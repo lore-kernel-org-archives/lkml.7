@@ -2,139 +2,112 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE4CCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439B9CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1524421850
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572195261;
-	bh=UtW9WD0HiBxpIq582FMAfo26riGb2a3TbmlgtH2/1lM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=r9Xf8X4bvcKFhomPq5RrBv83utVJsbiqsQmeCCEuC9L/VHcXrI22VHXqINXPys1c1
-	 LB6OA2NnKEiJqGmE6XKw355pfbVY563tsd1Kg2lLzL2k61Yj4DkdBHXvE6Q+AAB/21
-	 gNeEnoo+sAuy4j2nrF+5bLSJfWJUF6FYKcvjnsrA=
+	by mail.kernel.org (Postfix) with ESMTP id 17706205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:56:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="E15rO6N9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfJ0QyU (ORCPT
+        id S1727398AbfJ0Q4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 12:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727020AbfJ0QyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 12:54:19 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66B6620679;
-        Sun, 27 Oct 2019 16:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572195259;
-        bh=UtW9WD0HiBxpIq582FMAfo26riGb2a3TbmlgtH2/1lM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DBk5telXr+C5J+fj7tcudQcIpfg0hzVdbJeDUyY2OB+yBv8lp/aI7rI04uRsbNFR9
-         1B6UBme6GiEl2LThpZcgD+uH/E5KH7riNRl4S7vIOAj4XgaxLxdEcWya+L9tklzHf0
-         Qe+Ax2uo+vDurk2W2h0GQ0+odyZjOJu/Ca6FvG1A=
-Date:   Sun, 27 Oct 2019 16:54:14 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] tools: iio: Correctly add make dependency for iio_utils
-Message-ID: <20191027165414.3e4c3530@archlinux>
-In-Reply-To: <20191018172908.3761-1-labbott@redhat.com>
-References: <20191018172908.3761-1-labbott@redhat.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 27 Oct 2019 12:56:52 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40089 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727237AbfJ0Q4w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 12:56:52 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d22so4118391pll.7
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 09:56:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=WMklfu5SAQV6R0CPDuoC7Wh6fDlyi/L1KoUw5s6wFWk=;
+        b=E15rO6N9GSrjCyUNUBa+ms4uSI5E1+gtIw4EMgfQzpaTXKaEtXyWk4/WJxndmJUEjJ
+         p9S3G3K4R7tyyBcvsxLwAeDJG3/JcqEBBSGfol1EP2t1vnv7BKOxZEPLyGRTcEnwmm3B
+         C3lXvqSdk9QrqMx/TSXUWsdu5qPDs23Gb8ZDu2nzZxmDL5Y88TVe/le+ODBWdsSInrnD
+         IWQpv0ehoZQC1KqzqlMQzjC590gxmtCaxt91BKTOkUeHzdxqEUOocfeWlaFZ9WKC9Bxn
+         bkfrz8TIJVTa6KTxNXl7mBMIpNXeERU6F2rR0Ebc9tqzFH8pb/RFREABGOw74FZ8XQ+9
+         cawQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WMklfu5SAQV6R0CPDuoC7Wh6fDlyi/L1KoUw5s6wFWk=;
+        b=rzY/TzVmDOszDp8th5MtRGePwyyHyRzHlremlCsw/U7VxZFgG15pnF6/1vvpMt4sru
+         Ze0RO6iVq7GLLIwlQwjduWV+9lLZjjGqOeNmuTNsPNJaOHHa1Y48xZ6eS6+6zxgHoNgb
+         OY4zo0KJtr3RUPH39RdC1CwVdHtoPoNkiVFB4eWVUqH6DE0IHzQ/1y2Bq4QyJMqiwVo8
+         JukgpYTuiutEnrtkE7+uuQ32t2b78gir73z7sFxZ15C8Nv2Mm+C5i7N1tBrronF7ek2N
+         51GD9J6HKlx9/PJ6JTbNErrT/HpQ2zWvN/YD8G7wOPfW8uHGz1JpYHxnGxlrHw6sJ8+T
+         0a5w==
+X-Gm-Message-State: APjAAAU4Mq9XhPWTIbt4ncVNTY0dTJhNb7kgCZUy1BztHfaMarwLFJsV
+        /E8XtRXb9HFFE8EBUZxXcPH4EfBLiSw8iQ==
+X-Google-Smtp-Source: APXvYqw50ovreOQnkJXW3WyEtOsvQE7TKxOXPEBJzCfr7N/2ysDMw8uqKhLejub+aSi/lWWbyHRB6w==
+X-Received: by 2002:a17:902:122:: with SMTP id 31mr15001368plb.257.1572195409808;
+        Sun, 27 Oct 2019 09:56:49 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id j11sm5085244pfa.127.2019.10.27.09.56.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 27 Oct 2019 09:56:48 -0700 (PDT)
+Subject: Re: [PATCH 0/2][for-next] cleanup submission path
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1572189860.git.asml.silence@gmail.com>
+ <666ed447-ba8f-29e7-237f-de8044aa63ea@kernel.dk>
+ <5ec9bd14-d8f2-32e6-7f25-0ca7256c408a@gmail.com>
+ <aac65fe2-6c51-3baf-eee7-af5a8f633bf2@kernel.dk>
+Message-ID: <d39a878f-9dac-1457-6bba-01afc6268a84@kernel.dk>
+Date:   Sun, 27 Oct 2019 10:56:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <aac65fe2-6c51-3baf-eee7-af5a8f633bf2@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 13:29:08 -0400
-Laura Abbott <labbott@redhat.com> wrote:
+On 10/27/19 10:49 AM, Jens Axboe wrote:
+> On 10/27/19 10:44 AM, Pavel Begunkov wrote:
+>> On 27/10/2019 19:32, Jens Axboe wrote:
+>>> On 10/27/19 9:35 AM, Pavel Begunkov wrote:
+>>>> A small cleanup of very similar but diverged io_submit_sqes() and
+>>>> io_ring_submit()
+>>>>
+>>>> Pavel Begunkov (2):
+>>>>      io_uring: handle mm_fault outside of submission
+>>>>      io_uring: merge io_submit_sqes and io_ring_submit
+>>>>
+>>>>     fs/io_uring.c | 116 ++++++++++++++------------------------------------
+>>>>     1 file changed, 33 insertions(+), 83 deletions(-)
+>>>
+>>> I like the cleanups here, but one thing that seems off is the
+>>> assumption that io_sq_thread() always needs to grab the mm. If
+>>> the sqes processed are just READ/WRITE_FIXED, then it never needs
+>>> to grab the mm.
+>>> Yeah, we removed it to fix bugs. Personally, I think it would be
+>> clearer to do lazy grabbing conditionally, rather than have two
+>> functions. And in this case it's easier to do after merging.
+>>
+>> Do you prefer to return it back first?
+> 
+> Ah I see, no I don't care about that.
 
-> iio tools fail to build correctly with make parallelization:
-> 
-> $ make -s -j24
-> fixdep: error opening depfile: ./.iio_utils.o.d: No such file or directory
-> make[1]: *** [/home/labbott/linux_upstream/tools/build/Makefile.build:96: iio_utils.o] Error 2
-> make: *** [Makefile:43: iio_event_monitor-in.o] Error 2
-> make: *** Waiting for unfinished jobs....
-> 
-> This is because iio_utils.o is used across multiple targets.
-> Fix this by making iio_utils.o a proper dependency.
-> 
-> Signed-off-by: Laura Abbott <labbott@redhat.com>
-This looks fine to me, but my Makefile foo is decidedly limited. 
-Anyone else want to give a view?
+OK, looked at the post-patches state. It's still not correct. You are
+grabbing the mm from io_sq_thread() unconditionally. We should not do
+that, only if the sqes we need to submit need mm context.
 
-It seems sensible to backport this to stable as it seems low
-risk and will avoid some odd issues for distros.
-
-Thanks,
-
-Jonathan
-> ---
-> I realize that we don't really need the parallelization for tools
-> because it's so small but when building with the distro we want to use
-> the same make command and -j wherever possible.
-> 
-> This same issue also appears in the gpio tools so if this looks like an
-> okay approach I'll fix it there as well.
-> ---
->  tools/iio/Build    |  1 +
->  tools/iio/Makefile | 10 +++++++---
->  2 files changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/iio/Build b/tools/iio/Build
-> index f74cbda64710..8d0f3af3723f 100644
-> --- a/tools/iio/Build
-> +++ b/tools/iio/Build
-> @@ -1,3 +1,4 @@
-> +iio_utils-y += iio_utils.o
->  lsiio-y += lsiio.o iio_utils.o
->  iio_event_monitor-y += iio_event_monitor.o iio_utils.o
->  iio_generic_buffer-y += iio_generic_buffer.o iio_utils.o
-> diff --git a/tools/iio/Makefile b/tools/iio/Makefile
-> index e22378dba244..3de763d9ab70 100644
-> --- a/tools/iio/Makefile
-> +++ b/tools/iio/Makefile
-> @@ -32,20 +32,24 @@ $(OUTPUT)include/linux/iio: ../../include/uapi/linux/iio
->  
->  prepare: $(OUTPUT)include/linux/iio
->  
-> +IIO_UTILS_IN := $(OUTPUT)iio_utils-in.o
-> +$(IIO_UTILS_IN): prepare FORCE
-> +	$(Q)$(MAKE) $(build)=iio_utils
-> +
->  LSIIO_IN := $(OUTPUT)lsiio-in.o
-> -$(LSIIO_IN): prepare FORCE
-> +$(LSIIO_IN): prepare FORCE $(OUTPUT)iio_utils-in.o
->  	$(Q)$(MAKE) $(build)=lsiio
->  $(OUTPUT)lsiio: $(LSIIO_IN)
->  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
->  
->  IIO_EVENT_MONITOR_IN := $(OUTPUT)iio_event_monitor-in.o
-> -$(IIO_EVENT_MONITOR_IN): prepare FORCE
-> +$(IIO_EVENT_MONITOR_IN): prepare FORCE $(OUTPUT)iio_utils-in.o
->  	$(Q)$(MAKE) $(build)=iio_event_monitor
->  $(OUTPUT)iio_event_monitor: $(IIO_EVENT_MONITOR_IN)
->  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
->  
->  IIO_GENERIC_BUFFER_IN := $(OUTPUT)iio_generic_buffer-in.o
-> -$(IIO_GENERIC_BUFFER_IN): prepare FORCE
-> +$(IIO_GENERIC_BUFFER_IN): prepare FORCE $(OUTPUT)iio_utils-in.o
->  	$(Q)$(MAKE) $(build)=iio_generic_buffer
->  $(OUTPUT)iio_generic_buffer: $(IIO_GENERIC_BUFFER_IN)
->  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+-- 
+Jens Axboe
 
