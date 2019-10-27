@@ -2,147 +2,222 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E5ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA350CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4772067B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD97C20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:09:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJRFjd5+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Agg48Zrq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbfJ0XDo (ORCPT
+        id S1727539AbfJ0XJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 19:03:44 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46557 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfJ0XDo (ORCPT
+        Sun, 27 Oct 2019 19:09:51 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44295 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbfJ0XJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 19:03:44 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f19so5340634pgn.13
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 16:03:42 -0700 (PDT)
+        Sun, 27 Oct 2019 19:09:50 -0400
+Received: by mail-pl1-f195.google.com with SMTP id q16so4264703pll.11
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 16:09:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5NCQBLblr+3VzRKWt+r2uKZg0GiljuRiUpnaZ3zSTTc=;
-        b=IJRFjd5+3Q2MarXErPyr+smXeeYtKmVnuCMl0pZUsYWXLEiO+DY7flHvEEhKW4ElBg
-         homw33IjEzdlp7bDazMU//a271eISLJYTmPrz90ruofkxQ2lscQT4ovmyOvwsyO7zTEO
-         QQe8Y9t9/4tXr5ujOvlxrUnE0Fisn+h4+y1bACTAmISo9Fhc2UpBec6GnVJZGOoAu2Z4
-         oP1VB10QNgaPM3+dAPVqYoh6eAfu7kfM6vFDKN7qrEBEX/49FeDdBZhTvH1c089dv/95
-         2Z9PF6udW46rcL7TAD+ShT8+kqUMOFtb0m7vBsJcXGdCXDoB9c9ZKeHtt3znJUCZYsbG
-         pYKw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kZMQdP49SKSGCxikzk4IXXGYDDhTMLiJX9xeTkJggFM=;
+        b=Agg48ZrqlsNLwomBNvDAFStDC4273KPi77NSUU3O6CRLoYpEbURn/nlCdk6NNqT443
+         3AtvUVMxe7RYgYAoZTMwZdJfJgsDuqV6iIdvzXNBvOilFg5BcGSCC9A5FuOH1/kqAexe
+         0xOf0b8+p/XIz7Wm0w4aG5lTNvFsyKb9sahHw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5NCQBLblr+3VzRKWt+r2uKZg0GiljuRiUpnaZ3zSTTc=;
-        b=cKDCxH+yY6cY5l7KAeILuf1H4L6bxeau5Fj5Nx43S5bgvgC+Hz1qHNw++PzVAOfg+F
-         RoLQxmYBlI2eaV9F04Nxx2+6TDAMj2F6XPmwsG2wnP6PhmTe3Hq2xOKMWH7WN2xn10ll
-         m5fVsL/9OKueyHkV9ogXTgdBB1kWXLaFbilENvAxlTtpbYs6twDmgm1FERKhfxtXV7g6
-         h29RGtcBKcvLDo1NpewfvifllDJTfeQ3pdOYX5rCKfpEt9g/nkNDpfEVALNsJ9+UkPxl
-         oND6eK4hukAHIf0905GkgDaorGBsq82a4TR0eKUbRF2EE3N/UCxvSdIWjUgldL70cuWA
-         ciGw==
-X-Gm-Message-State: APjAAAV4czp4uOx6/uLGAGBpRNEvrahYbsV49Mbs3VFQrVoay6acgGEV
-        eyoUd3E/1Wy/rYNozSga0m8WBAiI
-X-Google-Smtp-Source: APXvYqzWWdejYXFXSoerLcQixmyTyuS9NMY5dq6lOw9KshpsLABjkdCo9VR84Nb0iyUsaZ6LbsBDfQ==
-X-Received: by 2002:a63:1f48:: with SMTP id q8mr17884892pgm.215.1572217421403;
-        Sun, 27 Oct 2019 16:03:41 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f7sm9131045pfa.150.2019.10.27.16.03.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 27 Oct 2019 16:03:40 -0700 (PDT)
-Subject: Re: [PATCH] lm75: add lm75b detection
-To:     Rain Wang <Rain_Wang@Jabil.com>, Jean Delvare <jdelvare@suse.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191026081049.GA16839@rainw-fedora28-jabil.corp.JABIL.ORG>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <7a2ddf42-8bbe-59e0-dae8-85b184ea0da0@roeck-us.net>
-Date:   Sun, 27 Oct 2019 16:03:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        bh=kZMQdP49SKSGCxikzk4IXXGYDDhTMLiJX9xeTkJggFM=;
+        b=LKJA75t6+bpYPn8ADjOl5Wt1W9/DJuKx+knlVjzCzERXsWSrhTAnaHTjRc9vg+h4F9
+         bwEphTN3xPho8zzqfCq040oa5G8MFE0r13YRdpShWmtdrjXTJdgSLJKhbUiazWXHHfSQ
+         UOptrfQ2JtwW6/fBHI/ChlFp7rZ5FpDYTtICq1BZqGB3mC2NvOafkmKtkEDwB49yEyTL
+         GG7Rnx80bUNEDa1NF6+ftznGxzrH+Cu/V3TwW3+En1bai9K7nEQ4dVMJ8tj/5fWxLqpb
+         qf/AICsBnv2/dfDUh+WJP7A6dCsxB1rHNNsioEoJ0m9Xc6gZjv9Vd9+I/ZvgK2rGhDJV
+         R/Hw==
+X-Gm-Message-State: APjAAAWZNP8KnlHBxkLI27dZPZydIztxTSovnUlPwes9cZ73a8x0qsdR
+        YVk0AWOpvsxhfR5HNTCnSJ2DMg==
+X-Google-Smtp-Source: APXvYqy2IgOxLN+SoLyYZNs3CI53NfTDWcc/ByPFbQnu9ECHCeKRG4mkz4WCGBlfBKDtOtpXcI65KA==
+X-Received: by 2002:a17:902:9897:: with SMTP id s23mr3851785plp.189.1572217789229;
+        Sun, 27 Oct 2019 16:09:49 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
+        by smtp.gmail.com with ESMTPSA id j22sm3097568pff.42.2019.10.27.16.09.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Oct 2019 16:09:48 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
+        bleung@chromium.org, enric.balletbo@collabora.com,
+        dianders@chromium.org, groeck@chromium.org,
+        fabien.lahoudere@collabora.com
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v3 00/18] cros_ec: Add sensorhub driver and FIFO processing
+Date:   Sun, 27 Oct 2019 16:09:03 -0700
+Message-Id: <20191027230921.205251-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
 MIME-Version: 1.0
-In-Reply-To: <20191026081049.GA16839@rainw-fedora28-jabil.corp.JABIL.ORG>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/26/19 1:10 AM, Rain Wang wrote:
-> The National Semiconductor LM75B is very similar as the
-> LM75A, but it has no ID byte register 7, and unused registers
-> return 0xff rather than the last read value like LM75A.
-> 
-> Signed-off-by: Rain Wang <rain_wang@jabil.com>
+This patchset adds a sensorhub driver for spreading sensor
+events coming from the Embedded controller sensor FIFO:
 
-I am quite hesitant to touch the detect function for this chip.
-Each addition increases the risk for false positives. What is the
-use case ?
+       +---------------+ +--------------+ +----
+       | cros_ec_accel | | cros_ec_gyro | | ...
+       +---------------+ +--------------+ +----
+           id:0       \        id:1 |       / id:..
+                 +------------------------------+
+                 |       cros_ec_sensorhub      |
+                 +------------------------------+
+                 |           cros_ec_dev        |
+                 +------------------------------+
+                 | cros_ec_i2c, cros_ec_lpc, .. |
+                 +------------------------------+
+                                 |
+                                 EC
 
-Thanks,
-Guenter
+When new sensors events are present, the EC raises and interrupt,
+sensorhub reads the FIFO and uses the 'id' field to spread the event to
+the proper IIO sensors. This stack is similar to the HID sensor input
+stack.
 
-> ---
->   drivers/hwmon/lm75.c | 17 +++++++++++++++--
->   1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-> index 5e6392294c03..a718f9eb4d72 100644
-> --- a/drivers/hwmon/lm75.c
-> +++ b/drivers/hwmon/lm75.c
-> @@ -760,6 +760,7 @@ static int lm75_detect(struct i2c_client *new_client,
->   	int i;
->   	int conf, hyst, os;
->   	bool is_lm75a = 0;
-> +	bool is_lm75b = 0;
->   
->   	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA |
->   				     I2C_FUNC_SMBUS_WORD_DATA))
-> @@ -780,8 +781,12 @@ static int lm75_detect(struct i2c_client *new_client,
->   	 * register 7, and unused registers return 0xff rather than the
->   	 * last read value.
->   	 *
-> +	 * The National Semiconductor LM75B is very similar as the
-> +	 * LM75A, but it has no ID byte register 7, and unused registers
-> +	 * return 0xff rather than the last read value like LM75A.
-> +	 *
->   	 * Note that this function only detects the original National
-> -	 * Semiconductor LM75 and the LM75A. Clones from other vendors
-> +	 * Semiconductor LM75 and the LM75A/B. Clones from other vendors
->   	 * aren't detected, on purpose, because they are typically never
->   	 * found on PC hardware. They are found on embedded designs where
->   	 * they can be instantiated explicitly so detection is not needed.
-> @@ -806,6 +811,13 @@ static int lm75_detect(struct i2c_client *new_client,
->   		is_lm75a = 1;
->   		hyst = i2c_smbus_read_byte_data(new_client, 2);
->   		os = i2c_smbus_read_byte_data(new_client, 3);
-> +	} else if (i2c_smbus_read_byte_data(new_client, 4) == 0xff
-> +		 && i2c_smbus_read_byte_data(new_client, 5) == 0xff
-> +		 && i2c_smbus_read_byte_data(new_client, 6) == 0xff) {
-> +		/* LM75B detection */
-> +		is_lm75b = 1;
-> +		hyst = i2c_smbus_read_byte_data(new_client, 2);
-> +		os = i2c_smbus_read_byte_data(new_client, 3);
->   	} else { /* Traditional style LM75 detection */
->   		/* Unused addresses */
->   		hyst = i2c_smbus_read_byte_data(new_client, 2);
-> @@ -839,7 +851,8 @@ static int lm75_detect(struct i2c_client *new_client,
->   			return -ENODEV;
->   	}
->   
-> -	strlcpy(info->type, is_lm75a ? "lm75a" : "lm75", I2C_NAME_SIZE);
-> +	strlcpy(info->type, is_lm75a ?
-> +		"lm75a" : (is_lm75b ? "lm75b" : "lm75"), I2C_NAME_SIZE);
->   
->   	return 0;
->   }
-> 
+The first patch move cros_ec_proto functions documentations into the
+code to prevent rot.
+
+The inext 3 patches add a primitive cros_ec_sensorhub. MFD just have to
+register this driver if at least one sensor is presented by the EC.
+cros_ec_sensorhub retrieves more information from the EC to find out
+which sensors are actually present:
+  mfd: cros_ec: Add sensor_count and make check_features public
+  platform: cros_ec: Add cros_ec_sensor_hub driver
+  platform/mfd:iio: cros_ec: Register sensor through sensorhub
+
+The next 3 patches prepare for FIFO support:
+  platform: chrome: cros-ec: record event timestamp in the hard irq
+  platform: chrome: cros_ec: Do not attempt to register a non-positive
+  platform: chrome: cros_ec: handle MKBP more events flag
+
+That last patch fixes a regression that changes event processing.
+Revert the patches that fixed that regression.
+
+The next 3 patches add FIFO support. An interface is added to connect
+the IIO sensors with cros_ec_sensorhub, and filters are needed to spread
+the timestamp when the EC send batches of events and deal with variation
+in interrupt delay.
+  platform: chrome: sensorhub: Add FIFO support
+  platform: chrome: sensorhub: Add code to spread timestmap
+  platform: chrome: sensorhub: Add median filter
+
+The remaining patches update IIO cros_ec drivers:
+The first patch moves cros_ec_sensor_core functions documentation into
+the .c file.
+Then we can use the FIFO function exposed by cros_ec_sensorhub:
+  iio: cros_ec: Use triggered buffer only when EC does not support FIFO
+
+The power management functions are not necessary anymore, since we
+shutoff the FIFO from cros_ec_sensorhub:
+  iio: cros_ec: Register to cros_ec_sensorhub when EC supports FIFO
+
+Finally, the last 3 patches present sensor information following the IIO
+ABI:
+-  Configurable EC timeout to allow batch mode in buffer/hwfifo_timeout,
+  in seconds.
+-  Hard coded EC FIFO size in buffer/hwfifo_watermark_max
+-  Sensor sampling frequency in hertz at sampling_frequency:
+  iio: cros_ec: Expose hwfifo_timeout
+  iio: cros_ec: Report hwfifo_watermark_max
+  iio: cros_ec: Use Hertz as unit for sampling frequency
+
+For testing, libiio test tools can be used:
+A iio device link looks like:
+iio:device1 ->
+...09:00/GOOG0004:00/cros-ec-dev.6.auto/cros-ec-sensorhub.7.auto/
+                     cros-ec-accel.15.auto/iio:device1
+
+When FIFO is available, no trigger are presented. Once
+sampling_freqeuncy and hwfifo_timeout are set, sensor events flow
+when listening to /dev/iio:device1:
+echo 12 > sampling_frequency   # Set ODR to at least 12Hz
+echo .100 > buffer/hwfifo_timeout  # do not wait more than 100ms to
+                                   # to send samples
+iio_readdev -b 2 -T 1000 -s 2 iio:device1 2>/dev/null| od -x
+0000000 ffd0 2e20 d990 0000 8630 b56c 07ea 0000
+0000020 ffc0 2e10 d970 0000 877e b56c 07ea 0000
+0000040`
+
+When FIFO is not supported by the EC, a trigger is present in the
+directory. After registering a trigger, setting sampling_frequency,
+the latest data collected by the sensor will be retrieved by the host
+when the trigger expires.
+
+When cros_ec_accel_legacy driver is used, no FIFO is supported and the
+sampling frequency for the accelerometers is hard coded at 10Hz.
+
+This set is built upon the master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+Enrico Granata (2):
+  platform: chrome: cros_ec: Do not attempt to register a non-positive
+    IRQ number
+  platform: chrome: cros_ec: handle MKBP more events flag
+
+Gwendal Grignou (16):
+  platform: chrome: Put docs with the code
+  mfd: cros_ec: Add sensor_count and make check_features public
+  platform: cros_ec: Add cros_ec_sensor_hub driver
+  platform/mfd:iio: cros_ec: Register sensor through sensorhub
+  platform: chrome: cros-ec: record event timestamp in the hard irq
+  Revert "Input: cros_ec_keyb - add back missing mask for event_type"
+  Revert "Input: cros_ec_keyb: mask out extra flags in event_type"
+  platform: chrome: sensorhub: Add FIFO support
+  platform: chrome: sensorhub: Add code to spread timestmap
+  platform: chrome: sensorhub: Add median filter
+  iio: cros_ec: Move function description to .c file
+  iio: cros_ec: Register to cros_ec_sensorhub when EC supports FIFO
+  iio: cros_ec: Remove pm function
+  iio: cros_ec: Expose hwfifo_timeout
+  iio: cros_ec: Report hwfifo_watermark_max
+  iio: cros_ec: Use Hertz as unit for sampling frequency
+
+ drivers/iio/accel/cros_ec_accel_legacy.c      |  14 +-
+ drivers/iio/common/cros_ec_sensors/Kconfig    |   2 +-
+ .../cros_ec_sensors/cros_ec_lid_angle.c       |   3 +-
+ .../common/cros_ec_sensors/cros_ec_sensors.c  |  19 +-
+ .../cros_ec_sensors/cros_ec_sensors_core.c    | 365 +++++--
+ drivers/iio/light/cros_ec_light_prox.c        |  21 +-
+ drivers/iio/pressure/cros_ec_baro.c           |  14 +-
+ drivers/input/keyboard/cros_ec_keyb.c         |   6 +-
+ drivers/mfd/cros_ec_dev.c                     | 235 +----
+ drivers/platform/chrome/Kconfig               |  12 +
+ drivers/platform/chrome/Makefile              |   2 +
+ drivers/platform/chrome/cros_ec.c             |  79 +-
+ drivers/platform/chrome/cros_ec_ishtp.c       |  25 +-
+ drivers/platform/chrome/cros_ec_lpc.c         |  17 +-
+ drivers/platform/chrome/cros_ec_proto.c       | 268 ++++-
+ drivers/platform/chrome/cros_ec_rpmsg.c       |  19 +-
+ drivers/platform/chrome/cros_ec_sensorhub.c   | 272 +++++
+ .../platform/chrome/cros_ec_sensorhub_ring.c  | 986 ++++++++++++++++++
+ .../linux/iio/common/cros_ec_sensors_core.h   | 105 +-
+ include/linux/platform_data/cros_ec_proto.h   | 138 +--
+ .../linux/platform_data/cros_ec_sensorhub.h   | 175 ++++
+ 21 files changed, 2147 insertions(+), 630 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_sensorhub.c
+ create mode 100644 drivers/platform/chrome/cros_ec_sensorhub_ring.c
+ create mode 100644 include/linux/platform_data/cros_ec_sensorhub.h
+
+-- 
+2.23.0.866.gb869b98d4c-goog
 
