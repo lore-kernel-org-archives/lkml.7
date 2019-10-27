@@ -2,54 +2,52 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6856CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA7ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5A9205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CB16205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212119;
-	bh=OxtsmDZcRyjTy/TwgnZe5iInYm/ARc+kAq5vsnT/P2M=;
+	s=default; t=1572212124;
+	bh=cVKlldt2kW/kmFEylPkfZI/FImeDXwBb7FbFTJyvG74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XBXvBA0eAgH63bnZqa29dr46G4/age2eEXY/K47Hi7tbNeRRpcffceQD7c6H+AFYs
-	 O3RwfCsXhtOOhrOtgBIfuiM6HysPf7viEbVuChMdaCElpZ5NgecIjsV5gS5JsjK4Gt
-	 NfC1CZW1cUcMwX3QSISWVEBmE+IDiqCSNdDQItEg=
+	b=EGOSVhNutjnJV1lnPuCr+ciypQgZcGHznJvtN+3uh+Wugm1Oo5hwzM79f3C7HCvjZ
+	 dbUgte4Vyt8v52eyW09O1yrcem9IrCEPwvim1mw/cvvMW6ukdFd8dmicJfjJFbFyFp
+	 K+XUhgDQsJKNheGUJlkkLWkT108O8Aa1+wvAymhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732931AbfJ0VfS (ORCPT
+        id S1732953AbfJ0VfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:35:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55622 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:35:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfJ0VJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:09:14 -0400
+        id S1729465AbfJ0VJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:09:08 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7ED6214AF;
-        Sun, 27 Oct 2019 21:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FCFE214AF;
+        Sun, 27 Oct 2019 21:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210553;
-        bh=OxtsmDZcRyjTy/TwgnZe5iInYm/ARc+kAq5vsnT/P2M=;
+        s=default; t=1572210548;
+        bh=cVKlldt2kW/kmFEylPkfZI/FImeDXwBb7FbFTJyvG74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tg8bBwO8LIG1+Kjt2UplagW4MNUNZ5poqcMbAsMoYHfWhMOi5EqtShMkT/+iKrhmC
-         RkQ1eOx6Qs1QqaoQWodo49kUSOWRy8BfiQPKbvO7OPKw2DwrnrkdIazRY/0Zwhmska
-         Dm/otqJvtpFoJcwCdLdp5OmR/qvqtCYJS7aPHPYo=
+        b=2uaOgpAi6DLozrNQubnWjjqAHU+1qwPAZkmw9BtNUd40n8Vr0ieRZhm91ufoFsNG2
+         UcmTidGloKivAFAQiT5mnvE0pK53LIrpyy0UhRiFl3nDPl2YNQmpdt37GKpdcTLb4k
+         MtToq9i3U+30cKmiD+ZmZm8OePwDOIwpxE4MoqrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Paul Burton <paul.burton@mips.com>, chenhc@lemote.com,
-        ralf@linux-mips.org, jhogan@kernel.org, linux-mips@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/119] mips: Loongson: Fix the link time qualifier of serial_exit()
-Date:   Sun, 27 Oct 2019 21:59:49 +0100
-Message-Id: <20191027203303.052992308@linuxfoundation.org>
+        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 010/119] nl80211: fix null pointer dereference
+Date:   Sun, 27 Oct 2019 21:59:47 +0100
+Message-Id: <20191027203302.104618561@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -62,39 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-[ Upstream commit 25b69a889b638b0b7e51e2c4fe717a66bec0e566 ]
+[ Upstream commit b501426cf86e70649c983c52f4c823b3c40d72a3 ]
 
-'exit' functions should be marked as __exit, not __init.
+If the interface is not in MESH mode, the command 'iw wlanx mpath del'
+will cause kernel panic.
 
-Fixes: 85cc028817ef ("mips: make loongsoon serial driver explicitly modular")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: chenhc@lemote.com
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org
+The root cause is null pointer access in mpp_flush_by_proxy(), as the
+pointer 'sdata->u.mesh.mpp_paths' is NULL for non MESH interface.
+
+Unable to handle kernel NULL pointer dereference at virtual address 00000068
+[...]
+PC is at _raw_spin_lock_bh+0x20/0x5c
+LR is at mesh_path_del+0x1c/0x17c [mac80211]
+[...]
+Process iw (pid: 4537, stack limit = 0xd83e0238)
+[...]
+[<c021211c>] (_raw_spin_lock_bh) from [<bf8c7648>] (mesh_path_del+0x1c/0x17c [mac80211])
+[<bf8c7648>] (mesh_path_del [mac80211]) from [<bf6cdb7c>] (extack_doit+0x20/0x68 [compat])
+[<bf6cdb7c>] (extack_doit [compat]) from [<c05c309c>] (genl_rcv_msg+0x274/0x30c)
+[<c05c309c>] (genl_rcv_msg) from [<c05c25d8>] (netlink_rcv_skb+0x58/0xac)
+[<c05c25d8>] (netlink_rcv_skb) from [<c05c2e14>] (genl_rcv+0x20/0x34)
+[<c05c2e14>] (genl_rcv) from [<c05c1f90>] (netlink_unicast+0x11c/0x204)
+[<c05c1f90>] (netlink_unicast) from [<c05c2420>] (netlink_sendmsg+0x30c/0x370)
+[<c05c2420>] (netlink_sendmsg) from [<c05886d0>] (sock_sendmsg+0x70/0x84)
+[<c05886d0>] (sock_sendmsg) from [<c0589f4c>] (___sys_sendmsg.part.3+0x188/0x228)
+[<c0589f4c>] (___sys_sendmsg.part.3) from [<c058add4>] (__sys_sendmsg+0x4c/0x70)
+[<c058add4>] (__sys_sendmsg) from [<c0208c80>] (ret_fast_syscall+0x0/0x44)
+Code: e2822c02 e2822001 e5832004 f590f000 (e1902f9f)
+---[ end trace bbd717600f8f884d ]---
+
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Link: https://lore.kernel.org/r/1569485810-761-1-git-send-email-miaoqing@codeaurora.org
+[trim useless data from commit message]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/loongson64/common/serial.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/nl80211.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/mips/loongson64/common/serial.c b/arch/mips/loongson64/common/serial.c
-index ffefc1cb26121..98c3a7feb10f8 100644
---- a/arch/mips/loongson64/common/serial.c
-+++ b/arch/mips/loongson64/common/serial.c
-@@ -110,7 +110,7 @@ static int __init serial_init(void)
- }
- module_init(serial_init);
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index ec504c4a397b4..ff31feeee8e3b 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -5504,6 +5504,9 @@ static int nl80211_del_mpath(struct sk_buff *skb, struct genl_info *info)
+ 	if (!rdev->ops->del_mpath)
+ 		return -EOPNOTSUPP;
  
--static void __init serial_exit(void)
-+static void __exit serial_exit(void)
- {
- 	platform_device_unregister(&uart8250_device);
++	if (dev->ieee80211_ptr->iftype != NL80211_IFTYPE_MESH_POINT)
++		return -EOPNOTSUPP;
++
+ 	return rdev_del_mpath(rdev, dev, dst);
  }
+ 
 -- 
 2.20.1
 
