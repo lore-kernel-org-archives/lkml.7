@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981C0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A289CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6937721726
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A93A214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211131;
-	bh=mqorUQN+cdr1Eu4q/RLzx0/E236qnHRyOfcEwcMOZpw=;
+	s=default; t=1572211136;
+	bh=3qfJsiNblWsRinUOR5rWmnopr316m0llNbLn03h1SLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fZN/bwII8CNqMUMSHjiIonOZEIroOb0C4jImlCun1yHPmKievYGfZ19BRuilImfjy
-	 kXpM+ObbUg9RFhP9fbddJ72LBDnfSG8GASKFecesxgQ8PR/evwIujw7Q0gfHQdIsor
-	 CEFlxAj/kjcsSVVjpaQ3uhrsvuCCzpuhBCNwdKIo=
+	b=JPiE0wzm9b9AbUuAO9fCsuHGlXMK+kQLPpIL+AFeuevktMXVK+gBUbGdbAe52dy/W
+	 p0MufCsJHU4u2OdsijnrPFi2tEYGPw6DwNLpVWGVoXghXE0wfx67sF5E6GMl9EEaZU
+	 XAeLxeuNGQMTvgFbO2ftXAwpBuF3SeQi7C/BfgcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731345AbfJ0VSu (ORCPT
+        id S1731365AbfJ0VSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:18:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38998 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:18:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731336AbfJ0VSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:18:46 -0400
+        id S1729582AbfJ0VSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:18:52 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E96420717;
-        Sun, 27 Oct 2019 21:18:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BCC8205C9;
+        Sun, 27 Oct 2019 21:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211125;
-        bh=mqorUQN+cdr1Eu4q/RLzx0/E236qnHRyOfcEwcMOZpw=;
+        s=default; t=1572211131;
+        bh=3qfJsiNblWsRinUOR5rWmnopr316m0llNbLn03h1SLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DfVDedHPqBV5pKJJrsM4b5lyLAiOpbATKnkisEJKA03u/JtUcf1snFdkUwgfw9gU4
-         A00kiNal2s+Qwd5Gz3mps/tStn5LYtV2YSVatsjQh3gSB8Mxh3CvCZKbQL1mfPduP8
-         HIDJVR8gHnntOHWs5NBo0sY5E1rDiicC6Zq9Lch8=
+        b=o0aHjfY8mCA/jTTMVYyto5BNJgUGm5j+sSOJ+yKCI0SUS+3mqKCCFXl3U76rEF1ek
+         cSbuh3xg2vjQA/0C3i7gBcnD+rW4QbWqrSkgA3eEq4RbauoZbgLyNae1BNsEvWXQYY
+         UcJ6Vp/6R3zqEop3niZDb08Utj05J1VoNhEjQpuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 006/197] scsi: ufs: skip shutdown if hba is not powered
-Date:   Sun, 27 Oct 2019 21:58:44 +0100
-Message-Id: <20191027203352.032337803@linuxfoundation.org>
+Subject: [PATCH 5.3 008/197] scsi: qla2xxx: Silence fwdump template message
+Date:   Sun, 27 Oct 2019 21:58:46 +0100
+Message-Id: <20191027203352.134337588@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,44 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Himanshu Madhani <hmadhani@marvell.com>
 
-[ Upstream commit f51913eef23f74c3bd07899dc7f1ed6df9e521d8 ]
+[ Upstream commit 248a445adfc8c33ffd67cf1f2e336578e34f9e21 ]
 
-In some cases, hba may go through shutdown flow without successful
-initialization and then make system hang.
+Print if fwdt template is present or not, only when
+ql2xextended_error_logging is enabled.
 
-For example, if ufshcd_change_power_mode() gets error and leads to
-ufshcd_hba_exit() to release resources of the host, future shutdown flow
-may hang the system since the host register will be accessed in unpowered
-state.
-
-To solve this issue, simply add checking to skip shutdown for above kind of
-situation.
-
-Link: https://lore.kernel.org/r/1568780438-28753-1-git-send-email-stanley.chu@mediatek.com
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Acked-by: Bean Huo <beanhuo@micron.com>
+Link: https://lore.kernel.org/r/20190912180918.6436-2-hmadhani@marvell.com
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/qla2xxx/qla_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 029da74bb2f5c..e674f6148f698 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -8095,6 +8095,9 @@ int ufshcd_shutdown(struct ufs_hba *hba)
- {
- 	int ret = 0;
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index afcd9a8858845..3fbe909744a8f 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -3268,7 +3268,7 @@ qla2x00_alloc_fw_dump(scsi_qla_host_t *vha)
  
-+	if (!hba->is_powered)
-+		goto out;
-+
- 	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
- 		goto out;
- 
+ 		for (j = 0; j < 2; j++, fwdt++) {
+ 			if (!fwdt->template) {
+-				ql_log(ql_log_warn, vha, 0x00ba,
++				ql_dbg(ql_dbg_init, vha, 0x00ba,
+ 				    "-> fwdt%u no template\n", j);
+ 				continue;
+ 			}
 -- 
 2.20.1
 
