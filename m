@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7264CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3468CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC8521850
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C2121726
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211440;
-	bh=lYS99/PgYPV24YMX4pde23jxpICiG+eXBVwlzD1pm6A=;
+	s=default; t=1572211443;
+	bh=7hY4aOUAT25qZzu5Zp8O4Xw+/lhFo9NIKHCkfDHF/X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eeMUXNeuiJeK3cRiUSvkEERBabFAtX8bd8Y21eV7K5H+Sorsmfmk1mu0QtrGQxQ4N
-	 GaNCoJYQPV9VP1t4FHxvhBEK/AY/qlZ7ArQ6Upzo68mrbDooqNF5888RWxVenOUCPA
-	 soKJE86oUxLcPLobP22C5eh2YvOXBnDaFDixyuRk=
+	b=PcGVO1Gx9SMbCqqKxLxj01SCkQKNlgsvwSHI3xi59y174Jwvr39SnfXWn0tkINBhZ
+	 JEI7MjY6aT5/Guoe76GlZeo8SLg0vnHc/Ysqnoqb3VbtC9HnVDFNNL4DrN01AoljcA
+	 Fza2/GvlPaPz+8pvDY3Z4fQEjB2UcC0u4nuy894A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbfJ0VX7 (ORCPT
+        id S1732426AbfJ0VYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45328 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730777AbfJ0VXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:23:55 -0400
+        id S1732411AbfJ0VX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:23:58 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4B2A214E0;
-        Sun, 27 Oct 2019 21:23:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6DAC21726;
+        Sun, 27 Oct 2019 21:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211434;
-        bh=lYS99/PgYPV24YMX4pde23jxpICiG+eXBVwlzD1pm6A=;
+        s=default; t=1572211437;
+        bh=7hY4aOUAT25qZzu5Zp8O4Xw+/lhFo9NIKHCkfDHF/X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SKIww8CRAU5vB+WhJ7W3NqoFg0qhO8QKI7AHhEMtRWeqSRowqjMxOaqqWuzZ66bG6
-         LXJhwOeghGM8kUZlXW7TJG9REW8PVlKwOUN5z9cBxRhDC5bdxBgyRf2oR2UmrYb1KF
-         tavF5+brFHn5hrHU6PDIxp3LBwiMTW8wzFELAhio=
+        b=UY8tI9vtur6aqXfarJt/QpbYSSKBDLUIgI8QUN84g1+QwQQFBjwBRTponuW2eSUiT
+         ZIUoZZ/m5jA38NP39uTTNQWzUxxErTF7oRGhic4FKUDYqhMR3nhPG5uqRiUeyeeryc
+         t9w4NQKe59rb2+eD4Xo8zUdI7Ek8qDjc9vK6hUBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Honglei Wang <honglei.wang@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 151/197] mm: memcg: get number of pages on the LRU list in memcgroup base on lru_zone_size
-Date:   Sun, 27 Oct 2019 22:01:09 +0100
-Message-Id: <20191027203359.841584643@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        James Zhu <James.Zhu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.3 134/197] drm/amdgpu/uvd7: fix allocation size in enc ring test (v2)
+Date:   Sun, 27 Oct 2019 22:00:52 +0100
+Message-Id: <20191027203358.951696366@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -66,151 +61,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Honglei Wang <honglei.wang@oracle.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit b11edebbc967ebf5c55b8f9e1d5bb6d68ec3a7fd upstream.
+commit 5d230bc91f6c15e5d281f2851502918d98b9e770 upstream.
 
-Commit 1a61ab8038e72 ("mm: memcontrol: replace zone summing with
-lruvec_page_state()") has made lruvec_page_state to use per-cpu counters
-instead of calculating it directly from lru_zone_size with an idea that
-this would be more effective.
+We need to allocate a large enough buffer for the
+session info, otherwise the IB test can overwrite
+other memory.
 
-Tim has reported that this is not really the case for their database
-benchmark which is showing an opposite results where lruvec_page_state
-is taking up a huge chunk of CPU cycles (about 25% of the system time
-which is roughly 7% of total cpu cycles) on 5.3 kernels.  The workload
-is running on a larger machine (96cpus), it has many cgroups (500) and
-it is heavily direct reclaim bound.
+v2: - session info is 128K according to mesa
+    - use the same session info for create and destroy
 
-Tim Chen said:
-
-: The problem can also be reproduced by running simple multi-threaded
-: pmbench benchmark with a fast Optane SSD swap (see profile below).
-:
-:
-: 6.15%     3.08%  pmbench          [kernel.vmlinux]            [k] lruvec_lru_size
-:             |
-:             |--3.07%--lruvec_lru_size
-:             |          |
-:             |          |--2.11%--cpumask_next
-:             |          |          |
-:             |          |           --1.66%--find_next_bit
-:             |          |
-:             |           --0.57%--call_function_interrupt
-:             |                     |
-:             |                      --0.55%--smp_call_function_interrupt
-:             |
-:             |--1.59%--0x441f0fc3d009
-:             |          _ops_rdtsc_init_base_freq
-:             |          access_histogram
-:             |          page_fault
-:             |          __do_page_fault
-:             |          handle_mm_fault
-:             |          __handle_mm_fault
-:             |          |
-:             |           --1.54%--do_swap_page
-:             |                     swapin_readahead
-:             |                     swap_cluster_readahead
-:             |                     |
-:             |                      --1.53%--read_swap_cache_async
-:             |                                __read_swap_cache_async
-:             |                                alloc_pages_vma
-:             |                                __alloc_pages_nodemask
-:             |                                __alloc_pages_slowpath
-:             |                                try_to_free_pages
-:             |                                do_try_to_free_pages
-:             |                                shrink_node
-:             |                                shrink_node_memcg
-:             |                                |
-:             |                                |--0.77%--lruvec_lru_size
-:             |                                |
-:             |                                 --0.76%--inactive_list_is_low
-:             |                                           |
-:             |                                            --0.76%--lruvec_lru_size
-:             |
-:              --1.50%--measure_read
-:                        page_fault
-:                        __do_page_fault
-:                        handle_mm_fault
-:                        __handle_mm_fault
-:                        do_swap_page
-:                        swapin_readahead
-:                        swap_cluster_readahead
-:                        |
-:                         --1.48%--read_swap_cache_async
-:                                   __read_swap_cache_async
-:                                   alloc_pages_vma
-:                                   __alloc_pages_nodemask
-:                                   __alloc_pages_slowpath
-:                                   try_to_free_pages
-:                                   do_try_to_free_pages
-:                                   shrink_node
-:                                   shrink_node_memcg
-:                                   |
-:                                   |--0.75%--inactive_list_is_low
-:                                   |          |
-:                                   |           --0.75%--lruvec_lru_size
-:                                   |
-:                                    --0.73%--lruvec_lru_size
-
-The likely culprit is the cache traffic the lruvec_page_state_local
-generates.  Dave Hansen says:
-
-: I was thinking purely of the cache footprint.  If it's reading
-: pn->lruvec_stat_local->count[idx] is three separate cachelines, so 192
-: bytes of cache *96 CPUs = 18k of data, mostly read-only.  1 cgroup would
-: be 18k of data for the whole system and the caching would be pretty
-: efficient and all 18k would probably survive a tight page fault loop in
-: the L1.  500 cgroups would be ~90k of data per CPU thread which doesn't
-: fit in the L1 and probably wouldn't survive a tight page fault loop if
-: both logical threads were banging on different cgroups.
-:
-: It's just a theory, but it's why I noted the number of cgroups when I
-: initially saw this show up in profiles
-
-Fix the regression by partially reverting the said commit and calculate
-the lru size explicitly.
-
-Link: http://lkml.kernel.org/r/20190905071034.16822-1-honglei.wang@oracle.com
-Fixes: 1a61ab8038e72 ("mm: memcontrol: replace zone summing with lruvec_page_state()")
-Signed-off-by: Honglei Wang <honglei.wang@oracle.com>
-Reported-by: Tim Chen <tim.c.chen@linux.intel.com>
-Acked-by: Tim Chen <tim.c.chen@linux.intel.com>
-Tested-by: Tim Chen <tim.c.chen@linux.intel.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: <stable@vger.kernel.org>	[5.2+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=204241
+Acked-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: James Zhu <James.Zhu@amd.com>
+Tested-by: James Zhu <James.Zhu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmscan.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c |   33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -354,12 +354,13 @@ unsigned long zone_reclaimable_pages(str
+--- a/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
+@@ -214,13 +214,14 @@ static int uvd_v7_0_enc_ring_test_ring(s
+  * Open up a stream for HW test
   */
- unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
+ static int uvd_v7_0_enc_get_create_msg(struct amdgpu_ring *ring, uint32_t handle,
++				       struct amdgpu_bo *bo,
+ 				       struct dma_fence **fence)
  {
--	unsigned long lru_size;
-+	unsigned long lru_size = 0;
- 	int zid;
+ 	const unsigned ib_size_dw = 16;
+ 	struct amdgpu_job *job;
+ 	struct amdgpu_ib *ib;
+ 	struct dma_fence *f = NULL;
+-	uint64_t dummy;
++	uint64_t addr;
+ 	int i, r;
  
--	if (!mem_cgroup_disabled())
--		lru_size = lruvec_page_state_local(lruvec, NR_LRU_BASE + lru);
--	else
-+	if (!mem_cgroup_disabled()) {
-+		for (zid = 0; zid < MAX_NR_ZONES; zid++)
-+			lru_size += mem_cgroup_get_zone_lru_size(lruvec, lru, zid);
-+	} else
- 		lru_size = node_page_state(lruvec_pgdat(lruvec), NR_LRU_BASE + lru);
+ 	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4, &job);
+@@ -228,15 +229,15 @@ static int uvd_v7_0_enc_get_create_msg(s
+ 		return r;
  
- 	for (zid = zone_idx + 1; zid < MAX_NR_ZONES; zid++) {
+ 	ib = &job->ibs[0];
+-	dummy = ib->gpu_addr + 1024;
++	addr = amdgpu_bo_gpu_offset(bo);
+ 
+ 	ib->length_dw = 0;
+ 	ib->ptr[ib->length_dw++] = 0x00000018;
+ 	ib->ptr[ib->length_dw++] = 0x00000001; /* session info */
+ 	ib->ptr[ib->length_dw++] = handle;
+ 	ib->ptr[ib->length_dw++] = 0x00000000;
+-	ib->ptr[ib->length_dw++] = upper_32_bits(dummy);
+-	ib->ptr[ib->length_dw++] = dummy;
++	ib->ptr[ib->length_dw++] = upper_32_bits(addr);
++	ib->ptr[ib->length_dw++] = addr;
+ 
+ 	ib->ptr[ib->length_dw++] = 0x00000014;
+ 	ib->ptr[ib->length_dw++] = 0x00000002; /* task info */
+@@ -275,13 +276,14 @@ err:
+  * Close up a stream for HW test or if userspace failed to do so
+  */
+ static int uvd_v7_0_enc_get_destroy_msg(struct amdgpu_ring *ring, uint32_t handle,
+-				struct dma_fence **fence)
++					struct amdgpu_bo *bo,
++					struct dma_fence **fence)
+ {
+ 	const unsigned ib_size_dw = 16;
+ 	struct amdgpu_job *job;
+ 	struct amdgpu_ib *ib;
+ 	struct dma_fence *f = NULL;
+-	uint64_t dummy;
++	uint64_t addr;
+ 	int i, r;
+ 
+ 	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4, &job);
+@@ -289,15 +291,15 @@ static int uvd_v7_0_enc_get_destroy_msg(
+ 		return r;
+ 
+ 	ib = &job->ibs[0];
+-	dummy = ib->gpu_addr + 1024;
++	addr = amdgpu_bo_gpu_offset(bo);
+ 
+ 	ib->length_dw = 0;
+ 	ib->ptr[ib->length_dw++] = 0x00000018;
+ 	ib->ptr[ib->length_dw++] = 0x00000001;
+ 	ib->ptr[ib->length_dw++] = handle;
+ 	ib->ptr[ib->length_dw++] = 0x00000000;
+-	ib->ptr[ib->length_dw++] = upper_32_bits(dummy);
+-	ib->ptr[ib->length_dw++] = dummy;
++	ib->ptr[ib->length_dw++] = upper_32_bits(addr);
++	ib->ptr[ib->length_dw++] = addr;
+ 
+ 	ib->ptr[ib->length_dw++] = 0x00000014;
+ 	ib->ptr[ib->length_dw++] = 0x00000002;
+@@ -334,13 +336,20 @@ err:
+ static int uvd_v7_0_enc_ring_test_ib(struct amdgpu_ring *ring, long timeout)
+ {
+ 	struct dma_fence *fence = NULL;
++	struct amdgpu_bo *bo = NULL;
+ 	long r;
+ 
+-	r = uvd_v7_0_enc_get_create_msg(ring, 1, NULL);
++	r = amdgpu_bo_create_reserved(ring->adev, 128 * 1024, PAGE_SIZE,
++				      AMDGPU_GEM_DOMAIN_VRAM,
++				      &bo, NULL, NULL);
++	if (r)
++		return r;
++
++	r = uvd_v7_0_enc_get_create_msg(ring, 1, bo, NULL);
+ 	if (r)
+ 		goto error;
+ 
+-	r = uvd_v7_0_enc_get_destroy_msg(ring, 1, &fence);
++	r = uvd_v7_0_enc_get_destroy_msg(ring, 1, bo, &fence);
+ 	if (r)
+ 		goto error;
+ 
+@@ -352,6 +361,8 @@ static int uvd_v7_0_enc_ring_test_ib(str
+ 
+ error:
+ 	dma_fence_put(fence);
++	amdgpu_bo_unreserve(bo);
++	amdgpu_bo_unref(&bo);
+ 	return r;
+ }
+ 
 
 
