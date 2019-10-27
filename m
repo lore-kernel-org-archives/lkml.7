@@ -2,89 +2,92 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F302CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 06:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EF2CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 06:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0E220650
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 06:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBD2205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 06:32:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XglZzy/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbfJ0GV4 (ORCPT
+        id S1726151AbfJ0Gcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 02:21:56 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.220]:36188 "EHLO
-        mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfJ0GVz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 02:21:55 -0400
-Received: from mxout1.routing.net (unknown [192.168.10.81])
-        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id 75BCD96C06;
-        Sun, 27 Oct 2019 06:21:51 +0000 (UTC)
-Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
-        by mxout1.routing.net (Postfix) with ESMTP id D3DD543C53;
-        Sun, 27 Oct 2019 06:21:51 +0000 (UTC)
-Received: from localhost.localdomain (fttx-pool-217.61.153.185.bambit.de [217.61.153.185])
-        by mxbox1.masterlogin.de (Postfix) with ESMTPSA id 369AB403C2;
-        Sun, 27 Oct 2019 06:21:51 +0000 (UTC)
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] serial: 8250-mtk: Use platform_get_irq_optional() for optional irq
-Date:   Sun, 27 Oct 2019 07:21:17 +0100
-Message-Id: <20191027062117.20389-1-frank-w@public-files.de>
-X-Mailer: git-send-email 2.17.1
+        Sun, 27 Oct 2019 02:32:43 -0400
+Received: from mout.gmx.net ([212.227.17.21]:58099 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbfJ0Gcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 02:32:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1572157953;
+        bh=URb4ktMfUpL1dbYIat3/0f/YdBmBlVy9KjAM/7UpLI0=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=XglZzy/WMm59HtyMddVqjE6ZR2+RaxPmfwEmYCXzobfiJeL01Z4U7Obw90woqrfgb
+         U4GeXgWqrDWPrbBr+eMNLB+IHQEsYMZrhgincWFuJy401uyX7T8HutSvALTIyFQ8dK
+         tKIlCC23G/wAFx9sUPnqKvPQGmWMEAp2MU3Pddww=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.153.185] ([217.61.153.185]) by web-mail.gmx.net
+ (3c-app-gmx-bap44.server.lan [172.19.172.114]) (via HTTP); Sun, 27 Oct 2019
+ 07:32:32 +0100
+MIME-Version: 1.0
+Message-ID: <trinity-c8e754a2-3369-4915-91dd-4e328c8d8a54-1572157952924@3c-app-gmx-bap44>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Fabio Estevam" <festevam@gmail.com>
+Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Aw: Re: [PATCH, RESEND] serial: 8250-mtk: Ask for IRQ-count before
+ request one
+Content-Type: text/plain; charset=UTF-8
+Date:   Sun, 27 Oct 2019 07:32:32 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <CAOMZO5Bb=1CUpw__xxS2N0w+ZP0+LnBBW9+JLVr03x6TC2Z7=g@mail.gmail.com>
+References: <20191026194522.28293-1-frank-w@public-files.de>
+ <CAOMZO5Bb=1CUpw__xxS2N0w+ZP0+LnBBW9+JLVr03x6TC2Z7=g@mail.gmail.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:ZwFWc4VD9dcVeZ8c7PaQyxCHzgAqT53gsWj2AJnSZjBgsFAC2j82vL5w/gSwf6To88DKA
+ 0JVhXeQGn6v1xg0j6H+pFB8vA8+G3TYvM7Slk1tW8sLbSXnjKM8T+P7wBcDqXssvwR9ws1e+sTQe
+ aJqoVJNc+XDlrH9pnB4HQeTnFTiiEP+UoM5ROLtw/5h8kkLPEbD+UxQrLCp8YTZ97jRaW5MJh0ZW
+ bM4K1Wgk1DmIF2UCcsSQP8MQP3/WRsna/nRScowwiffo8+6oaCX4zehW3QPQlNUqjonbdPOZJk+w
+ N0=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AFsynnJYb5U=:KBDbqLyPbYU5CLeqGZx3Vo
+ Sfnot+l7NRHzME8agB4fxaK7Rf01wkVSaeg1QGQ+dzmIKGc0efJ/YlsvMg9TZZRiQfx4ej1V9
+ Zo/2BChttYcdZZsI2tZheHb2tu0Izlf6WvHdTE6Dwi97qWNg7bPaHtgHuHwfFmpBNtJnHrpCG
+ fr2tpnbNC2TOjr+Exx02YsaHbmmIRMPAWSuPDMuwjQXRvR4ffqa+BECFzZUhmYjzhbit36Qyt
+ ZakEpDe9Kh9YUXJW9aXAJztfq+66NJJuZMzEYicOR9bGB2R+lhea04uxcnNhWKq6CB4q3zwq+
+ GRX3mr+KdMgOKLhrahiMZ+8eugpCP3Ldrl0RY0hjPrXEKX6+De4W0n2saAfp9H45+uQTXPCzg
+ BI1tfs7KMJG6kSsuKLInuWV5O2/b7pcM2pLXYbJNPDCUHc8kDFixkYrHBq10obM3MCW+w4/1K
+ 11XyCKqW9iDB4HsGO2W/MsweDQ82iA+eRMe7XdX1xmJQmRfLLZaKHb6VEc69Mk4BPOMf/O1HP
+ gstDfHykbv+cMcfOaTz4XFsMpb6T+KNeA2yPd2PTXAYyoadOusBMiPCRQhJvYSULYTLHu9J5w
+ w/WboqFnJlp0Xvk2Ekh7KvzjsD0KhKJ37v6cpAlBsJr1E4efWL+3XcE/awA+s1KhFAB6LPo1W
+ OFE9pK3qpw72iSLZJDdFmKl5quWbLc5xGULgM5MET6guvM5N/poP7PhPszZcKQaDM+3c=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As platform_get_irq() now prints an error when the interrupt does not
-exist, this warnings are printed on bananapi-r2:
+Hi,
 
-[    4.935780] mt6577-uart 11004000.serial: IRQ index 1 not found
-[    4.962589] 11002000.serial: ttyS1 at MMIO 0x11002000 (irq = 202, base_baud = 1625000) is a ST16650V2
-[    4.972127] mt6577-uart 11002000.serial: IRQ index 1 not found
-[    4.998927] 11003000.serial: ttyS2 at MMIO 0x11003000 (irq = 203, base_baud = 1625000) is a ST16650V2
-[    5.008474] mt6577-uart 11003000.serial: IRQ index 1 not found
+thank you, seems to work too
 
-Fix this by calling platform_get_irq_optional() instead.
+have posted v2 here: https://patchwork.kernel.org/patch/11213957/
 
-now it looks like this:
+regards Frank
 
-[    4.872751] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+> Gesendet: Samstag, 26. Oktober 2019 um 21:31 Uhr
+> Von: "Fabio Estevam" <festevam@gmail.com>
 
-Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-changes since v1:
-	https://patchwork.kernel.org/patch/11213813/
-	change from platform_irq_count to platform_get_irq_optional
----
- drivers/tty/serial/8250/8250_mtk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-index b411ba4eb5e9..4d067f515f74 100644
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -544,7 +544,7 @@ static int mtk8250_probe(struct platform_device *pdev)
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
--	data->rx_wakeup_irq = platform_get_irq(pdev, 1);
-+	data->rx_wakeup_irq = platform_get_irq_optional(pdev, 1);
- 
- 	return 0;
- }
--- 
-2.17.1
+> The solution that was accepted for this case was to use
+> platform_get_irq_optional() instead.
+>
+> You could try using platform_get_irq_optional() here as well.
 
