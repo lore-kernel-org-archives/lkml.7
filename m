@@ -2,168 +2,96 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85045CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C83CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56143205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9203205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212226;
-	bh=hoHHFCmI1sTcDN1WhsE34aOMhIQogs57D2phXWIk6lg=;
-	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=NqDDp4a1iCT24xCSf4LCvnQ92y82hT11+QFsnISf/PC9pQ1pf5HqCRwqBxiS1zr5s
-	 +tRFkusZMH0uvrsXdZT/chUDA4PQSrb/Ib6vaHpx+m98pmyGEvwmqnmD1ZGnhArnPx
-	 SB9C8OB+KmeBa5/aRvNLqgPP8qAldqmv9Eu/iy5c=
+	s=default; t=1572212233;
+	bh=FXIHqNPnz+9NAMzrKONjsTjF/Zex8ZBGkpnsoFhCgwI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VfZ0BlbrjLXMAdXCVrk8JPXRbgnJge6Tp/mfwuWtGl34N0XFeTDc1h6SPZ9O0ET3X
+	 Vpbk9bldOeBIa2DENeRiCKVLP8kVZlRFHdPh4mD+hLXt6GSRKSXYYUteYNKzP+i8T/
+	 vdlgpJA/zZedyVPUdDAXqwZvxzOkzpKZIz8PWi7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbfJ0VhF (ORCPT
+        id S1727300AbfJ0VFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:37:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727225AbfJ0VhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:37:00 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1728889AbfJ0VFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:05:43 -0400
+Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23423205F4;
-        Sun, 27 Oct 2019 21:36:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 978DD2064A;
+        Sun, 27 Oct 2019 21:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572212219;
-        bh=hoHHFCmI1sTcDN1WhsE34aOMhIQogs57D2phXWIk6lg=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=vQxIgU4W7DhbFHJFd4ZCQ0tfTgbMTw7qLk2qox2eRZ7Unuv+fjtTfeqPyaGbJsjo1
-         8PRIcXP7UeSOfiBGR4dB0r3Vr/l1gmwiiP6hvMGVyOw2g4ebXMvuDEAipK+QX0ReUz
-         Mha3Q1F6VzFQJJjf4aA+dDUKcsoCY8omTq37Abso=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1572210343;
+        bh=FXIHqNPnz+9NAMzrKONjsTjF/Zex8ZBGkpnsoFhCgwI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0OTsbV3XZpay9mYeRlN/o1fPdgL6z5IDpIi9RjiU12DctT+IZlBDScWm4VZ2ZdmBP
+         Fs32GbHLNco3MAKAOHe02OQ8bmT2thOUiFPrjFvOFrGVkoCtjwi5rgXgaZpfmhey57
+         Mz+uwM/ctbAE1pxYdwm1l8gYrvK019Nqx4Rg+4Ws=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>
+Subject: [PATCH 4.9 31/49] staging: wlan-ng: fix exit return when sme->key_idx >= NUM_WEPKEYS
+Date:   Sun, 27 Oct 2019 22:01:09 +0100
+Message-Id: <20191027203145.580889658@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
+References: <20191027203119.468466356@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAOCk7Np_Wn9JZ8JQCiDg1w+xcTVW9fhvtCA-k5ysc2juHZuvUw@mail.gmail.com>
-References: <20191002011555.36571-1-jeffrey.l.hugo@gmail.com> <20191002011640.36624-1-jeffrey.l.hugo@gmail.com> <20191017215023.2BFEC20872@mail.kernel.org> <CAOCk7NqgWkt6BwY75eGS2dbJ7GGk3DqH5NC0VLHUq4fc6WuYog@mail.gmail.com> <CAOCk7Np_Wn9JZ8JQCiDg1w+xcTVW9fhvtCA-k5ysc2juHZuvUw@mail.gmail.com>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] clk: qcom: Add MSM8998 GPU Clock Controller (GPUCC) driver
-User-Agent: alot/0.8.1
-Date:   Sun, 27 Oct 2019 14:36:58 -0700
-Message-Id: <20191027213659.23423205F4@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jeffrey Hugo (2019-10-18 14:11:09)
-> On Thu, Oct 17, 2019 at 5:16 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> w=
-rote:
-> >
-> > On Thu, Oct 17, 2019 at 3:50 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > >
-> > > Quoting Jeffrey Hugo (2019-10-01 18:16:40)
-> > > > +static const struct freq_tbl ftbl_gfx3d_clk_src[] =3D {
-> > > > +       F(180000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> > > > +       F(257000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> > > > +       F(342000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> > > > +       F(414000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> > > > +       F(515000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> > > > +       F(596000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> > > > +       F(670000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> > > > +       F(710000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> > > > +       { }
-> > >
-> > > I guess this one doesn't do PLL ping pong? Instead we just reprogram =
-the
-> > > PLL all the time? Can we have rcg2 clk ops that set the rate on the
-> > > parent to be exactly twice as much as the incoming frequency? I thoug=
-ht
-> > > we already had this support in the code. Indeed, it is part of
-> > > _freq_tbl_determine_rate() in clk-rcg.c, but not yet implemented in t=
-he
-> > > same function name in clk-rcg2.c! Can you implement it? That way we
-> > > don't need this long frequency table, just this weird one where it lo=
-oks
-> > > like:
-> > >
-> > >         { .src =3D P_GPUPLL0_OUT_EVEN, .pre_div =3D 3 }
-> > >         { }
-> > >
-> > > And then some more logic in the rcg2 ops to allow this possibility fo=
-r a
-> > > frequency table when CLK_SET_RATE_PARENT is set.
-> >
-> > Does not do PLL ping pong.  I'll look at extending the rcg2 ops like
-> > you describe.
->=20
-> Am I missing something?  From what I can tell, what you describe is
-> not implemented.
->=20
-> The only in-tree example of a freq_tbl with only a src and a pre_div
-> defined for rcg ops is for the tv_src clk in mmcc-msm8960 [1]
-> However, that uses a variant of rcg ops, clk_rcg_bypass_ops, not clk_rcg_=
-ops.
->=20
-> clk_rcg_bypass_ops has its own determine_rate implementation which
-> does not utilize _freq_tbl_determine_rate(), and can only do a 1:1
-> input rate to output ratio (we want a 1:2).
->=20
-> _freq_tbl_determine_rate() in either rcg_ops or rcg2_ops won't work,
-> because they both use qcom_find_freq() which doesn't work when your
-> table doesn't specify any frequencies (f->freq is 0).
+From: Colin Ian King <colin.king@canonical.com>
 
-Yes. You have to have some sort of frequency table to tell us what the
-source and predivider to use.
+commit 153c5d8191c26165dbbd2646448ca7207f7796d0 upstream.
 
-> qcom_find_freq() won't iterate through the table, therefore f in
-> qcom_find_freq() won't be pointing at the end of the table (the null
-> entry), so when qcom_find_freq decrements f in the return, it actually
-> goes off the beginning of the array in an array out of bounds
-> violation.
+Currently the exit return path when sme->key_idx >= NUM_WEPKEYS is via
+label 'exit' and this checks if result is non-zero, however result has
+not been initialized and contains garbage.  Fix this by replacing the
+goto with a return with the error code.
 
-Ouch!
+Addresses-Coverity: ("Uninitialized scalar variable")
+Fixes: 0ca6d8e74489 ("Staging: wlan-ng: replace switch-case statements with macro")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191014110201.9874-1-colin.king@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
->=20
-> Please advise how you would like to proceed.
+---
+ drivers/staging/wlan-ng/cfg80211.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Please have a frequency table like
+--- a/drivers/staging/wlan-ng/cfg80211.c
++++ b/drivers/staging/wlan-ng/cfg80211.c
+@@ -489,10 +489,8 @@ static int prism2_connect(struct wiphy *
+ 	/* Set the encryption - we only support wep */
+ 	if (is_wep) {
+ 		if (sme->key) {
+-			if (sme->key_idx >= NUM_WEPKEYS) {
+-				err = -EINVAL;
+-				goto exit;
+-			}
++			if (sme->key_idx >= NUM_WEPKEYS)
++				return -EINVAL;
+ 
+ 			result = prism2_domibset_uint32(wlandev,
+ 				DIDmib_dot11smt_dot11PrivacyTable_dot11WEPDefaultKeyID,
 
- { .src =3D SOME_PLL, .div =3D 4 }
-
-
->=20
-> I can still extend rcg2_ops to do what you want, but it won't be based
-> on what rcg_ops is doing.
-
-Why isn't rcg_ops doing it? The idea is to copy whatever is happening
-with this snippet in the _freq_tbl_determine_rate() in rcg.c to rcg2.c
-
-	clk_flags =3D clk_hw_get_flags(hw);
-	p =3D clk_hw_get_parent_by_index(hw, index);
-	if (clk_flags & CLK_SET_RATE_PARENT) {
-		rate =3D rate * f->pre_div;
-
-We have checked for CLK_SET_RATE_PARENT from the beginning. Maybe it was
-always broken! If the frequency table pointer can return us the pre div
-and source then we can do math to ask the parent PLL for something.
-
->=20
-> I can spin a rcg2_ops variant to do what you want, with a custom
-> determine_rate, but it doesn't seem like I'll really be saving any
-> lines of code.  Whatever I eliminate by minimizing the gfx3d
-> freq_table I will surely be putting into clk-rcg2.c
->=20
-> Or, I can just drop this idea and keep the freq_tbl as it is.  Seems
-> like just a one off scenario.
-
-Please make rcg2 clk ops "do the right thing" when the flag
-CLK_SET_RATE_PARENT is set and the frequency table is just a
-source/divider sort of thing. That way we don't have to have different
-clk ops or even put anything in the frequency table besides the source
-PLL we want to use and the predivider we want to configure.
 
