@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A898CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C15CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E196A222C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBF021D81
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211181;
-	bh=8cOjqoAtuGZkMYFN0n9rQSvoQnvLaA5rtCuHb8/avY0=;
+	s=default; t=1572211184;
+	bh=pdGeY4BdZh9wxfXX9Yk77xJOQObU4tbUQX9BnmzykKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QNWAwi5H6yu0V7iN9YaTIDJZ4X5zLIxD7l5DG3dvLQ3ryTLJgouXIqkrMVTnmiokn
-	 w0dYfFD48DORb9iVEFUDy8XEpPLPrwQgITyFl4QlC93eDiit89uSHyRe9ZV77as0Cb
-	 aEShyADYd3J03qIPWefAT4ZzwHaTIfFmFRGKxbzs=
+	b=ImDqMWnoG7/u/GwM02scs+8WF9nWslDgp6RmVerAYVLKhTE2umJsl+YA07Evpnud3
+	 YvXt39cetr5OLKTh8Te/FreN98gJCIcZ2CwyY80ToqXRZt2q+SCcB3tUagx/1WcE40
+	 x122OPpsmiASapM1dHyEB83r7ghTokqLCXGZBy1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731516AbfJ0VTj (ORCPT
+        id S1731525AbfJ0VTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39908 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731495AbfJ0VTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:19:33 -0400
+        id S1731509AbfJ0VTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:19:39 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D867220717;
-        Sun, 27 Oct 2019 21:19:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68724214E0;
+        Sun, 27 Oct 2019 21:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211172;
-        bh=8cOjqoAtuGZkMYFN0n9rQSvoQnvLaA5rtCuHb8/avY0=;
+        s=default; t=1572211177;
+        bh=pdGeY4BdZh9wxfXX9Yk77xJOQObU4tbUQX9BnmzykKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEvg70QNDNLOjUJRMQqS6W2/eBASYd37KV5LsySegdGsJky5j635u5Fpepi28qEK0
-         LvvNAJugj6Fn5ICeRGgu2HXmV8gBG8VqAliYcgqW/4Xyj7O1Nx+0uQUYpUeNXUV2F6
-         tNxMjsVeGdpmCVmZsTQ+FYaGcQqZOV2r5uKzXTNo=
+        b=aDdzFDU/paDv3GeGwTV311Vx6p3AVTmZn9PBW9YY+0jNZvAsWnaffNwRu//TD1v+0
+         nEA2eWa4/izpLFEHhXdFr/3KVCzlpCljWybLsk2qdwy8K70FRN8+9ZEi2ppLXekzuO
+         w6jKFGULCdlNVIUDCKUm3ua8j/y6gr2vtInKx2kg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jann Horn <jannh@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 040/197] net: stmmac: Correctly take timestamp for PTPv2
-Date:   Sun, 27 Oct 2019 21:59:18 +0100
-Message-Id: <20191027203353.879646671@linuxfoundation.org>
+Subject: [PATCH 5.3 059/197] Make filldir[64]() verify the directory entry filename is valid
+Date:   Sun, 27 Oct 2019 21:59:37 +0100
+Message-Id: <20191027203354.857292722@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -60,33 +62,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 14f347334bf232074616e29e29103dd0c7c54dec ]
+[ Upstream commit 8a23eb804ca4f2be909e372cf5a9e7b30ae476cd ]
 
-The case for PTPV2_EVENT requires event packets to be captured so add
-this setting to the list of enabled captures.
+This has been discussed several times, and now filesystem people are
+talking about doing it individually at the filesystem layer, so head
+that off at the pass and just do it in getdents{64}().
 
-Fixes: 891434b18ec0 ("stmmac: add IEEE PTPv1 and PTPv2 support.")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This is partially based on a patch by Jann Horn, but checks for NUL
+bytes as well, and somewhat simplified.
+
+There's also commentary about how it might be better if invalid names
+due to filesystem corruption don't cause an immediate failure, but only
+an error at the end of the readdir(), so that people can still see the
+filenames that are ok.
+
+There's also been discussion about just how much POSIX strictly speaking
+requires this since it's about filesystem corruption.  It's really more
+"protect user space from bad behavior" as pointed out by Jann.  But
+since Eric Biederman looked up the POSIX wording, here it is for context:
+
+ "From readdir:
+
+   The readdir() function shall return a pointer to a structure
+   representing the directory entry at the current position in the
+   directory stream specified by the argument dirp, and position the
+   directory stream at the next entry. It shall return a null pointer
+   upon reaching the end of the directory stream. The structure dirent
+   defined in the <dirent.h> header describes a directory entry.
+
+  From definitions:
+
+   3.129 Directory Entry (or Link)
+
+   An object that associates a filename with a file. Several directory
+   entries can associate names with the same file.
+
+  ...
+
+   3.169 Filename
+
+   A name consisting of 1 to {NAME_MAX} bytes used to name a file. The
+   characters composing the name may be selected from the set of all
+   character values excluding the slash character and the null byte. The
+   filenames dot and dot-dot have special meaning. A filename is
+   sometimes referred to as a 'pathname component'."
+
+Note that I didn't bother adding the checks to any legacy interfaces
+that nobody uses.
+
+Also note that if this ends up being noticeable as a performance
+regression, we can fix that to do a much more optimized model that
+checks for both NUL and '/' at the same time one word at a time.
+
+We haven't really tended to optimize 'memchr()', and it only checks for
+one pattern at a time anyway, and we really _should_ check for NUL too
+(but see the comment about "soft errors" in the code about why it
+currently only checks for '/')
+
+See the CONFIG_DCACHE_WORD_ACCESS case of hash_name() for how the name
+lookup code looks for pathname terminating characters in parallel.
+
+Link: https://lore.kernel.org/lkml/20190118161440.220134-2-jannh@google.com/
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Jann Horn <jannh@google.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/readdir.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 5c4408bdc843a..ade85ca9d8c7f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -626,6 +626,7 @@ static int stmmac_hwtstamp_set(struct net_device *dev, struct ifreq *ifr)
- 			config.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
- 			ptp_v2 = PTP_TCR_TSVER2ENA;
- 			snap_type_sel = PTP_TCR_SNAPTYPSEL_1;
-+			ts_event_en = PTP_TCR_TSEVNTENA;
- 			ptp_over_ipv4_udp = PTP_TCR_TSIPV4ENA;
- 			ptp_over_ipv6_udp = PTP_TCR_TSIPV6ENA;
- 			ptp_over_ethernet = PTP_TCR_TSIPENA;
+diff --git a/fs/readdir.c b/fs/readdir.c
+index 579c8ea894ae3..19bea591c3f1d 100644
+--- a/fs/readdir.c
++++ b/fs/readdir.c
+@@ -118,6 +118,40 @@ out:
+ }
+ EXPORT_SYMBOL(iterate_dir);
+ 
++/*
++ * POSIX says that a dirent name cannot contain NULL or a '/'.
++ *
++ * It's not 100% clear what we should really do in this case.
++ * The filesystem is clearly corrupted, but returning a hard
++ * error means that you now don't see any of the other names
++ * either, so that isn't a perfect alternative.
++ *
++ * And if you return an error, what error do you use? Several
++ * filesystems seem to have decided on EUCLEAN being the error
++ * code for EFSCORRUPTED, and that may be the error to use. Or
++ * just EIO, which is perhaps more obvious to users.
++ *
++ * In order to see the other file names in the directory, the
++ * caller might want to make this a "soft" error: skip the
++ * entry, and return the error at the end instead.
++ *
++ * Note that this should likely do a "memchr(name, 0, len)"
++ * check too, since that would be filesystem corruption as
++ * well. However, that case can't actually confuse user space,
++ * which has to do a strlen() on the name anyway to find the
++ * filename length, and the above "soft error" worry means
++ * that it's probably better left alone until we have that
++ * issue clarified.
++ */
++static int verify_dirent_name(const char *name, int len)
++{
++	if (WARN_ON_ONCE(!len))
++		return -EIO;
++	if (WARN_ON_ONCE(memchr(name, '/', len)))
++		return -EIO;
++	return 0;
++}
++
+ /*
+  * Traditional linux readdir() handling..
+  *
+@@ -227,6 +261,9 @@ static int filldir(struct dir_context *ctx, const char *name, int namlen,
+ 	int reclen = ALIGN(offsetof(struct linux_dirent, d_name) + namlen + 2,
+ 		sizeof(long));
+ 
++	buf->error = verify_dirent_name(name, namlen);
++	if (unlikely(buf->error))
++		return buf->error;
+ 	buf->error = -EINVAL;	/* only used if we fail.. */
+ 	if (reclen > buf->count)
+ 		return -EINVAL;
+@@ -316,6 +353,9 @@ static int filldir64(struct dir_context *ctx, const char *name, int namlen,
+ 	int reclen = ALIGN(offsetof(struct linux_dirent64, d_name) + namlen + 1,
+ 		sizeof(u64));
+ 
++	buf->error = verify_dirent_name(name, namlen);
++	if (unlikely(buf->error))
++		return buf->error;
+ 	buf->error = -EINVAL;	/* only used if we fail.. */
+ 	if (reclen > buf->count)
+ 		return -EINVAL;
 -- 
 2.20.1
 
