@@ -2,53 +2,52 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9293CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B2CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DD2214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5977D21783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210298;
-	bh=JB3tIwZcKyZUS5HkCMBOxMN0T3oELjuwa6+ZCfmripg=;
+	s=default; t=1572210304;
+	bh=IsBStTCkeWmqdWA0ZgIgVTI6Qu3UtzZL3iN49SUkrIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QXrpLnYCMkEfdmhsqWzF/GexA8pwZV6iFPviJhHTTkFZmXyGZwM1DLfXxxcgK9eEI
-	 EFSwG1lInadWSHZtO3zkDQfiFKyo2UUTaxfZpeKIuMK6BVuqxKDC3XGnRSkDMyd00X
-	 UGG4WpHpFxVorOmALJ+F33Z01ntUDeZqazWj3VGg=
+	b=sScrdP2zmvQiW3SH9C11cBcKXNci4J2tLCUhqZemi6KfaSiHYq4Bn5HcaGLoNQcfe
+	 FHZWzoVRTxw1Kye8DxDZT/i7ClHU/RnPCU0nFlUA/8byEwbLAbqq0ikcupPCYBehx7
+	 clQn/HnBw8fVLpVJtEr+I/D9KTkoyIvoWiOHLWnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfJ0VE5 (ORCPT
+        id S1728763AbfJ0VFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:04:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50608 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728723AbfJ0VEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:04:53 -0400
+        id S1728750AbfJ0VFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:05:01 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BD85214E0;
-        Sun, 27 Oct 2019 21:04:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 497E5214AF;
+        Sun, 27 Oct 2019 21:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210292;
-        bh=JB3tIwZcKyZUS5HkCMBOxMN0T3oELjuwa6+ZCfmripg=;
+        s=default; t=1572210300;
+        bh=IsBStTCkeWmqdWA0ZgIgVTI6Qu3UtzZL3iN49SUkrIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d4OfHfwpgin99rwt3Gg1WtS5cuWaFGiE+sVeBqXthSRR2UO8f9BiqIVlefzaqfufy
-         F0MuvpNKgupphtd6K/IqoKTCXayhKXJ9JFPsPwY9ENINmkVyuALNX8dgqUnCDylN39
-         eIk4ED4c8F3VyR5Y9rv3RQrpTsaVTRt++mkZQN4w=
+        b=jUr9QWqOwcSoS7doCv7aixMMTIs4J6nwD+GtneZcNMJCP0iaicEf7Akkkrjd5SSG5
+         1o7gVAeH+1WIAaFatjc6N1i7VE8Rvt64DN9m9BS2HF9T/hOJ+1cJRAlxGzjLaZfCdG
+         rZDa2Or7qts1awQq6XIRFmZ+atqbKU2wq9cYMlB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meng Zhuo <mengzhuo1203@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 15/49] MIPS: elf_hwcap: Export userspace ASEs
-Date:   Sun, 27 Oct 2019 22:00:53 +0100
-Message-Id: <20191027203129.665673387@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 18/49] net: bcmgenet: Set phydev->dev_flags only for internal PHYs
+Date:   Sun, 27 Oct 2019 22:00:56 +0100
+Message-Id: <20191027203133.052186421@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -61,95 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 38dffe1e4dde1d3174fdce09d67370412843ebb5 ]
+[ Upstream commit 92696286f3bb37ba50e4bd8d1beb24afb759a799 ]
 
-A Golang developer reported MIPS hwcap isn't reflecting instructions
-that the processor actually supported so programs can't apply optimized
-code at runtime.
+phydev->dev_flags is entirely dependent on the PHY device driver which
+is going to be used, setting the internal GENET PHY revision in those
+bits only makes sense when drivers/net/phy/bcm7xxx.c is the PHY driver
+being used.
 
-Thus we export the ASEs that can be used in userspace programs.
-
-Reported-by: Meng Zhuo <mengzhuo1203@gmail.com>
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: <stable@vger.kernel.org> # 4.14+
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 487320c54143 ("net: bcmgenet: communicate integrated PHY revision to PHY driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/mips/include/uapi/asm/hwcap.h | 11 ++++++++++
- arch/mips/kernel/cpu-probe.c       | 33 ++++++++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/uapi/asm/hwcap.h b/arch/mips/include/uapi/asm/hwcap.h
-index c7484a7ca686d..2b6f8d569d00f 100644
---- a/arch/mips/include/uapi/asm/hwcap.h
-+++ b/arch/mips/include/uapi/asm/hwcap.h
-@@ -4,5 +4,16 @@
- /* HWCAP flags */
- #define HWCAP_MIPS_R6		(1 << 0)
- #define HWCAP_MIPS_MSA		(1 << 1)
-+#define HWCAP_MIPS_MIPS16	(1 << 3)
-+#define HWCAP_MIPS_MDMX     (1 << 4)
-+#define HWCAP_MIPS_MIPS3D   (1 << 5)
-+#define HWCAP_MIPS_SMARTMIPS (1 << 6)
-+#define HWCAP_MIPS_DSP      (1 << 7)
-+#define HWCAP_MIPS_DSP2     (1 << 8)
-+#define HWCAP_MIPS_DSP3     (1 << 9)
-+#define HWCAP_MIPS_MIPS16E2 (1 << 10)
-+#define HWCAP_LOONGSON_MMI  (1 << 11)
-+#define HWCAP_LOONGSON_EXT  (1 << 12)
-+#define HWCAP_LOONGSON_EXT2 (1 << 13)
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -346,11 +346,12 @@ int bcmgenet_mii_probe(struct net_device
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	struct device_node *dn = priv->pdev->dev.of_node;
+ 	struct phy_device *phydev;
+-	u32 phy_flags;
++	u32 phy_flags = 0;
+ 	int ret;
  
- #endif /* _UAPI_ASM_HWCAP_H */
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index 0a7b3e513650f..1a1ab0a78ac05 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -2055,6 +2055,39 @@ void cpu_probe(void)
- 		elf_hwcap |= HWCAP_MIPS_MSA;
- 	}
+ 	/* Communicate the integrated PHY revision */
+-	phy_flags = priv->gphy_rev;
++	if (priv->internal_phy)
++		phy_flags = priv->gphy_rev;
  
-+	if (cpu_has_mips16)
-+		elf_hwcap |= HWCAP_MIPS_MIPS16;
-+
-+	if (cpu_has_mdmx)
-+		elf_hwcap |= HWCAP_MIPS_MDMX;
-+
-+	if (cpu_has_mips3d)
-+		elf_hwcap |= HWCAP_MIPS_MIPS3D;
-+
-+	if (cpu_has_smartmips)
-+		elf_hwcap |= HWCAP_MIPS_SMARTMIPS;
-+
-+	if (cpu_has_dsp)
-+		elf_hwcap |= HWCAP_MIPS_DSP;
-+
-+	if (cpu_has_dsp2)
-+		elf_hwcap |= HWCAP_MIPS_DSP2;
-+
-+	if (cpu_has_dsp3)
-+		elf_hwcap |= HWCAP_MIPS_DSP3;
-+
-+	if (cpu_has_loongson_mmi)
-+		elf_hwcap |= HWCAP_LOONGSON_MMI;
-+
-+	if (cpu_has_loongson_mmi)
-+		elf_hwcap |= HWCAP_LOONGSON_CAM;
-+
-+	if (cpu_has_loongson_ext)
-+		elf_hwcap |= HWCAP_LOONGSON_EXT;
-+
-+	if (cpu_has_loongson_ext)
-+		elf_hwcap |= HWCAP_LOONGSON_EXT2;
-+
- 	if (cpu_has_vz)
- 		cpu_probe_vz(c);
- 
--- 
-2.20.1
-
+ 	/* Initialize link state variables that bcmgenet_mii_setup() uses */
+ 	priv->old_link = -1;
 
 
