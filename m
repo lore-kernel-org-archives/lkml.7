@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F5ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FE3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35031205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9938A205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211896;
-	bh=VjuvPT47fQEVdtE0EJLHgkIrVxCYhOshqwCqj7yCM9I=;
+	s=default; t=1572211900;
+	bh=sv62GLlzZY0YW5GNEa6kawtjMTNjMoGLeHqaa5Chwck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=emrvadnPTHMeJ6cMvkFKEXw0w47tGaf5l4c940n6Xw9RYnb9GrDnpoiA8+q+WlrXO
-	 volUZ66XNnWE1eFOP33CC3DUGeSFTj4z8PTzh5EQLjpskaivqcLHAYK1ttPv7nrgEH
-	 i+Bqo5AjyGclIn/w2BDuU5dKtX84IuG4IJrOfp/Q=
+	b=xDDWTwLY30W5Mdwj+sAsfPpoUCF/ZVNL76D0jnLtW58r6dLgMFlTC37c61tQhLvRw
+	 qaDMZMxmmF0Lrju29iVifJN+Dqz/EcygU2wRkIpJHtLFvNpq57pJDwf3QEOAsteLhN
+	 UPvNzF/zEIQKZUQDnxBOld8ohQ9qlDupOGkCI3P8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbfJ0VQu (ORCPT
+        id S1731529AbfJ0Vbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:16:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36466 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730896AbfJ0VQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:16:47 -0400
+        id S1730878AbfJ0VQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:16:41 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B040D20717;
-        Sun, 27 Oct 2019 21:16:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51B4421848;
+        Sun, 27 Oct 2019 21:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211006;
-        bh=VjuvPT47fQEVdtE0EJLHgkIrVxCYhOshqwCqj7yCM9I=;
+        s=default; t=1572211000;
+        bh=sv62GLlzZY0YW5GNEa6kawtjMTNjMoGLeHqaa5Chwck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O3M3IvsHPbl2tvIaKCthR23he58gst8yktyju2sWq+D+1WZdxfFHY8LTgvpRf8BnN
-         aEppt+21QWuBAyeikAcAfvBLVU9uz2ccLvoyNco5hxBcYKEhh6UJzkzJEaUVLCLfM1
-         08yqUaMXcUIrzndQZfFbbMJ7WOR3Z89sxpU+MR+I=
+        b=YOBlcMn8oloH0h/r6EOo7ZfDzNcaNmgZ+VAb7rhBK/PWUjM/Df6GjgiJhUNlrdEmp
+         lpaWmngRBgVPr6IalfALrRUFSGsDvBoLR4Q6y2W1Y5gpKQ6Mx42jQkEz3khbsGfVYm
+         ZDlpqKf5TRdi3NMRrmOKg8XXlE6xfdPnPwzeuHFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        Prateek Sood <prsood@codeaurora.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 77/93] tracing: Fix race in perf_trace_buf initialization
-Date:   Sun, 27 Oct 2019 22:01:29 +0100
-Message-Id: <20191027203311.513159687@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 92/93] blk-rq-qos: fix first node deletion of rq_qos_del()
+Date:   Sun, 27 Oct 2019 22:01:44 +0100
+Message-Id: <20191027203318.353148127@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,115 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prateek Sood <prsood@codeaurora.org>
+From: Tejun Heo <tj@kernel.org>
 
-commit 6b1340cc00edeadd52ebd8a45171f38c8de2a387 upstream.
+commit 307f4065b9d7c1e887e8bdfb2487e4638559fea1 upstream.
 
-A race condition exists while initialiazing perf_trace_buf from
-perf_trace_init() and perf_kprobe_init().
+rq_qos_del() incorrectly assigns the node being deleted to the head if
+it was the first on the list in the !prev path.  Fix it by iterating
+with ** instead.
 
-      CPU0                                        CPU1
-perf_trace_init()
-  mutex_lock(&event_mutex)
-    perf_trace_event_init()
-      perf_trace_event_reg()
-        total_ref_count == 0
-	buf = alloc_percpu()
-        perf_trace_buf[i] = buf
-        tp_event->class->reg() //fails       perf_kprobe_init()
-	goto fail                              perf_trace_event_init()
-                                                 perf_trace_event_reg()
-        fail:
-	  total_ref_count == 0
-
-                                                   total_ref_count == 0
-                                                   buf = alloc_percpu()
-                                                   perf_trace_buf[i] = buf
-                                                   tp_event->class->reg()
-                                                   total_ref_count++
-
-          free_percpu(perf_trace_buf[i])
-          perf_trace_buf[i] = NULL
-
-Any subsequent call to perf_trace_event_reg() will observe total_ref_count > 0,
-causing the perf_trace_buf to be always NULL. This can result in perf_trace_buf
-getting accessed from perf_trace_buf_alloc() without being initialized. Acquiring
-event_mutex in perf_kprobe_init() before calling perf_trace_event_init() should
-fix this race.
-
-The race caused the following bug:
-
- Unable to handle kernel paging request at virtual address 0000003106f2003c
- Mem abort info:
-   ESR = 0x96000045
-   Exception class = DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000045
-   CM = 0, WnR = 1
- user pgtable: 4k pages, 39-bit VAs, pgdp = ffffffc034b9b000
- [0000003106f2003c] pgd=0000000000000000, pud=0000000000000000
- Internal error: Oops: 96000045 [#1] PREEMPT SMP
- Process syz-executor (pid: 18393, stack limit = 0xffffffc093190000)
- pstate: 80400005 (Nzcv daif +PAN -UAO)
- pc : __memset+0x20/0x1ac
- lr : memset+0x3c/0x50
- sp : ffffffc09319fc50
-
-  __memset+0x20/0x1ac
-  perf_trace_buf_alloc+0x140/0x1a0
-  perf_trace_sys_enter+0x158/0x310
-  syscall_trace_enter+0x348/0x7c0
-  el0_svc_common+0x11c/0x368
-  el0_svc_handler+0x12c/0x198
-  el0_svc+0x8/0xc
-
-Ramdumps showed the following:
-  total_ref_count = 3
-  perf_trace_buf = (
-      0x0 -> NULL,
-      0x0 -> NULL,
-      0x0 -> NULL,
-      0x0 -> NULL)
-
-Link: http://lkml.kernel.org/r/1571120245-4186-1-git-send-email-prsood@codeaurora.org
-
-Cc: stable@vger.kernel.org
-Fixes: e12f03d7031a9 ("perf/core: Implement the 'perf_kprobe' PMU")
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Fixes: a79050434b45 ("blk-rq-qos: refactor out common elements of blk-wbt")
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_event_perf.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ block/blk-rq-qos.h |   13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -272,9 +272,11 @@ int perf_kprobe_init(struct perf_event *
- 		goto out;
- 	}
+--- a/block/blk-rq-qos.h
++++ b/block/blk-rq-qos.h
+@@ -80,16 +80,13 @@ static inline void rq_qos_add(struct req
  
-+	mutex_lock(&event_mutex);
- 	ret = perf_trace_event_init(tp_event, p_event);
- 	if (ret)
- 		destroy_local_trace_kprobe(tp_event);
-+	mutex_unlock(&event_mutex);
- out:
- 	kfree(func);
- 	return ret;
-@@ -282,8 +284,10 @@ out:
- 
- void perf_kprobe_destroy(struct perf_event *p_event)
+ static inline void rq_qos_del(struct request_queue *q, struct rq_qos *rqos)
  {
-+	mutex_lock(&event_mutex);
- 	perf_trace_event_close(p_event);
- 	perf_trace_event_unreg(p_event);
-+	mutex_unlock(&event_mutex);
- 
- 	destroy_local_trace_kprobe(p_event->tp_event);
+-	struct rq_qos *cur, *prev = NULL;
+-	for (cur = q->rq_qos; cur; cur = cur->next) {
+-		if (cur == rqos) {
+-			if (prev)
+-				prev->next = rqos->next;
+-			else
+-				q->rq_qos = cur;
++	struct rq_qos **cur;
++
++	for (cur = &q->rq_qos; *cur; cur = &(*cur)->next) {
++		if (*cur == rqos) {
++			*cur = rqos->next;
+ 			break;
+ 		}
+-		prev = cur;
+ 	}
  }
+ 
 
 
