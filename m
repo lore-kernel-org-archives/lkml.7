@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DD3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0F9CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3C32064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08C12064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210780;
-	bh=NJb3PdRwSfT1QSxxEObHPqMhGSClyyumJNuAzDmURQo=;
+	s=default; t=1572210783;
+	bh=WxL+isxSLqVyP/vPvSWCFfVBslLsA4hnCVMimY/E5uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fchNt91YFKCnQeNdDw9BDt/qKTciOPEaM5W3UihBcaYG1OfHt5O5AuTXJRDhcZ6Vg
-	 CJgiJSYS9Ft1H10vQAzkesmNb/eMIe4vUMdytxeGBVjkTI1ojGpfYNBJgWiVgDhWkH
-	 hTcDVuFdb+Tl/TAYRJuG02epgGKTJBVUEedD7cX0=
+	b=YJw77wmzTtHT6UOSxIFS0zEhGiYJ5duEpd+3C9ye9nvgc6SPykU5D+MdC8mNBIxua
+	 E469k9e2fP2cYUDU3A7c5PRy+hKep5YiCrmftcv4jt7IKVJLf3a7jS+b9onLjkEVCj
+	 pewyOcTXQR1ZQaVV2Z6h1KSziKHLGh6oNCnoHEWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbfJ0VM6 (ORCPT
+        id S1730167AbfJ0VNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:12:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59900 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:13:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730136AbfJ0VM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:12:56 -0400
+        id S1730147AbfJ0VM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:12:58 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC5022064A;
-        Sun, 27 Oct 2019 21:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75D49205C9;
+        Sun, 27 Oct 2019 21:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210775;
-        bh=NJb3PdRwSfT1QSxxEObHPqMhGSClyyumJNuAzDmURQo=;
+        s=default; t=1572210778;
+        bh=WxL+isxSLqVyP/vPvSWCFfVBslLsA4hnCVMimY/E5uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O0ee604iqGSAuQF5Ehw9BPiVoRaTu8y7D/DxqFSDNfDa6KzCbkl2Xqfsfh2/82Kpp
-         d5X9NdIqw7I4zlZ5yrQbXZ63u2asNR6IKtMdMLcqlT0PnOKQrZFTQ7b+jDGvI0SBhH
-         SuYvnHYYUZMjTc9soHk5jf9u/FBw3r0+Ra4Pmlc4=
+        b=elcjCHWqu3/GDcP+5WvPGX3zRIxW3Ke+TC/8HQwXjnnK7rnDHyHuilyTGYqj2h7qF
+         qg54zgNw7B1wqv2i1fKyM/j0/gpBN8MTycfyAqmdqRx2504h2vQQdH9Gy1LAw9KcrS
+         w42RSEellvM9FEMFiV9lbPXQa1HAQKy0GxzJ+CqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Laura Garcia Liebana <nevola@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 13/93] mac80211: fix txq null pointer dereference
-Date:   Sun, 27 Oct 2019 22:00:25 +0100
-Message-Id: <20191027203254.654766669@linuxfoundation.org>
+Subject: [PATCH 4.19 14/93] netfilter: nft_connlimit: disable bh on garbage collection
+Date:   Sun, 27 Oct 2019 22:00:26 +0100
+Message-Id: <20191027203254.801058241@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -61,72 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 8ed31a264065ae92058ce54aa3cc8da8d81dc6d7 ]
+[ Upstream commit 34a4c95abd25ab41fb390b985a08a651b1fa0b0f ]
 
-If the interface type is P2P_DEVICE or NAN, read the file of
-'/sys/kernel/debug/ieee80211/phyx/netdev:wlanx/aqm' will get a
-NULL pointer dereference. As for those interface type, the
-pointer sdata->vif.txq is NULL.
+BH must be disabled when invoking nf_conncount_gc_list() to perform
+garbage collection, otherwise deadlock might happen.
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000011
-CPU: 1 PID: 30936 Comm: cat Not tainted 4.14.104 #1
-task: ffffffc0337e4880 task.stack: ffffff800cd20000
-PC is at ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
-LR is at ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
-[...]
-Process cat (pid: 30936, stack limit = 0xffffff800cd20000)
-[...]
-[<ffffff8000b7cd00>] ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
-[<ffffff8000b7c414>] ieee80211_if_read+0x60/0xbc [mac80211]
-[<ffffff8000b7ccc4>] ieee80211_if_read_aqm+0x28/0x30 [mac80211]
-[<ffffff80082eff94>] full_proxy_read+0x2c/0x48
-[<ffffff80081eef00>] __vfs_read+0x2c/0xd4
-[<ffffff80081ef084>] vfs_read+0x8c/0x108
-[<ffffff80081ef494>] SyS_read+0x40/0x7c
+  nf_conncount_add+0x1f/0x50 [nf_conncount]
+  nft_connlimit_eval+0x4c/0xe0 [nft_connlimit]
+  nft_dynset_eval+0xb5/0x100 [nf_tables]
+  nft_do_chain+0xea/0x420 [nf_tables]
+  ? sch_direct_xmit+0x111/0x360
+  ? noqueue_init+0x10/0x10
+  ? __qdisc_run+0x84/0x510
+  ? tcp_packet+0x655/0x1610 [nf_conntrack]
+  ? ip_finish_output2+0x1a7/0x430
+  ? tcp_error+0x130/0x150 [nf_conntrack]
+  ? nf_conntrack_in+0x1fc/0x4c0 [nf_conntrack]
+  nft_do_chain_ipv4+0x66/0x80 [nf_tables]
+  nf_hook_slow+0x44/0xc0
+  ip_rcv+0xb5/0xd0
+  ? ip_rcv_finish_core.isra.19+0x360/0x360
+  __netif_receive_skb_one_core+0x52/0x70
+  netif_receive_skb_internal+0x34/0xe0
+  napi_gro_receive+0xba/0xe0
+  e1000_clean_rx_irq+0x1e9/0x420 [e1000e]
+  e1000e_poll+0xbe/0x290 [e1000e]
+  net_rx_action+0x149/0x3b0
+  __do_softirq+0xde/0x2d8
+  irq_exit+0xba/0xc0
+  do_IRQ+0x85/0xd0
+  common_interrupt+0xf/0xf
+  </IRQ>
+  RIP: 0010:nf_conncount_gc_list+0x3b/0x130 [nf_conncount]
 
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Link: https://lore.kernel.org/r/1569549796-8223-1-git-send-email-miaoqing@codeaurora.org
-[trim useless data from commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 2f971a8f4255 ("netfilter: nf_conncount: move all list iterations under spinlock")
+Reported-by: Laura Garcia Liebana <nevola@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/debugfs_netdev.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ net/netfilter/nft_connlimit.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/net/mac80211/debugfs_netdev.c b/net/mac80211/debugfs_netdev.c
-index d37d4acafebf5..316250ae90712 100644
---- a/net/mac80211/debugfs_netdev.c
-+++ b/net/mac80211/debugfs_netdev.c
-@@ -490,9 +490,14 @@ static ssize_t ieee80211_if_fmt_aqm(
- 	const struct ieee80211_sub_if_data *sdata, char *buf, int buflen)
+diff --git a/net/netfilter/nft_connlimit.c b/net/netfilter/nft_connlimit.c
+index af1497ab94642..69d6173f91e2b 100644
+--- a/net/netfilter/nft_connlimit.c
++++ b/net/netfilter/nft_connlimit.c
+@@ -218,8 +218,13 @@ static void nft_connlimit_destroy_clone(const struct nft_ctx *ctx,
+ static bool nft_connlimit_gc(struct net *net, const struct nft_expr *expr)
  {
- 	struct ieee80211_local *local = sdata->local;
--	struct txq_info *txqi = to_txq_info(sdata->vif.txq);
-+	struct txq_info *txqi;
- 	int len;
+ 	struct nft_connlimit *priv = nft_expr_priv(expr);
++	bool ret;
  
-+	if (!sdata->vif.txq)
-+		return 0;
+-	return nf_conncount_gc_list(net, &priv->list);
++	local_bh_disable();
++	ret = nf_conncount_gc_list(net, &priv->list);
++	local_bh_enable();
 +
-+	txqi = to_txq_info(sdata->vif.txq);
-+
- 	spin_lock_bh(&local->fq.lock);
- 	rcu_read_lock();
- 
-@@ -659,7 +664,9 @@ static void add_common_files(struct ieee80211_sub_if_data *sdata)
- 	DEBUGFS_ADD(rc_rateidx_vht_mcs_mask_5ghz);
- 	DEBUGFS_ADD(hw_queues);
- 
--	if (sdata->local->ops->wake_tx_queue)
-+	if (sdata->local->ops->wake_tx_queue &&
-+	    sdata->vif.type != NL80211_IFTYPE_P2P_DEVICE &&
-+	    sdata->vif.type != NL80211_IFTYPE_NAN)
- 		DEBUGFS_ADD(aqm);
++	return ret;
  }
  
+ static struct nft_expr_type nft_connlimit_type;
 -- 
 2.20.1
 
