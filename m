@@ -2,51 +2,61 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C96BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10161CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23777222C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C57222BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211630;
-	bh=Xaq/uGk6x+nPCvX23EmlOAsKEGWsLjTJVAEPN5co3bw=;
+	s=default; t=1572211632;
+	bh=mXV+aCQIaF/2EIhmrQagNBsz8p/DkxAnpB4MZwnJxkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HRYA2Kh++WkFdSTulk9AZx9aD+3QogF2yalEDRDSeNymBEMRcH4jLxJkZt7OkMJRF
-	 2EhUdyWRavFPuseWKY5TYmPlD2FsM+S5kOdxA6Swj12wpD89jzeiWhnxSfnpUxMLv4
-	 kPJJyyn24pnvzzCASqZ3CntEJqBS+JNPRcKQWLuc=
+	b=aHqyMS1gCZH2VGu0GxWHlPY1WbsG/T9JOEXKt5VxNazRRVOosy6hBgzdasOSqt0q7
+	 Ke/QC62SlT7EIa0pL9xs5PeqUs4NFLCwVbmg2XzIMd4i+y9w3LZKKsXVO75T/Dfl4R
+	 18Skw0mSmKUTO0Bc9KY+jE6keqmqimO12c3qwsqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732752AbfJ0VZa (ORCPT
+        id S1732739AbfJ0VZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:25:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47348 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:25:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732731AbfJ0VZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:25:26 -0400
+        id S1732722AbfJ0VZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:25:24 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B299621783;
-        Sun, 27 Oct 2019 21:25:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E91721726;
+        Sun, 27 Oct 2019 21:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211526;
-        bh=Xaq/uGk6x+nPCvX23EmlOAsKEGWsLjTJVAEPN5co3bw=;
+        s=default; t=1572211523;
+        bh=mXV+aCQIaF/2EIhmrQagNBsz8p/DkxAnpB4MZwnJxkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AWxE35C+JazvA9uap6H6YAocdZmoieKcS+r0T52mbfFPytSrn40uwCD/T7vDP1aVl
-         yGkAix4O3jpckic7PV7jcvmkmghMJ4vXTR2i5SPXEm+IqsB0ure01HJHTIyQRMM84o
-         PbXuYjxtc+I9upA87OvWQdWRmnc84tbqWCPZwwFc=
+        b=YVU1Dx67P+Es0Nbxw1xDaAiNTBW/eO4gPJn6DWdLhZQKxa1BZj05DeKkWiVp3bXVZ
+         yymAs9X6Tw5RUpmHJ24/T92oiaPo5vzeb8wpoNS16vZK9qQUJyrPXT63/X8JrKK1rh
+         6QuxwVBKWJ7LMmlbHG2eFow4ow27CzXBUiKIsYNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 138/197] io_uring: Fix broken links with offloading
-Date:   Sun, 27 Oct 2019 22:00:56 +0100
-Message-Id: <20191027203359.161001599@linuxfoundation.org>
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        Pankaj gupta <pagupta@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 137/197] fs/proc/page.c: dont access uninitialized memmaps in fs/proc/page.c
+Date:   Sun, 27 Oct 2019 22:00:55 +0100
+Message-Id: <20191027203359.107241702@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,167 +69,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit fb5ccc98782f654778cb8d96ba8a998304f9a51f ]
+commit aad5f69bc161af489dbb5934868bd347282f0764 upstream.
 
-io_sq_thread() processes sqes by 8 without considering links. As a
-result, links will be randomely subdivided.
+There are three places where we access uninitialized memmaps, namely:
+- /proc/kpagecount
+- /proc/kpageflags
+- /proc/kpagecgroup
 
-The easiest way to fix it is to call io_get_sqring() inside
-io_submit_sqes() as do io_ring_submit().
+We have initialized memmaps either when the section is online or when the
+page was initialized to the ZONE_DEVICE.  Uninitialized memmaps contain
+garbage and in the worst case trigger kernel BUGs, especially with
+CONFIG_PAGE_POISONING.
 
-Downsides:
-1. This removes optimisation of not grabbing mm_struct for fixed files
-2. It submitting all sqes in one go, without finer-grained sheduling
-with cq processing.
+For example, not onlining a DIMM during boot and calling /proc/kpagecount
+with CONFIG_PAGE_POISONING:
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  :/# cat /proc/kpagecount > tmp.test
+  BUG: unable to handle page fault for address: fffffffffffffffe
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 114616067 P4D 114616067 PUD 114618067 PMD 0
+  Oops: 0000 [#1] SMP NOPTI
+  CPU: 0 PID: 469 Comm: cat Not tainted 5.4.0-rc1-next-20191004+ #11
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
+  RIP: 0010:kpagecount_read+0xce/0x1e0
+  Code: e8 09 83 e0 3f 48 0f a3 02 73 2d 4c 89 e7 48 c1 e7 06 48 03 3d ab 51 01 01 74 1d 48 8b 57 08 480
+  RSP: 0018:ffffa14e409b7e78 EFLAGS: 00010202
+  RAX: fffffffffffffffe RBX: 0000000000020000 RCX: 0000000000000000
+  RDX: 0000000000000001 RSI: 00007f76b5595000 RDI: fffff35645000000
+  RBP: 00007f76b5595000 R08: 0000000000000001 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
+  R13: 0000000000020000 R14: 00007f76b5595000 R15: ffffa14e409b7f08
+  FS:  00007f76b577d580(0000) GS:ffff8f41bd400000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: fffffffffffffffe CR3: 0000000078960000 CR4: 00000000000006f0
+  Call Trace:
+   proc_reg_read+0x3c/0x60
+   vfs_read+0xc5/0x180
+   ksys_read+0x68/0xe0
+   do_syscall_64+0x5c/0xa0
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+For now, let's drop support for ZONE_DEVICE from the three pseudo files
+in order to fix this.  To distinguish offline memory (with garbage
+memmap) from ZONE_DEVICE memory with properly initialized memmaps, we
+would have to check get_dev_pagemap() and pfn_zone_device_reserved()
+right now.  The usage of both (especially, special casing devmem) is
+frowned upon and needs to be reworked.
+
+The fundamental issue we have is:
+
+	if (pfn_to_online_page(pfn)) {
+		/* memmap initialized */
+	} else if (pfn_valid(pfn)) {
+		/*
+		 * ???
+		 * a) offline memory. memmap garbage.
+		 * b) devmem: memmap initialized to ZONE_DEVICE.
+		 * c) devmem: reserved for driver. memmap garbage.
+		 * (d) devmem: memmap currently initializing - garbage)
+		 */
+	}
+
+We'll leave the pfn_zone_device_reserved() check in stable_page_flags()
+in place as that function is also used from memory failure.  We now no
+longer dump information about pages that are not in use anymore -
+offline.
+
+Link: http://lkml.kernel.org/r/20191009142435.3975-2-david@redhat.com
+Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+Cc: Pankaj gupta <pagupta@redhat.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Anthony Yznaga <anthony.yznaga@oracle.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: <stable@vger.kernel.org>	[4.13+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/io_uring.c | 58 +++++++++++++++++++++++++++------------------------
- 1 file changed, 31 insertions(+), 27 deletions(-)
+ fs/proc/page.c |   28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 79f9c9f7b298e..518042cc6628b 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -687,6 +687,14 @@ static unsigned io_cqring_events(struct io_cq_ring *ring)
- 	return READ_ONCE(ring->r.tail) - READ_ONCE(ring->r.head);
- }
+--- a/fs/proc/page.c
++++ b/fs/proc/page.c
+@@ -42,10 +42,12 @@ static ssize_t kpagecount_read(struct fi
+ 		return -EINVAL;
  
-+static inline unsigned int io_sqring_entries(struct io_ring_ctx *ctx)
-+{
-+	struct io_sq_ring *ring = ctx->sq_ring;
+ 	while (count > 0) {
+-		if (pfn_valid(pfn))
+-			ppage = pfn_to_page(pfn);
+-		else
+-			ppage = NULL;
++		/*
++		 * TODO: ZONE_DEVICE support requires to identify
++		 * memmaps that were actually initialized.
++		 */
++		ppage = pfn_to_online_page(pfn);
 +
-+	/* make sure SQ entry isn't read before tail */
-+	return smp_load_acquire(&ring->r.tail) - ctx->cached_sq_head;
-+}
-+
- /*
-  * Find and free completed poll iocbs
-  */
-@@ -2268,8 +2276,8 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
- 	return false;
- }
+ 		if (!ppage || PageSlab(ppage) || page_has_type(ppage))
+ 			pcount = 0;
+ 		else
+@@ -216,10 +218,11 @@ static ssize_t kpageflags_read(struct fi
+ 		return -EINVAL;
  
--static int io_submit_sqes(struct io_ring_ctx *ctx, struct sqe_submit *sqes,
--			  unsigned int nr, bool has_user, bool mm_fault)
-+static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
-+			  bool has_user, bool mm_fault)
- {
- 	struct io_submit_state state, *statep = NULL;
- 	struct io_kiocb *link = NULL;
-@@ -2282,6 +2290,11 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, struct sqe_submit *sqes,
- 	}
+ 	while (count > 0) {
+-		if (pfn_valid(pfn))
+-			ppage = pfn_to_page(pfn);
+-		else
+-			ppage = NULL;
++		/*
++		 * TODO: ZONE_DEVICE support requires to identify
++		 * memmaps that were actually initialized.
++		 */
++		ppage = pfn_to_online_page(pfn);
  
- 	for (i = 0; i < nr; i++) {
-+		struct sqe_submit s;
-+
-+		if (!io_get_sqring(ctx, &s))
-+			break;
-+
- 		/*
- 		 * If previous wasn't linked and we have a linked command,
- 		 * that's the end of the chain. Submit the previous link.
-@@ -2290,16 +2303,16 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, struct sqe_submit *sqes,
- 			io_queue_sqe(ctx, link, &link->submit);
- 			link = NULL;
- 		}
--		prev_was_link = (sqes[i].sqe->flags & IOSQE_IO_LINK) != 0;
-+		prev_was_link = (s.sqe->flags & IOSQE_IO_LINK) != 0;
+ 		if (put_user(stable_page_flags(ppage), out)) {
+ 			ret = -EFAULT;
+@@ -261,10 +264,11 @@ static ssize_t kpagecgroup_read(struct f
+ 		return -EINVAL;
  
- 		if (unlikely(mm_fault)) {
--			io_cqring_add_event(ctx, sqes[i].sqe->user_data,
-+			io_cqring_add_event(ctx, s.sqe->user_data,
- 						-EFAULT);
- 		} else {
--			sqes[i].has_user = has_user;
--			sqes[i].needs_lock = true;
--			sqes[i].needs_fixed_file = true;
--			io_submit_sqe(ctx, &sqes[i], statep, &link);
-+			s.has_user = has_user;
-+			s.needs_lock = true;
-+			s.needs_fixed_file = true;
-+			io_submit_sqe(ctx, &s, statep, &link);
- 			submitted++;
- 		}
- 	}
-@@ -2314,7 +2327,6 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, struct sqe_submit *sqes,
+ 	while (count > 0) {
+-		if (pfn_valid(pfn))
+-			ppage = pfn_to_page(pfn);
+-		else
+-			ppage = NULL;
++		/*
++		 * TODO: ZONE_DEVICE support requires to identify
++		 * memmaps that were actually initialized.
++		 */
++		ppage = pfn_to_online_page(pfn);
  
- static int io_sq_thread(void *data)
- {
--	struct sqe_submit sqes[IO_IOPOLL_BATCH];
- 	struct io_ring_ctx *ctx = data;
- 	struct mm_struct *cur_mm = NULL;
- 	mm_segment_t old_fs;
-@@ -2329,8 +2341,8 @@ static int io_sq_thread(void *data)
- 
- 	timeout = inflight = 0;
- 	while (!kthread_should_park()) {
--		bool all_fixed, mm_fault = false;
--		int i;
-+		bool mm_fault = false;
-+		unsigned int to_submit;
- 
- 		if (inflight) {
- 			unsigned nr_events = 0;
-@@ -2363,7 +2375,8 @@ static int io_sq_thread(void *data)
- 				timeout = jiffies + ctx->sq_thread_idle;
- 		}
- 
--		if (!io_get_sqring(ctx, &sqes[0])) {
-+		to_submit = io_sqring_entries(ctx);
-+		if (!to_submit) {
- 			/*
- 			 * We're polling. If we're within the defined idle
- 			 * period, then let us spin without work before going
-@@ -2394,7 +2407,8 @@ static int io_sq_thread(void *data)
- 			/* make sure to read SQ tail after writing flags */
- 			smp_mb();
- 
--			if (!io_get_sqring(ctx, &sqes[0])) {
-+			to_submit = io_sqring_entries(ctx);
-+			if (!to_submit) {
- 				if (kthread_should_park()) {
- 					finish_wait(&ctx->sqo_wait, &wait);
- 					break;
-@@ -2412,19 +2426,8 @@ static int io_sq_thread(void *data)
- 			ctx->sq_ring->flags &= ~IORING_SQ_NEED_WAKEUP;
- 		}
- 
--		i = 0;
--		all_fixed = true;
--		do {
--			if (all_fixed && io_sqe_needs_user(sqes[i].sqe))
--				all_fixed = false;
--
--			i++;
--			if (i == ARRAY_SIZE(sqes))
--				break;
--		} while (io_get_sqring(ctx, &sqes[i]));
--
- 		/* Unless all new commands are FIXED regions, grab mm */
--		if (!all_fixed && !cur_mm) {
-+		if (!cur_mm) {
- 			mm_fault = !mmget_not_zero(ctx->sqo_mm);
- 			if (!mm_fault) {
- 				use_mm(ctx->sqo_mm);
-@@ -2432,8 +2435,9 @@ static int io_sq_thread(void *data)
- 			}
- 		}
- 
--		inflight += io_submit_sqes(ctx, sqes, i, cur_mm != NULL,
--						mm_fault);
-+		to_submit = min(to_submit, ctx->sq_entries);
-+		inflight += io_submit_sqes(ctx, to_submit, cur_mm != NULL,
-+					   mm_fault);
- 
- 		/* Commit SQ ring head once we've consumed all SQEs */
- 		io_commit_sqring(ctx);
--- 
-2.20.1
-
+ 		if (ppage)
+ 			ino = page_cgroup_ino(ppage);
 
 
