@@ -2,160 +2,55 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A569CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 17:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52ECCCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 17:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4075E20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 17:44:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="t89UEWkz"
+	by mail.kernel.org (Postfix) with ESMTP id 3270A20679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 17:45:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfJ0Ro2 (ORCPT
+        id S1727616AbfJ0RpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 13:44:28 -0400
-Received: from mail-40135.protonmail.ch ([185.70.40.135]:27742 "EHLO
-        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727607AbfJ0Ro2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 13:44:28 -0400
-Date:   Sun, 27 Oct 2019 17:44:13 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1572198264;
-        bh=6yiWG/CL7XyQLz0voQvVHgInV2wrBSXgCFAj8egaYM4=;
-        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
-        b=t89UEWkzcW7FHkAjnYgDbtcUE65v1C9Q1KfdK6LSEEXdCUWGIn0PywQWW+rr156CV
-         dZLy4cQMpPld0CUBdkHhce5/XzuJSqzi0vFFRdqpIVNAodCbwnnDqE6piAI8VKFkd7
-         ikMM+ewLrMCFerWwO/IOi8p0aXaVVEbk7fmEI8k8=
-To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-From:   Mazin Rezk <mnrzk@protonmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
-        "adrian@freund.io" <adrian@freund.io>,
-        "mnrzk@protonmail.com" <mnrzk@protonmail.com>
-Reply-To: Mazin Rezk <mnrzk@protonmail.com>
-Subject: [PATCH v8 2/2] HID: logitech-hidpp: Support WirelessDeviceStatus connect events
-Message-ID: <8digbnSpZ_FnleD2ei0nz-dB_rb8IuSFeYLUimi3LnWfQeYriniOHIZM9GKGz2-NEMDgMSXG1XFhuqTKzUt818yNTkfCF5oVVpe6LsgYkWs=@protonmail.com>
-Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
+        Sun, 27 Oct 2019 13:45:04 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:57878 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727099AbfJ0RpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 13:45:04 -0400
+Received: from [46.218.74.72] (helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iOmb3-00088Z-Ja; Sun, 27 Oct 2019 18:44:57 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Andy Yan <andy.yan@rock-chips.com>
+Cc:     kever.yang@rock-chips.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 3/4] dt-bindings: Add doc for rk3308-evb
+Date:   Sun, 27 Oct 2019 18:44:56 +0100
+Message-ID: <1753385.AINB0Y2Fk3@phil>
+In-Reply-To: <20191021084642.28562-1-andy.yan@rock-chips.com>
+References: <20191021084437.28279-1-andy.yan@rock-chips.com> <20191021084642.28562-1-andy.yan@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows hidpp_report_is_connect_event to support
-WirelessDeviceStatus connect events.
+Am Montag, 21. Oktober 2019, 10:46:42 CET schrieb Andy Yan:
+> Add compatible for RK3308 Evaluation board
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-The WirelessDeviceStatus feature index is stored in hidpp_device when
-probed. The connect event's fap feature_index is compared against it if the
-device supports it.
+applied for 5.5 with Rob's Review, but did reorder to sort
+the new entry alphabetically
 
-Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
----
- drivers/hid/hid-logitech-hidpp.c | 39 ++++++++++++++++++++++++++++----
- 1 file changed, 35 insertions(+), 4 deletions(-)
+Thanks
+Heiko
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hi=
-dpp.c
-index 19b315e4e91b..c8b23568d0b1 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -191,6 +191,8 @@ struct hidpp_device {
-
- =09struct hidpp_battery battery;
- =09struct hidpp_scroll_counter vertical_wheel_counter;
-+
-+=09u8 wireless_feature_index;
- };
-
- /* HID++ 1.0 error codes */
-@@ -403,10 +405,13 @@ static inline bool hidpp_match_error(struct hidpp_rep=
-ort *question,
- =09    (answer->fap.params[0] =3D=3D question->fap.funcindex_clientid);
- }
-
--static inline bool hidpp_report_is_connect_event(struct hidpp_report *repo=
-rt)
-+static inline bool hidpp_report_is_connect_event(struct hidpp_device *hidp=
-p,
-+=09=09struct hidpp_report *report)
- {
--=09return (report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) &&
--=09=09(report->rap.sub_id =3D=3D 0x41);
-+=09return (hidpp->wireless_feature_index &&
-+=09=09(report->fap.feature_index =3D=3D hidpp->wireless_feature_index)) ||
-+=09=09((report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) &&
-+=09=09(report->rap.sub_id =3D=3D 0x41));
- }
-
- /**
-@@ -1283,6 +1288,24 @@ static int hidpp_battery_get_property(struct power_s=
-upply *psy,
- =09return ret;
- }
-
-+/* -----------------------------------------------------------------------=
---- */
-+/* 0x1d4b: Wireless device status                                         =
-    */
-+/* -----------------------------------------------------------------------=
---- */
-+#define HIDPP_PAGE_WIRELESS_DEVICE_STATUS=09=09=090x1d4b
-+
-+static int hidpp_set_wireless_feature_index(struct hidpp_device *hidpp)
-+{
-+=09u8 feature_type;
-+=09int ret;
-+
-+=09ret =3D hidpp_root_get_feature(hidpp,
-+=09=09=09=09     HIDPP_PAGE_WIRELESS_DEVICE_STATUS,
-+=09=09=09=09     &hidpp->wireless_feature_index,
-+=09=09=09=09     &feature_type);
-+
-+=09return ret;
-+}
-+
- /* -----------------------------------------------------------------------=
---- */
- /* 0x2120: Hi-resolution scrolling                                        =
-    */
- /* -----------------------------------------------------------------------=
---- */
-@@ -3078,7 +3101,7 @@ static int hidpp_raw_hidpp_event(struct hidpp_device =
-*hidpp, u8 *data,
- =09=09}
- =09}
-
--=09if (unlikely(hidpp_report_is_connect_event(report))) {
-+=09if (unlikely(hidpp_report_is_connect_event(hidpp, report))) {
- =09=09atomic_set(&hidpp->connected,
- =09=09=09=09!(report->rap.params[0] & (1 << 6)));
- =09=09if (schedule_work(&hidpp->work) =3D=3D 0)
-@@ -3628,6 +3651,14 @@ static int hidpp_probe(struct hid_device *hdev, cons=
-t struct hid_device_id *id)
- =09=09hidpp_overwrite_name(hdev);
- =09}
-
-+=09if (connected && hidpp->protocol_major >=3D 2) {
-+=09=09ret =3D hidpp_set_wireless_feature_index(hidpp);
-+=09=09if (ret =3D=3D -ENOENT)
-+=09=09=09hidpp->wireless_feature_index =3D 0;
-+=09=09else if (ret)
-+=09=09=09goto hid_hw_init_fail;
-+=09}
-+
- =09if (connected && (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP)) {
- =09=09ret =3D wtp_get_config(hidpp);
- =09=09if (ret)
---
-2.23.0
 
