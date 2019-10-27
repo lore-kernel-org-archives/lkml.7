@@ -2,56 +2,53 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F834CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECA4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9002070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D50F2070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211198;
-	bh=D4p/k8K+pcrKKBqKJkh62m+JChkk/cjGS2MuusHjUes=;
+	s=default; t=1572211201;
+	bh=a35Svl5/lKHXrc2V5aFh4F8Q+GFYEOSVk+PbJ9K6IvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZSCa7IQlqjXvjQ1MhPp0tomS4xFU3ceKNRU6GLx1Rxn1SIQP82rO+Ri8Gczh4AUA
-	 gb0pz9M9asD8n1BfHhnsKJX3soy6m+z2heKd/8oQRTO0cMVZV2IF1umhOq28c5ahkj
-	 WxsKKvRylNeiWroR6G2dUB7qq/vPM2xMn/FJelOE=
+	b=q2uZ+D4Q/gLPnBpGiZh7V2b34Wq1bJAEWgF9VUHSJm0emGUP6TDt+0RCz5BeeYXbD
+	 /N6DD38O3rPUKYY1cWdks10SCKMgAGGDfiOLuM6l53ib9ko0yl9UyUKo8v75XcIWhJ
+	 c8w9AiwS9jp0bDMVnQGuMGIKCIPl1fSO2EGLNtNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbfJ0VT4 (ORCPT
+        id S1731596AbfJ0VUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:19:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:20:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731551AbfJ0VTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:19:49 -0400
+        id S1730943AbfJ0VTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:19:52 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D4152070B;
-        Sun, 27 Oct 2019 21:19:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A28352070B;
+        Sun, 27 Oct 2019 21:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211189;
-        bh=D4p/k8K+pcrKKBqKJkh62m+JChkk/cjGS2MuusHjUes=;
+        s=default; t=1572211192;
+        bh=a35Svl5/lKHXrc2V5aFh4F8Q+GFYEOSVk+PbJ9K6IvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EyaGJm3sBCKSFey5nRaxN/87+ditK11ku9dQ9IaHFCP8FNMiCtF0w/aPHB9360yd7
-         /qlzdbnNZDYer3bP4vOJ/+w8vQDFZzLb/+UABZUTM9fpVjVePHokiCKfoEPkJAHoyZ
-         f8DmKqwa/QktzENvEh6qvLm/KMR3624S9+OXawyw=
+        b=r0aG0ghh787D9gG6DQc6xbRFmEupgh3ylxYg7D4UfD8xSJLBzNZXiZc6XA7BBrwkF
+         OVP70XC9ssV1kLp2W62ySaTNDYGnwn18C5NYRPIcMlnfGoy/8yth2ipuHAw4QoXfV2
+         1LtutJ8EDWqJ3zbh+O5u1VI4HaKlV6hNdaAddbvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 063/197] net_sched: fix backward compatibility for TCA_ACT_KIND
-Date:   Sun, 27 Oct 2019 21:59:41 +0100
-Message-Id: <20191027203355.066356964@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Friedrich <afrie@gmx.net>,
+        Stephen Douthit <stephend@silicom-usa.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 064/197] libata/ahci: Fix PCS quirk application
+Date:   Sun, 27 Oct 2019 21:59:42 +0100
+Message-Id: <20191027203355.117224422@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -64,56 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-[ Upstream commit 4b793feccae3b06764268377a4030eb774ed924e ]
+[ Upstream commit 09d6ac8dc51a033ae0043c1fe40b4d02563c2496 ]
 
-For TCA_ACT_KIND, we have to keep the backward compatibility too,
-and rely on nla_strlcpy() to check and terminate the string with
-a NUL.
+Commit c312ef176399 "libata/ahci: Drop PCS quirk for Denverton and
+beyond" got the polarity wrong on the check for which board-ids should
+have the quirk applied. The board type board_ahci_pcs7 is defined at the
+end of the list such that "pcs7" boards can be special cased in the
+future if they need the quirk. All prior Intel board ids "<
+board_ahci_pcs7" should proceed with applying the quirk.
 
-Note for TC actions, nla_strcmp() is already used to compare kind
-strings, so we don't need to fix other places.
-
-Fixes: 199ce850ce11 ("net_sched: add policy validation for action attributes")
-Reported-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reported-by: Andreas Friedrich <afrie@gmx.net>
+Reported-by: Stephen Douthit <stephend@silicom-usa.com>
+Fixes: c312ef176399 ("libata/ahci: Drop PCS quirk for Denverton and beyond")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/act_api.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/ata/ahci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/sched/act_api.c b/net/sched/act_api.c
-index 2558f00f6b3ed..4e7429c6f8649 100644
---- a/net/sched/act_api.c
-+++ b/net/sched/act_api.c
-@@ -832,8 +832,7 @@ static struct tc_cookie *nla_memdup_cookie(struct nlattr **tb)
- }
+diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+index 3e63294304c72..691852b8bb41f 100644
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -1617,7 +1617,9 @@ static void ahci_intel_pcs_quirk(struct pci_dev *pdev, struct ahci_host_priv *hp
+ 	 */
+ 	if (!id || id->vendor != PCI_VENDOR_ID_INTEL)
+ 		return;
+-	if (((enum board_ids) id->driver_data) < board_ahci_pcs7)
++
++	/* Skip applying the quirk on Denverton and beyond */
++	if (((enum board_ids) id->driver_data) >= board_ahci_pcs7)
+ 		return;
  
- static const struct nla_policy tcf_action_policy[TCA_ACT_MAX + 1] = {
--	[TCA_ACT_KIND]		= { .type = NLA_NUL_STRING,
--				    .len = IFNAMSIZ - 1 },
-+	[TCA_ACT_KIND]		= { .type = NLA_STRING },
- 	[TCA_ACT_INDEX]		= { .type = NLA_U32 },
- 	[TCA_ACT_COOKIE]	= { .type = NLA_BINARY,
- 				    .len = TC_COOKIE_MAX_SIZE },
-@@ -865,8 +864,10 @@ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
- 			NL_SET_ERR_MSG(extack, "TC action kind must be specified");
- 			goto err_out;
- 		}
--		nla_strlcpy(act_name, kind, IFNAMSIZ);
--
-+		if (nla_strlcpy(act_name, kind, IFNAMSIZ) >= IFNAMSIZ) {
-+			NL_SET_ERR_MSG(extack, "TC action name too long");
-+			goto err_out;
-+		}
- 		if (tb[TCA_ACT_COOKIE]) {
- 			cookie = nla_memdup_cookie(tb);
- 			if (!cookie) {
+ 	/*
 -- 
 2.20.1
 
