@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4C9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D68CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C054D21783
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60C9205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211289;
-	bh=szCVL3WGa8C+AIWwGVnSsMk9yNrdZonwa70Sb3Pb0e0=;
+	s=default; t=1572211296;
+	bh=2DyfP3PmbQXEM8PChsIxEbxnKRdPq7KIWGN4SebMk6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AJTlY4Nwm1LAG3H2ZCpgSH9vtZ7slDNTzsUXwhDoVrIB/+l9roG+pc2bCCSi9MnZD
-	 np/bSgvfbMXTSFBR1Y8D8nHB8Fsv1n54YHA7AdqcvRy9r33AUfEDwAwu1NWzK4z1BZ
-	 tEkQFVB0MWqj+ylA/x+AQIeoS3Ro8vTKjRyxQ4qw=
+	b=jU/yW2yuk3xwa+QnaHthhDruDJcrichn89VMJvT/NnZ+brwMHYl80d1C1NnVmBJjy
+	 NsE8zG0nay7aOqciWxiu9m6qapgxIXRELNJLB7T/uSWDJ10D0ErIaNhhW8VsiJikB0
+	 637GNsQZDA5lkgIe4LqGQWgvfqIos/OdlPpLK0fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731935AbfJ0VV2 (ORCPT
+        id S1731957AbfJ0VVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:21:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42258 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731925AbfJ0VVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:21:25 -0400
+        id S1731938AbfJ0VVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:21:30 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EFE1205C9;
-        Sun, 27 Oct 2019 21:21:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A64BD205C9;
+        Sun, 27 Oct 2019 21:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211284;
-        bh=szCVL3WGa8C+AIWwGVnSsMk9yNrdZonwa70Sb3Pb0e0=;
+        s=default; t=1572211290;
+        bh=2DyfP3PmbQXEM8PChsIxEbxnKRdPq7KIWGN4SebMk6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CBbJJms5MS5r/Ls7UT2LBxY6lfP59bP1D0U/1m1exbyUOpsg4PeOjs49IUxRXBGhy
-         fWlT9IeM9qw0e2LqPTWgiADdPPlVRd9CkPSz1ni2OJ7Lb5/pBcCQgQ4BubgBmWTSlg
-         zoMxSgoVo3hVTwvUY04ZBvOE3CxbxXwJzmnofZ9Y=
+        b=AZfgTW3VB+WoOmY8F9A0kxDQRDR6hE2F77Bfxrjt01xEUhQUC2Lm2mxzV1YU8CnSf
+         TVQ6kIFFGqRqgwLsaK6jWYgROo2kQcdybf7/6KDYsc5/0FgsNip3V9EnKC/jR6wWLt
+         Joq1iOlOoXa/Ce9W4SyMKc24c3MldRE+NlM3u3+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Przemys=C5=82aw=20Kopa?= <prymoo@gmail.com>,
+        Rivera Valdez <riveravaldez@ysinembargo.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Daniel Drake <dan@reactivated.net>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 098/197] ALSA: hda/realtek - Enable headset mic on Asus MJ401TA
-Date:   Sun, 27 Oct 2019 22:00:16 +0100
-Message-Id: <20191027203357.054427454@linuxfoundation.org>
+Subject: [PATCH 5.3 100/197] ALSA: hda - Force runtime PM on Nvidia HDMI codecs
+Date:   Sun, 27 Oct 2019 22:00:18 +0100
+Message-Id: <20191027203357.166902340@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,62 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 8c8967a7dc01a25f57a0757fdca10987773cd1f2 upstream.
+commit 94989e318b2f11e217e86bee058088064fa9a2e9 upstream.
 
-On Asus MJ401TA (with Realtek ALC256), the headset mic is connected to
-pin 0x19, with default configuration value 0x411111f0 (indicating no
-physical connection).
+Przemysław Kopa reports that since commit b516ea586d71 ("PCI: Enable
+NVIDIA HDA controllers"), the discrete GPU Nvidia GeForce GT 540M on his
+2011 Samsung laptop refuses to runtime suspend, resulting in a power
+regression and excessive heat.
 
-Enable this by quirking the pin. Mic jack detection was also tested and
-found to be working.
+Rivera Valdez witnesses the same issue with a GeForce GT 525M (GF108M)
+of the same era, as does another Arch Linux user named "R0AR" with a
+more recent GeForce GTX 1050 Ti (GP107M).
 
-This enables use of the headset mic on this product.
+The commit exposes the discrete GPU's HDA controller and all four codecs
+on the controller do not set the CLKSTOP and EPSS bits in the Supported
+Power States Response.  They also do not set the PS-ClkStopOk bit in the
+Get Power State Response.  hda_codec_runtime_suspend() therefore does
+not call snd_hdac_codec_link_down(), which prevents each codec and the
+PCI device from runtime suspending.
 
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191017081501.17135-1-drake@endlessm.com
+The same issue is present on some AMD discrete GPUs and we addressed it
+by forcing runtime PM despite the bits not being set, see commit
+57cb54e53bdd ("ALSA: hda - Force to link down at runtime suspend on
+ATI/AMD HDMI").
+
+Do the same for Nvidia HDMI codecs.
+
+Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+Link: https://bbs.archlinux.org/viewtopic.php?pid=1865512
+Link: https://bugs.freedesktop.org/show_bug.cgi?id=75985#c81
+Reported-by: Przemysław Kopa <prymoo@gmail.com>
+Reported-by: Rivera Valdez <riveravaldez@ysinembargo.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Daniel Drake <dan@reactivated.net>
+Cc: stable@vger.kernel.org # v5.3+
+Link: https://lore.kernel.org/r/3086bc75135c1e3567c5bc4f3cc4ff5cbf7a56c2.1571324194.git.lukas@wunner.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ sound/pci/hda/patch_hdmi.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5868,6 +5868,7 @@ enum {
- 	ALC225_FIXUP_WYSE_AUTO_MUTE,
- 	ALC225_FIXUP_WYSE_DISABLE_MIC_VREF,
- 	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
-+	ALC256_FIXUP_ASUS_HEADSET_MIC,
- 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
- 	ALC299_FIXUP_PREDATOR_SPK,
- 	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
-@@ -6902,6 +6903,15 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE
- 	},
-+	[ALC256_FIXUP_ASUS_HEADSET_MIC] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x19, 0x03a11020 }, /* headset mic with jack detect */
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
-+	},
- 	[ALC256_FIXUP_ASUS_MIC_NO_PRESENCE] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
-@@ -7098,6 +7108,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
- 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
- 	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
- 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x1b13, "Asus U41SV", ALC269_FIXUP_INV_DMIC),
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -3307,6 +3307,8 @@ static int patch_nvhdmi(struct hda_codec
+ 		nvhdmi_chmap_cea_alloc_validate_get_type;
+ 	spec->chmap.ops.chmap_validate = nvhdmi_chmap_validate;
+ 
++	codec->link_down_at_suspend = 1;
++
+ 	return 0;
+ }
+ 
 
 
