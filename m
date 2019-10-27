@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7462FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EC7CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F8020B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EBEB214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210250;
-	bh=2Gpk+VlZGFrwkt2V2CFGaV+DomT8opTG+dvLCwcRiQo=;
+	s=default; t=1572210253;
+	bh=uMocm4+Idqizp2zaiVTkONT4tZfh/ZwZSSAhrI2oUFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BfgzMxe5YndrDF3EIQ3qpj9X/vZ8Ty6agmHwpom+pCpUk0pz3CrEI/DBuhrQPR3Mb
-	 JGvJglZhid9EFrDvxmK4+gvQp57ZFa13a2pmtYLuu4z/Ojw/hFmli2RmxCa/BqfBV9
-	 GEzFPmhEsJaeSOvkOOMSbqIsffVGT/th4nRtDOuA=
+	b=kZTA+6ujFm66M6+gGxQMiHcaznU/t0JlttG01k2zh1TR3IPhKRZQVFgcl2MgTN0ib
+	 B3VwVw8GF19F+mkWJJomweiysZFY1PsoYT36KPcv246MDHERAoLKCPRHrhB8E7vW4H
+	 Gg5Twcy2JRUMxMS70Go5XU+sQBIo4Rhfrlu7Qco8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfJ0VEI (ORCPT
+        id S1728569AbfJ0VEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49718 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727330AbfJ0VEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:04:06 -0400
+        id S1728556AbfJ0VEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:04:08 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFCD7214E0;
-        Sun, 27 Oct 2019 21:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3A2220B7C;
+        Sun, 27 Oct 2019 21:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210245;
-        bh=2Gpk+VlZGFrwkt2V2CFGaV+DomT8opTG+dvLCwcRiQo=;
+        s=default; t=1572210248;
+        bh=uMocm4+Idqizp2zaiVTkONT4tZfh/ZwZSSAhrI2oUFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vUR0IzzEX0ntfD4OXdupBg6BeCGR12H3LsXY4NADReZ7AOQUuP7nbNSzu8L50AiG0
-         N4qbP3aFWmjCgu6COZ2Xd2FyLQa+WMdjLcUTfxXG528qYvoGdhSYbL2aQJGiNpfzcg
-         j3Mqp+P9fYtsELbxA02+UmM4SR4w++YAzgv85ypg=
+        b=RYfl1NfNfQxdZigvbs9Vm6iprtWv0Z4N3j8t7PG12EB/vbyXIp53zAo/+8cRqBwdT
+         44GnGNdf2YVS9VO3XFNANkmRBhArYNlewBLcf5U6yrE7wZTmBBQfcQ5qnc/yF4Y/DD
+         xOKnsfgZbtNmY0OeVIfDfyXMAZvirP5JYz98BmSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Waisman <nico@semmle.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.4 41/41] RDMA/cxgb4: Do not dma memory off of the stack
-Date:   Sun, 27 Oct 2019 22:01:19 +0100
-Message-Id: <20191027203137.267282361@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Nicolas Waisman <nico@semmle.com>,
+        Will Deacon <will@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.4 28/41] mac80211: Reject malformed SSID elements
+Date:   Sun, 27 Oct 2019 22:01:06 +0100
+Message-Id: <20191027203123.346468408@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
 References: <20191027203056.220821342@linuxfoundation.org>
@@ -60,104 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg KH <gregkh@linuxfoundation.org>
+From: Will Deacon <will@kernel.org>
 
-commit 3840c5b78803b2b6cc1ff820100a74a092c40cbb upstream.
+commit 4152561f5da3fca92af7179dd538ea89e248f9d0 upstream.
 
-Nicolas pointed out that the cxgb4 driver is doing dma off of the stack,
-which is generally considered a very bad thing.  On some architectures it
-could be a security problem, but odds are none of them actually run this
-driver, so it's just a "normal" bug.
+Although this shouldn't occur in practice, it's a good idea to bounds
+check the length field of the SSID element prior to using it for things
+like allocations or memcpy operations.
 
-Resolve this by allocating the memory for a message off of the heap
-instead of the stack.  kmalloc() always will give us a proper memory
-location that DMA will work correctly from.
-
-Link: https://lore.kernel.org/r/20191001165611.GA3542072@kroah.com
+Cc: <stable@vger.kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
 Reported-by: Nicolas Waisman <nico@semmle.com>
-Tested-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20191004095132.15777-1-will@kernel.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/cxgb4/mem.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ net/mac80211/mlme.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/hw/cxgb4/mem.c
-+++ b/drivers/infiniband/hw/cxgb4/mem.c
-@@ -254,13 +254,17 @@ static int write_tpt_entry(struct c4iw_r
- 			   u64 len, u8 page_size, u32 pbl_size, u32 pbl_addr)
- {
- 	int err;
--	struct fw_ri_tpte tpt;
-+	struct fw_ri_tpte *tpt;
- 	u32 stag_idx;
- 	static atomic_t key;
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -2431,7 +2431,8 @@ struct sk_buff *ieee80211_ap_probereq_ge
  
- 	if (c4iw_fatal_error(rdev))
- 		return -EIO;
+ 	rcu_read_lock();
+ 	ssid = ieee80211_bss_get_ie(cbss, WLAN_EID_SSID);
+-	if (WARN_ON_ONCE(ssid == NULL))
++	if (WARN_ONCE(!ssid || ssid[1] > IEEE80211_MAX_SSID_LEN,
++		      "invalid SSID element (len=%d)", ssid ? ssid[1] : -1))
+ 		ssid_len = 0;
+ 	else
+ 		ssid_len = ssid[1];
+@@ -4669,7 +4670,7 @@ int ieee80211_mgd_assoc(struct ieee80211
  
-+	tpt = kmalloc(sizeof(*tpt), GFP_KERNEL);
-+	if (!tpt)
-+		return -ENOMEM;
-+
- 	stag_state = stag_state > 0;
- 	stag_idx = (*stag) >> 8;
- 
-@@ -270,6 +274,7 @@ static int write_tpt_entry(struct c4iw_r
- 			mutex_lock(&rdev->stats.lock);
- 			rdev->stats.stag.fail++;
- 			mutex_unlock(&rdev->stats.lock);
-+			kfree(tpt);
- 			return -ENOMEM;
- 		}
- 		mutex_lock(&rdev->stats.lock);
-@@ -284,28 +289,28 @@ static int write_tpt_entry(struct c4iw_r
- 
- 	/* write TPT entry */
- 	if (reset_tpt_entry)
--		memset(&tpt, 0, sizeof(tpt));
-+		memset(tpt, 0, sizeof(*tpt));
- 	else {
--		tpt.valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
-+		tpt->valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
- 			FW_RI_TPTE_STAGKEY_V((*stag & FW_RI_TPTE_STAGKEY_M)) |
- 			FW_RI_TPTE_STAGSTATE_V(stag_state) |
- 			FW_RI_TPTE_STAGTYPE_V(type) | FW_RI_TPTE_PDID_V(pdid));
--		tpt.locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
-+		tpt->locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
- 			(bind_enabled ? FW_RI_TPTE_MWBINDEN_F : 0) |
- 			FW_RI_TPTE_ADDRTYPE_V((zbva ? FW_RI_ZERO_BASED_TO :
- 						      FW_RI_VA_BASED_TO))|
- 			FW_RI_TPTE_PS_V(page_size));
--		tpt.nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
-+		tpt->nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
- 			FW_RI_TPTE_PBLADDR_V(PBL_OFF(rdev, pbl_addr)>>3));
--		tpt.len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
--		tpt.va_hi = cpu_to_be32((u32)(to >> 32));
--		tpt.va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
--		tpt.dca_mwbcnt_pstag = cpu_to_be32(0);
--		tpt.len_hi = cpu_to_be32((u32)(len >> 32));
-+		tpt->len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
-+		tpt->va_hi = cpu_to_be32((u32)(to >> 32));
-+		tpt->va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
-+		tpt->dca_mwbcnt_pstag = cpu_to_be32(0);
-+		tpt->len_hi = cpu_to_be32((u32)(len >> 32));
- 	}
- 	err = write_adapter_mem(rdev, stag_idx +
- 				(rdev->lldi.vr->stag.start >> 5),
--				sizeof(tpt), &tpt);
-+				sizeof(*tpt), tpt);
- 
- 	if (reset_tpt_entry) {
- 		c4iw_put_resource(&rdev->resource.tpt_table, stag_idx);
-@@ -313,6 +318,7 @@ static int write_tpt_entry(struct c4iw_r
- 		rdev->stats.stag.cur -= 32;
- 		mutex_unlock(&rdev->stats.lock);
- 	}
-+	kfree(tpt);
- 	return err;
- }
- 
+ 	rcu_read_lock();
+ 	ssidie = ieee80211_bss_get_ie(req->bss, WLAN_EID_SSID);
+-	if (!ssidie) {
++	if (!ssidie || ssidie[1] > sizeof(assoc_data->ssid)) {
+ 		rcu_read_unlock();
+ 		kfree(assoc_data);
+ 		return -EINVAL;
 
 
