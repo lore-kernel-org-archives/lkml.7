@@ -2,51 +2,53 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F48DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7F9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E8A21726
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCD220717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211235;
-	bh=7yoZoRGGFhcYeBasBZNTGWbaRNQSgC+J70ieIlJyhLU=;
+	s=default; t=1572211237;
+	bh=ugzrjbYkU1KrYuTzjbMkb4Wxg59tEBr0j7Zeg6FgpKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oc9OosOthKz+8gknkuZKPtswHydrNvE7CqSi5WZV24AFWKoKoI2OBSH8WMvyh0wDv
-	 PWnYP7oGCThp8e9ZYE6LH11YQE7Qu7K7yXYxXp276A43CCjQAh8uBXSi8G2tDGE6Y+
-	 nB+j2NycPD6Iy6kvIKMJdlCBc0ZsQSwK8GHyxBug=
+	b=KDGv07ur3C2HUcD+go3o/fLyecLyN3nPCzvzi9Ozm8A7aIKaOKh4D6jVZ7Oiue+fG
+	 S0Cmr2JL5xVSSESdEI6pALDJs44c9wK51mIvojvIx2reflPKYwLEe2/2BwSJ8WUVEj
+	 fU4AiWX1OPYFOHeX6z1zKVRFmhn0HV5Dc1BfNwOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731731AbfJ0VUe (ORCPT
+        id S1731742AbfJ0VUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:20:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:20:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730775AbfJ0VUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:20:32 -0400
+        id S1730775AbfJ0VUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:20:34 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13EAF21848;
-        Sun, 27 Oct 2019 21:20:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDFA920717;
+        Sun, 27 Oct 2019 21:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211231;
-        bh=7yoZoRGGFhcYeBasBZNTGWbaRNQSgC+J70ieIlJyhLU=;
+        s=default; t=1572211234;
+        bh=ugzrjbYkU1KrYuTzjbMkb4Wxg59tEBr0j7Zeg6FgpKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dr7lHKvKlrWMIj++XDinxDWPTOLFyhMM1uGlff0iddWW5++0zhZU3sAQb86ytYRDv
-         E/FqblT0S37RPCs8IFfnYH1jFNwNFjA5th0/D6Lbua5fZ6kXE8PU0ksS1YOf4tiWqr
-         CETl88b82aNgMsi1QS04viPiuQjegaBw6SOj0V/I=
+        b=GJGOwsZ6XG57kNrxr2vWRvgCk/OBvePGwikAqZWJfS+izO9Usa71mwxo98QfAJAiW
+         oVVOTC95J4DRfIy/PV+gPAvW4g5MDAJAXOzJZENmvKrKJVX3xui1aVlvzq+u/9XyEa
+         0wGVERxWqBkf6iGHSliI56Ya8ePsu09I+DFICIww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Biao Huang <biao.huang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 077/197] net: stmmac: disable/enable ptp_ref_clk in suspend/resume flow
-Date:   Sun, 27 Oct 2019 21:59:55 +0100
-Message-Id: <20191027203355.826603403@linuxfoundation.org>
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 042/197] net: ag71xx: fix mdio subnode support
+Date:   Sun, 27 Oct 2019 21:59:20 +0100
+Message-Id: <20191027203353.984467267@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,47 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit e497c20e203680aba9ccf7bb475959595908ca7e ]
+[ Upstream commit 569aad4fcd82cba64eb10ede235d330a00f0aa09 ]
 
-disable ptp_ref_clk in suspend flow, and enable it in resume flow.
+This patch is syncing driver with actual devicetree documentation:
+Documentation/devicetree/bindings/net/qca,ar71xx.txt
+|Optional subnodes:
+|- mdio : specifies the mdio bus, used as a container for phy nodes
+|  according to phy.txt in the same directory
 
-Fixes: f573c0b9c4e0 ("stmmac: move stmmac_clk, pclk, clk_ptp_ref and stmmac_rst to platform structure")
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+The driver was working with fixed phy without any noticeable issues. This bug
+was uncovered by introducing dsa ar9331-switch driver.
+Since no one reported this bug until now, I assume no body is using it
+and this patch should not brake existing system.
+
+Fixes: d51b6ce441d3 ("net: ethernet: add ag71xx driver")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/atheros/ag71xx.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4480,8 +4480,10 @@ int stmmac_suspend(struct device *dev)
- 		stmmac_mac_set(priv, priv->ioaddr, false);
- 		pinctrl_pm_select_sleep_state(priv->device);
- 		/* Disable clock in case of PWM is off */
--		clk_disable(priv->plat->pclk);
--		clk_disable(priv->plat->stmmac_clk);
-+		if (priv->plat->clk_ptp_ref)
-+			clk_disable_unprepare(priv->plat->clk_ptp_ref);
-+		clk_disable_unprepare(priv->plat->pclk);
-+		clk_disable_unprepare(priv->plat->stmmac_clk);
- 	}
- 	mutex_unlock(&priv->lock);
+diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
+index 6703960c7cf50..d1101eea15c2a 100644
+--- a/drivers/net/ethernet/atheros/ag71xx.c
++++ b/drivers/net/ethernet/atheros/ag71xx.c
+@@ -526,7 +526,7 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
+ 	struct device *dev = &ag->pdev->dev;
+ 	struct net_device *ndev = ag->ndev;
+ 	static struct mii_bus *mii_bus;
+-	struct device_node *np;
++	struct device_node *np, *mnp;
+ 	int err;
  
-@@ -4544,8 +4546,10 @@ int stmmac_resume(struct device *dev)
- 	} else {
- 		pinctrl_pm_select_default_state(priv->device);
- 		/* enable the clk previously disabled */
--		clk_enable(priv->plat->stmmac_clk);
--		clk_enable(priv->plat->pclk);
-+		clk_prepare_enable(priv->plat->stmmac_clk);
-+		clk_prepare_enable(priv->plat->pclk);
-+		if (priv->plat->clk_ptp_ref)
-+			clk_prepare_enable(priv->plat->clk_ptp_ref);
- 		/* reset the phy so that it's ready */
- 		if (priv->mii)
- 			stmmac_mdio_reset(priv->mii);
+ 	np = dev->of_node;
+@@ -571,7 +571,9 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
+ 		msleep(200);
+ 	}
+ 
+-	err = of_mdiobus_register(mii_bus, np);
++	mnp = of_get_child_by_name(np, "mdio");
++	err = of_mdiobus_register(mii_bus, mnp);
++	of_node_put(mnp);
+ 	if (err)
+ 		goto mdio_err_put_clk;
+ 
+-- 
+2.20.1
+
 
 
