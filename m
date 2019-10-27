@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F485CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47E4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4E221928
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7742C20663
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfJ0LNB (ORCPT
+        id S1726962AbfJ0LNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 07:13:01 -0400
+        Sun, 27 Oct 2019 07:13:10 -0400
 Received: from mga02.intel.com ([134.134.136.20]:12491 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726853AbfJ0LMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 07:12:41 -0400
+        id S1726818AbfJ0LMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 07:12:38 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 04:12:41 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 04:12:38 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,236,1569308400"; 
-   d="scan'208";a="282690168"
+   d="scan'208";a="282690158"
 Received: from unknown (HELO snr.jf.intel.com) ([10.54.39.141])
-  by orsmga001.jf.intel.com with ESMTP; 27 Oct 2019 04:12:39 -0700
+  by orsmga001.jf.intel.com with ESMTP; 27 Oct 2019 04:12:36 -0700
 From:   Luwei Kang <luwei.kang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
@@ -39,9 +39,9 @@ Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
         peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
         namhyung@kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH v1 5/8] KVM: X86: Expose PDCM cpuid to guest
-Date:   Sun, 27 Oct 2019 19:11:14 -0400
-Message-Id: <1572217877-26484-6-git-send-email-luwei.kang@intel.com>
+Subject: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS event
+Date:   Sun, 27 Oct 2019 19:11:12 -0400
+Message-Id: <1572217877-26484-4-git-send-email-luwei.kang@intel.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
 References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
@@ -50,110 +50,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PDCM (Perfmon and Debug Capability) indicates the processor
-supports the performance and debug feature indication
-MSR IA32_PERF_CAPABILITIES.
-
-PEBS enabling in KVM guest depend on PEBS via PT, and
-PEBS via PT is detected by IA32_PERF_CAPABILITIES[Bit16].
+This patch add a new parameter "pebs" that to make the
+host PMU framework allocate the performance counter for
+guest PEBS event.
 
 Signed-off-by: Luwei Kang <luwei.kang@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/cpuid.c            |  3 ++-
- arch/x86/kvm/svm.c              |  6 ++++++
- arch/x86/kvm/vmx/capabilities.h | 10 ++++++++++
- arch/x86/kvm/vmx/vmx.c          |  1 +
- 5 files changed, 20 insertions(+), 1 deletion(-)
+ arch/x86/kvm/pmu.c           | 23 +++++++++++++++--------
+ arch/x86/kvm/pmu.h           |  5 +++--
+ arch/x86/kvm/pmu_amd.c       |  2 +-
+ arch/x86/kvm/vmx/pmu_intel.c | 10 +++++-----
+ 4 files changed, 24 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index ed01936..a987ae1 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1126,6 +1126,7 @@ struct kvm_x86_ops {
- 	bool (*xsaves_supported)(void);
- 	bool (*umip_emulated)(void);
- 	bool (*pt_supported)(void);
-+	bool (*pdcm_supported)(void);
- 
- 	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
- 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 9c5029c..ab2906d 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -442,6 +442,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 	unsigned f_rdtscp = kvm_x86_ops->rdtscp_supported() ? F(RDTSCP) : 0;
- 	unsigned f_xsaves = kvm_x86_ops->xsaves_supported() ? F(XSAVES) : 0;
- 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
-+	unsigned f_pdcm = kvm_x86_ops->pdcm_supported() ? F(PDCM) : 0;
- 
- 	/* cpuid 1.edx */
- 	const u32 kvm_cpuid_1_edx_x86_features =
-@@ -470,7 +471,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 		F(XMM3) | F(PCLMULQDQ) | 0 /* DTES64, MONITOR */ |
- 		0 /* DS-CPL, VMX, SMX, EST */ |
- 		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
--		F(FMA) | F(CX16) | 0 /* xTPR Update, PDCM */ |
-+		F(FMA) | F(CX16) | 0 /* xTPR Update */ | f_pdcm |
- 		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
- 		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
- 		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index f8ecb6d..7e0a7b3 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5975,6 +5975,11 @@ static bool svm_pt_supported(void)
- 	return false;
- }
- 
-+static bool svm_pdcm_supported(void)
-+{
-+	return false;
-+}
-+
- static bool svm_has_wbinvd_exit(void)
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 46875bb..5088d1c 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -99,7 +99,7 @@ static void kvm_perf_overflow_intr(struct perf_event *perf_event,
+ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+ 				  unsigned config, bool exclude_user,
+ 				  bool exclude_kernel, bool intr,
+-				  bool in_tx, bool in_tx_cp)
++				  bool in_tx, bool in_tx_cp, bool pebs)
  {
- 	return true;
-@@ -7272,6 +7277,7 @@ static bool svm_apic_init_signal_blocked(struct kvm_vcpu *vcpu)
- 	.xsaves_supported = svm_xsaves_supported,
- 	.umip_emulated = svm_umip_emulated,
- 	.pt_supported = svm_pt_supported,
-+	.pdcm_supported = svm_pdcm_supported,
+ 	struct perf_event *event;
+ 	struct perf_event_attr attr = {
+@@ -111,9 +111,12 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+ 		.exclude_user = exclude_user,
+ 		.exclude_kernel = exclude_kernel,
+ 		.config = config,
++		.precise_ip = pebs ? 1 : 0,
++		.aux_output = pebs ? 1 : 0,
+ 	};
  
- 	.set_supported_cpuid = svm_set_supported_cpuid,
+-	attr.sample_period = (-pmc->counter) & pmc_bitmask(pmc);
++	attr.sample_period = pebs ? (-pmc->reload_cnt) & pmc_bitmask(pmc) :
++					(-pmc->counter) & pmc_bitmask(pmc);
  
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index fc861d4..2f502f1 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -363,4 +363,14 @@ static inline bool cpu_has_vmx_pebs_output_pt(void)
- 		(perf_cap & MSR_IA32_PERF_CAP_PEBS_OUTPUT_PT));
+ 	if (in_tx)
+ 		attr.config |= HSW_IN_TX;
+@@ -140,7 +143,7 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+ 	clear_bit(pmc->idx, (unsigned long*)&pmc_to_pmu(pmc)->reprogram_pmi);
  }
  
-+static inline bool vmx_pebs_supported(void)
-+{
-+	return (cpu_has_vmx_pebs_output_pt() && pt_mode == PT_MODE_HOST_GUEST);
-+}
-+
-+static inline bool vmx_pdcm_supported(void)
-+{
-+	return boot_cpu_has(X86_FEATURE_PDCM) && vmx_pebs_supported();
-+}
-+
- #endif /* __KVM_X86_VMX_CAPS_H */
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 170afde..6c29a57 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7865,6 +7865,7 @@ static __exit void hardware_unsetup(void)
- 	.xsaves_supported = vmx_xsaves_supported,
- 	.umip_emulated = vmx_umip_emulated,
- 	.pt_supported = vmx_pt_supported,
-+	.pdcm_supported = vmx_pdcm_supported,
+-void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel)
++void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel, bool pebs)
+ {
+ 	unsigned config, type = PERF_TYPE_RAW;
+ 	u8 event_select, unit_mask;
+@@ -198,11 +201,12 @@ void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel)
+ 			      !(eventsel & ARCH_PERFMON_EVENTSEL_OS),
+ 			      eventsel & ARCH_PERFMON_EVENTSEL_INT,
+ 			      (eventsel & HSW_IN_TX),
+-			      (eventsel & HSW_IN_TX_CHECKPOINTED));
++			      (eventsel & HSW_IN_TX_CHECKPOINTED),
++			      pebs);
+ }
+ EXPORT_SYMBOL_GPL(reprogram_gp_counter);
  
- 	.request_immediate_exit = vmx_request_immediate_exit,
+-void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx)
++void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx, bool pebs)
+ {
+ 	unsigned en_field = ctrl & 0x3;
+ 	bool pmi = ctrl & 0x8;
+@@ -228,7 +232,8 @@ void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx)
+ 			      kvm_x86_ops->pmu_ops->find_fixed_event(idx),
+ 			      !(en_field & 0x2), /* exclude user */
+ 			      !(en_field & 0x1), /* exclude kernel */
+-			      pmi, false, false);
++			      pmi, false, false,
++			      pebs);
+ }
+ EXPORT_SYMBOL_GPL(reprogram_fixed_counter);
  
+@@ -240,12 +245,14 @@ void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx)
+ 		return;
+ 
+ 	if (pmc_is_gp(pmc))
+-		reprogram_gp_counter(pmc, pmc->eventsel);
++		reprogram_gp_counter(pmc, pmc->eventsel,
++				(pmu->pebs_enable & BIT_ULL(pmc_idx)));
+ 	else {
+ 		int idx = pmc_idx - INTEL_PMC_IDX_FIXED;
+ 		u8 ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl, idx);
+ 
+-		reprogram_fixed_counter(pmc, ctrl, idx);
++		reprogram_fixed_counter(pmc, ctrl, idx,
++				(pmu->pebs_enable & BIT_ULL(pmc_idx)));
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(reprogram_counter);
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index c62a1ff..0c59a15 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -102,8 +102,9 @@ static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr,
+ 	return NULL;
+ }
+ 
+-void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
+-void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
++void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel, bool pebs);
++void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx,
++								bool pebs);
+ void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
+ 
+ void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/pmu_amd.c b/arch/x86/kvm/pmu_amd.c
+index c838838..7b3e307 100644
+--- a/arch/x86/kvm/pmu_amd.c
++++ b/arch/x86/kvm/pmu_amd.c
+@@ -248,7 +248,7 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		if (data == pmc->eventsel)
+ 			return 0;
+ 		if (!(data & pmu->reserved_bits)) {
+-			reprogram_gp_counter(pmc, data);
++			reprogram_gp_counter(pmc, data, false);
+ 			return 0;
+ 		}
+ 	}
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 3f723a3..15b5f05 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -48,7 +48,8 @@ static void reprogram_fixed_counters(struct kvm_pmu *pmu, u64 data)
+ 		if (old_ctrl == new_ctrl)
+ 			continue;
+ 
+-		reprogram_fixed_counter(pmc, new_ctrl, i);
++		reprogram_fixed_counter(pmc, new_ctrl, i,
++			(pmu->pebs_enable & BIT_ULL(i + INTEL_PMC_IDX_FIXED)));
+ 	}
+ 
+ 	pmu->fixed_ctr_ctrl = data;
+@@ -292,7 +293,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			if (data == pmc->eventsel)
+ 				return 0;
+ 			if (!(data & pmu->reserved_bits)) {
+-				reprogram_gp_counter(pmc, data);
++				reprogram_gp_counter(pmc, data,
++					(pmu->pebs_enable & BIT_ULL(pmc->idx)));
+ 				return 0;
+ 			}
+ 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_RELOAD_PMC0)) ||
+@@ -301,10 +303,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			if (data == pmc->reload_cnt)
+ 				return 0;
+ 			if (!(data & ~pmc_bitmask(pmc))) {
+-				int pmc_idx = pmc_is_fixed(pmc) ? pmc->idx +
+-						INTEL_PMC_IDX_FIXED : pmc->idx;
+ 				pmc->reload_cnt = data;
+-				reprogram_counter(pmu, pmc_idx);
++				reprogram_counter(pmu, pmc->idx);
+ 				return 0;
+ 			}
+ 		}
 -- 
 1.8.3.1
 
