@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BF5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E8BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA7F208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3760D20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210681;
-	bh=FmXQsAMYoRFFNGFa1iTYEpJCv+dMzOYBi8XUuX6CirQ=;
+	s=default; t=1572210684;
+	bh=0Yf3Sk80zrmXm6bH+9w5Mz+Gheo+SF6FY/8Hxrs8ppQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i0kgcC4frFdkDXlhCqaji+t7nrQNZyNaQTGtcpoiUyosik+5eUu3gl8Yq2Nnf69Er
-	 mpwTzviOMUGz09lSpwmDBfMUMVsgZe9GEbEkyfTpngL9cS76AMwm2NiouDkkuh6x8H
-	 /fLIqkNX+hqU6Rjz/Cl//Xhc/YfmgxMioRmK128I=
+	b=zm4y0XQuPzT8cLxqqiBzaoWutWCrRBmdjrIVHptMD/HL+KFak017EQRH6/cBOJHHj
+	 /2+O9z0F7dcrvXmYsD2HQhNpGPTgUWn5haJgJqzvBAU77begzb0Al6hkLZOwwnBBvi
+	 OM/9X3HCskNw1hv0+gTQa4M76TmSe4vRqrkq44i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbfJ0VLU (ORCPT
+        id S1728398AbfJ0VLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:11:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57736 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:11:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729860AbfJ0VLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:11:14 -0400
+        id S1729873AbfJ0VLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:11:20 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61E8F20B7C;
-        Sun, 27 Oct 2019 21:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00502214AF;
+        Sun, 27 Oct 2019 21:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210673;
-        bh=FmXQsAMYoRFFNGFa1iTYEpJCv+dMzOYBi8XUuX6CirQ=;
+        s=default; t=1572210679;
+        bh=0Yf3Sk80zrmXm6bH+9w5Mz+Gheo+SF6FY/8Hxrs8ppQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0rhjx1nAaLnHwDi5AeQ+0QIWS+NjKLPJREzEN19ybiwTBIAH4JZAnenrVzCzcF7th
-         GUth281OBsSjTOaESujmzpl1COIsU7PhTEtOB82S6ixfNUAFiR7zcmCmchfhkF9oKl
-         Bawrpr3jAo2Qi26kCYpyY8h4SIi6LJDFCfuCEDZI=
+        b=qy0/wXN0XgOvjdfROp1tDZn7rUxNI7gzb2o3F77IDutNFaDt78U1c2ER+GLX5URGp
+         x1gKQyIoSeIcRNkWu3k4m6AJuo7msFTDJngOWTpVcnq9AOlWbPFwwYA0UmQGEA4ivW
+         E3UuIkd2nN5IkTE1xrTHGctVl//6YCpPnQkD2riQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Nicolas Waisman <nico@semmle.com>,
-        Will Deacon <will@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 095/119] mac80211: Reject malformed SSID elements
-Date:   Sun, 27 Oct 2019 22:01:12 +0100
-Message-Id: <20191027203348.650128093@linuxfoundation.org>
+        Dave Martin <dave.martin@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH 4.14 055/119] arm64: capabilities: Allow features based on local CPU scope
+Date:   Sun, 27 Oct 2019 22:00:32 +0100
+Message-Id: <20191027203324.012028429@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -61,46 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit 4152561f5da3fca92af7179dd538ea89e248f9d0 upstream.
+[ Upstream commit fbd890b9b8497bab04c1d338bd97579a7bc53fab ]
 
-Although this shouldn't occur in practice, it's a good idea to bounds
-check the length field of the SSID element prior to using it for things
-like allocations or memcpy operations.
+So far we have treated the feature capabilities as system wide
+and this wouldn't help with features that could be detected locally
+on one or more CPUs (e.g, KPTI, Software prefetch). This patch
+splits the feature detection to two phases :
 
-Cc: <stable@vger.kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20191004095132.15777-1-will@kernel.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+ 1) Local CPU features are checked on all boot time active CPUs.
+ 2) System wide features are checked only once after all CPUs are
+    active.
+
+Reviewed-by: Dave Martin <dave.martin@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/mac80211/mlme.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/cpufeature.c |   17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -2430,7 +2430,8 @@ struct sk_buff *ieee80211_ap_probereq_ge
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -485,6 +485,7 @@ static void __init init_cpu_ftr_reg(u32
+ }
  
- 	rcu_read_lock();
- 	ssid = ieee80211_bss_get_ie(cbss, WLAN_EID_SSID);
--	if (WARN_ON_ONCE(ssid == NULL))
-+	if (WARN_ONCE(!ssid || ssid[1] > IEEE80211_MAX_SSID_LEN,
-+		      "invalid SSID element (len=%d)", ssid ? ssid[1] : -1))
- 		ssid_len = 0;
- 	else
- 		ssid_len = ssid[1];
-@@ -4756,7 +4757,7 @@ int ieee80211_mgd_assoc(struct ieee80211
+ extern const struct arm64_cpu_capabilities arm64_errata[];
++static const struct arm64_cpu_capabilities arm64_features[];
+ static void update_cpu_capabilities(const struct arm64_cpu_capabilities *caps,
+ 				    u16 scope_mask, const char *info);
  
- 	rcu_read_lock();
- 	ssidie = ieee80211_bss_get_ie(req->bss, WLAN_EID_SSID);
--	if (!ssidie) {
-+	if (!ssidie || ssidie[1] > sizeof(assoc_data->ssid)) {
- 		rcu_read_unlock();
- 		kfree(assoc_data);
- 		return -EINVAL;
+@@ -526,11 +527,12 @@ void __init init_cpu_features(struct cpu
+ 	}
+ 
+ 	/*
+-	 * Run the errata work around checks on the boot CPU, once we have
+-	 * initialised the cpu feature infrastructure.
++	 * Run the errata work around and local feature checks on the
++	 * boot CPU, once we have initialised the cpu feature infrastructure.
+ 	 */
+ 	update_cpu_capabilities(arm64_errata, SCOPE_LOCAL_CPU,
+ 				"enabling workaround for");
++	update_cpu_capabilities(arm64_features, SCOPE_LOCAL_CPU, "detected:");
+ }
+ 
+ static void update_cpu_ftr_reg(struct arm64_ftr_reg *reg, u64 new)
+@@ -1349,15 +1351,18 @@ void check_local_cpu_capabilities(void)
+ 
+ 	/*
+ 	 * If we haven't finalised the system capabilities, this CPU gets
+-	 * a chance to update the errata work arounds.
++	 * a chance to update the errata work arounds and local features.
+ 	 * Otherwise, this CPU should verify that it has all the system
+ 	 * advertised capabilities.
+ 	 */
+-	if (!sys_caps_initialised)
++	if (!sys_caps_initialised) {
+ 		update_cpu_capabilities(arm64_errata, SCOPE_LOCAL_CPU,
+ 					"enabling workaround for");
+-	else
++		update_cpu_capabilities(arm64_features, SCOPE_LOCAL_CPU,
++					"detected:");
++	} else {
+ 		verify_local_cpu_capabilities();
++	}
+ }
+ 
+ DEFINE_STATIC_KEY_FALSE(arm64_const_caps_ready);
+@@ -1382,7 +1387,7 @@ void __init setup_cpu_features(void)
+ 	int cls;
+ 
+ 	/* Set the CPU feature capabilies */
+-	update_cpu_capabilities(arm64_features, SCOPE_ALL, "detected:");
++	update_cpu_capabilities(arm64_features, SCOPE_SYSTEM, "detected:");
+ 	update_cpu_capabilities(arm64_errata, SCOPE_SYSTEM,
+ 				"enabling workaround for");
+ 	enable_cpu_capabilities(arm64_features, SCOPE_ALL);
 
 
