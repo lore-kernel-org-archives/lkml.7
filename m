@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA81DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC41CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D44620717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9BB205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211955;
-	bh=xd57e78IOUAHKpYpwT2IGQZpvJCvLZa8IEjkNyMJC4w=;
+	s=default; t=1572211964;
+	bh=sZbX5Yt3N5y0iN6FpR9DzyZ0uhLEKkpk4eAQNGBDUuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hSZzKedXMA+xKHtseCBeqRyn+npF/ChJJPQRac3aeJregK9Oyasi0zLnSpdwoTK5L
-	 XZJEkTkGiFyumYu6d8Ud2A8/v4L0FUkzJhe2UlxMtw6TLZwLfkJydmYdYtzQchX62u
-	 sxDRkg5AztFgBX6/DR/YZ+/5IfYBr+AIHBDcTYZ0=
+	b=JtiKiFdKDQlhCW/7YGHyGLxeBiRKqA9ZNP7vqKsU4Jx9ltAkDKt2Si2irlEa4z4RV
+	 Q9zLQ6K3uAeZURSG73H0vDl+Bg4yeNKVvjg1DuGqq6wKthqtxW4R9mb7XFNoyQxGKh
+	 g67wpEgmI/mdD1hFtr1qvOXZQJmNQuMKnoe3nqoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732304AbfJ0Vce (ORCPT
+        id S1731630AbfJ0Vcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:32:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33690 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:32:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730496AbfJ0VOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:14:42 -0400
+        id S1727319AbfJ0VOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:14:12 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41D6C214AF;
-        Sun, 27 Oct 2019 21:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C9332064A;
+        Sun, 27 Oct 2019 21:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210880;
-        bh=xd57e78IOUAHKpYpwT2IGQZpvJCvLZa8IEjkNyMJC4w=;
+        s=default; t=1572210852;
+        bh=sZbX5Yt3N5y0iN6FpR9DzyZ0uhLEKkpk4eAQNGBDUuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HAoVomn1oDb6n7cHen5nD0AyxtuMlplAGbzHU7CbiTQQ52sO9PbICaq+Zogww/G5T
-         oQeL7QZSa/3ClERVES9jrQ9H9ZJzHcl1Me58XQalQI+UI9uoJvALULJbywDK/03ZpP
-         QOVSGBeKWmalFnynKR0gteObZzAjtKn9q8dIQaIc=
+        b=xy2aY/85Y7weDkxBOtstj6h2+eVJyTn+N27r0GzKsJJOCkWesk8RToaqH7ctj7aAR
+         tWCABB/6CRsekh5SjOyVbsW3vlzY3XjWbxyueyGZWJllRAHuDLYJ9lEZ+zMjcAB3Hz
+         2orow+amzKRf9d/kgOnXvsz4sTxj5Dxpo4vaKvhI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 49/93] scsi: sd: Ignore a failure to sync cache due to lack of authorization
-Date:   Sun, 27 Oct 2019 22:01:01 +0100
-Message-Id: <20191027203300.557463261@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Przemys=C5=82aw=20Kopa?= <prymoo@gmail.com>,
+        Rivera Valdez <riveravaldez@ysinembargo.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Daniel Drake <dan@reactivated.net>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 40/93] ALSA: hda - Force runtime PM on Nvidia HDMI codecs
+Date:   Sun, 27 Oct 2019 22:00:52 +0100
+Message-Id: <20191027203258.387618254@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -59,38 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 21e3d6c81179bbdfa279efc8de456c34b814cfd2 upstream.
+commit 94989e318b2f11e217e86bee058088064fa9a2e9 upstream.
 
-I've got a report about a UAS drive enclosure reporting back Sense: Logical
-unit access not authorized if the drive it holds is password protected.
-While the drive is obviously unusable in that state as a mass storage
-device, it still exists as a sd device and when the system is asked to
-perform a suspend of the drive, it will be sent a SYNCHRONIZE CACHE. If
-that fails due to password protection, the error must be ignored.
+Przemysław Kopa reports that since commit b516ea586d71 ("PCI: Enable
+NVIDIA HDA controllers"), the discrete GPU Nvidia GeForce GT 540M on his
+2011 Samsung laptop refuses to runtime suspend, resulting in a power
+regression and excessive heat.
 
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190903101840.16483-1-oneukum@suse.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Rivera Valdez witnesses the same issue with a GeForce GT 525M (GF108M)
+of the same era, as does another Arch Linux user named "R0AR" with a
+more recent GeForce GTX 1050 Ti (GP107M).
+
+The commit exposes the discrete GPU's HDA controller and all four codecs
+on the controller do not set the CLKSTOP and EPSS bits in the Supported
+Power States Response.  They also do not set the PS-ClkStopOk bit in the
+Get Power State Response.  hda_codec_runtime_suspend() therefore does
+not call snd_hdac_codec_link_down(), which prevents each codec and the
+PCI device from runtime suspending.
+
+The same issue is present on some AMD discrete GPUs and we addressed it
+by forcing runtime PM despite the bits not being set, see commit
+57cb54e53bdd ("ALSA: hda - Force to link down at runtime suspend on
+ATI/AMD HDMI").
+
+Do the same for Nvidia HDMI codecs.
+
+Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+Link: https://bbs.archlinux.org/viewtopic.php?pid=1865512
+Link: https://bugs.freedesktop.org/show_bug.cgi?id=75985#c81
+Reported-by: Przemysław Kopa <prymoo@gmail.com>
+Reported-by: Rivera Valdez <riveravaldez@ysinembargo.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Daniel Drake <dan@reactivated.net>
+Cc: stable@vger.kernel.org # v5.3+
+Link: https://lore.kernel.org/r/3086bc75135c1e3567c5bc4f3cc4ff5cbf7a56c2.1571324194.git.lukas@wunner.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/sd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_hdmi.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1646,7 +1646,8 @@ static int sd_sync_cache(struct scsi_dis
- 		/* we need to evaluate the error return  */
- 		if (scsi_sense_valid(sshdr) &&
- 			(sshdr->asc == 0x3a ||	/* medium not present */
--			 sshdr->asc == 0x20))	/* invalid command */
-+			 sshdr->asc == 0x20 ||	/* invalid command */
-+			 (sshdr->asc == 0x74 && sshdr->ascq == 0x71)))	/* drive is password locked */
- 				/* this is no error here */
- 				return 0;
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -3264,6 +3264,8 @@ static int patch_nvhdmi(struct hda_codec
+ 		nvhdmi_chmap_cea_alloc_validate_get_type;
+ 	spec->chmap.ops.chmap_validate = nvhdmi_chmap_validate;
+ 
++	codec->link_down_at_suspend = 1;
++
+ 	return 0;
+ }
  
 
 
