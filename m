@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BFFCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBD4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4E5208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E625C21783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211055;
-	bh=DoZbOJkyEpxr8O1/upunQtXlKDIbBtKBteci4Ek32YA=;
+	s=default; t=1572211058;
+	bh=Rmt2vC1gq7Y1SdH5bjjb7PSiYPSvnWGQM7T5c8N6Eh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kncryFXVV/zKTer6gZ8jAwVhUU/6sksd6JNkoz2ZZSfNBfqRSZnLsl2gZpVnivCzJ
-	 fEy51dy/Dsx4xnxCaUj1V5ZAaf3nNEF1XKWML5ucUahXALTkRUhSURjh385QrrCh2o
-	 XjS5SuNHqHuWCHWlK5q5esOuLW5Ibj7Ch6HQQ6Nc=
+	b=Ct+5S7ZxxXJk0mbq//6nXQFwDmaE7CSgGURmPMT9RaRlBLKbaIsE9VZ/PMQlY7Dvh
+	 XwyGVhfwqNyISqxq8wMNDJbJzE3PC0z37ZnUjWeH8jqeNHbAoBxUeO0BJtUPD9DlVC
+	 8UchUXl/N9B3faRc5b/KkxmnSuDw0TjTd/Sottps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbfJ0VRe (ORCPT
+        id S1731087AbfJ0VRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:17:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37320 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731059AbfJ0VRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:17:30 -0400
+        id S1730494AbfJ0VRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:17:33 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42071205C9;
-        Sun, 27 Oct 2019 21:17:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFF882070B;
+        Sun, 27 Oct 2019 21:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211049;
-        bh=DoZbOJkyEpxr8O1/upunQtXlKDIbBtKBteci4Ek32YA=;
+        s=default; t=1572211052;
+        bh=Rmt2vC1gq7Y1SdH5bjjb7PSiYPSvnWGQM7T5c8N6Eh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AbTcRIihGC+DCpWC3IpEyNpE2uqd5CAHxIGW7DXRSdJUqyE9P18SmEFEqRoJ3zNZu
-         XGbHOimgyn7jD8TGFYFWhchLm5TwnaK2ISkRt5GItegfiJO5o6iHG1I6Es9qMYB5Zo
-         xdZWTvEAD+NkozFzNlK9vhE3wkFrrfWO20vJJxO0=
+        b=Rayyjv9mgv+uC/sK2ifmQQf8nefCopQ62oOE00t7G2SkRefAOAcaVgKf4aF+vz3uE
+         ykQ9I/ZK3fmRMsdrF/Oi+gGW4KJJMpSr14+8djHRHcbxTPpdcOrpdY12wtA3upepBg
+         LmZFZRSkb2FkzsYz7h4U1CIGYO1Em+kU1/2Vp9z4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jyri Sarha <jsarha@ti.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Andr=C3=A9=20Roth?= <neolynx@gmail.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 015/197] ARM: OMAP2+: Add missing LCDC midlemode for am335x
-Date:   Sun, 27 Oct 2019 21:58:53 +0100
-Message-Id: <20191027203352.497559276@linuxfoundation.org>
+Subject: [PATCH 5.3 016/197] ARM: OMAP2+: Fix warnings with broken omap2_set_init_voltage()
+Date:   Sun, 27 Oct 2019 21:58:54 +0100
+Message-Id: <20191027203352.549707686@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -64,65 +65,164 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 17529d43b21c72466e9109d602c6f5c360a1a9e8 ]
+[ Upstream commit cf395f7ddb9ebc6b2d28d83b53d18aa4e7c19701 ]
 
-TRM "Table 13-34. SYSCONFIG Register Field Descriptions" lists both
-standbymode and idlemode that should be just the sidle and midle
-registers where midle is currently unconfigured for lcdc_sysc. As
-the dts data has been generated based on lcdc_sysc, we now have an
-empty "ti,sysc-midle" property.
+This code is currently unable to find the dts opp tables as ti-cpufreq
+needs to set them up first based on speed binning.
 
-And so we currently get a warning for lcdc because of a difference
-with dts provided configuration compared to the legacy platform
-data. This is because lcdc has SYSC_HAS_MIDLEMODE configured in
-the platform data without configuring the modes.
+We stopped initializing the opp tables with platform code years ago for
+device tree based booting with commit 92d51856d740 ("ARM: OMAP3+: do not
+register non-dt OPP tables for device tree boot"), and all of mach-omap2
+is now booting using device tree.
 
-Let's fix the issue by adding the missing midlemode to lcdc_sysc,
-and configuring the "ti,sysc-midle" property based on the TRM
-values.
+We currently get the following errors on init:
 
-Fixes: f711c575cfec ("ARM: dts: am335x: Add l4 interconnect hierarchy and ti-sysc data")
-Cc: Jyri Sarha <jsarha@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Robert Nelson <robertcnelson@gmail.com>
-Cc: Suman Anna <s-anna@ti.com>
+omap2_set_init_voltage: unable to find boot up OPP for vdd_mpu
+omap2_set_init_voltage: unable to set vdd_mpu
+omap2_set_init_voltage: unable to find boot up OPP for vdd_core
+omap2_set_init_voltage: unable to set vdd_core
+omap2_set_init_voltage: unable to find boot up OPP for vdd_iva
+omap2_set_init_voltage: unable to set vdd_iva
+
+Let's just drop the unused code. Nowadays ti-cpufreq should be used to
+to initialize things properly.
+
+Cc: Adam Ford <aford173@gmail.com>
+Cc: André Roth <neolynx@gmail.com>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Nishanth Menon <nm@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am33xx-l4.dtsi           | 4 +++-
- arch/arm/mach-omap2/omap_hwmod_33xx_data.c | 5 +++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/mach-omap2/pm.c | 100 ---------------------------------------
+ 1 file changed, 100 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index 1515f4f914999..3287cf695b5a4 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -2038,7 +2038,9 @@
- 			reg = <0xe000 0x4>,
- 			      <0xe054 0x4>;
- 			reg-names = "rev", "sysc";
--			ti,sysc-midle ;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
- 			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
- 					<SYSC_IDLE_NO>,
- 					<SYSC_IDLE_SMART>;
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-index c965af275e341..81d9912f17c85 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-@@ -231,8 +231,9 @@ static struct omap_hwmod am33xx_control_hwmod = {
- static struct omap_hwmod_class_sysconfig lcdc_sysc = {
- 	.rev_offs	= 0x0,
- 	.sysc_offs	= 0x54,
--	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE),
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
-+	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE,
-+	.idlemodes	= SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
-+			  MSTANDBY_FORCE | MSTANDBY_NO | MSTANDBY_SMART,
- 	.sysc_fields	= &omap_hwmod_sysc_type2,
- };
+diff --git a/arch/arm/mach-omap2/pm.c b/arch/arm/mach-omap2/pm.c
+index 1fde1bf53fb65..7ac9af56762df 100644
+--- a/arch/arm/mach-omap2/pm.c
++++ b/arch/arm/mach-omap2/pm.c
+@@ -74,83 +74,6 @@ int omap_pm_clkdms_setup(struct clockdomain *clkdm, void *unused)
+ 	return 0;
+ }
+ 
+-/*
+- * This API is to be called during init to set the various voltage
+- * domains to the voltage as per the opp table. Typically we boot up
+- * at the nominal voltage. So this function finds out the rate of
+- * the clock associated with the voltage domain, finds out the correct
+- * opp entry and sets the voltage domain to the voltage specified
+- * in the opp entry
+- */
+-static int __init omap2_set_init_voltage(char *vdd_name, char *clk_name,
+-					 const char *oh_name)
+-{
+-	struct voltagedomain *voltdm;
+-	struct clk *clk;
+-	struct dev_pm_opp *opp;
+-	unsigned long freq, bootup_volt;
+-	struct device *dev;
+-
+-	if (!vdd_name || !clk_name || !oh_name) {
+-		pr_err("%s: invalid parameters\n", __func__);
+-		goto exit;
+-	}
+-
+-	if (!strncmp(oh_name, "mpu", 3))
+-		/* 
+-		 * All current OMAPs share voltage rail and clock
+-		 * source, so CPU0 is used to represent the MPU-SS.
+-		 */
+-		dev = get_cpu_device(0);
+-	else
+-		dev = omap_device_get_by_hwmod_name(oh_name);
+-
+-	if (IS_ERR(dev)) {
+-		pr_err("%s: Unable to get dev pointer for hwmod %s\n",
+-			__func__, oh_name);
+-		goto exit;
+-	}
+-
+-	voltdm = voltdm_lookup(vdd_name);
+-	if (!voltdm) {
+-		pr_err("%s: unable to get vdd pointer for vdd_%s\n",
+-			__func__, vdd_name);
+-		goto exit;
+-	}
+-
+-	clk =  clk_get(NULL, clk_name);
+-	if (IS_ERR(clk)) {
+-		pr_err("%s: unable to get clk %s\n", __func__, clk_name);
+-		goto exit;
+-	}
+-
+-	freq = clk_get_rate(clk);
+-	clk_put(clk);
+-
+-	opp = dev_pm_opp_find_freq_ceil(dev, &freq);
+-	if (IS_ERR(opp)) {
+-		pr_err("%s: unable to find boot up OPP for vdd_%s\n",
+-			__func__, vdd_name);
+-		goto exit;
+-	}
+-
+-	bootup_volt = dev_pm_opp_get_voltage(opp);
+-	dev_pm_opp_put(opp);
+-
+-	if (!bootup_volt) {
+-		pr_err("%s: unable to find voltage corresponding to the bootup OPP for vdd_%s\n",
+-		       __func__, vdd_name);
+-		goto exit;
+-	}
+-
+-	voltdm_scale(voltdm, bootup_volt);
+-	return 0;
+-
+-exit:
+-	pr_err("%s: unable to set vdd_%s\n", __func__, vdd_name);
+-	return -EINVAL;
+-}
+-
+ #ifdef CONFIG_SUSPEND
+ static int omap_pm_enter(suspend_state_t suspend_state)
+ {
+@@ -208,25 +131,6 @@ void omap_common_suspend_init(void *pm_suspend)
+ }
+ #endif /* CONFIG_SUSPEND */
+ 
+-static void __init omap3_init_voltages(void)
+-{
+-	if (!soc_is_omap34xx())
+-		return;
+-
+-	omap2_set_init_voltage("mpu_iva", "dpll1_ck", "mpu");
+-	omap2_set_init_voltage("core", "l3_ick", "l3_main");
+-}
+-
+-static void __init omap4_init_voltages(void)
+-{
+-	if (!soc_is_omap44xx())
+-		return;
+-
+-	omap2_set_init_voltage("mpu", "dpll_mpu_ck", "mpu");
+-	omap2_set_init_voltage("core", "l3_div_ck", "l3_main_1");
+-	omap2_set_init_voltage("iva", "dpll_iva_m5x2_ck", "iva");
+-}
+-
+ int __maybe_unused omap_pm_nop_init(void)
+ {
+ 	return 0;
+@@ -246,10 +150,6 @@ int __init omap2_common_pm_late_init(void)
+ 	omap4_twl_init();
+ 	omap_voltage_late_init();
+ 
+-	/* Initialize the voltages */
+-	omap3_init_voltages();
+-	omap4_init_voltages();
+-
+ 	/* Smartreflex device init */
+ 	omap_devinit_smartreflex();
  
 -- 
 2.20.1
