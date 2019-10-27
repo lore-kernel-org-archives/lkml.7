@@ -2,61 +2,61 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A8FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5108CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2587421D7F
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762B5222C1
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nywAXHaY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0fZnZa8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbfJ0One (ORCPT
+        id S1727159AbfJ0Onj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 10:43:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42530 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfJ0Onc (ORCPT
+        Sun, 27 Oct 2019 10:43:39 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34082 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfJ0Onf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 10:43:32 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r1so7217328wrs.9;
-        Sun, 27 Oct 2019 07:43:31 -0700 (PDT)
+        Sun, 27 Oct 2019 10:43:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v3so7713227wmh.1;
+        Sun, 27 Oct 2019 07:43:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=YTHjpx5tynN5ysNBWnDF8q0AZsL3oz0jYtEIvTs3UB8=;
-        b=nywAXHaYFmYMIY+hAOelcPD7dFa0WvtZ4hopNPXAcgcSOOWBR3qexe4p3jR+opMRem
-         lCugMtCFnPAa3bYeCi5XUQ9nsJjqAlyMBdtErBu6QfX4HiRClOJ9XlX/YzaCltObVthY
-         kmmcXvFX9SHiQPo0V8Unp3F6q7o//WoKIRf54n4rgXnKWx+n76nNudLg2fyVX0LLKjl/
-         PT3bvONLPl3UJdPbe/wn9J2+LWtGQS93qOk5kt8AjOXmyRaf7eStSgqKHH+1RGIB+vJI
-         cYBywcXCz6MGJOcKDf2v81F7FSxmlhMvDjS20n5zV5P+PuVCUmoFOu+G1edytmO2HiIq
-         fAEw==
+        bh=qE0X3ogtNhn0ebFIC/w7JpP2rq2/beNy9tfdgFGDWNI=;
+        b=c0fZnZa8IRC4VhCN+ke+befKGunIOO7DkdhdFaW+KDbpyWHkOsSjIKR9Dc0Rq7Kuj3
+         Ncr3xzia093wSTG7NjjuBjEOWtDraFGsGPGhWkXSmkyaYAXRGMlB9f4dUS6EkQJ3h87m
+         gfgMYdQ+LpSTpCSfgf/PfkwJXXm4DgWlfZExXMdaoyzWYDpTa17vp2m5Z048vWoi3i00
+         rcrdtNHrHcrhEyE+Bb6tefzIrXXhFszP1SO1ADgz7YvTfDTI6Qm+FdmI/a3V8SNTbaez
+         LA946Gk8I6ZGviJVfCUYd+IiTIJbKwK2jQvvWcsZQkd97KZuUI6T6IrzGOM5UW8dBgnJ
+         N8bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YTHjpx5tynN5ysNBWnDF8q0AZsL3oz0jYtEIvTs3UB8=;
-        b=hbznPDJfkTNrC9Ntt4U37iS7KHe77nmsA2yqUe2KJTWUzdfbyiIehJdoRj7OnWSnPO
-         1uSrOWMVZVmJUVCb2qhRGg/Jc0ObHU3kVHgHHIfd/A6uBvrCCEASm18lXV3TgG6ZoIJQ
-         gh0YCO1TXBy9GMF0OtVTSW4FWmKECKIir8QYiKrPkddMkCfgIR9iEwSBOPrVzocNKrxj
-         kPCVXP3tvfAGBxsP6iIMPUA00GIzEKlcFm+foh8GTn6em1/d2M4jE7We3N4rHPgwE3Lq
-         1RvVxVYJHrIl9onzMTu0L9rJu3ySNSsO/To/zfXNcz7Vu9D/N/27e8zjdlMN4tse/CYP
-         4TTQ==
-X-Gm-Message-State: APjAAAWkP05kOCZmplb7+lnt5T94vGIUzDCmcRVQ8S8fH6rqV7FUz0B/
-        tNUMXjQBChZCCgmrcpusD60=
-X-Google-Smtp-Source: APXvYqwJ+H4xcrTifNRyujk7kct3/jugAiLCESyoG4j0g4CEAKEOyPB8CuSko//m+TkPGmo0KYgcvQ==
-X-Received: by 2002:a5d:4705:: with SMTP id y5mr11261749wrq.364.1572187410396;
-        Sun, 27 Oct 2019 07:43:30 -0700 (PDT)
+        bh=qE0X3ogtNhn0ebFIC/w7JpP2rq2/beNy9tfdgFGDWNI=;
+        b=Mq0eXFIHbDsV7LucG/66LmzYxDqrpcqLXRjUyiUkrLkHzJIkGVIdI5RrRRC5YmJk4f
+         KCdO9z43am4yvwVW/1AUVYFhuFQZifrN6KflBr6xfrTKP63OxNrNEY9H2x4j2c5SLmX6
+         r4mWbpxarksGs9dMkNfRoiin504I2IkJNJ6TzLVjoMpeg+pwN816Shhelbv2S3fk7Njr
+         xlT+L2AJiBNLFr+ksbwzTMvNLkm9xfb1OTGhLHdCveJon/GbjuGoaYCqWOdTqQD2IDZa
+         ofTMoXP10JvEnARCHs9pQoO2KjnLiOqZuhjgZHd3E7uHLA9SE1WoQhUfhb7XCi0W2znd
+         nLlA==
+X-Gm-Message-State: APjAAAXxIjUdW+C2lFZLp6YJRWy8cHUPEZAN5DesgRcDoPnHWvKz/oYU
+        o7TOnLeooGBtrNwie9g6rcI=
+X-Google-Smtp-Source: APXvYqyBiUGAZ2CjiSe1OPmeBxzC1CyoaPv3kh/kHYYIFyajS1xQnlY1UJFFT+LYInWLXZcO8WGb+Q==
+X-Received: by 2002:a7b:cd86:: with SMTP id y6mr12203560wmj.101.1572187413656;
+        Sun, 27 Oct 2019 07:43:33 -0700 (PDT)
 Received: from localhost (94.222.26.109.rev.sfr.net. [109.26.222.94])
-        by smtp.gmail.com with ESMTPSA id n17sm7655453wmc.41.2019.10.27.07.43.28
+        by smtp.gmail.com with ESMTPSA id l15sm1194788wme.5.2019.10.27.07.43.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 07:43:29 -0700 (PDT)
-Date:   Sun, 27 Oct 2019 09:01:46 +0100
+        Sun, 27 Oct 2019 07:43:32 -0700 (PDT)
+Date:   Sun, 27 Oct 2019 09:12:13 +0100
 From:   Stefan Hajnoczi <stefanha@gmail.com>
 To:     Stefano Garzarella <sgarzare@redhat.com>
 Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
@@ -71,14 +71,16 @@ Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
         Stefan Hajnoczi <stefanha@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [PATCH net-next 00/14] vsock: add multi-transports support
-Message-ID: <20191027080146.GA4472@stefanha-x1.localdomain>
+Subject: Re: [PATCH net-next 08/14] vsock: add vsock_create_connected()
+ called by transports
+Message-ID: <20191027081213.GC4472@stefanha-x1.localdomain>
 References: <20191023095554.11340-1-sgarzare@redhat.com>
+ <20191023095554.11340-9-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+        protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
 Content-Disposition: inline
-In-Reply-To: <20191023095554.11340-1-sgarzare@redhat.com>
+In-Reply-To: <20191023095554.11340-9-sgarzare@redhat.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,55 +88,44 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---1yeeQ81UyVL57Vl7
+--DSayHWYpDlRfCAAQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 23, 2019 at 11:55:40AM +0200, Stefano Garzarella wrote:
-> This series adds the multi-transports support to vsock, following
-> this proposal: https://www.spinics.net/lists/netdev/msg575792.html
+On Wed, Oct 23, 2019 at 11:55:48AM +0200, Stefano Garzarella wrote:
+> All transports call __vsock_create() with the same parameters,
+> most of them depending on the parent socket. In order to simplify
+> the VSOCK core APIs exposed to the transports, this patch adds
+> the vsock_create_connected() callable from transports to create
+> a new socket when a connection request is received.
+> We also unexported the __vsock_create().
 >=20
-> With the multi-transports support, we can use VSOCK with nested VMs
-> (using also different hypervisors) loading both guest->host and
-> host->guest transports at the same time.
-> Before this series, vmci-transport supported this behavior but only
-> using VMware hypervisor on L0, L1, etc.
->=20
-> RFC: https://patchwork.ozlabs.org/cover/1168442/
-> RFC -> v1:
-> - Added R-b/A-b from Dexuan and Stefan
-> - Fixed comments and typos in several patches (Stefan)
-> - Patch 7: changed .notify_buffer_size return to void (Stefan)
-> - Added patch 8 to simplify the API exposed to the transports (Stefan)
-> - Patch 11:
->   + documented VSOCK_TRANSPORT_F_* flags (Stefan)
->   + fixed vsock_assign_transport() when the socket is already assigned
->   + moved features outside of struct vsock_transport, and used as
->     parameter of vsock_core_register() as a preparation of Patch 12
-> - Removed "vsock: add 'transport_hg' to handle g2h\h2g transports" patch
-> - Added patch 12 to register vmci_transport only when VMCI guest/host
->   are active
+> Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  include/net/af_vsock.h                  |  5 +----
+>  net/vmw_vsock/af_vsock.c                | 20 +++++++++++++-------
+>  net/vmw_vsock/hyperv_transport.c        |  3 +--
+>  net/vmw_vsock/virtio_transport_common.c |  3 +--
+>  net/vmw_vsock/vmci_transport.c          |  3 +--
+>  5 files changed, 17 insertions(+), 17 deletions(-)
 
-Has there been feedback from Jorgen or someone else from VMware?  A
-Reviewed-by or Acked-by would be nice since this patch series affects
-VMCI AF_VSOCK.
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-Stefan
-
---1yeeQ81UyVL57Vl7
+--DSayHWYpDlRfCAAQ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl21TucACgkQnKSrs4Gr
-c8jY1wf9G0k0TNCkBEFILNq2f7qw5oF5+pTf1Of9V+p/S4tsTcWiHPLrYThBzZui
-QJ/Zws7KFQcXB/7+e8RQ4SXI/iMLoPtaEFK3euKQg0N48xlULtw2XuiMVuaAsTsl
-iaEmsyI21PQlM7zeMFTfqt0wxt2H6MebdP4DyrfhbKvFKmzAAy7v0Xq3vtv6/ZX6
-AIVIDuKDo19J9oe9ZKF51lvMe4Ndd7ynKNDD+2s2ZrrF31/uuQkE6K2ZUMjTDQVR
-zcK2K/aHtAnz+98XtneyrQAlc4JV0lTIZOMB2aTS4ZQ1sHssYiwGbF/j4fR2Dj0n
-iFHeCiwo4mQ5+1RKCoFZbtObs2ilQw==
-=wYuh
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl21UV0ACgkQnKSrs4Gr
+c8j8/ggAyDA6UkgCfi0daj2HF5HCXYLlJ9/XXtklusGF1Wc9tWjzw/GXPdNlYum9
+SqWtDu4YlWC3HH5TXKiMuTFjsumU6qJOSXKbPTFOmHdsQAnYeBMB1LZZRAd1O85T
+LeBzRaNJjd+3qcjEeGf4gy7TuHGk49qnJaaP9n+SvheaN6DRf4cVJYhVYHf15xnI
+qyhbT8cq5YcgszT/mp/D4guFPl9gYFPT7IqFvN8FOhELWmj7q6noJqAlEiUMsOSW
+fg8L76b1v8h04Q7iF2lmvUMFu3q9POIgkxqCQcYZzxJUMFLJez2y8nWnRIbNLJnJ
+l70AGpwkVMKXrJfa8DwyCI39cmT1Hg==
+=06uZ
 -----END PGP SIGNATURE-----
 
---1yeeQ81UyVL57Vl7--
+--DSayHWYpDlRfCAAQ--
