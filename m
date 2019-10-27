@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96507CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2748CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6321820873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47C421726
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210169;
-	bh=OCtxOBfUNqUfdyo4QTi6W5P3JVdilBukGXrbpspuus8=;
+	s=default; t=1572210175;
+	bh=IsBStTCkeWmqdWA0ZgIgVTI6Qu3UtzZL3iN49SUkrIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xOylSx6cPvxUXR2ZIlkXkgOdpSMHfzuCTn/dMM9AkADqFwrAu7LuyNDNp24/AWBaa
-	 CDCLii5oAJy7O6dJ9xJX2m3pH/WjWPEBmMSaoFrrLpef/6cT+xhYm9YAjR6TtBo/rd
-	 oBYAXPvmFalsJ9twXa/lddTSuRltg7iHYe5eHokU=
+	b=bUBSMVmX4PtmcNTBU0wVUEIFcoVxY5m7Z0eWsdJTJaShNOHtIsiL0w7qYWqA+PbMJ
+	 XxEtXnMLkJmomw4jAypuQ623bIprv6evAu0kL2/EcqmwEQBvNou3Ua0vqQG3ie8Ea8
+	 ZzaoG8HrSOsgYebTKEfK/WFe3ap5zQJ0Pbg8KFGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbfJ0VCr (ORCPT
+        id S1728153AbfJ0VCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:02:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47860 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:02:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728124AbfJ0VCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:02:44 -0400
+        id S1728139AbfJ0VCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:02:48 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1589B2064A;
-        Sun, 27 Oct 2019 21:02:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1729D2064A;
+        Sun, 27 Oct 2019 21:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210163;
-        bh=OCtxOBfUNqUfdyo4QTi6W5P3JVdilBukGXrbpspuus8=;
+        s=default; t=1572210166;
+        bh=IsBStTCkeWmqdWA0ZgIgVTI6Qu3UtzZL3iN49SUkrIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BPPryt4gifysVd8+O61SgKMy/jbXIkCrDKNq7ct2pk4BwMLlzZWswqmb9iljpUAdv
-         GGwlxihddiD0858EzUZEiNWYVH8PTtxCK5F1W+A88nn98dyxIlHhkdVdwIC7TrHimL
-         ZtIBuig49ozLS2siAFwPknLAsd+yVRPN5oxzo+2A=
+        b=CNU8yWwaYZbwr0ZLewIURVpTPm/4AXUkvt60lnS0y9wMKKZZi/xtCXcmsToCL+c5D
+         FFql6RXknx6t2Ca+i7S8BcbBNiz1oyELwFpMXcgfezzbTyx1AtaZxTuKHuPtNyiosr
+         qK2TJdCCu3FBsMWxi8LZ6aIqDdQ4rin+CUuJ34oM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         Doug Berger <opendmb@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 13/41] net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
-Date:   Sun, 27 Oct 2019 22:00:51 +0100
-Message-Id: <20191027203111.151176841@linuxfoundation.org>
+Subject: [PATCH 4.4 14/41] net: bcmgenet: Set phydev->dev_flags only for internal PHYs
+Date:   Sun, 27 Oct 2019 22:00:52 +0100
+Message-Id: <20191027203111.748185407@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
 References: <20191027203056.220821342@linuxfoundation.org>
@@ -62,45 +62,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit efb86fede98cdc70b674692ff617b1162f642c49 ]
+[ Upstream commit 92696286f3bb37ba50e4bd8d1beb24afb759a799 ]
 
-The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
-became 6 for GENET v4 and above, account for that difference.
+phydev->dev_flags is entirely dependent on the PHY device driver which
+is going to be used, setting the internal GENET PHY revision in those
+bits only makes sense when drivers/net/phy/bcm7xxx.c is the PHY driver
+being used.
 
-Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
+Fixes: 487320c54143 ("net: bcmgenet: communicate integrated PHY revision to PHY driver")
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Acked-by: Doug Berger <opendmb@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.h |    1 +
- drivers/net/ethernet/broadcom/genet/bcmmii.c   |    6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -362,6 +362,7 @@ struct bcmgenet_mib_counters {
- #define  EXT_ENERGY_DET_MASK		(1 << 12)
- 
- #define EXT_RGMII_OOB_CTRL		0x0C
-+#define  RGMII_MODE_EN_V123		(1 << 0)
- #define  RGMII_LINK			(1 << 4)
- #define  OOB_DISABLE			(1 << 5)
- #define  RGMII_MODE_EN			(1 << 6)
 --- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -328,7 +328,11 @@ int bcmgenet_mii_config(struct net_devic
- 	 */
- 	if (priv->ext_phy) {
- 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
--		reg |= RGMII_MODE_EN | id_mode_dis;
-+		reg |= id_mode_dis;
-+		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
-+			reg |= RGMII_MODE_EN_V123;
-+		else
-+			reg |= RGMII_MODE_EN;
- 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
- 	}
+@@ -346,11 +346,12 @@ int bcmgenet_mii_probe(struct net_device
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	struct device_node *dn = priv->pdev->dev.of_node;
+ 	struct phy_device *phydev;
+-	u32 phy_flags;
++	u32 phy_flags = 0;
+ 	int ret;
  
+ 	/* Communicate the integrated PHY revision */
+-	phy_flags = priv->gphy_rev;
++	if (priv->internal_phy)
++		phy_flags = priv->gphy_rev;
+ 
+ 	/* Initialize link state variables that bcmgenet_mii_setup() uses */
+ 	priv->old_link = -1;
 
 
