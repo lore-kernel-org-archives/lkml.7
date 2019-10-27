@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945BBCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0AFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A5420B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F63621850
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210853;
-	bh=BQkvAnAqGQMKSBoNnU79DGm9X/VGdKDSVN3+IwOkyJI=;
+	s=default; t=1572210857;
+	bh=E5SOf4JtBUhudpAnV1eKCgn6mcp3hoOUlmAWiHMcZHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pYLhBFWc9hPOJVM894i8FhtMkTIBmpIYl+62bWLKZYaJGvrgY2PXV466jnfGqgXrU
-	 UEGm+4U5VQwmYmLxrwBiR3yFtytSVN3GzCQY2oTzDZcjoF2DGi42ctId0cIgP6p50u
-	 TYKy2m/2v41MFV9eaR9xHbNsIRzq78lu4WGfNHqM=
+	b=GLp5hYOTF3vWjN/e9kOd2jZAt8zdSlqfuC+9mAXpgkp4AyWDGg5Zy/ilr+n0RuRqq
+	 KSJHCTdSOrfRO3j1xM8bjhul2TS43VF+Rz892HQkUcn1CLpoogscvAD2VRr5BNKXOa
+	 cP3opMtI1/v/llpjusGEdjhIZsf/R17sloN9L1Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730408AbfJ0VOM (ORCPT
+        id S1730421AbfJ0VOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:14:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:14:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729402AbfJ0VOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:14:09 -0400
+        id S1730391AbfJ0VOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:14:07 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9432320B7C;
-        Sun, 27 Oct 2019 21:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1AA02064A;
+        Sun, 27 Oct 2019 21:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210849;
-        bh=BQkvAnAqGQMKSBoNnU79DGm9X/VGdKDSVN3+IwOkyJI=;
+        s=default; t=1572210846;
+        bh=E5SOf4JtBUhudpAnV1eKCgn6mcp3hoOUlmAWiHMcZHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XWq29y/L6+UlM9tvcA3A7F17mXqfYICepwpS/V0fVj6pHxrR/oWJggn1/21i4nyPU
-         3R9kyhAVVCcyAXlnkN4db7hEhPUo5/KJ7KoFsFY+87+BgzkAPtDuEHD0tyk0o+Hw2x
-         6BV+sOdGMEEIHWZ2yuakIW3a9wzPlgPaTCV7XY7E=
+        b=nzlBMZtpJ0uJiWlu2esoozOIvX5iW/KG8dvYN6ZZAw4OpUSSBugWRu+OmtQV76uJ5
+         OEMI2liEeS1KSD7zklDBkX+JDK7nZysKs6gZqhdcIVSPyn52y85mL/S/b51dJf5Sb5
+         gKYihhvoBrXgaL1MxeyStCqPfOQ++okMSS/FhrIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Szabolcs=20Sz=C5=91ke?= <szszoke.code@gmail.com>,
+        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 39/93] ALSA: usb-audio: Disable quirks for BOSS Katana amplifiers
-Date:   Sun, 27 Oct 2019 22:00:51 +0100
-Message-Id: <20191027203258.297714007@linuxfoundation.org>
+Subject: [PATCH 4.19 38/93] ALSA: hda/realtek - Enable headset mic on Asus MJ401TA
+Date:   Sun, 27 Oct 2019 22:00:50 +0100
+Message-Id: <20191027203258.198878626@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,35 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Szabolcs Szőke <szszoke.code@gmail.com>
+From: Daniel Drake <drake@endlessm.com>
 
-commit 7571b6a17fcc5e4f6903f065a82d0e38011346ed upstream.
+commit 8c8967a7dc01a25f57a0757fdca10987773cd1f2 upstream.
 
-BOSS Katana amplifiers cannot be used for recording or playback if quirks
-are applied
+On Asus MJ401TA (with Realtek ALC256), the headset mic is connected to
+pin 0x19, with default configuration value 0x411111f0 (indicating no
+physical connection).
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=195223
-Signed-off-by: Szabolcs Szőke <szszoke.code@gmail.com>
+Enable this by quirking the pin. Mic jack detection was also tested and
+found to be working.
+
+This enables use of the headset mic on this product.
+
+Signed-off-by: Daniel Drake <drake@endlessm.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191011171937.8013-1-szszoke.code@gmail.com
+Link: https://lore.kernel.org/r/20191017081501.17135-1-drake@endlessm.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/pcm.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/pci/hda/patch_realtek.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -355,6 +355,9 @@ static int set_sync_ep_implicit_fb_quirk
- 		ep = 0x81;
- 		ifnum = 1;
- 		goto add_sync_ep_from_ifnum;
-+	case USB_ID(0x0582, 0x01d8): /* BOSS Katana */
-+		/* BOSS Katana amplifiers do not need quirks */
-+		return 0;
- 	}
- 
- 	if (attr == USB_ENDPOINT_SYNC_ASYNC &&
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5677,6 +5677,7 @@ enum {
+ 	ALC225_FIXUP_WYSE_AUTO_MUTE,
+ 	ALC225_FIXUP_WYSE_DISABLE_MIC_VREF,
+ 	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
++	ALC256_FIXUP_ASUS_HEADSET_MIC,
+ 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC299_FIXUP_PREDATOR_SPK,
+ 	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
+@@ -6693,6 +6694,15 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE
+ 	},
++	[ALC256_FIXUP_ASUS_HEADSET_MIC] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x03a11020 }, /* headset mic with jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
++	},
+ 	[ALC256_FIXUP_ASUS_MIC_NO_PRESENCE] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
+@@ -6889,6 +6899,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
+ 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
+ 	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+ 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1b13, "Asus U41SV", ALC269_FIXUP_INV_DMIC),
 
 
