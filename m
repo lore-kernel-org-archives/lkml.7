@@ -2,278 +2,99 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67E5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 18:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42C5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 18:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2EF20873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 18:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B92B20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 18:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q4llK1GE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uDga/ALg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfJ0SYM (ORCPT
+        id S1727633AbfJ0Sal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 14:24:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42428 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbfJ0SYM (ORCPT
+        Sun, 27 Oct 2019 14:30:41 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33998 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbfJ0Sal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 14:24:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=x/WBt9wVw5/Q3BiQuj4jBFrUih0yu1dsN3LgzzCFjb8=; b=q4llK1GEfYAm1dAxtYaVNJqeu
-        bV5cRLkIU8vukDODob2+2cWYTnqpsGhx8CRZrf1dsktZcWhZ26RwP9krcs1mT7C43PgefxVLKMP/A
-        CSmwgp0rz0ix+DZIyCOPMceH+cBXE3p+TvnSgjjX1mwfSuQYxlYOw/vgS2CeV0Lfr8IPmb9Oy19GI
-        WKtTHBLzyFVXCOhxhEJwseQmtLgdz4xSL4G95hbsMel2QY/oxRwXpW7RJLmEuqPs7ltdGKmMTeVtZ
-        y6Sg9P0hKiScLIMGw58jdz/CQPDjGK9iTrPusGSFPyWhOXc1zneRWZ3wpepOR29jjX7aCGYxaSo51
-        Qn/uckKPQ==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iOnD0-0002BR-J2; Sun, 27 Oct 2019 18:24:10 +0000
-Subject: Re: [PATCH] scripts:prune-kernel:prune old kernels and modules dir
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        yamada.masahiro@socionext.com, michal.lkml@markovi.net
-Cc:     bfields@fieldses.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191025054703.16400-1-unixbhaskar@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4adba61c-9c1b-dee3-0a9b-9159dcce5a82@infradead.org>
-Date:   Sun, 27 Oct 2019 11:24:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191025054703.16400-1-unixbhaskar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sun, 27 Oct 2019 14:30:41 -0400
+Received: by mail-io1-f66.google.com with SMTP id q1so7991513ion.1
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 11:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GBOGICALtPwpQfkNPfkezlntgQyagNPqrbCuHz6L7Es=;
+        b=uDga/ALgD7JROjJVKy/BpQ24VesfuzXc2hvMTRzeG2s2CNGOnyNWgjEoR52ffxI22q
+         3oFsSqfdGbnQaVqta0BQVVHPTo+b7aV2iIFtULHr1bzP9Ikti6SsNvVwr6E8mbxkx1xk
+         BxwMdjYKpC1SLryjVjglWzH6Fj7rnGT8HsJW9syE/3nEBmgJJorM0Ic1qWuagk/DIMHT
+         2Smt34x7H3IOeCeszuAs6x0xLFoa7NBWqzw1YfDHGGUn4VnTSZN9MxqRMaR3w/Woq8P3
+         IyqOHfGrUocJx1iSOXKGeUb73u0SUct3zmJH34rIL82roPEwkKnqEuyPdlf6PZeha/hw
+         2rbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GBOGICALtPwpQfkNPfkezlntgQyagNPqrbCuHz6L7Es=;
+        b=OqpOJebkuEXiB4QV0ljchb2gnhY33TeTW62hddnO+sC7DM4kAX6IoaJxFcbJGsyi93
+         4dYV6UcOJ8pLQxl8XyeQB/lKUvnwq83fRBPev3WKUZilYvuZPkLQOBLkt4TKaoDRp11v
+         c3v7ZBprRFB8fIsV4bU3bODuuS/Qk716fVkNHBQ2/COi3A9cIs82+xcqjwVNaMw6/TvM
+         qZWQzFNVyl9q9XchHH7IqSe/LvFgr63oMD2iGu4agArJ6Oxq+bN14d6ZlT4UnG3KhtFw
+         4G9yOPxAdU+cAqc+nhvwNLyElhQB9JCoAUh1TvtMMJjRLZd6DVfNZRBNTcIY4uJVD8mM
+         I3sA==
+X-Gm-Message-State: APjAAAXvh+EYGBKf9y3qmcSs7QqeN+DRFpSmIn2XlNLCX3VL9q6qN3Mf
+        h1d9ZN73O9skiDPtRdzeXJE=
+X-Google-Smtp-Source: APXvYqzvo+HqAIYoP1gTDYfnuGy2ExLr+rNsa7f56B8AJkvgCeeNu5LEoi0pNv8AOaV54aFtsiDI8Q==
+X-Received: by 2002:a05:6638:20a:: with SMTP id e10mr14306549jaq.27.1572201040594;
+        Sun, 27 Oct 2019 11:30:40 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id o5sm1186769ilc.68.2019.10.27.11.30.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2019 11:30:40 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: pci: Fix memory leak in snd_ali_create
+Date:   Sun, 27 Oct 2019 13:30:27 -0500
+Message-Id: <20191027183030.12677-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/24/19 10:47 PM, Bhaskar Chowdhury wrote:
-> This patch will remmove old kernel and associated modules directory from
-> the system.
-> 
-> Few interaction with the script ,below 
-> 
-> 1) ✔ ~/git-linux/linux-kbuild [master ↑·18|✔]
-> 10:40 $ ./scripts/prune-kernel
-> 
-> 
-> 2)10:41 $ ./scripts/prune-kernel -h
-> You need to use this script like this :
-> 
->   ./scripts/prune-kernel -r kernel_version  modules_directory_name
->  ./scripts/prune-kernel -i  option for interactive way to  use it.
-> 
-> 
-> 3) 10:41 $ ./scripts/prune-kernel -r 5.2.2 5.2.2-gentoo
-> Removed  kernel version:5.2.2 and modules directory:5.2.2-gentoo from
-> the system.
-> 
-> 
-> 4)10:41 $ ./scripts/prune-kernel -i
-> 
-> 
->  Want to removing old kernels and modules dir [YN]: Y
->  Please give another version to remove: 5.2.2
+In the implementation of snd_ali_create() the memory allocated for codec
+is leaked in case of an error. Release codec if snd_ali_chip_init()
+fails.
 
-These 2 lines above could (should) be combined into one line. E.g.:
+Fixes: f9ab2b1c3ab5 ("[ALSA] ali5451 - Code clean up, irq handler fix")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ sound/pci/ali5451/ali5451.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Enter kernel version to remove or blank/emtpy to exit:
-
->  /boot/vmlinuz-5.3.7-050307-generic
->  /boot/vmlinuz-5.3.6-050306-generic
->  find: ‘/boot/efi’: Permission denied
-
-too noisy.
-
->  Please give the full modules directory name to remove: 5.2.2-gentoo
->  5.3.6-050306-generic
->  5.3.7-050307-generic
-
-too noisy.
-
-> 
-> 
->   Removed kernel version:5.2.2 and associated modules:5.2.2-gentoo
->   ..Done.
-> 
-> 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-> ---
-> To Bruce,
-> I have incorporated all the changes you asked for ,kindly review.
-> 
->  scripts/prune-kernel | 75 +++++++++++++++++++++++++++++++++-----------
->  1 file changed, 56 insertions(+), 19 deletions(-)
-> 
-> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
-> index e8aa940bc0a9..292ba70d7770 100755
-> --- a/scripts/prune-kernel
-> +++ b/scripts/prune-kernel
-> @@ -1,21 +1,58 @@
->  #!/bin/bash
->  # SPDX-License-Identifier: GPL-2.0
-> -
-> -# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
-> -# again, /boot and /lib/modules/ eventually fill up.
-> -# Dumb script to purge that stuff:
-> -
-> -for f in "$@"
-> -do
-> -        if rpm -qf "/lib/modules/$f" >/dev/null; then
-> -                echo "keeping $f (installed from rpm)"
-> -        elif [ $(uname -r) = "$f" ]; then
-> -                echo "keeping $f (running kernel) "
-> -        else
-> -                echo "removing $f"
-> -                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
-> -                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
-> -                rm -rf "/lib/modules/$f"
-> -                new-kernel-pkg --remove $f
-> -        fi
-> -done
-> +#This script will delete old kernels and modules directory related to it interactively.
-> +#if you choose "-i" as interactive otherwise it will just go ahead and do the stuff once
-> +#you mentione the kernel_version and modules_directory_name as parameter.
-
-        mention
-or better:
-        enter
-
-> +flag=$1
-
-$flag is not used anywhere.
-
-> +kernel_ver=$2
-
-remove_old_kernel() uses $kernel_version, not $kernel_ver.
-
-> +modules_dir_name=$3
-
-remove_old_modules_dir() uses $modules_version, not $modules_dir_name.
-
-> +boot_dir=/boot
-> +modules_dir=/lib/modules
-
-need a blank line here.
-
-> +remove_old_kernel() {
-> +	cd $boot_dir
-> +	find $boot_dir -name "vmlinuz-*" -type f -exec ls -1 {} \;
-
-why the 'ls'?  too noisy IMO.
-
-> +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
-> +	return 0
-> +}
-
-need a blank line here.
-
-> +remove_old_modules_dir() {
-> +	cd $modules_dir
-> +	find $modules_dir -maxdepth 0 -type d -exec ls -1 {} \;
-
-'ls' is too noisy.
-
-> +	rm -rf $modules_version
-> +	return 0
-> +}
-> +while getopts :hir opt;
-
-$opt is not used anywhere.
-
-Does 'getopt's support long option strings?  E.g.,
---interactive, --help, --remove.
-
-> +do 
-
-'do' has a trailing space after it.  drop it.
-
-> +		 case "$1" in
-
-Is $1 the same as $flag here?
-
-> +			 -i | --interactive)
-
-bad indentation above.
-
-> +		 printf "\n\n Want to removing old kernels and modules dir [YN]: %s"
-> +		 read response
-> +		 if [[ $response == "Y" ]];then
-> +			 printf "Please give another version to remove: %s"
-> +			 read kernel_version
-> +			 remove_old_kernel
-> +			 printf "Please give the full modules directory name to remove: %s"
-> +			 read modules_version
-> +			 remove_old_modules_dir
-> +			 printf "\n\n\n Removed kernel version:$kernel_version and associated modules:$modules_version ..Done. \n\n"
-> +		 elif [[ $response == "N" ]];then
-> +			 exit 1
-> +		 fi
-> +		 ;;
-> +	                  -h | --help)
-
-bad indentation.
-
-> +                    
-
-line above is just a bunch of spaces.  bad.
-
-> +                     printf "You need to use this script like this :\n
-
-use tabs to indent, not spaces.
-
-> +	             $0 -r kernel_version modules_directory_name\n
-> +                     $0 -i option for interactive way to use it.\n\n"
-
-inconsistent indentation.
-
-> +	      
-
-line above is just spaces.  Empty lines are OK, even good for
-readablility, but they should not end with spaces or tabs.
-
-> +	         exit 1
-> +		     ;;
-> +	                 -r | --remove)
-> +			 shift $(( OPTIND - 1 ))
-
-What is the purpose of the shift, when this case ends with exit?
-
-> +			 rm -f kernel_ver
-
-			       $kernel_ver
-
-Probably need to cd $boot_dir for above 'rm'.
-or just rm -f $boot_dir/$kernel_ver
-
-> +                         cd $modules_dir
-> +	                 rm -rf $modules_dir_name
-> +	                 printf "Removed  kernel version:$kernel_ver and modules directory:$modules_dir_name from the system.\n\n"
-> +			 exit 0
-> +                         ;;
-> + esac
-
-esac indentation does not match case.
-
-> +     done
-
-done indentation does not match do.
-
-
-Nack.
-
+diff --git a/sound/pci/ali5451/ali5451.c b/sound/pci/ali5451/ali5451.c
+index 6e28e381c21a..3ed07a18be4d 100644
+--- a/sound/pci/ali5451/ali5451.c
++++ b/sound/pci/ali5451/ali5451.c
+@@ -2179,6 +2179,7 @@ static int snd_ali_create(struct snd_card *card,
+ 	err = snd_ali_chip_init(codec);
+ 	if (err < 0) {
+ 		dev_err(card->dev, "ali create: chip init error.\n");
++		snd_ali_free(codec);
+ 		return err;
+ 	}
+ 
 -- 
-~Randy
+2.17.1
 
