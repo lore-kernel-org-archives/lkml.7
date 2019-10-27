@@ -2,50 +2,52 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DD6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B1BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09132070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CFB2070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211752;
-	bh=IDU0l7Efib0taqOJVNYTz6XobOyDC5hC4mNkcR0XXIE=;
+	s=default; t=1572211754;
+	bh=BTbYBLePp+9uCeyYrl7wI5G+3XjBonWbTYXj63iJmqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XcErB7zSv1jZaaWP0/JNQvC4EL01jUGQFH0Q2K43m1A1O5vEknC1KkFXC33AguE5A
-	 GcX3YaV54kXIvuaJYXSAkwbn8UDPxqcuHOqFAivbb4LSL/Mdu7DDhKSybZ73mUmPwh
-	 oTa+AxsGdmA6IYZOxhwBWAF50n9nlyoHhbzeWJDI=
+	b=ehKIo5ap1yUzWbiTtgJEOmc0WQtA4urKihkfoXnms2pB8y1zFBnVsWzRws/U5f3mN
+	 f/XJjLuJHxkXh9irjaihplvTolvuxsDNA9ISKo1NZtbYrLtMxLllfNuN6jptU6X5uu
+	 SZpoAkCg7fMi775nw5Md8OpIN7YylGKCegvE3jIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732381AbfJ0V3L (ORCPT
+        id S1731892AbfJ0VVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:29:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42116 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:21:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731905AbfJ0VVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:21:18 -0400
+        id S1731870AbfJ0VVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:21:11 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E66D205C9;
-        Sun, 27 Oct 2019 21:21:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 180E8208C0;
+        Sun, 27 Oct 2019 21:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211278;
-        bh=IDU0l7Efib0taqOJVNYTz6XobOyDC5hC4mNkcR0XXIE=;
+        s=default; t=1572211270;
+        bh=BTbYBLePp+9uCeyYrl7wI5G+3XjBonWbTYXj63iJmqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HyQHS0N8+WK22a5gqk+7v4FchY327vrhsBDz5rvfn9Qx5xaKfn5bS2/VtDPMatPD+
-         paMx3vxLvDRpbqNUh7wFi9D8v91jrjYLqyR/Y3n9L95Ve+FNM23AYXVdUbyOvvkYig
-         KdCPu2tLO5TOTUOPH5lD+Zu+k9pOGOmfzq2Q8jkQ=
+        b=iSjF2WIk4EvhgXXnQNYK817hohz0hP84BWlOFukdrDEMDJm2cpjw6upgMjFchIXG1
+         eDbg4/D28H7nQOXmbpS/+5FbsrxpmSRGlWna3ROWQ6B0sF053C0dAE5X+asbw82xS2
+         XKXndFCphyiUclVoyGK8gd9ifWtdcCkHWrb0Vrkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 096/197] USB: legousbtower: fix memleak on disconnect
-Date:   Sun, 27 Oct 2019 22:00:14 +0100
-Message-Id: <20191027203356.951598018@linuxfoundation.org>
+        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 038/197] net: stmmac: xgmac: Not all Unicast addresses may be available
+Date:   Sun, 27 Oct 2019 21:59:16 +0100
+Message-Id: <20191027203353.777116238@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -58,37 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-commit b6c03e5f7b463efcafd1ce141bd5a8fc4e583ae2 upstream.
+[ Upstream commit 9a2ae7b3960eb2426a8560cbc3251e3453230d21 ]
 
-If disconnect() races with release() after a process has been
-interrupted, release() could end up returning early and the driver would
-fail to free its driver data.
+Some setups may not have all Unicast addresses filters available. Let's
+check this before trying to setup filters.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191010125835.27031-3-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 0efedbf11f07 ("net: stmmac: xgmac: Fix XGMAC selftests")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/legousbtower.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -419,10 +419,7 @@ static int tower_release (struct inode *
- 		goto exit;
- 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 85c68b7ee8c6a..46d74f407aab6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -370,7 +370,7 @@ static void dwxgmac2_set_filter(struct mac_device_info *hw,
+ 	dwxgmac2_set_mchash(ioaddr, mc_filter, mcbitslog2);
  
--	if (mutex_lock_interruptible(&dev->lock)) {
--	        retval = -ERESTARTSYS;
--		goto exit;
--	}
-+	mutex_lock(&dev->lock);
- 
- 	if (dev->open_count != 1) {
- 		dev_dbg(&dev->udev->dev, "%s: device not opened exactly once\n",
+ 	/* Handle multiple unicast addresses */
+-	if (netdev_uc_count(dev) > XGMAC_ADDR_MAX) {
++	if (netdev_uc_count(dev) > hw->unicast_filter_entries) {
+ 		value |= XGMAC_FILTER_PR;
+ 	} else {
+ 		struct netdev_hw_addr *ha;
+-- 
+2.20.1
+
 
 
