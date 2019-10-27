@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101FBCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744C9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36662064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9362064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210736;
-	bh=a5sdZr3g7A4P952zrAxsxcFA2hqawcCrTqhspGU8zyQ=;
+	s=default; t=1572210740;
+	bh=L1PrepPqPQmkFLVK0zM+FROUoakFp+6q6KeHCKYcIo8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qfUyQEAh+GIowXKdmwo/+7qASO3a2K+ycL54toAh5cFK67mCdCnqHn7E/0dCPZUDw
-	 AO2hIg5jdFKWh88CkvWVZUwYyBWNor8F6QPzy/tDWufBIRJWp53rklhR4n6s/1cmlo
-	 uNBmwB7UeN80a9WbLUlT0+9Phvp/M0NMpcX6b7B0=
+	b=KWctqgEBNl43kBaCP/XeQS4UlmENmRku4l4sX206srQSHnAVkVGVP2Oi5ipiYyGz8
+	 9ygMI5G/8wkgkvPzqcCaYeogSo/1r22fxrg6zt1sbGnKAYrxTe0mhIuNISCTzbFONC
+	 Z8SxzF1dvKjBbg6Jz9teSR6sZwnIgzoD/JywOy7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbfJ0VMP (ORCPT
+        id S1730039AbfJ0VMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58926 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730013AbfJ0VMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:12:13 -0400
+        id S1730030AbfJ0VMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:12:16 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ACCD2064A;
-        Sun, 27 Oct 2019 21:12:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9D14205C9;
+        Sun, 27 Oct 2019 21:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210732;
-        bh=a5sdZr3g7A4P952zrAxsxcFA2hqawcCrTqhspGU8zyQ=;
+        s=default; t=1572210735;
+        bh=L1PrepPqPQmkFLVK0zM+FROUoakFp+6q6KeHCKYcIo8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iqreZQLJQJpk4qS3k+ckYlq2mUpwDK6IG98pPKStMqi4sVMqynC0xEoycE5unmHMz
-         WCsL9cvoIUQK9DbKRK7oMPHglnc6XWw+jzVFkTeGDrC4sJazVTm6OPtmACrN6hkEEa
-         ywHdblBHC+8hEZacXs+Omh7wVZEXvA2h42zodvjw=
+        b=cnwEsD1+EZpJrKfS2FwCDPD2US4JTtZ5viyuFiWJZ8YlnfpEBMxHoVJEfH7avh10U
+         THxWTZ/EV9+Bb0UUQdH3/x02cigvbK3yHRxox4YbjUIsXWFSC0ZCMFryeAvIUD9wBx
+         J07GNIaHNALh466ZkPEcIR6krP4BoMB4ED4aAgLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junaid Shahid <junaids@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         "Jitindar SIngh, Suraj" <surajjs@amazon.com>
-Subject: [PATCH 4.14 117/119] kvm: apic: Flush TLB after APIC mode/address change if VPIDs are in use
-Date:   Sun, 27 Oct 2019 22:01:34 +0100
-Message-Id: <20191027203349.948578924@linuxfoundation.org>
+Subject: [PATCH 4.14 118/119] kvm: vmx: Basic APIC virtualization controls have three settings
+Date:   Sun, 27 Oct 2019 22:01:35 +0100
+Message-Id: <20191027203350.009320062@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -61,78 +61,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junaid Shahid <junaids@google.com>
+From: Jim Mattson <jmattson@google.com>
 
-commit a468f2dbf921d02f5107378501693137a812999b upstream.
+commit 8d860bbeedef97fe981d28fa7b71d77f3b29563f upstream.
 
-Currently, KVM flushes the TLB after a change to the APIC access page
-address or the APIC mode when EPT mode is enabled. However, even in
-shadow paging mode, a TLB flush is needed if VPIDs are being used, as
-specified in the Intel SDM Section 29.4.5.
+Previously, we toggled between SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE
+and SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES, depending on whether or
+not the EXTD bit was set in MSR_IA32_APICBASE. However, if the local
+APIC is disabled, we should not set either of these APIC
+virtualization control bits.
 
-So replace vmx_flush_tlb_ept_only() with vmx_flush_tlb(), which will
-flush if either EPT or VPIDs are in use.
-
-Signed-off-by: Junaid Shahid <junaids@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Cc: "Jitindar SIngh, Suraj" <surajjs@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |   14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/kvm_host.h |    2 -
+ arch/x86/kvm/lapic.c            |   12 ++++------
+ arch/x86/kvm/svm.c              |    4 +--
+ arch/x86/kvm/vmx.c              |   48 +++++++++++++++++++++++++---------------
+ 4 files changed, 38 insertions(+), 28 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -4444,12 +4444,6 @@ static void vmx_flush_tlb(struct kvm_vcp
- 	__vmx_flush_tlb(vcpu, to_vmx(vcpu)->vpid, invalidate_gpa);
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -998,7 +998,7 @@ struct kvm_x86_ops {
+ 	void (*hwapic_irr_update)(struct kvm_vcpu *vcpu, int max_irr);
+ 	void (*hwapic_isr_update)(struct kvm_vcpu *vcpu, int isr);
+ 	void (*load_eoi_exitmap)(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap);
+-	void (*set_virtual_x2apic_mode)(struct kvm_vcpu *vcpu, bool set);
++	void (*set_virtual_apic_mode)(struct kvm_vcpu *vcpu);
+ 	void (*set_apic_access_page_addr)(struct kvm_vcpu *vcpu, hpa_t hpa);
+ 	void (*deliver_posted_interrupt)(struct kvm_vcpu *vcpu, int vector);
+ 	int (*sync_pir_to_irr)(struct kvm_vcpu *vcpu);
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1967,13 +1967,11 @@ void kvm_lapic_set_base(struct kvm_vcpu
+ 		}
+ 	}
+ 
+-	if ((old_value ^ value) & X2APIC_ENABLE) {
+-		if (value & X2APIC_ENABLE) {
+-			kvm_apic_set_x2apic_id(apic, vcpu->vcpu_id);
+-			kvm_x86_ops->set_virtual_x2apic_mode(vcpu, true);
+-		} else
+-			kvm_x86_ops->set_virtual_x2apic_mode(vcpu, false);
+-	}
++	if (((old_value ^ value) & X2APIC_ENABLE) && (value & X2APIC_ENABLE))
++		kvm_apic_set_x2apic_id(apic, vcpu->vcpu_id);
++
++	if ((old_value ^ value) & (MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE))
++		kvm_x86_ops->set_virtual_apic_mode(vcpu);
+ 
+ 	apic->base_address = apic->vcpu->arch.apic_base &
+ 			     MSR_IA32_APICBASE_BASE;
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -4589,7 +4589,7 @@ static void update_cr8_intercept(struct
+ 		set_cr_intercept(svm, INTERCEPT_CR8_WRITE);
  }
  
--static void vmx_flush_tlb_ept_only(struct kvm_vcpu *vcpu)
--{
--	if (enable_ept)
--		vmx_flush_tlb(vcpu, true);
--}
--
- static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
+-static void svm_set_virtual_x2apic_mode(struct kvm_vcpu *vcpu, bool set)
++static void svm_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
  {
- 	ulong cr0_guest_owned_bits = vcpu->arch.cr0_guest_owned_bits;
-@@ -9320,7 +9314,7 @@ static void vmx_set_virtual_x2apic_mode(
- 	} else {
- 		sec_exec_control &= ~SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE;
- 		sec_exec_control |= SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES;
--		vmx_flush_tlb_ept_only(vcpu);
-+		vmx_flush_tlb(vcpu, true);
+ 	return;
+ }
+@@ -5713,7 +5713,7 @@ static struct kvm_x86_ops svm_x86_ops __
+ 	.enable_nmi_window = enable_nmi_window,
+ 	.enable_irq_window = enable_irq_window,
+ 	.update_cr8_intercept = update_cr8_intercept,
+-	.set_virtual_x2apic_mode = svm_set_virtual_x2apic_mode,
++	.set_virtual_apic_mode = svm_set_virtual_apic_mode,
+ 	.get_enable_apicv = svm_get_enable_apicv,
+ 	.refresh_apicv_exec_ctrl = svm_refresh_apicv_exec_ctrl,
+ 	.load_eoi_exitmap = svm_load_eoi_exitmap,
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -591,7 +591,8 @@ struct nested_vmx {
+ 	 */
+ 	bool sync_shadow_vmcs;
+ 
+-	bool change_vmcs01_virtual_x2apic_mode;
++	bool change_vmcs01_virtual_apic_mode;
++
+ 	/* L2 must run next, and mustn't decide to exit to L1. */
+ 	bool nested_run_pending;
+ 
+@@ -9290,31 +9291,43 @@ static void update_cr8_intercept(struct
+ 	vmcs_write32(TPR_THRESHOLD, irr);
+ }
+ 
+-static void vmx_set_virtual_x2apic_mode(struct kvm_vcpu *vcpu, bool set)
++static void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
+ {
+ 	u32 sec_exec_control;
+ 
++	if (!lapic_in_kernel(vcpu))
++		return;
++
+ 	/* Postpone execution until vmcs01 is the current VMCS. */
+ 	if (is_guest_mode(vcpu)) {
+-		to_vmx(vcpu)->nested.change_vmcs01_virtual_x2apic_mode = true;
++		to_vmx(vcpu)->nested.change_vmcs01_virtual_apic_mode = true;
+ 		return;
+ 	}
+ 
+-	if (!cpu_has_vmx_virtualize_x2apic_mode())
+-		return;
+-
+ 	if (!cpu_need_tpr_shadow(vcpu))
+ 		return;
+ 
+ 	sec_exec_control = vmcs_read32(SECONDARY_VM_EXEC_CONTROL);
++	sec_exec_control &= ~(SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES |
++			      SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE);
+ 
+-	if (set) {
+-		sec_exec_control &= ~SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES;
+-		sec_exec_control |= SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE;
+-	} else {
+-		sec_exec_control &= ~SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE;
+-		sec_exec_control |= SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES;
+-		vmx_flush_tlb(vcpu, true);
++	switch (kvm_get_apic_mode(vcpu)) {
++	case LAPIC_MODE_INVALID:
++		WARN_ONCE(true, "Invalid local APIC state");
++	case LAPIC_MODE_DISABLED:
++		break;
++	case LAPIC_MODE_XAPIC:
++		if (flexpriority_enabled) {
++			sec_exec_control |=
++				SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES;
++			vmx_flush_tlb(vcpu, true);
++		}
++		break;
++	case LAPIC_MODE_X2APIC:
++		if (cpu_has_vmx_virtualize_x2apic_mode())
++			sec_exec_control |=
++				SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE;
++		break;
  	}
  	vmcs_write32(SECONDARY_VM_EXEC_CONTROL, sec_exec_control);
  
-@@ -9348,7 +9342,7 @@ static void vmx_set_apic_access_page_add
- 	    !nested_cpu_has2(get_vmcs12(&vmx->vcpu),
- 			     SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES)) {
- 		vmcs_write64(APIC_ACCESS_ADDR, hpa);
--		vmx_flush_tlb_ept_only(vcpu);
-+		vmx_flush_tlb(vcpu, true);
- 	}
- }
+@@ -12185,10 +12198,9 @@ static void nested_vmx_vmexit(struct kvm
+ 	if (kvm_has_tsc_control)
+ 		decache_tsc_multiplier(vmx);
  
-@@ -11243,7 +11237,7 @@ static int prepare_vmcs02(struct kvm_vcp
- 		}
- 	} else if (nested_cpu_has2(vmcs12,
- 				   SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES)) {
--		vmx_flush_tlb_ept_only(vcpu);
-+		vmx_flush_tlb(vcpu, true);
- 	}
- 
- 	/*
-@@ -12198,7 +12192,7 @@ static void nested_vmx_vmexit(struct kvm
+-	if (vmx->nested.change_vmcs01_virtual_x2apic_mode) {
+-		vmx->nested.change_vmcs01_virtual_x2apic_mode = false;
+-		vmx_set_virtual_x2apic_mode(vcpu,
+-				vcpu->arch.apic_base & X2APIC_ENABLE);
++	if (vmx->nested.change_vmcs01_virtual_apic_mode) {
++		vmx->nested.change_vmcs01_virtual_apic_mode = false;
++		vmx_set_virtual_apic_mode(vcpu);
  	} else if (!nested_cpu_has_ept(vmcs12) &&
  		   nested_cpu_has2(vmcs12,
  				   SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES)) {
--		vmx_flush_tlb_ept_only(vcpu);
-+		vmx_flush_tlb(vcpu, true);
- 	}
- 
- 	/* This is needed for same reason as it was needed in prepare_vmcs02 */
+@@ -12749,7 +12761,7 @@ static struct kvm_x86_ops vmx_x86_ops __
+ 	.enable_nmi_window = enable_nmi_window,
+ 	.enable_irq_window = enable_irq_window,
+ 	.update_cr8_intercept = update_cr8_intercept,
+-	.set_virtual_x2apic_mode = vmx_set_virtual_x2apic_mode,
++	.set_virtual_apic_mode = vmx_set_virtual_apic_mode,
+ 	.set_apic_access_page_addr = vmx_set_apic_access_page_addr,
+ 	.get_enable_apicv = vmx_get_enable_apicv,
+ 	.refresh_apicv_exec_ctrl = vmx_refresh_apicv_exec_ctrl,
 
 
