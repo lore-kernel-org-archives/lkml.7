@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC150CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932F3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3F5222BD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B11222BD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211652;
-	bh=3v2CFzO8u+SwFTSx3GvJ7V2Rq8W5YnaxDv4MV1yXFjM=;
+	s=default; t=1572211657;
+	bh=ZFe86N/EscxSwYeE7npBjjyYeCxyrwEyFWXFXK0cBM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QJ+iuhl/b8obm1xWO1XiYrLvyM3CTy6GB+KrHD9mnHMaxKVZQpVW6PPcxguAfVwIQ
-	 mOuxOaGdIxbPXt5Bg052mNDwYvi+pNzAoPwIp3A6348ooEP+Ow5ryv8DsNMmGlqn6X
-	 X1v843QAulmnOu0GbUdHXJhbmZvSWj5ihs1KtsGc=
+	b=xSvUq5VD2RunEdaxs1ldPD0nCGqypB4j9fZ3rsiVHzR/iCy2x1BU/LvlBgKoozAm5
+	 prNDt/tf9+fBdfjyrphoIQ2erhHP+8yNCDaRzTSid5XGbX7t8YRXjthMnZSsziG2f6
+	 Del9qK/VIFDWSrcBdylXtJKw1PbPIHMY1GkWukVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732651AbfJ0VZF (ORCPT
+        id S1731974AbfJ0VYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:25:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46720 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:24:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732634AbfJ0VZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:25:01 -0400
+        id S1732573AbfJ0VYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:24:43 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F29221848;
-        Sun, 27 Oct 2019 21:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC64D21726;
+        Sun, 27 Oct 2019 21:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211500;
-        bh=3v2CFzO8u+SwFTSx3GvJ7V2Rq8W5YnaxDv4MV1yXFjM=;
+        s=default; t=1572211482;
+        bh=ZFe86N/EscxSwYeE7npBjjyYeCxyrwEyFWXFXK0cBM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RFN7OwTOR+nPTbeHxx0iegMIZGOiGeeTqLXbJT0UdKTH+1aGKrjWjvwMUF8QHv8oC
-         ADknZ5a7f0pTmqEOZeBZ5Gj/xK7rpMybYJ1S5thHtcp83T+nOIZb5JQCNKKMFeBakT
-         5rSgFcYbrkhYZ8V6Ll4cjN4MFoEcEJ1H9CkdKP74=
+        b=fw1NjhcBIaVbLPn8GQkBMnH8PBAbdR/hQHw+kAgnYNXZNiuNPrbrtE5sTjz1UpLzl
+         dTb0l6RLUbh1Duq6Z+ZcSRYRpesfWA39A1j1zsqMIIAPiJ7X6Xm/aQ+gTt/Tvw02L4
+         blGiIxhp+Ln0RUmmSiUryQVRvcbNtfHtVDtgv+jU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 136/197] drivers/base/memory.c: dont access uninitialized memmaps in soft_offline_page_store()
-Date:   Sun, 27 Oct 2019 22:00:54 +0100
-Message-Id: <20191027203359.053510896@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.3 166/197] arm64: Allow CAVIUM_TX2_ERRATUM_219 to be selected
+Date:   Sun, 27 Oct 2019 22:01:24 +0100
+Message-Id: <20191027203403.257696914@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -63,55 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-commit 641fe2e9387a36f9ee01d7c69382d1fe147a5e98 upstream.
+commit 603afdc9438ac546181e843f807253d75d3dbc45 upstream.
 
-Uninitialized memmaps contain garbage and in the worst case trigger kernel
-BUGs, especially with CONFIG_PAGE_POISONING.  They should not get touched.
+Allow the user to select the workaround for TX2-219, and update
+the silicon-errata.rst file to reflect this.
 
-Right now, when trying to soft-offline a PFN that resides on a memory
-block that was never onlined, one gets a misleading error with
-CONFIG_PAGE_POISONING:
-
-  :/# echo 5637144576 > /sys/devices/system/memory/soft_offline_page
-  [   23.097167] soft offline: 0x150000 page already poisoned
-
-But the actual result depends on the garbage in the memmap.
-
-soft_offline_page() can only work with online pages, it returns -EIO in
-case of ZONE_DEVICE.  Make sure to only forward pages that are online
-(iow, managed by the buddy) and, therefore, have an initialized memmap.
-
-Add a check against pfn_to_online_page() and similarly return -EIO.
-
-Link: http://lkml.kernel.org/r/20191010141200.8985-1-david@redhat.com
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: <stable@vger.kernel.org>	[4.13+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/memory.c |    3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/arm64/silicon-errata.rst |    2 ++
+ arch/arm64/Kconfig                     |   17 +++++++++++++++++
+ 2 files changed, 19 insertions(+)
 
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -554,6 +554,9 @@ static ssize_t soft_offline_page_store(s
- 	pfn >>= PAGE_SHIFT;
- 	if (!pfn_valid(pfn))
- 		return -ENXIO;
-+	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
-+	if (!pfn_to_online_page(pfn))
-+		return -EIO;
- 	ret = soft_offline_page(pfn_to_page(pfn), 0);
- 	return ret == 0 ? count : ret;
- }
+--- a/Documentation/arm64/silicon-errata.rst
++++ b/Documentation/arm64/silicon-errata.rst
+@@ -107,6 +107,8 @@ stable kernels.
+ +----------------+-----------------+-----------------+-----------------------------+
+ | Cavium         | ThunderX2 SMMUv3| #126            | N/A                         |
+ +----------------+-----------------+-----------------+-----------------------------+
++| Cavium         | ThunderX2 Core  | #219            | CAVIUM_TX2_ERRATUM_219      |
+++----------------+-----------------+-----------------+-----------------------------+
+ +----------------+-----------------+-----------------+-----------------------------+
+ | Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585         |
+ +----------------+-----------------+-----------------+-----------------------------+
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -601,6 +601,23 @@ config CAVIUM_ERRATUM_30115
+ 
+ 	  If unsure, say Y.
+ 
++config CAVIUM_TX2_ERRATUM_219
++	bool "Cavium ThunderX2 erratum 219: PRFM between TTBR change and ISB fails"
++	default y
++	help
++	  On Cavium ThunderX2, a load, store or prefetch instruction between a
++	  TTBR update and the corresponding context synchronizing operation can
++	  cause a spurious Data Abort to be delivered to any hardware thread in
++	  the CPU core.
++
++	  Work around the issue by avoiding the problematic code sequence and
++	  trapping KVM guest TTBRx_EL1 writes to EL2 when SMT is enabled. The
++	  trap handler performs the corresponding register access, skips the
++	  instruction and ensures context synchronization by virtue of the
++	  exception return.
++
++	  If unsure, say Y.
++
+ config QCOM_FALKOR_ERRATUM_1003
+ 	bool "Falkor E1003: Incorrect translation due to ASID change"
+ 	default y
 
 
