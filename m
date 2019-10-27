@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51691CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E11CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1666A205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30AD821783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210790;
-	bh=OxtsmDZcRyjTy/TwgnZe5iInYm/ARc+kAq5vsnT/P2M=;
+	s=default; t=1572210795;
+	bh=iUn0+AXJbd2oK9c2oxMcnZEUu2QM6vGDtG0r2+b2KF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tVIKQfI+bNDQgcEarEajxE5u4daMLMpdBsdlgznaFu6r2PU+R7YSoKcUC4mfhxXkx
-	 fVKiIODioEW+jlNO555QTlB/aVMfIx7Q/ybUmYFSi1c/vjQRv3AvQwDAi1vwAUCWpu
-	 Ik3H7jmw26/LZVsRgmlXr0I0OCrj++qoRXDwuB0s=
+	b=2mdDSpTUiYjuOgFb8RsMHFx0ScyrFRKsiBIc4wKUDOMY4je2oLGzhOjtSvhg1J4ZE
+	 18DPY5rSce6y/n6JSckNf/6CgQFVfqXDGj+Rv5pBeI1ql7MfO2iRmTpEzCUQZy1BF1
+	 K2oHhtcwJWCe94rUELEO+IrIkFylwx0s2J1Vj5zU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbfJ0VNI (ORCPT
+        id S1729256AbfJ0VNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:13:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60078 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:13:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730174AbfJ0VNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:13:04 -0400
+        id S1730174AbfJ0VNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:13:09 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A13FA205C9;
-        Sun, 27 Oct 2019 21:13:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D42A20B7C;
+        Sun, 27 Oct 2019 21:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210783;
-        bh=OxtsmDZcRyjTy/TwgnZe5iInYm/ARc+kAq5vsnT/P2M=;
+        s=default; t=1572210788;
+        bh=iUn0+AXJbd2oK9c2oxMcnZEUu2QM6vGDtG0r2+b2KF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dpl9nj8a7K2H1ULjIqcBtEI0GFzxfmgHQNZF8fnmnhvX+lKJuUa2s5agZXQGih4Om
-         LUQfYdLv6o4ji/QbeJWKxKt4E/MqbKahHVlCzbxP/a7mtACbwAOSycUMHS6pJjhMY3
-         bOICW1Vqg8taIr2BKN0YPCaJy6aaCKl/FOh5gqpo=
+        b=zbE+BEtETNBDNVxnRrxA9f0uv2SJ+ethNjo82AGdxhsxooZEtYl01Ow1Rae8USR/n
+         ICnfslNMjn7u2b678aYvQanumfhYAGiFT5gEkfa0ctPry9J2SQt05vhzwRsQayXdLm
+         atxdC2Bk5P8yZjVyALltrJxW9OduqFGgE9asP/Gw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Paul Burton <paul.burton@mips.com>, chenhc@lemote.com,
-        ralf@linux-mips.org, jhogan@kernel.org, linux-mips@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 16/93] mips: Loongson: Fix the link time qualifier of serial_exit()
-Date:   Sun, 27 Oct 2019 22:00:28 +0100
-Message-Id: <20191027203255.107174272@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 18/93] lib: textsearch: fix escapes in example code
+Date:   Sun, 27 Oct 2019 22:00:30 +0100
+Message-Id: <20191027203255.387257901@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -62,39 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 25b69a889b638b0b7e51e2c4fe717a66bec0e566 ]
+[ Upstream commit 2105b52e30debe7f19f3218598d8ae777dcc6776 ]
 
-'exit' functions should be marked as __exit, not __init.
+This textsearch code example does not need the '\' escapes and they can
+be misleading to someone reading the example. Also, gcc and sparse warn
+that the "\%d" is an unknown escape sequence.
 
-Fixes: 85cc028817ef ("mips: make loongsoon serial driver explicitly modular")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: chenhc@lemote.com
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org
+Fixes: 5968a70d7af5 ("textsearch: fix kernel-doc warnings and add kernel-api section")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/loongson64/common/serial.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/textsearch.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/loongson64/common/serial.c b/arch/mips/loongson64/common/serial.c
-index ffefc1cb26121..98c3a7feb10f8 100644
---- a/arch/mips/loongson64/common/serial.c
-+++ b/arch/mips/loongson64/common/serial.c
-@@ -110,7 +110,7 @@ static int __init serial_init(void)
- }
- module_init(serial_init);
- 
--static void __init serial_exit(void)
-+static void __exit serial_exit(void)
- {
- 	platform_device_unregister(&uart8250_device);
- }
+diff --git a/lib/textsearch.c b/lib/textsearch.c
+index 5939549c0e7bc..9135c29add624 100644
+--- a/lib/textsearch.c
++++ b/lib/textsearch.c
+@@ -93,9 +93,9 @@
+  *       goto errout;
+  *   }
+  *
+- *   pos = textsearch_find_continuous(conf, \&state, example, strlen(example));
++ *   pos = textsearch_find_continuous(conf, &state, example, strlen(example));
+  *   if (pos != UINT_MAX)
+- *       panic("Oh my god, dancing chickens at \%d\n", pos);
++ *       panic("Oh my god, dancing chickens at %d\n", pos);
+  *
+  *   textsearch_destroy(conf);
+  */
 -- 
 2.20.1
 
