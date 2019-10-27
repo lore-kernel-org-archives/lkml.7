@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0B0CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB11CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FBF222CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4EE21783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211568;
-	bh=zJJ8f/jSEkfvId2/8PLTXAWRo/PhgYsPR5zxT/49t4Y=;
+	s=default; t=1572211573;
+	bh=SuWVog35rq4t9m85OJPt6eblq9oTPRJl2/Qpvf7D4LQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+8BrPXTDvbEB9H4/60LVd4qCTGBr8g4XCMrsob7r/evFuUVFe1W+uKxiAUfmQgoK
-	 VlvqyyW1QHi7zNBe3MPPN+Sjds4Q5pK90qApQzIi8jIUWlFRtukaNlJiFhfz40QiaP
-	 RZeLlugHtdFffIWIue6RsBffHET+gKCklZtn1L2o=
+	b=bSe7TYmZbsuSeLIgGlmaOFTYMbo+OGVTTlC9OVkKBTyrx9vf+UA/FmmHL45a0wQf1
+	 TF2ySV3plO/4Fnl4I7CJadgr9i4CKVatUFiYvcJdgI9EC4iAidl8So9XMMwkbrEFuS
+	 Q/rwV8mzLdIDyedz4gdB4LOFy0vhaDYeruyhEGao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732866AbfJ0V0H (ORCPT
+        id S1732886AbfJ0V0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47982 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:26:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732850AbfJ0V0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:26:03 -0400
+        id S1732871AbfJ0V0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:26:09 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E88D21D80;
-        Sun, 27 Oct 2019 21:26:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D01FE222C5;
+        Sun, 27 Oct 2019 21:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211563;
-        bh=zJJ8f/jSEkfvId2/8PLTXAWRo/PhgYsPR5zxT/49t4Y=;
+        s=default; t=1572211568;
+        bh=SuWVog35rq4t9m85OJPt6eblq9oTPRJl2/Qpvf7D4LQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZtuAxAG7YJUZhy200SddT/tl6yVdNcE9qo4hlycWoaO842Xlkw6aEZ4nuIxDtGXqs
-         R29w69VK5hgGGVM021oak7Prmuc8HJPO3yYd2IcpUwLbmOckrUyzwLBdQMT79KPP5C
-         S/akNwiPaariIf5Bwrs1C07ddUDaIos8G+xum044=
+        b=NmUi6tExTKDorG4EB73CgIzqASzZhsaRgVFTrSz8ILydVSwZbAnY4ap70KsmyJYU+
+         vooFOze1CEYg8GMdMfFvOCxvKLCi/M826kxZfSxw4E3prVGz2pN3vioierR8oZa/Xu
+         pxlBbt7Kib2zVHOCFSdlzG76Ps9OkTZewhPhoUpk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.3 196/197] blk-rq-qos: fix first node deletion of rq_qos_del()
-Date:   Sun, 27 Oct 2019 22:01:54 +0100
-Message-Id: <20191027203407.066172421@linuxfoundation.org>
+        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.3 181/197] btrfs: block-group: Fix a memory leak due to missing btrfs_put_block_group()
+Date:   Sun, 27 Oct 2019 22:01:39 +0100
+Message-Id: <20191027203405.822561757@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -60,48 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 307f4065b9d7c1e887e8bdfb2487e4638559fea1 upstream.
+commit 4b654acdae850f48b8250b9a578a4eaa518c7a6f upstream.
 
-rq_qos_del() incorrectly assigns the node being deleted to the head if
-it was the first on the list in the !prev path.  Fix it by iterating
-with ** instead.
+In btrfs_read_block_groups(), if we have an invalid block group which
+has mixed type (DATA|METADATA) while the fs doesn't have MIXED_GROUPS
+feature, we error out without freeing the block group cache.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Fixes: a79050434b45 ("blk-rq-qos: refactor out common elements of blk-wbt")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This patch will add the missing btrfs_put_block_group() to prevent
+memory leak.
+
+Note for stable backports: the file to patch in versions <= 5.3 is
+fs/btrfs/extent-tree.c
+
+Fixes: 49303381f19a ("Btrfs: bail out if block group has different mixed flag")
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-rq-qos.h |   13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ fs/btrfs/extent-tree.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -103,16 +103,13 @@ static inline void rq_qos_add(struct req
- 
- static inline void rq_qos_del(struct request_queue *q, struct rq_qos *rqos)
- {
--	struct rq_qos *cur, *prev = NULL;
--	for (cur = q->rq_qos; cur; cur = cur->next) {
--		if (cur == rqos) {
--			if (prev)
--				prev->next = rqos->next;
--			else
--				q->rq_qos = cur;
-+	struct rq_qos **cur;
-+
-+	for (cur = &q->rq_qos; *cur; cur = &(*cur)->next) {
-+		if (*cur == rqos) {
-+			*cur = rqos->next;
- 			break;
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -8117,6 +8117,7 @@ int btrfs_read_block_groups(struct btrfs
+ 			btrfs_err(info,
+ "bg %llu is a mixed block group but filesystem hasn't enabled mixed block groups",
+ 				  cache->key.objectid);
++			btrfs_put_block_group(cache);
+ 			ret = -EINVAL;
+ 			goto error;
  		}
--		prev = cur;
- 	}
- 
- 	blk_mq_debugfs_unregister_rqos(rqos);
 
 
