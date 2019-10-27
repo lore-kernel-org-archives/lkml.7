@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C3BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FA1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8790208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E46121783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210378;
-	bh=V3L3ajqgIIvjGrqd9v+vqSVseo6kV+2bOOOWCgjVJ4A=;
+	s=default; t=1572210382;
+	bh=ssO/fgfxNpvpT7q/HqGLGpAcTTDrtqgKuanlAZwDpQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AEgbMLIS8dgchkKojeglK/TZ8yOniesrnggePi/P1NB+Gm6umAJgJtAWTsWkswv6n
-	 P775yftKPTkDn2e+wmaQSuhYYD3kXxwJJHgHndiAzXTkpGE/cy3hKVrcPHxY8CRqEX
-	 /IbnSiQQ9vAqkEIHNPwifS0wu2b3ewP9mncwOJM8=
+	b=CE6/HC4LKXhx23PoZjS7q/KEQC2wOo69UYtyzZbcxiW75H87N6KIvL1RvyE4CUIn9
+	 hhZkllESXPdeN5/X81f/6QbjFRvhltFMeNiyBh/3Nq3+poYjzyGGQyHJIw8rVCSb5b
+	 6dxLOeXpakjMB+gSMUqSOEWDP7YBtqTJM9XqfSZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfJ0VGR (ORCPT
+        id S1727874AbfJ0VGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52118 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:06:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727465AbfJ0VGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:06:12 -0400
+        id S1728032AbfJ0VGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:06:15 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2970E20B7C;
-        Sun, 27 Oct 2019 21:06:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1201214AF;
+        Sun, 27 Oct 2019 21:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210371;
-        bh=V3L3ajqgIIvjGrqd9v+vqSVseo6kV+2bOOOWCgjVJ4A=;
+        s=default; t=1572210374;
+        bh=ssO/fgfxNpvpT7q/HqGLGpAcTTDrtqgKuanlAZwDpQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dT01JIz00BSbqvIFLZuJ1EqlJj8lvY63q0F1MOhNVIC2+3N4voMdoI3EwmQSum6jm
-         OUWqY4Xptu4dER5a3UYX4jJbDgAZZLwWE4IE3XaCKMEYQ4oZkVw1uuqT3zgmlJW/Vn
-         npdFqWHIXgrGZEoHqgbnIrtO5qSFqagehhbi6g3k=
+        b=ZsmbQJk5I7VzJ3QC3SdMvjZd5HFGRqJC7A4j5pY3jLQG/xEq9QyUaALWHGpvdKM0P
+         QxGDiw6SxKwnmf8WTDbgsc0LYlU4YdedPWAZDxdzXBtBZ2S9a7e/egywWI1WkPo4xh
+         zxG24fXdb/ASqszNGnqJpEme1rNUMmm6ddYR29SM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 43/49] btrfs: block-group: Fix a memory leak due to missing btrfs_put_block_group()
-Date:   Sun, 27 Oct 2019 22:01:21 +0100
-Message-Id: <20191027203201.084029289@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 44/49] memstick: jmb38x_ms: Fix an error handling path in jmb38x_ms_probe()
+Date:   Sun, 27 Oct 2019 22:01:22 +0100
+Message-Id: <20191027203202.077051658@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -60,42 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 4b654acdae850f48b8250b9a578a4eaa518c7a6f upstream.
+commit 28c9fac09ab0147158db0baeec630407a5e9b892 upstream.
 
-In btrfs_read_block_groups(), if we have an invalid block group which
-has mixed type (DATA|METADATA) while the fs doesn't have MIXED_GROUPS
-feature, we error out without freeing the block group cache.
+If 'jmb38x_ms_count_slots()' returns 0, we must undo the previous
+'pci_request_regions()' call.
 
-This patch will add the missing btrfs_put_block_group() to prevent
-memory leak.
+Goto 'err_out_int' to fix it.
 
-Note for stable backports: the file to patch in versions <= 5.3 is
-fs/btrfs/extent-tree.c
-
-Fixes: 49303381f19a ("Btrfs: bail out if block group has different mixed flag")
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 60fdd931d577 ("memstick: add support for JMicron jmb38x MemoryStick host controller")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent-tree.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/memstick/host/jmb38x_ms.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -10325,6 +10325,7 @@ int btrfs_read_block_groups(struct btrfs
- 			btrfs_err(info,
- "bg %llu is a mixed block group but filesystem hasn't enabled mixed block groups",
- 				  cache->key.objectid);
-+			btrfs_put_block_group(cache);
- 			ret = -EINVAL;
- 			goto error;
- 		}
+--- a/drivers/memstick/host/jmb38x_ms.c
++++ b/drivers/memstick/host/jmb38x_ms.c
+@@ -947,7 +947,7 @@ static int jmb38x_ms_probe(struct pci_de
+ 	if (!cnt) {
+ 		rc = -ENODEV;
+ 		pci_dev_busy = 1;
+-		goto err_out;
++		goto err_out_int;
+ 	}
+ 
+ 	jm = kzalloc(sizeof(struct jmb38x_ms)
 
 
