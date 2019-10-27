@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FA1CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FE3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351EA20873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC1420B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210596;
-	bh=t74p8N9ci9kwCGvfHTXx7zxJ4/yXagwEI90cMiviUfY=;
+	s=default; t=1572210601;
+	bh=1OvOHMUWN+zQfis1W/kvZd2XpNU2os5/nufc3T6RDOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i1/DC7wuXQklo7ikmN/ihIS55YILVOqxKSyAke7Dhp8x9L10rDMyt6Vvo0zaM4K6z
-	 yiu7CwGmW05/VDj8QmNc016T2cH/hvBLnmAiLbjq17O/9mo2OOBAgzR7Dg7LGiahBF
-	 fpE56fA6g0n/LYDvBwKd4x147dVd42E+dDe5UDsY=
+	b=Nr5j+QrHxepV0zB+ku8CznnOKt69x7pzP0Th8xHseljx9QFugcA6d7EHf3jy+mU42
+	 CfGT+eT4byj71Jz0nhyrNqcJON/82NuQ4BqcHhwieweAtE9Vn8pgf2mIfIivLjpYY4
+	 Z8FzitWG52RDj+0i7JqnCIe5TJymorGvNDw+5CIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbfJ0VJz (ORCPT
+        id S1729607AbfJ0VKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:09:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56258 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728832AbfJ0VJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:09:51 -0400
+        id S1729590AbfJ0VJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:09:57 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DD7520873;
-        Sun, 27 Oct 2019 21:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC2C42064A;
+        Sun, 27 Oct 2019 21:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210590;
-        bh=t74p8N9ci9kwCGvfHTXx7zxJ4/yXagwEI90cMiviUfY=;
+        s=default; t=1572210596;
+        bh=1OvOHMUWN+zQfis1W/kvZd2XpNU2os5/nufc3T6RDOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tIJvHdDMTP2HtXc1tmorRaLQ0EoTuszHEuXxL+VX2sDppia0JeoDLEZYp0WYAjYrg
-         WDHks0pN57dQYt83EwkxNz1rc2qfCjdULbXO5KpaWz76gfJpJl8WcuCmDcU28sSIMr
-         Z5DMyi2nXg39xCJjKfFoYQSnIZlzQtts+QPmtpUQ=
+        b=zwMEgEfWIumdONu9y8k3xVKKytxYeR8vkwrjyeDji8MCB4hM40iLdF0ImX1GcM/7C
+         lSVJNMQ+PaqJ2i8vY0oRBsedejqHJYep0Olg+JIOQpwoS8J+PGvRwhk6uraqzX6r5i
+         UhvLOi97RCbhM83bkIQPkCw+CR9ILv6P6va0IKNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dave Martin <dave.martin@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
         Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 051/119] arm64: capabilities: Unify the verification
-Date:   Sun, 27 Oct 2019 22:00:28 +0100
-Message-Id: <20191027203321.576169722@linuxfoundation.org>
+Subject: [PATCH 4.14 070/119] KVM: arm64: Set SCTLR_EL2.DSSBS if SSBD is forcefully disabled and !vhe
+Date:   Sun, 27 Oct 2019 22:00:47 +0100
+Message-Id: <20191027203336.044367544@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -61,144 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Will Deacon <will.deacon@arm.com>
 
-[ Upstream commit eaac4d83daa50fc1b9b7850346e9a62adfd4647e ]
+[ Upstream commit 7c36447ae5a090729e7b129f24705bb231a07e0b ]
 
-Now that each capability describes how to treat the conflicts
-of CPU cap state vs System wide cap state, we can unify the
-verification logic to a single place.
+When running without VHE, it is necessary to set SCTLR_EL2.DSSBS if SSBD
+has been forcefully disabled on the kernel command-line.
 
-Reviewed-by: Dave Martin <dave.martin@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Acked-by: Christoffer Dall <christoffer.dall@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/cpufeature.c |   91 ++++++++++++++++++++++++++---------------
- 1 file changed, 58 insertions(+), 33 deletions(-)
+ arch/arm64/include/asm/kvm_host.h |   11 +++++++++++
+ arch/arm64/kvm/hyp/sysreg-sr.c    |   11 +++++++++++
+ 2 files changed, 22 insertions(+)
 
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1229,6 +1229,58 @@ static inline void set_sys_caps_initiali
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -356,6 +356,8 @@ struct kvm_vcpu *kvm_mpidr_to_vcpu(struc
+ void __kvm_set_tpidr_el2(u64 tpidr_el2);
+ DECLARE_PER_CPU(kvm_cpu_context_t, kvm_host_cpu_state);
+ 
++void __kvm_enable_ssbs(void);
++
+ static inline void __cpu_init_hyp_mode(phys_addr_t pgd_ptr,
+ 				       unsigned long hyp_stack_ptr,
+ 				       unsigned long vector_ptr)
+@@ -380,6 +382,15 @@ static inline void __cpu_init_hyp_mode(p
+ 		- (u64)kvm_ksym_ref(kvm_host_cpu_state);
+ 
+ 	kvm_call_hyp(__kvm_set_tpidr_el2, tpidr_el2);
++
++	/*
++	 * Disabling SSBD on a non-VHE system requires us to enable SSBS
++	 * at EL2.
++	 */
++	if (!has_vhe() && this_cpu_has_cap(ARM64_SSBS) &&
++	    arm64_get_ssbd_state() == ARM64_SSBD_FORCE_DISABLE) {
++		kvm_call_hyp(__kvm_enable_ssbs);
++	}
  }
  
- /*
-+ * Run through the list of capabilities to check for conflicts.
-+ * If the system has already detected a capability, take necessary
-+ * action on this CPU.
-+ *
-+ * Returns "false" on conflicts.
-+ */
-+static bool
-+__verify_local_cpu_caps(const struct arm64_cpu_capabilities *caps_list)
+ static inline void kvm_arch_hardware_unsetup(void) {}
+--- a/arch/arm64/kvm/hyp/sysreg-sr.c
++++ b/arch/arm64/kvm/hyp/sysreg-sr.c
+@@ -188,3 +188,14 @@ void __hyp_text __kvm_set_tpidr_el2(u64
+ {
+ 	asm("msr tpidr_el2, %0": : "r" (tpidr_el2));
+ }
++
++void __hyp_text __kvm_enable_ssbs(void)
 +{
-+	bool cpu_has_cap, system_has_cap;
-+	const struct arm64_cpu_capabilities *caps;
++	u64 tmp;
 +
-+	for (caps = caps_list; caps->matches; caps++) {
-+		cpu_has_cap = __this_cpu_has_cap(caps_list, caps->capability);
-+		system_has_cap = cpus_have_cap(caps->capability);
-+
-+		if (system_has_cap) {
-+			/*
-+			 * Check if the new CPU misses an advertised feature,
-+			 * which is not safe to miss.
-+			 */
-+			if (!cpu_has_cap && !cpucap_late_cpu_optional(caps))
-+				break;
-+			/*
-+			 * We have to issue cpu_enable() irrespective of
-+			 * whether the CPU has it or not, as it is enabeld
-+			 * system wide. It is upto the call back to take
-+			 * appropriate action on this CPU.
-+			 */
-+			if (caps->cpu_enable)
-+				caps->cpu_enable(caps);
-+		} else {
-+			/*
-+			 * Check if the CPU has this capability if it isn't
-+			 * safe to have when the system doesn't.
-+			 */
-+			if (cpu_has_cap && !cpucap_late_cpu_permitted(caps))
-+				break;
-+		}
-+	}
-+
-+	if (caps->matches) {
-+		pr_crit("CPU%d: Detected conflict for capability %d (%s), System: %d, CPU: %d\n",
-+			smp_processor_id(), caps->capability,
-+			caps->desc, system_has_cap, cpu_has_cap);
-+		return false;
-+	}
-+
-+	return true;
++	asm volatile(
++	"mrs	%0, sctlr_el2\n"
++	"orr	%0, %0, %1\n"
++	"msr	sctlr_el2, %0"
++	: "=&r" (tmp) : "L" (SCTLR_ELx_DSSBS));
 +}
-+
-+/*
-  * Check for CPU features that are used in early boot
-  * based on the Boot CPU value.
-  */
-@@ -1250,25 +1302,10 @@ verify_local_elf_hwcaps(const struct arm
- 		}
- }
- 
--static void
--verify_local_cpu_features(const struct arm64_cpu_capabilities *caps_list)
-+static void verify_local_cpu_features(void)
- {
--	const struct arm64_cpu_capabilities *caps = caps_list;
--	for (; caps->matches; caps++) {
--		if (!cpus_have_cap(caps->capability))
--			continue;
--		/*
--		 * If the new CPU misses an advertised feature, we cannot proceed
--		 * further, park the cpu.
--		 */
--		if (!__this_cpu_has_cap(caps_list, caps->capability)) {
--			pr_crit("CPU%d: missing feature: %s\n",
--					smp_processor_id(), caps->desc);
--			cpu_die_early();
--		}
--		if (caps->cpu_enable)
--			caps->cpu_enable(caps);
--	}
-+	if (!__verify_local_cpu_caps(arm64_features))
-+		cpu_die_early();
- }
- 
- /*
-@@ -1278,20 +1315,8 @@ verify_local_cpu_features(const struct a
-  */
- static void verify_local_cpu_errata_workarounds(void)
- {
--	const struct arm64_cpu_capabilities *caps = arm64_errata;
--
--	for (; caps->matches; caps++) {
--		if (cpus_have_cap(caps->capability)) {
--			if (caps->cpu_enable)
--				caps->cpu_enable(caps);
--		} else if (caps->matches(caps, SCOPE_LOCAL_CPU)) {
--			pr_crit("CPU%d: Requires work around for %s, not detected"
--					" at boot time\n",
--				smp_processor_id(),
--				caps->desc ? : "an erratum");
--			cpu_die_early();
--		}
--	}
-+	if (!__verify_local_cpu_caps(arm64_errata))
-+		cpu_die_early();
- }
- 
- static void update_cpu_errata_workarounds(void)
-@@ -1315,7 +1340,7 @@ static void __init enable_errata_workaro
- static void verify_local_cpu_capabilities(void)
- {
- 	verify_local_cpu_errata_workarounds();
--	verify_local_cpu_features(arm64_features);
-+	verify_local_cpu_features();
- 	verify_local_elf_hwcaps(arm64_elf_hwcaps);
- 	if (system_supports_32bit_el0())
- 		verify_local_elf_hwcaps(compat_elf_hwcaps);
 
 
