@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D65ECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D157CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F5C20B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBD2214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210510;
-	bh=DNogohxJudpJgaAhRb6Da2/JiIzdCiOlJWxWHOT7MTo=;
+	s=default; t=1572210513;
+	bh=ZeDfFjrTK0wY0Pvjs0FQCIo/dT7SBq2fX/KyPL6o9GE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1rCsY7gz5VRVrdySgnXqCQdh1I+Nxmlir9b3t5qMJKfsH6Ci9KOhGQorebNZlU3cB
-	 5wn4BJ24/9rskiP1o6cVMDGrqCCcuu0Wr9U7C7cAGXvRSfwz1gXiJb9AfkUFMwLeJK
-	 hmmqC/rXcgrXy51js21Bt1ywM5PKuUI5swBAuYx4=
+	b=fYLc7ZYlJtIFl8t8qQyIb3I2/CWx41D2ykBkgok3VJadcrpIYDadwkIxvdSytJ1R2
+	 0XVIuGfN8m4ViiRs71aHnOF57Eg+LGno2mpht9PGN1YvwmKtEduvfQa8OtXNmd0Ps8
+	 DsmJp/XOZFVdvd3nppkyk39T67yz/thDlsCjYJGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfJ0VI3 (ORCPT
+        id S1728736AbfJ0VIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54540 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:08:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbfJ0VIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:08:20 -0400
+        id S1727225AbfJ0VIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:08:24 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41851208C0;
-        Sun, 27 Oct 2019 21:08:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96AF82064A;
+        Sun, 27 Oct 2019 21:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210500;
-        bh=DNogohxJudpJgaAhRb6Da2/JiIzdCiOlJWxWHOT7MTo=;
+        s=default; t=1572210503;
+        bh=ZeDfFjrTK0wY0Pvjs0FQCIo/dT7SBq2fX/KyPL6o9GE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R35Ohnzic04XRpd8Rk/ruEP9lcIXjA0A4tzYjYgAFo9J3VaoBP26sI5R6MXIViuj7
-         0tvhQZ6FL+2VmoVZWPjY+rpbdmY08xGbMR9txpweGLJqdcj6NQwldwiA47lBEPehAQ
-         9K8qzM5DVNbeJK0od0WR0SUgsxuQ7TqKFbHTbTDo=
+        b=B9PtUTJhjY/QeQTbG4QCDKPw/f77JbItCmyv1ICQDpz63/2mSf9mMZ9SqjzZHgJ0U
+         lPMlm5pygm3udYefAlnTowQDMoCI5vsP13jnNrS89kg1bgBa4eUacGfToo9EnaEk1T
+         g5O2sb1rFUNAMY0Sqv+buULpIKxYaymAMmXsVuJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+cd24df4d075c319ebfc5@syzkaller.appspotmail.com,
+        syzbot+6fe95b826644f7f12b0b@syzkaller.appspotmail.com,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 035/119] USB: usblp: fix use-after-free on disconnect
-Date:   Sun, 27 Oct 2019 22:00:12 +0100
-Message-Id: <20191027203311.413211029@linuxfoundation.org>
+Subject: [PATCH 4.14 036/119] USB: ldusb: fix read info leaks
+Date:   Sun, 27 Oct 2019 22:00:13 +0100
+Message-Id: <20191027203311.758225817@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -62,49 +62,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 7a759197974894213621aa65f0571b51904733d6 upstream.
+commit 7a6f22d7479b7a0b68eadd308a997dd64dda7dae upstream.
 
-A recent commit addressing a runtime PM use-count regression, introduced
-a use-after-free by not making sure we held a reference to the struct
-usb_interface for the lifetime of the driver data.
+Fix broken read implementation, which could be used to trigger slab info
+leaks.
 
-Fixes: 9a31535859bf ("USB: usblp: fix runtime PM after driver unbind")
-Cc: stable <stable@vger.kernel.org>
-Reported-by: syzbot+cd24df4d075c319ebfc5@syzkaller.appspotmail.com
+The driver failed to check if the custom ring buffer was still empty
+when waking up after having waited for more data. This would happen on
+every interrupt-in completion, even if no data had been added to the
+ring buffer (e.g. on disconnect events).
+
+Due to missing sanity checks and uninitialised (kmalloced) ring-buffer
+entries, this meant that huge slab info leaks could easily be triggered.
+
+Note that the empty-buffer check after wakeup is enough to fix the info
+leak on disconnect, but let's clear the buffer on allocation and add a
+sanity check to read() to prevent further leaks.
+
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.13
+Reported-by: syzbot+6fe95b826644f7f12b0b@syzkaller.appspotmail.com
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191015175522.18490-1-johan@kernel.org
+Link: https://lore.kernel.org/r/20191018151955.25135-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/class/usblp.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/misc/ldusb.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/class/usblp.c
-+++ b/drivers/usb/class/usblp.c
-@@ -458,6 +458,7 @@ static void usblp_cleanup(struct usblp *
- 	kfree(usblp->readbuf);
- 	kfree(usblp->device_id_string);
- 	kfree(usblp->statusbuf);
-+	usb_put_intf(usblp->intf);
- 	kfree(usblp);
- }
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -467,7 +467,7 @@ static ssize_t ld_usb_read(struct file *
  
-@@ -1120,7 +1121,7 @@ static int usblp_probe(struct usb_interf
- 	init_waitqueue_head(&usblp->wwait);
- 	init_usb_anchor(&usblp->urbs);
- 	usblp->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
--	usblp->intf = intf;
-+	usblp->intf = usb_get_intf(intf);
+ 	/* wait for data */
+ 	spin_lock_irq(&dev->rbsl);
+-	if (dev->ring_head == dev->ring_tail) {
++	while (dev->ring_head == dev->ring_tail) {
+ 		dev->interrupt_in_done = 0;
+ 		spin_unlock_irq(&dev->rbsl);
+ 		if (file->f_flags & O_NONBLOCK) {
+@@ -477,12 +477,17 @@ static ssize_t ld_usb_read(struct file *
+ 		retval = wait_event_interruptible(dev->read_wait, dev->interrupt_in_done);
+ 		if (retval < 0)
+ 			goto unlock_exit;
+-	} else {
+-		spin_unlock_irq(&dev->rbsl);
++
++		spin_lock_irq(&dev->rbsl);
+ 	}
++	spin_unlock_irq(&dev->rbsl);
  
- 	/* Malloc device ID string buffer to the largest expected length,
- 	 * since we can re-query it on an ioctl and a dynamic string
-@@ -1209,6 +1210,7 @@ abort:
- 	kfree(usblp->readbuf);
- 	kfree(usblp->statusbuf);
- 	kfree(usblp->device_id_string);
-+	usb_put_intf(usblp->intf);
- 	kfree(usblp);
- abort_ret:
- 	return retval;
+ 	/* actual_buffer contains actual_length + interrupt_in_buffer */
+ 	actual_buffer = (size_t *)(dev->ring_buffer + dev->ring_tail * (sizeof(size_t)+dev->interrupt_in_endpoint_size));
++	if (*actual_buffer > dev->interrupt_in_endpoint_size) {
++		retval = -EIO;
++		goto unlock_exit;
++	}
+ 	bytes_to_read = min(count, *actual_buffer);
+ 	if (bytes_to_read < *actual_buffer)
+ 		dev_warn(&dev->intf->dev, "Read buffer overflow, %zd bytes dropped\n",
+@@ -693,7 +698,9 @@ static int ld_usb_probe(struct usb_inter
+ 		dev_warn(&intf->dev, "Interrupt out endpoint not found (using control endpoint instead)\n");
+ 
+ 	dev->interrupt_in_endpoint_size = usb_endpoint_maxp(dev->interrupt_in_endpoint);
+-	dev->ring_buffer = kmalloc(ring_buffer_size*(sizeof(size_t)+dev->interrupt_in_endpoint_size), GFP_KERNEL);
++	dev->ring_buffer = kcalloc(ring_buffer_size,
++			sizeof(size_t) + dev->interrupt_in_endpoint_size,
++			GFP_KERNEL);
+ 	if (!dev->ring_buffer)
+ 		goto error;
+ 	dev->interrupt_in_buffer = kmalloc(dev->interrupt_in_endpoint_size, GFP_KERNEL);
 
 
