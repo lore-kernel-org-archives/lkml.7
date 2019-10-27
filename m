@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867A5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F3DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5782920679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46086205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212272;
-	bh=fMC2KVqM3DIfY3q5vtjxo4yXJnY7/FVmoBRpuqNzRi0=;
+	s=default; t=1572212275;
+	bh=hCdWys4nfkW9HX9hA2t1QwKOg1sqsG2DB1dn1GyTNak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OULaCGp65mULVtx2lVAqxDZCjTSrlU2sEwa5JMHM8BmCKjlNn34DLzm6FuHs9jQyq
-	 0K7fxUJIQ2LIMi6KjqSa/jaApIrn5iufVWIldaffjCJhLNzIxhwrkb1AW7FE+6l2Ga
-	 UsZuNSkIjoJ4+Alwhe5iOj5glUSV2ugfjebTxTeM=
+	b=J+4bi8IWI7AivgU5CkqnEvQOaEp20vDyyJai9Yfc0LH1QnyffCPDgRTh4xcAgymuK
+	 y71jFnT10rdLAErWUrRc+yAa1b+l7F7b6uQ+tPNMMoY8aTdGaFr+boPMkLUjbItxu3
+	 Ym2rf9C8bRuWIK9fP3loRDm8Sz9YShgVQ2hOAJlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbfJ0VEg (ORCPT
+        id S1728645AbfJ0VEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:04:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50236 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:04:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbfJ0VEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:04:32 -0400
+        id S1727051AbfJ0VE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:04:29 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B8CA2064A;
-        Sun, 27 Oct 2019 21:04:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADFE520873;
+        Sun, 27 Oct 2019 21:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210271;
-        bh=fMC2KVqM3DIfY3q5vtjxo4yXJnY7/FVmoBRpuqNzRi0=;
+        s=default; t=1572210269;
+        bh=hCdWys4nfkW9HX9hA2t1QwKOg1sqsG2DB1dn1GyTNak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xpt+YiKr5PJWB/BbaIo82SliHbaqWQ7OGp54LegIOuKZVzBnuSNf9gzkLgjZuIk72
-         +qa8EgoDDbkqBSQNn0tb0Ca4pR6ZE7lt6H0NAi8sGVUhP2L4AK83b7UFMWRkvJ9b0v
-         gfl9zEoYNp5mak1nSh4XpS34YE4f7IUXr+WmDFZA=
+        b=f8bmJs4BESFWvjg58QXrSvZpe76kTwXzXSNpJgmJMlWbxotFd2S8UA6aJlseWEIdO
+         ewvjMfc4qyDfkzdY7vkrEaBEO52lJL5s2NGQ8YVpUHJNm7L0HoxlemUqbxsjGTCJ1c
+         oDATTNdBCboLlddgyR5AZJPfL6htnrBRem+YVOxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
-        Junya Monden <jmonden@jp.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 26/41] ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting
-Date:   Sun, 27 Oct 2019 22:01:04 +0100
-Message-Id: <20191027203121.969779760@linuxfoundation.org>
+        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.4 35/41] btrfs: block-group: Fix a memory leak due to missing btrfs_put_block_group()
+Date:   Sun, 27 Oct 2019 22:01:13 +0100
+Message-Id: <20191027203129.173850606@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
 References: <20191027203056.220821342@linuxfoundation.org>
@@ -65,42 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junya Monden <jmonden@jp.adit-jv.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 22e58665a01006d05f0239621f7d41cacca96cc4 upstream.
+commit 4b654acdae850f48b8250b9a578a4eaa518c7a6f upstream.
 
-Unlike other format-related DAI parameters, rdai->bit_clk_inv flag
-is not properly re-initialized when setting format for new stream
-processing. The inversion, if requested, is then applied not to default,
-but to a previous value, which leads to SCKP bit in SSICR register being
-set incorrectly.
-Fix this by re-setting the flag to its initial value, determined by format.
+In btrfs_read_block_groups(), if we have an invalid block group which
+has mixed type (DATA|METADATA) while the fs doesn't have MIXED_GROUPS
+feature, we error out without freeing the block group cache.
 
-Fixes: 1a7889ca8aba3 ("ASoC: rsnd: fixup SND_SOC_DAIFMT_xB_xF behavior")
-Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Cc: Jiada Wang <jiada_wang@mentor.com>
-Cc: Timo Wischer <twischer@de.adit-jv.com>
-Cc: stable@vger.kernel.org # v3.17+
-Signed-off-by: Junya Monden <jmonden@jp.adit-jv.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20191016124255.7442-1-erosca@de.adit-jv.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch will add the missing btrfs_put_block_group() to prevent
+memory leak.
+
+Note for stable backports: the file to patch in versions <= 5.3 is
+fs/btrfs/extent-tree.c
+
+Fixes: 49303381f19a ("Btrfs: bail out if block group has different mixed flag")
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/sh/rcar/core.c |    1 +
+ fs/btrfs/extent-tree.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/sound/soc/sh/rcar/core.c
-+++ b/sound/soc/sh/rcar/core.c
-@@ -524,6 +524,7 @@ static int rsnd_soc_dai_set_fmt(struct s
- 	}
- 
- 	/* set format */
-+	rdai->bit_clk_inv = 0;
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_I2S:
- 		rdai->sys_delay = 0;
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -9905,6 +9905,7 @@ int btrfs_read_block_groups(struct btrfs
+ 			btrfs_err(info,
+ "bg %llu is a mixed block group but filesystem hasn't enabled mixed block groups",
+ 				  cache->key.objectid);
++			btrfs_put_block_group(cache);
+ 			ret = -EINVAL;
+ 			goto error;
+ 		}
 
 
