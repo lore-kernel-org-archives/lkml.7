@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9F0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44843CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5E1208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16072205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212195;
-	bh=uw4FsbykKvY5mRQRdXpS59+P12ELhRHDs100pawlrWQ=;
+	s=default; t=1572212203;
+	bh=4kpBjFVHBtSenIMSIQp2j0JOTMmGi0qrCsyJrZ/a9kY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mcKBVSQGhe7Hx7JC2WpfNMhGejy3pssK1NVS+gJAT01KSqV/gW8iGPdSSAJcf7mvN
-	 /NZ1GZ1stLqhfacCpid0v8eV7q/axKaBb+K5jk4d9HhwDdPwIyvYpnrXSBUQ0OI9gU
-	 BCFKab/UpVv9hW0av2OrSd9Mo1efSV7a1W9hS/sM=
+	b=mcbxSqVV4kpRG/oW4REsZgz6kYJ9bjnNAVtNJ80iQpgIZtwRWUytEeWwAwjL8OArG
+	 LJ/U8KgCJ46AxGqAsBG1RkIGx7NBnKE+pEMqpJnYpd2Xa1E9nUwOONQijdEpBdvZqH
+	 vHIGptAbD/SJu1eaWkh558VtgpgNfC1Xz2VSRp44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbfJ0VGq (ORCPT
+        id S1727459AbfJ0VG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:06:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52596 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727702AbfJ0VGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:06:39 -0400
+        id S1727503AbfJ0VGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:06:24 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E1042064A;
-        Sun, 27 Oct 2019 21:06:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B26221783;
+        Sun, 27 Oct 2019 21:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210398;
-        bh=uw4FsbykKvY5mRQRdXpS59+P12ELhRHDs100pawlrWQ=;
+        s=default; t=1572210383;
+        bh=4kpBjFVHBtSenIMSIQp2j0JOTMmGi0qrCsyJrZ/a9kY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nmsddOP73VcrHXoc6fCyzitqY25qczk0kODTP7XGTAvWCSN6OrtQLMGsxKDgZcbeU
-         bRev7u0V8l0WPPGD9nJUU9ZAZ2Xktv5ZTjTV7xPtjzThhpGRIc/1kXoq8rKD8wYwz7
-         Aew2S0H4Rgdv6Qq3jjaWjaaH8u4FhakEfnWwRxBw=
+        b=A83qr1HJLlwNb5J4CcpDNu9UyJYDtdc+WeaGfCFRU7z59YGeHImNSKwmUHxd74Ne8
+         zDKZvsZn2Rc+wjyhXxfQaz4jnFVaLUUQFG1wmnmbdI980huJCqg0/wb083mGUm9efj
+         fK82wnZQ+8n58bEAMC+HjN/Hl9WF8vFAXKH8v5oI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Nicolas Waisman <nico@semmle.com>,
-        Will Deacon <will@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.9 36/49] mac80211: Reject malformed SSID elements
-Date:   Sun, 27 Oct 2019 22:01:14 +0100
-Message-Id: <20191027203152.366352267@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.9 47/49] PCI: PM: Fix pci_power_up()
+Date:   Sun, 27 Oct 2019 22:01:25 +0100
+Message-Id: <20191027203205.369411821@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -61,46 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 4152561f5da3fca92af7179dd538ea89e248f9d0 upstream.
+commit 45144d42f299455911cc29366656c7324a3a7c97 upstream.
 
-Although this shouldn't occur in practice, it's a good idea to bounds
-check the length field of the SSID element prior to using it for things
-like allocations or memcpy operations.
+There is an arbitrary difference between the system resume and
+runtime resume code paths for PCI devices regarding the delay to
+apply when switching the devices from D3cold to D0.
 
-Cc: <stable@vger.kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20191004095132.15777-1-will@kernel.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Namely, pci_restore_standard_config() used in the runtime resume
+code path calls pci_set_power_state() which in turn invokes
+__pci_start_power_transition() to power up the device through the
+platform firmware and that function applies the transition delay
+(as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
+However, pci_pm_default_resume_early() used in the system resume
+code path calls pci_power_up() which doesn't apply the delay at
+all and that causes issues to occur during resume from
+suspend-to-idle on some systems where the delay is required.
+
+Since there is no reason for that difference to exist, modify
+pci_power_up() to follow pci_set_power_state() more closely and
+invoke __pci_start_power_transition() from there to call the
+platform firmware to power up the device (in case that's necessary).
+
+Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
+Reported-by: Daniel Drake <drake@endlessm.com>
+Tested-by: Daniel Drake <drake@endlessm.com>
+Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/mlme.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/pci.c |   24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -2434,7 +2434,8 @@ struct sk_buff *ieee80211_ap_probereq_ge
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -754,19 +754,6 @@ void pci_update_current_state(struct pci
+ }
  
- 	rcu_read_lock();
- 	ssid = ieee80211_bss_get_ie(cbss, WLAN_EID_SSID);
--	if (WARN_ON_ONCE(ssid == NULL))
-+	if (WARN_ONCE(!ssid || ssid[1] > IEEE80211_MAX_SSID_LEN,
-+		      "invalid SSID element (len=%d)", ssid ? ssid[1] : -1))
- 		ssid_len = 0;
- 	else
- 		ssid_len = ssid[1];
-@@ -4691,7 +4692,7 @@ int ieee80211_mgd_assoc(struct ieee80211
+ /**
+- * pci_power_up - Put the given device into D0 forcibly
+- * @dev: PCI device to power up
+- */
+-void pci_power_up(struct pci_dev *dev)
+-{
+-	if (platform_pci_power_manageable(dev))
+-		platform_pci_set_power_state(dev, PCI_D0);
+-
+-	pci_raw_set_power_state(dev, PCI_D0);
+-	pci_update_current_state(dev, PCI_D0);
+-}
+-
+-/**
+  * pci_platform_power_transition - Use platform to change device power state
+  * @dev: PCI device to handle.
+  * @state: State to put the device into.
+@@ -942,6 +929,17 @@ int pci_set_power_state(struct pci_dev *
+ EXPORT_SYMBOL(pci_set_power_state);
  
- 	rcu_read_lock();
- 	ssidie = ieee80211_bss_get_ie(req->bss, WLAN_EID_SSID);
--	if (!ssidie) {
-+	if (!ssidie || ssidie[1] > sizeof(assoc_data->ssid)) {
- 		rcu_read_unlock();
- 		kfree(assoc_data);
- 		return -EINVAL;
+ /**
++ * pci_power_up - Put the given device into D0 forcibly
++ * @dev: PCI device to power up
++ */
++void pci_power_up(struct pci_dev *dev)
++{
++	__pci_start_power_transition(dev, PCI_D0);
++	pci_raw_set_power_state(dev, PCI_D0);
++	pci_update_current_state(dev, PCI_D0);
++}
++
++/**
+  * pci_choose_state - Choose the power state of a PCI device
+  * @dev: PCI device to be suspended
+  * @state: target sleep state for the whole system. This is the value
 
 
