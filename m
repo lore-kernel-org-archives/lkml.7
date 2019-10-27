@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E93CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4B0CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4122E214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F7621726
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211144;
-	bh=dlmTroG9Z6e2QxL9z2QYYH/+HCwazBgRl60ITiwDM9c=;
+	s=default; t=1572211151;
+	bh=OUrNLCHzvRhAG4hsbQCod1QXhYariPy0m16QKFxoLtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WfxaITgzUnv/2elIj4Hh+EJK3AkUkPMeh5PtgerUqaGgsqa1HYLT3c8SeKtOq4FMr
-	 Um4BOqSM+HEVGqD6Qzf1vpyp/o3wSMZXb2/1BeeL7+I9KnYzWCmkv3UyX5T3tBiFB1
-	 Qqw2y40kANWzLqtIz+dmBZEm5F/v7zPkQuf/INVI=
+	b=2wBgI0csN6EAsjXd9M+N3Cf9ZmeDJZvUZ4y2Me2ROmBuaHzeSBJula4ys+TMZtkiN
+	 HuPML7VFFIhWAakf2VskObtga13oBXqxFXqHe/Nl8YGA/9TBGjpPNo1sm1P1nVVqY7
+	 9VDi8MM18Ve0A1TsmHNP8bTp/KDHl9GJ0SDIhT8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731387AbfJ0VTD (ORCPT
+        id S1731408AbfJ0VTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:19:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39230 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731364AbfJ0VSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:18:55 -0400
+        id S1731380AbfJ0VTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:19:01 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85E00205C9;
-        Sun, 27 Oct 2019 21:18:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50E9F214E0;
+        Sun, 27 Oct 2019 21:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211135;
-        bh=dlmTroG9Z6e2QxL9z2QYYH/+HCwazBgRl60ITiwDM9c=;
+        s=default; t=1572211140;
+        bh=OUrNLCHzvRhAG4hsbQCod1QXhYariPy0m16QKFxoLtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D3dJN8kSUU3zyHSetOOvWC24s7M+I1IWz41zZQLTot7/aLE9W80p2L33M9OZtfNuW
-         rDoQLrhnI+B4xk5OfT6ZHTQsL0mHFBKyCAKgTsAPHIT96xulzZVFtEWa1krma+/YU3
-         tJURk2L2eluekfD8oRpzREokHqvryf30tgYVW/Pw=
+        b=0ENJRIUFiXX+4Uf+v5QoCk/RTev81E3ohazvbx3gxZtN/TUbSjfs1Uh8NquICjV4r
+         QDDgNELMTOhpEPsuRhMwtyVs47Efns9nDl+CrkGEQNxXZ/mp//Bq9Ks30z/g34WHBc
+         /sTxBKuQEKbE8R0IHxTJzEptmwBqUiWqCiLF/IQY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 009/197] scsi: qla2xxx: Fix unbound sleep in fcport delete path.
-Date:   Sun, 27 Oct 2019 21:58:47 +0100
-Message-Id: <20191027203352.185589994@linuxfoundation.org>
+Subject: [PATCH 5.3 039/197] net: stmmac: dwmac4: Always update the MAC Hash Filter
+Date:   Sun, 27 Oct 2019 21:59:17 +0100
+Message-Id: <20191027203353.828444927@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,45 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit c3b6a1d397420a0fdd97af2f06abfb78adc370df ]
+[ Upstream commit f79bfda3756c50a86c0ee65091935c42c5bbe0cb ]
 
-There are instances, though rare, where a LOGO request cannot be sent out
-and the thread in free session done can wait indefinitely. Fix this by
-putting an upper bound to sleep.
+We need to always update the MAC Hash Filter so that previous entries
+are invalidated.
 
-Link: https://lore.kernel.org/r/20190912180918.6436-3-hmadhani@marvell.com
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Found out while running stmmac selftests.
+
+Fixes: b8ef7020d6e5 ("net: stmmac: add support for hash table size 128/256 in dwmac4")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 459c28aa3b94a..f77baf107024f 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -1021,6 +1021,7 @@ void qlt_free_session_done(struct work_struct *work)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index fc9954e4a7729..9c73fb759b575 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -407,8 +407,11 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 	int numhashregs = (hw->multicast_filter_bins >> 5);
+ 	int mcbitslog2 = hw->mcast_bits_log2;
+ 	unsigned int value;
++	u32 mc_filter[8];
+ 	int i;
  
- 	if (logout_started) {
- 		bool traced = false;
-+		u16 cnt = 0;
++	memset(mc_filter, 0, sizeof(mc_filter));
++
+ 	value = readl(ioaddr + GMAC_PACKET_FILTER);
+ 	value &= ~GMAC_PACKET_FILTER_HMC;
+ 	value &= ~GMAC_PACKET_FILTER_HPF;
+@@ -422,16 +425,13 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 		/* Pass all multi */
+ 		value |= GMAC_PACKET_FILTER_PM;
+ 		/* Set all the bits of the HASH tab */
+-		for (i = 0; i < numhashregs; i++)
+-			writel(0xffffffff, ioaddr + GMAC_HASH_TAB(i));
++		memset(mc_filter, 0xff, sizeof(mc_filter));
+ 	} else if (!netdev_mc_empty(dev)) {
+ 		struct netdev_hw_addr *ha;
+-		u32 mc_filter[8];
  
- 		while (!READ_ONCE(sess->logout_completed)) {
- 			if (!traced) {
-@@ -1030,6 +1031,9 @@ void qlt_free_session_done(struct work_struct *work)
- 				traced = true;
- 			}
- 			msleep(100);
-+			cnt++;
-+			if (cnt > 200)
-+				break;
+ 		/* Hash filter for multicast */
+ 		value |= GMAC_PACKET_FILTER_HMC;
+ 
+-		memset(mc_filter, 0, sizeof(mc_filter));
+ 		netdev_for_each_mc_addr(ha, dev) {
+ 			/* The upper n bits of the calculated CRC are used to
+ 			 * index the contents of the hash table. The number of
+@@ -446,10 +446,11 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 			 */
+ 			mc_filter[bit_nr >> 5] |= (1 << (bit_nr & 0x1f));
  		}
+-		for (i = 0; i < numhashregs; i++)
+-			writel(mc_filter[i], ioaddr + GMAC_HASH_TAB(i));
+ 	}
  
- 		ql_dbg(ql_dbg_disc, vha, 0xf087,
++	for (i = 0; i < numhashregs; i++)
++		writel(mc_filter[i], ioaddr + GMAC_HASH_TAB(i));
++
+ 	value |= GMAC_PACKET_FILTER_HPF;
+ 
+ 	/* Handle multiple unicast addresses */
 -- 
 2.20.1
 
