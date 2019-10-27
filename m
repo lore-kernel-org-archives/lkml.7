@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B057BCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873A8CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86645214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D71721850
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ywe3N4nQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fmKC8Mt1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfJ0NGb (ORCPT
+        id S1726917AbfJ0NGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 09:06:31 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52755 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfJ0NGa (ORCPT
+        Sun, 27 Oct 2019 09:06:35 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34962 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfJ0NGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 09:06:30 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p21so6690857wmg.2
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 06:06:29 -0700 (PDT)
+        Sun, 27 Oct 2019 09:06:34 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v6so6447966wmj.0
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 06:06:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Gs3GiRBJblAnQ6egGV4uLJk282FsBIvSNYDjAwRLL+g=;
-        b=Ywe3N4nQsVwPjtUQUEhvDHaoayXFYP/OeswTDv+CN1AbCzQxZ/m7hpJEIBga+I9pMY
-         eNAD+KcRa8uTBgIumoiX8Nu5tbnx3/9gd2SJdAaJ5KSye5jr0huyZ3D1v9hZJod9cnQL
-         nYFSM/0l36XP+6c+KwLl/jemZ/wKHnFUcs8pS1qsnj1im1bzwqlBPWaoT+jw8sof3mb1
-         BpYBhrNB9KdGymDd9gRAo7LA7tSNCfy5slneQWeRTkTjDaLbUmOLDP6/3uKlYrLHFM1S
-         1Dy24cc6VoZoYp2GJObFzo520mIwY34yOrkQ6M5Qu1a7LxARrl9+8VI9JtoSADheh/mR
-         US6g==
+        bh=q7+ITGPF3JM+lAUTt3VXVFdC2laXS2ImbyjZp+wnQkw=;
+        b=fmKC8Mt16jXkc4PKFgndhqbChVqmzKGwWDi85jHuZEmLwlE1uf35csN1Plu96qz69f
+         nNDSavXTztJ/l540EdD1hwTTOp/7GwO+PuubXwLcW8HTTpXTk+k5RiF37ExwJO+YhWJV
+         KFILhc8Pmb/1iBb3fuT2zHRQZmWE6SO4m3gm62DAkOE0fO+kj3QkpK+d8MxhC5h0nJ/A
+         xhl6T6nWOS7vYxvjUV3B/15Qyg0cWcz8no6jk1//3VpMohFeafFqCsJc0OTuuWc0rS9D
+         BAuOOTx8jfFOkH4s3VvFTBF/dQdhLdTSIuYG2StnROaIKT8FmnfASvYvkQFYpLQ5kWcY
+         Di3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Gs3GiRBJblAnQ6egGV4uLJk282FsBIvSNYDjAwRLL+g=;
-        b=ssDNO2YrDm9xg+/So8ILJSRJK49y8JLRH+QHVZQrvUMDxWjwgcK3K3QhuEnJXx7DtG
-         fo9snerAbPQ75LLSMvBLVfNIewB+YE9ALs0DOqKMuRrWtNjFdtPE0kabKmsmqLVizoxP
-         CnUyDfLRINtVuEoncU1vwotx/Isj7Eg5mcnYIUWTJfHXguE9wQfB/SW1LNTifxMXCNyl
-         PSTR8WPqeelLdqPTRFJ7D7S51WW+8v8g0BnwjtparAqzGximti7UiDlntVOxMPbUrYDp
-         gD2CF4wvgAGv+NTbV32C0mqmDCfcnrrpCvQuNAL0iXe89pSRQTScuwg81TnUmft60Jwr
-         Cm6g==
-X-Gm-Message-State: APjAAAVkWAWCOVC/NndhzdoWlozVVdtQgrFqrr8zMIF4Rth6irP/C2lU
-        1WBxrSjDXo+zieNVhzVjzxo=
-X-Google-Smtp-Source: APXvYqyF0Zd7gGXoIxMaA+lj8avWfAVO9dqxhm1cbZogNDJFN/LaCnpCEvh/bcezyQHbPUeZyRfe5Q==
-X-Received: by 2002:a1c:c912:: with SMTP id f18mr12335034wmb.168.1572181588816;
-        Sun, 27 Oct 2019 06:06:28 -0700 (PDT)
+        bh=q7+ITGPF3JM+lAUTt3VXVFdC2laXS2ImbyjZp+wnQkw=;
+        b=O33IYt6zSbd//d93nuHRT1zwy9EHhaCi9iagL9+0jRVFofJGYDl+1nbhE5BAsFdBzo
+         yL98G7ztoGuqA0O6vjukbvEN1n++WggHQmLH47imlfdIPzKUOGxovjkCrAUXE86uFZbl
+         pdV5DxHxaOVHNznPFggiQxBkQECXAAzPDJ6AqXG/SGBubBqvyxn3ucgyaa3Txuirn+rA
+         /uWl6J2liUZcePrwnb0zHdLoXL+9PhW7QkoDp03pkNARWORTk+VFhzGvrgrd0F67NFGV
+         26bhp19rRh5UE5EKFV2QeiUCbUmpiVSB2Jc2cJdG8JizzZm4ZaKyYXbX0GxnCHrGuI7q
+         2rVQ==
+X-Gm-Message-State: APjAAAVHfclc/CLqEbePF/WxBdvGrJpgPbaAnAzvTd1cXliKa11OTjMU
+        7DMiqnU2At0EuYwbys9La6gF12bI
+X-Google-Smtp-Source: APXvYqxs3IK7zhapjHaGamTvhkE6gKWudgHFpIba5HV0aUuxyC8ucqXisVIWTW+330hRoLVlJ9Qi8g==
+X-Received: by 2002:a7b:cc89:: with SMTP id p9mr10805931wma.99.1572181592820;
+        Sun, 27 Oct 2019 06:06:32 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id 126sm8127371wma.48.2019.10.27.06.06.27
+        by smtp.gmail.com with ESMTPSA id 126sm8127371wma.48.2019.10.27.06.06.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 06:06:28 -0700 (PDT)
+        Sun, 27 Oct 2019 06:06:32 -0700 (PDT)
 From:   Michael Straube <straube.linux@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org,
         Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 2/4] staging: rtl8188eu: reduce indentation level in _rtw_free_sta_priv
-Date:   Sun, 27 Oct 2019 14:06:02 +0100
-Message-Id: <20191027130604.68379-2-straube.linux@gmail.com>
+Subject: [PATCH 4/4] staging: rtl8188eu: replace tabs with spaces - style
+Date:   Sun, 27 Oct 2019 14:06:04 +0100
+Message-Id: <20191027130604.68379-4-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027130604.68379-1-straube.linux@gmail.com>
 References: <20191027130604.68379-1-straube.linux@gmail.com>
@@ -75,72 +75,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reduce indentation level in _rtw_free_sta_priv by returning early if
-pstapriv is NULL. Also clears a line over 80 characters checkpatch
-warning.
+Replace tabs with spaces where appropriate to cleanup whitespace.
 
 Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- drivers/staging/rtl8188eu/core/rtw_sta_mgt.c | 43 ++++++++++----------
- 1 file changed, 21 insertions(+), 22 deletions(-)
+ drivers/staging/rtl8188eu/core/rtw_sta_mgt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-index 65a824b4dfe0..6c03068d7ed2 100644
+index 8b7adb9e76c2..73f2cb5ebaa6 100644
 --- a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
 +++ b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-@@ -135,31 +135,30 @@ u32 _rtw_free_sta_priv(struct sta_priv *pstapriv)
+@@ -167,7 +167,7 @@ struct sta_info *rtw_alloc_stainfo(struct sta_priv *pstapriv, u8 *hwaddr)
+ {
+ 	s32 index;
+ 	struct list_head *phash_list;
+-	struct sta_info	*psta;
++	struct sta_info *psta;
+ 	struct __queue *pfree_sta_queue;
  	struct recv_reorder_ctrl *preorder_ctrl;
- 	int index;
+ 	int i = 0;
+@@ -318,7 +318,7 @@ u32 rtw_free_stainfo(struct adapter *padapter, struct sta_info *psta)
  
--	if (pstapriv) {
--		/* delete all reordering_ctrl_timer */
--		spin_lock_bh(&pstapriv->sta_hash_lock);
--		for (index = 0; index < NUM_STA; index++) {
--			phead = &pstapriv->sta_hash[index];
--			plist = phead->next;
--
--			while (phead != plist) {
--				int i;
--
--				psta = container_of(plist, struct sta_info,
--						    hash_list);
--				plist = plist->next;
--
--				for (i = 0; i < 16; i++) {
--					preorder_ctrl = &psta->recvreorder_ctrl[i];
--					del_timer_sync(&preorder_ctrl->reordering_ctrl_timer);
--				}
-+	if (!pstapriv)
-+		return _SUCCESS;
-+
-+	/* delete all reordering_ctrl_timer */
-+	spin_lock_bh(&pstapriv->sta_hash_lock);
-+	for (index = 0; index < NUM_STA; index++) {
-+		phead = &pstapriv->sta_hash[index];
-+		plist = phead->next;
-+
-+		while (phead != plist) {
-+			int i;
-+
-+			psta = container_of(plist, struct sta_info, hash_list);
-+			plist = plist->next;
-+
-+			for (i = 0; i < 16; i++) {
-+				preorder_ctrl = &psta->recvreorder_ctrl[i];
-+				del_timer_sync(&preorder_ctrl->reordering_ctrl_timer);
- 			}
- 		}
--		spin_unlock_bh(&pstapriv->sta_hash_lock);
--		/*===============================*/
--
--		vfree(pstapriv->pallocated_stainfo_buf);
- 	}
-+	spin_unlock_bh(&pstapriv->sta_hash_lock);
-+
-+	vfree(pstapriv->pallocated_stainfo_buf);
+ 		spin_lock_bh(&ppending_recvframe_queue->lock);
  
- 	return _SUCCESS;
- }
+-		phead =		get_list_head(ppending_recvframe_queue);
++		phead = get_list_head(ppending_recvframe_queue);
+ 		plist = phead->next;
+ 
+ 		while (!list_empty(phead)) {
 -- 
 2.23.0
 
