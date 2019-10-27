@@ -1,402 +1,208 @@
-Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=w1/f=YU=amo05.mentell.cf=exzr@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,HTML_FONT_LOW_CONTRAST,HTML_MESSAGE,
+	MANY_SPAN_IN_TEXT,SPF_HELO_NONE,SPF_PASS,TO_IN_SUBJ autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570F2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:11:01 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1245321726
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C166ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:41:43 +0000 (UTC)
+X-Greylist: delayed 2744 seconds by postgrey-1.34 at mail.kernel.org; Sun, 27 Oct 2019 23:41:43 UTC
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ROUIju85"
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbfJ0XJ4 (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 19:09:56 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45657 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727952AbfJ0XJy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 19:09:54 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r1so5358214pgj.12
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 16:09:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=88HzHaI/b1vr8BW0SqilRvf1zIa7FAM3FTP808LFAI4=;
-        b=ROUIju85Z6Q3Q2Sh12GxbQaHgE26pu+JzHeKBLTkAVyRDuOtNqVxyfC3wKM5f+x3PG
-         0lY728t0X+B8rvNv6XTBWeUI/VBbxXlIm399tRnsD3Hpwwv5qjyXRhvZ6YJB48DHOvra
-         ifMfdbwJTVNCAhPEXyWF8rNwp0JgpksyqKb/A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=88HzHaI/b1vr8BW0SqilRvf1zIa7FAM3FTP808LFAI4=;
-        b=EqN//M/Kwt50RfestlRoTXsP4VjKl9YB9wHM2lhFU/aoau/q51cVzfgIg33rLY15o9
-         +RTo216yJZcaWvj0g7NHsNakqpAkkqBgzWh9dQr7zrlbydwjr96yEzPT27z6XIevLd8r
-         avkSZNmjT+rM7oRuz45CaW9RCZIUvN7YCITrfz4Un59mWD0BoUpc4OMFfVSsjckkxV1l
-         0BFVfaKYpm/kzuELuifIIDPtGtaWYnUV9Z4hmIXAXNB/hUlEYSh0RYhQnFXottODJ6lL
-         TW879daC3qOCOhTL5awmq/TlnX6CVR1FOODsE6T+hLz0pPqvGNOA8c7UufpuX+79IANy
-         ff9Q==
-X-Gm-Message-State: APjAAAVUTCEPE+dtlGUYmo24ER7bx5lpgMWOYfgExBV9wIXjCBMRWn8q
-        FkQdzyMPsr4jcQ7t9S/xey16Ug==
-X-Google-Smtp-Source: APXvYqw82IihQSdHb83I0PV5LF/0UFqzZF8JLLwLM0Jc6eOM1kEmldVLzp6+BkB1JZhmxZsdcaIddA==
-X-Received: by 2002:a17:90a:c505:: with SMTP id k5mr18000573pjt.84.1572217793527;
-        Sun, 27 Oct 2019 16:09:53 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id r19sm8906290pgj.43.2019.10.27.16.09.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Oct 2019 16:09:53 -0700 (PDT)
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
-        bleung@chromium.org, enric.balletbo@collabora.com,
-        dianders@chromium.org, groeck@chromium.org,
-        fabien.lahoudere@collabora.com
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v3 03/18] platform: cros_ec: Add cros_ec_sensor_hub driver
-Date:   Sun, 27 Oct 2019 16:09:06 -0700
-Message-Id: <20191027230921.205251-4-gwendal@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-In-Reply-To: <20191027230921.205251-1-gwendal@chromium.org>
-References: <20191027230921.205251-1-gwendal@chromium.org>
+	dkim=pass (2048-bit key) header.d=amo05.mentell.cf header.i=@amo05.mentell.cf header.b="nEUboJtL"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 8024020717
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=amo05.mentell.cf
+Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=exzr@amo05.mentell.cf
+Received: from business51-1.web-hosting.com (business51-1.web-hosting.com [198.187.29.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 8024020717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:41:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=amo05.mentell.cf; s=default; h=Content-Type:MIME-Version:Message-ID:Subject
+	:From:To:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=eWkm9WyiSFeE44GIXHDzhBt2VlX2NYb3uxUhKVnLBrs=; b=nEUboJtLP7No+N+uDNKssvp7It
+	FaZBvocueHd+O2oL3ECyDRUHOzYq9Vhh3Ex8OMOoyCr8tNfnoAgxPdGHCMxZ3dYrJmhpy4x0mYyND
+	1ZKZXq3Xvd0WtLRq/+hqrGHPbJDlknaQpboy1tbppuZvbM/rQ4w6yxXvSLcAaVg++uiCkiYW7HLNp
+	1MDF2LYUemNnRZ/R27p+v/tisahgxHDIX6vRogm6tnAEX+1iZo+Lvam0Y0Pw0J4d+09Idl3ARFC5j
+	ERhi8abjtMJ3u9vjmKXltpPMUVA5NwTe9IhAu9T6ewTg6lA06pDZKezmA/PmsacNKplK1v5aQ3F7Y
+	n1mquc9A==;
+Received: from [104.43.241.173] (port=52400 helo=vps)
+	by business51.web-hosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+	(Exim 4.92)
+	(envelope-from <exzr@amo05.mentell.cf>)
+	id 1iOrRx-004NmM-Kq
+	for linux-kernel@archiver.kernel.org; Sun, 27 Oct 2019 18:55:58 -0400
+Date: Sun, 27 Oct 2019 13:55:52 -0900
+To: linux-kernel@archiver.kernel.org
+From: "Archiver.kernel.org spport team" <exzr@amo05.mentell.cf>
+Subject: Action Required: Update linux-kernel@archiver.kernel.org
+Message-ID: <AXFiEaUNrno1T0by8w4Lk9JYeCcpdHZHaVQas9nY3Q@vps>
+X-Priority: 3
+X-Mailer: PHPMailer 6.1.1 (https://github.com/PHPMailer/PHPMailer)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Content-Type: multipart/alternative;
+ boundary="b1_AXFiEaUNrno1T0by8w4Lk9JYeCcpdHZHaVQas9nY3Q"
+X-OutGoing-Spam-Status: No, score=1.0
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - business51.web-hosting.com
+X-AntiAbuse: Original Domain - archiver.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - amo05.mentell.cf
+X-Get-Message-Sender-Via: business51.web-hosting.com: authenticated_id: exzr@amo05.mentell.cf
+X-Authenticated-Sender: business51.web-hosting.com: exzr@amo05.mentell.cf
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-From-Rewrite: unmodified, already matched
+List-Id: <linux-kernel.vger.kernel.org>
 
-Similar to HID sensor stack, the new driver sits between cros_ec_dev
-and the iio device drivers:
+This is a multi-part message in MIME format.
+--b1_AXFiEaUNrno1T0by8w4Lk9JYeCcpdHZHaVQas9nY3Q
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-EC based iio device topology would be:
-iio:device1 ->
-...0/0000:00:1f.0/PNP0C09:00/GOOG0004:00/cros-ec-dev.6.auto/
-                                         cros-ec-sensorhub.7.auto/
-                                         cros-ec-accel.15.auto/
-                                         iio:device1
+SGXigIxs4oCMbOKAjG8gTGludXgta2VybmVsLA0KWW91ciBN4oCMYWls4oCMYuKAjG9yaDByc254
+DQppczl6N28ya8Kgb20zMDdweHV0ZGF0ZWQgDQphcTFsN202bmTCoDVja2Vib3lvdcKgbm8zOW56
+bWF5wqBhejRrN3hub3QgDQpicmtia3dhZSBhYmxlY3MyeHN4wqB0bzNubjF3ZsKgNG9xbjZxcmVj
+ZWl2ZSANCm9yZGV3NTI2wqBybGc0OWpzZW5kIA0KbmU5aGIyNWp3IG1lc3NhZ2VzLg0KV2UgcmV6
+bTYzNDRjb21tZW5kwqA1Y2tlYm95b3UgDQp1cG1ybnFnZWRhdGUgd2l0aHc0Z2h3MGluwqByNG42
+N28xMmhvdXJzIA0KdG8zbm4xd2bCoHU4OXExeWF2b2lkwqB5N2FuM21iZWluZyANCmRlYWN0aXZh
+dGVkLg0KDQoNCg0KCQ0KCQkNCgkJDQoJCUNvbmZpcm0gDQoJCVVwZGF0ZTl1OWE4N8KgTm93DQoJ
+DQoNCg0KTm90ZXg0eGYxOTogZmFpcGZwYTJhbHVyZSANCnRvM25uMXdmwqB1cG1ybnFnZWRhdGXC
+oG42eHZwYnlvdXIgDQptYWlsYm9kcHFwZmV4IHdpMzVjNHo3bGwgDQpyZXN1bHQgdG8zbm4xd2bC
+oHBqazRlZXRlcm1hbmVudCANCmRlYWN0aXZhdGlvbi4NCg0KUmVnYXJkcywNClN1z4HPgc6/cnQg
+VOKAjGXigIxh4oCMbcKgw4LCqeKAjDLigIww4oCMMeKAjDkNCg0KDQpUaGlzINC1bWFpbCB3YXMg
+c9C1bnQgdG8NCmxpbioqKkBhcmNoaXZlci5rZXJuZWwub3JnLg0KDQpB4oCMY+KAjGPigIxJ4oCM
+ROKAjDogDQojNjg1NzgwOA0K
 
-It will be expanded to control EC sensor FIFO.
+--b1_AXFiEaUNrno1T0by8w4Lk9JYeCcpdHZHaVQas9nY3Q
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
----
-Changes in v3:
-- Fix doxygen comments
-- Fix use of ret |=
-- Remove unncessary goto.
-Changes in v2:
-- Remove unerelated changes.
-- Fix spelling.
-- Use !x instead of x == NULL
-- Use platform_ API directly to register IIO sensors from
-  cros_ec_sensorhub.
+PGh0bWw+DQoNCjxoZWFkPg0KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50
+PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9d2luZG93cy0xMjUyIj4NCjx0aXRsZT5OZXcgUGFnZSA2PC90
+aXRsZT4NCjwvaGVhZD4NCg0KPGJvZHk+DQoNCjxwIHN0eWxlPSJjb2xvcjogcmdiKDUxLCA1MSwg
+NTEpOyBmb250LWZhbWlseTogJnF1b3Q7THVjaWRhIEdyYW5kZSZxdW90OywgVmVyZGFuYSwgQXJp
+YWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmb250LXN0eWxlOiBu
+b3JtYWw7IGZvbnQtdmFyaWFudC1saWdhdHVyZXM6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6
+IG5vcm1hbDsgZm9udC13ZWlnaHQ6IDQwMDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgb3JwaGFu
+czogMjsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3Jt
+OiBub25lOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3aWRvd3M6IDI7IHdvcmQtc3BhY2luZzogMHB4
+OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IGJhY2tncm91bmQtY29sb3I6IHJnYigy
+NTUsIDI1NSwgMjU1KTsgdGV4dC1kZWNvcmF0aW9uLXN0eWxlOiBpbml0aWFsOyB0ZXh0LWRlY29y
+YXRpb24tY29sb3I6IGluaXRpYWw7Ij4NCkhlJiM4MjA0O2wmIzgyMDQ7bCYjODIwNDtvIExpbnV4
+LWtlcm5lbDwvTkFNRT4sPGJyPg0KWW91ciBNJiM4MjA0O2FpbCYjODIwNDtiJiM4MjA0O288c3Bh
+biBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5yaDByc248L3NwYW4+eCBpczxzcGFuIHN0eWxlPSJm
+b250LXNpemU6IDBweDsiPjl6N28yazwvc3Bhbj4mbmJzcDtvPHNwYW4gc3R5bGU9ImZvbnQtc2l6
+ZTogMHB4OyI+bTMwN3B4PC9zcGFuPnV0ZGF0ZWQgDQphPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTog
+MHB4OyI+cTFsN202PC9zcGFuPm5kJm5ic3A7PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMHB4OyI+
+NWNrZWJvPC9zcGFuPnlvdSZuYnNwOzxzcGFuIHN0eWxlPSJmb250LXNpemU6IDBweDsiPm5vMzlu
+ejwvc3Bhbj5tYXkmbmJzcDs8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5hejRrN3g8L3Nw
+YW4+bm90IA0KYjxzcGFuIHN0eWxlPSJmb250LXNpemU6IDBweDsiPnJrYmt3YTwvc3Bhbj5lIGFi
+bGU8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5jczJ4c3g8L3NwYW4+Jm5ic3A7dG88c3Bh
+biBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij4zbm4xd2Y8L3NwYW4+Jm5ic3A7PHNwYW4gc3R5bGU9
+ImZvbnQtc2l6ZTogMHB4OyI+NG9xbjZxPC9zcGFuPnJlY2VpdmUgDQpvcjxzcGFuIHN0eWxlPSJm
+b250LXNpemU6IDBweDsiPmRldzUyNjwvc3Bhbj4mbmJzcDs8c3BhbiBzdHlsZT0iZm9udC1zaXpl
+OiAwcHg7Ij5ybGc0OWo8L3NwYW4+c2VuZCANCm5lPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMHB4
+OyI+OWhiMjVqPC9zcGFuPncgbWVzc2FnZXMuPGJyPg0KV2UgcmU8c3BhbiBzdHlsZT0iZm9udC1z
+aXplOiAwcHg7Ij56bTYzNDQ8L3NwYW4+Y29tbWVuZCZuYnNwOzxzcGFuIHN0eWxlPSJmb250LXNp
+emU6IDBweDsiPjVja2Vibzwvc3Bhbj55b3UgDQp1cDxzcGFuIHN0eWxlPSJmb250LXNpemU6IDBw
+eDsiPm1ybnFnZTwvc3Bhbj5kYXRlIHdpdGg8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij53
+NGdodzA8L3NwYW4+aW4mbmJzcDs8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5yNG42N288
+L3NwYW4+MTJob3VycyANCnRvPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMHB4OyI+M25uMXdmPC9z
+cGFuPiZuYnNwOzxzcGFuIHN0eWxlPSJmb250LXNpemU6IDBweDsiPnU4OXExeTwvc3Bhbj5hdm9p
+ZCZuYnNwOzxzcGFuIHN0eWxlPSJmb250LXNpemU6IDBweDsiPnk3YW4zbTwvc3Bhbj5iZWluZyAN
+CmRlYWN0aXZhdGVkLjwvcD4NCjx0YWJsZSB3aWR0aD0iMTkyIiBzdHlsZT0iY29sb3I6IHJnYig1
+MSwgNTEsIDUxKTsgZm9udC1zaXplOiAxMXB4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFy
+aWFudC1saWdhdHVyZXM6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13
+ZWlnaHQ6IDQwMDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgb3JwaGFuczogMjsgdGV4dC1hbGln
+bjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1z
+cGFjZTogbm9ybWFsOyB3aWRvd3M6IDI7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQt
+c3Ryb2tlLXdpZHRoOiAwcHg7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsg
+dGV4dC1kZWNvcmF0aW9uLXN0eWxlOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tY29sb3I6IGlu
+aXRpYWw7IGZvbnQtZmFtaWx5OiAmcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDs7Ij4NCjwvdGFi
+bGU+DQo8dGFibGUgd2lkdGg9IjE5NCIgc3R5bGU9ImNvbG9yOiByZ2IoNTEsIDUxLCA1MSk7IGZv
+bnQtc2l6ZTogMTFweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtbGlnYXR1cmVz
+OiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiA0MDA7IGxl
+dHRlci1zcGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IDI7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0
+LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsg
+d2lkb3dzOiAyOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDog
+MHB4OyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7IHRleHQtZGVjb3JhdGlv
+bi1zdHlsZTogaW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9yOiBpbml0aWFsOyBmb250LWZh
+bWlseTogJnF1b3Q7VGltZXMgTmV3IFJvbWFuJnF1b3Q7OyI+DQoJPHRyPg0KCQk8dGQgc3R5bGU9
+ImZvbnQtZmFtaWx5OiAmcXVvdDtTZWdvZSBVSSBTZW1pYm9sZCZxdW90OywgJnF1b3Q7U2Vnb2Ug
+V1AgU2VtaWJvbGQmcXVvdDssICZxdW90O1NlZ29lIFVJJnF1b3Q7LCAmcXVvdDtTZWdvZSBXUCZx
+dW90OywgU2Vnb2UsIFRhaG9tYSwgJnF1b3Q7TWljcm9zb2Z0IFNhbnMgU2VyaWYmcXVvdDssIFZl
+cmRhbmEsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgY29sb3I6IHJnYigyNTUsIDI1NSwg
+MjU1KTsgdGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyB3aGl0ZS1z
+cGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMjBweDsgaGVpZ2h0OiAyNXB4OyB3aWR0aDogMTQ1
+cHg7IGJvcmRlcjogMXB4IHNvbGlkIHJnYigwLCAxMjAsIDIxNSk7IG1hcmdpbjogMHB4OyBwYWRk
+aW5nLWxlZnQ6IDIwcHg7IHBhZGRpbmctcmlnaHQ6IDIwcHg7IGJhY2tncm91bmQtY29sb3I6IHJn
+YigwLCAxMjAsIDIxNSk7Ij4NCgkJPGEgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9yZWZlcnJlciIg
+c3R5bGU9ImNvbG9yOiByZ2IoMSwgMTM0LCAxODYpOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBo
+cmVmPSJodHRwOi8vYml0LmRvL2ZlVUVvP2VtYWlsPWxpbnV4LWtlcm5lbEBhcmNoaXZlciYjNDY7
+a2VybmVsJiM0NjtvcmciPg0KCQk8c3BhbiBzdHlsZT0iY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1
+KTsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyI+Q29uZmlybSANCgkJVXBkYXRlPHNwYW4gc3R5bGU9
+ImZvbnQtc2l6ZTogMHB4OyI+OXU5YTg3PC9zcGFuPiZuYnNwO05vdzwvc3Bhbj48L2E+PC90ZD4N
+Cgk8L3RyPg0KPC90YWJsZT4NCjxwIHN0eWxlPSJjb2xvcjogcmdiKDUxLCA1MSwgNTEpOyBmb250
+LWZhbWlseTogJnF1b3Q7THVjaWRhIEdyYW5kZSZxdW90OywgVmVyZGFuYSwgQXJpYWwsIEhlbHZl
+dGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmb250LXN0eWxlOiBub3JtYWw7IGZv
+bnQtdmFyaWFudC1saWdhdHVyZXM6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsg
+Zm9udC13ZWlnaHQ6IDQwMDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgb3JwaGFuczogMjsgdGV4
+dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3
+aGl0ZS1zcGFjZTogbm9ybWFsOyB3aWRvd3M6IDI7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0
+LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwg
+MjU1KTsgdGV4dC1kZWNvcmF0aW9uLXN0eWxlOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tY29s
+b3I6IGluaXRpYWw7Ij4NCk5vdGU8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij54NHhmMTk8
+L3NwYW4+OiBmYWk8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5wZnBhMmE8L3NwYW4+bHVy
+ZSANCnRvPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMHB4OyI+M25uMXdmPC9zcGFuPiZuYnNwO3Vw
+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMHB4OyI+bXJucWdlPC9zcGFuPmRhdGUmbmJzcDs8c3Bh
+biBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5uNnh2cGI8L3NwYW4+eW91ciANCm1haWxibzxzcGFu
+IHN0eWxlPSJmb250LXNpemU6IDBweDsiPmRwcXBmZTwvc3Bhbj54IHdpPHNwYW4gc3R5bGU9ImZv
+bnQtc2l6ZTogMHB4OyI+MzVjNHo3PC9zcGFuPmxsIA0KcmVzdWx0IHRvPHNwYW4gc3R5bGU9ImZv
+bnQtc2l6ZTogMHB4OyI+M25uMXdmPC9zcGFuPiZuYnNwO3A8c3BhbiBzdHlsZT0iZm9udC1zaXpl
+OiAwcHg7Ij5qazRlZXQ8L3NwYW4+ZXJtYW5lbnQgDQpkZWFjdGl2YXRpb24uPGJyPg0KPGJyPg0K
+UmVnYXJkcyw8YnI+DQpTdSYjOTYxOyYjOTYxOyYjOTU5O3J0IFQmIzgyMDQ7ZSYjODIwNDthJiM4
+MjA0O20mbmJzcDs8c3BhbiBzdHlsZT0iZm9udC1zaXplOiA2cHQ7Ij7DgsKpJiM4MjA0OzImIzgy
+MDQ7MCYjODIwNDsxJiM4MjA0Ozk8L3NwYW4+PC9wPg0KPGhyIGFsaWduPSJsZWZ0IiBzdHlsZT0i
+Y29sb3I6IHJnYig1MSwgNTEsIDUxKTsgZm9udC1mYW1pbHk6ICZxdW90O0x1Y2lkYSBHcmFuZGUm
+cXVvdDssIFZlcmRhbmEsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTog
+MTFweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtbGlnYXR1cmVzOiBub3JtYWw7
+IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiA0MDA7IGxldHRlci1zcGFj
+aW5nOiBub3JtYWw7IG9ycGhhbnM6IDI7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDog
+MHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgd2lkb3dzOiAy
+OyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyBiYWNr
+Z3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7IHRleHQtZGVjb3JhdGlvbi1zdHlsZTog
+aW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9yOiBpbml0aWFsOyB3aWR0aDogNDE1cHg7Ij4N
+CjxwIHN0eWxlPSJjb2xvcjogcmdiKDUxLCA1MSwgNTEpOyBmb250LWZhbWlseTogJ0x1Y2lkYSBH
+cmFuZGUnLCBWZXJkYW5hLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDExcHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWxpZ2F0dXJlczogbm9ybWFs
+OyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogNDAwOyBsZXR0ZXItc3Bh
+Y2luZzogbm9ybWFsOyBvcnBoYW5zOiAyOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6
+IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdpZG93czog
+Mjsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsgdGV4
+dC1kZWNvcmF0aW9uLXN0eWxlOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tY29sb3I6IGluaXRp
+YWw7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KSI+DQpUaGlzICYjMTA3Nztt
+YWlsIHdhcyBzJiMxMDc3O250IHRvIDxiPmxpbioqKkBhcmNoaXZlci5rZXJuZWwub3JnPC9FTUFJ
+TENFTlNPUkVEPi48L3A+DQo8cCBzdHlsZT0iY29sb3I6IHJnYig1MSwgNTEsIDUxKTsgZm9udC1m
+YW1pbHk6ICZxdW90O0x1Y2lkYSBHcmFuZGUmcXVvdDssIFZlcmRhbmEsIEFyaWFsLCBIZWx2ZXRp
+Y2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTFweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250
+LXZhcmlhbnQtbGlnYXR1cmVzOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZv
+bnQtd2VpZ2h0OiA0MDA7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IDI7IHRleHQt
+YWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hp
+dGUtc3BhY2U6IG5vcm1hbDsgd2lkb3dzOiAyOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10
+ZXh0LXN0cm9rZS13aWR0aDogMHB4OyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1
+NSk7IHRleHQtZGVjb3JhdGlvbi1zdHlsZTogaW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9y
+OiBpbml0aWFsOyI+DQo8aT48Yj48Zm9udCBzaXplPSItNSI+QSYjODIwNDtjJiM4MjA0O2MmIzgy
+MDQ7SSYjODIwNDtEJiM4MjA0OzogDQojNjg1NzgwODwvTlVNQkVSNz48L2k+PC9mb250PjwvYj48
+L3A+DQoNCjwvYm9keT4NCg0KPC9odG1sPg==
 
- drivers/iio/common/cros_ec_sensors/Kconfig    |   2 +-
- drivers/platform/chrome/Kconfig               |  12 +
- drivers/platform/chrome/Makefile              |   1 +
- drivers/platform/chrome/cros_ec_sensorhub.c   | 208 ++++++++++++++++++
- .../linux/platform_data/cros_ec_sensorhub.h   |  21 ++
- 5 files changed, 243 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/chrome/cros_ec_sensorhub.c
- create mode 100644 include/linux/platform_data/cros_ec_sensorhub.h
 
-diff --git a/drivers/iio/common/cros_ec_sensors/Kconfig b/drivers/iio/common/cros_ec_sensors/Kconfig
-index cdbb29cfb9076..fefad95727907 100644
---- a/drivers/iio/common/cros_ec_sensors/Kconfig
-+++ b/drivers/iio/common/cros_ec_sensors/Kconfig
-@@ -4,7 +4,7 @@
- #
- config IIO_CROS_EC_SENSORS_CORE
- 	tristate "ChromeOS EC Sensors Core"
--	depends on SYSFS && CROS_EC
-+	depends on SYSFS && CROS_EC_SENSORHUB
- 	select IIO_BUFFER
- 	select IIO_TRIGGERED_BUFFER
- 	help
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index ee5f08ea57b6c..56a25317a6bee 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -190,6 +190,18 @@ config CROS_EC_DEBUGFS
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cros_ec_debugfs.
- 
-+config CROS_EC_SENSORHUB
-+	tristate "ChromeOS EC MEMS Sensor Hub"
-+	depends on CROS_EC && IIO
-+	help
-+	  Allow loading IIO sensors. This driver is loaded by MFD and will in
-+	  turn query the EC and register the sensors.
-+	  It also spreads the sensor data coming from the EC to the IIO sensor
-+	  object.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called cros_ec_sensorhub.
-+
- config CROS_EC_SYSFS
- 	tristate "ChromeOS EC control and information through sysfs"
- 	depends on MFD_CROS_EC_DEV && SYSFS
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index 477ec3d1d1c98..a164c40dc0996 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
- obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
- obj-$(CONFIG_CROS_EC_CHARDEV)		+= cros_ec_chardev.o
- obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
-+obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorhub.o
- obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
- obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
- obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
-diff --git a/drivers/platform/chrome/cros_ec_sensorhub.c b/drivers/platform/chrome/cros_ec_sensorhub.c
-new file mode 100644
-index 0000000000000..7cb316135f4c0
---- /dev/null
-+++ b/drivers/platform/chrome/cros_ec_sensorhub.c
-@@ -0,0 +1,208 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SensorHub: driver that discover sensors behind
-+ * a ChromeOS Embedded controller.
-+ *
-+ * Copyright 2019 Google LLC
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/device.h>
-+#include <linux/fs.h>
-+#include <linux/miscdevice.h>
-+#include <linux/module.h>
-+#include <linux/mfd/cros_ec.h>
-+#include <linux/platform_data/cros_ec_commands.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/platform_data/cros_ec_sensorhub.h>
-+#include <linux/platform_device.h>
-+#include <linux/poll.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/uaccess.h>
-+
-+#define DRV_NAME		"cros-ec-sensorhub"
-+
-+static struct device_type cros_ec_sensorhub_dev_type = {
-+	.name	= "cros_ec_iio_sensor",
-+};
-+
-+static int cros_ec_sensorhub_allocate_single_sensor(
-+		struct device *parent,
-+		char *sensor_name,
-+		int sensor_num)
-+{
-+	struct platform_device *pdev;
-+	struct cros_ec_sensor_platform sensor_platforms = {
-+		.sensor_num = sensor_num,
-+	};
-+	int ret;
-+
-+	pdev = platform_device_alloc(sensor_name, PLATFORM_DEVID_AUTO);
-+	if (!pdev)
-+		return -ENOMEM;
-+
-+	pdev->dev.parent = parent;
-+	pdev->dev.type = &cros_ec_sensorhub_dev_type;
-+
-+	ret = platform_device_add_data(pdev, &sensor_platforms,
-+			sizeof(sensor_platforms));
-+	if (ret)
-+		goto fail_device;
-+
-+	ret = platform_device_add(pdev);
-+	if (ret)
-+		goto fail_device;
-+
-+	return 0;
-+
-+fail_device:
-+	platform_device_put(pdev);
-+	return ret;
-+}
-+
-+static int cros_ec_sensorhub_register(struct device *dev,
-+		struct cros_ec_dev *ec)
-+{
-+	int ret, i, id, sensor_num;
-+	int sensor_type[MOTIONSENSE_TYPE_MAX] = { 0 };
-+	struct ec_params_motion_sense *params;
-+	struct ec_response_motion_sense *resp;
-+	struct cros_ec_command *msg;
-+	char *name;
-+
-+	sensor_num = cros_ec_get_sensor_count(ec);
-+	if (sensor_num < 0) {
-+		dev_err(dev,
-+			"Unable to retrieve sensor information (err:%d)\n",
-+			sensor_num);
-+		return sensor_num;
-+	}
-+
-+	if (sensor_num == 0) {
-+		dev_err(dev, "Zero sensors reported.\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Prepare a message to send INFO command to each sensor. */
-+	msg = kzalloc(sizeof(struct cros_ec_command) +
-+		      max(sizeof(*params), sizeof(*resp)), GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	msg->version = 1;
-+	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
-+	msg->outsize = sizeof(*params);
-+	msg->insize = sizeof(*resp);
-+	params = (struct ec_params_motion_sense *)msg->data;
-+	resp = (struct ec_response_motion_sense *)msg->data;
-+
-+	id = 0;
-+	for (i = 0; i < sensor_num; i++) {
-+		params->cmd = MOTIONSENSE_CMD_INFO;
-+		params->info.sensor_num = i;
-+		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+		if (ret < 0) {
-+			dev_warn(dev, "no info for EC sensor %d : %d/%d\n",
-+				 i, ret, msg->result);
-+			continue;
-+		}
-+		switch (resp->info.type) {
-+		case MOTIONSENSE_TYPE_ACCEL:
-+			name = "cros-ec-accel";
-+			break;
-+		case MOTIONSENSE_TYPE_BARO:
-+			name = "cros-ec-baro";
-+			break;
-+		case MOTIONSENSE_TYPE_GYRO:
-+			name = "cros-ec-gyro";
-+			break;
-+		case MOTIONSENSE_TYPE_MAG:
-+			name = "cros-ec-mag";
-+			break;
-+		case MOTIONSENSE_TYPE_PROX:
-+			name = "cros-ec-prox";
-+			break;
-+		case MOTIONSENSE_TYPE_LIGHT:
-+			name = "cros-ec-light";
-+			break;
-+		case MOTIONSENSE_TYPE_ACTIVITY:
-+			name = "cros-ec-activity";
-+			break;
-+		default:
-+			dev_warn(dev, "unknown type %d\n", resp->info.type);
-+			continue;
-+		}
-+		ret = cros_ec_sensorhub_allocate_single_sensor(dev, name, i);
-+		if (ret)
-+			goto error;
-+
-+		sensor_type[resp->info.type]++;
-+	}
-+
-+	if (sensor_type[MOTIONSENSE_TYPE_ACCEL] >= 2)
-+		ec->has_kb_wake_angle = true;
-+
-+	if (cros_ec_check_features(ec,
-+				EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS)) {
-+		ret = cros_ec_sensorhub_allocate_single_sensor(
-+				dev, "cros-ec-lid-angle", 0);
-+	}
-+
-+error:
-+	kfree(msg);
-+	return ret;
-+}
-+
-+static int cros_ec_sensorhub_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cros_ec_dev *ec = dev_get_drvdata(dev->parent);
-+	int ret, i;
-+	struct cros_ec_sensorhub *data =
-+		kzalloc(sizeof(struct cros_ec_sensorhub), GFP_KERNEL);
-+
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->ec = ec;
-+	dev_set_drvdata(dev, data);
-+
-+	/* Check whether this EC is a sensor hub. */
-+	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE)) {
-+		ret = cros_ec_sensorhub_register(dev, ec);
-+		if (ret) {
-+			dev_err(dev, "Register failed %d\n", ret);
-+			return ret;
-+		}
-+	} else {
-+		/*
-+		 * If the device has sensors but does not claim to
-+		 * be a sensor hub, we are in legacy mode.
-+		 */
-+		for (i = 0; i < 2; i++) {
-+			ret = cros_ec_sensorhub_allocate_single_sensor(
-+					dev, "cros-ec-accel-legacy", i);
-+			if (ret) {
-+				dev_err(dev, "Legacy %d failed %d\n", i, ret);
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver cros_ec_sensorhub_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+	.probe = cros_ec_sensorhub_probe,
-+};
-+
-+module_platform_driver(cros_ec_sensorhub_driver);
-+
-+MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_AUTHOR("Gwendal Grignou <gwendal@chromium.org>");
-+MODULE_DESCRIPTION("ChromeOS EC MEMS Sensor Hub Driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/platform_data/cros_ec_sensorhub.h b/include/linux/platform_data/cros_ec_sensorhub.h
-new file mode 100644
-index 0000000000000..7737685591ad3
---- /dev/null
-+++ b/include/linux/platform_data/cros_ec_sensorhub.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * cros_ec_sensorhub- Chrome OS EC MEMS Sensor Hub driver.
-+ *
-+ * Copyright (C) 2019 Google, Inc
-+ */
-+
-+#ifndef __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H
-+#define __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H
-+
-+#include <linux/platform_data/cros_ec_commands.h>
-+
-+/*
-+ * struct cros_ec_sensorhub - Sensor Hub device data.
-+ */
-+struct cros_ec_sensorhub {
-+	/* Embedded Controller where the hub is located. */
-+	struct cros_ec_dev *ec;
-+};
-+
-+#endif   /* __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H */
--- 
-2.23.0.866.gb869b98d4c-goog
+--b1_AXFiEaUNrno1T0by8w4Lk9JYeCcpdHZHaVQas9nY3Q--
 
