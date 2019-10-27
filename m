@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E355CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACA0CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5431B21726
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFF921928
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572152899;
-	bh=7kiXahjaMWcn2HR5dkdQfHTmHcvQn27gE+pu4EYBl58=;
+	s=default; t=1572152931;
+	bh=avjDO20ekzRg6N0cc0H6NK1mMp2HBzb27/Uf4/5l9F8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OwFaqOca2CM9WBufRF/p9gRy0yuDsyS4GEoDk4yq/a4j5PP03GSUw1hJdOIDXN1Wm
-	 AVegF6CTiRQHmZY2AjWjLXcVYGOYVoeICAk5c+6aCNHXkAnUFb+Y0VMiN06dHSyhsE
-	 LwuNqBTHvmZPsJEqdT7ChYe35YEvYQ48rLzyQ4D4=
+	b=j0TWESqc3DLA/V5serKj026g/mE8iK2lucdWoDjQfD2mUZOPjBUmaLFu5Reh1J8Tc
+	 PS/2HLdqgbWxL7Y80X9CnJxo4ltVLg82SkFwiHsOApPmT0RqSPn2UgBITSxw7YhBEr
+	 zG/TVaWJ5S8T8LSpB8+6AOwl+nSr5/wzmScQk/H0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbfJ0FIS (ORCPT
+        id S1726242AbfJ0FIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 01:08:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41296 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 01:08:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfJ0FIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 01:08:17 -0400
+        id S1725440AbfJ0FIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 01:08:50 -0400
 Received: from localhost (mobile-166-176-122-39.mycingular.net [166.176.122.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 192172070B;
-        Sun, 27 Oct 2019 05:08:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D88B21726;
+        Sun, 27 Oct 2019 05:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572152897;
-        bh=7kiXahjaMWcn2HR5dkdQfHTmHcvQn27gE+pu4EYBl58=;
+        s=default; t=1572152929;
+        bh=avjDO20ekzRg6N0cc0H6NK1mMp2HBzb27/Uf4/5l9F8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NEWV96RWWO21r9uihlgdxW/0d6Z14uFDcm/1mUUoo0Fy2vTI3Q6utO7Q+8bwSib1R
-         xKj3dck3ORIMsMLOGgzWGPoh8oiSzIekB/N0X7o70lOKK/s9C6wjpG1bIBJUwS8rvR
-         vcPVhKbQqjy6+48GM4yQweW/0LetxOAzem0wMsJg=
-Date:   Sun, 27 Oct 2019 00:08:15 -0500
+        b=oTHduX+jH6f/n4r9yjH+zOHcuZewTUvYYElECQPGzd6RXifUW09JnupgPwM973osk
+         M9vwBKwuWApjm1wQmFTDpkCCRbr/C1IZ3B7+pOxEF5T/UlE7nhcGAMf0f//EGs0znG
+         eqJZ/BSoWr0VxQWpx4AhnDXyw9k85F6SnYw7gZYk=
+Date:   Sun, 27 Oct 2019 00:08:48 -0500
 From:   Andy Gross <agross@kernel.org>
 To:     Amit Kucheria <amit.kucheria@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -50,9 +50,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 06/15] arm64: dts: msm8916: thermal: Fixup HW ids for
- cpu sensors
-Message-ID: <20191027050815.GA5514@hector.lan>
+Subject: Re: [PATCH v6 13/15] arm64: dts: msm8916: thermal: Add interrupt
+ support
+Message-ID: <20191027050848.GB5514@hector.lan>
 Mail-Followup-To: Amit Kucheria <amit.kucheria@linaro.org>,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com,
@@ -63,27 +63,22 @@ Mail-Followup-To: Amit Kucheria <amit.kucheria@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
         devicetree@vger.kernel.org
 References: <cover.1571652874.git.amit.kucheria@linaro.org>
- <1726fdbf7cf7200ac5dc2a4c811aaee7edc47fd5.1571652874.git.amit.kucheria@linaro.org>
+ <88eff964b708c8aff57b24370d2e14389ace09e9.1571652874.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1726fdbf7cf7200ac5dc2a4c811aaee7edc47fd5.1571652874.git.amit.kucheria@linaro.org>
+In-Reply-To: <88eff964b708c8aff57b24370d2e14389ace09e9.1571652874.git.amit.kucheria@linaro.org>
 User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 04:05:25PM +0530, Amit Kucheria wrote:
-> msm8916 uses sensors 0, 1, 2, 4 and 5. Sensor 3 is NOT used. Fixup the
-> device tree so that the correct sensor ID is used and as a result we can
-> actually check the temperature for the cpu2_3 sensor.
+On Mon, Oct 21, 2019 at 04:05:32PM +0530, Amit Kucheria wrote:
+> Register upper-lower interrupt for the tsens controller.
 > 
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
 
-Applied for 5.5
+Applied for 5.5.
 
 Andy
