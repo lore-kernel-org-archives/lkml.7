@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E406CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60EFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458B1214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F832184C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210652;
-	bh=Kin03poEpPqo7IQuKmDiZFT5cHxaIpyJ2RAzFwtVhSo=;
+	s=default; t=1572210659;
+	bh=Eplurz0Sr4O86edDYblfv3yLCH43g66Otz7gO3cbtnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QrWD676UEki4rkk/VvZdROQKmXQJ6BFWNCdDpm0zgyIX0kR6KY84Br3xQW00ejEmY
-	 DopGUMfsegoYcfk5LhtpsM2N54c97e/EnhHlYvsIF2jrqedqgrxKIWM7a6I8liqDjP
-	 KdBqZfZaKCaO/ZWBLyvTr8AQUE++Shaj8FpLMyD4=
+	b=jCeB7eWQsKmmncUqJOGTAWww62VhMdOIw3M8Epi2QhO/J3gBoQlztK9XRxf6P2NeX
+	 nX8U67ssL8QAAb4WX+rT01G0gB954dYMeYDJ/1mRysVsTHrWLczQiQg+vm5FlyS0Ka
+	 tfwzAOYojFAnaNnCod/ZwwyU2TsbFHf3YJbdXotc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbfJ0VKv (ORCPT
+        id S1729806AbfJ0VK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:10:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57274 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfJ0VKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:10:48 -0400
+        id S1729792AbfJ0VKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:10:55 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AD92208C0;
-        Sun, 27 Oct 2019 21:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70739214E0;
+        Sun, 27 Oct 2019 21:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210647;
-        bh=Kin03poEpPqo7IQuKmDiZFT5cHxaIpyJ2RAzFwtVhSo=;
+        s=default; t=1572210654;
+        bh=Eplurz0Sr4O86edDYblfv3yLCH43g66Otz7gO3cbtnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVcWh7taBjy5CJPU9zq2/ETCjEzfCExa0/SI1mZCHvgHkxE/qNsVuOdaDJUvgihv5
-         PAl5efcyhvdZ4E3aLg8zSDqZEal9wQ0OW1xRfcuukxzrdG1MOQ3FX5LQb3p3zKSTNx
-         JTQTSTIzYOJMOxs92b5NtO26BdsB+3dOEetHXw+I=
+        b=pqCmFwhVjW+X5/qjuqdyUbopVSqbMblYSF3dyy5UUEFGqfwOQbkO6m8cwChI9pajy
+         W6V9D2nHg70v9/IOwxZIT9irQE0qxYCkJ0JYrMBgBScIGcQp3DvDSTSfShzzWZKkX5
+         WYqfxinlSi0vCW/BkGbaCH8Zw8/ZcQboFOT9G21o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 087/119] scsi: sd: Ignore a failure to sync cache due to lack of authorization
-Date:   Sun, 27 Oct 2019 22:01:04 +0100
-Message-Id: <20191027203347.479606199@linuxfoundation.org>
+        Dave Martin <dave.martin@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH 4.14 053/119] arm64: capabilities: Prepare for grouping features and errata work arounds
+Date:   Sun, 27 Oct 2019 22:00:30 +0100
+Message-Id: <20191027203323.136720420@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -59,38 +61,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit 21e3d6c81179bbdfa279efc8de456c34b814cfd2 upstream.
+[ Upstream commit 600b9c919c2f4d07a7bf67864086aa3432224674 ]
 
-I've got a report about a UAS drive enclosure reporting back Sense: Logical
-unit access not authorized if the drive it holds is password protected.
-While the drive is obviously unusable in that state as a mass storage
-device, it still exists as a sd device and when the system is asked to
-perform a suspend of the drive, it will be sent a SYNCHRONIZE CACHE. If
-that fails due to password protection, the error must be ignored.
+We are about to group the handling of all capabilities (features
+and errata workarounds). This patch open codes the wrapper routines
+to make it easier to merge the handling.
 
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190903101840.16483-1-oneukum@suse.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Dave Martin <dave.martin@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/scsi/sd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/cpufeature.c |   58 ++++++++++++-----------------------------
+ 1 file changed, 18 insertions(+), 40 deletions(-)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1658,7 +1658,8 @@ static int sd_sync_cache(struct scsi_dis
- 		/* we need to evaluate the error return  */
- 		if (scsi_sense_valid(sshdr) &&
- 			(sshdr->asc == 0x3a ||	/* medium not present */
--			 sshdr->asc == 0x20))	/* invalid command */
-+			 sshdr->asc == 0x20 ||	/* invalid command */
-+			 (sshdr->asc == 0x74 && sshdr->ascq == 0x71)))	/* drive is password locked */
- 				/* this is no error here */
- 				return 0;
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -485,7 +485,8 @@ static void __init init_cpu_ftr_reg(u32
+ }
+ 
+ extern const struct arm64_cpu_capabilities arm64_errata[];
+-static void update_cpu_errata_workarounds(void);
++static void update_cpu_capabilities(const struct arm64_cpu_capabilities *caps,
++				    u16 scope_mask, const char *info);
+ 
+ void __init init_cpu_features(struct cpuinfo_arm64 *info)
+ {
+@@ -528,7 +529,8 @@ void __init init_cpu_features(struct cpu
+ 	 * Run the errata work around checks on the boot CPU, once we have
+ 	 * initialised the cpu feature infrastructure.
+ 	 */
+-	update_cpu_errata_workarounds();
++	update_cpu_capabilities(arm64_errata, SCOPE_ALL,
++				"enabling workaround for");
+ }
+ 
+ static void update_cpu_ftr_reg(struct arm64_ftr_reg *reg, u64 new)
+@@ -1312,33 +1314,6 @@ verify_local_elf_hwcaps(const struct arm
+ 		}
+ }
+ 
+-static void verify_local_cpu_features(void)
+-{
+-	if (!__verify_local_cpu_caps(arm64_features, SCOPE_ALL))
+-		cpu_die_early();
+-}
+-
+-/*
+- * The CPU Errata work arounds are detected and applied at boot time
+- * and the related information is freed soon after. If the new CPU requires
+- * an errata not detected at boot, fail this CPU.
+- */
+-static void verify_local_cpu_errata_workarounds(void)
+-{
+-	if (!__verify_local_cpu_caps(arm64_errata, SCOPE_ALL))
+-		cpu_die_early();
+-}
+-
+-static void update_cpu_errata_workarounds(void)
+-{
+-	update_cpu_capabilities(arm64_errata, SCOPE_ALL,
+-				"enabling workaround for");
+-}
+-
+-static void __init enable_errata_workarounds(void)
+-{
+-	enable_cpu_capabilities(arm64_errata, SCOPE_ALL);
+-}
+ 
+ /*
+  * Run through the enabled system capabilities and enable() it on this CPU.
+@@ -1350,8 +1325,15 @@ static void __init enable_errata_workaro
+  */
+ static void verify_local_cpu_capabilities(void)
+ {
+-	verify_local_cpu_errata_workarounds();
+-	verify_local_cpu_features();
++	/*
++	 * The CPU Errata work arounds are detected and applied at boot time
++	 * and the related information is freed soon after. If the new CPU
++	 * requires an errata not detected at boot, fail this CPU.
++	 */
++	if (!__verify_local_cpu_caps(arm64_errata, SCOPE_ALL))
++		cpu_die_early();
++	if (!__verify_local_cpu_caps(arm64_features, SCOPE_ALL))
++		cpu_die_early();
+ 	verify_local_elf_hwcaps(arm64_elf_hwcaps);
+ 	if (system_supports_32bit_el0())
+ 		verify_local_elf_hwcaps(compat_elf_hwcaps);
+@@ -1372,17 +1354,12 @@ void check_local_cpu_capabilities(void)
+ 	 * advertised capabilities.
+ 	 */
+ 	if (!sys_caps_initialised)
+-		update_cpu_errata_workarounds();
++		update_cpu_capabilities(arm64_errata, SCOPE_ALL,
++					"enabling workaround for");
+ 	else
+ 		verify_local_cpu_capabilities();
+ }
+ 
+-static void __init setup_feature_capabilities(void)
+-{
+-	update_cpu_capabilities(arm64_features, SCOPE_ALL, "detected:");
+-	enable_cpu_capabilities(arm64_features, SCOPE_ALL);
+-}
+-
+ DEFINE_STATIC_KEY_FALSE(arm64_const_caps_ready);
+ EXPORT_SYMBOL(arm64_const_caps_ready);
+ 
+@@ -1405,8 +1382,9 @@ void __init setup_cpu_features(void)
+ 	int cls;
+ 
+ 	/* Set the CPU feature capabilies */
+-	setup_feature_capabilities();
+-	enable_errata_workarounds();
++	update_cpu_capabilities(arm64_features, SCOPE_ALL, "detected:");
++	enable_cpu_capabilities(arm64_features, SCOPE_ALL);
++	enable_cpu_capabilities(arm64_errata, SCOPE_ALL);
+ 	mark_const_caps_ready();
+ 	setup_elf_hwcaps(arm64_elf_hwcaps);
  
 
 
