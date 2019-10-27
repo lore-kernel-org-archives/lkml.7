@@ -2,55 +2,59 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FC2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A3ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C16320B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A770214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210418;
-	bh=Nd/69uza/dlZHrUS8k+TlHCzIFVzAvLu8UefKxT4+6I=;
+	s=default; t=1572210425;
+	bh=u2PERKJ5Oo1DyMWofqCOrqYj+rOF3pYWR+5pcYdb3lI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fKan+M/ZZEWuDufGS2+SWaP6uB4kR8isxl/YzUJkW85KovARzXmDLpsg3r6aA1apK
-	 FtjX33Admi7o8AaUt7xMeJPaTSz36opOJFI8+qXQF6Cesih87t31Uu3hQSMzpl0Szw
-	 l187tOaRTzcwTwPFPZlxGkpHIIcRMtM6d5sMki2M=
+	b=YemysfRvVvsq07FiPAZ68tTQMVl+og2HZzxUwoa9ibS86W3rou6tmv3jjpfK2U1Zz
+	 KmL5tPgTs77yGDAEtWzixh0pglOq14z5N3L1iD2yCOPI3RhTd+Ri92zRboArQb8LMG
+	 9DI3EGfVaNAEjTM/IQCCQu2dZhtM0O9mmk7zlT8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfJ0VG5 (ORCPT
+        id S1729088AbfJ0VHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:06:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:07:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbfJ0VGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:06:54 -0400
+        id S1728009AbfJ0VHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:07:00 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ED3020873;
-        Sun, 27 Oct 2019 21:06:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D53320873;
+        Sun, 27 Oct 2019 21:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210413;
-        bh=Nd/69uza/dlZHrUS8k+TlHCzIFVzAvLu8UefKxT4+6I=;
+        s=default; t=1572210419;
+        bh=u2PERKJ5Oo1DyMWofqCOrqYj+rOF3pYWR+5pcYdb3lI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCTXZ2ocV6Cob7yF51b+IBI6mq1vcB2PqPmj2VZkrtMJJU3+VZG/3Itf7ZJfxx2KX
-         1E0xErak8JxnkOtKNmYQtLPJ9vwJph3YPaMJKFh9uHWZaMqHS1f88Zu3nL4eXczmmk
-         XT3ApMWUMgfv2hYuuSSS5uQsJ1XXm8QQIgcWDOZE=
+        b=lqfVMRZSfD0gXE0XSa/NMU3VqLBo2A83bS/IhHWOYy2rTrxOwwxGHirSMj6Ac7fhd
+         CS2bK5FiwSx2JgDMuBOVVF0XLvs2lUi5g4yMg+9Rx6hlUY0HwHkPiB/rRybU9zmrif
+         WPUGAw+pc4TIY4YXs9maghkgkj1Yu5Cyz81byQew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
-        Sven Schnelle <svens@stackframe.org>
-Subject: [PATCH 4.9 41/49] parisc: Fix vmap memory leak in ioremap()/iounmap()
-Date:   Sun, 27 Oct 2019 22:01:19 +0100
-Message-Id: <20191027203158.986796017@linuxfoundation.org>
+        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 001/119] scsi: ufs: skip shutdown if hba is not powered
+Date:   Sun, 27 Oct 2019 21:59:38 +0100
+Message-Id: <20191027203300.207681244@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
-References: <20191027203119.468466356@linuxfoundation.org>
+In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
+References: <20191027203259.948006506@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,60 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-commit 513f7f747e1cba81f28a436911fba0b485878ebd upstream.
+[ Upstream commit f51913eef23f74c3bd07899dc7f1ed6df9e521d8 ]
 
-Sven noticed that calling ioremap() and iounmap() multiple times leads
-to a vmap memory leak:
-	vmap allocation for size 4198400 failed:
-	use vmalloc=<size> to increase size
+In some cases, hba may go through shutdown flow without successful
+initialization and then make system hang.
 
-It seems we missed calling vunmap() in iounmap().
+For example, if ufshcd_change_power_mode() gets error and leads to
+ufshcd_hba_exit() to release resources of the host, future shutdown flow
+may hang the system since the host register will be accessed in unpowered
+state.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
-Noticed-by: Sven Schnelle <svens@stackframe.org>
-Cc: <stable@vger.kernel.org> # v3.16+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To solve this issue, simply add checking to skip shutdown for above kind of
+situation.
 
+Link: https://lore.kernel.org/r/1568780438-28753-1-git-send-email-stanley.chu@mediatek.com
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Acked-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/mm/ioremap.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/parisc/mm/ioremap.c
-+++ b/arch/parisc/mm/ioremap.c
-@@ -2,7 +2,7 @@
-  * arch/parisc/mm/ioremap.c
-  *
-  * (C) Copyright 1995 1996 Linus Torvalds
-- * (C) Copyright 2001-2006 Helge Deller <deller@gmx.de>
-+ * (C) Copyright 2001-2019 Helge Deller <deller@gmx.de>
-  * (C) Copyright 2005 Kyle McMartin <kyle@parisc-linux.org>
-  */
- 
-@@ -83,7 +83,7 @@ void __iomem * __ioremap(unsigned long p
- 	addr = (void __iomem *) area->addr;
- 	if (ioremap_page_range((unsigned long)addr, (unsigned long)addr + size,
- 			       phys_addr, pgprot)) {
--		vfree(addr);
-+		vunmap(addr);
- 		return NULL;
- 	}
- 
-@@ -91,9 +91,11 @@ void __iomem * __ioremap(unsigned long p
- }
- EXPORT_SYMBOL(__ioremap);
- 
--void iounmap(const volatile void __iomem *addr)
-+void iounmap(const volatile void __iomem *io_addr)
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 60c9184bad3be..07cae5ea608c7 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -7755,6 +7755,9 @@ int ufshcd_shutdown(struct ufs_hba *hba)
  {
--	if (addr > high_memory)
--		return vfree((void *) (PAGE_MASK & (unsigned long __force) addr));
-+	unsigned long addr = (unsigned long)io_addr & PAGE_MASK;
+ 	int ret = 0;
+ 
++	if (!hba->is_powered)
++		goto out;
 +
-+	if (is_vmalloc_addr((void *)addr))
-+		vunmap((void *)addr);
- }
- EXPORT_SYMBOL(iounmap);
+ 	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
+ 		goto out;
+ 
+-- 
+2.20.1
+
 
 
