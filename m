@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E965C47E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7814CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34434205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA20A20717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212040;
-	bh=ssO/fgfxNpvpT7q/HqGLGpAcTTDrtqgKuanlAZwDpQA=;
+	s=default; t=1572212044;
+	bh=gQSgm9615ylTqStbQ+zmWn2KzgDQK2vHXBXyg1Y7cJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FsYGZTVa1PFfj23OEtACV5FybgQXKhOUVQsAA5kvtMsv0YOT+hiuXG5n/ElERnWQK
-	 rUI9JelGVs8lKgLsy/WObataTLNSG8mc1msCxilriT+DTy9jdIVPf2f/6qPBTt4xu1
-	 KOJ/AZBqpEkYmuQjv+PAmF+cB5br1gjegcMwlRD8=
+	b=sD+QTrko4P6lzmx7iOJDfuU5Iz1pUpSV0CumhXMq8g6vx5FtrBy52uiYZfJEapkuR
+	 nXqGzo1MCVoHlmo1PKDK7ZuwogqLYIvQKG3sIxZ1oqpZ7ZaPo0eNg2UJ2w1bpv9ap6
+	 DeclNtw1kkmExcUtXAtU9EJxvbGwZHkhku962Y94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbfJ0VLx (ORCPT
+        id S1731181AbfJ0VeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:34:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729949AbfJ0VLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:11:52 -0400
+        id S1729074AbfJ0VLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:11:46 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DFCE205C9;
-        Sun, 27 Oct 2019 21:11:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1359D205C9;
+        Sun, 27 Oct 2019 21:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210711;
-        bh=ssO/fgfxNpvpT7q/HqGLGpAcTTDrtqgKuanlAZwDpQA=;
+        s=default; t=1572210705;
+        bh=gQSgm9615ylTqStbQ+zmWn2KzgDQK2vHXBXyg1Y7cJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zzdLe2tVhiYtHWixGUmNcH0ZjtGjnL/xJt0SaHhdDHePhhSLw8Wq1nhNEbHmKzAl5
-         DI6KC0mg++L8i0BiDjmHT+XJpKQAjYkLsNmuYYXx2/5tx6YozSIQtqcU3ZME1dJY/a
-         5LsWqxwgcCnPkC2Wrxc0Bk8m0/xHepOZn8Lnvgpg=
+        b=z78QIg3HMWqrpMDF/QI9pHg2HqJSnmRL4TzUbHYkIv7pYte6A5z/Azftb6kixua2F
+         z21Fqp0oWNvtsSXbC+No59/3Ev/21JsGdqfiB9Fdmp8c1Xf9JiGUq9ZZwtDFFDXGIy
+         BBaT9zx4YdRTMJWM9UvQuHB5da9g84kIzmmPgGA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 111/119] memstick: jmb38x_ms: Fix an error handling path in jmb38x_ms_probe()
-Date:   Sun, 27 Oct 2019 22:01:28 +0100
-Message-Id: <20191027203349.582152782@linuxfoundation.org>
+        stable@vger.kernel.org, Patrick Williams <alpawi@amazon.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.14 109/119] pinctrl: armada-37xx: swap polarity on LED group
+Date:   Sun, 27 Oct 2019 22:01:26 +0100
+Message-Id: <20191027203349.467637020@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -60,35 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Patrick Williams <alpawi@amazon.com>
 
-commit 28c9fac09ab0147158db0baeec630407a5e9b892 upstream.
+commit b835d6953009dc350d61402a854b5a7178d8c615 upstream.
 
-If 'jmb38x_ms_count_slots()' returns 0, we must undo the previous
-'pci_request_regions()' call.
+The configuration registers for the LED group have inverted
+polarity, which puts the GPIO into open-drain state when used in
+GPIO mode.  Switch to '0' for GPIO and '1' for LED modes.
 
-Goto 'err_out_int' to fix it.
-
-Fixes: 60fdd931d577 ("memstick: add support for JMicron jmb38x MemoryStick host controller")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support for Armada 37xx")
+Signed-off-by: Patrick Williams <alpawi@amazon.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191001155154.99710-1-alpawi@amazon.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/memstick/host/jmb38x_ms.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/memstick/host/jmb38x_ms.c
-+++ b/drivers/memstick/host/jmb38x_ms.c
-@@ -947,7 +947,7 @@ static int jmb38x_ms_probe(struct pci_de
- 	if (!cnt) {
- 		rc = -ENODEV;
- 		pci_dev_busy = 1;
--		goto err_out;
-+		goto err_out_int;
- 	}
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -170,10 +170,10 @@ static struct armada_37xx_pin_group arma
+ 	PIN_GRP_EXTRA("uart2", 9, 2, BIT(1) | BIT(13) | BIT(14) | BIT(19),
+ 		      BIT(1) | BIT(13) | BIT(14), BIT(1) | BIT(19),
+ 		      18, 2, "gpio", "uart"),
+-	PIN_GRP_GPIO("led0_od", 11, 1, BIT(20), "led"),
+-	PIN_GRP_GPIO("led1_od", 12, 1, BIT(21), "led"),
+-	PIN_GRP_GPIO("led2_od", 13, 1, BIT(22), "led"),
+-	PIN_GRP_GPIO("led3_od", 14, 1, BIT(23), "led"),
++	PIN_GRP_GPIO_2("led0_od", 11, 1, BIT(20), BIT(20), 0, "led"),
++	PIN_GRP_GPIO_2("led1_od", 12, 1, BIT(21), BIT(21), 0, "led"),
++	PIN_GRP_GPIO_2("led2_od", 13, 1, BIT(22), BIT(22), 0, "led"),
++	PIN_GRP_GPIO_2("led3_od", 14, 1, BIT(23), BIT(23), 0, "led"),
  
- 	jm = kzalloc(sizeof(struct jmb38x_ms)
+ };
+ 
 
 
