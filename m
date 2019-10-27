@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC91FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3A3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71DF020679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E54C20717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211994;
-	bh=KSTyBycvaBF6MzT0NdhfrBGaaI+TnTsiPM3uavlCd/I=;
+	s=default; t=1572211997;
+	bh=7thJGh8wgTLrA4H1iy8iuAhzw2uXgJIQcuahMt884cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cMjDqTU0JlAxxCgkUiOptrxb+V6q5TYZi0WZQ6u3iA3y9oIthlvhIUrduSRDuGyRl
-	 qqXlWunPOUFfpUsuQLsIF9sGOcZieiUNoooyS/4FMTBqgpiELg8nkKiEbFOw+1jBPI
-	 bYTZBJ1Y654hTkBqeWKtQtidcVtFdeVHki/XkRLs=
+	b=pjZvMdynjmuq0hl0gWekpxJAM2qU/oetU7aAuwbXsS8d9y5RuLMgCZqIimvXRP7n7
+	 w78qXpB1/MXg2FIqlImA1twglICcfCBwuJiTY4iDhRRTAKUG8tEw6Pf2JUVk3zjl74
+	 fsY+sJZvrpVwSW5vQDvOVqcR1N8wkImqOSMRx9xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbfJ0VNP (ORCPT
+        id S1732330AbfJ0VdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60138 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:33:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730182AbfJ0VNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:13:07 -0400
+        id S1730217AbfJ0VNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:13:15 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8954A20B7C;
-        Sun, 27 Oct 2019 21:13:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB34A20B7C;
+        Sun, 27 Oct 2019 21:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210786;
-        bh=KSTyBycvaBF6MzT0NdhfrBGaaI+TnTsiPM3uavlCd/I=;
+        s=default; t=1572210794;
+        bh=7thJGh8wgTLrA4H1iy8iuAhzw2uXgJIQcuahMt884cM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lSUCVQGwf8NJPRaoBvTZ9UGi8rSyJdKPMjmyiNqIX45ibA5h4v1JkFu3PbKLQBrXs
-         SjFpFHtXOgBpLjN82amf8cIrrGGVF0mnaW3WSIQvYsR5f5Qm6/GiRGr9Dn8LQAl2Md
-         Yqf8ROsnnxg+oWuGF3GD88iBiP/+0OLthuuRQuKw=
+        b=LlgcYliODXKs5S56KuVjxJvdzS1BVlme6zAkeN5k9fRU5NL/ssBNiGZV218ZXqT43
+         rswB46HtwesdoamnTaCkC1Q4BrHOC5p5tqB8R9K3IOgfMOvC+pEuTL7HfsVJhcaNE4
+         vTIkU7i9ZD9WGP+GIKE5xdFWmAj/LNIy//OcVtLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 17/93] net: hisilicon: Fix usage of uninitialized variable in function mdio_sc_cfg_reg_write()
-Date:   Sun, 27 Oct 2019 22:00:29 +0100
-Message-Id: <20191027203255.236459642@linuxfoundation.org>
+Subject: [PATCH 4.19 02/93] scsi: ufs: skip shutdown if hba is not powered
+Date:   Sun, 27 Oct 2019 22:00:14 +0100
+Message-Id: <20191027203251.840999987@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,43 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit 53de429f4e88f538f7a8ec2b18be8c0cd9b2c8e1 ]
+[ Upstream commit f51913eef23f74c3bd07899dc7f1ed6df9e521d8 ]
 
-In function mdio_sc_cfg_reg_write(), variable "reg_value" could be
-uninitialized if regmap_read() fails. However, "reg_value" is used
-to decide the control flow later in the if statement, which is
-potentially unsafe.
+In some cases, hba may go through shutdown flow without successful
+initialization and then make system hang.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+For example, if ufshcd_change_power_mode() gets error and leads to
+ufshcd_hba_exit() to release resources of the host, future shutdown flow
+may hang the system since the host register will be accessed in unpowered
+state.
+
+To solve this issue, simply add checking to skip shutdown for above kind of
+situation.
+
+Link: https://lore.kernel.org/r/1568780438-28753-1-git-send-email-stanley.chu@mediatek.com
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Acked-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns_mdio.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
-index baf5cc251f329..9a3bc0994a1db 100644
---- a/drivers/net/ethernet/hisilicon/hns_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
-@@ -156,11 +156,15 @@ static int mdio_sc_cfg_reg_write(struct hns_mdio_device *mdio_dev,
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index b8b59cfeacd1f..4aaba3e030554 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -7874,6 +7874,9 @@ int ufshcd_shutdown(struct ufs_hba *hba)
  {
- 	u32 time_cnt;
- 	u32 reg_value;
-+	int ret;
+ 	int ret = 0;
  
- 	regmap_write(mdio_dev->subctrl_vbase, cfg_reg, set_val);
- 
- 	for (time_cnt = MDIO_TIMEOUT; time_cnt; time_cnt--) {
--		regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		ret = regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		if (ret)
-+			return ret;
++	if (!hba->is_powered)
++		goto out;
 +
- 		reg_value &= st_msk;
- 		if ((!!check_st) == (!!reg_value))
- 			break;
+ 	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
+ 		goto out;
+ 
 -- 
 2.20.1
 
