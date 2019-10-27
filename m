@@ -2,54 +2,51 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE12ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7711CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6E9222C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC94F222C1
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211624;
-	bh=ajNWyUIB9j30wVqpM3yEv3nGoOtf1fhGnU0PTi2r/uM=;
+	s=default; t=1572211627;
+	bh=ti2/6AttwyI/CUbzp9Nn0c4NFrp3fhY5UsaMZgfOQDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CxV35v6KyFNNRRZN3VugwN4+knUA3AGoBowtFX6IQvBoTGIJoUpS2wfXgvA2CNev6
-	 0tD+EuACUQ9bqDfy7pm3e7gJXDE3rlQ1NJBr+evwyiMX/oFhS9YPCNiM21FxPXTqP2
-	 f7EML24t6ACbRn3PHnTxO2S/d7DzmpS0jwh7XBaY=
+	b=oYjwpBQZZ2pVRMaoZj76blcRKUHbTcf+j36HVhQIcPdFfveR3uhErYZTiKpNvIjZn
+	 bjta0GQlFug9Bs0EAYmXZGGdro8h5SpGBd2xdJoI+/IC9cTyRSOm/plWCd94KPKesM
+	 k3I7x2+oA2eii2lliDiZKR1doyH7mn5dWc5eL3UY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732258AbfJ0V1C (ORCPT
+        id S1731919AbfJ0VZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:27:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47664 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:25:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731951AbfJ0VZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:25:47 -0400
+        id S1732745AbfJ0VZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:25:29 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5C3D21D81;
-        Sun, 27 Oct 2019 21:25:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8018A21850;
+        Sun, 27 Oct 2019 21:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211545;
-        bh=ajNWyUIB9j30wVqpM3yEv3nGoOtf1fhGnU0PTi2r/uM=;
+        s=default; t=1572211529;
+        bh=ti2/6AttwyI/CUbzp9Nn0c4NFrp3fhY5UsaMZgfOQDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GYeb7yIdzLXM4OpttIrCEzCR+i5fCX5xPEtrAa22vM7dVOt9O2b9vCUNhjp6c1CmQ
-         sBNIdQ9NO4RMwbsBVmmlmSx/tEkBYE4vX2ia5/mI2jQIw1WnZRARGWmX+0s2WOZAbT
-         so2lU1oPTS6aHtp3u1/J4X/ra4YKxN/coD0EBkTQ=
+        b=NGkeeb7Yekds7MLDLBtykcbVKQBgxN1ETDC52EwQaTFeZCHTsBSG6AlqJVbudeNvI
+         tVW9UgQT7M2CdLoVaF7AFDExjK4JkivUXK3U2UnfnQm8sLtdRMjJbD4/qSWXfKwjbe
+         r4kkvGP8THx41++6jjSlD+4jJtwiV6P2cP4mtWlE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 5.3 190/197] cpufreq: Avoid cpufreq_suspend() deadlock on system shutdown
-Date:   Sun, 27 Oct 2019 22:01:48 +0100
-Message-Id: <20191027203406.745335828@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 139/197] io_uring: Fix race for sqes with userspace
+Date:   Sun, 27 Oct 2019 22:00:57 +0100
+Message-Id: <20191027203359.214148601@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -62,85 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-commit 65650b35133ff20f0c9ef0abd5c3c66dbce3ae57 upstream.
+[ Upstream commit 935d1e45908afb8853c497f2c2bbbb685dec51dc ]
 
-It is incorrect to set the cpufreq syscore shutdown callback pointer
-to cpufreq_suspend(), because that function cannot be run in the
-syscore stage of system shutdown for two reasons: (a) it may attempt
-to carry out actions depending on devices that have already been shut
-down at that point and (b) the RCU synchronization carried out by it
-may not be able to make progress then.
+io_ring_submit() finalises with
+1. io_commit_sqring(), which releases sqes to the userspace
+2. Then calls to io_queue_link_head(), accessing released head's sqe
 
-The latter issue has been present since commit 45975c7d21a1 ("rcu:
-Define RCU-sched API in terms of RCU for Tree RCU PREEMPT builds"),
-but the former one has been there since commit 90de2a4aa9f3 ("cpufreq:
-suspend cpufreq governors on shutdown") regardless.
+Reorder them.
 
-Fix that by dropping cpufreq_syscore_ops altogether and making
-device_shutdown() call cpufreq_suspend() directly before shutting
-down devices, which is along the lines of what system-wide power
-management does.
-
-Fixes: 45975c7d21a1 ("rcu: Define RCU-sched API in terms of RCU for Tree RCU PREEMPT builds")
-Fixes: 90de2a4aa9f3 ("cpufreq: suspend cpufreq governors on shutdown")
-Reported-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Tested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: 4.0+ <stable@vger.kernel.org> # 4.0+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/core.c       |    3 +++
- drivers/cpufreq/cpufreq.c |   10 ----------
- 2 files changed, 3 insertions(+), 10 deletions(-)
+ fs/io_uring.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -9,6 +9,7 @@
-  */
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 518042cc6628b..d447f43d64a24 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2488,13 +2488,14 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit)
+ 		submit++;
+ 		io_submit_sqe(ctx, &s, statep, &link);
+ 	}
+-	io_commit_sqring(ctx);
  
- #include <linux/acpi.h>
-+#include <linux/cpufreq.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/fwnode.h>
-@@ -3150,6 +3151,8 @@ void device_shutdown(void)
- 	wait_for_device_probe();
- 	device_block_probing();
+ 	if (link)
+ 		io_queue_sqe(ctx, link, &link->submit);
+ 	if (statep)
+ 		io_submit_state_end(statep);
  
-+	cpufreq_suspend();
++	io_commit_sqring(ctx);
 +
- 	spin_lock(&devices_kset->list_lock);
- 	/*
- 	 * Walk the devices list backward, shutting down each in turn.
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2746,14 +2746,6 @@ int cpufreq_unregister_driver(struct cpu
+ 	return submit;
  }
- EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
  
--/*
-- * Stop cpufreq at shutdown to make sure it isn't holding any locks
-- * or mutexes when secondary CPUs are halted.
-- */
--static struct syscore_ops cpufreq_syscore_ops = {
--	.shutdown = cpufreq_suspend,
--};
--
- struct kobject *cpufreq_global_kobject;
- EXPORT_SYMBOL(cpufreq_global_kobject);
- 
-@@ -2765,8 +2757,6 @@ static int __init cpufreq_core_init(void
- 	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
- 	BUG_ON(!cpufreq_global_kobject);
- 
--	register_syscore_ops(&cpufreq_syscore_ops);
--
- 	return 0;
- }
- module_param(off, int, 0444);
+-- 
+2.20.1
+
 
 
