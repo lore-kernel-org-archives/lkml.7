@@ -8,65 +8,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085F6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B057BCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6CB214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86645214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCyAY8ks"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ywe3N4nQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfJ0NG3 (ORCPT
+        id S1726846AbfJ0NGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 09:06:29 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55724 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfJ0NG3 (ORCPT
+        Sun, 27 Oct 2019 09:06:31 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52755 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfJ0NGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 09:06:29 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g24so6675554wmh.5
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 06:06:28 -0700 (PDT)
+        Sun, 27 Oct 2019 09:06:30 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p21so6690857wmg.2
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 06:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E48jVCfAGOKBFgNTIr5FbZLg41IvwUd7cL0m7x4ZdGI=;
-        b=UCyAY8kshvJ/xio2kzAtDjo1XBcDV6Ptj+pV2Qj5GO+Dt1q0l9sVd0TQfFwbhzJDXF
-         5EyS/10um7GapAjwCbynnklu2gX0d8zETV10IJb9S0FItZZm8zjFu6RJb0NcRz/lDLf3
-         HHInOXTNWOwAel0DdKeAzzC3uXO6qzM9hsxZWvIpEGf21/Ne5hxrRlJwZar3N5ankgnj
-         UsuTAmZheuce6GSEPUYeShirjZtSiKBctUHaGjS2xPIfJZNYcuzI0bl4+BxMaQGjbj8e
-         GNUM+iH7+Fs4Kx42iY3hr/DiiAKKTOfMIePSg0KXNiQ/Ar6GF7PZlKb9TgCLVFvqnOMz
-         3SXA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Gs3GiRBJblAnQ6egGV4uLJk282FsBIvSNYDjAwRLL+g=;
+        b=Ywe3N4nQsVwPjtUQUEhvDHaoayXFYP/OeswTDv+CN1AbCzQxZ/m7hpJEIBga+I9pMY
+         eNAD+KcRa8uTBgIumoiX8Nu5tbnx3/9gd2SJdAaJ5KSye5jr0huyZ3D1v9hZJod9cnQL
+         nYFSM/0l36XP+6c+KwLl/jemZ/wKHnFUcs8pS1qsnj1im1bzwqlBPWaoT+jw8sof3mb1
+         BpYBhrNB9KdGymDd9gRAo7LA7tSNCfy5slneQWeRTkTjDaLbUmOLDP6/3uKlYrLHFM1S
+         1Dy24cc6VoZoYp2GJObFzo520mIwY34yOrkQ6M5Qu1a7LxARrl9+8VI9JtoSADheh/mR
+         US6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E48jVCfAGOKBFgNTIr5FbZLg41IvwUd7cL0m7x4ZdGI=;
-        b=BoymUUV8tC8uX1fGQE38fRyfZMPA5oEUlUX1JkIfZpqcbaIfGAULbAywMaxczHly72
-         8fmdxl7hYL8CnZLDGrzw5+emnuCcySFeFJ4VzQrTVQfb6pFv+j3NNryjmj9rwAWOQMQw
-         GUwHH1FTcUDgr5s99eeTLfVGlCa+b/hkFEY6/C0VgEqCrkBfOeAPNq4eL7+yLtUgCVd4
-         KwnrjlVW60Dek4mOGOlk2+j0mdK/zbwbIrk15f1ebl9Hpeh+eqefRoB6DJiCYz062KvI
-         K1gXDdeJcYIBLYBDGoRLpThdygog6Q17Loe6pe/Xtp6h/k8FZ0fuFxs9xq4mWfqaD6se
-         VMAw==
-X-Gm-Message-State: APjAAAWEepMAWCSJa/micnIPkdxaEDy1Gz1fZgQulg8XQqUqrbCvafPN
-        fmGVAjRwyDHGkYsKD8hV5u7hzgsS
-X-Google-Smtp-Source: APXvYqzK3CGe68HpHPiGJCa/XaQHHGLYs3nQW1zlv+QMKy7bFZY43rXprGrWHoxwVdwMV9YeSPRagQ==
-X-Received: by 2002:a7b:cc88:: with SMTP id p8mr6132704wma.80.1572181587759;
-        Sun, 27 Oct 2019 06:06:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Gs3GiRBJblAnQ6egGV4uLJk282FsBIvSNYDjAwRLL+g=;
+        b=ssDNO2YrDm9xg+/So8ILJSRJK49y8JLRH+QHVZQrvUMDxWjwgcK3K3QhuEnJXx7DtG
+         fo9snerAbPQ75LLSMvBLVfNIewB+YE9ALs0DOqKMuRrWtNjFdtPE0kabKmsmqLVizoxP
+         CnUyDfLRINtVuEoncU1vwotx/Isj7Eg5mcnYIUWTJfHXguE9wQfB/SW1LNTifxMXCNyl
+         PSTR8WPqeelLdqPTRFJ7D7S51WW+8v8g0BnwjtparAqzGximti7UiDlntVOxMPbUrYDp
+         gD2CF4wvgAGv+NTbV32C0mqmDCfcnrrpCvQuNAL0iXe89pSRQTScuwg81TnUmft60Jwr
+         Cm6g==
+X-Gm-Message-State: APjAAAVkWAWCOVC/NndhzdoWlozVVdtQgrFqrr8zMIF4Rth6irP/C2lU
+        1WBxrSjDXo+zieNVhzVjzxo=
+X-Google-Smtp-Source: APXvYqyF0Zd7gGXoIxMaA+lj8avWfAVO9dqxhm1cbZogNDJFN/LaCnpCEvh/bcezyQHbPUeZyRfe5Q==
+X-Received: by 2002:a1c:c912:: with SMTP id f18mr12335034wmb.168.1572181588816;
+        Sun, 27 Oct 2019 06:06:28 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id 126sm8127371wma.48.2019.10.27.06.06.26
+        by smtp.gmail.com with ESMTPSA id 126sm8127371wma.48.2019.10.27.06.06.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 06:06:26 -0700 (PDT)
+        Sun, 27 Oct 2019 06:06:28 -0700 (PDT)
 From:   Michael Straube <straube.linux@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH 1/4] staging: rtl8188eu: remove exit label from rtw_alloc_stainfo
-Date:   Sun, 27 Oct 2019 14:06:01 +0100
-Message-Id: <20191027130604.68379-1-straube.linux@gmail.com>
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 2/4] staging: rtl8188eu: reduce indentation level in _rtw_free_sta_priv
+Date:   Sun, 27 Oct 2019 14:06:02 +0100
+Message-Id: <20191027130604.68379-2-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191027130604.68379-1-straube.linux@gmail.com>
+References: <20191027130604.68379-1-straube.linux@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,46 +75,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove exit label from rtw_alloc_stainfo and simply return NULL
-instead of goto exit.
+Reduce indentation level in _rtw_free_sta_priv by returning early if
+pstapriv is NULL. Also clears a line over 80 characters checkpatch
+warning.
 
-Suggested-by: Joe Perches <joe@perches.com>
 Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- drivers/staging/rtl8188eu/core/rtw_sta_mgt.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/staging/rtl8188eu/core/rtw_sta_mgt.c | 43 ++++++++++----------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-index 776931b8bf72..65a824b4dfe0 100644
+index 65a824b4dfe0..6c03068d7ed2 100644
 --- a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
 +++ b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-@@ -181,7 +181,7 @@ struct sta_info *rtw_alloc_stainfo(struct sta_priv *pstapriv, u8 *hwaddr)
- 					struct sta_info, list);
- 	if (!psta) {
- 		spin_unlock_bh(&pfree_sta_queue->lock);
--		goto exit;
-+		return NULL;
+@@ -135,31 +135,30 @@ u32 _rtw_free_sta_priv(struct sta_priv *pstapriv)
+ 	struct recv_reorder_ctrl *preorder_ctrl;
+ 	int index;
+ 
+-	if (pstapriv) {
+-		/* delete all reordering_ctrl_timer */
+-		spin_lock_bh(&pstapriv->sta_hash_lock);
+-		for (index = 0; index < NUM_STA; index++) {
+-			phead = &pstapriv->sta_hash[index];
+-			plist = phead->next;
+-
+-			while (phead != plist) {
+-				int i;
+-
+-				psta = container_of(plist, struct sta_info,
+-						    hash_list);
+-				plist = plist->next;
+-
+-				for (i = 0; i < 16; i++) {
+-					preorder_ctrl = &psta->recvreorder_ctrl[i];
+-					del_timer_sync(&preorder_ctrl->reordering_ctrl_timer);
+-				}
++	if (!pstapriv)
++		return _SUCCESS;
++
++	/* delete all reordering_ctrl_timer */
++	spin_lock_bh(&pstapriv->sta_hash_lock);
++	for (index = 0; index < NUM_STA; index++) {
++		phead = &pstapriv->sta_hash[index];
++		plist = phead->next;
++
++		while (phead != plist) {
++			int i;
++
++			psta = container_of(plist, struct sta_info, hash_list);
++			plist = plist->next;
++
++			for (i = 0; i < 16; i++) {
++				preorder_ctrl = &psta->recvreorder_ctrl[i];
++				del_timer_sync(&preorder_ctrl->reordering_ctrl_timer);
+ 			}
+ 		}
+-		spin_unlock_bh(&pstapriv->sta_hash_lock);
+-		/*===============================*/
+-
+-		vfree(pstapriv->pallocated_stainfo_buf);
  	}
++	spin_unlock_bh(&pstapriv->sta_hash_lock);
++
++	vfree(pstapriv->pallocated_stainfo_buf);
  
- 	list_del_init(&psta->list);
-@@ -194,8 +194,7 @@ struct sta_info *rtw_alloc_stainfo(struct sta_priv *pstapriv, u8 *hwaddr)
- 	if (index >= NUM_STA) {
- 		RT_TRACE(_module_rtl871x_sta_mgt_c_, _drv_err_,
- 			 ("ERROR => %s: index >= NUM_STA", __func__));
--		psta = NULL;
--		goto exit;
-+		return NULL;
- 	}
- 	phash_list = &pstapriv->sta_hash[index];
- 
-@@ -246,7 +245,6 @@ struct sta_info *rtw_alloc_stainfo(struct sta_priv *pstapriv, u8 *hwaddr)
- 	/* init for the sequence number of received management frame */
- 	psta->RxMgmtFrameSeqNum = 0xffff;
- 
--exit:
- 	return psta;
+ 	return _SUCCESS;
  }
- 
 -- 
 2.23.0
 
