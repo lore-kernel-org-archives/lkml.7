@@ -4,50 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FE3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371A3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9938A205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A47D20679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211900;
-	bh=sv62GLlzZY0YW5GNEa6kawtjMTNjMoGLeHqaa5Chwck=;
+	s=default; t=1572211910;
+	bh=kBixZciC+SwAD5N9IqEnDJit+WNCuEd8YTzQB0ENBSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xDDWTwLY30W5Mdwj+sAsfPpoUCF/ZVNL76D0jnLtW58r6dLgMFlTC37c61tQhLvRw
-	 qaDMZMxmmF0Lrju29iVifJN+Dqz/EcygU2wRkIpJHtLFvNpq57pJDwf3QEOAsteLhN
-	 UPvNzF/zEIQKZUQDnxBOld8ohQ9qlDupOGkCI3P8=
+	b=OEobMxBB1gMhWWsqbTf1rtUSIu87+49yKxq8vSs91EuYIFYdk6cL/oxpGLy/5dYCH
+	 2gKMewF17md05Q9jIg9W+oxkW/TL8NbOSCfegx9Hk8o5JRk6OvB/gt9GLU2DxiNdAc
+	 UywbdXyIYltT3ucpXPCzqQVpTX+Iw/HflyVl+yh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731529AbfJ0Vbj (ORCPT
+        id S1731292AbfJ0Vbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36346 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730878AbfJ0VQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:16:41 -0400
+        id S1730783AbfJ0VQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:16:18 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51B4421848;
-        Sun, 27 Oct 2019 21:16:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 317DD205C9;
+        Sun, 27 Oct 2019 21:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211000;
-        bh=sv62GLlzZY0YW5GNEa6kawtjMTNjMoGLeHqaa5Chwck=;
+        s=default; t=1572210977;
+        bh=kBixZciC+SwAD5N9IqEnDJit+WNCuEd8YTzQB0ENBSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YOBlcMn8oloH0h/r6EOo7ZfDzNcaNmgZ+VAb7rhBK/PWUjM/Df6GjgiJhUNlrdEmp
-         lpaWmngRBgVPr6IalfALrRUFSGsDvBoLR4Q6y2W1Y5gpKQ6Mx42jQkEz3khbsGfVYm
-         ZDlpqKf5TRdi3NMRrmOKg8XXlE6xfdPnPwzeuHFY=
+        b=2U7BFUZvPIVuLbuNx+N10fAKiXfT+savOGig0L88K8ulM5zIc+ct0r0JV8e2/gHla
+         ymgDq3gSS3Uhl3tPvNu6YPG7+2HxOijVDbmimRgbSuozPHq2/ClnloNxetgMR694/Z
+         KV/V8MOx1n2PEfE96DIKfrAx5s5q5uAO3abK1M4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 92/93] blk-rq-qos: fix first node deletion of rq_qos_del()
-Date:   Sun, 27 Oct 2019 22:01:44 +0100
-Message-Id: <20191027203318.353148127@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 76/93] perf/aux: Fix AUX output stopping
+Date:   Sun, 27 Oct 2019 22:01:28 +0100
+Message-Id: <20191027203311.208096055@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,48 +68,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 307f4065b9d7c1e887e8bdfb2487e4638559fea1 upstream.
+commit f3a519e4add93b7b31a6616f0b09635ff2e6a159 upstream.
 
-rq_qos_del() incorrectly assigns the node being deleted to the head if
-it was the first on the list in the !prev path.  Fix it by iterating
-with ** instead.
+Commit:
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Fixes: a79050434b45 ("blk-rq-qos: refactor out common elements of blk-wbt")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  8a58ddae2379 ("perf/core: Fix exclusive events' grouping")
+
+allows CAP_EXCLUSIVE events to be grouped with other events. Since all
+of those also happen to be AUX events (which is not the case the other
+way around, because arch/s390), this changes the rules for stopping the
+output: the AUX event may not be on its PMU's context any more, if it's
+grouped with a HW event, in which case it will be on that HW event's
+context instead. If that's the case, munmap() of the AUX buffer can't
+find and stop the AUX event, potentially leaving the last reference with
+the atomic context, which will then end up freeing the AUX buffer. This
+will then trip warnings:
+
+Fix this by using the context's PMU context when looking for events
+to stop, instead of the event's PMU context.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191022073940.61814-1-alexander.shishkin@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-rq-qos.h |   13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ kernel/events/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -80,16 +80,13 @@ static inline void rq_qos_add(struct req
- 
- static inline void rq_qos_del(struct request_queue *q, struct rq_qos *rqos)
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6813,7 +6813,7 @@ static void __perf_event_output_stop(str
+ static int __perf_pmu_output_stop(void *info)
  {
--	struct rq_qos *cur, *prev = NULL;
--	for (cur = q->rq_qos; cur; cur = cur->next) {
--		if (cur == rqos) {
--			if (prev)
--				prev->next = rqos->next;
--			else
--				q->rq_qos = cur;
-+	struct rq_qos **cur;
-+
-+	for (cur = &q->rq_qos; *cur; cur = &(*cur)->next) {
-+		if (*cur == rqos) {
-+			*cur = rqos->next;
- 			break;
- 		}
--		prev = cur;
- 	}
- }
- 
+ 	struct perf_event *event = info;
+-	struct pmu *pmu = event->pmu;
++	struct pmu *pmu = event->ctx->pmu;
+ 	struct perf_cpu_context *cpuctx = this_cpu_ptr(pmu->pmu_cpu_context);
+ 	struct remote_output ro = {
+ 		.rb	= event->rb,
 
 
