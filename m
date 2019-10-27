@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65DECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A36CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F90720717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277852184C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211164;
-	bh=naMNGdMiQ4KmdVDxjycCfK0/ec7A2qbg2aucw2kQ98M=;
+	s=default; t=1572211167;
+	bh=Htv05VN3kJsdeDZwi8YBPXw24VJr2khxFpXcM28opdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tniiXw8MyuZGcUj8QQVt44yYSZhWWgADOuTkDQgYHPSC8bYu8iqNy1AZzsvcQ6Atb
-	 W4Sowm8e/ZF2CcRcPmPEVE8/w+i2Tj85iHc/fZxURArkDs9Ce8jSMD+7C9fG5k/Rag
-	 GtE5M2KJbCNixweE6hIAA2DysPSPr8qVgUBfjLGg=
+	b=uISCd+jZJiHV6Fn2nQaQLAVXYtoNMXO1vET75sfaiMjzCeNDTcKmtbokxIrnbFj0v
+	 9sYgrZh6Re6IY65xLek3FrZiQXejblAjsjWjc8T2t3n/ch1Jirj+hADJhgUwMApajI
+	 DXxeNBl4W6eaVTSZeivw9p4n4qCF/2dqKAlciyvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731467AbfJ0VTX (ORCPT
+        id S1731478AbfJ0VTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:19:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39562 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731435AbfJ0VTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:19:15 -0400
+        id S1731452AbfJ0VTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:19:21 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51D7621726;
-        Sun, 27 Oct 2019 21:19:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AA2E205C9;
+        Sun, 27 Oct 2019 21:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211154;
-        bh=naMNGdMiQ4KmdVDxjycCfK0/ec7A2qbg2aucw2kQ98M=;
+        s=default; t=1572211160;
+        bh=Htv05VN3kJsdeDZwi8YBPXw24VJr2khxFpXcM28opdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nrrnfQRDvxI41E1mrYhxZJr4QDeGAXov94OunhybJYAAEo65q+WY8drjVLWIXvTRy
-         5/WAeCTaoHRshVizsGDi+2EigDcU/cUdAevlMTHxwGMYhPgTDmua6nIgH8LPHOibOW
-         IZU1d8vAoAKP+82Gu9y+I4SSfC0M19X3LczgOQBQ=
+        b=HSMQrnDfvIVV+VVxfR6QUW2YwgsQ1+LOimr7p/a/J+u+86+rA2YRtj1vvalvr8seT
+         YhGflVISzcsoG1sZcsIadUNjXk1Orao8fi9/nAMq5CsZsaQQpOqlusvRWyIQGF1Le7
+         ZiMOgl5IlCHpXi44Lq7/fq/8vYbjUyNofNLsoT1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 052/197] s390/mm: fix -Wunused-but-set-variable warnings
-Date:   Sun, 27 Oct 2019 21:59:30 +0100
-Message-Id: <20191027203354.492549644@linuxfoundation.org>
+Subject: [PATCH 5.3 054/197] net: phy: allow for reset line to be tied to a sleepy GPIO controller
+Date:   Sun, 27 Oct 2019 21:59:32 +0100
+Message-Id: <20191027203354.593849810@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,76 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Andrea Merello <andrea.merello@gmail.com>
 
-[ Upstream commit 51ce02216d4ad4e8f6a58de81d6e803cf04c418e ]
+[ Upstream commit ea977d19d918324ad5b66953f051a6ed07d0a3c5 ]
 
-Convert two functions to static inline to get ride of W=1 GCC warnings
-like,
+mdio_device_reset() makes use of the atomic-pretending API flavor for
+handling the PHY reset GPIO line.
 
-mm/gup.c: In function 'gup_pte_range':
-mm/gup.c:1816:16: warning: variable 'ptem' set but not used
-[-Wunused-but-set-variable]
-  pte_t *ptep, *ptem;
-                ^~~~
+I found no hint that mdio_device_reset() is called from atomic context
+and indeed it uses usleep_range() since long time, so I would assume that
+it is OK to sleep there.
 
-mm/mmap.c: In function 'acct_stack_growth':
-mm/mmap.c:2322:16: warning: variable 'new_start' set but not used
-[-Wunused-but-set-variable]
-  unsigned long new_start;
-                ^~~~~~~~~
+This patch switch to gpiod_set_value_cansleep() in mdio_device_reset().
+This is relevant if e.g. the PHY reset line is tied to a I2C GPIO
+controller.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/lkml/1570138596-11913-1-git-send-email-cai@lca.pw/
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+This has been tested on a ZynqMP board running an upstream 4.19 kernel and
+then hand-ported on current kernel tree.
+
+Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/hugetlb.h | 9 +++++++--
- arch/s390/include/asm/pgtable.h | 3 ++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/phy/mdio_device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/hugetlb.h b/arch/s390/include/asm/hugetlb.h
-index bb59dd9645909..de8f0bf5f238c 100644
---- a/arch/s390/include/asm/hugetlb.h
-+++ b/arch/s390/include/asm/hugetlb.h
-@@ -12,8 +12,6 @@
- #include <asm/page.h>
- #include <asm/pgtable.h>
+diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
+index e282600bd83e2..c1d345c3cab35 100644
+--- a/drivers/net/phy/mdio_device.c
++++ b/drivers/net/phy/mdio_device.c
+@@ -121,7 +121,7 @@ void mdio_device_reset(struct mdio_device *mdiodev, int value)
+ 		return;
  
--
--#define is_hugepage_only_range(mm, addr, len)	0
- #define hugetlb_free_pgd_range			free_pgd_range
- #define hugepages_supported()			(MACHINE_HAS_EDAT1)
+ 	if (mdiodev->reset_gpio)
+-		gpiod_set_value(mdiodev->reset_gpio, value);
++		gpiod_set_value_cansleep(mdiodev->reset_gpio, value);
  
-@@ -23,6 +21,13 @@ pte_t huge_ptep_get(pte_t *ptep);
- pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
- 			      unsigned long addr, pte_t *ptep);
- 
-+static inline bool is_hugepage_only_range(struct mm_struct *mm,
-+					  unsigned long addr,
-+					  unsigned long len)
-+{
-+	return false;
-+}
-+
- /*
-  * If the arch doesn't supply something else, assume that hugepage
-  * size aligned regions are ok without further preparation.
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 9b274fcaacb68..70ac23e50cae9 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1268,7 +1268,8 @@ static inline pte_t *pte_offset(pmd_t *pmd, unsigned long address)
- 
- #define pte_offset_kernel(pmd, address) pte_offset(pmd, address)
- #define pte_offset_map(pmd, address) pte_offset_kernel(pmd, address)
--#define pte_unmap(pte) do { } while (0)
-+
-+static inline void pte_unmap(pte_t *pte) { }
- 
- static inline bool gup_fast_permitted(unsigned long start, unsigned long end)
- {
+ 	if (mdiodev->reset_ctrl) {
+ 		if (value)
 -- 
 2.20.1
 
