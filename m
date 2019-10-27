@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D11ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67158CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F534214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3948F2184C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211008;
-	bh=LI1+dhirixYEYs7FYCxZTa41ybRrG0gdklv7SZqhNTA=;
+	s=default; t=1572211014;
+	bh=OTjw6Fx7Rjm7MPM6SXQSae15WjISv8x9DLpcgCTBjnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vKxyVjMEtfYtzOHwJiu/WYmj5+Nvtmz5sbu55khglLCCFNJFM6YLYh4n6K663FqCm
-	 d0iHL+eKdofwL1BFLN+AwCO2juCKYr9eMIMFsuEwyrsW9/0+0DAzWk0tRmHgwoRAJe
-	 Jljwkb5U/iYpEn28+MNyC08Fktcsg8tt7+UasDAY=
+	b=qf4HJ3qHKvUiOMxLBTrt+C9vBQaFyEkV1uEK+3iwwccgTjHQKJT9O0YY7UTEuFzbh
+	 Oce/JOyzvSohehkpAheod2C07lgTJlZsnF78i57pzJRRVuWdUhOkLPpkZHDq36dVlT
+	 XP/gK7R7Cat0tG6EYz4gNr7YNptzePnMblJSZFT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730900AbfJ0VQr (ORCPT
+        id S1730927AbfJ0VQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:16:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36404 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730886AbfJ0VQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:16:44 -0400
+        id S1730911AbfJ0VQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:16:50 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05AD821726;
-        Sun, 27 Oct 2019 21:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 895B621726;
+        Sun, 27 Oct 2019 21:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211003;
-        bh=LI1+dhirixYEYs7FYCxZTa41ybRrG0gdklv7SZqhNTA=;
+        s=default; t=1572211009;
+        bh=OTjw6Fx7Rjm7MPM6SXQSae15WjISv8x9DLpcgCTBjnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l0b+692S2iGNTNfdQy/sQi/jggwGUNE82U/MUtGpaYbfjG/Ogn9JYgwG8Wu9IJywZ
-         LlUokTIfHQcRI+kLJXz4W9vXofiO1zzSmJPvkNAUM5zUCHrYzP6efL5owWqx8GdPQS
-         5Iyo3oKL/JNE3eBAXkhQKgO65xA+A7MWkVxKqfDs=
+        b=y+PjCz9P3fq7l1Yk2ZRhedwvS29KEtBboCXTVKOjN7/hAeO0D+Fc3MGBiBAoCbQMz
+         GBuYNpMBhgtuPqoOXsiVQ6bu/MsKNI/FU77/rC+RuZ7QL1YzqgMvWwO0xUGDptXWxR
+         V9btoU37TSFgv63o9+STFhOutCYKHyaNa8JRRHaQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Waisman <nico@semmle.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 93/93] RDMA/cxgb4: Do not dma memory off of the stack
-Date:   Sun, 27 Oct 2019 22:01:45 +0100
-Message-Id: <20191027203318.790103764@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 78/93] dm cache: fix bugs when a GFP_NOWAIT allocation fails
+Date:   Sun, 27 Oct 2019 22:01:30 +0100
+Message-Id: <20191027203311.950155787@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,104 +59,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg KH <gregkh@linuxfoundation.org>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 3840c5b78803b2b6cc1ff820100a74a092c40cbb upstream.
+commit 13bd677a472d534bf100bab2713efc3f9e3f5978 upstream.
 
-Nicolas pointed out that the cxgb4 driver is doing dma off of the stack,
-which is generally considered a very bad thing.  On some architectures it
-could be a security problem, but odds are none of them actually run this
-driver, so it's just a "normal" bug.
+GFP_NOWAIT allocation can fail anytime - it doesn't wait for memory being
+available and it fails if the mempool is exhausted and there is not enough
+memory.
 
-Resolve this by allocating the memory for a message off of the heap
-instead of the stack.  kmalloc() always will give us a proper memory
-location that DMA will work correctly from.
+If we go down this path:
+  map_bio -> mg_start -> alloc_migration -> mempool_alloc(GFP_NOWAIT)
+we can see that map_bio() doesn't check the return value of mg_start(),
+and the bio is leaked.
 
-Link: https://lore.kernel.org/r/20191001165611.GA3542072@kroah.com
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Tested-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+If we go down this path:
+  map_bio -> mg_start -> mg_lock_writes -> alloc_prison_cell ->
+  dm_bio_prison_alloc_cell_v2 -> mempool_alloc(GFP_NOWAIT) ->
+  mg_lock_writes -> mg_complete
+the bio is ended with an error - it is unacceptable because it could
+cause filesystem corruption if the machine ran out of memory
+temporarily.
+
+Change GFP_NOWAIT to GFP_NOIO, so that the mempool code will properly
+wait until memory becomes available. mempool_alloc with GFP_NOIO can't
+fail, so remove the code paths that deal with allocation failure.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/cxgb4/mem.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/md/dm-cache-target.c |   28 ++--------------------------
+ 1 file changed, 2 insertions(+), 26 deletions(-)
 
---- a/drivers/infiniband/hw/cxgb4/mem.c
-+++ b/drivers/infiniband/hw/cxgb4/mem.c
-@@ -274,13 +274,17 @@ static int write_tpt_entry(struct c4iw_r
- 			   struct sk_buff *skb, struct c4iw_wr_wait *wr_waitp)
+--- a/drivers/md/dm-cache-target.c
++++ b/drivers/md/dm-cache-target.c
+@@ -541,7 +541,7 @@ static void wake_migration_worker(struct
+ 
+ static struct dm_bio_prison_cell_v2 *alloc_prison_cell(struct cache *cache)
  {
- 	int err;
--	struct fw_ri_tpte tpt;
-+	struct fw_ri_tpte *tpt;
- 	u32 stag_idx;
- 	static atomic_t key;
- 
- 	if (c4iw_fatal_error(rdev))
- 		return -EIO;
- 
-+	tpt = kmalloc(sizeof(*tpt), GFP_KERNEL);
-+	if (!tpt)
-+		return -ENOMEM;
-+
- 	stag_state = stag_state > 0;
- 	stag_idx = (*stag) >> 8;
- 
-@@ -290,6 +294,7 @@ static int write_tpt_entry(struct c4iw_r
- 			mutex_lock(&rdev->stats.lock);
- 			rdev->stats.stag.fail++;
- 			mutex_unlock(&rdev->stats.lock);
-+			kfree(tpt);
- 			return -ENOMEM;
- 		}
- 		mutex_lock(&rdev->stats.lock);
-@@ -304,28 +309,28 @@ static int write_tpt_entry(struct c4iw_r
- 
- 	/* write TPT entry */
- 	if (reset_tpt_entry)
--		memset(&tpt, 0, sizeof(tpt));
-+		memset(tpt, 0, sizeof(*tpt));
- 	else {
--		tpt.valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
-+		tpt->valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
- 			FW_RI_TPTE_STAGKEY_V((*stag & FW_RI_TPTE_STAGKEY_M)) |
- 			FW_RI_TPTE_STAGSTATE_V(stag_state) |
- 			FW_RI_TPTE_STAGTYPE_V(type) | FW_RI_TPTE_PDID_V(pdid));
--		tpt.locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
-+		tpt->locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
- 			(bind_enabled ? FW_RI_TPTE_MWBINDEN_F : 0) |
- 			FW_RI_TPTE_ADDRTYPE_V((zbva ? FW_RI_ZERO_BASED_TO :
- 						      FW_RI_VA_BASED_TO))|
- 			FW_RI_TPTE_PS_V(page_size));
--		tpt.nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
-+		tpt->nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
- 			FW_RI_TPTE_PBLADDR_V(PBL_OFF(rdev, pbl_addr)>>3));
--		tpt.len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
--		tpt.va_hi = cpu_to_be32((u32)(to >> 32));
--		tpt.va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
--		tpt.dca_mwbcnt_pstag = cpu_to_be32(0);
--		tpt.len_hi = cpu_to_be32((u32)(len >> 32));
-+		tpt->len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
-+		tpt->va_hi = cpu_to_be32((u32)(to >> 32));
-+		tpt->va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
-+		tpt->dca_mwbcnt_pstag = cpu_to_be32(0);
-+		tpt->len_hi = cpu_to_be32((u32)(len >> 32));
- 	}
- 	err = write_adapter_mem(rdev, stag_idx +
- 				(rdev->lldi.vr->stag.start >> 5),
--				sizeof(tpt), &tpt, skb, wr_waitp);
-+				sizeof(*tpt), tpt, skb, wr_waitp);
- 
- 	if (reset_tpt_entry) {
- 		c4iw_put_resource(&rdev->resource.tpt_table, stag_idx);
-@@ -333,6 +338,7 @@ static int write_tpt_entry(struct c4iw_r
- 		rdev->stats.stag.cur -= 32;
- 		mutex_unlock(&rdev->stats.lock);
- 	}
-+	kfree(tpt);
- 	return err;
+-	return dm_bio_prison_alloc_cell_v2(cache->prison, GFP_NOWAIT);
++	return dm_bio_prison_alloc_cell_v2(cache->prison, GFP_NOIO);
  }
  
+ static void free_prison_cell(struct cache *cache, struct dm_bio_prison_cell_v2 *cell)
+@@ -553,9 +553,7 @@ static struct dm_cache_migration *alloc_
+ {
+ 	struct dm_cache_migration *mg;
+ 
+-	mg = mempool_alloc(&cache->migration_pool, GFP_NOWAIT);
+-	if (!mg)
+-		return NULL;
++	mg = mempool_alloc(&cache->migration_pool, GFP_NOIO);
+ 
+ 	memset(mg, 0, sizeof(*mg));
+ 
+@@ -663,10 +661,6 @@ static bool bio_detain_shared(struct cac
+ 	struct dm_bio_prison_cell_v2 *cell_prealloc, *cell;
+ 
+ 	cell_prealloc = alloc_prison_cell(cache); /* FIXME: allow wait if calling from worker */
+-	if (!cell_prealloc) {
+-		defer_bio(cache, bio);
+-		return false;
+-	}
+ 
+ 	build_key(oblock, end, &key);
+ 	r = dm_cell_get_v2(cache->prison, &key, lock_level(bio), bio, cell_prealloc, &cell);
+@@ -1492,11 +1486,6 @@ static int mg_lock_writes(struct dm_cach
+ 	struct dm_bio_prison_cell_v2 *prealloc;
+ 
+ 	prealloc = alloc_prison_cell(cache);
+-	if (!prealloc) {
+-		DMERR_LIMIT("%s: alloc_prison_cell failed", cache_device_name(cache));
+-		mg_complete(mg, false);
+-		return -ENOMEM;
+-	}
+ 
+ 	/*
+ 	 * Prevent writes to the block, but allow reads to continue.
+@@ -1534,11 +1523,6 @@ static int mg_start(struct cache *cache,
+ 	}
+ 
+ 	mg = alloc_migration(cache);
+-	if (!mg) {
+-		policy_complete_background_work(cache->policy, op, false);
+-		background_work_end(cache);
+-		return -ENOMEM;
+-	}
+ 
+ 	mg->op = op;
+ 	mg->overwrite_bio = bio;
+@@ -1627,10 +1611,6 @@ static int invalidate_lock(struct dm_cac
+ 	struct dm_bio_prison_cell_v2 *prealloc;
+ 
+ 	prealloc = alloc_prison_cell(cache);
+-	if (!prealloc) {
+-		invalidate_complete(mg, false);
+-		return -ENOMEM;
+-	}
+ 
+ 	build_key(mg->invalidate_oblock, oblock_succ(mg->invalidate_oblock), &key);
+ 	r = dm_cell_lock_v2(cache->prison, &key,
+@@ -1668,10 +1648,6 @@ static int invalidate_start(struct cache
+ 		return -EPERM;
+ 
+ 	mg = alloc_migration(cache);
+-	if (!mg) {
+-		background_work_end(cache);
+-		return -ENOMEM;
+-	}
+ 
+ 	mg->overwrite_bio = bio;
+ 	mg->invalidate_cblock = cblock;
 
 
