@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2438BCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03E9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF88721783
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CF020873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210330;
-	bh=P2vJ9ibDgioB1J3v/QHFvsCZHo25Rm2Voqe4Ut1VUjE=;
+	s=default; t=1572210334;
+	bh=wgCt+YZ5RNpB3TdtQz/yGRs20B5SCGe3XuJHby44QTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=azR0z0GcgX7Ih0Z9hSg7YqyO82qsXBc+C6sHVjZiEVfOznIp98jW5N7tNYYTFT+IO
-	 pYHe5l3jOuB2vTvx2v/bBvIyCy6TnLdBh2uvv4NrBd4CvFWU2PMg/pwKe80O2zNmD/
-	 CM1lZskaTLCBpWGiZqP2DxadveFRHUTha9guXGv4=
+	b=Th+GX0sBMAOXRT/uQMmdoiLjviJH3rdRSfmTc9yWhoQ7P7uLNhdahSHFWwCzxLdHi
+	 7mXQk6XPMbRXWJ3azEJi5mXtrp+1nMefTEQr46IvvCqzXZmjNli2kVJWqeGXelqEIK
+	 tE04rJXwLjcpM53ZpKu+IstaWmxHNBlt730aZIcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbfJ0VF2 (ORCPT
+        id S1728842AbfJ0VFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728816AbfJ0VFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:05:21 -0400
+        id S1727823AbfJ0VFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:05:24 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D16A820873;
-        Sun, 27 Oct 2019 21:05:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1950D2064A;
+        Sun, 27 Oct 2019 21:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210320;
-        bh=P2vJ9ibDgioB1J3v/QHFvsCZHo25Rm2Voqe4Ut1VUjE=;
+        s=default; t=1572210323;
+        bh=wgCt+YZ5RNpB3TdtQz/yGRs20B5SCGe3XuJHby44QTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sZmU5BUUoOTbtRSFBKnx1qKwwAoe4h9UF3OvDbToYGkJwDitTk3FX7ixSgMrP1LVD
-         YLickZaxPIMNw7g6TbK4attal8wWf8QWQE7yu9x2/9ImqlVWmFfwByJBtPRWq/FOd8
-         sLzEiaDxjqcn9SL2t5saEkyQNNU8oOoOkfIbpLD0=
+        b=ujjHoHO83fZPyvrpb2gzSBCuowJ5bZkx9YE1xzp7/gJhFDRFKSXOsghwpLkCytIiR
+         HdHBxc7mNHp6GrpOPLiqET3+dzbDAcYPbOgPwj3LFqe2U/iBH80BQsMmsknk2zKZzZ
+         Taez3RMpXeleeH7XH5hIPadEBnxLl0BrATjPQi7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 24/49] ALSA: hda/realtek - Add support for ALC711
-Date:   Sun, 27 Oct 2019 22:01:02 +0100
-Message-Id: <20191027203137.952164100@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH 4.9 25/49] usb: udc: lpc32xx: fix bad bit shift operation
+Date:   Sun, 27 Oct 2019 22:01:03 +0100
+Message-Id: <20191027203138.367796220@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -59,46 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 83629532ce45ef9df1f297b419b9ea112045685d upstream.
+commit b987b66ac3a2bc2f7b03a0ba48a07dc553100c07 upstream.
 
-Support new codec ALC711.
+It seems that the right variable to use in this case is *i*, instead of
+*n*, otherwise there is an undefined behavior when right shifiting by more
+than 31 bits when multiplying n by 8; notice that *n* can take values
+equal or greater than 4 (4, 8, 16, ...).
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Also, notice that under the current conditions (bl = 3), we are skiping
+the handling of bytes 3, 7, 31... So, fix this by updating this logic
+and limit *bl* up to 4 instead of up to 3.
+
+This fix is based on function udc_stuff_fifo().
+
+Addresses-Coverity-ID: 1454834 ("Bad bit shift operation")
+Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Link: https://lore.kernel.org/r/20191014191830.GA10721@embeddedor
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/gadget/udc/lpc32xx_udc.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -353,6 +353,7 @@ static void alc_fill_eapd_coef(struct hd
- 	case 0x10ec0700:
- 	case 0x10ec0701:
- 	case 0x10ec0703:
-+	case 0x10ec0711:
- 		alc_update_coef_idx(codec, 0x10, 1<<15, 0);
+--- a/drivers/usb/gadget/udc/lpc32xx_udc.c
++++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
+@@ -1178,11 +1178,11 @@ static void udc_pop_fifo(struct lpc32xx_
+ 			tmp = readl(USBD_RXDATA(udc->udp_baseaddr));
+ 
+ 			bl = bytes - n;
+-			if (bl > 3)
+-				bl = 3;
++			if (bl > 4)
++				bl = 4;
+ 
+ 			for (i = 0; i < bl; i++)
+-				data[n + i] = (u8) ((tmp >> (n * 8)) & 0xFF);
++				data[n + i] = (u8) ((tmp >> (i * 8)) & 0xFF);
+ 		}
  		break;
- 	case 0x10ec0662:
-@@ -6424,6 +6425,7 @@ static int patch_alc269(struct hda_codec
- 	case 0x10ec0700:
- 	case 0x10ec0701:
- 	case 0x10ec0703:
-+	case 0x10ec0711:
- 		spec->codec_variant = ALC269_TYPE_ALC700;
- 		spec->gen.mixer_nid = 0; /* ALC700 does not have any loopback mixer path */
- 		alc_update_coef_idx(codec, 0x4a, 1 << 15, 0); /* Combo jack auto trigger control */
-@@ -7464,6 +7466,7 @@ static const struct hda_device_id snd_hd
- 	HDA_CODEC_ENTRY(0x10ec0700, "ALC700", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0701, "ALC701", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0703, "ALC703", patch_alc269),
-+	HDA_CODEC_ENTRY(0x10ec0711, "ALC711", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0867, "ALC891", patch_alc662),
- 	HDA_CODEC_ENTRY(0x10ec0880, "ALC880", patch_alc880),
- 	HDA_CODEC_ENTRY(0x10ec0882, "ALC882", patch_alc882),
+ 
 
 
