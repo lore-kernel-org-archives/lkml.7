@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2126CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BFFCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71CAA205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4E5208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211052;
-	bh=fZWWucbpLxJGkKOUSdJkJb/oxZDR/zbWPQ//eAJTko8=;
+	s=default; t=1572211055;
+	bh=DoZbOJkyEpxr8O1/upunQtXlKDIbBtKBteci4Ek32YA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KXHBsggcRAG/pfZVvNoMpk3nl3NoZt3YzojmebbbL/xS4OAIcyhVS9gVFRSX3rVI4
-	 xQvRhs0FUHLjLYiknuB5qVoa8TMrW/CJyGA420tMmXPJRvCbBdjccLuRlZhy2w1dN6
-	 Q1jWoo4aZeHnIKKRvqeI2WoJTVvng8d7mGBUS3gM=
+	b=kncryFXVV/zKTer6gZ8jAwVhUU/6sksd6JNkoz2ZZSfNBfqRSZnLsl2gZpVnivCzJ
+	 fEy51dy/Dsx4xnxCaUj1V5ZAaf3nNEF1XKWML5ucUahXALTkRUhSURjh385QrrCh2o
+	 XjS5SuNHqHuWCHWlK5q5esOuLW5Ibj7Ch6HQQ6Nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731064AbfJ0VRb (ORCPT
+        id S1731076AbfJ0VRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:17:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37218 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:17:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731036AbfJ0VRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:17:24 -0400
+        id S1731059AbfJ0VRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:17:30 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD99205C9;
-        Sun, 27 Oct 2019 21:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42071205C9;
+        Sun, 27 Oct 2019 21:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211044;
-        bh=fZWWucbpLxJGkKOUSdJkJb/oxZDR/zbWPQ//eAJTko8=;
+        s=default; t=1572211049;
+        bh=DoZbOJkyEpxr8O1/upunQtXlKDIbBtKBteci4Ek32YA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NPBsgPBdVfjy9H4LGnCxuia1xcOmvP4IWe1UM3BRkyFzfzieIj2O22/HeFabQOWji
-         NYMcWOhoHa3YKOJ8Oj0EfJTD9kkd1xvCA0PGJ0zmJd+Hj6QmexKc7qtZCsChuxAu/l
-         nsI7he4PsyrJirYcbilVXCSQQnX5cb5Iw43qsz70=
+        b=AbTcRIihGC+DCpWC3IpEyNpE2uqd5CAHxIGW7DXRSdJUqyE9P18SmEFEqRoJ3zNZu
+         XGbHOimgyn7jD8TGFYFWhchLm5TwnaK2ISkRt5GItegfiJO5o6iHG1I6Es9qMYB5Zo
+         xdZWTvEAD+NkozFzNlK9vhE3wkFrrfWO20vJJxO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>,
+        stable@vger.kernel.org, Jyri Sarha <jsarha@ti.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
         Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 013/197] ARM: dts: Fix gpio0 flags for am335x-icev2
-Date:   Sun, 27 Oct 2019 21:58:51 +0100
-Message-Id: <20191027203352.392665239@linuxfoundation.org>
+Subject: [PATCH 5.3 015/197] ARM: OMAP2+: Add missing LCDC midlemode for am335x
+Date:   Sun, 27 Oct 2019 21:58:53 +0100
+Message-Id: <20191027203352.497559276@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -62,52 +64,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 4ef5d76b453908f21341e661a9b6f96862f6f589 ]
+[ Upstream commit 17529d43b21c72466e9109d602c6f5c360a1a9e8 ]
 
-The ti,no-idle-on-init and ti,no-reset-on-init flags need to be at
-the interconnect target module level for the modules that have it
-defined. Otherwise we get the following warnings:
+TRM "Table 13-34. SYSCONFIG Register Field Descriptions" lists both
+standbymode and idlemode that should be just the sidle and midle
+registers where midle is currently unconfigured for lcdc_sysc. As
+the dts data has been generated based on lcdc_sysc, we now have an
+empty "ti,sysc-midle" property.
 
-dts flag should be at module level for ti,no-idle-on-init
-dts flag should be at module level for ti,no-reset-on-init
+And so we currently get a warning for lcdc because of a difference
+with dts provided configuration compared to the legacy platform
+data. This is because lcdc has SYSC_HAS_MIDLEMODE configured in
+the platform data without configuring the modes.
 
-Fixes: 87fc89ced3a7 ("ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc")
-Cc: Lokesh Vutla <lokeshvutla@ti.com>
-Reported-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+Let's fix the issue by adding the missing midlemode to lcdc_sysc,
+and configuring the "ti,sysc-midle" property based on the TRM
+values.
+
+Fixes: f711c575cfec ("ARM: dts: am335x: Add l4 interconnect hierarchy and ti-sysc data")
+Cc: Jyri Sarha <jsarha@ti.com>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Robert Nelson <robertcnelson@gmail.com>
+Cc: Suman Anna <s-anna@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-icev2.dts | 2 +-
- arch/arm/boot/dts/am33xx-l4.dtsi   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am33xx-l4.dtsi           | 4 +++-
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c | 5 +++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
-index 18f70b35da4c7..204bccfcc110a 100644
---- a/arch/arm/boot/dts/am335x-icev2.dts
-+++ b/arch/arm/boot/dts/am335x-icev2.dts
-@@ -432,7 +432,7 @@
- 	pinctrl-0 = <&mmc0_pins_default>;
- };
- 
--&gpio0 {
-+&gpio0_target {
- 	/* Do not idle the GPIO used for holding the VTT regulator */
- 	ti,no-reset-on-init;
- 	ti,no-idle-on-init;
 diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index 46849d6ecb3e2..1515f4f914999 100644
+index 1515f4f914999..3287cf695b5a4 100644
 --- a/arch/arm/boot/dts/am33xx-l4.dtsi
 +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -127,7 +127,7 @@
- 			ranges = <0x0 0x5000 0x1000>;
- 		};
+@@ -2038,7 +2038,9 @@
+ 			reg = <0xe000 0x4>,
+ 			      <0xe054 0x4>;
+ 			reg-names = "rev", "sysc";
+-			ti,sysc-midle ;
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
+ 			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+ 					<SYSC_IDLE_NO>,
+ 					<SYSC_IDLE_SMART>;
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+index c965af275e341..81d9912f17c85 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+@@ -231,8 +231,9 @@ static struct omap_hwmod am33xx_control_hwmod = {
+ static struct omap_hwmod_class_sysconfig lcdc_sysc = {
+ 	.rev_offs	= 0x0,
+ 	.sysc_offs	= 0x54,
+-	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
++	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE,
++	.idlemodes	= SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
++			  MSTANDBY_FORCE | MSTANDBY_NO | MSTANDBY_SMART,
+ 	.sysc_fields	= &omap_hwmod_sysc_type2,
+ };
  
--		target-module@7000 {			/* 0x44e07000, ap 14 20.0 */
-+		gpio0_target: target-module@7000 {	/* 0x44e07000, ap 14 20.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
- 			ti,hwmods = "gpio1";
- 			reg = <0x7000 0x4>,
 -- 
 2.20.1
 
