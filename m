@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF54CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AE1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9649A2070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9855B208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210977;
-	bh=QW6MRCRLYhtplUwDHGu9qu0e/8biqeJI/X84mmGWZKM=;
+	s=default; t=1572210981;
+	bh=3iJ3qKVbyTkIAzRYUW0YRonG/XHJgsleQiyTF+dZR08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ezgf3z0UzKnBpnX3H1KLTHJw7nX8nBMYrVi+/NDy2DaDWxAPgOoUYBe79QpV6nm9t
-	 UU032xDkazvHfzI/XwWD6NwqQwThyQpI/fq/YmCIeBUiYnE303UMpOwlEdSFgec6TN
-	 asycI+YkGdUEdLypiWDVRuuv2nmXGqE+NvRc9ObE=
+	b=j9igArytRSBeiX2D5W19nlm1H76gLhzSZQbr/j/NlzAvm8qVzyvTeQmV9t0vUI/Ut
+	 W39WBndkuVkDvXFmpjo89AbeydzotM7pE8W+K5dBH/5s/0iW3o9EMnOn6wM/NpIFFL
+	 FmTn6vY4w7p5M5o4l4GnknltXtlcdpxyfACE/GA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbfJ0VQQ (ORCPT
+        id S1730808AbfJ0VQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35760 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:16:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730783AbfJ0VQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:16:13 -0400
+        id S1730791AbfJ0VQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:16:15 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C760F205C9;
-        Sun, 27 Oct 2019 21:16:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83D9B21783;
+        Sun, 27 Oct 2019 21:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210972;
-        bh=QW6MRCRLYhtplUwDHGu9qu0e/8biqeJI/X84mmGWZKM=;
+        s=default; t=1572210975;
+        bh=3iJ3qKVbyTkIAzRYUW0YRonG/XHJgsleQiyTF+dZR08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E0/VkZdtkBAsa2ZReVr6Jf3Nnkuq3DMXmCi8shkgrsNVBrTg5m1BviWy0j0zltjpi
-         ChAUEi0dDorEU3ld6loLwq/L+TqW/NeN75JIVRRVlurLLhTOc8dqjUJgRN3kau6+zr
-         i18GnbJ0r2ixBp7aTLpyik0va7X9sIhgffoREY5A=
+        b=gORjVdwfPOqd/yJsWmH+mmvg2A/W8H/gMAinWQpa6Pz/vSTPy2tg4TZoyrzYcPLps
+         oySJPsC9IjKS9ZiPExFnpynCWRhM7W+kTdzkK8x4tG1P6cdJ0Q0sVQEQVcG7odATCK
+         4082dRGFYLhZDq9cu1Q81hy/xk3O+sDbBW4SzSWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 37/93] ALSA: hda/realtek - Add support for ALC711
-Date:   Sun, 27 Oct 2019 22:00:49 +0100
-Message-Id: <20191027203258.122885374@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 28/93] net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
+Date:   Sun, 27 Oct 2019 22:00:40 +0100
+Message-Id: <20191027203256.762646938@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -59,46 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 83629532ce45ef9df1f297b419b9ea112045685d upstream.
+[ Upstream commit efb86fede98cdc70b674692ff617b1162f642c49 ]
 
-Support new codec ALC711.
+The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
+became 6 for GENET v4 and above, account for that difference.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/patch_realtek.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h |    1 +
+ drivers/net/ethernet/broadcom/genet/bcmmii.c   |    6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -405,6 +405,7 @@ static void alc_fill_eapd_coef(struct hd
- 	case 0x10ec0700:
- 	case 0x10ec0701:
- 	case 0x10ec0703:
-+	case 0x10ec0711:
- 		alc_update_coef_idx(codec, 0x10, 1<<15, 0);
- 		break;
- 	case 0x10ec0662:
-@@ -7752,6 +7753,7 @@ static int patch_alc269(struct hda_codec
- 	case 0x10ec0700:
- 	case 0x10ec0701:
- 	case 0x10ec0703:
-+	case 0x10ec0711:
- 		spec->codec_variant = ALC269_TYPE_ALC700;
- 		spec->gen.mixer_nid = 0; /* ALC700 does not have any loopback mixer path */
- 		alc_update_coef_idx(codec, 0x4a, 1 << 15, 0); /* Combo jack auto trigger control */
-@@ -8883,6 +8885,7 @@ static const struct hda_device_id snd_hd
- 	HDA_CODEC_ENTRY(0x10ec0700, "ALC700", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0701, "ALC701", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0703, "ALC703", patch_alc269),
-+	HDA_CODEC_ENTRY(0x10ec0711, "ALC711", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0867, "ALC891", patch_alc662),
- 	HDA_CODEC_ENTRY(0x10ec0880, "ALC880", patch_alc880),
- 	HDA_CODEC_ENTRY(0x10ec0882, "ALC882", patch_alc882),
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+@@ -369,6 +369,7 @@ struct bcmgenet_mib_counters {
+ #define  EXT_PWR_DOWN_PHY_EN		(1 << 20)
+ 
+ #define EXT_RGMII_OOB_CTRL		0x0C
++#define  RGMII_MODE_EN_V123		(1 << 0)
+ #define  RGMII_LINK			(1 << 4)
+ #define  OOB_DISABLE			(1 << 5)
+ #define  RGMII_MODE_EN			(1 << 6)
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -261,7 +261,11 @@ int bcmgenet_mii_config(struct net_devic
+ 	 */
+ 	if (priv->ext_phy) {
+ 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
+-		reg |= RGMII_MODE_EN | id_mode_dis;
++		reg |= id_mode_dis;
++		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
++			reg |= RGMII_MODE_EN_V123;
++		else
++			reg |= RGMII_MODE_EN;
+ 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
+ 	}
+ 
 
 
