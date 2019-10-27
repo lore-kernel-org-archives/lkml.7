@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978EECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D97CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A62020B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B9C20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210623;
-	bh=KnbIuc4hH1+dOvfd4Ox4/W1RZYw4LgzElBn/oUflloQ=;
+	s=default; t=1572210626;
+	bh=LwU4NPpiiTWWki5dyovJzzJTpL45yAe7Vi9hAtVmcg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wZ3kpgyhCXNcPYhQNEQWKHOO8+rgWfByObQOuDMQzHoK/AZ/B4MIQMeNZ/FmJFhae
-	 Jfl3A5HZwJlvLMEXjWmep1nTtSSBMZk+A1DhrIuqgdHareGXs2HElTicK2Aw9CL5DG
-	 LVhea/RJP79L8+ZU2Bl8TJKG+nD3bGnj8s0p37m0=
+	b=pGvZx3+TM0YXk7+8/52eNKQlBtHbr2Ta+GgInpefuAHE9I7bhmVu0LAIDzEaHTFKo
+	 G8ylBEFTFUUAr2B05vHWHkyO1SsPf5MEqFhp2+aTnAHaRNy9GiUo/PfMBMu5eusq5c
+	 8zDc9/vFRy+hc5eGu7ztPoA+czPrmdzqVDF0Vdh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbfJ0VKV (ORCPT
+        id S1729687AbfJ0VKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:10:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:10:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729670AbfJ0VKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:10:17 -0400
+        id S1729670AbfJ0VKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:10:22 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CE6E20873;
-        Sun, 27 Oct 2019 21:10:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E3A22064A;
+        Sun, 27 Oct 2019 21:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210616;
-        bh=KnbIuc4hH1+dOvfd4Ox4/W1RZYw4LgzElBn/oUflloQ=;
+        s=default; t=1572210621;
+        bh=LwU4NPpiiTWWki5dyovJzzJTpL45yAe7Vi9hAtVmcg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yyQnBEZXIxXNqnB0MFPJpREY20GHbP1H5l7zMHM6cHAF6EPjHe7yKI6y7Ao3K0YMI
-         fPi00YzHQCspfWovhd+jSiGStI4CMimXTCQ30Tz2bLXcTaHD3ztoOqCJ7o3b77jZH/
-         qLaf3lE4rvWUtel0lvwnf7tg4S9geUiTA53RNa8Y=
+        b=ByW0vT8X/RwWMRznRInPMDMGzYqPwYD5tt5R8Bt2Bx0x/5K/mauq/63W7X+8B3WjE
+         sHZF6j7m4PNbiBJOaQMiuzSzF8HJhimiXpejHFnFPi2UyW9mwCGcyq0Ka9kG7x0wtZ
+         onMk3pJ5vodXmsLZqd+/zxX2oOgmjTzW7tnP9W+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
         Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dave Martin <dave.martin@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 077/119] arm64: Advertise mitigation of Spectre-v2, or lack thereof
-Date:   Sun, 27 Oct 2019 22:00:54 +0100
-Message-Id: <20191027203343.582225094@linuxfoundation.org>
+Subject: [PATCH 4.14 052/119] arm64: capabilities: Filter the entries based on a given mask
+Date:   Sun, 27 Oct 2019 22:00:29 +0100
+Message-Id: <20191027203322.468518194@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -65,220 +62,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 73f38166095947f3b86b02fbed6bd592223a7ac8 ]
+[ Upstream commit cce360b54ce6ca1bcf4b0a870ec076d83606775e ]
 
-We currently have a list of CPUs affected by Spectre-v2, for which
-we check that the firmware implements ARCH_WORKAROUND_1. It turns
-out that not all firmwares do implement the required mitigation,
-and that we fail to let the user know about it.
+While processing the list of capabilities, it is useful to
+filter out some of the entries based on the given mask for the
+scope of the capabilities to allow better control. This can be
+used later for handling LOCAL vs SYSTEM wide capabilities and more.
+All capabilities should have their scope set to either LOCAL_CPU or
+SYSTEM. No functional/flow change.
 
-Instead, let's slightly revamp our checks, and rely on a whitelist
-of cores that are known to be non-vulnerable, and let the user know
-the status of the mitigation in the kernel log.
-
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Dave Martin <dave.martin@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/cpu_errata.c |  108 +++++++++++++++++++++--------------------
- 1 file changed, 56 insertions(+), 52 deletions(-)
+ arch/arm64/include/asm/cpufeature.h |    1 +
+ arch/arm64/kernel/cpufeature.c      |   33 ++++++++++++++++++++++-----------
+ 2 files changed, 23 insertions(+), 11 deletions(-)
 
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -98,9 +98,9 @@ static void __copy_hyp_vect_bpi(int slot
- 	flush_icache_range((uintptr_t)dst, (uintptr_t)dst + SZ_2K);
- }
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -207,6 +207,7 @@ extern struct arm64_ftr_reg arm64_ftr_re
  
--static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
--				      const char *hyp_vecs_start,
--				      const char *hyp_vecs_end)
-+static void install_bp_hardening_cb(bp_hardening_cb_t fn,
-+				    const char *hyp_vecs_start,
-+				    const char *hyp_vecs_end)
- {
- 	static int last_slot = -1;
- 	static DEFINE_SPINLOCK(bp_lock);
-@@ -130,7 +130,7 @@ static void __install_bp_hardening_cb(bp
- #define __smccc_workaround_1_smc_start		NULL
- #define __smccc_workaround_1_smc_end		NULL
+ #define SCOPE_SYSTEM				ARM64_CPUCAP_SCOPE_SYSTEM
+ #define SCOPE_LOCAL_CPU				ARM64_CPUCAP_SCOPE_LOCAL_CPU
++#define SCOPE_ALL				ARM64_CPUCAP_SCOPE_MASK
  
--static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
-+static void install_bp_hardening_cb(bp_hardening_cb_t fn,
- 				      const char *hyp_vecs_start,
- 				      const char *hyp_vecs_end)
- {
-@@ -138,23 +138,6 @@ static void __install_bp_hardening_cb(bp
- }
- #endif	/* CONFIG_KVM */
- 
--static void  install_bp_hardening_cb(const struct arm64_cpu_capabilities *entry,
--				     bp_hardening_cb_t fn,
--				     const char *hyp_vecs_start,
--				     const char *hyp_vecs_end)
--{
--	u64 pfr0;
--
--	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
--		return;
--
--	pfr0 = read_cpuid(ID_AA64PFR0_EL1);
--	if (cpuid_feature_extract_unsigned_field(pfr0, ID_AA64PFR0_CSV2_SHIFT))
--		return;
--
--	__install_bp_hardening_cb(fn, hyp_vecs_start, hyp_vecs_end);
--}
--
- #include <uapi/linux/psci.h>
- #include <linux/arm-smccc.h>
- #include <linux/psci.h>
-@@ -189,31 +172,27 @@ static int __init parse_nospectre_v2(cha
- }
- early_param("nospectre_v2", parse_nospectre_v2);
- 
--static void
--enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
-+/*
-+ * -1: No workaround
-+ *  0: No workaround required
-+ *  1: Workaround installed
-+ */
-+static int detect_harden_bp_fw(void)
- {
- 	bp_hardening_cb_t cb;
- 	void *smccc_start, *smccc_end;
- 	struct arm_smccc_res res;
- 	u32 midr = read_cpuid_id();
- 
--	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
--		return;
--
--	if (__nospectre_v2) {
--		pr_info_once("spectrev2 mitigation disabled by command line option\n");
--		return;
--	}
--
- 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
--		return;
-+		return -1;
- 
- 	switch (psci_ops.conduit) {
- 	case PSCI_CONDUIT_HVC:
- 		arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
- 		if ((int)res.a0 < 0)
--			return;
-+			return -1;
- 		cb = call_hvc_arch_workaround_1;
- 		/* This is a guest, no need to patch KVM vectors */
- 		smccc_start = NULL;
-@@ -224,23 +203,23 @@ enable_smccc_arch_workaround_1(const str
- 		arm_smccc_1_1_smc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
- 		if ((int)res.a0 < 0)
--			return;
-+			return -1;
- 		cb = call_smc_arch_workaround_1;
- 		smccc_start = __smccc_workaround_1_smc_start;
- 		smccc_end = __smccc_workaround_1_smc_end;
- 		break;
- 
- 	default:
--		return;
-+		return -1;
- 	}
- 
- 	if (((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR) ||
- 	    ((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR_V1))
- 		cb = qcom_link_stack_sanitization;
- 
--	install_bp_hardening_cb(entry, cb, smccc_start, smccc_end);
-+	install_bp_hardening_cb(cb, smccc_start, smccc_end);
- 
--	return;
-+	return 1;
- }
- #endif	/* CONFIG_HARDEN_BRANCH_PREDICTOR */
- 
-@@ -479,23 +458,48 @@ out_printmsg:
- 	CAP_MIDR_RANGE_LIST(midr_list)
- 
- #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
--
  /*
-- * List of CPUs where we need to issue a psci call to
-- * harden the branch predictor.
-+ * List of CPUs that do not need any Spectre-v2 mitigation at all.
+  * Is it permitted for a late CPU to have this capability when system
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1164,10 +1164,12 @@ static bool __this_cpu_has_cap(const str
+ }
+ 
+ static void update_cpu_capabilities(const struct arm64_cpu_capabilities *caps,
+-				    const char *info)
++				    u16 scope_mask, const char *info)
+ {
++	scope_mask &= ARM64_CPUCAP_SCOPE_MASK;
+ 	for (; caps->matches; caps++) {
+-		if (!caps->matches(caps, cpucap_default_scope(caps)))
++		if (!(caps->type & scope_mask) ||
++		    !caps->matches(caps, cpucap_default_scope(caps)))
+ 			continue;
+ 
+ 		if (!cpus_have_cap(caps->capability) && caps->desc)
+@@ -1189,12 +1191,14 @@ static int __enable_cpu_capability(void
+  * CPUs
   */
--static const struct midr_range arm64_bp_harden_smccc_cpus[] = {
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A75),
--	MIDR_ALL_VERSIONS(MIDR_BRCM_VULCAN),
--	MIDR_ALL_VERSIONS(MIDR_CAVIUM_THUNDERX2),
--	MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR_V1),
--	MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR),
--	{},
-+static const struct midr_range spectre_v2_safe_list[] = {
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
-+	{ /* sentinel */ }
- };
+ static void __init
+-enable_cpu_capabilities(const struct arm64_cpu_capabilities *caps)
++enable_cpu_capabilities(const struct arm64_cpu_capabilities *caps,
++			u16 scope_mask)
+ {
++	scope_mask &= ARM64_CPUCAP_SCOPE_MASK;
+ 	for (; caps->matches; caps++) {
+ 		unsigned int num = caps->capability;
  
-+static bool __maybe_unused
-+check_branch_predictor(const struct arm64_cpu_capabilities *entry, int scope)
-+{
-+	int need_wa;
-+
-+	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
-+
-+	/* If the CPU has CSV2 set, we're safe */
-+	if (cpuid_feature_extract_unsigned_field(read_cpuid(ID_AA64PFR0_EL1),
-+						 ID_AA64PFR0_CSV2_SHIFT))
-+		return false;
-+
-+	/* Alternatively, we have a list of unaffected CPUs */
-+	if (is_midr_in_range_list(read_cpuid_id(), spectre_v2_safe_list))
-+		return false;
-+
-+	/* Fallback to firmware detection */
-+	need_wa = detect_harden_bp_fw();
-+	if (!need_wa)
-+		return false;
-+
-+	/* forced off */
-+	if (__nospectre_v2) {
-+		pr_info_once("spectrev2 mitigation disabled by command line option\n");
-+		return false;
-+	}
-+
-+	if (need_wa < 0)
-+		pr_warn_once("ARM_SMCCC_ARCH_WORKAROUND_1 missing from firmware\n");
-+
-+	return (need_wa > 0);
-+}
- #endif
+-		if (!cpus_have_cap(num))
++		if (!(caps->type & scope_mask) || !cpus_have_cap(num))
+ 			continue;
  
- const struct arm64_cpu_capabilities arm64_errata[] = {
-@@ -639,8 +643,8 @@ const struct arm64_cpu_capabilities arm6
- #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
- 	{
- 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
--		ERRATA_MIDR_RANGE_LIST(arm64_bp_harden_smccc_cpus),
--		.cpu_enable = enable_smccc_arch_workaround_1,
-+		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
-+		.matches = check_branch_predictor,
- 	},
- #endif
- 	{
+ 		/* Ensure cpus_have_const_cap(num) works */
+@@ -1236,12 +1240,18 @@ static inline void set_sys_caps_initiali
+  * Returns "false" on conflicts.
+  */
+ static bool
+-__verify_local_cpu_caps(const struct arm64_cpu_capabilities *caps_list)
++__verify_local_cpu_caps(const struct arm64_cpu_capabilities *caps_list,
++			u16 scope_mask)
+ {
+ 	bool cpu_has_cap, system_has_cap;
+ 	const struct arm64_cpu_capabilities *caps;
+ 
++	scope_mask &= ARM64_CPUCAP_SCOPE_MASK;
++
+ 	for (caps = caps_list; caps->matches; caps++) {
++		if (!(caps->type & scope_mask))
++			continue;
++
+ 		cpu_has_cap = __this_cpu_has_cap(caps_list, caps->capability);
+ 		system_has_cap = cpus_have_cap(caps->capability);
+ 
+@@ -1304,7 +1314,7 @@ verify_local_elf_hwcaps(const struct arm
+ 
+ static void verify_local_cpu_features(void)
+ {
+-	if (!__verify_local_cpu_caps(arm64_features))
++	if (!__verify_local_cpu_caps(arm64_features, SCOPE_ALL))
+ 		cpu_die_early();
+ }
+ 
+@@ -1315,18 +1325,19 @@ static void verify_local_cpu_features(vo
+  */
+ static void verify_local_cpu_errata_workarounds(void)
+ {
+-	if (!__verify_local_cpu_caps(arm64_errata))
++	if (!__verify_local_cpu_caps(arm64_errata, SCOPE_ALL))
+ 		cpu_die_early();
+ }
+ 
+ static void update_cpu_errata_workarounds(void)
+ {
+-	update_cpu_capabilities(arm64_errata, "enabling workaround for");
++	update_cpu_capabilities(arm64_errata, SCOPE_ALL,
++				"enabling workaround for");
+ }
+ 
+ static void __init enable_errata_workarounds(void)
+ {
+-	enable_cpu_capabilities(arm64_errata);
++	enable_cpu_capabilities(arm64_errata, SCOPE_ALL);
+ }
+ 
+ /*
+@@ -1368,8 +1379,8 @@ void check_local_cpu_capabilities(void)
+ 
+ static void __init setup_feature_capabilities(void)
+ {
+-	update_cpu_capabilities(arm64_features, "detected feature:");
+-	enable_cpu_capabilities(arm64_features);
++	update_cpu_capabilities(arm64_features, SCOPE_ALL, "detected:");
++	enable_cpu_capabilities(arm64_features, SCOPE_ALL);
+ }
+ 
+ DEFINE_STATIC_KEY_FALSE(arm64_const_caps_ready);
 
 
