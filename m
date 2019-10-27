@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B47CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC48BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF8C205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F05320679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212108;
-	bh=5rGOHxdHV9ZIQXqg1PPXAB+NumLzZ2ZkyPS4HKwri8I=;
+	s=default; t=1572212111;
+	bh=Fjix/1wYoRrt88X6LT3sdeBrVg/SIuSCPYTz3CK56o4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vay/3OCkN2Ju9iqSAfEnNN4eQH/R/xlFixSmLZA4PJjI7iEhYXoiFf0PdaBsgYHTD
-	 +zVXmWxGzbCaxaiTbmDWlHHcL7pZOe2v+23DYwvGu1iMOBawCN5N3Vvy09cCmtRmNo
-	 wHNEOLG2ZQ5zcFiaNtcuZVpbUzx44fVDVOnYM9Y4=
+	b=DfJh+X+mHFHLGFkt4CYCXbUNAMxtGJG9mA3b8/mA+5UGFWIFg8XcYSJmWZ0duDxuk
+	 fhs/SZXC/adiWnuYnFNkHKY0khG6MdvuuIH/rdmnxrfGQvZ4DAJOtgJaqK3u8l5VXN
+	 aLrAMPRhTvb5WHXIOFIJWV+6aBO1oXvL7wAfqPM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbfJ0VJc (ORCPT
+        id S1732862AbfJ0VfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:09:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55808 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:35:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728255AbfJ0VJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:09:26 -0400
+        id S1728629AbfJ0VJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:09:31 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC66020873;
-        Sun, 27 Oct 2019 21:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CF61208C0;
+        Sun, 27 Oct 2019 21:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210565;
-        bh=5rGOHxdHV9ZIQXqg1PPXAB+NumLzZ2ZkyPS4HKwri8I=;
+        s=default; t=1572210570;
+        bh=Fjix/1wYoRrt88X6LT3sdeBrVg/SIuSCPYTz3CK56o4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1LYp7NxR6NMvt4fuPzr187wJcPGBiHIDOkWMDKBK/fzYLD2MgyqTwNU+m+XU3wTv
-         GFUPSjkPM3l5/rb79y3ZBuawin7V07ORsF8ptRLYyY/VSCWZ16mtmTZG1mN6BeiXeS
-         sbPJVCx8lnb2is0liENyfu07xvf8vZ9/X05JaUrw=
+        b=JokZBiY0VUNAMXICgPjv7FQDGONqtna7vHmzmCSSSyIb23/Cwyu/28XWRltOCpFyW
+         8836+b1b5C+he5HGMKxxbszCmLMKigyEKZ/tsT+X44tExuYSnfdqbPYTb0Qyvb1Ti3
+         +cfU1gaNIVcd3oZ6Kf5KN84M/6gKPKUF+N1/s7R4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
         Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Dave Martin <dave.martin@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 060/119] arm64: capabilities: Change scope of VHE to Boot CPU feature
-Date:   Sun, 27 Oct 2019 22:00:37 +0100
-Message-Id: <20191027203326.326345015@linuxfoundation.org>
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 4.14 062/119] arm64: Add helpers for checking CPU MIDR against a range
+Date:   Sun, 27 Oct 2019 22:00:39 +0100
+Message-Id: <20191027203328.256976128@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -64,144 +64,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 830dcc9f9a7cd26a812522a26efaacf7df6fc365 ]
+[ Upstream commit 1df310505d6d544802016f6bae49aab836ae8510 ]
 
-We expect all CPUs to be running at the same EL inside the kernel
-with or without VHE enabled and we have strict checks to ensure
-that any mismatch triggers a kernel panic. If VHE is enabled,
-we use the feature based on the boot CPU and all other CPUs
-should follow. This makes it a perfect candidate for a capability
-based on the boot CPU,  which should be matched by all the CPUs
-(both when is ON and OFF). This saves us some not-so-pretty
-hooks and special code, just for verifying the conflict.
+Add helpers for checking if the given CPU midr falls in a range
+of variants/revisions for a given model.
 
-The patch also makes the VHE capability entry depend on
-CONFIG_ARM64_VHE.
-
-Cc: Marc Zyngier <marc.zyngier@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Reviewed-by: Dave Martin <dave.martin@arm.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/include/asm/cpufeature.h |    6 +++++
- arch/arm64/include/asm/virt.h       |    6 -----
- arch/arm64/kernel/cpufeature.c      |    5 ++--
- arch/arm64/kernel/smp.c             |   38 ------------------------------------
- 4 files changed, 9 insertions(+), 46 deletions(-)
+ arch/arm64/include/asm/cpufeature.h |    4 ++--
+ arch/arm64/include/asm/cputype.h    |   30 ++++++++++++++++++++++++++++++
+ arch/arm64/kernel/cpu_errata.c      |   18 +++++++-----------
+ 3 files changed, 39 insertions(+), 13 deletions(-)
 
 --- a/arch/arm64/include/asm/cpufeature.h
 +++ b/arch/arm64/include/asm/cpufeature.h
-@@ -283,6 +283,12 @@ extern struct arm64_ftr_reg arm64_ftr_re
- 	(ARM64_CPUCAP_SCOPE_LOCAL_CPU		|	\
- 	 ARM64_CPUCAP_OPTIONAL_FOR_LATE_CPU)
+@@ -10,6 +10,7 @@
+ #define __ASM_CPUFEATURE_H
  
-+/*
-+ * CPU feature used early in the boot based on the boot CPU. All secondary
-+ * CPUs must match the state of the capability as detected by the boot CPU.
+ #include <asm/cpucaps.h>
++#include <asm/cputype.h>
+ #include <asm/hwcap.h>
+ #include <asm/sysreg.h>
+ 
+@@ -302,8 +303,7 @@ struct arm64_cpu_capabilities {
+ 	void (*cpu_enable)(const struct arm64_cpu_capabilities *cap);
+ 	union {
+ 		struct {	/* To be used for erratum handling only */
+-			u32 midr_model;
+-			u32 midr_range_min, midr_range_max;
++			struct midr_range midr_range;
+ 		};
+ 
+ 		struct {	/* Feature register checking */
+--- a/arch/arm64/include/asm/cputype.h
++++ b/arch/arm64/include/asm/cputype.h
+@@ -126,6 +126,36 @@
+ #define read_cpuid(reg)			read_sysreg_s(SYS_ ## reg)
+ 
+ /*
++ * Represent a range of MIDR values for a given CPU model and a
++ * range of variant/revision values.
++ *
++ * @model	- CPU model as defined by MIDR_CPU_MODEL
++ * @rv_min	- Minimum value for the revision/variant as defined by
++ *		  MIDR_CPU_VAR_REV
++ * @rv_max	- Maximum value for the variant/revision for the range.
 + */
-+#define ARM64_CPUCAP_STRICT_BOOT_CPU_FEATURE ARM64_CPUCAP_SCOPE_BOOT_CPU
++struct midr_range {
++	u32 model;
++	u32 rv_min;
++	u32 rv_max;
++};
 +
- struct arm64_cpu_capabilities {
- 	const char *desc;
- 	u16 capability;
---- a/arch/arm64/include/asm/virt.h
-+++ b/arch/arm64/include/asm/virt.h
-@@ -102,12 +102,6 @@ static inline bool has_vhe(void)
- 	return false;
- }
- 
--#ifdef CONFIG_ARM64_VHE
--extern void verify_cpu_run_el(void);
--#else
--static inline void verify_cpu_run_el(void) {}
--#endif
--
- #endif /* __ASSEMBLY__ */
- 
- #endif /* ! __ASM__VIRT_H */
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -982,13 +982,15 @@ static const struct arm64_cpu_capabiliti
- 		.matches = cpufeature_pan_not_uao,
- 	},
- #endif /* CONFIG_ARM64_PAN */
-+#ifdef CONFIG_ARM64_VHE
- 	{
- 		.desc = "Virtualization Host Extensions",
- 		.capability = ARM64_HAS_VIRT_HOST_EXTN,
--		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
-+		.type = ARM64_CPUCAP_STRICT_BOOT_CPU_FEATURE,
- 		.matches = runs_at_el2,
- 		.cpu_enable = cpu_copy_el2regs,
- 	},
-+#endif	/* CONFIG_ARM64_VHE */
- 	{
- 		.desc = "32-bit EL0 Support",
- 		.capability = ARM64_HAS_32BIT_EL0,
-@@ -1332,7 +1334,6 @@ static bool verify_local_cpu_caps(u16 sc
-  */
- static void check_early_cpu_features(void)
++#define MIDR_RANGE(m, v_min, r_min, v_max, r_max)		\
++	{							\
++		.model = m,					\
++		.rv_min = MIDR_CPU_VAR_REV(v_min, r_min),	\
++		.rv_max = MIDR_CPU_VAR_REV(v_max, r_max),	\
++	}
++
++#define MIDR_ALL_VERSIONS(m) MIDR_RANGE(m, 0, 0, 0xf, 0xf)
++
++static inline bool is_midr_in_range(u32 midr, struct midr_range const *range)
++{
++	return MIDR_IS_CPU_MODEL_RANGE(midr, range->model,
++				 range->rv_min, range->rv_max);
++}
++
++/*
+  * The CPU ID never changes at run time, so we might as well tell the
+  * compiler that it's constant.  Use this function to read the CPU ID
+  * rather than directly reading processor_id or read_cpuid() directly.
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -26,10 +26,10 @@
+ static bool __maybe_unused
+ is_affected_midr_range(const struct arm64_cpu_capabilities *entry, int scope)
  {
--	verify_cpu_run_el();
- 	verify_cpu_asid_bits();
- 	/*
- 	 * Early features are used by the kernel already. If there
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -83,43 +83,6 @@ enum ipi_msg_type {
- 	IPI_WAKEUP
- };
- 
--#ifdef CONFIG_ARM64_VHE
--
--/* Whether the boot CPU is running in HYP mode or not*/
--static bool boot_cpu_hyp_mode;
--
--static inline void save_boot_cpu_run_el(void)
--{
--	boot_cpu_hyp_mode = is_kernel_in_hyp_mode();
--}
--
--static inline bool is_boot_cpu_in_hyp_mode(void)
--{
--	return boot_cpu_hyp_mode;
--}
--
--/*
-- * Verify that a secondary CPU is running the kernel at the same
-- * EL as that of the boot CPU.
-- */
--void verify_cpu_run_el(void)
--{
--	bool in_el2 = is_kernel_in_hyp_mode();
--	bool boot_cpu_el2 = is_boot_cpu_in_hyp_mode();
--
--	if (in_el2 ^ boot_cpu_el2) {
--		pr_crit("CPU%d: mismatched Exception Level(EL%d) with boot CPU(EL%d)\n",
--					smp_processor_id(),
--					in_el2 ? 2 : 1,
--					boot_cpu_el2 ? 2 : 1);
--		cpu_panic_kernel();
--	}
--}
--
--#else
--static inline void save_boot_cpu_run_el(void) {}
--#endif
--
- #ifdef CONFIG_HOTPLUG_CPU
- static int op_cpu_kill(unsigned int cpu);
- #else
-@@ -448,7 +411,6 @@ void __init smp_prepare_boot_cpu(void)
- 	 */
- 	jump_label_init();
- 	cpuinfo_store_boot_cpu();
--	save_boot_cpu_run_el();
++	u32 midr = read_cpuid_id();
++
+ 	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
+-	return MIDR_IS_CPU_MODEL_RANGE(read_cpuid_id(), entry->midr_model,
+-				       entry->midr_range_min,
+-				       entry->midr_range_max);
++	return is_midr_in_range(midr, &entry->midr_range);
  }
  
- static u64 __init of_get_cpu_mpidr(struct device_node *dn)
+ static bool __maybe_unused
+@@ -43,7 +43,7 @@ is_kryo_midr(const struct arm64_cpu_capa
+ 	model &= MIDR_IMPLEMENTOR_MASK | (0xf00 << MIDR_PARTNUM_SHIFT) |
+ 		 MIDR_ARCHITECTURE_MASK;
+ 
+-	return model == entry->midr_model;
++	return model == entry->midr_range.model;
+ }
+ 
+ static bool
+@@ -407,15 +407,11 @@ static bool has_ssbd_mitigation(const st
+ 
+ #define CAP_MIDR_RANGE(model, v_min, r_min, v_max, r_max)	\
+ 	.matches = is_affected_midr_range,			\
+-	.midr_model = model,					\
+-	.midr_range_min = MIDR_CPU_VAR_REV(v_min, r_min),	\
+-	.midr_range_max = MIDR_CPU_VAR_REV(v_max, r_max)
++	.midr_range = MIDR_RANGE(model, v_min, r_min, v_max, r_max)
+ 
+ #define CAP_MIDR_ALL_VERSIONS(model)					\
+ 	.matches = is_affected_midr_range,				\
+-	.midr_model = model,						\
+-	.midr_range_min = MIDR_CPU_VAR_REV(0, 0),			\
+-	.midr_range_max = (MIDR_VARIANT_MASK | MIDR_REVISION_MASK)
++	.midr_range = MIDR_ALL_VERSIONS(model)
+ 
+ #define MIDR_FIXED(rev, revidr_mask) \
+ 	.fixed_revs = (struct arm64_midr_revidr[]){{ (rev), (revidr_mask) }, {}}
+@@ -556,7 +552,7 @@ const struct arm64_cpu_capabilities arm6
+ 		.desc = "Qualcomm Technologies Kryo erratum 1003",
+ 		.capability = ARM64_WORKAROUND_QCOM_FALKOR_E1003,
+ 		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
+-		.midr_model = MIDR_QCOM_KRYO,
++		.midr_range.model = MIDR_QCOM_KRYO,
+ 		.matches = is_kryo_midr,
+ 	},
+ #endif
 
 
