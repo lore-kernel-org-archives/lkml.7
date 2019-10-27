@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C56CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6222ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E9F2070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A232064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211370;
-	bh=p8TQo0aB/eU1a0RImXzGrF98fzdSnVnNJ7C/l+abCjM=;
+	s=default; t=1572211374;
+	bh=lCqS4E0uEPjyXJmJtHuFFGjg724ePFJdZapNyiHa+hE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L7s9KCZ7rkwd+9Avdk3Cd9aYNSUCFMi7e6bshrdI+blLLaqMtD7/uGxj7yPKyCAXy
-	 W0n/K2qP1F0WXUEhuwGxdcbTlmiiFdoMvyktK66NEI9Lw/wLAd3Lt2D3FMDz/c4RWn
-	 tgVGxo4Fxoeem6nXY+NRjnDR9CsB7copf1c9dbaM=
+	b=giI34ZAYGFNMXN/uNEIGfeYm7RjOSVx73fjqjK2GThLomU1XLfmLuDStUZu13zD1W
+	 hXFE5PvR6iL7LTatrKPuKihtGum1Qn/r1pXVFxXCrydDbxabisI7FFje3uvsrXsokt
+	 HqygWFlY0KgnOXiiCC/PNDrrPFVYNuKHnGfX4174=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732238AbfJ0VWt (ORCPT
+        id S1731579AbfJ0VWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:22:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43876 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732227AbfJ0VWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:22:47 -0400
+        id S1728739AbfJ0VWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:22:49 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6093D21D81;
-        Sun, 27 Oct 2019 21:22:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19DD4205C9;
+        Sun, 27 Oct 2019 21:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211365;
-        bh=p8TQo0aB/eU1a0RImXzGrF98fzdSnVnNJ7C/l+abCjM=;
+        s=default; t=1572211368;
+        bh=lCqS4E0uEPjyXJmJtHuFFGjg724ePFJdZapNyiHa+hE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J/aeJxsUZE+OM9qQRMokAKY3PvGrm/2SXQB/XLXEdqTGoFm0Vav2S/7og6I8b/MeS
-         r4DMLJKXnvMt6FeXEkOf4aXktQfQGC2JoskghzizV2BUAX0CTwKNoW3qBMM++J9Fz9
-         KYL/aTIgBkBqdkNTJrV5+ISsnVP/V7pz7Zyxo3Fc=
+        b=WeXRP9onOgp/092WsvlkH7Ul05NIB7IuMzhuJET0wyLRQ41fOycWNzlXCXB34q+PL
+         wC57TEgskHRneBjZTfHYS7WRyU+/j7V9vgtIYOs4OFByDebzapMJPd5kIidqQtajnE
+         nLxjo0K9Ppjl8CDPKATM6H9MULJsgmWRJ9qtJaSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 089/197] netdevsim: Fix error handling in nsim_fib_init and nsim_fib_exit
-Date:   Sun, 27 Oct 2019 22:00:07 +0100
-Message-Id: <20191027203356.553994320@linuxfoundation.org>
+        stable@vger.kernel.org, Souptick Joarder <jrdr.linux@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: [PATCH 5.3 125/197] drm/ttm: Restore ttm prefaulting
+Date:   Sun, 27 Oct 2019 22:00:43 +0100
+Message-Id: <20191027203358.480134362@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,115 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-[ Upstream commit 33902b4a4227877896dd9368ac10f4ca0d100de5 ]
+commit 941f2f72dbbe0cf8c2d6e0b180a8021a0ec477fa upstream.
 
-In nsim_fib_init(), if register_fib_notifier failed, nsim_fib_net_ops
-should be unregistered before return.
+Commit 4daa4fba3a38 ("gpu: drm: ttm: Adding new return type vm_fault_t")
+broke TTM prefaulting. Since vmf_insert_mixed() typically always returns
+VM_FAULT_NOPAGE, prefaulting stops after the second PTE.
 
-In nsim_fib_exit(), unregister_fib_notifier should be called before
-nsim_fib_net_ops be unregistered, otherwise may cause use-after-free:
+Restore (almost) the original behaviour. Unfortunately we can no longer
+with the new vm_fault_t return type determine whether a prefaulting
+PTE insertion hit an already populated PTE, and terminate the insertion
+loop. Instead we continue with the pre-determined number of prefaults.
 
-BUG: KASAN: use-after-free in nsim_fib_event_nb+0x342/0x570 [netdevsim]
-Read of size 8 at addr ffff8881daaf4388 by task kworker/0:3/3499
-
-CPU: 0 PID: 3499 Comm: kworker/0:3 Not tainted 5.3.0-rc7+ #30
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Workqueue: ipv6_addrconf addrconf_dad_work [ipv6]
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- print_address_description+0x65/0x380 mm/kasan/report.c:351
- __kasan_report+0x149/0x18d mm/kasan/report.c:482
- kasan_report+0xe/0x20 mm/kasan/common.c:618
- nsim_fib_event_nb+0x342/0x570 [netdevsim]
- notifier_call_chain+0x52/0xf0 kernel/notifier.c:95
- __atomic_notifier_call_chain+0x78/0x140 kernel/notifier.c:185
- call_fib_notifiers+0x30/0x60 net/core/fib_notifier.c:30
- call_fib6_entry_notifiers+0xc1/0x100 [ipv6]
- fib6_add+0x92e/0x1b10 [ipv6]
- __ip6_ins_rt+0x40/0x60 [ipv6]
- ip6_ins_rt+0x84/0xb0 [ipv6]
- __ipv6_ifa_notify+0x4b6/0x550 [ipv6]
- ipv6_ifa_notify+0xa5/0x180 [ipv6]
- addrconf_dad_completed+0xca/0x640 [ipv6]
- addrconf_dad_work+0x296/0x960 [ipv6]
- process_one_work+0x5c0/0xc00 kernel/workqueue.c:2269
- worker_thread+0x5c/0x670 kernel/workqueue.c:2415
- kthread+0x1d7/0x200 kernel/kthread.c:255
- ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-Allocated by task 3388:
- save_stack+0x19/0x80 mm/kasan/common.c:69
- set_track mm/kasan/common.c:77 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:493
- kmalloc include/linux/slab.h:557 [inline]
- kzalloc include/linux/slab.h:748 [inline]
- ops_init+0xa9/0x220 net/core/net_namespace.c:127
- __register_pernet_operations net/core/net_namespace.c:1135 [inline]
- register_pernet_operations+0x1d4/0x420 net/core/net_namespace.c:1212
- register_pernet_subsys+0x24/0x40 net/core/net_namespace.c:1253
- nsim_fib_init+0x12/0x70 [netdevsim]
- veth_get_link_ksettings+0x2b/0x50 [veth]
- do_one_initcall+0xd4/0x454 init/main.c:939
- do_init_module+0xe0/0x330 kernel/module.c:3490
- load_module+0x3c2f/0x4620 kernel/module.c:3841
- __do_sys_finit_module+0x163/0x190 kernel/module.c:3931
- do_syscall_64+0x72/0x2e0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 3534:
- save_stack+0x19/0x80 mm/kasan/common.c:69
- set_track mm/kasan/common.c:77 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:455
- slab_free_hook mm/slub.c:1423 [inline]
- slab_free_freelist_hook mm/slub.c:1474 [inline]
- slab_free mm/slub.c:3016 [inline]
- kfree+0xe9/0x2d0 mm/slub.c:3957
- ops_free net/core/net_namespace.c:151 [inline]
- ops_free_list.part.7+0x156/0x220 net/core/net_namespace.c:184
- ops_free_list net/core/net_namespace.c:182 [inline]
- __unregister_pernet_operations net/core/net_namespace.c:1165 [inline]
- unregister_pernet_operations+0x221/0x2a0 net/core/net_namespace.c:1224
- unregister_pernet_subsys+0x1d/0x30 net/core/net_namespace.c:1271
- nsim_fib_exit+0x11/0x20 [netdevsim]
- nsim_module_exit+0x16/0x21 [netdevsim]
- __do_sys_delete_module kernel/module.c:1015 [inline]
- __se_sys_delete_module kernel/module.c:958 [inline]
- __x64_sys_delete_module+0x244/0x330 kernel/module.c:958
- do_syscall_64+0x72/0x2e0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 59c84b9fcf42 ("netdevsim: Restore per-network namespace accounting for fib entries")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4daa4fba3a38 ("gpu: drm: ttm: Adding new return type vm_fault_t")
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: Christian König <christian.koenig@amd.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/330387/
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/netdevsim/fib.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/netdevsim/fib.c
-+++ b/drivers/net/netdevsim/fib.c
-@@ -241,8 +241,8 @@ static struct pernet_operations nsim_fib
+---
+ drivers/gpu/drm/ttm/ttm_bo_vm.c |   16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
+--- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+@@ -278,15 +278,13 @@ static vm_fault_t ttm_bo_vm_fault(struct
+ 		else
+ 			ret = vmf_insert_pfn(&cvma, address, pfn);
  
- void nsim_fib_exit(void)
- {
--	unregister_pernet_subsys(&nsim_fib_net_ops);
- 	unregister_fib_notifier(&nsim_fib_nb);
-+	unregister_pernet_subsys(&nsim_fib_net_ops);
- }
+-		/*
+-		 * Somebody beat us to this PTE or prefaulting to
+-		 * an already populated PTE, or prefaulting error.
+-		 */
+-
+-		if (unlikely((ret == VM_FAULT_NOPAGE && i > 0)))
+-			break;
+-		else if (unlikely(ret & VM_FAULT_ERROR))
+-			goto out_io_unlock;
++		/* Never error on prefaulted PTEs */
++		if (unlikely((ret & VM_FAULT_ERROR))) {
++			if (i == 0)
++				goto out_io_unlock;
++			else
++				break;
++		}
  
- int nsim_fib_init(void)
-@@ -258,6 +258,7 @@ int nsim_fib_init(void)
- 	err = register_fib_notifier(&nsim_fib_nb, nsim_fib_dump_inconsistent);
- 	if (err < 0) {
- 		pr_err("Failed to register fib notifier\n");
-+		unregister_pernet_subsys(&nsim_fib_net_ops);
- 		goto err_out;
- 	}
- 
+ 		address += PAGE_SIZE;
+ 		if (unlikely(++page_offset >= page_last))
 
 
