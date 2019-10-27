@@ -2,152 +2,83 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0289CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90555CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E2621D7F
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659F321850
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:22:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dUZFeTqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfJ0PTp (ORCPT
+        id S1727244AbfJ0PWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 11:19:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34970 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbfJ0PTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 11:19:44 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 450EAC049E12
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 15:19:44 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id q22so2396405wmc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 08:19:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JvVHDWrg8kpWgm0TThMdqhOJom1+KkBM1yfK666tdK4=;
-        b=tfeLk+25zZfbxmCPHOCpDCqL6wnAyT8SgcD0p4zyz8Jyy37tuibkltHP5o/rZIjAsP
-         M+44LGm/9+5OgyQjAFSYhXyzr603us6KQOJ+wrXtV4NfC+MdDrwvC0cdoq1jWWukj8+k
-         eU0cgj69tDmlf9Rm3238AoBKsqeGBVMN2t3gCeIEJwtPEJEoCeOjmjkO22xW4gSqdzuS
-         8F9ZmfZnJjVBAJMHETVdUIK+dtZX2570SbBeA+m2VwyOL4783FoewT4JxdRSfIMBtrFX
-         2gJPAX5TrtjcIxWiarGhABniZ3bE8B0BnlWnyHN3T2cc6Ij2BQuLVcnNA0AgwlAgOa8A
-         fYxg==
-X-Gm-Message-State: APjAAAXmvwJjjS4R1eykk72QQ8JTj+bshcRBkwajRGSPipE5L56a/Qkm
-        X36sENxtLIp6WAWd3643znxyd8VbdcHTX4ABJCwo8dUt5RGi55q6oBw4B0QwbAsYfpdgd77de+J
-        S6DRf9RWVIb6fortdaoKi/ZaG
-X-Received: by 2002:adf:94e2:: with SMTP id 89mr10328947wrr.259.1572189583020;
-        Sun, 27 Oct 2019 08:19:43 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzvdVn0aiYq7FrT5RVLqx0MXimGTzauHTpKqpbORHqbfFJoV/X9338sWHQK9x3m/KY2jVMJ9Q==
-X-Received: by 2002:adf:94e2:: with SMTP id 89mr10328926wrr.259.1572189582760;
-        Sun, 27 Oct 2019 08:19:42 -0700 (PDT)
-Received: from vitty.brq.redhat.com ([193.43.158.229])
-        by smtp.gmail.com with ESMTPSA id l15sm3649473wmh.18.2019.10.27.08.19.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 08:19:41 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v3] x86/hyper-v: micro-optimize send_ipi_one case
-Date:   Sun, 27 Oct 2019 16:19:38 +0100
-Message-Id: <20191027151938.7296-1-vkuznets@redhat.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 27 Oct 2019 11:22:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43966 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbfJ0PWa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 11:22:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ABDhaHUlk58M0GS8x0OMrJzxXgr2v5RmyRmLK7Waq+g=; b=dUZFeTqfxrYApphqMY5veHBsj
+        A+RBT+sV9JAtjLVJ+WGOvwNXNw/oX5Nmdvk/AvVWpQtUikMzhdcFtLs1khOn6BULZkyos9EyCedJ5
+        hnt6JriZauG8vb9KgHx/w5MlX/0VsPY2qith2hEChaeTwdY1U4gqTqvfXNegsgqDSyxL508wE6OTp
+        rSaIg8nxkLmtsXAZhqw2s7U224aDC3inBSdoJfjj10LxclpiVy3dsmRybQQ2cjBiPNh9YfQem1O52
+        i64kZVSne/xbFmaWrYMJPXP1/NB8tION2wFu8JyUehQlS7P6++7uDvnUPpIJ80aCkyA7RRWHTg8rb
+        VpLLc/GSg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iOkN5-0005Zc-Hn; Sun, 27 Oct 2019 15:22:23 +0000
+Date:   Sun, 27 Oct 2019 08:22:23 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 11/10] pipe: Add fsync() support [ver #2]
+Message-ID: <20191027152223.GA21194@infradead.org>
+References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+ <30394.1571936252@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30394.1571936252@warthog.procyon.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When sending an IPI to a single CPU there is no need to deal with cpumasks.
-With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
-cycles) improvement with smp_call_function_single() loop benchmark. The
-optimization, however, is tiny and straitforward. Also, send_ipi_one() is
-important for PV spinlock kick.
+On Thu, Oct 24, 2019 at 05:57:32PM +0100, David Howells wrote:
+> pipe: Add fsync() support
+> 
+> The keyrings testsuite needs the ability to wait for all the outstanding
+> notifications in the queue to have been processed so that it can then go
+> through them to find out whether the notifications it expected have been
+> emitted.
+> 
+> Implement fsync() support for pipes to provide this.  The tailmost buffer
+> at the point of calling is marked and fsync adds itself to the list of
+> waiters, noting the tail position to be waited for and marking the buffer
+> as no longer mergeable.  Then when the buffer is consumed, if the flag is
+> set, any matching waiters are woken up.
 
-I was also wondering if it would make sense to switch to using regular
-APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
-cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
-vector)).
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-Changes since v2:
- - Check VP number instead of CPU number against >= 64 [Michael]
- - Check for VP_INVAL
----
- arch/x86/hyperv/hv_apic.c           | 16 +++++++++++++---
- arch/x86/include/asm/trace/hyperv.h | 15 +++++++++++++++
- 2 files changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index e01078e93dd3..40e0e322161d 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -194,10 +194,20 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
- 
- static bool __send_ipi_one(int cpu, int vector)
- {
--	struct cpumask mask = CPU_MASK_NONE;
-+	int vp = hv_cpu_number_to_vp_number(cpu);
- 
--	cpumask_set_cpu(cpu, &mask);
--	return __send_ipi_mask(&mask, vector);
-+	trace_hyperv_send_ipi_one(cpu, vector);
-+
-+	if (!hv_hypercall_pg || (vp == VP_INVAL))
-+		return false;
-+
-+	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
-+		return false;
-+
-+	if (vp >= 64)
-+		return __send_ipi_mask_ex(cpumask_of(cpu), vector);
-+
-+	return !hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector, BIT_ULL(vp));
- }
- 
- static void hv_send_ipi(int cpu, int vector)
-diff --git a/arch/x86/include/asm/trace/hyperv.h b/arch/x86/include/asm/trace/hyperv.h
-index ace464f09681..4d705cb4d63b 100644
---- a/arch/x86/include/asm/trace/hyperv.h
-+++ b/arch/x86/include/asm/trace/hyperv.h
-@@ -71,6 +71,21 @@ TRACE_EVENT(hyperv_send_ipi_mask,
- 		      __entry->ncpus, __entry->vector)
- 	);
- 
-+TRACE_EVENT(hyperv_send_ipi_one,
-+	    TP_PROTO(int cpu,
-+		     int vector),
-+	    TP_ARGS(cpu, vector),
-+	    TP_STRUCT__entry(
-+		    __field(int, cpu)
-+		    __field(int, vector)
-+		    ),
-+	    TP_fast_assign(__entry->cpu = cpu;
-+			   __entry->vector = vector;
-+		    ),
-+	    TP_printk("cpu %d vector %x",
-+		      __entry->cpu, __entry->vector)
-+	);
-+
- #endif /* CONFIG_HYPERV */
- 
- #undef TRACE_INCLUDE_PATH
--- 
-2.20.1
-
+I am _really_ worried about overloading fsync for this behavior.  fsync
+hasn't done anything for 50 years, and suddenly adding any action
+is not helpful.  If you can't use FIONREAD please add a new ioctls
+instead, and document it properly.
