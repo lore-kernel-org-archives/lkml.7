@@ -2,160 +2,134 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE3ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA29CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B13620679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lgw5oiCk"
+	by mail.kernel.org (Postfix) with ESMTP id C459D20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfJ0TCH (ORCPT
+        id S1727954AbfJ0THu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 15:02:07 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44909 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727414AbfJ0TCH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 15:02:07 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q26so1452906pfn.11
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 12:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=wgXJkM4LlINZksD97TnNf02/xyfzFX94gQb26FvFADg=;
-        b=lgw5oiCksRFHX8luQUz4XSah8LRBE+YIx8H0AwT27EQX83lAmR8ql1WNKLWdEAVgyH
-         widD4Dc8EUPHqYOs/JrfjdQSDtKbj8rM2DHKFIQiaM7S2bfDhllbBdrNyjiFPJfq3/JQ
-         /SxGleTqUEbsgc/93PGQ35nfjrVpesxWsldnVvNjGN5hF9mSgEGJVL25hUt5nKto/+UB
-         z7WFkuQWDgxvnTQwEO4Qotl2NIhrZ7m5dPYiQhPTNIHVYKa6hzOVAVwMrn/moMOxsfJW
-         tMzKq6FYLWEt2s7tn08HxJwN77cEL2lJUO5uN0IN87vENWBJXNJg+c1qjlQz1zNRJfdo
-         scbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wgXJkM4LlINZksD97TnNf02/xyfzFX94gQb26FvFADg=;
-        b=Zvz4WBkzhQSQURNASmOS+xLUaqpkFZ+cjeYJuCWM7BZ7VlfW03VPO7M+LxAxQMzzN5
-         xzOTB9/154nL9WgMS23Yh3z/CIKnNlBnKCr6udmxVivNnYFZhglNyE9b/0vgcGodeFJr
-         /acszV/0lA35HCjCZBEOK+dIiKZ9jYtDa+oBZsJOvkHD9d7bSHOmTjfwx9aInJiP3Mjj
-         SK95kTfdG6Pyn/kKqQOmyXcw+p4xH5u+4J+6MVV5FTXKtkzyrrgV1kEg1mQKtGSykspj
-         VkPXwUxvN5s11KRjQH+dtTHhUrDoLhCpNQVp3HTOdT4jS24b5qDPzDw4Dyw7anq5ty0j
-         seOQ==
-X-Gm-Message-State: APjAAAXfxuOFq24ZJ1q9yvB1huRQ2dpfLl+ZxC5UpewMrhsEqnn698B+
-        vTFmE/n8QCHcvfE4NiRoIc9SzBNaWUJXmQ==
-X-Google-Smtp-Source: APXvYqwvrQ34A6w/KBTeYyz5Y5SXBFCdNOgKn9TyMiCQo+awUERZkXv0ZowDc4wRRkkt9VlBWvMJQQ==
-X-Received: by 2002:a63:8f5e:: with SMTP id r30mr8302248pgn.146.1572202924538;
-        Sun, 27 Oct 2019 12:02:04 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id b14sm8343477pfi.95.2019.10.27.12.02.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 27 Oct 2019 12:02:03 -0700 (PDT)
-Subject: Re: [PATCH 0/2][for-next] cleanup submission path
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1572189860.git.asml.silence@gmail.com>
- <666ed447-ba8f-29e7-237f-de8044aa63ea@kernel.dk>
- <5ec9bd14-d8f2-32e6-7f25-0ca7256c408a@gmail.com>
- <aac65fe2-6c51-3baf-eee7-af5a8f633bf2@kernel.dk>
- <d39a878f-9dac-1457-6bba-01afc6268a84@kernel.dk>
- <57db9960-0b31-9f40-c13b-1db6dcc88920@gmail.com>
- <02a25d12-1f44-de18-f233-b5421c608469@kernel.dk>
- <63f93f8a-4207-3ac4-a301-4907882009c9@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <728dec9c-465c-2341-d7b5-929a50400e9c@kernel.dk>
-Date:   Sun, 27 Oct 2019 13:02:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <63f93f8a-4207-3ac4-a301-4907882009c9@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 27 Oct 2019 15:07:50 -0400
+Received: from gate.crashing.org ([63.228.1.57]:57536 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726974AbfJ0THu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 15:07:50 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9RJ7Apj017967;
+        Sun, 27 Oct 2019 14:07:10 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x9RJ79gY017964;
+        Sun, 27 Oct 2019 14:07:09 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Sun, 27 Oct 2019 14:07:09 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>, luto@kernel.org,
+        vincenzo.frascino@arm.com, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH] powerpc/32: Switch VDSO to C implementation.
+Message-ID: <20191027190709.GZ28442@gate.crashing.org>
+References: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr> <alpine.DEB.2.21.1910212312520.2078@nanos.tec.linutronix.de> <f4486e86-3c0c-0eec-1639-0e5956cdb8f1@c-s.fr> <95bd2367-8edc-29db-faa3-7729661e05f2@c-s.fr> <alpine.DEB.2.21.1910261751140.10190@nanos.tec.linutronix.de> <439bce37-9c2c-2afe-9c9e-2f500472f9f8@c-s.fr> <alpine.DEB.2.21.1910262026340.10190@nanos.tec.linutronix.de> <20191026230609.GY28442@gate.crashing.org> <8e4d0b82-a7a1-b7f1-308e-df871b32d317@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8e4d0b82-a7a1-b7f1-308e-df871b32d317@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/27/19 12:56 PM, Pavel Begunkov wrote:
-> On 27/10/2019 20:26, Jens Axboe wrote:
->> On 10/27/19 11:19 AM, Pavel Begunkov wrote:
->>> On 27/10/2019 19:56, Jens Axboe wrote:
->>>> On 10/27/19 10:49 AM, Jens Axboe wrote:
->>>>> On 10/27/19 10:44 AM, Pavel Begunkov wrote:
->>>>>> On 27/10/2019 19:32, Jens Axboe wrote:
->>>>>>> On 10/27/19 9:35 AM, Pavel Begunkov wrote:
->>>>>>>> A small cleanup of very similar but diverged io_submit_sqes() and
->>>>>>>> io_ring_submit()
->>>>>>>>
->>>>>>>> Pavel Begunkov (2):
->>>>>>>>        io_uring: handle mm_fault outside of submission
->>>>>>>>        io_uring: merge io_submit_sqes and io_ring_submit
->>>>>>>>
->>>>>>>>       fs/io_uring.c | 116 ++++++++++++++------------------------------------
->>>>>>>>       1 file changed, 33 insertions(+), 83 deletions(-)
->>>>>>>
->>>>>>> I like the cleanups here, but one thing that seems off is the
->>>>>>> assumption that io_sq_thread() always needs to grab the mm. If
->>>>>>> the sqes processed are just READ/WRITE_FIXED, then it never needs
->>>>>>> to grab the mm.
->>>>>>> Yeah, we removed it to fix bugs. Personally, I think it would be
->>>>>> clearer to do lazy grabbing conditionally, rather than have two
->>>>>> functions. And in this case it's easier to do after merging.
->>>>>>
->>>>>> Do you prefer to return it back first?
->>>>>
->>>>> Ah I see, no I don't care about that.
->>>>
->>>> OK, looked at the post-patches state. It's still not correct. You are
->>>> grabbing the mm from io_sq_thread() unconditionally. We should not do
->>>> that, only if the sqes we need to submit need mm context.
->>>>
->>> That's what my question to the fix was about :)
->>> 1. Then, what the case it could fail?
->>> 2. Is it ok to hold it while polling? It could keep it for quite
->>> a long time if host is swift, e.g. submit->poll->submit->poll-> ...
->>>
->>> Anyway, I will add it back and resend the patchset.
->>
->> If possible in a simple way, I'd prefer if we do it as a prep patch and
->> then queue that up for 5.4 since we now lost that optimization.  Then
->> layer the other 2 on top of that, since I'll just rebase the 5.5 stuff
->> on top of that.
->>
->> If not trivially possible for 5.4, then we'll just have to leave with it
->> in that release. For that case, you can fold the change in with these
->> two patches.
->>
-> Hmm, what's the semantics? I think we should fail only those who need
-> mm, but can't get it. The alternative is to fail all subsequent after
-> the first mm_fault.
+On Sun, Oct 27, 2019 at 10:21:25AM +0100, Christophe Leroy wrote:
+> Le 27/10/2019 à 01:06, Segher Boessenkool a écrit :
+> >The hand-optimised asm code will pretty likely win handsomely, whatever
+> >you do.  Especially on cores like the 885 (no branch prediction, single
+> >issue, small caches, etc.: every instruction counts).
+> >
+> >Is there any reason to replace this hand-optimised code?  It was written
+> >for exacty this reason?  These functions are critical and should be as
+> >fast as possible.
+> 
+> Well, all this started with COARSE clocks not being supported by PPC32 
+> VDSO. I first submitted a series with a set of optimisations including 
+> the implementation of COARSE clocks 
+> (https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=126779)
+> 
+> Then after a comment received on patch 4 of the series from Santosh 
+> Sivaraj asking for a common implementation of it for PPC32 and PPC64, I 
+> started looking into making the whole VDSO source code common to PPC32 
+> and PPC64. Most functions are similar. Time functions are also rather 
+> similar but unfortunately don't use the same registers. They also don't 
+> cover all possible clocks. And getres() is also buggy, see series 
+> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=110321
 
-For the sqthread setup, there's no notion of "do this many". It just
-grabs whatever it can and issues it. This means that the mm assign
-is really per-sqe. What we did before, with the batching, just optimized
-it so we'd only grab it for one batch IFF at least one sqe in that batch
-needed the mm.
+That is all nice work :-)
 
-Since you've killed the batching, I think the logic should be something
-ala:
+> So instead of reworking the existing time functions, I started 
+> investigating whether we could plug powerpc to the generic 
+> implementation. One drawback of PPC is that we need to setup an ASM 
+> trampoline to handle the SO bit as it can't be handled from C directly, 
+> can it ?
 
-if (io_sqe_needs_user(sqe) && !cur_mm)) {
-	if (already_attempted_mmget_and_failed_ {
-		-EFAULT end sqe
-	} else {
-		do mm_get and mmuse dance
-	}
-}
+There is no way to say what CR bits to return.  The ABI requires some of
+those bits to be preserved, and some are volatile.  System calls use a
+different ABI, one the compiler knows nothing about, so you cannot even
+show system calls as calls to the compiler.
 
-Hence if the sqe doesn't need the mm, doesn't matter if we previously
-failed. If we need the mm and previously failed, -EFAULT.
+> How critical are these functions ? Although we have a slight degration 
+> with the C implementation, they are still way faster than the 
+> corresponding syscall.
 
--- 
-Jens Axboe
+"Slight":
 
+	With current powerpc/32 ASM VDSO:
+
+	gettimeofday:    vdso: 750 nsec/call
+	clock-getres-realtime:    vdso: 382 nsec/call
+	clock-gettime-realtime:    vdso: 928 nsec/call
+	clock-getres-monotonic:    vdso: 382 nsec/call
+	clock-gettime-monotonic:    vdso: 1033 nsec/call
+
+	Once switched to C implementation:
+
+	gettimeofday:    vdso: 1533 nsec/call
+	clock-getres-realtime:    vdso: 853 nsec/call
+	clock-gettime-realtime:    vdso: 1570 nsec/call
+	clock-getres-monotonic:    vdso: 835 nsec/call
+	clock-gettime-monotonic:    vdso: 1605 nsec/call
+
+
+---> Those that are not more than two times slower are almost that. <---
+
+
+This also needs measurements on more representative PowerPC cores, say
+some G3 or G4; and on modern CPUs (Power7/8/9).
+
+It also needs context with those measurements: what CPU core is it?
+Running at what frequency clock?
+
+> Another thing I was wondering, is it worth using the 64 bit timebase on 
+> PPC32 ? As far as I understand, the timebase is there to calculate a 
+> linear date update since last VDSO datapage update. How often is the 
+> VDSO datapage updated ? On the 885 clocked at 132Mhz, the timebase is at 
+> 8.25 Mhz, which means it needs more than 8 minutes to loop over 32 bits.
+
+On most PowerPC cores the time base is incremented significantly faster.
+Usual speeds for older cores are 50MHz to 100MHz, and for newer cores ten
+times that.  Recommended frequency is currently 512MHz, so you'll wrap the
+low 32 bits in 8s or so on those, and in about a minute on many powermac
+etc. machines already.  How can you know this long hasn't passed since the
+last time you read the high half of the time base?  Without reading that
+high part?
+
+The current (assembler) code already optimises converting this to some
+other scale quite well, better than a compiler can (see __do_get_tspec).
+
+
+Segher
