@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECA4CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57068CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D50F2070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123C1208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211201;
-	bh=a35Svl5/lKHXrc2V5aFh4F8Q+GFYEOSVk+PbJ9K6IvQ=;
+	s=default; t=1572211203;
+	bh=MpeTyxLdGwSINKCEALywvaWEq2jpjZQmO+9Hqo0R9Hg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q2uZ+D4Q/gLPnBpGiZh7V2b34Wq1bJAEWgF9VUHSJm0emGUP6TDt+0RCz5BeeYXbD
-	 /N6DD38O3rPUKYY1cWdks10SCKMgAGGDfiOLuM6l53ib9ko0yl9UyUKo8v75XcIWhJ
-	 c8w9AiwS9jp0bDMVnQGuMGIKCIPl1fSO2EGLNtNo=
+	b=xVTI4TuWELdCPm7T/u7v5a0qJeG6Rn5SpiaNOI7wtLFpc9LcWgVXygq7+82RyRd/s
+	 k5hr9WaSiTdarSf8f1rF6dP0Utj/I2WBkXYYya5wd+Opx2/muJFWvRN1EKUzrIIM/Z
+	 oJi9grxXUTEwvraPFNLbmVXh2RtO6GhFZOpNRJTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731596AbfJ0VUA (ORCPT
+        id S1731605AbfJ0VUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:20:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40314 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:20:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730943AbfJ0VTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:19:52 -0400
+        id S1731590AbfJ0VT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:19:58 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A28352070B;
-        Sun, 27 Oct 2019 21:19:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CD8E205C9;
+        Sun, 27 Oct 2019 21:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211192;
-        bh=a35Svl5/lKHXrc2V5aFh4F8Q+GFYEOSVk+PbJ9K6IvQ=;
+        s=default; t=1572211198;
+        bh=MpeTyxLdGwSINKCEALywvaWEq2jpjZQmO+9Hqo0R9Hg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r0aG0ghh787D9gG6DQc6xbRFmEupgh3ylxYg7D4UfD8xSJLBzNZXiZc6XA7BBrwkF
-         OVP70XC9ssV1kLp2W62ySaTNDYGnwn18C5NYRPIcMlnfGoy/8yth2ipuHAw4QoXfV2
-         1LtutJ8EDWqJ3zbh+O5u1VI4HaKlV6hNdaAddbvE=
+        b=WM8svX4GU2RY2NXCOHjaP9bVjOcZPXrC186GnIF6mShSZnMnAuq6+nUYMZTqoaLmE
+         EbEMvVO+qGc85lCcQd1z80KYnqA4Xl2jgDY5I7Uj7+HGZpysuuhSaUReY849M3Gs1d
+         3VXXRHvfaiKWzxo0TN+wG+zW47SFOs0fRU0mbMJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Friedrich <afrie@gmx.net>,
-        Stephen Douthit <stephend@silicom-usa.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 064/197] libata/ahci: Fix PCS quirk application
-Date:   Sun, 27 Oct 2019 21:59:42 +0100
-Message-Id: <20191027203355.117224422@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 066/197] Revert "drm/radeon: Fix EEH during kexec"
+Date:   Sun, 27 Oct 2019 21:59:44 +0100
+Message-Id: <20191027203355.221286144@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,43 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 09d6ac8dc51a033ae0043c1fe40b4d02563c2496 ]
+[ Upstream commit 8d13c187c42e110625d60094668a8f778c092879 ]
 
-Commit c312ef176399 "libata/ahci: Drop PCS quirk for Denverton and
-beyond" got the polarity wrong on the check for which board-ids should
-have the quirk applied. The board type board_ahci_pcs7 is defined at the
-end of the list such that "pcs7" boards can be special cased in the
-future if they need the quirk. All prior Intel board ids "<
-board_ahci_pcs7" should proceed with applying the quirk.
+This reverts commit 6f7fe9a93e6c09bf988c5059403f5f88e17e21e6.
 
-Reported-by: Andreas Friedrich <afrie@gmx.net>
-Reported-by: Stephen Douthit <stephend@silicom-usa.com>
-Fixes: c312ef176399 ("libata/ahci: Drop PCS quirk for Denverton and beyond")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This breaks some boards.  Maybe just enable this on PPC for
+now?
+
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=205147
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/ahci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/radeon_drv.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index 3e63294304c72..691852b8bb41f 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -1617,7 +1617,9 @@ static void ahci_intel_pcs_quirk(struct pci_dev *pdev, struct ahci_host_priv *hp
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 5cc0fbb04ab14..7033f3a38c878 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -380,19 +380,11 @@ radeon_pci_remove(struct pci_dev *pdev)
+ static void
+ radeon_pci_shutdown(struct pci_dev *pdev)
+ {
+-	struct drm_device *ddev = pci_get_drvdata(pdev);
+-
+ 	/* if we are running in a VM, make sure the device
+ 	 * torn down properly on reboot/shutdown
  	 */
- 	if (!id || id->vendor != PCI_VENDOR_ID_INTEL)
- 		return;
--	if (((enum board_ids) id->driver_data) < board_ahci_pcs7)
-+
-+	/* Skip applying the quirk on Denverton and beyond */
-+	if (((enum board_ids) id->driver_data) >= board_ahci_pcs7)
- 		return;
+ 	if (radeon_device_is_virtual())
+ 		radeon_pci_remove(pdev);
+-
+-	/* Some adapters need to be suspended before a
+-	* shutdown occurs in order to prevent an error
+-	* during kexec.
+-	*/
+-	radeon_suspend_kms(ddev, true, true, false);
+ }
  
- 	/*
+ static int radeon_pmops_suspend(struct device *dev)
 -- 
 2.20.1
 
