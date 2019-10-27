@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3468CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB64FCA9EBE
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C2121726
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF2621850
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211443;
-	bh=7hY4aOUAT25qZzu5Zp8O4Xw+/lhFo9NIKHCkfDHF/X4=;
+	s=default; t=1572211446;
+	bh=PBAuqa8bf6EkANw75Ec/0dC2L0rQjMnIEdBZie01Rg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PcGVO1Gx9SMbCqqKxLxj01SCkQKNlgsvwSHI3xi59y174Jwvr39SnfXWn0tkINBhZ
-	 JEI7MjY6aT5/Guoe76GlZeo8SLg0vnHc/Ysqnoqb3VbtC9HnVDFNNL4DrN01AoljcA
-	 Fza2/GvlPaPz+8pvDY3Z4fQEjB2UcC0u4nuy894A=
+	b=ttkrg8W1f27azxoDTAXY5+xsnjuK/uspHLTjy27qY6ka7XhITAV/lKibWnXHsIobU
+	 b/jnfxTNBgQn9M8/3iRns1b+yLQ3sFAGO4y3/KlTbxgPoyt4TRG0bZlE2S2ft+PXxa
+	 VVpcWL9SpftZL+E4SjaPLURMqR3aFlN4NimEepLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732426AbfJ0VYC (ORCPT
+        id S1732438AbfJ0VYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45384 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732411AbfJ0VX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:23:58 -0400
+        id S1730777AbfJ0VYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:24:00 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6DAC21726;
-        Sun, 27 Oct 2019 21:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E51521726;
+        Sun, 27 Oct 2019 21:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211437;
-        bh=7hY4aOUAT25qZzu5Zp8O4Xw+/lhFo9NIKHCkfDHF/X4=;
+        s=default; t=1572211440;
+        bh=PBAuqa8bf6EkANw75Ec/0dC2L0rQjMnIEdBZie01Rg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UY8tI9vtur6aqXfarJt/QpbYSSKBDLUIgI8QUN84g1+QwQQFBjwBRTponuW2eSUiT
-         ZIUoZZ/m5jA38NP39uTTNQWzUxxErTF7oRGhic4FKUDYqhMR3nhPG5uqRiUeyeeryc
-         t9w4NQKe59rb2+eD4Xo8zUdI7Ek8qDjc9vK6hUBY=
+        b=1quUmj5MLL7g5U7yGuCHlnbPUnO55ko3H+5bV6P3csLHHATTgnfmN5P7CR/AmBu6U
+         iz6dL12ekIx+n7jE4Sp7EubJF8scCGTkG9bWeWjBxEzHVExcWXbTA+2QHSH2DRfxc8
+         nGnhn+ftn2Xl01oxK4W4qAPK+HTWuEDzLFoUyoCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        James Zhu <James.Zhu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.3 134/197] drm/amdgpu/uvd7: fix allocation size in enc ring test (v2)
-Date:   Sun, 27 Oct 2019 22:00:52 +0100
-Message-Id: <20191027203358.951696366@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Adam Ford <aford173@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 152/197] mm: memblock: do not enforce current limit for memblock_phys* family
+Date:   Sun, 27 Oct 2019 22:01:10 +0100
+Message-Id: <20191027203359.893319012@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,133 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-commit 5d230bc91f6c15e5d281f2851502918d98b9e770 upstream.
+commit f3057ad767542be7bbac44e548cb44017178a163 upstream.
 
-We need to allocate a large enough buffer for the
-session info, otherwise the IB test can overwrite
-other memory.
+Until commit 92d12f9544b7 ("memblock: refactor internal allocation
+functions") the maximal address for memblock allocations was forced to
+memblock.current_limit only for the allocation functions returning
+virtual address.  The changes introduced by that commit moved the limit
+enforcement into the allocation core and as a result the allocation
+functions returning physical address also started to limit allocations
+to memblock.current_limit.
 
-v2: - session info is 128K according to mesa
-    - use the same session info for create and destroy
+This caused breakage of etnaviv GPU driver:
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=204241
-Acked-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: James Zhu <James.Zhu@amd.com>
-Tested-by: James Zhu <James.Zhu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+  etnaviv etnaviv: bound 130000.gpu (ops gpu_ops)
+  etnaviv etnaviv: bound 134000.gpu (ops gpu_ops)
+  etnaviv etnaviv: bound 2204000.gpu (ops gpu_ops)
+  etnaviv-gpu 130000.gpu: model: GC2000, revision: 5108
+  etnaviv-gpu 130000.gpu: command buffer outside valid memory window
+  etnaviv-gpu 134000.gpu: model: GC320, revision: 5007
+  etnaviv-gpu 134000.gpu: command buffer outside valid memory window
+  etnaviv-gpu 2204000.gpu: model: GC355, revision: 1215
+  etnaviv-gpu 2204000.gpu: Ignoring GPU with VG and FE2.0
+
+Restore the behaviour of memblock_phys* family so that these functions
+will not enforce memblock.current_limit.
+
+Link: http://lkml.kernel.org/r/1570915861-17633-1-git-send-email-rppt@kernel.org
+Fixes: 92d12f9544b7 ("memblock: refactor internal allocation functions")
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reported-by: Adam Ford <aford173@gmail.com>
+Tested-by: Adam Ford <aford173@gmail.com>	[imx6q-logicpd]
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c |   33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ mm/memblock.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
-@@ -214,13 +214,14 @@ static int uvd_v7_0_enc_ring_test_ring(s
-  * Open up a stream for HW test
-  */
- static int uvd_v7_0_enc_get_create_msg(struct amdgpu_ring *ring, uint32_t handle,
-+				       struct amdgpu_bo *bo,
- 				       struct dma_fence **fence)
- {
- 	const unsigned ib_size_dw = 16;
- 	struct amdgpu_job *job;
- 	struct amdgpu_ib *ib;
- 	struct dma_fence *f = NULL;
--	uint64_t dummy;
-+	uint64_t addr;
- 	int i, r;
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc
+ 		align = SMP_CACHE_BYTES;
+ 	}
  
- 	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4, &job);
-@@ -228,15 +229,15 @@ static int uvd_v7_0_enc_get_create_msg(s
- 		return r;
+-	if (end > memblock.current_limit)
+-		end = memblock.current_limit;
+-
+ again:
+ 	found = memblock_find_in_range_node(size, align, start, end, nid,
+ 					    flags);
+@@ -1469,6 +1466,9 @@ static void * __init memblock_alloc_inte
+ 	if (WARN_ON_ONCE(slab_is_available()))
+ 		return kzalloc_node(size, GFP_NOWAIT, nid);
  
- 	ib = &job->ibs[0];
--	dummy = ib->gpu_addr + 1024;
-+	addr = amdgpu_bo_gpu_offset(bo);
- 
- 	ib->length_dw = 0;
- 	ib->ptr[ib->length_dw++] = 0x00000018;
- 	ib->ptr[ib->length_dw++] = 0x00000001; /* session info */
- 	ib->ptr[ib->length_dw++] = handle;
- 	ib->ptr[ib->length_dw++] = 0x00000000;
--	ib->ptr[ib->length_dw++] = upper_32_bits(dummy);
--	ib->ptr[ib->length_dw++] = dummy;
-+	ib->ptr[ib->length_dw++] = upper_32_bits(addr);
-+	ib->ptr[ib->length_dw++] = addr;
- 
- 	ib->ptr[ib->length_dw++] = 0x00000014;
- 	ib->ptr[ib->length_dw++] = 0x00000002; /* task info */
-@@ -275,13 +276,14 @@ err:
-  * Close up a stream for HW test or if userspace failed to do so
-  */
- static int uvd_v7_0_enc_get_destroy_msg(struct amdgpu_ring *ring, uint32_t handle,
--				struct dma_fence **fence)
-+					struct amdgpu_bo *bo,
-+					struct dma_fence **fence)
- {
- 	const unsigned ib_size_dw = 16;
- 	struct amdgpu_job *job;
- 	struct amdgpu_ib *ib;
- 	struct dma_fence *f = NULL;
--	uint64_t dummy;
-+	uint64_t addr;
- 	int i, r;
- 
- 	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4, &job);
-@@ -289,15 +291,15 @@ static int uvd_v7_0_enc_get_destroy_msg(
- 		return r;
- 
- 	ib = &job->ibs[0];
--	dummy = ib->gpu_addr + 1024;
-+	addr = amdgpu_bo_gpu_offset(bo);
- 
- 	ib->length_dw = 0;
- 	ib->ptr[ib->length_dw++] = 0x00000018;
- 	ib->ptr[ib->length_dw++] = 0x00000001;
- 	ib->ptr[ib->length_dw++] = handle;
- 	ib->ptr[ib->length_dw++] = 0x00000000;
--	ib->ptr[ib->length_dw++] = upper_32_bits(dummy);
--	ib->ptr[ib->length_dw++] = dummy;
-+	ib->ptr[ib->length_dw++] = upper_32_bits(addr);
-+	ib->ptr[ib->length_dw++] = addr;
- 
- 	ib->ptr[ib->length_dw++] = 0x00000014;
- 	ib->ptr[ib->length_dw++] = 0x00000002;
-@@ -334,13 +336,20 @@ err:
- static int uvd_v7_0_enc_ring_test_ib(struct amdgpu_ring *ring, long timeout)
- {
- 	struct dma_fence *fence = NULL;
-+	struct amdgpu_bo *bo = NULL;
- 	long r;
- 
--	r = uvd_v7_0_enc_get_create_msg(ring, 1, NULL);
-+	r = amdgpu_bo_create_reserved(ring->adev, 128 * 1024, PAGE_SIZE,
-+				      AMDGPU_GEM_DOMAIN_VRAM,
-+				      &bo, NULL, NULL);
-+	if (r)
-+		return r;
++	if (max_addr > memblock.current_limit)
++		max_addr = memblock.current_limit;
 +
-+	r = uvd_v7_0_enc_get_create_msg(ring, 1, bo, NULL);
- 	if (r)
- 		goto error;
+ 	alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid);
  
--	r = uvd_v7_0_enc_get_destroy_msg(ring, 1, &fence);
-+	r = uvd_v7_0_enc_get_destroy_msg(ring, 1, bo, &fence);
- 	if (r)
- 		goto error;
- 
-@@ -352,6 +361,8 @@ static int uvd_v7_0_enc_ring_test_ib(str
- 
- error:
- 	dma_fence_put(fence);
-+	amdgpu_bo_unreserve(bo);
-+	amdgpu_bo_unref(&bo);
- 	return r;
- }
- 
+ 	/* retry allocation without lower limit */
 
 
