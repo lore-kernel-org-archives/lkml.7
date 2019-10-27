@@ -2,107 +2,144 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5DBCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A72CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B79920679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E43521D80
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:49:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LJSZ+OLD"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="QVZGVyIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfJ0Qt0 (ORCPT
+        id S1727513AbfJ0Qtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 12:49:26 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33144 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727346AbfJ0QtZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 12:49:25 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c184so4982525pfb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 09:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=8n++wD5/6NxxNZrfUyrDCMF9nFv+oO8Is6pr+NQ2vc8=;
-        b=LJSZ+OLDM/VdGmMyVSOBACyZfslq6n6qQUFyVshxSQSMrtou/6JvdNv3hpP8Pj7SIW
-         B3DtOxdkJFnGgC+XWlkSOLvx6PXVCDAFAPVvWswXjE9DMC7s6kvDB/C4Vo3FLLmEHW2s
-         48kRsKlP0IH45sqi8M5EfsCRLEtP9PC6kgCBQL7BhSw1HNY2I27icDvqjq235YnAWS3j
-         5htcDA774lBUXBINA1j9hWxwLysgLeCyDpKjUCf9ppWcmk909CtrNIFZXHWxnT6SeiUJ
-         IB12iesABZdNEDK7SZuVEB8Y6KLqN65om9lMt1lU374agzRJmg9j46Ru4bR7wIZl/X7V
-         +Uxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8n++wD5/6NxxNZrfUyrDCMF9nFv+oO8Is6pr+NQ2vc8=;
-        b=X99hmWjm/jjI0VKBpewCP16vIXAJaAwHerlLzBOWw5jmWcfMSaI0tPK0JwbIgurVpH
-         14x0sOFEzOnygfyX7m0Lcb1UK/lSDPfsOh+kc/nnDYiw63+NVcmL+oF9tQLZPp6R3JMI
-         aOyW0au6mg/6nTQIb/iwK9Q8qplyLbvPYcGpNtTU2Arl6utTK4K36mB7lR194P8p31FW
-         3OK29iVKD/G3v/SqpBjzcvufLi8kbeZfS2N/Cuubgz2v6MtfCaQYgHPW++elVky1xZ2F
-         sTg69W5Q7RUf4RRM7yRgi82EYy02eo/vrchV/plIN1w7uPuiAqvB5etEmgH3VaLForfa
-         Df6A==
-X-Gm-Message-State: APjAAAUuWYKQzUSSyvZ2TBptva6+4BXcUD1qaVbVxyAZhdJLEzbcY3ul
-        DLLGtUpSft/cWpl+Tx7oOAAB/4TXOWg5Yw==
-X-Google-Smtp-Source: APXvYqwDOraOE5lBRWgCaRKUiO3QTcqmUcsqakQ6qe0tcratki5eAw5O61ceyWxh/YWg0gu4iIwUlQ==
-X-Received: by 2002:a63:ab49:: with SMTP id k9mr13831866pgp.34.1572194964287;
-        Sun, 27 Oct 2019 09:49:24 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id 13sm9713407pgq.72.2019.10.27.09.49.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 27 Oct 2019 09:49:23 -0700 (PDT)
-Subject: Re: [PATCH 0/2][for-next] cleanup submission path
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1572189860.git.asml.silence@gmail.com>
- <666ed447-ba8f-29e7-237f-de8044aa63ea@kernel.dk>
- <5ec9bd14-d8f2-32e6-7f25-0ca7256c408a@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <aac65fe2-6c51-3baf-eee7-af5a8f633bf2@kernel.dk>
-Date:   Sun, 27 Oct 2019 10:49:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <5ec9bd14-d8f2-32e6-7f25-0ca7256c408a@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Sun, 27 Oct 2019 12:49:36 -0400
+Received: from mail-eopbgr750091.outbound.protection.outlook.com ([40.107.75.91]:38983
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727346AbfJ0Qtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 12:49:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xs3/Oqb2JHW/Tz/MPctb/jPNsBQBVl5XIV47MmWg61pkElwZiw/ecOPXzBTzPyU9FhUWtsWt6G7cuONKFlCJG1eFG2nPGFjeDn5xfzpfur9JzSPnC2NUCllTSvTES3USQQD1v3hi+7rprLmuJ9m7RGnNM49vsS9bQthygdMNKDn8tU7dTsAye3sgeq1qA/5kddiQqBOYNpiBXQoUTTNGvGkWvzd2HT6ztyHzpRsx7KoOXUYm0ii4DhB78uGHnqyaXQMYCm8jz5ng/LWE9Tap8M7y87j2wJWm/G9WFJlcJUllSC1mh0KP5CUqAvtI3Sre/RlwSzZrNV3g4UX3Rq+cDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sdLYdTjF9PnExFRZWYzGLk8ZT9Ir37TnVqzNOMU//9w=;
+ b=IcqPwUVYafnz2kgGr6SFNuIiENEz/rVN32gK6bu3iawYcUh/m9WyHPHCa/nV9fnniHb8LbO0QpQGCYAWY/N8L1B8XRiZ0xf0ujs1Yq9oiocXdINj3HRuWJPLIwgDhzDsRdE7b6iIcjVguW3svs2XDDlD3R2MymKefvBizm8j1PoYICELX0cF5SvMnqUiO5K5UvCxIJSLzwgfVLz9xn6nF4rt6QZzO6O0ML3bmEB8BrwiAUpZcXKAbxZUtqxhJHmHwbhrKm2xC5LqOOsttAEBR4+epU0+S2BxL0uz3SAUx9sjf+TmxbTFKqCyOTkTY/hfVF6Sv6kZaFcUow/p4W03Bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sdLYdTjF9PnExFRZWYzGLk8ZT9Ir37TnVqzNOMU//9w=;
+ b=QVZGVyIsH+GPjizDYMtvILPnWx1ez00yD2z58nyQ/iAcLxmB1XItgZChP9wgepjRRxt64dog9f2q+iD+9X3Lx44eOjIYz/rVqFxbnzumvhPh3EpTSNmn6JfpPpNHsqSkk840xNBlekGNbP4YO3P7euD03+hGqMpEE+4rQBqOMx0=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0763.namprd21.prod.outlook.com (10.173.172.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id
+ 15.20.2408.15; Sun, 27 Oct 2019 16:49:32 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::9cc3:f167:bb63:799]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::9cc3:f167:bb63:799%5]) with mapi id 15.20.2408.014; Sun, 27 Oct 2019
+ 16:49:32 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Joe Perches <joe@perches.com>
+Subject: RE: [PATCH v3] x86/hyper-v: micro-optimize send_ipi_one case
+Thread-Topic: [PATCH v3] x86/hyper-v: micro-optimize send_ipi_one case
+Thread-Index: AQHVjNn5fFTFLcbQ9UmGNbPSapBCP6dustcA
+Date:   Sun, 27 Oct 2019 16:49:31 +0000
+Message-ID: <DM5PR21MB0137360776CEDD19E6FECC75D7670@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20191027151938.7296-1-vkuznets@redhat.com>
+In-Reply-To: <20191027151938.7296-1-vkuznets@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-27T16:49:29.4870378Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b0eada00-22bb-45ef-8407-01aa833ab95c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cb3d33ed-2012-421e-fe83-08d75afda426
+x-ms-traffictypediagnostic: DM5PR21MB0763:|DM5PR21MB0763:|DM5PR21MB0763:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR21MB07630EA1F29D2FC1988A2607D7670@DM5PR21MB0763.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 0203C93D51
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(136003)(376002)(39860400002)(346002)(396003)(366004)(199004)(189003)(8936002)(81166006)(8676002)(81156014)(22452003)(2501003)(74316002)(54906003)(26005)(6116002)(3846002)(110136005)(14454004)(66946007)(76116006)(10290500003)(7416002)(66446008)(2906002)(66476007)(66556008)(64756008)(478600001)(305945005)(7736002)(316002)(25786009)(10090500001)(14444005)(256004)(33656002)(66066001)(55016002)(6436002)(86362001)(8990500004)(99286004)(102836004)(6506007)(6246003)(186003)(4326008)(5660300002)(9686003)(52536014)(71200400001)(11346002)(486006)(71190400001)(4744005)(7696005)(76176011)(446003)(229853002)(476003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0763;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: J/xtUPdmLaKyiY+Wq/JraSD+tM5Y6CPT2JVh3zzw0yJnchBTFy0g9NOCXWoTVZAtc6EcfeojD3ckV0o3kIJDc39uX7cSmzZz7Y74L0uDHNLp5NvucS1k86wTlTT5ZGMpnF5qjkHCzRaVpu4kZEoafF46jgROLD5KYp3MA6UBK6e9zLfH/5ziDBNSB+4xtU4y+4mqi6OWvaHghzvYjh6eskQIizodBy+1JBGhrNlXjR81eAowXUwItC4YiCWq3586fcL8uHaEq4wWL6OjW6Rmf3xqYWZvOfff16h7oPHqfCV1IYfR8eFccR30Ko7jwOE+kMuZtRoCKlihwPwoQjqWu6TTgOY/bqWpqx5qJ3dhM6T4f1rd1jjNPSfJWtKPmTlUPlky0bJUVRKikBjmduYsKCezFqFwbB4W4iQHYUiklDYbuVkewwEIO0ZqvwTJbz1D
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb3d33ed-2012-421e-fe83-08d75afda426
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Oct 2019 16:49:32.0430
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oEGVionwR6excCRfiUSx+CAK2Ad2DKmmdqOfS2mI1B2Acl88hYyfSuTmvNpuWD+4Taxnuwz1UuaJ03H9u0HWICDrYNUo9QAtX9hGCIy75+8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0763
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/27/19 10:44 AM, Pavel Begunkov wrote:
-> On 27/10/2019 19:32, Jens Axboe wrote:
->> On 10/27/19 9:35 AM, Pavel Begunkov wrote:
->>> A small cleanup of very similar but diverged io_submit_sqes() and
->>> io_ring_submit()
->>>
->>> Pavel Begunkov (2):
->>>     io_uring: handle mm_fault outside of submission
->>>     io_uring: merge io_submit_sqes and io_ring_submit
->>>
->>>    fs/io_uring.c | 116 ++++++++++++++------------------------------------
->>>    1 file changed, 33 insertions(+), 83 deletions(-)
->>
->> I like the cleanups here, but one thing that seems off is the
->> assumption that io_sq_thread() always needs to grab the mm. If
->> the sqes processed are just READ/WRITE_FIXED, then it never needs
->> to grab the mm.
->> Yeah, we removed it to fix bugs. Personally, I think it would be
-> clearer to do lazy grabbing conditionally, rather than have two
-> functions. And in this case it's easier to do after merging.
-> 
-> Do you prefer to return it back first?
+From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Sunday, October 27, 2019=
+ 8:20 AM
+>=20
+> When sending an IPI to a single CPU there is no need to deal with cpumask=
+s.
+> With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
+> cycles) improvement with smp_call_function_single() loop benchmark. The
+> optimization, however, is tiny and straitforward. Also, send_ipi_one() is
+> important for PV spinlock kick.
+>=20
+> I was also wondering if it would make sense to switch to using regular
+> APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CP=
+U
+> cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
+> vector)).
+>=20
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+> Changes since v2:
+>  - Check VP number instead of CPU number against >=3D 64 [Michael]
+>  - Check for VP_INVAL
+>
 
-Ah I see, no I don't care about that.
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
 
--- 
-Jens Axboe
+
 
