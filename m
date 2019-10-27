@@ -2,105 +2,129 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199CDCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C205CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D50482064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACE52064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211830;
-	bh=u1QY37GQqiMRz3nMqJTL9xuwt1CVrLfwwm/6Qk4iZPM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=acRfwzFr4NZFfOY/2yKFj3ohMLXd1iLn+mq0cc8VSsxtGH043AS5AGxkAUX/87wQr
-	 w6LXgKYXgRKG797b9X9o9v0zmBkAt+1G/fq72/Qmc83Uoowly5ZB9wBsOCPJBXYDpc
-	 ZuExxmAHTN00JjPjWzEXAKEtrBC1ES74TxX8+Q38=
+	s=default; t=1572211835;
+	bh=8izSZAbx6fQBwUzEgqL17sTkPb8Aj2f809bsHzCJRec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bZkFNpOFgZShxQVBX/jTBwwA/COkQMHhl6c2ipztE270ZhKD2dY4wWyAu1/jPFYMH
+	 1LcgcEGGbylgHme5RXolCt4uISUeICnwW37lmn/686ZYZZpW1nzK4qtg81dxeF0JYu
+	 wYYKYXcUBiGgjOmjlTEQoSpo3gCuNXtBz6dntFoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732680AbfJ0Va3 (ORCPT
+        id S1732138AbfJ0Vad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38932 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:30:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731331AbfJ0VSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:18:43 -0400
-Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
+        id S1731152AbfJ0Va2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:30:28 -0400
+Received: from earth.universe (unknown [46.218.74.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79913205C9;
-        Sun, 27 Oct 2019 21:18:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32A912070B;
+        Sun, 27 Oct 2019 21:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211123;
-        bh=u1QY37GQqiMRz3nMqJTL9xuwt1CVrLfwwm/6Qk4iZPM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MYn9ti7sL6heRHanG+1xsVty3JzPHXrUdomvSx3vLPlzB7bkhEO+ZOS+FoH8HLHIc
-         QoH01/mXSIKn6MFWNRzkuD9sssKJ3FT1+/RvM9qsDotdcexK/vD/sOF//EWiy/2c0B
-         zILLD72FX+ZalbqhZM1DHncQRHO0nKi9vfqzlqWA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Balbir Singh <sblbir@amzn.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 005/197] nvme-pci: Fix a race in controller removal
-Date:   Sun, 27 Oct 2019 21:58:43 +0100
-Message-Id: <20191027203351.981022129@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
-References: <20191027203351.684916567@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1572211827;
+        bh=8izSZAbx6fQBwUzEgqL17sTkPb8Aj2f809bsHzCJRec=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A3CHmcenkVz7kS733vuH0673jNWz9Zx/lWgZ/CbFxj8unHvz7OjccwI2DkDKF85rM
+         LMtg1WkSbZ/5lwFO6+laJwBckY9C34S0Tiaj75y783XYBu77cNxeyaJU+niPkYu1Hq
+         GEI1BTRX36Cku/6aZyi2uzXhFMvIyxyPSeUCidzo=
+Received: by earth.universe (Postfix, from userid 1000)
+        id B31FF3C09B2; Sun, 27 Oct 2019 22:30:24 +0100 (CET)
+Date:   Sun, 27 Oct 2019 22:30:24 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power: supply: ab8500_charger: Fix inconsistent IS_ERR
+ and PTR_ERR
+Message-ID: <20191027213024.x3lvdefs67wcb37j@earth.universe>
+References: <20191021174937.GA17424@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ci4bos7uztzfqtgo"
+Content-Disposition: inline
+In-Reply-To: <20191021174937.GA17424@embeddedor>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Balbir Singh <sblbir@amzn.com>
 
-[ Upstream commit b224726de5e496dbf78147a66755c3d81e28bdd2 ]
+--ci4bos7uztzfqtgo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-User space programs like udevd may try to read to partitions at the
-same time the driver detects a namespace is unusable, and may deadlock
-if revalidate_disk() is called while such a process is waiting to
-enter the frozen queue. On detecting a dead namespace, move the disk
-revalidate after unblocking dispatchers that may be holding bd_butex.
+Hi,
 
-changelog Suggested-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Balbir Singh <sblbir@amzn.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On Mon, Oct 21, 2019 at 12:49:37PM -0500, Gustavo A. R. Silva wrote:
+> Fix inconsistent IS_ERR and PTR_ERR in ab8500_charger_probe().
+>=20
+> The proper pointer to be passed as argument is di->adc_main_charger_c
+>=20
+> This bug was detected with the help of Coccinelle.
+>=20
+> Fixes: 97ab78bac5d0 ("power: supply: ab8500_charger: Convert to IIO ADC")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index d3d6b7bd69033..28217cee5e762 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -103,10 +103,13 @@ static void nvme_set_queue_dying(struct nvme_ns *ns)
- 	 */
- 	if (!ns->disk || test_and_set_bit(NVME_NS_DEAD, &ns->flags))
- 		return;
--	revalidate_disk(ns->disk);
- 	blk_set_queue_dying(ns->queue);
- 	/* Forcibly unquiesce queues to avoid blocking dispatch */
- 	blk_mq_unquiesce_queue(ns->queue);
-+	/*
-+	 * Revalidate after unblocking dispatchers that may be holding bd_butex
-+	 */
-+	revalidate_disk(ns->disk);
- }
- 
- static void nvme_queue_scan(struct nvme_ctrl *ctrl)
--- 
-2.20.1
+Thanks, queued.
 
+-- Sebastian
 
+>  drivers/power/supply/ab8500_charger.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/ab8500_charger.c b/drivers/power/supply=
+/ab8500_charger.c
+> index ff2bb4411a22..8a0f9d769690 100644
+> --- a/drivers/power/supply/ab8500_charger.c
+> +++ b/drivers/power/supply/ab8500_charger.c
+> @@ -3393,7 +3393,7 @@ static int ab8500_charger_probe(struct platform_dev=
+ice *pdev)
+>  		if (PTR_ERR(di->adc_main_charger_c) =3D=3D -ENODEV)
+>  			return -EPROBE_DEFER;
+>  		dev_err(&pdev->dev, "failed to get ADC main charger current\n");
+> -		return PTR_ERR(di->adc_main_charger_v);
+> +		return PTR_ERR(di->adc_main_charger_c);
+>  	}
+>  	di->adc_vbus_v =3D devm_iio_channel_get(&pdev->dev, "vbus_v");
+>  	if (IS_ERR(di->adc_vbus_v)) {
+> --=20
+> 2.23.0
+>=20
 
+--ci4bos7uztzfqtgo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl22DG0ACgkQ2O7X88g7
++pqcLQ/+JkR/ANfCqah3p0yYMbAWJ6Rs3SI2YzhwyIFJBWzOIEWwWgcsUzq+ahlf
+2t8Um/Db2BC68q/GT+304JNaumpr5XfH/mWt4DrKcZgCGFePPwh5EscqAbUCHfu+
+IqNQbtoHrnofZu4hThBZDqDvgZL+LGtikMRwBL2asytquPBveDJ/URKNdec+ue23
+k7GzGGrvXp/IakLcWcFEfb66ibqgue8k4RL7YzKvySE74RQX/6ePQNVwGP4vGCSP
+Zin9CH+uFAgg7/Dg6dBpxjE6L2DWFv+ftrg0pQO9rn6bLdWWjZvOXjo/RNk+GTpF
+YMSfI1unLWHUf8/S/aGZjox/bH6KsqkY/W/TJ10C3OF5w19xj11hgWTQ1Y5oNB5c
+VRJCEcWwrBfT42IjQKLvzjqP4GAduwqqYc5dyyXp5lKVU7qKNl0G51EPomkyPw4z
+zNuS7KscPQeZQaZ6XB+70jQ2yUGvYN5IR4/H6ATgcG4zPUAQ286YobarRldJAeO2
+y1RkZF52MtIvLozfMR+hd3ppNXO/nb5v4xsAvJu0QhuAiMfCzwz6v8/dU3KMF5dW
+6zUxuX95sX3rW7zj0G35+O1r+olXHDqTJQmR1l+LLIOIA5F043DXTogsX9T8DzR9
+qpLj0bikHEnmnZKjl2mV7E44zrAvE6jDaPfTaiP1au8BiiGLuqo=
+=1lwG
+-----END PGP SIGNATURE-----
+
+--ci4bos7uztzfqtgo--
