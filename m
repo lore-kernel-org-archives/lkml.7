@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BADCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7C6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434EC21726
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C6821726
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211449;
-	bh=Z13k9Rr+oBpf3ED7rjGzDOEk10lgri0uRu9QWWRnjeQ=;
+	s=default; t=1572211451;
+	bh=9bcCU39ZWTggCACE2Egvoc42+x08ORp7iVYCKacHHeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TkLNYqToWuLofsw09xe/jkaGrM19g2kxcd+ogtL04VGvek5i20lQLr9TGWFcgEKUi
-	 UB19qtDWopfZuWHWbUUeHTli4yVK6sdUh4YrXPNbHwTEVfw0gc2aHrR6NG3Me3yE8s
-	 FTCkbF0aG4kZ6D3SxYTOR3fq+HE+10nH+7Zes2xc=
+	b=RLb/QdwEKS5Jj1FEvhuHObL6w7YcxfmoviAZsmgP3Yg9g4F4ClZpg6le+ltAud4l/
+	 vPar4W+S9cp5HdSaQMw4aCbwAEvIuz0PgqlFvl41mIspRvoS1Mo2Ms1WcF4j1phlGz
+	 /eOdMhHXJ1CuEcxLEau6JQQPC9ltHjlt3r/7NzdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732451AbfJ0VYI (ORCPT
+        id S1732460AbfJ0VYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:24:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:24:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732428AbfJ0VYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:24:03 -0400
+        id S1732428AbfJ0VYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:24:08 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22FBC2184C;
-        Sun, 27 Oct 2019 21:24:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C337621783;
+        Sun, 27 Oct 2019 21:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211442;
-        bh=Z13k9Rr+oBpf3ED7rjGzDOEk10lgri0uRu9QWWRnjeQ=;
+        s=default; t=1572211448;
+        bh=9bcCU39ZWTggCACE2Egvoc42+x08ORp7iVYCKacHHeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bvXUK1uUHmvOc7qES7FO1eFiFi3RdaxEw/JZWiZzTtjPx71EUuS+edSpRqAW7udH+
-         QZjfBp7iAccmAu86WCG2VQ7JIxffJ5UR+6dX8ZPusoR8a23TxHXmKwvcvwlPQBDkXO
-         7Gh+59DsIIdbuT368RBCRAnxBw1bg2/dLPnjG8W4=
+        b=Ft6tkr6pUyRRbf/UB/dli8IxNHc59S/CNheYJoeNBlvoH/K7ec+cmK6Bscw7pHDyp
+         5DpKbhbVfY+QfYhqArequ84rtcWNCHkfpL1rdhTnYbKVkbGGTZ8ewD9zxeO8pCQzss
+         LIoOgvp0DjXGLTuG6mMfSTZtR0+z7zsOMtyJOXAU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
+        stable@vger.kernel.org, Chenwandun <chenwandun@huawei.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 153/197] hugetlbfs: dont access uninitialized memmaps in pfn_range_valid_gigantic()
-Date:   Sun, 27 Oct 2019 22:01:11 +0100
-Message-Id: <20191027203359.945985294@linuxfoundation.org>
+Subject: [PATCH 5.3 155/197] zram: fix race between backing_dev_show and backing_dev_store
+Date:   Sun, 27 Oct 2019 22:01:13 +0100
+Message-Id: <20191027203400.055050644@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -64,59 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Chenwandun <chenwandun@huawei.com>
 
-commit f231fe4235e22e18d847e05cbe705deaca56580a upstream.
+commit f7daefe4231e57381d92c2e2ad905a899c28e402 upstream.
 
-Uninitialized memmaps contain garbage and in the worst case trigger
-kernel BUGs, especially with CONFIG_PAGE_POISONING.  They should not get
-touched.
+CPU0:				       CPU1:
+backing_dev_show		       backing_dev_store
+    ......				   ......
+    file = zram->backing_dev;
+    down_read(&zram->init_lock);	   down_read(&zram->init_init_lock)
+    file_path(file, ...);		   zram->backing_dev = backing_dev;
+    up_read(&zram->init_lock);		   up_read(&zram->init_lock);
 
-Let's make sure that we only consider online memory (managed by the
-buddy) that has initialized memmaps.  ZONE_DEVICE is not applicable.
+gets the value of zram->backing_dev too early in backing_dev_show, which
+resultin the value being NULL at the beginning, and not NULL later.
 
-page_zone() will call page_to_nid(), which will trigger
-VM_BUG_ON_PGFLAGS(PagePoisoned(page), page) with CONFIG_PAGE_POISONING
-and CONFIG_DEBUG_VM_PGFLAGS when called on uninitialized memmaps.  This
-can be the case when an offline memory block (e.g., never onlined) is
-spanned by a zone.
+backtrace:
+  d_path+0xcc/0x174
+  file_path+0x10/0x18
+  backing_dev_show+0x40/0xb4
+  dev_attr_show+0x20/0x54
+  sysfs_kf_seq_show+0x9c/0x10c
+  kernfs_seq_show+0x28/0x30
+  seq_read+0x184/0x488
+  kernfs_fop_read+0x5c/0x1a4
+  __vfs_read+0x44/0x128
+  vfs_read+0xa0/0x138
+  SyS_read+0x54/0xb4
 
-Note: As explained by Michal in [1], alloc_contig_range() will verify
-the range.  So it boils down to the wrong access in this function.
-
-[1] http://lkml.kernel.org/r/20180423000943.GO17484@dhcp22.suse.cz
-
-Link: http://lkml.kernel.org/r/20191015120717.4858-1-david@redhat.com
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reported-by: Michal Hocko <mhocko@kernel.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: <stable@vger.kernel.org>	[4.13+]
+Link: http://lkml.kernel.org/r/1571046839-16814-1-git-send-email-chenwandun@huawei.com
+Signed-off-by: Chenwandun <chenwandun@huawei.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: <stable@vger.kernel.org>	[4.14+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/hugetlb.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/block/zram/zram_drv.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1084,11 +1084,10 @@ static bool pfn_range_valid_gigantic(str
- 	struct page *page;
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -413,13 +413,14 @@ static void reset_bdev(struct zram *zram
+ static ssize_t backing_dev_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+ {
++	struct file *file;
+ 	struct zram *zram = dev_to_zram(dev);
+-	struct file *file = zram->backing_dev;
+ 	char *p;
+ 	ssize_t ret;
  
- 	for (i = start_pfn; i < end_pfn; i++) {
--		if (!pfn_valid(i))
-+		page = pfn_to_online_page(i);
-+		if (!page)
- 			return false;
- 
--		page = pfn_to_page(i);
--
- 		if (page_zone(page) != z)
- 			return false;
- 
+ 	down_read(&zram->init_lock);
+-	if (!zram->backing_dev) {
++	file = zram->backing_dev;
++	if (!file) {
+ 		memcpy(buf, "none\n", 5);
+ 		up_read(&zram->init_lock);
+ 		return 5;
 
 
