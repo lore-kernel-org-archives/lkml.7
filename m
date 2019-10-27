@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BC7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1BACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E75FC208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 398D12070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211029;
-	bh=9hY8NZOhxzV2KeZA0eTHKZPgwdCjCBrLUUEhiwi4SYg=;
+	s=default; t=1572211034;
+	bh=/Xw7BhYA+kwXh7NFcln0984td5k3Pk8C3Zla/ek6nGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVpvxpW58T2uj7GeZNLqhcu0/usVz3dGv473t+GYL9tc3D8PGTlKBs2bZzlztzg1q
-	 q1zW2PNHHrtt6hDrygkCwq5ColPFWLcYrtmMawzl7WMW0pcVqhZQx53UXzzUHYARxR
-	 ZASpDqEzLYiG/bz4mXAweRCSDJuHwvm/JbAucb7w=
+	b=RCkxuzrS+FZ84TdXaecBQxLTxotumH0uYlqUSnv8aC47K+u+3lEtGhwt0Cj15ZEkN
+	 OBT+c1uhCPzOkQzIovDrqJhTYCsMcQM0gtVChC7ii8i7yZ6UvTvqLMhI/CwSW35Rrn
+	 Kp8lS9zPbvrN0Lo2RakxQdBKBsd5w0a2MQjj5THs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730985AbfJ0VRH (ORCPT
+        id S1731007AbfJ0VRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:17:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36850 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:17:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730966AbfJ0VRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:17:04 -0400
+        id S1730990AbfJ0VRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:17:10 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 363052070B;
-        Sun, 27 Oct 2019 21:17:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8BCF2070B;
+        Sun, 27 Oct 2019 21:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211023;
-        bh=9hY8NZOhxzV2KeZA0eTHKZPgwdCjCBrLUUEhiwi4SYg=;
+        s=default; t=1572211029;
+        bh=/Xw7BhYA+kwXh7NFcln0984td5k3Pk8C3Zla/ek6nGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KbRfd8x1PeYAXjMAjuFnPu7ipPF2Qmmx5ithXTaLVUV1ZKjvtTtVRXVChmcWdKAO7
-         GkUz6RVg6Nd/fsYcLmk7hz79tI2WR9X8QluKOvgotHEER4pCJNu5NcHkKKb0ED9Xbt
-         ZWQAsYoAnh2E19B6zMfWQY77DBtcxPIseMdpZ768=
+        b=o7w4klHQIWPEkdl19ZJ2T+NlgGk7Oa3z0Vg4L1bV1Kf0ms5ZYYK7vydOxZFkDiob6
+         eAoOy5ds7+nx39h0Fqv/Z9IJZiIhTh1/k12tHQwa9fGChnSxCyghPXB5ifHihEJKvR
+         VumveiPwG1XbVA8owD+St+dZ/zB/PVj1VgVcWMeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Patrick Williams <alpawi@amazon.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.19 83/93] pinctrl: armada-37xx: swap polarity on LED group
-Date:   Sun, 27 Oct 2019 22:01:35 +0100
-Message-Id: <20191027203313.789507102@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.19 75/93] CIFS: Fix use after free of file info structures
+Date:   Sun, 27 Oct 2019 22:01:27 +0100
+Message-Id: <20191027203310.813651313@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -59,41 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Williams <alpawi@amazon.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit b835d6953009dc350d61402a854b5a7178d8c615 upstream.
+commit 1a67c415965752879e2e9fad407bc44fc7f25f23 upstream.
 
-The configuration registers for the LED group have inverted
-polarity, which puts the GPIO into open-drain state when used in
-GPIO mode.  Switch to '0' for GPIO and '1' for LED modes.
+Currently the code assumes that if a file info entry belongs
+to lists of open file handles of an inode and a tcon then
+it has non-zero reference. The recent changes broke that
+assumption when putting the last reference of the file info.
+There may be a situation when a file is being deleted but
+nothing prevents another thread to reference it again
+and start using it. This happens because we do not hold
+the inode list lock while checking the number of references
+of the file info structure. Fix this by doing the proper
+locking when doing the check.
 
-Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support for Armada 37xx")
-Signed-off-by: Patrick Williams <alpawi@amazon.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191001155154.99710-1-alpawi@amazon.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 487317c99477d ("cifs: add spinlock for the openFileList to cifsInodeInfo")
+Fixes: cb248819d209d ("cifs: use cifsInodeInfo->open_file_lock while iterating to avoid a panic")
+Cc: Stable <stable@vger.kernel.org>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/cifs/file.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -183,10 +183,10 @@ static struct armada_37xx_pin_group arma
- 	PIN_GRP_EXTRA("uart2", 9, 2, BIT(1) | BIT(13) | BIT(14) | BIT(19),
- 		      BIT(1) | BIT(13) | BIT(14), BIT(1) | BIT(19),
- 		      18, 2, "gpio", "uart"),
--	PIN_GRP_GPIO("led0_od", 11, 1, BIT(20), "led"),
--	PIN_GRP_GPIO("led1_od", 12, 1, BIT(21), "led"),
--	PIN_GRP_GPIO("led2_od", 13, 1, BIT(22), "led"),
--	PIN_GRP_GPIO("led3_od", 14, 1, BIT(23), "led"),
-+	PIN_GRP_GPIO_2("led0_od", 11, 1, BIT(20), BIT(20), 0, "led"),
-+	PIN_GRP_GPIO_2("led1_od", 12, 1, BIT(21), BIT(21), 0, "led"),
-+	PIN_GRP_GPIO_2("led2_od", 13, 1, BIT(22), BIT(22), 0, "led"),
-+	PIN_GRP_GPIO_2("led3_od", 14, 1, BIT(23), BIT(23), 0, "led"),
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -403,10 +403,11 @@ void _cifsFileInfo_put(struct cifsFileIn
+ 	bool oplock_break_cancelled;
  
- };
+ 	spin_lock(&tcon->open_file_lock);
+-
++	spin_lock(&cifsi->open_file_lock);
+ 	spin_lock(&cifs_file->file_info_lock);
+ 	if (--cifs_file->count > 0) {
+ 		spin_unlock(&cifs_file->file_info_lock);
++		spin_unlock(&cifsi->open_file_lock);
+ 		spin_unlock(&tcon->open_file_lock);
+ 		return;
+ 	}
+@@ -419,9 +420,7 @@ void _cifsFileInfo_put(struct cifsFileIn
+ 	cifs_add_pending_open_locked(&fid, cifs_file->tlink, &open);
  
+ 	/* remove it from the lists */
+-	spin_lock(&cifsi->open_file_lock);
+ 	list_del(&cifs_file->flist);
+-	spin_unlock(&cifsi->open_file_lock);
+ 	list_del(&cifs_file->tlist);
+ 
+ 	if (list_empty(&cifsi->openFileList)) {
+@@ -437,6 +436,7 @@ void _cifsFileInfo_put(struct cifsFileIn
+ 		cifs_set_oplock_level(cifsi, 0);
+ 	}
+ 
++	spin_unlock(&cifsi->open_file_lock);
+ 	spin_unlock(&tcon->open_file_lock);
+ 
+ 	oplock_break_cancelled = wait_oplock_handler ?
 
 
