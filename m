@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AD2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96580CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7B52070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F802070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211210;
-	bh=uEigrDSO+Ag3UVASUP0pmv4uqt7zouB0tEdl/zaUl3A=;
+	s=default; t=1572211214;
+	bh=x/NA11M+lOlNuOhGp8WHw4vTofgmxvwg0WMPXF6S4Zg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YM7wA3NbS8fzWeI4Usrj0CZnmBRb4UfqU4JrSxM5nUw4YWb78VIY1gPoXetdEk173
-	 pv8TzDin7sJb8F8IjcglDkFhFnPI6uA2LUaT38vAwKDXmVUqv+QAob9+NwiT5Vfyr4
-	 Mrjq7ZeyzIWYCg/+UsV14WN23UE8xA7EM7kv7zuA=
+	b=RQ+KX7/x03Rofs/CZQ2LIZktrAsH2VIBefIqIwbkM1udQl7LWxVt24AKjV7Rxkc9r
+	 EI7Ul1BsD5PkVYTqiI6+vY34hWuIfTmbFgfIrFOBXZF08zmL4K0LY5fYTHTgLhuknP
+	 Zn1GqKHNCzaIs9vCQPC1PL7GkOwvWb1e4HxJsVFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbfJ0VUI (ORCPT
+        id S1730127AbfJ0VUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:20:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:20:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731622AbfJ0VUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:20:06 -0400
+        id S1731622AbfJ0VUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:20:10 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3A462070B;
-        Sun, 27 Oct 2019 21:20:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FC9F205C9;
+        Sun, 27 Oct 2019 21:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211206;
-        bh=uEigrDSO+Ag3UVASUP0pmv4uqt7zouB0tEdl/zaUl3A=;
+        s=default; t=1572211208;
+        bh=x/NA11M+lOlNuOhGp8WHw4vTofgmxvwg0WMPXF6S4Zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RX799BkTP8NyaH18CgxZqQiX5vEF9LvWieD+Ep7VEuCwzp7+4KSgM5RlmcZYlIIRK
-         2x7hzs9B43VnTg9g+tTiHlWKI2hKkeSZQqriq+hfcC3y+xP3vQfcOyCZR8t8BVJ6cF
-         iKabs5m1GDdhuLiQoVICcN9T3xcTX+plHyqJnAko=
+        b=JaGPUeM75Kkmk1P6CzyaeadUECSTMWqmBNyEVoerOw5Sl1xhHHnAJQLTo33GWA3uv
+         mwoEQ8mxB6m7kXE5tdACuzjp3RlqiJUSWHOwINwxgskGYgngX+C5VSSN7fm2cLG2q7
+         N4HrKx42O12Az5OQzCh7shm/QVdJPhAQg0dQ+q2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Kevin Hao <haokexin@gmail.com>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5.3 068/197] nvme-pci: Set the prp2 correctly when using more than 4k page
-Date:   Sun, 27 Oct 2019 21:59:46 +0100
-Message-Id: <20191027203355.327536227@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Wang <weiwan@google.com>,
+        Ido Schimmel <idosch@idosch.org>,
+        Jesse Hathaway <jesse@mbuki-mvuki.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        David Ahern <dsahern@gmail.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 069/197] ipv4: fix race condition between route lookup and invalidation
+Date:   Sun, 27 Oct 2019 21:59:47 +0100
+Message-Id: <20191027203355.379557651@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,38 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: Wei Wang <weiwan@google.com>
 
-commit a4f40484e7f1dff56bb9f286cc59ffa36e0259eb upstream.
+[ Upstream commit 5018c59607a511cdee743b629c76206d9c9e6d7b ]
 
-In the current code, the nvme is using a fixed 4k PRP entry size,
-but if the kernel use a page size which is more than 4k, we should
-consider the situation that the bv_offset may be larger than the
-dev->ctrl.page_size. Otherwise we may miss setting the prp2 and then
-cause the command can't be executed correctly.
+Jesse and Ido reported the following race condition:
+<CPU A, t0> - Received packet A is forwarded and cached dst entry is
+taken from the nexthop ('nhc->nhc_rth_input'). Calls skb_dst_set()
 
-Fixes: dff824b2aadb ("nvme-pci: optimize mapping of small single segment requests")
-Cc: stable@vger.kernel.org
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+<t1> - Given Jesse has busy routers ("ingesting full BGP routing tables
+from multiple ISPs"), route is added / deleted and rt_cache_flush() is
+called
+
+<CPU B, t2> - Received packet B tries to use the same cached dst entry
+from t0, but rt_cache_valid() is no longer true and it is replaced in
+rt_cache_route() by the newer one. This calls dst_dev_put() on the
+original dst entry which assigns the blackhole netdev to 'dst->dev'
+
+<CPU A, t3> - dst_input(skb) is called on packet A and it is dropped due
+to 'dst->dev' being the blackhole netdev
+
+There are 2 issues in the v4 routing code:
+1. A per-netns counter is used to do the validation of the route. That
+means whenever a route is changed in the netns, users of all routes in
+the netns needs to redo lookup. v6 has an implementation of only
+updating fn_sernum for routes that are affected.
+2. When rt_cache_valid() returns false, rt_cache_route() is called to
+throw away the current cache, and create a new one. This seems
+unnecessary because as long as this route does not change, the route
+cache does not need to be recreated.
+
+To fully solve the above 2 issues, it probably needs quite some code
+changes and requires careful testing, and does not suite for net branch.
+
+So this patch only tries to add the deleted cached rt into the uncached
+list, so user could still be able to use it to receive packets until
+it's done.
+
+Fixes: 95c47f9cf5e0 ("ipv4: call dst_dev_put() properly")
+Signed-off-by: Wei Wang <weiwan@google.com>
+Reported-by: Ido Schimmel <idosch@idosch.org>
+Reported-by: Jesse Hathaway <jesse@mbuki-mvuki.org>
+Tested-by: Jesse Hathaway <jesse@mbuki-mvuki.org>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Cc: David Ahern <dsahern@gmail.com>
+Reviewed-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/nvme/host/pci.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv4/route.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -769,7 +769,8 @@ static blk_status_t nvme_setup_prp_simpl
- 		struct bio_vec *bv)
- {
- 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
--	unsigned int first_prp_len = dev->ctrl.page_size - bv->bv_offset;
-+	unsigned int offset = bv->bv_offset & (dev->ctrl.page_size - 1);
-+	unsigned int first_prp_len = dev->ctrl.page_size - offset;
- 
- 	iod->first_dma = dma_map_bvec(dev->dev, bv, rq_dma_dir(req), 0);
- 	if (dma_mapping_error(dev->dev, iod->first_dma))
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1482,7 +1482,7 @@ static bool rt_cache_route(struct fib_nh
+ 	prev = cmpxchg(p, orig, rt);
+ 	if (prev == orig) {
+ 		if (orig) {
+-			dst_dev_put(&orig->dst);
++			rt_add_uncached_list(orig);
+ 			dst_release(&orig->dst);
+ 		}
+ 	} else {
 
 
