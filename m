@@ -1,208 +1,152 @@
-Return-Path: <SRS0=w1/f=YU=amo05.mentell.cf=exzr@kernel.org>
+Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,HTML_FONT_LOW_CONTRAST,HTML_MESSAGE,
-	MANY_SPAN_IN_TEXT,SPF_HELO_NONE,SPF_PASS,TO_IN_SUBJ autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C166ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:41:43 +0000 (UTC)
-X-Greylist: delayed 2744 seconds by postgrey-1.34 at mail.kernel.org; Sun, 27 Oct 2019 23:41:43 UTC
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amo05.mentell.cf header.i=@amo05.mentell.cf header.b="nEUboJtL"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 8024020717
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=amo05.mentell.cf
-Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=exzr@amo05.mentell.cf
-Received: from business51-1.web-hosting.com (business51-1.web-hosting.com [198.187.29.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 8024020717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=amo05.mentell.cf; s=default; h=Content-Type:MIME-Version:Message-ID:Subject
-	:From:To:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=eWkm9WyiSFeE44GIXHDzhBt2VlX2NYb3uxUhKVnLBrs=; b=nEUboJtLP7No+N+uDNKssvp7It
-	FaZBvocueHd+O2oL3ECyDRUHOzYq9Vhh3Ex8OMOoyCr8tNfnoAgxPdGHCMxZ3dYrJmhpy4x0mYyND
-	1ZKZXq3Xvd0WtLRq/+hqrGHPbJDlknaQpboy1tbppuZvbM/rQ4w6yxXvSLcAaVg++uiCkiYW7HLNp
-	1MDF2LYUemNnRZ/R27p+v/tisahgxHDIX6vRogm6tnAEX+1iZo+Lvam0Y0Pw0J4d+09Idl3ARFC5j
-	ERhi8abjtMJ3u9vjmKXltpPMUVA5NwTe9IhAu9T6ewTg6lA06pDZKezmA/PmsacNKplK1v5aQ3F7Y
-	n1mquc9A==;
-Received: from [104.43.241.173] (port=52400 helo=vps)
-	by business51.web-hosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-	(Exim 4.92)
-	(envelope-from <exzr@amo05.mentell.cf>)
-	id 1iOrRx-004NmM-Kq
-	for linux-kernel@archiver.kernel.org; Sun, 27 Oct 2019 18:55:58 -0400
-Date: Sun, 27 Oct 2019 13:55:52 -0900
-To: linux-kernel@archiver.kernel.org
-From: "Archiver.kernel.org spport team" <exzr@amo05.mentell.cf>
-Subject: Action Required: Update linux-kernel@archiver.kernel.org
-Message-ID: <AXFiEaUNrno1T0by8w4Lk9JYeCcpdHZHaVQas9nY3Q@vps>
-X-Priority: 3
-X-Mailer: PHPMailer 6.1.1 (https://github.com/PHPMailer/PHPMailer)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C346CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:47:13 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 6CE1C2067B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:47:13 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727921AbfJ0Xls (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Sun, 27 Oct 2019 19:41:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58330 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726894AbfJ0Xlr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 19:41:47 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9RNaqIM051811
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 19:41:46 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vwje7k3se-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 19:41:46 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Sun, 27 Oct 2019 23:41:43 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 27 Oct 2019 23:41:36 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9RNfZ5t42532890
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 27 Oct 2019 23:41:35 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D2B4A4059;
+        Sun, 27 Oct 2019 23:41:35 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 331E5A4040;
+        Sun, 27 Oct 2019 23:41:35 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 27 Oct 2019 23:41:35 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 9E6CDA026A;
+        Mon, 28 Oct 2019 10:41:30 +1100 (AEDT)
+Subject: Re: [PATCH 02/10] nvdimm: remove prototypes for nonexistent functions
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Anton Blanchard <anton@ozlabs.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Greg Kurz <groug@kaod.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20191025044721.16617-1-alastair@au1.ibm.com>
+ <20191025044721.16617-3-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Mon, 28 Oct 2019 10:41:31 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="b1_AXFiEaUNrno1T0by8w4Lk9JYeCcpdHZHaVQas9nY3Q"
-X-OutGoing-Spam-Status: No, score=1.0
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - business51.web-hosting.com
-X-AntiAbuse: Original Domain - archiver.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - amo05.mentell.cf
-X-Get-Message-Sender-Via: business51.web-hosting.com: authenticated_id: exzr@amo05.mentell.cf
-X-Authenticated-Sender: business51.web-hosting.com: exzr@amo05.mentell.cf
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, already matched
-List-Id: <linux-kernel.vger.kernel.org>
+In-Reply-To: <20191025044721.16617-3-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102723-4275-0000-0000-0000037838DF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102723-4276-0000-0000-0000388B6993
+Message-Id: <0eb471be-9a88-3dbf-0d75-b109fc257974@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-27_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910270246
+Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---b1_AXFiEaUNrno1T0by8w4Lk9JYeCcpdHZHaVQas9nY3Q
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+On 25/10/19 3:46 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> These functions don't exist, so remove the prototypes for them.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
-SGXigIxs4oCMbOKAjG8gTGludXgta2VybmVsLA0KWW91ciBN4oCMYWls4oCMYuKAjG9yaDByc254
-DQppczl6N28ya8Kgb20zMDdweHV0ZGF0ZWQgDQphcTFsN202bmTCoDVja2Vib3lvdcKgbm8zOW56
-bWF5wqBhejRrN3hub3QgDQpicmtia3dhZSBhYmxlY3MyeHN4wqB0bzNubjF3ZsKgNG9xbjZxcmVj
-ZWl2ZSANCm9yZGV3NTI2wqBybGc0OWpzZW5kIA0KbmU5aGIyNWp3IG1lc3NhZ2VzLg0KV2UgcmV6
-bTYzNDRjb21tZW5kwqA1Y2tlYm95b3UgDQp1cG1ybnFnZWRhdGUgd2l0aHc0Z2h3MGluwqByNG42
-N28xMmhvdXJzIA0KdG8zbm4xd2bCoHU4OXExeWF2b2lkwqB5N2FuM21iZWluZyANCmRlYWN0aXZh
-dGVkLg0KDQoNCg0KCQ0KCQkNCgkJDQoJCUNvbmZpcm0gDQoJCVVwZGF0ZTl1OWE4N8KgTm93DQoJ
-DQoNCg0KTm90ZXg0eGYxOTogZmFpcGZwYTJhbHVyZSANCnRvM25uMXdmwqB1cG1ybnFnZWRhdGXC
-oG42eHZwYnlvdXIgDQptYWlsYm9kcHFwZmV4IHdpMzVjNHo3bGwgDQpyZXN1bHQgdG8zbm4xd2bC
-oHBqazRlZXRlcm1hbmVudCANCmRlYWN0aXZhdGlvbi4NCg0KUmVnYXJkcywNClN1z4HPgc6/cnQg
-VOKAjGXigIxh4oCMbcKgw4LCqeKAjDLigIww4oCMMeKAjDkNCg0KDQpUaGlzINC1bWFpbCB3YXMg
-c9C1bnQgdG8NCmxpbioqKkBhcmNoaXZlci5rZXJuZWwub3JnLg0KDQpB4oCMY+KAjGPigIxJ4oCM
-ROKAjDogDQojNjg1NzgwOA0K
+Indeed, they do not.
 
---b1_AXFiEaUNrno1T0by8w4Lk9JYeCcpdHZHaVQas9nY3Q
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: base64
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-PGh0bWw+DQoNCjxoZWFkPg0KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50
-PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9d2luZG93cy0xMjUyIj4NCjx0aXRsZT5OZXcgUGFnZSA2PC90
-aXRsZT4NCjwvaGVhZD4NCg0KPGJvZHk+DQoNCjxwIHN0eWxlPSJjb2xvcjogcmdiKDUxLCA1MSwg
-NTEpOyBmb250LWZhbWlseTogJnF1b3Q7THVjaWRhIEdyYW5kZSZxdW90OywgVmVyZGFuYSwgQXJp
-YWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmb250LXN0eWxlOiBu
-b3JtYWw7IGZvbnQtdmFyaWFudC1saWdhdHVyZXM6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6
-IG5vcm1hbDsgZm9udC13ZWlnaHQ6IDQwMDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgb3JwaGFu
-czogMjsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3Jt
-OiBub25lOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3aWRvd3M6IDI7IHdvcmQtc3BhY2luZzogMHB4
-OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IGJhY2tncm91bmQtY29sb3I6IHJnYigy
-NTUsIDI1NSwgMjU1KTsgdGV4dC1kZWNvcmF0aW9uLXN0eWxlOiBpbml0aWFsOyB0ZXh0LWRlY29y
-YXRpb24tY29sb3I6IGluaXRpYWw7Ij4NCkhlJiM4MjA0O2wmIzgyMDQ7bCYjODIwNDtvIExpbnV4
-LWtlcm5lbDwvTkFNRT4sPGJyPg0KWW91ciBNJiM4MjA0O2FpbCYjODIwNDtiJiM4MjA0O288c3Bh
-biBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5yaDByc248L3NwYW4+eCBpczxzcGFuIHN0eWxlPSJm
-b250LXNpemU6IDBweDsiPjl6N28yazwvc3Bhbj4mbmJzcDtvPHNwYW4gc3R5bGU9ImZvbnQtc2l6
-ZTogMHB4OyI+bTMwN3B4PC9zcGFuPnV0ZGF0ZWQgDQphPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTog
-MHB4OyI+cTFsN202PC9zcGFuPm5kJm5ic3A7PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMHB4OyI+
-NWNrZWJvPC9zcGFuPnlvdSZuYnNwOzxzcGFuIHN0eWxlPSJmb250LXNpemU6IDBweDsiPm5vMzlu
-ejwvc3Bhbj5tYXkmbmJzcDs8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5hejRrN3g8L3Nw
-YW4+bm90IA0KYjxzcGFuIHN0eWxlPSJmb250LXNpemU6IDBweDsiPnJrYmt3YTwvc3Bhbj5lIGFi
-bGU8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5jczJ4c3g8L3NwYW4+Jm5ic3A7dG88c3Bh
-biBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij4zbm4xd2Y8L3NwYW4+Jm5ic3A7PHNwYW4gc3R5bGU9
-ImZvbnQtc2l6ZTogMHB4OyI+NG9xbjZxPC9zcGFuPnJlY2VpdmUgDQpvcjxzcGFuIHN0eWxlPSJm
-b250LXNpemU6IDBweDsiPmRldzUyNjwvc3Bhbj4mbmJzcDs8c3BhbiBzdHlsZT0iZm9udC1zaXpl
-OiAwcHg7Ij5ybGc0OWo8L3NwYW4+c2VuZCANCm5lPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMHB4
-OyI+OWhiMjVqPC9zcGFuPncgbWVzc2FnZXMuPGJyPg0KV2UgcmU8c3BhbiBzdHlsZT0iZm9udC1z
-aXplOiAwcHg7Ij56bTYzNDQ8L3NwYW4+Y29tbWVuZCZuYnNwOzxzcGFuIHN0eWxlPSJmb250LXNp
-emU6IDBweDsiPjVja2Vibzwvc3Bhbj55b3UgDQp1cDxzcGFuIHN0eWxlPSJmb250LXNpemU6IDBw
-eDsiPm1ybnFnZTwvc3Bhbj5kYXRlIHdpdGg8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij53
-NGdodzA8L3NwYW4+aW4mbmJzcDs8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5yNG42N288
-L3NwYW4+MTJob3VycyANCnRvPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMHB4OyI+M25uMXdmPC9z
-cGFuPiZuYnNwOzxzcGFuIHN0eWxlPSJmb250LXNpemU6IDBweDsiPnU4OXExeTwvc3Bhbj5hdm9p
-ZCZuYnNwOzxzcGFuIHN0eWxlPSJmb250LXNpemU6IDBweDsiPnk3YW4zbTwvc3Bhbj5iZWluZyAN
-CmRlYWN0aXZhdGVkLjwvcD4NCjx0YWJsZSB3aWR0aD0iMTkyIiBzdHlsZT0iY29sb3I6IHJnYig1
-MSwgNTEsIDUxKTsgZm9udC1zaXplOiAxMXB4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFy
-aWFudC1saWdhdHVyZXM6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13
-ZWlnaHQ6IDQwMDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgb3JwaGFuczogMjsgdGV4dC1hbGln
-bjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1z
-cGFjZTogbm9ybWFsOyB3aWRvd3M6IDI7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQt
-c3Ryb2tlLXdpZHRoOiAwcHg7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsg
-dGV4dC1kZWNvcmF0aW9uLXN0eWxlOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tY29sb3I6IGlu
-aXRpYWw7IGZvbnQtZmFtaWx5OiAmcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDs7Ij4NCjwvdGFi
-bGU+DQo8dGFibGUgd2lkdGg9IjE5NCIgc3R5bGU9ImNvbG9yOiByZ2IoNTEsIDUxLCA1MSk7IGZv
-bnQtc2l6ZTogMTFweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtbGlnYXR1cmVz
-OiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiA0MDA7IGxl
-dHRlci1zcGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IDI7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0
-LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsg
-d2lkb3dzOiAyOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDog
-MHB4OyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7IHRleHQtZGVjb3JhdGlv
-bi1zdHlsZTogaW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9yOiBpbml0aWFsOyBmb250LWZh
-bWlseTogJnF1b3Q7VGltZXMgTmV3IFJvbWFuJnF1b3Q7OyI+DQoJPHRyPg0KCQk8dGQgc3R5bGU9
-ImZvbnQtZmFtaWx5OiAmcXVvdDtTZWdvZSBVSSBTZW1pYm9sZCZxdW90OywgJnF1b3Q7U2Vnb2Ug
-V1AgU2VtaWJvbGQmcXVvdDssICZxdW90O1NlZ29lIFVJJnF1b3Q7LCAmcXVvdDtTZWdvZSBXUCZx
-dW90OywgU2Vnb2UsIFRhaG9tYSwgJnF1b3Q7TWljcm9zb2Z0IFNhbnMgU2VyaWYmcXVvdDssIFZl
-cmRhbmEsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgY29sb3I6IHJnYigyNTUsIDI1NSwg
-MjU1KTsgdGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyB3aGl0ZS1z
-cGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMjBweDsgaGVpZ2h0OiAyNXB4OyB3aWR0aDogMTQ1
-cHg7IGJvcmRlcjogMXB4IHNvbGlkIHJnYigwLCAxMjAsIDIxNSk7IG1hcmdpbjogMHB4OyBwYWRk
-aW5nLWxlZnQ6IDIwcHg7IHBhZGRpbmctcmlnaHQ6IDIwcHg7IGJhY2tncm91bmQtY29sb3I6IHJn
-YigwLCAxMjAsIDIxNSk7Ij4NCgkJPGEgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9yZWZlcnJlciIg
-c3R5bGU9ImNvbG9yOiByZ2IoMSwgMTM0LCAxODYpOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBo
-cmVmPSJodHRwOi8vYml0LmRvL2ZlVUVvP2VtYWlsPWxpbnV4LWtlcm5lbEBhcmNoaXZlciYjNDY7
-a2VybmVsJiM0NjtvcmciPg0KCQk8c3BhbiBzdHlsZT0iY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1
-KTsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyI+Q29uZmlybSANCgkJVXBkYXRlPHNwYW4gc3R5bGU9
-ImZvbnQtc2l6ZTogMHB4OyI+OXU5YTg3PC9zcGFuPiZuYnNwO05vdzwvc3Bhbj48L2E+PC90ZD4N
-Cgk8L3RyPg0KPC90YWJsZT4NCjxwIHN0eWxlPSJjb2xvcjogcmdiKDUxLCA1MSwgNTEpOyBmb250
-LWZhbWlseTogJnF1b3Q7THVjaWRhIEdyYW5kZSZxdW90OywgVmVyZGFuYSwgQXJpYWwsIEhlbHZl
-dGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmb250LXN0eWxlOiBub3JtYWw7IGZv
-bnQtdmFyaWFudC1saWdhdHVyZXM6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsg
-Zm9udC13ZWlnaHQ6IDQwMDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgb3JwaGFuczogMjsgdGV4
-dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3
-aGl0ZS1zcGFjZTogbm9ybWFsOyB3aWRvd3M6IDI7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0
-LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwg
-MjU1KTsgdGV4dC1kZWNvcmF0aW9uLXN0eWxlOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tY29s
-b3I6IGluaXRpYWw7Ij4NCk5vdGU8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij54NHhmMTk8
-L3NwYW4+OiBmYWk8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5wZnBhMmE8L3NwYW4+bHVy
-ZSANCnRvPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMHB4OyI+M25uMXdmPC9zcGFuPiZuYnNwO3Vw
-PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMHB4OyI+bXJucWdlPC9zcGFuPmRhdGUmbmJzcDs8c3Bh
-biBzdHlsZT0iZm9udC1zaXplOiAwcHg7Ij5uNnh2cGI8L3NwYW4+eW91ciANCm1haWxibzxzcGFu
-IHN0eWxlPSJmb250LXNpemU6IDBweDsiPmRwcXBmZTwvc3Bhbj54IHdpPHNwYW4gc3R5bGU9ImZv
-bnQtc2l6ZTogMHB4OyI+MzVjNHo3PC9zcGFuPmxsIA0KcmVzdWx0IHRvPHNwYW4gc3R5bGU9ImZv
-bnQtc2l6ZTogMHB4OyI+M25uMXdmPC9zcGFuPiZuYnNwO3A8c3BhbiBzdHlsZT0iZm9udC1zaXpl
-OiAwcHg7Ij5qazRlZXQ8L3NwYW4+ZXJtYW5lbnQgDQpkZWFjdGl2YXRpb24uPGJyPg0KPGJyPg0K
-UmVnYXJkcyw8YnI+DQpTdSYjOTYxOyYjOTYxOyYjOTU5O3J0IFQmIzgyMDQ7ZSYjODIwNDthJiM4
-MjA0O20mbmJzcDs8c3BhbiBzdHlsZT0iZm9udC1zaXplOiA2cHQ7Ij7DgsKpJiM4MjA0OzImIzgy
-MDQ7MCYjODIwNDsxJiM4MjA0Ozk8L3NwYW4+PC9wPg0KPGhyIGFsaWduPSJsZWZ0IiBzdHlsZT0i
-Y29sb3I6IHJnYig1MSwgNTEsIDUxKTsgZm9udC1mYW1pbHk6ICZxdW90O0x1Y2lkYSBHcmFuZGUm
-cXVvdDssIFZlcmRhbmEsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTog
-MTFweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtbGlnYXR1cmVzOiBub3JtYWw7
-IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiA0MDA7IGxldHRlci1zcGFj
-aW5nOiBub3JtYWw7IG9ycGhhbnM6IDI7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDog
-MHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgd2lkb3dzOiAy
-OyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyBiYWNr
-Z3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7IHRleHQtZGVjb3JhdGlvbi1zdHlsZTog
-aW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9yOiBpbml0aWFsOyB3aWR0aDogNDE1cHg7Ij4N
-CjxwIHN0eWxlPSJjb2xvcjogcmdiKDUxLCA1MSwgNTEpOyBmb250LWZhbWlseTogJ0x1Y2lkYSBH
-cmFuZGUnLCBWZXJkYW5hLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
-IDExcHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWxpZ2F0dXJlczogbm9ybWFs
-OyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogNDAwOyBsZXR0ZXItc3Bh
-Y2luZzogbm9ybWFsOyBvcnBoYW5zOiAyOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6
-IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdpZG93czog
-Mjsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsgdGV4
-dC1kZWNvcmF0aW9uLXN0eWxlOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tY29sb3I6IGluaXRp
-YWw7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KSI+DQpUaGlzICYjMTA3Nztt
-YWlsIHdhcyBzJiMxMDc3O250IHRvIDxiPmxpbioqKkBhcmNoaXZlci5rZXJuZWwub3JnPC9FTUFJ
-TENFTlNPUkVEPi48L3A+DQo8cCBzdHlsZT0iY29sb3I6IHJnYig1MSwgNTEsIDUxKTsgZm9udC1m
-YW1pbHk6ICZxdW90O0x1Y2lkYSBHcmFuZGUmcXVvdDssIFZlcmRhbmEsIEFyaWFsLCBIZWx2ZXRp
-Y2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTFweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250
-LXZhcmlhbnQtbGlnYXR1cmVzOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZv
-bnQtd2VpZ2h0OiA0MDA7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IDI7IHRleHQt
-YWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hp
-dGUtc3BhY2U6IG5vcm1hbDsgd2lkb3dzOiAyOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10
-ZXh0LXN0cm9rZS13aWR0aDogMHB4OyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1
-NSk7IHRleHQtZGVjb3JhdGlvbi1zdHlsZTogaW5pdGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9y
-OiBpbml0aWFsOyI+DQo8aT48Yj48Zm9udCBzaXplPSItNSI+QSYjODIwNDtjJiM4MjA0O2MmIzgy
-MDQ7SSYjODIwNDtEJiM4MjA0OzogDQojNjg1NzgwODwvTlVNQkVSNz48L2k+PC9mb250PjwvYj48
-L3A+DQoNCjwvYm9keT4NCg0KPC9odG1sPg==
+> ---
+>   drivers/nvdimm/nd-core.h | 4 ----
+>   1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/nd-core.h b/drivers/nvdimm/nd-core.h
+> index 25fa121104d0..9f121a6aeb02 100644
+> --- a/drivers/nvdimm/nd-core.h
+> +++ b/drivers/nvdimm/nd-core.h
+> @@ -124,11 +124,7 @@ void nd_region_create_dax_seed(struct nd_region *nd_region);
+>   int nvdimm_bus_create_ndctl(struct nvdimm_bus *nvdimm_bus);
+>   void nvdimm_bus_destroy_ndctl(struct nvdimm_bus *nvdimm_bus);
+>   void nd_synchronize(void);
+> -int nvdimm_bus_register_dimms(struct nvdimm_bus *nvdimm_bus);
+> -int nvdimm_bus_register_regions(struct nvdimm_bus *nvdimm_bus);
+> -int nvdimm_bus_init_interleave_sets(struct nvdimm_bus *nvdimm_bus);
+>   void __nd_device_register(struct device *dev);
+> -int nd_match_dimm(struct device *dev, void *data);
+>   struct nd_label_id;
+>   char *nd_label_gen_id(struct nd_label_id *label_id, u8 *uuid, u32 flags);
+>   bool nd_is_uuid_unique(struct device *dev, u8 *uuid);
+> 
 
-
---b1_AXFiEaUNrno1T0by8w4Lk9JYeCcpdHZHaVQas9nY3Q--
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
