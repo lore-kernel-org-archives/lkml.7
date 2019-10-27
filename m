@@ -2,122 +2,138 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974A5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 12:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97A5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 12:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6930C2070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 12:15:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BW1zpR5T"
+	by mail.kernel.org (Postfix) with ESMTP id B1E0C20679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 12:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572179542;
+	bh=EuTIDHl6bQl/3rTLwZ8VASMvn82jC2/UGPnCBd61cbI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=Hls6kINhfthZh9ESi2C7B31uZpdla6wMPs/iSHMGpwh429++cSGJIOj54kEX3nx7D
+	 GbtY+ARk7+/9p8BMmUEcKksPsxsp2sy1gbmfPo6eOHt1+vZBcX9lpQQHAI9MR67tTU
+	 bZlVG9kHNsF8MbeBZcn7yV5Ic/PxBP6kyQYIjNzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfJ0MPJ (ORCPT
+        id S1726776AbfJ0Mbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 08:15:09 -0400
-Received: from mout.gmx.net ([212.227.15.15]:57777 "EHLO mout.gmx.net"
+        Sun, 27 Oct 2019 08:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbfJ0MPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 08:15:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572178483;
-        bh=hzFiu0s1u36lbFL+Sm9oiww/ZbzJI1xnUJXEm4icdTo=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=BW1zpR5Ta7ncnQqOvekklsntEhirIr3KAOSW4A1k6viRfqDhznCRywCckhtCrsSRY
-         yXOszMhui/P0zQDkJPYy9lHJtQItD6tMmZd59UjROu5MBh3M2RKwGSYA5j5CGNAGK2
-         iWNz9V4NmjVHq+J6MlbLmHFLdp5QzAwXS5kUL7DY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.112]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4zAs-1hxAjH1PAS-010qGa; Sun, 27
- Oct 2019 13:14:43 +0100
-Subject: Re: [PATCH] net: usb: lan78xx: Disable interrupts before calling
- generic_handle_irq()
-To:     Daniel Wagner <dwagner@suse.de>, netdev@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Miller <davem@davemloft.net>
-References: <20191025080413.22665-1-dwagner@suse.de>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <46b35c32-4383-c630-3c52-b59bf7908c36@gmx.net>
-Date:   Sun, 27 Oct 2019 13:14:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726533AbfJ0Mbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 08:31:52 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9160620679;
+        Sun, 27 Oct 2019 12:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572179511;
+        bh=EuTIDHl6bQl/3rTLwZ8VASMvn82jC2/UGPnCBd61cbI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=gg7E7f+x2+FgboRqkW3txPE+c8F0VbcY6hZSAI/UGQ0LcB22fKTBqiJNiXIcDofUG
+         EB/VdB1z//xNmIntXhf/LgQSlp4CpRaP2ya+V84Ys2Ik7PnQrNUC6FCDqb9w4DKX5g
+         vb1qzsKMSx0G+Z647D0OByxbUBsOG/ABxlkyAgRc=
+Message-ID: <1a9ac7d3097efe53ad6f2fda4dd584204dd7eba2.camel@kernel.org>
+Subject: Re: [PATCH v2] ceph: Fix use-after-free in __ceph_remove_cap
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <ukernel@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sun, 27 Oct 2019 08:31:49 -0400
+In-Reply-To: <20191025130524.31755-1-lhenriques@suse.com>
+References: <9c1fe73500ca7dece15c73d7534b9e0ec417c83a.camel@kernel.org>
+         <20191025130524.31755-1-lhenriques@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20191025080413.22665-1-dwagner@suse.de>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:v5mliJ6wThw2tCSLVO1SujmRbc7WST509PmL6NPAFGOCl91mn0g
- jNStYQ+eGPj6wJxQjHQ5LtN/PPobbST2tTkBAusWDg7ybb4EqFqEm4a1pyQaCXQOQHd11ey
- qIXVnd41DoYn6wQS0J8cKkYnEYkpHLiB/ep1+7NjtY6HtHzoXk4VHsHgSUsUzmzkU9DsdZC
- 826JCv8X1iACsy65Cf+Rg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yATG3UeRTho=:pzoxsdOfAetcRZpiMmoqvp
- Wwn5rj6pv4xPdBlSUOZ0fLxCkfwRX3dYFyNd0NESSPLANMWoEe2kXXdq6skOEBf5ZFgreaJBL
- D0qxWhf70A2hOnfE2V6u28uOAcpU5OYmSySUogUnil6Z0OkA8IquWQ4rBTfcyDUv0KaGyAge9
- GVtqDzMpP13dTOL4THucv1kBNAReon4w2aqFHAWF3vuVgWUUzczWtBhxg7Xb6F4wlXg4i1MC0
- 0Fjn5DCZcmj+uH/XwGfRwU1Yapogm6upnslUEcnXCP2OnyiE/Jr7m+MFBUFcBeVzdhy6/cjCj
- Od3czv8t9YMwBZMlbsCV+aqbNt9m31yloWjebnpZuWt6k6OkfIgdvxRriTAGt239jaAKRAp3Q
- h2Z3FhHIhZctAItslVRY2IfckA/fk8DchXZq02gtV95uTrgmQMDdobKdeEzgMKRsdGXCNlIlZ
- iaq2x7TaDDfe6i4Wc2bP3qiukBpqEVWATav4bpm1Wt0gf6SWRFGxwGtjioyUstKFirhrVJ4U9
- lhIVfKmvrIR4PRH66ARDXr2+oQ52S4Z/0OdOletgMWwfV80+L8cA5aHwjQYotP1mbL4UBsvpE
- cuyOUlngv9cGiiHkPg03c+Vtl0lEG+VhX9c3B+JE2dixgfPAXYUkUuOrzxp1vC2cn5NMJxLNZ
- SMgEubzRwPB/1Cr877RzY+FoHs5Iz6gfvbKzdOnNbjfk93SYYtYIC+la+XjvqulCWtjC24thQ
- o8GJfQ81xKCSh/ziusBFOSVoFxBLnVi3KmM8Ltn2BP4HPKf//fe93AvR6KZVqgGqCiDRBQe4O
- V76j+vnJTgAK0X6l/JDTcB1ckIPI78sQkqV2Et2sQZsqoYA/Lp/CPZfRwYUcCaRIkZkAz38GY
- lJXHhpIbzF4adaVI1U3E9ncy0/VnpOlzruhlK7gDb4HzQN3q4x8azJFHzMdNgamGBNrhmh3SH
- /kYvqPeNt2YHB/l9ieBu8DX73o5WENIxV+oFoH+a/URhsQrzzRGcwFw5snpuhZG4Npsyeq5dK
- dduKqWBHCjNCYy60rEVu5vOz6kOJVvJexkowK2iLwH5tLXwT8ZS5Irx1J6y9pQT/56zlzIriC
- QHGCaKBqVGhiUx0DQLGuxrvqKsJkjAeN7TklEgapHh1OEICKsFIsS+k85EHJ4lQsf0K6YQutB
- yTL4oCmJsyU6tmzWksmq5FQjf4puKKhO6ZWTJ0j/kjCMDCW6FuH4VCdXA6gq3KfKV6r9VaDYA
- ohon6T6zQ9PWvQzf6ql4PZLXOY3an4ARZGQ734QCvJWjb2/Z9rZmhZe1q4QI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
-
-Am 25.10.19 um 10:04 schrieb Daniel Wagner:
-> ...
->
-> Fixes: ed194d136769 ("usb: core: remove local_irq_save() around ->complete() handler")
-> Cc: Woojung Huh <woojung.huh@microchip.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Stefan Wahren <wahrenst@gmx.net>
-> Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: David Miller <davem@davemloft.net>
-> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+On Fri, 2019-10-25 at 14:05 +0100, Luis Henriques wrote:
+> KASAN reports a use-after-free when running xfstest generic/531, with the
+> following trace:
+> 
+> [  293.903362]  kasan_report+0xe/0x20
+> [  293.903365]  rb_erase+0x1f/0x790
+> [  293.903370]  __ceph_remove_cap+0x201/0x370
+> [  293.903375]  __ceph_remove_caps+0x4b/0x70
+> [  293.903380]  ceph_evict_inode+0x4e/0x360
+> [  293.903386]  evict+0x169/0x290
+> [  293.903390]  __dentry_kill+0x16f/0x250
+> [  293.903394]  dput+0x1c6/0x440
+> [  293.903398]  __fput+0x184/0x330
+> [  293.903404]  task_work_run+0xb9/0xe0
+> [  293.903410]  exit_to_usermode_loop+0xd3/0xe0
+> [  293.903413]  do_syscall_64+0x1a0/0x1c0
+> [  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> This happens because __ceph_remove_cap() may queue a cap release
+> (__ceph_queue_cap_release) which can be scheduled before that cap is
+> removed from the inode list with
+> 
+> 	rb_erase(&cap->ci_node, &ci->i_caps);
+> 
+> And, when this finally happens, the use-after-free will occur.
+> 
+> This can be fixed by removing the cap from the inode list before being
+> removed from the session list, and thus eliminating the risk of an UAF.
+> 
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
 > ---
->
-> Hi,
->
-> This patch just fixes the warning. There are still problems left (the
-> unstable NFS report from me) but I suggest to look at this
-> separately. The initial patch to revert all the irqdomain code might
-> just hide the problem. At this point I don't know what's going on so I
-> rather go baby steps. The revert is still possible if nothing else
-> works.
+> Hi!
+> 
+> So, after spending some time trying to find possible races throught code
+> review and testing, I modified the fix according to Jeff's suggestion.
+> 
+> Cheers,
+> Luis
+> 
+> fs/ceph/caps.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> index d3b9c9d5c1bd..a9ce858c37d0 100644
+> --- a/fs/ceph/caps.c
+> +++ b/fs/ceph/caps.c
+> @@ -1058,6 +1058,11 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
+>  
+>  	dout("__ceph_remove_cap %p from %p\n", cap, &ci->vfs_inode);
+>  
+> +	/* remove from inode list */
+> +	rb_erase(&cap->ci_node, &ci->i_caps);
+> +	if (ci->i_auth_cap == cap)
+> +		ci->i_auth_cap = NULL;
+> +
+>  	/* remove from session list */
+>  	spin_lock(&session->s_cap_lock);
+>  	if (session->s_cap_iterator == cap) {
+> @@ -1091,11 +1096,6 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
+>  
+>  	spin_unlock(&session->s_cap_lock);
+>  
+> -	/* remove from inode list */
+> -	rb_erase(&cap->ci_node, &ci->i_caps);
+> -	if (ci->i_auth_cap == cap)
+> -		ci->i_auth_cap = NULL;
+> -
+>  	if (removed)
+>  		ceph_put_cap(mdsc, cap);
+>  
 
-did you ever see this pseudo lan78xx-irqs fire? I examined
-/proc/interrupts on RPi 3B+ and always saw a 0.
+Looks good. Merged with a slight modification to the comment:
 
-FWIW you can have:
++       /* remove from inode's cap rbtree, and clear auth cap */
 
-Tested-by: Stefan Wahren <wahrenst@gmx.net>
-
-for this patch.
-
-Regards
-Stefan
+Thanks!
+-- 
+Jeff Layton <jlayton@kernel.org>
 
