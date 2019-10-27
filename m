@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2830BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E4DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A85222C1
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7971D222C1
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211617;
-	bh=xKVZE5JhxPls7RCkz1IZ18bRsS/CieIGVS88fy3Y+K0=;
+	s=default; t=1572211620;
+	bh=9hY8NZOhxzV2KeZA0eTHKZPgwdCjCBrLUUEhiwi4SYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SxfYi6Txoy1mqmT+qIm69ekTgfw8uHF08VpjVwf4RdsKkqR6qzrGIj87pC+GDjfjl
-	 9yIFudjrIH3xjayIVNImJQMklOgbhlKd4wGrv3k0sfr5qwORGm7kPl78EOnB5Ez6nP
-	 m2bAcTMCT/RXokq5Y2jsnRLYFiuRwtq6gEBrIDU0=
+	b=0GfC6Ndb+zm0pSBgQ4LkEh9rPpg4p5aaR9lAa9IOsEXtEHzU5Ynz6HBT4QiVSVMOm
+	 88DsokVRM/8kIMO7ItgjnP1GCBHb4zNcOxceII8qKhUD9CmXx/7hgJ/TNqvZpgIwRl
+	 AnNbErTiPueMCYR8jOJssjZEhU4wN9zvpZMPnKyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732814AbfJ0VZw (ORCPT
+        id S1732795AbfJ0VZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47718 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:25:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732799AbfJ0VZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:25:48 -0400
+        id S1730905AbfJ0VZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:25:40 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A418B21850;
-        Sun, 27 Oct 2019 21:25:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6971F21D7F;
+        Sun, 27 Oct 2019 21:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211548;
-        bh=xKVZE5JhxPls7RCkz1IZ18bRsS/CieIGVS88fy3Y+K0=;
+        s=default; t=1572211539;
+        bh=9hY8NZOhxzV2KeZA0eTHKZPgwdCjCBrLUUEhiwi4SYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nh72g7yjcpEViTLX+HpKRSucFb5Cc88W4rU4tUbh8CIMHDkmrEnH6fx4tR4bIBor9
-         +mLRPozdVSqHy9/6GcGG7UwZadH6hzeCj2xioXSR3rHkh1V7k1oLCBP4ctMmuWgHbu
-         jgfVSzfwnsGSIQ6t/f81LGp6HknbYp3uu6y8CmNo=
+        b=lPn1s50cbuAgD026+8a9f46XJqiQYtwOn51UFheiHaWqdb723wEpmmxbqPGu2MI7f
+         JVP1WxFmtGfpgLP2p6ym9RCLJOlKQpNk0ckA8whotqVBTrPJKoOOWe7KGwOXKmsb+M
+         B121Mw3ZoLCFDwwAiBGpGX1eNgxAVmT/5apVPhoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 5.3 191/197] ceph: just skip unrecognized info in ceph_reply_info_extra
-Date:   Sun, 27 Oct 2019 22:01:49 +0100
-Message-Id: <20191027203406.798811216@linuxfoundation.org>
+        stable@vger.kernel.org, Patrick Williams <alpawi@amazon.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.3 180/197] pinctrl: armada-37xx: swap polarity on LED group
+Date:   Sun, 27 Oct 2019 22:01:38 +0100
+Message-Id: <20191027203405.720033249@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,79 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Patrick Williams <alpawi@amazon.com>
 
-commit 1d3f87233e26362fc3d4e59f0f31a71b570f90b9 upstream.
+commit b835d6953009dc350d61402a854b5a7178d8c615 upstream.
 
-In the future, we're going to want to extend the ceph_reply_info_extra
-for create replies. Currently though, the kernel code doesn't accept an
-extra blob that is larger than the expected data.
+The configuration registers for the LED group have inverted
+polarity, which puts the GPIO into open-drain state when used in
+GPIO mode.  Switch to '0' for GPIO and '1' for LED modes.
 
-Change the code to skip over any unrecognized fields at the end of the
-extra blob, rather than returning -EIO.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support for Armada 37xx")
+Signed-off-by: Patrick Williams <alpawi@amazon.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191001155154.99710-1-alpawi@amazon.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/mds_client.c |   21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -384,8 +384,8 @@ static int parse_reply_info_readdir(void
- 	}
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -183,10 +183,10 @@ static struct armada_37xx_pin_group arma
+ 	PIN_GRP_EXTRA("uart2", 9, 2, BIT(1) | BIT(13) | BIT(14) | BIT(19),
+ 		      BIT(1) | BIT(13) | BIT(14), BIT(1) | BIT(19),
+ 		      18, 2, "gpio", "uart"),
+-	PIN_GRP_GPIO("led0_od", 11, 1, BIT(20), "led"),
+-	PIN_GRP_GPIO("led1_od", 12, 1, BIT(21), "led"),
+-	PIN_GRP_GPIO("led2_od", 13, 1, BIT(22), "led"),
+-	PIN_GRP_GPIO("led3_od", 14, 1, BIT(23), "led"),
++	PIN_GRP_GPIO_2("led0_od", 11, 1, BIT(20), BIT(20), 0, "led"),
++	PIN_GRP_GPIO_2("led1_od", 12, 1, BIT(21), BIT(21), 0, "led"),
++	PIN_GRP_GPIO_2("led2_od", 13, 1, BIT(22), BIT(22), 0, "led"),
++	PIN_GRP_GPIO_2("led3_od", 14, 1, BIT(23), BIT(23), 0, "led"),
  
- done:
--	if (*p != end)
--		goto bad;
-+	/* Skip over any unrecognized fields */
-+	*p = end;
- 	return 0;
+ };
  
- bad:
-@@ -406,12 +406,10 @@ static int parse_reply_info_filelock(voi
- 		goto bad;
- 
- 	info->filelock_reply = *p;
--	*p += sizeof(*info->filelock_reply);
- 
--	if (unlikely(*p != end))
--		goto bad;
-+	/* Skip over any unrecognized fields */
-+	*p = end;
- 	return 0;
--
- bad:
- 	return -EIO;
- }
-@@ -425,18 +423,21 @@ static int parse_reply_info_create(void
- {
- 	if (features == (u64)-1 ||
- 	    (features & CEPH_FEATURE_REPLY_CREATE_INODE)) {
-+		/* Malformed reply? */
- 		if (*p == end) {
- 			info->has_create_ino = false;
- 		} else {
- 			info->has_create_ino = true;
--			info->ino = ceph_decode_64(p);
-+			ceph_decode_64_safe(p, end, info->ino, bad);
- 		}
-+	} else {
-+		if (*p != end)
-+			goto bad;
- 	}
- 
--	if (unlikely(*p != end))
--		goto bad;
-+	/* Skip over any unrecognized fields */
-+	*p = end;
- 	return 0;
--
- bad:
- 	return -EIO;
- }
 
 
