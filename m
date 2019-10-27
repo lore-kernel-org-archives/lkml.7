@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7493CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B14CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47DFC208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9849E214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210872;
-	bh=EUuh1vPUFAlhoRbVgQeGEOyNuTvyYkG+7Olaa9exQJU=;
+	s=default; t=1572210878;
+	bh=EJOQF7DRiGn4tKqSF37wvovTR3uTnUBMgugGdktf3ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDlzdfRiLAGXo1HLZvN7hY7UPv6uIQv3AZ+A3w19A016yAh6NyJgnl3cLIix4QXHx
-	 bks9XsVpZqpoZXp3ZbLQd98kqjWyv1yyWL/hpmYxb9L9FjfGnx1j/BXqrK7vIlC3oK
-	 hxmsx2xkpYM7jFzAdgEbkip7nE2w+XmWnY5r1viw=
+	b=wOLHDic2XOuykDTFoW0yR0EmS6YTlqrXC3T4FjQpwnblf9qJHhGR1E8OmoG/hucEQ
+	 MtiaRPDgVvTnKwCqgkiAaaDYa3izFeYO+MKX/2/cfD+QszqTYT/REBqzcUNpZZSaiz
+	 cRtnj7Xq0v67L6evrE4S3le+U7nUnWp80I9b4+Xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbfJ0VOb (ORCPT
+        id S1729490AbfJ0VOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729745AbfJ0VO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:14:27 -0400
+        id S1728939AbfJ0VOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:14:30 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40D3B21726;
-        Sun, 27 Oct 2019 21:14:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EBCA208C0;
+        Sun, 27 Oct 2019 21:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210866;
-        bh=EUuh1vPUFAlhoRbVgQeGEOyNuTvyYkG+7Olaa9exQJU=;
+        s=default; t=1572210869;
+        bh=EJOQF7DRiGn4tKqSF37wvovTR3uTnUBMgugGdktf3ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cLgJokeTwOcfLhtr8KSwTsS+TC0NHxgxr69Kg0eIdmC9Y8hMDOzhz/rE9BFalrQmG
-         Y/TsYeP3bQtPBsheVBjzeBIOgLddiRDuh48cwMJ3kGyU2gyw+uwbNRtks5znOPCnOT
-         ryD5rY9+CLeeaacgbTWQj2TeRviUah6W3zAxkZBo=
+        b=re5uK3OF2Rs0LNvG0kCzh0YAXj5XXCwFLbaBqxkKVqF2mUUeqsk5AwdESvX3WPYya
+         KNnuFjL3+60ZAYG+zaIC2D//9DFK9wUiSZI8AnXdCHaCEX8DYeCi0WXeccdsUG2nzL
+         I9fGK8Prvqjaz2HYRM+93VNLBKQlSsLaDCxnZ3Nk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6fe95b826644f7f12b0b@syzkaller.appspotmail.com,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 45/93] USB: ldusb: fix read info leaks
-Date:   Sun, 27 Oct 2019 22:00:57 +0100
-Message-Id: <20191027203259.369262258@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        linux-mips@vger.kernel.org
+Subject: [PATCH 4.19 46/93] MIPS: tlbex: Fix build_restore_pagemask KScratch restore
+Date:   Sun, 27 Oct 2019 22:00:58 +0100
+Message-Id: <20191027203259.733806213@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,80 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Paul Burton <paulburton@kernel.org>
 
-commit 7a6f22d7479b7a0b68eadd308a997dd64dda7dae upstream.
+commit b42aa3fd5957e4daf4b69129e5ce752a2a53e7d6 upstream.
 
-Fix broken read implementation, which could be used to trigger slab info
-leaks.
+build_restore_pagemask() will restore the value of register $1/$at when
+its restore_scratch argument is non-zero, and aims to do so by filling a
+branch delay slot. Commit 0b24cae4d535 ("MIPS: Add missing EHB in mtc0
+-> mfc0 sequence.") added an EHB instruction (Execution Hazard Barrier)
+prior to restoring $1 from a KScratch register, in order to resolve a
+hazard that can result in stale values of the KScratch register being
+observed. In particular, P-class CPUs from MIPS with out of order
+execution pipelines such as the P5600 & P6600 are affected.
 
-The driver failed to check if the custom ring buffer was still empty
-when waking up after having waited for more data. This would happen on
-every interrupt-in completion, even if no data had been added to the
-ring buffer (e.g. on disconnect events).
+Unfortunately this EHB instruction was inserted in the branch delay slot
+causing the MFC0 instruction which performs the restoration to no longer
+execute along with the branch. The result is that the $1 register isn't
+actually restored, ie. the TLB refill exception handler clobbers it -
+which is exactly the problem the EHB is meant to avoid for the P-class
+CPUs.
 
-Due to missing sanity checks and uninitialised (kmalloced) ring-buffer
-entries, this meant that huge slab info leaks could easily be triggered.
+Similarly build_get_pgd_vmalloc() will restore the value of $1/$at when
+its mode argument equals refill_scratch, and suffers from the same
+problem.
 
-Note that the empty-buffer check after wakeup is enough to fix the info
-leak on disconnect, but let's clear the buffer on allocation and add a
-sanity check to read() to prevent further leaks.
+Fix this by in both cases moving the EHB earlier in the emitted code.
+There's no reason it needs to immediately precede the MFC0 - it simply
+needs to be between the MTC0 & MFC0.
 
-Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.13
-Reported-by: syzbot+6fe95b826644f7f12b0b@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191018151955.25135-2-johan@kernel.org
+This bug only affects Cavium Octeon systems which use
+build_fast_tlb_refill_handler().
+
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Fixes: 0b24cae4d535 ("MIPS: Add missing EHB in mtc0 -> mfc0 sequence.")
+Cc: Dmitry Korotin <dkorotin@wavecomp.com>
+Cc: stable@vger.kernel.org # v3.15+
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/ldusb.c |   18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ arch/mips/mm/tlbex.c |   23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -464,7 +464,7 @@ static ssize_t ld_usb_read(struct file *
- 
- 	/* wait for data */
- 	spin_lock_irq(&dev->rbsl);
--	if (dev->ring_head == dev->ring_tail) {
-+	while (dev->ring_head == dev->ring_tail) {
- 		dev->interrupt_in_done = 0;
- 		spin_unlock_irq(&dev->rbsl);
- 		if (file->f_flags & O_NONBLOCK) {
-@@ -474,12 +474,17 @@ static ssize_t ld_usb_read(struct file *
- 		retval = wait_event_interruptible(dev->read_wait, dev->interrupt_in_done);
- 		if (retval < 0)
- 			goto unlock_exit;
--	} else {
--		spin_unlock_irq(&dev->rbsl);
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -654,6 +654,13 @@ static void build_restore_pagemask(u32 *
+ 				   int restore_scratch)
+ {
+ 	if (restore_scratch) {
++		/*
++		 * Ensure the MFC0 below observes the value written to the
++		 * KScratch register by the prior MTC0.
++		 */
++		if (scratch_reg >= 0)
++			uasm_i_ehb(p);
 +
-+		spin_lock_irq(&dev->rbsl);
+ 		/* Reset default page size */
+ 		if (PM_DEFAULT_MASK >> 16) {
+ 			uasm_i_lui(p, tmp, PM_DEFAULT_MASK >> 16);
+@@ -668,12 +675,10 @@ static void build_restore_pagemask(u32 *
+ 			uasm_i_mtc0(p, 0, C0_PAGEMASK);
+ 			uasm_il_b(p, r, lid);
+ 		}
+-		if (scratch_reg >= 0) {
+-			uasm_i_ehb(p);
++		if (scratch_reg >= 0)
+ 			UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
+-		} else {
++		else
+ 			UASM_i_LW(p, 1, scratchpad_offset(0), 0);
+-		}
+ 	} else {
+ 		/* Reset default page size */
+ 		if (PM_DEFAULT_MASK >> 16) {
+@@ -922,6 +927,10 @@ build_get_pgd_vmalloc64(u32 **p, struct
  	}
-+	spin_unlock_irq(&dev->rbsl);
+ 	if (mode != not_refill && check_for_high_segbits) {
+ 		uasm_l_large_segbits_fault(l, *p);
++
++		if (mode == refill_scratch && scratch_reg >= 0)
++			uasm_i_ehb(p);
++
+ 		/*
+ 		 * We get here if we are an xsseg address, or if we are
+ 		 * an xuseg address above (PGDIR_SHIFT+PGDIR_BITS) boundary.
+@@ -938,12 +947,10 @@ build_get_pgd_vmalloc64(u32 **p, struct
+ 		uasm_i_jr(p, ptr);
  
- 	/* actual_buffer contains actual_length + interrupt_in_buffer */
- 	actual_buffer = (size_t *)(dev->ring_buffer + dev->ring_tail * (sizeof(size_t)+dev->interrupt_in_endpoint_size));
-+	if (*actual_buffer > dev->interrupt_in_endpoint_size) {
-+		retval = -EIO;
-+		goto unlock_exit;
-+	}
- 	bytes_to_read = min(count, *actual_buffer);
- 	if (bytes_to_read < *actual_buffer)
- 		dev_warn(&dev->intf->dev, "Read buffer overflow, %zd bytes dropped\n",
-@@ -690,10 +695,9 @@ static int ld_usb_probe(struct usb_inter
- 		dev_warn(&intf->dev, "Interrupt out endpoint not found (using control endpoint instead)\n");
- 
- 	dev->interrupt_in_endpoint_size = usb_endpoint_maxp(dev->interrupt_in_endpoint);
--	dev->ring_buffer =
--		kmalloc_array(ring_buffer_size,
--			      sizeof(size_t) + dev->interrupt_in_endpoint_size,
--			      GFP_KERNEL);
-+	dev->ring_buffer = kcalloc(ring_buffer_size,
-+			sizeof(size_t) + dev->interrupt_in_endpoint_size,
-+			GFP_KERNEL);
- 	if (!dev->ring_buffer)
- 		goto error;
- 	dev->interrupt_in_buffer = kmalloc(dev->interrupt_in_endpoint_size, GFP_KERNEL);
+ 		if (mode == refill_scratch) {
+-			if (scratch_reg >= 0) {
+-				uasm_i_ehb(p);
++			if (scratch_reg >= 0)
+ 				UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
+-			} else {
++			else
+ 				UASM_i_LW(p, 1, scratchpad_offset(0), 0);
+-			}
+ 		} else {
+ 			uasm_i_nop(p);
+ 		}
 
 
