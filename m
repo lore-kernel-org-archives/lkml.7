@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56ACFCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EF9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26431214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2F72064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210435;
-	bh=NPNT9I5o/4emtMTJrnusg3gedRhNDoLKH7IfGRjATXc=;
+	s=default; t=1572210440;
+	bh=KSTyBycvaBF6MzT0NdhfrBGaaI+TnTsiPM3uavlCd/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YbjPI8S6SjYuOzh7d5QUDSLSRBybicxDSP/jI2nzHbrNuHlzuSv3YwCesPuNMPG0i
-	 w7bm6PFvO1jGm1GAnijQMOSWOwciVqssUgHQ9ickplP92omN4GfXqZQrUWD53YHanU
-	 XsF4WH4jKgrPqFqOF5Pi1QApF3AJxSyfUsKOmKrg=
+	b=ZG8Pjxu8W1SPitP0MEGKVTd0Nbp2K4sQqSNBhWXgVHEXj13qpJQTOX6T1BhW5rdhU
+	 zE30R/ZjnqwrolCGYWG6yDGZq1VDH3Dk/Ea9s9nIZ+K1M9lUxX9uVOYJoL472YpCfO
+	 xCPCOp4eMa0rUtVDB1X0lk6Uy9MvhRBAKzfjUAGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfJ0VHN (ORCPT
+        id S1729137AbfJ0VHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:07:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728045AbfJ0VHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:07:09 -0400
+        id S1728037AbfJ0VHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:07:11 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C646520B7C;
-        Sun, 27 Oct 2019 21:07:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A122B214E0;
+        Sun, 27 Oct 2019 21:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210428;
-        bh=NPNT9I5o/4emtMTJrnusg3gedRhNDoLKH7IfGRjATXc=;
+        s=default; t=1572210431;
+        bh=KSTyBycvaBF6MzT0NdhfrBGaaI+TnTsiPM3uavlCd/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G3gosHImcEm0iT+qa9ifehqUWPTqPDO8wO5KTPjX8b+JSZfc7jVitlHt4tfVWm3rb
-         7yYLT5N+ETYULLh2VGyXQyhio1xoy8uBcTCoT4xBeVe9/Xr7vu1KqgRryRthKs9RK1
-         pMdqkqbgNtbGg1o7RpHMpK0ovsVYh4DuiwH528Cs=
+        b=0LnF7LkO4HKOLQgiKX+QISUEY9w19Q0RVGRWU+RtkYPbxG7CsxYeauZM5DesWdm/k
+         0KwnBm7kuirbTDRi10L+tuntE9h2cPH4cyUuxa0e4tC1ktbuNt5F24Ssa6dC7VfF8Z
+         9MH2WR/4WbiYQnugEvO2CGwS9ZJX+ylFmG8T0aeY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 004/119] ARM: OMAP2+: Fix missing reset done flag for am3 and am43
-Date:   Sun, 27 Oct 2019 21:59:41 +0100
-Message-Id: <20191027203300.767128463@linuxfoundation.org>
+Subject: [PATCH 4.14 013/119] net: hisilicon: Fix usage of uninitialized variable in function mdio_sc_cfg_reg_write()
+Date:   Sun, 27 Oct 2019 21:59:50 +0100
+Message-Id: <20191027203303.152336287@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -59,51 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Yizhuo <yzhai003@ucr.edu>
 
-[ Upstream commit 8ad8041b98c665b6147e607b749586d6e20ba73a ]
+[ Upstream commit 53de429f4e88f538f7a8ec2b18be8c0cd9b2c8e1 ]
 
-For ti,sysc-omap4 compatible devices with no sysstatus register, we do have
-reset done status available in the SOFTRESET bit that clears when the reset
-is done. This is documented for example in am437x TRM for DMTIMER_TIOCP_CFG
-register. The am335x TRM just says that SOFTRESET bit value 1 means reset is
-ongoing, but it behaves the same way clearing after reset is done.
+In function mdio_sc_cfg_reg_write(), variable "reg_value" could be
+uninitialized if regmap_read() fails. However, "reg_value" is used
+to decide the control flow later in the if statement, which is
+potentially unsafe.
 
-With the ti-sysc driver handling this automatically based on no sysstatus
-register defined, we see warnings if SYSC_HAS_RESET_STATUS is missing in the
-legacy platform data:
-
-ti-sysc 48042000.target-module: sysc_flags 00000222 != 00000022
-ti-sysc 48044000.target-module: sysc_flags 00000222 != 00000022
-ti-sysc 48046000.target-module: sysc_flags 00000222 != 00000022
-...
-
-Let's fix these warnings by adding SYSC_HAS_RESET_STATUS. Let's also
-remove the useless parentheses while at it.
-
-If it turns out we do have ti,sysc-omap4 compatible devices without a
-working SOFTRESET bit we can set up additional quirk handling for it.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns_mdio.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-index de06a1d5ffab5..e61c14f590634 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-@@ -966,7 +966,8 @@ static struct omap_hwmod_class_sysconfig am33xx_timer_sysc = {
- 	.rev_offs	= 0x0000,
- 	.sysc_offs	= 0x0010,
- 	.syss_offs	= 0x0014,
--	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
-+	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
-+			  SYSC_HAS_RESET_STATUS,
- 	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
- 			  SIDLE_SMART_WKUP),
- 	.sysc_fields	= &omap_hwmod_sysc_type2,
+diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
+index baf5cc251f329..9a3bc0994a1db 100644
+--- a/drivers/net/ethernet/hisilicon/hns_mdio.c
++++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
+@@ -156,11 +156,15 @@ static int mdio_sc_cfg_reg_write(struct hns_mdio_device *mdio_dev,
+ {
+ 	u32 time_cnt;
+ 	u32 reg_value;
++	int ret;
+ 
+ 	regmap_write(mdio_dev->subctrl_vbase, cfg_reg, set_val);
+ 
+ 	for (time_cnt = MDIO_TIMEOUT; time_cnt; time_cnt--) {
+-		regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
++		ret = regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
++		if (ret)
++			return ret;
++
+ 		reg_value &= st_msk;
+ 		if ((!!check_st) == (!!reg_value))
+ 			break;
 -- 
 2.20.1
 
