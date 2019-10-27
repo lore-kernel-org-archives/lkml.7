@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF35CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9182FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7D020717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E10E205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211868;
-	bh=RbW/Ro+spT/qRFap2ebndlzW46XRVhfTR2zROlgJvMk=;
+	s=default; t=1572211871;
+	bh=oGHknJ1O/6LAjrtCeIttoLqZwSAoc1U8qXk1HVnDHX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PWqDH9iMJq7pmSgmgSrLCzPjF72FecX+nHdE9CGdhZVeLLIAiw+D9+uEgWnB/X0UP
-	 5O27VByx/Vzlcsa2+zDMIUDwijIYtclziqHph1w1CBtCttx2vh2dU8CT2N57db6yml
-	 Jo/kXkSsEje8ObhV24gK/SLhNUZCPrimKFxHwuxM=
+	b=TBxnUnQIJhxsu04UszWxH1/kKcY1/l2ClhseTPyKvpRCbVgqmbJ8SkJOMQRh38xo4
+	 UXjG14Tv7QcOWQJqMGBRnlxnc4s8bntw8KCkvHwEK91kTAGknl+UNxerL+OT0l0yvF
+	 I74Vn11TflOir/3QlvTxrnk45mKwoc552jnB3U5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbfJ0VRz (ORCPT
+        id S1731146AbfJ0VRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:17:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37788 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:17:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731122AbfJ0VRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:17:47 -0400
+        id S1731108AbfJ0VRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:17:44 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A49562184C;
-        Sun, 27 Oct 2019 21:17:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5CFE2070B;
+        Sun, 27 Oct 2019 21:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211066;
-        bh=RbW/Ro+spT/qRFap2ebndlzW46XRVhfTR2zROlgJvMk=;
+        s=default; t=1572211063;
+        bh=oGHknJ1O/6LAjrtCeIttoLqZwSAoc1U8qXk1HVnDHX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4rY9figpkDmRGoZ9rfr5HvqRjp+niLpYdverW5LImXn0tWvgmZzto5L84AM0l/RK
-         QmnSuZmn9ZMkA8gnvVC1qSjETv3Y9Bobk7dL2zZtDyAw4FKPVGLmm5ju/ixXQeXlUN
-         iwLsdsuyd99TJzDKC+Hr64LgvGBAVQk0s6VdcSCU=
+        b=vLy0X3hZMa2r6kFjeoSPyUOAhHFW6cg9uyuUxDv+zjAV1GFlxjXkFnSvoW9jJq5ni
+         HfVq/abp5Zih5TWHMoiw4hp6+bPMbWC9c53fW7RlDAY2TvUX2hD8VkA2kFJiEDnW0w
+         TX9agL3kpeHixVyqDA8c9TB1Cz2EtVBZ60zdNHuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
+        stable@vger.kernel.org,
+        "Lowry Li (Arm Technology China)" <lowry.li@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        "James Qian Wang (Arm Technology China)" <james.qian.wang@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 020/197] nvme-rdma: Fix max_hw_sectors calculation
-Date:   Sun, 27 Oct 2019 21:58:58 +0100
-Message-Id: <20191027203352.763389443@linuxfoundation.org>
+Subject: [PATCH 5.3 002/197] drm: Clear the fence pointer when writeback job signaled
+Date:   Sun, 27 Oct 2019 21:58:40 +0100
+Message-Id: <20191027203351.823794615@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -60,79 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Lowry Li (Arm Technology China) <Lowry.Li@arm.com>
 
-[ Upstream commit ff13c1b87c97275b82b2af99044b4abf6861b28f ]
+[ Upstream commit b1066a123538044117f0a78ba8c6a50cf5a04c86 ]
 
-By default, the NVMe/RDMA driver should support max io_size of 1MiB (or
-upto the maximum supported size by the HCA). Currently, one will see that
-/sys/class/block/<bdev>/queue/max_hw_sectors_kb is 1020 instead of 1024.
+During it signals the completion of a writeback job, after releasing
+the out_fence, we'd clear the pointer.
 
-A non power of 2 value can cause performance degradation due to
-unnecessary splitting of IO requests and unoptimized allocation units.
+Check if fence left over in drm_writeback_cleanup_job(), release it.
 
-The number of pages per MR has been fixed here, so there is no longer any
-need to reduce max_sectors by 1.
-
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+Reviewed-by: Brian Starkey <brian.starkey@arm.com>
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
+Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1564571048-15029-3-git-send-email-lowry.li@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/rdma.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/drm_writeback.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 1a6449bc547b9..cc1956349a2af 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -427,7 +427,7 @@ static void nvme_rdma_destroy_queue_ib(struct nvme_rdma_queue *queue)
- static int nvme_rdma_get_max_fr_pages(struct ib_device *ibdev)
- {
- 	return min_t(u32, NVME_RDMA_MAX_SEGMENTS,
--		     ibdev->attrs.max_fast_reg_page_list_len);
-+		     ibdev->attrs.max_fast_reg_page_list_len - 1);
+diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
+index ff138b6ec48ba..43d9e3bb3a943 100644
+--- a/drivers/gpu/drm/drm_writeback.c
++++ b/drivers/gpu/drm/drm_writeback.c
+@@ -324,6 +324,9 @@ void drm_writeback_cleanup_job(struct drm_writeback_job *job)
+ 	if (job->fb)
+ 		drm_framebuffer_put(job->fb);
+ 
++	if (job->out_fence)
++		dma_fence_put(job->out_fence);
++
+ 	kfree(job);
  }
+ EXPORT_SYMBOL(drm_writeback_cleanup_job);
+@@ -366,25 +369,29 @@ drm_writeback_signal_completion(struct drm_writeback_connector *wb_connector,
+ {
+ 	unsigned long flags;
+ 	struct drm_writeback_job *job;
++	struct dma_fence *out_fence;
  
- static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
-@@ -437,7 +437,7 @@ static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
- 	const int cq_factor = send_wr_factor + 1;	/* + RECV */
- 	int comp_vector, idx = nvme_rdma_queue_idx(queue);
- 	enum ib_poll_context poll_ctx;
--	int ret;
-+	int ret, pages_per_mr;
+ 	spin_lock_irqsave(&wb_connector->job_lock, flags);
+ 	job = list_first_entry_or_null(&wb_connector->job_queue,
+ 				       struct drm_writeback_job,
+ 				       list_entry);
+-	if (job) {
++	if (job)
+ 		list_del(&job->list_entry);
+-		if (job->out_fence) {
+-			if (status)
+-				dma_fence_set_error(job->out_fence, status);
+-			dma_fence_signal(job->out_fence);
+-			dma_fence_put(job->out_fence);
+-		}
+-	}
++
+ 	spin_unlock_irqrestore(&wb_connector->job_lock, flags);
  
- 	queue->device = nvme_rdma_find_get_device(queue->cm_id);
- 	if (!queue->device) {
-@@ -479,10 +479,16 @@ static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
- 		goto out_destroy_qp;
- 	}
+ 	if (WARN_ON(!job))
+ 		return;
  
-+	/*
-+	 * Currently we don't use SG_GAPS MR's so if the first entry is
-+	 * misaligned we'll end up using two entries for a single data page,
-+	 * so one additional entry is required.
-+	 */
-+	pages_per_mr = nvme_rdma_get_max_fr_pages(ibdev) + 1;
- 	ret = ib_mr_pool_init(queue->qp, &queue->qp->rdma_mrs,
- 			      queue->queue_size,
- 			      IB_MR_TYPE_MEM_REG,
--			      nvme_rdma_get_max_fr_pages(ibdev), 0);
-+			      pages_per_mr, 0);
- 	if (ret) {
- 		dev_err(queue->ctrl->ctrl.device,
- 			"failed to initialize MR pool sized %d for QID %d\n",
-@@ -824,8 +830,8 @@ static int nvme_rdma_configure_admin_queue(struct nvme_rdma_ctrl *ctrl,
- 	if (error)
- 		goto out_stop_queue;
- 
--	ctrl->ctrl.max_hw_sectors =
--		(ctrl->max_fr_pages - 1) << (ilog2(SZ_4K) - 9);
-+	ctrl->ctrl.max_segments = ctrl->max_fr_pages;
-+	ctrl->ctrl.max_hw_sectors = ctrl->max_fr_pages << (ilog2(SZ_4K) - 9);
- 
- 	error = nvme_init_identify(&ctrl->ctrl);
- 	if (error)
++	out_fence = job->out_fence;
++	if (out_fence) {
++		if (status)
++			dma_fence_set_error(out_fence, status);
++		dma_fence_signal(out_fence);
++		dma_fence_put(out_fence);
++		job->out_fence = NULL;
++	}
++
+ 	INIT_WORK(&job->cleanup_work, cleanup_work);
+ 	queue_work(system_long_wq, &job->cleanup_work);
+ }
 -- 
 2.20.1
 
