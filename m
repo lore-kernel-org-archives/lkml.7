@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6222ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6C0CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A232064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F56E20717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211374;
-	bh=lCqS4E0uEPjyXJmJtHuFFGjg724ePFJdZapNyiHa+hE=;
+	s=default; t=1572211376;
+	bh=d7BXlQMeshVMcQHLgh1CG8CHXyxlJSuwgcNotI58I5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=giI34ZAYGFNMXN/uNEIGfeYm7RjOSVx73fjqjK2GThLomU1XLfmLuDStUZu13zD1W
-	 hXFE5PvR6iL7LTatrKPuKihtGum1Qn/r1pXVFxXCrydDbxabisI7FFje3uvsrXsokt
-	 HqygWFlY0KgnOXiiCC/PNDrrPFVYNuKHnGfX4174=
+	b=uZcxeGbWvBtLFwbyip+fON+8Xqc2PisT9F2BICzVu7qVnMbfMBj5C2xFkQGaS7TiO
+	 W1l0DEMcwHXDxXODEKKurO4JYcodb4AhLh63QUnS0/zK0yQIRewyEuMYg55jMNRzUZ
+	 +C5y/bbFyEmvCGO6B6wSw3+oGiiYDmZCfda6KXd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731579AbfJ0VWw (ORCPT
+        id S1731601AbfJ0VWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:22:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43900 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728739AbfJ0VWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:22:49 -0400
+        id S1732245AbfJ0VWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:22:52 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19DD4205C9;
-        Sun, 27 Oct 2019 21:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D06F205C9;
+        Sun, 27 Oct 2019 21:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211368;
-        bh=lCqS4E0uEPjyXJmJtHuFFGjg724ePFJdZapNyiHa+hE=;
+        s=default; t=1572211371;
+        bh=d7BXlQMeshVMcQHLgh1CG8CHXyxlJSuwgcNotI58I5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WeXRP9onOgp/092WsvlkH7Ul05NIB7IuMzhuJET0wyLRQ41fOycWNzlXCXB34q+PL
-         wC57TEgskHRneBjZTfHYS7WRyU+/j7V9vgtIYOs4OFByDebzapMJPd5kIidqQtajnE
-         nLxjo0K9Ppjl8CDPKATM6H9MULJsgmWRJ9qtJaSc=
+        b=yjis6Ax6qCzquvNJTrwXm4zHL2t1p8NXeGB7TcdoxtdSUidu85Zl3viI6Fh3S9Lnj
+         jO7dJTjmdOEtbEtmm89TfUYu+RRhTvrjm30f3e+lz/GY8UE7qUeAxh2ZTUyk7d8DiS
+         daidl9dg5UqR61F+sB0/0ogQCrzyjyOQffIgDZIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Souptick Joarder <jrdr.linux@gmail.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Subject: [PATCH 5.3 125/197] drm/ttm: Restore ttm prefaulting
-Date:   Sun, 27 Oct 2019 22:00:43 +0100
-Message-Id: <20191027203358.480134362@linuxfoundation.org>
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Steven Price <steven.price@arm.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 5.3 126/197] drm/panfrost: Handle resetting on timeout better
+Date:   Sun, 27 Oct 2019 22:00:44 +0100
+Message-Id: <20191027203358.534250985@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -60,57 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+From: Steven Price <steven.price@arm.com>
 
-commit 941f2f72dbbe0cf8c2d6e0b180a8021a0ec477fa upstream.
+commit 5b3ec8134f5f9fa1ed0a538441a495521078bbee upstream.
 
-Commit 4daa4fba3a38 ("gpu: drm: ttm: Adding new return type vm_fault_t")
-broke TTM prefaulting. Since vmf_insert_mixed() typically always returns
-VM_FAULT_NOPAGE, prefaulting stops after the second PTE.
+Panfrost uses multiple schedulers (one for each slot, so 2 in reality),
+and on a timeout has to stop all the schedulers to safely perform a
+reset. However more than one scheduler can trigger a timeout at the same
+time. This race condition results in jobs being freed while they are
+still in use.
 
-Restore (almost) the original behaviour. Unfortunately we can no longer
-with the new vm_fault_t return type determine whether a prefaulting
-PTE insertion hit an already populated PTE, and terminate the insertion
-loop. Instead we continue with the pre-determined number of prefaults.
+When stopping other slots use cancel_delayed_work_sync() to ensure that
+any timeout started for that slot has completed. Also use
+mutex_trylock() to obtain reset_lock. This means that only one thread
+attempts the reset, the other threads will simply complete without doing
+anything (the first thread will wait for this in the call to
+cancel_delayed_work_sync()).
 
-Fixes: 4daa4fba3a38 ("gpu: drm: ttm: Adding new return type vm_fault_t")
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: Christian König <christian.koenig@amd.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/330387/
+While we're here and since the function is already dependent on
+sched_job not being NULL, let's remove the unnecessary checks.
+
+Fixes: aa20236784ab ("drm/panfrost: Prevent concurrent resets")
+Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Steven Price <steven.price@arm.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191009094456.9704-1-steven.price@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/ttm/ttm_bo_vm.c |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_job.c |   16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -278,15 +278,13 @@ static vm_fault_t ttm_bo_vm_fault(struct
- 		else
- 			ret = vmf_insert_pfn(&cvma, address, pfn);
+--- a/drivers/gpu/drm/panfrost/panfrost_job.c
++++ b/drivers/gpu/drm/panfrost/panfrost_job.c
+@@ -384,13 +384,19 @@ static void panfrost_job_timedout(struct
+ 		job_read(pfdev, JS_TAIL_LO(js)),
+ 		sched_job);
  
--		/*
--		 * Somebody beat us to this PTE or prefaulting to
--		 * an already populated PTE, or prefaulting error.
--		 */
--
--		if (unlikely((ret == VM_FAULT_NOPAGE && i > 0)))
--			break;
--		else if (unlikely(ret & VM_FAULT_ERROR))
--			goto out_io_unlock;
-+		/* Never error on prefaulted PTEs */
-+		if (unlikely((ret & VM_FAULT_ERROR))) {
-+			if (i == 0)
-+				goto out_io_unlock;
-+			else
-+				break;
-+		}
+-	mutex_lock(&pfdev->reset_lock);
++	if (!mutex_trylock(&pfdev->reset_lock))
++		return;
  
- 		address += PAGE_SIZE;
- 		if (unlikely(++page_offset >= page_last))
+-	for (i = 0; i < NUM_JOB_SLOTS; i++)
+-		drm_sched_stop(&pfdev->js->queue[i].sched, sched_job);
++	for (i = 0; i < NUM_JOB_SLOTS; i++) {
++		struct drm_gpu_scheduler *sched = &pfdev->js->queue[i].sched;
+ 
+-	if (sched_job)
+-		drm_sched_increase_karma(sched_job);
++		drm_sched_stop(sched, sched_job);
++		if (js != i)
++			/* Ensure any timeouts on other slots have finished */
++			cancel_delayed_work_sync(&sched->work_tdr);
++	}
++
++	drm_sched_increase_karma(sched_job);
+ 
+ 	/* panfrost_core_dump(pfdev); */
+ 
 
 
