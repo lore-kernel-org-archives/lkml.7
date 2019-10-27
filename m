@@ -2,52 +2,51 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B7CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A368CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECF1205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8FE205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212295;
-	bh=nT/j3F0AN5FiUMGZP3CTaQv7AleDUd0qO4qwvbnEMtU=;
+	s=default; t=1572212309;
+	bh=Pzc40gy2TSMKNQNDKKZmqku+u+iXqpnNmsAgWEeokFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wzBx4z3QE/3cT/7Stt2rkCjQwefu0oWTqhmK9++n9hTZyk/Fp3LX1PhbZOez21VjW
-	 cf5wItVVvvrsMSuWAs5bj0vwhFGWSL3bALmQLZnKLOMR8zRKKUsIpxJVxtWnOo390x
-	 Ifd0lHB4F4Lq1EzYQgTR3pk8Vo+FYPeOlhSokk6U=
+	b=GPfBNT+6LIvKZ60QB3TNyw6ROUThhdHdBVOo4/hgtVr+L/XyDGUy1jz9uF5xb7A03
+	 upegKg+ov1nDUyZEsU2jVcJnxXmXNjE5Jt0jWqJT3YDnAH7XaiHIvODrxDE7h8NqtL
+	 OhFUPZpCgZAU2Bp+Yl1PaWHdtxHt/et8OhWh9Y6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbfJ0VEB (ORCPT
+        id S1728358AbfJ0VDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:04:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49414 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:03:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbfJ0VD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:03:58 -0400
+        id S1728337AbfJ0VD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:03:29 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99B19208C0;
-        Sun, 27 Oct 2019 21:03:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 087732064A;
+        Sun, 27 Oct 2019 21:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210237;
-        bh=nT/j3F0AN5FiUMGZP3CTaQv7AleDUd0qO4qwvbnEMtU=;
+        s=default; t=1572210208;
+        bh=Pzc40gy2TSMKNQNDKKZmqku+u+iXqpnNmsAgWEeokFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yHzex8bFpkGSn5/BSu6dE3pABStkhOd0GZpGaeCNs1z+8X4SG/5fSoFZQUEWQy2Zy
-         iji9nwR3P3b7ABYoErQyXL/r09MIQd3yFyARduYdEnzQ/Xrhzbit8Fat3UGMdOE3PY
-         YRLnFPoGw+RK1bMntjycqMEy99ljkhN7JUKiPt8Y=
+        b=PLR5fh60H8iwlx4hIpLh1z2e0OzlA/0aHGw/4EFiJcqWN5n8IrJI3BtmtraHMTSWF
+         6Iw66Dm7UICB/2SFGySua/Cd4Sc3E9lCsfw652CFpzY0u7MHyQJ8WMn+YRXRuH9u3o
+         fZoyKUSKKzpq2lf3od48UZqkXrNWDJBNRiqdzGaU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Paul Durrant <paul@xen.org>, Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 38/41] xen/netback: fix error path of xenvif_connect_data()
-Date:   Sun, 27 Oct 2019 22:01:16 +0100
-Message-Id: <20191027203133.755136541@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 04/41] ARM: OMAP2+: Fix missing reset done flag for am3 and am43
+Date:   Sun, 27 Oct 2019 22:00:42 +0100
+Message-Id: <20191027203102.576561911@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
 References: <20191027203056.220821342@linuxfoundation.org>
@@ -60,36 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Tony Lindgren <tony@atomide.com>
 
-commit 3d5c1a037d37392a6859afbde49be5ba6a70a6b3 upstream.
+[ Upstream commit 8ad8041b98c665b6147e607b749586d6e20ba73a ]
 
-xenvif_connect_data() calls module_put() in case of error. This is
-wrong as there is no related module_get().
+For ti,sysc-omap4 compatible devices with no sysstatus register, we do have
+reset done status available in the SOFTRESET bit that clears when the reset
+is done. This is documented for example in am437x TRM for DMTIMER_TIOCP_CFG
+register. The am335x TRM just says that SOFTRESET bit value 1 means reset is
+ongoing, but it behaves the same way clearing after reset is done.
 
-Remove the superfluous module_put().
+With the ti-sysc driver handling this automatically based on no sysstatus
+register defined, we see warnings if SYSC_HAS_RESET_STATUS is missing in the
+legacy platform data:
 
-Fixes: 279f438e36c0a7 ("xen-netback: Don't destroy the netdev until the vif is shut down")
-Cc: <stable@vger.kernel.org> # 3.12
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Paul Durrant <paul@xen.org>
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ti-sysc 48042000.target-module: sysc_flags 00000222 != 00000022
+ti-sysc 48044000.target-module: sysc_flags 00000222 != 00000022
+ti-sysc 48046000.target-module: sysc_flags 00000222 != 00000022
+...
 
+Let's fix these warnings by adding SYSC_HAS_RESET_STATUS. Let's also
+remove the useless parentheses while at it.
+
+If it turns out we do have ti,sysc-omap4 compatible devices without a
+working SOFTRESET bit we can set up additional quirk handling for it.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/xen-netback/interface.c |    1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/xen-netback/interface.c
-+++ b/drivers/net/xen-netback/interface.c
-@@ -620,7 +620,6 @@ err_tx_unbind:
- err_unmap:
- 	xenvif_unmap_frontend_rings(queue);
- err:
--	module_put(THIS_MODULE);
- 	return err;
- }
- 
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+index b31ad596be795..6b09debcf4840 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+@@ -1020,7 +1020,8 @@ static struct omap_hwmod_class_sysconfig am33xx_timer_sysc = {
+ 	.rev_offs	= 0x0000,
+ 	.sysc_offs	= 0x0010,
+ 	.syss_offs	= 0x0014,
+-	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
++	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
++			  SYSC_HAS_RESET_STATUS,
+ 	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+ 			  SIDLE_SMART_WKUP),
+ 	.sysc_fields	= &omap_hwmod_sysc_type2,
+-- 
+2.20.1
+
 
 
