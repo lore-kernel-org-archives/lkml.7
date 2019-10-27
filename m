@@ -2,209 +2,196 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47E4CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE835CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7742C20663
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D722067B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:17:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZezgIGhk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfJ0LNK (ORCPT
+        id S1726792AbfJ0LR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 07:13:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12491 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbfJ0LMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 07:12:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 04:12:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,236,1569308400"; 
-   d="scan'208";a="282690158"
-Received: from unknown (HELO snr.jf.intel.com) ([10.54.39.141])
-  by orsmga001.jf.intel.com with ESMTP; 27 Oct 2019 04:12:36 -0700
-From:   Luwei Kang <luwei.kang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, ak@linux.intel.com, thomas.lendacky@amd.com,
-        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS event
-Date:   Sun, 27 Oct 2019 19:11:12 -0400
-Message-Id: <1572217877-26484-4-git-send-email-luwei.kang@intel.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
-References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
+        Sun, 27 Oct 2019 07:17:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54508 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfJ0LR1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 07:17:27 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g7so6535587wmk.4
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 04:17:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=ozjLv38D02wF3YZPF1kQXnLllTtgLqYsGIt8rRUEKtE=;
+        b=ZezgIGhklw2T6pepzn/3CDCIXBE/OUIGzDxdVB3U7L+IvoEztXjfJ4J+GETrQ4NHps
+         V0diXhgf9loG3CYJq+VZSUi4BJRAIP/cWVUhaqsfkyuCVbcpIrbY+6YbTn2tqlZGL9rZ
+         YdKXxF0fZMpgwnyYS2aSb6x0Xp0dTIlOFgMy26CNS7Xe+oOrYElmMvOSLTIeDDWTZj3e
+         WPGQ2niPwgneYUNQo3nzmhYOOsp1kRfWPu8N2gzSJNRtyxWbp1Wa5FKJTiBX9kRfslJU
+         bQhCMcNMpWb+hkP9Z/vZq1MjEmy2ssw/HsGk+TAwZ3MA7QgTYQx7yN/BKSgD1IlO9xyO
+         1y0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to;
+        bh=ozjLv38D02wF3YZPF1kQXnLllTtgLqYsGIt8rRUEKtE=;
+        b=EWaXcgv7Inp4JBZaDbMjmaHOulU7fHCg3o+GBWN5H6LOh8IZz5XaoxyItFMEWnzw6V
+         FM9tlBQlDvs+KhzH2onRGAMLiw0ndqzaJKhXyosnxeenhmv8FubHcqirwBGT2s/Vpumi
+         XaXqQOvFVsgretvNBD9x2Y51d2KMi5TM5XVGlsyIKTtwtuDl51u50pZcog372sEm9xn/
+         o7SO82ka6T6lWayP18hoLQZQvhiUltoQaR1TKtngLi7zKgdxTEEZjyfz2nNw9v3tEkwx
+         qJzt0J9p5Cg/yc9HQ9oeK/YmzgKqunCoVPAvC8uinBbwl7+d6uRIlgefNEJNMOxtGypf
+         csSg==
+X-Gm-Message-State: APjAAAUgTtZ9dH/GGenbJy66Z6vHf/tx+MbYYxnCKqvYPEbMR8SpZiIC
+        lBOSqwIVSov43veCT6LBpQAiAw==
+X-Google-Smtp-Source: APXvYqyhdSjyUdQfSi68+fWWpXpITrPlGnZerDM+dVXs1EYwtysHzGZs7xaHMWxdPr5EUTBZXdfqWA==
+X-Received: by 2002:a1c:f305:: with SMTP id q5mr11193836wmq.137.1572175044802;
+        Sun, 27 Oct 2019 04:17:24 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ec4e:2270::99c4:f20b? ([2a01:e34:ec4e:2270::99c4:f20b])
+        by smtp.gmail.com with ESMTPSA id h17sm8469911wme.6.2019.10.27.04.17.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 27 Oct 2019 04:17:23 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: i2c: meson: convert to yaml
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Beniamino Galvani <b.galvani@gmail.com>
+References: <20191021140053.9525-1-narmstrong@baylibre.com>
+ <20191024190407.GG1870@kunai>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <ac2dc086-e713-b639-2e8f-f2fb4e58fe3e@baylibre.com>
+Date:   Sun, 27 Oct 2019 12:17:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191024190407.GG1870@kunai>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="uSvFfU1J9MhaXlDCiqAbXuvQuHA8h1Ikd"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add a new parameter "pebs" that to make the
-host PMU framework allocate the performance counter for
-guest PEBS event.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--uSvFfU1J9MhaXlDCiqAbXuvQuHA8h1Ikd
+Content-Type: multipart/mixed; boundary="4GHeFe8yu0shO7ojDEjDsZeVgcaLHL52r";
+ protected-headers="v1"
+From: Neil Armstrong <narmstrong@baylibre.com>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Beniamino Galvani <b.galvani@gmail.com>
+Message-ID: <ac2dc086-e713-b639-2e8f-f2fb4e58fe3e@baylibre.com>
+Subject: Re: [PATCH] dt-bindings: i2c: meson: convert to yaml
+References: <20191021140053.9525-1-narmstrong@baylibre.com>
+ <20191024190407.GG1870@kunai>
+In-Reply-To: <20191024190407.GG1870@kunai>
 
-Signed-off-by: Luwei Kang <luwei.kang@intel.com>
----
- arch/x86/kvm/pmu.c           | 23 +++++++++++++++--------
- arch/x86/kvm/pmu.h           |  5 +++--
- arch/x86/kvm/pmu_amd.c       |  2 +-
- arch/x86/kvm/vmx/pmu_intel.c | 10 +++++-----
- 4 files changed, 24 insertions(+), 16 deletions(-)
+--4GHeFe8yu0shO7ojDEjDsZeVgcaLHL52r
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 46875bb..5088d1c 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -99,7 +99,7 @@ static void kvm_perf_overflow_intr(struct perf_event *perf_event,
- static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
- 				  unsigned config, bool exclude_user,
- 				  bool exclude_kernel, bool intr,
--				  bool in_tx, bool in_tx_cp)
-+				  bool in_tx, bool in_tx_cp, bool pebs)
- {
- 	struct perf_event *event;
- 	struct perf_event_attr attr = {
-@@ -111,9 +111,12 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
- 		.exclude_user = exclude_user,
- 		.exclude_kernel = exclude_kernel,
- 		.config = config,
-+		.precise_ip = pebs ? 1 : 0,
-+		.aux_output = pebs ? 1 : 0,
- 	};
- 
--	attr.sample_period = (-pmc->counter) & pmc_bitmask(pmc);
-+	attr.sample_period = pebs ? (-pmc->reload_cnt) & pmc_bitmask(pmc) :
-+					(-pmc->counter) & pmc_bitmask(pmc);
- 
- 	if (in_tx)
- 		attr.config |= HSW_IN_TX;
-@@ -140,7 +143,7 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
- 	clear_bit(pmc->idx, (unsigned long*)&pmc_to_pmu(pmc)->reprogram_pmi);
- }
- 
--void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel)
-+void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel, bool pebs)
- {
- 	unsigned config, type = PERF_TYPE_RAW;
- 	u8 event_select, unit_mask;
-@@ -198,11 +201,12 @@ void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel)
- 			      !(eventsel & ARCH_PERFMON_EVENTSEL_OS),
- 			      eventsel & ARCH_PERFMON_EVENTSEL_INT,
- 			      (eventsel & HSW_IN_TX),
--			      (eventsel & HSW_IN_TX_CHECKPOINTED));
-+			      (eventsel & HSW_IN_TX_CHECKPOINTED),
-+			      pebs);
- }
- EXPORT_SYMBOL_GPL(reprogram_gp_counter);
- 
--void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx)
-+void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx, bool pebs)
- {
- 	unsigned en_field = ctrl & 0x3;
- 	bool pmi = ctrl & 0x8;
-@@ -228,7 +232,8 @@ void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx)
- 			      kvm_x86_ops->pmu_ops->find_fixed_event(idx),
- 			      !(en_field & 0x2), /* exclude user */
- 			      !(en_field & 0x1), /* exclude kernel */
--			      pmi, false, false);
-+			      pmi, false, false,
-+			      pebs);
- }
- EXPORT_SYMBOL_GPL(reprogram_fixed_counter);
- 
-@@ -240,12 +245,14 @@ void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx)
- 		return;
- 
- 	if (pmc_is_gp(pmc))
--		reprogram_gp_counter(pmc, pmc->eventsel);
-+		reprogram_gp_counter(pmc, pmc->eventsel,
-+				(pmu->pebs_enable & BIT_ULL(pmc_idx)));
- 	else {
- 		int idx = pmc_idx - INTEL_PMC_IDX_FIXED;
- 		u8 ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl, idx);
- 
--		reprogram_fixed_counter(pmc, ctrl, idx);
-+		reprogram_fixed_counter(pmc, ctrl, idx,
-+				(pmu->pebs_enable & BIT_ULL(pmc_idx)));
- 	}
- }
- EXPORT_SYMBOL_GPL(reprogram_counter);
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index c62a1ff..0c59a15 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -102,8 +102,9 @@ static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr,
- 	return NULL;
- }
- 
--void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
--void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
-+void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel, bool pebs);
-+void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx,
-+								bool pebs);
- void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
- 
- void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/pmu_amd.c b/arch/x86/kvm/pmu_amd.c
-index c838838..7b3e307 100644
---- a/arch/x86/kvm/pmu_amd.c
-+++ b/arch/x86/kvm/pmu_amd.c
-@@ -248,7 +248,7 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		if (data == pmc->eventsel)
- 			return 0;
- 		if (!(data & pmu->reserved_bits)) {
--			reprogram_gp_counter(pmc, data);
-+			reprogram_gp_counter(pmc, data, false);
- 			return 0;
- 		}
- 	}
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 3f723a3..15b5f05 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -48,7 +48,8 @@ static void reprogram_fixed_counters(struct kvm_pmu *pmu, u64 data)
- 		if (old_ctrl == new_ctrl)
- 			continue;
- 
--		reprogram_fixed_counter(pmc, new_ctrl, i);
-+		reprogram_fixed_counter(pmc, new_ctrl, i,
-+			(pmu->pebs_enable & BIT_ULL(i + INTEL_PMC_IDX_FIXED)));
- 	}
- 
- 	pmu->fixed_ctr_ctrl = data;
-@@ -292,7 +293,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			if (data == pmc->eventsel)
- 				return 0;
- 			if (!(data & pmu->reserved_bits)) {
--				reprogram_gp_counter(pmc, data);
-+				reprogram_gp_counter(pmc, data,
-+					(pmu->pebs_enable & BIT_ULL(pmc->idx)));
- 				return 0;
- 			}
- 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_RELOAD_PMC0)) ||
-@@ -301,10 +303,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			if (data == pmc->reload_cnt)
- 				return 0;
- 			if (!(data & ~pmc_bitmask(pmc))) {
--				int pmc_idx = pmc_is_fixed(pmc) ? pmc->idx +
--						INTEL_PMC_IDX_FIXED : pmc->idx;
- 				pmc->reload_cnt = data;
--				reprogram_counter(pmu, pmc_idx);
-+				reprogram_counter(pmu, pmc->idx);
- 				return 0;
- 			}
- 		}
--- 
-1.8.3.1
+Hi Wolfram,
 
+On 24/10/2019 21:04, Wolfram Sang wrote:
+>=20
+>> +maintainers:
+>> +  - Neil Armstrong <narmstrong@baylibre.com>
+>> +  - Beniamino Galvani <b.galvani@gmail.com>
+>=20
+> I need an ack from Beniamino for this.
+>=20
+> Also, do you want to maintain only this file or also the driver? The
+> latter would be much appreciated, of course!
+>=20
+I'm taking responsibility for the bindings to make sure the DT is correct=
+,
+but I don't have time to maintain this driver for the moment, sorry,
+
+Neil
+
+
+--4GHeFe8yu0shO7ojDEjDsZeVgcaLHL52r--
+
+--uSvFfU1J9MhaXlDCiqAbXuvQuHA8h1Ikd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEPVPGJshWBf4d9CyLd9zb2sjISdEFAl21fMEACgkQd9zb2sjI
+SdHjeg//dNqABHtrvn9cnkEQKfPa5BHNeqUbXdQA/5iWTnaE8irETKzq9cJ+VTzv
+GtuU8zgbzRJ8GdVGF/K21UTpWgcT8/Auh9iw1aXt1lffR7+fYc5yw5KfHjUDTxAh
+e0KZF+e93JqHPT0wkHmznJcn5ZcxpIOvd/Cmbko4tkk/KZl1cOhPqBTFwHdHFkvL
+xQqdtvxYbLo5KGz0S/KkRtu4BcBlVifIxNj5erjEqj3cW15uyM1bzziPcIwSn/Vs
+dNBd4P0cV9dM7Si+ECTFK+JT+X3D6kQ5GRTNWf3n0d3mSJbOV+nHUD+2M7CqXDsG
+cJas3nlxsa4G5YDFvcUlW2vgdl1HzC5EZaGp3HzwxJYXazV+7Ik20iyWntDerJ8d
+1E1QfHHkwlnwY5iXYnI6iacRohq2R6d/dP0FYhJ7hRaXoxApecDnFV/s/o12pV0e
+Jb7TMhgO6MqldxIcUKtQKHiRowiyi0z6RBpPUKU1f5bY/dMPQvbhJCVW7vSS5CEW
+W6lKoPOrWojRs1gN+gkddB4NAYMcaR7rGzIiFJugyidysBP0TlYocehFNodmiRDy
+XlWugQTLTN+iBI5JFXAy5O7Q7mjh607LIEUEXAX8S1+ZCc6nCXu4vcJ1l746R/a9
+/Akdf81OhdS/pzfKWbPdu0BY6aYgqMlIm5G0a1MgaMP/1ZmV7K8=
+=Kmas
+-----END PGP SIGNATURE-----
+
+--uSvFfU1J9MhaXlDCiqAbXuvQuHA8h1Ikd--
