@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86450CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FE7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5409D21726
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76E7208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210814;
-	bh=GHu3kxfw3EEQhhSdbxenzvZRkwjxrDM1IARAor+TjfQ=;
+	s=default; t=1572210817;
+	bh=1wAiKYZzxhCvOyXOT3yy5K9vPW5JV2UVEbFsyb8UxJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=slg0x9iWFozWq6spo8E02/A58WpVnFMZ01eJQJvHHcrFyaOmb0lRU5mNYKL1gmc7k
-	 NZC69VR6esqK8mHJyFmCXpAtRhv48wHzOYdFzW5CojeIvBbYf72efS1vY0bKDrfmx9
-	 cX4j8vzLjVzn/bgzaLG9qtBE0CVdwRxDpWvPx/+4=
+	b=oEctToX3YrmlAZa84HVAnhe0KO/2FwonbUfV9SJRxt9nRbb6ASuPT993USrTzcPqV
+	 H6wEVss53eA5z6WtJJBEC+mPsxUvzOLqVt4fO1oKMeX18s27BltUIxoQGsoG0JOtyU
+	 WPILnHUbQO48wzjU2sW9CrMQPnpBTCQCKAKGIW+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbfJ0VNc (ORCPT
+        id S1730299AbfJ0VNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60562 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:13:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730242AbfJ0VNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:13:30 -0400
+        id S1730288AbfJ0VNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:13:33 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1236208C0;
-        Sun, 27 Oct 2019 21:13:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C0BC214AF;
+        Sun, 27 Oct 2019 21:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210809;
-        bh=GHu3kxfw3EEQhhSdbxenzvZRkwjxrDM1IARAor+TjfQ=;
+        s=default; t=1572210811;
+        bh=1wAiKYZzxhCvOyXOT3yy5K9vPW5JV2UVEbFsyb8UxJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0AyzsfUvuekbMeTiT8S9X9G/IohVNZc+ed/9+2lQhdFCOvxBkyVUrFP6DGI6inZJM
-         oPI0MbzLSckuPamlcGwg+6+EAaEgM5kPHmmv1bsZEQVieaAhqgT62DlrYr7KyEuvZK
-         3cBbwIgV1DhawHX6ugmSd3KoBzRYNw0nwEB59tDk=
+        b=ph7NU+BZjj7LXHOCh+oJKjv8klkzIu+FKdV3I6urvZPBgLPFZ+DB0r903gvv9oTFb
+         h1mrBi3+cPx45zb8ebHsW4KCopbqTkYzO8SbPM/FML80FhyULffYcYlRxMBPemv+t+
+         zMV6WEojlgrNc+x+NiT6Vusm5SOhiS1kziV9FmBI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yi Li <yilikernel@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 24/93] ocfs2: fix panic due to ocfs2_wq is null
-Date:   Sun, 27 Oct 2019 22:00:36 +0100
-Message-Id: <20191027203256.167675867@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Wang <weiwan@google.com>,
+        Ido Schimmel <idosch@idosch.org>,
+        Jesse Hathaway <jesse@mbuki-mvuki.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        David Ahern <dsahern@gmail.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 25/93] ipv4: fix race condition between route lookup and invalidation
+Date:   Sun, 27 Oct 2019 22:00:37 +0100
+Message-Id: <20191027203256.322396995@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -66,78 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Li <yilikernel@gmail.com>
+From: Wei Wang <weiwan@google.com>
 
-commit b918c43021baaa3648de09e19a4a3dd555a45f40 upstream.
+[ Upstream commit 5018c59607a511cdee743b629c76206d9c9e6d7b ]
 
-mount.ocfs2 failed when reading ocfs2 filesystem superblock encounters
-an error.  ocfs2_initialize_super() returns before allocating ocfs2_wq.
-ocfs2_dismount_volume() triggers the following panic.
+Jesse and Ido reported the following race condition:
+<CPU A, t0> - Received packet A is forwarded and cached dst entry is
+taken from the nexthop ('nhc->nhc_rth_input'). Calls skb_dst_set()
 
-  Oct 15 16:09:27 cnwarekv-205120 kernel: On-disk corruption discovered.Please run fsck.ocfs2 once the filesystem is unmounted.
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_read_locked_inode:537 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_init_global_system_inodes:458 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_init_global_system_inodes:491 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_initialize_super:2313 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_fill_super:1033 ERROR: status = -30
-  ------------[ cut here ]------------
-  Oops: 0002 [#1] SMP NOPTI
-  CPU: 1 PID: 11753 Comm: mount.ocfs2 Tainted: G  E
-        4.14.148-200.ckv.x86_64 #1
-  Hardware name: Sugon H320-G30/35N16-US, BIOS 0SSDX017 12/21/2018
-  task: ffff967af0520000 task.stack: ffffa5f05484000
-  RIP: 0010:mutex_lock+0x19/0x20
-  Call Trace:
-    flush_workqueue+0x81/0x460
-    ocfs2_shutdown_local_alloc+0x47/0x440 [ocfs2]
-    ocfs2_dismount_volume+0x84/0x400 [ocfs2]
-    ocfs2_fill_super+0xa4/0x1270 [ocfs2]
-    ? ocfs2_initialize_super.isa.211+0xf20/0xf20 [ocfs2]
-    mount_bdev+0x17f/0x1c0
-    mount_fs+0x3a/0x160
+<t1> - Given Jesse has busy routers ("ingesting full BGP routing tables
+from multiple ISPs"), route is added / deleted and rt_cache_flush() is
+called
 
-Link: http://lkml.kernel.org/r/1571139611-24107-1-git-send-email-yili@winhong.com
-Signed-off-by: Yi Li <yilikernel@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+<CPU B, t2> - Received packet B tries to use the same cached dst entry
+from t0, but rt_cache_valid() is no longer true and it is replaced in
+rt_cache_route() by the newer one. This calls dst_dev_put() on the
+original dst entry which assigns the blackhole netdev to 'dst->dev'
+
+<CPU A, t3> - dst_input(skb) is called on packet A and it is dropped due
+to 'dst->dev' being the blackhole netdev
+
+There are 2 issues in the v4 routing code:
+1. A per-netns counter is used to do the validation of the route. That
+means whenever a route is changed in the netns, users of all routes in
+the netns needs to redo lookup. v6 has an implementation of only
+updating fn_sernum for routes that are affected.
+2. When rt_cache_valid() returns false, rt_cache_route() is called to
+throw away the current cache, and create a new one. This seems
+unnecessary because as long as this route does not change, the route
+cache does not need to be recreated.
+
+To fully solve the above 2 issues, it probably needs quite some code
+changes and requires careful testing, and does not suite for net branch.
+
+So this patch only tries to add the deleted cached rt into the uncached
+list, so user could still be able to use it to receive packets until
+it's done.
+
+Fixes: 95c47f9cf5e0 ("ipv4: call dst_dev_put() properly")
+Signed-off-by: Wei Wang <weiwan@google.com>
+Reported-by: Ido Schimmel <idosch@idosch.org>
+Reported-by: Jesse Hathaway <jesse@mbuki-mvuki.org>
+Tested-by: Jesse Hathaway <jesse@mbuki-mvuki.org>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Cc: David Ahern <dsahern@gmail.com>
+Reviewed-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/ocfs2/journal.c    |    3 ++-
- fs/ocfs2/localalloc.c |    3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ net/ipv4/route.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ocfs2/journal.c
-+++ b/fs/ocfs2/journal.c
-@@ -231,7 +231,8 @@ void ocfs2_recovery_exit(struct ocfs2_su
- 	/* At this point, we know that no more recovery threads can be
- 	 * launched, so wait for any recovery completion work to
- 	 * complete. */
--	flush_workqueue(osb->ocfs2_wq);
-+	if (osb->ocfs2_wq)
-+		flush_workqueue(osb->ocfs2_wq);
- 
- 	/*
- 	 * Now that recovery is shut down, and the osb is about to be
---- a/fs/ocfs2/localalloc.c
-+++ b/fs/ocfs2/localalloc.c
-@@ -391,7 +391,8 @@ void ocfs2_shutdown_local_alloc(struct o
- 	struct ocfs2_dinode *alloc = NULL;
- 
- 	cancel_delayed_work(&osb->la_enable_wq);
--	flush_workqueue(osb->ocfs2_wq);
-+	if (osb->ocfs2_wq)
-+		flush_workqueue(osb->ocfs2_wq);
- 
- 	if (osb->local_alloc_state == OCFS2_LA_UNUSED)
- 		goto out;
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1476,7 +1476,7 @@ static bool rt_cache_route(struct fib_nh
+ 	prev = cmpxchg(p, orig, rt);
+ 	if (prev == orig) {
+ 		if (orig) {
+-			dst_dev_put(&orig->dst);
++			rt_add_uncached_list(orig);
+ 			dst_release(&orig->dst);
+ 		}
+ 	} else {
 
 
