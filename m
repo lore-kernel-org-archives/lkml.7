@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE18ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF092CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5F7214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A23205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210928;
-	bh=ZxblUBR8xTc4PK25nN++gbyYlqGJxOpexeBfqiMq9xE=;
+	s=default; t=1572210935;
+	bh=Po2c2GviTAUMla+oYjDjAo+YpQcwECI9M/p6lDJSJmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0W5nef+s9kaO3lW45gM9syxYjQEFUnkM5VkFHxhRQr/CmArgvhW5yc4A//KSbIXv8
-	 Ei6kz1mBRk3ExEXIPpq1aKpLvnTLhdQrZnFtsknVMdpbM4fJaFDYgNO7Va66oOVHn9
-	 2QZSMUrw6sLgmnyt+4ZyYltWRyuNWFqce6kRhQ+o=
+	b=ZgK3qLHd3lkKWJhjr3he268vgob1BUsS+KzTycXae416Xahn7yNwwVZ6XB/l7LaVa
+	 DBA7jjnL1j4OEUPlfDqjdYSaG67KU3qx5cd2kvkgBaQlcmW1FwqzctvVQ3GUJ9IDew
+	 z5bsBx9e+uX/zbh+fdkGLg9ksKOSGk4OfmFDXkjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbfJ0VP1 (ORCPT
+        id S1729405AbfJ0VPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:15:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:15:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730609AbfJ0VPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:15:19 -0400
+        id S1728107AbfJ0VPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:15:30 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4250B214AF;
-        Sun, 27 Oct 2019 21:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19FC2214AF;
+        Sun, 27 Oct 2019 21:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210917;
-        bh=ZxblUBR8xTc4PK25nN++gbyYlqGJxOpexeBfqiMq9xE=;
+        s=default; t=1572210929;
+        bh=Po2c2GviTAUMla+oYjDjAo+YpQcwECI9M/p6lDJSJmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JjCDor2lWGJrMkVa9cyrt88Mv3HWxljyJxpAFhFtI4hXA+sMpSbinOK8P1m20rPLW
-         7LZWao8+LOER2102Nua69cBBCFZKdqpePJ36kdimZpp0LTGsr9yehB62fn6R7MwCk8
-         1Iavy436ZkXtTWa9EppopsTRtZwiZHnUnEuHzLUA=
+        b=G8Ad2g0BBnYLziOouPuWBEpdB8gHCHdI4aS1RuWGBG0Zkf78aUxbK8Guex0vs881X
+         sUWr4SPqmfOagFQZ7EKtyY3gR8MZUHjo3bePrv6H/gAykZdtbigdPYgymNGztPJGTU
+         WT1kIASZyYNhw2OFslG1+FPCNPdLoY89Uebud72k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.19 61/93] drm/amdgpu: Bail earlier when amdgpu.cik_/si_support is not set to 1
-Date:   Sun, 27 Oct 2019 22:01:13 +0100
-Message-Id: <20191027203305.376070221@linuxfoundation.org>
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 65/93] mm/memory-failure.c: dont access uninitialized memmaps in memory_failure()
+Date:   Sun, 27 Oct 2019 22:01:17 +0100
+Message-Id: <20191027203306.883320150@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,123 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: David Hildenbrand <david@redhat.com>
 
-commit 984d7a929ad68b7be9990fc9c5cfa5d5c9fc7942 upstream.
+commit 96c804a6ae8c59a9092b3d5dd581198472063184 upstream.
 
-Bail from the pci_driver probe function instead of from the drm_driver
-load function.
+We should check for pfn_to_online_page() to not access uninitialized
+memmaps.  Reshuffle the code so we don't have to duplicate the error
+message.
 
-This avoid /dev/dri/card0 temporarily getting registered and then
-unregistered again, sending unwanted add / remove udev events to
-userspace.
-
-Specifically this avoids triggering the (userspace) bug fixed by this
-plymouth merge-request:
-https://gitlab.freedesktop.org/plymouth/plymouth/merge_requests/59
-
-Note that despite that being a userspace bug, not sending unnecessary
-udev events is a good idea in general.
-
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1490490
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20191009142435.3975-3-david@redhat.com
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
+Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: <stable@vger.kernel.org>	[4.13+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c |   35 ++++++++++++++++++++++++++++++++
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |   35 --------------------------------
- 2 files changed, 35 insertions(+), 35 deletions(-)
+ mm/memory-failure.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -841,6 +841,41 @@ static int amdgpu_pci_probe(struct pci_d
- 	if (ret == -EPROBE_DEFER)
- 		return ret;
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1258,17 +1258,19 @@ int memory_failure(unsigned long pfn, in
+ 	if (!sysctl_memory_failure_recovery)
+ 		panic("Memory failure on page %lx", pfn);
  
-+#ifdef CONFIG_DRM_AMDGPU_SI
-+	if (!amdgpu_si_support) {
-+		switch (flags & AMD_ASIC_MASK) {
-+		case CHIP_TAHITI:
-+		case CHIP_PITCAIRN:
-+		case CHIP_VERDE:
-+		case CHIP_OLAND:
-+		case CHIP_HAINAN:
-+			dev_info(&pdev->dev,
-+				 "SI support provided by radeon.\n");
-+			dev_info(&pdev->dev,
-+				 "Use radeon.si_support=0 amdgpu.si_support=1 to override.\n"
-+				);
-+			return -ENODEV;
+-	if (!pfn_valid(pfn)) {
++	p = pfn_to_online_page(pfn);
++	if (!p) {
++		if (pfn_valid(pfn)) {
++			pgmap = get_dev_pagemap(pfn, NULL);
++			if (pgmap)
++				return memory_failure_dev_pagemap(pfn, flags,
++								  pgmap);
 +		}
-+	}
-+#endif
-+#ifdef CONFIG_DRM_AMDGPU_CIK
-+	if (!amdgpu_cik_support) {
-+		switch (flags & AMD_ASIC_MASK) {
-+		case CHIP_KAVERI:
-+		case CHIP_BONAIRE:
-+		case CHIP_HAWAII:
-+		case CHIP_KABINI:
-+		case CHIP_MULLINS:
-+			dev_info(&pdev->dev,
-+				 "CIK support provided by radeon.\n");
-+			dev_info(&pdev->dev,
-+				 "Use radeon.cik_support=0 amdgpu.cik_support=1 to override.\n"
-+				);
-+			return -ENODEV;
-+		}
-+	}
-+#endif
-+
- 	/* Get rid of things like offb */
- 	ret = amdgpu_kick_out_firmware_fb(pdev);
- 	if (ret)
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -87,41 +87,6 @@ int amdgpu_driver_load_kms(struct drm_de
- 	struct amdgpu_device *adev;
- 	int r, acpi_status;
+ 		pr_err("Memory failure: %#lx: memory outside kernel control\n",
+ 			pfn);
+ 		return -ENXIO;
+ 	}
  
--#ifdef CONFIG_DRM_AMDGPU_SI
--	if (!amdgpu_si_support) {
--		switch (flags & AMD_ASIC_MASK) {
--		case CHIP_TAHITI:
--		case CHIP_PITCAIRN:
--		case CHIP_VERDE:
--		case CHIP_OLAND:
--		case CHIP_HAINAN:
--			dev_info(dev->dev,
--				 "SI support provided by radeon.\n");
--			dev_info(dev->dev,
--				 "Use radeon.si_support=0 amdgpu.si_support=1 to override.\n"
--				);
--			return -ENODEV;
--		}
--	}
--#endif
--#ifdef CONFIG_DRM_AMDGPU_CIK
--	if (!amdgpu_cik_support) {
--		switch (flags & AMD_ASIC_MASK) {
--		case CHIP_KAVERI:
--		case CHIP_BONAIRE:
--		case CHIP_HAWAII:
--		case CHIP_KABINI:
--		case CHIP_MULLINS:
--			dev_info(dev->dev,
--				 "CIK support provided by radeon.\n");
--			dev_info(dev->dev,
--				 "Use radeon.cik_support=0 amdgpu.cik_support=1 to override.\n"
--				);
--			return -ENODEV;
--		}
--	}
--#endif
+-	pgmap = get_dev_pagemap(pfn, NULL);
+-	if (pgmap)
+-		return memory_failure_dev_pagemap(pfn, flags, pgmap);
 -
- 	adev = kzalloc(sizeof(struct amdgpu_device), GFP_KERNEL);
- 	if (adev == NULL) {
- 		return -ENOMEM;
+-	p = pfn_to_page(pfn);
+ 	if (PageHuge(p))
+ 		return memory_failure_hugetlb(pfn, flags);
+ 	if (TestSetPageHWPoison(p)) {
 
 
