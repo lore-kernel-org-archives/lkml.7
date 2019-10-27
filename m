@@ -2,53 +2,54 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6573CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B54CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E482214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B553B208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210319;
-	bh=MAUIFzvj0oCaU6nDVjrgFqLlv1Ar4V2sW0PJ1BSPT3A=;
+	s=default; t=1572210321;
+	bh=KlEZ86iupsiV+W6cbYN+k7MMDobQXDrIkXofB4Cs1hA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZE49RBC6RwwIuS76QZEU0AOf0kH8pREto6c3dFzLmK15ov/IIM6AAFknocat0vxtI
-	 OuX7V8s45kK6Y1+MUxlJqHagEcpvzvsJ2JyS6G26yP83EX1DX+lJawpUMCGI9HifEt
-	 mw+JYa7U8Xhi3KO0q000FA5SqGMxtDCDeG49Jp74=
+	b=jbLbMXMFVv/ayzTjZgMMOoWfbmjzrMcGsnD90mJ6uJ2279802NTzWkRO8B95W0YLr
+	 cuCj1DRS2NVL4uF1eFkoWpP+8cYI9Z12z7sLbZ9tP+VcYI3CLIpcSetMnTDPF6RS/q
+	 A4FI8w2UdPtFlNcw4lXpQizYZ/KqjYBJfkwGmyjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfJ0VFR (ORCPT
+        id S1728814AbfJ0VFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:05:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50870 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:05:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728767AbfJ0VFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:05:06 -0400
+        id S1728776AbfJ0VFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:05:12 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7E2F214AF;
-        Sun, 27 Oct 2019 21:05:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6875720873;
+        Sun, 27 Oct 2019 21:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210306;
-        bh=MAUIFzvj0oCaU6nDVjrgFqLlv1Ar4V2sW0PJ1BSPT3A=;
+        s=default; t=1572210312;
+        bh=KlEZ86iupsiV+W6cbYN+k7MMDobQXDrIkXofB4Cs1hA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aN4Kmu3nf7vb4qaLhvuzSQc4aDIqokmt3/ZAaFg/Hi5YF8YV1Ms0idgl9HwWBryeT
-         cQkELK8DStV6lT13E/gwQ9XHuzy1zzN7dpzNFyN6bM96/5t05nXrJA5DX+SQhSNouH
-         lkP7WHXEdt0R4fliG7XHrnX3VhPSnYF6qGiS4gMc=
+        b=f8omY7xp5WlC2298CKICFswhUIXI+mu4CfTEj3lZfnMAJ6z2CkjPIDwhYDykB0ADp
+         eLb67zp/LFaZc0Jdo93cYcZWv4HBGl1+NLB59tFsZtI8o7STpndx1bRUzGRBHzJqKg
+         oV3rNghr5vBq11lCJIt+X+1JzF0eCSGulm0DvbB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 02/49] scsi: megaraid: disable device when probe failed after enabled device
-Date:   Sun, 27 Oct 2019 22:00:40 +0100
-Message-Id: <20191027203121.575796632@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Walter <walteste@inf.ethz.ch>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Gonzalo Siero <gsierohu@redhat.com>
+Subject: [PATCH 4.9 21/49] ipv4: Return -ENETUNREACH if we cant create route but saddr is valid
+Date:   Sun, 27 Oct 2019 22:00:59 +0100
+Message-Id: <20191027203135.574241772@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -61,42 +62,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit 70054aa39a013fa52eff432f2223b8bd5c0048f8 ]
+[ Upstream commit 595e0651d0296bad2491a4a29a7a43eae6328b02 ]
 
-For pci device, need to disable device when probe failed after enabled
-device.
+...instead of -EINVAL. An issue was found with older kernel versions
+while unplugging a NFS client with pending RPCs, and the wrong error
+code here prevented it from recovering once link is back up with a
+configured address.
 
-Link: https://lore.kernel.org/r/1567818450-173315-1-git-send-email-chenxiang66@hisilicon.com
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Incidentally, this is not an issue anymore since commit 4f8943f80883
+("SUNRPC: Replace direct task wakeups from softirq context"), included
+in 5.2-rc7, had the effect of decoupling the forwarding of this error
+by using SO_ERROR in xs_wake_error(), as pointed out by Benjamin
+Coddington.
+
+To the best of my knowledge, this isn't currently causing any further
+issue, but the error code doesn't look appropriate anyway, and we
+might hit this in other paths as well.
+
+In detail, as analysed by Gonzalo Siero, once the route is deleted
+because the interface is down, and can't be resolved and we return
+-EINVAL here, this ends up, courtesy of inet_sk_rebuild_header(),
+as the socket error seen by tcp_write_err(), called by
+tcp_retransmit_timer().
+
+In turn, tcp_write_err() indirectly calls xs_error_report(), which
+wakes up the RPC pending tasks with a status of -EINVAL. This is then
+seen by call_status() in the SUN RPC implementation, which aborts the
+RPC call calling rpc_exit(), instead of handling this as a
+potentially temporary condition, i.e. as a timeout.
+
+Return -EINVAL only if the input parameters passed to
+ip_route_output_key_hash_rcu() are actually invalid (this is the case
+if the specified source address is multicast, limited broadcast or
+all zeroes), but return -ENETUNREACH in all cases where, at the given
+moment, the given source address doesn't allow resolving the route.
+
+While at it, drop the initialisation of err to -ENETUNREACH, which
+was added to __ip_route_output_key() back then by commit
+0315e3827048 ("net: Fix behaviour of unreachable, blackhole and
+prohibit routes"), but actually had no effect, as it was, and is,
+overwritten by the fib_lookup() return code assignment, and anyway
+ignored in all other branches, including the if (fl4->saddr) one:
+I find this rather confusing, as it would look like -ENETUNREACH is
+the "default" error, while that statement has no effect.
+
+Also note that after commit fc75fc8339e7 ("ipv4: dont create routes
+on down devices"), we would get -ENETUNREACH if the device is down,
+but -EINVAL if the source address is specified and we can't resolve
+the route, and this appears to be rather inconsistent.
+
+Reported-by: Stefan Walter <walteste@inf.ethz.ch>
+Analysed-by: Benjamin Coddington <bcodding@redhat.com>
+Analysed-by: Gonzalo Siero <gsierohu@redhat.com>
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/scsi/megaraid.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/route.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/megaraid.c b/drivers/scsi/megaraid.c
-index 19bffe0b2cc0a..2cbfec6a74662 100644
---- a/drivers/scsi/megaraid.c
-+++ b/drivers/scsi/megaraid.c
-@@ -4219,11 +4219,11 @@ megaraid_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
- 		 */
- 		if (pdev->subsystem_vendor == PCI_VENDOR_ID_COMPAQ &&
- 		    pdev->subsystem_device == 0xC000)
--		   	return -ENODEV;
-+			goto out_disable_device;
- 		/* Now check the magic signature byte */
- 		pci_read_config_word(pdev, PCI_CONF_AMISIG, &magic);
- 		if (magic != HBA_SIGNATURE_471 && magic != HBA_SIGNATURE)
--			return -ENODEV;
-+			goto out_disable_device;
- 		/* Ok it is probably a megaraid */
- 	}
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -2221,7 +2221,7 @@ struct rtable *__ip_route_output_key_has
+ 	struct fib_result res;
+ 	struct rtable *rth;
+ 	int orig_oif;
+-	int err = -ENETUNREACH;
++	int err;
  
--- 
-2.20.1
-
+ 	res.tclassid	= 0;
+ 	res.fi		= NULL;
+@@ -2236,11 +2236,14 @@ struct rtable *__ip_route_output_key_has
+ 
+ 	rcu_read_lock();
+ 	if (fl4->saddr) {
+-		rth = ERR_PTR(-EINVAL);
+ 		if (ipv4_is_multicast(fl4->saddr) ||
+ 		    ipv4_is_lbcast(fl4->saddr) ||
+-		    ipv4_is_zeronet(fl4->saddr))
++		    ipv4_is_zeronet(fl4->saddr)) {
++			rth = ERR_PTR(-EINVAL);
+ 			goto out;
++		}
++
++		rth = ERR_PTR(-ENETUNREACH);
+ 
+ 		/* I removed check for oif == dev_out->oif here.
+ 		   It was wrong for two reasons:
 
 
