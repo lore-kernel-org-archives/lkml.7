@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF39ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6302CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BC12070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8604321783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211381;
-	bh=tXsBqKtu6vFAtUYWW+CWmag2N1dcGDkHT2k+n6PCjEs=;
+	s=default; t=1572211383;
+	bh=TYgk3jFPZOvKToNOdidpupw5qei3AAmg3k+MAjGFO4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ulLLZ5mhZCPY7m0lz/5vIcXFTaDG9qB5eB/+BQn3fIs6E0LDH1oL9Pce9dWTa3HI
-	 eyt3tNN5xH4GRjqcfW31fweWYRUxM8NEUOqDYvq4SGsfcslZre6Bw0DfCkDh0q1vlm
-	 zGgaJo5MBo5X78by5kDGB8I1bql8xsvH5uKlgYrw=
+	b=Reh9WXUGq8487BmP6Lp2PDF4Y3kWyWFwS1VJzPlBok6EV3lizYqNIR9gt6wr/2Uy9
+	 fVIuGv1TMB3tR2zUcVhNyABmfZ16uex1FrLCq5LHAtkaIE8skvQiD6V8TthoLsXLdR
+	 5qnYfg3+ZKxEQtv84+4E/h3iPAlMMxaScNSwtYfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732273AbfJ0VXA (ORCPT
+        id S1732263AbfJ0VW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:23:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44064 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731868AbfJ0VW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:22:58 -0400
+        id S1728802AbfJ0VW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:22:56 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B6FC205C9;
-        Sun, 27 Oct 2019 21:22:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 742772070B;
+        Sun, 27 Oct 2019 21:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211377;
-        bh=tXsBqKtu6vFAtUYWW+CWmag2N1dcGDkHT2k+n6PCjEs=;
+        s=default; t=1572211375;
+        bh=TYgk3jFPZOvKToNOdidpupw5qei3AAmg3k+MAjGFO4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F33gSeVbtURuCdb8q1A3GrD3XQ/YYGD6a7jZEXLqsELgOczk91FWPBV379PZmQKBv
-         tULBMox7tPE7Cc1nPcoLQRZnigSEo2TOzNpQQei8DToAynBmK8hBgIqF8WlWIq8gq8
-         mjPLUXcjpRfyqrGrEB9r4cXx21yK5z+aH22FhrUE=
+        b=Six2DzsNAboUL8wQCFMJJjMduc5GcYa+Vz7GJf3GJ3KzqM+JsuuPoj5TErzliUppg
+         rZmSWT6/jhpiGYvt/5pSpOZiI1CoufCaCu3LGLNbcsONZ3lgulF+/AZnTRQ+I/Ly/R
+         KusNuWvo4hqKE22Dren+s/7jsgySz/jmcQFqflOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Hans de Goede <hdegoede@redhat.com>,
         Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.3 128/197] drm/amdgpu/sdma5: fix mask value of POLL_REGMEM packet for pipe sync
-Date:   Sun, 27 Oct 2019 22:00:46 +0100
-Message-Id: <20191027203358.637745681@linuxfoundation.org>
+Subject: [PATCH 5.3 127/197] drm/amdgpu: Bail earlier when amdgpu.cik_/si_support is not set to 1
+Date:   Sun, 27 Oct 2019 22:00:45 +0100
+Message-Id: <20191027203358.587004930@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,33 +60,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaojie Yuan <xiaojie.yuan@amd.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit d12c50857c6edc1d18aa7a60c5a4d6d943137bc0 upstream.
+commit 984d7a929ad68b7be9990fc9c5cfa5d5c9fc7942 upstream.
 
-sdma will hang once sequence number to be polled reaches 0x1000_0000
+Bail from the pci_driver probe function instead of from the drm_driver
+load function.
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+This avoid /dev/dri/card0 temporarily getting registered and then
+unregistered again, sending unwanted add / remove udev events to
+userspace.
+
+Specifically this avoids triggering the (userspace) bug fixed by this
+plymouth merge-request:
+https://gitlab.freedesktop.org/plymouth/plymouth/merge_requests/59
+
+Note that despite that being a userspace bug, not sending unnecessary
+udev events is a good idea in general.
+
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1490490
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c |   35 ++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |   35 --------------------------------
+ 2 files changed, 35 insertions(+), 35 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-@@ -1086,7 +1086,7 @@ static void sdma_v5_0_ring_emit_pipeline
- 	amdgpu_ring_write(ring, addr & 0xfffffffc);
- 	amdgpu_ring_write(ring, upper_32_bits(addr) & 0xffffffff);
- 	amdgpu_ring_write(ring, seq); /* reference */
--	amdgpu_ring_write(ring, 0xfffffff); /* mask */
-+	amdgpu_ring_write(ring, 0xffffffff); /* mask */
- 	amdgpu_ring_write(ring, SDMA_PKT_POLL_REGMEM_DW5_RETRY_COUNT(0xfff) |
- 			  SDMA_PKT_POLL_REGMEM_DW5_INTERVAL(4)); /* retry count, poll interval */
- }
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -1030,6 +1030,41 @@ static int amdgpu_pci_probe(struct pci_d
+ 		return -ENODEV;
+ 	}
+ 
++#ifdef CONFIG_DRM_AMDGPU_SI
++	if (!amdgpu_si_support) {
++		switch (flags & AMD_ASIC_MASK) {
++		case CHIP_TAHITI:
++		case CHIP_PITCAIRN:
++		case CHIP_VERDE:
++		case CHIP_OLAND:
++		case CHIP_HAINAN:
++			dev_info(&pdev->dev,
++				 "SI support provided by radeon.\n");
++			dev_info(&pdev->dev,
++				 "Use radeon.si_support=0 amdgpu.si_support=1 to override.\n"
++				);
++			return -ENODEV;
++		}
++	}
++#endif
++#ifdef CONFIG_DRM_AMDGPU_CIK
++	if (!amdgpu_cik_support) {
++		switch (flags & AMD_ASIC_MASK) {
++		case CHIP_KAVERI:
++		case CHIP_BONAIRE:
++		case CHIP_HAWAII:
++		case CHIP_KABINI:
++		case CHIP_MULLINS:
++			dev_info(&pdev->dev,
++				 "CIK support provided by radeon.\n");
++			dev_info(&pdev->dev,
++				 "Use radeon.cik_support=0 amdgpu.cik_support=1 to override.\n"
++				);
++			return -ENODEV;
++		}
++	}
++#endif
++
+ 	/* Get rid of things like offb */
+ 	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, 0, "amdgpudrmfb");
+ 	if (ret)
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -144,41 +144,6 @@ int amdgpu_driver_load_kms(struct drm_de
+ 	struct amdgpu_device *adev;
+ 	int r, acpi_status;
+ 
+-#ifdef CONFIG_DRM_AMDGPU_SI
+-	if (!amdgpu_si_support) {
+-		switch (flags & AMD_ASIC_MASK) {
+-		case CHIP_TAHITI:
+-		case CHIP_PITCAIRN:
+-		case CHIP_VERDE:
+-		case CHIP_OLAND:
+-		case CHIP_HAINAN:
+-			dev_info(dev->dev,
+-				 "SI support provided by radeon.\n");
+-			dev_info(dev->dev,
+-				 "Use radeon.si_support=0 amdgpu.si_support=1 to override.\n"
+-				);
+-			return -ENODEV;
+-		}
+-	}
+-#endif
+-#ifdef CONFIG_DRM_AMDGPU_CIK
+-	if (!amdgpu_cik_support) {
+-		switch (flags & AMD_ASIC_MASK) {
+-		case CHIP_KAVERI:
+-		case CHIP_BONAIRE:
+-		case CHIP_HAWAII:
+-		case CHIP_KABINI:
+-		case CHIP_MULLINS:
+-			dev_info(dev->dev,
+-				 "CIK support provided by radeon.\n");
+-			dev_info(dev->dev,
+-				 "Use radeon.cik_support=0 amdgpu.cik_support=1 to override.\n"
+-				);
+-			return -ENODEV;
+-		}
+-	}
+-#endif
+-
+ 	adev = kzalloc(sizeof(struct amdgpu_device), GFP_KERNEL);
+ 	if (adev == NULL) {
+ 		return -ENOMEM;
 
 
