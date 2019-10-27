@@ -5,53 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 996BACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE32CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693542064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F092064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211840;
-	bh=pE0yT9Ol68fBMk/rzKDUq3s4Y8QKqjuEq7VMxFMPklc=;
+	s=default; t=1572211846;
+	bh=meW55MlINg8cCAyxxV1Wps5B+gB7Zc5yAB2yAV0AaPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e4zLLwiwPlJMI4n5+3NKsM9MjSoraJCcjheWR/Oy7ZwGQ+c+qpDZBgDus5BXsRB2B
-	 4Ubc017cvBrEuvcMe2fnr+cSOLf5njfJNuL8I2kY0Jm2+K2EVrJY7IPiyWjqjVgowr
-	 ZICqegKJG8DYWzrAwtiKk82UTWCfoSao327mSlaE=
+	b=RG9Lm4uUbZgYQwv7sVipC+Ab9ujYGXLUB5TDT/n1PYb7d6tPamr7yK85umoSgvHzu
+	 KJBkNV3h1g7LLlHHWtsu9LtkEazhLMJSIW9nEHG4AbwtxNM8aqcf/Lv6Dpvqf9l9qh
+	 CXq4mWlRrD+5CeuyDm1fHj+wHwVCVRX5lul4/jR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732809AbfJ0Vai (ORCPT
+        id S1726475AbfJ0VSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:30:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:18:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731310AbfJ0VSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:18:38 -0400
+        id S1730388AbfJ0VSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:18:17 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA16520717;
-        Sun, 27 Oct 2019 21:18:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 951B0205C9;
+        Sun, 27 Oct 2019 21:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211117;
-        bh=pE0yT9Ol68fBMk/rzKDUq3s4Y8QKqjuEq7VMxFMPklc=;
+        s=default; t=1572211097;
+        bh=meW55MlINg8cCAyxxV1Wps5B+gB7Zc5yAB2yAV0AaPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iiOiojoZAv6DR+EihEm9o5W/zql8Fq6LvGeEOsrxK9yCLI4Ay7umTWsOz5e5mPdfc
-         W3u/y8hCktsDHRbQRaF+knFCAyJ5D/4zvONjRzkH2SFKPfMwkWq+2H4WvVTfsLPhzF
-         b6P6f/lBu+5pjkmhNtUnLqY4ykEsC1u6gShByNNo=
+        b=SnFJncKwxifYAVrXoqks6MK8HGbK/b66joa1P9sQocKwxQjRRvASjYxvCPg5gtqWh
+         UJ+BWMXBXiGnMDvq2kA7QcSOSDvUJijNyWbAM2OzwZVlSC5hh3yNkoxya26nrPgeF3
+         rEk9Y1Df+UZYfkDu1u+EAW4i1bQk0YA1Vb3IN50Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 037/197] net: dsa: rtl8366rb: add missing of_node_put after calling of_get_child_by_name
-Date:   Sun, 27 Oct 2019 21:59:15 +0100
-Message-Id: <20191027203353.725873412@linuxfoundation.org>
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 030/197] MIPS: dts: ar9331: fix interrupt-controller size
+Date:   Sun, 27 Oct 2019 21:59:08 +0100
+Message-Id: <20191027203353.370644790@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -64,90 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit f32eb9d80470dab05df26b6efd02d653c72e6a11 ]
+[ Upstream commit 0889d07f3e4b171c453b2aaf2b257f9074cdf624 ]
 
-of_node_put needs to be called when the device node which is got
-from of_get_child_by_name finished using.
-irq_domain_add_linear() also calls of_node_get() to increase refcount,
-so irq_domain will not be affected when it is released.
+It is two registers each of 4 byte.
 
-Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Vivien Didelot <vivien.didelot@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/rtl8366rb.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/mips/boot/dts/qca/ar9331.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/rtl8366rb.c b/drivers/net/dsa/rtl8366rb.c
-index a268085ffad28..f5cc8b0a7c74c 100644
---- a/drivers/net/dsa/rtl8366rb.c
-+++ b/drivers/net/dsa/rtl8366rb.c
-@@ -507,7 +507,8 @@ static int rtl8366rb_setup_cascaded_irq(struct realtek_smi *smi)
- 	irq = of_irq_get(intc, 0);
- 	if (irq <= 0) {
- 		dev_err(smi->dev, "failed to get parent IRQ\n");
--		return irq ? irq : -EINVAL;
-+		ret = irq ? irq : -EINVAL;
-+		goto out_put_node;
- 	}
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index 63a9f33aa43e8..5cfc9d347826a 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -99,7 +99,7 @@
  
- 	/* This clears the IRQ status register */
-@@ -515,7 +516,7 @@ static int rtl8366rb_setup_cascaded_irq(struct realtek_smi *smi)
- 			  &val);
- 	if (ret) {
- 		dev_err(smi->dev, "can't read interrupt status\n");
--		return ret;
-+		goto out_put_node;
- 	}
+ 			miscintc: interrupt-controller@18060010 {
+ 				compatible = "qca,ar7240-misc-intc";
+-				reg = <0x18060010 0x4>;
++				reg = <0x18060010 0x8>;
  
- 	/* Fetch IRQ edge information from the descriptor */
-@@ -537,7 +538,7 @@ static int rtl8366rb_setup_cascaded_irq(struct realtek_smi *smi)
- 				 val);
- 	if (ret) {
- 		dev_err(smi->dev, "could not configure IRQ polarity\n");
--		return ret;
-+		goto out_put_node;
- 	}
- 
- 	ret = devm_request_threaded_irq(smi->dev, irq, NULL,
-@@ -545,7 +546,7 @@ static int rtl8366rb_setup_cascaded_irq(struct realtek_smi *smi)
- 					"RTL8366RB", smi);
- 	if (ret) {
- 		dev_err(smi->dev, "unable to request irq: %d\n", ret);
--		return ret;
-+		goto out_put_node;
- 	}
- 	smi->irqdomain = irq_domain_add_linear(intc,
- 					       RTL8366RB_NUM_INTERRUPT,
-@@ -553,12 +554,15 @@ static int rtl8366rb_setup_cascaded_irq(struct realtek_smi *smi)
- 					       smi);
- 	if (!smi->irqdomain) {
- 		dev_err(smi->dev, "failed to create IRQ domain\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto out_put_node;
- 	}
- 	for (i = 0; i < smi->num_ports; i++)
- 		irq_set_parent(irq_create_mapping(smi->irqdomain, i), irq);
- 
--	return 0;
-+out_put_node:
-+	of_node_put(intc);
-+	return ret;
- }
- 
- static int rtl8366rb_set_addr(struct realtek_smi *smi)
+ 				interrupt-parent = <&cpuintc>;
+ 				interrupts = <6>;
 -- 
 2.20.1
 
