@@ -2,67 +2,134 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8D5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA55CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96AF20873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:32:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="Q3F5MO7X"
+	by mail.kernel.org (Postfix) with ESMTP id 33AC921850
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572194669;
+	bh=XwS5i6MNNhwp8I5DB1OdPHCvAwnv3Rif4k1pFCPwCzA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dqL/Bd+EEwYzD++Rsfm50S632G85djWwSkouiZyF9r1sPeDBNnuGLHcFVt2nGnYy1
+	 LC2AgF+4h2iDnxOzwEiNG3RUphxnjoTjS+K2m10rugmOXUIOzoMxx3rRhdsLFjhAM1
+	 yGqnGwr0tArzxEjuhITl0NljsqzgaXNPfifvdu7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfJ0Qc4 (ORCPT
+        id S1727324AbfJ0Qo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 12:32:56 -0400
-Received: from one.firstfloor.org ([193.170.194.197]:43404 "EHLO
-        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbfJ0Qc4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 12:32:56 -0400
-Received: by one.firstfloor.org (Postfix, from userid 503)
-        id BCCEF868A0; Sun, 27 Oct 2019 17:32:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
-        s=mail; t=1572193970;
-        bh=Qy2BzbwNudZ+K/M+aELzPmKqbE47rBv9XJrJ+gnJi3M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q3F5MO7Xcn3BCGNZn1vmupgXeQm3s0wHP5aWbVjhFEGf8Qwz3EIhygQL/I0HKVSMt
-         WFwEPSut/cpsepflfcWbxLZhiPNgrSeyx1+lsVenV9KGhEyz2ipWSHLCULIuB0nar7
-         rCi+uYn1JrgxL+MWHOXFb/tRMlRedywFpulB34g8=
-Date:   Sun, 27 Oct 2019 09:32:50 -0700
-From:   Andi Kleen <andi@firstfloor.org>
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, andi@firstfloor.org,
-        kan.liang@linux.intel.com, lkp@lists.01.org
-Subject: Re: [perf]  06e0dbcfd3:  phoronix-test-suite.mbw.0.mib_s 12.6%
- improvement
-Message-ID: <20191027163248.nv63uybzjstoigj5@two.firstfloor.org>
-References: <20191022092307.425783389@infradead.org>
- <20191027051812.GJ29418@shao2-debian>
+        Sun, 27 Oct 2019 12:44:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726682AbfJ0Qo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 12:44:27 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED8D121726;
+        Sun, 27 Oct 2019 16:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572194666;
+        bh=XwS5i6MNNhwp8I5DB1OdPHCvAwnv3Rif4k1pFCPwCzA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DQrl9SdB02jUANet0M/EyTNtAtCzKuT4tWm+PE/xkZOVHa6RDcho9Keu5Z5UrYjjr
+         z7w+AxjjhF/FFLuW7ns7v+bIoIBczrz1WIKK2aqAg+eWvkXzedECrPuJDeTeX+Rnmu
+         Wz7hLjQpyyQ3Ax4okjHkTPDWMC5KOMdA8qmrvLeQ=
+Date:   Sun, 27 Oct 2019 16:44:20 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rishi Gupta <gupt21@gmail.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] iio: documentation: light: Add veml6030 sysfs
+ documentation
+Message-ID: <20191027164420.2a1aa82c@archlinux>
+In-Reply-To: <1571749887-9054-1-git-send-email-gupt21@gmail.com>
+References: <1571749887-9054-1-git-send-email-gupt21@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191027051812.GJ29418@shao2-debian>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 01:18:12PM +0800, kernel test robot wrote:
-> Greeting,
+On Tue, 22 Oct 2019 18:41:27 +0530
+Rishi Gupta <gupt21@gmail.com> wrote:
+
+> The driver for veml6030 light sensor provides sysfs
+> entries like configuring cutoff for interrupt. This
+> commit document them.
 > 
-> FYI, we noticed a 12.6% improvement of phoronix-test-suite.mbw.0.mib_s due to commit:
+> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+> ---
+> Changes in v5:
+> * Use ABI/testing/sysfs-bus-iio to document sysfs files for veml6030
+> 
+> Changes in v4:
+> * None
+> 
+> Changes in v3:
+> * Updated Date from September to October
+> * Updated KernelVersion from 5.3.1 to 5.4
+> * in_illuminance_period_available is now in events directory
+> 
+> Changes in v2:
+> * None
+> 
+>  Documentation/ABI/testing/sysfs-bus-iio | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index 6804516..a26d532 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -753,6 +753,8 @@ What:		/sys/.../events/in_illuminance0_thresh_falling_value
+>  what:		/sys/.../events/in_illuminance0_thresh_rising_value
+>  what:		/sys/.../events/in_proximity0_thresh_falling_value
+>  what:		/sys/.../events/in_proximity0_thresh_rising_value
+> +What:		/sys/.../events/in_illuminance_thresh_rising_value
+> +What:		/sys/.../events/in_illuminance_thresh_falling_value
+>  KernelVersion:	2.6.37
+>  Contact:	linux-iio@vger.kernel.org
+>  Description:
+> @@ -972,6 +974,7 @@ What:		/sys/.../events/in_activity_jogging_thresh_rising_period
+>  What:		/sys/.../events/in_activity_jogging_thresh_falling_period
+>  What:		/sys/.../events/in_activity_running_thresh_rising_period
+>  What:		/sys/.../events/in_activity_running_thresh_falling_period
+> +What:		/sys/.../events/in_illuminance_thresh_either_period
+>  KernelVersion:	2.6.37
+>  Contact:	linux-iio@vger.kernel.org
+>  Description:
+> @@ -1715,3 +1718,12 @@ Description:
+>  		Mass concentration reading of particulate matter in ug / m3.
+>  		pmX consists of particles with aerodynamic diameter less or
+>  		equal to X micrometers.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/events/in_illuminance_period_available
+> +Date:		October 2019
+> +KernelVersion:	5.4
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		List of valid values available in multiples of integration time
+> +		for which the light intensity must be above the threshold level
+> +		before interrupt is asserted. This refers to persistence values.
 
-Wow! Sadly it's a false positive, from lowering perf overhead, instead
-of improving the workload. Still seems like a good thing.
+This doesn't match with in_illuminance_period (which is correct).  The period values
+a are in seconds, not multiples of the integration time.  The reason is that firstly
+integration time may not be related to sampling frequency (which actually matters here)
+and secondly it's much easier for userspace to set these period values to say something
+is true for 0.1 seconds rather than having to work out the relationship with the devices
+internal sampling rates.
 
-Note that there is a perf user tool change coming soon that will likely
-improve it even more (using affiity to optimize all perf IPIs).
 
--Andi
+Thanks,
+
+Jonathan
+
