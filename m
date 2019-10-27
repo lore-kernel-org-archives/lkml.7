@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44843CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948F8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16072205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66AD020B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212203;
-	bh=4kpBjFVHBtSenIMSIQp2j0JOTMmGi0qrCsyJrZ/a9kY=;
+	s=default; t=1572212205;
+	bh=HD9mHCLH10oaeXqUmRtcah0sFgC/axtPSfwRW0zPG2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mcbxSqVV4kpRG/oW4REsZgz6kYJ9bjnNAVtNJ80iQpgIZtwRWUytEeWwAwjL8OArG
-	 LJ/U8KgCJ46AxGqAsBG1RkIGx7NBnKE+pEMqpJnYpd2Xa1E9nUwOONQijdEpBdvZqH
-	 vHIGptAbD/SJu1eaWkh558VtgpgNfC1Xz2VSRp44=
+	b=RECgTOdzeoEEo29mWVIPVz0u/J5HodP5OoRAUE3vJftu4aiR+/O45bUmc3KUwu6DS
+	 dJ+GpMPloU820pEszGepzyVhPnTWmdnXgbn8bsk1WHA01KiEndzUBVwiWhpr7hThlu
+	 FzoEUuctlDPoHYcodKIJsgMq/fwlJnfze10WR3CM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfJ0VG3 (ORCPT
+        id S1729003AbfJ0VG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52380 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:06:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727503AbfJ0VGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:06:24 -0400
+        id S1728974AbfJ0VGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:06:18 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B26221783;
-        Sun, 27 Oct 2019 21:06:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C121721D80;
+        Sun, 27 Oct 2019 21:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210383;
-        bh=4kpBjFVHBtSenIMSIQp2j0JOTMmGi0qrCsyJrZ/a9kY=;
+        s=default; t=1572210377;
+        bh=HD9mHCLH10oaeXqUmRtcah0sFgC/axtPSfwRW0zPG2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A83qr1HJLlwNb5J4CcpDNu9UyJYDtdc+WeaGfCFRU7z59YGeHImNSKwmUHxd74Ne8
-         zDKZvsZn2Rc+wjyhXxfQaz4jnFVaLUUQFG1wmnmbdI980huJCqg0/wb083mGUm9efj
-         fK82wnZQ+8n58bEAMC+HjN/Hl9WF8vFAXKH8v5oI=
+        b=T2cD3IVBTH7+OYjIL/zZ2P/sVrvvdh2M2wSQnDg0grt8VvOlfZgKjRJT/QLP7chyw
+         iYE8B6I93A7JCtGANAN7EEwIRh3khCdpt0hMG3lRDQ7blkr3zCRwdcGnRLIvfITKHk
+         7DCn4XQD529niCicfgM6RlpFA76BoTpk5wdrqta4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.9 47/49] PCI: PM: Fix pci_power_up()
-Date:   Sun, 27 Oct 2019 22:01:25 +0100
-Message-Id: <20191027203205.369411821@linuxfoundation.org>
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 4.9 45/49] cpufreq: Avoid cpufreq_suspend() deadlock on system shutdown
+Date:   Sun, 27 Oct 2019 22:01:23 +0100
+Message-Id: <20191027203202.190338203@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -62,79 +64,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 45144d42f299455911cc29366656c7324a3a7c97 upstream.
+commit 65650b35133ff20f0c9ef0abd5c3c66dbce3ae57 upstream.
 
-There is an arbitrary difference between the system resume and
-runtime resume code paths for PCI devices regarding the delay to
-apply when switching the devices from D3cold to D0.
+It is incorrect to set the cpufreq syscore shutdown callback pointer
+to cpufreq_suspend(), because that function cannot be run in the
+syscore stage of system shutdown for two reasons: (a) it may attempt
+to carry out actions depending on devices that have already been shut
+down at that point and (b) the RCU synchronization carried out by it
+may not be able to make progress then.
 
-Namely, pci_restore_standard_config() used in the runtime resume
-code path calls pci_set_power_state() which in turn invokes
-__pci_start_power_transition() to power up the device through the
-platform firmware and that function applies the transition delay
-(as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
-However, pci_pm_default_resume_early() used in the system resume
-code path calls pci_power_up() which doesn't apply the delay at
-all and that causes issues to occur during resume from
-suspend-to-idle on some systems where the delay is required.
+The latter issue has been present since commit 45975c7d21a1 ("rcu:
+Define RCU-sched API in terms of RCU for Tree RCU PREEMPT builds"),
+but the former one has been there since commit 90de2a4aa9f3 ("cpufreq:
+suspend cpufreq governors on shutdown") regardless.
 
-Since there is no reason for that difference to exist, modify
-pci_power_up() to follow pci_set_power_state() more closely and
-invoke __pci_start_power_transition() from there to call the
-platform firmware to power up the device (in case that's necessary).
+Fix that by dropping cpufreq_syscore_ops altogether and making
+device_shutdown() call cpufreq_suspend() directly before shutting
+down devices, which is along the lines of what system-wide power
+management does.
 
-Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
-Reported-by: Daniel Drake <drake@endlessm.com>
-Tested-by: Daniel Drake <drake@endlessm.com>
-Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
+Fixes: 45975c7d21a1 ("rcu: Define RCU-sched API in terms of RCU for Tree RCU PREEMPT builds")
+Fixes: 90de2a4aa9f3 ("cpufreq: suspend cpufreq governors on shutdown")
+Reported-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Tested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: 4.0+ <stable@vger.kernel.org> # 4.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pci.c |   24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ drivers/base/core.c       |    3 +++
+ drivers/cpufreq/cpufreq.c |   10 ----------
+ 2 files changed, 3 insertions(+), 10 deletions(-)
 
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -754,19 +754,6 @@ void pci_update_current_state(struct pci
- }
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -10,6 +10,7 @@
+  *
+  */
  
- /**
-- * pci_power_up - Put the given device into D0 forcibly
-- * @dev: PCI device to power up
-- */
--void pci_power_up(struct pci_dev *dev)
--{
--	if (platform_pci_power_manageable(dev))
--		platform_pci_set_power_state(dev, PCI_D0);
--
--	pci_raw_set_power_state(dev, PCI_D0);
--	pci_update_current_state(dev, PCI_D0);
--}
--
--/**
-  * pci_platform_power_transition - Use platform to change device power state
-  * @dev: PCI device to handle.
-  * @state: State to put the device into.
-@@ -942,6 +929,17 @@ int pci_set_power_state(struct pci_dev *
- EXPORT_SYMBOL(pci_set_power_state);
++#include <linux/cpufreq.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/fwnode.h>
+@@ -2128,6 +2129,8 @@ void device_shutdown(void)
+ 	wait_for_device_probe();
+ 	device_block_probing();
  
- /**
-+ * pci_power_up - Put the given device into D0 forcibly
-+ * @dev: PCI device to power up
-+ */
-+void pci_power_up(struct pci_dev *dev)
-+{
-+	__pci_start_power_transition(dev, PCI_D0);
-+	pci_raw_set_power_state(dev, PCI_D0);
-+	pci_update_current_state(dev, PCI_D0);
-+}
++	cpufreq_suspend();
 +
-+/**
-  * pci_choose_state - Choose the power state of a PCI device
-  * @dev: PCI device to be suspended
-  * @state: target sleep state for the whole system. This is the value
+ 	spin_lock(&devices_kset->list_lock);
+ 	/*
+ 	 * Walk the devices list backward, shutting down each in turn.
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2543,14 +2543,6 @@ int cpufreq_unregister_driver(struct cpu
+ }
+ EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
+ 
+-/*
+- * Stop cpufreq at shutdown to make sure it isn't holding any locks
+- * or mutexes when secondary CPUs are halted.
+- */
+-static struct syscore_ops cpufreq_syscore_ops = {
+-	.shutdown = cpufreq_suspend,
+-};
+-
+ struct kobject *cpufreq_global_kobject;
+ EXPORT_SYMBOL(cpufreq_global_kobject);
+ 
+@@ -2562,8 +2554,6 @@ static int __init cpufreq_core_init(void
+ 	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
+ 	BUG_ON(!cpufreq_global_kobject);
+ 
+-	register_syscore_ops(&cpufreq_syscore_ops);
+-
+ 	return 0;
+ }
+ core_initcall(cpufreq_core_init);
 
 
