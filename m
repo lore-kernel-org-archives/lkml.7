@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D68CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87505CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60C9205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48FFD205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211296;
-	bh=2DyfP3PmbQXEM8PChsIxEbxnKRdPq7KIWGN4SebMk6M=;
+	s=default; t=1572211303;
+	bh=gSQJtAxrFbMVdanez9BjPKXiMSWioG2yotDUzWuEOFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jU/yW2yuk3xwa+QnaHthhDruDJcrichn89VMJvT/NnZ+brwMHYl80d1C1NnVmBJjy
-	 NsE8zG0nay7aOqciWxiu9m6qapgxIXRELNJLB7T/uSWDJ10D0ErIaNhhW8VsiJikB0
-	 637GNsQZDA5lkgIe4LqGQWgvfqIos/OdlPpLK0fI=
+	b=ItYrGuO7e3DKjl4NqjrH4HiWh6B/xwIGAIjhPXkWiz0ySoo26tuI8A8uWPwhk9bUD
+	 wBIk1aRAOo5/Ks/Vmly8X/pBZIWp0SPvvHNZ+MRoMBL6v894/AgoMGyG3RmIoXovHu
+	 rZVbOfF3vHgp/gqJ4HhTNUYc0ELQxcQ5NeOv/haQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbfJ0VVf (ORCPT
+        id S1731980AbfJ0VVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:21:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:21:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731938AbfJ0VVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:21:30 -0400
+        id S1730893AbfJ0VVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:21:34 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A64BD205C9;
-        Sun, 27 Oct 2019 21:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F97208C0;
+        Sun, 27 Oct 2019 21:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211290;
-        bh=2DyfP3PmbQXEM8PChsIxEbxnKRdPq7KIWGN4SebMk6M=;
+        s=default; t=1572211292;
+        bh=gSQJtAxrFbMVdanez9BjPKXiMSWioG2yotDUzWuEOFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AZfgTW3VB+WoOmY8F9A0kxDQRDR6hE2F77Bfxrjt01xEUhQUC2Lm2mxzV1YU8CnSf
-         TVQ6kIFFGqRqgwLsaK6jWYgROo2kQcdybf7/6KDYsc5/0FgsNip3V9EnKC/jR6wWLt
-         Joq1iOlOoXa/Ce9W4SyMKc24c3MldRE+NlM3u3+A=
+        b=AuIWn4IrRnkscYxTZI1jzFA4JKGwInC/OyeasFparISQXoiA7U6dQSC1X2Lt/tu90
+         e+oZmOqsXAc9Q5ChiMb/JHTn2bqNYo2bfmPrzkLGkmV2hN6mQOMpjddTOq30BHjXX/
+         LkkIdCRSSPuC8YUICU6CkqIqHpUwS857+bwpzv44=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Przemys=C5=82aw=20Kopa?= <prymoo@gmail.com>,
-        Rivera Valdez <riveravaldez@ysinembargo.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Daniel Drake <dan@reactivated.net>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 100/197] ALSA: hda - Force runtime PM on Nvidia HDMI codecs
-Date:   Sun, 27 Oct 2019 22:00:18 +0100
-Message-Id: <20191027203357.166902340@linuxfoundation.org>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH 5.3 101/197] usb: udc: lpc32xx: fix bad bit shift operation
+Date:   Sun, 27 Oct 2019 22:00:19 +0100
+Message-Id: <20191027203357.217806484@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -63,59 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 94989e318b2f11e217e86bee058088064fa9a2e9 upstream.
+commit b987b66ac3a2bc2f7b03a0ba48a07dc553100c07 upstream.
 
-Przemysław Kopa reports that since commit b516ea586d71 ("PCI: Enable
-NVIDIA HDA controllers"), the discrete GPU Nvidia GeForce GT 540M on his
-2011 Samsung laptop refuses to runtime suspend, resulting in a power
-regression and excessive heat.
+It seems that the right variable to use in this case is *i*, instead of
+*n*, otherwise there is an undefined behavior when right shifiting by more
+than 31 bits when multiplying n by 8; notice that *n* can take values
+equal or greater than 4 (4, 8, 16, ...).
 
-Rivera Valdez witnesses the same issue with a GeForce GT 525M (GF108M)
-of the same era, as does another Arch Linux user named "R0AR" with a
-more recent GeForce GTX 1050 Ti (GP107M).
+Also, notice that under the current conditions (bl = 3), we are skiping
+the handling of bytes 3, 7, 31... So, fix this by updating this logic
+and limit *bl* up to 4 instead of up to 3.
 
-The commit exposes the discrete GPU's HDA controller and all four codecs
-on the controller do not set the CLKSTOP and EPSS bits in the Supported
-Power States Response.  They also do not set the PS-ClkStopOk bit in the
-Get Power State Response.  hda_codec_runtime_suspend() therefore does
-not call snd_hdac_codec_link_down(), which prevents each codec and the
-PCI device from runtime suspending.
+This fix is based on function udc_stuff_fifo().
 
-The same issue is present on some AMD discrete GPUs and we addressed it
-by forcing runtime PM despite the bits not being set, see commit
-57cb54e53bdd ("ALSA: hda - Force to link down at runtime suspend on
-ATI/AMD HDMI").
-
-Do the same for Nvidia HDMI codecs.
-
-Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
-Link: https://bbs.archlinux.org/viewtopic.php?pid=1865512
-Link: https://bugs.freedesktop.org/show_bug.cgi?id=75985#c81
-Reported-by: Przemysław Kopa <prymoo@gmail.com>
-Reported-by: Rivera Valdez <riveravaldez@ysinembargo.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Daniel Drake <dan@reactivated.net>
-Cc: stable@vger.kernel.org # v5.3+
-Link: https://lore.kernel.org/r/3086bc75135c1e3567c5bc4f3cc4ff5cbf7a56c2.1571324194.git.lukas@wunner.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Addresses-Coverity-ID: 1454834 ("Bad bit shift operation")
+Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Link: https://lore.kernel.org/r/20191014191830.GA10721@embeddedor
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_hdmi.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/udc/lpc32xx_udc.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -3307,6 +3307,8 @@ static int patch_nvhdmi(struct hda_codec
- 		nvhdmi_chmap_cea_alloc_validate_get_type;
- 	spec->chmap.ops.chmap_validate = nvhdmi_chmap_validate;
+--- a/drivers/usb/gadget/udc/lpc32xx_udc.c
++++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
+@@ -1180,11 +1180,11 @@ static void udc_pop_fifo(struct lpc32xx_
+ 			tmp = readl(USBD_RXDATA(udc->udp_baseaddr));
  
-+	codec->link_down_at_suspend = 1;
-+
- 	return 0;
- }
+ 			bl = bytes - n;
+-			if (bl > 3)
+-				bl = 3;
++			if (bl > 4)
++				bl = 4;
+ 
+ 			for (i = 0; i < bl; i++)
+-				data[n + i] = (u8) ((tmp >> (n * 8)) & 0xFF);
++				data[n + i] = (u8) ((tmp >> (i * 8)) & 0xFF);
+ 		}
+ 		break;
  
 
 
