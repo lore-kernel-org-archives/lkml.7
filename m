@@ -4,58 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F65CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6E0CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858CC20717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31381205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211037;
-	bh=zhckgUep76OpebvAf3fwYTU9iJOmCzEJqsA0iackRgQ=;
+	s=default; t=1572211043;
+	bh=Ap0R0u+BPYY+mMHbAVes4DfMCXhd8ei/7HF44I4neFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qt22FNoGWfB5gig1wAjTqE4KqezrO4yPVsjiqJh3lRPur6p+IZ9MfY5epPcUoZ17J
-	 M+Lurw2tXDKEVYEwkwoQdtuJfT373h7QqTxenazJatjIp1TngflKJrw3kPO2XyauwX
-	 kiJHObg67+eZC5SpSAxQ9n9fC7BzpCbLNA/ZY64Q=
+	b=enq1izn/QKdJlGk8zkVeN1VNZxk1GkoisCtVtxt3FDyFnOXMoYOxrs5mWv8Cv0J0g
+	 aDcrQq0hO2BxG5CTM0EnvqqouT8LEFSZwmDqyyn0T0p6EAOY6lEmkU+WAhEB/zKqeM
+	 D1A10bxwSBg8Du15lIittFO2saBJ/xbYUzcr5x5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbfJ0VRQ (ORCPT
+        id S1731031AbfJ0VRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37004 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:17:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731006AbfJ0VRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:17:13 -0400
+        id S1731006AbfJ0VRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:17:17 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCA5E205C9;
-        Sun, 27 Oct 2019 21:17:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F8C42070B;
+        Sun, 27 Oct 2019 21:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211032;
-        bh=zhckgUep76OpebvAf3fwYTU9iJOmCzEJqsA0iackRgQ=;
+        s=default; t=1572211035;
+        bh=Ap0R0u+BPYY+mMHbAVes4DfMCXhd8ei/7HF44I4neFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=unUB8uX4v2LFKoICK2hUi4156wl7KIs2YKjggtVcWKl5Vg70+OToA0mCYbHjiNj/y
-         6ZIBshJBDZXEXga3g0jrecZyYKE7SEDp26IUQVoa3yHtNM7osnN3lq1YrMldFphihF
-         iRYBAsWI0YHIWZtiaoALNwTyscslqrzTOOpT+rVU=
+        b=sAOSkO78t8agQBwtstFpw46JXhfaFpKEO/T7Wk95hmEVudu1HNOBr1+Eeoc0RYvC7
+         Jo6mFTZaYQJInZCO7bZatdJ9lxy0HQKeQnR4J5hDxSXlbxnvpW39H2+CsQvSV6LQpd
+         K8ZQuCcJnyklQJ+wOlRlhfrnxkd3UAE4NLKE3BTU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Lowry Li (Arm Technology China)" <lowry.li@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        "James Qian Wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 001/197] drm: Free the writeback_job when it with an empty fb
-Date:   Sun, 27 Oct 2019 21:58:39 +0100
-Message-Id: <20191027203351.770938071@linuxfoundation.org>
+Subject: [PATCH 5.3 010/197] scsi: qla2xxx: Fix stale mem access on driver unload
+Date:   Sun, 27 Oct 2019 21:58:48 +0100
+Message-Id: <20191027203352.237902032@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,136 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lowry Li (Arm Technology China) <Lowry.Li@arm.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 8581d51055a08cc6eb061c8856062290e8582ce4 ]
+[ Upstream commit fd5564ba54e0d8a9e3e823d311b764232e09eb5f ]
 
-Adds the check if the writeback_job with an empty fb, then it should
-be freed in atomic_check phase.
+On driver unload, 'remove_one' thread was allowed to advance, while session
+cleanup still lag behind.  This patch ensures session deletion will finish
+before remove_one can advance.
 
-With this change, the driver users will not check empty fb case any more.
-So refined accordingly.
-
-Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
-Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1564571048-15029-2-git-send-email-lowry.li@arm.com
+Link: https://lore.kernel.org/r/20190912180918.6436-4-hmadhani@marvell.com
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/arm/display/komeda/komeda_wb_connector.c    |  3 +--
- drivers/gpu/drm/arm/malidp_mw.c                     |  4 ++--
- drivers/gpu/drm/drm_atomic.c                        | 13 +++++++++----
- drivers/gpu/drm/rcar-du/rcar_du_writeback.c         |  4 ++--
- drivers/gpu/drm/vc4/vc4_txp.c                       |  5 ++---
- 5 files changed, 16 insertions(+), 13 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c     |  1 +
+ drivers/scsi/qla2xxx/qla_target.c | 21 ++++++++-------------
+ 2 files changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-index 2851cac94d869..23fbee268119f 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-@@ -43,9 +43,8 @@ komeda_wb_encoder_atomic_check(struct drm_encoder *encoder,
- 	struct komeda_data_flow_cfg dflow;
- 	int err;
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 4fda308c3ef5c..084e39e415ff5 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -1153,6 +1153,7 @@ qla2x00_wait_for_sess_deletion(scsi_qla_host_t *vha)
+ 	qla2x00_mark_all_devices_lost(vha, 0);
  
--	if (!writeback_job || !writeback_job->fb) {
-+	if (!writeback_job)
- 		return 0;
--	}
+ 	wait_event_timeout(vha->fcport_waitQ, test_fcport_count(vha), 10*HZ);
++	flush_workqueue(vha->hw->wq);
+ }
  
- 	if (!crtc_st->active) {
- 		DRM_DEBUG_ATOMIC("Cannot write the composition result out on a inactive CRTC.\n");
-diff --git a/drivers/gpu/drm/arm/malidp_mw.c b/drivers/gpu/drm/arm/malidp_mw.c
-index 2e812525025dd..a59227b2cdb55 100644
---- a/drivers/gpu/drm/arm/malidp_mw.c
-+++ b/drivers/gpu/drm/arm/malidp_mw.c
-@@ -130,7 +130,7 @@ malidp_mw_encoder_atomic_check(struct drm_encoder *encoder,
- 	struct drm_framebuffer *fb;
- 	int i, n_planes;
+ /*
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index f77baf107024f..1bb0fc9324ead 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -954,7 +954,7 @@ void qlt_free_session_done(struct work_struct *work)
+ 	struct qla_hw_data *ha = vha->hw;
+ 	unsigned long flags;
+ 	bool logout_started = false;
+-	scsi_qla_host_t *base_vha;
++	scsi_qla_host_t *base_vha = pci_get_drvdata(ha->pdev);
+ 	struct qlt_plogi_ack_t *own =
+ 		sess->plogi_link[QLT_PLOGI_LINK_SAME_WWN];
  
--	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
-+	if (!conn_state->writeback_job)
- 		return 0;
- 
- 	fb = conn_state->writeback_job->fb;
-@@ -247,7 +247,7 @@ void malidp_mw_atomic_commit(struct drm_device *drm,
- 
- 	mw_state = to_mw_state(conn_state);
- 
--	if (conn_state->writeback_job && conn_state->writeback_job->fb) {
-+	if (conn_state->writeback_job) {
- 		struct drm_framebuffer *fb = conn_state->writeback_job->fb;
- 
- 		DRM_DEV_DEBUG_DRIVER(drm->dev,
-diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
-index 419381abbdd16..14aeaf7363210 100644
---- a/drivers/gpu/drm/drm_atomic.c
-+++ b/drivers/gpu/drm/drm_atomic.c
-@@ -430,10 +430,15 @@ static int drm_atomic_connector_check(struct drm_connector *connector,
- 		return -EINVAL;
+@@ -1106,6 +1106,7 @@ void qlt_free_session_done(struct work_struct *work)
  	}
  
--	if (writeback_job->out_fence && !writeback_job->fb) {
--		DRM_DEBUG_ATOMIC("[CONNECTOR:%d:%s] requesting out-fence without framebuffer\n",
--				 connector->base.id, connector->name);
--		return -EINVAL;
-+	if (!writeback_job->fb) {
-+		if (writeback_job->out_fence) {
-+			DRM_DEBUG_ATOMIC("[CONNECTOR:%d:%s] requesting out-fence without framebuffer\n",
-+					 connector->base.id, connector->name);
-+			return -EINVAL;
-+		}
+ 	spin_unlock_irqrestore(&ha->tgt.sess_lock, flags);
++	sess->free_pending = 0;
+ 
+ 	ql_dbg(ql_dbg_tgt_mgt, vha, 0xf001,
+ 	    "Unregistration of sess %p %8phC finished fcp_cnt %d\n",
+@@ -1114,17 +1115,8 @@ void qlt_free_session_done(struct work_struct *work)
+ 	if (tgt && (tgt->sess_count == 0))
+ 		wake_up_all(&tgt->waitQ);
+ 
+-	if (vha->fcport_count == 0)
+-		wake_up_all(&vha->fcport_waitQ);
+-
+-	base_vha = pci_get_drvdata(ha->pdev);
+-
+-	sess->free_pending = 0;
+-
+-	if (test_bit(PFLG_DRIVER_REMOVING, &base_vha->pci_flags))
+-		return;
+-
+-	if ((!tgt || !tgt->tgt_stop) && !LOOP_TRANSITION(vha)) {
++	if (!test_bit(PFLG_DRIVER_REMOVING, &base_vha->pci_flags) &&
++	    (!tgt || !tgt->tgt_stop) && !LOOP_TRANSITION(vha)) {
+ 		switch (vha->host->active_mode) {
+ 		case MODE_INITIATOR:
+ 		case MODE_DUAL:
+@@ -1137,6 +1129,9 @@ void qlt_free_session_done(struct work_struct *work)
+ 			break;
+ 		}
+ 	}
 +
-+		drm_writeback_cleanup_job(writeback_job);
-+		state->writeback_job = NULL;
- 	}
++	if (vha->fcport_count == 0)
++		wake_up_all(&vha->fcport_waitQ);
+ }
  
- 	return 0;
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_writeback.c b/drivers/gpu/drm/rcar-du/rcar_du_writeback.c
-index ae07290bba6a4..04efa78d70b6e 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_writeback.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_writeback.c
-@@ -147,7 +147,7 @@ static int rcar_du_wb_enc_atomic_check(struct drm_encoder *encoder,
- 	struct drm_device *dev = encoder->dev;
- 	struct drm_framebuffer *fb;
+ /* ha->tgt.sess_lock supposed to be held on entry */
+@@ -1166,7 +1161,7 @@ void qlt_unreg_sess(struct fc_port *sess)
+ 	sess->last_login_gen = sess->login_gen;
  
--	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
-+	if (!conn_state->writeback_job)
- 		return 0;
+ 	INIT_WORK(&sess->free_work, qlt_free_session_done);
+-	schedule_work(&sess->free_work);
++	queue_work(sess->vha->hw->wq, &sess->free_work);
+ }
+ EXPORT_SYMBOL(qlt_unreg_sess);
  
- 	fb = conn_state->writeback_job->fb;
-@@ -221,7 +221,7 @@ void rcar_du_writeback_setup(struct rcar_du_crtc *rcrtc,
- 	unsigned int i;
- 
- 	state = rcrtc->writeback.base.state;
--	if (!state || !state->writeback_job || !state->writeback_job->fb)
-+	if (!state || !state->writeback_job)
- 		return;
- 
- 	fb = state->writeback_job->fb;
-diff --git a/drivers/gpu/drm/vc4/vc4_txp.c b/drivers/gpu/drm/vc4/vc4_txp.c
-index 96f91c1b4b6e6..e92fa12750343 100644
---- a/drivers/gpu/drm/vc4/vc4_txp.c
-+++ b/drivers/gpu/drm/vc4/vc4_txp.c
-@@ -229,7 +229,7 @@ static int vc4_txp_connector_atomic_check(struct drm_connector *conn,
- 	int i;
- 
- 	conn_state = drm_atomic_get_new_connector_state(state, conn);
--	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
-+	if (!conn_state->writeback_job)
- 		return 0;
- 
- 	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
-@@ -269,8 +269,7 @@ static void vc4_txp_connector_atomic_commit(struct drm_connector *conn,
- 	u32 ctrl;
- 	int i;
- 
--	if (WARN_ON(!conn_state->writeback_job ||
--		    !conn_state->writeback_job->fb))
-+	if (WARN_ON(!conn_state->writeback_job))
- 		return;
- 
- 	mode = &conn_state->crtc->state->adjusted_mode;
 -- 
 2.20.1
 
