@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA21ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C35EDCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C360205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924D0208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211019;
-	bh=+fUGPU/cUvr4r1VruQzw+nmYANorNrfj6Z+QY1jRk18=;
+	s=default; t=1572211022;
+	bh=l5Ap4qy6IDx+F2UEHsXA9RX/S0oe9K0oBuAI3v//3JU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M/S5CecjrYyRXdi7XZgVFaXIOa1WIoKnU12BIT9xUsGlVVaxn6wpuIrokXeqjtKMh
-	 ncZCL9JMDDgoYtesFXvXAByfuaBEbOtIyrnmHkzR/VxiSWenqE9W+PTuIFrc5h37VF
-	 KMxPL9xqNWIYcJx1WbJRPUS6shrE/xeyoTlTCKRw=
+	b=0rtoEI7QjkohxPMsAtTmADyo69RLrpaFB608Wg1j2pdvK3bEuo0tmewt5evy9vKcZ
+	 B43DF0LUpaXJNV9GumEK+cd8PpDBjKJSthPWRFtBtj/SdW2UdQAL+ExEs5CR137KZP
+	 8s4rgcCdjBgA1CclFliRiKNJN5SPEWJZzwcDw9gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbfJ0VQ6 (ORCPT
+        id S1730959AbfJ0VRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:16:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36668 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:17:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730934AbfJ0VQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:16:56 -0400
+        id S1730947AbfJ0VQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:16:58 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E64FD21D80;
-        Sun, 27 Oct 2019 21:16:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4A90208C0;
+        Sun, 27 Oct 2019 21:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211015;
-        bh=+fUGPU/cUvr4r1VruQzw+nmYANorNrfj6Z+QY1jRk18=;
+        s=default; t=1572211018;
+        bh=l5Ap4qy6IDx+F2UEHsXA9RX/S0oe9K0oBuAI3v//3JU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZvQfryEvcJcgrvNi4khxkrDj9GaDzwpEiA7ktRZHyNyYgccz8+dvnaQtQGJbnL9OO
-         5gouWlUInjNG5Fu2JvN4qi65Dz79vRjvEX/vwDxec/N2X6ziuLbqDePC/jfsDWPig6
-         qntd5iV/aHeubiexNxiWeWbTjAV5euZeqMioxf6g=
+        b=UHHoOtrzDHODCDGgHPQle4Aj2fcaXhgx8fzlWOHYc02Be7LRWrQcNNocDe7eJR5BJ
+         4Ybj0HJU8/CFcgAZx84ymCEcCr1pDEnMqa6LmYBagIhhFMRPojFYcLzKkjoc/um3xD
+         Xh2CqGt208zOvacmWXpvumC3NA1/LZKSGh8R/V5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 80/93] x86/apic/x2apic: Fix a NULL pointer deref when handling a dying cpu
-Date:   Sun, 27 Oct 2019 22:01:32 +0100
-Message-Id: <20191027203313.153509910@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Levin <levinale@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 4.19 81/93] pinctrl: cherryview: restore Strago DMI workaround for all versions
+Date:   Sun, 27 Oct 2019 22:01:33 +0100
+Message-Id: <20191027203313.219460624@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,53 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 7a22e03b0c02988e91003c505b34d752a51de344 upstream.
+commit 260996c30f4f3a732f45045e3e0efe27017615e4 upstream.
 
-Check that the per-cpu cluster mask pointer has been set prior to
-clearing a dying cpu's bit.  The per-cpu pointer is not set until the
-target cpu reaches smp_callin() during CPUHP_BRINGUP_CPU, whereas the
-teardown function, x2apic_dead_cpu(), is associated with the earlier
-CPUHP_X2APIC_PREPARE.  If an error occurs before the cpu is awakened,
-e.g. if do_boot_cpu() itself fails, x2apic_dead_cpu() will dereference
-the NULL pointer and cause a panic.
+This is essentially a revert of:
 
-  smpboot: do_boot_cpu failed(-22) to wakeup CPU#1
-  BUG: kernel NULL pointer dereference, address: 0000000000000008
-  RIP: 0010:x2apic_dead_cpu+0x1a/0x30
-  Call Trace:
-   cpuhp_invoke_callback+0x9a/0x580
-   _cpu_up+0x10d/0x140
-   do_cpu_up+0x69/0xb0
-   smp_init+0x63/0xa9
-   kernel_init_freeable+0xd7/0x229
-   ? rest_init+0xa0/0xa0
-   kernel_init+0xa/0x100
-   ret_from_fork+0x35/0x40
+e3f72b749da2 pinctrl: cherryview: fix Strago DMI workaround
+86c5dd6860a6 pinctrl: cherryview: limit Strago DMI workarounds to version 1.0
 
-Fixes: 023a611748fd5 ("x86/apic/x2apic: Simplify cluster management")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+because even with 1.1 versions of BIOS there are some pins that are
+configured as interrupts but not claimed by any driver, and they
+sometimes fire up and result in interrupt storms that cause touchpad
+stop functioning and other issues.
+
+Given that we are unlikely to qualify another firmware version for a
+while it is better to keep the workaround active on all Strago boards.
+
+Reported-by: Alex Levin <levinale@chromium.org>
+Fixes: 86c5dd6860a6 ("pinctrl: cherryview: limit Strago DMI workarounds to version 1.0")
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191001205019.5789-1-sean.j.christopherson@intel.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Alex Levin <levinale@chromium.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/apic/x2apic_cluster.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/intel/pinctrl-cherryview.c |    4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/arch/x86/kernel/apic/x2apic_cluster.c
-+++ b/arch/x86/kernel/apic/x2apic_cluster.c
-@@ -158,7 +158,8 @@ static int x2apic_dead_cpu(unsigned int
- {
- 	struct cluster_mask *cmsk = per_cpu(cluster_masks, dead_cpu);
- 
--	cpumask_clear_cpu(dead_cpu, &cmsk->mask);
-+	if (cmsk)
-+		cpumask_clear_cpu(dead_cpu, &cmsk->mask);
- 	free_cpumask_var(per_cpu(ipi_mask, dead_cpu));
- 	return 0;
- }
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1524,7 +1524,6 @@ static const struct dmi_system_id chv_no
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+ 			DMI_MATCH(DMI_PRODUCT_FAMILY, "Intel_Strago"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+ 		},
+ 	},
+ 	{
+@@ -1532,7 +1531,6 @@ static const struct dmi_system_id chv_no
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Setzer"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+ 		},
+ 	},
+ 	{
+@@ -1540,7 +1538,6 @@ static const struct dmi_system_id chv_no
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Cyan"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+ 		},
+ 	},
+ 	{
+@@ -1548,7 +1545,6 @@ static const struct dmi_system_id chv_no
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Celes"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+ 		},
+ 	},
+ 	{}
 
 
