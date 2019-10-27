@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3B1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA20CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A3A214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C53B20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210483;
-	bh=H9qPFSXEmi517p5/bsJsJ4u13zprYepTA2/NdxCmPqI=;
+	s=default; t=1572210486;
+	bh=Ac3FKcAqWgiejFUBgLqLaR+hkkhRMrcjAXj8UqIpnlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SC59Xn+eTCmMwa5usU/vctugkamF+NSfff60Vh5UzFaWBzMbTYjqmhd/NRJ/WvakL
-	 FD0YzcTWRUiwiyi0sP5DXnQMF4q02vrnJRW14fkxw6+G7AzGUTN7Lf6kOfAQYrwoOT
-	 WpJLMXuWXiXNUQkgkxtyb7N/YbqjWd1rKr0dO0wg=
+	b=x1IwG63Z00JvaJrydMJS2YBUwOZntn89xscb2DYa4TRjjemnDR/4OiTRoMQbD+Xsv
+	 fu3yORCGqxp1ZrRoc+HxfnIsd1OiKIidMG5eYdAy9go4KeSg6IFa5uqYS7IiOhp/bJ
+	 VVsB7c4PKcnoE8oTAA4tgMxsVZTIGUDGbJTBf04U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbfJ0VIB (ORCPT
+        id S1729321AbfJ0VIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:08:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54102 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:08:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729303AbfJ0VH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:07:58 -0400
+        id S1728456AbfJ0VIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:08:01 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC5F720873;
-        Sun, 27 Oct 2019 21:07:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC93620873;
+        Sun, 27 Oct 2019 21:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210477;
-        bh=H9qPFSXEmi517p5/bsJsJ4u13zprYepTA2/NdxCmPqI=;
+        s=default; t=1572210480;
+        bh=Ac3FKcAqWgiejFUBgLqLaR+hkkhRMrcjAXj8UqIpnlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yfK4CibjNIkmKHRR4BzMYG7CCeqL+aTAYSnbPYwVo1/P5eNYTZ+3jwJUJalPo2kRm
-         Pz0ClHhyazCG8ue27Hg5HKA3Xk8UMWKMmZikwDOaCViqtql4QHHdgQyS9jAyB1PAZQ
-         HVlEnpCKpmPo/F16pJ6fD+1camRguC4OrYIYTRBs=
+        b=maVgB+4mFfavoMqTBhaK8rZWsUf78dVwkABWrspg0EG2ADXsBfL8kSZ8W8qHaRJXU
+         /21k+pXVTvtsDoygspboKHb2rOovJaT06cp2uOa12EEJydemrhUEUe4gDr2hzoffwh
+         kjvJC/stQsAHlySoxBfZwUIhvR9TpeVtoalHSj5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Alessio Balsini <balsini@android.com>,
+        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 028/119] loop: Add LOOP_SET_DIRECT_IO to compat ioctl
-Date:   Sun, 27 Oct 2019 22:00:05 +0100
-Message-Id: <20191027203308.865585869@linuxfoundation.org>
+Subject: [PATCH 4.14 029/119] memfd: Fix locking when tagging pins
+Date:   Sun, 27 Oct 2019 22:00:06 +0100
+Message-Id: <20191027203309.163284422@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -60,40 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alessio Balsini <balsini@android.com>
+From: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-[ Upstream commit fdbe4eeeb1aac219b14f10c0ed31ae5d1123e9b8 ]
+The RCU lock is insufficient to protect the radix tree iteration as
+a deletion from the tree can occur before we take the spinlock to
+tag the entry.  In 4.19, this has manifested as a bug with the following
+trace:
 
-Enabling Direct I/O with loop devices helps reducing memory usage by
-avoiding double caching.  32 bit applications running on 64 bits systems
-are currently not able to request direct I/O because is missing from the
-lo_compat_ioctl.
+kernel BUG at lib/radix-tree.c:1429!
+invalid opcode: 0000 [#1] SMP KASAN PTI
+CPU: 7 PID: 6935 Comm: syz-executor.2 Not tainted 4.19.36 #25
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+RIP: 0010:radix_tree_tag_set+0x200/0x2f0 lib/radix-tree.c:1429
+Code: 00 00 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 89 44 24 10 e8 a3 29 7e fe 48 8b 44 24 10 48 0f ab 03 e9 d2 fe ff ff e8 90 29 7e fe <0f> 0b 48 c7 c7 e0 5a 87 84 e8 f0 e7 08 ff 4c 89 ef e8 4a ff ac fe
+RSP: 0018:ffff88837b13fb60 EFLAGS: 00010016
+RAX: 0000000000040000 RBX: ffff8883c5515d58 RCX: ffffffff82cb2ef0
+RDX: 0000000000000b72 RSI: ffffc90004cf2000 RDI: ffff8883c5515d98
+RBP: ffff88837b13fb98 R08: ffffed106f627f7e R09: ffffed106f627f7e
+R10: 0000000000000001 R11: ffffed106f627f7d R12: 0000000000000004
+R13: ffffea000d7fea80 R14: 1ffff1106f627f6f R15: 0000000000000002
+FS:  00007fa1b8df2700(0000) GS:ffff8883e2fc0000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa1b8df1db8 CR3: 000000037d4d2001 CR4: 0000000000160ee0
+Call Trace:
+ memfd_tag_pins mm/memfd.c:51 [inline]
+ memfd_wait_for_pins+0x2c5/0x12d0 mm/memfd.c:81
+ memfd_add_seals mm/memfd.c:215 [inline]
+ memfd_fcntl+0x33d/0x4a0 mm/memfd.c:247
+ do_fcntl+0x589/0xeb0 fs/fcntl.c:421
+ __do_sys_fcntl fs/fcntl.c:463 [inline]
+ __se_sys_fcntl fs/fcntl.c:448 [inline]
+ __x64_sys_fcntl+0x12d/0x180 fs/fcntl.c:448
+ do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:293
 
-This patch fixes the compatibility issue mentioned above by exporting
-LOOP_SET_DIRECT_IO as additional lo_compat_ioctl() entry.
-The input argument for this ioctl is a single long converted to a 1-bit
-boolean, so compatibility is preserved.
+The problem does not occur in mainline due to the XArray rewrite which
+changed the locking to exclude modification of the tree during iteration.
+At the time, nobody realised this was a bugfix.  Backport the locking
+changes to stable.
 
-Cc: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Alessio Balsini <balsini@android.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: stable@vger.kernel.org
+Reported-by: zhong jiang <zhongjiang@huawei.com>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/shmem.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 87d7c42affbc4..ec61dd873c93d 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1605,6 +1605,7 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
- 		arg = (unsigned long) compat_ptr(arg);
- 	case LOOP_SET_FD:
- 	case LOOP_CHANGE_FD:
-+	case LOOP_SET_DIRECT_IO:
- 		err = lo_ioctl(bdev, mode, cmd, arg);
- 		break;
- 	default:
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 037e2ee9ccacc..5b2cc9f9b1f1d 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2657,11 +2657,12 @@ static void shmem_tag_pins(struct address_space *mapping)
+ 	void **slot;
+ 	pgoff_t start;
+ 	struct page *page;
++	unsigned int tagged = 0;
+ 
+ 	lru_add_drain();
+ 	start = 0;
+-	rcu_read_lock();
+ 
++	spin_lock_irq(&mapping->tree_lock);
+ 	radix_tree_for_each_slot(slot, &mapping->page_tree, &iter, start) {
+ 		page = radix_tree_deref_slot(slot);
+ 		if (!page || radix_tree_exception(page)) {
+@@ -2670,18 +2671,19 @@ static void shmem_tag_pins(struct address_space *mapping)
+ 				continue;
+ 			}
+ 		} else if (page_count(page) - page_mapcount(page) > 1) {
+-			spin_lock_irq(&mapping->tree_lock);
+ 			radix_tree_tag_set(&mapping->page_tree, iter.index,
+ 					   SHMEM_TAG_PINNED);
+-			spin_unlock_irq(&mapping->tree_lock);
+ 		}
+ 
+-		if (need_resched()) {
+-			slot = radix_tree_iter_resume(slot, &iter);
+-			cond_resched_rcu();
+-		}
++		if (++tagged % 1024)
++			continue;
++
++		slot = radix_tree_iter_resume(slot, &iter);
++		spin_unlock_irq(&mapping->tree_lock);
++		cond_resched();
++		spin_lock_irq(&mapping->tree_lock);
+ 	}
+-	rcu_read_unlock();
++	spin_unlock_irq(&mapping->tree_lock);
+ }
+ 
+ /*
 -- 
 2.20.1
 
