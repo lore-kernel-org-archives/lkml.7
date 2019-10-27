@@ -2,54 +2,55 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1ECCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AD2CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01528205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D4A20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210729;
-	bh=4Ce5rBZoOua/OoTPwPIKxJ3Gc5yMrdjZccCghVbMfAU=;
+	s=default; t=1572210732;
+	bh=CgIvwC7qTH85RQI6kmwZ38ooNUQA/hoQ21zTCtaVeX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uXeb91j6fNvssxbqjTJ1YyEaFap5PujYl1rTWcMlnPHkiLc8n4idmlUmB2AJ2cZIK
-	 M6FKELfCc1BUR8O5GG10u0uqW+cm3XlH8JOKyQy3sW8qn5nK9ubHiThe+Kz0Wmd67K
-	 J9XWjh91wT8aMmaFuqkzHxr9WwNZLI30GzpIDfDs=
+	b=h69IBgy1vuCzZx5N14uhxNB2vtGwY55lhdDWcDry1qleZIG1a/pcztjcXFL2dGtTi
+	 Ho3tkSxNIYVkGzxIUEE4dCeN+TCVQqQN4sW36uWkBuFQliJCqJSq4/oyAVyA+UhZG5
+	 CJivebaTdqG7HB8aPeZIb2IAlYcHAqVKZ5wb6lCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbfJ0VMH (ORCPT
+        id S1728150AbfJ0VMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:12:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58712 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:12:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbfJ0VME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:12:04 -0400
+        id S1730013AbfJ0VMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:12:07 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47CBE205C9;
-        Sun, 27 Oct 2019 21:12:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23A3520873;
+        Sun, 27 Oct 2019 21:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210723;
-        bh=4Ce5rBZoOua/OoTPwPIKxJ3Gc5yMrdjZccCghVbMfAU=;
+        s=default; t=1572210726;
+        bh=CgIvwC7qTH85RQI6kmwZ38ooNUQA/hoQ21zTCtaVeX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0tTpCNKFvIBHRna5jzn2Ty3UT245EqZYom3s51s/1g5DCEm5BvKBhgoW8BTE1ZUxA
-         k90c52bZGxyS2UcAfGJU8dq7khe+fa18T7lYnewLR3RUVESWDKsMzHjzApneuDJEFo
-         S2qYpD64z+w2+tPNc3A+GWL2GwwsYs2u9FFHU6iE=
+        b=MsDZHRFHUm73x1S691R497Ah0r97gqiZ/B/ZxR/1dTptbhuAtOpS8ok1Tsgz4pPP8
+         /guJmSJA3kF32ocr8JGo7LudpSeGAxmoyDxemFokeDj03083w1ifvknaFcr5iX8rnh
+         ezB3HKMWBj7gGndrsVqm5txwIR1SEkSDb417Ub7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Jitindar SIngh, Suraj" <surajjs@amazon.com>,
-        Wanpeng Li <wanpeng.li@hotmail.com>
-Subject: [PATCH 4.14 115/119] KVM: X86: introduce invalidate_gpa argument to tlb flush
-Date:   Sun, 27 Oct 2019 22:01:32 +0100
-Message-Id: <20191027203349.831967407@linuxfoundation.org>
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 098/119] drivers/base/memory.c: dont access uninitialized memmaps in soft_offline_page_store()
+Date:   Sun, 27 Oct 2019 22:01:15 +0100
+Message-Id: <20191027203348.834120266@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -62,206 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpeng.li@hotmail.com>
+From: David Hildenbrand <david@redhat.com>
 
-commit c2ba05ccfde2f069a66c0462e5b5ef8a517dcc9c upstream.
+commit 641fe2e9387a36f9ee01d7c69382d1fe147a5e98 upstream.
 
-Introduce a new bool invalidate_gpa argument to kvm_x86_ops->tlb_flush,
-it will be used by later patches to just flush guest tlb.
+Uninitialized memmaps contain garbage and in the worst case trigger kernel
+BUGs, especially with CONFIG_PAGE_POISONING.  They should not get touched.
 
-For VMX, this will use INVVPID instead of INVEPT, which will invalidate
-combined mappings while keeping guest-physical mappings.
+Right now, when trying to soft-offline a PFN that resides on a memory
+block that was never onlined, one gets a misleading error with
+CONFIG_PAGE_POISONING:
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Jitindar SIngh, Suraj" <surajjs@amazon.com>
-Signed-off-by: Wanpeng Li <wanpeng.li@hotmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+  :/# echo 5637144576 > /sys/devices/system/memory/soft_offline_page
+  [   23.097167] soft offline: 0x150000 page already poisoned
+
+But the actual result depends on the garbage in the memmap.
+
+soft_offline_page() can only work with online pages, it returns -EIO in
+case of ZONE_DEVICE.  Make sure to only forward pages that are online
+(iow, managed by the buddy) and, therefore, have an initialized memmap.
+
+Add a check against pfn_to_online_page() and similarly return -EIO.
+
+Link: http://lkml.kernel.org/r/20191010141200.8985-1-david@redhat.com
+Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: <stable@vger.kernel.org>	[4.13+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    2 +-
- arch/x86/kvm/svm.c              |   14 +++++++-------
- arch/x86/kvm/vmx.c              |   21 +++++++++++----------
- arch/x86/kvm/x86.c              |    6 +++---
- 4 files changed, 22 insertions(+), 21 deletions(-)
+ drivers/base/memory.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -973,7 +973,7 @@ struct kvm_x86_ops {
- 	unsigned long (*get_rflags)(struct kvm_vcpu *vcpu);
- 	void (*set_rflags)(struct kvm_vcpu *vcpu, unsigned long rflags);
- 
--	void (*tlb_flush)(struct kvm_vcpu *vcpu);
-+	void (*tlb_flush)(struct kvm_vcpu *vcpu, bool invalidate_gpa);
- 
- 	void (*run)(struct kvm_vcpu *vcpu);
- 	int (*handle_exit)(struct kvm_vcpu *vcpu);
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -299,7 +299,7 @@ static int vgif = true;
- module_param(vgif, int, 0444);
- 
- static void svm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0);
--static void svm_flush_tlb(struct kvm_vcpu *vcpu);
-+static void svm_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa);
- static void svm_complete_interrupts(struct vcpu_svm *svm);
- 
- static int nested_svm_exit_handled(struct vcpu_svm *svm);
-@@ -2097,7 +2097,7 @@ static int svm_set_cr4(struct kvm_vcpu *
- 		return 1;
- 
- 	if (npt_enabled && ((old_cr4 ^ cr4) & X86_CR4_PGE))
--		svm_flush_tlb(vcpu);
-+		svm_flush_tlb(vcpu, true);
- 
- 	vcpu->arch.cr4 = cr4;
- 	if (!npt_enabled)
-@@ -2438,7 +2438,7 @@ static void nested_svm_set_tdp_cr3(struc
- 
- 	svm->vmcb->control.nested_cr3 = __sme_set(root);
- 	mark_dirty(svm->vmcb, VMCB_NPT);
--	svm_flush_tlb(vcpu);
-+	svm_flush_tlb(vcpu, true);
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -552,6 +552,9 @@ store_soft_offline_page(struct device *d
+ 	pfn >>= PAGE_SHIFT;
+ 	if (!pfn_valid(pfn))
+ 		return -ENXIO;
++	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
++	if (!pfn_to_online_page(pfn))
++		return -EIO;
+ 	ret = soft_offline_page(pfn_to_page(pfn), 0);
+ 	return ret == 0 ? count : ret;
  }
- 
- static void nested_svm_inject_npf_exit(struct kvm_vcpu *vcpu,
-@@ -3111,7 +3111,7 @@ static bool nested_svm_vmrun(struct vcpu
- 	svm->nested.intercept_exceptions = nested_vmcb->control.intercept_exceptions;
- 	svm->nested.intercept            = nested_vmcb->control.intercept;
- 
--	svm_flush_tlb(&svm->vcpu);
-+	svm_flush_tlb(&svm->vcpu, true);
- 	svm->vmcb->control.int_ctl = nested_vmcb->control.int_ctl | V_INTR_MASKING_MASK;
- 	if (nested_vmcb->control.int_ctl & V_INTR_MASKING_MASK)
- 		svm->vcpu.arch.hflags |= HF_VINTR_MASK;
-@@ -4947,7 +4947,7 @@ static int svm_set_tss_addr(struct kvm *
- 	return 0;
- }
- 
--static void svm_flush_tlb(struct kvm_vcpu *vcpu)
-+static void svm_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 
-@@ -5288,7 +5288,7 @@ static void svm_set_cr3(struct kvm_vcpu
- 
- 	svm->vmcb->save.cr3 = __sme_set(root);
- 	mark_dirty(svm->vmcb, VMCB_CR);
--	svm_flush_tlb(vcpu);
-+	svm_flush_tlb(vcpu, true);
- }
- 
- static void set_tdp_cr3(struct kvm_vcpu *vcpu, unsigned long root)
-@@ -5302,7 +5302,7 @@ static void set_tdp_cr3(struct kvm_vcpu
- 	svm->vmcb->save.cr3 = kvm_read_cr3(vcpu);
- 	mark_dirty(svm->vmcb, VMCB_CR);
- 
--	svm_flush_tlb(vcpu);
-+	svm_flush_tlb(vcpu, true);
- }
- 
- static int is_disabled(void)
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -4427,9 +4427,10 @@ static void exit_lmode(struct kvm_vcpu *
- 
- #endif
- 
--static inline void __vmx_flush_tlb(struct kvm_vcpu *vcpu, int vpid)
-+static inline void __vmx_flush_tlb(struct kvm_vcpu *vcpu, int vpid,
-+				bool invalidate_gpa)
- {
--	if (enable_ept) {
-+	if (enable_ept && (invalidate_gpa || !enable_vpid)) {
- 		if (!VALID_PAGE(vcpu->arch.mmu.root_hpa))
- 			return;
- 		ept_sync_context(construct_eptp(vcpu, vcpu->arch.mmu.root_hpa));
-@@ -4438,15 +4439,15 @@ static inline void __vmx_flush_tlb(struc
- 	}
- }
- 
--static void vmx_flush_tlb(struct kvm_vcpu *vcpu)
-+static void vmx_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
- {
--	__vmx_flush_tlb(vcpu, to_vmx(vcpu)->vpid);
-+	__vmx_flush_tlb(vcpu, to_vmx(vcpu)->vpid, invalidate_gpa);
- }
- 
- static void vmx_flush_tlb_ept_only(struct kvm_vcpu *vcpu)
- {
- 	if (enable_ept)
--		vmx_flush_tlb(vcpu);
-+		vmx_flush_tlb(vcpu, true);
- }
- 
- static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
-@@ -4644,7 +4645,7 @@ static void vmx_set_cr3(struct kvm_vcpu
- 		ept_load_pdptrs(vcpu);
- 	}
- 
--	vmx_flush_tlb(vcpu);
-+	vmx_flush_tlb(vcpu, true);
- 	vmcs_writel(GUEST_CR3, guest_cr3);
- }
- 
-@@ -8314,7 +8315,7 @@ static int handle_invvpid(struct kvm_vcp
- 		return kvm_skip_emulated_instruction(vcpu);
- 	}
- 
--	__vmx_flush_tlb(vcpu, vmx->nested.vpid02);
-+	__vmx_flush_tlb(vcpu, vmx->nested.vpid02, true);
- 	nested_vmx_succeed(vcpu);
- 
- 	return kvm_skip_emulated_instruction(vcpu);
-@@ -11214,11 +11215,11 @@ static int prepare_vmcs02(struct kvm_vcp
- 			vmcs_write16(VIRTUAL_PROCESSOR_ID, vmx->nested.vpid02);
- 			if (vmcs12->virtual_processor_id != vmx->nested.last_vpid) {
- 				vmx->nested.last_vpid = vmcs12->virtual_processor_id;
--				__vmx_flush_tlb(vcpu, to_vmx(vcpu)->nested.vpid02);
-+				__vmx_flush_tlb(vcpu, to_vmx(vcpu)->nested.vpid02, true);
- 			}
- 		} else {
- 			vmcs_write16(VIRTUAL_PROCESSOR_ID, vmx->vpid);
--			vmx_flush_tlb(vcpu);
-+			vmx_flush_tlb(vcpu, true);
- 		}
- 
- 	}
-@@ -11921,7 +11922,7 @@ static void load_vmcs12_host_state(struc
- 		 * L1's vpid. TODO: move to a more elaborate solution, giving
- 		 * each L2 its own vpid and exposing the vpid feature to L1.
- 		 */
--		vmx_flush_tlb(vcpu);
-+		vmx_flush_tlb(vcpu, true);
- 	}
- 	/* Restore posted intr vector. */
- 	if (nested_cpu_has_posted_intr(vmcs12))
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6943,10 +6943,10 @@ static void vcpu_scan_ioapic(struct kvm_
- 	kvm_x86_ops->load_eoi_exitmap(vcpu, eoi_exit_bitmap);
- }
- 
--static void kvm_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
-+static void kvm_vcpu_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
- {
- 	++vcpu->stat.tlb_flush;
--	kvm_x86_ops->tlb_flush(vcpu);
-+	kvm_x86_ops->tlb_flush(vcpu, invalidate_gpa);
- }
- 
- void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
-@@ -7017,7 +7017,7 @@ static int vcpu_enter_guest(struct kvm_v
- 		if (kvm_check_request(KVM_REQ_MMU_SYNC, vcpu))
- 			kvm_mmu_sync_roots(vcpu);
- 		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
--			kvm_vcpu_flush_tlb(vcpu);
-+			kvm_vcpu_flush_tlb(vcpu, true);
- 		if (kvm_check_request(KVM_REQ_REPORT_TPR_ACCESS, vcpu)) {
- 			vcpu->run->exit_reason = KVM_EXIT_TPR_ACCESS;
- 			r = 0;
 
 
