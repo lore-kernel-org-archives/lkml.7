@@ -2,119 +2,103 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AFACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5AECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32835214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5YCU6c0"
+	by mail.kernel.org (Postfix) with ESMTP id 5101E21D7F
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572184222;
+	bh=v1tTEbU8VyN9fz+96r4Gc6HAeYNRODRPhxochdoNREE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rxI89ikGLYlJQdcWcTLshwrTOtFPdjbPF6Ozq3bRFhfossvoh/WwXk7fgw59Upzww
+	 bQmi6p508m4p68fL9s85tARmpf80FcvJvvUVoX/q17+fsVIZwsiyGJQhRorjdpMmB6
+	 xWKLmQMAqpzed+NsDPOelC3ux56pVhc73F0rUWWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfJ0NGe (ORCPT
+        id S1726932AbfJ0NuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 09:06:34 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55729 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfJ0NGd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 09:06:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g24so6675664wmh.5
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 06:06:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vIE8XssdDi2D15V3zAvt/eEC5atPcZygXFN0pGgPoW4=;
-        b=V5YCU6c0YaFSoVOLXUeBlkIVfmyzbRFjBosz5ee1KljrPAJdbemc22aK5+m4yPuZaP
-         /X3an58nkOAXwMnio0/QFSumtp2VUYdRrlrvKxLeVuph9xHjzRHQADDrs9LOkygWW/Tl
-         HTa2QFTDt2VIY7N1ARzhvTHIpdMnZGU1csZHyx8fyTNlnNHb26kaz2g0QK9fS5xMwLG/
-         +r98BfbFdkzPZabFOY1DBS+t7MGfF5EHWWCGz8ozhyeu1SfJ+gyi3wALVbAlsUUXCoQv
-         iP8XnA7D86lqSZZQbLnwkiIe+m2fP0gjuCbKyqv3hZ+w534PO1b/jcWN4FZnmhWupjew
-         G1XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vIE8XssdDi2D15V3zAvt/eEC5atPcZygXFN0pGgPoW4=;
-        b=Jzyxv0EBVnWLWFGcSqqeINFsSCqklx/GvNS5cOlmVqoXp1Zu3QUWHDFhmjpLNpKOsz
-         H4ZFLS62eptL9PWkf3B1jpgdRB92wz77l+5t8qyWmbjNXzdWOPLrAIXyi7I6xHhWB3FF
-         IOvzoK2sv2FG5qBip78+JbtuN+Qd0ZCoOLwEQKmZ8gO0zHfCRYiPsE/XNHqQSexDe9+8
-         lNMEXUe31sTYAH0OQMF8XZ4YvlPt1GMovos7eUO07OCkHsONRT2M9mUGUEwB/bG94D4o
-         aPbzb0/Ftf2mNnW2fO3yiOwmnSMvQobLmh8kKmyoPvq+fg4MQjeCRVGFFySI3iBZqfv9
-         DTsA==
-X-Gm-Message-State: APjAAAUVidZdye6YgxSLCme+3480H/8hfJV1QAuhxAxJGH2I9l8pU59H
-        4OR45fobkzV5EMf8nTdmszQ=
-X-Google-Smtp-Source: APXvYqw+rHqY8MyVMbrLRoK37aBhL4DbeoQPEB1GMR6L+lvLYeiKYBgu9qGh6zLgM08gBVDn4C+N5w==
-X-Received: by 2002:a05:600c:228b:: with SMTP id 11mr11770998wmf.112.1572181591661;
-        Sun, 27 Oct 2019 06:06:31 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id 126sm8127371wma.48.2019.10.27.06.06.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 06:06:31 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 3/4] staging: rtl8188eu: remove return variable from rtw_init_bcmc_stainfo
-Date:   Sun, 27 Oct 2019 14:06:03 +0100
-Message-Id: <20191027130604.68379-3-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027130604.68379-1-straube.linux@gmail.com>
-References: <20191027130604.68379-1-straube.linux@gmail.com>
+        Sun, 27 Oct 2019 09:50:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726860AbfJ0NuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 09:50:18 -0400
+Received: from localhost (unknown [77.241.229.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 993F4222BD;
+        Sun, 27 Oct 2019 13:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572184218;
+        bh=v1tTEbU8VyN9fz+96r4Gc6HAeYNRODRPhxochdoNREE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fyr60KSwpaHWwxbSfU4WElBe+XHerKpi4vgaMZSIshmSo5Sd4fCs1s7CaBNKWjpDB
+         wjtG6ev5DR5yL9whA94eLglSlBNwfuObhM6SYyAOB4fJ/a7jJb9dPSFUJ2t9DAHKwm
+         c8VrPp7shN5DIleuTJ0N5+83W5f9zD6OPYovKZbY=
+Date:   Sun, 27 Oct 2019 14:50:13 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 4.4 1/2] x86/vdso: Remove direct HPET mapping into
+ userspace
+Message-ID: <20191027135013.GA2232759@kroah.com>
+References: <157183247628.2324.16440279839073827980.stgit@buzz>
+ <00665546-4ad7-758c-d205-02f2fdca7e6e@yandex-team.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00665546-4ad7-758c-d205-02f2fdca7e6e@yandex-team.ru>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove variable res, that is used to store the return value, from
-rtw_init_bcmc_stainfo. Instead return _FAIL or _SUCCESS directly
-and remove the now unneeded exit label.
+On Wed, Oct 23, 2019 at 04:05:47PM +0300, Konstantin Khlebnikov wrote:
+> On 23/10/2019 15.07, Konstantin Khlebnikov wrote:
+> > commit 1ed95e52d902035e39a715ff3a314a893a96e5b7 upstream.
+> > 
+> > Commit d96d87834d5b870402a4a5b565706a4869ebc020 in v4.4.190 which is
+> > backport of upstream commit 1ed95e52d902035e39a715ff3a314a893a96e5b7
+> > removed only HPET access from vdso but leaved HPET mapped in "vvar".
+> > So userspace still could read HPET directly and confuse hardware.
+> > 
+> > This patch removes mapping HPET page into userspace.
+> > 
+> > Fixes: d96d87834d5b ("x86/vdso: Remove direct HPET access through the vDSO") # v4.4.190
+> > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> > Link: https://lore.kernel.org/lkml/6fd42b2b-e29a-1fd6-03d1-e9da9192e6c5@yandex-team.ru/
+> > ---
+> >   arch/x86/entry/vdso/vma.c |   14 --------------
+> >   1 file changed, 14 deletions(-)
+> > 
+> > diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+> > index 6b46648588d8..cc0a3c16a95d 100644
+> > --- a/arch/x86/entry/vdso/vma.c
+> > +++ b/arch/x86/entry/vdso/vma.c
+> > @@ -18,7 +18,6 @@
+> >   #include <asm/vdso.h>
+> >   #include <asm/vvar.h>
+> >   #include <asm/page.h>
+> > -#include <asm/hpet.h>
+> >   #include <asm/desc.h>
+> >   #include <asm/cpufeature.h>
+> > @@ -159,19 +158,6 @@ static int map_vdso(const struct vdso_image *image, bool calculate_addr)
+> >   	if (ret)
+> >   		goto up_fail;
+> > -#ifdef CONFIG_HPET_TIMER
+> > -	if (hpet_address && image->sym_hpet_page) {
+> 
+> Probably this patch is not required.
+> It seems after removing symbol "hpet_page" from vdso code
+> image->sym_hpet_page always is NULL and this branch never executed.
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_sta_mgt.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+Ok, so these two patches are not needed?  I'll drop them from my
+todo-queue, thanks.
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-index 6c03068d7ed2..8b7adb9e76c2 100644
---- a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-@@ -451,24 +451,21 @@ struct sta_info *rtw_get_stainfo(struct sta_priv *pstapriv, u8 *hwaddr)
- u32 rtw_init_bcmc_stainfo(struct adapter *padapter)
- {
- 	struct sta_info *psta;
--	u32 res = _SUCCESS;
- 	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 
- 	psta = rtw_alloc_stainfo(pstapriv, bc_addr);
- 
- 	if (!psta) {
--		res = _FAIL;
- 		RT_TRACE(_module_rtl871x_sta_mgt_c_, _drv_err_,
- 			 ("rtw_alloc_stainfo fail"));
--		goto exit;
-+		return _FAIL;
- 	}
- 
- 	/*  default broadcast & multicast use macid 1 */
- 	psta->mac_id = 1;
- 
--exit:
--	return res;
-+	return _SUCCESS;
- }
- 
- struct sta_info *rtw_get_bcmc_stainfo(struct adapter *padapter)
--- 
-2.23.0
-
+greg k-h
