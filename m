@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66736CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCD8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9E821783
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE6721726
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211460;
-	bh=t69A56lr0lOMmewix5iSiPHCFZCowdC0rRu0+B5hnBw=;
+	s=default; t=1572211464;
+	bh=l+06AWxAeKb0gTOn8VVy4toEMu+SKlfr9RViXwvIcXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hXA5/exaFqXOOFxTMQUnhidEJiVsby4RdVRdmtdqldHpZ2IPWmo/5hw9+IxN6zmLd
-	 2D5rD1qqhXMu1gukf7HUJ3LLQqMtypaYAczjLq36TC4WJOeYGikQQp4tMo/1TGkbss
-	 Em3yvxepveIDjyY5jLxZbzgCqgvtcjCUOLfw6AOA=
+	b=TVkIoL/l+TaKq9BJyWZS/ZqDNTPFXEQWHp++8mtz4VMlNxo/NVWdxq/ax5abzasan
+	 5Kkobcoz49xxuBb+LXFrlraf2If1Aa2lViWl9nucDD3BtNWxeTMOWcxdFpqcvCjnDe
+	 3Rnl9Oy4rwhjDND7VLkG7L872gRGXYnCWUSLKcrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732490AbfJ0VYT (ORCPT
+        id S1732501AbfJ0VYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45852 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730777AbfJ0VYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:24:17 -0400
+        id S1731856AbfJ0VYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:24:11 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1931521726;
-        Sun, 27 Oct 2019 21:24:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B7002064A;
+        Sun, 27 Oct 2019 21:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211456;
-        bh=t69A56lr0lOMmewix5iSiPHCFZCowdC0rRu0+B5hnBw=;
+        s=default; t=1572211451;
+        bh=l+06AWxAeKb0gTOn8VVy4toEMu+SKlfr9RViXwvIcXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AJux7bHx8bwNBX+spHP+RVrVwwr2QdOFbhszpB1oe6EW2zZ5f30IGwRuNF7xfFa+8
-         63OlEWNSwIMqoHwCczXfVs/hwdJG7xXLNWzynJ2gOwevIVOclH1pt0aos3C4MBoIkr
-         6pju2HGzM+R/p7dqDDmW8vJ+lelaReqRn9A1hLvQ=
+        b=RXupMkebjWBDnnQaw/Xkpj4VfXvVCubL1tvZGm+WD1m+yG8PdT1Z51lJB9oBAV/zt
+         esIZ/7aFN75HXUR/+2kaipBdd4MN+R6dXMvNoVxwo8bVitHVgCDhxDeD+sPL/HV9yG
+         HgPheExlimS1xxv2NxNUe8COHr43B6U0vdDrCHuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Johan Hovold <johan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.3 158/197] s390/zcrypt: fix memleak at release
-Date:   Sun, 27 Oct 2019 22:01:16 +0100
-Message-Id: <20191027203400.212151946@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH 5.3 156/197] xtensa: drop EXPORT_SYMBOL for outs*/ins*
+Date:   Sun, 27 Oct 2019 22:01:14 +0100
+Message-Id: <20191027203400.106459028@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -62,37 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-commit 388bb19be8eab4674a660e0c97eaf60775362bc7 upstream.
+commit 8b39da985194aac2998dd9e3a22d00b596cebf1e upstream.
 
-If a process is interrupted while accessing the crypto device and the
-global ap_perms_mutex is contented, release() could return early and
-fail to free related resources.
+Custom outs*/ins* implementations are long gone from the xtensa port,
+remove matching EXPORT_SYMBOLs.
+This fixes the following build warnings issued by modpost since commit
+15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions"):
 
-Fixes: 00fab2350e6b ("s390/zcrypt: multiple zcrypt device nodes support")
-Cc: <stable@vger.kernel.org> # 4.19
-Cc: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+  WARNING: "insb" [vmlinux] is a static EXPORT_SYMBOL
+  WARNING: "insw" [vmlinux] is a static EXPORT_SYMBOL
+  WARNING: "insl" [vmlinux] is a static EXPORT_SYMBOL
+  WARNING: "outsb" [vmlinux] is a static EXPORT_SYMBOL
+  WARNING: "outsw" [vmlinux] is a static EXPORT_SYMBOL
+  WARNING: "outsl" [vmlinux] is a static EXPORT_SYMBOL
+
+Cc: stable@vger.kernel.org
+Fixes: d38efc1f150f ("xtensa: adopt generic io routines")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/crypto/zcrypt_api.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/xtensa/kernel/xtensa_ksyms.c |    7 -------
+ 1 file changed, 7 deletions(-)
 
---- a/drivers/s390/crypto/zcrypt_api.c
-+++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -539,8 +539,7 @@ static int zcrypt_release(struct inode *
- 	if (filp->f_inode->i_cdev == &zcrypt_cdev) {
- 		struct zcdn_device *zcdndev;
+--- a/arch/xtensa/kernel/xtensa_ksyms.c
++++ b/arch/xtensa/kernel/xtensa_ksyms.c
+@@ -119,13 +119,6 @@ EXPORT_SYMBOL(__invalidate_icache_range)
+ // FIXME EXPORT_SYMBOL(screen_info);
+ #endif
  
--		if (mutex_lock_interruptible(&ap_perms_mutex))
--			return -ERESTARTSYS;
-+		mutex_lock(&ap_perms_mutex);
- 		zcdndev = find_zcdndev_by_devt(filp->f_inode->i_rdev);
- 		mutex_unlock(&ap_perms_mutex);
- 		if (zcdndev) {
+-EXPORT_SYMBOL(outsb);
+-EXPORT_SYMBOL(outsw);
+-EXPORT_SYMBOL(outsl);
+-EXPORT_SYMBOL(insb);
+-EXPORT_SYMBOL(insw);
+-EXPORT_SYMBOL(insl);
+-
+ extern long common_exception_return;
+ EXPORT_SYMBOL(common_exception_return);
+ 
 
 
