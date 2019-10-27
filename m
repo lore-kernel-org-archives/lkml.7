@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9182FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D236CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E10E205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD102205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211871;
-	bh=oGHknJ1O/6LAjrtCeIttoLqZwSAoc1U8qXk1HVnDHX4=;
+	s=default; t=1572211882;
+	bh=XmgcN1gRkoXMecMZQ9tx4ufGWDQDD7XynS9mMfuQHn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TBxnUnQIJhxsu04UszWxH1/kKcY1/l2ClhseTPyKvpRCbVgqmbJ8SkJOMQRh38xo4
-	 UXjG14Tv7QcOWQJqMGBRnlxnc4s8bntw8KCkvHwEK91kTAGknl+UNxerL+OT0l0yvF
-	 I74Vn11TflOir/3QlvTxrnk45mKwoc552jnB3U5o=
+	b=H2dgKMFySpjw7QCjmGwsrfh+KfN+fi5yV7W5QhclrQmkcPvF/iw2yKCVh3NhAVM+R
+	 usdBhJw81pb62dajg+5ihCTqJvImfEFTHRC3MUaMBOt9mhDRXyiGyVbFkL1kMY1wN4
+	 lIZYoAhe8vxJE9LcRxu2USLxAEtPtN3ncIkEA2v4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731146AbfJ0VRx (ORCPT
+        id S1731934AbfJ0VbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37710 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731108AbfJ0VRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:17:44 -0400
+        id S1731049AbfJ0VR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:17:29 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5CFE2070B;
-        Sun, 27 Oct 2019 21:17:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74AC02070B;
+        Sun, 27 Oct 2019 21:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211063;
-        bh=oGHknJ1O/6LAjrtCeIttoLqZwSAoc1U8qXk1HVnDHX4=;
+        s=default; t=1572211047;
+        bh=XmgcN1gRkoXMecMZQ9tx4ufGWDQDD7XynS9mMfuQHn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vLy0X3hZMa2r6kFjeoSPyUOAhHFW6cg9uyuUxDv+zjAV1GFlxjXkFnSvoW9jJq5ni
-         HfVq/abp5Zih5TWHMoiw4hp6+bPMbWC9c53fW7RlDAY2TvUX2hD8VkA2kFJiEDnW0w
-         TX9agL3kpeHixVyqDA8c9TB1Cz2EtVBZ60zdNHuA=
+        b=I4OZX06An/pEWq6rH2OOWqwd9nBa78dMrwCTeEQ3+An4eO5tcNToQyKlldnjgaRNl
+         9N5m3vQ6eVREOsHELY5/3RuXUxk5nMTjmcRD/SBLKUeuS5Q38wbvWCiNBFS5sknTdm
+         9qghNgYbvwzudT1LcmAIWxIbIa2p7nvhEhL2nSQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Lowry Li (Arm Technology China)" <lowry.li@arm.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        "James Qian Wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 002/197] drm: Clear the fence pointer when writeback job signaled
-Date:   Sun, 27 Oct 2019 21:58:40 +0100
-Message-Id: <20191027203351.823794615@linuxfoundation.org>
+Subject: [PATCH 5.3 014/197] ARM: OMAP2+: Fix missing reset done flag for am3 and am43
+Date:   Sun, 27 Oct 2019 21:58:52 +0100
+Message-Id: <20191027203352.444667918@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -62,77 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lowry Li (Arm Technology China) <Lowry.Li@arm.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit b1066a123538044117f0a78ba8c6a50cf5a04c86 ]
+[ Upstream commit 8ad8041b98c665b6147e607b749586d6e20ba73a ]
 
-During it signals the completion of a writeback job, after releasing
-the out_fence, we'd clear the pointer.
+For ti,sysc-omap4 compatible devices with no sysstatus register, we do have
+reset done status available in the SOFTRESET bit that clears when the reset
+is done. This is documented for example in am437x TRM for DMTIMER_TIOCP_CFG
+register. The am335x TRM just says that SOFTRESET bit value 1 means reset is
+ongoing, but it behaves the same way clearing after reset is done.
 
-Check if fence left over in drm_writeback_cleanup_job(), release it.
+With the ti-sysc driver handling this automatically based on no sysstatus
+register defined, we see warnings if SYSC_HAS_RESET_STATUS is missing in the
+legacy platform data:
 
-Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-Reviewed-by: Brian Starkey <brian.starkey@arm.com>
-Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
-Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1564571048-15029-3-git-send-email-lowry.li@arm.com
+ti-sysc 48042000.target-module: sysc_flags 00000222 != 00000022
+ti-sysc 48044000.target-module: sysc_flags 00000222 != 00000022
+ti-sysc 48046000.target-module: sysc_flags 00000222 != 00000022
+...
+
+Let's fix these warnings by adding SYSC_HAS_RESET_STATUS. Let's also
+remove the useless parentheses while at it.
+
+If it turns out we do have ti,sysc-omap4 compatible devices without a
+working SOFTRESET bit we can set up additional quirk handling for it.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_writeback.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
-index ff138b6ec48ba..43d9e3bb3a943 100644
---- a/drivers/gpu/drm/drm_writeback.c
-+++ b/drivers/gpu/drm/drm_writeback.c
-@@ -324,6 +324,9 @@ void drm_writeback_cleanup_job(struct drm_writeback_job *job)
- 	if (job->fb)
- 		drm_framebuffer_put(job->fb);
- 
-+	if (job->out_fence)
-+		dma_fence_put(job->out_fence);
-+
- 	kfree(job);
- }
- EXPORT_SYMBOL(drm_writeback_cleanup_job);
-@@ -366,25 +369,29 @@ drm_writeback_signal_completion(struct drm_writeback_connector *wb_connector,
- {
- 	unsigned long flags;
- 	struct drm_writeback_job *job;
-+	struct dma_fence *out_fence;
- 
- 	spin_lock_irqsave(&wb_connector->job_lock, flags);
- 	job = list_first_entry_or_null(&wb_connector->job_queue,
- 				       struct drm_writeback_job,
- 				       list_entry);
--	if (job) {
-+	if (job)
- 		list_del(&job->list_entry);
--		if (job->out_fence) {
--			if (status)
--				dma_fence_set_error(job->out_fence, status);
--			dma_fence_signal(job->out_fence);
--			dma_fence_put(job->out_fence);
--		}
--	}
-+
- 	spin_unlock_irqrestore(&wb_connector->job_lock, flags);
- 
- 	if (WARN_ON(!job))
- 		return;
- 
-+	out_fence = job->out_fence;
-+	if (out_fence) {
-+		if (status)
-+			dma_fence_set_error(out_fence, status);
-+		dma_fence_signal(out_fence);
-+		dma_fence_put(out_fence);
-+		job->out_fence = NULL;
-+	}
-+
- 	INIT_WORK(&job->cleanup_work, cleanup_work);
- 	queue_work(system_long_wq, &job->cleanup_work);
- }
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+index adb6271f819be..7773876d165f1 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+@@ -811,7 +811,8 @@ static struct omap_hwmod_class_sysconfig am33xx_timer_sysc = {
+ 	.rev_offs	= 0x0000,
+ 	.sysc_offs	= 0x0010,
+ 	.syss_offs	= 0x0014,
+-	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
++	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
++			  SYSC_HAS_RESET_STATUS,
+ 	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+ 			  SIDLE_SMART_WKUP),
+ 	.sysc_fields	= &omap_hwmod_sysc_type2,
 -- 
 2.20.1
 
