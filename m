@@ -2,56 +2,57 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCB0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4FECA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F26E208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2DE2064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210545;
-	bh=JwJbmvmue4rSUIF6gaZB1bl6wcv45ZlgHlBozyiTPtA=;
+	s=default; t=1572210549;
+	bh=qfCF2CBKHLavLO5gpk2z0LNY6BLuAcfk78Lkz8xYQFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p22jVlMS2IynXMzM2E4mo1tuY4k3gkLVhGuT6yK51T8ReMCVPMJfdUH5FlfIVYMYN
-	 iky9fl+iX+xsvJMMgvgmAS26CXUlbg7DuD988hZ0ZYxV8BBdj2pa4OVgtYk7dBiSBs
-	 Ye7ulhsawv9rMcsc0AoAJJ9FghaXxBOGT1SHMtrg=
+	b=tpM9Ayc47H+d6Cro6xdx/wJoTzt7Ty0YZOtXNcGNO1TP4+he92GtSNiJrwLXHmuDn
+	 DdiAcKl+fZGMwJiKpzjKeJZ4fxFbdgPc+jknMq8vbQGGlGIkzOCYpML9n4uVnmsIVG
+	 +L83hjwBB+0YiCug3CUCMeRS1tgffZyfGo7vOVWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfJ0VJE (ORCPT
+        id S1729467AbfJ0VJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:09:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55330 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:09:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbfJ0VJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:09:01 -0400
+        id S1728951AbfJ0VJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:09:03 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 841282064A;
-        Sun, 27 Oct 2019 21:08:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08B5A20B7C;
+        Sun, 27 Oct 2019 21:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210540;
-        bh=JwJbmvmue4rSUIF6gaZB1bl6wcv45ZlgHlBozyiTPtA=;
+        s=default; t=1572210542;
+        bh=qfCF2CBKHLavLO5gpk2z0LNY6BLuAcfk78Lkz8xYQFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1/YPhprMV9xrGYedamsbLpCSqfMG9RDk07lOAKbK6SnlZGwbv5j0I0uSSax9m7vYq
-         HeB36d8hGBfHqFBKUrpn9x2k8FmttrRS2AS73Vy6tGta5BQoQv4fMMwfteN+wSsNDU
-         LTusBUk7p6wfUdYHqXzbP5wl/6LQ/AXtTSy4+lOA=
+        b=LHV/LWQHSZKtYdJpI7x12mHZjqLcCNVmGKcBc5GTFQynFwMLLwH8VchJC6CBjHfH7
+         la7WtoTVV09El6uCF/gK9/MxYICvlblo1BIS3qyTHO8HA7uOoHH+G6oqi2peH8VsnE
+         q9j3w/xK5Vq55XZOJw/V1vwWM5o+1w8EBXKgYI6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Dave Martin <dave.martin@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 048/119] arm64: capabilities: Move errata processing code
-Date:   Sun, 27 Oct 2019 22:00:25 +0100
-Message-Id: <20191027203319.576429658@linuxfoundation.org>
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 008/119] MIPS: dts: ar9331: fix interrupt-controller size
+Date:   Sun, 27 Oct 2019 21:59:45 +0100
+Message-Id: <20191027203301.560229650@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -64,161 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit 1e89baed5d50d2b8d9fd420830902570270703f1 ]
+[ Upstream commit 0889d07f3e4b171c453b2aaf2b257f9074cdf624 ]
 
-We have errata work around processing code in cpu_errata.c,
-which calls back into helpers defined in cpufeature.c. Now
-that we are going to make the handling of capabilities
-generic, by adding the information to each capability,
-move the errata work around specific processing code.
-No functional changes.
+It is two registers each of 4 byte.
 
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Dave Martin <dave.martin@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/cpufeature.h |    7 -----
- arch/arm64/kernel/cpu_errata.c      |   33 ---------------------------
- arch/arm64/kernel/cpufeature.c      |   43 +++++++++++++++++++++++++++++++++---
- 3 files changed, 40 insertions(+), 43 deletions(-)
+ arch/mips/boot/dts/qca/ar9331.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/cpufeature.h
-+++ b/arch/arm64/include/asm/cpufeature.h
-@@ -230,15 +230,8 @@ static inline bool id_aa64pfr0_32bit_el0
- }
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index efd5f07222060..39b6269610d41 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -99,7 +99,7 @@
  
- void __init setup_cpu_features(void);
--
--void update_cpu_capabilities(const struct arm64_cpu_capabilities *caps,
--			    const char *info);
--void enable_cpu_capabilities(const struct arm64_cpu_capabilities *caps);
- void check_local_cpu_capabilities(void);
+ 			miscintc: interrupt-controller@18060010 {
+ 				compatible = "qca,ar7240-misc-intc";
+-				reg = <0x18060010 0x4>;
++				reg = <0x18060010 0x8>;
  
--void update_cpu_errata_workarounds(void);
--void __init enable_errata_workarounds(void);
--void verify_local_cpu_errata_workarounds(void);
- 
- u64 read_sanitised_ftr_reg(u32 id);
- 
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -621,36 +621,3 @@ const struct arm64_cpu_capabilities arm6
- 	{
- 	}
- };
--
--/*
-- * The CPU Errata work arounds are detected and applied at boot time
-- * and the related information is freed soon after. If the new CPU requires
-- * an errata not detected at boot, fail this CPU.
-- */
--void verify_local_cpu_errata_workarounds(void)
--{
--	const struct arm64_cpu_capabilities *caps = arm64_errata;
--
--	for (; caps->matches; caps++) {
--		if (cpus_have_cap(caps->capability)) {
--			if (caps->cpu_enable)
--				caps->cpu_enable(caps);
--		} else if (caps->matches(caps, SCOPE_LOCAL_CPU)) {
--			pr_crit("CPU%d: Requires work around for %s, not detected"
--					" at boot time\n",
--				smp_processor_id(),
--				caps->desc ? : "an erratum");
--			cpu_die_early();
--		}
--	}
--}
--
--void update_cpu_errata_workarounds(void)
--{
--	update_cpu_capabilities(arm64_errata, "enabling workaround for");
--}
--
--void __init enable_errata_workarounds(void)
--{
--	enable_cpu_capabilities(arm64_errata);
--}
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -484,6 +484,9 @@ static void __init init_cpu_ftr_reg(u32
- 	reg->user_mask = user_mask;
- }
- 
-+extern const struct arm64_cpu_capabilities arm64_errata[];
-+static void update_cpu_errata_workarounds(void);
-+
- void __init init_cpu_features(struct cpuinfo_arm64 *info)
- {
- 	/* Before we start using the tables, make sure it is sorted */
-@@ -1160,8 +1163,8 @@ static bool __this_cpu_has_cap(const str
- 	return false;
- }
- 
--void update_cpu_capabilities(const struct arm64_cpu_capabilities *caps,
--			    const char *info)
-+static void update_cpu_capabilities(const struct arm64_cpu_capabilities *caps,
-+				    const char *info)
- {
- 	for (; caps->matches; caps++) {
- 		if (!caps->matches(caps, caps->def_scope))
-@@ -1185,7 +1188,8 @@ static int __enable_cpu_capability(void
-  * Run through the enabled capabilities and enable() it on all active
-  * CPUs
-  */
--void __init enable_cpu_capabilities(const struct arm64_cpu_capabilities *caps)
-+static void __init
-+enable_cpu_capabilities(const struct arm64_cpu_capabilities *caps)
- {
- 	for (; caps->matches; caps++) {
- 		unsigned int num = caps->capability;
-@@ -1268,6 +1272,39 @@ verify_local_cpu_features(const struct a
- }
- 
- /*
-+ * The CPU Errata work arounds are detected and applied at boot time
-+ * and the related information is freed soon after. If the new CPU requires
-+ * an errata not detected at boot, fail this CPU.
-+ */
-+static void verify_local_cpu_errata_workarounds(void)
-+{
-+	const struct arm64_cpu_capabilities *caps = arm64_errata;
-+
-+	for (; caps->matches; caps++) {
-+		if (cpus_have_cap(caps->capability)) {
-+			if (caps->cpu_enable)
-+				caps->cpu_enable(caps);
-+		} else if (caps->matches(caps, SCOPE_LOCAL_CPU)) {
-+			pr_crit("CPU%d: Requires work around for %s, not detected"
-+					" at boot time\n",
-+				smp_processor_id(),
-+				caps->desc ? : "an erratum");
-+			cpu_die_early();
-+		}
-+	}
-+}
-+
-+static void update_cpu_errata_workarounds(void)
-+{
-+	update_cpu_capabilities(arm64_errata, "enabling workaround for");
-+}
-+
-+static void __init enable_errata_workarounds(void)
-+{
-+	enable_cpu_capabilities(arm64_errata);
-+}
-+
-+/*
-  * Run through the enabled system capabilities and enable() it on this CPU.
-  * The capabilities were decided based on the available CPUs at the boot time.
-  * Any new CPU should match the system wide status of the capability. If the
+ 				interrupt-parent = <&cpuintc>;
+ 				interrupts = <6>;
+-- 
+2.20.1
+
 
 
