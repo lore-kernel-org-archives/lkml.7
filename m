@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D29ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F37CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A3421850
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34CFD21850
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572187576;
-	bh=bweGBvr/zsul0PBw/CUXnoQwKxpUkbBX2bXnI2WiT6A=;
+	s=default; t=1572187582;
+	bh=wb8MnmVIHroJM9PSk6o4I+88KKLW/wWOgZB5RORktF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bh1TJGYYlnox5m/0A1nX+XYZZORPStNwWeMcp3BHFJkFG5+3UGE7b07u5RBZhSUTt
-	 0eShtQunU6QQ0slTRhmYhrZlpz/EJ3D9TOcbmBtwGW3urzh+eV8ON32IFwZDkA0Y/b
-	 LNpZhtjZTlJYv/rKgnetT6A/ZL88HLjjha8p7nRY=
+	b=t2HPn2plKG+JTEgvv4AKZ72orkNJfe807OKeTZ4VH2hoTYHXozVE98Zid4LqEKS84
+	 Bi+4xoNOtjXcTErAAOaq761HOI3/QKhIehwlVu1EqoXtQmrShU7EFoIqOfFojE5xlO
+	 uLBgmoANOs7L84A+SAc+Z9oIxxaEnrwd+GcW51pQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfJ0OqP (ORCPT
+        id S1727506AbfJ0OqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 10:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38900 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 10:46:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfJ0OqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 10:46:14 -0400
+        id S1726817AbfJ0OqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 10:46:20 -0400
 Received: from localhost.localdomain (82-132-239-15.dab.02.net [82.132.239.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 489A921D7F;
-        Sun, 27 Oct 2019 14:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EED521726;
+        Sun, 27 Oct 2019 14:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572187573;
-        bh=bweGBvr/zsul0PBw/CUXnoQwKxpUkbBX2bXnI2WiT6A=;
+        s=default; t=1572187580;
+        bh=wb8MnmVIHroJM9PSk6o4I+88KKLW/wWOgZB5RORktF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDk1e6T2TaUYx96VA3aU1x69aKWDFf4Zx41KfJ33BKv29uzfisn9NYmEg2A7KZJyh
-         loizo7D7LSTEaE1BP+9W//bNK5TSXUXof3+O1AZcBeUTgPlX5520narm/gXtLh6cbx
-         pKlpEzft8VjQoV0BGmfQAZSOgWgOfmbHJSLnj+IU=
+        b=lmNHF40SztBAGcoItfEeP4saZVNK3PO8ndRou08M55Se0UZhKIR+LYFNJcCCd9yQ0
+         JuGa3PcjSKcsWdIQVo8cEPrQodmraqCEbggPzzgbiAbtCJuAHUV5B0zmI3Mt6t9vFw
+         W5fZwx41oPaHllmwvevsCvI/X+1RoHc+UJYtrJyg=
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -52,9 +52,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Jayachandran C <jnair@marvell.com>,
         Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v2 30/36] irqchip/gic-v4.1: Add VSGI allocation/teardown
-Date:   Sun, 27 Oct 2019 14:42:28 +0000
-Message-Id: <20191027144234.8395-31-maz@kernel.org>
+Subject: [PATCH v2 31/36] irqchip/gic-v4.1: Add VSGI property setup
+Date:   Sun, 27 Oct 2019 14:42:29 +0000
+Message-Id: <20191027144234.8395-32-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191027144234.8395-1-maz@kernel.org>
 References: <20191027144234.8395-1-maz@kernel.org>
@@ -65,124 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate per-VPE SGIs when initializing the GIC-specific part of the
-VPE data structure.
+Add the SGI configuration entry point for KVM to use.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v4.c       | 68 +++++++++++++++++++++++++++++-
- include/linux/irqchip/arm-gic-v4.h |  2 +
- 2 files changed, 69 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v4.c       | 13 +++++++++++++
+ include/linux/irqchip/arm-gic-v4.h |  1 +
+ 2 files changed, 14 insertions(+)
 
 diff --git a/drivers/irqchip/irq-gic-v4.c b/drivers/irqchip/irq-gic-v4.c
-index 60b51d6683aa..a29a063861bc 100644
+index a29a063861bc..b937e51a9178 100644
 --- a/drivers/irqchip/irq-gic-v4.c
 +++ b/drivers/irqchip/irq-gic-v4.c
-@@ -92,6 +92,47 @@ static bool has_v4_1(void)
- 	return !!sgi_domain_ops;
+@@ -324,6 +324,19 @@ int its_prop_update_vlpi(int irq, u8 config, bool inv)
+ 	return irq_set_vcpu_affinity(irq, &info);
  }
  
-+static int its_alloc_vcpu_sgis(struct its_vpe *vpe, int idx)
++int its_prop_update_vsgi(int irq, u8 priority, bool group)
 +{
-+	char *name;
-+	int sgi_base;
++	struct its_cmd_info info = {
++		.cmd_type = PROP_UPDATE_SGI,
++		{
++			.priority	= priority,
++			.group		= group,
++		},
++	};
 +
-+	if (!has_v4_1())
-+		return 0;
-+
-+	name = kasprintf(GFP_KERNEL, "GICv4-sgi-%d", task_pid_nr(current));
-+	if (!name)
-+		goto err;
-+
-+	vpe->fwnode = irq_domain_alloc_named_id_fwnode(name, idx);
-+	if (!vpe->fwnode)
-+		goto err;
-+
-+	kfree(name);
-+	name = NULL;
-+
-+	vpe->sgi_domain = irq_domain_create_linear(vpe->fwnode, 16,
-+						   sgi_domain_ops, vpe);
-+	if (!vpe->sgi_domain)
-+		goto err;
-+
-+	sgi_base = __irq_domain_alloc_irqs(vpe->sgi_domain, -1, 16,
-+					       NUMA_NO_NODE, vpe,
-+					       false, NULL);
-+	if (sgi_base <= 0)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	if (vpe->sgi_domain)
-+		irq_domain_remove(vpe->sgi_domain);
-+	if (vpe->fwnode)
-+		irq_domain_free_fwnode(vpe->fwnode);
-+	kfree(name);
-+	return -ENOMEM;
++	return irq_set_vcpu_affinity(irq, &info);
 +}
 +
- int its_alloc_vcpu_irqs(struct its_vm *vm)
- {
- 	int vpe_base_irq, i;
-@@ -118,8 +159,13 @@ int its_alloc_vcpu_irqs(struct its_vm *vm)
- 	if (vpe_base_irq <= 0)
- 		goto err;
- 
--	for (i = 0; i < vm->nr_vpes; i++)
-+	for (i = 0; i < vm->nr_vpes; i++) {
-+		int ret;
- 		vm->vpes[i]->irq = vpe_base_irq + i;
-+		ret = its_alloc_vcpu_sgis(vm->vpes[i], i);
-+		if (ret)
-+			goto err;
-+	}
- 
- 	return 0;
- 
-@@ -132,8 +178,28 @@ int its_alloc_vcpu_irqs(struct its_vm *vm)
- 	return -ENOMEM;
- }
- 
-+static void its_free_sgi_irqs(struct its_vm *vm)
-+{
-+	int i;
-+
-+	if (!has_v4_1())
-+		return;
-+
-+	for (i = 0; i < vm->nr_vpes; i++) {
-+		unsigned int irq = irq_find_mapping(vm->vpes[i]->sgi_domain, 0);
-+
-+		if (WARN_ON(!irq))
-+			continue;
-+
-+		irq_domain_free_irqs(irq, 16);
-+		irq_domain_remove(vm->vpes[i]->sgi_domain);
-+		irq_domain_free_fwnode(vm->vpes[i]->fwnode);
-+	}
-+}
-+
- void its_free_vcpu_irqs(struct its_vm *vm)
- {
-+	its_free_sgi_irqs(vm);
- 	irq_domain_free_irqs(vm->vpes[0]->irq, vm->nr_vpes);
- 	irq_domain_remove(vm->domain);
- 	irq_domain_free_fwnode(vm->fwnode);
+ int its_init_v4(struct irq_domain *domain,
+ 		const struct irq_domain_ops *vpe_ops,
+ 		const struct irq_domain_ops *sgi_ops)
 diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index 084890a5c2bf..5578cbe7430b 100644
+index 5578cbe7430b..b894796df9ab 100644
 --- a/include/linux/irqchip/arm-gic-v4.h
 +++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -47,6 +47,8 @@ struct its_vpe {
- 		};
- 		/* GICv4.1 implementations */
- 		struct {
-+			struct fwnode_handle	*fwnode;
-+			struct irq_domain	*sgi_domain;
- 			struct {
- 				u8	priority;
- 				bool	enabled;
+@@ -127,6 +127,7 @@ int its_map_vlpi(int irq, struct its_vlpi_map *map);
+ int its_get_vlpi(int irq, struct its_vlpi_map *map);
+ int its_unmap_vlpi(int irq);
+ int its_prop_update_vlpi(int irq, u8 config, bool inv);
++int its_prop_update_vsgi(int irq, u8 priority, bool group);
+ 
+ struct irq_domain_ops;
+ int its_init_v4(struct irq_domain *domain,
 -- 
 2.20.1
 
