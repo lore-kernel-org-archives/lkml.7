@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02A1CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BD7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9C920717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34EE121848
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211267;
-	bh=ffY51uUFwKpkIbitwsoWl4TS9Ry0fSsB7ZSfmqk+0A0=;
+	s=default; t=1572211270;
+	bh=acrx3JS5YrBn+hV9SPGE9+4j06jBjjQtCzlyQCKbF1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tllbhExyd0mnnkzg56UWNM7vCtOpyOok7EgjEI8IPiTF6IO8Dhtoo4f93S0AmeDqY
-	 RLG5M3Tyk6DYz75MS/9VLERKbpjnT7rff7Z7CvqfWxXxMSDSatm+VUK16k+apaa8AC
-	 9G4XNlytLvBRjH/zQ3FAMNZrQUjoxyjZj7pjZn18=
+	b=lyoLIkR/3SRvl5L2isG+0xETKEL3B+KV1n1SsPiS35iJLmbza+JnulDPutVCGQah1
+	 JSd1KicuyX9UIM5pCk3mwlzyIzW0MVdhBUg2QipTpDUXIrquqD+Vyzy/IJBtxu1Omt
+	 pPDe4CH6IjrwxWdORoDk8DqIm2EbyKqtNg7hAJA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731852AbfJ0VVG (ORCPT
+        id S1731865AbfJ0VVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41758 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:21:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731838AbfJ0VVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:21:03 -0400
+        id S1731253AbfJ0VVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:21:06 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18A79205C9;
-        Sun, 27 Oct 2019 21:21:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDC49205C9;
+        Sun, 27 Oct 2019 21:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211262;
-        bh=ffY51uUFwKpkIbitwsoWl4TS9Ry0fSsB7ZSfmqk+0A0=;
+        s=default; t=1572211265;
+        bh=acrx3JS5YrBn+hV9SPGE9+4j06jBjjQtCzlyQCKbF1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upV/YwaS+JZlf3vpfAWDCFEeaMHNn5FejeZQLe7/zvU0B5PG+/r/65uBRhOnZogFO
-         qqW8FpMP1EzX4YUN/hLhQhvfZPdFXiimJfh/6s7sVQGSa6du9vdOMUXFNGJYvCZmmo
-         P/APUXIeWF/TQdYSDd71MggvnUS7/a3dmtgvSJC8=
+        b=B2uBsA03wC026o+AmZ63H4eTsI/B3lbvoX8qLOiS5+VhSXhrGQqWAuX4yX4T112+K
+         3K4zPGt/LnkqYjME5Pii4QNxdItjIboGAbWU4RsRUDHCoukM1VW/KQNMPsZU7eHEOA
+         nyF960RHBXg1efcXaogyXxu3f/EJvtzN+UJTzRzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 045/197] drm/amdgpu: fix multiple memory leaks in acp_hw_init
-Date:   Sun, 27 Oct 2019 21:59:23 +0100
-Message-Id: <20191027203354.136852913@linuxfoundation.org>
+Subject: [PATCH 5.3 046/197] drm/amd/display: memory leak
+Date:   Sun, 27 Oct 2019 21:59:24 +0100
+Message-Id: <20191027203354.187705006@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -64,118 +63,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 57be09c6e8747bf48704136d9e3f92bfb93f5725 ]
+[ Upstream commit 055e547478a11a6360c7ce05e2afc3e366968a12 ]
 
-In acp_hw_init there are some allocations that needs to be released in
-case of failure:
+In dcn*_clock_source_create when dcn20_clk_src_construct fails allocated
+clk_src needs release.
 
-1- adev->acp.acp_genpd should be released if any allocation attemp for
-adev->acp.acp_cell, adev->acp.acp_res or i2s_pdata fails.
-2- all of those allocations should be released if
-mfd_add_hotplug_devices or pm_genpd_add_device fail.
-3- Release is needed in case of time out values expire.
-
-Reviewed-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c | 34 ++++++++++++++++---------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c | 1 +
+ drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c | 1 +
+ drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c | 1 +
+ drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c | 1 +
+ drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c   | 1 +
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c   | 1 +
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c   | 1 +
+ 7 files changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
-index eba42c752bca3..82155ac3288a0 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
-@@ -189,7 +189,7 @@ static int acp_hw_init(void *handle)
- 	u32 val = 0;
- 	u32 count = 0;
- 	struct device *dev;
--	struct i2s_platform_data *i2s_pdata;
-+	struct i2s_platform_data *i2s_pdata = NULL;
- 
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
- 
-@@ -231,20 +231,21 @@ static int acp_hw_init(void *handle)
- 	adev->acp.acp_cell = kcalloc(ACP_DEVS, sizeof(struct mfd_cell),
- 							GFP_KERNEL);
- 
--	if (adev->acp.acp_cell == NULL)
--		return -ENOMEM;
-+	if (adev->acp.acp_cell == NULL) {
-+		r = -ENOMEM;
-+		goto failure;
-+	}
- 
- 	adev->acp.acp_res = kcalloc(5, sizeof(struct resource), GFP_KERNEL);
- 	if (adev->acp.acp_res == NULL) {
--		kfree(adev->acp.acp_cell);
--		return -ENOMEM;
-+		r = -ENOMEM;
-+		goto failure;
+diff --git a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
+index 6248c84553140..45f74219e79ed 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
+@@ -668,6 +668,7 @@ struct clock_source *dce100_clock_source_create(
+ 		return &clk_src->base;
  	}
  
- 	i2s_pdata = kcalloc(3, sizeof(struct i2s_platform_data), GFP_KERNEL);
- 	if (i2s_pdata == NULL) {
--		kfree(adev->acp.acp_res);
--		kfree(adev->acp.acp_cell);
--		return -ENOMEM;
-+		r = -ENOMEM;
-+		goto failure;
- 	}
- 
- 	switch (adev->asic_type) {
-@@ -341,14 +342,14 @@ static int acp_hw_init(void *handle)
- 	r = mfd_add_hotplug_devices(adev->acp.parent, adev->acp.acp_cell,
- 								ACP_DEVS);
- 	if (r)
--		return r;
-+		goto failure;
- 
- 	for (i = 0; i < ACP_DEVS ; i++) {
- 		dev = get_mfd_cell_dev(adev->acp.acp_cell[i].name, i);
- 		r = pm_genpd_add_device(&adev->acp.acp_genpd->gpd, dev);
- 		if (r) {
- 			dev_err(dev, "Failed to add dev to genpd\n");
--			return r;
-+			goto failure;
- 		}
- 	}
- 
-@@ -367,7 +368,8 @@ static int acp_hw_init(void *handle)
- 			break;
- 		if (--count == 0) {
- 			dev_err(&adev->pdev->dev, "Failed to reset ACP\n");
--			return -ETIMEDOUT;
-+			r = -ETIMEDOUT;
-+			goto failure;
- 		}
- 		udelay(100);
- 	}
-@@ -384,7 +386,8 @@ static int acp_hw_init(void *handle)
- 			break;
- 		if (--count == 0) {
- 			dev_err(&adev->pdev->dev, "Failed to reset ACP\n");
--			return -ETIMEDOUT;
-+			r = -ETIMEDOUT;
-+			goto failure;
- 		}
- 		udelay(100);
- 	}
-@@ -393,6 +396,13 @@ static int acp_hw_init(void *handle)
- 	val &= ~ACP_SOFT_RESET__SoftResetAud_MASK;
- 	cgs_write_register(adev->acp.cgs_device, mmACP_SOFT_RESET, val);
- 	return 0;
-+
-+failure:
-+	kfree(i2s_pdata);
-+	kfree(adev->acp.acp_res);
-+	kfree(adev->acp.acp_cell);
-+	kfree(adev->acp.acp_genpd);
-+	return r;
++	kfree(clk_src);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
  }
+diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
+index 764329264c3b4..0cb83b0e0e1ee 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
+@@ -714,6 +714,7 @@ struct clock_source *dce110_clock_source_create(
+ 		return &clk_src->base;
+ 	}
  
- /**
++	kfree(clk_src);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
+diff --git a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
+index 7a04be74c9cf9..918455caa9a61 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
+@@ -687,6 +687,7 @@ struct clock_source *dce112_clock_source_create(
+ 		return &clk_src->base;
+ 	}
+ 
++	kfree(clk_src);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
+diff --git a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+index ae38c9c7277cf..49f3f0fad7633 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+@@ -500,6 +500,7 @@ static struct clock_source *dce120_clock_source_create(
+ 		return &clk_src->base;
+ 	}
+ 
++	kfree(clk_src);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
+diff --git a/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c b/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
+index 860a524ebcfab..952440893fbb3 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
+@@ -701,6 +701,7 @@ struct clock_source *dce80_clock_source_create(
+ 		return &clk_src->base;
+ 	}
+ 
++	kfree(clk_src);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+index a12530a3ab9ca..3f25e8da5396a 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+@@ -786,6 +786,7 @@ struct clock_source *dcn10_clock_source_create(
+ 		return &clk_src->base;
+ 	}
+ 
++	kfree(clk_src);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+index b949e202d6cb7..5b7ff6c549f18 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+@@ -955,6 +955,7 @@ struct clock_source *dcn20_clock_source_create(
+ 		return &clk_src->base;
+ 	}
+ 
++	kfree(clk_src);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
 -- 
 2.20.1
 
