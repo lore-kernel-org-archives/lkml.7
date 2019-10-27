@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F692CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A21CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FAB20B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2446F20B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 23:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YNVSpy7u"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MgmyEigc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfJ0XK0 (ORCPT
+        id S1728699AbfJ0XKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 19:10:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46261 "EHLO
+        Sun, 27 Oct 2019 19:10:14 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44130 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728737AbfJ0XKQ (ORCPT
+        with ESMTP id S1728552AbfJ0XKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 19:10:16 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f19so5353817pgn.13
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 16:10:14 -0700 (PDT)
+        Sun, 27 Oct 2019 19:10:06 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e10so5359773pgd.11
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 16:10:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=sBkZv5T87/6qsGMWiQqASxcIOOXirewPBkGsTYS+sGo=;
-        b=YNVSpy7uZPK9B0TkvWaxRuHgHdmPep21fLIGntvqEIh4jj5FcDfBkiFFt4NtGtjc9U
-         2giTuJNd8q326EXt6wvv/To8lLTh98UN/Ujgw/Eoz0+bbZ/kh0y3DXcBwuvqLLDY8gai
-         9jYHXM5hWxlBcp5rLIbbys1GbUdY86LCCqU9U=
+        bh=SCl5z2eaTL650HgTHRN/eqR6Yxn6ClMA4d1O+k3PtWI=;
+        b=MgmyEigcMJiw5EsHJWuOQbYV/fzp8/jId/rgw8AGezc77qqugbgG4vHfCHB66Bos9z
+         gnTu4t5+QjJSC9CZerr9ZFHwNxq15J3C8O0bJuaTLxLBXT2W6BIwCMbisC4Vgg7XwdY1
+         a436Wdf5CEyKMiP2iPXdq1NP2hbTt2rcKjwRE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sBkZv5T87/6qsGMWiQqASxcIOOXirewPBkGsTYS+sGo=;
-        b=F58JLKZt2UudMWrEMkWD8D7nhjmvyWYFH3bJRgZwrELl4RDLvScTYQwU2cuts/5Xi3
-         5pgd36xrS8BuDbeYgyaOV/VYqbSDAxtIU69fiwxogSuQnfFkWC5X7/UHvH1xe1c4OsHF
-         nP9CEmgU7CxGEYLKDTA2Dut0upCPIN4vBjQBhlzRFMTJVSHgAKnKsjt6xcawLEjItBnj
-         WABLHpjH63qmtmGn+gber1np8wL/mGI8q0fkKxwVCK3cJS+TCb/2n5qwWzq8/KEw0kE+
-         IdwBhka1uIdQ3hhM55mDfUxS19o7uJ6eqONHi+3TklIYoHqFMYSD+v20wB3yulcA4dEY
-         nwJg==
-X-Gm-Message-State: APjAAAUE+K5Mqwh0nPs+hum64Ih7MF99qjv2exA2tnUN51GQzqQGWMW0
-        BDK0O9TSCNW23odFISMiWcZBCQ==
-X-Google-Smtp-Source: APXvYqzuVoUzDR+kvliLsubwOzyTreO6YSrTy6g0PjiUPewNtXmRNbghRJDWWJpnU00x/R8WHBT6zw==
-X-Received: by 2002:a63:cd47:: with SMTP id a7mr16827359pgj.29.1572217813592;
-        Sun, 27 Oct 2019 16:10:13 -0700 (PDT)
+        bh=SCl5z2eaTL650HgTHRN/eqR6Yxn6ClMA4d1O+k3PtWI=;
+        b=QIXSD/7wH+yNghJt2GPntzL8zDq+IgRwzU2CRhf6Gt9SDAAXmOnqPEDLHG7cu83IEE
+         J5qzlIMBFYqjNE2uO9r/R+ES5VIh4V8lXbXr+S9uuURqWI0BxvkhoZC/2+GtYBG8env9
+         6o8MMeeWY29TfpNkbgGWzdw5MJy3R1U9PdenTpTefxQJu2Aa+cv0gqSQxyHHg4xf01F0
+         bkkidB4AnN6mPpk8/r9yg6Ak5OHVNx505ohiePoctVL+/ofelnPug4I0m0oGmbDGWZNe
+         Oqi3dy5oYmfccdqFJVP9XtcRpesiLh3IQ55D3mZUvTrvkRqkq0F7hNHWd/xQjCopjhZd
+         3C2Q==
+X-Gm-Message-State: APjAAAXly4hV8l6Z2zDqeGBfJNRglw7Z+oJFkFthTn3wf8cPyf3WvpSD
+        3x41GIq1jw5qE8vIo9bKXmFsgw==
+X-Google-Smtp-Source: APXvYqxjUvl2zOdBtcg8h25mMfe8v9fcOgfMA6sxYCQc4nLDeQsPBnMI66hb9AiQIrvoBInWVTTXfg==
+X-Received: by 2002:a63:cb4f:: with SMTP id m15mr18170844pgi.325.1572217805045;
+        Sun, 27 Oct 2019 16:10:05 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id f25sm12791753pfk.10.2019.10.27.16.10.12
+        by smtp.gmail.com with ESMTPSA id i7sm7634049pjs.1.2019.10.27.16.10.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Oct 2019 16:10:13 -0700 (PDT)
+        Sun, 27 Oct 2019 16:10:04 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
         lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
@@ -61,9 +61,9 @@ To:     briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
         fabien.lahoudere@collabora.com
 Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v3 17/18] iio: cros_ec: Report hwfifo_watermark_max
-Date:   Sun, 27 Oct 2019 16:09:20 -0700
-Message-Id: <20191027230921.205251-18-gwendal@chromium.org>
+Subject: [PATCH v3 11/18] platform: chrome: sensorhub: Add code to spread timestmap
+Date:   Sun, 27 Oct 2019 16:09:14 -0700
+Message-Id: <20191027230921.205251-12-gwendal@chromium.org>
 X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
 In-Reply-To: <20191027230921.205251-1-gwendal@chromium.org>
 References: <20191027230921.205251-1-gwendal@chromium.org>
@@ -74,116 +74,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Report the maximum amount of sample the EC can hold.
-This is not tunable, but can be useful for application to find out the
-maximum amount of time it can sleep when hwfifo_timeout is set to a
-large number.
+EC FIFO can send sensor events in batch. Spread them based on
+previous (TSa) and currnet timestamp (TSb)
+
+  EC FIFO                             iio events
++-----------+
+| TSa       |
++-----------+             +---------------------------------------+
+| event 1   |             | event 1 | TSb - (TSb - TSa)/n * (n-1) |
++-----------+             +---------------------------------------+
+| event 2   |             | event 2 | TSb - (TSb - TSa)/n * (n-2) |
++-----------+             +---------------------------------------+
+|  ...      |  ------>    |  ....   |                             |
++-----------+             +---------------------------------------+
+| event n-1 |             | event 2 | TSb - (TSb - TSa)/n         |
++-----------+             +---------------------------------------+
+| event n   |             | event 2 | TSb                         |
++-----------+             +---------------------------------------+
+| TSb       |
++-----------+
 
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
 No changes in v3.
 Changes in v2:
-- Remove double lines, add line before return for visibility.
+- Use CROS_EC_SENSOR_LAST_TS instead of LAST_TS to avoid name colisions.
 
- .../cros_ec_sensors/cros_ec_sensors_core.c    | 34 +++++++++++++++++--
- .../linux/iio/common/cros_ec_sensors_core.h   |  3 ++
- 2 files changed, 35 insertions(+), 2 deletions(-)
+ .../platform/chrome/cros_ec_sensorhub_ring.c  | 99 ++++++++++++++++++-
+ 1 file changed, 96 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-index 506b481420036..fc40bfa4a21fd 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-@@ -23,6 +23,12 @@
- #include <linux/platform_data/cros_ec_sensorhub.h>
- #include <linux/platform_device.h>
+diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+index d77e71303d80e..380807ef4cdde 100644
+--- a/drivers/platform/chrome/cros_ec_sensorhub_ring.c
++++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+@@ -191,6 +191,97 @@ static bool cros_ec_ring_process_event(
+ 	return true;
+ }
  
 +/*
-+ * Hard coded to the first device to support sensor fifo.  The EC has a 2048
-+ * byte fifo and will trigger an interrupt when fifo is 2/3 full.
++ * cros_ec_ring_spread_add: Calculate proper timestamps then
++ * add to ringbuffer (legacy).
++ *
++ * If there is a sample with a proper timestamp
++ *                        timestamp | count
++ * older_unprocess_out --> TS1      | 1
++ *                         TS1      | 2
++ * out -->                 TS1      | 3
++ * next_out -->            TS2      |
++ * We spread time for the samples [older_unprocess_out .. out]
++ * between TS1 and TS2: [TS1+1/4, TS1+2/4, TS1+3/4, TS2].
++ *
++ * If we reach the end of the samples, we compare with the
++ * current timestamp:
++ *
++ * older_unprocess_out --> TS1      | 1
++ *                         TS1      | 2
++ * out -->                 TS1      | 3
++ * We know have [TS1+1/3, TS1+2/3, current timestamp]
 + */
-+#define CROS_EC_FIFO_SIZE (2048 * 2 / 3)
-+
- static char *cros_ec_loc[] = {
- 	[MOTIONSENSE_LOC_BASE] = "base",
- 	[MOTIONSENSE_LOC_LID] = "lid",
-@@ -56,8 +62,15 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
- 
- static void get_default_min_max_freq(enum motionsensor_type type,
- 				     u32 *min_freq,
--				     u32 *max_freq)
-+				     u32 *max_freq,
-+				     u32 *max_fifo_events)
- {
-+	/*
-+	 * We don't know fifo size, set to size previously used by older
-+	 * hardware.
-+	 */
-+	*max_fifo_events = CROS_EC_FIFO_SIZE;
-+
- 	switch (type) {
- 	case MOTIONSENSE_TYPE_ACCEL:
- 	case MOTIONSENSE_TYPE_GYRO:
-@@ -150,8 +163,22 @@ static IIO_DEVICE_ATTR(hwfifo_timeout, 0644,
- 		       cros_ec_sensor_get_report_latency,
- 		       cros_ec_sensor_set_report_latency, 0);
- 
-+static ssize_t hwfifo_watermark_max_show(
-+		struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
++static void cros_ec_ring_spread_add(
++				struct cros_ec_sensorhub *sensorhub,
++				unsigned long sensor_mask,
++				s64 current_timestamp,
++				struct cros_ec_sensors_ring_sample *last_out)
 +{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
++	struct cros_ec_sensors_ring_sample *out;
++	int i;
 +
-+	return sprintf(buf, "%d\n", st->fifo_max_event_count);
++	for_each_set_bit(i, &sensor_mask, BITS_PER_LONG) {
++		s64 older_timestamp;
++		s64 timestamp;
++		struct cros_ec_sensors_ring_sample *older_unprocess_out =
++			sensorhub->ring;
++		struct cros_ec_sensors_ring_sample *next_out;
++		int count = 1;
++
++		for (out = sensorhub->ring; out < last_out; out = next_out) {
++			s64 time_period;
++
++			next_out = out + 1;
++			if (out->sensor_id != i)
++				continue;
++
++			/* Timestamp to start with */
++			older_timestamp = out->timestamp;
++
++			/* find next sample */
++			while (next_out < last_out && next_out->sensor_id != i)
++				next_out++;
++
++			if (next_out >= last_out) {
++				timestamp = current_timestamp;
++			} else {
++				timestamp = next_out->timestamp;
++				if (timestamp == older_timestamp) {
++					count++;
++					continue;
++				}
++			}
++
++			/*
++			 * The next sample has a new timestamp,
++			 * spread the unprocessed samples.
++			 */
++			if (next_out < last_out)
++				count++;
++			time_period = div_s64(timestamp - older_timestamp,
++					      count);
++
++			for (; older_unprocess_out <= out;
++					older_unprocess_out++) {
++				if (older_unprocess_out->sensor_id != i)
++					continue;
++				older_timestamp += time_period;
++				older_unprocess_out->timestamp =
++					older_timestamp;
++			}
++			count = 1;
++			/* The next_out sample has a valid timestamp, skip. */
++			next_out++;
++			older_unprocess_out = next_out;
++		}
++	}
++
++	/* push the event into the kfifo */
++	for (out = sensorhub->ring; out < last_out; out++)
++		cros_sensorhub_send_sample(sensorhub, out);
 +}
 +
-+static IIO_DEVICE_ATTR_RO(hwfifo_watermark_max, 0);
-+
- const struct attribute *cros_ec_sensor_fifo_attributes[] = {
- 	&iio_dev_attr_hwfifo_timeout.dev_attr.attr,
-+	&iio_dev_attr_hwfifo_watermark_max.dev_attr.attr,
- 	NULL,
- };
- EXPORT_SYMBOL_GPL(cros_ec_sensor_fifo_attributes);
-@@ -287,12 +314,15 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
- 		if (state->msg->version < 3) {
- 			get_default_min_max_freq(state->resp->info.type,
- 						 &state->frequencies[1],
--						 &state->frequencies[2]);
-+						 &state->frequencies[2],
-+						 &state->fifo_max_event_count);
- 		} else {
- 			state->frequencies[1] =
- 			    state->resp->info_3.min_frequency;
- 			state->frequencies[2] =
- 			    state->resp->info_3.max_frequency;
-+			state->fifo_max_event_count =
-+			    state->resp->info_3.fifo_max_event_count;
+ /*
+  * cros_ec_sensorhub_ring_handler - the trigger handler function
+  *
+@@ -324,9 +415,11 @@ static void cros_ec_sensorhub_ring_handler(struct cros_ec_sensorhub *sensorhub)
  		}
+ 	}
  
- 		ret = devm_iio_triggered_buffer_setup(
-diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-index ded8381b1299c..2f3668dfc826b 100644
---- a/include/linux/iio/common/cros_ec_sensors_core.h
-+++ b/include/linux/iio/common/cros_ec_sensors_core.h
-@@ -50,6 +50,7 @@ typedef irqreturn_t (*cros_ec_sensors_capture_t)(int irq, void *p);
-  *				the timestamp. The timestamp is always last and
-  *				is always 8-byte aligned.
-  * @read_ec_sensors_data:	function used for accessing sensors values
-+ * @fifo_max_event_count:	Size of the EC sensor FIFO
-  */
- struct cros_ec_sensors_core_state {
- 	struct cros_ec_device *ec;
-@@ -72,6 +73,8 @@ struct cros_ec_sensors_core_state {
- 	int (*read_ec_sensors_data)(struct iio_dev *indio_dev,
- 				    unsigned long scan_mask, s16 *data);
+-	/* push the event into the kfifo */
+-	for (out = sensorhub->ring; out < last_out; out++)
+-		cros_sensorhub_send_sample(sensorhub, out);
++	/*
++	 * Spread samples in case of batching, then add them to the ringbuffer.
++	 */
++	cros_ec_ring_spread_add(sensorhub, sensor_mask,
++			current_timestamp, last_out);
  
-+	u32 fifo_max_event_count;
-+
- 	/* Table of known available frequencies : 0, Min and Max in mHz */
- 	int frequencies[3];
- };
+ ring_handler_end:
+ 	sensorhub->fifo_timestamp[CROS_EC_SENSOR_LAST_TS] = current_timestamp;
 -- 
 2.23.0.866.gb869b98d4c-goog
 
