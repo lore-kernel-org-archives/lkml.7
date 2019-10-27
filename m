@@ -2,114 +2,83 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606DACA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FD8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345B521850
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:40:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572154836;
-	bh=OCCaBp16e3xCiP3x2aFhaCuEsNQYB+FJTD6/O6dDB/0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DVNdfIh7weiKpFYiyhzj8ESq6xNYtITH+kwJsQ1COUXj/R4f+lg6wNym2gewiUT1v
-	 zLKGbLyL0LgfgOu6O7vP3hzcr8/l1OZGnzV0a5LFc/0CIvLnr/jf5LKzZdcTupZ7H/
-	 +JjMy4YaJLOVqNzc392Bq9nam+noLgzC+xmrXEEU=
+	by mail.kernel.org (Postfix) with ESMTP id A67D32070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfJ0Fkf (ORCPT
+        id S1726137AbfJ0FsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 01:40:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfJ0Fkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 01:40:35 -0400
-Received: from localhost (mobile-166-176-122-39.mycingular.net [166.176.122.39])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C453A214AF;
-        Sun, 27 Oct 2019 05:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572154834;
-        bh=OCCaBp16e3xCiP3x2aFhaCuEsNQYB+FJTD6/O6dDB/0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yxH8TJGIoLm8wYTgCeKTBsSzrMCNYZtdpVl78uoG3QcgwxdsipVakls+pltc//hRR
-         EfB3w4q/uKAvewT5GJBKFCLDXsAAlVgA5KEi3AmLeKQjQSdC2KO21jCGdcMhugN2OS
-         O8ElmD2lJIsnPKC5R724gktVczIZkWodm5i+df34=
-Date:   Sun, 27 Oct 2019 00:40:32 -0500
-From:   Andy Gross <agross@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-cheza: delete zap-shader
-Message-ID: <20191027054032.GI5514@hector.lan>
-Mail-Followup-To: Doug Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191025212106.2657-1-robdclark@gmail.com>
- <CAD=FV=VqNpttUXQZ7KUd1ahsDrxST9BVoy9NXCM+xhQb9aRb1A@mail.gmail.com>
+        Sun, 27 Oct 2019 01:48:17 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:13490 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725935AbfJ0FsR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 01:48:17 -0400
+X-IronPort-AV: E=Sophos;i="5.68,235,1569276000"; 
+   d="scan'208";a="408548235"
+Received: from ip-121.net-89-2-166.rev.numericable.fr (HELO hadrien) ([89.2.166.121])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 06:47:55 +0100
+Date:   Sun, 27 Oct 2019 06:47:55 +0100 (CET)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Joe Perches <joe@perches.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <error27@gmail.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] kernel: sys.c: Avoid copying possible padding bytes in
+ copy_to_user
+In-Reply-To: <dfa331c00881d61c8ee51577a082d8bebd61805c.camel@perches.com>
+Message-ID: <alpine.DEB.2.21.1910270644590.3186@hadrien>
+References: <dfa331c00881d61c8ee51577a082d8bebd61805c.camel@perches.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=VqNpttUXQZ7KUd1ahsDrxST9BVoy9NXCM+xhQb9aRb1A@mail.gmail.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 02:28:22PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Oct 25, 2019 at 2:23 PM Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > This is unused on cheza.  Delete the node to get ride of the reserved-
-> > memory section, and to avoid the driver from attempting to load a zap
-> > shader that doesn't exist every time it powers up the GPU.
-> >
-> > (This also avoids a massive amount of dmesg spam about missing zap fw.)
-> 
-> optional nit: maybe when this is applied Bjorn / Andy can put in the
-> actual error message to make this easier to find if anyone is seeing
-> this problem.  Specifically:
-> 
->   msm ae00000.mdss: [drm:adreno_request_fw] *ERROR* failed to load
-> qcom/a630_zap.mdt: -2
->   adreno 5000000.gpu: [drm:adreno_zap_shader_load] *ERROR* Unable to
-> load a630_zap.mdt
-> 
-> 
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > Cc: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
-> >  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> I probably would have put it in two patches (one for sdm845.dtsi and
-> one for cheza) but that's more because I'm obsessive-compulsive than
-> for any real reason.  ;-)  In any case:
-> 
-> Fixes: 3fdeaee951aa ("arm64: dts: sdm845: Add zap shader region for GPU")
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Tested-by: Douglas Anderson <dianders@chromium.org>
 
-Applied this patch and added in the dmesg error messages.
 
-Andy
+On Sat, 26 Oct 2019, Joe Perches wrote:
+
+> Initialization is not guaranteed to zero padding bytes so
+> use an explicit memset instead to avoid leaking any kernel
+> content in any possible padding bytes.
+
+Here is an extract of an email that I sent to Kees at one point that left
+me unsure about what should be done about these situations:
+
+From Kees:
+
+    The only way to correctly handle this is:
+
+    memset(&instance, 0, sizeof(instance));
+    instance.one = 1;
+
+From me:
+
+Actually, this document:
+
+https://wiki.sei.cmu.edu/confluence/display/c/DCL39-C.+Avoid+information+leakage+when+passing+a+structure+across+a+trust+boundary
+
+says that memset is a "noncompliant solution".  They suggest declaring the
+structure as packed, as well as some other more unpleasant solutions.
+Their point is that 1 will be sitting in a register, and the assignment at
+least might copy the upper bytes of the register into the padding space.
+
+-------------------------
+
+Is the memset solution nevertheless what is always wanted in the kernel
+when there is padding?
+
+thanks,
+julia
