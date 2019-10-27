@@ -2,169 +2,151 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E453C47E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DE3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D554E20873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DFD20650
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="U4eHsFpH"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="QCMlP2Di"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfJ0Tvi (ORCPT
+        id S1727528AbfJ0T4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 15:51:38 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35745 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfJ0Tvh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 15:51:37 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c8so5055973pgb.2
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 12:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=cQSTfOLjfDbfxLSX98qKnRcVqxW4gsyw1IBc/12j3FI=;
-        b=U4eHsFpHVC6NVLadllfJVPTF1zI0tOLco2eoKyzSK8fABH++iKb6gPej7PtopTHYlE
-         wJObJdvVa3R7V9x6nzgxFzs4mqZiAHSAooA2oKrVfvP5pYVRDti2bw6OHpzyX0hNWFjn
-         h1rShHBE7NrVt5QaZYCQKtCHZJKHKP8YUj8UtApQfEWNs0bxfHVO5OJFon+kRiKAq0az
-         8BQRf63rNz4bXSxSo8D+J2CoFuJCGlN6/49cjWwX354fIQs3hIE7QcKLiJ69+XjYs++Y
-         H9cn+tqokIYys0Y71DK1Mi/oWF+fQO78y76kFgklThn9smSdtRo7j50lP5bSPIAb4qJv
-         /o4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cQSTfOLjfDbfxLSX98qKnRcVqxW4gsyw1IBc/12j3FI=;
-        b=YxfUkd3TPMp5SFZxPjAtQZNN+dfyy278++wSZr6kYgQvmAUmJ2l2ytv7yFdV9K+HFy
-         FurbQWOmA/nHvGgLAD44JbDUjgNPwu4KuAP4oqVUymDadUMWBnzr3O0rTmv+aOdWXbkp
-         4HhjFjKjzzV+bg4X3r9i3b7tke26uAKwFjsUHy0Kx6+y9jqXJnUeXWdz6lemv+jmxCAA
-         XvVZRCiyQfg4UA21BAubNn6MW0QKBPmpSTF5xJjTIaoV1S27vrrxLjxe5IdsJWfRd1i0
-         q4Js4dN0YPpP8vywJbJmst5y9mNFGU/ZsG4DA4/W2icc0sz/yCgZWDpo547D8NT5YE++
-         ej9Q==
-X-Gm-Message-State: APjAAAVeG3St2GNCAZw1ailHw0QENfMIe49A330cOrtbwuAlsOXNVKp2
-        8rNnNl+c6sTE3GVWwNHAzn+dqIctwctKCQ==
-X-Google-Smtp-Source: APXvYqyD5wGiykhjuXfco548VRffM9nDrUsNeXenPdMnRTu5PuNUPCa6AcUKF10DHLKDe0+cgpZWrQ==
-X-Received: by 2002:a17:90a:62cc:: with SMTP id k12mr18797564pjs.142.1572205896221;
-        Sun, 27 Oct 2019 12:51:36 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id u36sm10075598pgn.29.2019.10.27.12.51.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 27 Oct 2019 12:51:35 -0700 (PDT)
-Subject: Re: [PATCH 0/2][for-next] cleanup submission path
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1572189860.git.asml.silence@gmail.com>
- <666ed447-ba8f-29e7-237f-de8044aa63ea@kernel.dk>
- <5ec9bd14-d8f2-32e6-7f25-0ca7256c408a@gmail.com>
- <aac65fe2-6c51-3baf-eee7-af5a8f633bf2@kernel.dk>
- <d39a878f-9dac-1457-6bba-01afc6268a84@kernel.dk>
- <57db9960-0b31-9f40-c13b-1db6dcc88920@gmail.com>
- <02a25d12-1f44-de18-f233-b5421c608469@kernel.dk>
- <63f93f8a-4207-3ac4-a301-4907882009c9@gmail.com>
- <728dec9c-465c-2341-d7b5-929a50400e9c@kernel.dk>
- <3b8b84d0-cde2-6bb0-c903-a1d71f9b83e2@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3957148b-0dac-a621-8f12-5d2d45557e24@kernel.dk>
-Date:   Sun, 27 Oct 2019 13:51:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 27 Oct 2019 15:56:06 -0400
+Received: from mout.web.de ([212.227.15.4]:45547 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726444AbfJ0T4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 15:56:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1572206151;
+        bh=S+5gyOKr+ARwNkrg4UcLgqHG0pbtbH+v/M3v0ME89SU=;
+        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
+        b=QCMlP2DiqqfV1dHknpr7q4shXkfzMhxxrnOlLBv3WEsZuel6wC6izkjrzbo/IEq/r
+         HFXWNL7aL/X8QSt71+GjyTW5cZrz6ghaN0IENM6O41OWKe4GTzVVARJCQuiFLtmCof
+         AJ1NWyB4dfDgVuZ2vbgAm89senGrw1IFO6lnVyO4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.56.174]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LmxtE-1hmAVX0PTo-00h5Aa; Sun, 27
+ Oct 2019 20:55:51 +0100
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Eric Anholt <eric@anholt.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <20191027173234.6449-1-navid.emamdoost@gmail.com>
+Subject: Re: [PATCH] drm/tinydrm: Fix memroy leak in hx8357d_probe
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        dri-devel@lists.freedesktop.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <85cb5ed9-66ba-3461-dd56-017b89ba70ce@web.de>
+Date:   Sun, 27 Oct 2019 20:55:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <3b8b84d0-cde2-6bb0-c903-a1d71f9b83e2@gmail.com>
+In-Reply-To: <20191027173234.6449-1-navid.emamdoost@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:V7MW5M8iAruKle95RqhSpVNYxM9qFqhKA4pmswLNyMDELGYxjx2
+ vcslc4aHozqIpNn9WRRABQUfhBvsqUyFfQt2tWvRy3VfeMY3mESF+1I+7QRXu9DqW7ifDu4
+ LtylbbROrEJFOHAm3I3YtR2dUL87ISo5a5N042i2cOCIPiu3hskW2qzCbvrhWAmLK1aMBma
+ aZB/6u+bLCo/OGWaEL5+g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lnrwGZG8EFg=:EoMYcfpeB0JPMDFX4gA8Sg
+ moZvoe8BLN7e1FyVYeaozS6VOCup6q8cnrKKuOf1lgmqFZxIHXfU5QDB3x6F7mn7XJqmoCObO
+ XbR8SwcIQWN68OvT3P4gesbbJTA5VROQu7AsR56G4jIYYSPvmHoSNTiWtBy11kRQZ/PWN8f5a
+ kSjE3P1rZCjjl8ZC6nr4YBG0ZDzksj1sEdtB++DSPZmkEYOzg6sTlWbwVED5IOO2xck5PvYYW
+ AjzQBvik3gFv+uF3/q8f2zJHQJdGQ/1uU3fY1gjVefNjR0r/I9iAwG8JTIF+t+dosC0YVqtWY
+ jNOjV4gCB0ScYC1De66Mca1NWtcYzqmWP8WCJ3PmzbDI1ccS4xfRjUvo9TrQ/LssrEoly+kJh
+ SFN4BmJyQBnVykdfZprk4YIuzcjZuiud6F0qUppnrgWRE+cayIPX/CbtOjONeC8LPhuDVoSjD
+ najC84MbQphp/W5ycTLoeg95uP5FyIloKYYvVtsfb8HizoljK7Y3qCZ6AtRPU90Dv8+fPEvzm
+ pVftWrHGwhlpZcn5grCSnFNxQHtrN/jySz/B1gb8+MA3hqhMZmQIJK3Tk0eFq1ckrMdJBxwya
+ ME49rXbrvCZtHGHObpNxL9NNLFvceZYhUudRmDesR3s3s0OfOGXjt4bXif3qy4fzMOEgR3g/V
+ nfbQI89B+Vl4d/EMoW42ZhvHJvUVo6JyHuDez2L08m2kiHnvaldaZn+BvjFkunZRlETKlQB7X
+ OtmMw79XfIaRP9V0VOi82rzJQ+ivpQhNyaY57mmBHKG0FygPq+QkiRp08lwTeK3DbGvNLUXgG
+ 32iO174qK+RyaQ1dsa3ZovzzO4UqyA2EUw+1KanyXYIopB8WLDbXO3eYT+8zPikMP6shx6ST2
+ S6Uc2rbCsncEVqrAkABswMcE1R4QgUEYf97LtPe16koRk2Z5fqnZtwVJP9AoimROb+9v8LK+e
+ HFL7/1pr3W+W2OT/Auz9PUozEGOn6mAz4f2Qp/SipXSBMr78NdBLNSxarmUK+uNawgS8lMhE2
+ cgh6aDPQzhg1iD6uxE4xDaQ0VEqCernhtG88vFtTYraEoLUISMtAsmwTVgJBTJvFFGDgXhvX9
+ J9umttKUYl21gs2GfX20f1oD3W0O6Qq6a2wmGXUJngVH5sL2vUJ/bcyIsauVRoKDAhbEQ1+0O
+ Az5wfOEgAGRwlS3V4sYnBUEcaEPyhBmtQt1U5hqZKjqxYtf9jIi+FS67q66DwMc/tJyhuncRB
+ 4mw5gdK9RtfCezryCOuGS2T2QAp5+5T0qyWbSG9BpzmpYmkeBIKev306pOFI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/27/19 1:17 PM, Pavel Begunkov wrote:
-> On 27/10/2019 22:02, Jens Axboe wrote:
->> On 10/27/19 12:56 PM, Pavel Begunkov wrote:
->>> On 27/10/2019 20:26, Jens Axboe wrote:
->>>> On 10/27/19 11:19 AM, Pavel Begunkov wrote:
->>>>> On 27/10/2019 19:56, Jens Axboe wrote:
->>>>>> On 10/27/19 10:49 AM, Jens Axboe wrote:
->>>>>>> On 10/27/19 10:44 AM, Pavel Begunkov wrote:
->>>>>>>> On 27/10/2019 19:32, Jens Axboe wrote:
->>>>>>>>> On 10/27/19 9:35 AM, Pavel Begunkov wrote:
->>>>>>>>>> A small cleanup of very similar but diverged io_submit_sqes() and
->>>>>>>>>> io_ring_submit()
->>>>>>>>>>
->>>>>>>>>> Pavel Begunkov (2):
->>>>>>>>>>         io_uring: handle mm_fault outside of submission
->>>>>>>>>>         io_uring: merge io_submit_sqes and io_ring_submit
->>>>>>>>>>
->>>>>>>>>>        fs/io_uring.c | 116 ++++++++++++++------------------------------------
->>>>>>>>>>        1 file changed, 33 insertions(+), 83 deletions(-)
->>>>>>>>>
->>>>>>>>> I like the cleanups here, but one thing that seems off is the
->>>>>>>>> assumption that io_sq_thread() always needs to grab the mm. If
->>>>>>>>> the sqes processed are just READ/WRITE_FIXED, then it never needs
->>>>>>>>> to grab the mm.
->>>>>>>>> Yeah, we removed it to fix bugs. Personally, I think it would be
->>>>>>>> clearer to do lazy grabbing conditionally, rather than have two
->>>>>>>> functions. And in this case it's easier to do after merging.
->>>>>>>>
->>>>>>>> Do you prefer to return it back first?
->>>>>>>
->>>>>>> Ah I see, no I don't care about that.
->>>>>>
->>>>>> OK, looked at the post-patches state. It's still not correct. You are
->>>>>> grabbing the mm from io_sq_thread() unconditionally. We should not do
->>>>>> that, only if the sqes we need to submit need mm context.
->>>>>>
->>>>> That's what my question to the fix was about :)
->>>>> 1. Then, what the case it could fail?
->>>>> 2. Is it ok to hold it while polling? It could keep it for quite
->>>>> a long time if host is swift, e.g. submit->poll->submit->poll-> ...
->>>>>
->>>>> Anyway, I will add it back and resend the patchset.
->>>>
->>>> If possible in a simple way, I'd prefer if we do it as a prep patch and
->>>> then queue that up for 5.4 since we now lost that optimization.  Then
->>>> layer the other 2 on top of that, since I'll just rebase the 5.5 stuff
->>>> on top of that.
->>>>
->>>> If not trivially possible for 5.4, then we'll just have to leave with it
->>>> in that release. For that case, you can fold the change in with these
->>>> two patches.
->>>>
->>> Hmm, what's the semantics? I think we should fail only those who need
->>> mm, but can't get it. The alternative is to fail all subsequent after
->>> the first mm_fault.
->>
->> For the sqthread setup, there's no notion of "do this many". It just
->> grabs whatever it can and issues it. This means that the mm assign
->> is really per-sqe. What we did before, with the batching, just optimized
->> it so we'd only grab it for one batch IFF at least one sqe in that batch
->> needed the mm.
->>
->> Since you've killed the batching, I think the logic should be something
->> ala:
->>
->> if (io_sqe_needs_user(sqe) && !cur_mm)) {
->> 	if (already_attempted_mmget_and_failed_ {
->> 		-EFAULT end sqe
->> 	} else {
->> 		do mm_get and mmuse dance
->> 	}
->> }
->>
->> Hence if the sqe doesn't need the mm, doesn't matter if we previously
->> failed. If we need the mm and previously failed, -EFAULT.
->>
-> That makes sense, but a bit hard to implement honoring links and drains
+=E2=80=A6
+> +++ b/drivers/gpu/drm/tiny/hx8357d.c
+> @@ -232,44 +232,49 @@ static int hx8357d_probe(struct spi_device *spi)
+=E2=80=A6
+> +		goto free_dbidev;
+>
+>  	spi_set_drvdata(spi, drm);
 
-If it becomes too complicated or convoluted, just drop it. It's not
-worth spending that much time on.
+I got another development concern here.
+Can it make sense to pass the variable =E2=80=9Cdbidev=E2=80=9D instead of=
+ =E2=80=9Cdrm=E2=80=9D?
 
--- 
-Jens Axboe
 
+=E2=80=A6
+> +free_dbidev:
+> +	kfree(dbidev);
+=E2=80=A6
+
+I became curious if there is a need for such a memory release at another p=
+lace.
+How do you think about to add this function call also to the implementatio=
+n
+of the function =E2=80=9Chx8357d_remove=E2=80=9D?
+
+Regards,
+Markus
