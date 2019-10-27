@@ -4,48 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD86CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EC6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C45205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7147D208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210950;
-	bh=l+06AWxAeKb0gTOn8VVy4toEMu+SKlfr9RViXwvIcXU=;
+	s=default; t=1572210955;
+	bh=5bYkzf0cOA1DnTlb6MM2s3nSpeMQETLnobPhmKDtXlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q1uzThMhnMkF+e8FqMUj5wr8MfkoQLEAmUtHl9s4+uEctTaopW2jw1hLxT/iKjuGM
-	 8RDi2TMUyaYRnvUcOcLRgPFjguhyZFGX7nvOuESSlp037eB+U24m43iFJVfe98txBW
-	 9vIU+YLRb3QtYcl4eHb8veKFXRlogM/gUOw/5T5A=
+	b=o1myO0ceU1bbPeUYyK49IwqVQNZ+PWDystof+NrxqI81hBCBM+iAyQeb4NCqjPxe6
+	 tHpY9UgMUKYK4L032NltLsYjScZpH5x+tAFQ9QJNP5264ayFbk2H1ugqKm0dNLWuUY
+	 fysOMErJILFMb2L2iEuP1qjQ/XxQ07gIAcFN89Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730709AbfJ0VPt (ORCPT
+        id S1730735AbfJ0VPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:15:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35226 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:15:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730692AbfJ0VPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:15:46 -0400
+        id S1730718AbfJ0VPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:15:52 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C4A205C9;
-        Sun, 27 Oct 2019 21:15:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 685C920717;
+        Sun, 27 Oct 2019 21:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210946;
-        bh=l+06AWxAeKb0gTOn8VVy4toEMu+SKlfr9RViXwvIcXU=;
+        s=default; t=1572210952;
+        bh=5bYkzf0cOA1DnTlb6MM2s3nSpeMQETLnobPhmKDtXlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YEck0PmjYPMKyKkc2pTL3TELRkeEKR8w67Xs+5iAmRKjyEVBrZHgwkPxEDR+oKKNs
-         Myf5bGxMWf1VmvvhkGbuP0y6xZ/c04GatYtKkHm7wpQFqevYNhHNbTlSrxQQpqvO1T
-         oxDlagj9uKw+bD3quQUG/YE0LB9T8ZVDd3tygo+I=
+        b=TW18KZMRhG3/qMSQkI5O3hS5BRah9IJmrgfjA5ksW1QnkuGllQZ32CIpiBKilGPY1
+         CItYhFTcXChp2XzadaAUyPjGwFMIalZhFd0QAd1D35ZQ3XLb2XPs4rLy/Wcv0WpNsL
+         rLT0rUnFfDMXpAjKxMcFLcJ07YefNNlq2WVm7QBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 4.19 70/93] xtensa: drop EXPORT_SYMBOL for outs*/ins*
-Date:   Sun, 27 Oct 2019 22:01:22 +0100
-Message-Id: <20191027203308.882299914@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robert Richter <rrichter@marvell.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [PATCH 4.19 72/93] EDAC/ghes: Fix Use after free in ghes_edac remove path
+Date:   Sun, 27 Oct 2019 22:01:24 +0100
+Message-Id: <20191027203309.714870582@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -58,46 +64,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: James Morse <james.morse@arm.com>
 
-commit 8b39da985194aac2998dd9e3a22d00b596cebf1e upstream.
+commit 1e72e673b9d102ff2e8333e74b3308d012ddf75b upstream.
 
-Custom outs*/ins* implementations are long gone from the xtensa port,
-remove matching EXPORT_SYMBOLs.
-This fixes the following build warnings issued by modpost since commit
-15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions"):
+ghes_edac models a single logical memory controller, and uses a global
+ghes_init variable to ensure only the first ghes_edac_register() will
+do anything.
 
-  WARNING: "insb" [vmlinux] is a static EXPORT_SYMBOL
-  WARNING: "insw" [vmlinux] is a static EXPORT_SYMBOL
-  WARNING: "insl" [vmlinux] is a static EXPORT_SYMBOL
-  WARNING: "outsb" [vmlinux] is a static EXPORT_SYMBOL
-  WARNING: "outsw" [vmlinux] is a static EXPORT_SYMBOL
-  WARNING: "outsl" [vmlinux] is a static EXPORT_SYMBOL
+ghes_edac is registered the first time a GHES entry in the HEST is
+probed. There may be multiple entries, so subsequent attempts to
+register ghes_edac are silently ignored as the work has already been
+done.
 
-Cc: stable@vger.kernel.org
-Fixes: d38efc1f150f ("xtensa: adopt generic io routines")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+When a GHES entry is unregistered, it calls ghes_edac_unregister(),
+which free()s the memory behind the global variables in ghes_edac.
+
+But there may be multiple GHES entries, the next call to
+ghes_edac_unregister() will dereference the free()d memory, and attempt
+to free it a second time.
+
+This may also be triggered on a platform with one GHES entry, if the
+driver is unbound/re-bound and unbound. The re-bind step will do
+nothing because of ghes_init, the second unbind will then do the same
+work as the first.
+
+Doing the unregister work on the first call is unsafe, as another
+CPU may be processing a notification in ghes_edac_report_mem_error(),
+using the memory we are about to free.
+
+ghes_init is already half of the reference counting. We only need
+to do the register work for the first call, and the unregister work
+for the last. Add the unregister check.
+
+This means we no longer free ghes_edac's memory while there are
+GHES entries that may receive a notification.
+
+This was detected by KASAN and DEBUG_TEST_DRIVER_REMOVE.
+
+ [ bp: merge into a single patch. ]
+
+Fixes: 0fe5f281f749 ("EDAC, ghes: Model a single, logical memory controller")
+Reported-by: John Garry <john.garry@huawei.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Robert Richter <rrichter@marvell.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20191014171919.85044-2-james.morse@arm.com
+Link: https://lkml.kernel.org/r/304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/xtensa/kernel/xtensa_ksyms.c |    7 -------
- 1 file changed, 7 deletions(-)
+ drivers/edac/ghes_edac.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/xtensa/kernel/xtensa_ksyms.c
-+++ b/arch/xtensa/kernel/xtensa_ksyms.c
-@@ -119,13 +119,6 @@ EXPORT_SYMBOL(__invalidate_icache_range)
- // FIXME EXPORT_SYMBOL(screen_info);
- #endif
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -532,7 +532,11 @@ void ghes_edac_unregister(struct ghes *g
+ 	if (!ghes_pvt)
+ 		return;
  
--EXPORT_SYMBOL(outsb);
--EXPORT_SYMBOL(outsw);
--EXPORT_SYMBOL(outsl);
--EXPORT_SYMBOL(insb);
--EXPORT_SYMBOL(insw);
--EXPORT_SYMBOL(insl);
--
- extern long common_exception_return;
- EXPORT_SYMBOL(common_exception_return);
- 
++	if (atomic_dec_return(&ghes_init))
++		return;
++
+ 	mci = ghes_pvt->mci;
++	ghes_pvt = NULL;
+ 	edac_mc_del_mc(mci->pdev);
+ 	edac_mc_free(mci);
+ }
 
 
