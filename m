@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560E6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FC4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243C521848
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C898D21783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211473;
-	bh=ducbvbvTebvGptEQe/6xKp5AEyQgn3Bc0/DQdWbjwVY=;
+	s=default; t=1572211476;
+	bh=+9jZZGeI7w6970cSzL2GnY+5H/WDdvxEd0GZbvc3oaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LsVmaMTEDz5UvXr7Pmyyf//cA2HVqTME+EopAXjP+4796b8lAKWHkQEHRGYLKRdWF
-	 gCCYaR9LzCniELq6VUi7aVvQxxvugqghIwTCQa7znHRmw0ah+V09HHsLSzIsMy0fs0
-	 e0vVfyYTTpfKzMkBMciCm88JTPStVdPLIqGGd1X4=
+	b=g2LvEi3307+ZkLKNciVxeNIjhdvPwGQgTkFYEaak8i15b4nCo24hVLe/gx7l95p+p
+	 4FlccE95WBDvNC0EXi/YnhA6aXv+TF/VGpnRXHGmU6YX1NsVvPYRTk27MTaBz7MH0L
+	 O8Eg9C2OvTW43L03gKvzW5QvM4ulpGoOeHU44fBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732536AbfJ0VYb (ORCPT
+        id S1732547AbfJ0VYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:24:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46106 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:24:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732524AbfJ0VY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:24:29 -0400
+        id S1732534AbfJ0VYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:24:32 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C9F521848;
-        Sun, 27 Oct 2019 21:24:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8BCC21783;
+        Sun, 27 Oct 2019 21:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211468;
-        bh=ducbvbvTebvGptEQe/6xKp5AEyQgn3Bc0/DQdWbjwVY=;
+        s=default; t=1572211471;
+        bh=+9jZZGeI7w6970cSzL2GnY+5H/WDdvxEd0GZbvc3oaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wOiZoxwKEsxRVSZTjTOmDVrPfr3Ccaeb4/NfrntDLWPz1OF4pc50GoPpW2gqQGSJ5
-         Z7EYcDoiUlBmpbKrJsPH3r3IAfjPLqOblS9E+JRCA3c1802xKoN721Ofq+0svsSSx/
-         qpuoejKqjE5XJQAF7vgGGlSFROy/IklwtRbpyO+U=
+        b=ChvKMzfBeWdcS63/aRH0G2THLmFDINW5sFUObdsrITpuxpvTpA6GizIBeVnUN3ltU
+         SUf9Y1JNrWKzctjxyVrDC8E5NxVwbd6xmp/tWvcoKZlfyTSXpX3eYws8qko41HiBU7
+         i6h0hQKyPsEy5WLe2H8cKraWAuKIN/1XJClLSS8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philip Yang <Philip.Yang@amd.com>,
-        Joe Barnett <thejoe@gmail.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.3 135/197] drm/amdgpu: user pages array memory leak fix
-Date:   Sun, 27 Oct 2019 22:00:53 +0100
-Message-Id: <20191027203359.001669494@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robert Richter <rrichter@marvell.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [PATCH 5.3 162/197] EDAC/ghes: Fix Use after free in ghes_edac remove path
+Date:   Sun, 27 Oct 2019 22:01:20 +0100
+Message-Id: <20191027203402.547589321@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -62,63 +64,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philip Yang <Philip.Yang@amd.com>
+From: James Morse <james.morse@arm.com>
 
-commit 209620b422945ee03cebb03f726e706d537b692d upstream.
+commit 1e72e673b9d102ff2e8333e74b3308d012ddf75b upstream.
 
-user_pages array should always be freed after validation regardless if
-user pages are changed after bo is created because with HMM change parse
-bo always allocate user pages array to get user pages for userptr bo.
+ghes_edac models a single logical memory controller, and uses a global
+ghes_init variable to ensure only the first ghes_edac_register() will
+do anything.
 
-v2: remove unused local variable and amend commit
+ghes_edac is registered the first time a GHES entry in the HEST is
+probed. There may be multiple entries, so subsequent attempts to
+register ghes_edac are silently ignored as the work has already been
+done.
 
-v3: add back get user pages in gem_userptr_ioctl, to detect application
-bug where an userptr VMA is not ananymous memory and reject it.
+When a GHES entry is unregistered, it calls ghes_edac_unregister(),
+which free()s the memory behind the global variables in ghes_edac.
 
-Bugzilla: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1844962
+But there may be multiple GHES entries, the next call to
+ghes_edac_unregister() will dereference the free()d memory, and attempt
+to free it a second time.
 
-Signed-off-by: Philip Yang <Philip.Yang@amd.com>
-Tested-by: Joe Barnett <thejoe@gmail.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org # 5.3
+This may also be triggered on a platform with one GHES entry, if the
+driver is unbound/re-bound and unbound. The re-bind step will do
+nothing because of ghes_init, the second unbind will then do the same
+work as the first.
+
+Doing the unregister work on the first call is unsafe, as another
+CPU may be processing a notification in ghes_edac_report_mem_error(),
+using the memory we are about to free.
+
+ghes_init is already half of the reference counting. We only need
+to do the register work for the first call, and the unregister work
+for the last. Add the unregister check.
+
+This means we no longer free ghes_edac's memory while there are
+GHES entries that may receive a notification.
+
+This was detected by KASAN and DEBUG_TEST_DRIVER_REMOVE.
+
+ [ bp: merge into a single patch. ]
+
+Fixes: 0fe5f281f749 ("EDAC, ghes: Model a single, logical memory controller")
+Reported-by: John Garry <john.garry@huawei.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Robert Richter <rrichter@marvell.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20191014171919.85044-2-james.morse@arm.com
+Link: https://lkml.kernel.org/r/304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c |    8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/edac/ghes_edac.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-@@ -536,7 +536,6 @@ static int amdgpu_cs_list_validate(struc
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -553,7 +553,11 @@ void ghes_edac_unregister(struct ghes *g
+ 	if (!ghes_pvt)
+ 		return;
  
- 	list_for_each_entry(lobj, validated, tv.head) {
- 		struct amdgpu_bo *bo = ttm_to_amdgpu_bo(lobj->tv.bo);
--		bool binding_userptr = false;
- 		struct mm_struct *usermm;
- 
- 		usermm = amdgpu_ttm_tt_get_usermm(bo->tbo.ttm);
-@@ -553,7 +552,6 @@ static int amdgpu_cs_list_validate(struc
- 
- 			amdgpu_ttm_tt_set_user_pages(bo->tbo.ttm,
- 						     lobj->user_pages);
--			binding_userptr = true;
- 		}
- 
- 		if (p->evictable == lobj)
-@@ -563,10 +561,8 @@ static int amdgpu_cs_list_validate(struc
- 		if (r)
- 			return r;
- 
--		if (binding_userptr) {
--			kvfree(lobj->user_pages);
--			lobj->user_pages = NULL;
--		}
-+		kvfree(lobj->user_pages);
-+		lobj->user_pages = NULL;
- 	}
- 	return 0;
++	if (atomic_dec_return(&ghes_init))
++		return;
++
+ 	mci = ghes_pvt->mci;
++	ghes_pvt = NULL;
+ 	edac_mc_del_mc(mci->pdev);
+ 	edac_mc_free(mci);
  }
 
 
