@@ -4,57 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E57CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBA3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57CAF20873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F52A20B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210154;
-	bh=nQzPg6Cjllqir6rtER6d5XGo+HSHjtmHJ9eSyOdluEg=;
+	s=default; t=1572210160;
+	bh=yJSJj+ITuIJKMs7+vc2CHCVTSpYCGIZ3tQbBjXT/Olk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IRXMxgyTiSASzp/boamKB2sQ1zrKpKiIr6nOGDgecJjbbd0rESxNsHon5YPPN2COL
-	 wszNZVb+hBZNIUbAhk5shTILk0DxFAsGM+IPWSFtMtDQe5naYpMjvx8W4iw7A2iZ5I
-	 p3i84LYps5yVEt/GwpiX4acYqIxYFA2pHYtgurko=
+	b=dWnWNHYtCilpTD3JRA4bt3TzlnaWgLu9RpdO8lnSUcGIhxbE1S6+6bG1kfHTIKJTQ
+	 D80UJjBr73GpY10S9SzkeBG8VYrWktYynfWhA+nU0g+s0Snj/guK5lsMZ8eg56P9Ip
+	 JFYGarGkktBdl6K6zS+LPYfAFVBjmt4p/ztvVSjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfJ0VCd (ORCPT
+        id S1728091AbfJ0VCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:02:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47572 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbfJ0VCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:02:33 -0400
+        id S1727099AbfJ0VCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:02:37 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94BE92064A;
-        Sun, 27 Oct 2019 21:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7442D208C0;
+        Sun, 27 Oct 2019 21:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210152;
-        bh=nQzPg6Cjllqir6rtER6d5XGo+HSHjtmHJ9eSyOdluEg=;
+        s=default; t=1572210155;
+        bh=yJSJj+ITuIJKMs7+vc2CHCVTSpYCGIZ3tQbBjXT/Olk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hLSEs8YjoZY4VM/GLqYll3Z/yTPx1Y7oNuER/tnEObhB1e//4jhDfkBxtYHA2HiQc
-         /ETrnPyozXkcsJQplRq/YORj6qhEcjDzw0GJjLJQS8VWuKfBQhsrDWrncYl0zhRu7Z
-         Dyi0SMBvVQGeC9tlwAxHefLnsuJR7kZtiyp7v2gA=
+        b=bPdlCma7AuZ+pgwjp1tYLFrFWYMcZtdmPj8QixgX61VKzNBCk6sa+rW27rjFLhaBc
+         1BmNzAtJDLngTjVxEM+c2qzzrqGEdh9yX+Nh2qu4H0W4drSx/gJCtHUf2byKPycNKG
+         cp2YKG1erVbYOLuvUGcO4l0p02Js6GHJWRvf7K5E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Yunqiang Su <ysu@wavecomp.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/41] scsi: ufs: skip shutdown if hba is not powered
-Date:   Sun, 27 Oct 2019 22:00:39 +0100
-Message-Id: <20191027203059.889159814@linuxfoundation.org>
+Subject: [PATCH 4.4 10/41] MIPS: Treat Loongson Extensions as ASEs
+Date:   Sun, 27 Oct 2019 22:00:48 +0100
+Message-Id: <20191027203108.485466107@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
 References: <20191027203056.220821342@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,44 +62,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit f51913eef23f74c3bd07899dc7f1ed6df9e521d8 ]
+[ Upstream commit d2f965549006acb865c4638f1f030ebcefdc71f6 ]
 
-In some cases, hba may go through shutdown flow without successful
-initialization and then make system hang.
+Recently, binutils had split Loongson-3 Extensions into four ASEs:
+MMI, CAM, EXT, EXT2. This patch do the samething in kernel and expose
+them in cpuinfo so applications can probe supported ASEs at runtime.
 
-For example, if ufshcd_change_power_mode() gets error and leads to
-ufshcd_hba_exit() to release resources of the host, future shutdown flow
-may hang the system since the host register will be accessed in unpowered
-state.
-
-To solve this issue, simply add checking to skip shutdown for above kind of
-situation.
-
-Link: https://lore.kernel.org/r/1568780438-28753-1-git-send-email-stanley.chu@mediatek.com
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Acked-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Yunqiang Su <ysu@wavecomp.com>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/mips/include/asm/cpu-features.h | 8 ++++++++
+ arch/mips/include/asm/cpu.h          | 2 ++
+ arch/mips/kernel/cpu-probe.c         | 2 ++
+ arch/mips/kernel/proc.c              | 2 ++
+ 4 files changed, 14 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index fd8bbd2b5d0eb..504d367961528 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -5371,6 +5371,9 @@ int ufshcd_shutdown(struct ufs_hba *hba)
- {
- 	int ret = 0;
+diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
+index d1e04c943f5f7..ff60510357f63 100644
+--- a/arch/mips/include/asm/cpu-features.h
++++ b/arch/mips/include/asm/cpu-features.h
+@@ -307,6 +307,14 @@
+ #define cpu_has_dsp2		(cpu_data[0].ases & MIPS_ASE_DSP2P)
+ #endif
  
-+	if (!hba->is_powered)
-+		goto out;
++#ifndef cpu_has_loongson_mmi
++#define cpu_has_loongson_mmi		__ase(MIPS_ASE_LOONGSON_MMI)
++#endif
 +
- 	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
- 		goto out;
++#ifndef cpu_has_loongson_ext
++#define cpu_has_loongson_ext		__ase(MIPS_ASE_LOONGSON_EXT)
++#endif
++
+ #ifndef cpu_has_mipsmt
+ #define cpu_has_mipsmt		(cpu_data[0].ases & MIPS_ASE_MIPSMT)
+ #endif
+diff --git a/arch/mips/include/asm/cpu.h b/arch/mips/include/asm/cpu.h
+index 82ad15f110492..08cb7a5661d07 100644
+--- a/arch/mips/include/asm/cpu.h
++++ b/arch/mips/include/asm/cpu.h
+@@ -399,5 +399,7 @@ enum cpu_type_enum {
+ #define MIPS_ASE_DSP2P		0x00000040 /* Signal Processing ASE Rev 2 */
+ #define MIPS_ASE_VZ		0x00000080 /* Virtualization ASE */
+ #define MIPS_ASE_MSA		0x00000100 /* MIPS SIMD Architecture */
++#define MIPS_ASE_LOONGSON_MMI	0x00000800 /* Loongson MultiMedia extensions Instructions */
++#define MIPS_ASE_LOONGSON_EXT	0x00002000 /* Loongson EXTensions */
  
+ #endif /* _ASM_CPU_H */
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index 6b9064499bd3d..ee71bda53d4e6 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -1016,6 +1016,7 @@ static inline void cpu_probe_legacy(struct cpuinfo_mips *c, unsigned int cpu)
+ 			__cpu_name[cpu] = "ICT Loongson-3";
+ 			set_elf_platform(cpu, "loongson3a");
+ 			set_isa(c, MIPS_CPU_ISA_M64R1);
++			c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_EXT);
+ 			break;
+ 		case PRID_REV_LOONGSON3B_R1:
+ 		case PRID_REV_LOONGSON3B_R2:
+@@ -1023,6 +1024,7 @@ static inline void cpu_probe_legacy(struct cpuinfo_mips *c, unsigned int cpu)
+ 			__cpu_name[cpu] = "ICT Loongson-3";
+ 			set_elf_platform(cpu, "loongson3b");
+ 			set_isa(c, MIPS_CPU_ISA_M64R1);
++			c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_EXT);
+ 			break;
+ 		}
+ 
+diff --git a/arch/mips/kernel/proc.c b/arch/mips/kernel/proc.c
+index f1fab6ff53e63..33c6cdff2331e 100644
+--- a/arch/mips/kernel/proc.c
++++ b/arch/mips/kernel/proc.c
+@@ -121,6 +121,8 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	if (cpu_has_eva)	seq_printf(m, "%s", " eva");
+ 	if (cpu_has_htw)	seq_printf(m, "%s", " htw");
+ 	if (cpu_has_xpa)	seq_printf(m, "%s", " xpa");
++	if (cpu_has_loongson_mmi)	seq_printf(m, "%s", " loongson-mmi");
++	if (cpu_has_loongson_ext)	seq_printf(m, "%s", " loongson-ext");
+ 	seq_printf(m, "\n");
+ 
+ 	if (cpu_has_mmips) {
 -- 
 2.20.1
 
