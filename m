@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EB9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39E6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8514B20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B1120679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212081;
-	bh=6u/I12k282DOBG2MRmZ69eO1I+TUxQ9KbrQ2nM3A04A=;
+	s=default; t=1572212085;
+	bh=tSqkmqnfXoX2DXObang/oy5lGOvr0Kq+arr3Bk2N6kE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nLNtkcpkNpx//RfW5BuS9ExmqRA3CkRDO3kM6oY3xaw6nZQPlvi2kiYNuagqGFJel
-	 AFUbV5Pxb1odEkbfEhVoJ3DNeeG7fJF1Jxu8nMkb9y+O4bK4GgoajZhqLPrE9jNr/K
-	 N/uKvCFS/lhfPuhqojYuHqCfb70uFr8dv+XWpc1E=
+	b=aDTVnIHqHSQGvPgT0JfJicY4H9Ga5v42p6Rxz6K422tjCATaNFju9CeeI0agtvWBW
+	 jAqYW78d9wJgtjgFYsnDByGQG3u2S/kVtyctnQjc8N6knnaQ4ctqZVZt1dkXKxTRKG
+	 BnHMW3rG/ghP5tXsK3TskhOt68iH9nA74DX9XbFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730987AbfJ0Vej (ORCPT
+        id S1730891AbfJ0Veo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:34:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57016 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728768AbfJ0VKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:10:35 -0400
+        id S1729659AbfJ0VKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:10:20 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6015208C0;
-        Sun, 27 Oct 2019 21:10:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F32920B7C;
+        Sun, 27 Oct 2019 21:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210634;
-        bh=6u/I12k282DOBG2MRmZ69eO1I+TUxQ9KbrQ2nM3A04A=;
+        s=default; t=1572210618;
+        bh=tSqkmqnfXoX2DXObang/oy5lGOvr0Kq+arr3Bk2N6kE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmaSuoRxphQ/N1E5qgVtCIjfEGP62HbCXBwk75POoLT3nzBBSNcCdL2B/teMJcRv+
-         PY8iN2dO7ZO6qkpf44dJEZgqHYVwlRQZ6uhjCTMF2o3OxBDVT1dAsqNxauG9VCrXBW
-         n6mDQMdV4tGkuTFVkKSvsNbSjs5SbzGsW/YH9JhI=
+        b=cyX2DEOCCA+SqZ2oE9aA7WQNhJs9Z42WDet7Qez4AhpC5yebv6rtah3LAgzfNc6jt
+         lYoIGh46LTJzpsAl19CaP9UKv1zMDLx7aZGds9iqrPrNxf3O4GXTh9IJCNz14AOhxM
+         Qosb5DOneHWJTtYDwUpz9gnBvm11bJg+e61Nwc2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Will Deacon <will.deacon@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 082/119] arm64: Force SSBS on context switch
-Date:   Sun, 27 Oct 2019 22:00:59 +0100
-Message-Id: <20191027203345.704836456@linuxfoundation.org>
+Subject: [PATCH 4.14 078/119] arm64: Always enable spectre-v2 vulnerability detection
+Date:   Sun, 27 Oct 2019 22:00:55 +0100
+Message-Id: <20191027203344.153460145@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -60,115 +63,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Jeremy Linton <jeremy.linton@arm.com>
 
-[ Upstream commit cbdf8a189a66001c36007bf0f5c975d0376c5c3a ]
+[ Upstream commit 8c1e3d2bb44cbb998cb28ff9a18f105fee7f1eb3 ]
 
-On a CPU that doesn't support SSBS, PSTATE[12] is RES0.  In a system
-where only some of the CPUs implement SSBS, we end-up losing track of
-the SSBS bit across task migration.
+Ensure we are always able to detect whether or not the CPU is affected
+by Spectre-v2, so that we can later advertise this to userspace.
 
-To address this issue, let's force the SSBS bit on context switch.
-
-Fixes: 8f04e8e6e29c ("arm64: ssbd: Add support for PSTATE.SSBS rather than trapping to EL3")
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-[will: inverted logic and added comments]
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/include/asm/processor.h |   14 ++++++++++++--
- arch/arm64/kernel/process.c        |   29 ++++++++++++++++++++++++++++-
- 2 files changed, 40 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/cpu_errata.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -148,6 +148,16 @@ static inline void start_thread_common(s
- 	regs->pc = pc;
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -76,7 +76,6 @@ cpu_enable_trap_ctr_access(const struct
+ 	config_sctlr_el1(SCTLR_EL1_UCT, 0);
  }
  
-+static inline void set_ssbs_bit(struct pt_regs *regs)
-+{
-+	regs->pstate |= PSR_SSBS_BIT;
-+}
-+
-+static inline void set_compat_ssbs_bit(struct pt_regs *regs)
-+{
-+	regs->pstate |= PSR_AA32_SSBS_BIT;
-+}
-+
- static inline void start_thread(struct pt_regs *regs, unsigned long pc,
- 				unsigned long sp)
- {
-@@ -155,7 +165,7 @@ static inline void start_thread(struct p
- 	regs->pstate = PSR_MODE_EL0t;
+-#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
+ #include <asm/mmu_context.h>
+ #include <asm/cacheflush.h>
  
- 	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
--		regs->pstate |= PSR_SSBS_BIT;
-+		set_ssbs_bit(regs);
+@@ -217,11 +216,11 @@ static int detect_harden_bp_fw(void)
+ 	    ((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR_V1))
+ 		cb = qcom_link_stack_sanitization;
  
- 	regs->sp = sp;
+-	install_bp_hardening_cb(cb, smccc_start, smccc_end);
++	if (IS_ENABLED(CONFIG_HARDEN_BRANCH_PREDICTOR))
++		install_bp_hardening_cb(cb, smccc_start, smccc_end);
+ 
+ 	return 1;
  }
-@@ -174,7 +184,7 @@ static inline void compat_start_thread(s
- #endif
+-#endif	/* CONFIG_HARDEN_BRANCH_PREDICTOR */
  
- 	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
--		regs->pstate |= PSR_AA32_SSBS_BIT;
-+		set_compat_ssbs_bit(regs);
+ DEFINE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
  
- 	regs->compat_sp = sp;
- }
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -298,7 +298,7 @@ int copy_thread(unsigned long clone_flag
- 			childregs->pstate |= PSR_UAO_BIT;
+@@ -457,7 +456,6 @@ out_printmsg:
+ 	.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,			\
+ 	CAP_MIDR_RANGE_LIST(midr_list)
  
- 		if (arm64_get_ssbd_state() == ARM64_SSBD_FORCE_DISABLE)
--			childregs->pstate |= PSR_SSBS_BIT;
-+			set_ssbs_bit(childregs);
- 
- 		p->thread.cpu_context.x19 = stack_start;
- 		p->thread.cpu_context.x20 = stk_sz;
-@@ -340,6 +340,32 @@ void uao_thread_switch(struct task_struc
- }
- 
+-#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
  /*
-+ * Force SSBS state on context-switch, since it may be lost after migrating
-+ * from a CPU which treats the bit as RES0 in a heterogeneous system.
-+ */
-+static void ssbs_thread_switch(struct task_struct *next)
-+{
-+	struct pt_regs *regs = task_pt_regs(next);
-+
-+	/*
-+	 * Nothing to do for kernel threads, but 'regs' may be junk
-+	 * (e.g. idle task) so check the flags and bail early.
-+	 */
-+	if (unlikely(next->flags & PF_KTHREAD))
-+		return;
-+
-+	/* If the mitigation is enabled, then we leave SSBS clear. */
-+	if ((arm64_get_ssbd_state() == ARM64_SSBD_FORCE_ENABLE) ||
-+	    test_tsk_thread_flag(next, TIF_SSBD))
-+		return;
-+
-+	if (compat_user_mode(regs))
-+		set_compat_ssbs_bit(regs);
-+	else if (user_mode(regs))
-+		set_ssbs_bit(regs);
-+}
-+
-+/*
-  * We store our current task in sp_el0, which is clobbered by userspace. Keep a
-  * shadow copy so that we can restore this upon entry from userspace.
-  *
-@@ -367,6 +393,7 @@ __notrace_funcgraph struct task_struct *
- 	contextidr_thread_switch(next);
- 	entry_task_switch(next);
- 	uao_thread_switch(next);
-+	ssbs_thread_switch(next);
+  * List of CPUs that do not need any Spectre-v2 mitigation at all.
+  */
+@@ -489,6 +487,12 @@ check_branch_predictor(const struct arm6
+ 	if (!need_wa)
+ 		return false;
  
- 	/*
- 	 * Complete any pending TLB or cache maintenance on this CPU in case
++	if (!IS_ENABLED(CONFIG_HARDEN_BRANCH_PREDICTOR)) {
++		pr_warn_once("spectrev2 mitigation disabled by kernel configuration\n");
++		__hardenbp_enab = false;
++		return false;
++	}
++
+ 	/* forced off */
+ 	if (__nospectre_v2) {
+ 		pr_info_once("spectrev2 mitigation disabled by command line option\n");
+@@ -500,7 +504,6 @@ check_branch_predictor(const struct arm6
+ 
+ 	return (need_wa > 0);
+ }
+-#endif
+ 
+ const struct arm64_cpu_capabilities arm64_errata[] = {
+ #if	defined(CONFIG_ARM64_ERRATUM_826319) || \
+@@ -640,13 +643,11 @@ const struct arm64_cpu_capabilities arm6
+ 		ERRATA_MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
+ 	},
+ #endif
+-#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
+ 	{
+ 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
+ 		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
+ 		.matches = check_branch_predictor,
+ 	},
+-#endif
+ 	{
+ 		.desc = "Speculative Store Bypass Disable",
+ 		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
 
 
