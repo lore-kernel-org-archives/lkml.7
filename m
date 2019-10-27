@@ -2,53 +2,52 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2003DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F06CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB952064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE4420873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210342;
-	bh=VTE3iNMsGVPx5aIFWaap7QbAngR+xbH2tN1CHoJh/kE=;
+	s=default; t=1572210345;
+	bh=DNogohxJudpJgaAhRb6Da2/JiIzdCiOlJWxWHOT7MTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Az/Z4RJhIspvvz1DfckCmYi1QsGB/c+oV+2wcukVzZCi+AxoJ7tRZdQIJcuTbAge7
-	 oaqGeKi43oBinwDHNKYQ+uUKrpE3MzC58DeICDPkg6EDV6kcMjUDw3VLsH9X4V8H4m
-	 LQg/Y6SQs+cbydurlMBudn66eileapvIfws9v6Wc=
+	b=zInQnw3DiWMaK+xs9+p5fhHvkEKkuXbMTxsCN0MP0mCtEj4wLNbozV3/Ebw4armdm
+	 XDGZtG8DhRahsUT9QTwUEquysyl9T21CiLnEwWAJ9oXOmmKJXu2djgrghgy8YApCxn
+	 zrytlVw1Ldu0Ku7MDIue8v4Z8xWvGPwYpkEH3Oa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbfJ0VFk (ORCPT
+        id S1728890AbfJ0VFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:05:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51480 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:05:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727511AbfJ0VFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:05:38 -0400
+        id S1728838AbfJ0VFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:05:32 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20F06208C0;
-        Sun, 27 Oct 2019 21:05:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B342020B7C;
+        Sun, 27 Oct 2019 21:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210337;
-        bh=VTE3iNMsGVPx5aIFWaap7QbAngR+xbH2tN1CHoJh/kE=;
+        s=default; t=1572210332;
+        bh=DNogohxJudpJgaAhRb6Da2/JiIzdCiOlJWxWHOT7MTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LkJdXVecpL55Mgo9lUuILKUBxZF/31gUC4l/haqzUoiTrdEZWg+CLvVfh5ifDFYw7
-         gMtEpl+J/qJNTjjBxwOxYRdbpbfgRfGyapakRIT1pSgoBxpfACMwwABevjefAeFc+8
-         o2NJTMbE+rb6Qt2rnciUeP3z7OnmXADt+E2Sr//k=
+        b=f8W7MgJxKZvG0WgvKs9TlGQEHhqS7BKE7FETT5dXayyJtMxV1rQTi48FTBqQUp4k3
+         GgcqVxKPlJIvKR7BCGF330VlryGd4quGTlLvoQT/EEhPQ0k0toUjV5IbU3G5jgwc20
+         corj0JiJhZNc5E6wFFCrGqgjFUD5JXp9pQMr5dgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 03/49] scsi: qla2xxx: Fix unbound sleep in fcport delete path.
-Date:   Sun, 27 Oct 2019 22:00:41 +0100
-Message-Id: <20191027203121.970264406@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+cd24df4d075c319ebfc5@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 28/49] USB: usblp: fix use-after-free on disconnect
+Date:   Sun, 27 Oct 2019 22:01:06 +0100
+Message-Id: <20191027203141.415037922@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -61,47 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit c3b6a1d397420a0fdd97af2f06abfb78adc370df ]
+commit 7a759197974894213621aa65f0571b51904733d6 upstream.
 
-There are instances, though rare, where a LOGO request cannot be sent out
-and the thread in free session done can wait indefinitely. Fix this by
-putting an upper bound to sleep.
+A recent commit addressing a runtime PM use-count regression, introduced
+a use-after-free by not making sure we held a reference to the struct
+usb_interface for the lifetime of the driver data.
 
-Link: https://lore.kernel.org/r/20190912180918.6436-3-hmadhani@marvell.com
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 9a31535859bf ("USB: usblp: fix runtime PM after driver unbind")
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot+cd24df4d075c319ebfc5@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191015175522.18490-1-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/qla2xxx/qla_target.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/class/usblp.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 11f45cb998927..d13e91e164258 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -572,6 +572,7 @@ static void qlt_free_session_done(struct work_struct *work)
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -458,6 +458,7 @@ static void usblp_cleanup(struct usblp *
+ 	kfree(usblp->readbuf);
+ 	kfree(usblp->device_id_string);
+ 	kfree(usblp->statusbuf);
++	usb_put_intf(usblp->intf);
+ 	kfree(usblp);
+ }
  
- 	if (logout_started) {
- 		bool traced = false;
-+		u16 cnt = 0;
+@@ -1120,7 +1121,7 @@ static int usblp_probe(struct usb_interf
+ 	init_waitqueue_head(&usblp->wwait);
+ 	init_usb_anchor(&usblp->urbs);
+ 	usblp->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
+-	usblp->intf = intf;
++	usblp->intf = usb_get_intf(intf);
  
- 		while (!ACCESS_ONCE(sess->logout_completed)) {
- 			if (!traced) {
-@@ -581,6 +582,9 @@ static void qlt_free_session_done(struct work_struct *work)
- 				traced = true;
- 			}
- 			msleep(100);
-+			cnt++;
-+			if (cnt > 200)
-+				break;
- 		}
- 
- 		ql_dbg(ql_dbg_tgt_mgt, vha, 0xf087,
--- 
-2.20.1
-
+ 	/* Malloc device ID string buffer to the largest expected length,
+ 	 * since we can re-query it on an ioctl and a dynamic string
+@@ -1209,6 +1210,7 @@ abort:
+ 	kfree(usblp->readbuf);
+ 	kfree(usblp->statusbuf);
+ 	kfree(usblp->device_id_string);
++	usb_put_intf(usblp->intf);
+ 	kfree(usblp);
+ abort_ret:
+ 	return retval;
 
 
