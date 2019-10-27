@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4E2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BD7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A662064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B20FC214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211416;
-	bh=l0pchxFYAHhyUv0q79nwe2Ng0yEf+Cg2EzxFV4FdCZU=;
+	s=default; t=1572211421;
+	bh=lKgQpJ6lldb24qjFTVG9e/CiNh4+PFY2l5F0C51r+fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gU4PZIeO4Y0D8KuQpN9oqpNvT1EW69CAMdD+N/ufejrLACV/e8Ch80hMc2afZhvVj
-	 /DO/2lqJbFNRoligFOCYGj+rwcrZYmSK9/Z+b8Htji3gdsfiOxqf8ni/BsHqtRGlEx
-	 m9hB4tA853RPKZg821ae0DB+8hPaJec2rB5vzu4E=
+	b=yAxYvxR9sYlmeXlibrgcOZVPSvQZaCJLT6qeLXY9BOyMMZtdi1MQgvGONgh21Znj+
+	 snUOrDwtW/k2F/U2TTfl0m1xzZFs26sVgmrndNYlLvszlETfX/y2Alx9kJVQundXeu
+	 PNunhxfCsYB0LN2MhZs+9yXs83DlvNlc7LQD37NM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732367AbfJ0VXf (ORCPT
+        id S1732379AbfJ0VXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:23:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44682 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:23:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732355AbfJ0VX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:23:29 -0400
+        id S1732364AbfJ0VXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:23:34 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F27A214E0;
-        Sun, 27 Oct 2019 21:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2B39205C9;
+        Sun, 27 Oct 2019 21:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211408;
-        bh=l0pchxFYAHhyUv0q79nwe2Ng0yEf+Cg2EzxFV4FdCZU=;
+        s=default; t=1572211414;
+        bh=lKgQpJ6lldb24qjFTVG9e/CiNh4+PFY2l5F0C51r+fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iNCOP68UvMKi6KcsvY24SaqIh1paPYv3fLDlnyjoyMBoFS+VFV8cOFsm8YieVchU2
-         gkLUScIQvLlXBv1B9MKazQpbov3PzPpxjvg11vvlBPSnAszFL0+1b2x/tRv9gs3D91
-         v3Zq0c5GZ9mVpn2qd43NTcsbjm1mCvVbPCxTr7z8=
+        b=nYeupQGG5I7HIVd303hZcG0mwHvReTW3bNUidNVRS6oxRdeTQEf17lRcmzFRtgqoR
+         OgOCh7P3MvSgRM67qH+0FHqroetx62osIzoKPgSBUe4b5AFIT44G/TX4G7se6N8wUq
+         umR3dlbgm44YTEfZb0K6CGtblkwB/009CrdnW2o4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.3 142/197] mmc: cqhci: Commit descriptors before setting the doorbell
-Date:   Sun, 27 Oct 2019 22:01:00 +0100
-Message-Id: <20191027203359.367516888@linuxfoundation.org>
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 144/197] mm/memory-failure.c: dont access uninitialized memmaps in memory_failure()
+Date:   Sun, 27 Oct 2019 22:01:02 +0100
+Message-Id: <20191027203359.469037864@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -60,34 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: David Hildenbrand <david@redhat.com>
 
-commit c07d0073b9ec80a139d07ebf78e9c30d2a28279e upstream.
+commit 96c804a6ae8c59a9092b3d5dd581198472063184 upstream.
 
-Add a write memory barrier to make sure that descriptors are actually
-written to memory, before ringing the doorbell.
+We should check for pfn_to_online_page() to not access uninitialized
+memmaps.  Reshuffle the code so we don't have to duplicate the error
+message.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: http://lkml.kernel.org/r/20191009142435.3975-3-david@redhat.com
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
+Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: <stable@vger.kernel.org>	[4.13+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/cqhci.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/memory-failure.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/mmc/host/cqhci.c
-+++ b/drivers/mmc/host/cqhci.c
-@@ -611,7 +611,8 @@ static int cqhci_request(struct mmc_host
- 	cq_host->slot[tag].flags = 0;
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1253,17 +1253,19 @@ int memory_failure(unsigned long pfn, in
+ 	if (!sysctl_memory_failure_recovery)
+ 		panic("Memory failure on page %lx", pfn);
  
- 	cq_host->qcnt += 1;
+-	if (!pfn_valid(pfn)) {
++	p = pfn_to_online_page(pfn);
++	if (!p) {
++		if (pfn_valid(pfn)) {
++			pgmap = get_dev_pagemap(pfn, NULL);
++			if (pgmap)
++				return memory_failure_dev_pagemap(pfn, flags,
++								  pgmap);
++		}
+ 		pr_err("Memory failure: %#lx: memory outside kernel control\n",
+ 			pfn);
+ 		return -ENXIO;
+ 	}
+ 
+-	pgmap = get_dev_pagemap(pfn, NULL);
+-	if (pgmap)
+-		return memory_failure_dev_pagemap(pfn, flags, pgmap);
 -
-+	/* Make sure descriptors are ready before ringing the doorbell */
-+	wmb();
- 	cqhci_writel(cq_host, 1 << tag, CQHCI_TDBR);
- 	if (!(cqhci_readl(cq_host, CQHCI_TDBR) & (1 << tag)))
- 		pr_debug("%s: cqhci: doorbell not set for tag %d\n",
+-	p = pfn_to_page(pfn);
+ 	if (PageHuge(p))
+ 		return memory_failure_hugetlb(pfn, flags);
+ 	if (TestSetPageHWPoison(p)) {
 
 
