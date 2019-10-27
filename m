@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106E5CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1488BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A2F20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCDDA20717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212070;
-	bh=hOIWh6sD8eanVs3fL3OUNBF9iJgLBnjhqtR80HCmals=;
+	s=default; t=1572212072;
+	bh=9wfYJ86MlnnLvv4todEkNfb2aWKG/3Ov7BSF6kFRxJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mwP80+Em275n+igT9dlWxmVJ86r4rpB+WVHTQ0eFwYvLmsJxJ/Sf4n4afjOxmmAHy
-	 KaBjQaohjCzPCB2fvqcmhDNNGRwNO1zEF8qxllBWM0bp2m0FsvqHLU7dQBvlfIXBNS
-	 hzvdWYRwf0R9mx8TY3HQTrPwgEPYeoS5+NaosutY=
+	b=BHyayD9QyTp2UBM/mzMGLndFr0QjhkAua/82HF4ZRlWz4x59FzZKBKMnF2SOTjzxR
+	 TnW+LxyDJMTjmVAyj0M1LVrYIGeYB5TynVsbuQnQ9lcbv5+3jIuZhQROL49PdGdzaM
+	 y6sifJEHnoVMXEbsGt2gbPS/u1V5GwBALg4JJS6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfJ0VK4 (ORCPT
+        id S1729015AbfJ0VKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:10:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57358 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:10:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbfJ0VKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:10:52 -0400
+        id S1727627AbfJ0VKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:10:46 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52E4A214AF;
-        Sun, 27 Oct 2019 21:10:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6E5220873;
+        Sun, 27 Oct 2019 21:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210650;
-        bh=hOIWh6sD8eanVs3fL3OUNBF9iJgLBnjhqtR80HCmals=;
+        s=default; t=1572210645;
+        bh=9wfYJ86MlnnLvv4todEkNfb2aWKG/3Ov7BSF6kFRxJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OYb7nFAvJOHztSbRt97DveTjzWxyDpjD5Z5oh4PD+Jt8TqOjsHkrdlpivDHKqKqGs
-         vgSBsQN1u7LqMhbM19OytTs3TPRYHs26xucEwVO/V8qy4yZIdUjWp3UlVT/Iw1J6rq
-         RiggwOEmLLdII8TtYCH8C0P6Zbib+FmxRBr8gcz8=
+        b=xRsKz0j4xHnM3wx5xUV6gW1be/CVkz2mFE+O4KJK5Sq789qqQNMdpQOfSBu6iGCIs
+         b4yk+R/jxpT3cHqyCasPzTCecbsWU/KMXsv50Y3Jk0FT7P23XZZb1o+Oi/bZBcFf9c
+         EnnJqkf/JRlXGvTbQvjIW9VN4LPSE7vY4sZ5K8+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 088/119] scsi: core: save/restore command resid for error handling
-Date:   Sun, 27 Oct 2019 22:01:05 +0100
-Message-Id: <20191027203347.970364903@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>
+Subject: [PATCH 4.14 086/119] staging: wlan-ng: fix exit return when sme->key_idx >= NUM_WEPKEYS
+Date:   Sun, 27 Oct 2019 22:01:03 +0100
+Message-Id: <20191027203347.229722142@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -60,73 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 8f8fed0cdbbd6cdbf28d9ebe662f45765d2f7d39 upstream.
+commit 153c5d8191c26165dbbd2646448ca7207f7796d0 upstream.
 
-When a non-passthrough command is terminated with CHECK CONDITION, request
-sense is executed by hijacking the command descriptor. Since
-scsi_eh_prep_cmnd() and scsi_eh_restore_cmnd() do not save/restore the
-original command resid, the value returned on failure of the original
-command is lost and replaced with the value set by the execution of the
-request sense command. This value may in many instances be unaligned to the
-device sector size, causing sd_done() to print a warning message about the
-incorrect unaligned resid before the command is retried.
+Currently the exit return path when sme->key_idx >= NUM_WEPKEYS is via
+label 'exit' and this checks if result is non-zero, however result has
+not been initialized and contains garbage.  Fix this by replacing the
+goto with a return with the error code.
 
-Fix this problem by saving the original command residual in struct
-scsi_eh_save using scsi_eh_prep_cmnd() and restoring it in
-scsi_eh_restore_cmnd(). In addition, to make sure that the request sense
-command is executed with a correctly initialized command structure, also
-reset the residual to 0 in scsi_eh_prep_cmnd() after saving the original
-command value in struct scsi_eh_save.
-
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191001074839.1994-1-damien.lemoal@wdc.com
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Addresses-Coverity: ("Uninitialized scalar variable")
+Fixes: 0ca6d8e74489 ("Staging: wlan-ng: replace switch-case statements with macro")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191014110201.9874-1-colin.king@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/scsi_error.c |    3 +++
- include/scsi/scsi_eh.h    |    1 +
- 2 files changed, 4 insertions(+)
+ drivers/staging/wlan-ng/cfg80211.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/scsi/scsi_error.c
-+++ b/drivers/scsi/scsi_error.c
-@@ -935,6 +935,7 @@ void scsi_eh_prep_cmnd(struct scsi_cmnd
- 	ses->sdb = scmd->sdb;
- 	ses->next_rq = scmd->request->next_rq;
- 	ses->result = scmd->result;
-+	ses->resid_len = scmd->req.resid_len;
- 	ses->underflow = scmd->underflow;
- 	ses->prot_op = scmd->prot_op;
- 	ses->eh_eflags = scmd->eh_eflags;
-@@ -946,6 +947,7 @@ void scsi_eh_prep_cmnd(struct scsi_cmnd
- 	memset(&scmd->sdb, 0, sizeof(scmd->sdb));
- 	scmd->request->next_rq = NULL;
- 	scmd->result = 0;
-+	scmd->req.resid_len = 0;
+--- a/drivers/staging/wlan-ng/cfg80211.c
++++ b/drivers/staging/wlan-ng/cfg80211.c
+@@ -490,10 +490,8 @@ static int prism2_connect(struct wiphy *
+ 	/* Set the encryption - we only support wep */
+ 	if (is_wep) {
+ 		if (sme->key) {
+-			if (sme->key_idx >= NUM_WEPKEYS) {
+-				err = -EINVAL;
+-				goto exit;
+-			}
++			if (sme->key_idx >= NUM_WEPKEYS)
++				return -EINVAL;
  
- 	if (sense_bytes) {
- 		scmd->sdb.length = min_t(unsigned, SCSI_SENSE_BUFFERSIZE,
-@@ -999,6 +1001,7 @@ void scsi_eh_restore_cmnd(struct scsi_cm
- 	scmd->sdb = ses->sdb;
- 	scmd->request->next_rq = ses->next_rq;
- 	scmd->result = ses->result;
-+	scmd->req.resid_len = ses->resid_len;
- 	scmd->underflow = ses->underflow;
- 	scmd->prot_op = ses->prot_op;
- 	scmd->eh_eflags = ses->eh_eflags;
---- a/include/scsi/scsi_eh.h
-+++ b/include/scsi/scsi_eh.h
-@@ -32,6 +32,7 @@ extern int scsi_ioctl_reset(struct scsi_
- struct scsi_eh_save {
- 	/* saved state */
- 	int result;
-+	unsigned int resid_len;
- 	int eh_eflags;
- 	enum dma_data_direction data_direction;
- 	unsigned underflow;
+ 			result = prism2_domibset_uint32(wlandev,
+ 				DIDmib_dot11smt_dot11PrivacyTable_dot11WEPDefaultKeyID,
 
 
