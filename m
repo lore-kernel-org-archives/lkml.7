@@ -2,58 +2,54 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04328CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323D8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3D6214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02696214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210290;
-	bh=GHu3kxfw3EEQhhSdbxenzvZRkwjxrDM1IARAor+TjfQ=;
+	s=default; t=1572210295;
+	bh=oJ5CUPNbNtT3V+fDsQ5W+ZazwrslLjjgDVeCQQ110oI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sDe8sItoy6SM8XSddE+VakQPiiAFiZDyxKvKBhRVAWDULwvcFi89FTNRg4iYqb3vd
-	 7FGvuQARsh3noKdXWefDZg7B7iRWx2P1im2maZEqys2f0DOBfXXSnw4yYGp5QfOAjf
-	 Vu3J3gR5wa+7bAm/TZHJTQAXjkYyMmgGITaLhI0U=
+	b=UeLe9EDs/ts8DNJ2V2n47AGMds939zeEB/9l68eHw8xSi0y/Crw9ytyWJIWcSC/82
+	 4VOwq4VcSUDFKvpfBgdEpbHqhMmmKA9P1G3ULv08tm4jW5ivsa1ykls5lQaYjp08Kp
+	 cX1vCcWTLHi/zCxCVlPgBRvp9NbvcD/Nr2pIeYfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfJ0VEt (ORCPT
+        id S1728724AbfJ0VEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50474 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:04:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727326AbfJ0VEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:04:46 -0400
+        id S1728711AbfJ0VEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:04:50 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23F902064A;
-        Sun, 27 Oct 2019 21:04:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D22720B7C;
+        Sun, 27 Oct 2019 21:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210285;
-        bh=GHu3kxfw3EEQhhSdbxenzvZRkwjxrDM1IARAor+TjfQ=;
+        s=default; t=1572210288;
+        bh=oJ5CUPNbNtT3V+fDsQ5W+ZazwrslLjjgDVeCQQ110oI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H2yWnwZJcyylF4xEs8WyK+TzZbxUHyhUL5UATNoTVICzwC4JSw71Q4MsZ5nEYzmFy
-         mHcxXHicyTbItmofO5/mfmFJCGy9b7FrzyennuLEK94Ir+7SglsZUqRRoJr8/bpDrG
-         eY5aCuN7/3eqPbq+KusekBBBHMgEPZ1R75nm7Eh8=
+        b=gXo/yQm1otlxVlYS/eUBucfK6oPWmykZhDbPIXiAU+2JNeN8F7VRle/Ni7JJBSbcN
+         hiu5iP6QKtDSO83vlu0Uafm8K9Da18spAWO8T2yWmGD4wC7uRi0p2bOfsA+2goiIWw
+         bf9cClkxKEELkBasEiOcqWbcmlvHOyAynUfB2UDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yi Li <yilikernel@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 13/49] ocfs2: fix panic due to ocfs2_wq is null
-Date:   Sun, 27 Oct 2019 22:00:51 +0100
-Message-Id: <20191027203126.938247877@linuxfoundation.org>
+        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Yunqiang Su <ysu@wavecomp.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 14/49] MIPS: Treat Loongson Extensions as ASEs
+Date:   Sun, 27 Oct 2019 22:00:52 +0100
+Message-Id: <20191027203127.430697160@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -66,78 +62,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Li <yilikernel@gmail.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-commit b918c43021baaa3648de09e19a4a3dd555a45f40 upstream.
+[ Upstream commit d2f965549006acb865c4638f1f030ebcefdc71f6 ]
 
-mount.ocfs2 failed when reading ocfs2 filesystem superblock encounters
-an error.  ocfs2_initialize_super() returns before allocating ocfs2_wq.
-ocfs2_dismount_volume() triggers the following panic.
+Recently, binutils had split Loongson-3 Extensions into four ASEs:
+MMI, CAM, EXT, EXT2. This patch do the samething in kernel and expose
+them in cpuinfo so applications can probe supported ASEs at runtime.
 
-  Oct 15 16:09:27 cnwarekv-205120 kernel: On-disk corruption discovered.Please run fsck.ocfs2 once the filesystem is unmounted.
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_read_locked_inode:537 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_init_global_system_inodes:458 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_init_global_system_inodes:491 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_initialize_super:2313 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_fill_super:1033 ERROR: status = -30
-  ------------[ cut here ]------------
-  Oops: 0002 [#1] SMP NOPTI
-  CPU: 1 PID: 11753 Comm: mount.ocfs2 Tainted: G  E
-        4.14.148-200.ckv.x86_64 #1
-  Hardware name: Sugon H320-G30/35N16-US, BIOS 0SSDX017 12/21/2018
-  task: ffff967af0520000 task.stack: ffffa5f05484000
-  RIP: 0010:mutex_lock+0x19/0x20
-  Call Trace:
-    flush_workqueue+0x81/0x460
-    ocfs2_shutdown_local_alloc+0x47/0x440 [ocfs2]
-    ocfs2_dismount_volume+0x84/0x400 [ocfs2]
-    ocfs2_fill_super+0xa4/0x1270 [ocfs2]
-    ? ocfs2_initialize_super.isa.211+0xf20/0xf20 [ocfs2]
-    mount_bdev+0x17f/0x1c0
-    mount_fs+0x3a/0x160
-
-Link: http://lkml.kernel.org/r/1571139611-24107-1-git-send-email-yili@winhong.com
-Signed-off-by: Yi Li <yilikernel@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Yunqiang Su <ysu@wavecomp.com>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/journal.c    |    3 ++-
- fs/ocfs2/localalloc.c |    3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ arch/mips/include/asm/cpu-features.h | 16 ++++++++++++++++
+ arch/mips/include/asm/cpu.h          |  4 ++++
+ arch/mips/kernel/cpu-probe.c         |  4 ++++
+ arch/mips/kernel/proc.c              |  4 ++++
+ 4 files changed, 28 insertions(+)
 
---- a/fs/ocfs2/journal.c
-+++ b/fs/ocfs2/journal.c
-@@ -231,7 +231,8 @@ void ocfs2_recovery_exit(struct ocfs2_su
- 	/* At this point, we know that no more recovery threads can be
- 	 * launched, so wait for any recovery completion work to
- 	 * complete. */
--	flush_workqueue(osb->ocfs2_wq);
-+	if (osb->ocfs2_wq)
-+		flush_workqueue(osb->ocfs2_wq);
+diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
+index e961c8a7ea662..8c8b92b9b1eeb 100644
+--- a/arch/mips/include/asm/cpu-features.h
++++ b/arch/mips/include/asm/cpu-features.h
+@@ -345,6 +345,22 @@
+ #define cpu_has_dsp3		(cpu_data[0].ases & MIPS_ASE_DSP3)
+ #endif
  
- 	/*
- 	 * Now that recovery is shut down, and the osb is about to be
---- a/fs/ocfs2/localalloc.c
-+++ b/fs/ocfs2/localalloc.c
-@@ -391,7 +391,8 @@ void ocfs2_shutdown_local_alloc(struct o
- 	struct ocfs2_dinode *alloc = NULL;
++#ifndef cpu_has_loongson_mmi
++#define cpu_has_loongson_mmi		__ase(MIPS_ASE_LOONGSON_MMI)
++#endif
++
++#ifndef cpu_has_loongson_cam
++#define cpu_has_loongson_cam		__ase(MIPS_ASE_LOONGSON_CAM)
++#endif
++
++#ifndef cpu_has_loongson_ext
++#define cpu_has_loongson_ext		__ase(MIPS_ASE_LOONGSON_EXT)
++#endif
++
++#ifndef cpu_has_loongson_ext2
++#define cpu_has_loongson_ext2		__ase(MIPS_ASE_LOONGSON_EXT2)
++#endif
++
+ #ifndef cpu_has_mipsmt
+ #define cpu_has_mipsmt		(cpu_data[0].ases & MIPS_ASE_MIPSMT)
+ #endif
+diff --git a/arch/mips/include/asm/cpu.h b/arch/mips/include/asm/cpu.h
+index 9a8372484edc0..2cd5ee7463605 100644
+--- a/arch/mips/include/asm/cpu.h
++++ b/arch/mips/include/asm/cpu.h
+@@ -429,5 +429,9 @@ enum cpu_type_enum {
+ #define MIPS_ASE_VZ		0x00000080 /* Virtualization ASE */
+ #define MIPS_ASE_MSA		0x00000100 /* MIPS SIMD Architecture */
+ #define MIPS_ASE_DSP3		0x00000200 /* Signal Processing ASE Rev 3*/
++#define MIPS_ASE_LOONGSON_MMI	0x00000800 /* Loongson MultiMedia extensions Instructions */
++#define MIPS_ASE_LOONGSON_CAM	0x00001000 /* Loongson CAM */
++#define MIPS_ASE_LOONGSON_EXT	0x00002000 /* Loongson EXTensions */
++#define MIPS_ASE_LOONGSON_EXT2	0x00004000 /* Loongson EXTensions R2 */
  
- 	cancel_delayed_work(&osb->la_enable_wq);
--	flush_workqueue(osb->ocfs2_wq);
-+	if (osb->ocfs2_wq)
-+		flush_workqueue(osb->ocfs2_wq);
+ #endif /* _ASM_CPU_H */
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index 921211bcd2bad..0a7b3e513650f 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -1480,6 +1480,7 @@ static inline void cpu_probe_legacy(struct cpuinfo_mips *c, unsigned int cpu)
+ 			__cpu_name[cpu] = "ICT Loongson-3";
+ 			set_elf_platform(cpu, "loongson3a");
+ 			set_isa(c, MIPS_CPU_ISA_M64R1);
++			c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_EXT);
+ 			break;
+ 		case PRID_REV_LOONGSON3B_R1:
+ 		case PRID_REV_LOONGSON3B_R2:
+@@ -1487,6 +1488,7 @@ static inline void cpu_probe_legacy(struct cpuinfo_mips *c, unsigned int cpu)
+ 			__cpu_name[cpu] = "ICT Loongson-3";
+ 			set_elf_platform(cpu, "loongson3b");
+ 			set_isa(c, MIPS_CPU_ISA_M64R1);
++			c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_EXT);
+ 			break;
+ 		}
  
- 	if (osb->local_alloc_state == OCFS2_LA_UNUSED)
- 		goto out;
+@@ -1826,6 +1828,8 @@ static inline void cpu_probe_loongson(struct cpuinfo_mips *c, unsigned int cpu)
+ 		decode_configs(c);
+ 		c->options |= MIPS_CPU_FTLB | MIPS_CPU_TLBINV | MIPS_CPU_LDPTE;
+ 		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
++		c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_CAM |
++			MIPS_ASE_LOONGSON_EXT | MIPS_ASE_LOONGSON_EXT2);
+ 		break;
+ 	default:
+ 		panic("Unknown Loongson Processor ID!");
+diff --git a/arch/mips/kernel/proc.c b/arch/mips/kernel/proc.c
+index 4c01ee5b88c99..dd05ec89cc57e 100644
+--- a/arch/mips/kernel/proc.c
++++ b/arch/mips/kernel/proc.c
+@@ -122,6 +122,10 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	if (cpu_has_eva)	seq_printf(m, "%s", " eva");
+ 	if (cpu_has_htw)	seq_printf(m, "%s", " htw");
+ 	if (cpu_has_xpa)	seq_printf(m, "%s", " xpa");
++	if (cpu_has_loongson_mmi)	seq_printf(m, "%s", " loongson-mmi");
++	if (cpu_has_loongson_cam)	seq_printf(m, "%s", " loongson-cam");
++	if (cpu_has_loongson_ext)	seq_printf(m, "%s", " loongson-ext");
++	if (cpu_has_loongson_ext2)	seq_printf(m, "%s", " loongson-ext2");
+ 	seq_printf(m, "\n");
+ 
+ 	if (cpu_has_mmips) {
+-- 
+2.20.1
+
 
 
