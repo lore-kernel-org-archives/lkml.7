@@ -2,33 +2,33 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DATE_IN_FUTURE_06_12,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6C5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F485CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A7420717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4E221928
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfJ0LMz (ORCPT
+        id S1726950AbfJ0LNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 07:12:55 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12498 "EHLO mga02.intel.com"
+        Sun, 27 Oct 2019 07:13:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:12491 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbfJ0LMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 07:12:43 -0400
+        id S1726853AbfJ0LMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 07:12:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 04:12:43 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 04:12:41 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,236,1569308400"; 
-   d="scan'208";a="282690177"
+   d="scan'208";a="282690168"
 Received: from unknown (HELO snr.jf.intel.com) ([10.54.39.141])
-  by orsmga001.jf.intel.com with ESMTP; 27 Oct 2019 04:12:41 -0700
+  by orsmga001.jf.intel.com with ESMTP; 27 Oct 2019 04:12:39 -0700
 From:   Luwei Kang <luwei.kang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
@@ -39,9 +39,9 @@ Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
         peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
         namhyung@kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH v1 7/8] KVM: x86: Expose PEBS feature to guest
-Date:   Sun, 27 Oct 2019 19:11:16 -0400
-Message-Id: <1572217877-26484-8-git-send-email-luwei.kang@intel.com>
+Subject: [PATCH v1 5/8] KVM: X86: Expose PDCM cpuid to guest
+Date:   Sun, 27 Oct 2019 19:11:14 -0400
+Message-Id: <1572217877-26484-6-git-send-email-luwei.kang@intel.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
 References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
@@ -50,115 +50,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expose PEBS feature to guest by IA32_MISC_ENABLE[bit12].
-IA32_MISC_ENABLE[bit12] is Processor Event Based Sampling (PEBS)
-Unavailable (RO) flag:
-1 = PEBS is not supported; 0 = PEBS is supported.
+PDCM (Perfmon and Debug Capability) indicates the processor
+supports the performance and debug feature indication
+MSR IA32_PERF_CAPABILITIES.
+
+PEBS enabling in KVM guest depend on PEBS via PT, and
+PEBS via PT is detected by IA32_PERF_CAPABILITIES[Bit16].
 
 Signed-off-by: Luwei Kang <luwei.kang@intel.com>
 ---
  arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/cpuid.c            |  3 ++-
  arch/x86/kvm/svm.c              |  6 ++++++
+ arch/x86/kvm/vmx/capabilities.h | 10 ++++++++++
  arch/x86/kvm/vmx/vmx.c          |  1 +
- arch/x86/kvm/x86.c              | 22 +++++++++++++++++-----
- 4 files changed, 25 insertions(+), 5 deletions(-)
+ 5 files changed, 20 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 24a0ab9..76f5fa5 100644
+index ed01936..a987ae1 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1127,6 +1127,7 @@ struct kvm_x86_ops {
+@@ -1126,6 +1126,7 @@ struct kvm_x86_ops {
  	bool (*xsaves_supported)(void);
  	bool (*umip_emulated)(void);
  	bool (*pt_supported)(void);
-+	bool (*pebs_supported)(void);
- 	bool (*pdcm_supported)(void);
++	bool (*pdcm_supported)(void);
  
  	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
+ 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 9c5029c..ab2906d 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -442,6 +442,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 	unsigned f_rdtscp = kvm_x86_ops->rdtscp_supported() ? F(RDTSCP) : 0;
+ 	unsigned f_xsaves = kvm_x86_ops->xsaves_supported() ? F(XSAVES) : 0;
+ 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
++	unsigned f_pdcm = kvm_x86_ops->pdcm_supported() ? F(PDCM) : 0;
+ 
+ 	/* cpuid 1.edx */
+ 	const u32 kvm_cpuid_1_edx_x86_features =
+@@ -470,7 +471,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		F(XMM3) | F(PCLMULQDQ) | 0 /* DTES64, MONITOR */ |
+ 		0 /* DS-CPL, VMX, SMX, EST */ |
+ 		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
+-		F(FMA) | F(CX16) | 0 /* xTPR Update, PDCM */ |
++		F(FMA) | F(CX16) | 0 /* xTPR Update */ | f_pdcm |
+ 		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
+ 		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
+ 		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 7e0a7b3..3a1bbb3 100644
+index f8ecb6d..7e0a7b3 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
 @@ -5975,6 +5975,11 @@ static bool svm_pt_supported(void)
  	return false;
  }
  
-+static bool svm_pebs_supported(void)
++static bool svm_pdcm_supported(void)
 +{
 +	return false;
 +}
 +
- static bool svm_pdcm_supported(void)
+ static bool svm_has_wbinvd_exit(void)
  {
- 	return false;
-@@ -7277,6 +7282,7 @@ static bool svm_apic_init_signal_blocked(struct kvm_vcpu *vcpu)
+ 	return true;
+@@ -7272,6 +7277,7 @@ static bool svm_apic_init_signal_blocked(struct kvm_vcpu *vcpu)
  	.xsaves_supported = svm_xsaves_supported,
  	.umip_emulated = svm_umip_emulated,
  	.pt_supported = svm_pt_supported,
-+	.pebs_supported = svm_pebs_supported,
- 	.pdcm_supported = svm_pdcm_supported,
++	.pdcm_supported = svm_pdcm_supported,
  
  	.set_supported_cpuid = svm_set_supported_cpuid,
+ 
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index fc861d4..2f502f1 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -363,4 +363,14 @@ static inline bool cpu_has_vmx_pebs_output_pt(void)
+ 		(perf_cap & MSR_IA32_PERF_CAP_PEBS_OUTPUT_PT));
+ }
+ 
++static inline bool vmx_pebs_supported(void)
++{
++	return (cpu_has_vmx_pebs_output_pt() && pt_mode == PT_MODE_HOST_GUEST);
++}
++
++static inline bool vmx_pdcm_supported(void)
++{
++	return boot_cpu_has(X86_FEATURE_PDCM) && vmx_pebs_supported();
++}
++
+ #endif /* __KVM_X86_VMX_CAPS_H */
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 5c4dd05..3c370a3 100644
+index 170afde..6c29a57 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7879,6 +7879,7 @@ static __exit void hardware_unsetup(void)
+@@ -7865,6 +7865,7 @@ static __exit void hardware_unsetup(void)
  	.xsaves_supported = vmx_xsaves_supported,
  	.umip_emulated = vmx_umip_emulated,
  	.pt_supported = vmx_pt_supported,
-+	.pebs_supported = vmx_pebs_supported,
- 	.pdcm_supported = vmx_pdcm_supported,
++	.pdcm_supported = vmx_pdcm_supported,
  
  	.request_immediate_exit = vmx_request_immediate_exit,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 661e2bf..5f59073 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2591,6 +2591,7 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
- int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- {
- 	bool pr = false;
-+	bool update_cpuid = false;
- 	u32 msr = msr_info->index;
- 	u64 data = msr_info->data;
  
-@@ -2671,11 +2672,17 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		    ((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_MWAIT)) {
- 			if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
- 				return 1;
--			vcpu->arch.ia32_misc_enable_msr = data;
--			kvm_update_cpuid(vcpu);
--		} else {
--			vcpu->arch.ia32_misc_enable_msr = data;
-+			update_cpuid = true;
- 		}
-+
-+		if (kvm_x86_ops->pebs_supported())
-+			data &=  ~MSR_IA32_MISC_ENABLE_PEBS;
-+		else
-+			data |= MSR_IA32_MISC_ENABLE_PEBS;
-+
-+		vcpu->arch.ia32_misc_enable_msr = data;
-+		if (update_cpuid)
-+			kvm_update_cpuid(vcpu);
- 		break;
- 	case MSR_IA32_SMBASE:
- 		if (!msr_info->host_initiated)
-@@ -2971,7 +2978,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		msr_info->data = (u64)vcpu->arch.ia32_tsc_adjust_msr;
- 		break;
- 	case MSR_IA32_MISC_ENABLE:
--		msr_info->data = vcpu->arch.ia32_misc_enable_msr;
-+		if (kvm_x86_ops->pebs_supported())
-+			msr_info->data = (vcpu->arch.ia32_misc_enable_msr &
-+						~MSR_IA32_MISC_ENABLE_PEBS);
-+		else
-+			msr_info->data = (vcpu->arch.ia32_misc_enable_msr |
-+						MSR_IA32_MISC_ENABLE_PEBS);
- 		break;
- 	case MSR_IA32_SMBASE:
- 		if (!msr_info->host_initiated)
 -- 
 1.8.3.1
 
