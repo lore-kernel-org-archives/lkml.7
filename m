@@ -3,115 +3,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09821CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE563CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE21C214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8F820873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfJ0Ord (ORCPT
+        id S1727003AbfJ0PFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 10:47:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12940 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726796AbfJ0Ord (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 10:47:33 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9REkeUF138989
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 10:47:31 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vw3rqwp6s-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 10:47:31 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Sun, 27 Oct 2019 14:47:29 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 27 Oct 2019 14:47:26 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9RElQtk38797364
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 27 Oct 2019 14:47:26 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7EF9A4053;
-        Sun, 27 Oct 2019 14:47:25 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C07AEA4040;
-        Sun, 27 Oct 2019 14:47:24 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.187.251])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 27 Oct 2019 14:47:24 +0000 (GMT)
-Subject: Re: [PATCH v2 1/4] KEYS: Defined an ima hook for measuring keys on
- key create or update
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, casey@schaufler-ca.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Sun, 27 Oct 2019 10:47:24 -0400
-In-Reply-To: <c1de8055-89a7-25dd-d99a-427e2c2c4c59@linux.microsoft.com>
-References: <20191023233950.22072-1-nramas@linux.microsoft.com>
-         <20191023233950.22072-2-nramas@linux.microsoft.com>
-         <1572032428.4532.72.camel@linux.ibm.com>
-         <c1de8055-89a7-25dd-d99a-427e2c2c4c59@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102714-0008-0000-0000-0000032813FF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102714-0009-0000-0000-00004A474F0A
-Message-Id: <1572187644.4532.211.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-27_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910270155
+        Sun, 27 Oct 2019 11:05:41 -0400
+Received: from verein.lst.de ([213.95.11.211]:58407 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726682AbfJ0PFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 11:05:41 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id DEBE768B05; Sun, 27 Oct 2019 16:05:38 +0100 (CET)
+Date:   Sun, 27 Oct 2019 16:05:38 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 2/3] nvme: Create helper function to obtain command
+ effects
+Message-ID: <20191027150538.GB5843@lst.de>
+References: <20191025202535.12036-1-logang@deltatee.com> <20191025202535.12036-3-logang@deltatee.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025202535.12036-3-logang@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-25 at 15:28 -0700, Lakshmi Ramasubramanian wrote:
-> On 10/25/2019 12:40 PM, Mimi Zohar wrote:
-> 
-> >> +void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-> >> +				   unsigned long flags, bool create)
-> >> +{
-> >> +	const struct public_key *pk;
-> >> +
-> >> +	if (key->type != &key_type_asymmetric)
-> >> +		return;
-> >> +
-> >> +	if (!ima_initialized)
-> >> +		return;
-> > 
-> > There's no reason to define a new variable to determine if IMA is
-> > initialized.  Use ima_policy_flag.  
-> 
-> Please correct me if I am wrong -
-> 
-> ima_policy_flag will be set to 0 if IMA is not yet initialized
-> OR
-> IMA is initialized, but ima_policy_flag could be still set to 0 (say, 
-> due to the configured policy).
-> 
-> In the latter case the measurement request should be a NOP immediately.
-
-I'm not sure.  The builtin keys most likely will be loaded prior to a
-custom IMA policy containing "keyring" rules are defined.
-
-Mimi
-
+The change in this and patch 1 look fine.  But wouldn't the changes be
+a little simpler to understand if you moved this patch before the
+other one instead of touching the same code multiple times?
