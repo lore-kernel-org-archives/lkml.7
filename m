@@ -2,53 +2,52 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA94CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9218CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5612064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966DC20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210161;
-	bh=JAjNnovaKiGZ0JEZqWC//3IDhdNyQTZW3xqY1GsT6Hs=;
+	s=default; t=1572210166;
+	bh=WclGftjhtADkb4qHB3tRje/8CLOt7Ubn4RbsQk7VAXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rntry8Y8bJV6b8k/bQK3dcCZ+bwwKi3N8x1bk/OYv9SNr5OcdxvSh50mDeFtsu8fT
-	 syKwsKPZaUImHJ97pRpKTcoxn0tHykr1hEWYBxwCWNIVi1BvDsSNFakxzeYxyo+tFq
-	 rPqU8Z7AML8e5c3WmaYHyFQhPnlHU2CL81GZAqAs=
+	b=rlmJOAz0auX1y1Qr0nOXfkWuIVGqQAuAP/FlhoqfM5IQLpjoavAz2QoyVUbAtrJXY
+	 HvFpi2+EhegxolO2dGn/M/BU+7w90dsSDjYRdq87+7eneG5GYf5TpSNO3JURrTwOlT
+	 JdTvNxYKeZYZsI0vsEO7ec4KUVFKluWMFB3ZhFUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfJ0VCk (ORCPT
+        id S1728122AbfJ0VCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47640 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbfJ0VCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:02:39 -0400
+        id S1727099AbfJ0VCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:02:41 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A0162064A;
-        Sun, 27 Oct 2019 21:02:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EB0D20873;
+        Sun, 27 Oct 2019 21:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210157;
-        bh=JAjNnovaKiGZ0JEZqWC//3IDhdNyQTZW3xqY1GsT6Hs=;
+        s=default; t=1572210160;
+        bh=WclGftjhtADkb4qHB3tRje/8CLOt7Ubn4RbsQk7VAXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUeNj7ki8KBilcan/kdBsFghy+Cne3mI1GaLpvYOwAv7c2GTT7sEob0n0lv1JPG+f
-         kLaOcFS+VehQmjmHMmOkudEeytoQprF5a6nrZr4TmIdk/AWfNKWPjO2+7/pnaSyOP5
-         vyfrQo6hYVcxtKK9QWSEhpqywKbHXoIkDxDJ0Oxk=
+        b=qdKRAulHz2Z1ajKBhsusIGlPih/tIiybGZhSmGZN1DIU87tXePZxdJFn95arhl6d3
+         Lu8xqJ3zOmRPYgWw204b+lKbH01wKbJz8D58hxpX9ClTapO5ntTP93hmh9V/m9ZYZy
+         grYCJq4n+LBMvIWVIrVkaw7+402TFdCETrvuVPJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meng Zhuo <mengzhuo1203@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Alessio Balsini <balsini@android.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 11/41] MIPS: elf_hwcap: Export userspace ASEs
-Date:   Sun, 27 Oct 2019 22:00:49 +0100
-Message-Id: <20191027203108.951999877@linuxfoundation.org>
+Subject: [PATCH 4.4 12/41] loop: Add LOOP_SET_DIRECT_IO to compat ioctl
+Date:   Sun, 27 Oct 2019 22:00:50 +0100
+Message-Id: <20191027203110.371349330@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
 References: <20191027203056.220821342@linuxfoundation.org>
@@ -61,87 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Alessio Balsini <balsini@android.com>
 
-[ Upstream commit 38dffe1e4dde1d3174fdce09d67370412843ebb5 ]
+[ Upstream commit fdbe4eeeb1aac219b14f10c0ed31ae5d1123e9b8 ]
 
-A Golang developer reported MIPS hwcap isn't reflecting instructions
-that the processor actually supported so programs can't apply optimized
-code at runtime.
+Enabling Direct I/O with loop devices helps reducing memory usage by
+avoiding double caching.  32 bit applications running on 64 bits systems
+are currently not able to request direct I/O because is missing from the
+lo_compat_ioctl.
 
-Thus we export the ASEs that can be used in userspace programs.
+This patch fixes the compatibility issue mentioned above by exporting
+LOOP_SET_DIRECT_IO as additional lo_compat_ioctl() entry.
+The input argument for this ioctl is a single long converted to a 1-bit
+boolean, so compatibility is preserved.
 
-Reported-by: Meng Zhuo <mengzhuo1203@gmail.com>
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: <stable@vger.kernel.org> # 4.14+
-Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Alessio Balsini <balsini@android.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/uapi/asm/hwcap.h | 11 +++++++++++
- arch/mips/kernel/cpu-probe.c       | 25 +++++++++++++++++++++++++
- 2 files changed, 36 insertions(+)
+ drivers/block/loop.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/include/uapi/asm/hwcap.h b/arch/mips/include/uapi/asm/hwcap.h
-index c7484a7ca686d..2b6f8d569d00f 100644
---- a/arch/mips/include/uapi/asm/hwcap.h
-+++ b/arch/mips/include/uapi/asm/hwcap.h
-@@ -4,5 +4,16 @@
- /* HWCAP flags */
- #define HWCAP_MIPS_R6		(1 << 0)
- #define HWCAP_MIPS_MSA		(1 << 1)
-+#define HWCAP_MIPS_MIPS16	(1 << 3)
-+#define HWCAP_MIPS_MDMX     (1 << 4)
-+#define HWCAP_MIPS_MIPS3D   (1 << 5)
-+#define HWCAP_MIPS_SMARTMIPS (1 << 6)
-+#define HWCAP_MIPS_DSP      (1 << 7)
-+#define HWCAP_MIPS_DSP2     (1 << 8)
-+#define HWCAP_MIPS_DSP3     (1 << 9)
-+#define HWCAP_MIPS_MIPS16E2 (1 << 10)
-+#define HWCAP_LOONGSON_MMI  (1 << 11)
-+#define HWCAP_LOONGSON_EXT  (1 << 12)
-+#define HWCAP_LOONGSON_EXT2 (1 << 13)
- 
- #endif /* _UAPI_ASM_HWCAP_H */
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index ee71bda53d4e6..3903737e08cc8 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -1540,6 +1540,31 @@ void cpu_probe(void)
- 		elf_hwcap |= HWCAP_MIPS_MSA;
- 	}
- 
-+	if (cpu_has_mips16)
-+		elf_hwcap |= HWCAP_MIPS_MIPS16;
-+
-+	if (cpu_has_mdmx)
-+		elf_hwcap |= HWCAP_MIPS_MDMX;
-+
-+	if (cpu_has_mips3d)
-+		elf_hwcap |= HWCAP_MIPS_MIPS3D;
-+
-+	if (cpu_has_smartmips)
-+		elf_hwcap |= HWCAP_MIPS_SMARTMIPS;
-+
-+	if (cpu_has_dsp)
-+		elf_hwcap |= HWCAP_MIPS_DSP;
-+
-+	if (cpu_has_dsp2)
-+		elf_hwcap |= HWCAP_MIPS_DSP2;
-+
-+	if (cpu_has_loongson_mmi)
-+		elf_hwcap |= HWCAP_LOONGSON_MMI;
-+
-+	if (cpu_has_loongson_ext)
-+		elf_hwcap |= HWCAP_LOONGSON_EXT;
-+
-+
- 	cpu_probe_vmbits(c);
- 
- #ifdef CONFIG_64BIT
--- 
-2.20.1
-
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1557,6 +1557,7 @@ static int lo_compat_ioctl(struct block_
+ 		arg = (unsigned long) compat_ptr(arg);
+ 	case LOOP_SET_FD:
+ 	case LOOP_CHANGE_FD:
++	case LOOP_SET_DIRECT_IO:
+ 		err = lo_ioctl(bdev, mode, cmd, arg);
+ 		break;
+ 	default:
 
 
