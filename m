@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1490CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A92CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F45D222CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7DE222BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211592;
-	bh=2dkV0I/ttTsDq2uK0syJ7uNnKrFVDYIZq51ZA9hvSWg=;
+	s=default; t=1572211599;
+	bh=XWjD4FZ046YLmn/khAIlwG3zrKCQFGYeJP3DutWla14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BMU3MLhEF3nLEBOlYXj9PnkRTVb2NPOxAxANomkc0qmATY4fTqsOrxfiNYlEaC9eY
-	 BtqeWEgSkLHGedDTAqUGjWPPUa0MHdqdN2wvYb26vGVLEsPw8LPk4Mhu5jlwt5Nj4u
-	 sBnzVvtJgBI1b1MYOvYYwvoJh+GiMU/yQMIILFLo=
+	b=U7Tc2du3G0CrQrTtL8vKs6BwPfPK6m595tIaEDZryt0FEQvdoSwQDi39n4Og4ZQ+J
+	 kYP/VUR/cqGrbpPPyADH2NnEdy8a8rBFJpeLOL0GgymqZ4i3rTmolL2SWW2l31t0Ez
+	 e47N67SEBqpAMC0FFWMx+nzimsyYnIlFcxIknGt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732950AbfJ0V0b (ORCPT
+        id S1732967AbfJ0V0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48376 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732928AbfJ0V00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:26:26 -0400
+        id S1732928AbfJ0V0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:26:32 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FDAD21E6F;
-        Sun, 27 Oct 2019 21:26:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC05222C4;
+        Sun, 27 Oct 2019 21:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211585;
-        bh=2dkV0I/ttTsDq2uK0syJ7uNnKrFVDYIZq51ZA9hvSWg=;
+        s=default; t=1572211591;
+        bh=XWjD4FZ046YLmn/khAIlwG3zrKCQFGYeJP3DutWla14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/ORJfyfLyq+8SLsKV8YB8wl6lbiE9uC5Q8awLZN/RgRqr9XP/Xao9ZrpRAlZS4k8
-         AifGPNo166YOzSWAV8UxAXKXIDlelCQQS4YU+tcOh7eVRRTVb9c6ZK/AX43tfMuQpN
-         6voQTXHuAFP6uvJRBYyciJsalRcW35NsDpz57oEw=
+        b=n1GfPbTzlfeAbqLlRSw7l62dydlYJbh3j+MN6ucBD2XC2tTjxkLCguw8KOCJNhrHH
+         wBaVd6E9atj9DuIZgGEHb+nO9/f7pOqYovc0fGlOw+uh90DlUnhB4TOllyXgypPPr8
+         9KBUxaMiFnUSu3EGJ0AVJCMBTHVpptsJhxTdY1o0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.3 187/197] btrfs: tracepoints: Fix bad entry members of qgroup events
-Date:   Sun, 27 Oct 2019 22:01:45 +0100
-Message-Id: <20191027203406.582477867@linuxfoundation.org>
+        stable@vger.kernel.org, Patrick Williams <alpawi@amazon.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.3 179/197] pinctrl: armada-37xx: fix control of pins 32 and up
+Date:   Sun, 27 Oct 2019 22:01:37 +0100
+Message-Id: <20191027203405.485211757@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,66 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Patrick Williams <alpawi@amazon.com>
 
-commit 1b2442b4ae0f234daeadd90e153b466332c466d8 upstream.
+commit 20504fa1d2ffd5d03cdd9dc9c9dd4ed4579b97ef upstream.
 
-[BUG]
-For btrfs:qgroup_meta_reserve event, the trace event can output garbage:
+The 37xx configuration registers are only 32 bits long, so
+pins 32-35 spill over into the next register.  The calculation
+for the register address was done, but the bitmask was not, so
+any configuration to pin 32 or above resulted in a bitmask that
+overflowed and performed no action.
 
-  qgroup_meta_reserve: 9c7f6acc-b342-4037-bc47-7f6e4d2232d7: refroot=5(FS_TREE) type=DATA diff=2
-  qgroup_meta_reserve: 9c7f6acc-b342-4037-bc47-7f6e4d2232d7: refroot=5(FS_TREE) type=0x258792 diff=2
+Fix the register / offset calculation to also adjust the offset.
 
-The @type can be completely garbage, as DATA type is not possible for
-trace_qgroup_meta_reserve() trace event.
-
-[CAUSE]
-Ther are several problems related to qgroup trace events:
-- Unassigned entry member
-  Member entry::type of trace_qgroup_update_reserve() and
-  trace_qgourp_meta_reserve() is not assigned
-
-- Redundant entry member
-  Member entry::type is completely useless in
-  trace_qgroup_meta_convert()
-
-Fixes: 4ee0d8832c2e ("btrfs: qgroup: Update trace events for metadata reservation")
-CC: stable@vger.kernel.org # 4.10+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
+Signed-off-by: Patrick Williams <alpawi@amazon.com>
+Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191001154634.96165-1-alpawi@amazon.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/trace/events/btrfs.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/include/trace/events/btrfs.h
-+++ b/include/trace/events/btrfs.h
-@@ -1687,6 +1687,7 @@ TRACE_EVENT(qgroup_update_reserve,
- 		__entry->qgid		= qgroup->qgroupid;
- 		__entry->cur_reserved	= qgroup->rsv.values[type];
- 		__entry->diff		= diff;
-+		__entry->type		= type;
- 	),
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -221,11 +221,11 @@ static const struct armada_37xx_pin_data
+ };
  
- 	TP_printk_btrfs("qgid=%llu type=%s cur_reserved=%llu diff=%lld",
-@@ -1709,6 +1710,7 @@ TRACE_EVENT(qgroup_meta_reserve,
- 	TP_fast_assign_btrfs(root->fs_info,
- 		__entry->refroot	= root->root_key.objectid;
- 		__entry->diff		= diff;
-+		__entry->type		= type;
- 	),
+ static inline void armada_37xx_update_reg(unsigned int *reg,
+-					  unsigned int offset)
++					  unsigned int *offset)
+ {
+ 	/* We never have more than 2 registers */
+-	if (offset >= GPIO_PER_REG) {
+-		offset -= GPIO_PER_REG;
++	if (*offset >= GPIO_PER_REG) {
++		*offset -= GPIO_PER_REG;
+ 		*reg += sizeof(u32);
+ 	}
+ }
+@@ -376,7 +376,7 @@ static inline void armada_37xx_irq_updat
+ {
+ 	int offset = irqd_to_hwirq(d);
  
- 	TP_printk_btrfs("refroot=%llu(%s) type=%s diff=%lld",
-@@ -1725,7 +1727,6 @@ TRACE_EVENT(qgroup_meta_convert,
- 	TP_STRUCT__entry_btrfs(
- 		__field(	u64,	refroot			)
- 		__field(	s64,	diff			)
--		__field(	int,	type			)
- 	),
+-	armada_37xx_update_reg(reg, offset);
++	armada_37xx_update_reg(reg, &offset);
+ }
  
- 	TP_fast_assign_btrfs(root->fs_info,
+ static int armada_37xx_gpio_direction_input(struct gpio_chip *chip,
+@@ -386,7 +386,7 @@ static int armada_37xx_gpio_direction_in
+ 	unsigned int reg = OUTPUT_EN;
+ 	unsigned int mask;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 
+ 	return regmap_update_bits(info->regmap, reg, mask, 0);
+@@ -399,7 +399,7 @@ static int armada_37xx_gpio_get_directio
+ 	unsigned int reg = OUTPUT_EN;
+ 	unsigned int val, mask;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 	regmap_read(info->regmap, reg, &val);
+ 
+@@ -413,7 +413,7 @@ static int armada_37xx_gpio_direction_ou
+ 	unsigned int reg = OUTPUT_EN;
+ 	unsigned int mask, val, ret;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 
+ 	ret = regmap_update_bits(info->regmap, reg, mask, mask);
+@@ -434,7 +434,7 @@ static int armada_37xx_gpio_get(struct g
+ 	unsigned int reg = INPUT_VAL;
+ 	unsigned int val, mask;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 
+ 	regmap_read(info->regmap, reg, &val);
+@@ -449,7 +449,7 @@ static void armada_37xx_gpio_set(struct
+ 	unsigned int reg = OUTPUT_VAL;
+ 	unsigned int mask, val;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 	val = value ? mask : 0;
+ 
 
 
