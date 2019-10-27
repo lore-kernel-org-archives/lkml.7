@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F054CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440F1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC1420717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 087F9214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211089;
-	bh=KllF1Vd9QjJ+moQw4J7Yv+052X+bzOtxMFBqtCgyhEs=;
+	s=default; t=1572211094;
+	bh=PEz+A1ZFdffm/td2VnnYZBRiY/aqbuwpzKlPWMlDIFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpiXTM69vSwvZh9IY4aakt9QxBtVe4/GKfiMOhX6qxDmZv3lj7MMdD9x75u2CPT9z
-	 nY49XY/UIRwMlpGq09v74O94qi1c6vLKrqcWKfe/pqaSIVG0mXDE012LyQsOjAVDF8
-	 Zq3NrLey0DIIsav1xq9XXEGX9d6PDHT2zgODacvI=
+	b=EQoqc7xW7S1RwUzREf1YUD+wqXpoSJMmQZoGuAyoB3MvfhPEZSbZPzSqqxtDQB6HP
+	 h1nS9NKjUuGPaMyO9nNzjoUQJQ9kfgmYt/43C0Vb2dMNBj9piHFbaDiexu5MVmrTh3
+	 nbPGFE2jkLYz4MGjzVrflU8FD+kkchBAjBaR5YEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731222AbfJ0VSH (ORCPT
+        id S1731244AbfJ0VSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:18:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:18:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731205AbfJ0VSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:18:04 -0400
+        id S1731224AbfJ0VSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:18:09 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00939208C0;
-        Sun, 27 Oct 2019 21:18:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 957832070B;
+        Sun, 27 Oct 2019 21:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211083;
-        bh=KllF1Vd9QjJ+moQw4J7Yv+052X+bzOtxMFBqtCgyhEs=;
+        s=default; t=1572211089;
+        bh=PEz+A1ZFdffm/td2VnnYZBRiY/aqbuwpzKlPWMlDIFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MmSa8qLk0Mis/iN3/vLQd8zPuuN2homikEB/uIQJU/YHmhePo/2XBFRq+VHyViI/v
-         z3PTckGXaAjCqdcz/WggfXWxNDiG8x6M268cgcuxCCquMuhSxhz+U/XgVujLMPg5cj
-         kfr/G3whOcJW24FJBMKE8E+7hLedq0QFVqL2TPew=
+        b=ZG1qERYuwkdQYOfBjxz569MXdu9v0V8Utl+dBo5us1JhxETbqkI5famF6RZh3D+uN
+         uqex3RABHEICtnGo71gv+AFlMNZH9w08M/WWtrmaQV9HCSczxZ86oGr4Rz9X7yLjlK
+         ddoWnHoOhlbPOwXTjaPXhAxGMId6eLzLeH6/hHGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 026/197] blk-mq: honor IO scheduler for multiqueue devices
-Date:   Sun, 27 Oct 2019 21:59:04 +0100
-Message-Id: <20191027203353.126808171@linuxfoundation.org>
+Subject: [PATCH 5.3 028/197] ARM: dts: am4372: Set memory bandwidth limit for DISPC
+Date:   Sun, 27 Oct 2019 21:59:06 +0100
+Message-Id: <20191027203353.247217444@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -64,56 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit a12de1d42d74ef3c80e9fb9a2da94daaef747869 ]
+[ Upstream commit f90ec6cdf674248dcad85bf9af6e064bf472b841 ]
 
-If a device is using multiple queues, the IO scheduler may be bypassed.
-This may hurt performance for some slow MQ devices, and it also breaks
-zoned devices which depend on mq-deadline for respecting the write order
-in one zone.
+Set memory bandwidth limit to filter out resolutions above 720p@60Hz to
+avoid underflow errors due to the bandwidth needs of higher resolutions.
 
-Don't bypass io scheduler if we have one setup.
+am43xx can not provide enough bandwidth to DISPC to correctly handle
+'high' resolutions.
 
-This patch can double sequential write performance basically on MQ
-scsi_debug when mq-deadline is applied.
-
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Javier González <javier@javigon.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am4372.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index a79b9ad1aba18..ed41cde93641c 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1998,6 +1998,8 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- 		}
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 848e2a8884e2c..14bbc438055fd 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -337,6 +337,8 @@
+ 				ti,hwmods = "dss_dispc";
+ 				clocks = <&disp_clk>;
+ 				clock-names = "fck";
++
++				max-memory-bandwidth = <230000000>;
+ 			};
  
- 		blk_add_rq_to_plug(plug, rq);
-+	} else if (q->elevator) {
-+		blk_mq_sched_insert_request(rq, false, true, true);
- 	} else if (plug && !blk_queue_nomerges(q)) {
- 		/*
- 		 * We do limited plugging. If the bio can be merged, do that.
-@@ -2021,8 +2023,8 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- 			blk_mq_try_issue_directly(data.hctx, same_queue_rq,
- 					&cookie);
- 		}
--	} else if ((q->nr_hw_queues > 1 && is_sync) || (!q->elevator &&
--			!data.hctx->dispatch_busy)) {
-+	} else if ((q->nr_hw_queues > 1 && is_sync) ||
-+			!data.hctx->dispatch_busy) {
- 		blk_mq_try_issue_directly(data.hctx, rq, &cookie);
- 	} else {
- 		blk_mq_sched_insert_request(rq, false, true, true);
+ 			rfbi: rfbi@4832a800 {
 -- 
 2.20.1
 
