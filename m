@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16573CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4326DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA738208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1103D208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210720;
-	bh=+ZsH7oQpipIz+45yrR434x2lkezrifEcknHQJqomgC0=;
+	s=default; t=1572210724;
+	bh=adTvinB5qHUTQOXdWUAnUTJQLeswb/Ob77yEnh7asBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VSId2PRrjWimiBpg65EbpXZsybC0SUJsPM8vRpUSVIuXHaO5P1qP4UiJKRQmp2yTh
-	 Uq9RNOWSccScTfy8/6qctZuBZdHzJwtu2PhcvWRnApLi+0NBhSDQLwl3NjnojCv0OU
-	 sISGMYJSKKlU7UXrRXYXFj/sU093jyQxCrxNCuVg=
+	b=gTXJrvbnE59EJYV7vUAiAwPFfH9NoCpgQY9aHoIrXX7gJn0zfx37nkz6AyftAazMs
+	 I7+iuL7cBUOXzplAITAmAEUakgt8vV3pJOrEbjy93kWKt3OyfBmecoJuh1GAWLfMhF
+	 vj9Ex/jnfCfg3tIVC+LQDhP7uY/kSnTK/AT3ESBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbfJ0VL7 (ORCPT
+        id S1728846AbfJ0VMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:11:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58550 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:12:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729981AbfJ0VL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:11:56 -0400
+        id S1729984AbfJ0VL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:11:59 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78F54205C9;
-        Sun, 27 Oct 2019 21:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE970205C9;
+        Sun, 27 Oct 2019 21:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210715;
-        bh=+ZsH7oQpipIz+45yrR434x2lkezrifEcknHQJqomgC0=;
+        s=default; t=1572210718;
+        bh=adTvinB5qHUTQOXdWUAnUTJQLeswb/Ob77yEnh7asBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wXUA1rnzfJ5TH7RMF/V5IUvASrqpY50NcWfSuXlL19/ioJms0+luznUPAISeK5izy
-         eatT4BEtSZffOum5tyg3OUqbOra/oGinuVMqzDArtrrx8fwBrgtSpSQrUOPe1j54wP
-         CC/+gSSma+WbcHcmfbzROLiFMllwSf1dxGWgUBa0=
+        b=iAO7N4K9Gkx/P3EW2Ng19Jz5dywotZObGHM4algbQCZ5y3pomiz51evns3/3WaGUN
+         q7raaSaTA/3wB4UB78A5E3B/PXXVKkYa+DOR5cSg7Ky+0ZYPbtEXF/wtZRbbCVQnTt
+         P1W2uctGvSr3wR2yoQ87JoUQuuO54rzGHAFh39rw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 4.14 112/119] cpufreq: Avoid cpufreq_suspend() deadlock on system shutdown
-Date:   Sun, 27 Oct 2019 22:01:29 +0100
-Message-Id: <20191027203349.647955851@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Paul Durrant <paul@xen.org>, Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 113/119] xen/netback: fix error path of xenvif_connect_data()
+Date:   Sun, 27 Oct 2019 22:01:30 +0100
+Message-Id: <20191027203349.706116869@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -62,85 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Juergen Gross <jgross@suse.com>
 
-commit 65650b35133ff20f0c9ef0abd5c3c66dbce3ae57 upstream.
+commit 3d5c1a037d37392a6859afbde49be5ba6a70a6b3 upstream.
 
-It is incorrect to set the cpufreq syscore shutdown callback pointer
-to cpufreq_suspend(), because that function cannot be run in the
-syscore stage of system shutdown for two reasons: (a) it may attempt
-to carry out actions depending on devices that have already been shut
-down at that point and (b) the RCU synchronization carried out by it
-may not be able to make progress then.
+xenvif_connect_data() calls module_put() in case of error. This is
+wrong as there is no related module_get().
 
-The latter issue has been present since commit 45975c7d21a1 ("rcu:
-Define RCU-sched API in terms of RCU for Tree RCU PREEMPT builds"),
-but the former one has been there since commit 90de2a4aa9f3 ("cpufreq:
-suspend cpufreq governors on shutdown") regardless.
+Remove the superfluous module_put().
 
-Fix that by dropping cpufreq_syscore_ops altogether and making
-device_shutdown() call cpufreq_suspend() directly before shutting
-down devices, which is along the lines of what system-wide power
-management does.
-
-Fixes: 45975c7d21a1 ("rcu: Define RCU-sched API in terms of RCU for Tree RCU PREEMPT builds")
-Fixes: 90de2a4aa9f3 ("cpufreq: suspend cpufreq governors on shutdown")
-Reported-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Tested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: 4.0+ <stable@vger.kernel.org> # 4.0+
+Fixes: 279f438e36c0a7 ("xen-netback: Don't destroy the netdev until the vif is shut down")
+Cc: <stable@vger.kernel.org> # 3.12
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Paul Durrant <paul@xen.org>
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/core.c       |    3 +++
- drivers/cpufreq/cpufreq.c |   10 ----------
- 2 files changed, 3 insertions(+), 10 deletions(-)
+ drivers/net/xen-netback/interface.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -10,6 +10,7 @@
-  *
-  */
- 
-+#include <linux/cpufreq.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/fwnode.h>
-@@ -2845,6 +2846,8 @@ void device_shutdown(void)
- 	wait_for_device_probe();
- 	device_block_probing();
- 
-+	cpufreq_suspend();
-+
- 	spin_lock(&devices_kset->list_lock);
- 	/*
- 	 * Walk the devices list backward, shutting down each in turn.
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2570,14 +2570,6 @@ int cpufreq_unregister_driver(struct cpu
+--- a/drivers/net/xen-netback/interface.c
++++ b/drivers/net/xen-netback/interface.c
+@@ -718,7 +718,6 @@ err_unmap:
+ 	xenvif_unmap_frontend_data_rings(queue);
+ 	netif_napi_del(&queue->napi);
+ err:
+-	module_put(THIS_MODULE);
+ 	return err;
  }
- EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
  
--/*
-- * Stop cpufreq at shutdown to make sure it isn't holding any locks
-- * or mutexes when secondary CPUs are halted.
-- */
--static struct syscore_ops cpufreq_syscore_ops = {
--	.shutdown = cpufreq_suspend,
--};
--
- struct kobject *cpufreq_global_kobject;
- EXPORT_SYMBOL(cpufreq_global_kobject);
- 
-@@ -2589,8 +2581,6 @@ static int __init cpufreq_core_init(void
- 	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
- 	BUG_ON(!cpufreq_global_kobject);
- 
--	register_syscore_ops(&cpufreq_syscore_ops);
--
- 	return 0;
- }
- module_param(off, int, 0444);
 
 
