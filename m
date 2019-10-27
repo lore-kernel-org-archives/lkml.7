@@ -2,134 +2,154 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B29CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBA1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B27208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572231361;
-	bh=pb7IZTBRfkZVHAvZFuM2aHVe4OKL4bsoUZk1vFFsMic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dyrly8yMy8MWXlIcHdID5ECRV4aDM71vzMzCinbaxM+SZDkF1TXSIuqoVwcfZiru4
-	 RbJ8btF7aHVKusjoo08SYtaPQuI0HkM20bBSXobMHv0tTNrf9J6lpwGgcu7qS4f5wY
-	 hdkSpdDrOD1llDRZD/r3NpQp7ftu+wTjwETWXvVA=
+	by mail.kernel.org (Postfix) with ESMTP id E8555208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfJ1Czp (ORCPT
+        id S1728822AbfJ1C6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 22:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44332 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 22:58:23 -0400
+Received: from mga12.intel.com ([192.55.52.136]:35133 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbfJ1Czo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 22:55:44 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE302208C0;
-        Mon, 28 Oct 2019 02:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572231344;
-        bh=pb7IZTBRfkZVHAvZFuM2aHVe4OKL4bsoUZk1vFFsMic=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QeCp2KyO5HGNqs9LV5rCeAyHiDVHPizLKOXUYKZe9JMJNk5mejLTdbN1VT7KA+enL
-         nhFzRcexYUTqhoWNkmTETEes2aYa30k0oqjUzSXaNlImzHcJ79rLq8+3kmv1+p2Jsk
-         W9kfk5YiU0pAilyIEU7Qh9qOBeP9BnukZvoZ/wWg=
-Date:   Mon, 28 Oct 2019 10:55:26 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v13 10/18] ARM: dts: imx6dl-yapp4: Add reg property to
- the lp5562 channel node
-Message-ID: <20191028025524.GF16985@dragon>
-References: <20191016155954.29044-1-dmurphy@ti.com>
- <20191016155954.29044-11-dmurphy@ti.com>
+        id S1728229AbfJ1C6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 22:58:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 19:58:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,238,1569308400"; 
+   d="scan'208";a="229552422"
+Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Oct 2019 19:58:19 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>, Joerg Roedel <joro@8bytes.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kan.liang@intel.com,
+        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: [PATCH v4 0/6]  KVM: x86/vPMU: Efficiency optimization by reusing last created perf_event
+Date:   Sun, 27 Oct 2019 18:52:37 +0800
+Message-Id: <20191027105243.34339-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016155954.29044-11-dmurphy@ti.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 10:59:46AM -0500, Dan Murphy wrote:
-> Add the reg property to each channel node.  This update is
-> to accomodate the multicolor framework.  In addition to the
-> accomodation this allows the LEDs to be placed on any channel
-> and allow designs to skip channels as opposed to requiring
-> sequential order.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> CC: Shawn Guo <shawnguo@kernel.org>
-> CC: Sascha Hauer <s.hauer@pengutronix.de>
-> CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-> CC: Fabio Estevam <festevam@gmail.com>
-> CC: NXP Linux Team <linux-imx@nxp.com>
-> ---
->  arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-> index e8d800fec637..efc466ed1fea 100644
-> --- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-> +++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-> @@ -257,29 +257,35 @@
->  		reg = <0x30>;
->  		clock-mode = /bits/ 8 <1>;
->  		status = "disabled";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
->  
-> -		chan0 {
-> +		chan@0 {
+Hi Community,
 
-Patch #18 updates bindings example to use led as node name.  Maybe we
-should do the same here?
+For perf subsystem, please help review first two patches.
+For kvm subsystem, please help review last four patches.
 
-Shawn
+This patch series is going to improve vPMU Efficiency for guest which is
+mainly measured by guest NMI handler latency in such as basic perf usages
+[1][2] with hardware PMU. It's not a passthrough solution but based on the
+legacy vPMU implementation.
 
->  			chan-name = "R";
->  			led-cur = /bits/ 8 <0x20>;
->  			max-cur = /bits/ 8 <0x60>;
-> +			reg = <0>;
->  		};
->  
-> -		chan1 {
-> +		chan@1 {
->  			chan-name = "G";
->  			led-cur = /bits/ 8 <0x20>;
->  			max-cur = /bits/ 8 <0x60>;
-> +			reg = <1>;
->  		};
->  
-> -		chan2 {
-> +		chan@2 {
->  			chan-name = "B";
->  			led-cur = /bits/ 8 <0x20>;
->  			max-cur = /bits/ 8 <0x60>;
-> +			reg = <2>;
->  		};
->  
-> -		chan3 {
-> +		chan@3 {
->  			chan-name = "W";
->  			led-cur = /bits/ 8 <0x0>;
->  			max-cur = /bits/ 8 <0x0>;
-> +			reg = <3>;
->  		};
->  	};
->  
-> -- 
-> 2.22.0.214.g8dca754b1e
-> 
+With this optimization, the average latency of the guest NMI handler is
+reduced from 104923 ns to 48393 ns (~2.16x speed up on CLX-AP with 5.4-rc4,
+w/ perf_v4_pmi=n). If host disables the watchdog, the minimum latency of
+guest NMI handler could be speed up at ~3413x and in the average at ~786x.
+The run time of workload with perf attached inside the guest could be
+reduced significantly with this optimization.
+
+The general idea (defined in patch 5/6) is to reuse last created event
+for the same vPMC when the new requested config is the exactly same as the
+current_config (used by last pmc_reprogram_counter()) AND the new event
+period is appropriate and accepted (via perf_event_period() in patch 1/6).
+Before reusing the perf_event, it will be disabled until it's suitable for
+reuse and a hardware counter will be reassigned again to serve vPMC.
+
+If the disabled perf_event is no longer reused, we do a lazy release
+mechanism (defined in patch 6/6) which in a short is to release the
+disabled perf_events in the call of kvm_pmu_handle_event since the vcpu
+gets next scheduled in if guest doesn't WRMSR its MSRs in the last sched
+time slice. In the kvm_arch_sched_in(), KVM_REQ_PMU is requested if the
+pmu->event_count has not been reduced to zero and then do kvm_pmu_cleanup
+only once for a sched time slice to ensure that overhead is very limited.
+
+Please check each commit for more details and share your comments with us.
+
+Thanks,
+Like Xu
+
+---
+[1] multiplexing sampling mode usage: perf record  -e \
+`perf list | grep Hardware | grep event |\
+awk '{print $1}' | head -n 10 |tr '\n' ',' | sed 's/,$//' ` ./ftest
+[2] single event count mode usage: perf stat -e branch-misses ./ftest
+
+---
+Changes in v4:
+- s/rdpmc_idx/rdpmc_ecx/g (Jim Mattson)
+- make *_msr_idx_to_pmc static (kbuild test robot)
+
+Changes in v3:
+- optimize perf_event_pause() for no child event 
+- rename programed_config to programed_config
+- rename lazy_release_ctrl to pmc_in_use
+- rename kvm_pmu_ops callbacks form msr_idx to rdpmc_idx
+- add a new kvm_pmu_ops callback msr_idx_to_pmc
+- use DECLARE_BITMAP to declare bitmap
+- set up a bitmap 'pmu->all_valid_pmc_idx'
+- move kvm_pmu_cleanup to kvm_pmu_handle_event
+- update performance data based on 5.4-rc4 on CLX-AP
+
+Changes in v2:
+- use perf_event_pause() to disable, read, reset by only one lock;
+- use __perf_event_read_value() after _perf_event_disable();
+- replace bitfields with 'u8 event_count; bool need_cleanup;';
+- refine comments and commit messages;
+- fix two issues reported by kbuild test robot for ARCH=[nds32|sh]
+
+v3:
+https://lore.kernel.org/kvm/20191021160651.49508-1-like.xu@linux.intel.com/
+
+v2:
+https://lore.kernel.org/kvm/20191013091533.12971-1-like.xu@linux.intel.com/
+
+v1:
+https://lore.kernel.org/kvm/20190930072257.43352-1-like.xu@linux.intel.com/
+
+Like Xu (6):
+  perf/core: Provide a kernel-internal interface to recalibrate event
+    period
+  perf/core: Provide a kernel-internal interface to pause perf_event
+  KVM: x86/vPMU: Rename pmu_ops callbacks from msr_idx to rdpmc_ecx
+  KVM: x86/vPMU: Introduce a new kvm_pmu_ops->msr_idx_to_pmc callback
+  KVM: x86/vPMU: Reuse perf_event to avoid unnecessary
+    pmc_reprogram_counter
+  KVM: x86/vPMU: Add lazy mechanism to release perf_event per vPMC
+
+ arch/x86/include/asm/kvm_host.h |  19 ++++++
+ arch/x86/kvm/pmu.c              | 112 ++++++++++++++++++++++++++++++--
+ arch/x86/kvm/pmu.h              |  23 +++++--
+ arch/x86/kvm/pmu_amd.c          |  24 +++++--
+ arch/x86/kvm/vmx/pmu_intel.c    |  29 +++++++--
+ arch/x86/kvm/x86.c              |   8 ++-
+ include/linux/perf_event.h      |  10 +++
+ kernel/events/core.c            |  46 +++++++++++--
+ 8 files changed, 240 insertions(+), 31 deletions(-)
+
+-- 
+2.21.0
+
