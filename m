@@ -2,116 +2,104 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DEECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 20:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707B0CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 20:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC2E20873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 20:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572206752;
-	bh=CUyR3fuoRdKrJf9nZf1t8S4z237j7l+D00ncfqIoSsU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W2YyuMc/H0H48v67j/s3QAsq1jNNtY8zRTjBCLNH2B2MrMiFIGfeq4s8T+nvT0ZzD
-	 pvwUPAv96uxE/7RlFXAD88k6Ip/hZSmPe/f1wc5gKhrMHFnwVff+Rj+3m9/0GSpVTs
-	 odlnzOsgVrPLXOlmNnZMaCbrwijtAvkXUy+VMr6I=
+	by mail.kernel.org (Postfix) with ESMTP id 42DC420873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 20:08:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KosvU5MG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfJ0UFv (ORCPT
+        id S1727732AbfJ0UIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 16:05:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727235AbfJ0UFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 16:05:51 -0400
-Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B71E2070B;
-        Sun, 27 Oct 2019 20:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572206750;
-        bh=CUyR3fuoRdKrJf9nZf1t8S4z237j7l+D00ncfqIoSsU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=agxvakRkTOgijn/qKghHaoBmSxLV42tfG+3mDaEYBQaWHZAkmKod8SYfXy4MpEWo6
-         Dprkv23dHk6aJ3UmcpP4M8lhhTvS7xXEaYUcPvmJap/tZyHGkHa2Inqt5Kicypqv4d
-         meAoiKQjcdHD9W3YcUkXv7dyo7Dh3OrLSJTGPLUs=
-Date:   Sun, 27 Oct 2019 21:05:47 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     maowenan <maowenan@huawei.com>
-Cc:     Ajay Kaher <akaher@vmware.com>, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, jmorris@namei.org, yoshfuji@linux-ipv6.org,
-        kaber@trash.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        srivatsab@vmware.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        srinidhir@vmware.com, bvikas@vmware.com, anishs@vmware.com,
-        vsirnapalli@vmware.com, srostedt@vmware.com
-Subject: Re: [PATCH 4.9.y] Revert "net: sit: fix memory leak in
- sit_init_net()"
-Message-ID: <20191027200547.GB2588299@kroah.com>
-References: <1571216634-44834-1-git-send-email-akaher@vmware.com>
- <20191016183027.GC801860@kroah.com>
- <d0cbd39d-9fb7-dad8-b951-12aa299f13e8@huawei.com>
+        Sun, 27 Oct 2019 16:08:17 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33966 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbfJ0UIQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 16:08:16 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v3so8104178wmh.1;
+        Sun, 27 Oct 2019 13:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uILHnq2ITfdDUPR3qFBlC6hvnz1kzbF3v1izfuQrKFw=;
+        b=KosvU5MG6bLLKxIv6Q1GTSUvZR2Y0/dnt1uUCaeKm23meFQ6ZyXdc5rIx0y4b6mlvr
+         W4G48Tg4nYLf1XzXNokP+Zk16znbBAyuc1shsbomZUzwA95PkYYE3N8qhz41TJOfaQyu
+         Ar5YJOxzgr0RH16u4xoAeNBYiNoEjUouGcqttTEBZD4mc76yvCMGpbKsF+lSwaqS6XL7
+         FF6XFS5X47EjY0XuTf7PgzpnMJnDVM2ZyLBuk8sG3MYf1CGs/TXz1r9A9snvYeow7JV7
+         eZ6M6JHbe/awtIKk1Vyb+PK2N5GeAH98rdpsdh+lyrrgLNU3/K9tw1NR01IpnHHLvs6V
+         1PbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uILHnq2ITfdDUPR3qFBlC6hvnz1kzbF3v1izfuQrKFw=;
+        b=IEiy4uW96cy0OptnSHJ9/d0IjxmvUNvwb/EMPNlL5/8jC3efN6eQk3RpD+D/NRJBkn
+         Ven8PlhlheP4rxwHl+q9BrulpbSjluApT0vv+BJRAYsGvMLeszHMPEWJjXDycbX8DGg6
+         LZ5z05gkuz0HLrA4F60mdoYT0+m8hp1XXGG7G/G+LzldsiU9AmiotsiUyurGpOrqgNj4
+         gdzJdTM76tGVwaz30ObN3A8a86BR7iPPe+d2c6C/SQXHJIX0jIWZ5E2PiZVhgQTdwvZ1
+         JdAhyo5bZpmv8k3HOIZ9SvgsY//j8oPTEYmApMcovkMbtjKYF1VdsoEeerKO8VvMLgi5
+         /GNw==
+X-Gm-Message-State: APjAAAV3oZoGUWIf//fnpU6HnPQXgrIplvlHDhcO3DUBVlKhHsN4LaUA
+        2J6+Se4Q8vQCL5eWFmiVGTwQTdHcOdo=
+X-Google-Smtp-Source: APXvYqwyOASmJjLwg6ZT+C/jtzSWM3AVB0aUtxw+W5AEL7GrQyB/V5+FJN06i2VjrR7nVF3WoGClxg==
+X-Received: by 2002:a1c:2b45:: with SMTP id r66mr11035621wmr.163.1572206894390;
+        Sun, 27 Oct 2019 13:08:14 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id o11sm8539538wmh.28.2019.10.27.13.08.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2019 13:08:14 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Sean Young <sean@mess.org>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 2/2] arm64: dts: allwinner: beelink-gs1: Add rc-beelink-gs1 keymap
+Date:   Sun, 27 Oct 2019 21:07:38 +0100
+Message-Id: <20191027200738.24802-2-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191027200738.24802-1-peron.clem@gmail.com>
+References: <20191027200738.24802-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0cbd39d-9fb7-dad8-b951-12aa299f13e8@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 09:48:05AM +0800, maowenan wrote:
-> 
-> 
-> On 2019/10/17 2:30, Greg KH wrote:
-> > On Wed, Oct 16, 2019 at 02:33:54PM +0530, Ajay Kaher wrote:
-> >> This reverts commit 375d6d454a95ebacb9c6eb0b715da05a4458ffef which is
-> >> commit 07f12b26e21ab359261bf75cfcb424fdc7daeb6d upstream.
-> >>
-> >> Unnecessarily calling free_netdev() from sit_init_net().
-> >> ipip6_dev_free() of 4.9.y called free_netdev(), so no need
-> >> to call again after ipip6_dev_free().
-> >>
-> >> Cc: Mao Wenan <maowenan@huawei.com>
-> >> Cc: David S. Miller <davem@davemloft.net>
-> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> Signed-off-by: Ajay Kaher <akaher@vmware.com>
-> >> ---
-> >>  net/ipv6/sit.c | 1 -
-> >>  1 file changed, 1 deletion(-)
-> >>
-> >> diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
-> >> index 47ca2a2..16eba7b 100644
-> >> --- a/net/ipv6/sit.c
-> >> +++ b/net/ipv6/sit.c
-> >> @@ -1856,7 +1856,6 @@ static int __net_init sit_init_net(struct net *net)
-> >>  
-> >>  err_reg_dev:
-> >>  	ipip6_dev_free(sitn->fb_tunnel_dev);
-> >> -	free_netdev(sitn->fb_tunnel_dev);
-> >>  err_alloc_dev:
-> >>  	return err;
-> >>  }
-> >> -- 
-> >> 2.7.4
-> >>
-> > 
-> > Mao, are you ok with this change?
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> 
-> Greg, ipip6_dev_free has already called free_netdev in stable 4.9.
-> 
-> Reviewed-by: Mao Wenan <maowenan@huawei.com>
+Beelink GS1 ships with a NEC remote control.
 
-Thanks, now queued up.
+Add the rc keymap to the device-tree.
 
-greg k-h
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 1d05d570142f..ce4b0679839d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -252,6 +252,7 @@
+ };
+ 
+ &r_ir {
++	linux,rc-map-name = "rc-beelink-gs1";
+ 	status = "okay";
+ };
+ 
+-- 
+2.20.1
+
