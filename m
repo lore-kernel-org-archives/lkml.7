@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689CACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC77CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370C3208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7BF20B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210825;
-	bh=ETaAvzsQEiP4oZJWvRcthsJ/ZN8IdDXxzwucysDt7Ko=;
+	s=default; t=1572210832;
+	bh=hgWiUJDqFhtiAu2EufDq0H/kyP+i6BeWCEBmU9Aiu3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bgTSNNkEp6en6AxwdPXT9WxlMOArIXgiYbXe7rXlPJeopZF151kbDb8mh0mVjwpx4
-	 Yy2kD2qfeiGBlzXcuX2GngnRFMjd/XFqWcr+9MeVCaNWpFVZcCuBkwOWUwmiGvVRmA
-	 deoaGku086H2EakneXUDqVuHZryzw4MtAuxbjyLo=
+	b=t810g7kq4u4fI1uZHcyK4OP/60F4FB5M9WJATkK2AhmJaBvilf1xYEJ22Y2KjS/y3
+	 s7xfmnX0REzasEBB0CtnB08xgby5bF6dD3GsM15EyvqCbwgPzH+RReLRkFk4FwsyB/
+	 /Eb48rRpUvd0WEq7AJ6hQh2XgQNO5cs+AlqLYfkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbfJ0VNn (ORCPT
+        id S1730347AbfJ0VNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60816 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:13:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730311AbfJ0VNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:13:41 -0400
+        id S1730330AbfJ0VNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:13:46 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C649C208C0;
-        Sun, 27 Oct 2019 21:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C3BA205C9;
+        Sun, 27 Oct 2019 21:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210820;
-        bh=ETaAvzsQEiP4oZJWvRcthsJ/ZN8IdDXxzwucysDt7Ko=;
+        s=default; t=1572210826;
+        bh=hgWiUJDqFhtiAu2EufDq0H/kyP+i6BeWCEBmU9Aiu3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K6fkF+goOf2Knj6LqkiqMFMM52Yc8pD15WVWBen0tl2+X1cGZVq6uSM1mbDX1TBgq
-         rYSWgcUnoCbF+bIiGUAX+IYd8FMu1ltQyY6q20P3YHzQjKQ/1rEGYNaLioA/LHKb3x
-         PqaFsCiiv4/CfJdzF1Ey7ZSSUDI4Ue70oDNCzv7Q=
+        b=qETjWUhsXUKy76iYK81RWchGD+qAukYj0sXn+b8e8qsN48w+VIOZh10DkrDfvED5y
+         vmsahIh4M7qG2JhoBhs+J2gIHDgFOHucXj4CSmKuSPIM10YmddxtIjP8a/pgYanlw0
+         Ikpa4S6G63mzUcOkpb4sG4xWtemEM9yXATFK3GUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/93] scsi: megaraid: disable device when probe failed after enabled device
-Date:   Sun, 27 Oct 2019 22:00:15 +0100
-Message-Id: <20191027203252.435486519@linuxfoundation.org>
+Subject: [PATCH 4.19 05/93] ARM: OMAP2+: Fix missing reset done flag for am3 and am43
+Date:   Sun, 27 Oct 2019 22:00:17 +0100
+Message-Id: <20191027203253.088898277@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -61,40 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 70054aa39a013fa52eff432f2223b8bd5c0048f8 ]
+[ Upstream commit 8ad8041b98c665b6147e607b749586d6e20ba73a ]
 
-For pci device, need to disable device when probe failed after enabled
-device.
+For ti,sysc-omap4 compatible devices with no sysstatus register, we do have
+reset done status available in the SOFTRESET bit that clears when the reset
+is done. This is documented for example in am437x TRM for DMTIMER_TIOCP_CFG
+register. The am335x TRM just says that SOFTRESET bit value 1 means reset is
+ongoing, but it behaves the same way clearing after reset is done.
 
-Link: https://lore.kernel.org/r/1567818450-173315-1-git-send-email-chenxiang66@hisilicon.com
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+With the ti-sysc driver handling this automatically based on no sysstatus
+register defined, we see warnings if SYSC_HAS_RESET_STATUS is missing in the
+legacy platform data:
+
+ti-sysc 48042000.target-module: sysc_flags 00000222 != 00000022
+ti-sysc 48044000.target-module: sysc_flags 00000222 != 00000022
+ti-sysc 48046000.target-module: sysc_flags 00000222 != 00000022
+...
+
+Let's fix these warnings by adding SYSC_HAS_RESET_STATUS. Let's also
+remove the useless parentheses while at it.
+
+If it turns out we do have ti,sysc-omap4 compatible devices without a
+working SOFTRESET bit we can set up additional quirk handling for it.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/megaraid.c b/drivers/scsi/megaraid.c
-index 8c7154143a4eb..a84878fbf45d2 100644
---- a/drivers/scsi/megaraid.c
-+++ b/drivers/scsi/megaraid.c
-@@ -4189,11 +4189,11 @@ megaraid_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
- 		 */
- 		if (pdev->subsystem_vendor == PCI_VENDOR_ID_COMPAQ &&
- 		    pdev->subsystem_device == 0xC000)
--		   	return -ENODEV;
-+			goto out_disable_device;
- 		/* Now check the magic signature byte */
- 		pci_read_config_word(pdev, PCI_CONF_AMISIG, &magic);
- 		if (magic != HBA_SIGNATURE_471 && magic != HBA_SIGNATURE)
--			return -ENODEV;
-+			goto out_disable_device;
- 		/* Ok it is probably a megaraid */
- 	}
- 
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+index 9ded7bf972e71..3b8fe014a3e94 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+@@ -946,7 +946,8 @@ static struct omap_hwmod_class_sysconfig am33xx_timer_sysc = {
+ 	.rev_offs	= 0x0000,
+ 	.sysc_offs	= 0x0010,
+ 	.syss_offs	= 0x0014,
+-	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
++	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
++			  SYSC_HAS_RESET_STATUS,
+ 	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+ 			  SIDLE_SMART_WKUP),
+ 	.sysc_fields	= &omap_hwmod_sysc_type2,
 -- 
 2.20.1
 
