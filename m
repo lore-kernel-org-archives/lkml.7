@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACA0CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2F8CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFF921928
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6840021928
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572152931;
-	bh=avjDO20ekzRg6N0cc0H6NK1mMp2HBzb27/Uf4/5l9F8=;
+	s=default; t=1572152955;
+	bh=YR2Sm+hvHq7MESkHGm20xfXadb/2Kg+0rffw5uIclpM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j0TWESqc3DLA/V5serKj026g/mE8iK2lucdWoDjQfD2mUZOPjBUmaLFu5Reh1J8Tc
-	 PS/2HLdqgbWxL7Y80X9CnJxo4ltVLg82SkFwiHsOApPmT0RqSPn2UgBITSxw7YhBEr
-	 zG/TVaWJ5S8T8LSpB8+6AOwl+nSr5/wzmScQk/H0=
+	b=iFDBzRQZ6nh71wIYUdH8KnoDoLBpMDXWHkKuC0+2fonn1LohsKv6kDE/PBgu2JekW
+	 jkR+/kvbLJ+jgb0Sr9EayeS5dHjxIWbvbg70/fFgLDF5vnJLUoaBQ5r7KFuCEgJs8a
+	 0tcn9FsDKu27uhlX0l6qzrSjwsSybSRZvJxuC/o8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfJ0FIu (ORCPT
+        id S1726322AbfJ0FJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 01:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41452 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 01:09:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfJ0FIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 01:08:50 -0400
+        id S1725440AbfJ0FJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 01:09:14 -0400
 Received: from localhost (mobile-166-176-122-39.mycingular.net [166.176.122.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D88B21726;
-        Sun, 27 Oct 2019 05:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 346462070B;
+        Sun, 27 Oct 2019 05:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572152929;
-        bh=avjDO20ekzRg6N0cc0H6NK1mMp2HBzb27/Uf4/5l9F8=;
+        s=default; t=1572152953;
+        bh=YR2Sm+hvHq7MESkHGm20xfXadb/2Kg+0rffw5uIclpM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oTHduX+jH6f/n4r9yjH+zOHcuZewTUvYYElECQPGzd6RXifUW09JnupgPwM973osk
-         M9vwBKwuWApjm1wQmFTDpkCCRbr/C1IZ3B7+pOxEF5T/UlE7nhcGAMf0f//EGs0znG
-         eqJZ/BSoWr0VxQWpx4AhnDXyw9k85F6SnYw7gZYk=
-Date:   Sun, 27 Oct 2019 00:08:48 -0500
+        b=yVYxJNe7tRljYEhUkyyWBRCA8dGEXOhXN9HodgetLzqQ9FQA/UbZvdjI9NOKsL00/
+         J/qXsYnimaauYCzU5tHN7K48PCDpOItlayKYoMH4OVNERJiQa4t0mS4ccaXQSPAydP
+         f23J7M8u+YYiF1S5+/ws2ZIuVfaQd9gjBJYcgtV8=
+Date:   Sun, 27 Oct 2019 00:09:11 -0500
 From:   Andy Gross <agross@kernel.org>
 To:     Amit Kucheria <amit.kucheria@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -50,9 +50,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 13/15] arm64: dts: msm8916: thermal: Add interrupt
+Subject: Re: [PATCH v6 11/15] arm64: dts: qcs404: thermal: Add interrupt
  support
-Message-ID: <20191027050848.GB5514@hector.lan>
+Message-ID: <20191027050911.GC5514@hector.lan>
 Mail-Followup-To: Amit Kucheria <amit.kucheria@linaro.org>,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com,
@@ -63,21 +63,22 @@ Mail-Followup-To: Amit Kucheria <amit.kucheria@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
         devicetree@vger.kernel.org
 References: <cover.1571652874.git.amit.kucheria@linaro.org>
- <88eff964b708c8aff57b24370d2e14389ace09e9.1571652874.git.amit.kucheria@linaro.org>
+ <63d6b0b8bba0d217c2f7bb4240c587ead933b6be.1571652874.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <88eff964b708c8aff57b24370d2e14389ace09e9.1571652874.git.amit.kucheria@linaro.org>
+In-Reply-To: <63d6b0b8bba0d217c2f7bb4240c587ead933b6be.1571652874.git.amit.kucheria@linaro.org>
 User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 04:05:32PM +0530, Amit Kucheria wrote:
+On Mon, Oct 21, 2019 at 04:05:30PM +0530, Amit Kucheria wrote:
 > Register upper-lower interrupt for the tsens controller.
 > 
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
 
 Applied for 5.5.
 
