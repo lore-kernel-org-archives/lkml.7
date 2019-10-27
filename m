@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C00CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF54CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBB8208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9649A2070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210974;
-	bh=IDU0l7Efib0taqOJVNYTz6XobOyDC5hC4mNkcR0XXIE=;
+	s=default; t=1572210977;
+	bh=QW6MRCRLYhtplUwDHGu9qu0e/8biqeJI/X84mmGWZKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j3U0j91k0tXdeg+BgidbokNT3qyOSZXuRHk3zZ6mEAYPHab3gMC5WH4Fn499vW9iJ
-	 x0xkmCh0Qs4t89d2mJcW8a34kXiLPfpCaNlrrgcWDbgZO+HmcQy7cpECzjAAn5Otep
-	 TPEJc6oRWXf2EHHu8iI6rAggw4Koni8atf7F9YBo=
+	b=ezgf3z0UzKnBpnX3H1KLTHJw7nX8nBMYrVi+/NDy2DaDWxAPgOoUYBe79QpV6nm9t
+	 UU032xDkazvHfzI/XwWD6NwqQwThyQpI/fq/YmCIeBUiYnE303UMpOwlEdSFgec6TN
+	 asycI+YkGdUEdLypiWDVRuuv2nmXGqE+NvRc9ObE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbfJ0VQN (ORCPT
+        id S1730797AbfJ0VQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:16:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35696 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:16:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfJ0VQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:16:09 -0400
+        id S1730783AbfJ0VQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:16:13 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E34BE2070B;
-        Sun, 27 Oct 2019 21:16:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C760F205C9;
+        Sun, 27 Oct 2019 21:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210969;
-        bh=IDU0l7Efib0taqOJVNYTz6XobOyDC5hC4mNkcR0XXIE=;
+        s=default; t=1572210972;
+        bh=QW6MRCRLYhtplUwDHGu9qu0e/8biqeJI/X84mmGWZKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y0/yMl/0CsGVB1OrpxJY2FHLP2JehkVD6aG2RrNcKSBs3PknV9Hr6HwdXl28CMrvX
-         qLUXOWQpiris4kPihOuF1mOwfjXBtjO+8qR9Dl/haSQYmaAgu/iNCCITgKP17GWFsl
-         +mTmh9jDA7OB1d6+PpiiGnAGiG04I5SQ/tV0a9Ho=
+        b=E0/VkZdtkBAsa2ZReVr6Jf3Nnkuq3DMXmCi8shkgrsNVBrTg5m1BviWy0j0zltjpi
+         ChAUEi0dDorEU3ld6loLwq/L+TqW/NeN75JIVRRVlurLLhTOc8dqjUJgRN3kau6+zr
+         i18GnbJ0r2ixBp7aTLpyik0va7X9sIhgffoREY5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 36/93] USB: legousbtower: fix memleak on disconnect
-Date:   Sun, 27 Oct 2019 22:00:48 +0100
-Message-Id: <20191027203258.052004168@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 37/93] ALSA: hda/realtek - Add support for ALC711
+Date:   Sun, 27 Oct 2019 22:00:49 +0100
+Message-Id: <20191027203258.122885374@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -58,37 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Kailang Yang <kailang@realtek.com>
 
-commit b6c03e5f7b463efcafd1ce141bd5a8fc4e583ae2 upstream.
+commit 83629532ce45ef9df1f297b419b9ea112045685d upstream.
 
-If disconnect() races with release() after a process has been
-interrupted, release() could end up returning early and the driver would
-fail to free its driver data.
+Support new codec ALC711.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191010125835.27031-3-johan@kernel.org
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/legousbtower.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ sound/pci/hda/patch_realtek.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -419,10 +419,7 @@ static int tower_release (struct inode *
- 		goto exit;
- 	}
- 
--	if (mutex_lock_interruptible(&dev->lock)) {
--	        retval = -ERESTARTSYS;
--		goto exit;
--	}
-+	mutex_lock(&dev->lock);
- 
- 	if (dev->open_count != 1) {
- 		dev_dbg(&dev->udev->dev, "%s: device not opened exactly once\n",
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -405,6 +405,7 @@ static void alc_fill_eapd_coef(struct hd
+ 	case 0x10ec0700:
+ 	case 0x10ec0701:
+ 	case 0x10ec0703:
++	case 0x10ec0711:
+ 		alc_update_coef_idx(codec, 0x10, 1<<15, 0);
+ 		break;
+ 	case 0x10ec0662:
+@@ -7752,6 +7753,7 @@ static int patch_alc269(struct hda_codec
+ 	case 0x10ec0700:
+ 	case 0x10ec0701:
+ 	case 0x10ec0703:
++	case 0x10ec0711:
+ 		spec->codec_variant = ALC269_TYPE_ALC700;
+ 		spec->gen.mixer_nid = 0; /* ALC700 does not have any loopback mixer path */
+ 		alc_update_coef_idx(codec, 0x4a, 1 << 15, 0); /* Combo jack auto trigger control */
+@@ -8883,6 +8885,7 @@ static const struct hda_device_id snd_hd
+ 	HDA_CODEC_ENTRY(0x10ec0700, "ALC700", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0701, "ALC701", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0703, "ALC703", patch_alc269),
++	HDA_CODEC_ENTRY(0x10ec0711, "ALC711", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0867, "ALC891", patch_alc662),
+ 	HDA_CODEC_ENTRY(0x10ec0880, "ALC880", patch_alc880),
+ 	HDA_CODEC_ENTRY(0x10ec0882, "ALC882", patch_alc882),
 
 
