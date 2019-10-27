@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EC6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D698CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7147D208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 445A0205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210955;
-	bh=5bYkzf0cOA1DnTlb6MM2s3nSpeMQETLnobPhmKDtXlM=;
+	s=default; t=1572210959;
+	bh=8jmxZ2IQvza0hiJBvlidENn+RvnEXJ8eFPMGst97j9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o1myO0ceU1bbPeUYyK49IwqVQNZ+PWDystof+NrxqI81hBCBM+iAyQeb4NCqjPxe6
-	 tHpY9UgMUKYK4L032NltLsYjScZpH5x+tAFQ9QJNP5264ayFbk2H1ugqKm0dNLWuUY
-	 fysOMErJILFMb2L2iEuP1qjQ/XxQ07gIAcFN89Kw=
+	b=BWd46QgIIdytXFschEFxXO3eopA+X+Q9/bgU3PR4zBFvwuWScORxYz7tsWpoEjeay
+	 OeM/ewKTjFiGn14fxS3DqEjSPxCoRfQF5OlYr40Jd8HH2HPSTBplBZKKTmLNExxRvt
+	 4ZBF1PmKBott43f7T1tiOROxlulA7HUnjNUoAGgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbfJ0VPy (ORCPT
+        id S1730722AbfJ0VPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:15:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35332 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:15:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730718AbfJ0VPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:15:52 -0400
+        id S1730707AbfJ0VPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:15:49 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 685C920717;
-        Sun, 27 Oct 2019 21:15:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F2A52070B;
+        Sun, 27 Oct 2019 21:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210952;
-        bh=5bYkzf0cOA1DnTlb6MM2s3nSpeMQETLnobPhmKDtXlM=;
+        s=default; t=1572210948;
+        bh=8jmxZ2IQvza0hiJBvlidENn+RvnEXJ8eFPMGst97j9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TW18KZMRhG3/qMSQkI5O3hS5BRah9IJmrgfjA5ksW1QnkuGllQZ32CIpiBKilGPY1
-         CItYhFTcXChp2XzadaAUyPjGwFMIalZhFd0QAd1D35ZQ3XLb2XPs4rLy/Wcv0WpNsL
-         rLT0rUnFfDMXpAjKxMcFLcJ07YefNNlq2WVm7QBw=
+        b=hsI21zOHMf3Wc6VeF/5wHeesRgfgPyTV7Ycx4spIRVBBkIhRRgk6sI+ZHDtyaGvdy
+         /sR8jN8QBh62Wb7uicGqBgFv9GQvYgdfHHRtDsbA7PoJF8GOt8isfqICcNg2X8XCE+
+         Gqr2YahOTQ6WskkchPsQkogQ06r0FItvx9CYc7cU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 4.19 72/93] EDAC/ghes: Fix Use after free in ghes_edac remove path
-Date:   Sun, 27 Oct 2019 22:01:24 +0100
-Message-Id: <20191027203309.714870582@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        Sven Schnelle <svens@stackframe.org>
+Subject: [PATCH 4.19 71/93] parisc: Fix vmap memory leak in ioremap()/iounmap()
+Date:   Sun, 27 Oct 2019 22:01:23 +0100
+Message-Id: <20191027203309.163217642@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -64,76 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Helge Deller <deller@gmx.de>
 
-commit 1e72e673b9d102ff2e8333e74b3308d012ddf75b upstream.
+commit 513f7f747e1cba81f28a436911fba0b485878ebd upstream.
 
-ghes_edac models a single logical memory controller, and uses a global
-ghes_init variable to ensure only the first ghes_edac_register() will
-do anything.
+Sven noticed that calling ioremap() and iounmap() multiple times leads
+to a vmap memory leak:
+	vmap allocation for size 4198400 failed:
+	use vmalloc=<size> to increase size
 
-ghes_edac is registered the first time a GHES entry in the HEST is
-probed. There may be multiple entries, so subsequent attempts to
-register ghes_edac are silently ignored as the work has already been
-done.
+It seems we missed calling vunmap() in iounmap().
 
-When a GHES entry is unregistered, it calls ghes_edac_unregister(),
-which free()s the memory behind the global variables in ghes_edac.
-
-But there may be multiple GHES entries, the next call to
-ghes_edac_unregister() will dereference the free()d memory, and attempt
-to free it a second time.
-
-This may also be triggered on a platform with one GHES entry, if the
-driver is unbound/re-bound and unbound. The re-bind step will do
-nothing because of ghes_init, the second unbind will then do the same
-work as the first.
-
-Doing the unregister work on the first call is unsafe, as another
-CPU may be processing a notification in ghes_edac_report_mem_error(),
-using the memory we are about to free.
-
-ghes_init is already half of the reference counting. We only need
-to do the register work for the first call, and the unregister work
-for the last. Add the unregister check.
-
-This means we no longer free ghes_edac's memory while there are
-GHES entries that may receive a notification.
-
-This was detected by KASAN and DEBUG_TEST_DRIVER_REMOVE.
-
- [ bp: merge into a single patch. ]
-
-Fixes: 0fe5f281f749 ("EDAC, ghes: Model a single, logical memory controller")
-Reported-by: John Garry <john.garry@huawei.com>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20191014171919.85044-2-james.morse@arm.com
-Link: https://lkml.kernel.org/r/304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com
+Signed-off-by: Helge Deller <deller@gmx.de>
+Noticed-by: Sven Schnelle <svens@stackframe.org>
+Cc: <stable@vger.kernel.org> # v3.16+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/edac/ghes_edac.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/parisc/mm/ioremap.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -532,7 +532,11 @@ void ghes_edac_unregister(struct ghes *g
- 	if (!ghes_pvt)
- 		return;
+--- a/arch/parisc/mm/ioremap.c
++++ b/arch/parisc/mm/ioremap.c
+@@ -3,7 +3,7 @@
+  * arch/parisc/mm/ioremap.c
+  *
+  * (C) Copyright 1995 1996 Linus Torvalds
+- * (C) Copyright 2001-2006 Helge Deller <deller@gmx.de>
++ * (C) Copyright 2001-2019 Helge Deller <deller@gmx.de>
+  * (C) Copyright 2005 Kyle McMartin <kyle@parisc-linux.org>
+  */
  
-+	if (atomic_dec_return(&ghes_init))
-+		return;
-+
- 	mci = ghes_pvt->mci;
-+	ghes_pvt = NULL;
- 	edac_mc_del_mc(mci->pdev);
- 	edac_mc_free(mci);
+@@ -84,7 +84,7 @@ void __iomem * __ioremap(unsigned long p
+ 	addr = (void __iomem *) area->addr;
+ 	if (ioremap_page_range((unsigned long)addr, (unsigned long)addr + size,
+ 			       phys_addr, pgprot)) {
+-		vfree(addr);
++		vunmap(addr);
+ 		return NULL;
+ 	}
+ 
+@@ -92,9 +92,11 @@ void __iomem * __ioremap(unsigned long p
  }
+ EXPORT_SYMBOL(__ioremap);
+ 
+-void iounmap(const volatile void __iomem *addr)
++void iounmap(const volatile void __iomem *io_addr)
+ {
+-	if (addr > high_memory)
+-		return vfree((void *) (PAGE_MASK & (unsigned long __force) addr));
++	unsigned long addr = (unsigned long)io_addr & PAGE_MASK;
++
++	if (is_vmalloc_addr((void *)addr))
++		vunmap((void *)addr);
+ }
+ EXPORT_SYMBOL(iounmap);
 
 
