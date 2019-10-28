@@ -2,118 +2,150 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE73ECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91876CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8C620578
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cIMk0XHU"
+	by mail.kernel.org (Postfix) with ESMTP id 6E17A20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389199AbfJ1Mml (ORCPT
+        id S2389212AbfJ1Mms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:42:41 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:55348 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389163AbfJ1Mml (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:42:41 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191028124239epoutp04651c52d57e35dc3f60339d6e84c4b95b~R0BryO7qp2623126231epoutp04a
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:42:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191028124239epoutp04651c52d57e35dc3f60339d6e84c4b95b~R0BryO7qp2623126231epoutp04a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572266559;
-        bh=HiuklP0cYH3jIvujolcAfEAhpwjfw+PqhX1kaOGJoFE=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=cIMk0XHUdzsA9aRaijkUMmrR//RkvQQo8RJQULsJ08zZFkUHkDF7wofFWoNm5nEJy
-         IeZuATC01O7CpnsYY39Us8s4jNyZJwZCt78XEeGqlB+VlO7NCgfhaQ2nRCkNijnhIM
-         ucqp0ZgodgmbLg7U9PnCF6BhES5wZuuog+yKL5bI=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20191028124238epcas5p38ba9fff1728d661c230ec319ca46cc0e~R0BrP_r_r1784817848epcas5p3U;
-        Mon, 28 Oct 2019 12:42:38 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        37.7F.20245.E32E6BD5; Mon, 28 Oct 2019 21:42:38 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574~R0Bq2QFnG0725707257epcas5p4h;
-        Mon, 28 Oct 2019 12:42:38 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191028124238epsmtrp249e1c59749d9de0b4acbd9f8d3bfe704~R0Bq1kGyA2925729257epsmtrp2Z;
-        Mon, 28 Oct 2019 12:42:38 +0000 (GMT)
-X-AuditID: b6c32a4b-fa1ff70000014f15-34-5db6e23eb4b1
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        80.0A.24756.D32E6BD5; Mon, 28 Oct 2019 21:42:37 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191028124236epsmtip2ca97c20a4519b88e7a6b1d9e1a9dc300~R0BpnL7YO0999809998epsmtip2l;
-        Mon, 28 Oct 2019 12:42:36 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Cc:     pankaj.dubey@samsung.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, Anvesh Salveru <anvesh.s@samsung.com>
-Subject: [PATCH 0/2] Add support for ZRX-DC phy property
-Date:   Mon, 28 Oct 2019 18:12:18 +0530
-Message-Id: <1572266540-17626-1-git-send-email-anvesh.s@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsWy7bCmuq7do22xBk3nZS3O7lrIajH/yDlW
-        i5ZZi1gsLu+aw2Zxdt5xNovOL7PYLBZt/cJu8XPXPBYHDo+ds+6ye/Q2v2Pz6NuyitHj8ya5
-        AJYoLpuU1JzMstQifbsErozTV7ewFvxlqVj2ezJbA2MPSxcjJ4eEgInEg1l3gWwuDiGB3YwS
-        aw/cZIZwPjFKrGpogXK+MUpc67/DCNOyZ95KVojEXkaJHz0HoapamCSOb2sAq2IT0Jb4eXQv
-        O4gtIlAmMavpClicWaBUomv+RDYQW1jAQmL9gnYwm0VAVaKhbRYTiM0r4CKx/t52VohtchI3
-        z3UyQ9h/WSW+zEmCsF0k7l6fBxUXlnh1fAs7hC0l8fndXjYIO1+i9+5SqHiNxJS7HVAf2Esc
-        uDIH6GkOoHs0Jdbv0oc4jU+i9/cTJpCwhACvREebEISpJNE2sxqiUUJi8fybUEs9JO6d3sgG
-        UiIkECtx+A/3BEaZWQgjFzAyrmKUTC0ozk1PLTYtMM5LLdcrTswtLs1L10vOz93ECI5tLe8d
-        jJvO+RxiFOBgVOLhnXB5W6wQa2JZcWXuIUYJDmYlEd6LZ4BCvCmJlVWpRfnxRaU5qcWHGKU5
-        WJTEeSexXo0REkhPLEnNTk0tSC2CyTJxcEo1MFbtyPm4hClrRc1SSWt/q/D7Cs+M895OvyoQ
-        t/PzoolVi59EHpet3dx0sWrarTPdTRs85cI+rdpxMm3lH4tEldzC5sK6E76FBVu/isTF5i3w
-        l2Nvrjnmceh38O8F73tsRK4t5dRMfH1OMzFu5hpPKfbrP2skTq6249HS3uF/2/DAytYTXmf2
-        H1diKc5INNRiLipOBADSj04G6QIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmluLIzCtJLcpLzFFi42LZdlhJXtfu0bZYg0eCFmd3LWS1mH/kHKtF
-        y6xFLBaXd81hszg77zibReeXWWwWi7Z+Ybf4uWseiwOHx85Zd9k9epvfsXn0bVnF6PF5k1wA
-        SxSXTUpqTmZZapG+XQJXxumrW1gL/rJULPs9ma2BsYeli5GTQ0LARGLPvJWsXYxcHEICuxkl
-        1v16zwaRkJD4svcrlC0ssfLfc3aIoiYmiZYf/8ESbALaEj+P7mUHsUUEqiQOdPSBTWUWqJS4
-        3vGQCcQWFrCQWL+gHayeRUBVoqFtFlicV8BFYv297awQC+Qkbp7rZJ7AyLOAkWEVo2RqQXFu
-        em6xYYFhXmq5XnFibnFpXrpecn7uJkZwEGlp7mC8vCT+EKMAB6MSD++Lq9tihVgTy4orcw8x
-        SnAwK4nwXjwDFOJNSaysSi3Kjy8qzUktPsQozcGiJM77NO9YpJBAemJJanZqakFqEUyWiYNT
-        qoFxmpLplm+7PIsUo72a5/Y25DQf1HpV7ZG9uCR90l3j2qWO8QzqWe1bJJeJVJoZRi9kntTl
-        cbb3YEnSWftQ1432mfYOAiu3ePLnsvPkq/0pdU171xrdJLwzu2Ceicj2NVl1TbKXl8zUu/5u
-        5q1TcwLs1PuVeJwad//PaHvs2XJmneraxV8UfiuxFGckGmoxFxUnAgAmgzw/HgIAAA==
-X-CMS-MailID: 20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574
-References: <CGME20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574@epcas5p4.samsung.com>
+        Mon, 28 Oct 2019 08:42:48 -0400
+Received: from mga12.intel.com ([192.55.52.136]:44069 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389163AbfJ1Mmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 08:42:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 05:42:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
+   d="scan'208";a="374218666"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
+  by orsmga005.jf.intel.com with ESMTP; 28 Oct 2019 05:42:44 -0700
+Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
+ Trail Whiskey Cove PMIC
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrey Zhizhikin <andrey.z@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
+ <20191025075335.GC32742@smile.fi.intel.com>
+ <20191025075540.GD32742@smile.fi.intel.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <166c9855-910d-a70c-ba86-6aebe5f2346d@intel.com>
+Date:   Mon, 28 Oct 2019 14:41:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191025075540.GD32742@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DesignWare controller driver provides the support to handle the PHYs which
-are compliant to ZRX-DC specification based on "snps,phy-zrxdc-compliant"
-DT property. So, add "snps,phy-zrxdc-compliant" property in tegra pcie
-controller DT nodes and remove platform specific code from platform driver.
+On 25/10/19 10:55 AM, Andy Shevchenko wrote:
+> On Fri, Oct 25, 2019 at 10:53:35AM +0300, Andy Shevchenko wrote:
+>> On Thu, Oct 24, 2019 at 02:29:37PM +0000, Andrey Zhizhikin wrote:
+>>> This patchset introduces additional regulator driver for Intel Cherry
+>>> Trail Whiskey Cove PMIC. It also adds a cell in mfd driver for this
+>>> PMIC, which is used to instantiate this regulator.
+>>>
+>>> Regulator support for this PMIC was present in kernel release from Intel
+>>> targeted Aero platform, but was not entirely ported upstream and has
+>>> been omitted in mainline kernel releases. Consecutively, absence of
+>>> regulator caused the SD Card interface not to be provided with Vqcc
+>>> voltage source needed to operate with UHS-I cards.
+>>>
+>>> Following patches are addessing this issue and making sd card interface
+>>> to be fully operable with UHS-I cards. Regulator driver lists an ACPI id
+>>> of the SD Card interface in consumers and exposes optional "vqmmc"
+>>> voltage source, which mmc driver uses to switch signalling voltages
+>>> between 1.8V and 3.3V. 
+>>>
+>>> This set contains of 2 patches: one is implementing the regulator driver
+>>> (based on a non upstreamed version from Intel Aero), and another patch
+>>> registers this driver as mfd cell in exising Whiskey Cove PMIC driver.
+>>
+>> Thank you.
+>> Hans, Cc'ed, has quite interested in these kind of patches.
+>> Am I right, Hans?
+> 
+> Since it's about UHS/SD, Cc to Adrian as well.
+> 
 
-Anvesh Salveru (2):
-  PCI: tegra: Remove support for ZRX-DC compliant PHY from platform
-    driver
-  arm64: tegra: Add support for ZRX-DC phy property
+My only concern is that the driver might conflict with ACPI methods trying
+to do the same thing, e.g. there is one ACPI SDHC instance from GPDWin DSDT
+with code like this:
 
- arch/arm64/boot/dts/nvidia/tegra194.dtsi   | 6 ++++++
- drivers/pci/controller/dwc/pcie-tegra194.c | 4 ----
- 2 files changed, 6 insertions(+), 4 deletions(-)
+  If ((Arg2 == 0x03))
+   {
+       ADBG ("DSM 1p8")
+       If ((^^I2C7.AVBL == One))
+       {
+           If ((PMID == One))
+           {
+               DATA = 0x59
+               ^^I2C7.DL03 = BUFF /* \_SB_.PCI0.SHC1.BUFF */
+           }
+           ElseIf ((PMID == 0x02))
+           {
+               BUFF = ^^I2C7.XD31 /* \_SB_.PCI0.I2C7.XD31 */
+               If ((STAT == Zero))
+               {
+                   DATA |= 0x10
+                   ^^I2C7.XD31 = BUFF /* \_SB_.PCI0.SHC1.BUFF */
+               }
 
--- 
-2.17.1
+               BUFF = ^^I2C7.XD32 /* \_SB_.PCI0.I2C7.XD32 */
+               If ((STAT == Zero))
+               {
+                   DATA |= 0x0B
+                   DATA &= 0xEB
+                   ^^I2C7.XD32 = BUFF /* \_SB_.PCI0.SHC1.BUFF */
+               }
+
+               Sleep (0x0A)
+               BUFF = ^^I2C7.XD31 /* \_SB_.PCI0.I2C7.XD31 */
+               If ((STAT == Zero))
+               {
+                   DATA |= 0x20
+                   ^^I2C7.XD31 = BUFF /* \_SB_.PCI0.SHC1.BUFF */
+               }
+           }
+           ElseIf ((PMID == 0x03))
+           {
+               Local0 = ^^I2C7.PMI5.GET (One, 0x6E, 0x67)
+               Sleep (0x0A)
+               Local0 &= 0xF8
+               ^^I2C7.PMI5.SET (One, 0x6E, 0x67, Local0)
+               Sleep (0x64)
+               Local0 = ^^I2C7.PMI5.GET (One, 0x6E, 0x67)
+               Sleep (0x0A)
+               Local0 |= One
+               Local0 &= 0xF9
+               ^^I2C7.PMI5.SET (One, 0x6E, 0x67, Local0)
+               Sleep (0x0A)
+               ^^I2C7.PMI5.SET (One, 0x6E, 0xC6, 0x1F)
+               Sleep (0x0A)
+           }
+       }
+
+       SDVL = One
+       Return (0x03)
+   }
+
+
 
