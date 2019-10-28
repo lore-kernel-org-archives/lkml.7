@@ -2,142 +2,166 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6306CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C68ACA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBBC221835
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NsYY3RCc"
+	by mail.kernel.org (Postfix) with ESMTP id EE2E6218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404095AbfJ1VHh (ORCPT
+        id S2391223AbfJ1VHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:07:37 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30938 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391197AbfJ1VHY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:07:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572296843;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vaN691EUnxF95m8CQyGbqME6xNGoyr91KYIIBfK7uXs=;
-        b=NsYY3RCcrSSRK7N43bEJtZ75r4ut492io9M3kXqnv1Vnd2QxLuOUk2tRBmrI0f7Xc6siyu
-        PLyC2rwit7/d19vH3a4fMivKPMHLVxqCFihwoi7g76UrbDkdmmdWqwNKP0/Ke/hF7eILQP
-        5sycfsZPQXb9TKA2RCgr4zZ9MT7NfHY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-124-pWsCm5gWORa93cR4oE7e_g-1; Mon, 28 Oct 2019 17:07:20 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 851AF1804971;
-        Mon, 28 Oct 2019 21:07:17 +0000 (UTC)
-Received: from krava (ovpn-204-45.brq.redhat.com [10.40.204.45])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4928926359;
-        Mon, 28 Oct 2019 21:07:13 +0000 (UTC)
-Date:   Mon, 28 Oct 2019 22:07:12 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v4 4/9] perf tools: splice events onto evlist even on
- error
-Message-ID: <20191028210712.GB6158@krava>
-References: <20191024190202.109403-1-irogers@google.com>
- <20191025180827.191916-1-irogers@google.com>
- <20191025180827.191916-5-irogers@google.com>
+        Mon, 28 Oct 2019 17:07:42 -0400
+Received: from mga01.intel.com ([192.55.52.88]:42989 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404060AbfJ1VHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:07:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 14:07:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
+   d="scan'208";a="224760299"
+Received: from shrehore-mobl1.ti.intel.com (HELO localhost) ([10.251.82.5])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 14:07:31 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-doc@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v23 24/24] docs: x86/sgx: Document kernel internals
+Date:   Mon, 28 Oct 2019 23:03:24 +0200
+Message-Id: <20191028210324.12475-25-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191025180827.191916-5-irogers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: pWsCm5gWORa93cR4oE7e_g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 11:08:22AM -0700, Ian Rogers wrote:
-> If event parsing fails the event list is leaked, instead splice the list
-> onto the out result and let the caller cleanup.
->=20
-> An example input for parse_events found by libFuzzer that reproduces
-> this memory leak is 'm{'.
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Document some of the more tricky parts of the kernel implementation
+internals.
 
-thanks,
-jirka
+Cc: linux-doc@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ Documentation/x86/sgx/2.Kernel-internals.rst | 78 ++++++++++++++++++++
+ Documentation/x86/sgx/index.rst              |  1 +
+ 2 files changed, 79 insertions(+)
+ create mode 100644 Documentation/x86/sgx/2.Kernel-internals.rst
 
-> ---
->  tools/perf/util/parse-events.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
->=20
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index c516d0cce946..4c4c6f3e866a 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1952,15 +1952,20 @@ int parse_events(struct evlist *evlist, const cha=
-r *str,
-> =20
->  =09ret =3D parse_events__scanner(str, &parse_state, PE_START_EVENTS);
->  =09perf_pmu__parse_cleanup();
-> +
-> +=09if (!ret && list_empty(&parse_state.list)) {
-> +=09=09WARN_ONCE(true, "WARNING: event parser found nothing\n");
-> +=09=09return -1;
-> +=09}
-> +
-> +=09/*
-> +=09 * Add list to the evlist even with errors to allow callers to clean =
-up.
-> +=09 */
-> +=09perf_evlist__splice_list_tail(evlist, &parse_state.list);
-> +
->  =09if (!ret) {
->  =09=09struct evsel *last;
-> =20
-> -=09=09if (list_empty(&parse_state.list)) {
-> -=09=09=09WARN_ONCE(true, "WARNING: event parser found nothing\n");
-> -=09=09=09return -1;
-> -=09=09}
-> -
-> -=09=09perf_evlist__splice_list_tail(evlist, &parse_state.list);
->  =09=09evlist->nr_groups +=3D parse_state.nr_groups;
->  =09=09last =3D evlist__last(evlist);
->  =09=09last->cmdline_group_boundary =3D true;
-> --=20
-> 2.24.0.rc0.303.g954a862665-goog
->=20
+diff --git a/Documentation/x86/sgx/2.Kernel-internals.rst b/Documentation/x86/sgx/2.Kernel-internals.rst
+new file mode 100644
+index 000000000000..7bfd5cb19b8e
+--- /dev/null
++++ b/Documentation/x86/sgx/2.Kernel-internals.rst
+@@ -0,0 +1,78 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++================
++Kernel Internals
++================
++
++CPU configuration
++=================
++
++Because SGX has an ever evolving and expanding feature set, it's possible for
++a BIOS or VMM to configure a system in such a way that not all CPUs are equal,
++e.g. where Launch Control is only enabled on a subset of CPUs.  Linux does
++*not* support such a heterogeneous system configuration, nor does it even
++attempt to play nice in the face of a misconfigured system.  With the exception
++of Launch Control's hash MSRs, which can vary per CPU, Linux assumes that all
++CPUs have a configuration that is identical to the boot CPU.
++
++EPC management
++==============
++
++Because the kernel can't arbitrarily read EPC memory or share RO backing pages
++between enclaves, traditional memory models such as CoW and fork() do not work
++with enclaves.  In other words, the architectural rules of EPC force it to be
++treated as MAP_SHARED at all times.
++
++The inability to employ traditional memory models also means that EPC memory
++must be isolated from normal memory pools, e.g. attempting to use EPC memory
++for normal mappings would result in faults and/or perceived data corruption.
++Furthermore, EPC is not enumerated as normal memory, e.g. BIOS enumerates
++EPC as reserved memory in the e820 tables, or not at all.  As a result, EPC
++memory is directly managed by the SGX subsystem, e.g. SGX employs VM_PFNMAP to
++manually insert/zap/swap page table entries, and exposes EPC to userspace via
++a well known device, /dev/sgx/enclave.
++
++The net effect is that all enclave VMAs must be MAP_SHARED and are backed by
++a single file, /dev/sgx/enclave.
++
++EPC oversubscription
++====================
++
++SGX allows to have larger enclaves the than amount of available EPC by providing
++a subset of leaf instructions for swapping EPC pages to the system memory. The
++details of these instructions are discussed in the architecture document. Due to
++the unique requirements for swapping EPC pages, and because EPC pages do not
++have associated page structures, management of the EPC is not handled by the
++standard memory subsystem.
++
++SGX directly handles swapping of EPC pages, including a thread to initiate the
++reclaiming process and a rudimentary LRU mechanism. When the amount of free EPC
++pages goes below a low watermark the swapping thread starts reclaiming pages.
++The pages that have not been recently accessed (i.e. do not have the A bit set)
++are selected as victim pages. Each enclave holds an shmem file as a backing
++storage for reclaimed pages.
++
++Launch Control
++==============
++
++The current kernel implementation supports only writable MSRs. The launch is
++performed by setting the MSRs to the hash of the public key modulus of the
++enclave signer and a token with the valid bit set to zero.
++
++If the MSRs were read-only, the platform would need to provide a launch enclave
++(LE), which would be signed with the key matching the MSRs. The LE creates
++cryptographic tokens for other enclaves that they can pass together with their
++signature to the ENCLS(EINIT) opcode, which is used to initialize enclaves.
++
++Provisioning
++============
++
++The use of provisioning must be controlled because it allows to get access to
++the provisioning keys to attest to a remote party that the software is running
++inside a legitimate enclave. This could be used by a malware network to ensure
++that its nodes are running inside legitimate enclaves.
++
++The driver introduces a special device file /dev/sgx/provision and a special
++ioctl SGX_IOC_ENCLAVE_SET_ATTRIBUTE to accomplish this. A file descriptor
++pointing to /dev/sgx/provision is passed to ioctl from which kernel authorizes
++the PROVISION_KEY attribute to the enclave.
+diff --git a/Documentation/x86/sgx/index.rst b/Documentation/x86/sgx/index.rst
+index c5dfef62e612..5d660e83d984 100644
+--- a/Documentation/x86/sgx/index.rst
++++ b/Documentation/x86/sgx/index.rst
+@@ -14,3 +14,4 @@ potentially malicious.
+    :maxdepth: 1
+ 
+    1.Architecture
++   2.Kernel-internals
+-- 
+2.20.1
 
