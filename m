@@ -2,112 +2,97 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB075CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6190CCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A91F218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5EE218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:49:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PLniqjIK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F46ev0SL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732748AbfJ1VsK (ORCPT
+        id S1732939AbfJ1VtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:48:10 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13859 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730592AbfJ1VsK (ORCPT
+        Mon, 28 Oct 2019 17:49:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34352 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731303AbfJ1VtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:48:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5db7621e0000>; Mon, 28 Oct 2019 14:48:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 28 Oct 2019 14:48:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 28 Oct 2019 14:48:09 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
- 2019 21:48:09 +0000
-Received: from [10.26.11.236] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
- 2019 21:48:06 +0000
-Subject: Re: [PATCH 5.3 000/197] 5.3.8-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191027203351.684916567@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <ec238058-1eaf-a33f-cbbf-fd49e1ddaa82@nvidia.com>
-Date:   Mon, 28 Oct 2019 21:48:04 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 17:49:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Y+3ByL1NFha0OQHrVmcEx+qAYWBPgvk/yuNuappc9Ak=; b=F46ev0SLhQ+6Z3YQU9gYJSRJz
+        rGczGjUNX0n9PVm/PhvXfhzbgbr1/7tMohcOIESobf+14rPpueFB4bCTUpMPJZ7V7rQVDAP5pU1P6
+        KN7Iqoem1dS2yhyRHmJ1rmNVsn67ySmjemMucAsDBhODlNcjONujxdQ0vT2sNBXFWoGeLcLvhppZT
+        ll8BovQ0O9R4MdLbkbvE73yqyOFkVQ5r3OV5mlI1w7rA+WV1EqPwOcbyu1K9IMRzS0VjizGj0pyVo
+        88/HXIa6MzwwnxKziASWykcIqkncpX8fwejERCkNe79Gmc9XlHsXA4jiGNvNdBr897hcMwu1YA60l
+        4tGd5qBrQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPCsr-0004WY-K4; Mon, 28 Oct 2019 21:49:05 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5D2B1980D8F; Mon, 28 Oct 2019 22:49:02 +0100 (CET)
+Date:   Mon, 28 Oct 2019 22:49:02 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     linux-kernel@vger.kernel.org, aaron.lwe@gmail.com,
+        valentin.schneider@arm.com, mingo@kernel.org, pauld@redhat.com,
+        jdesfossez@digitalocean.com, naravamudan@digitalocean.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        juri.lelli@redhat.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, kernel-team@android.com, john.stultz@linaro.org
+Subject: Re: NULL pointer dereference in pick_next_task_fair
+Message-ID: <20191028214902.GN4643@worktop.programming.kicks-ass.net>
+References: <20191028174603.GA246917@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572299294; bh=mTTcSVLUyOS1hjod0gJhHeIejk2l8cyWa7r8Zx3f7Z8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=PLniqjIKvJXZBKLVt21jBjooxKlKn2wPXwq0fqRhKYzzSSNOgWGnAuSusZZC/tz+O
-         +6U9zPGeJxiQZymRC7xt3mASYiVBSYFOT5v0qxY0JQBeuJBsiUyECpSOEw2XwAsxzl
-         ATOFHwVHFmNEq42iv4kGwwUr6awRBolKzTKlQqFraexvA9gaheyLa1qntKiS3c4wKE
-         FsgTrem1KwBKyAJkBbYj3URUkGC0M6lKwbHC0t3OAfmQ9oOViATF5G+Pjd+kKvuytQ
-         IxI4BR7WomyKx8/K3tTPKchdRE/QQZRADJD4WexD7SCqfDBDLNV1AKAD263PKr6Mly
-         fRz9hrLx94n8Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028174603.GA246917@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 28, 2019 at 05:46:03PM +0000, Quentin Perret wrote:
 
-On 27/10/2019 20:58, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.8 release.
-> There are 197 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> The issue is very transient and relatively hard to reproduce.
 > 
-> Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
-> Anything received after that time might be too late.
+> After digging a bit, the offending commit seems to be:
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.8-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> and the diffstat can be found below.
+>     67692435c411 ("sched: Rework pick_next_task() slow-path")
 > 
-> thanks,
+> By 'offending' I mean that reverting it makes the issue go away. The
+> issue comes from the fact that pick_next_entity() returns a NULL se in
+> the 'simple' path of pick_next_task_fair(), which causes obvious
+> problems in the subsequent call to set_next_entity().
 > 
-> greg k-h
+> I'll dig more, but if anybody understands the issue in the meatime feel
+> free to send me a patch to try out :)
 
-All tests are passing for Tegra ...
+The only way for pick_next_entity() to return NULL is if the tree is
+empty and !cfs_rq->curr. But in that case, cfs_rq->nr_running _should_
+be 0 and or it's related se should not be enqueued in the parent cfs_rq.
 
-Test results for stable-v5.3:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
+Now for the root cfs_rq we check nr_running this and jump to the idle
+path, however if this occurs in the middle of the hierarchy, we're up a
+creek without no paddles. This is something that really should not
+happen (because empty cfs_rq should not be enqueued)
 
-Linux version:	5.3.8-rc1-g740177dc0d52
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+Also, if we take the simple patch, as you say, then we'll have done a
+put_prev_task(), regardless of how we got there, so we know cfs_rq->curr
+must be NULL. Which, with the above, means the tree really is empty.
 
-Cheers
-Jon
+And as stated above, when the tree is empty and !cfs_rq->curr, the
+cfs_rq's se should not be enqueued in the parent cfs_rq so we should not
+be getting here.
 
--- 
-nvpublic
+Clearly something is buggered with the cgroup state. What is your cgroup
+setup, are you using cpu-bandwidth?
