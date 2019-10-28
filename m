@@ -2,241 +2,182 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9395CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C55CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8757F208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A32208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:38:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eRd6k7tU"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bnTXkuH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730161AbfJ1Dhp (ORCPT
+        id S1731065AbfJ1Di4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 23:37:45 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59094 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726563AbfJ1Dhp (ORCPT
+        Sun, 27 Oct 2019 23:38:56 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38630 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfJ1Diz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 23:37:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572233862;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zZHaEr3ru+xV7/Kjx7LWFNlModN0mirw+1TlzsK6m4A=;
-        b=eRd6k7tUZehmYIgSLiuXPh2ldjnjB49QQdEJhp9BEbrDCmrXnLQwBoRBdDy7yEtYmpqGA5
-        P0mcxKO19TrpGDykiqwmKZo4nSKB5RXBBT9PeyCBxQooBwqHaICwfWTru99NUZfeunZW2b
-        Gz46d8QtwFO/Dga7CfID4qjE60voF7c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-287-HOL_lykHNO6SzZneQw0dLg-1; Sun, 27 Oct 2019 23:37:38 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55E5B1800DCB;
-        Mon, 28 Oct 2019 03:37:37 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-41.pek2.redhat.com [10.72.12.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 26C0819481;
-        Mon, 28 Oct 2019 03:37:25 +0000 (UTC)
-Subject: Re: [PATCH 1/2 v6] x86/kdump: always reserve the low 1MiB when the
- crashkernel option is specified
-To:     Dave Young <dyoung@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, bhe@redhat.com,
-        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
-        horms@verge.net.au, kexec@lists.infradead.org
-References: <20191028024551.4278-1-lijiang@redhat.com>
- <20191028024551.4278-2-lijiang@redhat.com>
- <20191028031915.GA6945@dhcp-128-65.nay.redhat.com>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <3cbc93b4-c51c-99fb-0159-05c338b2645f@redhat.com>
-Date:   Mon, 28 Oct 2019 11:37:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 27 Oct 2019 23:38:55 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w3so5911128pgt.5
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 20:38:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=ji6WxCq+aHJBwM+x0esrqtTDOJDqjo2ORpOWnADNR4I=;
+        b=bnTXkuH5ybsnQ2hYA9wVyBpJgD3nzhKEKX3/kqvksA4YfXyfa1Yao3wuKa+BYTVN2D
+         IyNe9l8XO5Wu/h+Ey5fWmpNfyFjzONEqYsuqtPkx4WUgdCqPTkZCi5RFvS5GYh3U/ZOO
+         5Pf+wqUk3aMMS2+UFPto4PK74NBmiD6e4j3WLqmbAvrtTPRh2BDXmPJO2hRE4Qao0nUH
+         t6vYe1ldeUYs+/cJrgQSOuOaPHWxjGMKb0Dq/BTtYkMCVD5IF3NGX1dAR3zcszEoFDkg
+         l6GU8MKV4aFdcWHd8/fyXqcrlw/SeM8UmpPtdzG82GEaZhua1F8rNXVXFyXByPa6N7l5
+         Lfyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ji6WxCq+aHJBwM+x0esrqtTDOJDqjo2ORpOWnADNR4I=;
+        b=N2GsU0ePjg16DSNfGsWkf21MeTGMS6P8XBtpkrHB/tyGtI8Eppo6h/wusCffRRT1nq
+         HzvHP50d5jgTRXU2rIBbdakG9pcRNxTrrnisGzHx8XmgKbUxOljTpRRpv3C+pnAXbQzu
+         1RtC06fuXOXRD9S7981OABO3YWWZdRmLKurbGzqhS7uW8+dmFqMDQRD+ifrZDUlEpk9l
+         le49N9d/XbG8AjWa24XKdrrLgtBE1OVLPT37O/jISs5AEu2KaPFgegYLKC4SW+zpnoUX
+         ka40C5/h5h8d8kqi8JDaG0WP1k0eNoCLsautOH0rTuXlECl0516+guxRF1H+jL8jW/NM
+         Uadg==
+X-Gm-Message-State: APjAAAWq8HVa8o22rGHtbC7DBP+c5PrM+7xPYQDsboLeKKRVdre9qBfQ
+        UB2uyKz/bLuAC7pmRFG8Z5sY8XD298tBWQ==
+X-Google-Smtp-Source: APXvYqxMgelNPK8c849u4hq+aJ7j68v0Wo4pjrhJDJ32txEMgB7HPSEkAy3OLg5lM+Ulcd+oErqCrQ==
+X-Received: by 2002:a62:6546:: with SMTP id z67mr18468263pfb.32.1572233934202;
+        Sun, 27 Oct 2019 20:38:54 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id r13sm10268381pfg.3.2019.10.27.20.38.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 27 Oct 2019 20:38:53 -0700 (PDT)
+Subject: Re: [PATCH 0/2][for-next] cleanup submission path
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1572189860.git.asml.silence@gmail.com>
+ <666ed447-ba8f-29e7-237f-de8044aa63ea@kernel.dk>
+ <5ec9bd14-d8f2-32e6-7f25-0ca7256c408a@gmail.com>
+ <aac65fe2-6c51-3baf-eee7-af5a8f633bf2@kernel.dk>
+ <d39a878f-9dac-1457-6bba-01afc6268a84@kernel.dk>
+ <57db9960-0b31-9f40-c13b-1db6dcc88920@gmail.com>
+ <02a25d12-1f44-de18-f233-b5421c608469@kernel.dk>
+ <63f93f8a-4207-3ac4-a301-4907882009c9@gmail.com>
+ <728dec9c-465c-2341-d7b5-929a50400e9c@kernel.dk>
+ <3b8b84d0-cde2-6bb0-c903-a1d71f9b83e2@gmail.com>
+ <3957148b-0dac-a621-8f12-5d2d45557e24@kernel.dk>
+ <1e0ae1a6-6b8b-a78e-8ec0-fb7aa5972d00@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <02d42c75-1d48-35bd-abad-8230d2449c67@kernel.dk>
+Date:   Sun, 27 Oct 2019 21:38:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191028031915.GA6945@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <1e0ae1a6-6b8b-a78e-8ec0-fb7aa5972d00@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: HOL_lykHNO6SzZneQw0dLg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E5=9C=A8 2019=E5=B9=B410=E6=9C=8828=E6=97=A5 11:19, Dave Young =E5=86=99=
-=E9=81=93:
-> On 10/28/19 at 10:45am, Lianbo Jiang wrote:
->> Kdump kernel will reuse the first 640k region because the real mode
->> trampoline has to work in this area. When the vmcore is dumped, the
->> old memory in this area may be accessed, therefore, kernel has to
->> copy the contents of the first 640k area to a backup region so that
->> kdump kernel can read the old memory from the backup area of the
->> first 640k area, which is done in the purgatory().
+On 10/27/19 1:59 PM, Pavel Begunkov wrote:
+> On 27/10/2019 22:51, Jens Axboe wrote:
+>> On 10/27/19 1:17 PM, Pavel Begunkov wrote:
+>>> On 27/10/2019 22:02, Jens Axboe wrote:
+>>>> On 10/27/19 12:56 PM, Pavel Begunkov wrote:
+>>>>> On 27/10/2019 20:26, Jens Axboe wrote:
+>>>>>> On 10/27/19 11:19 AM, Pavel Begunkov wrote:
+>>>>>>> On 27/10/2019 19:56, Jens Axboe wrote:
+>>>>>>>> On 10/27/19 10:49 AM, Jens Axboe wrote:
+>>>>>>>>> On 10/27/19 10:44 AM, Pavel Begunkov wrote:
+>>>>>>>>>> On 27/10/2019 19:32, Jens Axboe wrote:
+>>>>>>>>>>> On 10/27/19 9:35 AM, Pavel Begunkov wrote:
+>>>>>>>>>>>> A small cleanup of very similar but diverged io_submit_sqes() and
+>>>>>>>>>>>> io_ring_submit()
+>>>>>>>>>>>>
+>>>>>>>>>>>> Pavel Begunkov (2):
+>>>>>>>>>>>>          io_uring: handle mm_fault outside of submission
+>>>>>>>>>>>>          io_uring: merge io_submit_sqes and io_ring_submit
+>>>>>>>>>>>>
+>>>>>>>>>>>>         fs/io_uring.c | 116 ++++++++++++++------------------------------------
+>>>>>>>>>>>>         1 file changed, 33 insertions(+), 83 deletions(-)
+>>>>>>>>>>>
+>>>>>>>>>>> I like the cleanups here, but one thing that seems off is the
+>>>>>>>>>>> assumption that io_sq_thread() always needs to grab the mm. If
+>>>>>>>>>>> the sqes processed are just READ/WRITE_FIXED, then it never needs
+>>>>>>>>>>> to grab the mm.
+>>>>>>>>>>> Yeah, we removed it to fix bugs. Personally, I think it would be
+>>>>>>>>>> clearer to do lazy grabbing conditionally, rather than have two
+>>>>>>>>>> functions. And in this case it's easier to do after merging.
+>>>>>>>>>>
+>>>>>>>>>> Do you prefer to return it back first?
+>>>>>>>>>
+>>>>>>>>> Ah I see, no I don't care about that.
+>>>>>>>>
+>>>>>>>> OK, looked at the post-patches state. It's still not correct. You are
+>>>>>>>> grabbing the mm from io_sq_thread() unconditionally. We should not do
+>>>>>>>> that, only if the sqes we need to submit need mm context.
+>>>>>>>>
+>>>>>>> That's what my question to the fix was about :)
+>>>>>>> 1. Then, what the case it could fail?
+>>>>>>> 2. Is it ok to hold it while polling? It could keep it for quite
+>>>>>>> a long time if host is swift, e.g. submit->poll->submit->poll-> ...
+>>>>>>>
+>>>>>>> Anyway, I will add it back and resend the patchset.
+>>>>>>
+>>>>>> If possible in a simple way, I'd prefer if we do it as a prep patch and
+>>>>>> then queue that up for 5.4 since we now lost that optimization.  Then
+>>>>>> layer the other 2 on top of that, since I'll just rebase the 5.5 stuff
+>>>>>> on top of that.
+>>>>>>
+>>>>>> If not trivially possible for 5.4, then we'll just have to leave with it
+>>>>>> in that release. For that case, you can fold the change in with these
+>>>>>> two patches.
+>>>>>>
+>>>>> Hmm, what's the semantics? I think we should fail only those who need
+>>>>> mm, but can't get it. The alternative is to fail all subsequent after
+>>>>> the first mm_fault.
+>>>>
+>>>> For the sqthread setup, there's no notion of "do this many". It just
+>>>> grabs whatever it can and issues it. This means that the mm assign
+>>>> is really per-sqe. What we did before, with the batching, just optimized
+>>>> it so we'd only grab it for one batch IFF at least one sqe in that batch
+>>>> needed the mm.
+>>>>
+>>>> Since you've killed the batching, I think the logic should be something
+>>>> ala:
+>>>>
+>>>> if (io_sqe_needs_user(sqe) && !cur_mm)) {
+>>>> 	if (already_attempted_mmget_and_failed_ {
+>>>> 		-EFAULT end sqe
+>>>> 	} else {
+>>>> 		do mm_get and mmuse dance
+>>>> 	}
+>>>> }
+>>>>
+>>>> Hence if the sqe doesn't need the mm, doesn't matter if we previously
+>>>> failed. If we need the mm and previously failed, -EFAULT.
+>>>>
+>>> That makes sense, but a bit hard to implement honoring links and drains
 >>
->> But, the current handling of copying the first 640k area runs into
->> problems when SME is enabled, kernel does not properly copy these
->> old memory to the backup area in the purgatory(), thereby, kdump
->> kernel reads out the encrypted contents, because the kdump kernel
->> must access the first kernel's memory with the encryption bit set
->> when SME is enabled in the first kernel. Please refer to this link:
+>> If it becomes too complicated or convoluted, just drop it. It's not
+>> worth spending that much time on.
 >>
->> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D204793
->>
->> Finally, it causes the following errors, and the crash tool gets
->> invalid pointers when parsing the vmcore.
->>
->> crash> kmem -s|grep -i invalid
->> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac=
-099f0c5a4
->> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac=
-099f0c5a4
->> crash>
->>
->> To avoid the above errors, when the crashkernel option is specified,
->> lets reserve the remaining low 1MiB memory(after reserving real mode
->> memory) so that the allocated memory does not fall into the low 1MiB
->> area, which makes us not to copy the first 640k content to a backup
->> region in purgatory(). This indicates that it does not need to be
->> included in crash dumps or used for anything except the processor
->> trampolines that must live in the low 1MiB.
->>
->> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
->> ---
->> BTW:I also tried to fix the above problem in purgatory(), but there
->> are too many restricts in purgatory() context, for example: i can't
->> allocate new memory to create the identity mapping page table for
->> SME situation.
->>
->> Currently, there are two places where the first 640k area is needed,
->> the first one is in the find_trampoline_placement(), another one is
->> in the reserve_real_mode(), and their content doesn't matter.
->>
->> In addition, also need to clean all the code related to the backup
->> region later.
->>
->>  arch/x86/kernel/machine_kexec_64.c | 15 +++++++++++++++
->>  arch/x86/realmode/init.c           |  2 ++
->>  include/linux/kexec.h              |  2 ++
->>  kernel/kexec_core.c                |  3 +++
->>  4 files changed, 22 insertions(+)
->>
->> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machin=
-e_kexec_64.c
->> index 5dcd438ad8f2..42d7c15c45f1 100644
->> --- a/arch/x86/kernel/machine_kexec_64.c
->> +++ b/arch/x86/kernel/machine_kexec_64.c
->> @@ -17,6 +17,7 @@
->>  #include <linux/suspend.h>
->>  #include <linux/vmalloc.h>
->>  #include <linux/efi.h>
->> +#include <linux/memblock.h>
->> =20
->>  #include <asm/init.h>
->>  #include <asm/pgtable.h>
->> @@ -27,6 +28,7 @@
->>  #include <asm/kexec-bzimage64.h>
->>  #include <asm/setup.h>
->>  #include <asm/set_memory.h>
->> +#include <asm/cmdline.h>
->> =20
->>  #ifdef CONFIG_ACPI
->>  /*
->> @@ -687,3 +689,16 @@ void arch_kexec_pre_free_pages(void *vaddr, unsigne=
-d int pages)
->>  =09 */
->>  =09set_memory_encrypted((unsigned long)vaddr, pages);
->>  }
->> +
->> +/*
->> + * When the crashkernel option is specified, only use the low
->> + * 1MiB for the real mode trampoline.
->> + */
->> +void __init kexec_reserve_low_1MiB(void)
->> +{
->> +=09if (cmdline_find_option(boot_command_line, "crashkernel",
->> +=09=09=09=09NULL, 0) > 0) {
->> +=09=09memblock_reserve(0, 1<<20);
->> +=09=09pr_info("Reserving the low 1MiB of memory for crashkernel\n");
->> +=09}
->> +}
->> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
->> index 7dce39c8c034..064cc79a015d 100644
->> --- a/arch/x86/realmode/init.c
->> +++ b/arch/x86/realmode/init.c
->> @@ -3,6 +3,7 @@
->>  #include <linux/slab.h>
->>  #include <linux/memblock.h>
->>  #include <linux/mem_encrypt.h>
->> +#include <linux/kexec.h>
->> =20
->>  #include <asm/set_memory.h>
->>  #include <asm/pgtable.h>
->> @@ -34,6 +35,7 @@ void __init reserve_real_mode(void)
->> =20
->>  =09memblock_reserve(mem, size);
->>  =09set_real_mode_mem(mem);
->> +=09kexec_reserve_low_1MiB();
->>  }
->> =20
->>  static void __init setup_real_mode(void)
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index 1776eb2e43a4..988bf2de51a7 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -306,6 +306,7 @@ extern void __crash_kexec(struct pt_regs *);
->>  extern void crash_kexec(struct pt_regs *);
->>  int kexec_should_crash(struct task_struct *);
->>  int kexec_crash_loaded(void);
->> +void __init kexec_reserve_low_1MiB(void);
->>  void crash_save_cpu(struct pt_regs *regs, int cpu);
->>  extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
->> =20
->> @@ -397,6 +398,7 @@ static inline void __crash_kexec(struct pt_regs *reg=
-s) { }
->>  static inline void crash_kexec(struct pt_regs *regs) { }
->>  static inline int kexec_should_crash(struct task_struct *p) { return 0;=
- }
->>  static inline int kexec_crash_loaded(void) { return 0; }
->> +static inline void __init kexec_reserve_low_1MiB(void) { }
->>  #define kexec_in_progress false
->>  #endif /* CONFIG_KEXEC_CORE */
->> =20
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index 15d70a90b50d..8856047bcdc8 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -1213,3 +1213,6 @@ void __weak arch_kexec_protect_crashkres(void)
->> =20
->>  void __weak arch_kexec_unprotect_crashkres(void)
->>  {}
->> +
->> +void __init __weak kexec_reserve_low_1MiB(void)
->> +{}
->=20
-> Hi Lianbo,
->=20
-> Since this is x86 only, add a weak function sounds not necessary.
-> For example can just move it to  arch/x86/include/asm/kexec.h
-> Or maybe even better to limit it to kdump only, move it to=20
-> arch/x86/include/asm/crash.h
-> and arch/x86/kernel/crash.c
->=20
-Good point. I will improve them and then post again.
+> I've already done it more or less elegantly, just prefer to test commits
+> before sending.
 
-Thanks.
-Lianbo
+That's always appreciated!
 
-> Thanks
-> Dave
->=20
+It struck me that while I've added quite a few regression tests, we don't
+have any that just do basic read/write using the variety of settings we
+have for that. So I added that to liburing.
+
+-- 
+Jens Axboe
 
