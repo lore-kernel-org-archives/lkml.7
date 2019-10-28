@@ -2,129 +2,109 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADDBCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FD3CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B774C21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B161208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:58:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIvX0idW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403930AbfJ1Q4F (ORCPT
+        id S2403947AbfJ1Q6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:56:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58650 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726234AbfJ1Q4F (ORCPT
+        Mon, 28 Oct 2019 12:58:42 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35349 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfJ1Q6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:56:05 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9SGqpac179175
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:56:03 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vx1nrxn9e-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:56:03 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <iii@linux.ibm.com>;
-        Mon, 28 Oct 2019 16:56:02 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 28 Oct 2019 16:56:00 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9SGtwJa38273158
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 16:55:58 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8C82AAE045;
-        Mon, 28 Oct 2019 16:55:58 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4BEADAE04D;
-        Mon, 28 Oct 2019 16:55:58 +0000 (GMT)
-Received: from white.boeblingen.de.ibm.com (unknown [9.152.97.44])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 28 Oct 2019 16:55:58 +0000 (GMT)
-From:   Ilya Leoshkevich <iii@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH] mm/sparse.c: mark populate_section_memmap as __meminit
-Date:   Mon, 28 Oct 2019 17:55:49 +0100
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102816-0008-0000-0000-000003287607
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102816-0009-0000-0000-00004A47B510
-Message-Id: <20191028165549.14478-1-iii@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910280163
+        Mon, 28 Oct 2019 12:58:41 -0400
+Received: by mail-il1-f195.google.com with SMTP id p8so8819471ilp.2;
+        Mon, 28 Oct 2019 09:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=VsYOYw/63XAVKPUsYisyXnfblClorjAawHJi/it0oEA=;
+        b=OIvX0idWV6esLVnTUjwsh8UX0Y3MegoKcCrUD36IazFKX/z4o4uXg0RgARV00n2l9A
+         IsJFqlj41Kkp+0TO1kGJBeTa93xlWKkBk2sUsCbSx9I0xYqM23tRWBEsXzZbI9B1KdIm
+         gJK5ScQ+N5hznm3+xbFwlmmllQeuPSzoTwLC2MBXy9aVrEduAt+jm+bZdVrIkQYQdipw
+         eh4+A+1UszCvXqa5t2qNh0QPHipSR5BsWKa/AVAeWpl7mKf3On3n8D2TjXOvoQWqukRD
+         E99/TWyhTaurLqz0QfX0oAbXkzqkEDrmroVb2688sx/hKI4ycpfahn2P7K/IBPjUdnSH
+         A+iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=VsYOYw/63XAVKPUsYisyXnfblClorjAawHJi/it0oEA=;
+        b=U56Qpt7i7qeOISd+p2YS69CNVQYCA2dUBs6Hz+zgSIuNDSEOe7pPcjPkE/OxsjBcZ0
+         GGDsuIdVs87AADqpDMpPIWzMFCrRL5eQ8xBIYo/mTk//uTgBVwz+oGFjTnwXjYoAL9B/
+         JR7giJWYVGwtvqZmFFs9nPUbAieJHt7Vfz/hRd8c56VWBdG7bTtBj992b9wKgBYbsgQJ
+         qn3JgiYMunWRRlDBS9faljabIAhZhO0lEDjqmQ4U1jzaVsEC9XWZfxPoCQmCm8pc+Bs8
+         VPnfHUu2t+rJrWgSemMBxUvuxFvOx54vlQzbAkPGC2eguPwoRNi0ltwog+osmcTvrMP5
+         K+3Q==
+X-Gm-Message-State: APjAAAV57W+Ir4FnsCUjpj5sdxd9ooex/31AdiWTCnYGS1cP7ueWtQLn
+        1L2AMmyY4QfG018y5ura7aU=
+X-Google-Smtp-Source: APXvYqx2qXlEPCIiPVhl6XhY2JTF9eYwSmAPTLsncPs7iDDy0d9kOOdavwbVbzeSJzJSR1vraAyjIw==
+X-Received: by 2002:a92:9a54:: with SMTP id t81mr22517749ili.197.1572281920640;
+        Mon, 28 Oct 2019 09:58:40 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id l2sm597572ilc.34.2019.10.28.09.58.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 09:58:39 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     jae.hyun.yoo@linux.intel.com
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, linux-media@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] media: aspeed-video: Fix memory leaks in aspeed_video_probe
+Date:   Mon, 28 Oct 2019 11:58:26 -0500
+Message-Id: <20191028165827.24949-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <d9c04318-586a-bfc2-fce6-6218c6bab1d6@linux.intel.com>
+References: <d9c04318-586a-bfc2-fce6-6218c6bab1d6@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building the kernel on s390 with -Og produces the following warning:
+In the implementation of aspeed_video_probe() the allocated memory for
+video should be released if either devm_ioremap_resource()
+or aspeed_video_init() or aspeed_video_setup_video() fails. Replace
+kzalloc() with devm_kzalloc to avoid explicit release for video.
 
-WARNING: vmlinux.o(.text+0x28dabe): Section mismatch in reference from the function populate_section_memmap() to the function .meminit.text:__populate_section_memmap()
-The function populate_section_memmap() references
-the function __meminit __populate_section_memmap().
-This is often because populate_section_memmap lacks a __meminit
-annotation or the annotation of __populate_section_memmap is wrong.
-
-While -Og is not supported, in theory this might still happen with
-another compiler or on another architecture. So fix this by using the
-correct section annotations.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- mm/sparse.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes in v2:
+	-- replace kzalloc with devm_kzalloc based on Jae Hyun Yoo
+suggestion
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index f6891c1992b1..0f1f36443a96 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -448,7 +448,7 @@ static unsigned long __init section_map_size(void)
- 	return PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION);
- }
+ drivers/media/platform/aspeed-video.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+index eb12f3793062..2aa8ea2f9824 100644
+--- a/drivers/media/platform/aspeed-video.c
++++ b/drivers/media/platform/aspeed-video.c
+@@ -1646,7 +1646,7 @@ static int aspeed_video_probe(struct platform_device *pdev)
+ {
+ 	int rc;
+ 	struct resource *res;
+-	struct aspeed_video *video = kzalloc(sizeof(*video), GFP_KERNEL);
++	struct aspeed_video *video = devm_kzalloc(sizeof(*video), GFP_KERNEL);
  
--struct page __init *__populate_section_memmap(unsigned long pfn,
-+struct page __meminit *__populate_section_memmap(unsigned long pfn,
- 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
- 	unsigned long size = section_map_size();
-@@ -647,7 +647,7 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
- #endif
- 
- #ifdef CONFIG_SPARSEMEM_VMEMMAP
--static struct page *populate_section_memmap(unsigned long pfn,
-+static struct page * __meminit populate_section_memmap(unsigned long pfn,
- 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
- 	return __populate_section_memmap(pfn, nr_pages, nid, altmap);
-@@ -669,7 +669,7 @@ static void free_map_bootmem(struct page *memmap)
- 	vmemmap_free(start, end, NULL);
- }
- #else
--struct page *populate_section_memmap(unsigned long pfn,
-+struct page * __meminit populate_section_memmap(unsigned long pfn,
- 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
- 	struct page *page, *ret;
+ 	if (!video)
+ 		return -ENOMEM;
 -- 
-2.23.0
+2.17.1
 
