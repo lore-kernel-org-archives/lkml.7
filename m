@@ -2,107 +2,124 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22884CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D39CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC11218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03019208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:46:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="fcUjf9zk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhjSWFba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388178AbfJ1Up0 (ORCPT
+        id S2388207AbfJ1UqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:45:26 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37307 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJ1UpY (ORCPT
+        Mon, 28 Oct 2019 16:46:05 -0400
+Received: from mail-pl1-f177.google.com ([209.85.214.177]:44851 "EHLO
+        mail-pl1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJ1UqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:45:24 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p1so7753731pgi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 13:45:24 -0700 (PDT)
+        Mon, 28 Oct 2019 16:46:04 -0400
+Received: by mail-pl1-f177.google.com with SMTP id q16so6013889pll.11;
+        Mon, 28 Oct 2019 13:46:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=KOjhDV2bOtkoryUtZNdedbIyz5aUvjz8VRxxdiXfCZg=;
-        b=fcUjf9zk+4oJ62eLTSygNM/iUtrrnBl2+URBZKh9513ri3eVyRIWYt6bIgH6oBx4X0
-         LB5TPZm0P2iY/11cju/J8f/fRgRBSAwMe0CVXk0tW/1XHV0t8T2PQd/ceyOdSMnCnni5
-         9LeWRxiN2X+mhcgqmGe1cusQKUg8mFqlilKv2a9SwKST9Q/GowMmIwMwzcO2c2AGkhL4
-         xKH5DOsYPndupfQyJrxwYB7Z09GUJSFWJ7UqrM1qLKEiwtJqH80kHN5F87HbqAbzaiMR
-         uc5E7aoW6XA++r+uZ3QAikuJFPVAapX76VSsqSRNVeE3589Cdh9fCi9NV4M6qqamGUpI
-         w21Q==
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=lV3TnrefZSIp2fBnZfeV64I5DeWk0aVLIz9eM31Y7DE=;
+        b=nhjSWFba7+p4xp4vcCxRo7Ivtn17fiGuTkgM4306IMhMQkfnKDp2wHMkIfWT8e7az4
+         7YOQ0o/XSuK8rpTb5aWxd9EaVPFrDk1cTdEseDbI2K8odAw3FY8ZxQ+e3JPkECRIjlZa
+         3t5TRjhUZ1z1V8V/A8TkHa/gSKKfss5P7FJfR3Z902htuwYH6uxIMNbJzTJ3FUPVcGKL
+         UCb20Eb/7IvOrcXjcQyeccE9x9Tlc3U9Wfy9HVppNdJ7GY5CR7iDiDKhDfmo931Pb0gs
+         QKqruvPMhnHfzRFJKuptnwKChS+/31YQoYltlyGhnxDj4tTPd7T1Vk52uY24KmtCC4zP
+         P6eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=KOjhDV2bOtkoryUtZNdedbIyz5aUvjz8VRxxdiXfCZg=;
-        b=XOCB4SxzxiNTnU8IlmA4X2YLL4LlbXjmP4/+FjHb4oFzmECHxByTJcV9vO7Zbq7c9A
-         cVgwXtv/CFDJhYPj7YfO4v47OUxuDF57POL9K+tve5TPkseXcGKQxiVtLwJPKQP0MySo
-         2pefiqV9e4Rp9Er/Zh57Kc2i8ltnd2OVzs4JiPhr55CBff0G0POKVmSQKvacyw3/v90W
-         hSrpz2SeKSdfcpVEV4IbSVodqHOcEEGbQfVdFNVD3rrECUYiVRBHgn8/KotzDNC9JiST
-         AlDFDm5GghgnoC9cKy2wUDzA8H/PFisuyeMNCnfPPXbw9D2TQcqM1l0w3uUf4fbHOI3+
-         vroA==
-X-Gm-Message-State: APjAAAW6tcA1iDVgInE4bnmOSG0rvSKYCTxKsFKa8Up7WO8SfsNkktHP
-        jBdrrTNTGNlrbSDvMOTKmXsoRw==
-X-Google-Smtp-Source: APXvYqz+3RSrMew/VEEbk6rofjrWlXLaxsQq8rNZqiU1GY8aOt/v3M5nMsymLZnECmWFFPRlRADoVg==
-X-Received: by 2002:a63:a03:: with SMTP id 3mr24167392pgk.112.1572295524109;
-        Mon, 28 Oct 2019 13:45:24 -0700 (PDT)
-Received: from [100.96.218.121] (241.sub-174-237-138.myvzw.com. [174.237.138.241])
-        by smtp.gmail.com with ESMTPSA id l72sm372781pjb.18.2019.10.28.13.45.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Oct 2019 13:45:22 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
-Date:   Mon, 28 Oct 2019 14:44:23 -0600
-Message-Id: <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-In-Reply-To: <1572171452-7958-1-git-send-email-rppt@kernel.org>
-To:     Mike Rapoport <rppt@kernel.org>
-X-Mailer: iPhone Mail (17A878)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=lV3TnrefZSIp2fBnZfeV64I5DeWk0aVLIz9eM31Y7DE=;
+        b=sMMj09YiiljYkIaMTeSKqf1ZhJhrgIah27GRgHCRaShp2qwh68TF7TXVxezwhHeRoz
+         imZy4tksFUaiGjodefdk8GI/nWwmEVzsVm8pT5eE2qwy2krGbwL6XKLmLgSnFQB805hT
+         Zi1m81NFi2+59tdru+++04rzEuQofH2qD1jEHrL4saI7T4qIUFK6+645UEwnVTruKMso
+         5/CpmGJVA1ErEQlTgPzQaJoAN8p+pAOg0oc5fjEh+4wC0rs88R8D/ILGhxydNbwUO/OD
+         TjOX0gwadX56uo3/NG3Hkb5zWp2QctN2lUyQnRegGpVqdt6T1ATa6bf/bv2q0o3Wkql3
+         SAcQ==
+X-Gm-Message-State: APjAAAW6aS9oxjtFdQmNoNSmNqmVJxHdVMvQ6woqZWyUTdiyneH0NWTq
+        ntOWsQP0yfx+wRm5pTpFw19uc/NyT510dA==
+X-Google-Smtp-Source: APXvYqyqiBPqzBlqrSy0IddkiaS8mVe5wE1mBhL3+Wr7Mc7NuyY5wAZi98T20HhHXDPdRGQKPx7oUQ==
+X-Received: by 2002:a17:902:59d9:: with SMTP id d25mr21878plj.250.1572295563266;
+        Mon, 28 Oct 2019 13:46:03 -0700 (PDT)
+Received: from iclxps (155-97-232-235.usahousing.utah.edu. [155.97.232.235])
+        by smtp.gmail.com with ESMTPSA id z10sm6560789pfr.139.2019.10.28.13.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 13:46:02 -0700 (PDT)
+Message-ID: <5c5b9dec7ea401fffa13446af2a528cbaf6e1046.camel@gmail.com>
+Subject: Fwd: [PATCH v5 1/4] sparc64: implement ioremap_uc
+From:   Tuowen Zhao <ztuowen@gmail.com>
+To:     sparclinux@vger.kernel.org,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        acelan.kao@canonical.com, mcgrof@kernel.org
+Date:   Mon, 28 Oct 2019 14:46:00 -0600
+References: <20191016210629.1005086-2-ztuowen@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Adding sparc list. Sorry, first time missed the list.
 
-> On Oct 27, 2019, at 4:17 AM, Mike Rapoport <rppt@kernel.org> wrote:
->=20
-> =EF=BB=BFFrom: Mike Rapoport <rppt@linux.ibm.com>
->=20
-> Hi,
->=20
-> The patch below aims to allow applications to create mappins that have
-> pages visible only to the owning process. Such mappings could be used to
-> store secrets so that these secrets are not visible neither to other
-> processes nor to the kernel.
->=20
-> I've only tested the basic functionality, the changes should be verified
-> against THP/migration/compaction. Yet, I'd appreciate early feedback.
+Looking for some reviews.
 
-I=E2=80=99ve contemplated the concept a fair amount, and I think you should c=
-onsider a change to the API. In particular, rather than having it be a MAP_ f=
-lag, make it a chardev.  You can, at least at first, allow only MAP_SHARED, a=
-nd admins can decide who gets to use it.  It might also play better with the=
- VM overall, and you won=E2=80=99t need a VM_ flag for it =E2=80=94 you can j=
-ust wire up .fault to do the right thing.
+Patch set: Fix MTRR bug for intel-lpss-pci
+https://lkml.org/lkml/2019/10/16/1230
+
+Tuowen
+
+-------- Forwarded Message --------
+From: Tuowen Zhao <ztuowen@gmail.com>
+To: lee.jones@linaro.org, linux-kernel@vger.kernel.org
+Cc: andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+acelan.kao@canonical.com, mcgrof@kernel.org, davem@davemloft.net, 
+Tuowen Zhao <ztuowen@gmail.com>, kbuild test robot <lkp@intel.com>
+Subject: [PATCH v5 1/4] sparc64: implement ioremap_uc
+Date: Wed, 16 Oct 2019 15:06:27 -0600
+
+On sparc64, the whole physical IO address space is accessible using
+physically addressed loads and stores. *_uc does nothing like the
+others.
+
+Cc: <stable@vger.kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
+---
+ arch/sparc/include/asm/io_64.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/sparc/include/asm/io_64.h
+b/arch/sparc/include/asm/io_64.h
+index 688911051b44..f4afa301954a 100644
+--- a/arch/sparc/include/asm/io_64.h
++++ b/arch/sparc/include/asm/io_64.h
+@@ -407,6 +407,7 @@ static inline void __iomem *ioremap(unsigned long
+offset, unsigned long size)
+ }
+ 
+ #define ioremap_nocache(X,Y)		ioremap((X),(Y))
++#define ioremap_uc(X,Y)			ioremap((X),(Y))
+ #define ioremap_wc(X,Y)			ioremap((X),(Y))
+ #define ioremap_wt(X,Y)			ioremap((X),(Y))
+ 
+-- 
+2.23.0
+
+
