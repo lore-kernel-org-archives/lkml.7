@@ -2,74 +2,127 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEE8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDE0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F65720659
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572234534;
-	bh=+v2nHJWW8uJ0j5XhT13GaUAs7RJX1oty9dbstfaFroY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MSZ60BkjL53t2DKrmCgQPcJ/SNuhshs+Wr3wHHl+wd0XOssHvBbnoRTrGiXiKrKzk
-	 gnOsqIXlt+rncTvbwBmESVc6ygk4CcVVdbZue4wKnE/8purcqzO4OdSuct8QT+nQoh
-	 Cnpa4HbExNYs6jLcG9hU6O9JegoJ49dCkvAH3H0M=
+	by mail.kernel.org (Postfix) with ESMTP id 0698520659
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DBF0dwhJ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DBF0dwhJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731132AbfJ1Dsl (ORCPT
+        id S1731218AbfJ1DuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 23:48:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729328AbfJ1Dsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 23:48:40 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Sun, 27 Oct 2019 23:50:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44456 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729328AbfJ1DuY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 23:50:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 95D4860923; Mon, 28 Oct 2019 03:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572234623;
+        bh=nYsj8+XlqvZXU8+YArrtKzF6E8RdJ5PaJUfkJ9li9Nc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DBF0dwhJW1mCqXixjsvO69nPsuKT6OB8rKfTQBYQSJfsw1kfKxN2+Nj2+Od29NMR4
+         MZoZCPkZBVyWXfmQtFyEnSG5pKDI+/UfdmN7R1+pnQSPxRSAwM65zfcrdtW/ZBfLd0
+         kqtdRF2TDYG+kpyrBmzxEijEEGYE7V1Xxl+SMOq8=
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E804D20659;
-        Mon, 28 Oct 2019 03:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572234520;
-        bh=+v2nHJWW8uJ0j5XhT13GaUAs7RJX1oty9dbstfaFroY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DWNEMqZgdJ6nfhjBNdTsSyu/VD4Zw1lpdgN/lHi9MvTZda6XGDqU5UId2BpVK3Isk
-         CvwL8Q3MILQKgln5TSP3fl1FImUIBAuTb+JSdf6pazOxZTWNEaJBteFaNbEjCEfju7
-         /+hqwlgtO+ckln+BoXYEYMrmX/gRC9vuCKMAvqq0=
-Date:   Mon, 28 Oct 2019 11:48:20 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        aisheng.dong@nxp.com, sebastien.szymanski@armadeus.com,
-        leoyang.li@nxp.com, pramod.kumar_1@nxp.com, l.stach@pengutronix.de,
-        ping.bai@nxp.com, bhaskar.upadhaya@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 1/3] arm64: dts: imx8mn: Create EVK dtsi file for common
- use
-Message-ID: <20191028034819.GJ16985@dragon>
-References: <1571281984-7125-1-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571281984-7125-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        (Authenticated sender: cang@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C5BA060863;
+        Mon, 28 Oct 2019 03:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572234623;
+        bh=nYsj8+XlqvZXU8+YArrtKzF6E8RdJ5PaJUfkJ9li9Nc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DBF0dwhJW1mCqXixjsvO69nPsuKT6OB8rKfTQBYQSJfsw1kfKxN2+Nj2+Od29NMR4
+         MZoZCPkZBVyWXfmQtFyEnSG5pKDI+/UfdmN7R1+pnQSPxRSAwM65zfcrdtW/ZBfLd0
+         kqtdRF2TDYG+kpyrBmzxEijEEGYE7V1Xxl+SMOq8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C5BA060863
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1 1/5] scsi: Adjust DBD setting in mode sense for caching mode page per LLD
+Date:   Sun, 27 Oct 2019 20:50:03 -0700
+Message-Id: <1572234608-32654-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1572234608-32654-1-git-send-email-cang@codeaurora.org>
+References: <1572234608-32654-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 11:13:02AM +0800, Anson Huang wrote:
-> i.MX8MN has different EVK boards to support different DDR types,
-> the ONLY differences are DDR chips and PMIC, so most of the devices
-> can be shared between these EVK boards, create a EVK dtsi file for
-> common use.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Host sends MODE_SENSE_10 with caching mode page, to check if the device
+supports the cache feature.
+Some LLD standards requires DBD field to be set to 1.
 
-Applied all, thanks.
+This patch allows LLD to define the setting of DBD if required.
+
+Change-Id: I0c8752c1888654942d6d7e6e0f6dc197033ac326
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/scsi/sd.c        | 6 +++++-
+ include/scsi/scsi_host.h | 6 ++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index aab4ed8..6d8194f 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -2629,6 +2629,7 @@ static int sd_try_rc16_first(struct scsi_device *sdp)
+ {
+ 	int len = 0, res;
+ 	struct scsi_device *sdp = sdkp->device;
++	struct Scsi_Host *host = sdp->host;
+ 
+ 	int dbd;
+ 	int modepage;
+@@ -2660,7 +2661,10 @@ static int sd_try_rc16_first(struct scsi_device *sdp)
+ 		dbd = 8;
+ 	} else {
+ 		modepage = 8;
+-		dbd = 0;
++		if (host->set_dbd_for_caching)
++			dbd = 8;
++		else
++			dbd = 0;
+ 	}
+ 
+ 	/* cautiously ask */
+diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
+index 2c3f0c5..3900987 100644
+--- a/include/scsi/scsi_host.h
++++ b/include/scsi/scsi_host.h
+@@ -650,6 +650,12 @@ struct Scsi_Host {
+ 	unsigned no_scsi2_lun_in_cdb:1;
+ 
+ 	/*
++	 * Set "DBD" field in mode_sense caching mode page in case it is
++	 * mandatory by LLD standard.
++	 */
++	unsigned set_dbd_for_caching:1;
++
++	/*
+ 	 * Optional work queue to be utilized by the transport
+ 	 */
+ 	char work_q_name[20];
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
