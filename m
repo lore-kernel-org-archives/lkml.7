@@ -2,130 +2,197 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C28CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEF6CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF7220659
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:27:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WHVplwL/"
+	by mail.kernel.org (Postfix) with ESMTP id B3DC021734
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390075AbfJ1O16 (ORCPT
+        id S2390078AbfJ1O3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:27:58 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9916 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfJ1O15 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:27:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5db6faf20003>; Mon, 28 Oct 2019 07:28:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 28 Oct 2019 07:27:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 28 Oct 2019 07:27:57 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
- 2019 14:27:56 +0000
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
- DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Mon, 28 Oct 2019 14:27:56 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id F352D42C6C; Mon, 28 Oct 2019 16:27:53 +0200 (EET)
-Date:   Mon, 28 Oct 2019 16:27:53 +0200
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Michael Turquette <mturquette@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Prashant Gaikwad" <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] clk: tegra: divider: Add missing check for
- enable-bit on rate's recalculation
-Message-ID: <20191028142753.GC27141@pdeschrijver-desktop.Nvidia.com>
-References: <20190723025245.27754-1-digetx@gmail.com>
+        Mon, 28 Oct 2019 10:29:42 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5212 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727148AbfJ1O3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 10:29:42 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0A902BBF12FD62FF3EB0;
+        Mon, 28 Oct 2019 22:29:36 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 28 Oct
+ 2019 22:29:29 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Pratik Shinde <pratikshinde320@gmail.com>,
+        Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
+CC:     Gao Xiang <xiang@kernel.org>, <linux-kernel@vger.kernel.org>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v5] erofs: support superblock checksum
+Date:   Mon, 28 Oct 2019 22:32:02 +0800
+Message-ID: <20191028143202.133428-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191028134405.GA186556@architecture4>
+References: <20191028134405.GA186556@architecture4>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190723025245.27754-1-digetx@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572272882; bh=Mhj1wiVJEDOxWkpi52krED0OLh0170NOhW7y0wpgFsw=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=WHVplwL/GMMzf/na6Bvwo0v0+JgbD2dh9H+LllDesfjqN4EteMwr78RimXvb3zjtx
-         IEgSBjCYy1lYxVAVteR2yiSj3hDzte4yZwLClVvCbXs+OelGQQU9Ef1ZOp/eaCEXua
-         HE5m5W2MGU2FYXGOKVRlwJ3fTnD645wLV0q8p3EFpKwy4sJpThzeGdU5d7S0NlHGWM
-         TNyTQ8BZF9LRxxgbu35T2vmIL3OYdBj0XIDf8WiHg5x6HtGjEGrauJ+RGbbT0lPnVB
-         3kjZBOgGZzE5alwY82cAt5+aOn0xjlBjP00aJ6YPj2xz1O+XhQ2p3TzO7nIPkj+phM
-         sG1OnMeOOAWiQ==
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 05:52:44AM +0300, Dmitry Osipenko wrote:
-> Unset "enable" bit means that divider is in bypass mode, hence it doesn't
-> have any effect in that case. Please note that there are no known bugs
-> caused by the missing check.
-> 
+From: Pratik Shinde <pratikshinde320@gmail.com>
 
-Technically this is not quite true, but for the purposes of CCF you can
-treat it that way. This bits defines if the value in the lower 16 bits
-of the divider register is used to configure the divider or if the
-contents of the UART DLM/DLL registers is used. So the divider isn't
-actually bypassed, it's just configured differently.
-In practice this bit is only set when the divider is non-zero when doing
-set rate. So the extra test isn't strictly needed as long as the sw
-running before the kernel also ensures the bit is only set when the
-divider is non-zero.
+Introduce superblock checksum feature in order to verify
+a number of given blocks at mounting time.
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+changes since v4:
+ - Get rid of `chksum_blocks' pointed out by Chao;
+   https://lore.kernel.org/r/f158affb-c5c5-9cbe-d87d-17210bc635fe@huawei.com
+ - Co-tested with mkfs patch:
+   https://lore.kernel.org/r/20191028142353.123204-1-gaoxiang25@huawei.com
 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
-> 
-> Changelog:
-> 
-> v2: Changed the commit's description from 'Fix' to 'Add' in response to the
->     Stephen's Boyd question about the need to backport the patch into stable
->     kernels. The backporting is not really needed.
-> 
->  drivers/clk/tegra/clk-divider.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
-> index e76731fb7d69..f33c19045386 100644
-> --- a/drivers/clk/tegra/clk-divider.c
-> +++ b/drivers/clk/tegra/clk-divider.c
-> @@ -40,8 +40,13 @@ static unsigned long clk_frac_div_recalc_rate(struct clk_hw *hw,
->  	int div, mul;
->  	u64 rate = parent_rate;
->  
-> -	reg = readl_relaxed(divider->reg) >> divider->shift;
-> -	div = reg & div_mask(divider);
-> +	reg = readl_relaxed(divider->reg);
-> +
-> +	if ((divider->flags & TEGRA_DIVIDER_UART) &&
-> +	    !(reg & PERIPH_CLK_UART_DIV_ENB))
-> +		return rate;
-> +
-> +	div = (reg >> divider->shift) & div_mask(divider);
->  
->  	mul = get_mul(divider);
->  	div += mul;
-> -- 
-> 2.22.0
-> 
+ fs/erofs/Kconfig    |  1 +
+ fs/erofs/erofs_fs.h |  3 ++-
+ fs/erofs/internal.h |  2 ++
+ fs/erofs/super.c    | 36 ++++++++++++++++++++++++++++++++++--
+ 4 files changed, 39 insertions(+), 3 deletions(-)
+
+diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+index 9d634d3a1845..74b0aaa7114c 100644
+--- a/fs/erofs/Kconfig
++++ b/fs/erofs/Kconfig
+@@ -3,6 +3,7 @@
+ config EROFS_FS
+ 	tristate "EROFS filesystem support"
+ 	depends on BLOCK
++	select LIBCRC32C
+ 	help
+ 	  EROFS (Enhanced Read-Only File System) is a lightweight
+ 	  read-only file system with modern designs (eg. page-sized
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index b1ee5654750d..385fa49c7749 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -11,6 +11,8 @@
+ 
+ #define EROFS_SUPER_OFFSET      1024
+ 
++#define EROFS_FEATURE_COMPAT_SB_CHKSUM          0x00000001
++
+ /*
+  * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
+  * be incompatible with this kernel version.
+@@ -37,7 +39,6 @@ struct erofs_super_block {
+ 	__u8 uuid[16];          /* 128-bit uuid for volume */
+ 	__u8 volume_name[16];   /* volume name */
+ 	__le32 feature_incompat;
+-
+ 	__u8 reserved2[44];
+ };
+ 
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 544a453f3076..a3778f597bf6 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -85,6 +85,7 @@ struct erofs_sb_info {
+ 
+ 	u8 uuid[16];                    /* 128-bit uuid for volume */
+ 	u8 volume_name[16];             /* volume name */
++	u32 feature_compat;
+ 	u32 feature_incompat;
+ 
+ 	unsigned int mount_opt;
+@@ -426,6 +427,7 @@ static inline void z_erofs_exit_zip_subsystem(void) {}
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+ 
+ #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
++#define EFSBADCRC       EBADMSG         /* Bad CRC detected */
+ 
+ #endif	/* __EROFS_INTERNAL_H */
+ 
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 0e369494f2f2..2fcf44b656dd 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -9,6 +9,7 @@
+ #include <linux/statfs.h>
+ #include <linux/parser.h>
+ #include <linux/seq_file.h>
++#include <linux/crc32c.h>
+ #include "xattr.h"
+ 
+ #define CREATE_TRACE_POINTS
+@@ -46,6 +47,30 @@ void _erofs_info(struct super_block *sb, const char *function,
+ 	va_end(args);
+ }
+ 
++static int erofs_superblock_csum_verify(struct super_block *sb, void *sbdata)
++{
++	struct erofs_super_block *dsb;
++	u32 expected_crc, crc;
++
++	dsb = kmemdup(sbdata + EROFS_SUPER_OFFSET,
++		      EROFS_BLKSIZ - EROFS_SUPER_OFFSET, GFP_KERNEL);
++	if (!dsb)
++		return -ENOMEM;
++
++	expected_crc = le32_to_cpu(dsb->checksum);
++	dsb->checksum = 0;
++	/* to allow for x86 boot sectors and other oddities. */
++	crc = crc32c(~0, dsb, EROFS_BLKSIZ - EROFS_SUPER_OFFSET);
++	kfree(dsb);
++
++	if (crc != expected_crc) {
++		erofs_err(sb, "invalid checksum 0x%08x, 0x%08x expected",
++			  crc, expected_crc);
++		return -EFSBADCRC;
++	}
++	return 0;
++}
++
+ static void erofs_inode_init_once(void *ptr)
+ {
+ 	struct erofs_inode *vi = ptr;
+@@ -112,7 +137,7 @@ static int erofs_read_superblock(struct super_block *sb)
+ 
+ 	sbi = EROFS_SB(sb);
+ 
+-	data = kmap_atomic(page);
++	data = kmap(page);
+ 	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
+ 
+ 	ret = -EINVAL;
+@@ -121,6 +146,13 @@ static int erofs_read_superblock(struct super_block *sb)
+ 		goto out;
+ 	}
+ 
++	sbi->feature_compat = le32_to_cpu(dsb->feature_compat);
++	if (sbi->feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM) {
++		ret = erofs_superblock_csum_verify(sb, data);
++		if (ret)
++			goto out;
++	}
++
+ 	blkszbits = dsb->blkszbits;
+ 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+ 	if (blkszbits != LOG_BLOCK_SIZE) {
+@@ -155,7 +187,7 @@ static int erofs_read_superblock(struct super_block *sb)
+ 	}
+ 	ret = 0;
+ out:
+-	kunmap_atomic(data);
++	kunmap(data);
+ 	put_page(page);
+ 	return ret;
+ }
+-- 
+2.17.1
+
