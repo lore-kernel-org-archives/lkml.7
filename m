@@ -2,112 +2,138 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF0DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AB4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C2C20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E9F20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="xWHIGGQZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P4SRp8hs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732417AbfJ1HTV (ORCPT
+        id S1732462AbfJ1HTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 03:19:21 -0400
-Received: from gateway20.websitewelcome.com ([192.185.53.25]:20950 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730751AbfJ1HTU (ORCPT
+        Mon, 28 Oct 2019 03:19:42 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38703 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730751AbfJ1HTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 03:19:20 -0400
-X-Greylist: delayed 1363 seconds by postgrey-1.27 at vger.kernel.org; Mon, 28 Oct 2019 03:19:20 EDT
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 6B6F9400D0068
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 00:48:29 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id OyxAi0Et4BnGaOyxAieeqj; Mon, 28 Oct 2019 01:56:36 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oCTskRlbgqD+J7aWayjsVtQZcA0SIwA4npc4QiguN5o=; b=xWHIGGQZ1Iab0c2jpYjZZ0O1Oy
-        idQhgFCv+VHyiZt9qhZtSPdqDV6XWoIjQ9LD9elLoup1AYbW8Td72bRF5lr0kkTihUp9DFdPudO0w
-        KilHebfPbteyYM7s9JyCgKXe6/ElNoP+cG7dRzqIL1av6S0RlGiwAw9u/tNY93aU9rsixr8gzgC58
-        d9XboNFx4FZBVoAi7BKsnMhiX1fqZqBhQf0s5TLXo0rPGmRIKAWt/7DM9p3HQu3YiVKUoXYUiW4V9
-        ZNmCDkfOgd5NUgYkoeyuMfUpp9/IE/PiVxJiM1ix1ElIS4MotV1xg2ioyWlJqbnSE88n/uPSbEkS2
-        cPVkDtwA==;
-Received: from [187.192.2.30] (port=58438 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iOyx9-0040bs-6Y; Mon, 28 Oct 2019 01:56:35 -0500
-Date:   Mon, 28 Oct 2019 01:56:33 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Igor Russkikh <igor.russkikh@aquantia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dmitry Bezrukov <dmitry.bezrukov@aquantia.com>,
-        Nikita Danilov <nikita.danilov@aquantia.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH net-next] net: aquantia: fix error handling in aq_nic_init
-Message-ID: <20191028065633.GA2412@embeddedor>
+        Mon, 28 Oct 2019 03:19:42 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c13so6289777pfp.5
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 00:19:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1kARxN4zXqzFWFi9Hzge3EGrR8GY2GeJ7Yqz9IBjLtM=;
+        b=P4SRp8hsDD5IeFRKKfwF24MUFSYWQUG8Pifned/ZXWMMwEDxyNi2fo2IBqSZemeTIr
+         YXzLkF57dbipVFhFy74e+kfK6A+vvnGLJ9qcYvXjfL/f0CZKSBWPERoIjFznbevPjcKy
+         2Yr0AWo8FKDfZP5ZaXkh/LIexFunlbxZ+g2ns=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1kARxN4zXqzFWFi9Hzge3EGrR8GY2GeJ7Yqz9IBjLtM=;
+        b=LrNv8vWhvI0eySUTLuBuyXFD9YfGsl5wXPsGjbrnVCjwHYAN/7yLSSJixvwib41i3J
+         +fV5/JnRI9a/a5iSMP1OQLqn+esHzxrwmaod+OH+bgkMnreYs6rYUjBvQOi58p2aJmqk
+         07HJkvCBl4RIJrq2S7zu7rPPx2uj6GGDJzL1cspccv2xQsxIB0wYntgHLew1Qoaofea8
+         KrCWksB3VKacJouES4Fqong+fUUbdbpbZp3V1M3ZUpNLLMl9oaGWhbS6MrpjDJEMTIT/
+         MAcy/Iilrveq4jhzrzrSC3mK4pGxR3V6BYOgoM+t/Oqdh+foBpkW+m8LgnkUxXKE8ntX
+         rlVQ==
+X-Gm-Message-State: APjAAAU3PU2C6a05hgsrVToAZ69x2nl+ZB4TVKtXpXAVdtaNUQH+tO6h
+        0emLIpjJ5+atBZVn/7VMmO3l3n3NjSbPng==
+X-Google-Smtp-Source: APXvYqyQ6aIEt1WbaZMUGlnrW1jFW16UZAwHLIo+j1unzlK77i3d3XcL512n21QVNwPfdFP+R7kEQQ==
+X-Received: by 2002:a63:ff56:: with SMTP id s22mr19089316pgk.44.1572247179560;
+        Mon, 28 Oct 2019 00:19:39 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:10:79b4:bd83:e4a5:a720])
+        by smtp.gmail.com with ESMTPSA id h28sm12513742pgn.14.2019.10.28.00.19.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Oct 2019 00:19:38 -0700 (PDT)
+From:   Cheng-Yi Chiang <cychiang@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org,
+        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+Subject: [PATCH v9 0/6] Add HDMI jack support on RK3288
+Date:   Mon, 28 Oct 2019 15:19:24 +0800
+Message-Id: <20191028071930.145899-1-cychiang@chromium.org>
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.2.30
-X-Source-L: No
-X-Exim-ID: 1iOyx9-0040bs-6Y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.2.30]:58438
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix currenty ignored returned error by properly error checking
-aq_phy_init().
+This patch series supports HDMI jack reporting on RK3288, which uses
+DRM dw-hdmi driver and hdmi-codec codec driver.
 
-Addresses-Coverity-ID: 1487376 ("Unused value")
-Fixes: dbcd6806af42 ("net: aquantia: add support for Phy access")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The previous discussion about reporting jack status using hdmi-notifier
+and drm_audio_component is at
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index 433adc099e44..1914aa0a19d0 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -341,7 +341,8 @@ int aq_nic_init(struct aq_nic_s *self)
- 
- 	if (self->aq_nic_cfg.aq_hw_caps->media_type == AQ_HW_MEDIA_TYPE_TP) {
- 		self->aq_hw->phy_id = HW_ATL_PHY_ID_MAX;
--		err = aq_phy_init(self->aq_hw);
-+		if (!aq_phy_init(self->aq_hw))
-+			goto err_exit;
- 	}
- 
- 	for (i = 0U, aq_vec = self->aq_vec[0];
+https://lore.kernel.org/patchwork/patch/1083027/
+
+The new approach is to use a callback mechanism that is
+specific to hdmi-codec.
+
+The dependent change on hdmi-codec.c
+
+commit 6fa5963c37a2 ("ASoC: hdmi-codec: Add an op to set callback function for plug event")
+
+has been merged to upstream.
+
+Changes from v8 to v9:
+
+1. rockchip_max98090:
+   Use the presence of rockchip,audio-codec to determine the presense of max98090
+   in sound card.
+   Use the presence of rockchip,hdmi-codec to determine the presence of HDMI in
+   sound card.
+   Remove the compatible strings added in v8.
+
+2. #include <sound/hdmi-codec.h> should be in the patch of adding HDMI jack support.
+
+Cheng-Yi Chiang (6):
+  drm: bridge: dw-hdmi: Report connector status using callback
+  ASoC: rockchip-max98090: Support usage with and without HDMI
+  ASoC: rockchip_max98090: Optionally support HDMI use case
+  ASoC: rockchip_max98090: Add HDMI jack support
+  ARM: dts: rockchip: Add HDMI support to rk3288-veyron-analog-audio
+  ARM: dts: rockchip: Add HDMI audio support to rk3288-veyron-mickey.dts
+
+ .../bindings/sound/rockchip-max98090.txt      |  27 +-
+ .../boot/dts/rk3288-veyron-analog-audio.dtsi  |   1 +
+ arch/arm/boot/dts/rk3288-veyron-mickey.dts    |   7 +
+ .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   |  11 +
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     |  41 ++-
+ include/drm/bridge/dw_hdmi.h                  |   4 +
+ sound/soc/rockchip/Kconfig                    |   3 +-
+ sound/soc/rockchip/rockchip_max98090.c        | 313 ++++++++++++++----
+ 8 files changed, 338 insertions(+), 69 deletions(-)
+
 -- 
-2.23.0
+2.24.0.rc0.303.g954a862665-goog
 
