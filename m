@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CE7CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3B4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04B42086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17902086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572243671;
-	bh=1oraWkvGzB9i9YIhUnpN2CmrzqBkmrHglcy6dngSph0=;
+	s=default; t=1572243674;
+	bh=7KjOTQXNF6D5WHveWXFYCsb/3lubN3EseXC8iIzWeNE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jr0vPam2rbYUsj9Bq3VnV6sI2v0pkENzBLjee02vv+VViCFDSEsZj5EzRaj22ioGN
-	 sYplXoUb6MI5BQeJ8Ljst9vSrnSoURcHrG9XDBHbt401frAXHnohPRktkj/NhZepT+
-	 CHu/4DhoBWKZmHaai1op43BLtBZQ7pQWlSnNBaOc=
+	b=iUHoI5kyCucJeXcydBTzSwEqYgw3hYgEmpsDg6Zv/wZQ+K79vnLn6IJyxvtPP2XUy
+	 sfq97vK8Na4+Z4wMvch8WGQmF5AkPIwBxAzXZ180r/pcq4xeQVBpCviLkjqUxoJyXN
+	 EHGopgtNidSeglFzYOoW5zQ1XxAT6P0B+V3h3HnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbfJ1GUz (ORCPT
+        id S1731628AbfJ1GVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 02:20:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50092 "EHLO mail.kernel.org"
+        Mon, 28 Oct 2019 02:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728657AbfJ1GUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 02:20:54 -0400
+        id S1728657AbfJ1GVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:21:13 -0400
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5550F20659;
-        Mon, 28 Oct 2019 06:20:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17A4620659;
+        Mon, 28 Oct 2019 06:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572243654;
-        bh=1oraWkvGzB9i9YIhUnpN2CmrzqBkmrHglcy6dngSph0=;
+        s=default; t=1572243672;
+        bh=7KjOTQXNF6D5WHveWXFYCsb/3lubN3EseXC8iIzWeNE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BicByxo3CtsNd7n/zsZKv1iyV6JhcfcHGWYQ6toEw4HYp1HWwf7zGtiZ6WLZxEYpb
-         P1bALq/KSNVc02swIBd3gab1fH1XhxspQ6klaRekMPG5hBpghjKgeuuuGVXKw70daW
-         vKQl7R8Fur/w07XWZylLF1GAFOxm6fa853rKSfgI=
-Date:   Mon, 28 Oct 2019 14:20:34 +0800
+        b=xnF2K7tN1n24TDs5uBBaJVtfyLwz9eGUTE+k/nTPcuUtPkeMPsvXE8JR1D26hADNW
+         LFTccm/VcpUq73FoN+yKylVLvioASQyK71fieHti5P7k6lJpkZJ0DWPFf2dX54dvTD
+         CXMRoNnkRaBDcZa88myug/MWuJmq0mgQvpUj2LKE=
+Date:   Mon, 28 Oct 2019 14:20:54 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc:     linux-arm-kernel@lists.infradead.org,
@@ -46,32 +46,25 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         Chris Healy <cphealy@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] ARM: dts: imx6qdl-zii-rdu2: Fix accelerometer
- interrupt-names
-Message-ID: <20191028062033.GN16985@dragon>
+Subject: Re: [PATCH 3/3] ARM: dts: imx6qdl-zii-rdu2: Specify supplies for
+ accelerometer
+Message-ID: <20191028062053.GO16985@dragon>
 References: <20191022040500.18548-1-andrew.smirnov@gmail.com>
- <20191022040500.18548-2-andrew.smirnov@gmail.com>
+ <20191022040500.18548-3-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191022040500.18548-2-andrew.smirnov@gmail.com>
+In-Reply-To: <20191022040500.18548-3-andrew.smirnov@gmail.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 09:04:59PM -0700, Andrey Smirnov wrote:
-> According to Documentation/devicetree/bindings/iio/accel/mma8452.txt,
-> the correct interrupt-names are "INT1" and "INT2", so fix them
-> accordingly.
+On Mon, Oct 21, 2019 at 09:05:00PM -0700, Andrey Smirnov wrote:
+> Specify 'vdd' and 'vddio' supplies for accelerometer to avoid warnings
+> during boot.
 > 
-> While at it, modify the node to only specify "INT2" since providing
-> two interrupts is not necessary or useful (the driver will only use
-> one).
-> 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> [andrew.smirnov@gmail.com modified the patch to drop INT1]
 > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 > Cc: Fabio Estevam <festevam@gmail.com>
 > Cc: Chris Healy <cphealy@gmail.com>
