@@ -2,288 +2,111 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E08CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3871CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6954F21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733E021479
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HJOmAlie"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mFJrUbF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfJ1W0j (ORCPT
+        id S1728243AbfJ1W0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 18:26:39 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:46234 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ1W0i (ORCPT
+        Mon, 28 Oct 2019 18:26:41 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45196 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbfJ1W0k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 18:26:38 -0400
-Received: by mail-vs1-f66.google.com with SMTP id o21so3245887vsq.13
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 15:26:37 -0700 (PDT)
+        Mon, 28 Oct 2019 18:26:40 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 41so8049826oti.12
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 15:26:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1+MNzgj2iEx0H0t+szsEnklppy3bGeslZUw6smpX9Jo=;
-        b=HJOmAlie9b50Lm3WG1YnsV0rs2326f4Oex3+hqxn0T5wGape1k7vm3OISmfADnc9jR
-         Y1DemMU/JntIkkF39zQVvktFEDocJO2Gg98htp9EjhfNzVWPqtuIRWp5Q0U497IdDstt
-         Z/usgjaqAh60GXEoImXg0ksFjdsYvuRrltuxF482c3+zy37AJ9cUylh/XowiXxIYwPLe
-         qnxy/J6q1EAUbbxETDPBeOgupJucvs/hRs/ofCGzJhzilsGTPC+rnpZsE+kpV2vbyD1o
-         agZHXeUnKUdVqzaE+KZ1NxBy+SarDSTDfx3IpDBD39vjWL9hydpB9ifD559y8oSqZ3fu
-         BYUw==
+        bh=rjaKLyekYNHPXZ7Zh1mNGLtxL0unaQdEBwCVJlgaZ8w=;
+        b=mFJrUbF9SJh4NwZ1grLzSIg8GB0cbVWo9erluO3H5ch6mTmkstZOZ//IrIeSyR9Yva
+         vU5niR2ibGiMQyhT+KkdFZvWX/mcM4xaO+XVsGVzQZCHWUbQfZE5HgjqO48jxtJ+VWwV
+         xeJClmrCQwM+LyV9CTe+zH7j7599bBsEgjW1a9z5eb/xgM/hObBqRsD2bpPqEw0TjQNe
+         GQA/U9GsYTCE1jZUpWCEwYZKYxVRF4mi8w14jGNPY9NDWDhWwewcuVBhnPS6miSsi152
+         CJIPUCT5+JFktOIsaA3gYoq/HtHT60fsnjwzxHTfmiEYUxQdL+zTybLZ4n2L9/C+tWrb
+         /Ouw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1+MNzgj2iEx0H0t+szsEnklppy3bGeslZUw6smpX9Jo=;
-        b=onnF8XBi5flkj51kvaf8uXSC2k0lkohwxP8SRv8ZZL85Y94esxsEPMNJZvV7hPYtNu
-         Z3Bwlk9bCoTCxGpbLgBKqkTQC70WshvL2/mBe0uxvdUd+PXMfaQ9fzsqMhEPOJ4T46Hv
-         mlXZUDYz4yyCcKrzyABE5/XP/Yg5cAllh3B0UaO/iilCh5EwVBk/6TxxEiX74DVWTScq
-         DEZMaOb/6Ul3vlUAAOxQ1fbQrF7ljr8bi0X0PoVe1sat6lT3cfB0zD9ChRJFdnBOM6Im
-         3S3igWSrWAU/PeAsXHsKrl5JqWUr/HGkOR+TqvOGZ/HFeM45b09Qfyqh0O0LlORWw0df
-         /pgw==
-X-Gm-Message-State: APjAAAVRcDVzTpuct/WGnDw24TTLTBy/bpFDbIAJGZt9HKZogjWsAO90
-        wM1JAkUfEoKOQoyofiGYzR3EPqQ0MIfjtDbNx2nF8w==
-X-Google-Smtp-Source: APXvYqzcBVjx3JDXSzEykB+cM2WmaDt1uX8un+rod4VVVb3rK8ezHJSXpxGI1Fad9hre7H++4F7r4V3xQ7XhGwVDpZ0=
-X-Received: by 2002:a05:6102:36d:: with SMTP id f13mr4010400vsa.34.1572301597181;
- Mon, 28 Oct 2019 15:26:37 -0700 (PDT)
+        bh=rjaKLyekYNHPXZ7Zh1mNGLtxL0unaQdEBwCVJlgaZ8w=;
+        b=ImlGn54nEjuDiIaxcx/pF8B6q5FhZedxhxmfeL5H/aHFGX9m3C9OXmvDnyBrNW7fb2
+         /TRauu1aDqvlqg2i77UpuJw/oSGMaFfBRjLnKZ3v+CNrS250ofFEwcMuJ425mTQmWbG2
+         OvYrDVAVt1kc3gZVuN7qHAZuEH2CmyCLCvfBz0EjJXFZ38E7US60LIfWHVam5624Tr3D
+         kfj4M9Qtd/H9ewVYTKXBFc/fHvXUJmgPU54i7vmJ5My5QhmWJ9ojtxbRXaqb5SMdmJ9D
+         9AS2SRDsPidSTgrci7MFEHLDXdDIMBWyHlXTwuCwR9CYcBTjUwxyPzN2IxmFMURhSGzB
+         QJ9g==
+X-Gm-Message-State: APjAAAVA2W7PhnfdO7lWmXDpr02uaQf9JY05ZAMly2vmzfW+c9FUiQHJ
+        6+ODUuhdkOmIWGHMY2XFKV+CsY1nQwdy3FY64zDAgA==
+X-Google-Smtp-Source: APXvYqwaeIGafbzLyvtKwrzN2AssHSZQ3DHbhJ57doQ/HodEQyYbtIaq12npBm2CtcZ4G7Pyz3slNCD8r9A/pLQfEJo=
+X-Received: by 2002:a05:6830:ca:: with SMTP id x10mr14637591oto.221.1572301599265;
+ Mon, 28 Oct 2019 15:26:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191028143419.16236-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20191028143419.16236-1-daniel.lezcano@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 28 Oct 2019 23:26:00 +0100
-Message-ID: <CAPDyKFqY0pwuD7U-YbdtwF8HqmZ2TVo3U=wbs50uXpWzTf-4NA@mail.gmail.com>
-Subject: Re: [PATCH V5 1/3] cpuidle: play_idle: Make play_idle more flexible
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191025234834.28214-1-john.stultz@linaro.org>
+ <20191025234834.28214-2-john.stultz@linaro.org> <20191028191231.GJ125958@google.com>
+ <CALAqxLVEwTjNe6y9xLLv9ib8qnp6hFXsT+XS2bJT0jRTzZVdsg@mail.gmail.com>
+In-Reply-To: <CALAqxLVEwTjNe6y9xLLv9ib8qnp6hFXsT+XS2bJT0jRTzZVdsg@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 28 Oct 2019 15:26:28 -0700
+Message-ID: <CALAqxLWp3F-_uKrtW06CApyqajL-DK0Rujku8YjHe8QEUcXU6w@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/2] mm: cma: Export cma symbols for cma heap as a module
+To:     Sandeep Patil <sspatil@google.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chenbo Feng <fengc@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "Andrew F . Davis" <afd@ti.com>, Yue Hu <huyue2@yulong.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alistair Strachan <astrachan@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019 at 15:34, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+On Mon, Oct 28, 2019 at 1:03 PM John Stultz <john.stultz@linaro.org> wrote:
 >
-> The play_idle function has two users, the intel powerclamp and the
-> idle_injection.
+> On Mon, Oct 28, 2019 at 12:12 PM <sspatil@google.com> wrote:
+> > On Fri, Oct 25, 2019 at 11:48:33PM +0000, John Stultz wrote:
+> > > --- a/kernel/dma/contiguous.c
+> > > +++ b/kernel/dma/contiguous.c
+> > > @@ -31,6 +31,7 @@
+> > >  #endif
+> > >
+> > >  struct cma *dma_contiguous_default_area;
+> > > +EXPORT_SYMBOL(dma_contiguous_default_area);
+> >
+> > I didn't need to do this for the (out-of-tree) ion cma heap [1].
+> > Any reason why you had to?
 >
-> The idle injection cooling device uses the function via the
-> idle_injection powercap's APIs. Unfortunately, play_idle is currently
-> limited by the idle state depth: by default the deepest idle state is
-> selected. On the ARM[64] platforms, most of the time it is the cluster
-> idle state, the exit latency and the residency can be very high. That
-> reduces the scope of the idle injection usage because the impact on
-> the performances can be very significant.
->
-> If the idle injection cycles can be done with a shallow state like a
-> retention state, the cooling effect would eventually give similar
-> results than the cpufreq cooling device.
->
-> In order to prepare the function to receive an idle state parameter,
-> let's replace the 'use_deepest_state' boolean field with 'use_state'
-> and use this value to enter the specific idle state.
->
-> The current code keeps the default behavior which is go to the deepest
-> idle state.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Its likely due to the changes I made in the separate
+> non-default-CMA-region patch set. Earlier I had gotten away with just
+> your change, but in testing before I sent this series, I hit the build
+> error and quickly added the export before sending.
 
-This looks good to me! Just a minor nitpick, see more below. If you
-don't like my suggestions, I am fine as is. Therefore:
+And just to clarify this point, I was mistaken and it wasn't the
+non-default-CMA-region patch set, but the fact that I'm using
+dev_get_cma_area(NULL) to get the default CMA area to register, rather
+then trying to register every CMA area via cma_for_each_area() as is
+done in ION.  I actually could probably drop the cma_for_each_area
+export for the dmabuf heaps usage.
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
-
-
-> ---
->   V5:
->    - Fix s2idle default idle state value:
->      https://lkml.org/lkml/2019/10/15/522
-> ---
->  drivers/cpuidle/cpuidle.c | 21 +++++++++++----------
->  include/linux/cpuidle.h   | 13 ++++++-------
->  kernel/sched/idle.c       | 11 +++++++----
->  3 files changed, 24 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index 0895b988fa92..f8b54f277589 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -99,31 +99,31 @@ static int find_deepest_state(struct cpuidle_driver *drv,
->  }
->
->  /**
-> - * cpuidle_use_deepest_state - Set/clear governor override flag.
-> - * @enable: New value of the flag.
-> + * cpuidle_use_state - Force the cpuidle framework to enter an idle state.
-> + * @state: An integer for an idle state
->   *
-> - * Set/unset the current CPU to use the deepest idle state (override governors
-> - * going forward if set).
-> + * Specify an idle state the cpuidle framework must step in and bypass
-> + * the idle state selection process.
->   */
-> -void cpuidle_use_deepest_state(bool enable)
-> +void cpuidle_use_state(int state)
-
-Rather than naming the in-param to "state", perhaps "state_idx", would
-be more self-explanatory?
-
-That kind of goes for all kind of parameter/function naming in this series.
-
->  {
->         struct cpuidle_device *dev;
->
->         preempt_disable();
->         dev = cpuidle_get_device();
->         if (dev)
-> -               dev->use_deepest_state = enable;
-> +               dev->use_state = state;
-
-So, likewise here:
-
-Perhaps this may be more self-explanatory.
-
-"dev->use_state_idx = stated_idx"
-
-
->         preempt_enable();
->  }
->
->  /**
->   * cpuidle_find_deepest_state - Find the deepest available idle state.
-> - * @drv: cpuidle driver for the given CPU.
-> - * @dev: cpuidle device for the given CPU.
->   */
-> -int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
-> -                              struct cpuidle_device *dev)
-> +int cpuidle_find_deepest_state(void)
->  {
-> +       struct cpuidle_device *dev = cpuidle_get_device();
-> +       struct cpuidle_driver *drv = cpuidle_get_cpu_driver(dev);
-> +
->         return find_deepest_state(drv, dev, UINT_MAX, 0, false);
->  }
->
-> @@ -554,6 +554,7 @@ static void __cpuidle_unregister_device(struct cpuidle_device *dev)
->  static void __cpuidle_device_init(struct cpuidle_device *dev)
->  {
->         memset(dev->states_usage, 0, sizeof(dev->states_usage));
-> +       dev->use_state = CPUIDLE_STATE_NOUSE;
->         dev->last_residency = 0;
->         dev->next_hrtimer = 0;
->  }
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index 4b6b5bea8f79..b5602ab28601 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -15,6 +15,7 @@
->  #include <linux/list.h>
->  #include <linux/hrtimer.h>
->
-> +#define CPUIDLE_STATE_NOUSE    -1
->  #define CPUIDLE_STATE_MAX      10
->  #define CPUIDLE_NAME_LEN       16
->  #define CPUIDLE_DESC_LEN       32
-> @@ -80,11 +81,11 @@ struct cpuidle_driver_kobj;
->  struct cpuidle_device {
->         unsigned int            registered:1;
->         unsigned int            enabled:1;
-> -       unsigned int            use_deepest_state:1;
->         unsigned int            poll_time_limit:1;
->         unsigned int            cpu;
->         ktime_t                 next_hrtimer;
->
-> +       int                     use_state;
->         int                     last_state_idx;
->         int                     last_residency;
->         u64                     poll_limit_ns;
-> @@ -203,19 +204,17 @@ static inline struct cpuidle_device *cpuidle_get_device(void) {return NULL; }
->  #endif
->
->  #ifdef CONFIG_CPU_IDLE
-> -extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
-> -                                     struct cpuidle_device *dev);
-> +extern int cpuidle_find_deepest_state(void);
->  extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
->                                 struct cpuidle_device *dev);
-> -extern void cpuidle_use_deepest_state(bool enable);
-> +extern void cpuidle_use_state(int state);
->  #else
-> -static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
-> -                                            struct cpuidle_device *dev)
-> +static inline int cpuidle_find_deepest_state(void)
->  {return -ENODEV; }
->  static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
->                                        struct cpuidle_device *dev)
->  {return -ENODEV; }
-> -static inline void cpuidle_use_deepest_state(bool enable)
-> +static inline void cpuidle_use_state(int state)
->  {
->  }
->  #endif
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index 8dad5aa600ea..fc7f5216b579 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -165,7 +165,8 @@ static void cpuidle_idle_call(void)
->          * until a proper wakeup interrupt happens.
->          */
->
-> -       if (idle_should_enter_s2idle() || dev->use_deepest_state) {
-> +       if (idle_should_enter_s2idle() ||
-> +           dev->use_state != CPUIDLE_STATE_NOUSE) {
->                 if (idle_should_enter_s2idle()) {
->                         rcu_idle_enter();
->
-> @@ -176,12 +177,14 @@ static void cpuidle_idle_call(void)
->                         }
->
->                         rcu_idle_exit();
-> +                       next_state = cpuidle_find_deepest_state();
-> +               } else {
-> +                       next_state = dev->use_state;
->                 }
->
->                 tick_nohz_idle_stop_tick();
->                 rcu_idle_enter();
->
-> -               next_state = cpuidle_find_deepest_state(drv, dev);
->                 call_cpuidle(drv, dev, next_state);
->         } else {
->                 bool stop_tick = true;
-> @@ -328,7 +331,7 @@ void play_idle(unsigned long duration_us)
->         rcu_sleep_check();
->         preempt_disable();
->         current->flags |= PF_IDLE;
-> -       cpuidle_use_deepest_state(true);
-> +       cpuidle_use_state(cpuidle_find_deepest_state());
->
->         it.done = 0;
->         hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> @@ -339,7 +342,7 @@ void play_idle(unsigned long duration_us)
->         while (!READ_ONCE(it.done))
->                 do_idle();
->
-> -       cpuidle_use_deepest_state(false);
-> +       cpuidle_use_state(CPUIDLE_STATE_NOUSE);
->         current->flags &= ~PF_IDLE;
->
->         preempt_fold_need_resched();
-> --
-> 2.17.1
->
+thanks
+-john
