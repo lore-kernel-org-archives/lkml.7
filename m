@@ -2,173 +2,202 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CCBCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9563CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC39C214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:28:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="pbkbG+Ga"
+	by mail.kernel.org (Postfix) with ESMTP id 9F13E20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388236AbfJ1K2P (ORCPT
+        id S2388249AbfJ1KcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 06:28:15 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:36596 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727105AbfJ1K2P (ORCPT
+        Mon, 28 Oct 2019 06:32:09 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:35185 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727105AbfJ1KcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 06:28:15 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 8D6062E0DC6;
-        Mon, 28 Oct 2019 13:28:11 +0300 (MSK)
-Received: from sas1-7fab0cd91cd2.qloud-c.yandex.net (sas1-7fab0cd91cd2.qloud-c.yandex.net [2a02:6b8:c14:3a93:0:640:7fab:cd9])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id mrHLwd9UoF-SA98rx4o;
-        Mon, 28 Oct 2019 13:28:11 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1572258491; bh=J7Z/eIGyReSbbdRl5mEG9aN+6qXvv1CCh1xb2jn2xu0=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=pbkbG+GaQE8Ixq2o3uBu8UY0Kx1WgoNyg8VSCOQolIWcTwAMgi3SyH9G9puMg2/7a
-         jy4EnsVOEXnyvhTqDMOAtfeYQwI1rMUNDOUy8r8DyPvfnJoRDgPfdrr/1kP6dIS2e1
-         iyhjkCcm7CWAd9RFZ60QhYvrmjL//8mbVoFIoaAo=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
-        by sas1-7fab0cd91cd2.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id YKvcRXU12r-SAWGkupb;
-        Mon, 28 Oct 2019 13:28:10 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH RFC] fs/fcntl: add fcntl F_GET_RSS
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-Date:   Mon, 28 Oct 2019 13:28:09 +0300
-Message-ID: <157225848971.557.16257813537984792761.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 28 Oct 2019 06:32:08 -0400
+Received: by mail-io1-f72.google.com with SMTP id g24so7267827ioc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 03:32:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=hJSzb7bWJAvhaZjkw4DBBAd/7CIOcLR09vzgtA5ipIE=;
+        b=A2vwhYYIyMzzTLNW1kYM8BP4lJEUMqdkvt/BIU3fECWaLTfn5rBiih74Ems1kT9Rbk
+         FbC5aNYDrWY9ZEKqnZOJXEbu6x5ORBMkQyiPhfJHqktZWl4t5CNZ4vbGH8PspAXWEtbz
+         rKj1i09WomUTKJF1HgTVbLbtXwAbcoGVSLBFFFbappIe+3X0oBMcs6iw+mrpE74JbxN7
+         8nm3rFCmhoXZjFCxaawv13pYO869m8msw/BC9eI230KSwAxwx2/KQ/cZp4ivuT8ozKel
+         BlObB5XwQX12j7uPqLIbHGbROpv6gm55hYj8i0k5DJAPxpTxN6ABKhLrsrqttZ425mFT
+         bZpg==
+X-Gm-Message-State: APjAAAUzjiROPaqV+8/Stv/6ueULHSdIR9eemG68D8ti5miL/R3IHqND
+        s5YTbKzsDZJshnQjD4iMeWOleaBEE0AtGPmzyUrcQhSnfq6k
+X-Google-Smtp-Source: APXvYqznxlbZDdahJdmyIZekbwl12dJv2b3+PfVJxCfyOFx4Xhj0xpqEuav6W7NGB3vzQuiUpe//lF3ayZsl8tFHNxRFSqebwolj
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:889c:: with SMTP id m28mr19001304ilh.157.1572258727864;
+ Mon, 28 Oct 2019 03:32:07 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 03:32:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f838060595f602a7@google.com>
+Subject: KMSAN: uninit-value in get_term_name
+From:   syzbot <syzbot+8f2612936028bfd28f28@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, alsa-devel@alsa-project.org,
+        benquike@gmail.com, dan.carpenter@oracle.com, glider@google.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, tiwai@suse.com, wang6495@umn.edu,
+        yuehaibing@huawei.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This implements fcntl() for getting amount of resident memory in cache.
-Kernel already maintains counter for each inode, this patch just exposes
-it into userspace. Returned size is in kilobytes like values in procfs.
+Hello,
 
-Alternatively this could be implemented via mapping file and collecting
-map of cached pages with mincore(). Which is much slower and O(n*log n).
+syzbot found the following crash on:
 
-Syscall fincore() never was implemented in Linux.
-This fcntl() covers one of its use-cases with minimal footprint.
+HEAD commit:    d86c1556 kmsan: add printk_test()
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=16c4ef54e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c07a3d4f8a59e198
+dashboard link: https://syzkaller.appspot.com/bug?extid=8f2612936028bfd28f28
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b96c4ce00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a51ca8e00000
 
-Unlike to mincore() this fcntl counts all pages, including allocated but
-not read yet (non-uptodate) and pages beyond end of file.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8f2612936028bfd28f28@syzkaller.appspotmail.com
 
-This employs same security model as mincore() and requires one of:
-- file is opened for writing
-- current user owns inode
-- current user could open inode for writing
+usb 1-1: New USB device found, idVendor=1d6b, idProduct=0101, bcdDevice=  
+0.40
+usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+usb 1-1: Product: syz
+usb 1-1: Manufacturer: syz
+usb 1-1: SerialNumber: syz
+=====================================================
+BUG: KMSAN: uninit-value in get_term_name+0x1b7/0xad0 sound/usb/mixer.c:652
+CPU: 1 PID: 30 Comm: kworker/1:1 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
+  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
+  get_term_name+0x1b7/0xad0 sound/usb/mixer.c:652
+  __build_feature_ctl+0x11f1/0x29e0 sound/usb/mixer.c:1628
+  build_feature_ctl sound/usb/mixer.c:1709 [inline]
+  parse_audio_feature_unit sound/usb/mixer.c:1921 [inline]
+  parse_audio_unit+0x2308/0x7490 sound/usb/mixer.c:2753
+  snd_usb_mixer_controls sound/usb/mixer.c:3095 [inline]
+  snd_usb_create_mixer+0x1d7c/0x4070 sound/usb/mixer.c:3445
+  usb_audio_probe+0x286b/0x3eb0 sound/usb/card.c:653
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-Usage:
-resident_kb = fcntl(fd, F_GET_RSS);
+Uninit was stored to memory at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
+  kmsan_internal_chain_origin+0xbd/0x180 mm/kmsan/kmsan.c:319
+  __msan_chain_origin+0x6b/0xd0 mm/kmsan/kmsan_instr.c:179
+  parse_term_proc_unit+0x73d/0x7e0 sound/usb/mixer.c:896
+  __check_input_term+0x13ef/0x2360 sound/usb/mixer.c:989
+  check_input_term sound/usb/mixer.c:1008 [inline]
+  parse_audio_feature_unit sound/usb/mixer.c:1875 [inline]
+  parse_audio_unit+0x1478/0x7490 sound/usb/mixer.c:2753
+  snd_usb_mixer_controls sound/usb/mixer.c:3095 [inline]
+  snd_usb_create_mixer+0x1d7c/0x4070 sound/usb/mixer.c:3445
+  usb_audio_probe+0x286b/0x3eb0 sound/usb/card.c:653
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-Error codes:
--EINVAL		- not supported
--EPERM		- not writable / owner
--ENODATA	- special inode without cache
+Uninit was created at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
+  kmsan_internal_poison_shadow+0x60/0x120 mm/kmsan/kmsan.c:134
+  kmsan_slab_alloc+0xaa/0x120 mm/kmsan/kmsan_hooks.c:88
+  slab_alloc_node mm/slub.c:2792 [inline]
+  slab_alloc mm/slub.c:2801 [inline]
+  __kmalloc+0x28e/0x430 mm/slub.c:3832
+  kmalloc include/linux/slab.h:561 [inline]
+  usb_get_configuration+0x50d/0x76a0 drivers/usb/core/config.c:857
+  usb_enumerate_device drivers/usb/core/hub.c:2369 [inline]
+  usb_new_device+0x224/0x2fb0 drivers/usb/core/hub.c:2505
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+=====================================================
 
-Notes:
-Range of pages could be evicted from cache using POSIX_FADV_DONTNEED.
-Populating with POSIX_FADV_WILLNEED is asynchronous and limited with
-disk read_ahead_kb and max_sectors_kb. It seems most effective way to
-read data into cache synchronously is a sendfile() into /dev/null.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
- fs/fcntl.c                 |   30 ++++++++++++++++++++++++++++++
- include/uapi/linux/fcntl.h |    5 +++++
- 2 files changed, 35 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 3d40771e8e7c..b241d3c925db 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -25,6 +25,8 @@
- #include <linux/user_namespace.h>
- #include <linux/memfd.h>
- #include <linux/compat.h>
-+#include <linux/dax.h>
-+#include <linux/hugetlb.h>
- 
- #include <linux/poll.h>
- #include <asm/siginfo.h>
-@@ -319,6 +321,31 @@ static long fcntl_rw_hint(struct file *file, unsigned int cmd,
- 	}
- }
- 
-+static long fcntl_get_rss(struct file *filp)
-+{
-+	struct address_space *mapping = filp->f_mapping;
-+	unsigned long pages;
-+
-+	if (!mapping)
-+		return -ENODATA;
-+
-+	/* The same limitations as for sys_mincore() */
-+	if (!(filp->f_mode & FMODE_WRITE) &&
-+	    !inode_owner_or_capable(mapping->host) &&
-+	    inode_permission(mapping->host, MAY_WRITE))
-+		return -EPERM;
-+
-+	if (dax_mapping(mapping))
-+		pages = READ_ONCE(mapping->nrexceptional);
-+	else
-+		pages = READ_ONCE(mapping->nrpages);
-+
-+	if (is_file_hugepages(filp))
-+		pages <<= huge_page_order(hstate_file(filp));
-+
-+	return pages << (PAGE_SHIFT - 10);	/* page -> kb */
-+}
-+
- static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
- 		struct file *filp)
- {
-@@ -426,6 +453,9 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
- 	case F_SET_FILE_RW_HINT:
- 		err = fcntl_rw_hint(filp, cmd, arg);
- 		break;
-+	case F_GET_RSS:
-+		err = fcntl_get_rss(filp);
-+		break;
- 	default:
- 		break;
- 	}
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index 1d338357df8a..d467f1dbfc67 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -54,6 +54,11 @@
- #define F_GET_FILE_RW_HINT	(F_LINUX_SPECIFIC_BASE + 13)
- #define F_SET_FILE_RW_HINT	(F_LINUX_SPECIFIC_BASE + 14)
- 
-+/*
-+ * Get amount of resident memory in file cache in kilobytes.
-+ */
-+#define F_GET_RSS		(F_LINUX_SPECIFIC_BASE + 15)
-+
- /*
-  * Valid hint values for F_{GET,SET}_RW_HINT. 0 is "not set", or can be
-  * used to clear any hints previously set.
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
