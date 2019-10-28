@@ -2,110 +2,117 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C490ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCDFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E10208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:27:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mKkzgyJy"
+	by mail.kernel.org (Postfix) with ESMTP id A6FCE20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733307AbfJ1I15 (ORCPT
+        id S2387410AbfJ1I2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 04:27:57 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39054 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731531AbfJ1I14 (ORCPT
+        Mon, 28 Oct 2019 04:28:31 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:3495 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731531AbfJ1I2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 04:27:56 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S8Oakt028354;
-        Mon, 28 Oct 2019 08:27:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=7o48n+uEPUganz3JjAED7CtR2SsbStGSOoNK4sq0Wgo=;
- b=mKkzgyJyfrjtOQ45McVAuIaKQEtWTPjrw9bZpKYgSLIQBUSFKkfJ+7xAhCmY7YmCZyLc
- cCRwJ+zlyLhnPYAc9OrIswmt6Bg791yEl2f+YZ+6E6heT7LP41rVul+77uJBMT/eBt2e
- VcHe8/PjhRO96XQ1W5r+bpLveCAKHCummfcLMEgqpwyNBCGEInGlTkfkr9Ce67MlpfUd
- o7KuhhFXAO/MPB7cTUw7+6zRqvowMuv+QzE6/s/QEx6iCG5fmj7t7rK/w6qUacmfzgCI
- bGoYSZCSvnUcBxqLnEOdjU0YJ/quxJsKeO8REN8d9BSC4K9FlMJ+NAlFbBSvKs7iEBZX bQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vvdju0cfu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 08:27:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S8Ou1T131667;
-        Mon, 28 Oct 2019 08:27:46 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2vvykrb2uq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 08:27:46 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9S8Ribl012667;
-        Mon, 28 Oct 2019 08:27:44 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 28 Oct 2019 01:27:44 -0700
-Date:   Mon, 28 Oct 2019 11:27:32 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Cristiane Naves <cristianenavescardoso09@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH] staging: octeon: Remove unneeded variable
-Message-ID: <20191028082732.GE1944@kadam>
-References: <20191026222453.GA14562@cristiane-Inspiron-5420>
+        Mon, 28 Oct 2019 04:28:31 -0400
+X-UUID: 26941fac30af42238146077b5939d355-20191028
+X-UUID: 26941fac30af42238146077b5939d355-20191028
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <chao.hao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1314836737; Mon, 28 Oct 2019 16:28:24 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 28 Oct 2019 16:28:23 +0800
+Received: from localhost.localdomain (10.15.20.246) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 28 Oct 2019 16:28:20 +0800
+From:   Chao Hao <chao.hao@mediatek.com>
+To:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Jun Yan <jun.yan@mediatek.com>,
+        Cui Zhang <cui.zhang@mediatek.com>,
+        Guangming Cao <guangming.cao@mediatek.com>,
+        Yong Wu <yong.wu@mediatek.com>,
+        Anan Sun <anan.sun@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Chao Hao <chao.hao@mediatek.com>
+Subject: [PATCH 00/13] MT6779 IOMMU SUPPORT
+Date:   Mon, 28 Oct 2019 16:28:07 +0800
+Message-ID: <20191028082820.20221-1-chao.hao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191026222453.GA14562@cristiane-Inspiron-5420>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910280085
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910280085
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 07:24:53PM -0300, Cristiane Naves wrote:
-> Remove unneeded variable used to store return value. Issue found by
-> coccicheck.
-> 
-> Signed-off-by: Cristiane Naves <cristianenavescardoso09@gmail.com>
-> ---
->  drivers/staging/octeon/octeon-stubs.h | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-> index b07f5e2..d53bd801 100644
-> --- a/drivers/staging/octeon/octeon-stubs.h
-> +++ b/drivers/staging/octeon/octeon-stubs.h
-> @@ -1387,9 +1387,7 @@ static inline cvmx_pko_status_t cvmx_pko_send_packet_finish(uint64_t port,
->  		uint64_t queue, union cvmx_pko_command_word0 pko_command,
->  		union cvmx_buf_ptr packet, cvmx_pko_lock_t use_locking)
->  {
-> -	cvmx_pko_status_t ret = 0;
-> -
-> -	return ret;
-> +	return 0;
+This patchset adds mt6779 iommu support and adjusts mtk iommu software architecture mainly.
+1. Add mt6779 basic function, such as smi larb port define, registers define and so on.
+2. In addition, this patchset will adjust current mtk iommu SW architecture mainly to adapt all the mtk platforms:
+   Firstly, mt6779 iommu can support more HW modules, but some modules have special requirements for iova region,
+   for example, CCU only can access 0x4000_0000~0x47ff_ffff, VPU only can access 0x7da0_0000~0x7fbf_ffff. Current
+   architecture only support one iommu domain(include 0~4GB), all the modules allocate iova from 0~4GB region, so
+   it doesn't ensure to allocate expected iova region for special module(CCU and VPU). In order to resolve the problem,
+   we will create different iommu domains for special module, and every domain can include iova region which module needs.
+   Secondly, all the iommus share one page table for current architecture by "mtk_iommu_get_m4u_data", to make the
+   architecture look clearly, we will create a global page table firstly(mtk_iommu_pgtable), and the all the iommus can
+   use it. One page table can include 4GB iova space, so multiple iommu domains are created based on the same page table.
+   New SW architecture diagram is as below:
 
-What is the point of this function anyway?
+                          iommu0   iommu1
+                             |        |
+                             ----------
+                                  |
+                         mtk_iommu_pgtable
+                                  |
+             ------------------------------------------
+             |                    |                   |
+       mtk_iommu_domain1   mtk_iommu_domain2  mtk_iommu_domain3
+             |                    |                   |
+        iommu_group1         iommu_group2        iommu_group3
+             |                    |                   |
+        iommu_domain1        iommu_domain2       iommu_domain3
+             |                    |                   |
+      iova region1(normal)  iova region2(CCU)   iova region3(VPU)
 
-regards,
-dan carpenter
+ This patchset depends on "Improve tlb range flush"[1] and based on v5.4-rc1.
+ [1]http://lists.infradead.org/pipermail/linux-mediatek/2019-October/024207.html
+
+ Chao Hao (13):
+   dt-bindings: mediatek: Add bindings for MT6779
+   iommu/mediatek: Add mt6779 IOMMU basic support
+   iommu/mediatek: Add mtk_iommu_pgtable structure
+   iommu/mediatek: Remove mtk_iommu_domain_finalise
+   iommu/mediatek: Remove pgtable info in mtk_iommu_domain
+   iommu/mediatek: Change get the way of m4u_group
+   iommu/mediatek: Add smi_larb info about device
+   iommu/mediatek: Add mtk_domain_data structure
+   iommu/mediatek: Remove the usage of m4u_dom variable
+   iommu/mediatek: Remove mtk_iommu_get_m4u_data api
+   iommu/mediatek: Add iova reserved function
+   iommu/mediatek: Change single domain to multiple domains
+   iommu/mediatek: Add multiple mtk_iommu_domain support for mt6779
+
+  .../bindings/iommu/mediatek,iommu.txt         |   2 +
+  drivers/iommu/mtk_iommu.c                     | 488 +++++++++++++++---
+  drivers/iommu/mtk_iommu.h                     |  50 +-
+  include/dt-bindings/memory/mt6779-larb-port.h | 217 ++++++++
+  4 files changed, 685 insertions(+), 72 deletions(-)
+
+ --
+ 2.18.0
+
+
+
 
