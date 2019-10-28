@@ -2,109 +2,119 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4F5CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D12CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFAF208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A27521479
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:37:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0PUA4Tj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404183AbfJ1Rdb (ORCPT
+        id S1732324AbfJ1Rha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 13:33:31 -0400
-Received: from mga02.intel.com ([134.134.136.20]:42803 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404155AbfJ1Rdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 13:33:31 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 10:32:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
-   d="scan'208";a="399514952"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Oct 2019 10:32:30 -0700
-Date:   Mon, 28 Oct 2019 10:32:30 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191028173229.GC5061@linux.intel.com>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
- <d6ac08fe-23f3-c2d5-24c4-88e68f3fd4d0@intel.com>
+        Mon, 28 Oct 2019 13:37:30 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35703 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfJ1Rha (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 13:37:30 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m7so12287348lji.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 10:37:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VuVinsI/3uiMH/uRjW5JsSQsBaqr+Zj6YBmT9PXcHok=;
+        b=M0PUA4TjthTNgUv3eUuNaVYUk/T4pYaaHUCsnepsfmgtABGSfOWWgsuXT7yhF3AXtr
+         SMuIn+qb+Lp6Ve89dGQ3FAybVuEm/bx3XL7zsAy7L0fJlHaabaUiFoekQkG3Z+2w5ykK
+         j9pnaZ3k/t/8U1IIB5FCGwnQgLzgNTJnaHj4/Mp7fpfkbQpm4XtQUaVhiuYB1VSUcd3m
+         yfRwWw7rn8jJVRgOlrmbWJ07vZtu5j78VARRhdI5ADwJgK7Q+3ixLsxG54xL3wE86d2Q
+         wGKIMlzDtdb7KpSdqHL/lT14gEpKlqc7938aFegcHoMdoDMK3BwjJBuOzcme5Zudn/hW
+         TIyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VuVinsI/3uiMH/uRjW5JsSQsBaqr+Zj6YBmT9PXcHok=;
+        b=jX7Po0I0Kr+DeRrYg4mdapK8hKq8v9Qd1Itg9hUqSwUP8JAdQ5hHIbYkDm0haycqW9
+         WThGObhGdiqsU4ZggF7NuKBOYRh55OXnJDQv2muZqJiD9NsXpwRSsUZY/5KjAoCrVkp1
+         nyACdUHlL71dzVzbDBdWXXSi1CRar76DP+DzS0ontOZht1Fn6UxNVhUMt85JMOv6yM2+
+         0EbM5qInkGZHTKvR1pTYPOcHfgeNfgJRAQlcdnWlupHC88IJSZSmAPOjj4nxESTR60DB
+         VybHAtrvHru7KAyHf1o7WzxEXzLYBleWr2oBuMmSWyYbhNFyZ9/8sNUyFF9F6nQyMC3X
+         B/Gw==
+X-Gm-Message-State: APjAAAUQJe6LbTmTFkKfK5aVKKnPXD8v36opQaVhCGJzkJI8Fa7kmRdK
+        Fhka+Q2NRN1SCtb2pmZdeKvdvkwnZNGfUrpUQWaLexxW
+X-Google-Smtp-Source: APXvYqwp9bMWwh61/3xfg8rvTEuaKSFdmIUm5fmu4mm0j81ToI7s29lW8sto7iheQxP9bCg2R39m1XQ7wl/n8RPeraU=
+X-Received: by 2002:a2e:320d:: with SMTP id y13mr7421528ljy.145.1572284248866;
+ Mon, 28 Oct 2019 10:37:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d6ac08fe-23f3-c2d5-24c4-88e68f3fd4d0@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <7a15bc8ad7437dc3a044a4f9cd283500bd0b5f36.camel@perches.com>
+In-Reply-To: <7a15bc8ad7437dc3a044a4f9cd283500bd0b5f36.camel@perches.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Mon, 28 Oct 2019 18:37:17 +0100
+Message-ID: <CANiq72=B6XKwfkC9L4=+OxWtjxCp-94TWRG1a=pC=y636gzckA@mail.gmail.com>
+Subject: Re: [PATCH] compiler*.h: Add '__' prefix and suffix to all
+ __attribute__ #defines
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 10:12:44AM -0700, Dave Hansen wrote:
-> On 10/27/19 3:17 AM, Mike Rapoport wrote:
-> > The pages in these mappings are removed from the kernel direct map and
-> > marked with PG_user_exclusive flag. When the exclusive area is unmapped,
-> > the pages are mapped back into the direct map.
-> 
-> This looks fun.  It's certainly simple.
-> 
-> But, the description is not really calling out the pros and cons very
-> well.  I'm also not sure that folks will use an interface like this that
-> requires up-front, special code to do an allocation instead of something
-> like madvise().  That's why protection keys ended up the way it did: if
-> you do this as a mmap() replacement, you need to modify all *allocators*
-> to be enabled for this.  If you do it with mprotect()-style, you can
-> apply it to existing allocations.
-> 
-> Some other random thoughts:
-> 
->  * The page flag is probably not a good idea.  It would be probably
->    better to set _PAGE_SPECIAL on the PTE and force get_user_pages()
->    into the slow path.
->  * This really stops being "normal" memory.  You can't do futexes on it,
->    cant splice it.  Probably need a more fleshed-out list of
->    incompatible features.
->  * As Kirill noted, each 4k page ends up with a potential 1GB "blast
->    radius" of demoted pages in the direct map.  Not cool.  This is
->    probably a non-starter as it stands.
->  * The global TLB flushes are going to eat you alive.  They probably
->    border on a DoS on larger systems.
->  * Do we really want this user interface to dictate the kernel
->    implementation?  In other words, do we really want MAP_EXCLUSIVE,
->    or do we want MAP_SECRET?  One tells the kernel what do *do*, the
->    other tells the kernel what the memory *IS*.
+On Mon, Oct 28, 2019 at 12:43 PM Joe Perches <joe@perches.com> wrote:
+>
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 72393a..b8c2145 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -5,27 +5,27 @@
+>  #ifndef __ASSEMBLY__
+>
+>  #ifdef __CHECKER__
+> -# define __user                __attribute__((noderef, address_space(1)))
+> -# define __kernel      __attribute__((address_space(0)))
+> -# define __safe                __attribute__((safe))
+> -# define __force       __attribute__((force))
+> -# define __nocast      __attribute__((nocast))
+> -# define __iomem       __attribute__((noderef, address_space(2)))
+> -# define __must_hold(x)        __attribute__((context(x,1,1)))
+> -# define __acquires(x) __attribute__((context(x,0,1)))
+> -# define __releases(x) __attribute__((context(x,1,0)))
+> -# define __acquire(x)  __context__(x,1)
+> -# define __release(x)  __context__(x,-1)
+> +# define __user                __attribute__((__noderef__, __address_space__(1)))
+> +# define __kernel      __attribute__((__address_space__(0)))
+> +# define __safe                __attribute__((__safe__))
+> +# define __force       __attribute__((__force__))
+> +# define __nocast      __attribute__((__nocast__))
+> +# define __iomem       __attribute__((__noderef__, __address_space__(2)))
+> +# define __must_hold(x)        __attribute__((__context__(x, 1, 1)))
+> +# define __acquires(x) __attribute__((__context__(x, 0, 1)))
+> +# define __releases(x) __attribute__((__context__(x, 1, 0)))
+> +# define __acquire(x)  __context__(x, 1)
+> +# define __release(x)  __context__(x, -1)
+>  # define __cond_lock(x,c)      ((c) ? ({ __acquire(x); 1; }) : 0)
+> -# define __percpu      __attribute__((noderef, address_space(3)))
+> -# define __rcu         __attribute__((noderef, address_space(4)))
+> -# define __private     __attribute__((noderef))
+> +# define __percpu      __attribute__((__noderef__, __address_space__(3)))
+> +# define __rcu         __attribute__((__noderef__, __address_space__(4)))
+> +# define __private     __attribute__((__noderef__))
 
-If we go that route, maybe MAP_USER_SECRET so that there's wiggle room in
-the event that there are different secret keepers that require different
-implementations in the kernel?   E.g. MAP_GUEST_SECRET for a KVM guest to
-take the userspace VMM (Qemu) out of the TCB, i.e. the mapping would be
-accessible by the kernel (or just KVM?) and the KVM guest, but not
-userspace.
+Just in case: for these ones (i.e. __CHECKER__), did you check if
+sparse handles this syntax? (I don't recall myself if it does).
 
->  * There's a lot of other stuff going on in this area: XPFO, SEV, MKTME,
->    Persistent Memory, where the kernel direct map is a liability in some
->    way.  We probably need some kind of overall, architected solution
->    rather than five or ten things all poking at the direct map.
-> 
+Other than that, thanks for the cleanup too! I can pick it up in the
+the compiler-attributes tree and put it in -next.
+
+Cheers,
+Miguel
