@@ -2,148 +2,125 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A793CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524B4CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4290214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0D2214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:43:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IwNJ/hn2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GtxJLjhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389241AbfJ1Mm6 (ORCPT
+        id S2389256AbfJ1MnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:42:58 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:12561 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389230AbfJ1Mm5 (ORCPT
+        Mon, 28 Oct 2019 08:43:00 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54456 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389229AbfJ1Mm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:42:57 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191028124255epoutp03a3e1e44f9906e68dbf3e8d2f404f8462~R0B6qr6SD0718207182epoutp03E
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:42:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191028124255epoutp03a3e1e44f9906e68dbf3e8d2f404f8462~R0B6qr6SD0718207182epoutp03E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572266575;
-        bh=T5dy0LMdMnOMairr/D+gfFi983RUv2eT1Chz5wu0IN0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IwNJ/hn2iY7ajlaK2raZMh+4/dmCDUFX7/UlFUcTbq7vVsAgXjXDI/HTl1Jtsq0B3
-         SdOFT0cmHA6dbZkF6h6u2naEwJ/0LKNF/nhS3apcLIW0uqTTaomkt5lUehU/drNcd5
-         nHb72K5yRHYvt2aLDm2M8n66gS3sF1ALE4gN+1Vg=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20191028124254epcas5p1317837693f904049b413d736deee5d89~R0B6Q3PtO3227132271epcas5p1L;
-        Mon, 28 Oct 2019 12:42:54 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        43.F1.48302.E42E6BD5; Mon, 28 Oct 2019 21:42:54 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191028124253epcas5p3fd6b58e5ecd45bfd9c51dfdbd1a4ae40~R0B5ZfMyg1784817848epcas5p3q;
-        Mon, 28 Oct 2019 12:42:53 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191028124253epsmtrp1c21784a4638b87bf7ebf356942f20a71~R0B5Ys5YV1231112311epsmtrp14;
-        Mon, 28 Oct 2019 12:42:53 +0000 (GMT)
-X-AuditID: b6c32a4a-327ff7000001bcae-51-5db6e24ebffd
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        71.0A.24756.D42E6BD5; Mon, 28 Oct 2019 21:42:53 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191028124251epsmtip2d93a03035818de7b01b40fc46e6a7453~R0B3s1JF_0999809998epsmtip2o;
-        Mon, 28 Oct 2019 12:42:51 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Cc:     pankaj.dubey@samsung.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, Anvesh Salveru <anvesh.s@samsung.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-Subject: [PATCH 1/2] PCI: tegra: Remove support for ZRX-DC compliant PHY
- from platform driver
-Date:   Mon, 28 Oct 2019 18:12:19 +0530
-Message-Id: <1572266540-17626-2-git-send-email-anvesh.s@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572266540-17626-1-git-send-email-anvesh.s@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPIsWRmVeSWpSXmKPExsWy7bCmpq7fo22xBvtuq1g0/9/OanF210JW
-        iyVNGRbzj5xjtWiZtYjF4vKuOWwWZ+cdZ7Po/DKLzeLN7xfsFou2fmG3+LlrHovFte28Djwe
-        a+atYfTYOesuu8eCTaUevc3v2Dz6tqxi9Pi8SS6ALYrLJiU1J7MstUjfLoErY+7TFsaCddwV
-        9z5uZGpg/MzZxcjJISFgInGoaw1jFyMXh5DAbkaJpy8vM0M4nxgltl9cwAbhfGOU6Ow8wwbT
-        0vP8DFTLXkaJZyfPsEM4LUwSrw6dA6tiE9CW+Hl0LzuILSJQJjGr6QpYB7PAdCaJM5M3AhVx
-        cAgLxEt0HpQEqWERUJVoWv4drJdXwEXi3VKQepBtchI3z3Uyg9icAq4S3VsfsYDMkRA4wiax
-        vG8yM0SRi8Snj0uhbGGJV8e3sEPYUhIv+9ug7HyJ3rtLoewaiSl3O6AW2EscuDKHBeQeZgFN
-        ifW79EHCzAJ8Er2/nzCBhCUEeCU62oQgTCWJtpnVEI0SEovn32SGCHtIXP+pDwmFGYwS7ZMO
-        s01glJ2FMHMBI+MqRsnUguLc9NRi0wKjvNRyveLE3OLSvHS95PzcTYzgZKHltYNx2TmfQ4wC
-        HIxKPLwTLm+LFWJNLCuuzD3EKMHBrCTCe/EMUIg3JbGyKrUoP76oNCe1+BCjNAeLkjjvJNar
-        MUIC6YklqdmpqQWpRTBZJg5OqQbGkNrnjU3Hnr60euX3sY1bfu4UL0UhhU9pj85yFWzddKhK
-        vCl6s8QVzliGvOA1u/4xip6OEGJcxX1yYUdKydaS+1ffz9ZYsjxwXv+DpccXKa/Wrvq8jr25
-        ZcflhV6CWyZ4u/Q79Cnu0fQJu6gbWvZc8RTnP1VGgz+f7pvn71O4o/i39KjAF8UtSizFGYmG
-        WsxFxYkAcURQzBIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPLMWRmVeSWpSXmKPExsWy7bCSvK7vo22xBmtPqlo0/9/OanF210JW
-        iyVNGRbzj5xjtWiZtYjF4vKuOWwWZ+cdZ7Po/DKLzeLN7xfsFou2fmG3+LlrHovFte28Djwe
-        a+atYfTYOesuu8eCTaUevc3v2Dz6tqxi9Pi8SS6ALYrLJiU1J7MstUjfLoErY+7TFsaCddwV
-        9z5uZGpg/MzZxcjJISFgItHz/AxjFyMXh5DAbkaJi9c+sUEkJCS+7P0KZQtLrPz3nB2iqIlJ
-        YlHDd1aQBJuAtsTPo3vZQWwRgSqJAx19LCA2s8BcJonna1NAbGGBWIlDHXOZQWwWAVWJpuXf
-        wYbyCrhIvFt6hRFigZzEzXOdYDWcAq4S3Vsfgc0RAqpp+vuKeQIj3wJGhlWMkqkFxbnpucWG
-        BYZ5qeV6xYm5xaV56XrJ+bmbGMHBqqW5g/HykvhDjAIcjEo8vC+ubosVYk0sK67MPcQowcGs
-        JMJ78QxQiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/TvGORQgLpiSWp2ampBalFMFkmDk6pBsbp
-        lzYmP+l3cGO4f6clLXNKLMveY5wbGSV8bpq3K8zNyJ33JmZ3xtx9y07vP2frVXj533nlI09X
-        8Uz5+S9Pb8a5x09cqgV8Y8Q0pl7vqH3881Zv4/Hdn9+rVqauW2n1iW/OzL2/DC5ECF7yV3q3
-        8x3nlC27z28rMnkxa//6nTvzuU9FnX/45sLBs0osxRmJhlrMRcWJAF8447dSAgAA
-X-CMS-MailID: 20191028124253epcas5p3fd6b58e5ecd45bfd9c51dfdbd1a4ae40
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191028124253epcas5p3fd6b58e5ecd45bfd9c51dfdbd1a4ae40
-References: <1572266540-17626-1-git-send-email-anvesh.s@samsung.com>
-        <CGME20191028124253epcas5p3fd6b58e5ecd45bfd9c51dfdbd1a4ae40@epcas5p3.samsung.com>
+        Mon, 28 Oct 2019 08:42:58 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SCgvPc067052;
+        Mon, 28 Oct 2019 07:42:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572266577;
+        bh=Yz1BgUME6cvxTTqAS0w5bXD+zTBDG2uq+6hnZdt0R4M=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=GtxJLjhiK7D+ofcX6HEQPIEpw7ocMXBawr+nOqYTSlOj0eznVkTpT7LA6C4n+nem6
+         I+SyG2koZkG8z9f00pt8l4xrE7ebsv5mRvUtczNYPYMNG8RUYB3WNUDhGBOapklzZ1
+         mk0zeylUs82ISrfuWsZ/wStpvxo7uw+NujPjLBIY=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9SCgvue074467
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 28 Oct 2019 07:42:57 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
+ Oct 2019 07:42:45 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 28 Oct 2019 07:42:45 -0500
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SCgogs063574;
+        Mon, 28 Oct 2019 07:42:55 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH 02/17] remoteproc/omap: Switch to SPDX license identifiers
+Date:   Mon, 28 Oct 2019 14:42:23 +0200
+Message-ID: <20191028124238.19224-3-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191028124238.19224-1-t-kristo@ti.com>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of dw_pcie_setup(), PHYs which are compliant to ZRX-DC
-specification are already handled based on "snps,phy-zrxdc-compliant"
-property in controller DT node. So, instead of handling ZRX-DC
-compliant settings in each platform driver, remove this driver
-specific code.
+From: Suman Anna <s-anna@ti.com>
 
-CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC: Andrew Murray <andrew.murray@arm.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>
-CC: Vidya Sagar <vidyas@nvidia.com>
-Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Use the appropriate SPDX license identifiers in various OMAP remoteproc
+source files and drop the previous boilerplate license text.
+
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
-Depends on the following patch:
-https://patchwork.kernel.org/patch/11215241/
-https://patchwork.kernel.org/patch/11215239/
+ drivers/remoteproc/omap_remoteproc.h | 27 +--------------------------
+ 1 file changed, 1 insertion(+), 26 deletions(-)
 
- drivers/pci/controller/dwc/pcie-tegra194.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index f89f5acee72d..f3a6ea89b8a8 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -782,10 +782,6 @@ static void tegra_pcie_prepare_host(struct pcie_port *pp)
+diff --git a/drivers/remoteproc/omap_remoteproc.h b/drivers/remoteproc/omap_remoteproc.h
+index f6d2036d383d..1e6fef753c4f 100644
+--- a/drivers/remoteproc/omap_remoteproc.h
++++ b/drivers/remoteproc/omap_remoteproc.h
+@@ -1,35 +1,10 @@
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * Remote processor messaging
+  *
+  * Copyright (C) 2011 Texas Instruments, Inc.
+  * Copyright (C) 2011 Google, Inc.
+  * All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions
+- * are met:
+- *
+- * * Redistributions of source code must retain the above copyright
+- *   notice, this list of conditions and the following disclaimer.
+- * * Redistributions in binary form must reproduce the above copyright
+- *   notice, this list of conditions and the following disclaimer in
+- *   the documentation and/or other materials provided with the
+- *   distribution.
+- * * Neither the name Texas Instruments nor the names of its
+- *   contributors may be used to endorse or promote products derived
+- *   from this software without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
  
- 	init_host_aspm(pcie);
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--	val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
--	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
--
- 	if (pcie->update_fc_fixup) {
- 		val = dw_pcie_readl_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF);
- 		val |= 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT;
+ #ifndef _OMAP_RPMSG_H
 -- 
 2.17.1
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
