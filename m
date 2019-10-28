@@ -2,120 +2,173 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7077CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FE6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2DE20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:21:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QZ3mFo4d"
+	by mail.kernel.org (Postfix) with ESMTP id D73F2222C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732761AbfJ1HVr (ORCPT
+        id S1732969AbfJ1HWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 03:21:47 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44484 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730346AbfJ1HVr (ORCPT
+        Mon, 28 Oct 2019 03:22:09 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:53928 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730346AbfJ1HWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 03:21:47 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S7JGF8158431;
-        Mon, 28 Oct 2019 07:21:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=6UrEt8Yob0WvnmAEmegBqErzZ/vNf8vt6/tp3mnw1QE=;
- b=QZ3mFo4dfKxKWOxUf6tINRvNo006Y5lDeMmbZsbVUFo7aYrvSdpBSJY2p8gki1dfWCvF
- k7QB2fwdMVRYpGzKuGUDYuxfsuS1kav/Mln3nN6gymXwknafBlsx7b37p6AvDvHHBO7f
- T2t9cuDpnbUYBQLN8CmI2OLiTf5EW0rLDDBAhNCg0O4ImO0MzJopRn1qaSssxkt2zv0U
- 6A0gwzsPllysVcXgprVZdlfrJEpLvodyZQdcxx9YTrA+heH6bSwppYquJDdtLss1NXNj
- 6Kv1sS7i7T9HtsDg7xfZuoQWgWMTPc+a4HE4dB6R8/94IUSqxrQLMzB2czwEml7yRnBh qQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2vve3pyyjn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 07:21:31 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S7JSsE168600;
-        Mon, 28 Oct 2019 07:19:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2vwakxgjfd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 07:19:30 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9S7J2ZJ004438;
-        Mon, 28 Oct 2019 07:19:04 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 28 Oct 2019 00:19:02 -0700
-Date:   Mon, 28 Oct 2019 10:18:56 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <error27@gmail.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] kernel: sys.c: Avoid copying possible padding bytes in
- copy_to_user
-Message-ID: <20191028071856.GA1944@kadam>
-References: <dfa331c00881d61c8ee51577a082d8bebd61805c.camel@perches.com>
+        Mon, 28 Oct 2019 03:22:09 -0400
+Received: by mail-io1-f70.google.com with SMTP id w8so7673561iol.20
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 00:22:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=UTMie8PkzK5wS7wiHXSMYFWr16Um/IYsiISWD8xfTF8=;
+        b=MHUbOw4GKCVubCW8Plc5pKKiHozWPsA2Gux+cE035itFNrLAxMAFOtrHMBoPx7f5ga
+         1T074+hRdiqwnD2ssnjxrsAvcV6AErnf2N33m9PvidKYoWZqGDuj/y+WUEoidcLgGmIi
+         GjM8ei/kf/jacuOcOIWudN2GQ2usWG/ExgYeeG4Lg4+7LIGHQOZ5h+MjXmHi6Vjus4J/
+         oPlyF07yJs6zSnw5mrXIzm1Lvuj7g8dynVSMuNcfpEp6yN75yKZRPWHzs/E+S2xoMJhe
+         slRY9vKzgvflchigeao2klA9qNKaYmD4bvsM3x7Tlc4bmW5jE1dJ1FHVtBPXtmGVSjFD
+         jlLg==
+X-Gm-Message-State: APjAAAVw5mWLzu8tn9gN81m0nqKmSXuRZU9EfIqMPz5/RBF0v5B86Jzx
+        kqfnvnPGH5cpVskhXcSYd93vSXNV53zSdDwYoqYWXswq1LTp
+X-Google-Smtp-Source: APXvYqyjnPdfn3CdjHyInJVCwZZ8j26hi12GlxQnoYj74BdqdbCdpi7IjZ0jDDmXtV+Sf0ZDU8zXLudLzwnJ4P1QPrQ9A1VWDGeF
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dfa331c00881d61c8ee51577a082d8bebd61805c.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=884
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910280073
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=964 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910280073
+X-Received: by 2002:a5d:8d8f:: with SMTP id b15mr16379107ioj.296.1572247328016;
+ Mon, 28 Oct 2019 00:22:08 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 00:22:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007c4f500595f35bf4@google.com>
+Subject: KASAN: use-after-free Read in io_uring_setup
+From:   syzbot <syzbot+6f03d895a6cd0d06187f@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 12:46:08PM -0700, Joe Perches wrote:
-> Initialization is not guaranteed to zero padding bytes so
-> use an explicit memset instead to avoid leaking any kernel
-> content in any possible padding bytes.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  kernel/sys.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index a611d1..3459a5 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -1279,11 +1279,13 @@ SYSCALL_DEFINE1(uname, struct old_utsname __user *, name)
->  
->  SYSCALL_DEFINE1(olduname, struct oldold_utsname __user *, name)
->  {
-> -	struct oldold_utsname tmp = {};
-> +	struct oldold_utsname tmp;
+Hello,
 
-oldold_utsname doesn't have an struct holes.  It looks like this:
+syzbot found the following crash on:
 
-struct oldold_utsname {
-        char sysname[9];
-        char nodename[9];
-        char release[9];
-        char version[9];
-        char machine[9];
-};
+HEAD commit:    5a1e843c Merge tag 'mips_fixes_5.4_3' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e2001f600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=420126a10fdda0f1
+dashboard link: https://syzkaller.appspot.com/bug?extid=6f03d895a6cd0d06187f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d4fa97600000
 
-regards,
-dan carpenter
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6f03d895a6cd0d06187f@syzkaller.appspotmail.com
 
+==================================================================
+BUG: KASAN: use-after-free in io_uring_create fs/io_uring.c:3842 [inline]
+BUG: KASAN: use-after-free in io_uring_setup+0x1877/0x18c0  
+fs/io_uring.c:3881
+Read of size 8 at addr ffff888082284048 by task syz-executor.5/11342
+
+CPU: 1 PID: 11342 Comm: syz-executor.5 Not tainted 5.4.0-rc4+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  io_uring_create fs/io_uring.c:3842 [inline]
+  io_uring_setup+0x1877/0x18c0 fs/io_uring.c:3881
+  __do_sys_io_uring_setup fs/io_uring.c:3894 [inline]
+  __se_sys_io_uring_setup fs/io_uring.c:3891 [inline]
+  __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:3891
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459f39
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f313e126c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
+RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 0000000000459f39
+RDX: 0000000000000000 RSI: 00000000200005c0 RDI: 000000040000000e
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f313e1276d4
+R13: 00000000004c1512 R14: 00000000004d4da8 R15: 00000000ffffffff
+
+Allocated by task 11342:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:690 [inline]
+  io_ring_ctx_alloc fs/io_uring.c:393 [inline]
+  io_uring_create fs/io_uring.c:3811 [inline]
+  io_uring_setup+0xec6/0x18c0 fs/io_uring.c:3881
+  __do_sys_io_uring_setup fs/io_uring.c:3894 [inline]
+  __se_sys_io_uring_setup fs/io_uring.c:3891 [inline]
+  __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:3891
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 11335:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  io_ring_ctx_free fs/io_uring.c:3552 [inline]
+  io_ring_ctx_wait_and_kill+0x4d7/0x6c0 fs/io_uring.c:3592
+  io_uring_release+0x42/0x50 fs/io_uring.c:3600
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888082284000
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 72 bytes inside of
+  2048-byte region [ffff888082284000, ffff888082284800)
+The buggy address belongs to the page:
+page:ffffea000208a100 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
+index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea0002a1bc88 ffffea00023fa248 ffff8880aa400e00
+raw: 0000000000000000 ffff888082284000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff888082283f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff888082283f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff888082284000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                               ^
+  ffff888082284080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff888082284100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
