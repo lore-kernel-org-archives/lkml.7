@@ -2,110 +2,90 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE28CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23435CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E8B21835
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oked80Gc"
+	by mail.kernel.org (Postfix) with ESMTP id ED0BE21835
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733078AbfJ1UVz (ORCPT
+        id S1733116AbfJ1UXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:21:55 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33821 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732924AbfJ1UVz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:21:55 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e4so3401693pgs.1;
-        Mon, 28 Oct 2019 13:21:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=o3RYmNY37sf+6DZhfgwoRw3pPEWurA9fTDFSIhMeWeU=;
-        b=Oked80GciIxQk1i/LR2xCPTKwGdtHhZxyUq2WWOVcfXgw0QLfGwTKSya0fFMyXHtjs
-         3AbRxlvW0j09zV7fmaXlpfIS1dMK7mr8MuFY2WEFdBy6HJ1RYD0hiloMysUpzCljhzrI
-         ZKK/t6YfTEPwojUcpk4fuRj4+cfm641mdi3Wzs0y/OhMQkeolPTdwh2ClmdFDdAqMlX4
-         Bj3PZiqDHS9HORzfHhTa2ekYwbrQt805VoctgMyx6pb73lLWoHNXPPL+2RybnV7fwz/2
-         TlIfAphcosj9xIuxhpNKOsCqccOcPpzAqkkcCg5+5pBT4FV60WobxJZa4glF1yuLJF/w
-         EzzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=o3RYmNY37sf+6DZhfgwoRw3pPEWurA9fTDFSIhMeWeU=;
-        b=m2oUMBxzBeFs1A0o+ZuB3bNc14j/eWiA+gh/a1fXYoq+oiT1C8eEu+5arlS+6I5lN7
-         mI8eS4iUWXOV2RbU0cBUna+BQHYiWSVWzDsBm0EPAkyh6p2sUbiqvzZGcRLGTCfm7HY7
-         J75HSwI4qxWVgXm2cGFFiKuPCPMFKFPiIwxMAkfyGG4vryUsOUueEGmvI9FgFBHFey1h
-         xLVEDLJWa5DYacQuioG+DRDKe/VclT3ozf984tLzfbzYp864nEwfjhinIVaZAore9242
-         QO4bvPVwouYufvPVKRLi4XrMlNOtofKK+4iHc/rb9Dp8uOTAeB+kgguPr31Dtb8lDTzB
-         fAIQ==
-X-Gm-Message-State: APjAAAXCO5GiKn36HrVxcWNMBGBvc0xUJUvXL+JQ+ztMpr6WoJRy5Nfp
-        h7r3Ut/jNwiDvXfgXcSZPnk=
-X-Google-Smtp-Source: APXvYqwgMOgg9DoyjQ+QwjBbA0L2tFTAq78jMqvQKpUC2a2zoXo/IV6DRJzV2kNa8UPQGMxgPJo3JQ==
-X-Received: by 2002:a17:90a:a00e:: with SMTP id q14mr1489905pjp.132.1572294114235;
-        Mon, 28 Oct 2019 13:21:54 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id e198sm11908096pfh.83.2019.10.28.13.21.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 13:21:53 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 01:51:44 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     jingoohan1@gmail.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, bhelgaas@google.com, kgene@kernel.org,
-        krzk@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] pci: controller: dwc: Remove dev_err use after
- platform_get_irq
-Message-ID: <20191028202144.GA29158@saurav>
+        Mon, 28 Oct 2019 16:23:25 -0400
+Received: from albireo.enyo.de ([37.24.231.21]:46696 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727802AbfJ1UXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 16:23:24 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iPBXp-0006Lq-Li; Mon, 28 Oct 2019 20:23:17 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1iPBXp-0005JX-J5; Mon, 28 Oct 2019 21:23:17 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, x86@kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+        <87d0eieb0i.fsf@mid.deneb.enyo.de>
+        <385EB6D4-A1B0-4617-B256-181AA1C3BDE3@kernel.org>
+Date:   Mon, 28 Oct 2019 21:23:17 +0100
+In-Reply-To: <385EB6D4-A1B0-4617-B256-181AA1C3BDE3@kernel.org> (Mike
+        Rapoport's message of "Sun, 27 Oct 2019 13:00:13 +0200")
+Message-ID: <87h83s62mi.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't need dev_err() messages when platform_get_irq() fails now that
-platform_get_irq() prints an error message itself when something goes
-wrong.
+* Mike Rapoport:
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
- drivers/pci/controller/dwc/pci-exynos.c | 2 --
- 1 file changed, 2 deletions(-)
+> On October 27, 2019 12:30:21 PM GMT+02:00, Florian Weimer
+> <fw@deneb.enyo.de> wrote:
+>>* Mike Rapoport:
+>>
+>>> The patch below aims to allow applications to create mappins that
+>>have
+>>> pages visible only to the owning process. Such mappings could be used
+>>to
+>>> store secrets so that these secrets are not visible neither to other
+>>> processes nor to the kernel.
+>>
+>>How is this expected to interact with CRIU?
+>
+> CRIU dumps the memory contents using a parasite code from inside the
+> dumpee address space, so it would work the same way as for the other
+> mappings. Of course, at the restore time the exclusive mapping should
+> be recreated with the appropriate flags.
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index 14a6ba4067fb..2293b346d96a 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -403,7 +403,6 @@ static int __init exynos_add_pcie_port(struct exynos_pcie *ep,
- 
- 	pp->irq = platform_get_irq(pdev, 1);
- 	if (pp->irq < 0) {
--		dev_err(dev, "failed to get irq\n");
- 		return pp->irq;
- 	}
- 	ret = devm_request_irq(dev, pp->irq, exynos_pcie_irq_handler,
-@@ -416,7 +415,6 @@ static int __init exynos_add_pcie_port(struct exynos_pcie *ep,
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
- 		pp->msi_irq = platform_get_irq(pdev, 0);
- 		if (pp->msi_irq < 0) {
--			dev_err(dev, "failed to get msi irq\n");
- 			return pp->msi_irq;
- 		}
- 	}
--- 
-2.20.1
+Hmm, so it would use a bounce buffer to perform the extraction?
 
+>>> I've only tested the basic functionality, the changes should be
+>>verified
+>>> against THP/migration/compaction. Yet, I'd appreciate early feedback.
+>>
+>>What are the expected semantics for VM migration?  Should it fail?
+>
+> I don't quite follow. If qemu would use such mappings it would be able
+> to transfer them during live migration.
+
+I was wondering if the special state is supposed to bubble up to the
+host eventually.
