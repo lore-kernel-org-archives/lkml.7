@@ -2,120 +2,107 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA39CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2706CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5045B21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nwd5dW6y"
+	by mail.kernel.org (Postfix) with ESMTP id 7E55321783
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390993AbfJ1Q2q (ORCPT
+        id S2391002AbfJ1Q3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:28:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46252 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729399AbfJ1Q2q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:28:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qpI9foyHi8EnUmSAWcgk6rHa+5Eal+BjDZ/Pl2bVIIc=; b=Nwd5dW6yCmLSCfl7ftG+wlTMw
-        URomm2PGdukSStTQ54+XtiHut6wKi2ncfiK69zO81Xof5ny82xUzuS3tYj9Q5AN1qUzrPmdG6ooUp
-        Zdc0b4OqJehmFTlea+aONl1PyB7DySwEZHn6BROLBuisxjrV5+9AHGpP7R6uJVlTOMk037omZXBtT
-        HqxKn3CqYKbJ0Uby5ND850oKSReg48vXpfqiBgaqV/PtPXbjkZuvB+7G4e3WMx8bzk67404TVAcQq
-        vD0tRo05x2Eyg2ueKrog4llQkLrM2rUeMGUIEbJrUBBC5kq8WAvBM30sDQHIR7BhJOde/+iWaGsk4
-        Gid14cmOw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP7so-0004wS-WD; Mon, 28 Oct 2019 16:28:43 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9DB5C300E4D;
-        Mon, 28 Oct 2019 17:27:40 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 020CA2B400AB5; Mon, 28 Oct 2019 17:28:40 +0100 (CET)
-Date:   Mon, 28 Oct 2019 17:28:40 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com, adrian.hunter@intel.com,
-        mathieu.poirier@linaro.org, mark.rutland@arm.com
-Subject: Re: [PATCH v3 1/3] perf: Allow using AUX data in perf samples
-Message-ID: <20191028162840.GD5671@hirez.programming.kicks-ass.net>
-References: <20191025140835.53665-1-alexander.shishkin@linux.intel.com>
- <20191025140835.53665-2-alexander.shishkin@linux.intel.com>
- <20191028162712.GH4097@hirez.programming.kicks-ass.net>
+        Mon, 28 Oct 2019 12:29:04 -0400
+Received: from mga02.intel.com ([134.134.136.20]:37947 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732565AbfJ1Q3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 12:29:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 09:29:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
+   d="scan'208";a="211478363"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 28 Oct 2019 09:29:00 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iP7t5-0005D3-EA; Mon, 28 Oct 2019 18:28:59 +0200
+Date:   Mon, 28 Oct 2019 18:28:59 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andrey Zhizhikin <andrey.z@gmail.com>, lgirdwood@gmail.com,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
+ Trail Whiskey Cove PMIC
+Message-ID: <20191028162859.GO32742@smile.fi.intel.com>
+References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
+ <20191025075335.GC32742@smile.fi.intel.com>
+ <20191025075540.GD32742@smile.fi.intel.com>
+ <166c9855-910d-a70c-ba86-6aebe5f2346d@intel.com>
+ <20191028124554.GF5015@sirena.co.uk>
+ <c5faf16d-892e-b36e-b448-9c59c2051b9e@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028162712.GH4097@hirez.programming.kicks-ass.net>
+In-Reply-To: <c5faf16d-892e-b36e-b448-9c59c2051b9e@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 05:27:12PM +0100, Peter Zijlstra wrote:
-> And while I get why we need recursion protection for pmu::snapshot_aux,
-> I'm a little puzzled on why it is over the padding, that is, why isn't
-> the whole of aux_in_sampling inside (the newly minted)
-> perf_pmu_snapshot_aux() ?
+On Mon, Oct 28, 2019 at 02:26:21PM +0100, Hans de Goede wrote:
+> On 28-10-2019 13:45, Mark Brown wrote:
+> > On Mon, Oct 28, 2019 at 02:41:46PM +0200, Adrian Hunter wrote:
+> > > On 25/10/19 10:55 AM, Andy Shevchenko wrote:
+> > 
+> > > > Since it's about UHS/SD, Cc to Adrian as well.
+> > 
+> > > My only concern is that the driver might conflict with ACPI methods trying
+> > > to do the same thing, e.g. there is one ACPI SDHC instance from GPDWin DSDT
+> > > with code like this:
+> 
+> Oh, right that is a very good point.
+> 
+> > That's certainly what's idiomatic for ACPI (though machine specific
+> > quirks are too!).  The safe thing to do would be to only register the
+> > supply on systems where we know there's no ACPI method.
+> 
+> Right, so as I mentioned before Andrey told me about the evaluation
+> board he is using I was aware of only 3 Cherry Trail devices using
+> the Whiskey Cove PMIC. The GPD win, the GPD pocket and the Lenovo
+> Yoga book. I've checked the DSDT of all 3 and all 3 of them offer
+> voltage control through the Intel _DSM method for voltage control.
+> 
+> I've also actually tested this on the GPD win and 1.8V signalling
+> works fine there without needing Andrey's patch.
+> 
+> So it seems that Andrey's patch should only be active on his
+> dev-board, as actual production hardware ships with the _DSM method.
+> 
+> I believe that the best solution is for the Whiskey Cove MFD driver:
+> drivers/mfd/intel_soc_pmic_chtwc.c
+> 
+> To only register the new cell on Andrey's evaluation board model
+> (based in a DMI match I guess). Another option would be to do
+> the DMI check in the regulator driver, but that would mean
+> udev will needlessly modprobe the regulator driver on production
+> hardware, so doing it in the MFD driver and not registering the cell
+> seems best,
 
-That is, given the previous delta, the below.
+I'm wondering if we can upgrade DSDT to provide _DSM for Aero platform.
 
----
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6292,9 +6292,17 @@ long perf_pmu_snapshot_aux(struct perf_e
- 	 * IRQs need to be disabled to prevent IPIs from racing with us.
- 	 */
- 	local_irq_save(flags);
-+	/*
-+	 * Guard against NMI hits inside the critical section;
-+	 * see also perf_prepare_sample_aux().
-+	 */
-+	WRITE_ONCE(rb->aux_in_sampling, 1);
-+	barrier();
- 
- 	ret = event->pmu->snapshot_aux(event, handle, size);
- 
-+	barrier();
-+	WRITE_ONCE(rb->aux_in_sampling, 0);
- 	local_irq_restore(flags);
- 
- 	return ret;
-@@ -6316,13 +6324,6 @@ static void perf_aux_sample_output(struc
- 	if (!rb)
- 		return;
- 
--	/*
--	 * Guard against NMI hits inside the critical section;
--	 * see also perf_prepare_sample_aux().
--	 */
--	WRITE_ONCE(rb->aux_in_sampling, 1);
--	barrier();
--
- 	size = perf_pmu_snapshot_aux(sampler, handle, data->aux_size);
- 
- 	/*
-@@ -6348,9 +6349,6 @@ static void perf_aux_sample_output(struc
- 	}
- 
- out_clear:
--	barrier();
--	WRITE_ONCE(rb->aux_in_sampling, 0);
--
- 	ring_buffer_put(rb);
- }
- 
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
