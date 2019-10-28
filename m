@@ -6,54 +6,71 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6507BCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3935CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E2B20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA8C20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388511AbfJ1Lhc (ORCPT
+        id S2388523AbfJ1LiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 07:37:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:34029 "EHLO verein.lst.de"
+        Mon, 28 Oct 2019 07:38:19 -0400
+Received: from verein.lst.de ([213.95.11.211]:34037 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfJ1Lhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 07:37:31 -0400
+        id S1726463AbfJ1LiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 07:38:18 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id E4BA268AFE; Mon, 28 Oct 2019 12:37:28 +0100 (CET)
-Date:   Mon, 28 Oct 2019 12:37:28 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Will Deacon <will@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, isaacm@codeaurora.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        joro@8bytes.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        pratikp@codeaurora.org, lmark@codeaurora.org
-Subject: Re: [PATCH] iommu/dma: Add support for DMA_ATTR_SYS_CACHE
-Message-ID: <20191028113728.GA24055@lst.de>
-References: <1572050616-6143-1-git-send-email-isaacm@codeaurora.org> <20191026053026.GA14545@lst.de> <e5fe861d7d506eb41c23f3fc047efdfa@codeaurora.org> <20191028074156.GB20443@lst.de> <20191028112457.GB4122@willie-the-truck>
+        id C917068BE1; Mon, 28 Oct 2019 12:38:16 +0100 (CET)
+Date:   Mon, 28 Oct 2019 12:38:16 +0100
+From:   "hch@lst.de" <hch@lst.de>
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     Jonathan Lemon <jlemon@flugsvamp.com>, "hch@lst.de" <hch@lst.de>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Madalin Bucur <madalin.bucur@nxp.com>
+Subject: Re: [PATCH v2 3/3] dpaa2_eth: use new unmap and sync dma api
+ variants
+Message-ID: <20191028113816.GB24055@lst.de>
+References: <20191024124130.16871-1-laurentiu.tudor@nxp.com> <20191024124130.16871-4-laurentiu.tudor@nxp.com> <BC2F1623-D8A5-4A6E-BAF4-5C551637E472@flugsvamp.com> <00a138f0-3651-5441-7241-5f02956b6c2c@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191028112457.GB4122@willie-the-truck>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <00a138f0-3651-5441-7241-5f02956b6c2c@nxp.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 11:24:58AM +0000, Will Deacon wrote:
-> Agreed. The way I /think/ it works is that on many SoCs there is a
-> system/last-level cache (LLC) which effectively sits in front of memory for
-> all masters. Even if a device isn't coherent with the CPU caches, we still
-> want to be able to allocate into the LLC. Why this doesn't happen
-> automatically is beyond me, but it appears that on these Qualcomm designs
-> you actually have to set the memory attributes up in the page-table to
-> ensure that the resulting memory transactions are non-cacheable for the CPU
-> but cacheable for the LLC. Without any changes, the transactions are
-> non-cacheable in both of them which assumedly has a performance cost.
+On Mon, Oct 28, 2019 at 10:55:05AM +0000, Laurentiu Tudor wrote:
+> >> @@ -85,9 +75,10 @@ static void free_rx_fd(struct dpaa2_eth_priv *priv,
+> >>      sgt = vaddr + dpaa2_fd_get_offset(fd);
+> >>      for (i = 1; i < DPAA2_ETH_MAX_SG_ENTRIES; i++) {
+> >>          addr = dpaa2_sg_get_addr(&sgt[i]);
+> >> -        sg_vaddr = dpaa2_iova_to_virt(priv->iommu_domain, addr);
+> >> -        dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
+> >> -                   DMA_BIDIRECTIONAL);
+> >> +        sg_vaddr = page_to_virt
+> >> +                (dma_unmap_page_desc(dev, addr,
+> >> +                            DPAA2_ETH_RX_BUF_SIZE,
+> >> +                            DMA_BIDIRECTIONAL));
+> > 
+> > This is doing virt -> page -> virt.  Why not just have the new
+> > function return the VA corresponding to the addr, which would
+> > match the other functions?
 > 
-> But you can see that I'm piecing things together myself here. Isaac?
+> I'd really like that as it would get rid of the page_to_virt() calls but 
+> it will break the symmetry with the dma_map_page() API. I'll let the 
+> maintainers decide.
 
-If that is the case it sounds like we'd want to drive this through
-DT properties, not the driver API.  But again, without an actual consumer
-it pretty much is a moot point anyway.
+It would be symmetric with dma_map_single, though.  Maybe we need
+both variants?
