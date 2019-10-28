@@ -2,72 +2,151 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9C6CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB2CC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6BB21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:45:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jv-coder.de header.i=@jv-coder.de header.b="Ec7dBlyC"
+	by mail.kernel.org (Postfix) with ESMTP id 7ED1820873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388298AbfJ1Ko7 (ORCPT
+        id S2388310AbfJ1Kqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 06:44:59 -0400
-Received: from mail.jv-coder.de ([5.9.79.73]:51714 "EHLO mail.jv-coder.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732891AbfJ1Ko7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 06:44:59 -0400
-Received: from [10.61.40.7] (unknown [37.156.92.209])
-        by mail.jv-coder.de (Postfix) with ESMTPSA id 6CA929F7D6;
-        Mon, 28 Oct 2019 10:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jv-coder.de; s=dkim;
-        t=1572259497; bh=5JNSbrJraKNtfEOW/Y/SSiZAnTUWwvSO739g19EqHLQ=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version;
-        b=Ec7dBlyCzGP12sig57kfDZVbZaQc+hH3Brr14ZLMNFik/U84R+hBUB6coWb4EfKok
-         BvAnSV75+LKGPNfmrw3Y3waHtBek/STlB0ncvPqDxdxlXj/BjABFjn7W8U+6IHXiBv
-         NFDCNzM8SU8SkXjb1Q7+H6gvigrup8JB7qYm/qX8=
-Subject: Re: [PATCH v2 1/1] xfrm : lock input tasklet skb queue
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Tom Rix <trix@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CACVy4SUkfn4642Vne=c1yuWhne=2cutPZQ5XeXz_QBz1g67CrA@mail.gmail.com>
- <20191024103134.GD13225@gauss3.secunet.de>
- <ad094bfc-ebb3-012b-275b-05fb5a8f86e5@jv-coder.de>
- <20191025094758.pchz4wupvo3qs6hy@linutronix.de>
- <202da67b-95c7-3355-1abc-f67a40a554e9@jv-coder.de>
- <20191025102203.zmkqvvg5tofaqfw6@linutronix.de>
-From:   Joerg Vehlow <lkml@jv-coder.de>
-Message-ID: <5b45c8f6-1aa2-2e1e-9019-a140988bba80@jv-coder.de>
-Date:   Mon, 28 Oct 2019 11:44:57 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 28 Oct 2019 06:46:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41562 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730796AbfJ1Kqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 06:46:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2A7BBB1B0;
+        Mon, 28 Oct 2019 10:46:49 +0000 (UTC)
+Subject: Re: [PATCH v2 2/8] dt-bindings: rtc: realtek: Convert RTD119x to
+ schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191020040817.16882-1-afaerber@suse.de>
+ <20191020040817.16882-3-afaerber@suse.de> <20191025212015.GA29978@bogus>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <5491f3ed-93bf-1c4d-60f8-5d646c3bd2fb@suse.de>
+Date:   Mon, 28 Oct 2019 11:46:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191025102203.zmkqvvg5tofaqfw6@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191025212015.GA29978@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Am 25.10.2019 um 12:22 schrieb Sebastian Andrzej Siewior:
-> On 2019-10-25 12:14:59 [+0200], Joerg Vehlow wrote:
->> Here is one of the oops logs I still have:
+Am 25.10.19 um 23:20 schrieb Rob Herring:
+> On Sun, Oct 20, 2019 at 06:08:11AM +0200, Andreas Färber wrote:
+>> Convert the RTD119x binding to a YAML schema.
 >>
->> [  139.717273] CPU: 2 PID: 11987 Comm: netstress Not tainted
->> 4.19.59-rt24-preemt-rt #1
-> could you retry with the latest v5.2-RT, please? qemu should boot fine…
->
-> Sebastian
-I was unable to reproduce it with 5.2.21-rt13. Do you know if something
-changed in network scheduling code or could it be just less likely?
+>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>> ---
+>>  v2: New
+>>  
+>>  .../devicetree/bindings/rtc/realtek,rtd119x.txt    | 16 ---------
+>>  .../devicetree/bindings/rtc/realtek,rtd119x.yaml   | 38 ++++++++++++++++++++++
+>>  2 files changed, 38 insertions(+), 16 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
+>>  create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+> 
+> 
+>> diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+>> new file mode 100644
+>> index 000000000000..71b7396bd469
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+
+While renaming the file to .yaml I would like to also rename it to 1195.
+It would need to be 1x9x to cover RTD1195 and e.g. RTD1296, and looking
+forward the wildcard may need to be 1xxx to cover also RTD1619, which
+quickly becomes unrecognizable.
+
+>> @@ -0,0 +1,38 @@
+>> +# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
+> 
+> Missing ()
+
+Fixed.
+
+> 
+> Though I'm not sure it matters other than consistency.
+> 
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/rtc/realtek,rtd119x.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Realtek RTD129x Real-Time Clock
+>> +
+>> +allOf:
+>> +  - $ref: "rtc.yaml#"
+>> +
+>> +maintainers:
+>> +  - Andreas Färber <afaerber@suse.de>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: realtek,rtd1295-rtc
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +    description: Specifies the clock gate
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +
+>> +examples:
+>> +  - |
+>> +	rtc@9801b600 {
+>> +		compatible = "realtek,rtd1295-clk";
+
+This reveals a bug in the original binding example. Fixed to -rtc.
+
+>> +		reg = <0x9801b600 0x100>;
+>> +		clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
+> 
+> You need the include file here or the example won't build (run 'make 
+> dt_binding_check').
+
+We can't. You acked the clk binding but the driver never got any review,
+so it didn't get merged and cannot be depended on here.
+
+I've changed it to an artificial 42 so that dt_binding_check passes.
+I've also needed to fix the indentation to 4 spaces.
+
+Regards,
+Andreas
+
+> 
+>> +	};
+>> +...
+>> -- 
+>> 2.16.4
+>>
+
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
