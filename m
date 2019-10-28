@@ -2,105 +2,106 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABA9CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893C1CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA33E20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A0321721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fC0Arx2f"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZIWictY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388078AbfJ1Un1 (ORCPT
+        id S2388095AbfJ1Uom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:43:27 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38901 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfJ1Un1 (ORCPT
+        Mon, 28 Oct 2019 16:44:42 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37997 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfJ1Uom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:43:27 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w3so7742642pgt.5;
-        Mon, 28 Oct 2019 13:43:27 -0700 (PDT)
+        Mon, 28 Oct 2019 16:44:42 -0400
+Received: by mail-qk1-f195.google.com with SMTP id e2so1324041qkn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 13:44:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=4zLDgL2Tv+U6+2fqrJoYSvbV/fzHrzrxd+zfcyEk0Mg=;
-        b=fC0Arx2fP2pQajMaoYQZ8TldvHGcKz83ifiEWa3vIhZIIL4m0B2Nergp1GFdE4kms0
-         heC85V7W9rGI1CCl+vSLDtKIyiPi/xWuiS5R4FVZRLLarsv1vMVWybHGsisAgwvUF8Mb
-         UBNDNIlIuFmtymhcFTDeDMpJVmc2Aq09jD0+5lg12gnYMvg3UhrWVs7rnHsZfXYq+wIm
-         NbYFld4OYbQl98JQkjElKmtwgsXmjXfXnP8GuQD86u/adwTy8edic8m4ByC33mIMV12t
-         qfPpwbE3lZyDyyDgNq2kpw+NrlM4xhM3jZKaBFhe4s6nwmz7wO1ydIcs+A5mlbhXn1ew
-         mxGA==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=jCeXW/iQVileFnjio6pHN19c+809WESUARAGyyHFMiw=;
+        b=ZIWictY08313cWqh5rWJ0/Q79pOhAgqgJu9Wv5RPOkOyjHvbbsWC93irpJkneqcJGf
+         EU++BTh/VNla43NivG90yKxl/Dx0DZoFa7R1vGPRBDnogAkfWYnCJGb4uXGrZc+1wuIB
+         knwNWyw470r3PbNPA+Nq8NU8Z7IgmPh2oC8SHqqcjw3ihFnC/kn8WSvzoTgVwKCqjsR7
+         zLWlZy0vdyV8FH9P/gtZ0ha0x/Xd6YfUKXwFEXPWQI4xknUpsJWzq55ZhlDrLLegZy4H
+         VZyg9qf16H1oGqBGMS6MZXnUx2pl9/+IghjX63BuOIN4BDzQ4SZnOSD5ik/v8pWoejKQ
+         4EZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=4zLDgL2Tv+U6+2fqrJoYSvbV/fzHrzrxd+zfcyEk0Mg=;
-        b=Ucd3vfgeZRVTgC8RM5l4vAbBMCT7BmkgWxaTAO0IcOc/SQ4J10lskOqk3wRc4ZEy5I
-         uWU6wQIGgKgu0OWLg6+jIVz/e0nuX2nM/vtt8sw1y8dqvsTlMyrqIcwO0lJQC2KVB5KI
-         JzrmRDIMU+gmUmoduaWdUr9Nx+dz9iWfJxBYRW8t4WH7HXLuDpuCVJc6F+huMSbuBHDu
-         IMIqPZ9vxL5n/mENlFMbAjrCkida49nad0dMDYPQuIj3ZMuI+NJQ6NmXuFvGZ9Z9+Wo1
-         vib2F92skImWSXakRY1pbX8XuQssR0108oUwyIRtxAQbTLa8z3Xuht6zGN3RseDTnB6Z
-         Kjyg==
-X-Gm-Message-State: APjAAAWBKTtTJ/qfGl2K3fnXyaMhOsZJ3H04cxIhCqN3wcFFGgj8nbm5
-        1c0onNdFl/oLUWGDYoqrbPQ=
-X-Google-Smtp-Source: APXvYqycfDtHncZtnj9Mi+Cs0rySqwXwx1Y/ecr4wfkWllPbSLcM/VJPhFzr5rGuTklLWd1CPzBRWw==
-X-Received: by 2002:a63:d10c:: with SMTP id k12mr14234478pgg.344.1572295406616;
-        Mon, 28 Oct 2019 13:43:26 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id 13sm13705579pgq.72.2019.10.28.13.43.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 13:43:26 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 02:13:17 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     ath9k-devel@qca.qualcomm.com, kvalo@codeaurora.org,
-        davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] ath: ath9k: Remove unneeded variable
-Message-ID: <20191028204317.GA29468@saurav>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jCeXW/iQVileFnjio6pHN19c+809WESUARAGyyHFMiw=;
+        b=cyDaUEadKCXukA8W3kY2F6hVPeG5QSq+rws0xAKSjtdBUFZSnp4lcZ3jQFkm4sNV7+
+         +UFWdy3xwUioXaBrqkSsTxT8jcB3277JPr5lYtcqqkMf7uJ2ZPvPdVNTT6wne2I/GKFd
+         B+9DKU2EezqC2o6j6GKEz6lQIn9027MEF4gxbuJ2rmThu5A5IWRb9hLVGnLmYr15pakh
+         wA6evRGcPcqStBry1dxOPT8IdTaIxu9s2rK71ctwkUQjtg1LjLucOc/8axzaz1eINcC7
+         C+jmfKxx8Fin2ZTF9SV8DO/XbW8LFRQNsb2YpUNACRAMuaYM59GyOKblOEfz441q3Ggo
+         ycLw==
+X-Gm-Message-State: APjAAAU+tThBvFMBLv9xDhaKnzp6Fhp/B0vTubRxHw1/dFtrqwLJnAmC
+        NMc/evcmtM8PYlPht1tT7AssRA==
+X-Google-Smtp-Source: APXvYqzYpIGH4S94deT2nN70Tmize13/ElVqKsLU5ZvrP/dWPuIIZ4r+5OAFvpHgH0uuEwvdpsHpaA==
+X-Received: by 2002:a37:2ec5:: with SMTP id u188mr17969151qkh.94.1572295480832;
+        Mon, 28 Oct 2019 13:44:40 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id m25sm8972825qtc.0.2019.10.28.13.44.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 28 Oct 2019 13:44:40 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     mpe@ellerman.id.au
+Cc:     peterz@infradead.org, paulmck@linux.ibm.com, npiggin@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] powerpc/powernv/smp: fix a warning at CPU hotplug
+Date:   Mon, 28 Oct 2019 16:44:27 -0400
+Message-Id: <1572295467-14686-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove "len" variable which is not used in ath9k_dump_legacy_btcoex.
+The commit e78a7614f387 ("idle: Prevent late-arriving interrupts from
+disrupting offline") introduced a warning on powerpc with CPU hotplug,
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+WARNING: CPU: 1 PID: 0 at arch/powerpc/platforms/powernv/smp.c:160
+pnv_smp_cpu_kill_self+0x5c/0x330
+Call Trace:
+ cpu_die+0x48/0x64
+ arch_cpu_idle_dead+0x30/0x50
+ do_idle+0x2e4/0x460
+ cpu_startup_entry+0x3c/0x40
+ start_secondary+0x7a8/0xa80
+ start_secondary_resume+0x10/0x14
+
+because it calls local_irq_disable() before arch_cpu_idle_dead().
+
+Fixes: e78a7614f387 ("idle: Prevent late-arriving interrupts from disrupting offline")
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/net/wireless/ath/ath9k/gpio.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/powerpc/platforms/powernv/smp.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/gpio.c b/drivers/net/wireless/ath/ath9k/gpio.c
-index b457e52dd365..f3d1bc02e633 100644
---- a/drivers/net/wireless/ath/ath9k/gpio.c
-+++ b/drivers/net/wireless/ath/ath9k/gpio.c
-@@ -498,14 +498,13 @@ static int ath9k_dump_legacy_btcoex(struct ath_softc *sc, u8 *buf, u32 size)
- {
+diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
+index fbd6e6b7bbf2..51f4e07b9168 100644
+--- a/arch/powerpc/platforms/powernv/smp.c
++++ b/arch/powerpc/platforms/powernv/smp.c
+@@ -157,7 +157,6 @@ static void pnv_smp_cpu_kill_self(void)
+ 	 * This hard disables local interurpts, ensuring we have no lazy
+ 	 * irqs pending.
+ 	 */
+-	WARN_ON(irqs_disabled());
+ 	hard_irq_disable();
+ 	WARN_ON(lazy_irq_pending());
  
- 	struct ath_btcoex *btcoex = &sc->btcoex;
--	u32 len = 0;
- 
- 	ATH_DUMP_BTCOEX("Stomp Type", btcoex->bt_stomp_type);
- 	ATH_DUMP_BTCOEX("BTCoex Period (msec)", btcoex->btcoex_period);
- 	ATH_DUMP_BTCOEX("Duty Cycle", btcoex->duty_cycle);
- 	ATH_DUMP_BTCOEX("BT Wait time", btcoex->bt_wait_time);
- 
--	return len;
-+	return 0;
- }
- 
- int ath9k_dump_btcoex(struct ath_softc *sc, u8 *buf, u32 size)
 -- 
-2.20.1
+1.8.3.1
 
