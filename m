@@ -2,147 +2,165 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73A4CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D951ECA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D94208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF46E20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:32:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xf+EPQRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387560AbfJ1I3Z (ORCPT
+        id S1731770AbfJ1IcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 04:29:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58883 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731943AbfJ1I3Y (ORCPT
+        Mon, 28 Oct 2019 04:32:23 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40890 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728941AbfJ1IcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 04:29:24 -0400
-X-UUID: c2d9be443de44f30a353b6aae80677c9-20191028
-X-UUID: c2d9be443de44f30a353b6aae80677c9-20191028
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <chao.hao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1865292384; Mon, 28 Oct 2019 16:29:18 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 28 Oct 2019 16:29:15 +0800
-Received: from localhost.localdomain (10.15.20.246) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 28 Oct 2019 16:29:13 +0800
-From:   Chao Hao <chao.hao@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Jun Yan <jun.yan@mediatek.com>,
-        Cui Zhang <cui.zhang@mediatek.com>,
-        Guangming Cao <guangming.cao@mediatek.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Anan Sun <anan.sun@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Chao Hao <chao.hao@mediatek.com>
-Subject: [PATCH 13/13] iommu/mediatek: Add multiple mtk_iommu_domain support for mt6779
-Date:   Mon, 28 Oct 2019 16:28:20 +0800
-Message-ID: <20191028082820.20221-14-chao.hao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191028082820.20221-1-chao.hao@mediatek.com>
-References: <20191028082820.20221-1-chao.hao@mediatek.com>
+        Mon, 28 Oct 2019 04:32:23 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9S8WJwE087003;
+        Mon, 28 Oct 2019 03:32:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572251540;
+        bh=cb8t7x1Wna5/A3kIdSJHuz07Zq6Z8d9QRprTibbQH/A=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xf+EPQRE/Ena49IcnlQZUSJ8d8p/R/q9CCHyoJCQn6Epmjw+ux4wrycN5aTtXHBQX
+         1U8WI+NBrxo+aQf9ymhBaTiK/4ShGHAw0Q5kNx9SU5GHvqlyBvn8mX8eV4/lM19rlt
+         /WKddutMSXZEovdcsa9DlrohABePQcY8RFls7iI0=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9S8WJVw104270
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 28 Oct 2019 03:32:19 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
+ Oct 2019 03:32:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 28 Oct 2019 03:32:19 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9S8WHVD088990;
+        Mon, 28 Oct 2019 03:32:17 -0500
+Subject: Re: [PATCH v3 2/3] dt-bindings: phy: ti,phy-j721e-wiz: Add Type-C dir
+ GPIO
+To:     Rob Herring <robh@kernel.org>
+CC:     <kishon@ti.com>, <aniljoy@cadence.com>, <adouglas@cadence.com>,
+        <nsekhar@ti.com>, <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20191024114042.30237-1-rogerq@ti.com>
+ <20191024114042.30237-3-rogerq@ti.com> <20191025200603.GA10839@bogus>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <a01a51a5-2249-b26a-1df2-8034f333eb02@ti.com>
+Date:   Mon, 28 Oct 2019 10:32:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191025200603.GA10839@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For mt6779, it needs to support three mtk_iommu_domains, every
-mtk_iommu_domain's iova space is different.
-Three mtk_iommu_domains is as below:
-1. Normal mtk_iommu_domain exclude 0x4000_0000~0x47ff_ffff and
-   0x7da0_0000~7fbf_ffff.
-2. CCU mtk_iommu_domain include 0x4000_0000~0x47ff_ffff.
-3. VPU mtk_iommu_domain 0x7da0_0000~0x7fbf_ffff.
+Hi Rob,
 
-Signed-off-by: Chao Hao <chao.hao@mediatek.com>
----
- drivers/iommu/mtk_iommu.c | 45 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 43 insertions(+), 2 deletions(-)
+On 25/10/2019 23:06, Rob Herring wrote:
+> On Thu, Oct 24, 2019 at 02:40:41PM +0300, Roger Quadros wrote:
+>> This is an optional GPIO, if specified will be used to
+>> swap lane 0 and lane 1 based on GPIO status. This is required
+>> to achieve plug flip support for USB Type-C.
+>>
+>> Type-C companions typically need some time after the cable is
+>> plugged before and before they reflect the correct status of
+>> Type-C plug orientation on the DIR line.
+>>
+>> Type-C Spec specifies CC attachment debounce time (tCCDebounce)
+>> of 100 ms (min) to 200 ms (max).
+>>
+>> Allow the DT node to specify the time (in ms) that we need
+>> to wait before sampling the DIR line.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Cc: Rob Herring <robh@kernel.org>
+>> ---
+>>   .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml | 15 +++++++++++++++
+>>   1 file changed, 15 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>> index 8a1eccee6c1d..5dab0010bcdf 100644
+>> --- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>> @@ -53,6 +53,21 @@ properties:
+>>     assigned-clock-parents:
+>>       maxItems: 2
+>>   
+>> +  typec-dir-gpios:
+> 
+> TI specific or could be generic?
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index c33ea55a1841..882fe01ff770 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -140,6 +140,30 @@ const struct mtk_domain_data single_dom = {
- 	.max_iova = DMA_BIT_MASK(32)
- };
- 
-+/*
-+ * related file: mt6779-larb-port.h
-+ */
-+const struct mtk_domain_data mt6779_multi_dom[] = {
-+	/* normal domain */
-+	{
-+	 .min_iova = 0x0,
-+	 .max_iova = DMA_BIT_MASK(32),
-+	},
-+	/* ccu domain */
-+	{
-+	 .min_iova = 0x40000000,
-+	 .max_iova = 0x48000000 - 1,
-+	 .port_mask = {MTK_M4U_ID(9, 21), MTK_M4U_ID(9, 22),
-+		       MTK_M4U_ID(12, 0), MTK_M4U_ID(12, 1)}
-+	},
-+	/* vpu domain */
-+	{
-+	 .min_iova = 0x7da00000,
-+	 .max_iova = 0x7fc00000 - 1,
-+	 .port_mask = {MTK_M4U_ID(13, 0)}
-+	}
-+};
-+
- static struct mtk_iommu_pgtable *share_pgtable;
- static const struct iommu_ops mtk_iommu_ops;
- 
-@@ -1055,6 +1079,21 @@ static const struct dev_pm_ops mtk_iommu_pm_ops = {
- 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_iommu_suspend, mtk_iommu_resume)
- };
- 
-+static const struct mtk_iommu_resv_iova_region mt6779_iommu_rsv_list[] = {
-+	{
-+		.dom_id = 0,
-+		.iova_base = 0x40000000,	/* CCU */
-+		.iova_size = 0x8000000,
-+		.type = IOMMU_RESV_RESERVED,
-+	},
-+	{
-+		.dom_id = 0,
-+		.iova_base = 0x7da00000,	/* VPU/MDLA */
-+		.iova_size = 0x2700000,
-+		.type = IOMMU_RESV_RESERVED,
-+	},
-+};
-+
- static const struct mtk_iommu_plat_data mt2712_data = {
- 	.m4u_plat     = M4U_MT2712,
- 	.has_4gb_mode = true,
-@@ -1068,8 +1107,10 @@ static const struct mtk_iommu_plat_data mt2712_data = {
- 
- static const struct mtk_iommu_plat_data mt6779_data = {
- 	.m4u_plat = M4U_MT6779,
--	.dom_cnt = 1,
--	.dom_data = &single_dom,
-+	.resv_cnt     = ARRAY_SIZE(mt6779_iommu_rsv_list),
-+	.resv_region  = mt6779_iommu_rsv_list,
-+	.dom_cnt = ARRAY_SIZE(mt6779_multi_dom),
-+	.dom_data = mt6779_multi_dom,
- 	.larbid_remap[0] = {0, 1, 2, 3, 5, 7, 10, 9},
- 	/* vp6a, vp6b, mdla/core2, mdla/edmc*/
- 	.larbid_remap[1] = {2, 0, 3, 1},
--- 
-2.18.0
+This driver is TI only.
 
+> 
+>> +    maxItems: 1
+>> +    description:
+>> +      GPIO to signal Type-C cable orientation for lane swap.
+>> +      If GPIO is active, lane 0 and lane 1 of SERDES will be swapped to
+>> +      achieve the funtionality of an exernal type-C plug flip mux.
+> 
+> s/exernal/external/
+> 
+>> +
+>> +  typec-dir-debounce:
+> 
+> Needs '-ms' suffix.
+> 
+>> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> 
+> then you can drop this because standard units have type already.
+> 
+>> +    description:
+>> +      Number of milliseconds to wait before sampling
+>> +      typec-dir-gpio. If not specified, the GPIO will be sampled ASAP.
+>> +      Type-C spec states minimum CC pin debounce of 100 ms and maximum
+>> +      of 200 ms.
+> 
+> Express this as constraints:
+> 
+> minimum: 100
+> maximum: 200
+> default: ???
+> 
+> If the spec minimum is 100ms, then doesn't sampling ASAP violate the
+> spec?
+
+Good point. I'll change the default to 100.
+
+Some board solutions seem to take even longer than 200. I can set
+1000 ms as maximum.
+
+> 
+>> +
+>>   patternProperties:
+>>     "^pll[0|1]_refclk$":
+>>       type: object
+>> -- 
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>
+
+--
+cheers,
+-roger
+  
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
