@@ -2,119 +2,125 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D0ECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7092CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB99521721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A527D217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u+/vQ5rH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GyHrjkQ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390214AbfJ1OiA (ORCPT
+        id S2390223AbfJ1Ok1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:38:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49892 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730441AbfJ1OiA (ORCPT
+        Mon, 28 Oct 2019 10:40:27 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40083 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729692AbfJ1Ok1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:38:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xgAOnlp7ZBAWh5vP0sbEuG/b7xjQLYHGCchMpQ5Bwys=; b=u+/vQ5rHWiyiR7BvUFgcsmDHN
-        OInbaBhoUtmHdkfA8zfC/FFemUsniSgG/dWVOepfOH3g7BrAVbVKi6LDopAktdnIdTOsd++/b6F4G
-        nU8pxCvqjk9BEqpCMOZx8hJpBc8A20xxVPqAtquAak+uesymbr6UVLlBFkf9jY6D2TH/3tIwJW9pG
-        yITKfu6lakCSjlFom1DNv61pwEWor8kum2Nu3loZ1M3lsw6gwE35J0KgtrAryY+gUW99l6XnJ5puf
-        o/QNBxpjzoCL7Aedp56R8m1yhfjZkNTqQPgwhVNiJTYuFLte13cZ5pk8m99cO7qJ/jKcmTLAu1AhY
-        eTbcmh9xA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP69X-0001zs-J4; Mon, 28 Oct 2019 14:37:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BC0013002B0;
-        Mon, 28 Oct 2019 15:36:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 171D62100B87C; Mon, 28 Oct 2019 15:37:49 +0100 (CET)
-Date:   Mon, 28 Oct 2019 15:37:49 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
-Message-ID: <20191028143749.GE4114@hirez.programming.kicks-ass.net>
-References: <20191009104611.15363-1-qais.yousef@arm.com>
+        Mon, 28 Oct 2019 10:40:27 -0400
+Received: by mail-wm1-f68.google.com with SMTP id w9so9402764wmm.5
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jDefaEjucmPfmXoR6EuBuaPt+jroTYHe9nD2t6DWPcM=;
+        b=GyHrjkQ9vfDcU5wXh/083wbH2nwmUq1lmiDg5F9BZ27v/NXI1oRLFMmzFLAuSBWcxl
+         XI5/FBrUcyDMVVYKj1881yfZA6CrszdspyFZ5xex8ShXZ+dNrEwWmFhbY81SYSlEn+iX
+         j0KtxvWOSRWPum+MygEV+FXMyNcQGVsXlUJ78l4nE68Cf/iPvqbftsFaWDzx4pPnoRfI
+         vSdGX+vjEg1LeRJ1nY7GAlGCpGrkohzhWXH+1MoWM+AWwC3D9+AF5p3GjcB3ljwydS72
+         sngthVWQc0n+v2F9ex8lSVcwrDvKtLzLVwoTeM5ozZ8sEXh4sV6W/boOT2qyfv70gvW8
+         AoUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jDefaEjucmPfmXoR6EuBuaPt+jroTYHe9nD2t6DWPcM=;
+        b=KRWsmjb7sXD+psXQwPHgAFy8IFB2jTD/o+4SyjEgEXKzzTHqoO2Oj9SGRouciJtcm9
+         UYW7k3rZsMY8Re4i1x7X6oWEiJpEB4GYDGxQH5o6kEPDaJ98k/2asoenhQOMx8A2oVk4
+         F35jrgCqInGbFZyDquTKdj2fRRsTNP3ybUkk+KHSUmN+rdyyxgDnfuMC5oZDHaKNmnYd
+         zK8ADlpo69Y1hS3l9HlvvCLKEvdTYx7MM9WbJ+4l1eppiAiFUNNdMlTcNwcpOu+Xpmip
+         o5Tl1o3RixWvm+XY87r+DIUTsUPzNTT1s0F1Vu4vC0So/faOdU0GeWEeOIcvUlGbWkM7
+         t/Cw==
+X-Gm-Message-State: APjAAAUPMJnSwocyMMQT+yJz2a/JoXV4kaDu5M/ehK3AJrWZthxsKpRP
+        WFobXQF8ISW5+gk3NgYefLeUzJQIdEzybKuzFZs=
+X-Google-Smtp-Source: APXvYqy58Usq1lGliMFgwEEdW88D9FmQUX6S4e8se9/pX5LCyyjc/WamJJyqnV2P2m8Mh9W1nLUcPZ3SGC+5SoTpig8=
+X-Received: by 2002:a7b:cd91:: with SMTP id y17mr293848wmj.113.1572273624910;
+ Mon, 28 Oct 2019 07:40:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009104611.15363-1-qais.yousef@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
+ <20191025075335.GC32742@smile.fi.intel.com> <20191025075540.GD32742@smile.fi.intel.com>
+ <166c9855-910d-a70c-ba86-6aebe5f2346d@intel.com>
+In-Reply-To: <166c9855-910d-a70c-ba86-6aebe5f2346d@intel.com>
+From:   Andrey Zhizhikin <andrey.z@gmail.com>
+Date:   Mon, 28 Oct 2019 15:40:19 +0100
+Message-ID: <CAHtQpK5zBE_6HGMRcdVFj5-zoUrwaPjqrCB=2GUB9CtvE8FhbQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
+ Trail Whiskey Cove PMIC
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>, lgirdwood@gmail.com,
+        Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 11:46:11AM +0100, Qais Yousef wrote:
-> Capacity Awareness refers to the fact that on heterogeneous systems
-> (like Arm big.LITTLE), the capacity of the CPUs is not uniform, hence
-> when placing tasks we need to be aware of this difference of CPU
-> capacities.
-> 
-> In such scenarios we want to ensure that the selected CPU has enough
-> capacity to meet the requirement of the running task. Enough capacity
-> means here that capacity_orig_of(cpu) >= task.requirement.
-> 
-> The definition of task.requirement is dependent on the scheduling class.
-> 
-> For CFS, utilization is used to select a CPU that has >= capacity value
-> than the cfs_task.util.
-> 
-> 	capacity_orig_of(cpu) >= cfs_task.util
-> 
-> DL isn't capacity aware at the moment but can make use of the bandwidth
-> reservation to implement that in a similar manner CFS uses utilization.
-> The following patchset implements that:
-> 
-> https://lore.kernel.org/lkml/20190506044836.2914-1-luca.abeni@santannapisa.it/
-> 
-> 	capacity_orig_of(cpu)/SCHED_CAPACITY >= dl_deadline/dl_runtime
-> 
-> For RT we don't have a per task utilization signal and we lack any
-> information in general about what performance requirement the RT task
-> needs. But with the introduction of uclamp, RT tasks can now control
-> that by setting uclamp_min to guarantee a minimum performance point.
-> 
-> ATM the uclamp value are only used for frequency selection; but on
-> heterogeneous systems this is not enough and we need to ensure that the
-> capacity of the CPU is >= uclamp_min. Which is what implemented here.
-> 
-> 	capacity_orig_of(cpu) >= rt_task.uclamp_min
-> 
-> Note that by default uclamp.min is 1024, which means that RT tasks will
-> always be biased towards the big CPUs, which make for a better more
-> predictable behavior for the default case.
-> 
-> Must stress that the bias acts as a hint rather than a definite
-> placement strategy. For example, if all big cores are busy executing
-> other RT tasks we can't guarantee that a new RT task will be placed
-> there.
-> 
-> On non-heterogeneous systems the original behavior of RT should be
-> retained. Similarly if uclamp is not selected in the config.
-> 
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+On Mon, Oct 28, 2019 at 1:42 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 25/10/19 10:55 AM, Andy Shevchenko wrote:
+> > On Fri, Oct 25, 2019 at 10:53:35AM +0300, Andy Shevchenko wrote:
+> >> On Thu, Oct 24, 2019 at 02:29:37PM +0000, Andrey Zhizhikin wrote:
+> >>> This patchset introduces additional regulator driver for Intel Cherry
+> >>> Trail Whiskey Cove PMIC. It also adds a cell in mfd driver for this
+> >>> PMIC, which is used to instantiate this regulator.
+> >>>
+> >>> Regulator support for this PMIC was present in kernel release from Intel
+> >>> targeted Aero platform, but was not entirely ported upstream and has
+> >>> been omitted in mainline kernel releases. Consecutively, absence of
+> >>> regulator caused the SD Card interface not to be provided with Vqcc
+> >>> voltage source needed to operate with UHS-I cards.
+> >>>
+> >>> Following patches are addessing this issue and making sd card interface
+> >>> to be fully operable with UHS-I cards. Regulator driver lists an ACPI id
+> >>> of the SD Card interface in consumers and exposes optional "vqmmc"
+> >>> voltage source, which mmc driver uses to switch signalling voltages
+> >>> between 1.8V and 3.3V.
+> >>>
+> >>> This set contains of 2 patches: one is implementing the regulator driver
+> >>> (based on a non upstreamed version from Intel Aero), and another patch
+> >>> registers this driver as mfd cell in exising Whiskey Cove PMIC driver.
+> >>
+> >> Thank you.
+> >> Hans, Cc'ed, has quite interested in these kind of patches.
+> >> Am I right, Hans?
+> >
+> > Since it's about UHS/SD, Cc to Adrian as well.
+> >
+>
+> My only concern is that the driver might conflict with ACPI methods trying
+> to do the same thing, e.g. there is one ACPI SDHC instance from GPDWin DSDT
+> with code like this:
+>
+[... cut ...]
 
-Works for me; Steve you OK with this?
+That's a good point, and this is what I tried at first when I started
+to work on this problem. In my case INTEL_DSM_V18_SWITCH (fn=0x3) got
+executed in the mmc sub-system, but without the regulator or DSDT
+support the card did not get the proper voltage.
+
+The DSDT on Intel Aero reference platform looks different here.
+Currently I don't have it on hands, but would be able to look it up
+next week.
+
+-- 
+Regards,
+Andrey.
