@@ -2,138 +2,66 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BC6CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 158A0CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9095A20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:49:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvIX3cpn"
+	by mail.kernel.org (Postfix) with ESMTP id E4BC320830
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388351AbfJ1Utl (ORCPT
+        id S2388369AbfJ1Uts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:49:41 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43889 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJ1Utl (ORCPT
+        Mon, 28 Oct 2019 16:49:48 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:17690 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJ1Utr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:49:41 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 3so7722474pfb.10;
-        Mon, 28 Oct 2019 13:49:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=1Hum32HGcrAtxzDAgbdk3CWnZkz7ktiFh+DUwCg4ZRg=;
-        b=PvIX3cpntw6AsPuxJ6BUXhCXcEa/4XIwybJ31Z+yIhgVmd/8pQB1DB6PiPWI9TO/xl
-         GTGVUvfHphH7+JIbdP4OjVBV/8M46488EQLtKt5sfM2m8hRgSgtHwaORiPjhsc2FkkwT
-         0cXVDm24R97jcZJLQE8xQBZDMdiOI2SSCmsoQ05cSIn8CeLUPWBS9TO9xJqH06xIx3ab
-         F3VbDotwhdhqkuOZdQYyxxMrd8qTqMfuqtCjS1I03WBdahP5Det8xFTbQ0ZkhgG83nvo
-         a4pIzZ7YE6g+pTBNSfEGBagurogbIGhdVcdLBeMR9RMJijXXkmK57uml3ZHbtHXGQbF/
-         M8bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=1Hum32HGcrAtxzDAgbdk3CWnZkz7ktiFh+DUwCg4ZRg=;
-        b=FCF6vx4yibbdubfNbTmWugDcxIwWfrWeUbdrDcvzZio3BVpdL+rsw/6Z1N0WtFtgy0
-         xYTi+x7ZSIQgMTyE616wOOvLzJ7svDvXxMDLkzhvHufeeuunrADvulUmdFbi6ta15+B2
-         6aLQk2aiOxaKsNt9x7DVfExk2lc8oF0b1bsud71z4VU8u/C5PpS3g1LscR1DCoMMET20
-         yAI4Ow9Xg3PRCySkbeum1U7oww6PW0CP2l+atn3qa5FXSzQM/u57L6jjNARQ6dmjRfv4
-         +drOdzcVVxB0DUJ1hwYvi9R3MTYBJz+8F5dnMRoMkvItGl/XyW6oSTCoMlpsfzDZcZzo
-         adTw==
-X-Gm-Message-State: APjAAAXDh1lyr3/UzOqfhAcVzhK03SQ+mUT4TcpKahatZLDzQuKtNI9k
-        LJW/V54VYkZr6poYA4H7qzE=
-X-Google-Smtp-Source: APXvYqzRDZ8JMCrB1odziVyZcNBn1BBvbF/xH5FTw+p7zNdRZIBXwC16VzOHEpqhw7bFnOr4Xbz6+w==
-X-Received: by 2002:a65:6203:: with SMTP id d3mr22775570pgv.272.1572295780516;
-        Mon, 28 Oct 2019 13:49:40 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id u36sm13494485pgn.29.2019.10.28.13.49.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 13:49:39 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 02:19:32 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     intel-linux-scu@intel.com, artur.paszkiewicz@intel.com,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] isci: request.c: remove unneeded variable status
-Message-ID: <20191028204931.GA29561@saurav>
+        Mon, 28 Oct 2019 16:49:47 -0400
+Received: from belgarion ([90.55.204.252])
+        by mwinf5d17 with ME
+        id K8pk210095TFNlm038pkhe; Mon, 28 Oct 2019 21:49:45 +0100
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Mon, 28 Oct 2019 21:49:45 +0100
+X-ME-IP: 90.55.204.252
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 16/46] ARM: pxa: tosa: use gpio descriptor for audio
+References: <20191018154052.1276506-1-arnd@arndb.de>
+        <20191018154201.1276638-16-arnd@arndb.de>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Mon, 28 Oct 2019 21:49:44 +0100
+In-Reply-To: <20191018154201.1276638-16-arnd@arndb.de> (Arnd Bergmann's
+        message of "Fri, 18 Oct 2019 17:41:31 +0200")
+Message-ID: <87a79kmw7r.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-status variable is not modified within function.
+Arnd Bergmann <arnd@arndb.de> writes:
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
- drivers/scsi/isci/request.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+> The audio driver should not use a hardwired gpio number
+> from the header. Change it to use a lookup table.
+>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 
-diff --git a/drivers/scsi/isci/request.c b/drivers/scsi/isci/request.c
-index 343d24c7e788..6537fa880906 100644
---- a/drivers/scsi/isci/request.c
-+++ b/drivers/scsi/isci/request.c
-@@ -1480,7 +1480,6 @@ static enum sci_status
- stp_request_pio_await_h2d_completion_tc_event(struct isci_request *ireq,
- 					      u32 completion_code)
- {
--	enum sci_status status = SCI_SUCCESS;
- 
- 	switch (SCU_GET_COMPLETION_TL_STATUS(completion_code)) {
- 	case SCU_MAKE_COMPLETION_STATUS(SCU_TASK_DONE_GOOD):
-@@ -1500,7 +1499,7 @@ stp_request_pio_await_h2d_completion_tc_event(struct isci_request *ireq,
- 		break;
- 	}
- 
--	return status;
-+	return SCI_SUCCESS;
- }
- 
- static enum sci_status
-@@ -2103,7 +2102,6 @@ sci_io_request_frame_handler(struct isci_request *ireq,
- static enum sci_status stp_request_udma_await_tc_event(struct isci_request *ireq,
- 						       u32 completion_code)
- {
--	enum sci_status status = SCI_SUCCESS;
- 
- 	switch (SCU_GET_COMPLETION_TL_STATUS(completion_code)) {
- 	case SCU_MAKE_COMPLETION_STATUS(SCU_TASK_DONE_GOOD):
-@@ -2148,13 +2146,12 @@ static enum sci_status stp_request_udma_await_tc_event(struct isci_request *ireq
- 		break;
- 	}
- 
--	return status;
-+	return SCI_SUCCESS;
- }
- 
- static enum sci_status atapi_raw_completion(struct isci_request *ireq, u32 completion_code,
- 						  enum sci_base_request_states next)
- {
--	enum sci_status status = SCI_SUCCESS;
- 
- 	switch (SCU_GET_COMPLETION_TL_STATUS(completion_code)) {
- 	case SCU_MAKE_COMPLETION_STATUS(SCU_TASK_DONE_GOOD):
-@@ -2174,7 +2171,7 @@ static enum sci_status atapi_raw_completion(struct isci_request *ireq, u32 compl
- 		break;
- 	}
- 
--	return status;
-+	return SCI_SUCCESS;
- }
- 
- static enum sci_status atapi_data_tc_completion_handler(struct isci_request *ireq,
--- 
-2.20.1
+Cheers.
 
+--
+Robert
