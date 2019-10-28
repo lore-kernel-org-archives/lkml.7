@@ -2,99 +2,71 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F1ECA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC780CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C19821783
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BD521783
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbfJ1PWF (ORCPT
+        id S1729943AbfJ1PWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:22:05 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42632 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfJ1PWF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:22:05 -0400
-Received: from cust-east-parth2-46-193-72-114.wb.wifirst.net (46.193.72.114) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 5e1bbc9d50f66428; Mon, 28 Oct 2019 16:22:02 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
-        linux-pm@vger.kernel.org, mtosatti@redhat.com
-Subject: Re: [PATCH v2] cpuidle: not unset the driver if it already exist
-Date:   Mon, 28 Oct 2019 16:22:02 +0100
-Message-ID: <3207655.LvExCM5pf1@kreacher>
-In-Reply-To: <1571795834-2027-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1571795834-2027-1-git-send-email-zhenzhong.duan@oracle.com>
+        Mon, 28 Oct 2019 11:22:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51958 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726553AbfJ1PWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 11:22:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B320CB20E;
+        Mon, 28 Oct 2019 15:22:32 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 08:21:08 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     eric@anholt.net, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: Re: [PATCH] staging: vc04_services: replace g_free_fragments_mutex
+ with spinlock
+Message-ID: <20191028152108.bjliafudxn3llysv@linux-p48b>
+References: <20191027221530.12080-1-dave@stgolabs.net>
+ <576df522-f012-9dd1-9dcc-b7e444e82ac6@gmx.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <576df522-f012-9dd1-9dcc-b7e444e82ac6@gmx.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, October 23, 2019 3:57:14 AM CET Zhenzhong Duan wrote:
-> __cpuidle_set_driver() check if there is an already exist driver and
-> unset it before return with -EBUSY. The next call will succeed as it's
-> just unset.
-> 
-> check if any of the CPUs in the mask have a driver different from drv
-> already and if so return -EBUSY before updating any cpuidle_drivers
-> per-CPU pointers.
-> 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> ---
-> v2: update code logic per Rafael
-> 
->  drivers/cpuidle/driver.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/cpuidle/driver.c b/drivers/cpuidle/driver.c
-> index 80c1a83..acfce04 100644
-> --- a/drivers/cpuidle/driver.c
-> +++ b/drivers/cpuidle/driver.c
-> @@ -62,24 +62,23 @@ static inline void __cpuidle_unset_driver(struct cpuidle_driver *drv)
->   * __cpuidle_set_driver - set per CPU driver variables for the given driver.
->   * @drv: a valid pointer to a struct cpuidle_driver
->   *
-> - * For each CPU in the driver's cpumask, unset the registered driver per CPU
-> - * to @drv.
-> - *
-> - * Returns 0 on success, -EBUSY if the CPUs have driver(s) already.
-> + * Returns 0 on success, -EBUSY if any CPU in the cpumask have a driver
-> + * different from drv already.
->   */
->  static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
->  {
->  	int cpu;
->  
->  	for_each_cpu(cpu, drv->cpumask) {
-> +		struct cpuidle_driver *old_drv;
->  
-> -		if (__cpuidle_get_cpu_driver(cpu)) {
-> -			__cpuidle_unset_driver(drv);
-> +		old_drv = __cpuidle_get_cpu_driver(cpu);
-> +		if (old_drv && old_drv != drv)
->  			return -EBUSY;
-> -		}
-> +	}
->  
-> +	for_each_cpu(cpu, drv->cpumask)
->  		per_cpu(cpuidle_drivers, cpu) = drv;
-> -	}
->  
->  	return 0;
->  }
-> 
+On Mon, 28 Oct 2019, Stefan Wahren wrote:
 
-Applied as 5.5 material, thanks!
+>Hi Davidlohr,
+>
+>Am 27.10.19 um 23:15 schrieb Davidlohr Bueso:
+>> There seems no need to be using a semaphore, or a sleeping lock
+>> in the first place: critical region is extremely short, does not
+>> call into any blocking calls and furthermore lock and unlocking
+>> operations occur in the same context.
+>>
+>> Get rid of another semaphore user by replacing it with a spinlock.
+>>
+>> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>> ---
+>> This is in an effort to further reduce semaphore users in the kernel.
+>>
+>thanks for this. Could please also send this to devel@driverdev.osuosl.org?
 
+Ccing.
 
+>
+>I only need to know, has this been tested on the Raspberry Pi?
 
+No testing has been done, I have no hardware to test this.
+
+Thanks,
+Davidlohr
