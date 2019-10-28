@@ -5,68 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2D2CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BCACA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6361021744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A368021744
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeEjxMuV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ldvm5knv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404390AbfJ1SY4 (ORCPT
+        id S1733268AbfJ1S05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 14:24:56 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38535 "EHLO
+        Mon, 28 Oct 2019 14:26:57 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38790 "EHLO
         mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733217AbfJ1SYz (ORCPT
+        with ESMTP id S1729786AbfJ1S04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 14:24:55 -0400
-Received: by mail-ed1-f65.google.com with SMTP id y8so8674087edu.5;
-        Mon, 28 Oct 2019 11:24:53 -0700 (PDT)
+        Mon, 28 Oct 2019 14:26:56 -0400
+Received: by mail-ed1-f65.google.com with SMTP id y8so8678769edu.5
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 11:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=s+epVcUrv+jzBvQcGpwKvBh17Aw5FnikxfqUyY5V1f8=;
-        b=SeEjxMuVYUfOma+JQBvSlHhkoXtJrbd2h/aWjAvx6CM1XV5NhR0ZtFlbMp/puCINBU
-         lI9sgRxd4OG/F8C85RlaDfYXjvqNDKB6vP5VC3+8NwUyXU2RXKuk/sPcU3B3cDVhZXVA
-         O7bazSd+bUgswvR1J+wvZcu2B50aX4p3Fom8NM8s9x4nTdDScDTeDmn1ExkI3zTh9azl
-         4Po413mozOirvX7ITdeJBRog1dOsROym+Sv70UWoM4zaBFRfWQvQiHzDGEF3o9w/O+Aa
-         LewFmc2s1kd4vm656Ecpidcv8PEd1H1NloozcxAZFUwTpXChnrvBcQ8OOdyYwI3s7YZZ
-         TPRw==
+        bh=jyG2bkaKFbztrj72ZgXXxBRwmsSDSnJ99Nc/U00gLp0=;
+        b=Ldvm5knvGdH5+kGtovWSTgcoIYTCvN8Sj8p3NABtwlire0lM9C7JdUUTuG5DLvoDIu
+         6HS9DW8S2OA1X7P+XLbhddg2JHw/hHHQeMmabbQa57Qb0xyUg8WdqQO2Te9BfmJMrkQ+
+         QpXbaa+EdBSXxtF0MbAEJ07JF93t+Dj507Tqyvi4wejHbLqSaaoBDGo9LBpmQtGHyryU
+         ydt1k3Xh6omPSZZL77rF+k2o0LhWqpwhs07gVo08qvJAGKcW8T21lRPe9Khn01H/Ty9A
+         Yhmu8uJi2P7l4PRkpUW8h4/VNk4c+kct5N/f8FJ9/574GD1z/AkJLH3fJa8ypvDZHXDB
+         PV1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=s+epVcUrv+jzBvQcGpwKvBh17Aw5FnikxfqUyY5V1f8=;
-        b=PWqaqsCMWuCMpoTIP1pqHLM7hVFtZ7tg+GIsyALxlYJQI/ypD0P93G7RhDT+wfCBqO
-         HBljkbVobNkxe4jRd6A6kIS1uhZ/cbtxBL2TlAG3gWrDiwKFBg4EGL6Do3erivkoOEwU
-         Mzs5G5SuBMB0EVoSCdmRA9IcztmJjUdiQECCugwucFY9h+MQJie89ZjrdmzDmN/ykrtX
-         0PAGPfb+8Ukig3uS5yL2yI8d0aME65hSgHP7Sya/m8rq/+osI3xhOoTQMZElcyvISLFi
-         m0ddxFPNrB6y0gi0l0k/f7pCUYl9E9TvFntqrjvC68EX/F4mNCc0hb7kZEfWBr8OvXnH
-         ci+g==
-X-Gm-Message-State: APjAAAUBOrxIogeV3Io3jtGv3ouq73JSJyaXy92zgmMakDB5mbAs3IAq
-        yQqTqm8LoWqFnkA74uzFkK8=
-X-Google-Smtp-Source: APXvYqylbM5CzfgzGEwbLq2ouvkn1ZugnmXi2tjNhuvYuZoyNUmuOGwq3LMm3cCduRyoBbG5U9yR/Q==
-X-Received: by 2002:a05:6402:797:: with SMTP id d23mr10252371edy.83.1572287093129;
-        Mon, 28 Oct 2019 11:24:53 -0700 (PDT)
+        bh=jyG2bkaKFbztrj72ZgXXxBRwmsSDSnJ99Nc/U00gLp0=;
+        b=slw8qMLY3vcEC8BRl/xcdVDr2CJpUXvtRjsMcSo0STqnByIC24r6UAPLrl50kkW4aB
+         8ZLOxIwkXDGAup4iZyRVvKHN8L83FkgPqtKSKmxBQ0CUvzpEHU+lbL0FmOcE4zdik2iK
+         8ezANVvysxrGjy9/Hfb/M7V9lQrK6C2eUd5P3jCwNh5Jb1nuEXbtjce8C9SUod0VozqS
+         FBWwWfBKsXP6cTLyxl1IxPy+m7fZdAPEkhVCNP7Wlba6lLEDc3iiLbfm+DwjTpJP5SNY
+         oMaq91LuCTAAxEdIKdZ2WLeNy6HwBPmkPgHTH2kqf7yffKrcIPPkvOAroRAEjB1Wx7Od
+         7qnQ==
+X-Gm-Message-State: APjAAAU/5+nBBCr1KLa6yMbi0oC1RmbTHM12D/g8Y/SB9f95LU6/8Di1
+        s1EPF8vUunj3k3KyxXOUqTs=
+X-Google-Smtp-Source: APXvYqypNd/NLWltDd0UcLe/z+MmJ5e8si+HfmviyOsXSF51Hr+jL9TfL8zQTPe3gB+nn6XF/6RkWA==
+X-Received: by 2002:aa7:c34c:: with SMTP id j12mr234807edr.175.1572287214506;
+        Mon, 28 Oct 2019 11:26:54 -0700 (PDT)
 Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id h9sm112431eja.83.2019.10.28.11.24.49
+        by smtp.googlemail.com with ESMTPSA id k22sm117960ejv.27.2019.10.28.11.26.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 11:24:52 -0700 (PDT)
-Subject: Re: [PATCH] usb: gadget: udc:bcm63xx_udc: use
- devm_platform_ioremap_resource
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>, cernekee@gmail.com,
-        balbi@kernel.org, gregkh@linuxfoundation.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        Mon, 28 Oct 2019 11:26:53 -0700 (PDT)
+Subject: Re: [PATCH] phy: broadcom: phy-brcm-usb-init.c: Fix comparing pointer
+ to 0
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>, alcooperx@gmail.com,
+        kishon@ti.com, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
 Cc:     saurav.girepunje@hotmail.com
-References: <20191025143533.GA7068@saurav>
+References: <20191027184210.GA20258@saurav>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
@@ -123,12 +121,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <a337b82b-c046-de6a-7bad-68d05f4b44a1@gmail.com>
-Date:   Mon, 28 Oct 2019 11:24:48 -0700
+Message-ID: <4215aa1d-f67e-54a9-dd28-4b54366748d2@gmail.com>
+Date:   Mon, 28 Oct 2019 11:26:50 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191025143533.GA7068@saurav>
+In-Reply-To: <20191027184210.GA20258@saurav>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -137,15 +135,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 7:35 AM, Saurav Girepunje wrote:
-> Use the new helper that wraps the calls to platform_get_resource()
-> and devm_ioremap_resource() together in bcm63xx_udc_probe().
+On 10/27/19 11:42 AM, Saurav Girepunje wrote:
+> Compare pointer-typed values to NULL rather than 0
 > 
 > Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
 
-This looks fine, in your subject, there should be an additional space
-between udc: and use devm_... other than that:
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
 Florian
