@@ -2,93 +2,138 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5EBCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E08ECA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0894208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079A921835
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YcdA17Z8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mCdCEyDr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvvSzQZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732724AbfJ1UJ6 (ORCPT
+        id S1732774AbfJ1UJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:09:58 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58916 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfJ1UJ4 (ORCPT
+        Mon, 28 Oct 2019 16:09:59 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40685 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727569AbfJ1UJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:09:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B46DB60274; Mon, 28 Oct 2019 20:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572293395;
-        bh=yDqvNVHhioOXiqjnb4f2q03NmQOz4C5aqZuljuDMOF0=;
-        h=Reply-To:From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=YcdA17Z8/z0a65m6GazQEoBEp0Y0FHxyklETaAStgGFT8noyV20xlEJvEBdKpZSQA
-         Tn5+YITS2CbbohG1+J2WlWa3PJvR9yENTuoeKFXhZmKbUK/HDUQZfeVtCsn66lpeAQ
-         uKtSp2Tjuc/8w1mJPR0Q6cyzsMXX0u0EROCjeyj4=
-Received: from BCAIN (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bcain@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A46AB60274;
-        Mon, 28 Oct 2019 20:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572293394;
-        bh=yDqvNVHhioOXiqjnb4f2q03NmQOz4C5aqZuljuDMOF0=;
-        h=Reply-To:From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=mCdCEyDrGyipu0nnGPB7/pULaO1iagaTJbBnIwPaqNbrEjzy4xSUGxTtGbzTYxxoV
-         zDzZioBviFtj/O3Vo3pJVC2UTNaeUQ9KaE+0Hu4aB0AoCksBpy6x8gkbGfGCTDdP4L
-         1tNTNv5Fr+bmXe+VaH2WFXYI2/wrQUjM+6t4FSjs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A46AB60274
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=bcain@codeaurora.org
-Reply-To: <bcain@codeaurora.org>
-From:   "Brian Cain" <bcain@codeaurora.org>
-To:     "'Nick Desaulniers'" <ndesaulniers@google.com>
-Cc:     "'Sid Manning'" <sidneym@quicinc.com>,
-        "'Allison Randal'" <allison@lohutok.net>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Richard Fontana'" <rfontana@redhat.com>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        <linux-hexagon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>
-References: <20191028155722.23419-1-ndesaulniers@google.com>
-In-Reply-To: <20191028155722.23419-1-ndesaulniers@google.com>
-Subject: RE: [PATCH] hexagon: work around compiler crash
-Date:   Mon, 28 Oct 2019 15:09:52 -0500
-Message-ID: <002301d58dcb$a9ffaa80$fdfeff80$@codeaurora.org>
+        Mon, 28 Oct 2019 16:09:57 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p5so1024265plr.7;
+        Mon, 28 Oct 2019 13:09:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=wl+iKNA5Jfay9ywIg9f4O45/2oXRJ3Weq7J5t6Tjfas=;
+        b=FvvSzQZhtAbnnhD9fehuY1IndRKkyeQFH/Ja4KzmDtuFlsQ4yWC3wDD/uKvTzXdO77
+         mRJu3Rm77YcfdaMIXRi38XW4xrNXJmd6jtwnIsHlAISpgUIJEssbEyHw/cJkryhevPZN
+         Fgqyy4Br72CBLdf3A6KK7MEGAW5jd/5I3c4hqfd5FEdFkBqtv0DDJ5Dy/73NCCMJFirJ
+         NKZDseP2xVBrVl7fL1syApRx1CoyuebQsBP14yBd4bHW2RejGkytU2DR5JTFikrscNYx
+         lt1lu33+alUjvvyA5YuTJKMFad3WBiTaJAY0PfsUs5EYRX3iHeUBoYkNhgssY8TS9POy
+         VbCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=wl+iKNA5Jfay9ywIg9f4O45/2oXRJ3Weq7J5t6Tjfas=;
+        b=LHJ6jwy0/o46v6TRBpVFdGFdiheG3mBAa5sN+zOmv6aLNqzbvUcWD/VO7bOKyN1MO6
+         9C79cWB7wSoWvdnmFqubW58nxdZV7d8Ap2lf+JtKhPGE7E8XkgSUsGYLC1IUWk/lSpd0
+         3M4AFC8HTLA/wTqIfnV4/W0CwOeiAOsyuQOWsIDFrH489EZfdMzXwmJDVRmh+jQMxPfz
+         T8N5V6JhOJbWviZJ9bMBrYxRZJ+i0Tcdq3JlYiQkn6Ll9iPxdEJp04oo/NcczM9fZW5T
+         1zkhlhOAFqSq1sTR/WPxFtOFuGf3RDvJ5yBkFfJZ4hOYm5p4WdC+PBpM8wzcb9B88KLt
+         LPmg==
+X-Gm-Message-State: APjAAAVHpprEdZVLR2j6toGSMvEZYZdZsHk/tx3zbzvPIqq7zAmXXu2q
+        BYpYA/22TW8zEvcx3OPJkbo=
+X-Google-Smtp-Source: APXvYqyajeo0OC7xTlcmXfY/Y+R89i/qbP/KRbraF3xD5S+oVDl7mzcP/13Ma6RUFsB5gyTb/AAAbA==
+X-Received: by 2002:a17:902:a503:: with SMTP id s3mr20180655plq.203.1572293396691;
+        Mon, 28 Oct 2019 13:09:56 -0700 (PDT)
+Received: from saurav ([27.62.167.137])
+        by smtp.gmail.com with ESMTPSA id 31sm12360941pgy.63.2019.10.28.13.09.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 13:09:56 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 01:39:50 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     sgoutham@cavium.com, rric@kernel.org, davem@davemloft.net,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] cavium: thunder: Fix use true/false for bool type
+Message-ID: <20191028200949.GA28902@saurav>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKUlOT6xDYs3glgy2B+THlWPmKFrqXybLvA
-Content-Language: en-us
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-hexagon-owner@vger.kernel.org <linux-hexagon-
-> owner@vger.kernel.org> On Behalf Of Nick Desaulniers
-...
-> Subject: [PATCH] hexagon: work around compiler crash
-> 
-> Clang cannot translate the string "r30" into a valid register yet.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/755
-> Suggested-by: Sid Manning <sidneym@quicinc.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+use true/false on bool type variables for assignment.
 
-LGTM.  Thanks, Nick.
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+ drivers/net/ethernet/cavium/thunder/thunder_bgx.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Reviewed-by: Brian Cain <bcain@codeaurora.org>
+diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+index acb016834f04..1e09fdb63c4f 100644
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+@@ -1007,14 +1007,14 @@ static void bgx_poll_for_link(struct work_struct *work)
+ 
+ 	if ((spu_link & SPU_STATUS1_RCV_LNK) &&
+ 	    !(smu_link & SMU_RX_CTL_STATUS)) {
+-		lmac->link_up = 1;
++		lmac->link_up = true;
+ 		if (lmac->lmac_type == BGX_MODE_XLAUI)
+ 			lmac->last_speed = SPEED_40000;
+ 		else
+ 			lmac->last_speed = SPEED_10000;
+ 		lmac->last_duplex = DUPLEX_FULL;
+ 	} else {
+-		lmac->link_up = 0;
++		lmac->link_up = false;
+ 		lmac->last_speed = SPEED_UNKNOWN;
+ 		lmac->last_duplex = DUPLEX_UNKNOWN;
+ 	}
+@@ -1023,7 +1023,7 @@ static void bgx_poll_for_link(struct work_struct *work)
+ 		if (lmac->link_up) {
+ 			if (bgx_xaui_check_link(lmac)) {
+ 				/* Errors, clear link_up state */
+-				lmac->link_up = 0;
++				lmac->link_up = false;
+ 				lmac->last_speed = SPEED_UNKNOWN;
+ 				lmac->last_duplex = DUPLEX_UNKNOWN;
+ 			}
+@@ -1055,11 +1055,11 @@ static int bgx_lmac_enable(struct bgx *bgx, u8 lmacid)
+ 	if ((lmac->lmac_type == BGX_MODE_SGMII) ||
+ 	    (lmac->lmac_type == BGX_MODE_QSGMII) ||
+ 	    (lmac->lmac_type == BGX_MODE_RGMII)) {
+-		lmac->is_sgmii = 1;
++		lmac->is_sgmii = true;
+ 		if (bgx_lmac_sgmii_init(bgx, lmac))
+ 			return -1;
+ 	} else {
+-		lmac->is_sgmii = 0;
++		lmac->is_sgmii = false;
+ 		if (bgx_lmac_xaui_init(bgx, lmac))
+ 			return -1;
+ 	}
+@@ -1304,7 +1304,7 @@ static void lmac_set_training(struct bgx *bgx, struct lmac *lmac, int lmacid)
+ {
+ 	if ((lmac->lmac_type != BGX_MODE_10G_KR) &&
+ 	    (lmac->lmac_type != BGX_MODE_40G_KR)) {
+-		lmac->use_training = 0;
++		lmac->use_training = false;
+ 		return;
+ 	}
+ 
+-- 
+2.20.1
 
