@@ -2,68 +2,84 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C61CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64709CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7412070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CFF520717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572229160;
+	bh=Ooys5L+8V//Sns55VinsxJARaA6m2QRYb6IyFJTCdtU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uWCJtLIJ+LXTte9Fb4h7nXRK3vqGZKcLAWdmFJpTgbKDihcktPWTo5I/Ygtq7jPdE
+	 7eXqUeYn1/4FSmgrSqoEhrxf/Ty32FR44anFXhquKJjGcS7oCRd+9lqluONStTRGpi
+	 6eAXe0IKG5unYpUM+C22KxWKPiOJH+Ciof5bJAhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbfJ1CPs (ORCPT
+        id S1729266AbfJ1CTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 22:15:48 -0400
-Received: from mga04.intel.com ([192.55.52.120]:33972 "EHLO mga04.intel.com"
+        Sun, 27 Oct 2019 22:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729899AbfJ1CPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 22:15:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 19:15:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,238,1569308400"; 
-   d="scan'208";a="193126219"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga008.jf.intel.com with ESMTP; 27 Oct 2019 19:15:39 -0700
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     akpm@linux-foundation.org, peterz@infradead.org, walken@google.com,
-        richardw.yang@linux.intel.com, dbueso@suse.de, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org
-Subject: [Patch v2 2/2] lib/rbtree: get successor's color directly
-Date:   Mon, 28 Oct 2019 10:14:42 +0800
-Message-Id: <20191028021442.5450-2-richardw.yang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191028021442.5450-1-richardw.yang@linux.intel.com>
-References: <20191028021442.5450-1-richardw.yang@linux.intel.com>
+        id S1727775AbfJ1CTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 22:19:19 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 789E72070B;
+        Mon, 28 Oct 2019 02:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572229158;
+        bh=Ooys5L+8V//Sns55VinsxJARaA6m2QRYb6IyFJTCdtU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gQhwRQ/3nHp908TPJ7774bqZ+4AEL3R/14X8ZNES9se557S/0mCQ4vgqRJY9s1+qn
+         GrmOiL3ABss+CsCqocabdwqyH03xkBBn53P6WRu4m87lVWpEHPkjSznSdmxIE7RB0K
+         etl4cZfFKHP48RL8OYm4mdSzBCOAWyY7TBVJY9sY=
+Date:   Mon, 28 Oct 2019 10:18:59 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, adam.ford@logicpd.com,
+        stable <stable@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: imx6-logicpd: Re-enable SNVS power key
+Message-ID: <20191028021858.GE16985@dragon>
+References: <20191016144005.9863-1-aford173@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016144005.9863-1-aford173@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After move parent assignment out, we can check the color directly.
+On Wed, Oct 16, 2019 at 09:40:05AM -0500, Adam Ford wrote:
+> The baseboard of the Logic PD i.MX6 development kit has a power
+> button routed which can both power down and power up the board.
+> It can also wake the board from sleep.  This functionality was
+> marked as disabled by default in imx6qdl.dtsi, so it needs to
+> be explicitly enabled for each board.
+> 
+> This patch enables the snvs power key again.
+> Fixes: 770856f0da5d ("ARM: dts: imx6qdl: Enable SNVS power key according to board design")
 
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
----
- include/linux/rbtree_augmented.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+So this is fixing powerkey, while the previous fix on som was actually
+about poweroff.  I was confused.
 
-diff --git a/include/linux/rbtree_augmented.h b/include/linux/rbtree_augmented.h
-index 99c42e1a74b8..724b0d036b57 100644
---- a/include/linux/rbtree_augmented.h
-+++ b/include/linux/rbtree_augmented.h
-@@ -286,8 +286,7 @@ __rb_erase_augmented(struct rb_node *node, struct rb_root *root,
- 			rb_set_parent_color(child2, parent, RB_BLACK);
- 			rebalance = NULL;
- 		} else {
--			unsigned long pc2 = successor->__rb_parent_color;
--			rebalance = __rb_is_black(pc2) ? parent : NULL;
-+			rebalance = rb_is_black(successor) ? parent : NULL;
- 		}
- 		successor->__rb_parent_color = pc;
- 		tmp = successor;
--- 
-2.17.1
+> 
+> Cc: stable <stable@vger.kernel.org> #5.3+
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
+Applied, thanks.
