@@ -2,127 +2,113 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AE0CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0EACA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2453D2086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:17:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DLMODg0I"
+	by mail.kernel.org (Postfix) with ESMTP id 62D7221721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572265073;
+	bh=4kjKjQAdwQg+xIOM1RGhfB1fhC3MB3bGym1xpZl9M4A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yo3qDzL6KOqxHBko8T6KGTiqjeUdVUqgwNppmcsuYhoeBbbo8RygIQ7/TfngSEDTf
+	 F9usuVu6AEY2MeZgMJINRlK1oeht4WbGxigVPrNF6r2ddt+vFYtVZx2KweWwCeufte
+	 1EdLi0ilJX1mHB9DIdw2YOUV2lO0pQpe1ICbnVVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbfJ1MRL (ORCPT
+        id S2388522AbfJ1MRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:17:11 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:20427 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbfJ1MRK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:17:10 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191028121705epoutp02b0277ed5898f09705d2d8f416a332669~RzrXx0IuU2838428384epoutp022
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:17:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191028121705epoutp02b0277ed5898f09705d2d8f416a332669~RzrXx0IuU2838428384epoutp022
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572265025;
-        bh=HCmBWY/wmqdTa6NcwAcBEvMYHjelpaieBLD7s2kbLLc=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=DLMODg0IDmjoPy1EpGhrBofzVrD3yux2jFWv4j26upZNMZXJ7QMPufYta1jwklyr6
-         uhlSo/mrTaD4OwkJH7ouMGZkuzshIKDOIuOqAT9dhz/P44bXgmk2TusvjO8il1k5Mt
-         C+1r0TVNJUxBvkzozxpLzi5Zk94hIzYxYzK3Il5o=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20191028121705epcas5p1ebb3eb517f07f7cf08313930f60835b1~RzrXMEPt12885528855epcas5p1Z;
-        Mon, 28 Oct 2019 12:17:05 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        13.BD.20293.14CD6BD5; Mon, 28 Oct 2019 21:17:05 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191028121704epcas5p483bf05ccb4cd25b1757cd5645e819d12~RzrWpERt22233722337epcas5p4h;
-        Mon, 28 Oct 2019 12:17:04 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191028121704epsmtrp18be6b80ebca61a809c7b1a377a10fd0d~RzrWoWIaZ3109131091epsmtrp1r;
-        Mon, 28 Oct 2019 12:17:04 +0000 (GMT)
-X-AuditID: b6c32a49-fe3ff70000014f45-07-5db6dc416e1d
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        58.D9.25663.04CD6BD5; Mon, 28 Oct 2019 21:17:04 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191028121703epsmtip16eb380b6af00f8801e5b65a87d9072c4~RzrVcyiuD2549225492epsmtip1G;
-        Mon, 28 Oct 2019 12:17:03 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, pankaj.dubey@samsung.com,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: [PATCH v2 0/2] Add support to handle ZRX-DC Compliant PHYs
-Date:   Mon, 28 Oct 2019 17:46:26 +0530
-Message-Id: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsWy7bCmuq7jnW2xBq132SzO7lrIarGkKcNi
-        /pFzrBa77nawW6z4MpPd4vKuOUDJecfZLBZt/cLuwOGxc9Zddo8Fm0o9+rasYvTYsv8zo8fn
-        TXIBrFFcNimpOZllqUX6dglcGYuvLWEr+MBesf/jReYGxjVsXYycHBICJhKXJ01g6WLk4hAS
-        2M0ocf3uKiYI5xOjxMYt5xkhnG+MEht+PGeFaXnz9gZU1V5GiaXLzkL1tzBJfNt+kAmkik1A
-        W+Ln0b3sXYwcHCICkRLHG1hBapgFJjJKfO1aC7ZcWMBZYm7bGTCbRUBV4uOV82A2r4CLxLN5
-        i5kgtslJ3DzXyQzSLCHQwSYx+dBpFoiEi8SNR51QJwlLvDq+hR3ClpJ42d8GZedL9N5dCmXX
-        SEy528EIYdtLHLgyhwXkOGYBTYn1u/RBwswCfBK9v58wgYQlBHglOtqEIEwlibaZ1RCNEhKL
-        599khrA9JFY93gA2XEggVuL3jEaWCYwysxBmLmBkXMUomVpQnJueWmxaYJiXWq5XnJhbXJqX
-        rpecn7uJERzlWp47GGed8znEKMDBqMTDO+Hytlgh1sSy4srcQ4wSHMxKIrwXzwCFeFMSK6tS
-        i/Lji0pzUosPMUpzsCiJ805ivRojJJCeWJKanZpakFoEk2Xi4JRqYORo1r8fH2IYmn7kSf//
-        z3NY5Leukl1dmadR1nJ9W/fMnzPUk09/utj07kmBF8+iI/92l59TXG32Ml951hcbg0rLoH/q
-        6azrM66kHlp73GGxsX+ZvdXntC8XbD6+Cl+uur4nfXNbStC/qumzb0TMuz17/1Kv37f2XYx6
-        MDFiXbSvnuQ8buaClEtKLMUZiYZazEXFiQB1YasL7gIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnluLIzCtJLcpLzFFi42LZdlhJTtfhzrZYg1WPpS3O7lrIarGkKcNi
-        /pFzrBa77nawW6z4MpPd4vKuOWwWZ+cdZ7NYtPULuwOHx85Zd9k9Fmwq9ejbsorRY8v+z4we
-        nzfJBbBGcdmkpOZklqUW6dslcGUsvraEreADe8X+jxeZGxjXsHUxcnJICJhIvHl7g6mLkYtD
-        SGA3o0THi7usEAkJiS97v0IVCUus/PecHaKoiUni54tDTCAJNgFtiZ9H9wIlODhEBKIlNrwS
-        AqlhFpjKKHFmzwWwGmEBZ4m5bWfABrEIqEp8vHIezOYVcJF4Nm8xE8QCOYmb5zqZJzDyLGBk
-        WMUomVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJERxMWlo7GE+ciD/EKMDBqMTDO+Hytlgh
-        1sSy4srcQ4wSHMxKIrwXzwCFeFMSK6tSi/Lji0pzUosPMUpzsCiJ88rnH4sUEkhPLEnNTk0t
-        SC2CyTJxcEo1MK4Ny3PMDko5b+GW+kVijVjLKbtZc3ZM7TCrDTOq/T6NWTY/+PDdcIuQCumL
-        fIZyKYJSe0xe5VuFG3PcrT7688/qqkR5FjkT0Yktz8SeNm38fzXp3zrW5PuSLxNO77CxMPE+
-        Y8r74Auf+u/i9/M8Z6/aN9Ng2U+Ha9Nv3cgSObc913j7Pz2+hUosxRmJhlrMRcWJAC0bamki
-        AgAA
-X-CMS-MailID: 20191028121704epcas5p483bf05ccb4cd25b1757cd5645e819d12
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191028121704epcas5p483bf05ccb4cd25b1757cd5645e819d12
-References: <CGME20191028121704epcas5p483bf05ccb4cd25b1757cd5645e819d12@epcas5p4.samsung.com>
+        Mon, 28 Oct 2019 08:17:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728329AbfJ1MRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 08:17:52 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ED0B2086D;
+        Mon, 28 Oct 2019 12:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572265071;
+        bh=4kjKjQAdwQg+xIOM1RGhfB1fhC3MB3bGym1xpZl9M4A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FYgnslUuZnLlj9KdLcmMiyHNbPvW79emQLvYDof+rYLD9FbSUFOeZOUyJfQvVpzb4
+         M71yGtlHpkJJJ7G8XUbBeqh1KNBHfiaRS3T3H6S05hoaETGTkjrdfHAHW6e8oFB3Se
+         xrtmTNL7KSHzVqf50nKwWXbQl0q6PNJ1ba5z2Au4=
+Date:   Mon, 28 Oct 2019 20:17:26 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, ping.bai@nxp.com, jun.li@nxp.com,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM64: imx8mm: Change compatible string for sdma
+Message-ID: <20191028121725.GJ16985@dragon>
+References: <1571992763-31339-1-git-send-email-shengjiu.wang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571992763-31339-1-git-send-email-shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According the PCI Express base specification when PHY does not meet
-ZRX-DC specification, after every 100ms timeout the link should
-transition to recovery state when the link is in low power states. 
+On Fri, Oct 25, 2019 at 04:39:23PM +0800, Shengjiu Wang wrote:
+> SDMA in i.MX8MM should use same configuration as i.MX8MQ
+> So need to change compatible string to be "fsl,imx8mq-sdma".
+> 
+> Fixes: a05ea40eb384 ("arm64: dts: imx: Add i.mx8mm dtsi support")
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Ports that meet the ZRX-DC specification for 2.5 GT/s while in the
-L1.Idle state and are therefore not required to implement the 100 ms
-timeout and transition to Recovery should avoid implementing it, since
-it will reduce the power savings expected from the L1 state.
+Updated the subject as below and applied the patch.
 
-DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+  arm64: dts: imx8mm: fix compatible string for sdma
 
-Anvesh Salveru (2):
-  dt-bindings: PCI: designware: Add binding for ZRX-DC PHY property
-  PCI: dwc: Add support to handle ZRX-DC Compliant PHYs
+Shawn
 
- Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
- drivers/pci/controller/dwc/pcie-designware.c              | 7 +++++++
- drivers/pci/controller/dwc/pcie-designware.h              | 3 +++
- 3 files changed, 12 insertions(+)
-
--- 
-2.17.1
-
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index 2139c0a9c495..6a54d2a3b19b 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -394,7 +394,7 @@
+>  			};
+>  
+>  			sdma2: dma-controller@302c0000 {
+> -				compatible = "fsl,imx8mm-sdma", "fsl,imx7d-sdma";
+> +				compatible = "fsl,imx8mm-sdma", "fsl,imx8mq-sdma";
+>  				reg = <0x302c0000 0x10000>;
+>  				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks = <&clk IMX8MM_CLK_SDMA2_ROOT>,
+> @@ -405,7 +405,7 @@
+>  			};
+>  
+>  			sdma3: dma-controller@302b0000 {
+> -				compatible = "fsl,imx8mm-sdma", "fsl,imx7d-sdma";
+> +				compatible = "fsl,imx8mm-sdma", "fsl,imx8mq-sdma";
+>  				reg = <0x302b0000 0x10000>;
+>  				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks = <&clk IMX8MM_CLK_SDMA3_ROOT>,
+> @@ -741,7 +741,7 @@
+>  			};
+>  
+>  			sdma1: dma-controller@30bd0000 {
+> -				compatible = "fsl,imx8mm-sdma", "fsl,imx7d-sdma";
+> +				compatible = "fsl,imx8mm-sdma", "fsl,imx8mq-sdma";
+>  				reg = <0x30bd0000 0x10000>;
+>  				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks = <&clk IMX8MM_CLK_SDMA1_ROOT>,
+> -- 
+> 2.21.0
+> 
