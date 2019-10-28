@@ -2,65 +2,77 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 220B9CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79F2CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21562086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40052086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbfJ1MNC (ORCPT
+        id S2388963AbfJ1MNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:13:02 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:40510 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbfJ1MNC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:13:02 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iP3tC-0003GO-4w; Mon, 28 Oct 2019 13:12:50 +0100
-Message-ID: <d0fc94581e0dce37d993c55edaae8fc40eaa7601.camel@sipsolutions.net>
-Subject: Re: [PATCH] cfg80211: Fix memory leak in
- cfg80211_inform_single_bss_frame_data
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 28 Oct 2019 13:12:47 +0100
-In-Reply-To: <20191027181600.11149-1-navid.emamdoost@gmail.com> (sfid-20191027_191610_218836_6E8601E7)
-References: <20191027181600.11149-1-navid.emamdoost@gmail.com>
-         (sfid-20191027_191610_218836_6E8601E7)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 28 Oct 2019 08:13:17 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37056 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727085AbfJ1MNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 08:13:16 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E2F0067FEF17D9FC4D9A;
+        Mon, 28 Oct 2019 20:13:14 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 28 Oct 2019 20:13:06 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <xuwei5@huawei.com>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <olof@lixom.net>, <bhelgaas@google.com>, <arnd@arndb.de>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH v2 5/5] logic_pio: Build into a library
+Date:   Mon, 28 Oct 2019 20:10:05 +0800
+Message-ID: <1572264605-172363-6-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1572264605-172363-1-git-send-email-john.garry@huawei.com>
+References: <1572264605-172363-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-10-27 at 13:15 -0500, Navid Emamdoost wrote:
-> In the implementation of cfg80211_inform_single_bss_frame_data() the
-> allocated memory for ies is leaked in case of an error. Release ies if
-> cfg80211_bss_update() fails.
+Object file logic_pio.o is always built.
 
-I'm pretty sure it's more complicated than this patch (and the previous
-one) - we already do free this at least in the case that "new =
-kzalloc(...)" fails in cfg80211_bss_update().
+Ideally the object file should only be built when required. This is
+tricky, as that would be for archs which define PCI_IOBASE, but no common
+config option exists for that.
 
-Your Fixes: tag is also wrong, back then we didn't even have the dynamic
-allocation of the IEs.
+For now, continue to always build but at least ensure the symbols are not
+included in the vmlinux when not referenced.
 
-I'm dropping this patch and the other and will make a note to eventually
-look at the lifetime issue here you point out, but if you want to work
-on it instead let me know.
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ lib/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-johannes
+diff --git a/lib/Makefile b/lib/Makefile
+index c5892807e06f..27645143d8bb 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -108,7 +108,7 @@ obj-$(CONFIG_HAS_IOMEM) += iomap_copy.o devres.o
+ obj-$(CONFIG_CHECK_SIGNATURE) += check_signature.o
+ obj-$(CONFIG_DEBUG_LOCKING_API_SELFTESTS) += locking-selftest.o
+ 
+-obj-y += logic_pio.o
++lib-y += logic_pio.o
+ 
+ obj-$(CONFIG_GENERIC_HWEIGHT) += hweight.o
+ 
+-- 
+2.17.1
 
