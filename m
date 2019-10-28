@@ -2,83 +2,112 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE32CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EE4CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33AB1214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:20:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="aOTb4mCQ"
+	by mail.kernel.org (Postfix) with ESMTP id ABCB5214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572261905;
+	bh=uIJQi/xVzH0ESZKekPUQxJmUM83EGRAVC0wB5kU/siI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0z/sdrSL4Wcs0b9kQpXQ41Xc+RecJAqrxGIepyYSOvb8q/+ZxKKD3ZUkDb2ae7veK
+	 ZbLjw3JiXyIqCLYKEBfHHpHqxbmRasO9qvPMaEkc+JYBCdu7jegX3SgYbtajz6wFUm
+	 5J7TZbe3VDQ5gamcir+eOZS0B1aG/tPDG9+YIV/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbfJ1LUz (ORCPT
+        id S1730682AbfJ1LZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 07:20:55 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:41610 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727163AbfJ1LUz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 07:20:55 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 3ED9B2E14E7;
-        Mon, 28 Oct 2019 14:20:52 +0300 (MSK)
-Received: from myt4-4db2488e778a.qloud-c.yandex.net (myt4-4db2488e778a.qloud-c.yandex.net [2a02:6b8:c00:884:0:640:4db2:488e])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id JysqeZpZ3P-Kp9ud7sV;
-        Mon, 28 Oct 2019 14:20:52 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1572261652; bh=8XwSiEkPC9qn9resugp5JbDrv4IyCtiDq/CQDPF6oiY=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=aOTb4mCQwAKdSGLq1PQZE9I3SRWh+HZt0QF2TTF7e2a6SV9hJ3A7PG89Jvw3hRubY
-         R5QiEkOs+cvQ3gUnXVOkPCgOBUEVuXnf6Y5l7B54F+tiZezohUk7rtBug8VpmKj2xU
-         oHG4G0QDMPHmsDBnO0SrSQtH+cD382KMs8OyukVo=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
-        by myt4-4db2488e778a.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id o1Ru44CYmh-KpVKoKKg;
-        Mon, 28 Oct 2019 14:20:51 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC] fs/fcntl: add fcntl F_GET_RSS
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-References: <157225848971.557.16257813537984792761.stgit@buzz>
- <20191028111034.GS2963@bombadil.infradead.org>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <33978ec2-ac27-1b8b-ba33-3bd2c66aa016@yandex-team.ru>
-Date:   Mon, 28 Oct 2019 14:20:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 07:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727163AbfJ1LZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 07:25:04 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 891692086D;
+        Mon, 28 Oct 2019 11:25:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572261903;
+        bh=uIJQi/xVzH0ESZKekPUQxJmUM83EGRAVC0wB5kU/siI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QQe5GHkfEvuKJNrCByV/qt4ubTUJPa5HvnNSdzA8Coiq+mGHE2JneqDRdBlJUeKEt
+         fc3QlteFbO+2MRHqlDpmCFrOlK+X5Vo8iD6mcMVX+kVr/8iI9CZ7LCfXA6uZte3vOi
+         A/VF/+J94ncgU2R2BBzUZIOKXk20sOYmsN9m+jFo=
+Date:   Mon, 28 Oct 2019 11:24:58 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     isaacm@codeaurora.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, joro@8bytes.org,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        pratikp@codeaurora.org, lmark@codeaurora.org
+Subject: Re: [PATCH] iommu/dma: Add support for DMA_ATTR_SYS_CACHE
+Message-ID: <20191028112457.GB4122@willie-the-truck>
+References: <1572050616-6143-1-git-send-email-isaacm@codeaurora.org>
+ <20191026053026.GA14545@lst.de>
+ <e5fe861d7d506eb41c23f3fc047efdfa@codeaurora.org>
+ <20191028074156.GB20443@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20191028111034.GS2963@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191028074156.GB20443@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/10/2019 14.10, Matthew Wilcox wrote:
-> On Mon, Oct 28, 2019 at 01:28:09PM +0300, Konstantin Khlebnikov wrote:
->> +	if (dax_mapping(mapping))
->> +		pages = READ_ONCE(mapping->nrexceptional);
->> +	else
->> +		pages = READ_ONCE(mapping->nrpages);
-> 
-> I'm not sure this is the right calculation for DAX files.  We haven't
-> allocated any memory for DAX; we're just accessing storage directly.
-> The entries in the page caache are just translation from file offset to
-> physical address.
-> 
+Hi Christoph,
 
-Yep, makes sense. If RSS declared as memory usage then this chunk must do
-pages = READ_ONCE(mapping->nrpages) unconditionally and report 0 for DAX.
+On Mon, Oct 28, 2019 at 08:41:56AM +0100, Christoph Hellwig wrote:
+> On Sat, Oct 26, 2019 at 03:12:57AM -0700, isaacm@codeaurora.org wrote:
+> > On 2019-10-25 22:30, Christoph Hellwig wrote:
+> >> The definition makes very little sense.
+> > Can you please clarify what part doesn’t make sense, and why?
+> 
+> It looks like complete garbage to me.  That might just be because it
+> uses tons of terms I've never heard of of and which aren't used anywhere
+> in the DMA API.  It also might be because it doesn't explain how the
+> flag might actually be practically useful.
+
+Agreed. The way I /think/ it works is that on many SoCs there is a
+system/last-level cache (LLC) which effectively sits in front of memory for
+all masters. Even if a device isn't coherent with the CPU caches, we still
+want to be able to allocate into the LLC. Why this doesn't happen
+automatically is beyond me, but it appears that on these Qualcomm designs
+you actually have to set the memory attributes up in the page-table to
+ensure that the resulting memory transactions are non-cacheable for the CPU
+but cacheable for the LLC. Without any changes, the transactions are
+non-cacheable in both of them which assumedly has a performance cost.
+
+But you can see that I'm piecing things together myself here. Isaac?
+
+> > This is 
+> > really just an extension of this patch that got mainlined, so that clients 
+> > that use the DMA API can use IOMMU_QCOM_SYS_CACHE as well: 
+> > https://patchwork.kernel.org/patch/10946099/
+> >>  Any without a user in the same series it is a complete no-go anyway.
+> > IOMMU_QCOM_SYS_CACHE does not have any current users in the mainline, nor 
+> > did it have it in the patch series in which it got merged, yet it is still 
+> > present? Furthermore, there are plans to upstream support for one of our 
+> > SoCs that may benefit from this, as seen here: 
+> > https://www.spinics.net/lists/iommu/msg39608.html.
+> 
+> Which means it should have never been merged.  As a general policy we do
+> not add code to the Linux kernel without actual users.
+
+Yes, in this case I was hoping a user would materialise via a different
+tree, but it didn't happen, hence my post last week about removing this
+altogether:
+
+https://lore.kernel.org/linux-iommu/20191024153832.GA7966@jcrouse1-lnx.qualcomm.com/T/#t
+
+which I suspect prompted this patch that unfortunately fails to solve the
+problem.
+
+Will
