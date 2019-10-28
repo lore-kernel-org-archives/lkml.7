@@ -2,74 +2,87 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF884CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8B1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8089920659
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:27:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572244036;
-	bh=HbkAY+lHAbwVtkObCGbCrSq1LaUQVDeVT+G5E/C+4/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QWhS2NQGdjb2kpK1V/3RSsuCYhjGDNfun4+G4NrlkQ+z5WhMZxT+Wu+fGGK7hl6gF
-	 c1i71A2JXsg1cij3vy3OZ5zlqBciLGdqBbxNXepQ7vkoLqKjPAY1S+iKeoFoQNM73A
-	 6QVzWpmxxV5rdGI9gcy59xE4KOT8JPrlnm45w32A=
+	by mail.kernel.org (Postfix) with ESMTP id EFABF20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731863AbfJ1G1O (ORCPT
+        id S1731883AbfJ1G1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 02:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728348AbfJ1G1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 02:27:14 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3CBE20873;
-        Mon, 28 Oct 2019 06:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572244034;
-        bh=HbkAY+lHAbwVtkObCGbCrSq1LaUQVDeVT+G5E/C+4/s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1JhoMeMcY7i7DZSmAbcIw/l2aa0AWSjqrCmnkgyC0CFvlcI8XbD1KWrkUy2CdYQ0j
-         9l+L4xHaS3EPeQ6E2ayREo4VgOqUxhYquT1D7ClkzaDLTMt6PwOmSIdML8zqWpkexD
-         +awmlK5pXFDkRhf/olUgHNhXzFt7ZQlS+CNq4bi0=
-Date:   Mon, 28 Oct 2019 14:26:55 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Peter Chen <peter.chen@nxp.com>, linux-imx@nxp.com,
+        Mon, 28 Oct 2019 02:27:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40770 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728348AbfJ1G1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:27:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 98A3FAC24;
+        Mon, 28 Oct 2019 06:27:42 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 07:27:40 +0100
+Message-ID: <s5hpnihmlk3.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: imx: Drop imx_anatop_usb_chrg_detect_disable()
-Message-ID: <20191028062654.GP16985@dragon>
-References: <20191022041445.23897-1-andrew.smirnov@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022041445.23897-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Subject: Re: [PATCH] ALSA: usb-audio: Fix memory leak in __snd_usbmidi_create
+In-Reply-To: <20191027221007.14317-1-navid.emamdoost@gmail.com>
+References: <20191027221007.14317-1-navid.emamdoost@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 09:14:45PM -0700, Andrey Smirnov wrote:
-> With commit b5bbe2235361 ("usb: phy: mxs: Disable external charger
-> detect in mxs_phy_hw_init()") in tree all of the necessary charger
-> setup is done by the USB PHY driver which covers all of the affected
-> i.MX6 SoCs.
+On Sun, 27 Oct 2019 23:10:06 +0100,
+Navid Emamdoost wrote:
 > 
-> NOTE: imx_anatop_usb_chrg_detect_disable() was also called for i.MX7D,
-> but looking at its datasheet it appears to have a different USB PHY IP
-> block, so executing i.MX6 charger disable configuration seems
-> unnecessary.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> In the implementation of __snd_usbmidi_create() there is a memory leak
+> caused by incorrect goto destination. Go to free_midi if
+> snd_usbmidi_create_endpoints_midiman() or snd_usbmidi_create_endpoints()
+> fail.
 
-Applied, thanks.
+No, this will lead to double-free.  After registering the rawmidi
+interface at snd_usbmidi_create_rawmidi(), the common destructor will
+be called via rawmidi private_free callback, and this will release the
+all resources already.
+
+
+thanks,
+
+Takashi
+
+> 
+> Fixes: 731209cc0417 ("ALSA: usb-midi: Use common error handling code in __snd_usbmidi_create()")
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  sound/usb/midi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/usb/midi.c b/sound/usb/midi.c
+> index b737f0ec77d0..22db37fbfbbd 100644
+> --- a/sound/usb/midi.c
+> +++ b/sound/usb/midi.c
+> @@ -2476,7 +2476,7 @@ int __snd_usbmidi_create(struct snd_card *card,
+>  	else
+>  		err = snd_usbmidi_create_endpoints(umidi, endpoints);
+>  	if (err < 0)
+> -		goto exit;
+> +		goto free_midi;
+>  
+>  	usb_autopm_get_interface_no_resume(umidi->iface);
+>  
+> -- 
+> 2.17.1
+> 
