@@ -2,102 +2,179 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611F3CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1B3CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4A921744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36BE208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQAhywDm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R9SU+tX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390301AbfJ1OrE (ORCPT
+        id S2390316AbfJ1OrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:47:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42994 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbfJ1OrD (ORCPT
+        Mon, 28 Oct 2019 10:47:13 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15686 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727982AbfJ1OrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:47:03 -0400
-Received: by mail-io1-f65.google.com with SMTP id k1so1997810iom.9;
-        Mon, 28 Oct 2019 07:47:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yAdrULyPsP/saITrhQHAw973q46vIVzs8IC2ETW439M=;
-        b=QQAhywDmsOGu3coSnKbJtF4iR4BVXWDs/vXUz52Ab9yVEeC53HQJehf1YFook6soIi
-         cjiIb1IJSu1/VLEATHmher8rfFI2ExE49XBsd1/JaA1UADBln6n3ubYZyFkpvBURFm1Q
-         NcWgXXEpQJPeWdxsKj9UEWIBq2UIgBbmUUrSkCglZU0wAkR9xYngIyOd2ge1O4ysOBHy
-         bCVmT4L1t07zi1Eq95jlNFgZVSawQm5Yjf36/mZQAlj9Dwie827dJjMv6VBS7KshsV9J
-         Ec1CdrIEz3Tofu0wvqU83PszdhDcztBGdUbm7rUOW/hgBoPE8smhTi9wEh10e1BAWIpn
-         s75w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yAdrULyPsP/saITrhQHAw973q46vIVzs8IC2ETW439M=;
-        b=NzZkccufFHngDqzK6iKXGc9hU6Pzv6yM3uarAKpeo+adGAbNmIx4vcOixhMK7/Bqns
-         sHClYGkVl5GSeZum9fSCVTmU6Nj5h1xn+JQPrFYXZH5UmIb9zNIL4GHiHrBY5s+ISQzt
-         DC++Dylm45qn+0Mqn/SvieC6Oi83Z1vzOwyCkdhOsl3JtHBZ/HR5qCUPyKlaWMrzo0eT
-         KbCQsXvSHGptL5pFkXEPvinZOMQWTgrBSs7Fel2LAg2Tn9HIUvACTBO9D4EA8AcCt1sP
-         TMyvh3F2lIMcRKa1sar39H1NMq3kjDjQDLtZ5T9QHs9PokLtihVAFd9qq14qApNgjIoP
-         /aYg==
-X-Gm-Message-State: APjAAAVxWTUV15gWiVTLEWgBvFUhNFOb88cW+O/af3qFRL7krAAhbQkg
-        GjjQcGxVnmUg9c8el6h8+FAi9iXPsG+eUQCjfSE=
-X-Google-Smtp-Source: APXvYqwRGrEMocwfiJKgngbQwJ1cUH7qFhJiEsIdi038NTMHy30hIo1Ql6GFXDTIDLNemPEdYg7e30CyxZlLg0llkrI=
-X-Received: by 2002:a6b:ba44:: with SMTP id k65mr2436219iof.190.1572274022666;
- Mon, 28 Oct 2019 07:47:02 -0700 (PDT)
+        Mon, 28 Oct 2019 10:47:12 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5db6ff770000>; Mon, 28 Oct 2019 07:47:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 28 Oct 2019 07:47:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 28 Oct 2019 07:47:11 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
+ 2019 14:47:11 +0000
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
+ DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Mon, 28 Oct 2019 14:47:10 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 9E003428E8; Mon, 28 Oct 2019 16:47:08 +0200 (EET)
+Date:   Mon, 28 Oct 2019 16:47:08 +0200
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Prashant Gaikwad" <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] clk: tegra20/30: Optimize PLLX configuration restoring
+Message-ID: <20191028144708.GE27141@pdeschrijver-desktop.Nvidia.com>
+References: <20190922215203.32103-1-digetx@gmail.com>
 MIME-Version: 1.0
-References: <20191027181600.11149-1-navid.emamdoost@gmail.com> <d0fc94581e0dce37d993c55edaae8fc40eaa7601.camel@sipsolutions.net>
-In-Reply-To: <d0fc94581e0dce37d993c55edaae8fc40eaa7601.camel@sipsolutions.net>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Mon, 28 Oct 2019 09:46:51 -0500
-Message-ID: <CAEkB2ERK=LQNgzAk-O9UB4wBGQGfSLdUOuybBwWiPTnoipfuTQ@mail.gmail.com>
-Subject: Re: [PATCH] cfg80211: Fix memory leak in cfg80211_inform_single_bss_frame_data
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190922215203.32103-1-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572274039; bh=KJppp2bcFVjIcgy/DqH/h7KP2DZcup8u3y5IqiTmba8=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=R9SU+tX3zP5Z5XdBTr3Di+YajQBxx0ao31hHbkv0SRHQW8G//Sylr2bhCiez/iKzb
+         Dd6eoRgyupYVCT5iafOfquylVZQ77GDoJPicCnqLdCO5PnToJ9qMei5/INweoZWJAN
+         /AAdzmA82ivm6llBHUevXPCKuHQujSHiph1nttVlfqSieHBt6L5EJRLkw9jQVZFRca
+         Mxm4OLoFqqOQ7N7jJH2yYwzXndV9R0fqdmSSHsyU1ALdgcuhBsrA9wif46yUGtAN09
+         OfVgKyLTGnZt0MGdD+t+aIlzZpWWOIBOjE7lsK8HbBGbMqRwNszZhTHCSEKhdl/lx5
+         rIxwCqycZ+0Aw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 7:12 AM Johannes Berg <johannes@sipsolutions.net> wrote:
->
-> On Sun, 2019-10-27 at 13:15 -0500, Navid Emamdoost wrote:
-> > In the implementation of cfg80211_inform_single_bss_frame_data() the
-> > allocated memory for ies is leaked in case of an error. Release ies if
-> > cfg80211_bss_update() fails.
->
-> I'm pretty sure it's more complicated than this patch (and the previous
-> one) - we already do free this at least in the case that "new =
-> kzalloc(...)" fails in cfg80211_bss_update().
+On Mon, Sep 23, 2019 at 12:52:03AM +0300, Dmitry Osipenko wrote:
+> There is no need to re-configure PLLX if its configuration in unchanged
+> on return from suspend / cpuidle, this saves 300us if PLLX is already
+> enabled (common case for cpuidle).
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-Now I agree, there are two cases of release for ies in cfg80211_bss_update().
-But for future reference, I suspect the last two cases of goto drop to
-be mishandling ies.
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 
-
->
-> Your Fixes: tag is also wrong, back then we didn't even have the dynamic
-> allocation of the IEs.
->
-> I'm dropping this patch and the other and will make a note to eventually
-> look at the lifetime issue here you point out, but if you want to work
-> on it instead let me know.
->
-> johannes
->
-
-
--- 
-Navid.
+> ---
+>  drivers/clk/tegra/clk-tegra20.c | 25 ++++++++++++++++---------
+>  drivers/clk/tegra/clk-tegra30.c | 25 ++++++++++++++++---------
+>  2 files changed, 32 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+> index cceefbd67a3b..4d8222f5c638 100644
+> --- a/drivers/clk/tegra/clk-tegra20.c
+> +++ b/drivers/clk/tegra/clk-tegra20.c
+> @@ -955,6 +955,7 @@ static void tegra20_cpu_clock_suspend(void)
+>  static void tegra20_cpu_clock_resume(void)
+>  {
+>  	unsigned int reg, policy;
+> +	u32 misc, base;
+>  
+>  	/* Is CPU complex already running on PLLX? */
+>  	reg = readl(clk_base + CCLK_BURST_POLICY);
+> @@ -968,15 +969,21 @@ static void tegra20_cpu_clock_resume(void)
+>  		BUG();
+>  
+>  	if (reg != CCLK_BURST_POLICY_PLLX) {
+> -		/* restore PLLX settings if CPU is on different PLL */
+> -		writel(tegra20_cpu_clk_sctx.pllx_misc,
+> -					clk_base + PLLX_MISC);
+> -		writel(tegra20_cpu_clk_sctx.pllx_base,
+> -					clk_base + PLLX_BASE);
+> -
+> -		/* wait for PLL stabilization if PLLX was enabled */
+> -		if (tegra20_cpu_clk_sctx.pllx_base & (1 << 30))
+> -			udelay(300);
+> +		misc = readl_relaxed(clk_base + PLLX_MISC);
+> +		base = readl_relaxed(clk_base + PLLX_BASE);
+> +
+> +		if (misc != tegra20_cpu_clk_sctx.pllx_misc ||
+> +		    base != tegra20_cpu_clk_sctx.pllx_base) {
+> +			/* restore PLLX settings if CPU is on different PLL */
+> +			writel(tegra20_cpu_clk_sctx.pllx_misc,
+> +						clk_base + PLLX_MISC);
+> +			writel(tegra20_cpu_clk_sctx.pllx_base,
+> +						clk_base + PLLX_BASE);
+> +
+> +			/* wait for PLL stabilization if PLLX was enabled */
+> +			if (tegra20_cpu_clk_sctx.pllx_base & (1 << 30))
+> +				udelay(300);
+> +		}
+>  	}
+>  
+>  	/*
+> diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+> index a19840fac716..3b5bca44b7aa 100644
+> --- a/drivers/clk/tegra/clk-tegra30.c
+> +++ b/drivers/clk/tegra/clk-tegra30.c
+> @@ -1135,6 +1135,7 @@ static void tegra30_cpu_clock_suspend(void)
+>  static void tegra30_cpu_clock_resume(void)
+>  {
+>  	unsigned int reg, policy;
+> +	u32 misc, base;
+>  
+>  	/* Is CPU complex already running on PLLX? */
+>  	reg = readl(clk_base + CLK_RESET_CCLK_BURST);
+> @@ -1148,15 +1149,21 @@ static void tegra30_cpu_clock_resume(void)
+>  		BUG();
+>  
+>  	if (reg != CLK_RESET_CCLK_BURST_POLICY_PLLX) {
+> -		/* restore PLLX settings if CPU is on different PLL */
+> -		writel(tegra30_cpu_clk_sctx.pllx_misc,
+> -					clk_base + CLK_RESET_PLLX_MISC);
+> -		writel(tegra30_cpu_clk_sctx.pllx_base,
+> -					clk_base + CLK_RESET_PLLX_BASE);
+> -
+> -		/* wait for PLL stabilization if PLLX was enabled */
+> -		if (tegra30_cpu_clk_sctx.pllx_base & (1 << 30))
+> -			udelay(300);
+> +		misc = readl_relaxed(clk_base + CLK_RESET_PLLX_MISC);
+> +		base = readl_relaxed(clk_base + CLK_RESET_PLLX_BASE);
+> +
+> +		if (misc != tegra30_cpu_clk_sctx.pllx_misc ||
+> +		    base != tegra30_cpu_clk_sctx.pllx_base) {
+> +			/* restore PLLX settings if CPU is on different PLL */
+> +			writel(tegra30_cpu_clk_sctx.pllx_misc,
+> +						clk_base + CLK_RESET_PLLX_MISC);
+> +			writel(tegra30_cpu_clk_sctx.pllx_base,
+> +						clk_base + CLK_RESET_PLLX_BASE);
+> +
+> +			/* wait for PLL stabilization if PLLX was enabled */
+> +			if (tegra30_cpu_clk_sctx.pllx_base & (1 << 30))
+> +				udelay(300);
+> +		}
+>  	}
+>  
+>  	/*
+> -- 
+> 2.23.0
+> 
