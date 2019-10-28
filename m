@@ -2,92 +2,98 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6032BCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64697CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7C2208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:55:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mMXIKL2S"
+	by mail.kernel.org (Postfix) with ESMTP id 40766208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389662AbfJ1Nzm (ORCPT
+        id S2389674AbfJ1Nz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:55:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55328 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbfJ1Nzm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:55:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GeTgSWc782B9W4ttmjLGz4tgdC/DzGai4EkjN8ttTKc=; b=mMXIKL2SEtnqYcFTQBFfETqhZ
-        Tik560Qg9n6orWmQPYldLjhvMjniKjLbno+NwSEb9TYeRNIWNXJD/1bMh11f8hnaF+RgyC001i3d3
-        ZJRxqy5yl68i/gCeXxlX55eHIydz4e/ikFkQdUpIaqL4bN90K2MvMKBhoOU5LDHogJz5Otc/URQfG
-        7zZ08LN4Q54Wcvo9ckkTInlSlsnCYlAXUovXdCMYNAwAikOp2lUvONs7HCNQjR01nvvlltaScYM6t
-        LoWnXVA4shjcPXbGcKOaCkfzLwdTR5rYN+qc/uVcQ5uLMEI9jkyEMfBdPzJILxRtEFzusVyV4+7PT
-        Pb4rM4lBQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP5US-00055y-Io; Mon, 28 Oct 2019 13:55:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4CFBE3002B0;
-        Mon, 28 Oct 2019 14:54:21 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 86173200DCF2A; Mon, 28 Oct 2019 14:55:21 +0100 (CET)
-Date:   Mon, 28 Oct 2019 14:55:21 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191028135521.GB4097@hirez.programming.kicks-ass.net>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
- <20191028123124.ogkk5ogjlamvwc2s@box>
- <20191028130018.GA7192@rapoport-lnx>
- <20191028131623.zwuwguhm4v4s5imh@box>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028131623.zwuwguhm4v4s5imh@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 28 Oct 2019 09:55:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54562 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727567AbfJ1Nz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:55:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B29BFAEFB;
+        Mon, 28 Oct 2019 13:55:54 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 14:55:52 +0100
+Message-ID: <s5himo9as9j.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     syzbot <syzbot+8f2612936028bfd28f28@syzkaller.appspotmail.com>,
+        allison@lohutok.net, alsa-devel@alsa-project.org,
+        benquike@gmail.com, dan.carpenter@oracle.com, glider@google.com,
+        linux-kernel@vger.kernel.org, perex@perex.cz,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        tiwai@suse.com, wang6495@umn.edu, yuehaibing@huawei.com
+Subject: Re: KMSAN: uninit-value in get_term_name
+In-Reply-To: <20191028133050.GA13691@kroah.com>
+References: <000000000000f838060595f602a7@google.com>
+        <s5hr22xau8f.wl-tiwai@suse.de>
+        <20191028133050.GA13691@kroah.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 04:16:23PM +0300, Kirill A. Shutemov wrote:
-
-> I think active use of this feature will lead to performance degradation of
-> the system with time.
+On Mon, 28 Oct 2019 14:30:50 +0100,
+Greg KH wrote:
 > 
-> Setting a single 4k page non-present in the direct mapping will require
-> splitting 2M or 1G page we usually map direct mapping with. And it's one
-> way road. We don't have any mechanism to map the memory with huge page
-> again after the application has freed the page.
+> On Mon, Oct 28, 2019 at 02:13:20PM +0100, Takashi Iwai wrote:
+> > On Mon, 28 Oct 2019 11:32:07 +0100,
+> > syzbot wrote:
+> > > 
+> > > Uninit was stored to memory at:
+> > >  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
+> > >  kmsan_internal_chain_origin+0xbd/0x180 mm/kmsan/kmsan.c:319
+> > >  __msan_chain_origin+0x6b/0xd0 mm/kmsan/kmsan_instr.c:179
+> > >  parse_term_proc_unit+0x73d/0x7e0 sound/usb/mixer.c:896
+> > >  __check_input_term+0x13ef/0x2360 sound/usb/mixer.c:989
+> > 
+> > So this comes from the invalid descriptor for a processing unit, and
+> > it's very likely the same issue as already spotted -- the validator up
+> > to 5.3-rc4 had a bug that passed the invalid descriptor falsely.
+> > This should have been covered by 5.3-rc5, commit ba8bf0967a15 ("ALSA:
+> > usb-audio: Fix copy&paste error in the validator").
+> 
+> SHould we be backporting the validator to any older kernels as well?
 
-Right, we recently had a 'bug' where ftrace triggered something like
-this and facebook ran into it as a performance regression. So yes, this
-is a real concern.
+Yes, that would be nice.  I didn't mark them for stable just because
+they are a bit largish and wanted to let them tested for 5.4 for a
+while.
+
+The following commits are relevant (from top/old to bottom/new).
+
+57f8770620e9b51c61089751f0b5ad3dbe376ff2
+    ALSA: usb-audio: More validations of descriptor units
+68e9fde245591d18200f8a9054cac22339437adb
+    ALSA: usb-audio: Simplify parse_audio_unit()
+52c3e317a857091fd746e15179a637f32be4d337
+    ALSA: usb-audio: Unify the release of usb_mixer_elem_info objects
+b8e4f1fdfa422398c2d6c47bfb7d1feb3046d70a
+    ALSA: usb-audio: Remove superfluous bLength checks
+e0ccdef92653f8867e2d1667facfd3c23699f540
+    ALSA: usb-audio: Clean up check_input_term()
+60849562a5db4a1eee2160167e4dce4590d3eafe
+    ALSA: usb-audio: Fix possible NULL dereference at create_yamaha_midi_quirk()
+b39e077fcb283dd96dd251a3abeba585402c61fe
+    ALSA: usb-audio: remove some dead code
+ba8bf0967a154796be15c4983603aad0b05c3138
+    ALSA: usb-audio: Fix copy&paste error in the validator
+
+
+thanks,
+
+Takashi
