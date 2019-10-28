@@ -2,79 +2,155 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE85CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483B2CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C910221479
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E91720873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:01:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kh0qVbm8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390574AbfJ1PBa (ORCPT
+        id S2390585AbfJ1PB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:01:30 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38145 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbfJ1PBa (ORCPT
+        Mon, 28 Oct 2019 11:01:58 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36545 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbfJ1PB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:01:30 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w3so7049154pgt.5;
-        Mon, 28 Oct 2019 08:01:29 -0700 (PDT)
+        Mon, 28 Oct 2019 11:01:57 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w18so10270411wrt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 08:01:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4cgrS1AWNs6QSLnc6iFA7RZ9gvANskUkxBGIRiV49/k=;
+        b=Kh0qVbm8NeJDbEzK9gq/qzjHiM4mbbhlIRCHyXpmrd1S1xnMaDlzCv3yi7lx6w13y8
+         Gbwq/UTwddHrRAArtRz1OvyKCr+wFx+mvRhVXDVqxZr3SDAwEtPBQ+FwSBWymIpXSSHm
+         Q+O1KW6m1zuyqsQgOYaZLZHrX4vGxoopr5SYPjSrHFa10iPmFB8ag9/c/mJn4sZG2DU+
+         nvMuRVYGgoB9KpqEeGqZjprx8ZK/nb0ntSuvsGhsuZnzvnEEypf1Aw9SOYUlvseT2FrI
+         zBsoyXHImtFWr4glONevuqj8mKQhE0Uc7mC3N3lJNCxSLhBcBXzQHw3P5SeZEqO+BpX0
+         gnSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Iot0ZBgc0Dj0tS3PUsk54zTN8OnhvTPdFLbjQIjDxSA=;
-        b=DOnlLJ6llSRlEV4B657Ghd7LUncAmLYfPfkksQch0nfH1Iy/co2bd6F43XmZPsl5bE
-         Wf2aTbX8hxITJHg3XDPxIzuOejWyPKEcKvX2xugNTTLN+v1FjQZzfaZl830Tj/0wBfkK
-         OqmxB3hSJu54QuE8KtG2iMG5HwRXRgydiBh2k0RlcOQtgiq/N4KR2z3Qg14D5dulydAH
-         PzkGRX8ayMRcOvwNBwdA7wiy/uK/yWSJXleH+Ll+S3FCxc0zFc5jKwONtWkiaVW+RI9/
-         ZiRN4AL2R3ODUmZMTJUY92slQ66k3uf6IiS/jaFLkZjhpuxvhg2KYSr7q/VVE3+MqoRl
-         E+ng==
-X-Gm-Message-State: APjAAAUqRAp4hs8/wjRHSJ2GDbduRmWvHbSNsEfo6XgTRmkXNqkrG2xh
-        TGHJT57OGHseSh+wg7aG9mw1naLp
-X-Google-Smtp-Source: APXvYqy8StxS7nh8ZwoKurzwZllHjIj28dUR8kSWsBGP/OebrjsJNEBkXoxDu3GWvS4/2G0GRVvhEA==
-X-Received: by 2002:a63:5422:: with SMTP id i34mr5587188pgb.142.1572274888793;
-        Mon, 28 Oct 2019 08:01:28 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id x12sm10758449pfm.130.2019.10.28.08.01.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Oct 2019 08:01:27 -0700 (PDT)
-Subject: Re: [PATCH v1 1/5] scsi: Adjust DBD setting in mode sense for caching
- mode page per LLD
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1572234608-32654-1-git-send-email-cang@codeaurora.org>
- <1572234608-32654-2-git-send-email-cang@codeaurora.org>
- <0ca52845-10ec-3310-83f7-81bdb635ec12@acm.org>
-Message-ID: <119bbf38-da2b-b928-fb4e-a43891a988c4@acm.org>
-Date:   Mon, 28 Oct 2019 08:01:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4cgrS1AWNs6QSLnc6iFA7RZ9gvANskUkxBGIRiV49/k=;
+        b=kyOog3OtjObEF4QE7m1OPSpuxez5/IkvLyYK+U4QXzMWd26frZA99OMFzemj30zTz/
+         QNh4kQ+TWejIwg0Tcg+GuXDppWKV67a6HVFFd75A06rYCJryMYFTn968tDJ6G3Is8v0t
+         RBOY7RQZhqBCUQ/Awgv0tlOPlTmkwVkt1AtPNQfVagAsgWMTCG84J29OAMjSQ1b+X8bJ
+         ngI1/ODWs04v2L1ooXoTT2J3rXITDiwiLIemMBz5Cj6vXemC0cuNzmM7wV1YuLcAEak3
+         sthamSORuAz7q0ZwI5gcDlpbLka+CwUS24gnbM+8ZHWKwATxIJuS3Bj+4nUz7knbuHI5
+         jxpg==
+X-Gm-Message-State: APjAAAUPa799B/l0zGGSd8QoQZ8YLi9clhp9XozKgPmGjWxsqVtj4ji/
+        esmaGFnJjigo6H0dX72FTUpMmkprEBv46mpXm9g=
+X-Google-Smtp-Source: APXvYqweKf7UQ3IeMh9OnDPUJNB8ESDigzRiKLFYQWrDV0mbCs2KXGkDYwI8PVap2KhduzwnNgARxaGRrwNXCKH6AEQ=
+X-Received: by 2002:a5d:614a:: with SMTP id y10mr14979812wrt.164.1572274915444;
+ Mon, 28 Oct 2019 08:01:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0ca52845-10ec-3310-83f7-81bdb635ec12@acm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
+ <20191025075335.GC32742@smile.fi.intel.com> <20191025075540.GD32742@smile.fi.intel.com>
+ <166c9855-910d-a70c-ba86-6aebe5f2346d@intel.com> <20191028124554.GF5015@sirena.co.uk>
+ <c5faf16d-892e-b36e-b448-9c59c2051b9e@redhat.com>
+In-Reply-To: <c5faf16d-892e-b36e-b448-9c59c2051b9e@redhat.com>
+From:   Andrey Zhizhikin <andrey.z@gmail.com>
+Date:   Mon, 28 Oct 2019 16:01:50 +0100
+Message-ID: <CAHtQpK5ocb8mqnf2dwcT7hQ9f8rQLtkHJsPppDWgfRPitJk6_Q@mail.gmail.com>
+Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
+ Trail Whiskey Cove PMIC
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        lgirdwood@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/19 7:58 AM, Bart Van Assche wrote:
-> Since this patch by itself has no effect, please resubmit this patch 
-> together with the LLD patch that sets set_dbd_for_caching.
+Hi Hans,
 
-Please ignore this part of my email. Patch 1/5 showed up in my inbox 
-before the rest of this patch series.
+On Mon, Oct 28, 2019 at 2:26 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 28-10-2019 13:45, Mark Brown wrote:
+> > On Mon, Oct 28, 2019 at 02:41:46PM +0200, Adrian Hunter wrote:
+> >> On 25/10/19 10:55 AM, Andy Shevchenko wrote:
+> >
+> >>> Since it's about UHS/SD, Cc to Adrian as well.
+> >
+> >> My only concern is that the driver might conflict with ACPI methods trying
+> >> to do the same thing, e.g. there is one ACPI SDHC instance from GPDWin DSDT
+> >> with code like this:
+>
+> Oh, right that is a very good point.
+>
+> > That's certainly what's idiomatic for ACPI (though machine specific
+> > quirks are too!).  The safe thing to do would be to only register the
+> > supply on systems where we know there's no ACPI method.
+>
+> Right, so as I mentioned before Andrey told me about the evaluation
+> board he is using I was aware of only 3 Cherry Trail devices using
+> the Whiskey Cove PMIC. The GPD win, the GPD pocket and the Lenovo
+> Yoga book. I've checked the DSDT of all 3 and all 3 of them offer
+> voltage control through the Intel _DSM method for voltage control.
+>
+> I've also actually tested this on the GPD win and 1.8V signalling
+> works fine there without needing Andrey's patch.
 
-Bart.
+Thanks a lot for checking this one out! At least this proves now that
+the only platform affected is in fact Intel Aero board, and the patch
+as it is might not be necessary to accommodate for all CHT-based
+products with Whiskey Cove.
+
+>
+> So it seems that Andrey's patch should only be active on his
+> dev-board, as actual production hardware ships with the _DSM method.
+>
+> I believe that the best solution is for the Whiskey Cove MFD driver:
+> drivers/mfd/intel_soc_pmic_chtwc.c
+>
+> To only register the new cell on Andrey's evaluation board model
+> (based in a DMI match I guess). Another option would be to do
+> the DMI check in the regulator driver, but that would mean
+> udev will needlessly modprobe the regulator driver on production
+> hardware, so doing it in the MFD driver and not registering the cell
+> seems best,
+
+I tend to lean to a solution to perform a DMI check in MFD rather than
+in the regulator driver, since this would keep the regulator
+more-or-less agnostic to the where it is running on.
+
+Or maybe it would even make more sense to create a board-specific hook
+(like it was suggested for vqmmc voltage and sdmmc ACPI d of
+consumer), and then only register a cell for Aero match? This would
+actually keep the regulator consumer and mfd cell together and would
+not allow the device-specific code to leak into generic driver
+implementation. In this case I'd go with mfd_add_cell() if I get a DMI
+match and register a vqmmc consumer in there.
+
+In that case, can you please tell me what you think about it and if
+the drivers/acpi/acpi_lpss.c would still be an appropriate location to
+put this code to?
+
+Thanks a lot!
+
+>
+> Regards,
+>
+> Hans
+>
+
+
+--
+Regards,
+Andrey.
