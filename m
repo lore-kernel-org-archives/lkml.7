@@ -2,212 +2,158 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FE3CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6F6CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32ADE217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82782218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Na/pRE3O"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="1q2fHQy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbfJ1VoJ (ORCPT
+        id S1732090AbfJ1Voc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:44:09 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42230 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730592AbfJ1VoI (ORCPT
+        Mon, 28 Oct 2019 17:44:32 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:34991 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730592AbfJ1Voc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:44:08 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 21so7836831pfj.9;
-        Mon, 28 Oct 2019 14:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=drfMRjPwU02ASI4D8UPPiRYEp0GQr7RmuUSXzOJ1M7c=;
-        b=Na/pRE3OIbMvOU5Volk0BYefi+jBZUfF4rzcDoqfVGzl4K2s0TVoZleBlNrJ5KuDID
-         8TQrHao/fBEgJOQyZHPyC16TNS/P4HeERIeymPCbIWVXPvfDfIJdh4f//ixuZSnE1My5
-         QAcgtngX9mQQReaS+9pAeOA0zkn9swASNPOPY5j1zMf11hp9c25f3VhowuSsYXvc1QOS
-         5DiEfLzgKfgpzDOV03RGhHff8lha/yzPDlkvrHxvZ0VAKGLp6++h5ih7KD32BBmjGDOF
-         47na+6tLBIey1QH9Qnbwub48NVQM7WhRVIv47FK/Wi6PpDHt/SGahMy+DGke+igaesJM
-         XZXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=drfMRjPwU02ASI4D8UPPiRYEp0GQr7RmuUSXzOJ1M7c=;
-        b=krwFqVzPQZJeBd09gGqA3Dms1BOKGiolEeu/J8fAqICrhYSfpFy5GJBV/4CusYXbWO
-         dEWZYty0c/JYDcVeP45TwnkLGyNdBzCiryP33rKyHIfAKCQU1tSJ2IEqONYTOkcCo240
-         RKlPtWD7TLvvub9JO+dir3YoMhPQ9v1C7dvxvOZqmZinZMbHzVr8JPBtShAbe7Uka+b+
-         EaUYF26CtYLyMazSXHL6uwgwE9AU6AUspTncDU/0Zc1lkGgiOx7aZm4naXeXaxmJlhZO
-         kBRa1BOtAexr+1sD5kqav1NCN1FyndDmsw0+GkkvqaygNI1wLgZiDurBZUxnLf9tevoc
-         qH1Q==
-X-Gm-Message-State: APjAAAXdVCY7DSUBGq0/eE3MbA9cGnqmuOVEuNgTwx8Uz81R6ev8rd90
-        RAvkbUJkj/J+A7RSyioAnRkbgQmhAZ4=
-X-Google-Smtp-Source: APXvYqwLPAL5HbcRKZvVZt2XxMfc6yX6k45Zo9pjgV++L6/nE9p6IGd9f9PIWWYsu5p/nVlN1KtQsA==
-X-Received: by 2002:a17:90a:dd43:: with SMTP id u3mr1866546pjv.130.1572299047213;
-        Mon, 28 Oct 2019 14:44:07 -0700 (PDT)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:539:24ac:ac7b:1049:baaf:a6f9])
-        by smtp.gmail.com with ESMTPSA id t1sm1693013pgp.9.2019.10.28.14.44.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 14:44:06 -0700 (PDT)
-From:   madhuparnabhowmik04@gmail.com
-To:     paulmck@kernel.org, joel@joelfernandes.org, corbet@lwn.net
-Cc:     linux-doc@vger.kernel.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH] Documentation: RCU: NMI-RCU: Converted NMI-RCU.txt to NMI-RCU.rst.
-Date:   Tue, 29 Oct 2019 03:12:52 +0530
-Message-Id: <20191028214252.17580-1-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 28 Oct 2019 17:44:32 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3C48D886BF;
+        Tue, 29 Oct 2019 10:44:28 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1572299068;
+        bh=DYOidqT5tUCFVfyUT2GRpqixTq+ntsgXpdtqwuOAk6k=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=1q2fHQy6amqf2xgJs26FyQkL6UTYuUaWyZ+T+FwsxzszVBd7XPgzBMxyDVLYrZb0P
+         23n0/Nt5U+HpPSNTNRF0YWRT8quYDB06byPzP6FKkhDRjh2vYoOEXWBfRgST6Yaxat
+         xShZO9FyV2UtSP9TiIWOjUJJhdoktAa9bM2schseZXWv5TNercrQ5hLNSW9kvrhcb6
+         SAjU61jBtv/8M/QjnnV0atlkMJ1my9SvzmpoR9gLG7a+ltoBySl5YN6nWycER4ddnU
+         FTNc9gY0I/TreSpiR8NZ7SVQbM76cdv1S5QTIu9ehLyE0YgRlU/Sy9jmGLw7jWhgh/
+         ma4ZSEsxA1nmg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5db7613d0000>; Tue, 29 Oct 2019 10:44:29 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Tue, 29 Oct 2019 10:44:25 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Tue, 29 Oct 2019 10:44:25 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: NSP: avoid unnecessary probe deferrals
+Thread-Topic: [PATCH 2/2] ARM: dts: NSP: avoid unnecessary probe deferrals
+Thread-Index: AQHViujHZY98ZQ157ka0OeDhGPxOgadqws4AgAToBQCAABcnAA==
+Date:   Mon, 28 Oct 2019 21:44:24 +0000
+Message-ID: <b8ef1b3d154e104d943d22dcb07bff2756a82315.camel@alliedtelesis.co.nz>
+References: <20191025040041.6210-1-chris.packham@alliedtelesis.co.nz>
+         <20191025040041.6210-3-chris.packham@alliedtelesis.co.nz>
+         <5d75b0ba-81c6-3d54-5bef-1127cd1c9998@gmail.com>
+         <c8c9df8f252ed42c4ac7f3a10e52bfa5f5e31d50.camel@alliedtelesis.co.nz>
+In-Reply-To: <c8c9df8f252ed42c4ac7f3a10e52bfa5f5e31d50.camel@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:54a5:7b66:76cf:b046]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6C26432F61A07B46A928981BB4283381@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-
-This patch converts NMI-RCU from txt to rst format.
-Also adds NMI-RCU in the index.rst file.
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- .../RCU/{NMI-RCU.txt => NMI-RCU.rst}          | 53 ++++++++++---------
- Documentation/RCU/index.rst                   |  1 +
- 2 files changed, 29 insertions(+), 25 deletions(-)
- rename Documentation/RCU/{NMI-RCU.txt => NMI-RCU.rst} (73%)
-
-diff --git a/Documentation/RCU/NMI-RCU.txt b/Documentation/RCU/NMI-RCU.rst
-similarity index 73%
-rename from Documentation/RCU/NMI-RCU.txt
-rename to Documentation/RCU/NMI-RCU.rst
-index 881353fd5bff..da5861f6a433 100644
---- a/Documentation/RCU/NMI-RCU.txt
-+++ b/Documentation/RCU/NMI-RCU.rst
-@@ -1,4 +1,7 @@
-+.. _NMI_rcu_doc:
-+
- Using RCU to Protect Dynamic NMI Handlers
-+=========================================
- 
- 
- Although RCU is usually used to protect read-mostly data structures,
-@@ -9,7 +12,7 @@ work in "arch/x86/oprofile/nmi_timer_int.c" and in
- "arch/x86/kernel/traps.c".
- 
- The relevant pieces of code are listed below, each followed by a
--brief explanation.
-+brief explanation.::
- 
- 	static int dummy_nmi_callback(struct pt_regs *regs, int cpu)
- 	{
-@@ -18,12 +21,12 @@ brief explanation.
- 
- The dummy_nmi_callback() function is a "dummy" NMI handler that does
- nothing, but returns zero, thus saying that it did nothing, allowing
--the NMI handler to take the default machine-specific action.
-+the NMI handler to take the default machine-specific action.::
- 
- 	static nmi_callback_t nmi_callback = dummy_nmi_callback;
- 
- This nmi_callback variable is a global function pointer to the current
--NMI handler.
-+NMI handler.::
- 
- 	void do_nmi(struct pt_regs * regs, long error_code)
- 	{
-@@ -53,11 +56,12 @@ anyway.  However, in practice it is a good documentation aid, particularly
- for anyone attempting to do something similar on Alpha or on systems
- with aggressive optimizing compilers.
- 
--Quick Quiz:  Why might the rcu_dereference_sched() be necessary on Alpha,
--	     given that the code referenced by the pointer is read-only?
-+Quick Quiz:
-+		Why might the rcu_dereference_sched() be necessary on Alpha, given that the code referenced by the pointer is read-only?
- 
-+:ref:`Answer to Quick Quiz <answer_quick_quiz_NMI>`
- 
--Back to the discussion of NMI and RCU...
-+Back to the discussion of NMI and RCU...::
- 
- 	void set_nmi_callback(nmi_callback_t callback)
- 	{
-@@ -68,7 +72,7 @@ The set_nmi_callback() function registers an NMI handler.  Note that any
- data that is to be used by the callback must be initialized up -before-
- the call to set_nmi_callback().  On architectures that do not order
- writes, the rcu_assign_pointer() ensures that the NMI handler sees the
--initialized values.
-+initialized values::
- 
- 	void unset_nmi_callback(void)
- 	{
-@@ -82,7 +86,7 @@ up any data structures used by the old NMI handler until execution
- of it completes on all other CPUs.
- 
- One way to accomplish this is via synchronize_rcu(), perhaps as
--follows:
-+follows::
- 
- 	unset_nmi_callback();
- 	synchronize_rcu();
-@@ -98,24 +102,23 @@ to free up the handler's data as soon as synchronize_rcu() returns.
- Important note: for this to work, the architecture in question must
- invoke nmi_enter() and nmi_exit() on NMI entry and exit, respectively.
- 
-+.. _answer_quick_quiz_NMI:
- 
--Answer to Quick Quiz
--
--	Why might the rcu_dereference_sched() be necessary on Alpha, given
--	that the code referenced by the pointer is read-only?
-+Answer to Quick Quiz:
-+	Why might the rcu_dereference_sched() be necessary on Alpha, given that the code referenced by the pointer is read-only?
- 
--	Answer: The caller to set_nmi_callback() might well have
--		initialized some data that is to be used by the new NMI
--		handler.  In this case, the rcu_dereference_sched() would
--		be needed, because otherwise a CPU that received an NMI
--		just after the new handler was set might see the pointer
--		to the new NMI handler, but the old pre-initialized
--		version of the handler's data.
-+	The caller to set_nmi_callback() might well have
-+	initialized some data that is to be used by the new NMI
-+	handler.  In this case, the rcu_dereference_sched() would
-+	be needed, because otherwise a CPU that received an NMI
-+	just after the new handler was set might see the pointer
-+	to the new NMI handler, but the old pre-initialized
-+	version of the handler's data.
- 
--		This same sad story can happen on other CPUs when using
--		a compiler with aggressive pointer-value speculation
--		optimizations.
-+	This same sad story can happen on other CPUs when using
-+	a compiler with aggressive pointer-value speculation
-+	optimizations.
- 
--		More important, the rcu_dereference_sched() makes it
--		clear to someone reading the code that the pointer is
--		being protected by RCU-sched.
-+	More important, the rcu_dereference_sched() makes it
-+	clear to someone reading the code that the pointer is
-+	being protected by RCU-sched.
-diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
-index 8d20d44f8fd4..627128c230dc 100644
---- a/Documentation/RCU/index.rst
-+++ b/Documentation/RCU/index.rst
-@@ -10,6 +10,7 @@ RCU concepts
-    arrayRCU
-    rcu
-    listRCU
-+   NMI-RCU
-    UP
- 
-    Design/Memory-Ordering/Tree-RCU-Memory-Ordering
--- 
-2.17.1
-
+T24gVHVlLCAyMDE5LTEwLTI5IGF0IDA5OjIxICsxMzAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0K
+PiBPbiBGcmksIDIwMTktMTAtMjUgYXQgMTA6MjYgLTA3MDAsIEZsb3JpYW4gRmFpbmVsbGkgd3Jv
+dGU6DQo+ID4gT24gMTAvMjQvMTkgOTowMCBQTSwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4gPiA+
+IFRoZSBwaW5jdHJsIG5vZGUgaXMgdXNlZCBieSB0aGUgZ3Bpb2Egbm9kZS4gV2hpY2ggbWF5IGhh
+dmUgbW9yZQ0KPiA+ID4gZGVzY2VuZGFudHMgYXQgYSBib2FyZCBsZXZlbC4gSWYgdGhlIHBpbmN0
+cmwgbm9kZSBpc24ndCBwcm9iZWQgZmlyc3QgdGhlDQo+ID4gPiBncGlvIGlzIGRlZmVycmVkIGFu
+ZCBhbnl0aGluZyB0aGF0IG5lZWRzIGEgZ3BpbyBwaW4gb24gdGhhdCBjaGlwIGlzIGFsc28NCj4g
+PiA+IGRlZmVycmVkLg0KPiA+IA0KPiA+IElmIHdoYXQgeW91IGNhcmUgaXMgdG8gb3B0aW1pemUg
+eW91ciBib290IGZsb3cgc3VjaCB0aGF0IG5vIHJlLXByb2JpbmcNCj4gPiBvY2N1cnMsIG1heWJl
+IGFub3RoZXIgc29sdXRpb24gdG8gbG9vayBhdCBpcyB0byByZS1vcmRlciB0aGUgb3JkZXIgaW4N
+Cj4gPiB3aGljaCBzdWJzeXN0ZW1zIGFyZSBpbml0aWFsaXplZCBvciBidWlsdCAoX2luaXRjYWxs
+IGNoYW5nZXMgb3INCj4gPiBkcml2ZXJzL01ha2VmaWxlIGNoYW5nZXMpLCBiZWNhdXNlIGNoYW5n
+aW5nIERldmljZSBUcmVlIGNlcnRhaW5seSBkb2VzDQo+ID4gbm90IHNjYWxlIG92ZXIgcGxhdGZv
+cm1zIGFuZCBJIHJlY2FsbCBSb2IgaW5kaWNhdGluZyB0aGF0IGhlIHdhbnRlZCB0bw0KPiA+IGlu
+dHJvZHVjZSByYW5kb21pemVkIHBsYXRmb3JtX2RldmljZSBjcmVhdGlvbiBmcm9tDQo+ID4gb2Zf
+cGxhdGZvcm1fYnVzX3BvcHVsYXRlKCkgYXQgb25lIHBvaW50IG9yIGFub3RoZXIuDQo+ID4gDQo+
+IA0KPiBIbW0uIEkgbWlnaHQgYmUgbWlzc2luZyBzb21ldGhpbmcuIHBpbmN0cmwtbnNwLWdwaW8u
+YyB1c2VzDQo+IGFyY2hfaW5pdGNhbGxfc3luYygpIGFuZCBwaW5jdHJsLW5zcC1tdXguYyB1c2Vz
+IGFyY2hfaW5pdGNhbGwoKSBzbyBpbg0KPiB0aGVvcnkgdGhleSBhcmUgYWxyZWFkeSBpbiB0aGUg
+cmlnaHQgb3JkZXIuDQo+IA0KDQpBY3R1YWxseSB0aGUgaW5pdCBjYWxscyBhcmUgbWFkZSBpbiB0
+aGUgcmVxdWlyZWQgb3JkZXIgdy5yLnQgZWFjaA0Kb3RoZXIuIEJ1dCB0aGV5IGFyZSBib3RoIGJl
+Zm9yZSBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSwgc28gaXQncyBiYWNrIHRvDQp0aGUgZGV2aWNlIHRy
+ZWUgYmVpbmcgdGhlIGRldGVybWluaW5nIGZhY3RvciBmb3Igd2hlbiB0aGUgcHJvYmUoKQ0KZnVu
+Y3Rpb25zIGFyZSBydW4uDQoNCldpdGggdGhlIGN1cnJlbnQga2VybmVsIEkgZ2V0DQoNCm5zcF9w
+aW5tdXhfaW5pdDoNCm5zcF9ncGlvX2luaXQ6DQpPRjogb2ZfcGxhdGZvcm1fcG9wdWxhdGU6DQpP
+Rjogb2ZfcGxhdGZvcm1fYnVzX2NyZWF0ZTogL2F4aUAxODAwMDAwMC9ncGlvQDIwDQpuc3BfZ3Bp
+b19wcm9iZToNCmdwaW9jaGlwX2FkZF9kYXRhX3dpdGhfa2V5OiBHUElPcyA0ODAuLjUxMSAoMTgw
+MDAwMjAuZ3BpbykgZmFpbGVkIHRvDQpyZWdpc3RlciwgLTUxNw0KbnNwLWdwaW8tYSAxODAwMDAy
+MC5ncGlvOiB1bmFibGUgdG8gYWRkIEdQSU8gY2hpcA0KT0Y6IG9mX3BsYXRmb3JtX2J1c19jcmVh
+dGU6IC9heGlAMTgwMDAwMDAvcGluY3RybEAzZjFjMA0KbnNwX3Bpbm11eF9wcm9iZToNCi4uLiBt
+dWNoIGxhdGVyIC4uLg0KbnNwX2dwaW9fcHJvYmU6DQoNCldvdWxkIGl0IGJlIGFjY2VwdGFibGUg
+dG8gY2hhbmdlIHRoZSBpbml0IGNhbGxzIHRvIGRldmljZV9pbml0Y2FsbCgpDQphbmQgZGV2aWNl
+X2luaXRjYWxsX3N5bmMoKT8gcGluY3RybC1uc3AtbXV4LmMgY291bGQgZXZlbiBiZSBjb252ZXJ0
+ZWQNCnRvIChidWlsdGluXylwbGF0Zm9ybV9kcml2ZXIuDQoNCj4gPiA+IA0KPiA+ID4gTm9ybWFs
+bHkgd2UgYW5kIG5vZGVzIGluIHRoZSBkZXZpY2UgdHJlZSB0byBiZSBsaXN0ZWQgaW4gdGhlaXIg
+bmF0dXJhbA0KPiA+ID4gbWVtb3J5IG1hcHBlZCBhZGRyZXNzIG9yZGVyIGJ1dCBwdXR0aW5nIHRo
+ZSBwaW5jdHJsIG5vZGUgZmlyc3QgYXZvaWRzDQo+ID4gPiB0aGUgZGVmZXJyYWwgb2YgbnVtZXJv
+dXMgZGV2aWNlcyBzbyBtYWtlIGFuIGV4Y2VwdGlvbiBpbiB0aGlzIGNhc2UuDQo+ID4gDQo+ID4g
+VGhhdCBpcyBhIHdvcmthcm91bmQgbW9yZSB0aGFuIGEgcmVhbCBzb2x1dGlvbiwgdGhvdWdoIEkg
+dW5kZXJzdGFuZCB3aHkNCj4gPiB5b3Ugd291bGQgdG8gZG8gdGhhdC4gT25lIGRvd25zaWRlIGlz
+IHRoYXQgdGhlIGVudHJpZXMgYXJlIG5vIGxvbmdlciBpbg0KPiA+IGluY3JlbWVudGluZyByZWdp
+c3RlciBhZGRyZXNzIG9yZGVyIGFuZCB0aGF0IGlzIHZpc3VhbGx5IGRpc3R1cmJpbmcgYW5kDQo+
+ID4gd2hvIGtub3dzLCBtYXliZSBhIGRyaXZlIGJ5IGNvbnRyaWJ1dG9yIHdob3NlIHBldCBwcm9q
+ZWN0IHdpbGwgYmUgdG8NCj4gPiBvcmRlciB0aGUgRGV2aWNlIFRyZWUgZW50cmllcyBieSBpbmNy
+ZW1lbnRpbmcgYWRkcmVzc2VzIHdpbGwgY2hhbmdlIHRoYXQNCj4gPiBpbiB0aGUgZnV0dXJlLi4u
+DQo+ID4gDQo+IA0KPiBJIGd1ZXNzIHJlYWxseSB3aGF0J3MgbmVlZGVkIGlzIHNvbWV0aGluZyB0
+aGF0IHVuZGVyc3RhbmRzIHBoYW5kbGVzIGFuZA0KPiB0cmllcyB0byBwcm9kdWNlIGEgZGVwZW5k
+ZW5jeSB0cmVlIGJhc2VkIG9uIHRoYXQuDQo+IA0KPiA+ID4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5
+OiBDaHJpcyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+ID4g
+PiAtLS0NCj4gPiA+ICBhcmNoL2FybS9ib290L2R0cy9iY20tbnNwLmR0c2kgfCAxNCArKysrKysr
+LS0tLS0tLQ0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDcgZGVsZXRp
+b25zKC0pDQo+ID4gPiANCj4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9iY20t
+bnNwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9iY20tbnNwLmR0c2kNCj4gPiA+IGluZGV4IGRh
+NmQ3MGYwOWVmMS4uZGQ3YTY1NzQzYzA4IDEwMDY0NA0KPiA+ID4gLS0tIGEvYXJjaC9hcm0vYm9v
+dC9kdHMvYmNtLW5zcC5kdHNpDQo+ID4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9iY20tbnNw
+LmR0c2kNCj4gPiA+IEBAIC0xNzIsNiArMTcyLDEzIEBADQo+ID4gPiAgCQkjYWRkcmVzcy1jZWxs
+cyA9IDwxPjsNCj4gPiA+ICAJCSNzaXplLWNlbGxzID0gPDE+Ow0KPiA+ID4gIA0KPiA+ID4gKwkJ
+cGluY3RybDogcGluY3RybEAzZjFjMCB7DQo+ID4gPiArCQkJY29tcGF0aWJsZSA9ICJicmNtLG5z
+cC1waW5tdXgiOw0KPiA+ID4gKwkJCXJlZyA9IDwweDNmMWMwIDB4MDQ+LA0KPiA+ID4gKwkJCSAg
+ICAgIDwweDMwMDI4IDB4MDQ+LA0KPiA+ID4gKwkJCSAgICAgIDwweDNmNDA4IDB4MDQ+Ow0KPiA+
+ID4gKwkJfTsNCj4gPiA+ICsNCj4gPiA+ICAJCWdwaW9hOiBncGlvQDIwIHsNCj4gPiA+ICAJCQlj
+b21wYXRpYmxlID0gImJyY20sbnNwLWdwaW8tYSI7DQo+ID4gPiAgCQkJcmVnID0gPDB4MDAyMCAw
+eDcwPiwNCj4gPiA+IEBAIC00NTgsMTMgKzQ2NSw2IEBADQo+ID4gPiAgCQkJCQkgICAgICJzYXRh
+MiI7DQo+ID4gPiAgCQl9Ow0KPiA+ID4gIA0KPiA+ID4gLQkJcGluY3RybDogcGluY3RybEAzZjFj
+MCB7DQo+ID4gPiAtCQkJY29tcGF0aWJsZSA9ICJicmNtLG5zcC1waW5tdXgiOw0KPiA+ID4gLQkJ
+CXJlZyA9IDwweDNmMWMwIDB4MDQ+LA0KPiA+ID4gLQkJCSAgICAgIDwweDMwMDI4IDB4MDQ+LA0K
+PiA+ID4gLQkJCSAgICAgIDwweDNmNDA4IDB4MDQ+Ow0KPiA+ID4gLQkJfTsNCj4gPiA+IC0NCj4g
+PiA+ICAJCXRoZXJtYWw6IHRoZXJtYWxAM2YyYzAgew0KPiA+ID4gIAkJCWNvbXBhdGlibGUgPSAi
+YnJjbSxucy10aGVybWFsIjsNCj4gPiA+ICAJCQlyZWcgPSA8MHgzZjJjMCAweDEwPjsNCj4gPiA+
+IA0KPiA+IA0KPiA+IA0K
