@@ -2,212 +2,117 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB63CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013F3CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080FA21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:19:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SjLU8+1i"
+	by mail.kernel.org (Postfix) with ESMTP id BB61C218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572301249;
+	bh=VSBk7YAMwCwbsPuvRCBw6UeuvHY7STvzXKIvzV2nyuI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XH3Ga3nNsyhFD7eVIMrQ0/QEg/mRX7OQNF3VneEcL8Awt60z/+f3XjXoWOjWRLN/R
+	 Hm3OaVGi4Yl9ozp1w48oYrVJqvaNCCNOouCWxHyc9y1xTaWLbd2fD8oOZnNOSdRCl0
+	 6X5gJDnWbFK0QXqjR1rxJyzgRABxU4UTCX6GyOFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfJ1WTI (ORCPT
+        id S1727700AbfJ1WUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 18:19:08 -0400
-Received: from mail-eopbgr740122.outbound.protection.outlook.com ([40.107.74.122]:3344
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725776AbfJ1WTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 18:19:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YQWG5RtQoOJ3wIpbNL1bqAlaUv9NzMJ2zdol51HFIvD7pbjuWC0lYG/4TnToRI4J3neVPDU1QKEd9lLAYsRjlsfmBjUKymNtcvEuRiKsIyTKp/LKBsRuxs744KPwc3ziGWpWbO69BGGTu3vRxoRssKAyBe3IKkRJjr9A6D6+F5yymAEQnQh4ZD4ZsGI8Q+Uzw73uaZSm82j9NuRfgT6JX7zawJ95HHPXw8zcXE4bLdrOWocUrzI5gkcL7RQ20QtOAILdBkvNCypk35Ig42i4Kd64ddjQP4tsYO8f0h95AsGaaf7j30v/6pGCVTW4sRx9c/hvcwVnP/YMY1t0GWL8gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e/8Bq/u0vxGZLddlskgsHAoRzpkhOQ6eC2uRhz+EUhc=;
- b=QIKaffztaSjbBbVDGYaHlbqiod7ZHJusvfuEbDkUD4RT7a38xkLs9VbwIEAC29jUsfWP0MoeNln4iPFSF+bZyWlyYDPzUmXwNkHj6nsWDvcBdI39LV7msxvyZJpelO6RYs7P+0tKNJeTR8PiVCOiB/6AIwtVbit4ydhF/62+uZhHUGgJ8e6DRgciUgEbvFIAw+/zyzGzkPEWsZQETK/bYzfzdLgn8V6fbKj5WNUIjuyGcfFZqGyytPlMgtXSTr3vmE8adlis1LS/zrmSeAjZ8nXpoxHoDqUELJcQChruns5ZyvNPQ9rDBVIu3SGrbOpbvPwWPuKnMxFaeGnzZ98I9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e/8Bq/u0vxGZLddlskgsHAoRzpkhOQ6eC2uRhz+EUhc=;
- b=SjLU8+1iS6LG0PuNLerM9BnAeZhsTzyvhMwor9MltocXKmIvz+TIPadwsxKKrntiD9Rdrr/wejuCpt9NL6qbVOM7uY5SEtWiJ269HJ9CYDrTJl8UovroOETIkHHT8xY7y5cM/9kESiitkbNdsgnBnIn4eKrH7iXKFFgILGukhOc=
-Received: from DM5PR21MB0185.namprd21.prod.outlook.com (10.173.173.136) by
- DM5PR21MB0139.namprd21.prod.outlook.com (10.173.173.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.13; Mon, 28 Oct 2019 22:19:02 +0000
-Received: from DM5PR21MB0185.namprd21.prod.outlook.com
- ([fe80::406f:d375:1fb:688e]) by DM5PR21MB0185.namprd21.prod.outlook.com
- ([fe80::406f:d375:1fb:688e%10]) with mapi id 15.20.2408.016; Mon, 28 Oct 2019
- 22:19:02 +0000
-From:   Pavel Shilovskiy <pshilov@microsoft.com>
-To:     Ben Hutchings <ben@decadent.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steven French <Steven.French@microsoft.com>
-Subject: RE: [PATCH 3.16 58/87] cifs: add spinlock for the openFileList to
- cifsInodeInfo
-Thread-Topic: [PATCH 3.16 58/87] cifs: add spinlock for the openFileList to
- cifsInodeInfo
-Thread-Index: AQHVeVS/lQup3fSKRkigSuKBphNnWqdwyCxg
-Date:   Mon, 28 Oct 2019 22:19:02 +0000
-Message-ID: <DM5PR21MB0185257853E50A73C593B891B6660@DM5PR21MB0185.namprd21.prod.outlook.com>
-References: <lsq.1570043210.379046399@decadent.org.uk>
- <lsq.1570043211.844466427@decadent.org.uk>
-In-Reply-To: <lsq.1570043211.844466427@decadent.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=pshilov@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-28T22:19:00.7879833Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fdc45b13-020e-4907-94ae-cbf40aae17a6;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pshilov@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:b:7bb2:eb46:8d29:3116]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 95750395-4511-474f-530b-08d75bf4d67c
-x-ms-traffictypediagnostic: DM5PR21MB0139:|DM5PR21MB0139:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR21MB0139887738988235661FB8DCB6660@DM5PR21MB0139.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0204F0BDE2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(376002)(136003)(396003)(346002)(13464003)(189003)(199004)(6116002)(476003)(33656002)(54906003)(110136005)(8936002)(81156014)(81166006)(316002)(22452003)(2501003)(74316002)(5660300002)(2906002)(86362001)(52536014)(8676002)(7736002)(305945005)(186003)(71190400001)(46003)(71200400001)(66446008)(66556008)(4326008)(66476007)(7696005)(10290500003)(14444005)(256004)(25786009)(5024004)(107886003)(76116006)(9686003)(99286004)(55016002)(66946007)(6506007)(53546011)(8990500004)(10090500001)(486006)(2201001)(6246003)(14454004)(102836004)(229853002)(76176011)(478600001)(6436002)(446003)(11346002)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0139;H:DM5PR21MB0185.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +nsjRKVwfFMotKn+9H+4zY7eqsfYbjeG3uHJtsKW3p8V8gyphMsjhSYA3/8ZXUvcoU1QwiHLjjERPgxqYPR0GX7qd3bGayL2X+bfL0sUyDw9sPAkzUEouyjP27OMaeozvoKfR7F2bhCd/kKcLR7POTydau2s6OAjYM1IszkPM5LdsZcyHUd9AeCd+w3bku3+fntxgFEstfDvZDHS7bGEw/Dr5k9NoED8/TVWc6GgYtKn30ua/Nx34nL1H98OKmV/SLS9blzsr8BSn3FVeIlts5LnKysn5VM+++8vMF0Ij8uAIOcteHhc4YYt+7/s+CrDOSSrrK/FoP5K8ef+elBjqaFYI2CXOrNFwm00eB1zrLnf/l1G1vXXEP4OXFdy/QaApzvD4x1g0u0JLFY/IBBfQl0nh2KP9DXbdhOaJlpagblEbtlEL0GRV+NptbUU2B5x
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 28 Oct 2019 18:20:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727601AbfJ1WUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 18:20:48 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F6A821479;
+        Mon, 28 Oct 2019 22:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572301247;
+        bh=VSBk7YAMwCwbsPuvRCBw6UeuvHY7STvzXKIvzV2nyuI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0gosvq7R5GnXKiYYLDbPH29ONaAKpYHE02ZEPnzDUcqvXqhp72Teg/Ds/g3vOOu+v
+         FG4avd2WmHPRGFFlHNloeY/x+Kqn7qS/tlQLnwyI/SyJIWS26MT+8t3UyWWDNnzYML
+         dc4R4LPqV+P2GObHwW+vgu32hGQhqxFZzIWcYSL4=
+Date:   Mon, 28 Oct 2019 22:20:42 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "moderated list:ARM SMMU DRIVERS" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] iommu/arm-smmu: fix "hang" when games exit
+Message-ID: <20191028222042.GB8532@willie-the-truck>
+References: <418d8426-f299-1269-2b2e-f86677cf22c2@arm.com>
+ <20191007204906.19571-1-robdclark@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95750395-4511-474f-530b-08d75bf4d67c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 22:19:02.2822
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 56kxDJbEUwnmukaod2SkNPHgSlYUriiEKNEguAcATEchpurWSZwf8Oy7PATwsTDcKOLj1NHbalf7bM/gE+NmXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0139
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007204906.19571-1-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCZW4gSHV0Y2hpbmdzIDxiZW5A
-ZGVjYWRlbnQub3JnLnVrPg0KPiBTZW50OiBXZWRuZXNkYXksIE9jdG9iZXIgMiwgMjAxOSAxMjow
-NyBQTQ0KPiBUbzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgc3RhYmxlQHZnZXIua2Vy
-bmVsLm9yZw0KPiBDYzogYWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZzsgRGVuaXMgS2lyamFub3Yg
-PGtkYUBsaW51eC1wb3dlcnBjLm9yZz47IFJvbm5pZSBTYWhsYmVyZyA8bHNhaGxiZXJAcmVkaGF0
-LmNvbT47IFN0ZXZlbiBGcmVuY2ggPFN0ZXZlbi5GcmVuY2hAbWljcm9zb2Z0LmNvbT47IFBhdmVs
-IFNoaWxvdnNraXkgPHBzaGlsb3ZAbWljcm9zb2Z0LmNvbT4NCj4gU3ViamVjdDogW1BBVENIIDMu
-MTYgNTgvODddIGNpZnM6IGFkZCBzcGlubG9jayBmb3IgdGhlIG9wZW5GaWxlTGlzdCB0byBjaWZz
-SW5vZGVJbmZvDQo+DQo+IDMuMTYuNzUtcmMxIHJldmlldyBwYXRjaC4gwqBJZiBhbnlvbmUgaGFz
-IGFueSBvYmplY3Rpb25zLCBwbGVhc2UgbGV0IG1lIGtub3cuDQo+DQo+IC0tLS0tLS0tLS0tLS0t
-LS0tLQ0KPg0KPiBGcm9tOiBSb25uaWUgU2FobGJlcmcgPGxzYWhsYmVyQHJlZGhhdC5jb20+DQo+
-DQo+IGNvbW1pdCA0ODczMTdjOTk0NzdkMDBmMjIzNzA2MjVkNTNiZTMyMzlmZWJhYmJlIHVwc3Ry
-ZWFtLg0KPg0KPiBXZSBjYW4gbm90IGRlcGVuZCBvbiB0aGUgdGNvbi0+b3Blbl9maWxlX2xvY2sg
-aGVyZSBzaW5jZSBpbiBtdWx0aXVzZXIgbW9kZSB3ZSBtYXkgaGF2ZSB0aGUgc2FtZSBmaWxlL2lu
-b2RlIG9wZW4gdmlhIG11bHRpcGxlIGRpZmZlcmVudCB0Y29ucy4NCj4NCj4gVGhlIGN1cnJlbnQg
-Y29kZSBpcyByYWNlIHByb25lIGFuZCB3aWxsIGNyYXNoIGlmIG9uZSB1c2VyIGRlbGV0ZXMgYSBm
-aWxlIGF0IHRoZSBzYW1lIHRpbWUgYSBkaWZmZXJlbnQgdXNlciBvcGVucy9jcmVhdGUgdGhlIGZp
-bGUuDQo+DQo+IFRvIGF2b2lkIHRoaXMgd2UgbmVlZCB0byBoYXZlIGEgc3BpbmxvY2sgYXR0YWNo
-ZWQgdG8gdGhlIGlub2RlIGFuZCBub3QgdGhlIHRjb24uDQo+DQo+IFJIQlo6IMKgMTU4MDE2NQ0K
-Pg0KPiBTaWduZWQtb2ZmLWJ5OiBSb25uaWUgU2FobGJlcmcgPGxzYWhsYmVyQHJlZGhhdC5jb20+
-DQo+IFNpZ25lZC1vZmYtYnk6IFN0ZXZlIEZyZW5jaCA8c3RmcmVuY2hAbWljcm9zb2Z0LmNvbT4N
-Cj4gUmV2aWV3ZWQtYnk6IFBhdmVsIFNoaWxvdnNreSA8cHNoaWxvdkBtaWNyb3NvZnQuY29tPg0K
-PiBbYndoOiBCYWNrcG9ydGVkIHRvIDMuMTY6IGFkanVzdCBjb250ZXh0LCBpbmRlbnRhdGlvbl0N
-Cj4gU2lnbmVkLW9mZi1ieTogQmVuIEh1dGNoaW5ncyA8YmVuQGRlY2FkZW50Lm9yZy51az4NCj4g
-LS0tDQo+IMKgZnMvY2lmcy9jaWZzZnMuYyDCoCB8IDEgKw0KPiDCoGZzL2NpZnMvY2lmc2dsb2Iu
-aCB8IDUgKysrKysNCj4gwqBmcy9jaWZzL2ZpbGUuYyDCoCDCoCB8IDggKysrKysrLS0NCj4gwqAz
-IGZpbGVzIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+DQo+IC0t
-LSBhL2ZzL2NpZnMvY2lmc2ZzLmMNCj4gKysrIGIvZnMvY2lmcy9jaWZzZnMuYw0KPiBAQCAtMjYw
-LDYgKzI2MCw3IEBAIGNpZnNfYWxsb2NfaW5vZGUoc3RydWN0IHN1cGVyX2Jsb2NrICpzYikNCj4g
-wqAgwqAgwqAgwqAgY2lmc19pbm9kZS0+dW5pcXVlaWQgPSAwOw0KPiDCoCDCoCDCoCDCoCBjaWZz
-X2lub2RlLT5jcmVhdGV0aW1lID0gMDsNCj4gwqAgwqAgwqAgwqAgY2lmc19pbm9kZS0+ZXBvY2gg
-PSAwOw0KPiArIMKgIMKgIMKgIHNwaW5fbG9ja19pbml0KCZjaWZzX2lub2RlLT5vcGVuX2ZpbGVf
-bG9jayk7DQo+IMKgI2lmZGVmIENPTkZJR19DSUZTX1NNQjINCj4gwqAgwqAgwqAgwqAgZ2VuZXJh
-dGVfcmFuZG9tX3V1aWQoY2lmc19pbm9kZS0+bGVhc2Vfa2V5KTsNCj4gwqAjZW5kaWYNCj4gLS0t
-IGEvZnMvY2lmcy9jaWZzZ2xvYi5oDQo+ICsrKyBiL2ZzL2NpZnMvY2lmc2dsb2IuaA0KPiBAQCAt
-MTExNiw2ICsxMTE2LDcgQEAgc3RydWN0IGNpZnNJbm9kZUluZm8gew0KPiDCoCDCoCDCoCDCoCBz
-dHJ1Y3Qgcndfc2VtYXBob3JlIGxvY2tfc2VtOyDCoCAvKiBwcm90ZWN0IHRoZSBmaWVsZHMgYWJv
-dmUgKi8NCj4gwqAgwqAgwqAgwqAgLyogQkIgYWRkIGluIGxpc3RzIGZvciBkaXJ0eSBwYWdlcyBp
-LmUuIHdyaXRlIGNhY2hpbmcgaW5mbyBmb3Igb3Bsb2NrICovDQo+IMKgIMKgIMKgIMKgIHN0cnVj
-dCBsaXN0X2hlYWQgb3BlbkZpbGVMaXN0Ow0KPiArIMKgIMKgIMKgIHNwaW5sb2NrX3QgwqAgwqAg
-wqBvcGVuX2ZpbGVfbG9jazsgLyogcHJvdGVjdHMgb3BlbkZpbGVMaXN0ICovDQo+IMKgIMKgIMKg
-IMKgIF9fdTMyIGNpZnNBdHRyczsgLyogZS5nLiBET1MgYXJjaGl2ZSBiaXQsIHNwYXJzZSwgY29t
-cHJlc3NlZCwgc3lzdGVtICovDQo+IMKgIMKgIMKgIMKgIHVuc2lnbmVkIGludCBvcGxvY2s7IMKg
-IMKgIMKgIMKgIMKgIMKgLyogb3Bsb2NrL2xlYXNlIGxldmVsIHdlIGhhdmUgKi8NCj4gwqAgwqAg
-wqAgwqAgdW5zaWduZWQgaW50IGVwb2NoOyDCoCDCoCDCoCDCoCDCoCDCoCAvKiB1c2VkIHRvIHRy
-YWNrIGxlYXNlIHN0YXRlIGNoYW5nZXMgKi8NCj4gQEAgLTE0ODUsMTAgKzE0ODYsMTQgQEAgcmVx
-dWlyZSB1c2Ugb2YgdGhlIHN0cm9uZ2VyIHByb3RvY29sICovDQo+IMKgICogwqB0Y3Bfc2VzX2xv
-Y2sgcHJvdGVjdHM6DQo+IMKgICogwqAgwqAgbGlzdCBvcGVyYXRpb25zIG9uIHRjcCBhbmQgU01C
-IHNlc3Npb24gbGlzdHMNCj4gwqAgKiDCoHRjb24tPm9wZW5fZmlsZV9sb2NrIHByb3RlY3RzIHRo
-ZSBsaXN0IG9mIG9wZW4gZmlsZXMgaGFuZ2luZyBvZmYgdGhlIHRjb24NCj4gKyAqIMKgaW5vZGUt
-Pm9wZW5fZmlsZV9sb2NrIHByb3RlY3RzIHRoZSBvcGVuRmlsZUxpc3QgaGFuZ2luZyBvZmYgdGhl
-DQo+ICsgaW5vZGUNCj4gwqAgKiDCoGNmaWxlLT5maWxlX2luZm9fbG9jayBwcm90ZWN0cyBjb3Vu
-dGVycyBhbmQgZmllbGRzIGluIGNpZnMgZmlsZSBzdHJ1Y3QNCj4gwqAgKiDCoGZfb3duZXIubG9j
-ayBwcm90ZWN0cyBjZXJ0YWluIHBlciBmaWxlIHN0cnVjdCBvcGVyYXRpb25zDQo+IMKgICogwqBt
-YXBwaW5nLT5wYWdlX2xvY2sgcHJvdGVjdHMgY2VydGFpbiBwZXIgcGFnZSBvcGVyYXRpb25zDQo+
-IMKgICoNCj4gKyAqIMKgTm90ZSB0aGF0IHRoZSBjaWZzX3Rjb24ub3Blbl9maWxlX2xvY2sgc2hv
-dWxkIGJlIHRha2VuIGJlZm9yZQ0KPiArICogwqBub3QgYWZ0ZXIgdGhlIGNpZnNJbm9kZUluZm8u
-b3Blbl9maWxlX2xvY2sNCj4gKyAqDQo+IMKgICogwqBTZW1hcGhvcmVzDQo+IMKgICogwqAtLS0t
-LS0tLS0tDQo+IMKgICogwqBzZXNTZW0gwqAgwqAgb3BlcmF0aW9ucyBvbiBzbWIgc2Vzc2lvbg0K
-PiAtLS0gYS9mcy9jaWZzL2ZpbGUuYw0KPiArKysgYi9mcy9jaWZzL2ZpbGUuYw0KPiBAQCAtMzM3
-LDEwICszMzcsMTIgQEAgY2lmc19uZXdfZmlsZWluZm8oc3RydWN0IGNpZnNfZmlkICpmaWQsDQo+
-IMKgIMKgIMKgIMKgIGxpc3RfYWRkKCZjZmlsZS0+dGxpc3QsICZ0Y29uLT5vcGVuRmlsZUxpc3Qp
-Ow0KPg0KPiDCoCDCoCDCoCDCoCAvKiBpZiByZWFkYWJsZSBmaWxlIGluc3RhbmNlIHB1dCBmaXJz
-dCBpbiBsaXN0Ki8NCj4gKyDCoCDCoCDCoCBzcGluX2xvY2soJmNpbm9kZS0+b3Blbl9maWxlX2xv
-Y2spOw0KPiDCoCDCoCDCoCDCoCBpZiAoZmlsZS0+Zl9tb2RlICYgRk1PREVfUkVBRCkNCj4gwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgbGlzdF9hZGQoJmNmaWxlLT5mbGlzdCwgJmNpbm9kZS0+b3Bl
-bkZpbGVMaXN0KTsNCj4gwqAgwqAgwqAgwqAgZWxzZQ0KPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCBsaXN0X2FkZF90YWlsKCZjZmlsZS0+Zmxpc3QsICZjaW5vZGUtPm9wZW5GaWxlTGlzdCk7DQo+
-ICsgwqAgwqAgwqAgc3Bpbl91bmxvY2soJmNpbm9kZS0+b3Blbl9maWxlX2xvY2spOw0KPiDCoCDC
-oCDCoCDCoCBzcGluX3VubG9jaygmdGNvbi0+b3Blbl9maWxlX2xvY2spOw0KPg0KPiDCoCDCoCDC
-oCDCoCBpZiAoZmlkLT5wdXJnZV9jYWNoZSkNCj4gQEAgLTQxMiw3ICs0MTQsOSBAQCB2b2lkIF9j
-aWZzRmlsZUluZm9fcHV0KHN0cnVjdCBjaWZzRmlsZUluDQo+IMKgIMKgIMKgIMKgIGNpZnNfYWRk
-X3BlbmRpbmdfb3Blbl9sb2NrZWQoJmZpZCwgY2lmc19maWxlLT50bGluaywgJm9wZW4pOw0KPg0K
-PiDCoCDCoCDCoCDCoCAvKiByZW1vdmUgaXQgZnJvbSB0aGUgbGlzdHMgKi8NCj4gKyDCoCDCoCDC
-oCBzcGluX2xvY2soJmNpZnNpLT5vcGVuX2ZpbGVfbG9jayk7DQo+IMKgIMKgIMKgIMKgIGxpc3Rf
-ZGVsKCZjaWZzX2ZpbGUtPmZsaXN0KTsNCj4gKyDCoCDCoCDCoCBzcGluX3VubG9jaygmY2lmc2kt
-Pm9wZW5fZmlsZV9sb2NrKTsNCj4gwqAgwqAgwqAgwqAgbGlzdF9kZWwoJmNpZnNfZmlsZS0+dGxp
-c3QpOw0KPg0KPiDCoCDCoCDCoCDCoCBpZiAobGlzdF9lbXB0eSgmY2lmc2ktPm9wZW5GaWxlTGlz
-dCkpIHsgQEAgLTE4NTAsMTAgKzE4NTQsMTAgQEAgcmVmaW5kX3dyaXRhYmxlOg0KPiDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCBpZiAoIXJjKQ0KPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCByZXR1cm4gaW52X2ZpbGU7DQo+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGVsc2Ug
-ew0KPiAtIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHNwaW5fbG9jaygmdGNvbi0+
-b3Blbl9maWxlX2xvY2spOw0KPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHNw
-aW5fbG9jaygmY2lmc19pbm9kZS0+b3Blbl9maWxlX2xvY2spOw0KPiDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCBsaXN0X21vdmVfdGFpbCgmaW52X2ZpbGUtPmZsaXN0LA0KPiDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCAmY2lmc19pbm9kZS0+b3BlbkZpbGVMaXN0KTsNCj4gLSDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCBzcGluX3VubG9jaygmdGNvbi0+b3Blbl9maWxlX2xvY2spOw0KPiArIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHNwaW5fdW5sb2NrKCZjaWZzX2lub2RlLT5vcGVu
-X2ZpbGVfbG9jayk7DQo+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNpZnNG
-aWxlSW5mb19wdXQoaW52X2ZpbGUpOw0KPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCArK3JlZmluZDsNCj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgaW52
-X2ZpbGUgPSBOVUxMOw0KPg0KDQpIaSBCZW4sDQoNCldlIGhhdmUgcmVjZW50bHkgZm91bmQgcmVn
-cmVzc2lvbnMgaW4gdGhpcyBwYXRjaCB0aGF0IGFyZSBhZGRyZXNzZWQgaW4gdGhlIGZvbGxvd2lu
-ZyB0d28gcGF0Y2hlczoNCg0KY2IyNDg4MTlkMjA5ZCAoImNpZnM6IHVzZSBjaWZzSW5vZGVJbmZv
-LT5vcGVuX2ZpbGVfbG9jayB3aGlsZSBpdGVyYXRpbmcgdG8gYXZvaWQgYSBwYW5pYyIpDQoxYTY3
-YzQxNTk2NTc1ICgiQ0lGUzogRml4IHVzZSBhZnRlciBmcmVlIG9mIGZpbGUgaW5mbyBzdHJ1Y3R1
-cmVzIikNCg0KU28sIEkgd291bGQgc3VnZ2VzdCBlaXRoZXIgdG8gYXBwbHkgdGhvc2UgdHdvIHBh
-dGNoZXMgYWJvdmUgb3IgdG8gcmV2ZXJ0IHRoaXMgb25lLg0KDQotLQ0KQmVzdCByZWdhcmRzLA0K
-UGF2ZWwgU2hpbG92c2t5DQo=
+Hi Rob,
+
+On Mon, Oct 07, 2019 at 01:49:06PM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> When games, browser, or anything using a lot of GPU buffers exits, there
+> can be many hundreds or thousands of buffers to unmap and free.  If the
+> GPU is otherwise suspended, this can cause arm-smmu to resume/suspend
+> for each buffer, resulting 5-10 seconds worth of reprogramming the
+> context bank (arm_smmu_write_context_bank()/arm_smmu_write_s2cr()/etc).
+> To the user it would appear that the system just locked up.
+> 
+> A simple solution is to use pm_runtime_put_autosuspend() instead, so we
+> don't immediately suspend the SMMU device.
+
+Please can you reword the subject to be a bit more useful? The commit
+message is great, but the subject is a bit like "fix bug in code" to me.
+
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+> v1: original
+> v2: unconditionally use autosuspend, rather than deciding based on what
+>     consumer does
+> 
+>  drivers/iommu/arm-smmu.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 3f1d55fb43c4..b7b41f5001bc 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -289,7 +289,7 @@ static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
+>  static inline void arm_smmu_rpm_put(struct arm_smmu_device *smmu)
+>  {
+>  	if (pm_runtime_enabled(smmu->dev))
+> -		pm_runtime_put(smmu->dev);
+> +		pm_runtime_put_autosuspend(smmu->dev);
+>  }
+>  
+>  static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
+> @@ -1445,6 +1445,9 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>  	/* Looks ok, so add the device to the domain */
+>  	ret = arm_smmu_domain_add_master(smmu_domain, fwspec);
+
+Please can you put a comment here explaining what this is doing? An abridged
+version of the commit message is fine.
+
+> +	pm_runtime_set_autosuspend_delay(smmu->dev, 20);
+> +	pm_runtime_use_autosuspend(smmu->dev);
+
+Cheers,
+
+Will
