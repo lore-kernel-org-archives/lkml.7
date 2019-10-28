@@ -2,234 +2,153 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4798CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 00:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6995CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892F32070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 00:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACA820679
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:03:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="O77cxxp0"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oIP1UQeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbfJ1A64 (ORCPT
+        id S1729149AbfJ1BD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 20:58:56 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36032 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfJ1A6z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 20:58:55 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u16so6481864lfq.3
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 17:58:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1aMsAP2PxExyB/E1NoTV0dqnnfdxMUwdxPX5EmrFyzA=;
-        b=O77cxxp0TiDbHCipSNxBDPQs6T3YuiXf2d6J838uRz/Yz+afk4zkR4cPIm4g3CsmLU
-         +BQIeATLcLKQ3CnG6y/WT1V6Wder0rgPEQQOcvJLBXyqGsXF44D7R/iyUcHJZdJUnlQ5
-         +FKKNxPCswaqseS4VUyoitrkxGU/Xg/Mg6Nu6OYsvG4oOjj7V/sH3Aa+VajjKaSI5flC
-         5RfLygrqux7RvLJcNKY0PfyXkS0784Dgxwvw6BQAJQJgqUJGj4NUukHElgcB73eiWejp
-         Ch8wzrgFhJkDlErFtU7bxaYsLF/DhvBa20f/1dphxEnP9jFGkBzHzVzXqvtA+jPR4iLu
-         jC3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1aMsAP2PxExyB/E1NoTV0dqnnfdxMUwdxPX5EmrFyzA=;
-        b=Vk4wYUrKuCPsZEzrDGjuAF8iVGZqYKhDD9XGk+xO35UBr6NRiLm/Pgp99nzTEd+PfF
-         7DjydrwCeWq7TyW5hUgInQs0UlE3UxDzdvKXGEFBrABQ4xPdTZ/85/+elxxjv5a0GRef
-         enPgNVzDU3BdTF6T++7Al1/HpVt2RjBi/zYmvDOfw4MoJro17heMb3gewNgBgrvDP1pB
-         nbfDJiFwlbQ8ynGnJLZiL3ro1cXZZ1nOLAuAzFcvcgco3oiumwIGpG4WY74vIulSKNvR
-         HpDJHQk+y3eqt6fFKUHmSffOztCJ9dCnBHdR4cEVvvZD63p0HKQcfVHSaCs2KMVpgCBr
-         gEWg==
-X-Gm-Message-State: APjAAAV7ETNEPtfNysv61C2duIIowSX8ge+pHyVdtzGwvjJnqS8fIGRS
-        Oke+RcWaxvVd3Mv6ehNDzdkMkHbG962usNcG3Wj09Q==
-X-Google-Smtp-Source: APXvYqxuFefFQRfxYLkJfVt6hHBd6Eyt1FmfLGZfeU+h+svNEOHgMHfQEyL/zqhvT47BmrFDaTpQdCnU0C81rSHyBto=
-X-Received: by 2002:a05:6512:146:: with SMTP id m6mr47893lfo.98.1572224332997;
- Sun, 27 Oct 2019 17:58:52 -0700 (PDT)
+        Sun, 27 Oct 2019 21:03:29 -0400
+Received: from ozlabs.org ([203.11.71.1]:37421 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727581AbfJ1BD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 21:03:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 471c0Y4QD0z9sNw;
+        Mon, 28 Oct 2019 12:03:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572224606;
+        bh=i7ArOkOPCVtOfQnDVjrmr2pJ+xA+Nt8dJM4lSqoCdBc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=oIP1UQeKKyB58N/+dUWkL8KMbgr9cAskfhUEBaQ+sR1p59qm17hYtlzbnwNRRaoBf
+         VCU8QD09virOjY6CbeCORuFCw5Yds4hh4SdX5qg+cvhvDhMxRNl5mhBfFaQHB7Y2Hp
+         r4DrFF/BkrUN+gh0js7k/dk71r7F8q9m10PqBXxLKmE21MpcA6pPwMrkOb1MgilB2u
+         CM5myUMZzl9jWgNO/KGhe1jtCHMJKlZ1hzhi+rIQJnCCM+Spm/50IAoy/S57ZIkfo5
+         jVIWlQYqH8kRm0PW67z8dP5Z7Ik5rQJPssVBv41ZE6wePVVxJuuww+WHxDZX5Uz2wK
+         vWsOldRZm4ncA==
+Date:   Mon, 28 Oct 2019 12:03:25 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: linux-next: manual merge of the amdgpu tree with Linus' tree
+Message-ID: <20191028120325.1f0dfb5d@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191009060516.3577-1-r@hev.cc> <0911c1130bb79fd8c8e266bc7701b251@suse.de>
-In-Reply-To: <0911c1130bb79fd8c8e266bc7701b251@suse.de>
-From:   Heiher <r@hev.cc>
-Date:   Mon, 28 Oct 2019 08:58:35 +0800
-Message-ID: <CAHirt9iJhPA2BbHYFU81M3bcCwd9uk8T_Cvx9_3MRauwz-2+hg@mail.gmail.com>
-Subject: Re: [PATCH RESEND v5] fs/epoll: Remove unnecessary wakeups of nested epoll
-To:     stable@vger.kernel.org
-Cc:     Roman Penyaev <rpenyaev@suse.de>, linux-fsdevel@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Eric Wong <e@80x24.org>, Jason Baron <jbaron@akamai.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/SptWgYLNrqX+FhGlFPABrTA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/SptWgYLNrqX+FhGlFPABrTA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 9, 2019 at 5:21 PM Roman Penyaev <rpenyaev@suse.de> wrote:
->
-> On 2019-10-09 08:05, hev wrote:
-> > From: Heiher <r@hev.cc>
-> >
-> > Take the case where we have:
-> >
-> >         t0
-> >          | (ew)
-> >         e0
-> >          | (et)
-> >         e1
-> >          | (lt)
-> >         s0
-> >
-> > t0: thread 0
-> > e0: epoll fd 0
-> > e1: epoll fd 1
-> > s0: socket fd 0
-> > ew: epoll_wait
-> > et: edge-trigger
-> > lt: level-trigger
-> >
-> > We remove unnecessary wakeups to prevent the nested epoll that working
-> > in edge-
-> > triggered mode to waking up continuously.
-> >
-> > Test code:
-> >  #include <unistd.h>
-> >  #include <sys/epoll.h>
-> >  #include <sys/socket.h>
-> >
-> >  int main(int argc, char *argv[])
-> >  {
-> >       int sfd[2];
-> >       int efd[2];
-> >       struct epoll_event e;
-> >
-> >       if (socketpair(AF_UNIX, SOCK_STREAM, 0, sfd) < 0)
-> >               goto out;
-> >
-> >       efd[0] = epoll_create(1);
-> >       if (efd[0] < 0)
-> >               goto out;
-> >
-> >       efd[1] = epoll_create(1);
-> >       if (efd[1] < 0)
-> >               goto out;
-> >
-> >       e.events = EPOLLIN;
-> >       if (epoll_ctl(efd[1], EPOLL_CTL_ADD, sfd[0], &e) < 0)
-> >               goto out;
-> >
-> >       e.events = EPOLLIN | EPOLLET;
-> >       if (epoll_ctl(efd[0], EPOLL_CTL_ADD, efd[1], &e) < 0)
-> >               goto out;
-> >
-> >       if (write(sfd[1], "w", 1) != 1)
-> >               goto out;
-> >
-> >       if (epoll_wait(efd[0], &e, 1, 0) != 1)
-> >               goto out;
-> >
-> >       if (epoll_wait(efd[0], &e, 1, 0) != 0)
-> >               goto out;
-> >
-> >       close(efd[0]);
-> >       close(efd[1]);
-> >       close(sfd[0]);
-> >       close(sfd[1]);
-> >
-> >       return 0;
-> >
-> >  out:
-> >       return -1;
-> >  }
-> >
-> > More tests:
-> >  https://github.com/heiher/epoll-wakeup
-> >
-> > Cc: Al Viro <viro@ZenIV.linux.org.uk>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Davide Libenzi <davidel@xmailserver.org>
-> > Cc: Davidlohr Bueso <dave@stgolabs.net>
-> > Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-> > Cc: Eric Wong <e@80x24.org>
-> > Cc: Jason Baron <jbaron@akamai.com>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Roman Penyaev <rpenyaev@suse.de>
-> > Cc: Sridhar Samudrala <sridhar.samudrala@intel.com>
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-fsdevel@vger.kernel.org
-> > Signed-off-by: hev <r@hev.cc>
-> > ---
-> >  fs/eventpoll.c | 16 ----------------
-> >  1 file changed, 16 deletions(-)
-> >
-> > diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> > index c4159bcc05d9..75fccae100b5 100644
-> > --- a/fs/eventpoll.c
-> > +++ b/fs/eventpoll.c
-> > @@ -671,7 +671,6 @@ static __poll_t ep_scan_ready_list(struct eventpoll
-> > *ep,
-> >                             void *priv, int depth, bool ep_locked)
-> >  {
-> >       __poll_t res;
-> > -     int pwake = 0;
-> >       struct epitem *epi, *nepi;
-> >       LIST_HEAD(txlist);
-> >
-> > @@ -738,26 +737,11 @@ static __poll_t ep_scan_ready_list(struct
-> > eventpoll *ep,
-> >        */
-> >       list_splice(&txlist, &ep->rdllist);
-> >       __pm_relax(ep->ws);
-> > -
-> > -     if (!list_empty(&ep->rdllist)) {
-> > -             /*
-> > -              * Wake up (if active) both the eventpoll wait list and
-> > -              * the ->poll() wait list (delayed after we release the lock).
-> > -              */
-> > -             if (waitqueue_active(&ep->wq))
-> > -                     wake_up(&ep->wq);
-> > -             if (waitqueue_active(&ep->poll_wait))
-> > -                     pwake++;
-> > -     }
-> >       write_unlock_irq(&ep->lock);
-> >
-> >       if (!ep_locked)
-> >               mutex_unlock(&ep->mtx);
-> >
-> > -     /* We have to call this outside the lock */
-> > -     if (pwake)
-> > -             ep_poll_safewake(&ep->poll_wait);
-> > -
-> >       return res;
-> >  }
->
-> This looks good to me.  Heiher, mind to make kselftest out of your test
-> suite?
->
-> Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
->
-> --
-> Roman
->
->
->
+Hi all,
 
-Need to back port this patch to stable branches?
+Today's linux-next merge of the amdgpu tree got a conflict in:
 
--- 
-Best regards!
-Hev
-https://hev.cc
+  drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+
+between commits:
+
+  d7b0827f28ab ("Merge tag 'kbuild-v5.4' of git://git.kernel.org/pub/scm/li=
+nux/kernel/git/masahiroy/linux-kbuild")
+  c0e70e10b11b ("drm/amd/display: fix dcn21 Makefile for clang")
+
+from Linus' tree and commits:
+
+  618f55831b84 ("drm/amd/display: fix dcn21 Makefile for clang")
+  4f952528add3 ("drm/amdgpu: fix stack alignment ABI mismatch for Clang")
+  971463bea55c ("drm/amdgpu: fix stack alignment ABI mismatch for GCC 7.1+")
+  101d09f07966 ("drm/amdgpu: enable -msse2 for GCC 7.1+ users")
+
+from the amdgpu tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+index ef673bffc241,feb7e705e792..000000000000
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+@@@ -1,18 -1,23 +1,23 @@@
+  #
+  # Makefile for DCN21.
+ =20
+- DCN21 =3D dcn21_hubp.o dcn21_hubbub.o dcn21_resource.o
++ DCN21 =3D dcn21_hubp.o dcn21_hubbub.o dcn21_resource.o dcn21_hwseq.o dcn2=
+1_link_encoder.o
+ =20
+- ifneq ($(call cc-option, -mpreferred-stack-boundary=3D4),)
+- 	cc_stack_align :=3D -mpreferred-stack-boundary=3D4
+- else ifneq ($(call cc-option, -mstack-alignment=3D16),)
+- 	cc_stack_align :=3D -mstack-alignment=3D16
+- endif
+ -CFLAGS_dcn21_resource.o :=3D -mhard-float -msse
+++CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -msse
+ =20
+- CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -msse $(=
+cc_stack_align)
++ ifdef CONFIG_CC_IS_GCC
++ ifeq ($(call cc-ifversion, -lt, 0701, y), y)
++ IS_OLD_GCC =3D 1
++ endif
++ endif
+ =20
+- ifdef CONFIG_CC_IS_CLANG
++ ifdef IS_OLD_GCC
++ # Stack alignment mismatch, proceed with caution.
++ # GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boun=
+dary=3D3
++ # (8B stack alignment).
+ -CFLAGS_dcn21_resource.o +=3D -mpreferred-stack-boundary=3D4
+++CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o +=3D -mpreferred-stack-bou=
+ndary=3D4
++ else
+ -CFLAGS_dcn21_resource.o +=3D -msse2
+ +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o +=3D -msse2
+  endif
+ =20
+  AMD_DAL_DCN21 =3D $(addprefix $(AMDDALPATH)/dc/dcn21/,$(DCN21))
+
+--Sig_/SptWgYLNrqX+FhGlFPABrTA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl22Pl0ACgkQAVBC80lX
+0GzbfwgAl/Zx1fqOsi9h4M3m9WVpybj1Ww4AjucqlYUioGQXXG+oTkq2fBjScmTQ
+TaQRqKTn5P42HsLpMkOAIqLV9d48g0P1UCF7qT1vyj/1sZ0p1v5a9hW4pDIE9Wet
+ee5yRk+uFUsnIFV15+fPCMknSRcQpiWBjALH0uymqHIELsdvoxxvMOLTGaRNkPlM
+oEUY5dO8ltQUB8z3AfHTlYPvh6pBb5iiS8cCq0pSwjO6QnSI0pwhDPzdEb02c361
++vPpGRCeAf/drwsucPTuV1+nfrWAL+8bNcivR23RrpTdNhB10ugzAATERapk+Bjf
+3+t/c0bJC1VzHxt+ayxjAgeOh2FS2g==
+=QlKz
+-----END PGP SIGNATURE-----
+
+--Sig_/SptWgYLNrqX+FhGlFPABrTA--
