@@ -2,124 +2,100 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7294CCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA330CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC6B208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A399620862
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:51:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eUpu78bc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWfPnOj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbfJ1Sud (ORCPT
+        id S1728877AbfJ1Svk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 14:50:33 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:16677 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727218AbfJ1Suc (ORCPT
+        Mon, 28 Oct 2019 14:51:40 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43726 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727218AbfJ1Svk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 14:50:32 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5db7387f0000>; Mon, 28 Oct 2019 11:50:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 28 Oct 2019 11:50:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 28 Oct 2019 11:50:31 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
- 2019 18:50:31 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
- 2019 18:50:31 +0000
-Subject: Re: [PATCH v2] mm: gup: fix comment of __get_user_pages()
-To:     Liu Xiang <liuxiang_1999@126.com>, <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>
-References: <1571929472-3091-1-git-send-email-liuxiang_1999@126.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <fb21ae4a-4a9e-ad39-e12c-47ab8e89efc4@nvidia.com>
-Date:   Mon, 28 Oct 2019 11:50:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 28 Oct 2019 14:51:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 3so7481033pfb.10;
+        Mon, 28 Oct 2019 11:51:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=4FYNWJKX/XjWeMthjDP9NPXXb7ZZAxlczEJEW9ICuKU=;
+        b=ZWfPnOj/qdzvpgxr9MmWErn5OrmtLT+k/g3sZTHiCQeeQK0ROyMMDhI9w67lzmwIn8
+         OpjFKAHZ3aRh4EaUTmXG59bPGfFi9RFrIXdnMJSLyW+bFJATYfarz461YX7DeKwwAoPw
+         RNEU4Iz8pI/eykMx8MUY0SAtbedrhXI9MVDsMUaNLwYFc5YT4K0p8ugo+Ut77ZXvTeL7
+         MhEMq2QMTpHu2oTmqwh5Smc4s71mnklIKkAKDrei17uu9zGfL7GzC+d3JB87lUJCbI/6
+         Tp9BLLo7TwLN9uqQah2NLQ9515q8f0gZ+2QOxLINCCYN2z1maYGVOLXLAuMtpPKTp26W
+         Aa/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=4FYNWJKX/XjWeMthjDP9NPXXb7ZZAxlczEJEW9ICuKU=;
+        b=FPO6JRkMYZ/K8GApAZoZA9324YhNxZPMVoq+zdWsaASiVTjSrCbQBTfnLQXKIHVGXH
+         IFuxuFqk+pglU8KmQaXTXPphNzN46FSC+Wa9nO9WGCUA/MXBgz1063OW1cj42X1mOrTG
+         D3J8WJfajPcdiDN3jozkuwaIIVe0NxJBS+sPlBXCjzOLYj6U1SU+vERoYIg+Q9r1klN8
+         +bZ031ekNJMXsv/PyJhQ/LCtv63R2hHaMCGB83sK+WH8ecLZmQYUyqs5xTpvTjjcKbGD
+         MgKd48QFW7FbZyofhuuwtUEu2tVfU+MTWBdfKlahJw0fzIul8mvSZHjYrGKlvbe3dLE3
+         v/Mg==
+X-Gm-Message-State: APjAAAXDV+fDPVthd7NdJ2hfbvd7zo8QGdlGDsAwDV+k44lsK3xAcNiV
+        BR8RufX1pE9PCTMf+yMl7QY=
+X-Google-Smtp-Source: APXvYqz9KuP8dCjEM+asWAoWnPH6ltjtJ4yxUQQDnNOLpZ3OiJVgE8P66QG/GmHdNAjoHYVJGFwX0w==
+X-Received: by 2002:a63:f923:: with SMTP id h35mr22990453pgi.323.1572288699408;
+        Mon, 28 Oct 2019 11:51:39 -0700 (PDT)
+Received: from saurav ([27.62.167.137])
+        by smtp.gmail.com with ESMTPSA id p9sm6250257pfq.40.2019.10.28.11.51.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 11:51:38 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 00:21:30 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     pkshih@realtek.com, kvalo@codeaurora.org, davem@davemloft.net,
+        Larry.Finger@lwfinger.net, saurav.girepunje@gmail.com,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] rtlwifi: rtl8192c: Drop condition with no effect
+Message-ID: <20191028185130.GA26825@saurav>
 MIME-Version: 1.0
-In-Reply-To: <1571929472-3091-1-git-send-email-liuxiang_1999@126.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572288639; bh=qI+ScbIYK3tKHWcv4xTLxpN+77OnrhD6yaRlomUj77o=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=eUpu78bcwWNDur+3tpuy4cBcQqDu6PtoW55Bm9git1S59DhOZDo7cRXgqvcGvJckF
-         iTTaoaiTHoBWgilKAFSIoJt+wGzw2BebGI/cM2OmQXdq30/KK6tX225B5OSfHuAFMT
-         vSkvGvB2HjCI/t/y744YhYhBXFFKkBccQYnBoE+obgU4Zq5lIPLQUSP9FY5Mq/KrW8
-         Ut00PAwLwTFJEWnjuqwyLk8xvKuEolrOux4lWWhIjWLuQRPv90Rp9zzBT2LRDTEAmW
-         nSLFSv0easfO3/39AgiMh4uiMlh999Aw1xjj78zPK3IGci3UiMywM3X5tc76lV/Ak4
-         eodhCmAyb0pWQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/24/19 8:04 AM, Liu Xiang wrote:
-> Fix comment of __get_user_pages() and make it more clear.
-> 
-> Suggested-by: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
-> ---
-> 
-> Changes in v2:
->  as suggested by John, rewrite the comment about return value.
-> 
->  mm/gup.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 8f236a3..bc6a254 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -734,11 +734,17 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
->   *		Or NULL if the caller does not require them.
->   * @nonblocking: whether waiting for disk IO or mmap_sem contention
->   *
-> - * Returns number of pages pinned. This may be fewer than the number
-> - * requested. If nr_pages is 0 or negative, returns 0. If no pages
-> - * were pinned, returns -errno. Each page returned must be released
-> - * with a put_page() call when it is finished with. vmas will only
-> - * remain valid while mmap_sem is held.
-> + * Returns either number of pages pinned (which may be less than the
-> + * number requested), or an error. Details about the return value:
-> + *
-> + * -- If nr_pages is 0, returns 0.
-> + * -- If nr_pages is >0, but no pages were pinned, returns -errno.
-> + * -- If nr_pages is >0, and some pages were pinned, returns the number of
-> + *    pages pinned. Again, this may be less than nr_pages.
-> + *
-> + * The caller is responsible for releasing returned @pages, via put_page().
-> + *
-> + * @vmas are valid only as long as mmap_sem is held.
+As the "else if" and "else" branch body are identical the condition
+has no effect. So drop the "else if" condition.
 
-Just remembered: this identical paragraph is also written in the 
-get_user_pages_remote() comments. It would be ideal to apply the same fix to 
-that identical blob of text.
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+ drivers/net/wireless/realtek/rtlwifi/rtl8192c/dm_common.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-
-thanks,
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192c/dm_common.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192c/dm_common.c
+index f2908ee5f860..4bef237f488d 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192c/dm_common.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192c/dm_common.c
+@@ -1649,8 +1649,6 @@ static void rtl92c_bt_ant_isolation(struct ieee80211_hw *hw, u8 tmp1byte)
+ 			    (rtlpriv->btcoexist.bt_rssi_state &
+ 			    BT_RSSI_STATE_SPECIAL_LOW)) {
+ 			rtl_write_byte(rtlpriv, REG_GPIO_MUXCFG, 0xa0);
+-		} else if (rtlpriv->btcoexist.bt_service == BT_PAN) {
+-			rtl_write_byte(rtlpriv, REG_GPIO_MUXCFG, tmp1byte);
+ 		} else {
+ 			rtl_write_byte(rtlpriv, REG_GPIO_MUXCFG, tmp1byte);
+ 		}
 -- 
-John Hubbard
-NVIDIA
+2.20.1
 
->   *
->   * Must be called with mmap_sem held.  It may be released.  See below.
->   *
-> 
