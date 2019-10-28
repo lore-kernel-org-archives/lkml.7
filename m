@@ -2,181 +2,107 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C914CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B28CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDCE208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:00:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572296418;
-	bh=wwm/g/IquAE4Y9gTiClWk0zw3UhnWwDbyNiv8CPDbcU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=qkNt/XzNKkB/nNSD5bb0ZlFzX2/eIfSox/GCx8xQGSwbgK0ma4ocZpfzhV5Q8+r+D
-	 bMqjFK3fZztppXn/2BpMYfgTBwzdxwcjfg0Iq5m/BmfiHKbrfqCJ/dOZjsqlRrvh+N
-	 n/orcNXHVaXCBpSgwW7p2CHvbMBlhhlFvzVi6ZDw=
+	by mail.kernel.org (Postfix) with ESMTP id 94AF7214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OS1tUSpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388704AbfJ1VAR (ORCPT
+        id S2388724AbfJ1VBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:00:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729449AbfJ1VAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:00:15 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95BD4218BA;
-        Mon, 28 Oct 2019 21:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572296414;
-        bh=wwm/g/IquAE4Y9gTiClWk0zw3UhnWwDbyNiv8CPDbcU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Rk7M/peu0QxJ1PXDReaKjGE0RrFqATy/j3UFbJm/CyHM1Z4IZsiMDqKghZwcDHpHL
-         nQrR0WRfxd6UhDgt3PeierO8WZKgTho9OOMW+Ls6a+EoUpLSn7rKGW4N+BRRcMXfY2
-         Eng1/e2fIjzpLWWSlcpcPtZ4+1qKLEmVfzizZuWg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 618BF3522C0D; Mon, 28 Oct 2019 14:00:14 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 14:00:14 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     madhuparnabhowmik04@gmail.com
-Cc:     paulmck@kernel.org, joel@joelfernandes.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] Documentation: RCU: arrayRCU: Converted arrayRCU.txt to
- arrayRCU.rst
-Message-ID: <20191028210014.GD20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191028202417.13095-1-madhuparnabhowmik04@gmail.com>
+        Mon, 28 Oct 2019 17:01:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54198 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729449AbfJ1VBG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:01:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6ftG5m8lGvtedzGNIH5EOrt+Fv7RjR731OYTUpDU54Q=; b=OS1tUSpLYQrfvH2uh3T8yVlGK
+        T7vhvhCzh7nVRAzZliu0ZIg07uS6OEiYQnOoOi85JBZI0iWrON0Iu16vQgduHVD22bRenrk9MGAdp
+        uKcnafOMm1FrL5HAuNXYEsXhlIcGEMrU6hR88iugETvhQ56ZTauoT25wIC/CX7I6yOScFSL3u9p9Z
+        3gL380MjV/ekE7yewMAuJQ+LNROKsn39Kf6t6EgN74581tf3VaAZEpON5BrcWyixhoW+HO6jGlt9M
+        YJgIJdVSxS68w5NheNlkd85yKwG1pk0hkWD4CtwgdW8e6ITdTg+yLNLjf7GTnYPILEHpJcwu0B0O/
+        n94zFzRaQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPC84-0005Ll-7y; Mon, 28 Oct 2019 21:00:44 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id ED6FD980D8F; Mon, 28 Oct 2019 22:00:52 +0100 (CET)
+Date:   Mon, 28 Oct 2019 22:00:52 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "kirill@shutemov.name" <kirill@shutemov.name>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rppt@kernel.org" <rppt@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "bp@alien8.de" <bp@alien8.de>, "arnd@arndb.de" <arnd@arndb.de>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+Message-ID: <20191028210052.GM4643@worktop.programming.kicks-ass.net>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <1572171452-7958-2-git-send-email-rppt@kernel.org>
+ <20191028123124.ogkk5ogjlamvwc2s@box>
+ <20191028130018.GA7192@rapoport-lnx>
+ <20191028131623.zwuwguhm4v4s5imh@box>
+ <20191028135521.GB4097@hirez.programming.kicks-ass.net>
+ <0a35765f7412937c1775daa05177b20113760aee.camel@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028202417.13095-1-madhuparnabhowmik04@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0a35765f7412937c1775daa05177b20113760aee.camel@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 01:54:17AM +0530, madhuparnabhowmik04@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+On Mon, Oct 28, 2019 at 07:59:25PM +0000, Edgecombe, Rick P wrote:
+> On Mon, 2019-10-28 at 14:55 +0100, Peter Zijlstra wrote:
+> > On Mon, Oct 28, 2019 at 04:16:23PM +0300, Kirill A. Shutemov wrote:
+> > 
+> > > I think active use of this feature will lead to performance degradation of
+> > > the system with time.
+> > > 
+> > > Setting a single 4k page non-present in the direct mapping will require
+> > > splitting 2M or 1G page we usually map direct mapping with. And it's one
+> > > way road. We don't have any mechanism to map the memory with huge page
+> > > again after the application has freed the page.
+> > 
+> > Right, we recently had a 'bug' where ftrace triggered something like
+> > this and facebook ran into it as a performance regression. So yes, this
+> > is a real concern.
 > 
-> This patch converts arrayRCU from txt to rst format.
-> arrayRCU.rst is also added in the index.rst file.
+> Don't e/cBPF filters also break the direct map down to 4k pages when calling
+> set_memory_ro() on the filter for 64 bit x86 and arm?
 > 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> I've been wondering if the page allocator should make some effort to find a
+> broken down page for anything that can be known will have direct map permissions
+> changed (or if it already groups them somehow). But also, why any potential
+> slowdown of 4k pages on the direct map hasn't been noticed for apps that do a
+> lot of insertions and removals of BPF filters, if this is indeed the case.
 
-Much better, thank you!
-
-I queued this with a small but important change called out below.
-
-> ---
->  .../RCU/{arrayRCU.txt => arrayRCU.rst}         | 18 +++++++++++++-----
->  Documentation/RCU/index.rst                    |  1 +
->  2 files changed, 14 insertions(+), 5 deletions(-)
->  rename Documentation/RCU/{arrayRCU.txt => arrayRCU.rst} (91%)
-> 
-> diff --git a/Documentation/RCU/arrayRCU.txt b/Documentation/RCU/arrayRCU.rst
-> similarity index 91%
-> rename from Documentation/RCU/arrayRCU.txt
-> rename to Documentation/RCU/arrayRCU.rst
-> index f05a9afb2c39..ed5ae24b196e 100644
-> --- a/Documentation/RCU/arrayRCU.txt
-> +++ b/Documentation/RCU/arrayRCU.rst
-> @@ -1,5 +1,7 @@
-> -Using RCU to Protect Read-Mostly Arrays
-> +.. _array_rcu_doc:
->  
-> +Using RCU to Protect Read-Mostly Arrays
-> +=======================================
->  
->  Although RCU is more commonly used to protect linked lists, it can
->  also be used to protect arrays.  Three situations are as follows:
-> @@ -26,6 +28,7 @@ described in the following sections.
->  
->  
->  Situation 1: Hash Tables
-> +------------------------
->  
->  Hash tables are often implemented as an array, where each array entry
->  has a linked-list hash chain.  Each hash chain can be protected by RCU
-> @@ -34,6 +37,7 @@ to other array-of-list situations, such as radix trees.
->  
->  
->  Situation 2: Static Arrays
-> +--------------------------
->  
->  Static arrays, where the data (rather than a pointer to the data) is
->  located in each array element, and where the array is never resized,
-> @@ -41,11 +45,13 @@ have not been used with RCU.  Rik van Riel recommends using seqlock in
->  this situation, which would also have minimal read-side overhead as long
->  as updates are rare.
->  
-> -Quick Quiz:  Why is it so important that updates be rare when
-> -	     using seqlock?
-> +Quick Quiz:  
-
-The above line added trailing whitespace.  I removed it for you, but
-please check for this on future submissions.  ;-)
-
-							Thanx, Paul
-
-> +		Why is it so important that updates be rare when using seqlock?
->  
-> +:ref:`Answer to Quick Quiz <answer_quick_quiz_seqlock>`
->  
->  Situation 3: Resizeable Arrays
-> +------------------------------
->  
->  Use of RCU for resizeable arrays is demonstrated by the grow_ary()
->  function formerly used by the System V IPC code.  The array is used
-> @@ -60,7 +66,7 @@ the remainder of the new, updates the ids->entries pointer to point to
->  the new array, and invokes ipc_rcu_putref() to free up the old array.
->  Note that rcu_assign_pointer() is used to update the ids->entries pointer,
->  which includes any memory barriers required on whatever architecture
-> -you are running on.
-> +you are running on.::
->  
->  	static int grow_ary(struct ipc_ids* ids, int newsize)
->  	{
-> @@ -112,7 +118,7 @@ a simple check suffices.  The pointer to the structure corresponding
->  to the desired IPC object is placed in "out", with NULL indicating
->  a non-existent entry.  After acquiring "out->lock", the "out->deleted"
->  flag indicates whether the IPC object is in the process of being
-> -deleted, and, if not, the pointer is returned.
-> +deleted, and, if not, the pointer is returned.::
->  
->  	struct kern_ipc_perm* ipc_lock(struct ipc_ids* ids, int id)
->  	{
-> @@ -144,8 +150,10 @@ deleted, and, if not, the pointer is returned.
->  		return out;
->  	}
->  
-> +.. _answer_quick_quiz_seqlock:
->  
->  Answer to Quick Quiz:
-> +	Why is it so important that updates be rare when using seqlock?
->  
->  	The reason that it is important that updates be rare when
->  	using seqlock is that frequent updates can livelock readers.
-> diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
-> index 5c99185710fa..8d20d44f8fd4 100644
-> --- a/Documentation/RCU/index.rst
-> +++ b/Documentation/RCU/index.rst
-> @@ -7,6 +7,7 @@ RCU concepts
->  .. toctree::
->     :maxdepth: 3
->  
-> +   arrayRCU
->     rcu
->     listRCU
->     UP
-> -- 
-> 2.17.1
-> 
+That should be limited to the module range. Random data maps could
+shatter the world.
