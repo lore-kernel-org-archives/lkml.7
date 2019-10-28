@@ -2,69 +2,90 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B29FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B8ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5BC20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E462B20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387598AbfJ1Jky (ORCPT
+        id S2388011AbfJ1Jl7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 05:40:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5199 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732063AbfJ1Jky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 05:40:54 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AE982872D7297DD92591;
-        Mon, 28 Oct 2019 17:40:50 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 28 Oct 2019
- 17:40:44 +0800
-Subject: Re: [PATCH v2 05/36] irqchip/gic-v3-its: Kill its->ite_size and use
- TYPER copy instead
-To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-kernel@vger.kernel.org>
-CC:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Andrew Murray" <Andrew.Murray@arm.com>,
-        Jayachandran C <jnair@marvell.com>,
-        "Robert Richter" <rrichter@marvell.com>
-References: <20191027144234.8395-1-maz@kernel.org>
- <20191027144234.8395-6-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <e1930273-ee1f-6b17-5c7a-01bafc8b9482@huawei.com>
-Date:   Mon, 28 Oct 2019 17:40:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 28 Oct 2019 05:41:59 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:56054 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732063AbfJ1Jl7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 05:41:59 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9S9fgjr018616, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9S9fgjr018616
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Oct 2019 17:41:42 +0800
+Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
+ RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Mon, 28 Oct
+ 2019 17:41:42 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "oliver@neukum.org" <oliver@neukum.org>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] r8152: Pass driver_info to REALTEK_USB_DEVICE() macro
+Thread-Topic: [PATCH 1/2] r8152: Pass driver_info to REALTEK_USB_DEVICE()
+ macro
+Thread-Index: AQHViyNHZmeG3ry3I0mcK8buPIS36KdvzL/w
+Date:   Mon, 28 Oct 2019 09:41:40 +0000
+Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18EF1C4@RTITMBSVM03.realtek.com.tw>
+References: <20191025105919.689-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20191025105919.689-1-kai.heng.feng@canonical.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20191027144234.8395-6-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/27 22:42, Marc Zyngier wrote:
-> Now that we have a copy of TYPER in the ITS structure, rely on this
-> to provide the same service as its->ite_size, which gets axed.
-> Errata workarounds are now updating the cached fields instead of
-> requiring a separate field in the ITS structure.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+Kai-Heng Feng [mailto:kai.heng.feng@canonical.com]
+> Sent: Friday, October 25, 2019 6:59 PM
+[...]
+> -#define REALTEK_USB_DEVICE(vend, prod)	\
+> +#define REALTEK_USB_DEVICE(vend, prod, info)	\
+>  	.match_flags = USB_DEVICE_ID_MATCH_DEVICE | \
+>  		       USB_DEVICE_ID_MATCH_INT_CLASS, \
+>  	.idVendor = (vend), \
+>  	.idProduct = (prod), \
+> -	.bInterfaceClass = USB_CLASS_VENDOR_SPEC \
+> +	.bInterfaceClass = USB_CLASS_VENDOR_SPEC, \
+> +	.driver_info = (info) \
+>  }, \
+>  { \
+>  	.match_flags = USB_DEVICE_ID_MATCH_INT_INFO | \
+> @@ -6739,25 +6740,26 @@ static void rtl8152_disconnect(struct
+> usb_interface *intf)
+>  	.idProduct = (prod), \
+>  	.bInterfaceClass = USB_CLASS_COMM, \
+>  	.bInterfaceSubClass = USB_CDC_SUBCLASS_ETHERNET, \
+> -	.bInterfaceProtocol = USB_CDC_PROTO_NONE
+> +	.bInterfaceProtocol = USB_CDC_PROTO_NONE, \
+> +	.driver_info = (info) \
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+This part is for ECM mode. Add driver_info here is useless,
+because it is never be used. The driver always changes
+the ECM mode to vendor mode.
+
+Best Regards,
+Hayes
+
 
