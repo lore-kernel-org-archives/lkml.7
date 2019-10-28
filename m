@@ -2,240 +2,125 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826FCCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F144C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4E521744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:55:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I0u3RieR"
+	by mail.kernel.org (Postfix) with ESMTP id 7479820873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572274608;
+	bh=R7BCORMt4cTpOpTSUkGRHLf+t0urkhRt64HyvYMbeMc=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=Q10nL9duAkehuKehqhO4hkMt0PA8EgFEF0jUSFDEHmnL82VYwFpjdYWc40jL2dy92
+	 DcgK/PC5Vg2ozXRt4QYXsg1CQYMmyKrthtoWO2R1pfMYR/m1VTn9+BU9QoFAiHZ9ni
+	 ghaamDvKgx7VinGfB8p8fcIgdjKWu6vtWRr6Ucn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390415AbfJ1Ozh (ORCPT
+        id S2390424AbfJ1O4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:55:37 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45433 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729708AbfJ1Ozg (ORCPT
+        Mon, 28 Oct 2019 10:56:47 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39792 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727227AbfJ1O4r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:55:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572274535;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6SI6pU5ltjnpPB7iWVIT6QOJJZOAm4cxx0m6EK7PRco=;
-        b=I0u3RieR61PkgDl/AtvRXVSF6h/BP3FLCAvubMYn5wXGf/Zx4ZJi03zDM2nLqCA2Ya1xdL
-        wH1HFqLrucMNro7nPatYTZ6XB+PI7QxnAleOeOaD+tNfAVE5N8hYC/9BeUt35cqMrTL7e+
-        vDwdmE0Vq6t1IT14zRm5X4OdnXIEIig=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-9OF9M3p9Pzq4axXXmVk_FQ-1; Mon, 28 Oct 2019 10:55:32 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06FA51804972;
-        Mon, 28 Oct 2019 14:55:30 +0000 (UTC)
-Received: from [10.36.117.63] (ovpn-117-63.ams2.redhat.com [10.36.117.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 68C2B612B1;
-        Mon, 28 Oct 2019 14:55:26 +0000 (UTC)
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-To:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <9c844300-e151-97a0-7223-a6d341d0d75e@redhat.com>
-Date:   Mon, 28 Oct 2019 15:55:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <1572171452-7958-2-git-send-email-rppt@kernel.org>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: 9OF9M3p9Pzq4axXXmVk_FQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Mon, 28 Oct 2019 10:56:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=gMtkHpqXbGd8zJxTWU55ZYO4wyxUyNeuiQJC1jr7G1M=; b=NkdZHt8S2j1p
+        MklXpynJjMwDROUGXKqyicL/iSsYOTEJSfN9mv8x3yCAWY+vD6cP/YmgeBq1UuKjSNWsTXHAldBlp
+        1FlSfk/R+6WoxkC++64MsSJ7vUi1t+TigYpnjVYVh4SNKWwpB8AnHCZH3/tazb3YXJ4KBkVX7RlNK
+        5VmuM=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iP6Rp-0008TB-4O; Mon, 28 Oct 2019 14:56:45 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 9B28627403E4; Mon, 28 Oct 2019 14:56:44 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: core: Allow generic coupling only for always-on regulators" to the regulator tree
+In-Reply-To: <20191025002240.25288-2-digetx@gmail.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191028145644.9B28627403E4@ypsilon.sirena.org.uk>
+Date:   Mon, 28 Oct 2019 14:56:44 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.10.19 11:17, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
->=20
-> The mappings created with MAP_EXCLUSIVE are visible only in the context o=
-f
-> the owning process and can be used by applications to store secret
-> information that will not be visible not only to other processes but to t=
-he
-> kernel as well.
->=20
-> The pages in these mappings are removed from the kernel direct map and
-> marked with PG_user_exclusive flag. When the exclusive area is unmapped,
-> the pages are mapped back into the direct map.
->=20
-> The MAP_EXCLUSIVE flag implies MAP_POPULATE and MAP_LOCKED.
->=20
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->   arch/x86/mm/fault.c                    | 14 ++++++++++
->   fs/proc/task_mmu.c                     |  1 +
->   include/linux/mm.h                     |  9 +++++++
->   include/linux/page-flags.h             |  7 +++++
->   include/linux/page_excl.h              | 49 +++++++++++++++++++++++++++=
-+++++++
->   include/trace/events/mmflags.h         |  9 ++++++-
->   include/uapi/asm-generic/mman-common.h |  1 +
->   kernel/fork.c                          |  3 ++-
->   mm/Kconfig                             |  3 +++
->   mm/gup.c                               |  8 ++++++
->   mm/memory.c                            |  3 +++
->   mm/mmap.c                              | 16 +++++++++++
->   mm/page_alloc.c                        |  5 ++++
->   13 files changed, 126 insertions(+), 2 deletions(-)
->   create mode 100644 include/linux/page_excl.h
->=20
-> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> index 9ceacd1..8f73a75 100644
-> --- a/arch/x86/mm/fault.c
-> +++ b/arch/x86/mm/fault.c
-> @@ -17,6 +17,7 @@
->   #include <linux/context_tracking.h>=09/* exception_enter(), ...=09*/
->   #include <linux/uaccess.h>=09=09/* faulthandler_disabled()=09*/
->   #include <linux/efi.h>=09=09=09/* efi_recover_from_page_fault()*/
-> +#include <linux/page_excl.h>=09=09/* page_is_user_exclusive()=09*/
->   #include <linux/mm_types.h>
->  =20
->   #include <asm/cpufeature.h>=09=09/* boot_cpu_has, ...=09=09*/
-> @@ -1218,6 +1219,13 @@ static int fault_in_kernel_space(unsigned long add=
-ress)
->   =09return address >=3D TASK_SIZE_MAX;
->   }
->  =20
-> +static bool fault_in_user_exclusive_page(unsigned long address)
-> +{
-> +=09struct page *page =3D virt_to_page(address);
-> +
-> +=09return page_is_user_exclusive(page);
-> +}
-> +
->   /*
->    * Called for all faults where 'address' is part of the kernel address
->    * space.  Might get called for faults that originate from *code* that
-> @@ -1261,6 +1269,12 @@ do_kern_addr_fault(struct pt_regs *regs, unsigned =
-long hw_error_code,
->   =09if (spurious_kernel_fault(hw_error_code, address))
->   =09=09return;
->  =20
-> +=09/* FIXME: warn and handle gracefully */
-> +=09if (unlikely(fault_in_user_exclusive_page(address))) {
-> +=09=09pr_err("page fault in user exclusive page at %lx", address);
-> +=09=09force_sig_fault(SIGSEGV, SEGV_MAPERR, (void __user *)address);
-> +=09}
-> +
->   =09/* kprobes don't want to hook the spurious faults: */
->   =09if (kprobe_page_fault(regs, X86_TRAP_PF))
->   =09=09return;
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 9442631..99e14d1 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -655,6 +655,7 @@ static void show_smap_vma_flags(struct seq_file *m, s=
-truct vm_area_struct *vma)
->   #ifdef CONFIG_X86_INTEL_MPX
->   =09=09[ilog2(VM_MPX)]=09=09=3D "mp",
->   #endif
-> +=09=09[ilog2(VM_EXCLUSIVE)]=09=3D "xl",
->   =09=09[ilog2(VM_LOCKED)]=09=3D "lo",
->   =09=09[ilog2(VM_IO)]=09=09=3D "io",
->   =09=09[ilog2(VM_SEQ_READ)]=09=3D "sr",
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index cc29227..9c43375 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -298,11 +298,13 @@ extern unsigned int kobjsize(const void *objp);
->   #define VM_HIGH_ARCH_BIT_2=0934=09/* bit only usable on 64-bit architec=
-tures */
->   #define VM_HIGH_ARCH_BIT_3=0935=09/* bit only usable on 64-bit architec=
-tures */
->   #define VM_HIGH_ARCH_BIT_4=0936=09/* bit only usable on 64-bit architec=
-tures */
-> +#define VM_HIGH_ARCH_BIT_5=0937=09/* bit only usable on 64-bit architect=
-ures */
->   #define VM_HIGH_ARCH_0=09BIT(VM_HIGH_ARCH_BIT_0)
->   #define VM_HIGH_ARCH_1=09BIT(VM_HIGH_ARCH_BIT_1)
->   #define VM_HIGH_ARCH_2=09BIT(VM_HIGH_ARCH_BIT_2)
->   #define VM_HIGH_ARCH_3=09BIT(VM_HIGH_ARCH_BIT_3)
->   #define VM_HIGH_ARCH_4=09BIT(VM_HIGH_ARCH_BIT_4)
-> +#define VM_HIGH_ARCH_5=09BIT(VM_HIGH_ARCH_BIT_5)
->   #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
->  =20
->   #ifdef CONFIG_ARCH_HAS_PKEYS
-> @@ -340,6 +342,12 @@ extern unsigned int kobjsize(const void *objp);
->   # define VM_MPX=09=09VM_NONE
->   #endif
->  =20
-> +#ifdef CONFIG_ARCH_USES_HIGH_VMA_FLAGS
-> +# define VM_EXCLUSIVE=09VM_HIGH_ARCH_5
-> +#else
-> +# define VM_EXCLUSIVE=09VM_NONE
-> +#endif
-> +
->   #ifndef VM_GROWSUP
->   # define VM_GROWSUP=09VM_NONE
->   #endif
-> @@ -2594,6 +2602,7 @@ struct page *follow_page(struct vm_area_struct *vma=
-, unsigned long address,
->   #define FOLL_ANON=090x8000=09/* don't do file mappings */
->   #define FOLL_LONGTERM=090x10000=09/* mapping lifetime is indefinite: se=
-e below */
->   #define FOLL_SPLIT_PMD=090x20000=09/* split huge pmd before returning *=
-/
-> +#define FOLL_EXCLUSIVE=090x40000=09/* mapping is exclusive to owning mm =
-*/
->  =20
->   /*
->    * NOTE on FOLL_LONGTERM:
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index f91cb88..32d0aee 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -131,6 +131,9 @@ enum pageflags {
->   =09PG_young,
->   =09PG_idle,
->   #endif
-> +#if defined(CONFIG_EXCLUSIVE_USER_PAGES)
-> +=09PG_user_exclusive,
-> +#endif
+The patch
 
-Last time I tried to introduce a new page flag I learned that this is=20
-very much frowned upon. Best you can usually do is reuse another flag -=20
-if valid in that context.
+   regulator: core: Allow generic coupling only for always-on regulators
 
---=20
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
+Mark
 
-David / dhildenb
+From e381bfe45a891a5894465f072c5bbf3ed3e33b8a Mon Sep 17 00:00:00 2001
+From: Dmitry Osipenko <digetx@gmail.com>
+Date: Fri, 25 Oct 2019 03:22:40 +0300
+Subject: [PATCH] regulator: core: Allow generic coupling only for always-on
+ regulators
+
+The generic voltage balancer doesn't work correctly if one of regulator
+couples turns off. Currently there are no users in kernel for that case,
+although let's explicitly show that this case is unsupported for those who
+will try to use that feature.
+
+Link: https://lore.kernel.org/linux-samsung-soc/20191008170503.yd6GscYPLxjgrXqDuCO7AJc6i6egNZGJkVWHLlCxvA4@z/
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20191025002240.25288-2-digetx@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index a46be221dbdc..a5b2a9b02108 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -4963,6 +4963,12 @@ static int generic_coupler_attach(struct regulator_coupler *coupler,
+ 		return -EPERM;
+ 	}
+ 
++	if (!rdev->constraints->always_on) {
++		rdev_err(rdev,
++			 "Coupling of a non always-on regulator is unimplemented\n");
++		return -ENOTSUPP;
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
 
