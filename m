@@ -2,102 +2,141 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9D7CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1ADCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44ECF21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432EE21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hroZuIQ/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d/JN3eUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbfJ1Pc5 (ORCPT
+        id S1731193AbfJ1PdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:32:57 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35023 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730994AbfJ1Pc4 (ORCPT
+        Mon, 28 Oct 2019 11:33:24 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59278 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfJ1PdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:32:56 -0400
-Received: by mail-qt1-f196.google.com with SMTP id l3so4620231qtp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 08:32:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=K01MlbOPcqeaYhVIj4KrVUdXGySrNF3wqsQr/ouX7b0=;
-        b=hroZuIQ/kLaov7AW148eGUTn1/nFPiDYcaajtH6eTf1Dur5xFiVRVAyOp482vUKlaJ
-         MlwHEzEld8o/ujXiofVc/OEbYdtws5Fx1tLiZES4K5Zj69UWZJSnGfoMwcACWIR4pNyQ
-         obNKNEsLq0yEbVJgLhzKOFjj5g28hgnsOzq/mjnylp7AnjSNPH1VGEsVS22RMvivefjx
-         PGaY6yQVci35INvQZyiSscZOIHoRjbSqKgyAafe0CIiAbhtROeK/8+Q6ftAeA66xKUjr
-         RMHR+jS5pLZt4Jih+eKmW15PQUemS/YrYZf7YeerxsYAIia5GkQtPlioWXKE7NERcoX7
-         ZJBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=K01MlbOPcqeaYhVIj4KrVUdXGySrNF3wqsQr/ouX7b0=;
-        b=CxdIMBoUAZ/QfasR5EszBxoaoi0qOs1MQDHCPum4kQZW/z3wKaOIRdYnVb1+ma4GR0
-         yKKpq3ofVvjAY90DaVxyo4IomipD7zmiyBhIULyYbxq7baZ0SGM5aYiyFaCsG5jFOt4D
-         4fZxTyzGozcGelO9wQChFD8BQaDtSFixCC/Dxi6wm+he9UgLLo9mIfDINZrv6zIeGoa+
-         QhtAYliFqacnKmZ2/2X3V6LAVAUAl6DGgmTmhJcMQBKZtzahlpuU5jKh+aNeXPGNDeeH
-         o9W67BItoRHFB+4+VQH9ZD4Da57ENoaCQwKok9R7MrQWvIFngBvlVt0MHGLEu9pizqMf
-         /yiw==
-X-Gm-Message-State: APjAAAWlavquBeUOLq7ZrVYgxBME9ARrBBa6oWYqjf7iC7Fvkd7n5xQr
-        TZI7hY3sMaGF/090RDeNcvw=
-X-Google-Smtp-Source: APXvYqwtQnktlqPe5NSdXIY5QLs4zjauQbcdIt5qTHHiAlUgNUyzE7YfECvUiHlkldNe6ywG2LLxpw==
-X-Received: by 2002:ac8:6d0b:: with SMTP id o11mr17554607qtt.253.1572276775728;
-        Mon, 28 Oct 2019 08:32:55 -0700 (PDT)
-Received: from cristiane-Inspiron-5420 ([131.100.148.220])
-        by smtp.gmail.com with ESMTPSA id w69sm2021498qkb.26.2019.10.28.08.32.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 08:32:55 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 12:32:50 -0300
-From:   Cristiane Naves <cristianenavescardoso09@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Julia Lawall <julia.lawall@lip6.fr>
-Subject: [PATCH v4 0/2] Cleanup in rtl8712
-Message-ID: <cover.1572276208.git.cristianenavescardoso09@gmail.com>
+        Mon, 28 Oct 2019 11:33:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zQuvBEiQv7/Ur7mCHVSdKJIemOFk01eQ56PkcAWxYvo=; b=d/JN3eUoLJaDDhpwAP87uijIB
+        KwTsU4dw78A51c+/o2xGh0VkNePm6IAWBOLYcQMMgsMqAefslZY4ORtUlhMkE6uXhlpS7q+N1H443
+        eEjrNkugb/xqmCVjdp5GPKI1EF0DOpskr/9k4bKsEzoJHMtxd+JqgnQDoLMQgyLDR3mHY9tnMIzhR
+        JUut/QFBiRf8cqM1df0uCiQ8x90UCqWXYWpGCoVViLz33FgolZAbxV8TyuY0tOUE1QJYGI4A7ZCrp
+        8TmxqGAY+T7eLk0OC7zacbDpnGjaQarO/D2onOJ8ju59XpWOcCmDIe7YGOGtBegcGtxnvcAwCrgu1
+        V2KNKTLvQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iP719-000346-2j; Mon, 28 Oct 2019 15:33:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7AE05300EBF;
+        Mon, 28 Oct 2019 16:32:13 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C7E682B4468CB; Mon, 28 Oct 2019 16:33:13 +0100 (CET)
+Date:   Mon, 28 Oct 2019 16:33:13 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+Subject: Re: [Patch v4 5/6] thermal/cpu-cooling: Update thermal pressure in
+ case of a maximum frequency capping
+Message-ID: <20191028153313.GF4097@hirez.programming.kicks-ass.net>
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <1571776465-29763-6-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1571776465-29763-6-git-send-email-thara.gopinath@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup in rtl8712
+On Tue, Oct 22, 2019 at 04:34:24PM -0400, Thara Gopinath wrote:
+> Thermal governors can request for a cpu's maximum supported frequency
+> to be capped in case of an overheat event. This in turn means that the
+> maximum capacity available for tasks to run on the particular cpu is
+> reduced. Delta between the original maximum capacity and capped
+> maximum capacity is known as thermal pressure. Enable cpufreq cooling
+> device to update the thermal pressure in event of a capped
+> maximum frequency.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  drivers/thermal/cpu_cooling.c | 31 +++++++++++++++++++++++++++++--
+>  1 file changed, 29 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+> index 391f397..2e6a979 100644
+> --- a/drivers/thermal/cpu_cooling.c
+> +++ b/drivers/thermal/cpu_cooling.c
+> @@ -218,6 +218,23 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
+>  }
+>  
+>  /**
+> + * update_sched_max_capacity - update scheduler about change in cpu
+> + *					max frequency.
+> + * @policy - cpufreq policy whose max frequency is capped.
 
-Changes in v2:
- - Arranging conflict between author name and signed-off-by.
- - Remove unnecessary parentheses.
- - Change the driver name to rtl8712.
+Uhm, this function doesn't have a @policy argument.
 
-Changes in v3:
- - Change alignment of eth_type.
- - Change alignment of SN_EQUAL.
- - Remove commit of unneeded parentheses.
+> + */
+> +static void update_sched_max_capacity(struct cpumask *cpus,
+> +				      unsigned int cur_max_freq,
+> +				      unsigned int max_freq)
+> +{
+> +	int cpu;
+> +	unsigned long capacity = (cur_max_freq << SCHED_CAPACITY_SHIFT) /
+> +				  max_freq;
 
-Changes in v4:
- - Fixing misplaced parentheses of previous version.
+check your types and ranges. What units is _freq in and does 'freq *
+SCHED_CAPACITY' fit in 'unsigned int'? If so, why do you assign it to an
+'unsigned long'?
 
+> +
+> +	for_each_cpu(cpu, cpus)
+> +		update_thermal_pressure(cpu, capacity);
+> +}
 
-Cristiane Naves (2):
-  staging: rtl8712: Fix Alignment of open parenthesis
-  staging: rtl8712: Remove lines before a close brace
+> @@ -331,8 +349,17 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+>  
+>  	cpufreq_cdev->cpufreq_state = state;
+>  
+> -	return dev_pm_qos_update_request(&cpufreq_cdev->qos_req,
+> -				cpufreq_cdev->freq_table[state].frequency);
+> +	ret = dev_pm_qos_update_request
+> +				(&cpufreq_cdev->qos_req,
+> +				 cpufreq_cdev->freq_table[state].frequency);
+> +
+> +	if (ret > 0)
+> +		update_sched_max_capacity
+> +				(cpufreq_cdev->policy->cpus,
+> +				 cpufreq_cdev->freq_table[state].frequency,
+> +				 cpufreq_cdev->policy->cpuinfo.max_freq);
 
- drivers/staging/rtl8712/rtl8712_recv.c | 38 ++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 20 deletions(-)
+Codingstyle wants that in { }.
 
--- 
-2.7.4
-
+> +
+> +	return ret;
+>  }
+>  
+>  /**
+> -- 
+> 2.1.4
+> 
