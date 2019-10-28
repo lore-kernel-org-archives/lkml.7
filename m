@@ -2,104 +2,127 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B502CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3C6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E39220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:11:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MM7/PoR8"
+	by mail.kernel.org (Postfix) with ESMTP id C3A9620679
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbfJ1BLi (ORCPT
+        id S1729199AbfJ1BNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 21:11:38 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39171 "EHLO ozlabs.org"
+        Sun, 27 Oct 2019 21:13:09 -0400
+Received: from mga18.intel.com ([134.134.136.126]:57247 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728574AbfJ1BLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 21:11:37 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 471c9z030gz9sPK;
-        Mon, 28 Oct 2019 12:11:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572225095;
-        bh=5Ds8Q7CwdrMTbH9IXggt+mmI5j9uKDnt49CBC/Yz0ac=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MM7/PoR8cF8t5iPgN5QkQc36BoC2GCYAu0R4TZ735lteuWaNTU8rqYfZKQ9Sm101V
-         DtDWX/XRAqaEY/rZzARWDLLCwQQqjRHjsM8vJX4FlAXA6qlmoenutcFR+P/C6GLbsI
-         xlgf9YwQaz9aSyOMFX1cej85Sxv17sQScpi8aVDYIqk3dmPobXymJ3i0Xu0D7dhgXa
-         C7bweNgoO1iH7H4yo2Sy2feqwTFo4MwNeqKMiiw42UXEO5/QkoIziCTSVQMMgIeEDD
-         UZQo2r/XX3o1Lmx7sjluxjRBiW4QNnLXWObAWpD4Tou3LGd3XUXGNetfnPSH3IlNTN
-         PDuwpCurDq9aQ==
-Date:   Mon, 28 Oct 2019 12:11:34 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kevin Wang <kevin1.wang@amd.com>, Evan Quan <evan.quan@amd.com>
-Subject: linux-next: manual merge of the amdgpu tree with Linus' tree
-Message-ID: <20191028121134.63b6c3c0@canb.auug.org.au>
+        id S1727509AbfJ1BNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 21:13:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 18:13:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,238,1569308400"; 
+   d="scan'208";a="224486495"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Oct 2019 18:13:02 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iOtag-0004hM-6I; Mon, 28 Oct 2019 09:13:02 +0800
+Date:   Mon, 28 Oct 2019 09:12:52 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Alastair D'Silva <alastair@au1.ibm.com>
+Cc:     kbuild-all@lists.01.org, alastair@d-silva.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Greg Kurz <groug@kaod.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Subject: [RFC PATCH] nvdimm: scm_get() can be static
+Message-ID: <20191028011252.ebr7djanid6k25ok@4978f4969bb8>
+References: <20191025044721.16617-9-alastair@au1.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/GWYAgCEI=ktipbJFMteknT0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025044721.16617-9-alastair@au1.ibm.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/GWYAgCEI=ktipbJFMteknT0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Fixes: 0d40f55b9035 ("nvdimm: Add driver for OpenCAPI Storage Class Memory")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ ocxl-scm.c          |    4 ++--
+ ocxl-scm_internal.c |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Today's linux-next merge of the amdgpu tree got a conflict in:
-
-  drivers/gpu/drm/amd/powerplay/inc/amdgpu_smu.h
-
-between commit:
-
-  155f85c0d568 ("drm/amd/powerplay: remove duplicate macro smu_get_uclk_dpm=
-_states in amdgpu_smu.h")
-
-from Linus' tree and commit:
-
-  18c1d3cee4c5 ("drm/amd/powerplay: split out those internal used swSMU API=
-s V2")
-
-from the amdgpu tree.
-
-I fixed it up (I just used the amdgpu tree version) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/GWYAgCEI=ktipbJFMteknT0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl22QEYACgkQAVBC80lX
-0GzvBgf/T2qJJzaB2aCW3QcDa1KxjhFm6Uj3hqXBjy0akfnJ0YG2udqAqd8vLYrs
-epTg9PEJaxGgIDZFZ2lS8zxhgHr9Lzbg+DPVaXaQx9COIyNQSMsw+EPuA90B0Q36
-avdwsL/5g7Bqvib0sHTV6ke4zKUGRQGhdIz/+uoCuwj6X6nstXC2Mu+xVccjtBVh
-Zi27tac6QZpN8HJrZOLq5pualLpU92uCkV4V0twEHltN6xGV9sx53hT4ujsYOZ9/
-Wu1CMCmCLX+wEt3WFIlvEM1MMf6UysmbHLoUKqzUJohbT2kEMJMj+ilT5nvagF/R
-3Ci6aQiis1mzn41Sm7MvjsKhZ+AczA==
-=PkON
------END PGP SIGNATURE-----
-
---Sig_/GWYAgCEI=ktipbJFMteknT0--
+diff --git a/drivers/nvdimm/ocxl-scm.c b/drivers/nvdimm/ocxl-scm.c
+index f4e6cc022de8a..c169cb0bc71d4 100644
+--- a/drivers/nvdimm/ocxl-scm.c
++++ b/drivers/nvdimm/ocxl-scm.c
+@@ -733,7 +733,7 @@ static void scm_put(struct scm_data *scm_data)
+ 	put_device(&scm_data->dev);
+ }
+ 
+-struct scm_data *scm_get(struct scm_data *scm_data)
++static struct scm_data *scm_get(struct scm_data *scm_data)
+ {
+ 	return (get_device(&scm_data->dev) == NULL) ? NULL : scm_data;
+ }
+@@ -2142,7 +2142,7 @@ static int scm_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	return -ENXIO;
+ }
+ 
+-struct pci_driver scm_pci_driver = {
++static struct pci_driver scm_pci_driver = {
+ 	.name = "ocxl-scm",
+ 	.id_table = scm_pci_tbl,
+ 	.probe = scm_probe,
+diff --git a/drivers/nvdimm/ocxl-scm_internal.c b/drivers/nvdimm/ocxl-scm_internal.c
+index e7c247835817b..ee11fb72e1ecd 100644
+--- a/drivers/nvdimm/ocxl-scm_internal.c
++++ b/drivers/nvdimm/ocxl-scm_internal.c
+@@ -64,8 +64,8 @@ int scm_admin_command_request(struct scm_data *scm_data, u8 op_code)
+ 	return scm_command_request(scm_data, &scm_data->admin_command, op_code);
+ }
+ 
+-int scm_command_response(const struct scm_data *scm_data,
+-			 const struct command_metadata *cmd)
++static int scm_command_response(const struct scm_data *scm_data,
++				const struct command_metadata *cmd)
+ {
+ 	u64 val;
+ 	u16 id;
