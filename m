@@ -2,106 +2,100 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D192ACA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C344CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA8EA204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:58:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kr+58qlw"
+	by mail.kernel.org (Postfix) with ESMTP id 66759204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfJ1T6y (ORCPT
+        id S1727761AbfJ1T72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 15:58:54 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44493 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ1T6y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 15:58:54 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q26so3999177pfn.11;
-        Mon, 28 Oct 2019 12:58:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=mUUwYm2J4X9AJ/m0x6sMLtjI+0msH+IroBSGwyonZQg=;
-        b=Kr+58qlwc2ermSgdCkMendRK93dGnsQ9/wcP+2QXe/ZhgaKwKYBHjpXqbKD0s+/i49
-         wqCOQIRuPqk4i1wpLLZlD6DdrUqRixVQyNe/4u9QVfCwiAZ/jTFaM6AC+XBVTn7+FYW1
-         oWSX46ptaB74p2i76Z1aB/q396JNSy4hfgOJYPy+fsUuyfzJwffFI/AQVuFGzucvIyOV
-         hEOIfIIpoRDnDxAyLt6A6UmJImPw+FDV8xPUPAzDCTXb5YZ9/6Z9fW+HbZtPm3hZdanV
-         zEdkG7sk4etqQXxYYM7wDTIxHwWeUSPd6x+em0hFXw+3BjvTWI8oZG/fcoWIiuOmo0Gr
-         sNFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=mUUwYm2J4X9AJ/m0x6sMLtjI+0msH+IroBSGwyonZQg=;
-        b=j1A3hBxyI7WiaQY/2pUFOSlxjn8B1OQUj6VSk0doXLX9aNi5akxe4NiBQhsNXIRTWT
-         r4ldGptQmSD2ToxMib4z3LyB+OpkDjB5JStiQffb01JdONV3ZwoOB3uWBHPeUH08/uBp
-         LfFsfLUmt9I9GVibAEPAAzhNAv7oQuKL8qPMOK2K2Q9XhTxNicUhewycc/nqrNgfKaPx
-         EEv9+2Z5H/50zlAxyu9wHOTtGKi/4SjaxvIP4bsUzAhYRh6tS226kcP32n7B6QAdckbl
-         AcbyiBtunaLSIIiaLDI1uBA2cmrmQ54sZdmV/PfmuoGRS/vG1zfi0Zmv0kKj3b1z+x7H
-         gyxQ==
-X-Gm-Message-State: APjAAAXni5ZzTqU0dsGDD4Ev1uFqFjZVfq/pk7ZFnt1Ot+fsL7eRVwtZ
-        RGfTYAmOdyrqMgW+XXxVUgY=
-X-Google-Smtp-Source: APXvYqxmNOlFl+8UCIExMbtEghL6rJkdU+mbae+gk/jlG2s6cpuUnqbwShlRdqMyzSqgb7CMfJzAig==
-X-Received: by 2002:a17:90a:9201:: with SMTP id m1mr1376390pjo.74.1572292731971;
-        Mon, 28 Oct 2019 12:58:51 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id x192sm12472924pfc.109.2019.10.28.12.58.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 12:58:51 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 01:28:44 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     QLogic-Storage-Upstream@qlogic.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] scsi: qla4xxx: ql4_init.c: Remove Unneeded variable status
-Message-ID: <20191028195844.GA28740@saurav>
+        Mon, 28 Oct 2019 15:59:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:9009 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbfJ1T72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 15:59:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 12:59:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
+   d="scan'208";a="224740400"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 12:59:26 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.185]) by
+ ORSMSX107.amr.corp.intel.com ([169.254.1.115]) with mapi id 14.03.0439.000;
+ Mon, 28 Oct 2019 12:59:26 -0700
+From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To:     "kirill@shutemov.name" <kirill@shutemov.name>,
+        "peterz@infradead.org" <peterz@infradead.org>
+CC:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rppt@kernel.org" <rppt@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "bp@alien8.de" <bp@alien8.de>, "arnd@arndb.de" <arnd@arndb.de>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+Thread-Topic: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+Thread-Index: AQHVjbnGcEUDTQSU2UGbl4rq5h7p8qdw7lIA
+Date:   Mon, 28 Oct 2019 19:59:25 +0000
+Message-ID: <0a35765f7412937c1775daa05177b20113760aee.camel@intel.com>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+         <1572171452-7958-2-git-send-email-rppt@kernel.org>
+         <20191028123124.ogkk5ogjlamvwc2s@box> <20191028130018.GA7192@rapoport-lnx>
+         <20191028131623.zwuwguhm4v4s5imh@box>
+         <20191028135521.GB4097@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191028135521.GB4097@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.54.75.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D229CC7531AD5E4DBDB18933FD17DC5A@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded variable status in qla4xxx_process_ddb_changed()
-
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
- drivers/scsi/qla4xxx/ql4_init.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/qla4xxx/ql4_init.c b/drivers/scsi/qla4xxx/ql4_init.c
-index 2bf5e3e639e1..8942c48740cb 100644
---- a/drivers/scsi/qla4xxx/ql4_init.c
-+++ b/drivers/scsi/qla4xxx/ql4_init.c
-@@ -1167,7 +1167,6 @@ int qla4xxx_process_ddb_changed(struct scsi_qla_host *ha,
- 				uint32_t state, uint32_t conn_err)
- {
- 	struct ddb_entry *ddb_entry;
--	int status = QLA_ERROR;
- 
- 	/* check for out of range index */
- 	if (fw_ddb_index >= MAX_DDB_ENTRIES)
-@@ -1189,7 +1188,7 @@ int qla4xxx_process_ddb_changed(struct scsi_qla_host *ha,
- 	ddb_entry->ddb_change(ha, fw_ddb_index, ddb_entry, state);
- 
- exit_ddb_event:
--	return status;
-+	return QLA_ERROR;
- }
- 
- /**
--- 
-2.20.1
-
+T24gTW9uLCAyMDE5LTEwLTI4IGF0IDE0OjU1ICswMTAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToN
+Cj4gT24gTW9uLCBPY3QgMjgsIDIwMTkgYXQgMDQ6MTY6MjNQTSArMDMwMCwgS2lyaWxsIEEuIFNo
+dXRlbW92IHdyb3RlOg0KPiANCj4gPiBJIHRoaW5rIGFjdGl2ZSB1c2Ugb2YgdGhpcyBmZWF0dXJl
+IHdpbGwgbGVhZCB0byBwZXJmb3JtYW5jZSBkZWdyYWRhdGlvbiBvZg0KPiA+IHRoZSBzeXN0ZW0g
+d2l0aCB0aW1lLg0KPiA+IA0KPiA+IFNldHRpbmcgYSBzaW5nbGUgNGsgcGFnZSBub24tcHJlc2Vu
+dCBpbiB0aGUgZGlyZWN0IG1hcHBpbmcgd2lsbCByZXF1aXJlDQo+ID4gc3BsaXR0aW5nIDJNIG9y
+IDFHIHBhZ2Ugd2UgdXN1YWxseSBtYXAgZGlyZWN0IG1hcHBpbmcgd2l0aC4gQW5kIGl0J3Mgb25l
+DQo+ID4gd2F5IHJvYWQuIFdlIGRvbid0IGhhdmUgYW55IG1lY2hhbmlzbSB0byBtYXAgdGhlIG1l
+bW9yeSB3aXRoIGh1Z2UgcGFnZQ0KPiA+IGFnYWluIGFmdGVyIHRoZSBhcHBsaWNhdGlvbiBoYXMg
+ZnJlZWQgdGhlIHBhZ2UuDQo+IA0KPiBSaWdodCwgd2UgcmVjZW50bHkgaGFkIGEgJ2J1Zycgd2hl
+cmUgZnRyYWNlIHRyaWdnZXJlZCBzb21ldGhpbmcgbGlrZQ0KPiB0aGlzIGFuZCBmYWNlYm9vayBy
+YW4gaW50byBpdCBhcyBhIHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb24uIFNvIHllcywgdGhpcw0KPiBp
+cyBhIHJlYWwgY29uY2Vybi4NCg0KRG9uJ3QgZS9jQlBGIGZpbHRlcnMgYWxzbyBicmVhayB0aGUg
+ZGlyZWN0IG1hcCBkb3duIHRvIDRrIHBhZ2VzIHdoZW4gY2FsbGluZw0Kc2V0X21lbW9yeV9ybygp
+IG9uIHRoZSBmaWx0ZXIgZm9yIDY0IGJpdCB4ODYgYW5kIGFybT8NCg0KSSd2ZSBiZWVuIHdvbmRl
+cmluZyBpZiB0aGUgcGFnZSBhbGxvY2F0b3Igc2hvdWxkIG1ha2Ugc29tZSBlZmZvcnQgdG8gZmlu
+ZCBhDQpicm9rZW4gZG93biBwYWdlIGZvciBhbnl0aGluZyB0aGF0IGNhbiBiZSBrbm93biB3aWxs
+IGhhdmUgZGlyZWN0IG1hcCBwZXJtaXNzaW9ucw0KY2hhbmdlZCAob3IgaWYgaXQgYWxyZWFkeSBn
+cm91cHMgdGhlbSBzb21laG93KS4gQnV0IGFsc28sIHdoeSBhbnkgcG90ZW50aWFsDQpzbG93ZG93
+biBvZiA0ayBwYWdlcyBvbiB0aGUgZGlyZWN0IG1hcCBoYXNuJ3QgYmVlbiBub3RpY2VkIGZvciBh
+cHBzIHRoYXQgZG8gYQ0KbG90IG9mIGluc2VydGlvbnMgYW5kIHJlbW92YWxzIG9mIEJQRiBmaWx0
+ZXJzLCBpZiB0aGlzIGlzIGluZGVlZCB0aGUgY2FzZS4NCg0KDQo=
