@@ -2,103 +2,146 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65435CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 00:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77271CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 00:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366952070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 00:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572223597;
-	bh=dUrfIt9ulQVATvgyr+HDIEG155LRe+2kRKFH8+5OlIE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qSSpuHI/BIsWBfy0NeYl6GJAYsnuyardLdvtojzbhVddYeu8qop9tc0XnozI6hglT
-	 qZCHFNumO2jug0VtWANscqbUEPedhxa5kZAJMVEr0Nmwbq6JC3NYXq4FG658/6PMQ9
-	 lVnQQkPOJDCC9DS0ufygqCiGLW0wq/i8mZjHwVhY=
+	by mail.kernel.org (Postfix) with ESMTP id 46F0021850
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 00:57:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fktUIehi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbfJ1Aq3 (ORCPT
+        id S1728709AbfJ1A5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 20:46:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47222 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 20:57:46 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54739 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727051AbfJ1Aq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 20:46:29 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1727051AbfJ1A5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 20:57:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 133F12070B;
-        Mon, 28 Oct 2019 00:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572223588;
-        bh=dUrfIt9ulQVATvgyr+HDIEG155LRe+2kRKFH8+5OlIE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zruWzOHfKq5ZGevrQIPMaNo/nYXLq6hunFdZSO9sRqfWCqJDHhfKpONYcxXQJu1nB
-         U8e7tbgw1BWYtj1XikjiixINEDkDq1oqI9chrE/Axx0CO0di6bwn3Cng1SionQqYjG
-         yYXyVKOCsPsHYvaMk/FDlW7TZ0sUXMpiIG6sHrxI=
-Date:   Mon, 28 Oct 2019 08:46:05 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] arm64: dts: zii-ultra: Add node for accelerometer
-Message-ID: <20191028004604.GA16985@dragon>
-References: <20191015152654.26726-1-andrew.smirnov@gmail.com>
- <20191015152654.26726-3-andrew.smirnov@gmail.com>
- <20191026115524.GJ14401@dragon>
- <CAHQ1cqHQar8ZoVa3p+LfuPyJixcwfeWv7spkmwyJc60cekEywQ@mail.gmail.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 471bsx19FKz9sPK;
+        Mon, 28 Oct 2019 11:57:41 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572224261;
+        bh=hDqh7wu/yQzM10Ws6uGcquRZWRFSL9gNf+r/NB/nf9A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=fktUIehiQV0rh0zuD/PZRoVW0nlCrTcrncBNm9Lus+Zmg3gJBG4/d8MaQluBi+Yb+
+         5lFvRGMdkoj2lEf9yN7jdw5CpSGBJaohP0bqdyM3ELf0IOgnVrNcvOINI/1p0pfq49
+         uCX9Uo9f36leF7uzpaNamz7mPL5TaFbOaMl7p3DTjY3U1CuxfDlWUgODD0CsAMSb3a
+         FggS20HicEnOaIp6KHDqGUA6+l8NOCX9VUhkxMlHaWa4eghLurmv0o7lR4slrRYG72
+         roFwXi/Ut67mvGezH/aTb1nBBdPszX3IzgArJIM0uLJR03iC5u6l/xQ9t5b1pnDWtE
+         VdREYecI8WvWA==
+Date:   Mon, 28 Oct 2019 11:57:40 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: linux-next: manual merge of the amdgpu tree with Linus' tree
+Message-ID: <20191028115740.791bdeba@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHQ1cqHQar8ZoVa3p+LfuPyJixcwfeWv7spkmwyJc60cekEywQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; boundary="Sig_/lXDEOIEaUnX9aF2FDAC=od7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 11:54:13AM -0700, Andrey Smirnov wrote:
-> On Sat, Oct 26, 2019 at 4:55 AM Shawn Guo <shawnguo@kernel.org> wrote:
-> >
-> > On Tue, Oct 15, 2019 at 08:26:53AM -0700, Andrey Smirnov wrote:
-> > > Add I2C node for accelerometer present on both Zest and RMB3 boards.
-> > >
-> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > > Cc: Fabio Estevam <festevam@gmail.com>
-> > > Cc: Chris Healy <cphealy@gmail.com>
-> > > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > > Cc: Shawn Guo <shawnguo@kernel.org>
-> > > Cc: linux-arm-kernel@lists.infradead.org,
-> > > Cc: linux-kernel@vger.kernel.org
-> > > ---
-> > >  .../boot/dts/freescale/imx8mq-zii-ultra.dtsi   | 18 ++++++++++++++++++
-> > >  1 file changed, 18 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-> > > index 21eb52341ba8..8395c5a73ba6 100644
-> > > --- a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-> > > @@ -262,6 +262,18 @@
-> > >       pinctrl-0 = <&pinctrl_i2c1>;
-> > >       status = "okay";
-> > >
-> > > +     accel@1c {
-> >
-> > s/accel/accelerometer
-> >
-> > I fixed it up and applied the series.
-> >
-> 
-> I'm fine with that change, but FYI, I originally had it as
-> "accelerometer', but changed to "accel" to match the name in DT for
-> RDU2.
+--Sig_/lXDEOIEaUnX9aF2FDAC=od7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-We should change RDU2 instead, IMO.
+Hi all,
 
-Shawn
+Today's linux-next merge of the amdgpu tree got a conflict in:
+
+  drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+
+between commit:
+
+  54b8ae66ae1a ("kbuild: change *FLAGS_<basetarget>.o to take the path rela=
+tive to $(obj)")
+
+from Linus' tree and commits:
+
+  4f952528add3 ("drm/amdgpu: fix stack alignment ABI mismatch for Clang")
+  971463bea55c ("drm/amdgpu: fix stack alignment ABI mismatch for GCC 7.1+")
+  101d09f07966 ("drm/amdgpu: enable -msse2 for GCC 7.1+ users")
+
+from the amdgpu tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+index ddb8d5649e79,be3a614963c6..000000000000
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+@@@ -10,16 -10,21 +10,21 @@@ ifdef CONFIG_DRM_AMD_DC_DSC_SUPPOR
+  DCN20 +=3D dcn20_dsc.o
+  endif
+ =20
+- ifneq ($(call cc-option, -mpreferred-stack-boundary=3D4),)
+- 	cc_stack_align :=3D -mpreferred-stack-boundary=3D4
+- else ifneq ($(call cc-option, -mstack-alignment=3D16),)
+- 	cc_stack_align :=3D -mstack-alignment=3D16
+- endif
+ -CFLAGS_dcn20_resource.o :=3D -mhard-float -msse
+++CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o :=3D -mhard-float -msse
+ =20
+- CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o :=3D -mhard-float -msse $(=
+cc_stack_align)
++ ifdef CONFIG_CC_IS_GCC
++ ifeq ($(call cc-ifversion, -lt, 0701, y), y)
++ IS_OLD_GCC =3D 1
++ endif
++ endif
+ =20
+- ifdef CONFIG_CC_IS_CLANG
++ ifdef IS_OLD_GCC
++ # Stack alignment mismatch, proceed with caution.
++ # GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boun=
+dary=3D3
++ # (8B stack alignment).
+ -CFLAGS_dcn20_resource.o +=3D -mpreferred-stack-boundary=3D4
+++CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o +=3D -mpreferred-stack-bou=
+ndary=3D4
++ else
+ -CFLAGS_dcn20_resource.o +=3D -msse2
+ +CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o +=3D -msse2
+  endif
+ =20
+  AMD_DAL_DCN20 =3D $(addprefix $(AMDDALPATH)/dc/dcn20/,$(DCN20))
+
+--Sig_/lXDEOIEaUnX9aF2FDAC=od7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl22PQQACgkQAVBC80lX
+0Gz/Fgf9FMfRLEvkuxRYD44yb4buxSvkNk05H7IKFgFMGFXfPI32uVdHW/uT/lxn
+YdQ/jhmyS/08kHAVlgNGhkCOTU14FW5CNcL2xtAs/DBT1V2fp6SjJPJrkpQ3Hr16
+hum5sT3fnUB2OZ+/GD23FaSAjKWE2VOFAmnz9xF6Q9gSq5AV9TQDLZCxNcO+fouW
+ZrKXhIy5Fz8RD/7nuPNkGTdgFL+sFUWFc6UNRq72t1vYsT4MEX4DRH45Rp3lg4Lb
+37xxLo0nNr6svS84OR3l1BJutBx8yl3DqYr0kfF6kj3zrFWUAjiiaDlA34ACvR7r
+A5XRm6fgBDApmEN8hrUH/Sw2Wy2Ajg==
+=b52H
+-----END PGP SIGNATURE-----
+
+--Sig_/lXDEOIEaUnX9aF2FDAC=od7--
