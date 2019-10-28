@@ -6,69 +6,68 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E143CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB609CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718B120679
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7FC20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:28:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="iqavAp5G"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FnEEyIv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbfJ1DZM (ORCPT
+        id S1730188AbfJ1D2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 23:25:12 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40343 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfJ1DZM (ORCPT
+        Sun, 27 Oct 2019 23:28:42 -0400
+Received: from mail-pf1-f178.google.com ([209.85.210.178]:34222 "EHLO
+        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbfJ1D2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 23:25:12 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 15so5880679pgt.7
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 20:25:10 -0700 (PDT)
+        Sun, 27 Oct 2019 23:28:42 -0400
+Received: by mail-pf1-f178.google.com with SMTP id b128so5914951pfa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 20:28:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iuuv5uDzwQjuDzXqpsithGymUPeE73L3D0NeEzp8Q00=;
-        b=iqavAp5G7CGwQYt0MWbkcL6EzvmJ+n3PRBTotiKoMMZjLT6V4QFfwpTr+u+vwScKD3
-         KpVutZfM/P9dzi5rPohWCEOKxw/+MDYaZJ7evH+VuGZUyWFoNsa296gMKRSkhfQ51ZGR
-         AgGsF8JqqNnY1CZn3OIIShlpQOZY41kmWdA5swBm3Mj+mwOVYEQVxC8p/7fdnD+0nr0T
-         mVLJwZ+7g3Su4tEENVu3y3hcWGRx3/gSpmcsNFCFvVAmsLyoCH9a81g3aF+eE7vnrWtq
-         FxT9W1WvQNEjC9uz3Tbv0Fk2rMA0MrGR5tpvAZB8w2SxwRGWp9rKcpiB8i4j5m1nSO8j
-         6xvg==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=JQoEGWmnXt1HXOcxozyvsTmaem0U3qNdOOn884rNMUs=;
+        b=FnEEyIv893T2XirJza0c4gD3QRzsh+EzVypzATohez9L/qpvesSPyENktB+jwm9mHG
+         MEj4bJb36cejJx+XuG2x3OsUfPFei1oiFfA027PeBQ3Mo+mF8Xl+2M3a46rfXbT+A7q6
+         KVA7YlkEjQQpzRoXA9I6azk/JSqlxs0e+NsdrzqII6ISGq7J+ifHlOo3HiwdksWbkGwj
+         3gqjAWFdf3PVVu0R6O82hIwzZ9xlRdUMrymA0KqQwVih2JMVRX5w/kQn/KhX4E8Vuwzc
+         hwVSNuDvkZ3yhg2dWOqnugHaBN9i8ZejBy50qXC67vNQL9ga3ECeojsHSaF6ewEz9SwQ
+         pIhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=iuuv5uDzwQjuDzXqpsithGymUPeE73L3D0NeEzp8Q00=;
-        b=dgcHDApJZZqMqKcwr9ILugcp+96Gci7l+zChGzK5kxaG2YyQXOwbkINxiXhK6RjGwS
-         O5iglZQbIUPsEwaQ7wg/dHCBAUCaLK4OkpNvk2UuDefxwHRNH+HXKSJNF0kJImEi8Qqz
-         Rszzb34756Djhe19cqfjQ8DWeaVbjRPuWvbiK2k+UrmC5ummb9RsRhhlZMgcU3gtAJhi
-         WG9E3fHq2sKScUPqrQ4vXB5Q4WKgP6p9+eUt7gLkF6eLVdPp2FSfRq2j4NQBSSJ3iSP4
-         twfLCxZEThmXGIonZUb64eUC3P1+RdE4LybN4mfw9IJ+ThrWJndR250iBpkomlD5+QZW
-         PyZQ==
-X-Gm-Message-State: APjAAAUHy54ew4vvY2Y94sUXOl6bgMLZ40y+qPN5AqWiU7czlPjv9onE
-        dU6NsCk6FTeufP+cGYsiHtM/1NKUjtxvjA==
-X-Google-Smtp-Source: APXvYqzaXi4g/x7LVLX5SWooWOl0YI/9dw1mF1GZ4B5OOrCrUhnAkiY+AyLAxR53ILruyo2LWer3cQ==
-X-Received: by 2002:a17:90a:4804:: with SMTP id a4mr3869284pjh.102.1572233109088;
-        Sun, 27 Oct 2019 20:25:09 -0700 (PDT)
+        bh=JQoEGWmnXt1HXOcxozyvsTmaem0U3qNdOOn884rNMUs=;
+        b=owCDNH1p/1Ha8WrbYkjnt1cY3zIqVpOgbN//aeVaAUEJZYB9vG2aHifUE3HPbvoRBn
+         5J5yzEG5O15lu7VEAgHtDrWuMtDEy4tmV5ZUKr5z7NNUI5GExT0Hy/Qe7WKUlUjdRp+/
+         MuMDNgsrqIr3DR/HspnwP52XBn3bCCA6Cimt13Xq8jLVjACc5J1DH/776hsBNx9ejd2V
+         nmymJdi9N07hrr41HOxV2M7XRixH7YtobqQUCcDul8SSyIqqNNH8wMJGA4X89PIvStmI
+         agEwFdwFnOpNRTULJi0CvQXHat78lYMFxvrnayCBOOWeJzxW/LWI0BtTpzKfkrZpunAz
+         /5Kw==
+X-Gm-Message-State: APjAAAXV49jGEaNIJME0USm4giLarDJi4G7rQ9Qs2dA8039FCql4YvTp
+        LNcgOhxo3umKLWRMeULO1ARt2oIRIItXsA==
+X-Google-Smtp-Source: APXvYqyEbnX1QMqfyPICKqhy4KjAimRgDkym/XFy/uORMMHVhUIEtP0uRApD6p70Ovqh2spF2H+DGg==
+X-Received: by 2002:a17:90a:8048:: with SMTP id e8mr20403457pjw.0.1572233319549;
+        Sun, 27 Oct 2019 20:28:39 -0700 (PDT)
 Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id k124sm10106917pga.83.2019.10.27.20.25.06
+        by smtp.gmail.com with ESMTPSA id s18sm2923371pfc.120.2019.10.27.20.28.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 27 Oct 2019 20:25:07 -0700 (PDT)
-Subject: Re: linux-next: build failure after merge of the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191028135945.5b2ed0fa@canb.auug.org.au>
+        Sun, 27 Oct 2019 20:28:38 -0700 (PDT)
+Subject: Re: [PATCH][for-linus] io_uring: Fix mm_fault with READ/WRITE_FIXED
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <a30b1e934506227b4740b6030dd77e7e233a58c2.1572207237.git.asml.silence@gmail.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <27de542b-aa30-78e4-40ad-4a024e42e643@kernel.dk>
-Date:   Sun, 27 Oct 2019 21:25:04 -0600
+Message-ID: <e70202d3-53c1-db48-f95b-0334f11178d1@kernel.dk>
+Date:   Sun, 27 Oct 2019 21:28:36 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191028135945.5b2ed0fa@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <a30b1e934506227b4740b6030dd77e7e233a58c2.1572207237.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,31 +75,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/27/19 8:59 PM, Stephen Rothwell wrote:
-> Hi all,
+On 10/27/19 2:15 PM, Pavel Begunkov wrote:
+> Commit fb5ccc98782f ("io_uring: Fix broken links with offloading")
+> itroduced a regression with unconditionally taking mm even for
+> READ/WRITE_FIXED operations.
 > 
-> After merging the block tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> fs/io_uring.c: In function '__io_sqe_files_unregister':
-> fs/io_uring.c:3010:12: error: invalid storage class for function 'io_sqe_files_unregister'
->   3010 | static int io_sqe_files_unregister(struct io_ring_ctx *ctx)
->        |            ^~~~~~~~~~~~~~~~~~~~~~~
-> fs/io_uring.c:3010:1: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
->   3010 | static int io_sqe_files_unregister(struct io_ring_ctx *ctx)
->        | ^~~~~~
-> 
-> Caused by commit
-> 
->    ed9e02e4bad1 ("io_uring: support for larger fixed file sets")
-> 
-> I have used the block tree from next-20191025 for today.
+> Return the logic handling it back. mm-faulted requests will go through
+> the generic submission path, so honoring links and drains, but will
+> fail further on req->has_user check.
 
-Ah shoot, forgot to update for-next, I did fix this silly error
-yesterday. If you're up for it, pull for-next again in 2 min and I'll
-have it updated. If not, I guess it'll be there in the next one. Usually
-doesn't matter, only asking because syzbot keeps flagging the same issue
-that is also fixed.
+I thought about this a bit, and I think we should just defer this to
+the next release and mark it stable for 5.4. I'll do that, thanks.
 
 -- 
 Jens Axboe
