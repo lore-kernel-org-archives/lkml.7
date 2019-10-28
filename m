@@ -6,35 +6,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8B1CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F931CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFABF20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7667720659
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731883AbfJ1G1p (ORCPT
+        id S1731912AbfJ1GaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 02:27:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40770 "EHLO mx1.suse.de"
+        Mon, 28 Oct 2019 02:30:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41178 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728348AbfJ1G1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 02:27:45 -0400
+        id S1730466AbfJ1GaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:30:08 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 98A3FAC24;
-        Mon, 28 Oct 2019 06:27:42 +0000 (UTC)
-Date:   Mon, 28 Oct 2019 07:27:40 +0100
-Message-ID: <s5hpnihmlk3.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 372A9B299;
+        Mon, 28 Oct 2019 06:30:07 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 07:30:06 +0100
+Message-ID: <s5ho8y1mlg1.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Navid Emamdoost <navid.emamdoost@gmail.com>
 Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Clemens Ladisch <clemens@ladisch.de>,
         Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: usb-audio: Fix memory leak in __snd_usbmidi_create
-In-Reply-To: <20191027221007.14317-1-navid.emamdoost@gmail.com>
-References: <20191027221007.14317-1-navid.emamdoost@gmail.com>
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Tim Blechmann <tim@klingt.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: lx6464es: Fix memory leaks in snd_lx6464es_create
+In-Reply-To: <20191027192415.32743-1-navid.emamdoost@gmail.com>
+References: <20191027192415.32743-1-navid.emamdoost@gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -45,18 +48,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 27 Oct 2019 23:10:06 +0100,
+On Sun, 27 Oct 2019 20:24:13 +0100,
 Navid Emamdoost wrote:
 > 
-> In the implementation of __snd_usbmidi_create() there is a memory leak
-> caused by incorrect goto destination. Go to free_midi if
-> snd_usbmidi_create_endpoints_midiman() or snd_usbmidi_create_endpoints()
-> fail.
+> In the implementation of snd_lx6464es_create() it there are memory leaks
+> when error happens. Go to error path if any of these calls fail:
+> lx_init_dsp(), lx_pcm_create(), lx_proc_create(), snd_ctl_add().
 
-No, this will lead to double-free.  After registering the rawmidi
-interface at snd_usbmidi_create_rawmidi(), the common destructor will
-be called via rawmidi private_free callback, and this will release the
-all resources already.
+Again no for this patch, it'll lead to double-frees.
+After registered via snd_device_new(), the device object gets released
+by its callback and the single snd_card_free() call suffices.
 
 
 thanks,
@@ -64,24 +65,46 @@ thanks,
 Takashi
 
 > 
-> Fixes: 731209cc0417 ("ALSA: usb-midi: Use common error handling code in __snd_usbmidi_create()")
+> Fixes: 02bec4904508 ("ALSA: lx6464es - driver for the digigram lx6464es interface")
 > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 > ---
->  sound/usb/midi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  sound/pci/lx6464es/lx6464es.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> diff --git a/sound/usb/midi.c b/sound/usb/midi.c
-> index b737f0ec77d0..22db37fbfbbd 100644
-> --- a/sound/usb/midi.c
-> +++ b/sound/usb/midi.c
-> @@ -2476,7 +2476,7 @@ int __snd_usbmidi_create(struct snd_card *card,
->  	else
->  		err = snd_usbmidi_create_endpoints(umidi, endpoints);
->  	if (err < 0)
-> -		goto exit;
-> +		goto free_midi;
+> diff --git a/sound/pci/lx6464es/lx6464es.c b/sound/pci/lx6464es/lx6464es.c
+> index fe10714380f2..7c6e8f4ef826 100644
+> --- a/sound/pci/lx6464es/lx6464es.c
+> +++ b/sound/pci/lx6464es/lx6464es.c
+> @@ -1020,25 +1020,26 @@ static int snd_lx6464es_create(struct snd_card *card,
+>  	err = lx_init_dsp(chip);
+>  	if (err < 0) {
+>  		dev_err(card->dev, "error during DSP initialization\n");
+> -		return err;
+> +		goto cleanup;
+>  	}
 >  
->  	usb_autopm_get_interface_no_resume(umidi->iface);
+>  	err = lx_pcm_create(chip);
+>  	if (err < 0)
+> -		return err;
+> +		goto cleanup;
+>  
+>  	err = lx_proc_create(card, chip);
+>  	if (err < 0)
+> -		return err;
+> +		goto cleanup;
+>  
+>  	err = snd_ctl_add(card, snd_ctl_new1(&lx_control_playback_switch,
+>  					     chip));
+>  	if (err < 0)
+> -		return err;
+> +		goto cleanup;
+>  
+>  	*rchip = chip;
+>  	return 0;
+>  
+> +cleanup:
+>  device_new_failed:
+>  	free_irq(pci->irq, chip);
 >  
 > -- 
 > 2.17.1
