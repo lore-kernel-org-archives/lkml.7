@@ -2,176 +2,101 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0755CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959EECA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623F7214B2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:06:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="nNKt5jO5"
+	by mail.kernel.org (Postfix) with ESMTP id 7512421721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731080AbfJ1UGC (ORCPT
+        id S1731640AbfJ1UHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:06:02 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:34747 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbfJ1UGB (ORCPT
+        Mon, 28 Oct 2019 16:07:09 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43216 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730671AbfJ1UHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:06:01 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 934968365D;
-        Tue, 29 Oct 2019 09:05:59 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1572293159;
-        bh=TrZJM1xTX9YI9Sdqm4mhE1ENesdMtbUdy83TCSciGhM=;
-        h=From:To:Cc:Subject:Date;
-        b=nNKt5jO5bgRnJhc6K+jGMLqOOKO5vycLmCX0Wase1PP9cT/2p2HG6wnb7TOt+Pcqu
-         19Ljg4KDdskhm6ZBczGa6+ehBnrP8BhcdfhrsMC0x4woRMWxJ+6vggLPMuen9xW5nm
-         14i0ARyseE+yUYY+p7CO25B4tX6++LFAU3S/j0xRA9lAj1p1AIFPz3NWInGoc4rZgk
-         HoyI79t669QwjTPczbBxUn2BEh5hGL8rcGW7+Fznwzxbib9sOGRaeNYAKDJblfXO76
-         N+4lgnq+zt7q9V3Y/Y8WzZ3Ray1qa5OAa7mQOT96cTMpEiqSNZvEVlDLBopvfouiAx
-         dmNUjqSzlb6pg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5db74a260000>; Tue, 29 Oct 2019 09:05:58 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 91EDF13EE9C;
-        Tue, 29 Oct 2019 09:05:58 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id ACEA128005C; Tue, 29 Oct 2019 09:05:57 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v5] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
-Date:   Tue, 29 Oct 2019 09:05:55 +1300
-Message-Id: <20191028200555.27524-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
+        Mon, 28 Oct 2019 16:07:09 -0400
+Received: by mail-pl1-f193.google.com with SMTP id v5so6193445ply.10;
+        Mon, 28 Oct 2019 13:07:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dmwIjzOj9mNCZOPZyIeIixZhUclJq2tBR5bVlHulNYw=;
+        b=Lss5J0ie9VKT8eTIok+xKJMyscENjhLtvbr6DaL1kcoYu2Kpj+HMa7Hm+SRB60GI88
+         ORpjwcD5iQpf0m+9CRQ7mRp4+aWKXuXoienDy99NM4yiI/DjN0snWjXiSYUhkXVvGW3z
+         fx7iFrlm5Mv+4yMszw+Pdgxt8P2VeKPtYjB4A80deEgbo5y02Leh8EsJqWvfofODO7Gx
+         Oj0w8ZzKotKWkwsF99yEDNzFoQziTh+oQ8cNOoeutUxzXgL7wRJVe4LohTIzNXqMKL8T
+         1DkMlkSYRsQhHHaTGT9DJWYppsmYmrHjmUGrdniBOAyZquC7MfXu1KrY9dambZyt0F9r
+         SDEQ==
+X-Gm-Message-State: APjAAAVIfVVsZqvlrj11vM842CmvCmDtuwhOg3lbThWQyqyJUtmsrss3
+        eoO6g2Xw2cfNGb1FQ18k90A=
+X-Google-Smtp-Source: APXvYqyOysLJXAL+XlfjbcadaI0f8aO/j+RFejYaBsQDSxIhUiYXDMqSX0W/hzI2SZG6R8ql/fHJGg==
+X-Received: by 2002:a17:902:fe95:: with SMTP id x21mr20014417plm.53.1572293228122;
+        Mon, 28 Oct 2019 13:07:08 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id p3sm11084218pgp.41.2019.10.28.13.07.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 13:07:07 -0700 (PDT)
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH 0/9] Consolidate {get,put}_unaligned_[bl]e24() definitions
+Date:   Mon, 28 Oct 2019 13:06:51 -0700
+Message-Id: <20191028200700.213753-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This GPIO controller is present on a number of Broadcom switch ASICs
-with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
-blocks but different enough to require a separate driver.
+Hi Peter,
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+This patch series moves the existing {get,put}_unaligned_[bl]e24() definitions
+into include/linux/unaligned/generic.h. This patch series also introduces a function
+for sign-extending 24-bit into 32-bit integers and introduces users for all new
+functions and macros. Please consider this patch series for kernel version v5.5.
 
-Notes:
-    Changes in v5:
-    - correct $id line following rename
-    - add reviewed-by from Rob
-   =20
-    Changes in v4:
-    - rename brcm,xgs-iproc.yaml -> brcm,xgs-iproc-gpio.yaml as suggested
-   =20
-    Changes in v3:
-    - incorporate review comments from Rob and Bart
-   =20
-    Changes in v2:
-    - Document as DT schema
-    - Include ngpios, #gpio-cells and gpio-controller properties
+Thanks,
 
- .../bindings/gpio/brcm,xgs-iproc-gpio.yaml    | 70 +++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc=
--gpio.yaml
+Bart.
 
-diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.y=
-aml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
-new file mode 100644
-index 000000000000..64e279a4bc10
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom XGS iProc GPIO controller
-+
-+maintainers:
-+  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-+
-+description: |
-+  This controller is the Chip Common A GPIO present on a number of Broad=
-com
-+  switch ASICs with integrated SoCs.
-+
-+properties:
-+  compatible:
-+    const: brcm,iproc-gpio-cca
-+
-+  reg:
-+    items:
-+      - description: the I/O address containing the GPIO controller
-+                     registers.
-+      - description: the I/O address containing the Chip Common A interr=
-upt
-+                     registers.
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+      const: 2
-+
-+  ngpios:
-+    minimum: 0
-+    maximum: 32
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+dependencies:
-+  interrupt-controller: [ interrupts ]
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    gpio@18000060 {
-+        compatible =3D "brcm,iproc-gpio-cca";
-+        #gpio-cells =3D <2>;
-+        reg =3D <0x18000060 0x50>,
-+              <0x18000000 0x50>;
-+        ngpios =3D <12>;
-+        gpio-controller;
-+        interrupt-controller;
-+        #interrupt-cells =3D <2>;
-+        interrupts =3D <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-+
-+
-+...
---=20
-2.23.0
+Bart Van Assche (9):
+  linux/unaligned/byteshift.h: Remove superfluous casts
+  c6x: Include <linux/unaligned/generic.h> instead of duplicating it
+  treewide: Consolidate {get,put}_unaligned_[bl]e24() definitions
+  drivers/iio: Sign extend without triggering implementation-defined
+    behavior
+  scsi/st: Use get_unaligned_signed_be24()
+  scsi/trace: Use get_unaligned_be*()
+  arm/ecard: Use get_unaligned_le{16,24}()
+  IB/qib: Sign extend without triggering implementation-defined behavior
+  ASoC/fsl_spdif: Use put_unaligned_be24() instead of open-coding it
 
+ arch/arm/mach-rpc/ecard.c                     |  18 +--
+ arch/c6x/include/asm/unaligned.h              |  65 +--------
+ .../iio/common/st_sensors/st_sensors_core.c   |   7 +-
+ drivers/infiniband/hw/qib/qib_rc.c            |   2 +-
+ drivers/nvme/host/rdma.c                      |   8 --
+ drivers/nvme/target/rdma.c                    |   6 -
+ drivers/scsi/scsi_trace.c                     | 128 ++++++------------
+ drivers/scsi/st.c                             |   4 +-
+ drivers/usb/gadget/function/f_mass_storage.c  |   1 +
+ drivers/usb/gadget/function/storage_common.h  |   5 -
+ include/linux/unaligned/be_byteshift.h        |   6 +-
+ include/linux/unaligned/generic.h             |  44 ++++++
+ include/linux/unaligned/le_byteshift.h        |   6 +-
+ include/target/target_core_backend.h          |   6 -
+ sound/soc/fsl/fsl_spdif.c                     |   5 +-
+ 15 files changed, 103 insertions(+), 208 deletions(-)
