@@ -2,89 +2,103 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DECCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A68CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD7B214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862BF2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:09:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="Bg+h1meV"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="n+qrbaRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387769AbfJ1JI3 (ORCPT
+        id S2387780AbfJ1JJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 05:08:29 -0400
-Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21466 "EHLO
-        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727586AbfJ1JI3 (ORCPT
+        Mon, 28 Oct 2019 05:09:05 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:50508 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727586AbfJ1JJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 05:08:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1572253676; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=Moykj5B1WkkWHupL9r6DyGaoy35uM0AjUy18FK/f40nuy391tfpGT6KMsFIEDKYWkMAQtxFqdYcJ446SE7zfL66lTx0yc83qoeNxrbl06LQ02Zhc81v1RCVXNP9sHHQocTCiDqNfI6RYoyNz5Snhc6x72gArUnpwIn3d2sEiMdc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1572253676; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=ByZHeiiRbDCAualSxq60IBfLlVYMklrFoMjUG2DW5xM=; 
-        b=QW5eyPyFDShxKjIqRDjb4WTFKgnIDgt7M6x0TK347GB4wrpGEnzzfDLXfZrfoF3shucXuZ9YTeq4u1umDgzcxhbW9iu3Y8YOW7zO+713IccW4bDPA0fB6pThUWErQp+4SOhiWIKdNTcdJ7Dmp0riZT2y07e/0oQUIylAzicH1Yk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=didiksetiawan.com;
-        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
-        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1572253676;
-        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        l=858; bh=ByZHeiiRbDCAualSxq60IBfLlVYMklrFoMjUG2DW5xM=;
-        b=Bg+h1meVd4CC4+BWonNHt5yFaROEdS6hi5kCQAswwkqECDuWl/17hsSZFC0Y1IZA
-        aAph9lv07wR0VUqHLjT1P9oEBiqjUD27YCsguXGa/2v469t2U9WVVs8vj6AkDZkFLLO
-        yYE5IRLnwFOIycQZXZgUAnwDx7Z+pIlHHfwKoEu4=
-Received: from notebook (117.102.74.82 [117.102.74.82]) by mx.zohomail.com
-        with SMTPS id 1572253675682152.35703934118305; Mon, 28 Oct 2019 02:07:55 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 16:07:50 +0700
-From:   Didik Setiawan <ds@didiksetiawan.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/41] 4.4.198-stable review
-Message-ID: <20191028090750.GC3678@notebook>
-References: <20191027203056.220821342@linuxfoundation.org>
+        Mon, 28 Oct 2019 05:09:05 -0400
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 0116A2E14AA;
+        Mon, 28 Oct 2019 12:09:02 +0300 (MSK)
+Received: from myt4-4db2488e778a.qloud-c.yandex.net (myt4-4db2488e778a.qloud-c.yandex.net [2a02:6b8:c00:884:0:640:4db2:488e])
+        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id rbmTkccsQ7-91B4gKqx;
+        Mon, 28 Oct 2019 12:09:01 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1572253741; bh=D1UY7YwBq9rLsS/3wP+8KKMkTRJDlUf3WbuEaKn64+M=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=n+qrbaRsk5wNnLikzwMb/2bgfiW8IzGPXqkx64cVRHEFMA4TcaEv6Yz4rY5q5u1RM
+         X5Yt6vaySd5hSo1c+U7fyQITf2hSupsbyb1VJdQulNLLoYYNPcm++NtBti/DEbmpct
+         K049T9ACgoR+F53zK6w9Y0jiAV7vPLmV4ZCR4HCQ=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
+        by myt4-4db2488e778a.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id 2xr2VxYMpr-91V8rcYn;
+        Mon, 28 Oct 2019 12:09:01 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] pipe: wakeup writer only if pipe buffer is at least half
+ empty
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <157219118016.7078.16223055699799396042.stgit@buzz>
+ <CAHk-=wjoTncMYdQFmY4yspKOUsDSNn1dHp1FWvJ0eRO94ZM3dQ@mail.gmail.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <5b970999-c714-6bfb-0b02-ed206bafced4@yandex-team.ru>
+Date:   Mon, 28 Oct 2019 12:09:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ZohoMailClient: External
+In-Reply-To: <CAHk-=wjoTncMYdQFmY4yspKOUsDSNn1dHp1FWvJ0eRO94ZM3dQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 10:00:38PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.198 release.
-> There are 41 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 27/10/2019 19.12, Linus Torvalds wrote:
+> On Sun, Oct 27, 2019 at 11:46 AM Konstantin Khlebnikov
+> <khlebnikov@yandex-team.ru> wrote:
+>>
+>> There is no reason to wakeup writer if pipe has only one empty page.
+>> This means reader consumes data slower then writer produces it.
+>>
+>> This patch waits until buffer is at least half empty before waking writer.
 > 
-> Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
-> Anything received after that time might be too late.
+> This is a bit dangerous, at least with David's other changes.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.198-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
+> In particular, there's now a "max_usage" in his series means that the
+> writer might be blocked even if there's lots of free slots, because
+> the writer is only allowed to use part of those slots.
 > 
-> thanks,
+> So I'd rather not see this logic particularly now that David is
+> working on modifying the overall pipe logic.
 > 
-> greg k-h
+> I do agree with the overall idea, but I'm not entirely happy about the
+> "half full" logic, because it gets subtle with David's changes.
+> 
+> Also, I'm a bit worried about cases where the readers and writers
+> block on each other, and depend on "there's enough space in the pipe
+> that we won't deadlock". Maybe the writer is blocked (because it
+> filled the pipe), the reader reads just part of the pipe, and then the
+> reader blocks on the writer doing something else, knowing that it just
+> free'd up resources for the writer. But the writer is still blocked,
+> and not woken up, because the pipe is still more than half full. See
+> what I'm saying?
+> 
+> I'm not sure anything like that exists, but it's an example of a "hmm"
+> condition.
+> 
 
-Compiled, booted, and no regressions found on my x86_64 system.
+Ok. This breakage scenario is doubtful but such weird software really might exist.
 
-Thanks,
-Didik Setiawan
+What about making this thing tunable via fcntl like size of pipe buffer?
 
+fcntl(fd, F_SETPIPE_WRITE_SZ, size)
