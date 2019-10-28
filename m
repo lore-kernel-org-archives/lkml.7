@@ -2,138 +2,118 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CAECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D004CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B78920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3468A20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:27:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cLlEgGTO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxsLjvXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388961AbfJ1N02 (ORCPT
+        id S2389005AbfJ1N11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:26:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47070 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726691AbfJ1N01 (ORCPT
+        Mon, 28 Oct 2019 09:27:27 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43219 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfJ1N11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:26:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572269186;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=l9TW8mW6u0TYBeeY+W6dVr0PHUxc5fffEDZPCioNZHk=;
-        b=cLlEgGTOhhw7o15fCc4wePKdLy2/Km7M5lBP4Hc1/sJql9rTAbWVzz3/uCR8O85cEfGHpG
-        Mt4eNG+3bGgruzGq7TIYQLnBO0d4j7CZ4pjZy3wgjk8rUhw63WIrQo14uzuR7swvEibJkI
-        MB9sMLEtA3cCvEO1tDVKg/8MWZAK1UI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-jLMyV8EdPBu8SFrjQ6t10A-1; Mon, 28 Oct 2019 09:26:24 -0400
-Received: by mail-wm1-f72.google.com with SMTP id i8so2230506wmd.5
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 06:26:24 -0700 (PDT)
+        Mon, 28 Oct 2019 09:27:27 -0400
+Received: by mail-pl1-f193.google.com with SMTP id v5so5571531ply.10;
+        Mon, 28 Oct 2019 06:27:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=m82WuZFIPuaz/xDcmdAtFNmGLYLSIvKFnSpY+e0Rr/8=;
+        b=XxsLjvXeFlFJnZv77GLwIK8SZNTDqwb7cc7HQmkcu+gGtubvG+oi5kLcn641B9uAhT
+         Imjkr4zOwiheXC3Tt0akZPdeScucEhxZ2Bojhcn3R2IRGuN0odNBNR+TqxObUfc6V5Lq
+         BDEWPO1h1cMeCIFUajcaa35JqDV2ou1RDxCShbPUVfd9AQ9cxfFE8vrMCi4rfXJSQb8x
+         leLUKF/nPTnbJledc6kcNlxN74x9H6hc3zoNt9D/1ANS2tFiyLEEA7Eb4M+s4HNGgJ+w
+         BQJfJzTTIDdR6lCXqkQY0Ftanam8+QoiKwhdzUXInM1sJkiOfV30sfSDNvw+4DM5fQsD
+         T4fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Si4Z1KsF+e4usTz9EQyO3e6lWF2BgkJb9zOZNHxAaEQ=;
-        b=FMmhMW79iTHzSppuIkW0kmr4+RTjwyQ8PbV6NfRCjMi3oQnARWEznCsnJwxtx5J+K9
-         BofRnqQxkon/h68JIIvOvgklpEpKbvpBLfZL6gUn8zGW/JEMfmZtSFQJFtcZrBUzJ+Sl
-         nHGvjx1scq+pqP+bn929wQ/tpsn7s+X1B6HCGV905uhkYuNAlsGSIYKW4l75DWG2tIEk
-         13r9S0NgA7DIxG0lWURHkfYfb3+Ly8FYqnSrkW4MnsrNAyrDuqpoea4c0OnsLwdMyWux
-         lQCS2mGRKkE/kuCbEeAvybj1GxAUIdUTu7B58xVxGD9b2E2McES91Sw2pq4egSkHIiG9
-         fjcw==
-X-Gm-Message-State: APjAAAXBLQG5JOvRW55ujsQjYHkKThlFtUxaZ0llkyZA9TQ4ltcDHj2v
-        1k5c4ipnjc+y/Qtey4y4pkHGEQOi8rNSht+hEvXwgAdRMR4DGw3gypqe/Lm6tUM7arWCbAAD1Nu
-        YnVmxXustiSysM2OtzW75tFmE
-X-Received: by 2002:adf:fec3:: with SMTP id q3mr15007967wrs.343.1572269183126;
-        Mon, 28 Oct 2019 06:26:23 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyll9zfVxUoQ/Wumh3Wks/s09Y9MeHgtOp3ThjrLKsKv7pjQOM/fvbWPLVI4z/CLE239nJUsA==
-X-Received: by 2002:adf:fec3:: with SMTP id q3mr15007950wrs.343.1572269182958;
-        Mon, 28 Oct 2019 06:26:22 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id f204sm15471362wmf.32.2019.10.28.06.26.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Oct 2019 06:26:22 -0700 (PDT)
-Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
- Trail Whiskey Cove PMIC
-To:     Mark Brown <broonie@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>, lgirdwood@gmail.com,
-        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
- <20191025075335.GC32742@smile.fi.intel.com>
- <20191025075540.GD32742@smile.fi.intel.com>
- <166c9855-910d-a70c-ba86-6aebe5f2346d@intel.com>
- <20191028124554.GF5015@sirena.co.uk>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c5faf16d-892e-b36e-b448-9c59c2051b9e@redhat.com>
-Date:   Mon, 28 Oct 2019 14:26:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        bh=m82WuZFIPuaz/xDcmdAtFNmGLYLSIvKFnSpY+e0Rr/8=;
+        b=At88Bmhnacp8chGv30MopUg+vERosSR5RPJShYd9F1lsSaFnPNTQLYaCnsXGZPvVy1
+         LTJtis01xiC4dmGwnoC+KDhDzUbBHVCWVrUzxuBYbxzrAKkypWiCgb1mED8kqW7x0s9t
+         2fvwBpkyKsRqTFDm3zB8bq7cn9PUTd4V/+Mfr7BZWQAFk7hOi//L9DDo2yepCoycg0OU
+         M6sKjgUwhQQbEeu0g8O49heB3NRIlVRH6Dk9wujTQiSNkzQ5iAqDhtTlXzmk9NaQXLMG
+         E3d7yco8GAXLh4laEbuzzRiy48HdV6Ghjw35z+OA+SKRfa8cZZ3lLP7n8QLrArkKsYzM
+         VPCQ==
+X-Gm-Message-State: APjAAAVidmjmvw5cj8txizE2hb7TzN1ze9WK1u8Ls9LqLMzcq0Ks58Ex
+        OivLYE4ZxuHMxonIcbZV2YQnK2Dc
+X-Google-Smtp-Source: APXvYqyfNFfZt/94g2Xhm2J+dNpQR0RuL4kH0F5u4ynhxy1z3BUV6UuA9j66ce9Mw/+x+BBmq09mZg==
+X-Received: by 2002:a17:902:6ac3:: with SMTP id i3mr11909551plt.294.1572269245749;
+        Mon, 28 Oct 2019 06:27:25 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a16sm11940383pfa.53.2019.10.28.06.27.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 28 Oct 2019 06:27:24 -0700 (PDT)
+Subject: Re: [PATCH] nvme: Add hardware monitoring support
+To:     Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc:     Chris Healy <Chris.Healy@zii.aero>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        Akinobu Mita <akinobu.mita@gmail.com>, linux-pm@vger.kernel.org
+References: <20191028024156.23964-1-linux@roeck-us.net>
+ <20191028073953.GA20443@lst.de>
+ <20191028080858.GB1718@redsun51.ssa.fujisawa.hgst.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <769941ad-22a7-a046-60cd-b084457d9789@roeck-us.net>
+Date:   Mon, 28 Oct 2019 06:27:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191028124554.GF5015@sirena.co.uk>
+In-Reply-To: <20191028080858.GB1718@redsun51.ssa.fujisawa.hgst.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-MC-Unique: jLMyV8EdPBu8SFrjQ6t10A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 10/28/19 1:08 AM, Keith Busch wrote:
+> On Mon, Oct 28, 2019 at 08:39:53AM +0100, Christoph Hellwig wrote:
+>> On Sun, Oct 27, 2019 at 07:41:56PM -0700, Guenter Roeck wrote:
+>>> nvme devices report temperature information in the controller information
+>>> (for limits) and in the smart log. Currently, the only means to retrieve
+>>> this information is the nvme command line interface, which requires
+>>> super-user privileges.
+>>>
+>>> At the same time, it would be desirable to use NVME temperature information
+>>> for thermal control.
+>>>
+>>> This patch adds support to read NVME temperatures from the kernel using the
+>>> hwmon API and adds temperature zones for NVME drives. The thermal subsystem
+>>> can use this information to set thermal policies, and userspace can access
+>>> it using libsensors and/or the "sensors" command.
+>>
+>> So these reported values seem to generate some interest.  Adding Akinobu
+>> Mita who also planned to wire them up to the thermal framework.  I don't
+>> really know either upper layer so I'm not sure which is the right one,
+>> but with this just like with the previous series I am quite worried that
+>> we add a lot of kernel boilerplate code for information people can
+>> trivially get using nvme-cli.
+>  > I think it's nvme-cli requires root, where this conveniently doesn't
+> need those elevated rights.
+> 
 
-On 28-10-2019 13:45, Mark Brown wrote:
-> On Mon, Oct 28, 2019 at 02:41:46PM +0200, Adrian Hunter wrote:
->> On 25/10/19 10:55 AM, Andy Shevchenko wrote:
->=20
->>> Since it's about UHS/SD, Cc to Adrian as well.
->=20
->> My only concern is that the driver might conflict with ACPI methods tryi=
-ng
->> to do the same thing, e.g. there is one ACPI SDHC instance from GPDWin D=
-SDT
->> with code like this:
+The other point here is the thermal framework. One can not wire that up
+through userspace, and even if it was possible to do it, that would defeat
+the idea of having the thermal subsystem in the kernel running on its own,
+without requiring userspace attention.
 
-Oh, right that is a very good point.
+> I'm not familiar with either upper level framework either; my only review
+> comment for this patch is to use devm_kfree() for the error cases.
+> 
+Makes sense. I'll address that in v2.
 
-> That's certainly what's idiomatic for ACPI (though machine specific
-> quirks are too!).  The safe thing to do would be to only register the
-> supply on systems where we know there's no ACPI method.
-
-Right, so as I mentioned before Andrey told me about the evaluation
-board he is using I was aware of only 3 Cherry Trail devices using
-the Whiskey Cove PMIC. The GPD win, the GPD pocket and the Lenovo
-Yoga book. I've checked the DSDT of all 3 and all 3 of them offer
-voltage control through the Intel _DSM method for voltage control.
-
-I've also actually tested this on the GPD win and 1.8V signalling
-works fine there without needing Andrey's patch.
-
-So it seems that Andrey's patch should only be active on his
-dev-board, as actual production hardware ships with the _DSM method.
-
-I believe that the best solution is for the Whiskey Cove MFD driver:
-drivers/mfd/intel_soc_pmic_chtwc.c
-
-To only register the new cell on Andrey's evaluation board model
-(based in a DMI match I guess). Another option would be to do
-the DMI check in the regulator driver, but that would mean
-udev will needlessly modprobe the regulator driver on production
-hardware, so doing it in the MFD driver and not registering the cell
-seems best,
-
-Regards,
-
-Hans
-
+Guenter
