@@ -2,129 +2,103 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAA0CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D50CCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB74218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572299787;
-	bh=8z6cLakerOz4WB/lec4BSVSyFlt8nfGEwkqPr1hMtkU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pYuHeNK1kSFbacrhggfRqQgzkHAnMHvAP85kFOq0jDLGa4N0wbrS+2Nel9Beo6mw5
-	 asOcVJNhxdn0QjBunbogaQC/PPky+rmavKhHnnHIJn4/oo+3cHMzkz+6kCrPW4Xwdt
-	 IpX7ybcCuyhkYKf+Ixs533xyi/jeaoVLOTKZq3OE=
+	by mail.kernel.org (Postfix) with ESMTP id 19E8B21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:56:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ou+FqvgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388638AbfJ1V40 (ORCPT
+        id S2388965AbfJ1V4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbfJ1V40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:56:26 -0400
-Received: from earth.universe (tmo-096-224.customers.d1-online.com [80.187.96.224])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B46121479;
-        Mon, 28 Oct 2019 21:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572299785;
-        bh=8z6cLakerOz4WB/lec4BSVSyFlt8nfGEwkqPr1hMtkU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MVearnut9RaAziRb0P2YELOLgsjrczgHMXYyaqfgG2xOu/NR9DtEtGIjy3jKwL6G3
-         A+JfyyXKZVOMfCNj9G3krwujddqTbl7+H9P2Wnor+PEW2PBmER9xZFybzigrM5SsyS
-         6GReker5+FrR86XgsovxdbhCRIhUL4ZO0TOeA4dg=
-Received: by earth.universe (Postfix, from userid 1000)
-        id D7E863C09B2; Mon, 28 Oct 2019 22:56:15 +0100 (CET)
-Date:   Mon, 28 Oct 2019 22:56:15 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: supply: cpcap-charger: Make
- cpcap_charger_voltage_to_regval static
-Message-ID: <20191028215615.3efezzsc5gji722q@earth.universe>
-References: <1571672407-58950-1-git-send-email-zhongjiang@huawei.com>
- <5DB71465.6050203@huawei.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nnsnvouks6a7nqnj"
-Content-Disposition: inline
-In-Reply-To: <5DB71465.6050203@huawei.com>
-User-Agent: NeoMutt/20180716
+        Mon, 28 Oct 2019 17:56:53 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:55561 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729738AbfJ1V4w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:56:52 -0400
+Received: by mail-pg1-f202.google.com with SMTP id b14so9363379pgm.22
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 14:56:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=UtGhKKNcMrwHGBNHOnspoVolNucvfChffjDhkf56Qew=;
+        b=ou+FqvgYLi5WelaPVkj2Yc12VFdOY5Sq5OnD59DIPUDn94kwQEAaAvFKhCE3f1iRbN
+         stxWQs0AgsbsTbv52NZDnB6eKbw0SzWTzU3DOkvmo5ZXg/jJvq2h3ORptPM3mzZSYjyM
+         gDgkgHLKafzlcO2/4ysSfhDgyrvP4u+EJIMM0YVSY8zBJ6SJgiFNArBx/uCTO7YkfqJ2
+         qSGX6AAOlcrq+O6n8p67xzlv+3k0DZ++D74N2sW3WASuFtw9nfpTsVtAt7W3qJw50fKK
+         U7VSkW/avTGiWXhFg3OJoaE6G6r7yqqpQskouef6RDevPsTdzxrc24Clq5NS9SVHn+Dh
+         7EIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=UtGhKKNcMrwHGBNHOnspoVolNucvfChffjDhkf56Qew=;
+        b=qpG1uf6aVMdcBDrMVKrN7t5p1E9x+0jIVuXmwYuU6OoF5hqVXjrsFAPz9dHKRGzQWi
+         pd9giz+4Spgl8atIPWFvwxyMCbE8mPKERkgZbA4tCKIs3MIk+pnsUEJmPO8H32foPMSn
+         6T/0+n+CerEQjFvqeAy1X6fFejtihtGQHKPOD+dc15sRE0yrMj+Hd210WmcpIhHF4fgr
+         OP+c2mTFOLfjvSYIxujxSoji5dhMsXlLkjujpM2Waz31JtTE3W2rs8J+aUWuVjRTPUOa
+         5uDZLHzRM+8XjEle1Npieay7lIbjbhy3YWZIILTru+/Pj+XhdC35BXU/4v8I9enqIYMP
+         fG7g==
+X-Gm-Message-State: APjAAAWiphl76aQkSrqJbaV5/5wwCxT0haK7Q6JN9stMPTr8WIH91Yd1
+        vOJkUwTLWqi3blYKUmC/v5/ocIa0ND/avg==
+X-Google-Smtp-Source: APXvYqyAPyMKSAS2cUPYIdxFIRy94JkwO6if0eJ3sgUmx6VI8CH77s6xexhkCyTAnNRO6glE1dRh4JJGT5mg+A==
+X-Received: by 2002:a63:cf18:: with SMTP id j24mr13166518pgg.406.1572299810069;
+ Mon, 28 Oct 2019 14:56:50 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 14:56:46 -0700
+Message-Id: <20191028215646.16638-1-edumazet@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: [PATCH] dma-debug: add a schedule point in debug_dma_dump_mappings()
+From:   Eric Dumazet <edumazet@google.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+debug_dma_dump_mappings() can take a lot of cpu cycles :
 
---nnsnvouks6a7nqnj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+lpk43:/# time wc -l /sys/kernel/debug/dma-api/dump
+163435 /sys/kernel/debug/dma-api/dump
 
-Hi,
+real	0m0.463s
+user	0m0.003s
+sys	0m0.459s
 
-https://lkml.org/lkml/2019/10/21/1018
+Let's add a cond_resched() to avoid holding cpu for too long.
 
-That's e3da2ce04e12 to be specific.
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Corentin Labbe <clabbe@baylibre.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ kernel/dma/debug.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--- Sebastian
+diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+index 099002d84f466af0a8e421d035ac8eb119e08bd8..4ad74f5987ea9e95f9bb5e2d1592254e367d24fb 100644
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -420,6 +420,7 @@ void debug_dma_dump_mappings(struct device *dev)
+ 		}
+ 
+ 		spin_unlock_irqrestore(&bucket->lock, flags);
++		cond_resched();
+ 	}
+ }
+ 
+-- 
+2.24.0.rc0.303.g954a862665-goog
 
-On Tue, Oct 29, 2019 at 12:16:37AM +0800, zhong jiang wrote:
-> ping.
->=20
-> On 2019/10/21 23:40, zhong jiang wrote:
-> > The GCC complains the following case when compiling kernel.
-> >
-> > drivers/power/supply/cpcap-charger.c:563:5: warning: symbol 'cpcap_char=
-ger_voltage_to_regval' was not declared. Should it be static?
-> >
-> > Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> > ---
-> >  drivers/power/supply/cpcap-charger.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/power/supply/cpcap-charger.c b/drivers/power/suppl=
-y/cpcap-charger.c
-> > index 40d96b8..c0d452e 100644
-> > --- a/drivers/power/supply/cpcap-charger.c
-> > +++ b/drivers/power/supply/cpcap-charger.c
-> > @@ -560,7 +560,7 @@ static void cpcap_charger_update_state(struct cpcap=
-_charger_ddata *ddata,
-> >  	dev_dbg(ddata->dev, "state: %s\n", status);
-> >  }
-> > =20
-> > -int cpcap_charger_voltage_to_regval(int voltage)
-> > +static int cpcap_charger_voltage_to_regval(int voltage)
-> >  {
-> >  	int offset;
-> > =20
->=20
->=20
-
---nnsnvouks6a7nqnj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl23Y/wACgkQ2O7X88g7
-+prsiA/8CFPmGfF8s7d5QI8hJ1R1KnjkOc5kHSIx954UNaHfA/gdjA3jy4oqjDDM
-t6nIZUWphJerbqGPfOZIwOQdOhAmjTV5LAtRLkg+IVxEvF2jQXYMaM9Ip5Nke35a
-pULPnkSeWARvMFZZYKnxG6OPe6AL8eqRaHBXRWC/Gd0XL5ndqW5SWgDeNOubmJtj
-lRmJcVh8s5IB3FafOTlTGA5GQosqrxIa5fWrXL3d/bC0gE9WXa5BKw0XAgv9OSr2
-dDJBpMemDCtQmXcmEN7LFg5OD4PUChdL2L60FOPpJnlpcktqNMUdUJ3S9dGuG9RZ
-QmYnv2zyC9PRWf0pH0K6ovLsqQrIx0SQm9+PK6jSTyJH/KFuaeHCsdO17wq/BetW
-VBZ00Bh+1hXovCQ3lwb6cIqh22hddY0KJiABOfd2kG6cw7tphLyYK8s4YQYYOBrh
-GmHU2iLak+inpvB9IX/EtbCwWgahRnI2Hxp9LS15nxt4pyg1Pj+A1264IzPE6EMl
-t43BGPt3MSjDIXlUDaR+MV3ibyCzwiq6j3tfihvNWcEiDQgdGSBANAvAXduo8po7
-MtgkWlgBvnGSrfcdP60aKblFEqUXQUFCCzTx59j1h6Z6WUckHfZYN55BOsh9LkwW
-VNAuWqJDP9iaCNz49ove8YjDuuCq6T5JH+jCPusa6Pg1obbvbYw=
-=NLra
------END PGP SIGNATURE-----
-
---nnsnvouks6a7nqnj--
