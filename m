@@ -2,101 +2,140 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F42FCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DCDCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06DDF20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:58:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="j0UFvLFA"
+	by mail.kernel.org (Postfix) with ESMTP id A665A20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390440AbfJ1O6i (ORCPT
+        id S2390557AbfJ1O6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:58:38 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:42786 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfJ1O6h (ORCPT
+        Mon, 28 Oct 2019 10:58:43 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40332 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfJ1O6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:58:37 -0400
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id AD8EF2010AC5;
-        Mon, 28 Oct 2019 07:58:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AD8EF2010AC5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1572274716;
-        bh=+4i7snc8+CJH6rwfZpPIV08+c2Slr7iBUhUCuWfrlls=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=j0UFvLFAwzPt56V4SalGwYBFPyo5AY8x+FDt/QbWoI7weuCwz94pbxHS2dxcBywsO
-         /Au8gNVv1GfwxnunbQq+3l5z+IcOX8CI0/1qn/lWU1D3WD4s1o3bl2iSeln9CRJSRq
-         DIjRAtjUzDkwRDz3GalJJ9ckMbiYvrkixtFgKYFE=
-Subject: Re: [PATCH v2 1/4] KEYS: Defined an ima hook for measuring keys on
- key create or update
-To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        casey@schaufler-ca.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-References: <20191023233950.22072-1-nramas@linux.microsoft.com>
- <20191023233950.22072-2-nramas@linux.microsoft.com>
- <1572032428.4532.72.camel@linux.ibm.com>
- <c1de8055-89a7-25dd-d99a-427e2c2c4c59@linux.microsoft.com>
- <1572187644.4532.211.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <1d7730ff-9847-c6be-4f4f-8cf1e90a71f2@linux.microsoft.com>
-Date:   Mon, 28 Oct 2019 07:58:36 -0700
+        Mon, 28 Oct 2019 10:58:43 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 15so7040172pgt.7;
+        Mon, 28 Oct 2019 07:58:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cgmUnsjTAz2FEyBL5EV5ObTx34mXAfg+kK1fzwbTqCU=;
+        b=IHRs3NEuzqdsqhXSthgObsaUR3ml0+lYpa1YGhf4QLeP9DDlnj4yfCTuUYlTpviGpb
+         pvX7V/UKL5B3BL1IkTw18rIYvtJpRHEveNpcSEwF68ZWidV1O/9K+rlfxyWmHO+QnfF3
+         vQ2FTdDZfqaN3yY0/McgW4G4147UqK+LwwvcLkduK0ZB/yjrGhByoJsxV7ep754mko+f
+         7xt/nJajGFMtJzBfUaWFZxFtSju4Sh+B+LJWCimhVsof12D+IT7s+wFyQIsQMHsyE6CV
+         YP3VSSq3ksFOOjzCmwZLyVZWDfMHa6UzS7QTWYI2ocdSMZcFnpd1JSLVDuHRMRjH3c0M
+         S7fg==
+X-Gm-Message-State: APjAAAUAS5PXkhoA/ZsKVEhmOY/seV8DD5jEXP/KCeryOv6nDbdu+v4K
+        V/cjKcOKZS5XBxGJ2/mkNsEnPYyk
+X-Google-Smtp-Source: APXvYqy6cw+Aib7+Zv7QP+bzEJtEbvPdGR6idczdfOjchnnwUSJia4e1GEQWgV2hdkKDqhHc3tiF2Q==
+X-Received: by 2002:a17:90a:ad44:: with SMTP id w4mr487144pjv.11.1572274721683;
+        Mon, 28 Oct 2019 07:58:41 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id x10sm10341508pgl.53.2019.10.28.07.58.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Oct 2019 07:58:40 -0700 (PDT)
+Subject: Re: [PATCH v1 1/5] scsi: Adjust DBD setting in mode sense for caching
+ mode page per LLD
+To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1572234608-32654-1-git-send-email-cang@codeaurora.org>
+ <1572234608-32654-2-git-send-email-cang@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <0ca52845-10ec-3310-83f7-81bdb635ec12@acm.org>
+Date:   Mon, 28 Oct 2019 07:58:39 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1572187644.4532.211.camel@linux.ibm.com>
+In-Reply-To: <1572234608-32654-2-git-send-email-cang@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/27/19 7:47 AM, Mimi Zohar wrote:
+On 10/27/19 8:50 PM, Can Guo wrote:
+> Host sends MODE_SENSE_10 with caching mode page, to check if the device
+> supports the cache feature.
+> Some LLD standards requires DBD field to be set to 1.
 
->>> There's no reason to define a new variable to determine if IMA is
->>> initialized.  Use ima_policy_flag.
->>
->> Please correct me if I am wrong -
->>
->> ima_policy_flag will be set to 0 if IMA is not yet initialized
->> OR
->> IMA is initialized, but ima_policy_flag could be still set to 0 (say,
->> due to the configured policy).
->>
->> In the latter case the measurement request should be a NOP immediately.
-> 
-> I'm not sure.  The builtin keys most likely will be loaded prior to a
-> custom IMA policy containing "keyring" rules are defined.
-> 
-> Mimi
+Which LLD standard are you referring to? Please mention at least one 
+name of such a standard in the patch description.
 
-I am not sure if I described it clearly - let me clarify:
+> Change-Id: I0c8752c1888654942d6d7e6e0f6dc197033ac326
 
-Say, we use ima_policy_flag to determine whether to
-measure the key immediately or
-queue the key for measurement and, measure when IMA is initialized.
+Change-IDs should be left out from upstream patches. Does the presence 
+of this ID mean that this patch has not been verified with checkpatch? 
+ From the checkpatch source code:
 
-We can incorrectly keep queuing keys in the case when IMA is 
-initialized, but due to the way IMA policy is configured ima_policy_flag 
-is still 0.
+# Check for unwanted Gerrit info
+if ($in_commit_log && $line =~ /^\s*change-id:/i) {
+	ERROR("GERRIT_CHANGE_ID",
+	      "Remove Gerrit Change-Id's before submitting upstream.\n"\
+		 . $herecurr);
+}
 
-That's why I feel a separate boolean flag would be needed to know 
-whether IMA is initialized or not.
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index aab4ed8..6d8194f 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -2629,6 +2629,7 @@ static int sd_try_rc16_first(struct scsi_device *sdp)
+>   {
+>   	int len = 0, res;
+>   	struct scsi_device *sdp = sdkp->device;
+> +	struct Scsi_Host *host = sdp->host;
+>   
+>   	int dbd;
+>   	int modepage;
+> @@ -2660,7 +2661,10 @@ static int sd_try_rc16_first(struct scsi_device *sdp)
+>   		dbd = 8;
+>   	} else {
+>   		modepage = 8;
+> -		dbd = 0;
+> +		if (host->set_dbd_for_caching)
+> +			dbd = 8;
+> +		else
+> +			dbd = 0;
+>   	}
+>   
+>   	/* cautiously ask */
+> diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
+> index 2c3f0c5..3900987 100644
+> --- a/include/scsi/scsi_host.h
+> +++ b/include/scsi/scsi_host.h
+> @@ -650,6 +650,12 @@ struct Scsi_Host {
+>   	unsigned no_scsi2_lun_in_cdb:1;
+>   
+>   	/*
+> +	 * Set "DBD" field in mode_sense caching mode page in case it is
+> +	 * mandatory by LLD standard.
+> +	 */
+> +	unsigned set_dbd_for_caching:1;
+> +
+> +	/*
+>   	 * Optional work queue to be utilized by the transport
+>   	 */
+>   	char work_q_name[20];
 
-If IMA is initialized, ima_policy_flag will dictate whether to measure 
-the key or not.
+Since this patch by itself has no effect, please resubmit this patch 
+together with the LLD patch that sets set_dbd_for_caching.
 
-thanks,
-  -lakshmi
+Thanks,
+
+Bart.
 
