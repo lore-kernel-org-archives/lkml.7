@@ -2,109 +2,158 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC92CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DE6CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A4320717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:18:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZeldSHPe"
+	by mail.kernel.org (Postfix) with ESMTP id 4324920862
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404136AbfJ1RSx (ORCPT
+        id S1731845AbfJ1RVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 13:18:53 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37313 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730665AbfJ1RSw (ORCPT
+        Mon, 28 Oct 2019 13:21:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40877 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730212AbfJ1RVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 13:18:52 -0400
-Received: by mail-il1-f193.google.com with SMTP id v2so8860014ilq.4;
-        Mon, 28 Oct 2019 10:18:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iuTrpxKUHZ/UCdTRpuBAw/Jl1hvuK8hDPzJ43oHoufo=;
-        b=ZeldSHPeFLJ+46uOkfBauBzB4QUPRBL6FT/1IHG3H5HgV/S9oZEeCr/eYmlUMX7RQq
-         IFbtyzQhlAjxV3MeEOPtjCY8Mgkf7ZOjnufKao/zkc8ODIrNdmsBxMrvOsEYgxp8plBY
-         Zp0UGhtXV58wk7kTz2557fjBR2/HNO+4dc9QPt39aIk70v8soaE+VJulKOGSGN5DPj5r
-         yGXE/TiVoohKDdetpgR3vFS8PLMbiOrvdEIKTalwP+ZB5NtQPEv+qqHl0Ae8gfMoYpWR
-         pHfnd+NmAMEOqTOFdBKEqVr5NztbiyfO2NZAiotAE7M9JiDm1PeEbPhivg9/gcDxn0h2
-         vkDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=iuTrpxKUHZ/UCdTRpuBAw/Jl1hvuK8hDPzJ43oHoufo=;
-        b=eAMKlkC3vM0vMeNdu14Y6PzrciKxSvgTGLTKrHmMKHDaMEgnZNhu6K+ATH6c9oRbaf
-         d6IhAsGT6vYhxJdZP150JnlrwaM7wLLn7fxHAlU6oW4mzM8mS9hHCAYm8oB80pAlBHV3
-         tXfbZL3Ikz8TnshpaaQu1qsXqgwurXtYlY+l/XMYJ6CWT4rpDFERU85/iMSjO8CFrx46
-         3ZwR/aRufDik3qIZ3xs57GFB2GPQEhFJWANd9xa6LifPqL2ZIlU5tA1geDkOyeTaTwau
-         pjDYcdPPCWhz30/gRoUIQWqvOj2hvSYx3H5VKfm5I+njmrl9YAbcCgijdjF+xLN0zdFC
-         t2QQ==
-X-Gm-Message-State: APjAAAXS2kuqqLkjQRH8SV+m8B5DNHEUyy1XGUmT0OlQ836fvkpC4mhx
-        1qXHSs0OxmayCOqWtVuI0alpaeofhgY=
-X-Google-Smtp-Source: APXvYqzQieKGGUdlk8auRT6Jo9SvrelCUC+fWWRQTTE6KT3RIsMBxP0GS64VURM0hUE8IXpPF2ghQg==
-X-Received: by 2002:a92:ce4a:: with SMTP id a10mr22136925ilr.48.1572283131374;
-        Mon, 28 Oct 2019 10:18:51 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id f8sm1637563ilg.58.2019.10.28.10.18.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 10:18:50 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     jae.hyun.yoo@linux.intel.com
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, linux-media@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] media: aspeed-video: Fix memory leaks in aspeed_video_probe
-Date:   Mon, 28 Oct 2019 12:18:37 -0500
-Message-Id: <20191028171838.28533-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <da959329-aa40-b6e7-dcc9-48183a8da716@linux.intel.com>
-References: <da959329-aa40-b6e7-dcc9-48183a8da716@linux.intel.com>
+        Mon, 28 Oct 2019 13:21:48 -0400
+Received: from [91.217.168.176] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iP8i8-0004dS-SK; Mon, 28 Oct 2019 17:21:44 +0000
+Date:   Mon, 28 Oct 2019 18:21:44 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: For review: documentation of clone3() system call
+Message-ID: <20191028172143.4vnnjpdljfnexaq5@wittgenstein>
+References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
+ <CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the implementation of aspeed_video_probe() the allocated memory for
-video should be released if either devm_ioremap_resource()
-or aspeed_video_init() or aspeed_video_setup_video() fails. Replace
-kzalloc() with devm_kzalloc to avoid explicit release for video.
+On Mon, Oct 28, 2019 at 04:12:09PM +0100, Jann Horn wrote:
+> On Fri, Oct 25, 2019 at 6:59 PM Michael Kerrisk (man-pages)
+> <mtk.manpages@gmail.com> wrote:
+> > I've made a first shot at adding documentation for clone3(). You can
+> > see the diff here:
+> > https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/commit/?id=faa0e55ae9e490d71c826546bbdef954a1800969
+> [...]
+> >    clone3()
+> >        The  clone3() system call provides a superset of the functionality
+> >        of the older clone() interface.  It also provides a number of  API
+> >        improvements,  including: space for additional flags bits; cleaner
+> >        separation in the use of various arguments;  and  the  ability  to
+> >        specify the size of the child's stack area.
+> 
+> You might want to note somewhere that its flags can't be
+> seccomp-filtered because they're stored in memory, making it
+> inappropriate to use in heavily sandboxed processes.
 
-Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
-Changes in v3:
-	-- fix call to devm_kzalloc()
----
- drivers/media/platform/aspeed-video.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hm, I don't think that belongs on the clone manpage. Granted that
+process creation is an important syscall but so are a bunch of others
+that aren't filterable because of pointer arguments.
+We can probably mention on the seccomp manpage that seccomp can't filter
+on pointer arguments and then provide a list of examples. If you setup a
+seccomp filter and don't know that you can't filter syscalls with
+pointer args that seems pretty bad to begin with.
 
-diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-index eb12f3793062..70797b41447c 100644
---- a/drivers/media/platform/aspeed-video.c
-+++ b/drivers/media/platform/aspeed-video.c
-@@ -1646,7 +1646,8 @@ static int aspeed_video_probe(struct platform_device *pdev)
- {
- 	int rc;
- 	struct resource *res;
--	struct aspeed_video *video = kzalloc(sizeof(*video), GFP_KERNEL);
-+	struct aspeed_video *video =
-+		devm_kzalloc(&pdev->dev, sizeof(*video), GFP_KERNEL);
- 
- 	if (!video)
- 		return -ENOMEM;
--- 
-2.17.1
+> 
+> >            struct clone_args {
+> >                u64 flags;        /* Flags bit mask */
+> >                u64 pidfd;        /* Where to store PID file descriptor
+> >                                     (int *) */
+> >                u64 child_tid;    /* Where to store child TID,
+> >                                     in child's memory (int *) */
+> >                u64 parent_tid;   /* Where to store child TID,
+> >                                     in parent's memory (int *) */
+> >                u64 exit_signal;  /* Signal to deliver to parent on
+> >                                     child termination */
+> >                u64 stack;        /* Pointer to lowest byte of stack */
+> >                u64 stack_size;   /* Size of stack */
+> >                u64 tls;          /* Location of new TLS */
+> >            };
+> >
+> >        The size argument that is supplied to clone3() should be  initial‐
+> >        ized  to  the  size of this structure.  (The existence of the size
+> >        argument permits future extensions to the clone_args structure.)
+> >
+> >        The stack for the child process is  specified  via  cl_args.stack,
+> >        which   points   to  the  lowest  byte  of  the  stack  area,  and
+> 
+> Here and in the comment in the struct above, you say that .stack
+> "points to the lowest byte of the stack area", but isn't that
+> architecture-dependent? For most architectures, I think it should
+> instead be "is the initial stack pointer", with the exception of IA64
+> (and maybe others, I'm not sure). For example, on X86, when launching
+> a thread with an initially empty stack, it points directly *after* the
+> end of the stack area.
 
+re arch and stack_size: You mentioned ia64 below (I snipped this part.)
+but it's not the only one. With legacy clone it's _passed_ for any
+architecture that has CONFIG_CLONE_BACKWARDS3. That includes at least
+microblaze and ia64 I think. But only ia64 makes _actual use_ of this in
+copy_thread() by doing user_stack_base + user_stack_size - 16. I think ia64
+only needs stack_size because of the split page-table layout where two
+stacks grow in different directions; so the stack doesn't grow
+dynamically. Afair, stack_size is mainly used when PF_KTHREAD is true
+but that can't be set from userspace anyway, so _shrug_.
+
+One thing I never liked about clone() was that userspace had to know
+about stack direction. And there is a lot of ugly code in userspace that
+has nasty clone() wrappers like:
+
+pid_t wrap_clone(int (*fn)(void *), void *arg, int flags, int *pidfd)
+{
+	pid_t ret;
+	void *stack;
+
+	stack = malloc(__STACK_SIZE);
+	if (!stack) {
+		SYSERROR("Failed to allocate clone stack");
+		return -ENOMEM;
+	}
+
+#ifdef __ia64__
+	ret = __clone2(fn, stack, __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
+#else
+	ret = clone(fn, stack + __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
+#endif
+	return ret;
+}
+
+where stack + stack_size is addition on a void pointer which usually
+clang and gcc are not very happy about.
+I wanted to bring this up on the mailing list soon: If possible, I don't
+want userspace to need to know about stack direction and just have stack
+point to the beginning and then have the kernel do the + stack_size
+after the copy_clone_args_from_user() if the arch needs it. For example,
+by having a dumb helder similar to copy_thread_tls()/coyp_thread() that
+either does the + stack_size or not. Right now, clone3() is supported on
+parisc and afaict, the stack grows upwards for it. I'm not sure if there
+are obvious reasons why that won't work or it would be a bad idea...
+
+Christian
