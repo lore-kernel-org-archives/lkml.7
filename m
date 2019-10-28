@@ -2,75 +2,87 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2686CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D9BCA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3BB0204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAADB21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572279479;
+	bh=FTD8UTLcgLaGI9mBwbZAP+9OgidQNFDpWRVoGM6yAsc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AKoKLNBeIy+Glpwf+FQAk9bDYwaj66IuFCSdXPMbQsFTW5nlZc2qgGoieP9SrKJpz
+	 hZ6quIqG5VhGx5NzZi2MZQocLlaSWy07/EK4w2r7eF0QpNy2T9EQ/8TEyqNj7IFeB7
+	 U54bQcoXaLbl0wJlUZsTfi9HT8h690wfyws8Qa84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732061AbfJ1QQq (ORCPT
+        id S1732203AbfJ1QR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:16:46 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39848 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729798AbfJ1QQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:16:46 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CFDE98331184E8A44F8D;
-        Tue, 29 Oct 2019 00:16:44 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.218) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
- 00:16:37 +0800
-Message-ID: <5DB71465.6050203@huawei.com>
-Date:   Tue, 29 Oct 2019 00:16:37 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        Mon, 28 Oct 2019 12:17:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729798AbfJ1QR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 12:17:58 -0400
+Received: from localhost (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B91D20873;
+        Mon, 28 Oct 2019 16:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572279477;
+        bh=FTD8UTLcgLaGI9mBwbZAP+9OgidQNFDpWRVoGM6yAsc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vYVakxo+EsEPXom6s7IRdjYw6W3NFGAH7Y7//mxwDU3HPAFW+Jnto7kCMWhEyEvO6
+         LHZmPyg6HHoxkuzfFtugztwoTgFzKOPMXHUyt9x/pfOb+LPE0kmgHvpzQbZXsXpovg
+         NW04GO4Z9N9trCQp/m88MrVuVd15bTfVKQ0re8TA=
+Date:   Mon, 28 Oct 2019 12:17:54 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Olaf Hering <olaf@aepfle.de>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "open list:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
+Message-ID: <20191028161754.GF1554@sasha-vm>
+References: <20191024144943.26199-1-olaf@aepfle.de>
 MIME-Version: 1.0
-To:     zhong jiang <zhongjiang@huawei.com>
-CC:     <sre@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] power: supply: cpcap-charger: Make cpcap_charger_voltage_to_regval
- static
-References: <1571672407-58950-1-git-send-email-zhongjiang@huawei.com>
-In-Reply-To: <1571672407-58950-1-git-send-email-zhongjiang@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.218]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191024144943.26199-1-olaf@aepfle.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping.
-
-On 2019/10/21 23:40, zhong jiang wrote:
-> The GCC complains the following case when compiling kernel.
+On Thu, Oct 24, 2019 at 04:49:43PM +0200, Olaf Hering wrote:
+>The hostname is resolved just once since commit 58125210ab3b ("Tools:
+>hv: cache FQDN in kvp_daemon to avoid timeouts") to make sure the VM
+>responds within the timeout limits to requests from the host.
 >
-> drivers/power/supply/cpcap-charger.c:563:5: warning: symbol 'cpcap_charger_voltage_to_regval' was not declared. Should it be static?
+>If for some reason getaddrinfo fails, the string returned by the
+>"FullyQualifiedDomainName" request contains some error string, which is
+>then used by tools on the host side.
 >
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  drivers/power/supply/cpcap-charger.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>Adjust the code to resolve the current hostname in a separate thread.
+>This thread loops until getaddrinfo returns success. During this time
+>all "FullyQualifiedDomainName" requests will be answered with an empty
+>string.
 >
-> diff --git a/drivers/power/supply/cpcap-charger.c b/drivers/power/supply/cpcap-charger.c
-> index 40d96b8..c0d452e 100644
-> --- a/drivers/power/supply/cpcap-charger.c
-> +++ b/drivers/power/supply/cpcap-charger.c
-> @@ -560,7 +560,7 @@ static void cpcap_charger_update_state(struct cpcap_charger_ddata *ddata,
->  	dev_dbg(ddata->dev, "state: %s\n", status);
->  }
->  
-> -int cpcap_charger_voltage_to_regval(int voltage)
-> +static int cpcap_charger_voltage_to_regval(int voltage)
->  {
->  	int offset;
->  
+>Signed-off-by: Olaf Hering <olaf@aepfle.de>
 
+Thank for the patch Olaf. However, it seems to break build for me:
 
+/usr/bin/ld: hv_kvp_daemon-in.o: in function `kvp_obtain_domain_name':
+/home/sasha/linux/tools/hv/hv_kvp_daemon.c:1372: undefined reference to `pthread_create'
+/usr/bin/ld: /home/sasha/linux/tools/hv/hv_kvp_daemon.c:1377: undefined reference to `pthread_detach'
+collect2: error: ld returned 1 exit status
+
+-- 
+Thanks,
+Sasha
