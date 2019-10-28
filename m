@@ -2,110 +2,122 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD43CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B28CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF9A21783
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F5D208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kuNp+E9V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jFXreMRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732775AbfJ1PjP (ORCPT
+        id S2389658AbfJ1Pjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:39:15 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41801 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfJ1PjP (ORCPT
+        Mon, 28 Oct 2019 11:39:40 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42287 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726025AbfJ1Pjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:39:15 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m125so4938345qkd.8
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 08:39:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jGuqyUAqHlQaOIqeuq1FvB8I+0XN2CCaqS3R8KrwwS8=;
-        b=kuNp+E9V5EDjkD+hU886wEFlkGJAKlDHlN5v0LpjyEmVmh6lYG9qlpOSHnCAlaAL4a
-         7Oi5hpSouapmuPH/xYHZfByCc++JM3+dNrOXhWDexUWiASrFLlkfNlvpDuAWygVxtHU1
-         d159ttqrVywPDhJdaxyeHcAxEQVWidnEquJZUCRK9gfkxw5jgnvsmSp2SCPC4KSn32YY
-         Dd0PotfFt78OCZht5zwpXgK9XKRUtfzcSaB4g23eZlyjj/iGDKc1p4EjuyfmTm0dw+zv
-         Xyf+0hEwQbZl49EHPWIbTDPOCT1V9cHvE6PMiFE/Wp/V9c/leeX+/B3yPJLFlIbD3E12
-         YEYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jGuqyUAqHlQaOIqeuq1FvB8I+0XN2CCaqS3R8KrwwS8=;
-        b=gaNoicLbVOa4VdNnRmOpkrpj2pJBUClr7ln8E2e+Im7JRRzWLmK3aTNrj1hhQUF1Up
-         P7xSEArRP8IE94iGAo06HRQzlVhNTuXEvODDue1Kin6crqqQu1BO34UNoT6jlHFl11xa
-         BL8xOxm61zGCBDqdnIwTw6HFNH1yAE0tchDq+281eEseMknwRzKFbyDzVCCx+ROPJ5D5
-         AL6SuZgPmtJQOkqW7vgGO0EjlT1VaskikjFGnvTOsxURGm5XyzTLGdIQZihBpjFdFXm9
-         aHm8QXGW/x1y7ktKTh9JxVAQRmN8pqbcmfB0/aqlvcp4mR9Z5gMHS0xhjpZ/tYv1rKXS
-         CZFQ==
-X-Gm-Message-State: APjAAAU5bpWkO8skvduzdnA7wEV39kYYLO8e5tij5oEw3A+hC4A0WAl7
-        3ft6Yu0yucXdqjIYP+td8JM=
-X-Google-Smtp-Source: APXvYqxJfPqkRNE6nLG0uTd8GbGyxXNP23v2Q6IHQcq5s6plJCZTv2CBpYxDL6WznxYSsYu8k+df/Q==
-X-Received: by 2002:a05:620a:15cc:: with SMTP id o12mr2537160qkm.252.1572277153869;
-        Mon, 28 Oct 2019 08:39:13 -0700 (PDT)
-Received: from cristiane-Inspiron-5420 ([131.100.148.220])
-        by smtp.gmail.com with ESMTPSA id g126sm6668657qkb.133.2019.10.28.08.39.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 08:39:13 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 12:39:08 -0300
-From:   Cristiane Naves <cristianenavescardoso09@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] staging: rtl8712: Remove lines before a close brace
-Message-ID: <359179720fcf90dd7aa35faab5d074bc829fa192.1572276208.git.cristianenavescardoso09@gmail.com>
-References: <cover.1572276208.git.cristianenavescardoso09@gmail.com>
+        Mon, 28 Oct 2019 11:39:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572277179;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mJ9KzaFwM1RWaOAJlcioiXkMO8pxcCUgcIBsHAiwcZc=;
+        b=jFXreMRsQUhQSBBWSASM8M9RfrBdx6CatOV9H+Dfk+c668S5auqaYO2GGI4vshH03YOjU2
+        ltxQFQoJdOqcnv08SdDVEQvBa2phsvMR+f/rqHVt6HGowkFcT/tkVDJlN7yMqTRf/czP5b
+        Le4AltD1nM1NEMsLW5dKbHiRKSHvn0o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-GZsLWB73O7-6f6W8FffYNw-1; Mon, 28 Oct 2019 11:39:35 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1C231005509;
+        Mon, 28 Oct 2019 15:39:33 +0000 (UTC)
+Received: from krava (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3C721600C9;
+        Mon, 28 Oct 2019 15:39:31 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 16:39:30 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 2/6] perf dso: Refactor dso_cache__read()
+Message-ID: <20191028153930.GA15449@krava>
+References: <20191025130000.13032-1-adrian.hunter@intel.com>
+ <20191025130000.13032-3-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191025130000.13032-3-adrian.hunter@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: GZsLWB73O7-6f6W8FffYNw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <cover.1572276208.git.cristianenavescardoso09@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix Blank lines aren't necessary before a close brace '}'. Issue found
-by checkpatch.
+On Fri, Oct 25, 2019 at 03:59:56PM +0300, Adrian Hunter wrote:
 
-Signed-off-by: Cristiane Naves <cristianenavescardoso09@gmail.com>
----
- drivers/staging/rtl8712/rtl8712_recv.c | 2 --
- 1 file changed, 2 deletions(-)
+SNIP
 
-diff --git a/drivers/staging/rtl8712/rtl8712_recv.c b/drivers/staging/rtl8712/rtl8712_recv.c
-index 36d5d2c..06de031 100644
---- a/drivers/staging/rtl8712/rtl8712_recv.c
-+++ b/drivers/staging/rtl8712/rtl8712_recv.c
-@@ -289,7 +289,6 @@ union recv_frame *r8712_recvframe_chk_defrag(struct _adapter *padapter,
- 			r8712_free_recvframe(precv_frame, pfree_recv_queue);
- 			prtnframe = NULL;
- 		}
--
- 	}
- 	if ((ismfrag == 0) && (fragnum != 0)) {
- 		/* the last fragment frame
-@@ -438,7 +437,6 @@ void r8712_rxcmd_event_hdl(struct _adapter *padapter, void *prxcmdbuf)
- 		r8712_event_handle(padapter, (__le32 *)poffset);
- 		poffset += (cmd_len + 8);/*8 bytes alignment*/
- 	} while (le32_to_cpu(voffset) & BIT(31));
--
- }
- 
- static int check_indicate_seq(struct recv_reorder_ctrl *preorder_ctrl,
--- 
-2.7.4
+> +}
+> =20
+> -=09return ret;
+> +static struct dso_cache *dso_cache__find(struct dso *dso,
+> +=09=09=09=09=09 struct machine *machine,
+> +=09=09=09=09=09 u64 offset,
+> +=09=09=09=09=09 ssize_t *ret)
+> +{
+> +=09struct dso_cache *cache =3D __dso_cache__find(dso, offset);
+> +
+> +=09return cache ? cache : dso_cache__populate(dso, machine, offset, ret)=
+;
+>  }
+> =20
+>  static ssize_t dso_cache_read(struct dso *dso, struct machine *machine,
+>  =09=09=09      u64 offset, u8 *data, ssize_t size)
+>  {
+>  =09struct dso_cache *cache;
+> +=09ssize_t ret =3D 0;
+> =20
+> -=09cache =3D dso_cache__find(dso, offset);
+> -=09if (cache)
+> -=09=09return dso_cache__memcpy(cache, offset, data, size);
+> -=09else
+> -=09=09return dso_cache__read(dso, machine, offset, data, size);
+> +=09cache =3D dso_cache__find(dso, machine, offset, &ret);
+> +=09if (!cache)
+> +=09=09return ret;
+
+why not use the ERR_* macros to get error through the pointer
+instead of adding extra argument?
+
+jirka
+
+
+> +
+> +=09return dso_cache__memcpy(cache, offset, data, size);
+>  }
+> =20
+>  /*
+> --=20
+> 2.17.1
+>=20
 
