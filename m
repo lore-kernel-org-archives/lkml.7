@@ -2,130 +2,70 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0174CCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8005CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C686321835
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572305579;
-	bh=A8fQbfzf/xn3KTHLUrgLxT6h14rtw3yrGoE4tKSOE1o=;
-	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
-	b=IW4NphctXNY+h7TjQ8VSKNnRJC2HPi1Iy70JElY3PnO8iQAC67vbZoYc0zPnxtz4v
-	 aXS0qX4GlwYlRfZVtM1NbVMyTPKITWZCTXEwIQ/yHswOSptQbtbvoVkuWQwzpcC+Aa
-	 cw45xCxJJnDmfsi5lalGG9Gjqrh7S0KBLOYtxRZM=
+	by mail.kernel.org (Postfix) with ESMTP id 9CD2E21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731336AbfJ1Xc6 (ORCPT
+        id S1731424AbfJ1XeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 19:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfJ1Xc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 19:32:57 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 798AD21479;
-        Mon, 28 Oct 2019 23:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572305576;
-        bh=A8fQbfzf/xn3KTHLUrgLxT6h14rtw3yrGoE4tKSOE1o=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=njFeY8jNMr17taXW5n7D7B1TbGRLyNZ1WuddS1sYMF3NHzWMDVtqgydnxwj9HK2hN
-         h8D27nclgyaTCLpKiEsFtPOmT9TaRaE7lmEvAUh4Fz3xRavU/zAoVCYfICBqqa/wvF
-         z75fwRjEAFXlQn3DQY9/k5yiROqOKhHaxttIpfFc=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5c66ac7d43ae1f57c335b6e565553fe1df703a83.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com> <5c66ac7d43ae1f57c335b6e565553fe1df703a83.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [RFC PATCH v2 05/13] clk: bd718x7: Support ROHM BD71828 clk block
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Mon, 28 Oct 2019 16:32:55 -0700
-Message-Id: <20191028233256.798AD21479@mail.kernel.org>
+        Mon, 28 Oct 2019 19:34:19 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:46618 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfJ1XeT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 19:34:19 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6319214BEB445;
+        Mon, 28 Oct 2019 16:34:18 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 16:34:17 -0700 (PDT)
+Message-Id: <20191028.163417.1094349367022411108.davem@davemloft.net>
+To:     arnd@arndb.de
+Cc:     olteanv@gmail.com, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, maowenan@huawei.com,
+        jakub.kicinski@netronome.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: sja1105: improve NET_DSA_SJA1105_TAS
+ dependency
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191025072654.2860705-1-arnd@arndb.de>
+References: <20191025072654.2860705-1-arnd@arndb.de>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 28 Oct 2019 16:34:18 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Matti Vaittinen (2019-10-24 04:44:40)
-> diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
-> index ae6e5baee330..d17a19e04592 100644
-> --- a/drivers/clk/clk-bd718x7.c
-> +++ b/drivers/clk/clk-bd718x7.c
-> @@ -8,6 +8,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/mfd/rohm-bd718x7.h>
-> +#include <linux/mfd/rohm-bd71828.h>
->  #include <linux/mfd/rohm-bd70528.h>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Fri, 25 Oct 2019 09:26:35 +0200
 
-It would be really great to not need to include these random header
-files in this driver and just use raw numbers somehow. Looks like maybe
-it can be done by populating a different device name from the mfd driver
-depending on the version of the clk controller desired? Then that can be
-matched in this clk driver and we can just put the register info in this
-file?
+> An earlier bugfix introduced a dependency on CONFIG_NET_SCH_TAPRIO,
+> but this missed the case of NET_SCH_TAPRIO=m and NET_DSA_SJA1105=y,
+> which still causes a link error:
+> 
+> drivers/net/dsa/sja1105/sja1105_tas.o: In function `sja1105_setup_tc_taprio':
+> sja1105_tas.c:(.text+0x5c): undefined reference to `taprio_offload_free'
+> sja1105_tas.c:(.text+0x3b4): undefined reference to `taprio_offload_get'
+> drivers/net/dsa/sja1105/sja1105_tas.o: In function `sja1105_tas_teardown':
+> sja1105_tas.c:(.text+0x6ec): undefined reference to `taprio_offload_free'
+> 
+> Change the dependency to only allow selecting the TAS code when it
+> can link against the taprio code.
+> 
+> Fixes: a8d570de0cc6 ("net: dsa: sja1105: Add dependency for NET_DSA_SJA1105_TAS")
+> Fixes: 317ab5b86c8e ("net: dsa: sja1105: Configure the Time-Aware Scheduler via tc-taprio offload")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
->  #include <linux/clk-provider.h>
->  #include <linux/clkdev.h>
-> @@ -21,10 +22,8 @@ struct bd718xx_clk {
->         struct rohm_regmap_dev *mfd;
->  };
-> =20
-> -static int bd71837_clk_set(struct clk_hw *hw, int status)
-> +static int bd71837_clk_set(struct bd718xx_clk *c, int status)
-
-should it be unsigned int status? Or maybe u32?
-
->  {
-> -       struct bd718xx_clk *c =3D container_of(hw, struct bd718xx_clk, hw=
-);
-> -
->         return regmap_update_bits(c->mfd->regmap, c->reg, c->mask, status=
-);
->  }
-> =20
-> @@ -33,14 +32,16 @@ static void bd71837_clk_disable(struct clk_hw *hw)
->         int rv;
->         struct bd718xx_clk *c =3D container_of(hw, struct bd718xx_clk, hw=
-);
-> =20
-> -       rv =3D bd71837_clk_set(hw, 0);
-> +       rv =3D bd71837_clk_set(c, 0);
->         if (rv)
->                 dev_dbg(&c->pdev->dev, "Failed to disable 32K clk (%d)\n"=
-, rv);
->  }
-> =20
->  static int bd71837_clk_enable(struct clk_hw *hw)
->  {
-> -       return bd71837_clk_set(hw, 1);
-> +       struct bd718xx_clk *c =3D container_of(hw, struct bd718xx_clk, hw=
-);
-> +
-> +       return bd71837_clk_set(c, 0xffffffff);
-
-Because now this is passing -1 to unsigned int taking
-regmap_update_bits()?
-
+Applied, thanks Arnd.
