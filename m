@@ -2,113 +2,95 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C003CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C68C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306B920B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:00:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="buaiJ3wC"
+	by mail.kernel.org (Postfix) with ESMTP id 94FD020B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572249745;
+	bh=KuLjpqvbGMtLUlNc5kaoR6YIjcyREiGv1q4fu5cS1Ak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I0Vw8VFuKhW1mOSjGbHoqxyXDdCWYXZFobpkXqtW6TuMRJvreEBF0TNEjQsaepRvc
+	 4Amp9n14CyW3Zu2SVd2Swx5iqNZTH1niv5xLrQwmicHWH36n9+DaUjySuMdbSSORVk
+	 /gZVTWUcQlAzfSV2aekOf32CS7MOtw0Lt3o1sVdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733160AbfJ1IAu (ORCPT
+        id S1733175AbfJ1ICY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 04:00:50 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39747 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731405AbfJ1IAt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 04:00:49 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p12so6370646pgn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 01:00:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Teb+nHfVj7QdEHZ6F94pdipxxAtosBBL8l+HZTtIm4A=;
-        b=buaiJ3wCZ4lN8R+UyQC0KOVQoxUBt6E4y93SYARVuR1cEQmv/6DKg4GcFkpHRoxyuZ
-         owizS5k3E6U2+4tNLCi2VzzTujDhbLZADv9SNpK6h5Mz6od8pwnNy7juEGYAPj9frn3F
-         yMPdfWr/m297s++31zAjbgfMq5FEv0rtrzsAX4Y2BOTh+VgZTwFpHrM5maha5RYfJ28s
-         i8vTW8T+L+PZ6mcbUUiC2fx9aHpoqrolWGKjjfqnrPFR5V91EuX3/bL3FfVDEPg26AcG
-         iWZwa4z03A1Bx0nETUvG+uyojlpdadDnzPWailVA/qhmAwdUW2H8KxKlfpRvCsiEm6Iu
-         D7KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Teb+nHfVj7QdEHZ6F94pdipxxAtosBBL8l+HZTtIm4A=;
-        b=ppy1mIYudWDh4gBaSXXMjekodoZ2p9MwCshWfWY56igw8WMC9VgjPwrXMqn1XRosLO
-         SGz7ZIJZUF/gwzrIXschcL57Hou1yRr109yr0EoXtP59JWpWCmBP+fbQOYK3XbOfSriP
-         /vncuHb61XsOC7lhurnMkSlT5QntiuCq7ZcLRhTuDUbB4OR60/tF8R13zyuq+CWdncZO
-         aFb/pDDeL/Th2BKJyJe95mPml+vfc41+LuwXPkRdabSx+j0bWH2wkp76FB7IEc5bumXO
-         li+4CGEcdveJDTufcRVZb9sQKBuw4lvqWID5xknNUoi30OYnndHCr2LOfjm2BrdaMMRX
-         KGMQ==
-X-Gm-Message-State: APjAAAXlV9KtbkdCzn0MhFvB5r4KoBjLbR9OVKYPDCmE9hM8OlP9pqUZ
-        53CK+YmwNrCUpSg0W7dkkukTuA==
-X-Google-Smtp-Source: APXvYqw5o9OQqVfoQBgItzsJbWV2pBxZDfEZpu9OM5nA5X7iLkchHyEIoGZfQuSvRNFLCJ9raZ6acA==
-X-Received: by 2002:a62:77c2:: with SMTP id s185mr3990854pfc.129.1572249648961;
-        Mon, 28 Oct 2019 01:00:48 -0700 (PDT)
-Received: from localhost.localdomain (111-241-170-106.dynamic-ip.hinet.net. [111.241.170.106])
-        by smtp.gmail.com with ESMTPSA id y36sm9504752pgk.66.2019.10.28.01.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 01:00:48 -0700 (PDT)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/4] MAINTAINERS: Add Green as SiFive PDMA driver maintainer
-Date:   Mon, 28 Oct 2019 15:56:23 +0800
-Message-Id: <20191028075658.12143-5-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191028075658.12143-1-green.wan@sifive.com>
-References: <20191028075658.12143-1-green.wan@sifive.com>
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 28 Oct 2019 04:02:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730328AbfJ1ICY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 04:02:24 -0400
+Received: from localhost (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47DB120862;
+        Mon, 28 Oct 2019 08:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572249743;
+        bh=KuLjpqvbGMtLUlNc5kaoR6YIjcyREiGv1q4fu5cS1Ak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G0s2Mz00gd0TJaorDXv098tL6oibTl1MVsC5aqs1AmlXJ2/v5v2aMW92DdobIt2vH
+         8iwPoE63nv6SkXiWQf+ARi4Nzym8RMF5TM26GsvGCmxLalkZNuQbWULECL/kcPCAYK
+         cBhUL+esadSCp39Vvt1uiALdImM8eQOKF6Il7wfQ=
+Date:   Mon, 28 Oct 2019 04:02:20 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH] KVM: vmx, svm: always run with EFER.NXE=1 when shadow
+ paging is active
+Message-ID: <20191028080220.GH1560@sasha-vm>
+References: <20191027152323.24326-1-pbonzini@redhat.com>
+ <20191028065919.AB8C3208C0@mail.kernel.org>
+ <b08a0103-312e-5441-9ffe-33c9df0a9d57@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <b08a0103-312e-5441-9ffe-33c9df0a9d57@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update MAINTAINERS for SiFive PDMA driver.
+On Mon, Oct 28, 2019 at 08:56:26AM +0100, Paolo Bonzini wrote:
+>On 28/10/19 07:59, Sasha Levin wrote:
+>>
+>> This commit has been processed because it contains a -stable tag.
+>> The stable tag indicates that it's relevant for the following trees: all
+>>
+>> The bot has tested the following trees: v5.3.7, v4.19.80, v4.14.150, v4.9.197, v4.4.197.
+>>
+>> v5.3.7: Build OK!
+>> v4.19.80: Failed to apply! Possible dependencies:
+>>     Unable to calculate
+>>
+>> v4.14.150: Failed to apply! Possible dependencies:
+>>     Unable to calculate
+>>
+>> v4.9.197: Failed to apply! Possible dependencies:
+>>     Unable to calculate
+>>
+>> v4.4.197: Failed to apply! Possible dependencies:
+>>     Unable to calculate
+>>
+>>
+>> NOTE: The patch will not be queued to stable trees until it is upstream.
+>>
+>> How should we proceed with this patch?
+>
+>It should apply just fine to all branches, just to arch/x86/kvm/vmx.c
+>instead of arch/x86/kvm/vmx/vmx.c.
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+I wonder if we should be carrying symlinks in the stable branches to
+make this smoother...
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c6c34d04ce95..330fbd050059 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14782,6 +14782,12 @@ F:	drivers/media/usb/siano/
- F:	drivers/media/usb/siano/
- F:	drivers/media/mmc/siano/
- 
-+SIFIVE PDMA DRIVER
-+M:	Green Wan <green.wan@sifive.com>
-+S:	Maintained
-+F:	drivers/dma/sf-pdma/
-+F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-+
- SIFIVE DRIVERS
- M:	Palmer Dabbelt <palmer@sifive.com>
- M:	Paul Walmsley <paul.walmsley@sifive.com>
 -- 
-2.17.1
-
+Thanks,
+Sasha
