@@ -2,97 +2,134 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9254ECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0718CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649A420717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jneJ72df"
+	by mail.kernel.org (Postfix) with ESMTP id A1F2D20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391087AbfJ1Qfj (ORCPT
+        id S2391097AbfJ1Qfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:35:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57484 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730703AbfJ1Qfi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:35:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4+K1/bmKx0JfCqxKDmPlAQkjGMz5sdzpbSR198DLpb8=; b=jneJ72dfq8edkHH/ghw9EkV+p
-        os2ENaXowtdPqJC7h2bw4WQTgKxQp7v4EXT6y4P9GrhBj96VdI28RuD6W37WuSWoKB30cnf3ks1wH
-        U+F8SJOQMXnakDWNavHCYFS1pItaDQf5yworCIZkmrGmkFVUVRKa7IhbvLd99zVB2/ydTWyYA1kGe
-        RkkcXxlnSP7xQ+unnklzAgqe8lObhhMAA1X15hZKaG5wCSvL7avJWFSk+CP0Z2SyA4s8D0fvfTwnf
-        TltRH/cBPFT9jjh5vZAPQ/UGlMLdS6RX741PazXsEvZ/w6kLwM86eBAkV/eeOT34R7bY3FTBsJslh
-        BLR+aFV8A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP7zB-0001Pq-Le; Mon, 28 Oct 2019 16:35:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1C30B306091;
-        Mon, 28 Oct 2019 17:34:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6B66E20C4EA0B; Mon, 28 Oct 2019 17:35:15 +0100 (CET)
-Date:   Mon, 28 Oct 2019 17:35:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
-        rabin@rab.in, Mark Rutland <mark.rutland@arm.com>,
-        james.morse@arm.com
-Subject: Re: [PATCH v4 13/16] arm/ftrace: Use __patch_text_real()
-Message-ID: <20191028163515.GE5671@hirez.programming.kicks-ass.net>
-References: <20191018073525.768931536@infradead.org>
- <20191018074634.687479693@infradead.org>
- <20191028162525.GF5576@willie-the-truck>
- <20191028163421.GI4097@hirez.programming.kicks-ass.net>
+        Mon, 28 Oct 2019 12:35:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:42724 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729420AbfJ1Qfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 12:35:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F03761FB;
+        Mon, 28 Oct 2019 09:35:39 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D03093F6C4;
+        Mon, 28 Oct 2019 09:35:37 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 16:35:33 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 05/17] add support for Clang's Shadow Call Stack (SCS)
+Message-ID: <20191028163532.GA52213@lakrids.cambridge.arm.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191024225132.13410-1-samitolvanen@google.com>
+ <20191024225132.13410-6-samitolvanen@google.com>
+ <20191025105643.GD40270@lakrids.cambridge.arm.com>
+ <CABCJKuc+XiDRdqfvjwCF7y=1wX3QO0MCUpeu4Gdcz91+nmnEAQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028163421.GI4097@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CABCJKuc+XiDRdqfvjwCF7y=1wX3QO0MCUpeu4Gdcz91+nmnEAQ@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 05:34:21PM +0100, Peter Zijlstra wrote:
-> On Mon, Oct 28, 2019 at 04:25:26PM +0000, Will Deacon wrote:
-> > > @@ -97,10 +100,7 @@ static int ftrace_modify_code(unsigned l
-> > >  			return -EINVAL;
-> > >  	}
-> > >  
-> > > -	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
-> > > -		return -EPERM;
-> > > -
-> > > -	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
-> > > +	__patch_text_real((void *)pc, new, patch_text_remap);
-> > 
-> > Why can't you just pass 'true' for patch_text_remap? AFAICT, the only
-> > time you want to pass false is during early boot when the text is
-> > assumedly still writable without the fixmap.
+On Fri, Oct 25, 2019 at 01:49:21PM -0700, Sami Tolvanen wrote:
+> On Fri, Oct 25, 2019 at 3:56 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > > +#define SCS_END_MAGIC        0xaf0194819b1635f6UL
+> >
+> > Keyboard smash? ... or is there a prize for whoever figures out the
+> > secret? ;)
 > 
-> Ah, it will also become true for module loading once we rework where we
+> It's a random number, so if someone figures out a secret in it,
+> they'll definitely deserve a prize. :)
 
-'false'. That is module loading will again be able to poke without
-alias map.
+I'll Cc some treasure hunters. :)
 
-> flip the module text RO,X. See this patch:
+> > > diff --git a/kernel/fork.c b/kernel/fork.c
+> > > index bcdf53125210..ae7ebe9f0586 100644
+> > > --- a/kernel/fork.c
+> > > +++ b/kernel/fork.c
+> > > @@ -94,6 +94,7 @@
+> > >  #include <linux/livepatch.h>
+> > >  #include <linux/thread_info.h>
+> > >  #include <linux/stackleak.h>
+> > > +#include <linux/scs.h>
+> >
+> > Nit: alphabetical order, please (this should come before stackleak.h).
 > 
->   https://lkml.kernel.org/r/20191018074634.858645375@infradead.org
+> The includes in kernel/fork.c aren't in alphabetical order, so I just
+> added this to the end here.
+
+Fair enough. It looked otherwise in the context, and we generally aim
+for that as a soft rule.
+
+[...]
+
+> > > +static inline void *__scs_base(struct task_struct *tsk)
+> > > +{
+> > > +     return (void *)((uintptr_t)task_scs(tsk) & ~(SCS_SIZE - 1));
+> > > +}
+> >
+> > We only ever assign the base to task_scs(tsk), with the current live
+> > value being in a register that we don't read. Are we expecting arch code
+> > to keep this up-to-date with the register value?
+> >
+> > I would have expected that we just leave this as the base (as we do for
+> > the regular stack in the task struct), and it's down to arch code to
+> > save/restore the current value where necessary.
+> >
+> > Am I missing some caveat with that approach?
 > 
-> But for that to land, there's still a few other issues to fix (KLP).
+> To keep the address of the currently active shadow stack out of
+> memory, the arm64 implementation clears this field when it loads x18
+> and saves the current value before a context switch. The generic code
+> doesn't expect the arch code to necessarily do so, but does allow it.
+> This requires us to use __scs_base() when accessing the base pointer
+> and to reset it in idle tasks before they're reused, hence
+> scs_task_reset().
+
+Ok. That'd be worth a comment somewhere, since it adds a number of
+things which would otherwise be unnecessary.
+
+IIUC this assumes an adversary who knows the address of a task's
+thread_info, and has an arbitrary-read (to extract the SCS base from
+thead_info) and an arbitrary-write (to modify the SCS area).
+
+Assuming that's the case, I don't think this buys much. If said
+adversary controls two userspace threads A and B, they only need to wait
+until A is context-switched out or in userspace, and read A's SCS base
+using B.
+
+Given that, I'd rather always store the SCS base in the thread_info, and
+simplify the rest of the code manipulating it.
+
+Thanks,
+Mark.
