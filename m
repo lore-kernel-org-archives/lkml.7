@@ -5,55 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A434ACA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2EFCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A9C21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F204204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:38:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RfTIGGTQ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rFmfGe9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfJ1Sim (ORCPT
+        id S1728002AbfJ1Sir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 14:38:42 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43368 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbfJ1Sil (ORCPT
+        Mon, 28 Oct 2019 14:38:47 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38482 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbfJ1Siq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 14:38:41 -0400
+        Mon, 28 Oct 2019 14:38:46 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SIccRk066065;
-        Mon, 28 Oct 2019 13:38:38 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SIchwN050106;
+        Mon, 28 Oct 2019 13:38:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572287918;
-        bh=g7UL6cJtcQdVkWq2mI0FrMGiupDZ0AbMcCYXx+3Cao4=;
+        s=ti-com-17Q1; t=1572287923;
+        bh=5oPRgd9y4fLZAUSx3Us0YBQ1cAUc/cf63XhWxENhBFk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=RfTIGGTQskUddENG1zSPDWsxJuy02u9LcQwJwFlRMQJypbP1l2cY4Ub2DB8kYYi4P
-         8NtvfWft4fbVqW/ttu9FeBwYxN1/Yi+o+p2xsTLRy8Yntj4YV5hc3tnO3pUSfQg8J5
-         CazTuGH3mTR5Csg4SDknWE5sjjRGF0dzZZMYOdtI=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SIccuA097495;
-        Mon, 28 Oct 2019 13:38:38 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+        b=rFmfGe9UjLYEo/015NyCfK7K4Jqkkj76fO0MF+m1Jj745DfSNXIQ5nr4GfBoxhUx0
+         ipR3FJMmqfdUcctI5WDXX6wx8hEiZ1MXrwSrVXRiA1H4yeH9fI68SlrVG0Ozxc52Gs
+         W8xO4s/FtzyUD4GLU2M6ZxEPBr9zTo94/r0gMuso=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SIchcF097587;
+        Mon, 28 Oct 2019 13:38:43 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
- Oct 2019 13:38:38 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 13:38:31 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 28 Oct 2019 13:38:26 -0500
+ Frontend Transport; Mon, 28 Oct 2019 13:38:43 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SIcbPL107173;
-        Mon, 28 Oct 2019 13:38:37 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SIchqm057644;
+        Mon, 28 Oct 2019 13:38:43 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v15 14/19] leds: lp5523: Update the lp5523 code to add multicolor brightness function
-Date:   Mon, 28 Oct 2019 13:36:24 -0500
-Message-ID: <20191028183629.11779-15-dmurphy@ti.com>
+Subject: [PATCH v15 15/19] leds: lp5521: Add multicolor framework multicolor brightness support
+Date:   Mon, 28 Oct 2019 13:36:25 -0500
+Message-ID: <20191028183629.11779-16-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20191028183629.11779-1-dmurphy@ti.com>
 References: <20191028183629.11779-1-dmurphy@ti.com>
@@ -67,23 +67,23 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Add the multicolor brightness call back to support the multicolor
-framework.  This call back allows setting  brightness on grouped channels
-in a single function.
+framework. This function allows setting the brightness across
+grouped LED channels in a single call.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/leds/leds-lp5523.c | 20 ++++++++++++++++++++
+ drivers/leds/leds-lp5521.c | 20 ++++++++++++++++++++
  1 file changed, 20 insertions(+)
 
-diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-index b076c16df9ab..609288077917 100644
---- a/drivers/leds/leds-lp5523.c
-+++ b/drivers/leds/leds-lp5523.c
-@@ -791,6 +791,25 @@ static ssize_t store_master_fader_leds(struct device *dev,
- 	return ret;
+diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
+index 6ff81d6be789..f8bdd55e8349 100644
+--- a/drivers/leds/leds-lp5521.c
++++ b/drivers/leds/leds-lp5521.c
+@@ -349,6 +349,25 @@ static int lp5521_run_selftest(struct lp55xx_chip *chip, char *buf)
+ 	return 0;
  }
  
-+static int lp5523_multicolor_brightness(struct lp55xx_led *led)
++static int lp5521_multicolor_brightness(struct lp55xx_led *led)
 +{
 +	struct lp55xx_chip *chip = led->chip;
 +	int ret;
@@ -92,7 +92,7 @@ index b076c16df9ab..609288077917 100644
 +	mutex_lock(&chip->lock);
 +	for (i = 0; i < led->mc_cdev.num_leds; i++) {
 +		ret = lp55xx_write(chip,
-+				   LP5523_REG_LED_PWM_BASE +
++				   LP5521_REG_LED_PWM_BASE +
 +				   led->color_components[i].output_num,
 +				   led->color_components[i].brightness);
 +		if (ret)
@@ -102,17 +102,17 @@ index b076c16df9ab..609288077917 100644
 +	return ret;
 +}
 +
- static int lp5523_led_brightness(struct lp55xx_led *led)
+ static int lp5521_led_brightness(struct lp55xx_led *led)
  {
  	struct lp55xx_chip *chip = led->chip;
-@@ -857,6 +876,7 @@ static struct lp55xx_device_config lp5523_cfg = {
- 	.max_channel  = LP5523_MAX_LEDS,
- 	.post_init_device   = lp5523_post_init_device,
- 	.brightness_fn      = lp5523_led_brightness,
-+	.multicolor_brightness_fn = lp5523_multicolor_brightness,
- 	.set_led_current    = lp5523_set_led_current,
- 	.firmware_cb        = lp5523_firmware_loaded,
- 	.run_engine         = lp5523_run_engine,
+@@ -490,6 +509,7 @@ static struct lp55xx_device_config lp5521_cfg = {
+ 	.max_channel  = LP5521_MAX_LEDS,
+ 	.post_init_device   = lp5521_post_init_device,
+ 	.brightness_fn      = lp5521_led_brightness,
++	.multicolor_brightness_fn = lp5521_multicolor_brightness,
+ 	.set_led_current    = lp5521_set_led_current,
+ 	.firmware_cb        = lp5521_firmware_loaded,
+ 	.run_engine         = lp5521_run_engine,
 -- 
 2.22.0.214.g8dca754b1e
 
