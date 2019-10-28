@@ -2,109 +2,143 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F29ACA9EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF38CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A4721783
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28895208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxSmDbo0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LOMqt7HL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbfJ1CnV (ORCPT
+        id S1729438AbfJ1CqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 22:43:21 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35244 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfJ1CnV (ORCPT
+        Sun, 27 Oct 2019 22:46:15 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55436 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726934AbfJ1CqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 22:43:21 -0400
-Received: by mail-io1-f65.google.com with SMTP id h9so9076705ioh.2
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 19:43:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WajkIfso2UlXgRkDGGI9iOFobax0DuU9gdm0Iijm/A8=;
-        b=rxSmDbo0YmfGeXOIN+Q9biZMXG5q+/XkXO3AjnWZKG9k2QoYsiz7/3dMdXaUmdydtA
-         6BWrxQMI0AHuw0nXVv4ks4FtDO7UoGpAD31IjfmfGxPe4Gt//TYkVcJYWnDP1v1jNz+o
-         c75oqllYLie1bX5jJdtqgLTrpy7qu3HR3TgrMMT1EF/Lmiodbh/48fx9vULV8AFTCVh4
-         fcDqWkceNEwGsW++o1WE2+6Q5BW2nt6F1IKAKdnQqPfjoMyeDjSDkldHsSGNfZ72PjAv
-         F/EwrYkqQLRi7CzIaRe56lr3UGRIuZFnStLJw69W5mywrUb9uT2V7KbcbKewcbFnfShe
-         B4hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WajkIfso2UlXgRkDGGI9iOFobax0DuU9gdm0Iijm/A8=;
-        b=OMgEOGW3RjYSZQ5E+XBhYkwEPCZmxpdQfU+lxaZgRzSYVcHx5XRaCVtBzW/zAy6ry0
-         EI/iICiqw1TYpHaabYw9khvbBqu2kC63ky0FhjebNrkcS9T1+Z6sQv2l2XLURxAKZ2zS
-         ZJM1r0JRvFmG0yRBmZ0/+7ohn8FFO+VO1RsGgEflVNTjqKohBUvrBPK8Tu+WKZeYab/6
-         YC5Q+UFAptqF38l41uRym/Y2RJB2t0g9Uho6jikqhMHXKhRQvLBgSO+17/eYw/nXUkc1
-         p+mqzdFB1eXEmVAXSMcjbkooKbR3GJsHWVL0Q/N1Mgwu7Mjv/HJgFiSR/Cat8aWeuZmX
-         IOxg==
-X-Gm-Message-State: APjAAAU/M87ZH/AFOZLClkm3lnbicZJ3tEBTK2oTmH4UQLuloQBJF+2h
-        fRazURPcjC4qBN9aa/K5ceK9pR0v/qmnzcPP9Lc=
-X-Google-Smtp-Source: APXvYqwOWm0fMe4Z+23NbNt4s3moVCNRfSkGYs68cOaCdJ7rNfZZA3zAvx6xOt8t6pKut1UDb6mLgbG5D1F93mKzz20=
-X-Received: by 2002:a5d:8247:: with SMTP id n7mr8103790ioo.195.1572230600541;
- Sun, 27 Oct 2019 19:43:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191025044721.16617-1-alastair@au1.ibm.com> <20191025044721.16617-10-alastair@au1.ibm.com>
-In-Reply-To: <20191025044721.16617-10-alastair@au1.ibm.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Mon, 28 Oct 2019 13:43:09 +1100
-Message-ID: <CAOSf1CGwuAkeayfk0uowN8gkKXWy8jKzgLX5-Gxxqn3ENNiUdA@mail.gmail.com>
-Subject: Re: [PATCH 09/10] powerpc: Enable OpenCAPI Storage Class Memory
- driver on bare metal
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 27 Oct 2019 22:46:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572230773;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=JamJ4gnvFxwjftOwafZltk5nfJrJj67jqUAhqzujMfY=;
+        b=LOMqt7HLBtq7PKMv83oy2ieueUeLkp7YCnKXjojbpzLJ5pCHoZVxBnbBUI0i2YGLWO0KXV
+        HlRFT5nomRPd1JqOHt0sPW3YCxgYTgbVrs08q1HXxzu8KfjEwVbxoymqt+0KLOQegK6DVq
+        sdaMrXRWiEH+5A7fU07Y0u2onlsXVok=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-377-2dx9YDZ-P22704eCoESnTg-1; Sun, 27 Oct 2019 22:46:10 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBAAC80183E;
+        Mon, 28 Oct 2019 02:46:08 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-12-41.pek2.redhat.com [10.72.12.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 58C4260A9F;
+        Mon, 28 Oct 2019 02:45:56 +0000 (UTC)
+From:   Lianbo Jiang <lijiang@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, bhe@redhat.com, dyoung@redhat.com, jgross@suse.com,
+        dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
+        horms@verge.net.au, kexec@lists.infradead.org
+Subject: [PATCH 0/2 v6] x86/kdump: Fix 'kmem -s' reported an invalid freepointer when SME was active
+Date:   Mon, 28 Oct 2019 10:45:49 +0800
+Message-Id: <20191028024551.4278-1-lijiang@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: 2dx9YDZ-P22704eCoESnTg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 3:51 PM Alastair D'Silva <alastair@au1.ibm.com> wrote:
->
-> From: Alastair D'Silva <alastair@d-silva.org>
->
-> Enable OpenCAPI Storage Class Memory driver on bare metal
->
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->  arch/powerpc/configs/powernv_defconfig | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/powerpc/configs/powernv_defconfig b/arch/powerpc/configs/powernv_defconfig
-> index 6658cceb928c..45c0eff94964 100644
-> --- a/arch/powerpc/configs/powernv_defconfig
-> +++ b/arch/powerpc/configs/powernv_defconfig
-> @@ -352,3 +352,7 @@ CONFIG_KVM_BOOK3S_64=m
->  CONFIG_KVM_BOOK3S_64_HV=m
->  CONFIG_VHOST_NET=m
->  CONFIG_PRINTK_TIME=y
-> +CONFIG_OCXL_SCM=m
+In purgatory(), the main things are as below:
 
-> +CONFIG_DEV_DAX=y
-> +CONFIG_DEV_DAX_PMEM=y
+[1] verify sha256 hashes for various segments.
+    Lets keep these codes, and do not touch the logic.
 
-These should probably be modules. Having them as builtins will force
-their dependencies (i.e. libnvdimm) to be built into the kernel too.
+[2] copy the first 640k content to a backup region.
+    Lets safely remove it and clean all code related to backup region.
 
-> +CONFIG_FS_DAX=y
-> --
-> 2.21.0
-> _______________________________________________
-> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
-> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
+This patch series will remove the backup region, because the current
+handling of copying the first 640k runs into problems when SME is
+active(https://bugzilla.kernel.org/show_bug.cgi?id=3D204793).
+
+The low 1MiB region will always be reserved when the crashkernel kernel
+command line option is specified. And this way makes it unnecessary to
+do anything with the low 1MiB region, because the memory allocated later
+won't fall into the low 1MiB area.
+
+This series includes two patches:
+[1] x86/kdump: always reserve the low 1MiB when the crashkernel option
+    is specified
+    The low 1MiB region will always be reserved when the crashkernel
+    kernel command line option is specified, which ensures that the
+    memory allocated later won't fall into the low 1MiB area.
+
+[2] x86/kdump: clean up all the code related to the backup region
+    Remove the backup region and clean up.
+
+Changes since v1:
+[1] Add extra checking condition: when the crashkernel option is
+    specified, reserve the low 640k area.
+
+Changes since v2:
+[1] Reserve the low 1MiB region when the crashkernel option is only
+    specified.(Suggested by Eric)
+
+[2] Remove the unused crash_copy_backup_region()
+
+[3] Remove the backup region and clean up
+
+[4] Split them into three patches
+
+Changes since v3:
+[1] Improve the first patch's log
+
+[2] Improve the third patch based on Eric's suggestions
+
+Changes since v4:
+[1] Correct some typos, and also improve the first patch's log
+
+[2] Add a new function kexec_reserve_low_1MiB() in kernel/kexec_core.c
+    and which is called by reserve_real_mode(). (Suggested by Boris)
+
+Changes since v5:
+[1] Call the cmdline_find_option() instead of strstr() to check the
+    crashkernel option. (Suggested by Hatayama)
+
+[2] Add a weak function kexec_reserve_low_1MiB() in kernel/kexec_core.c,
+    and implement the kexec_reserve_low_1MiB() in arch/x86/kernel/
+    machine_kexec_64.c so that it does not cause the compile error
+    on non-x86 kernel, and also ensures that it can work well on x86
+    kernel.
+
+Lianbo Jiang (2):
+  x86/kdump: always reserve the low 1MiB when the crashkernel option is
+    specified
+  x86/kdump: clean up all the code related to the backup region
+
+ arch/x86/include/asm/kexec.h       | 10 ----
+ arch/x86/include/asm/purgatory.h   | 10 ----
+ arch/x86/kernel/crash.c            | 87 ++++--------------------------
+ arch/x86/kernel/machine_kexec_64.c | 62 ++++++---------------
+ arch/x86/purgatory/purgatory.c     | 19 -------
+ arch/x86/realmode/init.c           |  2 +
+ include/linux/kexec.h              |  2 +
+ kernel/kexec_core.c                |  3 ++
+ 8 files changed, 33 insertions(+), 162 deletions(-)
+
+--=20
+2.17.1
+
