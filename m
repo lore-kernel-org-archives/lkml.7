@@ -2,108 +2,104 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87D8CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABE8CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C715A21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVO5gCo+"
+	by mail.kernel.org (Postfix) with ESMTP id 13E0C20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbfJ1TXU (ORCPT
+        id S1730576AbfJ1TXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 15:23:20 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37996 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbfJ1TXU (ORCPT
+        Mon, 28 Oct 2019 15:23:50 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:21140 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728941AbfJ1TXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 15:23:20 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w3so7567289pgt.5;
-        Mon, 28 Oct 2019 12:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=n0RrC7uGX/gZgkVMszycwSOKKQggxsrTHESmgPdcSao=;
-        b=JVO5gCo+FGFjlOMHBcxSq53Vv41uaRmbgVkGHkBtMpnvMnOyAF/nFx30yNzJUN8PHd
-         UKnOLa6bvQOcLPPFd3/hu/KPDaD77nsRTwiT/TeW+cuyjRhw/aqVFmturud8jQq3wO4Q
-         3oot5uzAeHHwnxHn8rAU8Qd3AKSVteeMn62Bxee+pOt96Ni4bqs+0JUrjtBfYHYmuZUb
-         eTO/Ow2QZ6ZekVefAewGlrBHZR3oo5pNvfFshRTufHFpRILEo4AKg5jL8KscSeNXu3U6
-         xRvmNm6iCrQD/2gjt+N+YIFPzs/blpKaO+VhzMlS0ehow7EgxGK87TY6QU8XfpX2P3rl
-         Xbow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=n0RrC7uGX/gZgkVMszycwSOKKQggxsrTHESmgPdcSao=;
-        b=OmPb6a8W35Je5UFmPS6G9ILSICE0a1taU7mcfPz+SS6IvMSCKJN+3aqRIV5Apbplhx
-         YfD3SrGhjfVX7nWFhCHtmhKIIrnRRX2eFkMLqA2FoRk+GOxrRc4trylM4Rh3zninW9S4
-         MA+Y6rCtluSM+Zy8OeTy1kIdljAC4iNmJELLmh83s06oKJ6OaFlaDjAix2gDEgdyAXPf
-         YT7sFCDVs/lcmM5g8Deq136vJ9MZilSJgWbFBwZN0kYqw71I0d1PCK4j/UcYPGNnkGtj
-         7oxFJjoJR+LfLn7LyvrTB5iF4DXcsWvSN4gJ/4WDBQzPUW/x2SutpV007y5JroRFiKyO
-         kXBQ==
-X-Gm-Message-State: APjAAAWO6IbJBNdIphE5zEiWRr69nTZnpRzhZEEItwK3ouKOZxkdC/dZ
-        Juq53Wp6FPHuFRvcQKymn50=
-X-Google-Smtp-Source: APXvYqyAslvrMNc3tZmWUPQB9FiwRftguQb9brnJWUPEvYqH10QxCEQQyeFZ3zhMVzUj+DCk2a7JmA==
-X-Received: by 2002:a17:90a:8a0e:: with SMTP id w14mr1146969pjn.51.1572290597879;
-        Mon, 28 Oct 2019 12:23:17 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id d127sm6035142pfc.28.2019.10.28.12.23.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 12:23:17 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 00:53:10 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     jirislaby@gmail.com, mickflemm@gmail.com, mcgrof@kernel.org,
-        kvalo@codeaurora.org, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] ath5k: eeprom.c: Remove unneeded variable
-Message-ID: <20191028192310.GA27452@saurav>
+        Mon, 28 Oct 2019 15:23:50 -0400
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9SJKpQ8014662;
+        Mon, 28 Oct 2019 19:23:44 GMT
+Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2vx43wsm98-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Oct 2019 19:23:44 +0000
+Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
+        by g2t2354.austin.hpe.com (Postfix) with ESMTP id D2544AC;
+        Mon, 28 Oct 2019 19:23:43 +0000 (UTC)
+Received: from anatevka.americas.hpqcorp.net (anatevka.americas.hpqcorp.net [10.34.81.61])
+        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 52AD936;
+        Mon, 28 Oct 2019 19:23:43 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 13:23:43 -0600
+From:   Jerry Hoemann <jerry.hoemann@hpe.com>
+To:     "Kani, Toshi" <toshi.kani@hpe.com>
+Cc:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "d.scott.phillips@intel.com" <d.scott.phillips@intel.com>,
+        "decui@microsoft.com" <decui@microsoft.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "stuart.w.hayes@gmail.com" <stuart.w.hayes@gmail.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] uapi: Add the BSD-2-Clause license to ndctl.h
+Message-ID: <20191028192343.GA6342@anatevka.americas.hpqcorp.net>
+Reply-To: Jerry.Hoemann@hpe.com
+References: <20191025175553.63271-1-d.scott.phillips@intel.com>
+ <CAPcyv4iQpO+JF8b7NUJUZ3fQFU=PWFeiWrXSd47QGnQPeRsrTg@mail.gmail.com>
+ <38f7f4852ad1cc76c7c7473a6fda85cb9acae14c.camel@intel.com>
+ <76ca7b4effada2c7219f66c211946a8178994d1c.camel@hpe.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <76ca7b4effada2c7219f66c211946a8178994d1c.camel@hpe.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-28_07:2019-10-28,2019-10-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=974
+ clxscore=1011 impostorscore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910280185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded ret variable from ath5k_eeprom_read_spur_chans()
+On Mon, Oct 28, 2019 at 08:54:35AM -0600, Kani, Toshi wrote:
+> On Fri, 2019-10-25 at 22:56 +0000, Verma, Vishal L wrote:
+> > On Fri, 2019-10-25 at 15:45 -0700, Dan Williams wrote:
+> > > On Fri, Oct 25, 2019 at 10:55 AM D Scott Phillips
+> > > <d.scott.phillips@intel.com> wrote:
+> > > > Allow ndctl.h to be licensed with BSD-2-Clause so that other
+> > > > operating systems can provide the same user level interface.
+> > > > ---
+> > > > 
+> > > > I've been working on nvdimm support in FreeBSD and would like to
+> > > > offer the same ndctl API there to ease porting of application
+> > > > code. Here I'm proposing to add the BSD-2-Clause license to this
+> > > > header file, so that it can later be copied into FreeBSD.
+> > > > 
+> > > > I believe that all the authors of changes to this file (in the To:
+> > > > list) would need to agree to this change before it could be
+> > > > accepted, so any signed-off-by is intentionally ommited for now.
+> > > > Thanks,
+> > > 
+> > > I have no problem with this change, but let's take the opportunity to
+> > > let SPDX do its job and drop the full license text.
+> > 
+> > This is fine by me too, barring the full license text vs. SPDX caveat
+> > Dan mentions.
+> 
+> I agree with the plan.
+> 
+I agree also.
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
- drivers/net/wireless/ath/ath5k/eeprom.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath5k/eeprom.c b/drivers/net/wireless/ath/ath5k/eeprom.c
-index 94d34ee02265..307f1fea0a88 100644
---- a/drivers/net/wireless/ath/ath5k/eeprom.c
-+++ b/drivers/net/wireless/ath/ath5k/eeprom.c
-@@ -1707,7 +1707,7 @@ ath5k_eeprom_read_spur_chans(struct ath5k_hw *ah)
- 	struct ath5k_eeprom_info *ee = &ah->ah_capabilities.cap_eeprom;
- 	u32 offset;
- 	u16 val;
--	int ret = 0, i;
-+	int  i;
- 
- 	offset = AR5K_EEPROM_CTL(ee->ee_version) +
- 				AR5K_EEPROM_N_CTLS(ee->ee_version);
-@@ -1730,7 +1730,7 @@ ath5k_eeprom_read_spur_chans(struct ath5k_hw *ah)
- 		}
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- 
 -- 
-2.20.1
 
+-----------------------------------------------------------------------------
+Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
+-----------------------------------------------------------------------------
