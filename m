@@ -2,170 +2,136 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C546CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9881ACA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F8020578
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C173214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gzlVwieG"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="UDy5cy9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389173AbfJ1MmA (ORCPT
+        id S2389186AbfJ1MmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:42:00 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36002 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389151AbfJ1MmA (ORCPT
+        Mon, 28 Oct 2019 08:42:23 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36766 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389175AbfJ1MmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:42:00 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c22so8981319wmd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 05:41:58 -0700 (PDT)
+        Mon, 28 Oct 2019 08:42:23 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v24so11196752ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 05:42:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5xksvSoWClSEPqFisZy8fkW7iGrHC1hgE7A27QwV7HQ=;
-        b=gzlVwieGLL+vRKmFH25rxW6uJL3c7ZUDBTuLJonZBtrHudOawmBb5SHfGzviP1gH8t
-         hXNTMOg8xclCA4Od9HvUqPTpcRylA/7YwAB5NbK1tNVot+6H2lJFyZ5wbLwZZQOt0YVz
-         xDnVaSEo0t2c+06VHQHs1nRNkAI5C1pmeyrCOXqrhFGYnXDmgbbUrrD2PNTKXunkRP7y
-         oDc/IoxUdoZHmoIYw1TIkqegXCxMusr/wiFg9SLQxjUgWVw3yhOA0KI7B8xgellvl6sZ
-         94/xu5989N5qnqz+ahT4jSbYLDj3j+bumF1FilJiuCvN85Q6RlCdoTO/AR90E2wvVWrR
-         iB6w==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YXz21DLbYChNtLC16qKg/F5siZzPuHpmcF6L0vjR70Q=;
+        b=UDy5cy9jp7qw9ea3NmGoBYL5rkK3rD7lP+Y1vSO/MvqCsnHZxGiFpUyWebGJzCFW9E
+         O4EN/t7pstqQFEkuseKzS6HdAafHy69l0s5ygYkRkW8TfdZhrlCNwaXt87RY98wEt4RP
+         Is7yuQa+XX5HsO0mbecgrOsACK82b0mMHfbbMNG+RwruNptd7tjW6NPWahNTvZ/ZFKST
+         2P+zFWeOa9FKappwZ+pztKsRRDT1l00rkjKdMCAIe4JbmppMd9zzBec12Pq0lMHa2GJ7
+         Nl6Qdmal2rG3oTZIll/X/BRfpYMawwGMn5q0oMGKiT8/fQssH8XyiL1bv1kzEd1UPD1C
+         iwTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5xksvSoWClSEPqFisZy8fkW7iGrHC1hgE7A27QwV7HQ=;
-        b=NuV+4W6WZK0d8KTRmAszkasvGS5zNvTrCX8KBCVCbymnPtShhFXr0tchNqbXMzyDJw
-         z5r9kKlo45+EdH6D6Nf5uJfiJYNdesCdWuETwrRGCE59aFVXtOLe1Ny00L5cKaRQGnza
-         tzmsg6C1/W0qMr/cKv2JtcHa7zjHK9Krh6SBn3hLS0L7Hd9HHD+A6LMwxW+uXluR3ftP
-         wz2z40bkDF2S9PtI2F1NZCVPTM7kbb+gpq5m9tnHIPfiF6ODUNBwcO3OXIOFGj7cY95k
-         l1d9O7k75P9SYqZ7BuPE6lax1v5DgWGA20rM7GmyDwRn/dlvB0OlZcOsZyqHFaUA2lmP
-         7j3g==
-X-Gm-Message-State: APjAAAUAJm/5e4j3MIjIYsf7fpkG/1HkLI/FnDh4FuU5JSRNoAjWA+2v
-        gLgFV4N0oOJqIb2OcG+utgglQA==
-X-Google-Smtp-Source: APXvYqygo0fnWXSv7nZYL4U1ZXDFCeZaEZJnTPCrkdL1XZ8dj3TrWb5bXsY76ZWjmyYR8KItRj/F5g==
-X-Received: by 2002:a1c:a751:: with SMTP id q78mr16448120wme.129.1572266517809;
-        Mon, 28 Oct 2019 05:41:57 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id u21sm13971582wmu.27.2019.10.28.05.41.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 05:41:56 -0700 (PDT)
-Subject: Re: [PATCH v2 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add bindings
- for gpio
-To:     Rob Herring <robh@kernel.org>
-Cc:     broonie@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org,
-        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-9-srinivas.kandagatla@linaro.org>
- <20191025210021.GA12751@bogus>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <e05ff19a-7c12-da80-4faf-3b152b24517d@linaro.org>
-Date:   Mon, 28 Oct 2019 12:41:56 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YXz21DLbYChNtLC16qKg/F5siZzPuHpmcF6L0vjR70Q=;
+        b=dC1R1PE+1hpz7ulwlYiAOoJfuV1T+NKmyBNeygDdDOxHmdFuTpJSxy3LTS90VeCD7w
+         2Aim1k39UL6lH4Xr/7Lc1s6gxvbAeA7ymk+FA+v7/vNJIU9iCSo7leiaNacmYpZnABpC
+         S6wSxE+oUPmtaAJ6D0KGjTla8paCmDen+10Jn0NEuVJ4wwPI1IYE3fNPP9QIY5++fCMJ
+         Z0ovsTMoeCn86kZJNUYcZt5TNvSgRzT1y8End42be/g7uk79+cm5MrIvC3JHzo01pUdi
+         lDyYW+7ZNJv9Kr+CBGJBd6JgapVFiMhQjBOcx1eHAXaObvjl/W0dr8Jl3FjzPBMgVPNS
+         9F+w==
+X-Gm-Message-State: APjAAAWcUZJH6mF/Zv/rBds08bxevxtkS3/oFoJ5/fEr+41roQVcJmXE
+        UVIRvKQFDdar02YGq9bb0aCqBA==
+X-Google-Smtp-Source: APXvYqzeBill5sGQdQXwwRpWKiSVdlLvWFYx2xLqvPT8yXAFAWaeU7gv4dx3rhmelIIJkIMHn+8r0A==
+X-Received: by 2002:a2e:547:: with SMTP id 68mr11779036ljf.150.1572266541309;
+        Mon, 28 Oct 2019 05:42:21 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id 4sm6328938lfa.95.2019.10.28.05.42.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 05:42:20 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 86B96100242; Mon, 28 Oct 2019 15:42:22 +0300 (+03)
+Date:   Mon, 28 Oct 2019 15:42:22 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Steven Whitehouse <swhiteho@redhat.com>
+Subject: Re: [PATCH] mm/filemap: do not allocate cache pages beyond end of
+ file at read
+Message-ID: <20191028124222.ld6u3dhhujfqcn7w@box>
+References: <157225677483.3442.4227193290486305330.stgit@buzz>
 MIME-Version: 1.0
-In-Reply-To: <20191025210021.GA12751@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157225677483.3442.4227193290486305330.stgit@buzz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thamks for the review Rob,
-
-
-On 25/10/2019 22:00, Rob Herring wrote:
-> On Fri, Oct 18, 2019 at 01:18:46AM +0100, Srinivas Kandagatla wrote:
->> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
->> gpio controller to control 5 gpios on the chip. This patch adds
->> required device tree bindings for it.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../pinctrl/qcom,wcd934x-pinctrl.yaml         | 51 +++++++++++++++++++
->>   1 file changed, 51 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
->> new file mode 100644
->> index 000000000000..c8a36cbc4935
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
->> @@ -0,0 +1,51 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/qcom,wcd934x-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: WCD9340/WCD9341 GPIO Pin controller
->> +
->> +maintainers:
->> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> +
->> +description: |
->> +  Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
->> +  gpio controller to control 5 gpios on the chip.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,wcd9340-pinctrl
->> +      - qcom,wcd9341-pinctrl
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  gpio-controller: true
->> +
->> +  gpio-ranges:
->> +    maxItems: 1
->> +
->> +  '#gpio-cells':
->> +    const: 2
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - gpio-controller
->> +  - gpio-ranges
->> +  - "#gpio-cells"
+On Mon, Oct 28, 2019 at 12:59:34PM +0300, Konstantin Khlebnikov wrote:
+> Page cache could contain pages beyond end of file during write or
+> if read races with truncate. But generic_file_buffered_read() always
+> allocates unneeded pages beyond eof if somebody reads here and one
+> extra page at the end if file size is page-aligned.
 > 
-> additionalProperties: false
+> Function generic_file_buffered_read() calls page_cache_sync_readahead()
+> if page not found in cache and then do another lookup. Readahead checks
+> file size in __do_page_cache_readahead() before allocating pages.
+> After that generic_file_buffered_read() falls back to slow path and
+> allocates page for ->readpage() without checking file size.
 > 
->> +
->> +
->> +examples:
->> +  - |
->> +    wcdpinctrl: wcdpinctrl@42 {
+> This patch checks file size before allocating page for ->readpage().
 > 
-> pinctrl@42
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> ---
+>  mm/filemap.c |    4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 85b7d087eb45..92abf5f348a9 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -2225,6 +2225,10 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
+>  		goto out;
+>  
+>  no_cached_page:
+> +		/* Do not allocate cache pages beyond end of file. */
+> +		if (((loff_t)index << PAGE_SHIFT) >= i_size_read(inode))
+> +			goto out;
+> +
+>  		/*
+>  		 * Ok, it wasn't cached, so we need to create a new
+>  		 * page..
+> 
+> 
 
-I will address above two comments in next version!
+CC Steven.
 
-Thanks,
-srini
-> 
->> +        compatible = "qcom,wcd9340-pinctrl";
->> +        reg = <0x042 0x2>;
->> +        gpio-controller;
->> +        gpio-ranges = <&wcdpinctrl 0 0 5>;
->> +        #gpio-cells = <2>;
->> +    };
->> +
->> +...
->> -- 
->> 2.21.0
->>
+I've tried something of this sort back in 2013:
+
+http://lore.kernel.org/r/1377099441-2224-1-git-send-email-kirill.shutemov@linux.intel.com
+
+and I've got push back.
+
+Apparently, some filesystems may not have valid i_size before >readpage().
+Not sure if it's still the case...
+
+Anyway I don't think it's valid reason for this inefficiency. These
+filesystems have to have own implementation of >read_iter() to deal with
+this.
+
+-- 
+ Kirill A. Shutemov
