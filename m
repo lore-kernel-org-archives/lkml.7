@@ -2,118 +2,98 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04E7CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4960DCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C906120862
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2401F20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y1PKiPJS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XDc/2ESg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404333AbfJ1SHm (ORCPT
+        id S2391118AbfJ1SIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 14:07:42 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34305 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730690AbfJ1SHm (ORCPT
+        Mon, 28 Oct 2019 14:08:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34260 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730690AbfJ1SIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 14:07:42 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e4so3113800pgs.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 11:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=KooIewZwbvjOkWEaBdb5ogJ6e+TbvWJNeEYKOS8P4w0=;
-        b=Y1PKiPJSo5cC4StnmwLOwPxBIOiH1/YjuhzkGWx/4kjWfWLT96mT2xSrwfVi7yHFEl
-         Nh5NKHRthKhTX38td42WJaxB7C3k4RnOtzAnd/+cwXMPAkE3gXJcIgkRB0vVN8o9bcN4
-         KAp7kN+geHLFssZe5717qy+JPk/T5xKxDrkTMcvlXZmievm/WR8G9YLZjh9nakfkEi8c
-         DuqWxZHoTQVwkP3WRh337YW3LM5Mvc9mLDhNNXAY5c6wXqksrU5cSXZO2Ga09wU9SwfR
-         LCosxU8Rahy9Gs3YHw1vnjY/XZ7JWwuSclzwONsO/L1nul6Ksh4YXaEw13q3UQ39M2GX
-         TZIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=KooIewZwbvjOkWEaBdb5ogJ6e+TbvWJNeEYKOS8P4w0=;
-        b=RgZh0h5ivQ73tZnpLSm1IGg07nxvHq9SBwghJiPNvdnaXKY6VybD1OvPe0bqvWjzeY
-         yNlSCdNHRwvTLP8k1wga6Rb30T5+Btec7Yn5SEYsliDY1JLLSuzCOkyw9O+AuesuSg4R
-         B14co3VGvBTwscviACiJasGV3/ogmslIv6j7b5dOF5nQNZqaxLy9voxTwpu7NaF6TMUo
-         7s9O0QqWd4HoBL5MyKpynttCfrsaqRE4yZM/dpRlSR/002AjAf/WRMqX6Y72XEMyglZ4
-         UF0a/bVaYXU/CHZLW9XSjCFW3kUjlqOoIoqyAgLLvnIR63aDSIftjv3cw5XkqOCVmRX6
-         osKA==
-X-Gm-Message-State: APjAAAVs4cvwpx8bRGr/iO9B8PaEJ4xNmtQlyGpOJHZj/+DPFa3ke8QV
-        aG5+NNL+b0UjRhasMNUJ70c=
-X-Google-Smtp-Source: APXvYqxbYQIyXuOm4thgIzsK1cAneqYYBmH5ZCOjF7KVYtMewLsSjXsd96H2cMKo8EN9gFEru5EWjw==
-X-Received: by 2002:a17:90a:37e4:: with SMTP id v91mr773608pjb.8.1572286061510;
-        Mon, 28 Oct 2019 11:07:41 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id i102sm168856pje.17.2019.10.28.11.07.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 11:07:40 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 23:37:33 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     joern@lazybastard.org, dwmw2@infradead.org,
-        computersforpeace@gmail.com, marek.vasut@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] mtd: devices: phram.c: Fix multiple kfree statement from
- phram_setup]
-Message-ID: <20191028180733.GA26168@saurav>
+        Mon, 28 Oct 2019 14:08:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1Oii312J4rwKfjBtVwSgoriFHTTc3+9xh/Qx156700k=; b=XDc/2ESgjMpplBzpDrC0S7Jp1
+        0qNTtrxHoUFs0nJAAGBFV1U+sTNzXyMzk6FwQ8U2kqQqeTWcSpvbLIOfEcBFQzyb/2npOWiU9bu+S
+        AZMyc3mzxjvJgKgUJx4zYZ+eHkI4/IvYoaQViQvUvwQlLhkC1PMP1DksUfid674VuAMnACmwOipl9
+        yByP1E3zbfKdH0E28vR3tA+5ICf8HAyoNxytN+AXycznam8Q0eMFdSxXCaPiKY82hNcz3UX6wooQP
+        +Po1osJUqQ2E70MIa+ZVW3lYr/T/5vCvrqgDKkaSIINdKVbMlHcbonidtye3Ziud1pRsml4yT34QS
+        ph8bCJQ8Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iP9R2-0003fP-VK; Mon, 28 Oct 2019 18:08:08 +0000
+Date:   Mon, 28 Oct 2019 11:08:08 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, x86@kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+Message-ID: <20191028180808.GA17669@bombadil.infradead.org>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <1572171452-7958-2-git-send-email-rppt@kernel.org>
+ <d6ac08fe-23f3-c2d5-24c4-88e68f3fd4d0@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d6ac08fe-23f3-c2d5-24c4-88e68f3fd4d0@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove multiple kfree statement from phram_setup() in phram.c
+On Mon, Oct 28, 2019 at 10:12:44AM -0700, Dave Hansen wrote:
+> Some other random thoughts:
+> 
+>  * The page flag is probably not a good idea.  It would be probably
+>    better to set _PAGE_SPECIAL on the PTE and force get_user_pages()
+>    into the slow path.
+>  * This really stops being "normal" memory.  You can't do futexes on it,
+>    cant splice it.  Probably need a more fleshed-out list of
+>    incompatible features.
+>  * As Kirill noted, each 4k page ends up with a potential 1GB "blast
+>    radius" of demoted pages in the direct map.  Not cool.  This is
+>    probably a non-starter as it stands.
+>  * The global TLB flushes are going to eat you alive.  They probably
+>    border on a DoS on larger systems.
+>  * Do we really want this user interface to dictate the kernel
+>    implementation?  In other words, do we really want MAP_EXCLUSIVE,
+>    or do we want MAP_SECRET?  One tells the kernel what do *do*, the
+>    other tells the kernel what the memory *IS*.
+>  * There's a lot of other stuff going on in this area: XPFO, SEV, MKTME,
+>    Persistent Memory, where the kernel direct map is a liability in some
+>    way.  We probably need some kind of overall, architected solution
+>    rather than five or ten things all poking at the direct map.
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
- drivers/mtd/devices/phram.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Another random set of thoughts:
 
-diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
-index c467286ca007..38f95a1517ac 100644
---- a/drivers/mtd/devices/phram.c
-+++ b/drivers/mtd/devices/phram.c
-@@ -243,22 +243,22 @@ static int phram_setup(const char *val)
- 
- 	ret = parse_num64(&start, token[1]);
- 	if (ret) {
--		kfree(name);
- 		parse_err("illegal start address\n");
-+		goto free_nam;
- 	}
- 
- 	ret = parse_num64(&len, token[2]);
- 	if (ret) {
--		kfree(name);
- 		parse_err("illegal device length\n");
-+		goto free_nam;
- 	}
- 
- 	ret = register_device(name, start, len);
- 	if (!ret)
- 		pr_info("%s device: %#llx at %#llx\n", name, len, start);
--	else
--		kfree(name);
- 
-+free_nam:
-+	kfree(name);
- 	return ret;
- }
- 
--- 
-2.20.1
-
+ - Should devices be permitted to DMA to/from MAP_SECRET pages?
+ - How about GUP?  Can I ptrace my way into another process's secret pages?
+ - What if I splice() the page into a pipe?
