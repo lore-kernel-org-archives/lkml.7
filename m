@@ -6,37 +6,36 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182CBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5EDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56BF20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2C120862
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731926AbfJ1Gbh (ORCPT
+        id S1731948AbfJ1Gc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 02:31:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41636 "EHLO mx1.suse.de"
+        Mon, 28 Oct 2019 02:32:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41906 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730425AbfJ1Gbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 02:31:37 -0400
+        id S1729298AbfJ1Gc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:32:56 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CA756B3C7;
-        Mon, 28 Oct 2019 06:31:35 +0000 (UTC)
-Date:   Mon, 28 Oct 2019 07:31:35 +0100
-Message-ID: <s5hmudlmldk.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 7DE1AB3C7;
+        Mon, 28 Oct 2019 06:32:54 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 07:32:54 +0100
+Message-ID: <s5hlft5mlbd.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: pci: Fix memory leak in snd_korg1212_create
-In-Reply-To: <20191027191206.30820-1-navid.emamdoost@gmail.com>
-References: <20191027191206.30820-1-navid.emamdoost@gmail.com>
+Subject: Re: [PATCH] ALSA: pci: Fix memory leak in snd_ali_create
+In-Reply-To: <20191027183030.12677-1-navid.emamdoost@gmail.com>
+References: <20191027183030.12677-1-navid.emamdoost@gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -47,16 +46,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 27 Oct 2019 20:12:04 +0100,
+On Sun, 27 Oct 2019 19:30:27 +0100,
 Navid Emamdoost wrote:
 > 
-> In the implementation of snd_korg1212_create() the allocated memory for
-> korg1212 is leaked in cases of error. Release korg1212 via
-> snd_korg1212_free() if either of these calls fail:
-> snd_korg1212_downloadDSPCode(), snd_pcm_new(), or snd_ctl_add().
+> In the implementation of snd_ali_create() the memory allocated for codec
+> is leaked in case of an error. Release codec if snd_ali_chip_init()
+> fails.
 
-This also leads to the double-free.  The code path is after
-snd_device_new() which has its own destructor callback.
+Once again, this is a wrong fix.  The code path is after
+snd_device_new() with the free op, so the object gets already released
+there.
 
 
 thanks,
@@ -64,52 +63,24 @@ thanks,
 Takashi
 
 > 
+> Fixes: f9ab2b1c3ab5 ("[ALSA] ali5451 - Code clean up, irq handler fix")
 > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 > ---
->  sound/pci/korg1212/korg1212.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+>  sound/pci/ali5451/ali5451.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/sound/pci/korg1212/korg1212.c b/sound/pci/korg1212/korg1212.c
-> index 0d81eac0a478..e976e857d915 100644
-> --- a/sound/pci/korg1212/korg1212.c
-> +++ b/sound/pci/korg1212/korg1212.c
-> @@ -2367,8 +2367,10 @@ static int snd_korg1212_create(struct snd_card *card, struct pci_dev *pci,
+> diff --git a/sound/pci/ali5451/ali5451.c b/sound/pci/ali5451/ali5451.c
+> index 6e28e381c21a..3ed07a18be4d 100644
+> --- a/sound/pci/ali5451/ali5451.c
+> +++ b/sound/pci/ali5451/ali5451.c
+> @@ -2179,6 +2179,7 @@ static int snd_ali_create(struct snd_card *card,
+>  	err = snd_ali_chip_init(codec);
+>  	if (err < 0) {
+>  		dev_err(card->dev, "ali create: chip init error.\n");
+> +		snd_ali_free(codec);
+>  		return err;
+>  	}
 >  
->  	mdelay(CARD_BOOT_DELAY_IN_MS);
->  
-> -        if (snd_korg1212_downloadDSPCode(korg1212))
-> +	if (snd_korg1212_downloadDSPCode(korg1212)) {
-> +		snd_korg1212_free(korg1212);
->          	return -EBUSY;
-> +	}
->  
->          K1212_DEBUG_PRINTK("korg1212: dspMemPhy = %08x U[%08x], "
->                 "PlayDataPhy = %08x L[%08x]\n"
-> @@ -2383,8 +2385,11 @@ static int snd_korg1212_create(struct snd_card *card, struct pci_dev *pci,
->                 korg1212->RoutingTablePhy, LowerWordSwap(korg1212->RoutingTablePhy),
->                 korg1212->AdatTimeCodePhy, LowerWordSwap(korg1212->AdatTimeCodePhy));
->  
-> -        if ((err = snd_pcm_new(korg1212->card, "korg1212", 0, 1, 1, &korg1212->pcm)) < 0)
-> +	err = snd_pcm_new(korg1212->card, "korg1212", 0, 1, 1, &korg1212->pcm);
-> +	if (err < 0) {
-> +		snd_korg1212_free(korg1212);
->                  return err;
-> +	}
->  
->  	korg1212->pcm->private_data = korg1212;
->          korg1212->pcm->private_free = snd_korg1212_free_pcm;
-> @@ -2398,8 +2403,10 @@ static int snd_korg1212_create(struct snd_card *card, struct pci_dev *pci,
->  
->          for (i = 0; i < ARRAY_SIZE(snd_korg1212_controls); i++) {
->                  err = snd_ctl_add(korg1212->card, snd_ctl_new1(&snd_korg1212_controls[i], korg1212));
-> -                if (err < 0)
-> +		if (err < 0) {
-> +			snd_korg1212_free(korg1212);
->                          return err;
-> +		}
->          }
->  
->          snd_korg1212_proc_init(korg1212);
 > -- 
 > 2.17.1
 > 
