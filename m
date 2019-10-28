@@ -2,54 +2,136 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E8BCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1648DCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C74320862
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B1320578
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:48:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m9j6/Cg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfJ1Xri (ORCPT
+        id S1727590AbfJ1Xsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 19:47:38 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:46856 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfJ1Xrh (ORCPT
+        Mon, 28 Oct 2019 19:48:36 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44176 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfJ1Xsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 19:47:37 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5973414BF467A;
-        Mon, 28 Oct 2019 16:47:37 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 16:47:36 -0700 (PDT)
-Message-Id: <20191028.164736.150119177615014814.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     3chas3@gmail.com, linux-atm-general@lists.sourceforge.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] atm: remove unneeded semicolon
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191025093030.956-1-yuehaibing@huawei.com>
-References: <20191025093030.956-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 28 Oct 2019 16:47:37 -0700 (PDT)
+        Mon, 28 Oct 2019 19:48:36 -0400
+Received: by mail-lf1-f65.google.com with SMTP id v4so5695295lfd.11;
+        Mon, 28 Oct 2019 16:48:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Q6EMHyEMqasbwBZsEfT0R2vQ55XJFS+NFj3xXGhBU+s=;
+        b=m9j6/Cg7tRFSSZ5FB1BdpF4D3YkwLwZcDlIfc2zybuOfGLo4Wig0UzhBj7VsS2NDyg
+         SY6OyxIMkF/B/mmXClhsCErc3tSLtefxSrida05uMRPigObCfa+8ZO5F88ZfgbGchoz7
+         uIzmoOKBFtPrDMo5B8MFPG2zn22pjUw00ToGZ+BSCnxqgxTeRPS7lM2JTXMs5aBONfMO
+         ygvIOOQ0fEVU79JLJ4scSqDg7Gfp3d1FfboVv1ZdJ25CQ1AOI2omufsqP+0XoCALEEEH
+         39ZULvucVQRxJi/oG1fMqKeIKmCERLUa/dTdFa9bN0cnX+u2hfQGab+76lnzi8M7gphz
+         XFTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q6EMHyEMqasbwBZsEfT0R2vQ55XJFS+NFj3xXGhBU+s=;
+        b=R7o8WLQjL6L9xLMV5Ql2jBWq1G+qah7uIszLrnYPWe69SOEwrxBBJar0OI5l8rSJKT
+         2oqc0U4ebXpeyEXEsDQD2mpRsahNd/VyjTTh7FYz/2tsIj65UkbCZBHlW5174k4nRMMw
+         l7/F+zUmmb4LUxWAAsDCZXaq9FA0SDGMitsLgEK+4LudZOpOVSWdHp1bhNVbRZbbAKRV
+         +7Pxb2xSXSubqdIMwtTLqxEq2q/ZsabdJd+Qm37f9cNokYt4PYZyK5CKAt8OxIUwOykP
+         GXhc6EN7i+sikJ4BNHVlbx3Z3jeqfdstZa6vKygWdLkiE78D+5cBsykjbds2Lr9GD2ES
+         S6Gg==
+X-Gm-Message-State: APjAAAXhbBrKBm89GBF/yyZIUpZ0jZfD/h6lDUcbIgyrVZCOzynTegJu
+        AHMYldqZfR3oR/VgCw93nuYAXyTK
+X-Google-Smtp-Source: APXvYqzEriIIo84/gTbWsLp4g6q3Dbr2B3JSuhaWyOO/FZUxl+8+KJhf/3hDABF6A4ann3gIJgdFng==
+X-Received: by 2002:a19:e017:: with SMTP id x23mr257683lfg.88.1572306513365;
+        Mon, 28 Oct 2019 16:48:33 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id b4sm4260809ljp.84.2019.10.28.16.48.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Oct 2019 16:48:32 -0700 (PDT)
+Subject: Re: [PATCH v1 01/17] clk: tegra: Add custom CCLK implementation
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191015211618.20758-1-digetx@gmail.com>
+ <20191015211618.20758-2-digetx@gmail.com>
+ <20191028145706.GF27141@pdeschrijver-desktop.Nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <2e35c210-8d76-c096-69b6-91b6ed577605@gmail.com>
+Date:   Tue, 29 Oct 2019 02:48:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20191028145706.GF27141@pdeschrijver-desktop.Nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Fri, 25 Oct 2019 17:30:30 +0800
-
-> remove unneeded semicolon.
+28.10.2019 17:57, Peter De Schrijver пишет:
+> On Wed, Oct 16, 2019 at 12:16:02AM +0300, Dmitry Osipenko wrote:
+>> CCLK stands for "CPU Clock", CPU core is running off CCLK. CCLK supports
+>> multiple parents and it has internal clock divider which uses clock
+>> skipping technique, meaning that CPU's voltage should correspond to the
+>> parent clock rate and not CCLK. PLLX is the main CCLK parent that provides
+>> clock rates above 1GHz and it has special property such that the CCLK's
+>> internal divider is set into bypass mode when PLLX is set as a parent for
+>> CCLK.
+>>
+>> This patch forks generic Super Clock into CCLK implementation which takes
+>> into account all CCLK specifics. The proper CCLK implementation is needed
+>> by the upcoming Tegra20 CPUFreq driver update that will allow to utilize
+>> the generic cpufreq-dt driver by moving intermediate clock handling into
+>> the clock driver. Note that technically this all could be squashed into
+>> clk-super, but result will be messier.
+>>
+>> Note that currently all CCLKLP bits are left in the clk-super.c and only
+>> CCLKG is supported by clk-tegra-super-cclk. It shouldn't be difficult
+>> to move the CCLKLP bits, but CCLKLP is not used by anything in kernel
+>> and thus better not to touch it for now.
 > 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ..
+> 
+>> +	super->reg = reg;
+>> +	super->lock = lock;
+>> +	super->width = 4;
+>> +	super->flags = clk_super_flags;
+>> +	super->frac_div.reg = reg + 4;
+>> +	super->frac_div.shift = 16;
+>> +	super->frac_div.width = 8;
+>> +	super->frac_div.frac_width = 1;
+>> +	super->frac_div.lock = lock;
+>> +	super->frac_div.flags = TEGRA_DIVIDER_SUPER;
+>> +	super->div_ops = &tegra_clk_frac_div_ops;
+>> +
+> 
+> This is not right. The super clock divider is not a divider, it's a
+> pulse skipper.
 
-Applied to net-next.
+For the reference: on #tegra Peter explained to me in a more details
+what was meant here. Turned out that T30+ has a real CCLK divider and we
+won't use the pulse skipper for T20 nor for T30+, I'll update clk
+patches accordingly in the next revision.
