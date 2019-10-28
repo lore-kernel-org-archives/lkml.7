@@ -2,106 +2,106 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893C1CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADC4CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A0321721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZIWictY0"
+	by mail.kernel.org (Postfix) with ESMTP id 3BA3021721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388095AbfJ1Uom (ORCPT
+        id S2388133AbfJ1UpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:44:42 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37997 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfJ1Uom (ORCPT
+        Mon, 28 Oct 2019 16:45:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45370 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725867AbfJ1UpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:44:42 -0400
-Received: by mail-qk1-f195.google.com with SMTP id e2so1324041qkn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 13:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=jCeXW/iQVileFnjio6pHN19c+809WESUARAGyyHFMiw=;
-        b=ZIWictY08313cWqh5rWJ0/Q79pOhAgqgJu9Wv5RPOkOyjHvbbsWC93irpJkneqcJGf
-         EU++BTh/VNla43NivG90yKxl/Dx0DZoFa7R1vGPRBDnogAkfWYnCJGb4uXGrZc+1wuIB
-         knwNWyw470r3PbNPA+Nq8NU8Z7IgmPh2oC8SHqqcjw3ihFnC/kn8WSvzoTgVwKCqjsR7
-         zLWlZy0vdyV8FH9P/gtZ0ha0x/Xd6YfUKXwFEXPWQI4xknUpsJWzq55ZhlDrLLegZy4H
-         VZyg9qf16H1oGqBGMS6MZXnUx2pl9/+IghjX63BuOIN4BDzQ4SZnOSD5ik/v8pWoejKQ
-         4EZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jCeXW/iQVileFnjio6pHN19c+809WESUARAGyyHFMiw=;
-        b=cyDaUEadKCXukA8W3kY2F6hVPeG5QSq+rws0xAKSjtdBUFZSnp4lcZ3jQFkm4sNV7+
-         +UFWdy3xwUioXaBrqkSsTxT8jcB3277JPr5lYtcqqkMf7uJ2ZPvPdVNTT6wne2I/GKFd
-         B+9DKU2EezqC2o6j6GKEz6lQIn9027MEF4gxbuJ2rmThu5A5IWRb9hLVGnLmYr15pakh
-         wA6evRGcPcqStBry1dxOPT8IdTaIxu9s2rK71ctwkUQjtg1LjLucOc/8axzaz1eINcC7
-         C+jmfKxx8Fin2ZTF9SV8DO/XbW8LFRQNsb2YpUNACRAMuaYM59GyOKblOEfz441q3Ggo
-         ycLw==
-X-Gm-Message-State: APjAAAU+tThBvFMBLv9xDhaKnzp6Fhp/B0vTubRxHw1/dFtrqwLJnAmC
-        NMc/evcmtM8PYlPht1tT7AssRA==
-X-Google-Smtp-Source: APXvYqzYpIGH4S94deT2nN70Tmize13/ElVqKsLU5ZvrP/dWPuIIZ4r+5OAFvpHgH0uuEwvdpsHpaA==
-X-Received: by 2002:a37:2ec5:: with SMTP id u188mr17969151qkh.94.1572295480832;
-        Mon, 28 Oct 2019 13:44:40 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id m25sm8972825qtc.0.2019.10.28.13.44.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 13:44:40 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     mpe@ellerman.id.au
-Cc:     peterz@infradead.org, paulmck@linux.ibm.com, npiggin@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] powerpc/powernv/smp: fix a warning at CPU hotplug
-Date:   Mon, 28 Oct 2019 16:44:27 -0400
-Message-Id: <1572295467-14686-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 28 Oct 2019 16:45:23 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9SKdqrX136406
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 16:45:22 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vx4sunhq2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 16:45:22 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 28 Oct 2019 20:45:19 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 28 Oct 2019 20:45:16 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9SKjF4125428188
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 20:45:15 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 525B34C040;
+        Mon, 28 Oct 2019 20:45:15 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53C814C046;
+        Mon, 28 Oct 2019 20:45:14 +0000 (GMT)
+Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 28 Oct 2019 20:45:14 +0000 (GMT)
+Subject: Re: [PATCH v1] selftest/trustedkeys: TPM 1.2 trusted keys test
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     David Howells <dhowells@redhat.com>, Petr Vorel <pvorel@suse.cz>,
+        shuah <shuah@kernel.org>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-integrity@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 28 Oct 2019 16:45:13 -0400
+In-Reply-To: <20191028203014.GA8279@linux.intel.com>
+References: <1571944467-13097-1-git-send-email-zohar@linux.ibm.com>
+         <20191028203014.GA8279@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102820-0028-0000-0000-000003B07F8B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102820-0029-0000-0000-00002472BDE2
+Message-Id: <1572295513.4532.270.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910280195
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit e78a7614f387 ("idle: Prevent late-arriving interrupts from
-disrupting offline") introduced a warning on powerpc with CPU hotplug,
+On Mon, 2019-10-28 at 22:30 +0200, Jarkko Sakkinen wrote:
+> On Thu, Oct 24, 2019 at 03:14:27PM -0400, Mimi Zohar wrote:
+> > Create, save and load trusted keys test
+> > 
+> > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> > 
+> > Change log v1:
+> > - Replace the directions for using Trousers to take ownership of the TPM
+> > with directions for using the IBM TSS.
+> > - Differentiate between different types of errors.  Recent bug is causing
+> > "add_key: Timer expired".
+> > ---
+> 
+> Is not really usable as a selftest because of 3rd party dependencies.
 
-WARNING: CPU: 1 PID: 0 at arch/powerpc/platforms/powernv/smp.c:160
-pnv_smp_cpu_kill_self+0x5c/0x330
-Call Trace:
- cpu_die+0x48/0x64
- arch_cpu_idle_dead+0x30/0x50
- do_idle+0x2e4/0x460
- cpu_startup_entry+0x3c/0x40
- start_secondary+0x7a8/0xa80
- start_secondary_resume+0x10/0x14
+As part of diagnosing trusted keys failure, there is some
+hints/directions as to how to take TPM 1.2 ownership, but it does not
+take ownership.  The previous version included directions for using
+Trousers.  This version provides directions for using the IBM TSS.
+ Feel free to include additional hints/directions.
 
-because it calls local_irq_disable() before arch_cpu_idle_dead().
-
-Fixes: e78a7614f387 ("idle: Prevent late-arriving interrupts from disrupting offline")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/powerpc/platforms/powernv/smp.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
-index fbd6e6b7bbf2..51f4e07b9168 100644
---- a/arch/powerpc/platforms/powernv/smp.c
-+++ b/arch/powerpc/platforms/powernv/smp.c
-@@ -157,7 +157,6 @@ static void pnv_smp_cpu_kill_self(void)
- 	 * This hard disables local interurpts, ensuring we have no lazy
- 	 * irqs pending.
- 	 */
--	WARN_ON(irqs_disabled());
- 	hard_irq_disable();
- 	WARN_ON(lazy_irq_pending());
- 
--- 
-1.8.3.1
+Mimi
+   
 
