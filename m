@@ -2,252 +2,372 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D353ECA9EBC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E5CCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959FA208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B38VAYDz"
+	by mail.kernel.org (Postfix) with ESMTP id D056D2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733273AbfJ1IWK (ORCPT
+        id S1733287AbfJ1IZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 04:22:10 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44320 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729786AbfJ1IWJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 04:22:09 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v4so3670597lfd.11
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 01:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wIXlgbuERO/r+OjB+yKUqeYDRiwYPjVnkieIgWyt76w=;
-        b=B38VAYDz7qc5eZ8v5Iut7ThwwndNb99Ya5qXU0gbehUWiTYDZMTxGBEaCnMWoZoPsh
-         ajRnJG99o6njVwv897rCPyDYuHmsbqcOHtZqXWOB/LlogIMJzbJeKn3ZwBL/HQ0lcdBm
-         0+FCMDnwHdGcVN1XympRw//aUoeIT+T2HJRv+isUqnMGMTcS7Q5Z36qZz+2UhedKIPlT
-         XJcC2dH7zTgQf0YxajYl8HCAoEd1U1k02bDlpn6X9GO34T85epiOLZsCXJFJQOd/P9iP
-         forqXjz5VBEi/G76JrQ9Gwb4d2exLLq8u52qb+U0GOQgGkFb/8MqakYjBpiNSJ/n4huK
-         OrkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wIXlgbuERO/r+OjB+yKUqeYDRiwYPjVnkieIgWyt76w=;
-        b=FlzxTJGX9cEksoo3XV/YD1VDX06yXtu/wH9J72YNhToImPaZ2itpHYuC8790s/NPSV
-         WZi8/p6Pt0rww+MZDAL4ur6XhTAyGCOzvYF7GTx71riwBXdu6WsLMWHhy70kCTRoIagn
-         rhAVfUR7EtBpXGHIh44fZ/GBS4Vwvvh9rhCi6jCh3SWBOSJr1Hv3X6j8d3BgtrPqrNS/
-         ihy+0b8Tl9tzLnJrNKVPCXgfCB9Bu1FLeMYJ3UGpkC3U2PMZXs7EEbhC08+E0nlnyImL
-         pN/nETlkJVuC3bWCCSa0SkNMwgb05wtKAb7GDQ2PDYe4NV189wfxaeXERFZurcuq7ttl
-         hnww==
-X-Gm-Message-State: APjAAAXh1O5SZsfM+pm1Sm3wbGvzUjDYCATJB7LxG0ICEFnlADpE7g4R
-        R5ZGNc3if+lbcJOHIjO7vRxol/yHoGofkPBOObYMQg==
-X-Google-Smtp-Source: APXvYqza5pTaS++YI4hlLxfxykVGNaV2Fn1clU+Uo5Dt9cYfwofGwz5UP5QFaU5rW1I/qlKWV/BS+j95kSnH2jGyXSU=
-X-Received: by 2002:ac2:5dc1:: with SMTP id x1mr3255017lfq.177.1572250926616;
- Mon, 28 Oct 2019 01:22:06 -0700 (PDT)
+        Mon, 28 Oct 2019 04:25:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:37258 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729786AbfJ1IZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 04:25:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 625AE1FB;
+        Mon, 28 Oct 2019 01:25:21 -0700 (PDT)
+Received: from [10.162.40.135] (p8cg001049571a15.blr.arm.com [10.162.40.135])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C7D93F71E;
+        Mon, 28 Oct 2019 01:25:14 -0700 (PDT)
+Subject: Re: [PATCH V9 2/2] arm64/mm: Enable memory hot remove
+To:     James Morse <james.morse@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        will@kernel.org, mark.rutland@arm.com, david@redhat.com,
+        cai@lca.pw, logang@deltatee.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com,
+        mgorman@techsingularity.net, osalvador@suse.de,
+        ard.biesheuvel@arm.com, steve.capper@arm.com, broonie@kernel.org,
+        valentin.schneider@arm.com, Robin.Murphy@arm.com,
+        steven.price@arm.com, suzuki.poulose@arm.com, ira.weiny@intel.com
+References: <1570609308-15697-1-git-send-email-anshuman.khandual@arm.com>
+ <1570609308-15697-3-git-send-email-anshuman.khandual@arm.com>
+ <20191010113433.GI28269@mbp> <f51cdb20-ddc4-4fb7-6c45-791d2e1e690c@arm.com>
+ <20191018094825.GD19734@arrakis.emea.arm.com>
+ <f5581644-42b7-097e-6a86-ba7db9d0b544@arm.com>
+ <5db2aab1-1dde-4545-a03d-e7ae2d86aec7@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <87ef9d38-a9ab-24b3-cc2e-93fedb4c0383@arm.com>
+Date:   Mon, 28 Oct 2019 13:55:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1572018904-5234-1-git-send-email-dsmythies@telus.net>
- <CAKfTPtDFAS3TiNaaPoEXFZbqdMt_-tfGm9ffVcQAN=Mu_KbRdQ@mail.gmail.com> <000c01d58bca$f5709b30$e051d190$@net>
-In-Reply-To: <000c01d58bca$f5709b30$e051d190$@net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 28 Oct 2019 09:21:55 +0100
-Message-ID: <CAKfTPtDx6nu7YtYN=JLRAseZS3Q6Nt-QdMQuG_XoUtmtR_101A@mail.gmail.com>
-Subject: Re: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load
- balancing path"
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5db2aab1-1dde-4545-a03d-e7ae2d86aec7@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 26 Oct 2019 at 08:59, Doug Smythies <dsmythies@telus.net> wrote:
->
-> Hi Vincent,
->
-> Thank you for your quick reply.
->
-> On 2010.10.25 09:51 Vincent Guittot wrote:
-> > On Fri, 25 Oct 2019 at 17:55, Doug Smythies <doug.smythies@gmail.com> wrote:
-> >>
-> >> This reverts commit 039ae8bcf7a5f4476f4487e6bf816885fb3fb617,
-> >> which, in turn, was a re-apply of
-> >> commit a9e7f6544b9c ("sched/fair: Fix O(nr_cgroups) in load balance path")
-> >> after it was reverted via
-> >> commit c40f7d74c741 ("sched/fair: Fix infinite loop in update_blocked_averages() by reverting a9e7f6544b9c")
-> >>
-> >> For an idle system, the cfs_rq_is_decayed function components can underflow to 0 and
-> >> incorrectly return TRUE, when the item should not be deleted from the list.
-> >
-> > The patch from Rik solves the problem of cfs_rq_is_decayed wrongly returns true
-> > https://lore.kernel.org/lkml/20190906191237.27006-6-riel@surriel.com/
->
-> Not for my use case.
->
-> I applied Rik's patch to kernel 5.4-rc2 (since all my other reference
-> test data had been acquired against a base of 5.4-rc2). Tests results
-> are similar to the non-reverted kernel (results added in-line
-> below).
 
-Ok.
+On 10/25/2019 10:39 PM, James Morse wrote:
+> Hi guys,
+> 
+> On 21/10/2019 10:53, Anshuman Khandual wrote:
+>> On 10/18/2019 03:18 PM, Catalin Marinas wrote:
+>>> On Fri, Oct 11, 2019 at 08:26:32AM +0530, Anshuman Khandual wrote:
+>>>> On 10/10/2019 05:04 PM, Catalin Marinas wrote:
+>>>>> Mark Rutland mentioned at some point that, as a preparatory patch to
+>>>>> this series, we'd need to make sure we don't hot-remove memory already
+>>>>> given to the kernel at boot. Any plans here?
+>>>>
+>>>> Hmm, this series just enables platform memory hot remove as required from
+>>>> generic memory hotplug framework. The path here is triggered either from
+>>>> remove_memory() or __remove_memory() which takes physical memory range
+>>>> arguments like (nid, start, size) and do the needful. arch_remove_memory()
+>>>> should never be required to test given memory range for anything including
+>>>> being part of the boot memory.
+>>>
+>>> Assuming arch_remove_memory() doesn't (cannot) check, is there a risk on
+>>
+>> Platform can definitely enumerate boot memory ranges. But checking on it in
+>> arch_remove_memory() which deals with actual procedural details might not be
+>> ideal IMHO. Refusing a requested removal attempt should have been done up in
+>> the call chain. This will require making generic hot plug reject any removal
+>> request which falls within enumerated boot memory. IFAICS currently there is
+>> no generic way to remember which memory came as part of the boot process.
+>> Probably be a new MEMBLOCK flag will do.
+> 
+> Memblock flags are fun because they have to be provided to the walkers like
+> for_each_mem_range().
 
-I have studied a bit more your results below and IIUC your problem,
-some periodic wakes up (every 4sec) are missing with kernel 5.4-rc2
-that helps cpuidle to enters deeper idle state after each new wake up
-until reaching the deepest state, isn't it ?
-My 1st point is that this code doesn't use timer or hrtimer to wake up
-the system but only take advantage of the wake up of something else to
-update the blocked load. So I don't see how this patch could remove
-the 4sec periodic wakeup of the watchdog timer that you are
-mentioning.
-Then, when a system is idle and not used, the load should obviously be
-null most of the time and the update of decayed load should not happen
-anyway. It looks like you take advantage of some spurious and
-un-necessary wake up to help cpuidle to reach deeper idle state. Is
-this understanding correct ?
+Yes, it will require some code changes but nevertheless, it can properly track
+early boot time added memory and differentiate it from runtime added memory. I
+am not saying we will have to go in this direction but it will be one of the
+viable generic ways to enumerate boot memory. IIUC the other existing method is
+through firmware memory map.
 
-Then, without or without removing the cfs_rq from the list, we should
-end up with rq->has_blocked_load == 0 and nohz.has_blocked == 0 too.
-The only main impact will be the duration of the loop that can be
-significantly shorter when you have a lot of rqs and cgroups.
+> 
+> Unless hot remove is a hot path, it should be enough to check against the UEFI memory map
+> or DT memory node. (we already have helpers to query the attributes from the memory map at
+> runtime, so it is still available).
+
+Only problem will be unlike memblock or firmware memory map, it does not get
+updated after each memory hot add or remove operation.
+
+> 
+> 
+>>> arm64 that, for example, one removes memory available at boot and then
+>>> kexecs a new kernel? Does the kexec tool present the new kernel with the
+>>> original memory map?
+>> I dont know, probably James can help here. But as I had mentioned earlier,
+>> the callers of remove_memory() should be able to control that. ACPI should
+>> definitely be aware about which ranges were part of boot memory and refrain
+>> from removing any subset, if the platform is known to have problems with
+>> any subsequent kexec operation because the way boot memory map get used.
+>>
+>> Though I am not much aware about kexec internals, it should inherit the
+>> memory state at given point in time
+> 
+> It does, but t = first-boot
+> 
+> 
+>> accommodating all previous memory hot and remove operations.
+> 
+> This would imply we rewrite the tables we get from firmware as the facts about the
+> platform change ... that way madness lies!
+
+OR the firmware itself can rewrite it's own table in memory after performing
+memory hotplug operations. But lets take a step back. The basic question here
+would be "What should the new kexec kernel get in terms of memory resources".
+
+There can be two options
+
+1. Memory state as available at runtime
+
+	- Seems logical unless kexec kernel has to be associated with boot resources
+	- Requires tracking the changes some where, either in kernel or firmware
+	- If kernel has to track this in a generic way, there are some options 
+
+		- memblock lists all accessible memory but does not identify boot memory
+		- firmware memmap
+
+	- If kexec needs resource enumeration from firmware table, then it requires re-write
+
+		- Either in memory hotplug path as with existing firmware memory map
+		- OR firmware updates the table itself after driving memory hotplug operation
+
+2. Memory state as available at boot
+
+	- If boot memory has been removed
+
+		- Platform must guarantee they are still accessible to next kexec kernel
+		- This is highly unlikely because
+
+			- DIMM might be taken out e.g resource trimming, error handling 
+			- DIMM might be reassigned to other guests in virtualization
+
+	- If new memory added
+
+		- Not problematic, new kexec kernel will not use this additional memory
+
+			- Just resource wastage from platform perspective
 
 >
-> >>
-> >> Signed-off-by: Doug Smythies <dsmythies@telus.net>
-> >> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> >> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >> Cc: Ingo Molnar <mingo@kernel.org>
-> >> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> >> Cc: Peter Zijlstra <peterz@infradead.org>
-> >> Cc: Thomas Gleixner <tglx@linutronix.de>
-> >> Cc: sargun@sargun.me
-> >> Cc: tj@kernel.org
-> >> Cc: xiexiuqi@huawei.com
-> >> Cc: xiezhipeng1@huawei.com
-> >> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> >>
-> >> ---
-> >> Note 1: Both this reversion and just deleting the cfs_rq_is_decayed function
-> >> and it's call and leaving the other changes have been tested. I do not know
-> >> which solution is better. (ie for the "list_for_each_entry_rcu" part of it.)
-> >>
-> >> Note 2: Previous controversy over this patch was based on heavy workloads,
-> >> but this is based on minimal or no workload, or "idle".
-> >> Where "idle" on my test server, with no gui and many services disabled,
-> >> tends to mean more "idle" than most systems.
-> >>
-> >> Note 3: While this supporting data only involves the intel_pstate CPU
-> >> frequency scaling driver as a casualty, it is beyond my capabilities
-> >> to determine what other tasks that should be running might be omitted.
-> >>
-> >> Use case example 1:
-> >> System Idle: The intel pstate CPU frequency scaling driver:
-> >> Mode: Active, non-hwp, powersave governor.
-> >> Expected behaviour: There is never ever a duration (time between calls to
-> >> the driver / per CPU) longer than 4 seconds (the watchdog time, I think).
-> >> Actual behaviour: There are long long gaps between calls to the driver:
-> >>
-> >> Kernel: 5.4-rc2 CPU:7
-> >> duration: 327.17 Seconds. (this is one of many hundreds of examples.)
-> >> mpref: 44023326
-> >> apref: 20716861
-> >> tsc: 1.11604E+12
-> >> load: 0
-> >> CPU frequency: 1.6053 GHz (average over this 327 second sample period).
-> >> old pstate: 16 (the lowest for my processor)
-> >> new pstate: 16
-> >>
-> >> Kernel: 5.4-rc2 + reversion (either method)
-> >> After several hours of testing, maximum durations were never more
-> >> than 4 seconds (well plus some jitter).
-> >> reversion method: max=4.07908 seconds
-> >> CPU:7
-> >> mperf: 492578
-> >> apref: 231813 (56,829 per second average is consistent with other tests)
-> >> tsc: 13914264074
-> >> load: 0
-> >> CPU frequency: 1.6052 GHz
-> >> old pstate: 16 (the lowest for my precessor)
-> >> new pstate: 16
-> >>
-> >> On average, the non-reverted kernel executes the driver 25% less
-> >> than the reverted kernel during idle.
->
-> On (shorter)average, the Rik patched kernel executes the driver
-> 14% less than the reverted kernel during idle.
->
-> Longer and repeated testing would be required to determine if
-> this is a trend or simply non-repeatable noise.
->
-> >> O.K. so who cares, the requested pstate doesn't change?
-> >> First, one wonders if the math could overflow.
-> >> (although 7180ddd suggests maybe it won't)
-> >> Second, the sample is largely dominated by obsolete information.
-> >> Third, this can be problematic, and potentially wastes energy,
-> >> for the busy to idle transition.
-> >>
-> >> Use case example 2:
-> >> The busy to idle transition:
-> >>
-> >> Typically, the pstate request response to a busy to idle transition
-> >> is very slow because the duration suddenly goes from, typically,
-> >> 10 milliseconds to much much longer, up to 4 seconds. Transition
-> >> times to the system being fully idle, with all requested pstates
-> >> being at minimum, takes around 8 seconds with this reversion,
-> >> and, potentially, a very very long time (over 100 seconds has been
-> >> measured) without.
-> >>
-> >> Again, so who cares, if the processor is in a deep idle state anyway,
-> >> not consuming much energy? O.K. but what if it is in an idle state
-> >> where energy consumption is a function of the requested pstate?
-> >> For example, for my processor (i7-2600K), idle state 1, then processor
-> >> package energy can be over double what it should be for many 10s of
-> >> seconds.
-> >>
-> >> Experiment method:
-> >>
-> >> enable only idle state 1
-> >> Dountil stopped
-> >>   apply a 100% load (all CPUs)
-> >>   after awhile (about 50 seconds) remove the load.
-> >>   allow a short transient delay (1 second).
-> >>   measure the processor package joules used over the next 149 seconds.
-> >> Enduntil
-> >>
-> >> Kernel k5.4-rc2 + reversion (this method)
-> >> Average processor package power: 9.148 watts (128 samples, > 7 hours)
-> >> Minimum: 9.02 watts
-> >> Maximum: 9.29 watts
-> >> Note: outlyer data point group removed, as it was assumed the computer
-> >> had something to do and wasn't actually "idle".
-> >>
-> >> Kernel 5.4-rc2:
-> >> Average processor package power: 9.969 watts (150 samples, > 8 hours)
-> >> Or 9% more energy for the idle phases of the work load.
-> >> Minimum: 9.15 watts
-> >> Maximum: 13.79 watts (51% more power)
->
-> Kernel 5.4-rc2 + Rik-patch:
-> Average processor package power: 9.85 watts (53 samples, < 3 hours)
-> Or 7.7% more energy for the idle phases of the work load.
-> Minimum: 9.23 watts
-> Maximum: 12.79 watts (40% more power)
->
->
->
+> ACPI doesn't describe memory, the UEFI memory map does. You may be using the UEFI memory
+> map on either a DT or ACPI system. If you don't have UEFI, you're using the DT memory-node.
+
+Is there any reason why firmware cannot update these tables (UEFI memory map or DT memory
+node) after driving memory hotplug operation ?
+
+> 
+> Linux passes on exactly what it had at boot through kexec. We don't rewrite the tables.
+> Memory is either described in DT, or in the UEFI memory map that was left in memory by the
+> EFI stub. Linux remembers where the UEFI memory map is through kexec using the additional
+> entries in the DT chosen node that were put there by the EFI stub.
+
+Okay, but again the point is if hot-plug is driven by firmware why cant it just update
+the resource table ? What is rationale of having values in there which does not correctly
+represent the entire addressable memory range anymore.
+
+> 
+> 
+> The bootloader (including the EFI stub) needs to know what memory is removable. Certain
+> allocations can't move once they have been made:
+>  * The kernel's randomised physical address should not be in removable memory. With UEFI,
+>    the EFI stub does this.
+>  * Firmware structures like the DT or ACPI tables should not be in removable memory.
+>    Neither should reservations for runtime use, like the RAS CPER regions, or the UEFI
+>    runtime services.
+>  * The EFI stub should not allocate the authoritative copy of the memory map in removable
+>    memory. (we have runtime helpers to lookup the attributes. we pass the boot-time memory
+>    map to the next OS via kexec).
+>  * During paging_init() we allocate memory for swapper_pg_dir. This isn't something we can
+> easily move around.
+> 
+> Its not just software!:
+>  * The GIC ITS property/pending (?) tables should not be in removable memory.
+
+All these are kernel allocations and they are always protected either being on non movable
+zones or with PG_reserved set. AFAICS these pages cannot be isolated, migrated or removed.
+So the protection comes from kernel because of their zone classification or allocation
+method (memblock_reserve etc).
+
+> 
+> 
+> The simplest thing to do here is decree that all memory present at boot, is non-removable.
+> Firmware may need to trim the memory available to UEFI to the minimum needed to boot the
+> system, we can hot-add the rest of it once we're up and running.
+
+That will be a more fundamental change in the way memory is handled during boot. AFAICS,
+we dont have to go in that direction.
+
+> 
+> 
+>> As an example cloud environment scenario, memory
+>> resources might have increased or decreased during a guest lifetime, so
+>> when the guest needs to have new OS image why should not it have all the
+>> memory ? I dont know if it's feasible for the guest to expect previous hot
+>> add or remove operations to be played again after the kexec.
+> 
+> Firmware can't know that we kexec'd, so it can't replay the operations.
+
+Okay.
+
+> 
+> I think we need a way of determining whether a particular block of removable memory is
+> present or not. If we do this during boot, then kexec works in the same way as a normal boot.
+> 
+> 
+>> There is another fundamental question here. Is there a notion of a minimum
+>> subset of boot memory which cannot be hot removed no matter what ? If yes,
+>> how that is being conveyed to the kernel currently ?
+> 
+> Yes. The UEFI memory map.
+> 
+> See drivers/firmware/efi/libstub/fdt.c::exit_boot_func()
+> the EFI stub calls efi_get_virtmap() to get the running memory map, then stores in the DT
+> with update_fdt_memmap().
+> 
+> The memory described at this stage may not be removed as allocations from the EFI stub
+> can't be moved. The biggest of these, is the kernel, which relocates itself to a random
+> physical address during the EFI stub.
+> 
+> See drivers/firmware/efi/libstub/arm64-stub.c::handle_kernel_image()
+> The memcpy() is at the end.
+
+But all these should be protected because their current allocation and usage
+(i.e ZONE_NORMAL, PG_reserved etc).
+
+> 
+> 
+>> The point is that all these need to be established between ACPI, EFI and
+>> kernel. AFAICS this problem is for MM subsystem (including the platform
+>> part of it) to solve instead.
+> 
+>>> I can see x86 has CONFIG_FIRMWARE_MEMMAP suggesting that it is used by
+>>> kexec. try_remove_memory() calls firmware_map_remove() so maybe they
+>>> solve this problem differently.
+>>>
+>>> Correspondingly, after an arch_add_memory(), do we want a kexec kernel
+>>> to access it? x86 seems to use the firmware_map_add_hotplug() mechanism.
+>>
+>> Hmm, kexec could use it instead on arm64 as well ?
+> 
+> Mmm, a linux specific description of the platform that we have to keep over kexec.
+
+As we mentioned before, if the kexec needs to inherent runtime memory resources
+instead of boot time, then changed memory resources will have to be tracked
+either in Linux or in firmware which kexec can refer.
+
+> 
+> How do we describe this if we kexec something that isn't linux? How do we tell a version
+Kexec tool reads memory resource enumeration from first running kernel and
+presents that to new kexec kernel. It can read what ever format it wants (EUFI
+memory map, DT, memblock, firmware memory map) but presents in way which kexec
+kernel can use (EUFI memory map, DT). Both formats need not be the same.
+
+> of linux that doesn't support hotplug not to overwrite it?
+
+If the running kernel does not support hotplug, nothing updates the memory map.
+It remains unchanged from boot. If the kexec kernel does not support hotplug, it
+is irrelevant because it will just consume memory as presented from the first
+running kernel which remains the same through out it's runtime.
+
+> 
+> It would be better if we had something in ACPI to tell us at runtime whether a hot
+> pluggable range of memory was populated.
+> 
+> (I haven't looked to see whether ACPI can already do this)
+
+There is a mechanism in ACPI for this i.e ACPI_SRAT_MEM_HOT_PLUGGABLE.
+
+Lets re-evaluate the situation here from scratch. Memory can be classified as
+boot and runtime because it impacts the way in which kernel allocations, zone
+initializations are treated. Boot memory deals with kernel allocation before
+zone init happens where as runtime memory might choose which zone to get into
+right away.
+
+(1) Boot memory
+
+	- Non-movable
+
+		- Normal memblocks
+		- All kernel allocations come here
+		- Become ZONE_NORMAL/DMA/DMA32 at runtime
+
+			- Never removable because isolation and hence migration impossible
+			- Removal protection because of the zone classification
+
+	- Movable	(ACPI_SRAT_MEM_HOT_PLUGGABLE)
+
+		- Memblock will be marked with MEMBLOCK_HOTPLUG
+		- Memblock allocations tried to be avoided (reversing the memblock order etc)
+		- Become ZONE_MOVABLE at runtime
+
+			- Removable  [1]
+
+(2) Runtime memory
+
+
+	- Removable
+		- Can become ZONE_NORMAL
+
+			- Never removable because isolation and hence migration impossible
+			- Removal protection because of the zone classification
+
+		- Can become ZONE_MOVABLE
+
+			- Removable [2]
+
+
+We dont have to worry about non-movable boot memory as they are protected
+against removal because of their zone and subsequent usage. Hence even if
+the firmware attempts (which it should not), it cannot be removed.
+
+[1] Remove hotpluggable boot memory
+
+Firmware should only attempt to remove memory which was tagged as hotpluggable
+ACPI_SRAT_MEM_HOT_PLUGGABLE in the SRAT table. The entire discussion here, is
+how to handle only this particular situation. Though DT based systems might
+also have similar concerns, if they support hotpluggable boot memory.
+
+a) Platform decides not to support removal of hotpluggable memory
+
+Platform can have a policy not to either give hotpluggable memory regions or
+not to attempt removing them even if given. This is a purely a firmware centric
+platform solution without requiring any changes to current memory hot-remove code.
+
+b) Platform decides to support removal of hotpluggable memory
+
+As mentioned before, free_hotplug_page_range() will have to handle PG_reserved
+pages while freeing. But kexec also needs to understand part of the boot memory
+is inaccessible now and should not be passed to the next kernel. This will
+require tracking boot memory changes in EUFI memory map or DT nodes or membock
+or firmware memory map, updated either by kernel or firmware itself.
+
+[2] Remove hotpluggable runtime memory
+
+There are no similar problems here. If runtime added memory is never going to
+be part of the kexec enumeration, it does not even matter whether these memory
+are removed or not.
+
+- Anshuman
+
+> 
+> 
+> 
+> Thanks,
+> 
+> James
+> 
+> 
