@@ -2,147 +2,104 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F51CCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FBACA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E73220717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C6820717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390377AbfJ1Pyz (ORCPT
+        id S2390738AbfJ1PzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:54:55 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:43561 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726387AbfJ1Pyz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:54:55 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x9SFs5EE001374;
-        Mon, 28 Oct 2019 17:54:05 +0200
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id 3A38960327; Mon, 28 Oct 2019 17:54:05 +0200 (IST)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        yuenn@google.com, venture@google.com, benjaminfair@google.com,
-        avifishman70@gmail.com, joel@jms.id.au
-Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v2 2/3] dt-bindings: reset: Add binding constants for NPCM7xx reset controller
-Date:   Mon, 28 Oct 2019 17:54:02 +0200
-Message-Id: <20191028155403.134126-3-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191028155403.134126-1-tmaimon77@gmail.com>
-References: <20191028155403.134126-1-tmaimon77@gmail.com>
+        Mon, 28 Oct 2019 11:55:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50316 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726612AbfJ1PzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 11:55:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AACD6B2A0;
+        Mon, 28 Oct 2019 15:55:18 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 08:53:54 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     eric@anholt.net, wahrenst@gmx.net
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: Re: [PATCH] staging: vc04_services: replace g_free_fragments_mutex
+ with spinlock
+Message-ID: <20191028155354.s3bgq2wazwlh32km@linux-p48b>
+References: <20191027221530.12080-1-dave@stgolabs.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191027221530.12080-1-dave@stgolabs.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree binding constants for Nuvoton BMC NPCM7xx
-reset controller.
+Cc devel@driverdev.osuosl.org
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- .../dt-bindings/reset/nuvoton,npcm7xx-reset.h | 82 +++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
+On Sun, 27 Oct 2019, Bueso wrote:
 
-diff --git a/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
-new file mode 100644
-index 000000000000..7b7e870eac35
---- /dev/null
-+++ b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
-@@ -0,0 +1,82 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+// Copyright (c) 2019 Nuvoton Technology corporation.
-+
-+#ifndef _DT_BINDINGS_NPCM7XX_RESET_H
-+#define _DT_BINDINGS_NPCM7XX_RESET_H
-+
-+#define NPCM7XX_RESET_FIU3		1
-+#define NPCM7XX_RESET_UDC1		5
-+#define NPCM7XX_RESET_EMC1		6
-+#define NPCM7XX_RESET_UART_2_3		7
-+#define NPCM7XX_RESET_UDC2		8
-+#define NPCM7XX_RESET_PECI		9
-+#define NPCM7XX_RESET_AES		10
-+#define NPCM7XX_RESET_UART_0_1		11
-+#define NPCM7XX_RESET_MC		12
-+#define NPCM7XX_RESET_SMB2		13
-+#define NPCM7XX_RESET_SMB3		14
-+#define NPCM7XX_RESET_SMB4		15
-+#define NPCM7XX_RESET_SMB5		16
-+#define NPCM7XX_RESET_PWM_M0		18
-+#define NPCM7XX_RESET_TIMER_0_4		19
-+#define NPCM7XX_RESET_TIMER_5_9		20
-+#define NPCM7XX_RESET_EMC2		21
-+#define NPCM7XX_RESET_UDC4		22
-+#define NPCM7XX_RESET_UDC5		23
-+#define NPCM7XX_RESET_UDC6		24
-+#define NPCM7XX_RESET_UDC3		25
-+#define NPCM7XX_RESET_ADC		27
-+#define NPCM7XX_RESET_SMB6		28
-+#define NPCM7XX_RESET_SMB7		29
-+#define NPCM7XX_RESET_SMB0		30
-+#define NPCM7XX_RESET_SMB1		31
-+#define NPCM7XX_RESET_MFT0		32
-+#define NPCM7XX_RESET_MFT1		33
-+#define NPCM7XX_RESET_MFT2		34
-+#define NPCM7XX_RESET_MFT3		35
-+#define NPCM7XX_RESET_MFT4		36
-+#define NPCM7XX_RESET_MFT5		37
-+#define NPCM7XX_RESET_MFT6		38
-+#define NPCM7XX_RESET_MFT7		39
-+#define NPCM7XX_RESET_MMC		40
-+#define NPCM7XX_RESET_SDHC		41
-+#define NPCM7XX_RESET_GFX_SYS		42
-+#define NPCM7XX_RESET_AHB_PCIBRG	43
-+#define NPCM7XX_RESET_VDMA		44
-+#define NPCM7XX_RESET_ECE		45
-+#define NPCM7XX_RESET_VCD		46
-+#define NPCM7XX_RESET_OTP		48
-+#define NPCM7XX_RESET_SIOX1		50
-+#define NPCM7XX_RESET_SIOX2		51
-+#define NPCM7XX_RESET_3DES		53
-+#define NPCM7XX_RESET_PSPI1		54
-+#define NPCM7XX_RESET_PSPI2		55
-+#define NPCM7XX_RESET_GMAC2		57
-+#define NPCM7XX_RESET_USB_HOST		58
-+#define NPCM7XX_RESET_GMAC1		60
-+#define NPCM7XX_RESET_CP		63
-+#define NPCM7XX_RESET_PWM_M1		160
-+#define NPCM7XX_RESET_SMB12		161
-+#define NPCM7XX_RESET_SPIX		162
-+#define NPCM7XX_RESET_SMB13		163
-+#define NPCM7XX_RESET_UDC0		164
-+#define NPCM7XX_RESET_UDC7		165
-+#define NPCM7XX_RESET_UDC8		166
-+#define NPCM7XX_RESET_UDC9		167
-+#define NPCM7XX_RESET_PCI_MAILBOX	169
-+#define NPCM7XX_RESET_SMB14		172
-+#define NPCM7XX_RESET_SHA		173
-+#define NPCM7XX_RESET_SEC_ECC		174
-+#define NPCM7XX_RESET_PCIE_RC		175
-+#define NPCM7XX_RESET_TIMER_10_14	176
-+#define NPCM7XX_RESET_RNG		177
-+#define NPCM7XX_RESET_SMB15		178
-+#define NPCM7XX_RESET_SMB8		179
-+#define NPCM7XX_RESET_SMB9		180
-+#define NPCM7XX_RESET_SMB10		181
-+#define NPCM7XX_RESET_SMB11		182
-+#define NPCM7XX_RESET_ESPI		183
-+#define NPCM7XX_RESET_USB_PHY_1		184
-+#define NPCM7XX_RESET_USB_PHY_2		185
-+
-+#endif
--- 
-2.22.0
-
+>There seems no need to be using a semaphore, or a sleeping lock
+>in the first place: critical region is extremely short, does not
+>call into any blocking calls and furthermore lock and unlocking
+>operations occur in the same context.
+>
+>Get rid of another semaphore user by replacing it with a spinlock.
+>
+>Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>---
+>This is in an effort to further reduce semaphore users in the kernel.
+>
+> .../staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 10 +++++-----
+> 1 file changed, 5 insertions(+), 5 deletions(-)
+>
+>diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+>index 8dc730cfe7a6..710d21654128 100644
+>--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+>+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+>@@ -63,7 +63,7 @@ static char *g_free_fragments;
+> static struct semaphore g_free_fragments_sema;
+> static struct device *g_dev;
+>
+>-static DEFINE_SEMAPHORE(g_free_fragments_mutex);
+>+static DEFINE_SPINLOCK(g_free_fragments_lock);
+>
+> static irqreturn_t
+> vchiq_doorbell_irq(int irq, void *dev_id);
+>@@ -528,11 +528,11 @@ create_pagelist(char __user *buf, size_t count, unsigned short type)
+>
+> 		WARN_ON(g_free_fragments == NULL);
+>
+>-		down(&g_free_fragments_mutex);
+>+		spin_lock(&g_free_fragments_lock);
+> 		fragments = g_free_fragments;
+> 		WARN_ON(fragments == NULL);
+> 		g_free_fragments = *(char **) g_free_fragments;
+>-		up(&g_free_fragments_mutex);
+>+		spin_unlock(&g_free_fragments_lock);
+> 		pagelist->type = PAGELIST_READ_WITH_FRAGMENTS +
+> 			(fragments - g_fragments_base) / g_fragments_size;
+> 	}
+>@@ -591,10 +591,10 @@ free_pagelist(struct vchiq_pagelist_info *pagelistinfo,
+> 			kunmap(pages[num_pages - 1]);
+> 		}
+>
+>-		down(&g_free_fragments_mutex);
+>+		spin_lock(&g_free_fragments_lock);
+> 		*(char **)fragments = g_free_fragments;
+> 		g_free_fragments = fragments;
+>-		up(&g_free_fragments_mutex);
+>+		spin_unlock(&g_free_fragments_lock);
+> 		up(&g_free_fragments_sema);
+> 	}
+>
+>-- 
+>2.16.4
+>
