@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E5BCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266CACA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541C821835
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E819421835
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uaUmY97o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eKVqOuBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390143AbfJ1V72 (ORCPT
+        id S2390579AbfJ1V75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:59:28 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46131 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389915AbfJ1V70 (ORCPT
+        Mon, 28 Oct 2019 17:59:57 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43162 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389866AbfJ1V72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:59:26 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f19so7877769pgn.13
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 14:59:26 -0700 (PDT)
+        Mon, 28 Oct 2019 17:59:28 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l24so7887203pgh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 14:59:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+L6QotxBXClg8Fe4NEIvH2M7vhWfz5AENh5gfCd6GV4=;
-        b=uaUmY97oSQxJQiygHKDaQ20ZTGg8dHh2CBe6oCjliV/RN29TrGpIx4ib9OqXas8o3L
-         VGfHqIuml3QwWjby0s2prmA2YMmiKWQVFFb1lAwmvGl498yOYU5Uls0CSQZ34KDFix43
-         G6JAmKHK8ywTaqFjTUQP00S7zXpDubMfH1Tir+VrVpTGeF7pp/x/zIimRziEyXRoQMht
-         x7W2cxF8KEa5n6o6m8KFmj7LejeivOjoMf2XtSHXLftGcJYpn6KXhdcqvG0pZZJ4idlx
-         kQxDcknr/f6WferMNpA/Vd7V+YIZo/bspA5ekOGZIugueMatX0phDtpfNMw5J5ckn8sF
-         6leg==
+        bh=NtLLzsDOIuiH39rP2uuMmF0oaTj9DHzaakbaIjXt74A=;
+        b=eKVqOuBe2qG/OSWZsaD3gbQVQnORi6YUJToqthQFixtmU1bAKAXU6V1ldupWC6VvTw
+         RsTMuqOIvs7Az8gxZhBzjgrhkGKRmX9qGZW+fIrHiDuDEeJLZMgyj+Yiz23bw9wfOREr
+         1gy4gtJ5MEfAGjn5SKvx5ks/STelDtQ4g6DKlAX9MLoSJ7+ETf+rl3nxipwO/X0YbJ04
+         kid2Lg+PjKbhGtco88Xw2DyknmmFVdZYVERdIKGLgbwv1F2AXXjq7WjmRyIVT9oJRoR5
+         I+dQGFLedmEvEqVeXZO4y+jfXBTe37AQds4D07d5UF/oXDarJbpUt6Jj34ERRyreJ5JA
+         JttQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+L6QotxBXClg8Fe4NEIvH2M7vhWfz5AENh5gfCd6GV4=;
-        b=D0tz/R3Zn62HOyrbuQL6Q2101bJ9uLA9vYq7Tk7tNl0wJ8udaLYc/GsraYdtvDnnJ0
-         tg3w7ftVG8+kHP3dDc5BK2TvBzp0pmoRUTspyZze1mFTXUvV2NjSzW2vW2w4xp5A2T2s
-         gI2XiHwadgHFJyibvmpl9tDK12iVBhcFvTCviYScGusP8YdrjKLPByMMHOgCodyPVTUl
-         t48QC5YUkMnzm2AC/iSQuhHqx4x6VhvkGOe+rFYOpXPN7GMUpHMG700r3p9pqzfiUcVr
-         z5lm01FOqvt6laallTDMj9ATqOgnd/SwE+5Atbu7rFKAYCw4jimQLw6sXSE7tVaUb7Y5
-         Lfnw==
-X-Gm-Message-State: APjAAAWi0YHOVuLpRfArxSfJflyCLZscbZiaYPhtJYlkMR6PV7nSWrOr
-        fr3Vh4lIGbBM2zx8o71Xuf2ml8FSzfI=
-X-Google-Smtp-Source: APXvYqwoT7ayq2aO4CF8CK+7fEOHyKKj3eXU3Enm6OGIp8+0wievgg8RmOqjN0WXhlj2nCmqsIIU7g==
-X-Received: by 2002:a63:f923:: with SMTP id h35mr23802494pgi.323.1572299965657;
-        Mon, 28 Oct 2019 14:59:25 -0700 (PDT)
+        bh=NtLLzsDOIuiH39rP2uuMmF0oaTj9DHzaakbaIjXt74A=;
+        b=laIqKnVt1eb3RQ/RWwpQn9SpbhYbbvVSrL8GJkonnPeCXO/ygQCM3AX6Dx8oBOQ04W
+         0m2iajhC39+2C/3RHMNVhvje58Pa5ISfuKr7+6lkpbSnS0tRCtZXKx5ewD+T7QwR7KPJ
+         pyMJf9Xeim8gKN8cidtozyCH2nCH/ExO1TZJ+wINYEBYY6ZYKVXja1154jG+N9eCBvMb
+         AZqfQaRz1coJSzd6IIRW3BIjrHfdXDjmpCHpeGdbKlYxVWlbSufyUZM6jONCpfv153Bk
+         JMGu8qP3XjThvUbIIS/vGVyxI5RwriwDYCiB2JNSdXpcWbzbolQmw1cwX6v/drwBW6bq
+         9o4Q==
+X-Gm-Message-State: APjAAAXyTWazFsDSJuQ15I2WA/MRbM8ErG4tjH6kvyyhsA8xXsSUqtz9
+        Hss8IyYmnmnjysFJOL8HhrPBXFHneCM=
+X-Google-Smtp-Source: APXvYqygibWkWPMAb7wZK/7S2yus1n7uqa1S6UdpudK6pIw6iG7qeF5t6FQaHX/vFB83z9Il5b0N2g==
+X-Received: by 2002:a63:67c3:: with SMTP id b186mr12427931pgc.152.1572299967053;
+        Mon, 28 Oct 2019 14:59:27 -0700 (PDT)
 Received: from localhost.localdomain (c-67-170-172-113.hsd1.or.comcast.net. [67.170.172.113])
-        by smtp.gmail.com with ESMTPSA id f12sm10880612pfn.152.2019.10.28.14.59.24
+        by smtp.gmail.com with ESMTPSA id f12sm10880612pfn.152.2019.10.28.14.59.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 14:59:25 -0700 (PDT)
+        Mon, 28 Oct 2019 14:59:26 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     Yu Chen <chenyu56@huawei.com>,
@@ -72,9 +72,9 @@ Cc:     Yu Chen <chenyu56@huawei.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v4 2/9] usb: dwc3: Execute GCTL Core Soft Reset while switch modes
-Date:   Mon, 28 Oct 2019 21:59:12 +0000
-Message-Id: <20191028215919.83697-3-john.stultz@linaro.org>
+Subject: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by device controller
+Date:   Mon, 28 Oct 2019 21:59:13 +0000
+Message-Id: <20191028215919.83697-4-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191028215919.83697-1-john.stultz@linaro.org>
 References: <20191028215919.83697-1-john.stultz@linaro.org>
@@ -85,15 +85,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yu Chen <chenyu56@huawei.com>
 
-On the HiKey960, we need to do a GCTL soft reset when
-switching modes.
-
-Jack Pham also noted that in the Synopsys databook it
-mentions performing a GCTL CoreSoftReset when changing the
-PrtCapDir between device & host modes.
-
-So this patch always does a GCTL Core Soft Reset when
-changing the mode.
+It needs more time for the device controller to clear the CmdAct of
+DEPCMD on Hisilicon Kirin Soc.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -114,48 +107,22 @@ Cc: devicetree@vger.kernel.org
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v3: Remove quirk conditional, as Jack Pham noted the
-    Synopsis databook states this should be done generally.
-    Also, at Jacks' suggestion, make the reset call before
-    changing the prtcap direction.
----
- drivers/usb/dwc3/core.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/usb/dwc3/gadget.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 999ce5e84d3c..a039e35ec7ad 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -112,6 +112,19 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
- 	dwc->current_dr_role = mode;
- }
- 
-+static void dwc3_gctl_core_soft_reset(struct dwc3 *dwc)
-+{
-+	u32 reg;
-+
-+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+	reg |= DWC3_GCTL_CORESOFTRESET;
-+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-+
-+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+	reg &= ~DWC3_GCTL_CORESOFTRESET;
-+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-+}
-+
- static void __dwc3_set_mode(struct work_struct *work)
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 86dc1db788a9..168eb4a0a9b0 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -270,7 +270,7 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
  {
- 	struct dwc3 *dwc = work_to_dwc(work);
-@@ -154,6 +167,9 @@ static void __dwc3_set_mode(struct work_struct *work)
+ 	const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
+ 	struct dwc3		*dwc = dep->dwc;
+-	u32			timeout = 1000;
++	u32			timeout = 5000;
+ 	u32			saved_config = 0;
+ 	u32			reg;
  
- 	spin_lock_irqsave(&dwc->lock, flags);
- 
-+	/* Execute a GCTL Core Soft Reset when switch mode */
-+	dwc3_gctl_core_soft_reset(dwc);
-+
- 	dwc3_set_prtcap(dwc, dwc->desired_dr_role);
- 
- 	spin_unlock_irqrestore(&dwc->lock, flags);
 -- 
 2.17.1
 
