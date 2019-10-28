@@ -2,136 +2,167 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA98CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D809BCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3A220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A45E620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bN8dMf3A"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GJ40qGJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390528AbfJ1PMS (ORCPT
+        id S2390568AbfJ1PMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:12:18 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:47928 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728436AbfJ1PMR (ORCPT
+        Mon, 28 Oct 2019 11:12:38 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43009 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731098AbfJ1PMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:12:17 -0400
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6412220F3BFB;
-        Mon, 28 Oct 2019 08:12:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6412220F3BFB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1572275536;
-        bh=oeOl1+MJVTxWNtYdrB+2Qje7BiiU/JQDN6GoQIL9Ybo=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=bN8dMf3AEpu9A5EX0gfGwLbF9kuPqBl4+Sl+0vtz8OL1o4VRhA0FC34is+ZfURZ8A
-         lod7XvSBjyWh6qVbvP/vjFwJw9FDS9yDR07nc/er9FZzqWasMyHRvNHZW4E45xCkrW
-         V98LqHeKeMhsO2VVp0vy7k4SRfZfJsP1WYmJ7xtM=
-Subject: Re: [PATCH v2 3/4] KEYS: Added BUILTIN_TRUSTED_KEYS enum to measure
- keys added to builtin_trusted_keys keyring
-To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        casey@schaufler-ca.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-References: <20191023233950.22072-1-nramas@linux.microsoft.com>
- <20191023233950.22072-4-nramas@linux.microsoft.com>
- <1572186810.4532.206.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <8494baa1-c4db-f08b-26c9-2e56279075d0@linux.microsoft.com>
-Date:   Mon, 28 Oct 2019 08:12:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 11:12:38 -0400
+Received: by mail-oi1-f195.google.com with SMTP id s5so6139930oie.10
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 08:12:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wXxhu/tmc9YP1XTfcQJ3HjAvQlCmqGJP256WPTj2XSc=;
+        b=GJ40qGJD7TtbIgudDFm2N7LHOQ6aSoOljrrxXlqEik+9bXO7yJallt9amumZdHCmjG
+         27n00ClQMzIia2m9uAlnK3x919OrGWy4dvA3Xp1pJJUzxWBIIZwvxmBpryE3+luDzYyq
+         b8x8CaYNpg/Ya0dz6dBgKfc41xtBqIwIUMNVHhp1ncWHdN0rxm/9FplrQ64sV3AsycdO
+         AkAmBf3pHs9hUKE9iRHFo5EEM1vKHq/iolqALxq8JXvSyZB1rgKMDHS+teXambVzbsnp
+         7zLsscjgNQF6ZVIJu3TXD+HhwdAbPJfVw1QH9JGup9MKa3Ac8UhSRm3Yn7ZX6LRxdZYj
+         8L7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wXxhu/tmc9YP1XTfcQJ3HjAvQlCmqGJP256WPTj2XSc=;
+        b=OAoZ7RF9cl6h24eI7bNTlpE85kYIWdpf9kRbRn4kluGeIXZpiNkEvfmTgon8aaZ4Uz
+         r1pqu5sSNXhb0nBDFRvwkF4l5i2HWRWUN8hTCbMhUs6hTe7QNMpgD9Ot9/e579nB8h8t
+         9xIBGHhIN8SaP2g+04X3mC8WHmdpk/WjNj4xS9KbFYO+ppbkx41Uxd9iKBwAsn6w9rMA
+         bJ1P2bpjP0GGteTUiEYfszD4ssIKqSjQ/JEpH6nneI3mo7pYTxb+miCvdJPjuWjFSkqF
+         WQlmzIPDhUVUh3VLOLGKqrELeOlPKGgFs9OTwL8uJTkfmGV63N56/MfJFD3GZlMxuMpX
+         Z5TA==
+X-Gm-Message-State: APjAAAXMN6bx5WEM+tZY0yOCsY6LGrh/1pKYBB10AJV4f3o22j0qIw7G
+        98kzXCrjaDAoDpM2wab3+02xuUpj6d0KOqTDSo6HaA==
+X-Google-Smtp-Source: APXvYqxIzAhUAQY2YqVi0DY+JV//TbVaQUHYNtEBARj1hmmiyo+CWdT7zgmtQj1uFTHVHbc9HcDYJREjaSWSkiT75mw=
+X-Received: by 2002:a05:6808:b30:: with SMTP id t16mr367143oij.157.1572275556022;
+ Mon, 28 Oct 2019 08:12:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1572186810.4532.206.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
+In-Reply-To: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 28 Oct 2019 16:12:09 +0100
+Message-ID: <CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com>
+Subject: Re: For review: documentation of clone3() system call
+To:     Michael Kerrisk-manpages <mtk.manpages@gmail.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/27/19 7:33 AM, Mimi Zohar wrote:
+On Fri, Oct 25, 2019 at 6:59 PM Michael Kerrisk (man-pages)
+<mtk.manpages@gmail.com> wrote:
+> I've made a first shot at adding documentation for clone3(). You can
+> see the diff here:
+> https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/commit/?id=3D=
+faa0e55ae9e490d71c826546bbdef954a1800969
+[...]
+>    clone3()
+>        The  clone3() system call provides a superset of the functionality
+>        of the older clone() interface.  It also provides a number of  API
+>        improvements,  including: space for additional flags bits; cleaner
+>        separation in the use of various arguments;  and  the  ability  to
+>        specify the size of the child's stack area.
 
-> .builtin_trusted_keys is a trusted keyring, which is created by the
-> kernel.  It cannot be deleted or replaced by userspace, so it should
-> be possible to correlate a keyring name with a keyring number on
-> policy load.
+You might want to note somewhere that its flags can't be
+seccomp-filtered because they're stored in memory, making it
+inappropriate to use in heavily sandboxed processes.
 
-Yes - at policy load we can map a keyring name to a keyring number.
+>            struct clone_args {
+>                u64 flags;        /* Flags bit mask */
+>                u64 pidfd;        /* Where to store PID file descriptor
+>                                     (int *) */
+>                u64 child_tid;    /* Where to store child TID,
+>                                     in child's memory (int *) */
+>                u64 parent_tid;   /* Where to store child TID,
+>                                     in parent's memory (int *) */
+>                u64 exit_signal;  /* Signal to deliver to parent on
+>                                     child termination */
+>                u64 stack;        /* Pointer to lowest byte of stack */
+>                u64 stack_size;   /* Size of stack */
+>                u64 tls;          /* Location of new TLS */
+>            };
+>
+>        The size argument that is supplied to clone3() should be  initial=
+=E2=80=90
+>        ized  to  the  size of this structure.  (The existence of the size
+>        argument permits future extensions to the clone_args structure.)
+>
+>        The stack for the child process is  specified  via  cl_args.stack,
+>        which   points   to  the  lowest  byte  of  the  stack  area,  and
 
-But at runtime we still need to know if the keyring parameter passed to 
-the IMA hook function is configured to be measured.
+Here and in the comment in the struct above, you say that .stack
+"points to the lowest byte of the stack area", but isn't that
+architecture-dependent? For most architectures, I think it should
+instead be "is the initial stack pointer", with the exception of IA64
+(and maybe others, I'm not sure). For example, on X86, when launching
+a thread with an initially empty stack, it points directly *after* the
+end of the stack area.
 
-void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-				   unsigned long flags, bool create);
-{
-    => Get the keyring number for the given "keyring".
-    => Check if the keyring number is in the configured IMA policy.
-    => If yes, measure the key.
-    => Else, do nothing.
-}
+>        cl_args.stack_size, which specifies  the  size  of  the  stack  in
+>        bytes.   In the case where the CLONE_VM flag (see below) is speci=
+=E2=80=90
 
-Did I misunderstand what you had stated?
+stack_size is ignored on most architectures.
 
->> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
->> index fc376a323908..25566c74e679 100644
->> --- a/Documentation/ABI/testing/ima_policy
->> +++ b/Documentation/ABI/testing/ima_policy
->> @@ -29,6 +29,7 @@ Description:
->>   				[FIRMWARE_CHECK]
->>   				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
->>   				[KEXEC_CMDLINE]
->> +				[BUILTIN_TRUSTED_KEYS]
-> 
-> The .builtin_trusted_keys is the name of a keyring, not of an IMA
-> hook.  Define a new IMA policy "keyring=" option, where keyring is
-> optional.  Some IMA policy rules might look like:
-> 
-> # measure all keys
-> measure func=KEYRING_CHECK
-> 
-> # measure keys on the IMA keyring
-> measure func=KEYRING_CHECK keyring=".ima"
-> 
-> # measure keys on the BUILTIN and IMA keyrings into a different PCR
-> measure func=KEYRING_CHECK keyring=".builtin_trusted_keys|.ima" pcr=11
+>        fied, a stack must be explicitly allocated and specified.   Other=
+=E2=80=90
+>        wise,  these  two  fields  can  be  specified as NULL and 0, which
+>        causes the child to use the same stack area as the parent (in  the
+>        child's own virtual address space).
+[...]
+>    Equivalence between clone() and clone3() arguments
+>        Unlike  the  older  clone()  interface, where arguments are passed
+>        individually, in the newer clone3() interface  the  arguments  are
+>        packaged  into  the clone_args structure shown above.  This struc=
+=E2=80=90
+>        ture allows for a superset  of  the  information  passed  via  the
+>        clone() arguments.
+>
+>        The following table shows the equivalence between the arguments of
+>        clone() and the fields in  the  clone_args  argument  supplied  to
+>        clone3():
+>
+>               clone()         clone(3)        Notes
+>                               cl_args field
+>               flags & ~0xff   flags
+>               parent_tid      pidfd           See CLONE_PIDFD
+>               child_tid       child_tid       See CLONE_CHILD_SETTID
+>               parent_tid      parent_tid      See CLONE_PARENT_SETTID
+>               flags & 0xff    exit_signal
+>               stack           stack
+>
+>               ---             stack_size
 
-I agree - I'll take a look at this.
-
-> "func", in this case, should be something like "KEYRING_CHECK".  No
-> mapping is necessary.
-Agree.
-
-> 
->>   	if (!ima_initialized) {
->> -		ima_queue_key_for_measurement(key, NONE);
->> +		ima_queue_key_for_measurement(key, func);
->>   		return;
->>   	}
->>   
->>   	pk = key->payload.data[asym_crypto];
->>   	process_buffer_measurement(pk->key, pk->keylen,
->>   				   key->description,
->> -				   NONE, 0);
->> +				   func, 0);
-> 
-> Pass the "keyring" to process_buffer_measurement() and on to
-> ima_get_action(), so that ima_get_action() determines whether the
-> keyring is in policy.
-
-Agree.
-
-thanks,
-  -lakshmi
-
-
+(except that on ia64, stack_size also exists in clone2(), and if
+you're not on ia64, stack_size doesn't do anything, at least on X86,
+so showing them side by side like this doesn't really make sense)
