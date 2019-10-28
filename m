@@ -2,143 +2,143 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54CACA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A01CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C56A21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B5A21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:13:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="XdGGpAvE";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="YnaKQ8o4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404073AbfJ1RMq (ORCPT
+        id S2404081AbfJ1RNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 13:12:46 -0400
-Received: from mga01.intel.com ([192.55.52.88]:26107 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbfJ1RMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 13:12:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 10:12:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
-   d="scan'208";a="203322850"
-Received: from sspina-mobl.amr.corp.intel.com (HELO [10.251.0.203]) ([10.251.0.203])
-  by orsmga006.jf.intel.com with ESMTP; 28 Oct 2019 10:12:44 -0700
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-To:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <d6ac08fe-23f3-c2d5-24c4-88e68f3fd4d0@intel.com>
-Date:   Mon, 28 Oct 2019 10:12:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1572171452-7958-2-git-send-email-rppt@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Mon, 28 Oct 2019 13:13:31 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:54628 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728371AbfJ1RNb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 13:13:31 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6D184C0D0F;
+        Mon, 28 Oct 2019 17:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1572282811; bh=TQOzGCwZxYKVSix5VA4u9hGGaiQGKOAnP1BoqO3XY/8=;
+        h=From:To:CC:Subject:Date:From;
+        b=XdGGpAvELxRP/kFd89GtXVSW7MCdao+y43j8HEhxnGNKbSHdWaFfAh+C43v984qal
+         dMOs++dVQlwBtJg3ho3du6Z1TmKeaXykvjgIq1d6xas4VwS1uEPr2oHILsBdOm4KTr
+         aIVWnjL4r61gq+XaQnjOdHowlcBEmIbLCt8sR3jNqvY7WsMnjHzLzifQAoXCAdDh9n
+         st0/SpZrS1/d6Ng6Dv5zIKmO50BtB7BGrvGs9lOhyFSaM9q/w0ZlR6Aas7OyFmUTTu
+         FCFPM6qYYu9eEg0w2UGGkIiq2I3N769FqIqLzf1wRU1LN0pDFWLXfZX3N2XUtji2ng
+         MAwMERE/XirZQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id F08E0A0079;
+        Mon, 28 Oct 2019 17:13:28 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 28 Oct 2019 10:12:36 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 28 Oct 2019 10:12:36 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TNXlAdoXKyQldFJ/puo1RGo7Flmmc1zQnZ4f6v0Rfi9ri8E+zyeVb20UupX1RqSEUrsqRKTUa+QWI859eDVXi8w94casNk1JuTa25sI4T7P9w4DUHXTyNnr4ZoVH7lHX3rQniMhjsq+azM6zS8zOPXskqFYr02GnaGgY6r1Ogv2xYjRHH0l3IWByrhTl5NRQOLsPondDazOs42sIIM1QesyP/bBTcyRp8CcK/qHuhpTdhvcBzIhYT0B9Cqw5WREmKO6wwt6qbJpUjPpZezhJT2rZH25XGISlxFVBmLDs72QTS6uzcXpKbZ2K8D3yiK5W98z0xAGDF/T1wcja7V6EGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TQOzGCwZxYKVSix5VA4u9hGGaiQGKOAnP1BoqO3XY/8=;
+ b=PM3fabDC8ZyAZB/PGL329QGbkzIOq3/gLjS2BfXOgiGM8AgTRCGm+8/+RJsQq55fM9Gwk/fxX0TqxiYz9gCa+su3bliQmSPh2g78kb0Kff1iApiayY8SAz1XB+Z+LMMSVXEudzBvq5F6J0lOb4EYKhj/0txKPVyKz+Tcs8lMrOoA1FXrelzJtTf5JWFeb1Vs86LqNjMFt1mTlwK05N44d6g7LGTDAdrezKpD2wV2VT9jF4SGHPwT9nCp2T6haLl79o1Iv6XYV+Hw8UkEixsaC/7QDvBRwUovj9I4fhArBb9bjckyqHdtDFm+zyTFQPqBo0l2F3fPJUFm486wccwMhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TQOzGCwZxYKVSix5VA4u9hGGaiQGKOAnP1BoqO3XY/8=;
+ b=YnaKQ8o4uV/Rao57XIkR+haqnH6WJ1i7c/qNiiggPOEDPMFl7f4Uzg07OBLWGlUFO/zBhRJVqcHBcww+ffQLGjSI3PiqEYFCDE+KYtlZdbAIVl/JO8sb9OSbYAYF6s8sgUTGRQe96IMTsDx76e5Pbpr+D2/Qd547BoL6PhQbkDQ=
+Received: from DM6PR12MB4089.namprd12.prod.outlook.com (10.141.184.211) by
+ DM6PR12MB3051.namprd12.prod.outlook.com (20.178.30.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Mon, 28 Oct 2019 17:13:18 +0000
+Received: from DM6PR12MB4089.namprd12.prod.outlook.com
+ ([fe80::19df:560:b8d3:e1cd]) by DM6PR12MB4089.namprd12.prod.outlook.com
+ ([fe80::19df:560:b8d3:e1cd%5]) with mapi id 15.20.2387.025; Mon, 28 Oct 2019
+ 17:13:18 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     lkml <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>
+Subject: [GIT PULL] ARC updates for 5.4-rc6
+Thread-Topic: [GIT PULL] ARC updates for 5.4-rc6
+Thread-Index: AQHVjbL+XnRHWNd0xkWypiJK2GmH5Q==
+Date:   Mon, 28 Oct 2019 17:13:18 +0000
+Message-ID: <7ad0416c-af35-48e9-2d79-479d4a9d3e85@synopsys.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vgupta@synopsys.com; 
+x-originating-ip: [149.117.75.13]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b1990a7b-f0c2-483b-dbc9-08d75bca20e3
+x-ms-traffictypediagnostic: DM6PR12MB3051:
+x-microsoft-antispam-prvs: <DM6PR12MB3051BA644DAD48D2D0307316B6660@DM6PR12MB3051.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1169;
+x-forefront-prvs: 0204F0BDE2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(366004)(376002)(39860400002)(136003)(189003)(199004)(31696002)(6486002)(14454004)(4001150100001)(7736002)(4326008)(8936002)(99286004)(256004)(186003)(5660300002)(6436002)(76116006)(305945005)(25786009)(66066001)(65956001)(65806001)(58126008)(316002)(71200400001)(71190400001)(54906003)(36756003)(478600001)(2616005)(6506007)(8676002)(26005)(6512007)(476003)(6916009)(2906002)(31686004)(86362001)(81156014)(81166006)(66446008)(64756008)(66946007)(66556008)(66476007)(102836004)(6116002)(486006)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3051;H:DM6PR12MB4089.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hDMNUr7cC79wENae5o6NCYQz7S3F1xkfs+4I5N9HIk+GkA8q4AUCJFr268gPC6Txd7kC9vER8ep2MhaRw/obMmRZj/JLr0X2PGlzUI0pm6U/gPVs64U405+/lz99MCUw4FgEnINy/j5eVVfZ8D/6pdxeNh+yUb3Y5qvmC9niQNtwZA8i+dQOAOoej3w1dfTaNt/6Ztj49QS0xciCXZzfbN08GbCpkA2GDy5w4ACNliNW/lqb75iECdJIp/YIKNNZ8/yW4gtqyut8tNTwuhp+YMmSzqovsBYs6gSBehuB83DHexxKovpU2zfRV8wsnnjdJlRupQ12z2RSlQ3kODkg8GsovRbowKVq7OLgD+BmT2jfB8OnBGPTK/YZWeE8J97xvtUfgVB1jQOFQdmuSMTHYkygZDfebj5fClS9C0yrXjYc8Dx4kGe2jsg2T6txlPl3
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F479E99372690842B1584CD70F98DBDE@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1990a7b-f0c2-483b-dbc9-08d75bca20e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 17:13:18.8872
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OAl5AxiG22bIgDFTbCvmLlguLDXswmuzZhVRUHmOFtFsd34RfsBPK4Fj6s6NhgNcsOE/HQQd6/G/JhwoXNFT2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3051
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/27/19 3:17 AM, Mike Rapoport wrote:
-> The pages in these mappings are removed from the kernel direct map and
-> marked with PG_user_exclusive flag. When the exclusive area is unmapped,
-> the pages are mapped back into the direct map.
-
-This looks fun.  It's certainly simple.
-
-But, the description is not really calling out the pros and cons very
-well.  I'm also not sure that folks will use an interface like this that
-requires up-front, special code to do an allocation instead of something
-like madvise().  That's why protection keys ended up the way it did: if
-you do this as a mmap() replacement, you need to modify all *allocators*
-to be enabled for this.  If you do it with mprotect()-style, you can
-apply it to existing allocations.
-
-Some other random thoughts:
-
- * The page flag is probably not a good idea.  It would be probably
-   better to set _PAGE_SPECIAL on the PTE and force get_user_pages()
-   into the slow path.
- * This really stops being "normal" memory.  You can't do futexes on it,
-   cant splice it.  Probably need a more fleshed-out list of
-   incompatible features.
- * As Kirill noted, each 4k page ends up with a potential 1GB "blast
-   radius" of demoted pages in the direct map.  Not cool.  This is
-   probably a non-starter as it stands.
- * The global TLB flushes are going to eat you alive.  They probably
-   border on a DoS on larger systems.
- * Do we really want this user interface to dictate the kernel
-   implementation?  In other words, do we really want MAP_EXCLUSIVE,
-   or do we want MAP_SECRET?  One tells the kernel what do *do*, the
-   other tells the kernel what the memory *IS*.
- * There's a lot of other stuff going on in this area: XPFO, SEV, MKTME,
-   Persistent Memory, where the kernel direct map is a liability in some
-   way.  We probably need some kind of overall, architected solution
-   rather than five or ten things all poking at the direct map.
-
+SGkgTGludXMsDQoNClNtYWxsIGZpeGVzIGZvciBBUkMuIFBsZWFzZSBwdWxsLg0KDQpUaHgsDQot
+VmluZWV0DQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0+DQpUaGUgZm9sbG93aW5nIGNoYW5n
+ZXMgc2luY2UgY29tbWl0IDdkMTk0YzIxMDBhZDJhNmRkZWQ1NDU4ODdkMDI3NTQ5NDhjYTUyNDE6
+DQoNCiAgTGludXggNS40LXJjNCAoMjAxOS0xMC0yMCAxNTo1NjoyMiAtMDQwMCkNCg0KYXJlIGF2
+YWlsYWJsZSBpbiB0aGUgR2l0IHJlcG9zaXRvcnkgYXQ6DQoNCiAgZ2l0Oi8vZ2l0Lmtlcm5lbC5v
+cmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3ZndXB0YS9hcmMuZ2l0LyB0YWdzL2FyYy01LjQt
+cmM2DQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1cCB0byA1ZWZmYzA5YzQ5MDc5MDFmMGU3
+MWU2OGU1ZjJlMTQyMTFkOWEyMDNmOg0KDQogIEFSQzogcGVyZjogQWNjb21tb2RhdGUgYmlnLWVu
+ZGlhbiBDUFUgKDIwMTktMTAtMjIgMDk6NTk6NDMgLTA3MDApDQoNCi0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkFSQyBmaXhl
+cyBmb3IgNS40LXJjNg0KDQogLSBwZXJmIGZpeCBmb3IgQmlnIEVuZGlhbiBidWlsZCBbQWxleGV5
+XQ0KDQogLSBoYWRrIHBsYXRmb3JtIGVuYWJsZSBzb2VtIHBlcmlwaGVyYWxzIFtFdWdlbml5XQ0K
+DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tDQpBbGV4ZXkgQnJvZGtpbiAoMSk6DQogICAgICBBUkM6IHBlcmY6IEFjY29tbW9k
+YXRlIGJpZy1lbmRpYW4gQ1BVDQoNCkV1Z2VuaXkgUGFsdHNldiAoMik6DQogICAgICBBUkM6IFtw
+bGF0LWhzZGtdOiBFbmFibGUgb24tYm9hcmQgU1BJIE5PUiBmbGFzaCBJQw0KICAgICAgQVJDOiBb
+cGxhdC1oc2RrXTogRW5hYmxlIG9uLWJvYXJkaSBTUEkgQURDIElDDQoNCiBhcmNoL2FyYy9ib290
+L2R0cy9oc2RrLmR0cyAgICAgIHwgMjMgKysrKysrKysrKysrKysrKysrKysrKysNCiBhcmNoL2Fy
+Yy9jb25maWdzL2hzZGtfZGVmY29uZmlnIHwgIDYgKysrKysrDQogYXJjaC9hcmMva2VybmVsL3Bl
+cmZfZXZlbnQuYyAgICB8ICA0ICsrLS0NCiAzIGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlvbnMo
+KyksIDIgZGVsZXRpb25zKC0pDQo=
