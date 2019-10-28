@@ -2,145 +2,101 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BB7CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D469DCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C28208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D9A208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:58:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VRinFB+O"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HAQhKnpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbfJ1H5k (ORCPT
+        id S1733110AbfJ1H57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 03:57:40 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:36261 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731140AbfJ1H5k (ORCPT
+        Mon, 28 Oct 2019 03:57:59 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36440 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731140AbfJ1H57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 03:57:40 -0400
-Received: by mail-pg1-f173.google.com with SMTP id j22so345532pgh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 00:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=0tOD6xTgafBMzD/bQT7mA2BK+hDrqf70u3fKrnf/Mq8=;
-        b=VRinFB+OJkAI+0T8PjMCYoRQof4sh3mxSQmc2bhFFpv5fQnmTVGIpuPnVScat+4NDl
-         ZfRqSL4DtLJ9PjAZwFTE/XRKr4Bk1fpmj9A9em4QCzb4LfkN5SdZoXeOGc3DLup8wy/H
-         IF7JO+Bh9BZmkQ5Pm0SqNPbOxgL3IJGtRmuPB/z3oWOEJp0ycpzuH64hWYIPpWd+spaC
-         x7+S+69A4ONXZxmM5bQnJFxLEtv+K8ExMnoogG3mcYRaEsRDXB4hYOE53bNQCmiZHvVn
-         9ladJtnMbBlAT+rQYn/+3maNCNUOUCEMApRmhSl/25xXFr+LpUW3gmtshzX79xsMhb3Y
-         b0xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0tOD6xTgafBMzD/bQT7mA2BK+hDrqf70u3fKrnf/Mq8=;
-        b=pdzyDZ87cKOe9WMo8DmJIUMZ8YII+S1DmxpzaWqcP8yMN0MMv0x7u95U+1LQkovYch
-         OO91eLfP78xZysQycUpB/SfrfIyLmNJuCFuYQ05Xi3WWC3RYAN63GhyK99yDh+FdVywO
-         Czg6RkJi9ZqxPZKzt0/36ejfgjBM0Vdh99xdrQFWXkYP/bDnyRHg8tl7E7YuwqFhBXO3
-         fgz/qFwvqmhgaKBodYCgrzRX0aORzFF847Tk1xiMViC6C2YgNAo2c29DMXDolk+mqVpW
-         Vx2Kj+CrgeBmfp9wsFDD8xNfJFktXWMmcdGI9P8mRORntgfcu9Sh+/F/EgDDzVORZ5Q1
-         41QQ==
-X-Gm-Message-State: APjAAAVAQzbRIhCIUGbnacP1BX8C0q9GUQdOBMThRnqezGEKBiuzFM/C
-        k46j6r9aAZEOMVZqsQLE7lBNyA==
-X-Google-Smtp-Source: APXvYqz+AAFzlNhGkv597kxEls8SCGWc37dH13XlmSzuhKJPPkYP/vWnh+D92sxsTEH0WNQUaCTWjA==
-X-Received: by 2002:a63:4b54:: with SMTP id k20mr19750139pgl.70.1572249459319;
-        Mon, 28 Oct 2019 00:57:39 -0700 (PDT)
-Received: from localhost.localdomain (111-241-170-106.dynamic-ip.hinet.net. [111.241.170.106])
-        by smtp.gmail.com with ESMTPSA id y36sm9504752pgk.66.2019.10.28.00.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 00:57:38 -0700 (PDT)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        Mon, 28 Oct 2019 03:57:59 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S7s6n4177032;
+        Mon, 28 Oct 2019 07:57:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=jQ6PJCli6p5m7RwQspPzyqTvse7VkcpWcjvd3zOJ4+A=;
+ b=HAQhKnprpT+rni6UrLSaaxlllVPKP9qFG9g/DnYovW+Mey13732trRR/riMkNnRM66Fn
+ gl7+/0Gc0h4RVBzI/RlvZ5ewCa+Jh8JsFdLxEhMof//9KM4oWmqxuAg6Iu22b74X/Hg5
+ b325kHQWHNF2LPUsPxCy7bAdIUu6yqsZlHjduOVuIjVUEkR9w2u6qSeZGqM9IRXopZJT
+ tl25BUtCGQvLWQPAl8gIpD1LotwFU0P6kx+GMTjOEkDLAeWyzHqNozAKQHHEKnZHfarK
+ PJJOeZcQU6AkeYMFNqBs9JumOrSSdf5aqsQH78Kfl9E5zmX+aFSOgTBx1R/sE+tLebyS jA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2vvumf50na-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 07:57:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S7s07f105156;
+        Mon, 28 Oct 2019 07:57:50 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2vw09f7h59-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 07:57:50 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9S7vmEl029995;
+        Mon, 28 Oct 2019 07:57:49 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 28 Oct 2019 00:57:47 -0700
+Date:   Mon, 28 Oct 2019 10:57:38 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Cristiane Naves <cristianenavescardoso09@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/4] dmaengine: sf-pdma: Add platform dma driver
-Date:   Mon, 28 Oct 2019 15:56:19 +0800
-Message-Id: <20191028075658.12143-1-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        linux-kernel@vger.kernel.org, Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>
+Subject: Re: [RESEND PATCH] staging: gasket: Fix lines ending with a '('
+Message-ID: <20191028075738.GC1944@kadam>
+References: <20191025232935.GA813@cristiane-Inspiron-5420>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025232935.GA813@cristiane-Inspiron-5420>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910280079
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910280079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
-DMAengine controller doc[1] to implement and take other DMA drivers as reference.
-Such as
+When I see a RESEND in the subject, that means you are tell us we messed
+up and accidentally ignored your patch.  So then we have to figure out
+what went wrong with the process and so we don't mess up again.
 
-  - drivers/dma/fsl-edma.c
-  - drivers/dma/dw-edma/
-  - drivers/dma/pxa-dma.c
+It would help us if you put a note under the --- cut off like "I sent
+this a month ago and never received a response.  Here is a link to the
+email archive so I know that it made it to the list."
 
-Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
+I recently had an issue like this where I complained that my patch
+wasn't applied and the maintainer said "Oh.  That's odd.  I have it
+written down in patchword that I emailed you to ask you do fix the bug
+in a different way."  So these sorts of mistakes happen.
 
- - 4 physical DMA channels, share same DONE and error interrupt handler. 
- - Support MEM_TO_MEM
- - Tested by DMA test client
- - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
-   patch for easier review and apply to different branch or SoC platform.
- - retry 1 time if DMA error occurs.
+regards,
+dan carpenter
 
-[Reference Doc]
- [1] ./Documentation/driver-api/dmaengine/provider.rst
- [2] ./Documentation/driver-api/dmaengine/dmatest.rst
- [3] https://static.dev.sifive.com/FU540-C000-v1.0.pdf 
-
-[Simple steps to test of DMA Test client]
- $ echo 1 > /sys/module/dmatest/parameters/iterations
- $ echo dma0chan0 > /sys/module/dmatest/parameters/channel
- $ echo dma0chan1 > /sys/module/dmatest/parameters/channel
- $ echo dma0chan2 > /sys/module/dmatest/parameters/channel
- $ echo dma0chan3 > /sys/module/dmatest/parameters/channel
- $ echo 1 > /sys/module/dmatest/parameters/run
-
-[Expected test result]
-[  267.563323] dmatest: dma0chan0-copy0: summary 45629 tests, 0 failures 38769.01 iops 309661 KB/s (0)
-[  267.572427] dmatest: dma0chan1-copy0: summary 45863 tests, 0 failures 40286.85 iops 321643 KB/s (0)
-[  267.581392] dmatest: dma0chan2-copy0: summary 45975 tests, 0 failures 41178.48 iops 328740 KB/s (0)
-[  267.590542] dmatest: dma0chan3-copy0: summary 44768 tests, 0 failures 38560.29 iops 307726 KB/s (0)
-
-Green Wan (4):
-  dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
-  riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
-  dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00
-  MAINTAINERS: Add Green as SiFive PDMA driver maintainer
-
- .../bindings/dma/sifive,fu540-c000-pdma.yaml  |  55 ++
- MAINTAINERS                                   |   6 +
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |   7 +
- drivers/dma/Kconfig                           |   2 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/sf-pdma/Kconfig                   |   6 +
- drivers/dma/sf-pdma/Makefile                  |   1 +
- drivers/dma/sf-pdma/sf-pdma.c                 | 602 ++++++++++++++++++
- drivers/dma/sf-pdma/sf-pdma.h                 | 123 ++++
- 9 files changed, 803 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
- create mode 100644 drivers/dma/sf-pdma/Kconfig
- create mode 100644 drivers/dma/sf-pdma/Makefile
- create mode 100644 drivers/dma/sf-pdma/sf-pdma.c
- create mode 100644 drivers/dma/sf-pdma/sf-pdma.h
-
-
-base-commit: d6d5df1db6e9d7f8f76d2911707f7d5877251b02
--- 
-2.17.1
 
