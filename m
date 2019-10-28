@@ -2,139 +2,129 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488AECA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16AECA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1DF2086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97FDC2086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="dTU3rPmV"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="byq6KJZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388600AbfJ1MHh (ORCPT
+        id S2388800AbfJ1MI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:07:37 -0400
-Received: from mail-eopbgr30059.outbound.protection.outlook.com ([40.107.3.59]:50006
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730055AbfJ1MHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:07:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GBzTCjDEw38KUxDrYmdx6lZBve85jF/4wl6wgk/f5APbconVucOPuULRM5mNjVQiQkrNCCNLtnQfLdD60BYeukh3gYDeK30KwSFn8eGM4Ip1KQPMsVL3YlV1I8VDbncWomWzCswuEnIEfZgDZaohBcfVMBWdagqTUimP+hQvE4vXII6FC98RtYQFgpETgkxvMoRg5fJPWOfZcyeK2ee1OaiPRWlEfgKm2bj/4B9npxbEkOEmd4Vr78nkeMI9LNuUhqy/l4gZbHk6CfdzBtlF17GifGuDMkleYb9Kul0B5iy6wc6UJkEVVzrKmDvZ7fZGT1Yb7KEnPvHtndLVXNinTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ufPYz03fbF/xvq6ZzQ02XZGBMh6qy4seCZ22vlZbH+k=;
- b=AeO8NX7p4dJUzeo9xXJvAOePLeQoql4ZAWpznow+NaIiJnrohUW+MCBrxJe7nK1g7Mulbd8mbLCwpz9BlJJ/scTGIPaDxpUlKhNCKRVjho3F1pBckLi33NIH8x9rHomlQ0WsddtOJkSlxLuvZaMytY5DNqr0gVgrSBadWqo6BOIKhYs6WvszXXT5ZvhEZ9hyLSwygchr/Da6m4UOeHoqfGFaS/EtJudx1Ap0wEl0vt63I0lKCW6NHgHHm2vsBhVCdkJKD84lkP/iQNiOV8zo9sInmAmIQ5iXFvtSW9hsHBQvt2mCaX7gciWtAZNbaO3r7/1M+AHVHqSOaf7wcyAHWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kococonnector.com; dmarc=pass action=none
- header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
+        Mon, 28 Oct 2019 08:08:28 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36232 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730055AbfJ1MI2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 08:08:28 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so11072543ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 05:08:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ufPYz03fbF/xvq6ZzQ02XZGBMh6qy4seCZ22vlZbH+k=;
- b=dTU3rPmVyD35xaZW1/0GWr+9f1dRHHai0PNqxPNdhkLYB4Rz2b0UDWIXwXczwKhoiuPSmRcq2qaSveYuTSkT5CtFXNjpcF0FwUEHuhyqEYTo7VI47aULskEPIndTz9jBccQyEXIR7Yq4sxjnlWfVkzJAd/BRZoYgpKWhQp4B+Ek=
-Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com (10.170.212.23) by
- DB6PR0902MB1879.eurprd09.prod.outlook.com (10.171.76.7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Mon, 28 Oct 2019 12:07:32 +0000
-Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com
- ([fe80::b1b2:ecb1:9c98:6b74]) by DB6PR0902MB2072.eurprd09.prod.outlook.com
- ([fe80::b1b2:ecb1:9c98:6b74%6]) with mapi id 15.20.2387.025; Mon, 28 Oct 2019
- 12:07:32 +0000
-From:   Oliver Graute <oliver.graute@kococonnector.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        =?iso-8859-1?Q?S=E9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] dt-bindings: arm: fsl: Document Variscite i.MX6q
- devicetree
-Thread-Topic: [PATCH v1] dt-bindings: arm: fsl: Document Variscite i.MX6q
- devicetree
-Thread-Index: AQHVikyT2KF91MXB10mxyuBdtabWT6dv89SAgAAHgYA=
-Date:   Mon, 28 Oct 2019 12:07:32 +0000
-Message-ID: <20191028120519.GA4147@optiplex>
-References: <20191024092019.4020-1-oliver.graute@kococonnector.com>
- <20191028113826.GD16985@dragon>
-In-Reply-To: <20191028113826.GD16985@dragon>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR02CA0021.eurprd02.prod.outlook.com
- (2603:10a6:208:3e::34) To DB6PR0902MB2072.eurprd09.prod.outlook.com
- (2603:10a6:6:8::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oliver.graute@kococonnector.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.161.132]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6d1bfcb2-8a21-4b88-465a-08d75b9f6929
-x-ms-traffictypediagnostic: DB6PR0902MB1879:
-x-microsoft-antispam-prvs: <DB6PR0902MB187975BD0711DB16777B34FBEB660@DB6PR0902MB1879.eurprd09.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:255;
-x-forefront-prvs: 0204F0BDE2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(346002)(136003)(366004)(376002)(396003)(39830400003)(189003)(199004)(81156014)(229853002)(33656002)(386003)(6506007)(25786009)(66476007)(66556008)(66446008)(7416002)(64756008)(186003)(3846002)(66066001)(6116002)(66946007)(26005)(86362001)(6246003)(102836004)(5660300002)(476003)(8676002)(4326008)(6486002)(11346002)(508600001)(4744005)(81166006)(6512007)(6916009)(71200400001)(6436002)(14454004)(1076003)(446003)(71190400001)(33716001)(305945005)(7736002)(54906003)(8936002)(9686003)(44832011)(256004)(76176011)(99286004)(486006)(316002)(2906002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0902MB1879;H:DB6PR0902MB2072.eurprd09.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: kococonnector.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: X2pucoY+MLAmupebskQvw1ztiy3DNpDBxGOn0JQaxpbqZ/XyvWHBRzbNHPS45Tj6BruaSkg8Gm4jfGDU43atyN6jGVY7rXAXrfq4Myj4km1kwAPkfO2DZMQ2QskI4Ojgj4y820wWK4WIPcQkqKO3Q4UEegVGwX2+1WVyND29CgLnv59bQ23yuWhFROM0Sx9DgTAAUzHefmMehoADV/YWJkyOtOZbLQ/BT8OpknMgMG8VcLpOLbap1PCdKdK4MSNqJK08fZLRT6dRNfCd28txt2Gd4CLnXoC5FunY9artVHDGNJw7wWR01zF/QhUY74x9hxH/QiYGzKM6WIqDeA2+f8U8UJak1SLrkbzR7G8tcM04NwVflx8VBjWFjbdZVAavR93W2hJGj7x9e0i/O4gDoETWhDNi0MJtJWOOExwP76JW4149Sr+LPNpP+kO6Q7wc
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <BDBB041599490542A768DC713BCDDB55@eurprd09.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6kDoXt82CZljf+qYADfgJAkcPTlQsFN1MjjiwFG1/RM=;
+        b=byq6KJZBAX2DLAVCixgRz0a3foTiHOcfMMRSGNs4kAATIezC3V3fo+VoYYGZyk0SCy
+         /+wiTzN6adLGc7qy8PsJuczixruDVfdrJcQt4nYTlRIU9NooFXE3BVZfqTeXO+x7iLoP
+         MODzSsRG5P3GseVPZ1gMt9mr8kDY+nZqe2q8N1dchBW1vIkaOWi2set3Pq77bKpLqd7g
+         m8vtzdHLILeZun5kvamZXLaG69F65q2i5/OPrVjq7iB4TsGSZMS+BZldDFiqzGio6zw2
+         ITl8my0VvV0AhZ4O8ER8IfkKS9kTsqAQGeMpmFoHrpHJFUISIvjd1MYpKB11WzILz4MU
+         BxtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6kDoXt82CZljf+qYADfgJAkcPTlQsFN1MjjiwFG1/RM=;
+        b=MpUF4JMvULXRTGawfDk6NJ/yTBH6JWu2MCJv7XoXmG453ijePTk/zg0Nn+KKYCCicI
+         2UZXdtPQDgbOXHlKewARlrImO7E6W644qPfbueh9UacAgsR4ShVHy/ZFZaLGIVu6aMS4
+         UKpsXuGmpxMKEnPOqXHBH3rcgNfad8/bwVX5yOEjMc4jl++QnPHVPRXaksh01OjOmUSA
+         n9T+22PwvLpj7W71aZDUEvQb8TW0AsQ1Yh5bjl6E/5eO8O6lAK6IFenGTmJiU305whTZ
+         QXEtIxxALodP03nGToEE/6Y22a1A+shu8A3Lpaauf/YjYvtRrZzMo5v6i5qIrLB6EQFT
+         hhnA==
+X-Gm-Message-State: APjAAAUO9KZkS2rR2R+0FRhU1TIa0iHCQPv1diS64lfzstxhcjJKkXp5
+        cuzTuHV/YZSdY7DM74Hq4yma5w==
+X-Google-Smtp-Source: APXvYqzYukSwZMFq5wv0NTuGkMM95KOM3+uXAMOBIFQx7Db98+LH3OzhK61OsWzwhG6Vw99QXDauAQ==
+X-Received: by 2002:a2e:9ad0:: with SMTP id p16mr11568746ljj.179.1572264504500;
+        Mon, 28 Oct 2019 05:08:24 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id k9sm5245781ljk.91.2019.10.28.05.08.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 05:08:23 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 78EDB100242; Mon, 28 Oct 2019 15:08:25 +0300 (+03)
+Date:   Mon, 28 Oct 2019 15:08:25 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     "Figo.zhang" <figo1802@gmail.com>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2] mm: Recheck page table entry with page table lock held
+Message-ID: <20191028120825.mmlfputxj3p44yxh@box>
+References: <20180926031858.9692-1-aneesh.kumar@linux.ibm.com>
+ <CAF7GXvqmf_pqrYCoG+9Kna184Yi0JNvGpwN7JcGvnBL3SFrcnQ@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: kococonnector.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d1bfcb2-8a21-4b88-465a-08d75b9f6929
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 12:07:32.0843
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 59845429-0644-4099-bd7e-17fba65a2f2b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t/VoaNVKWW5yIOVSuewyeuNmty1dOSaPcFwwGzsP2G7PA/pZ+V5Lx+1Di/HGn1KNvt5BX3bzZOBMsOdJIdKueCsftTtaQQFM2OKzX9onnt8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0902MB1879
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF7GXvqmf_pqrYCoG+9Kna184Yi0JNvGpwN7JcGvnBL3SFrcnQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/10/19, Shawn Guo wrote:
-> On Thu, Oct 24, 2019 at 09:22:37AM +0000, Oliver Graute wrote:
-> > Document the Variscite i.MX6qdl board devicetree binding
-> > already supported:
-> >=20
-> > - variscite,dt6customboard
-> >=20
-> > Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
->=20
-> Please organise it into the patch series, where it's being used.
+On Fri, Oct 25, 2019 at 11:13:58AM +0800, Figo.zhang wrote:
+> Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com> 于2018年9月26日周三 上午11:19写道：
+> 
+> > We clear the pte temporarily during read/modify/write update of the pte.
+> > If we
+> > take a page fault while the pte is cleared, the application can get
+> > SIGBUS. One
+> > such case is with remap_pfn_range without a backing vm_ops->fault callback.
+> > do_fault will return SIGBUS in that case.
+> >
+> what is " remap_pfn_range without a backing vm_ops->fault callback ", would
+> you like  elaborate the scenario?
+>  is it the case using remap_pfn_range()  in drivers mmap() file operations?
+> if in that case, why it will trap into do_fault?
 
-I think this was just forgotten on this commit:
+Because there's no page mapped there during the race.
 
-commit 26b7784b29e90da926ff3c290107f7e78c807314
-Author: Neil Armstrong <narmstrong@baylibre.com>
-Date:   Mon Dec 4 10:21:09 2017 +0100
+> >
+> > cpu 0                                           cpu1
+> > mprotect()
+> > ptep_modify_prot_start()/pte cleared.
+> > .
+> > .                                               page fault.
+> > .
+> > .
+> > prep_modify_prot_commit()
+> 
+> 
+>   i am confusing this  scenario, when CPU0 will call
+> in change_pte_range()->ptep_modify_prot_start() to clear the pte content,
+> and
+> on the other thread, in handle_pte_fault(), pte_offset_map() can get the
+> pte, and the pte is not invalid, it's pte is valid but just the content is
+> all zero, so why it will call into do_fault?
+> 
+> in  handle_pte_fault():
+>     vmf->pte = pte_offset_map(vmf->pmd, vmf->address);
+>     if (!vmf->pte) {
+>             return do_fault(vmf);
+>     }
 
-    ARM: dts: imx6q: Add Variscite DART-MX6 Carrier-board support
+This case handles the situation when pte is none (clear) or page table is
+not allocated at all.
 
-    This patch adds support for the i.MX6 Quad variant of the Variscite DAR=
-T-MX6
-    SoM Carrier-Board.
-
-
-Best Regards,
-
-Oliver
+-- 
+ Kirill A. Shutemov
