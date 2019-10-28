@@ -2,210 +2,411 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A1CCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F01CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355EB217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:06:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VM9Fmn7y"
+	by mail.kernel.org (Postfix) with ESMTP id E610721835
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389879AbfJ1VGl (ORCPT
+        id S2390020AbfJ1VGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 28 Oct 2019 17:06:43 -0400
+Received: from mga07.intel.com ([134.134.136.100]:17863 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389764AbfJ1VGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 28 Oct 2019 17:06:41 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44705 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730527AbfJ1VGk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:06:40 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z11so11347063wro.11
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 14:06:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kmLbG7xlFIRZD/3ijO96lnD7meByS4x923IZvFm+VaA=;
-        b=VM9Fmn7ylvsracAY5d67AGb8xMK9Q7dfb07/Z1Dsv5UMk9FTP5XpwxJJqz7VdC9j78
-         ldevEHz1yYwS2tNXj7wxKOhczCRP63xrVgyJcrfm5r61pDYme4Nf4Y2erQeiD3On5GnL
-         xvN/oqQyMVxjnSpPo5uLMNOgAULI5Y7Gky6AF+eQJh2p7gmiZ6AkccxgFdMbcdV94iZm
-         qDKORxrHoaoGFEzLHLJ4WqPDDqs6SEk8vr7v6oEneCPiTENkwmIDb6JaQVzCH6SLFFh0
-         tJgXPsA+9D4gaydluWCSXph/1LFhh97v2HOQvZCfYXt2kVenQtfHIKNMnujPm6pP7uu2
-         uWOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kmLbG7xlFIRZD/3ijO96lnD7meByS4x923IZvFm+VaA=;
-        b=KkMY69Uj3eRA2YjJAY0lA6sdTtIyMV/0gxkUZEeB3zaV/dulIAnAtFU+aEKxZSF5zL
-         ttU5gYOdAyc23u8y1iXS6Vl/YvJ3e6hToKb2Wl2LVMGf9zAQi0Wny2/xubmzuqOh7Lvl
-         UARhn4IyDlfNTg8SH1DwZnX92AhlSxpXShbhkFzDKeWfloWyf/fYMrzvN/YCYzN/Cspl
-         R5RTVksxIUcl1tHsQ5opo8GOCxKuGiY6tq1ff2u8NiOoH6SHi3u/FfwhvhxL93HZ0kEy
-         9uOMDzWOzjGEl5p5k77dSQx2UUiOtUyNtNMTvUFlFcPixAWjjY5VmRlCSdSNQFVlK1EY
-         q7Yw==
-X-Gm-Message-State: APjAAAW0ExFE2Hkm0AmjtSAWSA1l1ILN6Qh4upimRhFFYv3Cx1sd+Bku
-        0fL7DaFFfK9Vsov3oPnhHemj/lvQGC3QDSYix5UkMw==
-X-Google-Smtp-Source: APXvYqwASj4zprMprFIDA63PNWyUrrAq3SNIE66VlztI0flnsZYjGBs3OYEuA8ZG2zn/WxQAvn9S5Z16l5g1NPAAeOY=
-X-Received: by 2002:a5d:6785:: with SMTP id v5mr12529813wru.174.1572296796532;
- Mon, 28 Oct 2019 14:06:36 -0700 (PDT)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 14:06:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
+   d="scan'208";a="224760077"
+Received: from shrehore-mobl1.ti.intel.com (HELO localhost) ([10.251.82.5])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 14:06:32 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v23 18/24] x86/vdso: Add support for exception fixup in vDSO functions
+Date:   Mon, 28 Oct 2019 23:03:18 +0200
+Message-Id: <20191028210324.12475-19-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-References: <20191023005337.196160-1-irogers@google.com> <20191024190202.109403-1-irogers@google.com>
- <20191024190202.109403-2-irogers@google.com> <20191025075820.GE31679@krava>
- <CAP-5=fV3yruuFagTz4=8b9t6Y1tzZpFU=VhVcOmrSMiV+h2fQA@mail.gmail.com> <20191028193224.GB28772@krava>
-In-Reply-To: <20191028193224.GB28772@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 28 Oct 2019 14:06:24 -0700
-Message-ID: <CAP-5=fWqzT24JwuYYdH=4auB0EB2P4MMw4bvqGd02fTShXnJfg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/9] perf tools: add parse events append error
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 12:32 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, Oct 25, 2019 at 08:14:36AM -0700, Ian Rogers wrote:
-> > On Fri, Oct 25, 2019 at 12:58 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > >
-> > > On Thu, Oct 24, 2019 at 12:01:54PM -0700, Ian Rogers wrote:
-> > > > Parse event error handling may overwrite one error string with anot=
-her
-> > > > creating memory leaks and masking errors. Introduce a helper routin=
-e
-> > > > that appends error messages and avoids the memory leak.
-> > > >
-> > > > A reproduction of this problem can be seen with:
-> > > >   perf stat -e c/c/
-> > > > After this change this produces:
-> > > > event syntax error: 'c/c/'
-> > > >                        \___ unknown term (previous error: unknown t=
-erm (previous error: unknown term (previous error: unknown term (previous e=
-rror: unknown term (previous error: unknown term (previous error: unknown t=
-erm (previous error: unknown term (previous error: unknown term (previous e=
-rror: unknown term (previous error: unknown term (previous error: unknown t=
-erm (previous error: unknown term (previous error: unknown term (previous e=
-rror: unknown term (previous error: unknown term (previous error: unknown t=
-erm (previous error: unknown term (previous error: unknown term (previous e=
-rror: unknown term (previous error: unknown term (previous error: Cannot fi=
-nd PMU `c'. Missing kernel support?)(help: valid terms: event,filter_rem,fi=
-lter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,filter=
-_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,conf=
-ig,config1,config2,name,period,percore))(help: valid terms: event,filter_re=
-m,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,fi=
-lter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,=
-config,config1,config2,name,period,percore))(help: valid terms: event,filte=
-r_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umas=
-k,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter=
-_nm,config,config1,config2,name,period,percore))(help: valid terms: event,f=
-ilter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,=
-umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,fi=
-lter_nm,config,config1,config2,name,period,percore))(help: valid terms: eve=
-nt,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,=
-inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_stat=
-e,filter_nm,config,config1,config2,name,period,percore))(help: valid terms:=
- event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter=
-_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_=
-state,filter_nm,config,config1,config2,name,period,percore))(help: valid te=
-rms: event,pc,in_tx,edge,any,offcore_rsp,in_tx_cp,ldlat,inv,umask,frontend,=
-cmask,config,config1,config2,name,period,percore))(help: valid terms: event=
-,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,in=
-v,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,=
-filter_nm,config,config1,config2,name,period,percore))(help: valid terms: e=
-vent,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_n=
-c,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_st=
-ate,filter_nm,config,config1,config2,name,period,percore))(help: valid term=
-s: event,config,config1,config2,name,period,percore))(help: valid terms: ev=
-ent,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc=
-,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_sta=
-te,filter_nm,config,config1,config2,name,period,percore))(help: valid terms=
-: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filte=
-r_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter=
-_state,filter_nm,config,config1,config2,name,period,percore))(help: valid t=
-erms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,f=
-ilter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,fi=
-lter_state,filter_nm,config,config1,config2,name,period,percore))(help: val=
-id terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_l=
-oc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_n=
-m,filter_state,filter_nm,config,config1,config2,name,period,percore))(help:=
- valid terms: event,config,config1,config2,name,period,percore))(help: vali=
-d terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_lo=
-c,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm=
-,filter_state,filter_nm,config,config1,config2,name,period,percore))(help: =
-valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filte=
-r_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_no=
-t_nm,filter_state,filter_nm,config,config1,config2,name,period,percore))(he=
-lp: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,f=
-ilter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filte=
-r_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore)=
-)(help: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_t=
-id,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,f=
-ilter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,perc=
-ore))(help: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filt=
-er_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_=
-op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,=
-percore))
-> > >
-> > >
-> > > hum... I'd argue that the previous state was better:
-> > >
-> > > [jolsa@krava perf]$ ./perf stat -e c/c/
-> > > event syntax error: 'c/c/'
-> > >                        \___ unknown term
-> > >
-> > >
-> > > jirka
-> >
-> > I am agnostic. We can either have the previous state or the new state,
-> > I'm keen to resolve the memory leak. Another alternative is to warn
-> > that multiple errors have occurred before dropping or printing the
-> > previous error. As the code is shared in memory places the approach
-> > taken here was to try to not conceal anything that could potentially
-> > be useful. Given this, is the preference to keep the status quo
-> > without any warning?
->
-> if the other alternative is string above, yes.. but perhaps
-> keeping just the first error would be the best way?
->
-> here it seems to be the:
->    "Cannot find PMU `c'. Missing kernel support?)(help: valid..."
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-I think this is a reasonable idea. I'd propose doing it as an
-additional patch, the purpose of this patch is to avoid a possible
-memory leak. I can write the patch and base it on this series.
-To resolve the issue, I'd add an extra first error to the struct
-parse_events_error. All callers would need to be responsible for
-cleaning this up when present, which is why I'd rather not make it
-part of this patch.
-Does this sound reasonable?
+The basic concept and implementation is very similar to the kernel's
+exception fixup mechanism.  The key differences are that the kernel
+handler is hardcoded and the fixup entry addresses are relative to
+the overall table as opposed to individual entries.
 
-Thanks,
-Ian
+Hardcoding the kernel handler avoids the need to figure out how to
+get userspace code to point at a kernel function.  Given that the
+expected usage is to propagate information to userspace, dumping all
+fault information into registers is likely the desired behavior for
+the vast majority of yet-to-be-created functions.  Use registers
+DI, SI and DX to communicate fault information, which follows Linux's
+ABI for register consumption and hopefully avoids conflict with
+hardware features that might leverage the fixup capabilities, e.g.
+register usage for SGX instructions was at least partially designed
+with calling conventions in mind.
 
-> jirka
->
+Making fixup addresses relative to the overall table allows the table
+to be stripped from the final vDSO image (it's a kernel construct)
+without complicating the offset logic, e.g. entry-relative addressing
+would also need to account for the table's location relative to the
+image.
+
+Regarding stripping the table, modify vdso2c to extract the table from
+the raw, a.k.a. unstripped, data and dump it as a standalone byte array
+in the resulting .c file.  The original base of the table, its length
+and a pointer to the byte array are captured in struct vdso_image.
+Alternatively, the table could be dumped directly into the struct,
+but because the number of entries can vary per image, that would
+require either hardcoding a max sized table into the struct definition
+or defining the table as a flexible length array.  The flexible length
+array approach has zero benefits, e.g. the base/size are still needed,
+and prevents reusing the extraction code, while hardcoding the max size
+adds ongoing maintenance just to avoid exporting the explicit size.
+
+The immediate use case is for Intel Software Guard Extensions (SGX).
+SGX introduces a new CPL3-only "enclave" mode that runs as a sort of
+black box shared object that is hosted by an untrusted "normal" CPl3
+process.
+
+Entering an enclave can only be done through SGX-specific instructions,
+EENTER and ERESUME, and is a non-trivial process.  Because of the
+complexity of transitioning to/from an enclave, the vast majority of
+enclaves are expected to utilize a library to handle the actual
+transitions.  This is roughly analogous to how e.g. libc implementations
+are used by most applications.
+
+Another crucial characteristic of SGX enclaves is that they can generate
+exceptions as part of their normal (at least as "normal" as SGX can be)
+operation that need to be handled *in* the enclave and/or are unique
+to SGX.
+
+And because they are essentially fancy shared objects, a process can
+host any number of enclaves, each of which can execute multiple threads
+simultaneously.
+
+Putting everything together, userspace enclaves will utilize a library
+that must be prepared to handle any and (almost) all exceptions any time
+at least one thread may be executing in an enclave.  Leveraging signals
+to handle the enclave exceptions is unpleasant, to put it mildly, e.g.
+the SGX library must constantly (un)register its signal handler based
+on whether or not at least one thread is executing in an enclave, and
+filter and forward exceptions that aren't related to its enclaves.  This
+becomes particularly nasty when using multiple levels of libraries that
+register signal handlers, e.g. running an enclave via cgo inside of the
+Go runtime.
+
+Enabling exception fixup in vDSO allows the kernel to provide a vDSO
+function that wraps the low-level transitions to/from the enclave, i.e.
+the EENTER and ERESUME instructions.  The vDSO function can intercept
+exceptions that would otherwise generate a signal and return the fault
+information directly to its caller, thus avoiding the need to juggle
+signal handlers.
+
+Note that unlike the kernel's _ASM_EXTABLE_HANDLE implementation, the
+'C' version of _ASM_VDSO_EXTABLE_HANDLE doesn't use a pre-compiled
+assembly macro.  Duplicating four lines of code is simpler than adding
+the necessary infrastructure to generate pre-compiled assembly and the
+intended benefit of massaging GCC's inlining algorithm is unlikely to
+realized in the vDSO any time soon, if ever.
+
+Suggested-by: Andy Lutomirski <luto@amacapital.net>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ arch/x86/entry/vdso/Makefile          |  6 +--
+ arch/x86/entry/vdso/extable.c         | 46 +++++++++++++++++++++
+ arch/x86/entry/vdso/extable.h         | 29 ++++++++++++++
+ arch/x86/entry/vdso/vdso-layout.lds.S |  9 ++++-
+ arch/x86/entry/vdso/vdso2c.h          | 58 +++++++++++++++++++++++----
+ arch/x86/include/asm/vdso.h           |  5 +++
+ 6 files changed, 141 insertions(+), 12 deletions(-)
+ create mode 100644 arch/x86/entry/vdso/extable.c
+ create mode 100644 arch/x86/entry/vdso/extable.h
+
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 0f2154106d01..111228445add 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -26,7 +26,7 @@ VDSO32-$(CONFIG_IA32_EMULATION)	:= y
+ vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
+ 
+ # files to link into kernel
+-obj-y				+= vma.o
++obj-y				+= vma.o extable.o
+ OBJECT_FILES_NON_STANDARD_vma.o	:= n
+ 
+ # vDSO images to build
+@@ -122,8 +122,8 @@ $(obj)/%-x32.o: $(obj)/%.o FORCE
+ 
+ targets += vdsox32.lds $(vobjx32s-y)
+ 
+-$(obj)/%.so: OBJCOPYFLAGS := -S
+-$(obj)/%.so: $(obj)/%.so.dbg FORCE
++$(obj)/%.so: OBJCOPYFLAGS := -S --remove-section __ex_table
++$(obj)/%.so: $(obj)/%.so.dbg
+ 	$(call if_changed,objcopy)
+ 
+ $(obj)/vdsox32.so.dbg: $(obj)/vdsox32.lds $(vobjx32s) FORCE
+diff --git a/arch/x86/entry/vdso/extable.c b/arch/x86/entry/vdso/extable.c
+new file mode 100644
+index 000000000000..afcf5b65beef
+--- /dev/null
++++ b/arch/x86/entry/vdso/extable.c
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/err.h>
++#include <linux/mm.h>
++#include <asm/current.h>
++#include <asm/traps.h>
++#include <asm/vdso.h>
++
++struct vdso_exception_table_entry {
++	int insn, fixup;
++};
++
++bool fixup_vdso_exception(struct pt_regs *regs, int trapnr,
++			  unsigned long error_code, unsigned long fault_addr)
++{
++	const struct vdso_image *image = current->mm->context.vdso_image;
++	const struct vdso_exception_table_entry *extable;
++	unsigned int nr_entries, i;
++	unsigned long base;
++
++	/*
++	 * Do not attempt to fixup #DB or #BP.  It's impossible to identify
++	 * whether or not a #DB/#BP originated from within an SGX enclave and
++	 * SGX enclaves are currently the only use case for vDSO fixup.
++	 */
++	if (trapnr == X86_TRAP_DB || trapnr == X86_TRAP_BP)
++		return false;
++
++	if (!current->mm->context.vdso)
++		return false;
++
++	base =  (unsigned long)current->mm->context.vdso + image->extable_base;
++	nr_entries = image->extable_len / (sizeof(*extable));
++	extable = image->extable;
++
++	for (i = 0; i < nr_entries; i++) {
++		if (regs->ip == base + extable[i].insn) {
++			regs->ip = base + extable[i].fixup;
++			regs->di = trapnr;
++			regs->si = error_code;
++			regs->dx = fault_addr;
++			return true;
++		}
++	}
++
++	return false;
++}
+diff --git a/arch/x86/entry/vdso/extable.h b/arch/x86/entry/vdso/extable.h
+new file mode 100644
+index 000000000000..aafdac396948
+--- /dev/null
++++ b/arch/x86/entry/vdso/extable.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __VDSO_EXTABLE_H
++#define __VDSO_EXTABLE_H
++
++/*
++ * Inject exception fixup for vDSO code.  Unlike normal exception fixup,
++ * vDSO uses a dedicated handler the addresses are relative to the overall
++ * exception table, not each individual entry.
++ */
++#ifdef __ASSEMBLY__
++#define _ASM_VDSO_EXTABLE_HANDLE(from, to)	\
++	ASM_VDSO_EXTABLE_HANDLE from to
++
++.macro ASM_VDSO_EXTABLE_HANDLE from:req to:req
++	.pushsection __ex_table, "a"
++	.long (\from) - __ex_table
++	.long (\to) - __ex_table
++	.popsection
++.endm
++#else
++#define _ASM_VDSO_EXTABLE_HANDLE(from, to)	\
++	".pushsection __ex_table, \"a\"\n"      \
++	".long (" #from ") - __ex_table\n"      \
++	".long (" #to ") - __ex_table\n"        \
++	".popsection\n"
++#endif
++
++#endif /* __VDSO_EXTABLE_H */
++
+diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
+index 93c6dc7812d0..8ef849064501 100644
+--- a/arch/x86/entry/vdso/vdso-layout.lds.S
++++ b/arch/x86/entry/vdso/vdso-layout.lds.S
+@@ -63,11 +63,18 @@ SECTIONS
+ 	 * stuff that isn't used at runtime in between.
+ 	 */
+ 
+-	.text		: { *(.text*) }			:text	=0x90909090,
++	.text		: {
++		*(.text*)
++		*(.fixup)
++	}						:text	=0x90909090,
++
++
+ 
+ 	.altinstructions	: { *(.altinstructions) }	:text
+ 	.altinstr_replacement	: { *(.altinstr_replacement) }	:text
+ 
++	__ex_table		: { *(__ex_table) }		:text
++
+ 	/DISCARD/ : {
+ 		*(.discard)
+ 		*(.discard.*)
+diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
+index a20b134de2a8..04d04e46c98c 100644
+--- a/arch/x86/entry/vdso/vdso2c.h
++++ b/arch/x86/entry/vdso/vdso2c.h
+@@ -5,6 +5,41 @@
+  * are built for 32-bit userspace.
+  */
+ 
++static void BITSFUNC(copy)(FILE *outfile, const unsigned char *data, size_t len)
++{
++	size_t i;
++
++	for (i = 0; i < len; i++) {
++		if (i % 10 == 0)
++			fprintf(outfile, "\n\t");
++		fprintf(outfile, "0x%02X, ", (int)(data)[i]);
++	}
++}
++
++
++/*
++ * Extract a section from the input data into a standalone blob.  Used to
++ * capture kernel-only data that needs to persist indefinitely, e.g. the
++ * exception fixup tables, but only in the kernel, i.e. the section can
++ * be stripped from the final vDSO image.
++ */
++static void BITSFUNC(extract)(const unsigned char *data, size_t data_len,
++			      FILE *outfile, ELF(Shdr) *sec, const char *name)
++{
++	unsigned long offset;
++	size_t len;
++
++	offset = (unsigned long)GET_LE(&sec->sh_offset);
++	len = (size_t)GET_LE(&sec->sh_size);
++
++	if (offset + len > data_len)
++		fail("section to extract overruns input data");
++
++	fprintf(outfile, "static const unsigned char %s[%lu] = {", name, len);
++	BITSFUNC(copy)(outfile, data + offset, len);
++	fprintf(outfile, "\n};\n\n");
++}
++
+ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 			 void *stripped_addr, size_t stripped_len,
+ 			 FILE *outfile, const char *image_name)
+@@ -14,9 +49,8 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 	unsigned long mapping_size;
+ 	ELF(Ehdr) *hdr = (ELF(Ehdr) *)raw_addr;
+ 	int i;
+-	unsigned long j;
+ 	ELF(Shdr) *symtab_hdr = NULL, *strtab_hdr, *secstrings_hdr,
+-		*alt_sec = NULL;
++		*alt_sec = NULL, *extable_sec = NULL;
+ 	ELF(Dyn) *dyn = 0, *dyn_end = 0;
+ 	const char *secstrings;
+ 	INT_BITS syms[NSYMS] = {};
+@@ -78,6 +112,8 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 		if (!strcmp(secstrings + GET_LE(&sh->sh_name),
+ 			    ".altinstructions"))
+ 			alt_sec = sh;
++		if (!strcmp(secstrings + GET_LE(&sh->sh_name), "__ex_table"))
++			extable_sec = sh;
+ 	}
+ 
+ 	if (!symtab_hdr)
+@@ -150,13 +186,11 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 	fprintf(outfile,
+ 		"static unsigned char raw_data[%lu] __ro_after_init __aligned(PAGE_SIZE) = {",
+ 		mapping_size);
+-	for (j = 0; j < stripped_len; j++) {
+-		if (j % 10 == 0)
+-			fprintf(outfile, "\n\t");
+-		fprintf(outfile, "0x%02X, ",
+-			(int)((unsigned char *)stripped_addr)[j]);
+-	}
++	BITSFUNC(copy)(outfile, stripped_addr, stripped_len);
+ 	fprintf(outfile, "\n};\n\n");
++	if (extable_sec)
++		BITSFUNC(extract)(raw_addr, raw_len, outfile,
++				  extable_sec, "extable");
+ 
+ 	fprintf(outfile, "const struct vdso_image %s = {\n", image_name);
+ 	fprintf(outfile, "\t.data = raw_data,\n");
+@@ -167,6 +201,14 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 		fprintf(outfile, "\t.alt_len = %lu,\n",
+ 			(unsigned long)GET_LE(&alt_sec->sh_size));
+ 	}
++	if (extable_sec) {
++		fprintf(outfile, "\t.extable_base = %lu,\n",
++			(unsigned long)GET_LE(&extable_sec->sh_offset));
++		fprintf(outfile, "\t.extable_len = %lu,\n",
++			(unsigned long)GET_LE(&extable_sec->sh_size));
++		fprintf(outfile, "\t.extable = extable,\n");
++	}
++
+ 	for (i = 0; i < NSYMS; i++) {
+ 		if (required_syms[i].export && syms[i])
+ 			fprintf(outfile, "\t.sym_%s = %" PRIi64 ",\n",
+diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
+index 230474e2ddb5..745300a05f25 100644
+--- a/arch/x86/include/asm/vdso.h
++++ b/arch/x86/include/asm/vdso.h
+@@ -15,6 +15,8 @@ struct vdso_image {
+ 	unsigned long size;   /* Always a multiple of PAGE_SIZE */
+ 
+ 	unsigned long alt, alt_len;
++	unsigned long extable_base, extable_len;
++	const void *extable;
+ 
+ 	long sym_vvar_start;  /* Negative offset to the vvar area */
+ 
+@@ -44,6 +46,9 @@ extern void __init init_vdso_image(const struct vdso_image *image);
+ 
+ extern int map_vdso_once(const struct vdso_image *image, unsigned long addr);
+ 
++extern bool fixup_vdso_exception(struct pt_regs *regs, int trapnr,
++				 unsigned long error_code,
++				 unsigned long fault_addr);
+ #endif /* __ASSEMBLER__ */
+ 
+ #endif /* _ASM_X86_VDSO_H */
+-- 
+2.20.1
+
