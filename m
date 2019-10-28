@@ -2,316 +2,211 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3C0CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49087CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 834E9217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC92217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="bdl88kZF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VRe/8OtZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbfJ1Vdb (ORCPT
+        id S1731168AbfJ1Vgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:33:31 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42933 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbfJ1Vda (ORCPT
+        Mon, 28 Oct 2019 17:36:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36417 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728657AbfJ1Vgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:33:30 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f14so7840624pgi.9
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 14:33:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=jEdPM8+CeSN6YUxMRCSzn6h9zX/2P2PBOeSoWjOyGwU=;
-        b=bdl88kZF4sDffbc4FuxXRHGyWjQp7MkgkLicu4ygU8bjQP92Pk0Iz9iWsO9KDkuc4/
-         OWXgXpNgDaAyo15UFcQjqsHvBdmND76PEX359b0q8/jMTyJBJMTBx5b8QUaUG4ctQI8O
-         G1t8aNCXViLW/M6z74CJRHSjbi/PV17zzIy0jlj1JX1SSHZU8KmU8wohwGeDehZ1VXzE
-         /4wqibp0QVsR97msGf8JKGASqC1PIkhD59WPj2JwtDmSBr0kQpdlLO7doLn+B53l+eMZ
-         vkcj2cAn+t9m/hIRtyG8OA4RzULPw+QxE6ZpPUuGPRV1Q/7YwPWALUxGCTVUd/Y3woho
-         M6ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=jEdPM8+CeSN6YUxMRCSzn6h9zX/2P2PBOeSoWjOyGwU=;
-        b=fUQPmg1NM3xF03Fp1Dj3Q0Lr/ePCsHctjmeQGIr3Jqa4/401aVbyYoTqpOJVjZOZFM
-         7mToJdCNp2fAGsziB/Tp6jFufkfSMHAC679l4dmgDKO17BBb9Gs0IXqy76dVM5RnqOyu
-         2+fDZpuDiDM5OU80mBxnBbxrBTTjDee+c2XA4osgjEd80f08/ad7oHdZWoa0Cj44nSxA
-         o6EV/BUeMYOZLrxivxzKLI9mBhFea66U/dW1vNECfXqksq8EDEGTwK+9IwhIF2L+H7N4
-         o3uO3Xh08gV89ZfJyFkvqL/Awg9bVKeZG246AWNGKoM84TC/7awBsiYnQ1dtRpwXDbvQ
-         nrCQ==
-X-Gm-Message-State: APjAAAU3RcTm87xuaE5daAJFsIDYJpWWma78bB/1fQik68QnWjkUJDB6
-        ff7l/J9U2LQeYY5XU1afccWuMQ==
-X-Google-Smtp-Source: APXvYqy9OriwAtFJ734hHSc7dz3dHQ5c1a6LhaFVhJVlRYd1p7+V+rQWXdKlsj5AENvQYC6Tl4P2Gw==
-X-Received: by 2002:a17:90a:a882:: with SMTP id h2mr1782558pjq.1.1572298407836;
-        Mon, 28 Oct 2019 14:33:27 -0700 (PDT)
-Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id b14sm11228415pfi.95.2019.10.28.14.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 14:33:27 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 14:33:22 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next, 3/4] hv_netvsc: Add XDP support
-Message-ID: <20191028143322.45d81da4@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <1572296801-4789-4-git-send-email-haiyangz@microsoft.com>
-References: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
-        <1572296801-4789-4-git-send-email-haiyangz@microsoft.com>
-Organization: Netronome Systems, Ltd.
+        Mon, 28 Oct 2019 17:36:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572298604;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Brfy7mrD97bCpvfB3FBCa9L0t2S1CRB6c2tZSeFAi8A=;
+        b=VRe/8OtZ+iXGIOgn2fVmg8jWxzuB6N4+wvQ3klO40xsegMCRHB1JCWoxEXjElV5whhVBPc
+        PgcfJEvwNVr3MlicmGXc9hajGT2PUAbDuTCqzRxddBOVnYjjbWqh9KfCLzYQtBncZ8bRro
+        GcyBqTE42twZs+Ke+qQNr8Mu7xPsu74=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-223-ae2TBSuRM5GBbekG5sh_Wg-1; Mon, 28 Oct 2019 17:36:39 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C11DF801E5C;
+        Mon, 28 Oct 2019 21:36:36 +0000 (UTC)
+Received: from krava (ovpn-204-45.brq.redhat.com [10.40.204.45])
+        by smtp.corp.redhat.com (Postfix) with SMTP id BB6515D9C8;
+        Mon, 28 Oct 2019 21:36:31 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 22:36:30 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v3 1/9] perf tools: add parse events append error
+Message-ID: <20191028213630.GE28772@krava>
+References: <20191023005337.196160-1-irogers@google.com>
+ <20191024190202.109403-1-irogers@google.com>
+ <20191024190202.109403-2-irogers@google.com>
+ <20191025075820.GE31679@krava>
+ <CAP-5=fV3yruuFagTz4=8b9t6Y1tzZpFU=VhVcOmrSMiV+h2fQA@mail.gmail.com>
+ <20191028193224.GB28772@krava>
+ <CAP-5=fWqzT24JwuYYdH=4auB0EB2P4MMw4bvqGd02fTShXnJfg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAP-5=fWqzT24JwuYYdH=4auB0EB2P4MMw4bvqGd02fTShXnJfg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: ae2TBSuRM5GBbekG5sh_Wg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019 21:07:04 +0000, Haiyang Zhang wrote:
-> This patch adds support of XDP in native mode for hv_netvsc driver, and
-> transparently sets the XDP program on the associated VF NIC as well.
-> 
-> XDP program cannot run with LRO (RSC) enabled, so you need to disable LRO
-> before running XDP:
->         ethtool -K eth0 lro off
-> 
-> XDP actions not yet supported:
->         XDP_TX, XDP_REDIRECT
+On Mon, Oct 28, 2019 at 02:06:24PM -0700, Ian Rogers wrote:
+> On Mon, Oct 28, 2019 at 12:32 PM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Fri, Oct 25, 2019 at 08:14:36AM -0700, Ian Rogers wrote:
+> > > On Fri, Oct 25, 2019 at 12:58 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > > >
+> > > > On Thu, Oct 24, 2019 at 12:01:54PM -0700, Ian Rogers wrote:
+> > > > > Parse event error handling may overwrite one error string with an=
+other
+> > > > > creating memory leaks and masking errors. Introduce a helper rout=
+ine
+> > > > > that appends error messages and avoids the memory leak.
+> > > > >
+> > > > > A reproduction of this problem can be seen with:
+> > > > >   perf stat -e c/c/
+> > > > > After this change this produces:
+> > > > > event syntax error: 'c/c/'
+> > > > >                        \___ unknown term (previous error: unknown=
+ term (previous error: unknown term (previous error: unknown term (previous=
+ error: unknown term (previous error: unknown term (previous error: unknown=
+ term (previous error: unknown term (previous error: unknown term (previous=
+ error: unknown term (previous error: unknown term (previous error: unknown=
+ term (previous error: unknown term (previous error: unknown term (previous=
+ error: unknown term (previous error: unknown term (previous error: unknown=
+ term (previous error: unknown term (previous error: unknown term (previous=
+ error: unknown term (previous error: unknown term (previous error: Cannot =
+find PMU `c'. Missing kernel support?)(help: valid terms: event,filter_rem,=
+filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,filt=
+er_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,co=
+nfig,config1,config2,name,period,percore))(help: valid terms: event,filter_=
+rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,=
+filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_n=
+m,config,config1,config2,name,period,percore))(help: valid terms: event,fil=
+ter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,um=
+ask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filt=
+er_nm,config,config1,config2,name,period,percore))(help: valid terms: event=
+,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,in=
+v,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,=
+filter_nm,config,config1,config2,name,period,percore))(help: valid terms: e=
+vent,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_n=
+c,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_st=
+ate,filter_nm,config,config1,config2,name,period,percore))(help: valid term=
+s: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filt=
+er_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filte=
+r_state,filter_nm,config,config1,config2,name,period,percore))(help: valid =
+terms: event,pc,in_tx,edge,any,offcore_rsp,in_tx_cp,ldlat,inv,umask,fronten=
+d,cmask,config,config1,config2,name,period,percore))(help: valid terms: eve=
+nt,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,=
+inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_stat=
+e,filter_nm,config,config1,config2,name,period,percore))(help: valid terms:=
+ event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter=
+_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_=
+state,filter_nm,config,config1,config2,name,period,percore))(help: valid te=
+rms: event,config,config1,config2,name,period,percore))(help: valid terms: =
+event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_=
+nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_s=
+tate,filter_nm,config,config1,config2,name,period,percore))(help: valid ter=
+ms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,fil=
+ter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filt=
+er_state,filter_nm,config,config1,config2,name,period,percore))(help: valid=
+ terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc=
+,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,=
+filter_state,filter_nm,config,config1,config2,name,period,percore))(help: v=
+alid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter=
+_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not=
+_nm,filter_state,filter_nm,config,config1,config2,name,period,percore))(hel=
+p: valid terms: event,config,config1,config2,name,period,percore))(help: va=
+lid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_=
+loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_=
+nm,filter_state,filter_nm,config,config1,config2,name,period,percore))(help=
+: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,fil=
+ter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_=
+not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore))(=
+help: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid=
+,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,fil=
+ter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percor=
+e))(help: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter=
+_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op=
+,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,pe=
+rcore))(help: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,fi=
+lter_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_al=
+l_op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,perio=
+d,percore))
+> > > >
+> > > >
+> > > > hum... I'd argue that the previous state was better:
+> > > >
+> > > > [jolsa@krava perf]$ ./perf stat -e c/c/
+> > > > event syntax error: 'c/c/'
+> > > >                        \___ unknown term
+> > > >
+> > > >
+> > > > jirka
+> > >
+> > > I am agnostic. We can either have the previous state or the new state=
+,
+> > > I'm keen to resolve the memory leak. Another alternative is to warn
+> > > that multiple errors have occurred before dropping or printing the
+> > > previous error. As the code is shared in memory places the approach
+> > > taken here was to try to not conceal anything that could potentially
+> > > be useful. Given this, is the preference to keep the status quo
+> > > without any warning?
+> >
+> > if the other alternative is string above, yes.. but perhaps
+> > keeping just the first error would be the best way?
+> >
+> > here it seems to be the:
+> >    "Cannot find PMU `c'. Missing kernel support?)(help: valid..."
+>=20
+> I think this is a reasonable idea. I'd propose doing it as an
+> additional patch, the purpose of this patch is to avoid a possible
+> memory leak. I can write the patch and base it on this series.
+> To resolve the issue, I'd add an extra first error to the struct
+> parse_events_error. All callers would need to be responsible for
+> cleaning this up when present, which is why I'd rather not make it
+> part of this patch.
+> Does this sound reasonable?
 
-I don't think we want to merge support without at least XDP_TX these
-days..
+yep, sounds good
 
-And without the ability to prepend headers this may be the least
-complete initial XDP implementation we've seen :(
+jirka
 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index d22a36f..688487b 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -122,8 +122,10 @@ static void free_netvsc_device(struct rcu_head *head)
->  	vfree(nvdev->send_buf);
->  	kfree(nvdev->send_section_map);
->  
-> -	for (i = 0; i < VRSS_CHANNEL_MAX; i++)
-> +	for (i = 0; i < VRSS_CHANNEL_MAX; i++) {
-> +		xdp_rxq_info_unreg(&nvdev->chan_table[i].xdp_rxq);
->  		vfree(nvdev->chan_table[i].mrc.slots);
-> +	}
->  
->  	kfree(nvdev);
->  }
-> @@ -1370,6 +1372,10 @@ struct netvsc_device *netvsc_device_add(struct hv_device *device,
->  		nvchan->net_device = net_device;
->  		u64_stats_init(&nvchan->tx_stats.syncp);
->  		u64_stats_init(&nvchan->rx_stats.syncp);
-> +
-> +		xdp_rxq_info_reg(&nvchan->xdp_rxq, ndev, i);
-> +		xdp_rxq_info_reg_mem_model(&nvchan->xdp_rxq,
-> +					   MEM_TYPE_PAGE_SHARED, NULL);
-
-These can fail.
-
->  	}
->  
->  	/* Enable NAPI handler before init callbacks */
-> diff --git a/drivers/net/hyperv/netvsc_bpf.c b/drivers/net/hyperv/netvsc_bpf.c
-> new file mode 100644
-> index 0000000..4d235ac
-> --- /dev/null
-> +++ b/drivers/net/hyperv/netvsc_bpf.c
-> @@ -0,0 +1,211 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright (c) 2019, Microsoft Corporation.
-> + *
-> + * Author:
-> + *   Haiyang Zhang <haiyangz@microsoft.com>
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/netdevice.h>
-> +#include <linux/etherdevice.h>
-> +#include <linux/ethtool.h>
-> +#include <linux/bpf.h>
-> +#include <linux/bpf_trace.h>
-> +#include <linux/kernel.h>
-> +#include <net/xdp.h>
-> +
-> +#include <linux/mutex.h>
-> +#include <linux/rtnetlink.h>
-> +
-> +#include "hyperv_net.h"
-> +
-> +u32 netvsc_run_xdp(struct net_device *ndev, struct netvsc_channel *nvchan,
-> +		   void **p_pbuf)
-> +{
-> +	struct page *page = NULL;
-> +	void *data = nvchan->rsc.data[0];
-> +	u32 len = nvchan->rsc.len[0];
-> +	void *pbuf = data;
-> +	struct bpf_prog *prog;
-> +	struct xdp_buff xdp;
-> +	u32 act = XDP_PASS;
-> +
-> +	*p_pbuf = NULL;
-> +
-> +	rcu_read_lock();
-> +	prog = rcu_dereference(nvchan->bpf_prog);
-> +
-> +	if (!prog || nvchan->rsc.cnt > 1)
-
-Can rsc.cnt == 1 not be ensured at setup time? This looks quite
-limiting if random frames could be forced to bypass the filter.
-
-> +		goto out;
-> +
-> +	/* copy to a new page buffer if data are not within a page */
-> +	if (virt_to_page(data) != virt_to_page(data + len - 1)) {
-> +		page = alloc_page(GFP_ATOMIC);
-> +		if (!page)
-> +			goto out;
-
-Returning XDP_PASS on allocation failure seems highly questionable.
-
-> +		pbuf = page_address(page);
-> +		memcpy(pbuf, nvchan->rsc.data[0], len);
-> +
-> +		*p_pbuf = pbuf;
-> +	}
-> +
-> +	xdp.data_hard_start = pbuf;
-> +	xdp.data = xdp.data_hard_start;
-
-This patch also doesn't add any headroom for XDP to prepend data :(
-
-> +	xdp_set_data_meta_invalid(&xdp);
-> +	xdp.data_end = xdp.data + len;
-> +	xdp.rxq = &nvchan->xdp_rxq;
-> +	xdp.handle = 0;
-> +
-> +	act = bpf_prog_run_xdp(prog, &xdp);
-> +
-> +	switch (act) {
-> +	case XDP_PASS:
-> +		/* Pass to upper layers */
-> +		break;
-> +
-> +	case XDP_ABORTED:
-> +		trace_xdp_exception(ndev, prog, act);
-> +		break;
-> +
-> +	case XDP_DROP:
-> +		break;
-> +
-> +	default:
-> +		bpf_warn_invalid_xdp_action(act);
-> +	}
-> +
-> +out:
-> +	rcu_read_unlock();
-> +
-> +	if (page && act != XDP_PASS) {
-> +		*p_pbuf = NULL;
-> +		__free_page(page);
-> +	}
-> +
-> +	return act;
-> +}
-> +
-> +unsigned int netvsc_xdp_fraglen(unsigned int len)
-> +{
-> +	return SKB_DATA_ALIGN(len) +
-> +	       SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
-> +}
-> +
-> +struct bpf_prog *netvsc_xdp_get(struct netvsc_device *nvdev)
-> +{
-> +	return rtnl_dereference(nvdev->chan_table[0].bpf_prog);
-> +}
-> +
-> +int netvsc_xdp_set(struct net_device *dev, struct bpf_prog *prog,
-> +		   struct netvsc_device *nvdev)
-> +{
-> +	struct bpf_prog *old_prog;
-> +	int frag_max, i;
-> +
-> +	old_prog = netvsc_xdp_get(nvdev);
-> +
-> +	if (!old_prog && !prog)
-> +		return 0;
-
-I think this case is now handled by the core.
-
-> +	frag_max = netvsc_xdp_fraglen(dev->mtu + ETH_HLEN);
-> +	if (prog && frag_max > PAGE_SIZE) {
-> +		netdev_err(dev, "XDP: mtu:%u too large, frag:%u\n",
-> +			   dev->mtu, frag_max);
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	if (prog && (dev->features & NETIF_F_LRO)) {
-> +		netdev_err(dev, "XDP: not support LRO\n");
-
-Please report this via extack, that way users will see it in the console
-in which they're installing the program.
-
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	if (prog) {
-> +		prog = bpf_prog_add(prog, nvdev->num_chn);
-> +		if (IS_ERR(prog))
-> +			return PTR_ERR(prog);
-> +	}
-> +
-> +	for (i = 0; i < nvdev->num_chn; i++)
-> +		rcu_assign_pointer(nvdev->chan_table[i].bpf_prog, prog);
-> +
-> +	if (old_prog)
-> +		for (i = 0; i < nvdev->num_chn; i++)
-> +			bpf_prog_put(old_prog);
-> +
-> +	return 0;
-> +}
-> +
-> +int netvsc_vf_setxdp(struct net_device *vf_netdev, struct bpf_prog *prog)
-> +{
-> +	struct netdev_bpf xdp;
-> +	bpf_op_t ndo_bpf;
-> +
-> +	ASSERT_RTNL();
-> +
-> +	if (!vf_netdev)
-> +		return 0;
-> +
-> +	ndo_bpf = vf_netdev->netdev_ops->ndo_bpf;
-> +	if (!ndo_bpf)
-> +		return 0;
-> +
-> +	memset(&xdp, 0, sizeof(xdp));
-> +
-> +	xdp.command = XDP_SETUP_PROG;
-> +	xdp.prog = prog;
-> +
-> +	return ndo_bpf(vf_netdev, &xdp);
-
-IMHO the automatic propagation is not a good idea. Especially if the
-propagation doesn't make the entire installation fail if VF doesn't
-have ndo_bpf.
-
-> +}
