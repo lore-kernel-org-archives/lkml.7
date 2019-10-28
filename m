@@ -2,119 +2,89 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C40CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 05:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A90DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D4D20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 05:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDA520873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NJD2B3O+"
+	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="W23eHQzZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbfJ1Ftf (ORCPT
+        id S1730941AbfJ1GA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 01:49:35 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51029 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfJ1Ftf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 01:49:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 471kLg1Qqcz9sPK;
-        Mon, 28 Oct 2019 16:49:31 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572241772;
-        bh=tstUNT1brLDFJRPvtcAeyQmxp+7U7USa0PXA8ftu9+4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NJD2B3O+sidrtCTnKWj5vvxBtI/NzOK621TAUp2H9PSWcJMCSVF8GwzFTHu//liP5
-         aezBR3iX8cuLtrf9B5Lck/SreohkiVK+x3Re7maIiLQ3TQpWHSOb3nr72+dpg/7O0e
-         TWTgwxjv8METpLpvJKnTWblefgzgA82vrA/lTFdRpI7aV8okLwheGpbnFJAuxwppil
-         D2uxa4NPKJYxnOTDJThlSHscQxV14xxZ0iRZkJhzJi0AP5dDnU7BZIV4NX9VW7WzNL
-         xrTQ0Nr4iOok7xJw+JQlMgpPij+j9ENawGQGR5U9I+UO1BlsU7+2x+TZT8rpXF0tw1
-         ze7wXaz1WTPyw==
-Date:   Mon, 28 Oct 2019 16:49:24 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Smart <jsmart2021@gmail.com>
-Subject: Re: linux-next: build failure after merge of the scsi-mkp tree
-Message-ID: <20191028164924.232e32e5@canb.auug.org.au>
-In-Reply-To: <20191025140736.0c9e9d64@canb.auug.org.au>
-References: <20191025140736.0c9e9d64@canb.auug.org.au>
+        Mon, 28 Oct 2019 02:00:56 -0400
+Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21437 "EHLO
+        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfJ1GAz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:00:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1572242409; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=dB0bWUOERgGvT48DiOHzsKDaiV/DBnXlOQMIOZ4J+Tq4cjwF5rNgUSmEPDPfRFjKk10y6nZPLNHd6mCk6QQadcCAyeV2dgm2Pre/yv/7qh1lYw5dCsAaYuHGe0qDIA65fluBvMh8K4Gv2rYx5pZvlh7olPZE7wmHphbE3noaPPY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1572242409; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=+K/LZwImnPy9DLEwMasEs/dRwXl/m7WGIau4MogUkRc=; 
+        b=aoeMYjS+ByuvjpItNDCO+/H/HZP8sPCz7oQn7heFP8/830SLdk2l5WZ6BAHkIfiR8Vxd9skKXKlLy0CDsQzzuvGRES8vtH5mAyPakmoAaDr7hsJYE0EhzeR63eFJgCE7mB6nF/ZtqelNMZoafX4N0NR84qsYx5y6paigi2J/uek=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=didiksetiawan.com;
+        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
+        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1572242409;
+        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        l=862; bh=+K/LZwImnPy9DLEwMasEs/dRwXl/m7WGIau4MogUkRc=;
+        b=W23eHQzZ4YGWIT028KQojAVgH+H+XjCrUS1Vm7cY1Obkfd7/duzPTuJy/Z179GmA
+        CasL0sKJCb1gweppm0xhGC9CRbiUbQAfRgDF9tGhxfdCHEsjCLtasDNNRAhhRPPYBMw
+        E7TOeX9NYWpDGtygDitP6UgezNpJak/K8AsfI0to=
+Received: from notebook (117.102.74.82 [117.102.74.82]) by mx.zohomail.com
+        with SMTPS id 15722424079661003.1516840715439; Sun, 27 Oct 2019 23:00:07 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 12:59:57 +0700
+From:   Didik Setiawan <ds@didiksetiawan.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/119] 4.14.151-stable review
+Message-ID: <20191028055957.GA20979@notebook>
+References: <20191027203259.948006506@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/G3U/WFfGWlEPv9ohSoD/NlH";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/G3U/WFfGWlEPv9ohSoD/NlH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Oct 27, 2019 at 09:59:37PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.151 release.
+> There are 119 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.151-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Hi all,
+Compiled, booted, and no regressions found on my x86_64 system.
 
-On Fri, 25 Oct 2019 14:07:36 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> After merging the scsi-mkp tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
->=20
-> drivers/scsi/lpfc/lpfc_debugfs.c: In function 'lpfc_debugfs_ras_log_relea=
-se':
-> drivers/scsi/lpfc/lpfc_debugfs.c:2109:2: error: implicit declaration of f=
-unction 'vfree'; did you mean 'kvfree'? [-Werror=3Dimplicit-function-declar=
-ation]
->  2109 |  vfree(debug->buffer);
->       |  ^~~~~
->       |  kvfree
-> drivers/scsi/lpfc/lpfc_debugfs.c: In function 'lpfc_debugfs_ras_log_open':
-> drivers/scsi/lpfc/lpfc_debugfs.c:2150:18: error: implicit declaration of =
-function 'vmalloc'; did you mean 'kvmalloc'? [-Werror=3Dimplicit-function-d=
-eclaration]
->  2150 |  debug->buffer =3D vmalloc(size);
->       |                  ^~~~~~~
->       |                  kvmalloc
-> drivers/scsi/lpfc/lpfc_debugfs.c:2150:16: warning: assignment to 'char *'=
- from 'int' makes pointer from integer without a cast [-Wint-conversion]
->  2150 |  debug->buffer =3D vmalloc(size);
->       |                ^
->=20
-> Caused by commit
->=20
->   95bfc6d8ad86 ("scsi: lpfc: Make FW logging dynamically configurable")
->=20
-> I have used the scsi-mkp tree from next-20191024 for today.
+Thanks,
+Didik Setiawan
 
-This build failure now appears in the scsi tree build.  I have applied the
-fix from James Smart for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/G3U/WFfGWlEPv9ohSoD/NlH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl22gWQACgkQAVBC80lX
-0Gzx5wf+OuWnhPVqdmOeG9S0LWw9rudHHt4o2sAFEopbPgwkn3i8vrP467Exz+Ho
-DdxerHWZUmUDGX7kFw5lAPoCycknLATak3G1ialcyp6A+6iKhFcUu+dhCmMzPxcB
-Nm/bcznEI9QdIVFRKajJ2ZU7pwrqh3cBdm6QeUbEivaj0EZyLHY4SYBE553LdmSy
-PHBcrpB3cAXYKrC2gWroHRLi5Y1oZaRVgTpPXob1c7BsJNY5ZAMyuTnsfZQI9zqq
-5Y23R5k/do2i75wBh9Imzb7jCmwtTn7QJrUTHoUjFBviy3bByavBpHc64XcibCCI
-0W1b2gHYa5an3Vvs52mwro/mbZ1auA==
-=dCSO
------END PGP SIGNATURE-----
-
---Sig_/G3U/WFfGWlEPv9ohSoD/NlH--
