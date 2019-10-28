@@ -2,125 +2,114 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7092CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8BDCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A527D217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:40:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GyHrjkQ9"
+	by mail.kernel.org (Postfix) with ESMTP id 8096521835
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572273629;
+	bh=dmNS+or+xqTf7DWc23tqF8ino6TFJyoztCnlmTog0ZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bo44LhJyU7zj7MurNxdsBtfoNIGExA+XEMAan1E2M+kWHzdEhi8GoKirtjy6Exd3d
+	 2ZWgRl+3iBQMP4n6MMduP6fOsWLBapxircpxLcBPAj2C+xvPFsJxG05QMu1uIEfu2q
+	 n6tZmr6psaI27uQoHLrYdu8KvjRo+QOPKqYQiJWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390223AbfJ1Ok1 (ORCPT
+        id S2390233AbfJ1Ok2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 28 Oct 2019 10:40:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729524AbfJ1Ok1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 28 Oct 2019 10:40:27 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40083 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729692AbfJ1Ok1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:40:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w9so9402764wmm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jDefaEjucmPfmXoR6EuBuaPt+jroTYHe9nD2t6DWPcM=;
-        b=GyHrjkQ9vfDcU5wXh/083wbH2nwmUq1lmiDg5F9BZ27v/NXI1oRLFMmzFLAuSBWcxl
-         XI5/FBrUcyDMVVYKj1881yfZA6CrszdspyFZ5xex8ShXZ+dNrEwWmFhbY81SYSlEn+iX
-         j0KtxvWOSRWPum+MygEV+FXMyNcQGVsXlUJ78l4nE68Cf/iPvqbftsFaWDzx4pPnoRfI
-         vSdGX+vjEg1LeRJ1nY7GAlGCpGrkohzhWXH+1MoWM+AWwC3D9+AF5p3GjcB3ljwydS72
-         sngthVWQc0n+v2F9ex8lSVcwrDvKtLzLVwoTeM5ozZ8sEXh4sV6W/boOT2qyfv70gvW8
-         AoUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jDefaEjucmPfmXoR6EuBuaPt+jroTYHe9nD2t6DWPcM=;
-        b=KRWsmjb7sXD+psXQwPHgAFy8IFB2jTD/o+4SyjEgEXKzzTHqoO2Oj9SGRouciJtcm9
-         UYW7k3rZsMY8Re4i1x7X6oWEiJpEB4GYDGxQH5o6kEPDaJ98k/2asoenhQOMx8A2oVk4
-         F35jrgCqInGbFZyDquTKdj2fRRsTNP3ybUkk+KHSUmN+rdyyxgDnfuMC5oZDHaKNmnYd
-         zK8ADlpo69Y1hS3l9HlvvCLKEvdTYx7MM9WbJ+4l1eppiAiFUNNdMlTcNwcpOu+Xpmip
-         o5Tl1o3RixWvm+XY87r+DIUTsUPzNTT1s0F1Vu4vC0So/faOdU0GeWEeOIcvUlGbWkM7
-         t/Cw==
-X-Gm-Message-State: APjAAAUPMJnSwocyMMQT+yJz2a/JoXV4kaDu5M/ehK3AJrWZthxsKpRP
-        WFobXQF8ISW5+gk3NgYefLeUzJQIdEzybKuzFZs=
-X-Google-Smtp-Source: APXvYqy58Usq1lGliMFgwEEdW88D9FmQUX6S4e8se9/pX5LCyyjc/WamJJyqnV2P2m8Mh9W1nLUcPZ3SGC+5SoTpig8=
-X-Received: by 2002:a7b:cd91:: with SMTP id y17mr293848wmj.113.1572273624910;
- Mon, 28 Oct 2019 07:40:24 -0700 (PDT)
+Received: from localhost (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67EFC21721;
+        Mon, 28 Oct 2019 14:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572273627;
+        bh=dmNS+or+xqTf7DWc23tqF8ino6TFJyoztCnlmTog0ZQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S9R1oKirOJsZSdHSDJ75V+onIuAjbZ8FC4w9OUTpOjJSdOG4HkaXhCSG0fyBc7tsL
+         8SoAd6V/tmB0sb3JpogsUSsxakuGaFtjrrkbpIZ7iQaIrL5ZaYr2vCWd7qYfe7UkMa
+         6227OncaKO6YJYgplKfSHvj3J4uuRTDpVP1BCOv8=
+Date:   Mon, 28 Oct 2019 15:40:24 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     syzbot <syzbot+8f2612936028bfd28f28@syzkaller.appspotmail.com>,
+        allison@lohutok.net, alsa-devel@alsa-project.org,
+        benquike@gmail.com, dan.carpenter@oracle.com, glider@google.com,
+        linux-kernel@vger.kernel.org, perex@perex.cz,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        tiwai@suse.com, wang6495@umn.edu, yuehaibing@huawei.com
+Subject: Re: KMSAN: uninit-value in get_term_name
+Message-ID: <20191028144024.GA120200@kroah.com>
+References: <000000000000f838060595f602a7@google.com>
+ <s5hr22xau8f.wl-tiwai@suse.de>
+ <20191028133050.GA13691@kroah.com>
+ <s5himo9as9j.wl-tiwai@suse.de>
 MIME-Version: 1.0
-References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
- <20191025075335.GC32742@smile.fi.intel.com> <20191025075540.GD32742@smile.fi.intel.com>
- <166c9855-910d-a70c-ba86-6aebe5f2346d@intel.com>
-In-Reply-To: <166c9855-910d-a70c-ba86-6aebe5f2346d@intel.com>
-From:   Andrey Zhizhikin <andrey.z@gmail.com>
-Date:   Mon, 28 Oct 2019 15:40:19 +0100
-Message-ID: <CAHtQpK5zBE_6HGMRcdVFj5-zoUrwaPjqrCB=2GUB9CtvE8FhbQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
- Trail Whiskey Cove PMIC
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>, lgirdwood@gmail.com,
-        Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5himo9as9j.wl-tiwai@suse.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 1:42 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 25/10/19 10:55 AM, Andy Shevchenko wrote:
-> > On Fri, Oct 25, 2019 at 10:53:35AM +0300, Andy Shevchenko wrote:
-> >> On Thu, Oct 24, 2019 at 02:29:37PM +0000, Andrey Zhizhikin wrote:
-> >>> This patchset introduces additional regulator driver for Intel Cherry
-> >>> Trail Whiskey Cove PMIC. It also adds a cell in mfd driver for this
-> >>> PMIC, which is used to instantiate this regulator.
-> >>>
-> >>> Regulator support for this PMIC was present in kernel release from Intel
-> >>> targeted Aero platform, but was not entirely ported upstream and has
-> >>> been omitted in mainline kernel releases. Consecutively, absence of
-> >>> regulator caused the SD Card interface not to be provided with Vqcc
-> >>> voltage source needed to operate with UHS-I cards.
-> >>>
-> >>> Following patches are addessing this issue and making sd card interface
-> >>> to be fully operable with UHS-I cards. Regulator driver lists an ACPI id
-> >>> of the SD Card interface in consumers and exposes optional "vqmmc"
-> >>> voltage source, which mmc driver uses to switch signalling voltages
-> >>> between 1.8V and 3.3V.
-> >>>
-> >>> This set contains of 2 patches: one is implementing the regulator driver
-> >>> (based on a non upstreamed version from Intel Aero), and another patch
-> >>> registers this driver as mfd cell in exising Whiskey Cove PMIC driver.
-> >>
-> >> Thank you.
-> >> Hans, Cc'ed, has quite interested in these kind of patches.
-> >> Am I right, Hans?
-> >
-> > Since it's about UHS/SD, Cc to Adrian as well.
-> >
->
-> My only concern is that the driver might conflict with ACPI methods trying
-> to do the same thing, e.g. there is one ACPI SDHC instance from GPDWin DSDT
-> with code like this:
->
-[... cut ...]
+On Mon, Oct 28, 2019 at 02:55:52PM +0100, Takashi Iwai wrote:
+> On Mon, 28 Oct 2019 14:30:50 +0100,
+> Greg KH wrote:
+> > 
+> > On Mon, Oct 28, 2019 at 02:13:20PM +0100, Takashi Iwai wrote:
+> > > On Mon, 28 Oct 2019 11:32:07 +0100,
+> > > syzbot wrote:
+> > > > 
+> > > > Uninit was stored to memory at:
+> > > >  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
+> > > >  kmsan_internal_chain_origin+0xbd/0x180 mm/kmsan/kmsan.c:319
+> > > >  __msan_chain_origin+0x6b/0xd0 mm/kmsan/kmsan_instr.c:179
+> > > >  parse_term_proc_unit+0x73d/0x7e0 sound/usb/mixer.c:896
+> > > >  __check_input_term+0x13ef/0x2360 sound/usb/mixer.c:989
+> > > 
+> > > So this comes from the invalid descriptor for a processing unit, and
+> > > it's very likely the same issue as already spotted -- the validator up
+> > > to 5.3-rc4 had a bug that passed the invalid descriptor falsely.
+> > > This should have been covered by 5.3-rc5, commit ba8bf0967a15 ("ALSA:
+> > > usb-audio: Fix copy&paste error in the validator").
+> > 
+> > SHould we be backporting the validator to any older kernels as well?
+> 
+> Yes, that would be nice.  I didn't mark them for stable just because
+> they are a bit largish and wanted to let them tested for 5.4 for a
+> while.
+> 
+> The following commits are relevant (from top/old to bottom/new).
+> 
+> 57f8770620e9b51c61089751f0b5ad3dbe376ff2
+>     ALSA: usb-audio: More validations of descriptor units
+> 68e9fde245591d18200f8a9054cac22339437adb
+>     ALSA: usb-audio: Simplify parse_audio_unit()
+> 52c3e317a857091fd746e15179a637f32be4d337
+>     ALSA: usb-audio: Unify the release of usb_mixer_elem_info objects
+> b8e4f1fdfa422398c2d6c47bfb7d1feb3046d70a
+>     ALSA: usb-audio: Remove superfluous bLength checks
+> e0ccdef92653f8867e2d1667facfd3c23699f540
+>     ALSA: usb-audio: Clean up check_input_term()
+> 60849562a5db4a1eee2160167e4dce4590d3eafe
+>     ALSA: usb-audio: Fix possible NULL dereference at create_yamaha_midi_quirk()
+> b39e077fcb283dd96dd251a3abeba585402c61fe
+>     ALSA: usb-audio: remove some dead code
+> ba8bf0967a154796be15c4983603aad0b05c3138
+>     ALSA: usb-audio: Fix copy&paste error in the validator
+> 
 
-That's a good point, and this is what I tried at first when I started
-to work on this problem. In my case INTEL_DSM_V18_SWITCH (fn=0x3) got
-executed in the mmc sub-system, but without the regulator or DSDT
-support the card did not get the proper voltage.
+Thanks, I'll look at these for the next round of kernels.
 
-The DSDT on Intel Aero reference platform looks different here.
-Currently I don't have it on hands, but would be able to look it up
-next week.
-
--- 
-Regards,
-Andrey.
+greg k-h
