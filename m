@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42A2CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78E7CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958AA20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3B320830
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388601AbfJ1LmR (ORCPT
+        id S2388613AbfJ1LmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 07:42:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44338 "EHLO
+        Mon, 28 Oct 2019 07:42:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44359 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388276AbfJ1LmE (ORCPT
+        with ESMTP id S2388603AbfJ1LmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 07:42:04 -0400
+        Mon, 28 Oct 2019 07:42:19 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iP3PB-0001GH-9V; Mon, 28 Oct 2019 12:41:49 +0100
+        id 1iP3PO-0001Kb-0E; Mon, 28 Oct 2019 12:42:02 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E718C1C047C;
-        Mon, 28 Oct 2019 12:41:48 +0100 (CET)
-Date:   Mon, 28 Oct 2019 11:41:48 -0000
-From:   "tip-bot2 for Alexander Shishkin" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 902341C0081;
+        Mon, 28 Oct 2019 12:42:01 +0100 (CET)
+Date:   Mon, 28 Oct 2019 11:42:01 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/core: Start rejecting the syscall with
- attr.__reserved_2 set
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Subject: [tip: x86/asm] ubsan, x86: Annotate and allow
+ __ubsan_handle_shift_out_of_bounds() in uaccess regions
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>, cyphar@cyphar.com,
+        keescook@chromium.org, linux@rasmusvillemoes.dk,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191025121636.75182-1-alexander.shishkin@linux.intel.com>
-References: <20191025121636.75182-1-alexander.shishkin@linux.intel.com>
+In-Reply-To: <20191021131149.GA19358@hirez.programming.kicks-ass.net>
+References: <20191021131149.GA19358@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Message-ID: <157226290868.29376.3945306919973708358.tip-bot2@tip-bot2>
+Message-ID: <157226292126.29376.1602879935081875165.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,52 +62,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the x86/asm branch of tip:
 
-Commit-ID:     8c7e975667fbc3b7c816119dd56104739899f125
-Gitweb:        https://git.kernel.org/tip/8c7e975667fbc3b7c816119dd56104739899f125
-Author:        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-AuthorDate:    Fri, 25 Oct 2019 15:16:36 +03:00
+Commit-ID:     9a50dcaf0416a43e1fe411dc61a99c8333c90119
+Gitweb:        https://git.kernel.org/tip/9a50dcaf0416a43e1fe411dc61a99c8333c90119
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 21 Oct 2019 15:11:49 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 28 Oct 2019 11:01:59 +01:00
+CommitterDate: Mon, 28 Oct 2019 10:43:00 +01:00
 
-perf/core: Start rejecting the syscall with attr.__reserved_2 set
+ubsan, x86: Annotate and allow __ubsan_handle_shift_out_of_bounds() in uaccess regions
 
-Commit:
+The new check_zeroed_user() function uses variable shifts inside of a
+user_access_begin()/user_access_end() section and that results in GCC
+emitting __ubsan_handle_shift_out_of_bounds() calls, even though
+through value range analysis it would be able to see that the UB in
+question is impossible.
 
-  1a5941312414c ("perf: Add wakeup watermark control to the AUX area")
+Annotate and whitelist this UBSAN function; continued use of
+user_access_begin()/user_access_end() will undoubtedly result in
+further uses of function.
 
-added attr.__reserved_2 padding, but forgot to add an ABI check to reject
-attributes with this field set. Fix that.
-
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: adrian.hunter@intel.com
-Cc: mathieu.poirier@linaro.org
-Link: https://lkml.kernel.org/r/20191025121636.75182-1-alexander.shishkin@linux.intel.com
+Cc: cyphar@cyphar.com
+Cc: keescook@chromium.org
+Cc: linux@rasmusvillemoes.dk
+Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
+Link: https://lkml.kernel.org/r/20191021131149.GA19358@hirez.programming.kicks-ass.net
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/ubsan.c           | 5 ++++-
+ tools/objtool/check.c | 1 +
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index bb3748d..aec8dba 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10635,7 +10635,7 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
+diff --git a/lib/ubsan.c b/lib/ubsan.c
+index e7d3173..0c46811 100644
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@ -374,9 +374,10 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+ 	struct type_descriptor *lhs_type = data->lhs_type;
+ 	char rhs_str[VALUE_LENGTH];
+ 	char lhs_str[VALUE_LENGTH];
++	unsigned long ua_flags = user_access_save();
  
- 	attr->size = size;
+ 	if (suppress_report(&data->location))
+-		return;
++		goto out;
  
--	if (attr->__reserved_1)
-+	if (attr->__reserved_1 || attr->__reserved_2)
- 		return -EINVAL;
+ 	ubsan_prologue(&data->location, &flags);
  
- 	if (attr->sample_type & ~(PERF_SAMPLE_MAX-1))
+@@ -402,6 +403,8 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+ 			lhs_type->type_name);
+ 
+ 	ubsan_epilogue(&flags);
++out:
++	user_access_restore(ua_flags);
+ }
+ EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
+ 
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 044c9a3..f53d3c5 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -481,6 +481,7 @@ static const char *uaccess_safe_builtin[] = {
+ 	"ubsan_type_mismatch_common",
+ 	"__ubsan_handle_type_mismatch",
+ 	"__ubsan_handle_type_mismatch_v1",
++	"__ubsan_handle_shift_out_of_bounds",
+ 	/* misc */
+ 	"csum_partial_copy_generic",
+ 	"__memcpy_mcsafe",
