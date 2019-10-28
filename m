@@ -2,148 +2,293 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A634CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CA8CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89B321920
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KfLt3mCC"
+	by mail.kernel.org (Postfix) with ESMTP id D890821924
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391195AbfJ1VH2 (ORCPT
+        id S2391213AbfJ1VHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:07:28 -0400
-Received: from mail-eopbgr750137.outbound.protection.outlook.com ([40.107.75.137]:55799
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730207AbfJ1VHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:07:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fubqZpJnaC8u5GQihyapZd/aXLRv3dEb8BL9o5zpcFFtZgQrSUlW0IicQCa1q0wktoIrA6beu7ElxqDyR2ceqdrorhQSUG7ZQQfiz19+5WbkGrtoiFXB9Rq7W+ImlfUZLkww0DdctbAPDsGJURxl6X4u1bBZsby67lnG1jOb1GDjSNkj+fMzgfNAcREMjGAav9H6o6+pZuaLneYXlcIX14YEETXUFOPrsrB5K0FJdQnoJjZ7grjeH5QtcoftECY2pafBOd0iyfEZzVU1LEY4JakuLW0rqEQmuD5P+hSWCRqyYAvhrtc+kzIP6+CGZkuf2uaFwwEi5xbUh8lTht7B7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXEKnuN40jJ5SBw+kVEj2OgD4rOSYa6KtHCy4GTVcp0=;
- b=MsH/aNLD6wsFdiQOg0ZtzVwP8gLPGPbK7eLxHJx9PM4ts4+T0DXiDuB3Ug53Yvu2SoM9mnQ2UqjczkXQ4mRmvC5uU33cvPM/Jf5NJdeh/9dDgziaHQQp0lspI5A9YuRQlp9275Sz7Us7KKwaqPdkhV6L8raKr0OcW0LxKPskZ0BH5U+TsM0wgCbDCiAvfZlO4a6qWKXIyzlr1qoCM+0ZMBDlSP8eUYtiEZXvV4ScnK8+2g3zeHqCUPV21GMjqgtSkCcVei/5WWuCQJP8iHZvwSwVCbUz7BkHBSYBlV8JVmUOwGaSAZ2eKxeK8acunTr0qY6UPXIEE/s7KLDZctz5Sg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXEKnuN40jJ5SBw+kVEj2OgD4rOSYa6KtHCy4GTVcp0=;
- b=KfLt3mCCdtZPX7zXPTxXGznGIz1TBdy+jkm/wTI1s4BY8RKAIoEahwdNqnUBelXEKCoyWiC6aY2Rz9ljBw+HgrCojkBGAlK2itE8lCfePiqDUDDR9d9Kl7GmZM7mIOoZunwpdQnatuIRrXbP+jqXHZfE/HaGuXc7WlnORsD7nks=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1404.namprd21.prod.outlook.com (20.180.22.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.8; Mon, 28 Oct 2019 21:07:11 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::756e:8d3f:e463:3bf7]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::756e:8d3f:e463:3bf7%3]) with mapi id 15.20.2408.016; Mon, 28 Oct 2019
- 21:07:11 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next, 4/4] hv_netvsc: Update document for XDP support
-Thread-Topic: [PATCH net-next, 4/4] hv_netvsc: Update document for XDP support
-Thread-Index: AQHVjdOqeF2skKD6Y0io1FAqZWRRAw==
-Date:   Mon, 28 Oct 2019 21:07:11 +0000
-Message-ID: <1572296801-4789-5-git-send-email-haiyangz@microsoft.com>
-References: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO2PR04CA0076.namprd04.prod.outlook.com
- (2603:10b6:102:1::44) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b5df6643-1b7a-423a-8c18-08d75beacc99
-x-ms-traffictypediagnostic: DM6PR21MB1404:|DM6PR21MB1404:|DM6PR21MB1404:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB14049BFC29E7ADE4E00BE821AC660@DM6PR21MB1404.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0204F0BDE2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(346002)(396003)(39860400002)(136003)(199004)(189003)(6512007)(446003)(36756003)(54906003)(50226002)(486006)(22452003)(2616005)(476003)(305945005)(14454004)(478600001)(2501003)(6392003)(66066001)(7846003)(66476007)(66446008)(64756008)(66556008)(66946007)(10290500003)(6436002)(386003)(10090500001)(102836004)(7736002)(99286004)(11346002)(76176011)(52116002)(5660300002)(186003)(26005)(6506007)(256004)(8936002)(81156014)(81166006)(6116002)(6486002)(3846002)(4326008)(8676002)(2201001)(316002)(110136005)(25786009)(2906002)(4720700003)(71200400001)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1404;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: N2iu8QmvCapfjPeyHZjuDypd2A2cbxTl33hDk1j8ao+8ILwOJ+Fc2R6k4BdfcO78e8jF//lop4cZy87auDxGCJTpKZn/1fmNSLPRoHgmLU5Da8g4vRWKtj1/Mj0yMP3xCwcVLc1mIdsHG9QZDvKbqjGknOEataRn/XX5wO9QzYna8rEsiKT7LN0Dj4X93h1iMJv1hKDHEs6Blaxt2BZ/+9wVfa5Rt5QsOKJmZvx6mHbFm+GIgDi4uns7bsIMcMwmm6UZgm4mryky/XdvfnZ0U1IamvT8HyfjakdVsuOIW9q9vC4xJbHLu42oXshrqRhlpcBpCONoKoMtPJPcjojRl25f1QtFn68vyDS/VZZX2gPIKrfW2Ytyi3gdVJN6AVUObs0ohG7HFp8b16rhfZaY1KoMdFR4WWXR6+uWVCfomtJx0z8PHviqhvghED9FnO40
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 28 Oct 2019 17:07:34 -0400
+Received: from mga11.intel.com ([192.55.52.93]:6148 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390208AbfJ1VHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:07:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 14:07:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
+   d="scan'208";a="224760197"
+Received: from shrehore-mobl1.ti.intel.com (HELO localhost) ([10.251.82.5])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 14:07:10 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH v23 22/24] selftests/x86: Add vDSO selftest for SGX
+Date:   Mon, 28 Oct 2019 23:03:22 +0200
+Message-Id: <20191028210324.12475-23-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5df6643-1b7a-423a-8c18-08d75beacc99
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 21:07:11.1213
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KMNWNELcFRmEOdzrLnQ8aJ1PWR/TcqXTh4no8W6DD5VLqb5BCr9e4fY8t8kLD991IRZAn7Fv7XtbDIlepQ/OOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1404
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added the new section in the document regarding XDP support
-by hv_netvsc driver.
+Expand the selftest by invoking the enclave by using
+__vdso_sgx_enter_enclave() in addition to direct ENCLS[EENTER].
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: linux-sgx@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- .../networking/device_drivers/microsoft/netvsc.txt         | 14 ++++++++++=
-++++
- 1 file changed, 14 insertions(+)
+ tools/testing/selftests/x86/sgx/main.c     | 132 +++++++++++++++++++++
+ tools/testing/selftests/x86/sgx/sgx_call.S |  43 +++++++
+ tools/testing/selftests/x86/sgx/sgx_call.h |   3 +
+ 3 files changed, 178 insertions(+)
 
-diff --git a/Documentation/networking/device_drivers/microsoft/netvsc.txt b=
-/Documentation/networking/device_drivers/microsoft/netvsc.txt
-index 3bfa635..69ccfca 100644
---- a/Documentation/networking/device_drivers/microsoft/netvsc.txt
-+++ b/Documentation/networking/device_drivers/microsoft/netvsc.txt
-@@ -82,3 +82,17 @@ Features
-   contain one or more packets. The send buffer is an optimization, the dri=
-ver
-   will use slower method to handle very large packets or if the send buffe=
-r
-   area is exhausted.
+diff --git a/tools/testing/selftests/x86/sgx/main.c b/tools/testing/selftests/x86/sgx/main.c
+index a1a9e75099c2..df6846098f6f 100644
+--- a/tools/testing/selftests/x86/sgx/main.c
++++ b/tools/testing/selftests/x86/sgx/main.c
+@@ -23,6 +23,109 @@
+ #define PAGE_SIZE  4096
+ 
+ static const uint64_t MAGIC = 0x1122334455667788ULL;
++void *eenter;
 +
-+  XDP support
-+  -----------
-+  XDP (eXpress Data Path) is a feature that runs eBPF bytecode at the earl=
-y
-+  stage when packets arrive at a NIC card. The goal is to increase perform=
-ance
-+  for packet processing, reducing the overhead of SKB allocation and other
-+  upper network layers.
++struct vdso_symtab {
++	Elf64_Sym *elf_symtab;
++	const char *elf_symstrtab;
++	Elf64_Word *elf_hashtab;
++};
 +
-+  hv_netvsc supports XDP in native mode, and transparently sets the XDP
-+  program on the associated VF NIC as well.
++static void *vdso_get_base_addr(char *envp[])
++{
++	Elf64_auxv_t *auxv;
++	int i;
 +
-+  XDP program cannot run with LRO (RSC) enabled, so you need to disable LR=
-O
-+  before running XDP:
-+	ethtool -K eth0 lro off
---=20
-1.8.3.1
++	for (i = 0; envp[i]; i++)
++		;
++
++	auxv = (Elf64_auxv_t *)&envp[i + 1];
++
++	for (i = 0; auxv[i].a_type != AT_NULL; i++) {
++		if (auxv[i].a_type == AT_SYSINFO_EHDR)
++			return (void *)auxv[i].a_un.a_val;
++	}
++
++	return NULL;
++}
++
++static Elf64_Dyn *vdso_get_dyntab(void *addr)
++{
++	Elf64_Ehdr *ehdr = addr;
++	Elf64_Phdr *phdrtab = addr + ehdr->e_phoff;
++	int i;
++
++	for (i = 0; i < ehdr->e_phnum; i++)
++		if (phdrtab[i].p_type == PT_DYNAMIC)
++			return addr + phdrtab[i].p_offset;
++
++	return NULL;
++}
++
++static void *vdso_get_dyn(void *addr, Elf64_Dyn *dyntab, Elf64_Sxword tag)
++{
++	int i;
++
++	for (i = 0; dyntab[i].d_tag != DT_NULL; i++)
++		if (dyntab[i].d_tag == tag)
++			return addr + dyntab[i].d_un.d_ptr;
++
++	return NULL;
++}
++
++static bool vdso_get_symtab(void *addr, struct vdso_symtab *symtab)
++{
++	Elf64_Dyn *dyntab = vdso_get_dyntab(addr);
++
++	symtab->elf_symtab = vdso_get_dyn(addr, dyntab, DT_SYMTAB);
++	if (!symtab->elf_symtab)
++		return false;
++
++	symtab->elf_symstrtab = vdso_get_dyn(addr, dyntab, DT_STRTAB);
++	if (!symtab->elf_symstrtab)
++		return false;
++
++	symtab->elf_hashtab = vdso_get_dyn(addr, dyntab, DT_HASH);
++	if (!symtab->elf_hashtab)
++		return false;
++
++	return true;
++}
++
++static unsigned long elf_sym_hash(const char *name)
++{
++	unsigned long h = 0, high;
++
++	while (*name) {
++		h = (h << 4) + *name++;
++		high = h & 0xf0000000;
++
++		if (high)
++			h ^= high >> 24;
++
++		h &= ~high;
++	}
++
++	return h;
++}
++
++static Elf64_Sym *vdso_symtab_get(struct vdso_symtab *symtab, const char *name)
++{
++	Elf64_Word bucketnum = symtab->elf_hashtab[0];
++	Elf64_Word *buckettab = &symtab->elf_hashtab[2];
++	Elf64_Word *chaintab = &symtab->elf_hashtab[2 + bucketnum];
++	Elf64_Sym *sym;
++	Elf64_Word i;
++
++	for (i = buckettab[elf_sym_hash(name) % bucketnum]; i != STN_UNDEF;
++	     i = chaintab[i]) {
++		sym = &symtab->elf_symtab[i];
++		if (!strcmp(name, &symtab->elf_symstrtab[sym->st_name]))
++			return sym;
++	}
++
++	return NULL;
++}
+ 
+ static bool encl_create(int dev_fd, unsigned long bin_size,
+ 			struct sgx_secs *secs)
+@@ -212,10 +315,14 @@ bool load_sigstruct(const char *path, void *sigstruct)
+ 
+ int main(int argc, char *argv[], char *envp[])
+ {
++	struct sgx_enclave_exception exception;
+ 	struct sgx_sigstruct sigstruct;
++	struct vdso_symtab symtab;
++	Elf64_Sym *eenter_sym;
+ 	struct sgx_secs secs;
+ 	uint64_t result = 0;
+ 	off_t bin_size;
++	void *addr;
+ 	void *bin;
+ 
+ 	if (!encl_data_map("encl.bin", &bin, &bin_size))
+@@ -237,5 +344,30 @@ int main(int argc, char *argv[], char *envp[])
+ 
+ 	printf("Output: 0x%lx\n", result);
+ 
++	memset(&exception, 0, sizeof(exception));
++
++	addr = vdso_get_base_addr(envp);
++	if (!addr)
++		exit(1);
++
++	if (!vdso_get_symtab(addr, &symtab))
++		exit(1);
++
++	eenter_sym = vdso_symtab_get(&symtab, "__vdso_sgx_enter_enclave");
++	if (!eenter_sym)
++		exit(1);
++	eenter = addr + eenter_sym->st_value;
++
++	printf("Input: 0x%lx\n", MAGIC);
++
++	sgx_call_vdso((void *)&MAGIC, &result, 0, NULL, NULL, NULL,
++		      (void *)secs.base, &exception, NULL);
++	if (result != MAGIC) {
++		fprintf(stderr, "0x%lx != 0x%lx\n", result, MAGIC);
++		exit(1);
++	}
++
++	printf("Output: 0x%lx\n", result);
++
+ 	exit(0);
+ }
+diff --git a/tools/testing/selftests/x86/sgx/sgx_call.S b/tools/testing/selftests/x86/sgx/sgx_call.S
+index ca4c7893f9d9..e71f44f7a995 100644
+--- a/tools/testing/selftests/x86/sgx/sgx_call.S
++++ b/tools/testing/selftests/x86/sgx/sgx_call.S
+@@ -21,3 +21,46 @@ sgx_async_exit:
+ 	ENCLU
+ 	pop	%rbx
+ 	ret
++
++	.global sgx_call_vdso
++sgx_call_vdso:
++	.cfi_startproc
++	push	%r15
++	.cfi_adjust_cfa_offset	8
++	.cfi_rel_offset		%r15, 0
++	push	%r14
++	.cfi_adjust_cfa_offset	8
++	.cfi_rel_offset		%r14, 0
++	push	%r13
++	.cfi_adjust_cfa_offset	8
++	.cfi_rel_offset		%r13, 0
++	push	%r12
++	.cfi_adjust_cfa_offset	8
++	.cfi_rel_offset		%r12, 0
++	push	%rbx
++	.cfi_adjust_cfa_offset	8
++	.cfi_rel_offset		%rbx, 0
++	push	$0
++	.cfi_adjust_cfa_offset	8
++	push	0x48(%rsp)
++	.cfi_adjust_cfa_offset	8
++	push	0x48(%rsp)
++	.cfi_adjust_cfa_offset	8
++	push	0x48(%rsp)
++	.cfi_adjust_cfa_offset	8
++	mov	$2, %eax
++	call	*eenter(%rip)
++	add	$0x20, %rsp
++	.cfi_adjust_cfa_offset	-0x20
++	pop	%rbx
++	.cfi_adjust_cfa_offset	-8
++	pop	%r12
++	.cfi_adjust_cfa_offset	-8
++	pop	%r13
++	.cfi_adjust_cfa_offset	-8
++	pop	%r14
++	.cfi_adjust_cfa_offset	-8
++	pop	%r15
++	.cfi_adjust_cfa_offset	-8
++	ret
++	.cfi_endproc
+diff --git a/tools/testing/selftests/x86/sgx/sgx_call.h b/tools/testing/selftests/x86/sgx/sgx_call.h
+index bf72068ada23..a4072c5ecce7 100644
+--- a/tools/testing/selftests/x86/sgx/sgx_call.h
++++ b/tools/testing/selftests/x86/sgx/sgx_call.h
+@@ -8,4 +8,7 @@
+ 
+ void sgx_call_eenter(void *rdi, void *rsi, void *entry);
+ 
++int sgx_call_vdso(void *rdi, void *rsi, long rdx, void *rcx, void *r8, void *r9,
++		  void *tcs, struct sgx_enclave_exception *ei, void *cb);
++
+ #endif /* SGX_CALL_H */
+-- 
+2.20.1
 
