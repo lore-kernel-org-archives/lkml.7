@@ -2,92 +2,158 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35B0CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969ADCA9EBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFC52053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768F12184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbfJ1JWA convert rfc822-to-8bit (ORCPT
+        id S1731680AbfJ1JYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 05:22:00 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:54491 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbfJ1JV7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 05:21:59 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9S9LbRM014005, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9S9LbRM014005
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 28 Oct 2019 17:21:41 +0800
-Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
- RTITCASV02.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Mon, 28 Oct
- 2019 17:21:29 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "oliver@neukum.org" <oliver@neukum.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nic_swsd <nic_swsd@realtek.com>
-Subject: RE: [PATCH 2/2] r8152: Add macpassthru support for ThinkPad Thunderbolt 3 Dock Gen 2
-Thread-Topic: [PATCH 2/2] r8152: Add macpassthru support for ThinkPad
- Thunderbolt 3 Dock Gen 2
-Thread-Index: AQHViyNIwWDKAImfZESSShiKae+s26dvaNpQ//+TW4CAAMxToA==
-Date:   Mon, 28 Oct 2019 09:21:28 +0000
-Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18EF17F@RTITMBSVM03.realtek.com.tw>
-References: <20191025105919.689-1-kai.heng.feng@canonical.com>
- <20191025105919.689-2-kai.heng.feng@canonical.com>
- <0835B3720019904CB8F7AA43166CEEB2F18EEE4D@RTITMBSVM03.realtek.com.tw>
- <3980F066-6783-45A6-9B34-1D838C2C1A2C@canonical.com>
-In-Reply-To: <3980F066-6783-45A6-9B34-1D838C2C1A2C@canonical.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.177.214]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 28 Oct 2019 05:24:32 -0400
+Received: from mga14.intel.com ([192.55.52.115]:42059 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728194AbfJ1JYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 05:24:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 02:24:30 -0700
+X-IronPort-AV: E=Sophos;i="5.68,239,1569308400"; 
+   d="scan'208";a="193204146"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 02:24:25 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Changbin Du <changbin.du@gmail.com>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive 'functions' to 'identifiers'
+In-Reply-To: <20191025144802.uixg2crhw6h7gghq@mail.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191020131717.28990-1-changbin.du@gmail.com> <20191024121940.1d6a64df@lwn.net> <87woctb9cj.fsf@intel.com> <20191025144802.uixg2crhw6h7gghq@mail.google.com>
+Date:   Mon, 28 Oct 2019 11:24:22 +0200
+Message-ID: <87v9s99q9l.fsf@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kai-Heng Feng [mailto:kai.heng.feng@canonical.com]
-> Sent: Monday, October 28, 2019 12:58 PM
-[...]
-> >> @@ -6754,6 +6779,8 @@ static const struct usb_device_id rtl8152_table[]
-> = {
-> >> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f, 0)},
-> >> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062, 0)},
-> >> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3069, 0)},
-> >> +	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3082,
-> >> +			R8152_QUIRK_LENOVO_MACPASSTHRU)},
-> >
-> > This limits the usage of driver_info. For example, I couldn't
-> > use it to store a pointer address anymore.
-> 
-> But will the driver ever use .driver_info for pointers?
-> There are many driver use it for quirks and quirks only.
+On Fri, 25 Oct 2019, Changbin Du <changbin.du@gmail.com> wrote:
+> On Fri, Oct 25, 2019 at 09:57:48AM +0300, Jani Nikula wrote:
+>> On Thu, 24 Oct 2019, Jonathan Corbet <corbet@lwn.net> wrote:
+>> > On Sun, 20 Oct 2019 21:17:17 +0800
+>> > Changbin Du <changbin.du@gmail.com> wrote:
+>> >
+>> >> The 'functions' directive is not only for functions, but also works for
+>> >> structs/unions. So the name is misleading. This patch renames it to
+>> >> 'identifiers', which specific the functions/types to be included in
+>> >> documentation. We keep the old name as an alias of the new one before
+>> >> all documentation are updated.
+>> >> 
+>> >> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+>> >
+>> > So I think this is basically OK, but I have one more request...
+>> >
+>> > [...]
+>> >
+>> >> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+>> >> index 1159405cb920..0689f9c37f1e 100644
+>> >> --- a/Documentation/sphinx/kerneldoc.py
+>> >> +++ b/Documentation/sphinx/kerneldoc.py
+>> >> @@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
+>> >>      optional_arguments = 4
+>> >>      option_spec = {
+>> >>          'doc': directives.unchanged_required,
+>> >> -        'functions': directives.unchanged,
+>> >>          'export': directives.unchanged,
+>> >>          'internal': directives.unchanged,
+>> >> +        'identifiers': directives.unchanged,
+>> >> +        'functions': directives.unchanged,  # alias of 'identifiers'
+>> >>      }
+>> >>      has_content = False
+>> >>  
+>> >> @@ -71,6 +72,7 @@ class KernelDocDirective(Directive):
+>> >>  
+>> >>          filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
+>> >>          export_file_patterns = []
+>> >> +        identifiers = None
+>> >>  
+>> >>          # Tell sphinx of the dependency
+>> >>          env.note_dependency(os.path.abspath(filename))
+>> >> @@ -86,19 +88,22 @@ class KernelDocDirective(Directive):
+>> >>              export_file_patterns = str(self.options.get('internal')).split()
+>> >>          elif 'doc' in self.options:
+>> >>              cmd += ['-function', str(self.options.get('doc'))]
+>> >> +        elif 'identifiers' in self.options:
+>> >> +            identifiers = self.options.get('identifiers').split()
+>> >>          elif 'functions' in self.options:
+>> >> -            functions = self.options.get('functions').split()
+>> >> -            if functions:
+>> >> -                for f in functions:
+>> >> -                    cmd += ['-function', f]
+>> >> -            else:
+>> >> -                cmd += ['-no-doc-sections']
+>> >> +            identifiers = self.options.get('functions').split()
+>> >
+>> > Rather than do this, can you just change the elif line to read:
+>> >
+>> >     elif ('identifiers' in self.options) or ('functions' in self.options):
+>> >
+>> > ...then leave the rest of the code intact?  It keeps the logic together,
+>> > and avoids the confusing distinction between identifiers=='' and
+>> > identifiers==None .
+>> 
+>> I think the problem is you still need to distinguish between the two for
+>> the get('functions') part.
+>> 
+>> One option is to rename 'functions' to 'identifiers' in the above block,
+>> and put something like this above the whole if ladder (untested):
+>> 
+>>         # backward compat
+>>         if 'functions' in self.options:
+>>             if 'identifiers' in self.options:
+>>                 kernellog.warn(env.app, "fail")
+> This will miss the content of 'functions' directive if both exist in
+> same doc.
 
-I prefer to keep .driver_info empty, even though it is not
-used currently.
+Did you not notice your patch does the same, except silently, while this
+would produce a warning? Which one is less surprising?
 
-The R8152_QUIRK_LENOVO_MACPASSTHRU is only used to set the
-flag of LENOVO_MACPASSTHRU in probe(), and it is used only once.
-Besides, it could be replaced by checking the vendor ID and
-product ID. Therefore, I don't think it is necessary to use
-driver_info , unless there are more devices needing it.
+>
+>>             else:
+>>                 self.options.set('identifiers', self.options.get('functions'))
+>> 
+>> BR,
+>> Jani.
+>>
+> After comparing, I still perfer my original code which is simpler. :)
 
-Best Regards,
-Hayes
+But is it, really? I agree with Jon about the distinction between None
+and '' being confusing.
 
 
+BR,
+Jani.
+
+
+
+>
+>> 
+>> -- 
+>> Jani Nikula, Intel Open Source Graphics Center
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
