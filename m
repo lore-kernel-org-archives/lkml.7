@@ -2,81 +2,118 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755D5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F5CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47FB520650
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82CC320650
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DbyZ1xQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733065AbfJ1Htc (ORCPT
+        id S1733076AbfJ1H4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 03:49:32 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48006 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729695AbfJ1Htc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 03:49:32 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A5B60C32BAC2A7398FB4;
-        Mon, 28 Oct 2019 15:49:26 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 28 Oct 2019
- 15:49:25 +0800
-Subject: Re: [EXT] Re: [PATCH net-next] net: aquantia: Fix build error wihtout
- CONFIG_PTP_1588_CLOCK
-To:     Igor Russkikh <Igor.Russkikh@aquantia.com>,
-        Simon Horman <simon.horman@netronome.com>
-References: <20191025133726.31796-1-yuehaibing@huawei.com>
- <20191026080929.GD31244@netronome.com>
- <4edcf4c4-b8fc-00a1-5f13-6c41a27eb4a5@huawei.com>
- <379afbe8-adb8-5209-ac65-8bb9fb92966a@aquantia.com>
-CC:     Egor Pomozov <epomozov@marvell.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Dmitry Bezrukov <Dmitry.Bezrukov@aquantia.com>,
-        "Sergey Samoilenko" <Sergey.Samoilenko@aquantia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <49a629ba-c143-896a-d24d-32e04c430b77@huawei.com>
-Date:   Mon, 28 Oct 2019 15:49:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Mon, 28 Oct 2019 03:56:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31343 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733025AbfJ1H4d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 03:56:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572249391;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=7eZcqHF8b9Ji9D25pn09VHOG3WM+NKx8xJbvY/2TLqA=;
+        b=DbyZ1xQIU/cQOKXqY36GKaDvmznKy9CqnikuRE7wX9jOVLqZhYAi6cbeCSOufpoHqhgVim
+        GDPbVRO08mf6aaXlJTNLRfAXJN3U+m6avExz5fyBOd4ZtgOpU9VwYD2gPK2yNzCJNYz5Js
+        B+MQQEuR/n8IOTUqbl1jkLAChFJrum0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-4OgiWQmOM_uxrvdeBN2Qdg-1; Mon, 28 Oct 2019 03:56:29 -0400
+Received: by mail-wr1-f72.google.com with SMTP id e14so5873107wrm.21
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 00:56:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=S5NXpo19hb3uDxW1OhHDcHE5G0aGpOZOkhWsFlEbgJg=;
+        b=COT9+6GIXMmkegpDg1G3rTcVGk0vphac3ZENHuVihlsxWRA2QUaQlMfk7zhE52tP1o
+         65AsLs2zfLghnBapBjEZDQQ4VpGgXgKO7smDzP5x9C53ZnX1EO27nDKQzM+GMf0E/Gas
+         doHuBm37Ena4MgfPosP6NHSoFLfb/QZJiaJK2vCYLbwGdj04TpvhuL1ogaT729Y3+ldP
+         nxtridVOimG3wrO7W+GLLH2hvDWEyw8nbDVA5gYX8xzswc6jAAKCAUpNbde0T4K1MuUT
+         FhGYj4F6kUBPaR3XP90NiFN12DoiIAoNECK9XAbDhyx2D1ibctvMUHIvYmA32LZjNU8C
+         yahg==
+X-Gm-Message-State: APjAAAX8OQa1bR/KT446KL5aBlJEB3BmIJoDLC4ZrEjyZBySBth00Jpu
+        mz+yLn5djkaIvQE2zyvE2TvQroV4w8BSimY/5wSMa0sKIVqt4v02Oj/avZduzdcwyyqRrHn4KL0
+        WlBSmlSETVH1/YTlFRQrgIecO
+X-Received: by 2002:a1c:a6c8:: with SMTP id p191mr13488543wme.99.1572249388645;
+        Mon, 28 Oct 2019 00:56:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxdujLnbZ/mVVjeXxdogH1Figcm+nBuCvScMbkWCn3k8Tpyjlo4tv3ouf7+I5YMO36ZXlV4Ug==
+X-Received: by 2002:a1c:a6c8:: with SMTP id p191mr13488519wme.99.1572249388348;
+        Mon, 28 Oct 2019 00:56:28 -0700 (PDT)
+Received: from [192.168.42.37] (mob-37-176-198-149.net.vodafone.it. [37.176.198.149])
+        by smtp.gmail.com with ESMTPSA id v9sm8889789wro.51.2019.10.28.00.56.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Oct 2019 00:56:27 -0700 (PDT)
+Subject: Re: [PATCH] KVM: vmx, svm: always run with EFER.NXE=1 when shadow
+ paging is active
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+References: <20191027152323.24326-1-pbonzini@redhat.com>
+ <20191028065919.AB8C3208C0@mail.kernel.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <b08a0103-312e-5441-9ffe-33c9df0a9d57@redhat.com>
+Date:   Mon, 28 Oct 2019 08:56:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <379afbe8-adb8-5209-ac65-8bb9fb92966a@aquantia.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191028065919.AB8C3208C0@mail.kernel.org>
+Content-Language: en-US
+X-MC-Unique: 4OgiWQmOM_uxrvdeBN2Qdg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/26 19:09, Igor Russkikh wrote:
-> 
->>> Hi YueHaibing,
->>>
->>> thanks for your patch.
->>>
->>> What is the motivation for not using the existing copy of this function?
->>
->> I'm not sure if PTP_1588_CLOCK is needed at this config,
->> using the existing function need to PTP_1588_CLOCK is selected.
-> 
-> Hi YueHaibing,
-> 
-> Please checkout this patch: https://patchwork.ozlabs.org/patch/1184620/
-> 
-> It fixes the problem without duplicating the function.
+On 28/10/19 07:59, Sasha Levin wrote:
+>=20
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+>=20
+> The bot has tested the following trees: v5.3.7, v4.19.80, v4.14.150, v4.9=
+.197, v4.4.197.
+>=20
+> v5.3.7: Build OK!
+> v4.19.80: Failed to apply! Possible dependencies:
+>     Unable to calculate
+>=20
+> v4.14.150: Failed to apply! Possible dependencies:
+>     Unable to calculate
+>=20
+> v4.9.197: Failed to apply! Possible dependencies:
+>     Unable to calculate
+>=20
+> v4.4.197: Failed to apply! Possible dependencies:
+>     Unable to calculate
+>=20
+>=20
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+>=20
+> How should we proceed with this patch?
 
-Yes, this fix the issue.
+It should apply just fine to all branches, just to arch/x86/kvm/vmx.c
+instead of arch/x86/kvm/vmx/vmx.c.
 
-> 
-> Regards,
->   Igor
-> 
-> 
+Paolo
 
