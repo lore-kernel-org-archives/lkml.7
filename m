@@ -2,237 +2,138 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688F7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0156C208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5B5208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="KIIxiTpu"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="AjprizKQ";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="v8irVZao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388104AbfJ1JxE (ORCPT
+        id S2388109AbfJ1Jxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 05:53:04 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:57530 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728915AbfJ1JxE (ORCPT
+        Mon, 28 Oct 2019 05:53:47 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:63816 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728915AbfJ1Jxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 05:53:04 -0400
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 67A722E1430;
-        Mon, 28 Oct 2019 12:53:00 +0300 (MSK)
-Received: from vla1-5826f599457c.qloud-c.yandex.net (vla1-5826f599457c.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:5826:f599])
-        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 7uyn4H3XtT-r0BGrrK5;
-        Mon, 28 Oct 2019 12:53:00 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1572256380; bh=xqm1jSofN29SdWEre48fi8W13SuV+/iA71X565d9MD8=;
-        h=Message-ID:References:Date:To:From:Subject:In-Reply-To;
-        b=KIIxiTpuwCzyjAr46XiPLPDpgf4IO/lzLTUd0XYu2AGAm2Vc7JX8hB6zbITv+4rvD
-         CTJNLol+3A+jvYHx4eJN0cA+njdzn0tXhkBJ7if4OsmCrNYq9psmlCg+05VDml+JO/
-         6SIL4RfsnA9B9FOgCVSu33EltimrP/FpwHOnGNwk=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
-        by vla1-5826f599457c.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id C5lPuitJie-qxWCl6oM;
-        Mon, 28 Oct 2019 12:52:59 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] pipe: add fcntl for changing free space desired for write
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     David Howells <dhowells@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 28 Oct 2019 12:52:59 +0300
-Message-ID: <157225637948.2332.2715544570854147191.stgit@buzz>
-In-Reply-To: <5b970999-c714-6bfb-0b02-ed206bafced4@yandex-team.ru>
-References: <5b970999-c714-6bfb-0b02-ed206bafced4@yandex-team.ru>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
+        Mon, 28 Oct 2019 05:53:47 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9S9nmso006361;
+        Mon, 28 Oct 2019 02:53:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=A6xCUgGM3klAz+ymtBtTo+G6Mbn/xHa/ZXX02C+fbm0=;
+ b=AjprizKQ/5CjtdVOm+svYzQFuxV2oLemS030VRAnro+0DGpH2amT46iSyB8ZyfGA/Ba6
+ Xt9NDxhCeIdwdkD2GQckpGN0exczDm/4wWh5sV5yubL58YueWrU6lNUO9LC5mPd4fADo
+ W/R4weEhIs8bPfno4PqWMytfh+awCyf2lAmujXxZfi2RCsMCJT9MYoRdYxdcjLVW0dNd
+ zLS4gV74NRiAQuy8tImpTPI3YdFKUkiJIQnJKDw0hkY+6Wf/Nk6Vf2PMWxgBhc0ip9yr
+ G6RoDNiW/ddn5CGEUYM+OT+4i2wixxQQOLw22FfCoBV8JKajAoXSVjoXuac8IFw8Wr8H DA== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2vvkgq5fdf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 28 Oct 2019 02:53:34 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 28 Oct
+ 2019 02:53:33 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.53) by
+ SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 28 Oct 2019 02:53:33 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gv9jJ3vQZkN0qaYpgcQ0YS2DqwA7in1cXtBJmI3tyeaieCvOMt0RDQYF8AePcZ4HmywzO33vkh5hNtN8WlHRJYWkz5JDKePHPhc2zfRkVWlL2rRGWGnTiKUfYIw05RKxVRHz/MCEiHxH36ei4c+94x2EdS60PkQN1O8KWL1gAajDtQ36p1Lqa/waJBMSF4beHspYob/+jlmt2xrk7S+ASit1Che8YPRvlYMK8OffxJ36nuvHbtjbzbLB30ZjkeGorEfXzUkYDkY70f6lRp06Zl6XLicebPmKKwU/o8hTQky919fkGlIPZJoHzoJvYyPGZ45FnKnsNr+CGQPPYdeqTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A6xCUgGM3klAz+ymtBtTo+G6Mbn/xHa/ZXX02C+fbm0=;
+ b=CUXJaagfUzmhj8fpmx8uGJH+DmKxEzCReEuwL1+NyAndohsf85fm6+XSWiIxxNHxr2Kh+Yrzu8pO1CVArIeE7SDsWoLBPrPLin/DtvW/ewqo/8zgWkqA6CIfS8lF6/izwqp/a/6Wq65xJPZNvH1+i2pBtClKmUbfj+HPRo4wmdB64OUxC45BKHECbVsSSuDwMvaV87JTes7vUyX4sgWofra05U06em+iyw/ydeKW4QT9okBjZSgGBf+sBx5eyVzOfbe4sxxtc3p2ERfLs88C9hnXzRUiruiSy3oCAyM/ZwdwcDLMFTxpTrrp0AySlvHxLBtwc6nYOfXosz4NYojjKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A6xCUgGM3klAz+ymtBtTo+G6Mbn/xHa/ZXX02C+fbm0=;
+ b=v8irVZaoSX7e1nzZ5eBla/u+vA2AnVqhQgxFJ/AVNhOZMxj0BwYLjtBxrG28nMM0rj4ySff9E1pL+sDOkfaFZQb+71TQoTGPyxyXqGKZDaBm1MlqGelT1ThLtlrn1q+j1jfVlP26DqdG78z1aQmx7wq9eAnV83Tsg3evXL9ZFdY=
+Received: from BL0PR18MB2275.namprd18.prod.outlook.com (52.132.30.141) by
+ BL0PR18MB2339.namprd18.prod.outlook.com (52.132.10.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.24; Mon, 28 Oct 2019 09:53:32 +0000
+Received: from BL0PR18MB2275.namprd18.prod.outlook.com
+ ([fe80::4152:b5a9:45c2:a981]) by BL0PR18MB2275.namprd18.prod.outlook.com
+ ([fe80::4152:b5a9:45c2:a981%3]) with mapi id 15.20.2387.025; Mon, 28 Oct 2019
+ 09:53:32 +0000
+From:   Igor Russkikh <irusskikh@marvell.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Egor Pomozov <epomozov@marvell.com>,
+        Igor Russkikh <Igor.Russkikh@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sergey Samoilenko <Sergey.Samoilenko@aquantia.com>,
+        Dmitry Bezrukov <Dmitry.Bezrukov@aquantia.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] [PATCH net-next] net: aquantia: fix error handling in
+ aq_ptp_poll
+Thread-Topic: [EXT] [PATCH net-next] net: aquantia: fix error handling in
+ aq_ptp_poll
+Thread-Index: AQHVjXWOWenE2YYHN0K3xjp7931YMQ==
+Date:   Mon, 28 Oct 2019 09:53:32 +0000
+Message-ID: <8c961978-3fb2-730c-fe54-3b7cc2ec9b53@marvell.com>
+References: <20191028070447.GA3659@embeddedor>
+In-Reply-To: <20191028070447.GA3659@embeddedor>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0202.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1f::22) To BL0PR18MB2275.namprd18.prod.outlook.com
+ (2603:10b6:207:44::13)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [95.79.108.179]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 80f988f5-5cc7-41c1-faba-08d75b8cb12f
+x-ms-traffictypediagnostic: BL0PR18MB2339:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR18MB2339CDFA57861E2C541616F6B7660@BL0PR18MB2339.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:341;
+x-forefront-prvs: 0204F0BDE2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(366004)(396003)(39850400004)(199004)(189003)(316002)(54906003)(2616005)(110136005)(229853002)(36756003)(486006)(305945005)(6436002)(6486002)(64756008)(76176011)(66556008)(66446008)(6506007)(476003)(256004)(102836004)(186003)(99286004)(31686004)(7736002)(6116002)(6246003)(3846002)(446003)(386003)(11346002)(52116002)(66476007)(25786009)(66946007)(478600001)(2906002)(81166006)(4744005)(8936002)(81156014)(4326008)(66066001)(26005)(8676002)(86362001)(31696002)(5660300002)(14454004)(71200400001)(6512007)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR18MB2339;H:BL0PR18MB2275.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bBxDG/FX3L9yr7wcLZdqzCGI8qq3V338eMfEEdWRdutOKmTzOsRcas/uwJna3IgF7h1Me6MiVCVPZjYEOG3NMMc3xjs2rheHT2XgJUnULG2wTvP/AB2w/FCOWL35/Mkg3wE/mJsOJ53j8c7aSBsvCZEaYlvWaZ0zPOWEMqHnHsl4CpYxQ2/o9j6BYnwza7ho+ytesex/p6iUB9DJkl7cdxwU9dre5cwc48eDAq5Z78rzgNUin1NwoyyT4XoE6X7G3mpsCxmHIsnqMQRMj7MzIbKQRgnC1x3CgnpmQ+VoEL0RE6McumKOnw3MLxuCchKG2at7oQ8qkPFemTMb9zo2zbdZ4jACcg326myi76aXqiyVc4Wv/W/+B+FSXj3gUw0cLgxJRmJH2vNx9h8Zd+aivZSNfWw14askgB4jSl4HDq92DOx/a3t8/9PdoQpjYYyy
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-ID: <3D7449E242010041BC04C7901BCD6F9C@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80f988f5-5cc7-41c1-faba-08d75b8cb12f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 09:53:32.4014
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: n0b9BXGdewJ2EFsrkx/sQrbd7Xo0B/8zeuFeMP+rngl+9O4DrRO2P7q/4ES3tJD9/O+lCcIFynVOZwFNn8iJMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR18MB2339
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-28_04:2019-10-25,2019-10-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When writer produces data faster than reader consumes it is would be more
-optimal to wake up writer when buffer have enough room for following data.
-Right now pipe wakeup writer when there is just one free page.
-
-Unfortunately we cannot change default behavior without risk of breaking
-things. This patch makes threshold tunable via fcntl.
-
-fcntl(fd, F_SETPIPE_WRITE_SZ, size);
-size = fcntl(fd, F_GETPIPE_WRITE_SZ);
-
-Size is rounded up to page size like F_SETPIPE_SZ. Default is one page.
-
-perf stat bash -c 'seq 50000000 | wc' shows decreasing count of context
-switches from 26k to 13k when default is set to half of buffer size.
-Execution time stays the same.
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Link: https://lore.kernel.org/lkml/CAHk-=wjoTncMYdQFmY4yspKOUsDSNn1dHp1FWvJ0eRO94ZM3dQ@mail.gmail.com/
-
----
-
-#define _GNU_SOURCE
-#include <unistd.h>
-#include <fcntl.h>
-
-#define F_SETPIPE_WRITE_SZ	(1024 + 15)
-
-int main(int argc, char **argv)
-{
-	int fd[2];
-
-	pipe2(fd, O_CLOEXEC);
-	fcntl(fd[0], F_SETPIPE_SZ, 64 << 10);
-	fcntl(fd[0], F_SETPIPE_WRITE_SZ, 32 << 10);
-
-	if (!fork()) {
-		dup2(fd[1], 1);
-		execlp("seq", "seq", "50000000", NULL);
-	} else {
-		dup2(fd[0], 0);
-		execlp("wc", "wc", NULL);
-	}
-}
----
- fs/fcntl.c                 |    2 ++
- fs/pipe.c                  |   28 +++++++++++++++++++++++++---
- include/linux/pipe_fs_i.h  |    2 ++
- include/uapi/linux/fcntl.h |    6 ++++++
- 4 files changed, 35 insertions(+), 3 deletions(-)
-
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 3d40771e8e7c..6dc6784a718c 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -414,6 +414,8 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
- 		break;
- 	case F_SETPIPE_SZ:
- 	case F_GETPIPE_SZ:
-+	case F_SETPIPE_WRITE_SZ:
-+	case F_GETPIPE_WRITE_SZ:
- 		err = pipe_fcntl(filp, cmd, arg);
- 		break;
- 	case F_ADD_SEALS:
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 8a2ab2f974bd..17c56ee0b86a 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -324,7 +324,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
- 				curbuf = (curbuf + 1) & (pipe->buffers - 1);
- 				pipe->curbuf = curbuf;
- 				pipe->nrbufs = --bufs;
--				do_wakeup = 1;
-+				do_wakeup = pipe->buffers-bufs >= pipe->wrbufs;
- 			}
- 			total_len -= chars;
- 			if (!total_len)
-@@ -555,7 +555,8 @@ pipe_poll(struct file *filp, poll_table *wait)
- 	}
- 
- 	if (filp->f_mode & FMODE_WRITE) {
--		mask |= (nrbufs < pipe->buffers) ? EPOLLOUT | EPOLLWRNORM : 0;
-+		if (pipe->buffers - nrbufs >= pipe->wrbufs)
-+			mask |= EPOLLOUT | EPOLLWRNORM;
- 		/*
- 		 * Most Unices do not set EPOLLERR for FIFOs but on Linux they
- 		 * behave exactly like pipes for poll().
-@@ -680,6 +681,7 @@ struct pipe_inode_info *alloc_pipe_info(void)
- 		init_waitqueue_head(&pipe->wait);
- 		pipe->r_counter = pipe->w_counter = 1;
- 		pipe->buffers = pipe_bufs;
-+		pipe->wrbufs = 1;
- 		pipe->user = user;
- 		mutex_init(&pipe->mutex);
- 		return pipe;
-@@ -1090,8 +1092,10 @@ static long pipe_set_size(struct pipe_inode_info *pipe, unsigned long arg)
- 	 * expect a lot of shrink+grow operations, just free and allocate
- 	 * again like we would do for growing. If the pipe currently
- 	 * contains more buffers than arg, then return busy.
-+	 *
-+	 * Do not let shrink pipe buffer lower than write size.
- 	 */
--	if (nr_pages < pipe->nrbufs) {
-+	if (nr_pages < pipe->nrbufs || nr_pages < pipe->wrbufs) {
- 		ret = -EBUSY;
- 		goto out_revert_acct;
- 	}
-@@ -1135,6 +1139,18 @@ static long pipe_set_size(struct pipe_inode_info *pipe, unsigned long arg)
- 	return ret;
- }
- 
-+static long pipe_set_write_size(struct pipe_inode_info *pipe, unsigned long arg)
-+{
-+	unsigned int nr_pages;
-+
-+	nr_pages = (arg + PAGE_SIZE - 1) >> PAGE_SHIFT;
-+	if (!nr_pages || nr_pages > pipe->buffers)
-+		return -EINVAL;
-+
-+	pipe->wrbufs = nr_pages;
-+	return nr_pages * PAGE_SIZE;
-+}
-+
- /*
-  * After the inode slimming patch, i_pipe/i_bdev/i_cdev share the same
-  * location, so checking ->i_pipe is not enough to verify that this is a
-@@ -1163,6 +1179,12 @@ long pipe_fcntl(struct file *file, unsigned int cmd, unsigned long arg)
- 	case F_GETPIPE_SZ:
- 		ret = pipe->buffers * PAGE_SIZE;
- 		break;
-+	case F_SETPIPE_WRITE_SZ:
-+		ret = pipe_set_write_size(pipe, arg);
-+		break;
-+	case F_GETPIPE_WRITE_SZ:
-+		ret = pipe->wrbufs * PAGE_SIZE;
-+		break;
- 	default:
- 		ret = -EINVAL;
- 		break;
-diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
-index 5c626fdc10db..b4236805d167 100644
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -33,6 +33,7 @@ struct pipe_buffer {
-  *	@nrbufs: the number of non-empty pipe buffers in this pipe
-  *	@buffers: total number of buffers (should be a power of 2)
-  *	@curbuf: the current pipe buffer entry
-+ *	@wrbufs: count of buffers desired for write
-  *	@tmp_page: cached released page
-  *	@readers: number of current readers of this pipe
-  *	@writers: number of current writers of this pipe
-@@ -49,6 +50,7 @@ struct pipe_inode_info {
- 	struct mutex mutex;
- 	wait_queue_head_t wait;
- 	unsigned int nrbufs, curbuf, buffers;
-+	unsigned int wrbufs;
- 	unsigned int readers;
- 	unsigned int writers;
- 	unsigned int files;
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index 1d338357df8a..3fb043079d4a 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -28,6 +28,12 @@
- #define F_SETPIPE_SZ	(F_LINUX_SPECIFIC_BASE + 7)
- #define F_GETPIPE_SZ	(F_LINUX_SPECIFIC_BASE + 8)
- 
-+/*
-+ * Set and get of pipe space desired for each write
-+ */
-+#define F_SETPIPE_WRITE_SZ	(F_LINUX_SPECIFIC_BASE + 15)
-+#define F_GETPIPE_WRITE_SZ	(F_LINUX_SPECIFIC_BASE + 16)
-+
- /*
-  * Set/Get seals
-  */
-
+DQo+IEZpeCBjdXJyZW50eSBpZ25vcmVkIHJldHVybmVkIGVycm9yIGJ5IHByb3Blcmx5IGNoZWNr
+aW5nICplcnIqIGFmdGVyDQo+IGNhbGxpbmcgYXFfbmljLT5hcV9od19vcHMtPmh3X3JpbmdfaHd0
+c19yeF9maWxsKCkuDQo+IA0KPiBBZGRyZXNzZXMtQ292ZXJpdHktSUQ6IDE0ODczNTcgKCJVbnVz
+ZWQgdmFsdWUiKQ0KPiBGaXhlczogMDRhMTgzOTk1MGQ5ICgibmV0OiBhcXVhbnRpYTogaW1wbGVt
+ZW50IGRhdGEgUFRQIGRhdGFwYXRoIikNCj4gU2lnbmVkLW9mZi1ieTogR3VzdGF2byBBLiBSLiBT
+aWx2YSA8Z3VzdGF2b0BlbWJlZGRlZG9yLmNvbT4NCg0KVGhhbmtzLCBHdXN0YXZvIQ0KDQpSZXZp
+ZXdlZC1ieTogSWdvciBSdXNza2lraCA8aXJ1c3NraWtoQG1hcnZlbGwuY29tPg0KDQpSZWdhcmRz
+LA0KICBJZ29yDQo=
