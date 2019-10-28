@@ -2,101 +2,132 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98772CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502CECA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E05214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC17214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="PcVqPg+G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsYd+IrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404227AbfJ1R4J (ORCPT
+        id S2404241AbfJ1R4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 13:56:09 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.162]:11954 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730395AbfJ1R4J (ORCPT
+        Mon, 28 Oct 2019 13:56:43 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43044 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730395AbfJ1R4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 13:56:09 -0400
-X-Greylist: delayed 357 seconds by postgrey-1.27 at vger.kernel.org; Mon, 28 Oct 2019 13:56:08 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1572285367;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=O1Y3cHLchpCrbqj8e6xjlT/zTElzb7HM0YYVa7PBPnQ=;
-        b=PcVqPg+GPcG7+B6KA4OGjbngaVWjXIMoQG9EeQs2wasC8wDH+Lm7MPTMpbq+kR9dIE
-        AozAsUIDDFf/80hpJOCbh3Hl3VUb+OY3/Nr1QEWgYnSaLQYRpRIPO0gYr/IXJodiYVnu
-        OHncsi6lPLj8CBq0PjjomJL3Az/lQEiTLw1v9uCcr5c1aIBMQDlfNt1g8ULexjI0sT3x
-        vcdFxf0ExYeldcEiULADyr/xSvqI4zhd2iZ/aO/2rhgi4kuQmk8iuV8Y0mDd7Z/Rw9H8
-        mxKVo+JhSIhpc+NcuO5ZTHOli1Nr00J7/jK0yAAi8triGrIFhNgdbGG+hTs1OUGqd1nE
-        Aa+A==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4AUztn93FPS2dyuYM9i8w=="
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 44.28.1 SBL|AUTH)
-        with ESMTPSA id e01a77v9SHo6tns
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 28 Oct 2019 18:50:06 +0100 (CET)
-Date:   Mon, 28 Oct 2019 18:49:55 +0100
-From:   Olaf Hering <olaf@aepfle.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "open list:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
-Message-ID: <20191028184955.24dbb7d4.olaf@aepfle.de>
-In-Reply-To: <20191028161754.GF1554@sasha-vm>
-References: <20191024144943.26199-1-olaf@aepfle.de>
-        <20191028161754.GF1554@sasha-vm>
-X-Mailer: Claws Mail 2019.05.18 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Mon, 28 Oct 2019 13:56:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n1so3411426wra.10;
+        Mon, 28 Oct 2019 10:56:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yAgZMtf/VMvYmjG/BeZrCrg9OryuwBnaN7WoS0QCndo=;
+        b=lsYd+IrBzjmG3qfteumSThkMdXzznfqx5E28vX8HNjBNCvlLPm2zTiCTD9/dTnIovI
+         GzciN/1SNDxwcb3dI4c7inPDt3Hn1zePT9aEjzauaWC4X4XHzeI3iOssBTzebbmSBYbK
+         iw9dq7cMOa+QfqT6oq7EeynrMbkg0UTIa0UaHj8aoHhyrOud3GUr+5wKjq+B52SUinmq
+         rU2NppWWK8r0eepPXqrNWMhh2Byfl47OLXgNpnkgEHVaX8DxEXdrD26CeeGKb+5UpCaz
+         +79sOdQIF+WoGFbd5JS8021/3NKCotJ6B/r3XblTC5bxhsVGT8XqxqSRJP6Tz2mgeWMp
+         jECA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yAgZMtf/VMvYmjG/BeZrCrg9OryuwBnaN7WoS0QCndo=;
+        b=uSXAEKjdn14PZ8nluHJaL3b5vkAGGnv6NgfAPfW6vc3UuWlcFxG2wav9CQkbjrxwtw
+         CoLjEJoErGwVU2KXWYAHPZP0HBNjqQPTY7hl7kw7+ZAiPxLgw7YBNpxCcaElvbM33/W3
+         ASvqCf2cmoqqgxZ0k7viZNRhg3dnoM30L4EtyxV4w8IeDobBfqNnIFAI9uFqFBS1ovWO
+         +T/PMzTOtS0yRdLoGAy8RGNjfmRFyTG8jq+d26Wb/t3NZLYkHHQeNZjixSVUL2GKm4cG
+         epj3uiizpRy7PBX7FJxTk0BnFAo/CxyCYSuWTgy+wJ5EI/t4ArpOlqQhNcZG8HILJZxB
+         Lv+w==
+X-Gm-Message-State: APjAAAVO4S6qrItEd4vdqoU9f4FwEgQ13kSyrMII3GMz0BYLbiaSb5mB
+        hQ6UTAOvok1X3w642fAMSpgNRPfAv4neD36BWp8=
+X-Google-Smtp-Source: APXvYqxnORJpDwc4s1jCy3Q5X+6OC0fEfKMsIR8ZweCFnT0Pjd7LJxMWaOSFSH1x4BZ/57s6J/Kd17r2Xg5+gEdaz8Q=
+X-Received: by 2002:adf:ed02:: with SMTP id a2mr15784221wro.11.1572285399932;
+ Mon, 28 Oct 2019 10:56:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/IuoZQOlE/DrovulyPpUOb_M"; protocol="application/pgp-signature"
+References: <20191021145149.31657-1-geert+renesas@glider.be> <20191021145149.31657-4-geert+renesas@glider.be>
+In-Reply-To: <20191021145149.31657-4-geert+renesas@glider.be>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 28 Oct 2019 13:56:26 -0400
+Message-ID: <CADnq5_Mcs1EzvETV=+XjWZcbJff-bfLycYZ3N+SVE9-KA7U-Sw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] drm/amdgpu: Remove superfluous void * cast in
+ debugfs_create_file() call
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     =?UTF-8?Q?Breno_Leit=C3=A3o?= <leitao@debian.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David@rox.of.borg, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Casey Leedom <leedom@chelsio.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, linux-crypto@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IuoZQOlE/DrovulyPpUOb_M
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Oct 21, 2019 at 6:23 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> There is no need to cast a typed pointer to a void pointer when calling
+> a function that accepts the latter.  Remove it, as the cast prevents
+> further compiler checks.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Am Mon, 28 Oct 2019 12:17:54 -0400
-schrieb Sasha Levin <sashal@kernel.org>:
+Applied.  Thanks!
 
-> undefined reference to `pthread_create'
+Alex
 
-Does "make V=3D1 -C tools/hv" work for you?
-This is what I use.
-
-Olaf
-
---Sig_/IuoZQOlE/DrovulyPpUOb_M
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl23KkMACgkQ86SN7mm1
-DoCRWQ/+LG5xpg4eIZaIs/EnRBJawuXuQ1KF4Uz20eoKmJkSXAvwSG0SF7CmgrHV
-OPnIugF9R02hFD686YOLSZJDqsCs5s+GHRMLMorRQOfBgXZlnbA7WL4Kj4T9EyiW
-q+yRzGefuekOAn/shc+ARHVCmhOglL/Uq/Cu/H7V7rGSNBLuc1JAHY2jQsasg+ds
-1YdVMWl3vVcZOP9X/JgBjC4DPXryer8MkAg8A01vV6NPGe2GJbm98mJOZBvUg7aO
-0QtRG+rR+c3mJelE9XWLrl+AT7Rl38H0x6qqMGxOUIrFfQBBlcgB9hA/DuxZXTN4
-eEDHRQbvCdLlBJ/+WHM4qxTU6ZaSkVpdQWPf+EpsoTHaQpRNYStD6LKh4+AWtKrW
-mTvZQvmt7qaGvPVX0hwDHlC8HwP0CJhNpBPCM6svozAyukfYrSKwxajV2Mvrul3D
-CXz4zWOk9qjYrjZKJecI93M3PekMoHbtN6AO7aTZKLBgtruGD5qf64bzpvb6cWUn
-7rsytsn5JfUY8PjRcDDDlpgqki5VE4YCQKRsOHyACjdtoXRVAltqTPSfhsmqU5MT
-eLQeyBLbMvGKxII83A8dLoU6FxdWAmsq1Yd7NtCKvSbLhPESnmbHb8dfFyvJtAmR
-062L5egcECYBkLgcwMZ06d1qXxrp8I0t2MDv9qu2xFFQjkT9Jp8=
-=lVDa
------END PGP SIGNATURE-----
-
---Sig_/IuoZQOlE/DrovulyPpUOb_M--
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+> index 5652cc72ed3a9b3a..b97a38b1e089b3d6 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+> @@ -1090,8 +1090,8 @@ int amdgpu_debugfs_init(struct amdgpu_device *adev)
+>  {
+>         adev->debugfs_preempt =
+>                 debugfs_create_file("amdgpu_preempt_ib", 0600,
+> -                                   adev->ddev->primary->debugfs_root,
+> -                                   (void *)adev, &fops_ib_preempt);
+> +                                   adev->ddev->primary->debugfs_root, adev,
+> +                                   &fops_ib_preempt);
+>         if (!(adev->debugfs_preempt)) {
+>                 DRM_ERROR("unable to create amdgpu_preempt_ib debugsfs file\n");
+>                 return -EIO;
+> --
+> 2.17.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
