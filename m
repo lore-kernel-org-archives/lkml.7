@@ -2,221 +2,181 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FD1CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C914CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC066208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="o0C9HsFt"
+	by mail.kernel.org (Postfix) with ESMTP id 5DDCE208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572296418;
+	bh=wwm/g/IquAE4Y9gTiClWk0zw3UhnWwDbyNiv8CPDbcU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=qkNt/XzNKkB/nNSD5bb0ZlFzX2/eIfSox/GCx8xQGSwbgK0ma4ocZpfzhV5Q8+r+D
+	 bMqjFK3fZztppXn/2BpMYfgTBwzdxwcjfg0Iq5m/BmfiHKbrfqCJ/dOZjsqlRrvh+N
+	 n/orcNXHVaXCBpSgwW7p2CHvbMBlhhlFvzVi6ZDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388644AbfJ1VAO (ORCPT
+        id S2388704AbfJ1VAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:00:14 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41010 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729449AbfJ1VAO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:00:14 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t10so6277784plr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 14:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=P/TNBkzS9c/yuaoKTyq62ByC/G1jJQ84tbNvzb7SgP4=;
-        b=o0C9HsFtBU9Sra7x6IaGLFH7PguNxhPeWMy7ynv9qa03nFGgs3b/LqSleDwmrFa7hV
-         HIpIl3ADXvcn4z/BekGETXFni2nBKstLman9EpDxXkk/x/PQ7fD5ZYSRriRgARzPcng5
-         cAQASlDGW/NyW9Ys9CeBjqFTY/FDG6qDALiUmt2PvyDSvVFkCxVrpx14R+M9p+Bo7O5O
-         4drW68U7DNRMUwdRVG+2EMbuu2DP5GhNnhPzMZXhyIPDaUrTSgEYX/0gMGUqpgIxjq/S
-         Yf1WyoN4mnZMtAeR4hftKH7MSME6xXhzVvIWdCrToeqTYuc0g1Xd568hzngj7UmhwBXI
-         sNaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P/TNBkzS9c/yuaoKTyq62ByC/G1jJQ84tbNvzb7SgP4=;
-        b=q2QO0BMswj8blmXkWt8hRWItnmtmERhxv65+QbQzBf3cgx6dnMQE3qFgQ3a3NqVPzZ
-         xkf648WMHR4KzyrdWzwY6XQsPGs4EalXuz/l8HImFIBCVoTuZFJRTgB8nyX1x7lxnhtT
-         8aSGpx+2OHIlOy81Gv5chD5qkjPCst00Sm1ZsORkjf3ouq/lw39i/EhilUvCcJk8mkNZ
-         jIexuELbMoQgGfkSV6kraR8rBqXFV5uNg7bq0Izvh6kvcTkoC8YAsIBmlR75qEM+RdfJ
-         d5uwAMWyXIxkz1od1vW0RtXeCvI1fehdSTCFjTC3J6CtkfXVB1Rf4F9EHp2b6PgMqEgZ
-         /26A==
-X-Gm-Message-State: APjAAAUGMJZ6KOzaQdEUNRpqHFWiLWfq8ZIM2ZyWO9971Og6T5VFWHkt
-        Fb4APyNGaxw555iaXMLD+XgEMg==
-X-Google-Smtp-Source: APXvYqx+2ejtwliH32Lrsh/HKKbawYZkx6gTkSPqk4stHnkUm7zC43dfFaIO4KnDQRSPXO/qOp1v1A==
-X-Received: by 2002:a17:902:b20b:: with SMTP id t11mr52091plr.89.1572296413030;
-        Mon, 28 Oct 2019 14:00:13 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id a8sm10678707pfc.20.2019.10.28.14.00.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 14:00:12 -0700 (PDT)
-Subject: Re: INFO: task hung in io_wq_destroy
-To:     syzbot <syzbot+0f1cc17f85154f400465@syzkaller.appspotmail.com>,
-        andriy.shevchenko@linux.intel.com, davem@davemloft.net,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org,
-        idosch@mellanox.com, kimbrownkd@gmail.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, petrm@mellanox.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk, wanghai26@huawei.com,
-        yuehaibing@huawei.com
-References: <000000000000f86a4f0595fdb152@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f1a79e81-b41f-ba48-9bf3-aeae708f73ba@kernel.dk>
-Date:   Mon, 28 Oct 2019 15:00:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 17:00:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729449AbfJ1VAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:00:15 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95BD4218BA;
+        Mon, 28 Oct 2019 21:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572296414;
+        bh=wwm/g/IquAE4Y9gTiClWk0zw3UhnWwDbyNiv8CPDbcU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Rk7M/peu0QxJ1PXDReaKjGE0RrFqATy/j3UFbJm/CyHM1Z4IZsiMDqKghZwcDHpHL
+         nQrR0WRfxd6UhDgt3PeierO8WZKgTho9OOMW+Ls6a+EoUpLSn7rKGW4N+BRRcMXfY2
+         Eng1/e2fIjzpLWWSlcpcPtZ4+1qKLEmVfzizZuWg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 618BF3522C0D; Mon, 28 Oct 2019 14:00:14 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 14:00:14 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     paulmck@kernel.org, joel@joelfernandes.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] Documentation: RCU: arrayRCU: Converted arrayRCU.txt to
+ arrayRCU.rst
+Message-ID: <20191028210014.GD20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191028202417.13095-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <000000000000f86a4f0595fdb152@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028202417.13095-1-madhuparnabhowmik04@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/19 1:42 PM, syzbot wrote:
-> Hello,
+On Tue, Oct 29, 2019 at 01:54:17AM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 > 
-> syzbot found the following crash on:
+> This patch converts arrayRCU from txt to rst format.
+> arrayRCU.rst is also added in the index.rst file.
 > 
-> HEAD commit:    139c2d13 Add linux-next specific files for 20191025
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=137a3e97600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=28fd7a693df38d29
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0f1cc17f85154f400465
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15415bdf600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=101fa6e4e00000
-> 
-> The bug was bisected to:
-> 
-> commit 3f982fff29b4ad339b36e9cf43422d1039f9917a
-> Author: Jens Axboe <axboe@kernel.dk>
-> Date:   Thu Oct 24 17:35:03 2019 +0000
-> 
->       Merge branch 'for-5.5/drivers' into for-next
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17f7e44ce00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=140fe44ce00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=100fe44ce00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+0f1cc17f85154f400465@syzkaller.appspotmail.com
-> Fixes: 3f982fff29b4 ("Merge branch 'for-5.5/drivers' into for-next")
-> 
-> INFO: task syz-executor696:18072 blocked for more than 143 seconds.
->         Not tainted 5.4.0-rc4-next-20191025 #0
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> syz-executor696 D28160 18072   9609 0x00004004
-> Call Trace:
->    context_switch kernel/sched/core.c:3385 [inline]
->    __schedule+0x94a/0x1e70 kernel/sched/core.c:4070
->    schedule+0xdc/0x2b0 kernel/sched/core.c:4144
->    schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
->    do_wait_for_common kernel/sched/completion.c:83 [inline]
->    __wait_for_common kernel/sched/completion.c:104 [inline]
->    wait_for_common kernel/sched/completion.c:115 [inline]
->    wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
->    io_wq_destroy+0x247/0x470 fs/io-wq.c:784
->    io_finish_async+0x102/0x180 fs/io_uring.c:2890
->    io_ring_ctx_free fs/io_uring.c:3615 [inline]
->    io_ring_ctx_wait_and_kill+0x249/0x710 fs/io_uring.c:3683
->    io_uring_release+0x42/0x50 fs/io_uring.c:3691
->    __fput+0x2ff/0x890 fs/file_table.c:280
->    ____fput+0x16/0x20 fs/file_table.c:313
->    task_work_run+0x145/0x1c0 kernel/task_work.c:113
->    tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->    exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
->    prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
->    syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
->    do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x4019d0
-> Code: 01 f0 ff ff 0f 83 20 0c 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f
-> 44 00 00 83 3d fd 2c 2d 00 00 75 14 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 f4 0b 00 00 c3 48 83 ec 08 e8 5a 01 00 00
-> RSP: 002b:00007ffdcb9bf4b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-> RAX: 0000000000000000 RBX: 0000000000000004 RCX: 00000000004019d0
-> RDX: 0000000000401970 RSI: 0000000020000080 RDI: 0000000000000003
-> RBP: 0000000000000000 R08: 0000000000000004 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000670
-> R13: 0000000000402ae0 R14: 0000000000000000 R15: 0000000000000000
-> 
-> Showing all locks held in the system:
-> 1 lock held by khungtaskd/1078:
->    #0: ffffffff88faba80 (rcu_read_lock){....}, at:
-> debug_show_all_locks+0x5f/0x279 kernel/locking/lockdep.c:5336
-> 1 lock held by rsyslogd/9148:
->    #0: ffff888099aa8660 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110
-> fs/file.c:801
-> 2 locks held by getty/9238:
->    #0: ffff88809a77f090 (&tty->ldisc_sem){++++}, at:
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
->    #1: ffffc90005f472e0 (&ldata->atomic_read_lock){+.+.}, at:
-> n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/9239:
->    #0: ffff8880a7bc7090 (&tty->ldisc_sem){++++}, at:
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
->    #1: ffffc90005f4f2e0 (&ldata->atomic_read_lock){+.+.}, at:
-> n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/9240:
->    #0: ffff8880a83e7090 (&tty->ldisc_sem){++++}, at:
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
->    #1: ffffc90005f3d2e0 (&ldata->atomic_read_lock){+.+.}, at:
-> n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/9241:
->    #0: ffff88808e706090 (&tty->ldisc_sem){++++}, at:
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
->    #1: ffffc90005f292e0 (&ldata->atomic_read_lock){+.+.}, at:
-> n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/9242:
->    #0: ffff8880a7b75090 (&tty->ldisc_sem){++++}, at:
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
->    #1: ffffc90005f312e0 (&ldata->atomic_read_lock){+.+.}, at:
-> n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/9243:
->    #0: ffff8880a130f090 (&tty->ldisc_sem){++++}, at:
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
->    #1: ffffc90005f532e0 (&ldata->atomic_read_lock){+.+.}, at:
-> n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/9244:
->    #0: ffff88809b09e090 (&tty->ldisc_sem){++++}, at:
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
->    #1: ffffc90005f212e0 (&ldata->atomic_read_lock){+.+.}, at:
-> n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-> 
-> =============================================
-> 
-> NMI backtrace for cpu 0
-> CPU: 0 PID: 1078 Comm: khungtaskd Not tainted 5.4.0-rc4-next-20191025 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->    __dump_stack lib/dump_stack.c:77 [inline]
->    dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->    nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
->    nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
->    arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
->    trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
->    check_hung_uninterruptible_tasks kernel/hung_task.c:269 [inline]
->    watchdog+0xc8f/0x1350 kernel/hung_task.c:353
->    kthread+0x361/0x430 kernel/kthread.c:255
->    ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Sending NMI from CPU 0 to CPUs 1:
-> NMI backtrace for cpu 1 skipped: idling at native_safe_halt+0xe/0x10
-> arch/x86/include/asm/irqflags.h:60
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-This is fixed in my for-next branch for a few days at least, unfortunately
-linux-next is still on the old one. Next version should be better.
+Much better, thank you!
 
--- 
-Jens Axboe
+I queued this with a small but important change called out below.
 
+> ---
+>  .../RCU/{arrayRCU.txt => arrayRCU.rst}         | 18 +++++++++++++-----
+>  Documentation/RCU/index.rst                    |  1 +
+>  2 files changed, 14 insertions(+), 5 deletions(-)
+>  rename Documentation/RCU/{arrayRCU.txt => arrayRCU.rst} (91%)
+> 
+> diff --git a/Documentation/RCU/arrayRCU.txt b/Documentation/RCU/arrayRCU.rst
+> similarity index 91%
+> rename from Documentation/RCU/arrayRCU.txt
+> rename to Documentation/RCU/arrayRCU.rst
+> index f05a9afb2c39..ed5ae24b196e 100644
+> --- a/Documentation/RCU/arrayRCU.txt
+> +++ b/Documentation/RCU/arrayRCU.rst
+> @@ -1,5 +1,7 @@
+> -Using RCU to Protect Read-Mostly Arrays
+> +.. _array_rcu_doc:
+>  
+> +Using RCU to Protect Read-Mostly Arrays
+> +=======================================
+>  
+>  Although RCU is more commonly used to protect linked lists, it can
+>  also be used to protect arrays.  Three situations are as follows:
+> @@ -26,6 +28,7 @@ described in the following sections.
+>  
+>  
+>  Situation 1: Hash Tables
+> +------------------------
+>  
+>  Hash tables are often implemented as an array, where each array entry
+>  has a linked-list hash chain.  Each hash chain can be protected by RCU
+> @@ -34,6 +37,7 @@ to other array-of-list situations, such as radix trees.
+>  
+>  
+>  Situation 2: Static Arrays
+> +--------------------------
+>  
+>  Static arrays, where the data (rather than a pointer to the data) is
+>  located in each array element, and where the array is never resized,
+> @@ -41,11 +45,13 @@ have not been used with RCU.  Rik van Riel recommends using seqlock in
+>  this situation, which would also have minimal read-side overhead as long
+>  as updates are rare.
+>  
+> -Quick Quiz:  Why is it so important that updates be rare when
+> -	     using seqlock?
+> +Quick Quiz:  
+
+The above line added trailing whitespace.  I removed it for you, but
+please check for this on future submissions.  ;-)
+
+							Thanx, Paul
+
+> +		Why is it so important that updates be rare when using seqlock?
+>  
+> +:ref:`Answer to Quick Quiz <answer_quick_quiz_seqlock>`
+>  
+>  Situation 3: Resizeable Arrays
+> +------------------------------
+>  
+>  Use of RCU for resizeable arrays is demonstrated by the grow_ary()
+>  function formerly used by the System V IPC code.  The array is used
+> @@ -60,7 +66,7 @@ the remainder of the new, updates the ids->entries pointer to point to
+>  the new array, and invokes ipc_rcu_putref() to free up the old array.
+>  Note that rcu_assign_pointer() is used to update the ids->entries pointer,
+>  which includes any memory barriers required on whatever architecture
+> -you are running on.
+> +you are running on.::
+>  
+>  	static int grow_ary(struct ipc_ids* ids, int newsize)
+>  	{
+> @@ -112,7 +118,7 @@ a simple check suffices.  The pointer to the structure corresponding
+>  to the desired IPC object is placed in "out", with NULL indicating
+>  a non-existent entry.  After acquiring "out->lock", the "out->deleted"
+>  flag indicates whether the IPC object is in the process of being
+> -deleted, and, if not, the pointer is returned.
+> +deleted, and, if not, the pointer is returned.::
+>  
+>  	struct kern_ipc_perm* ipc_lock(struct ipc_ids* ids, int id)
+>  	{
+> @@ -144,8 +150,10 @@ deleted, and, if not, the pointer is returned.
+>  		return out;
+>  	}
+>  
+> +.. _answer_quick_quiz_seqlock:
+>  
+>  Answer to Quick Quiz:
+> +	Why is it so important that updates be rare when using seqlock?
+>  
+>  	The reason that it is important that updates be rare when
+>  	using seqlock is that frequent updates can livelock readers.
+> diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+> index 5c99185710fa..8d20d44f8fd4 100644
+> --- a/Documentation/RCU/index.rst
+> +++ b/Documentation/RCU/index.rst
+> @@ -7,6 +7,7 @@ RCU concepts
+>  .. toctree::
+>     :maxdepth: 3
+>  
+> +   arrayRCU
+>     rcu
+>     listRCU
+>     UP
+> -- 
+> 2.17.1
+> 
