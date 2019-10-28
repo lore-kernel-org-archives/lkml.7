@@ -2,155 +2,258 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975B6CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C60CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6224921734
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10C321721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HCzG50pL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wys/SgWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390157AbfJ1Oee (ORCPT
+        id S2390144AbfJ1Oec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:34:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50118 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390128AbfJ1Oea (ORCPT
+        Mon, 28 Oct 2019 10:34:32 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54867 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390052AbfJ1Oeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:34:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572273268;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp:autocrypt:autocrypt;
-        bh=2zSLFnT78SObCjRc2kcWtLSkTCoW74eGKHeMYdeeQeY=;
-        b=HCzG50pLMaTo3fnals8zaLoBJ2Gc3rA9HgMcI5x732/HuCh/KppTXpbUxPs1gXhu8RR/qN
-        R1K48/uFGmvSeV+Ts/YiEMrzvfCgV0xk0jecP+DxH3+fqD5n1G4hIOLeV6KzhqThyfMi82
-        2bsil0Lsz3QdbTy0tLDm1gEyveEinBU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-pN3RLijUNBGf8cXbvpCiQA-1; Mon, 28 Oct 2019 10:34:25 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 187E1107AD28;
-        Mon, 28 Oct 2019 14:34:21 +0000 (UTC)
-Received: from [10.40.204.213] (ovpn-204-213.brq.redhat.com [10.40.204.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 09FD93D8F;
-        Mon, 28 Oct 2019 14:34:03 +0000 (UTC)
-Subject: Re: [PATCH v12 0/6] mm / virtio: Provide support for unused page
- reporting
-To:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
-        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, konrad.wilk@oracle.com, david@redhat.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com, osalvador@suse.de
-References: <20191022221223.17338.5860.stgit@localhost.localdomain>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFl4pQoBEADT/nXR2JOfsCjDgYmE2qonSGjkM1g8S6p9UWD+bf7YEAYYYzZsLtbilFTe
- z4nL4AV6VJmC7dBIlTi3Mj2eymD/2dkKP6UXlliWkq67feVg1KG+4UIp89lFW7v5Y8Muw3Fm
- uQbFvxyhN8n3tmhRe+ScWsndSBDxYOZgkbCSIfNPdZrHcnOLfA7xMJZeRCjqUpwhIjxQdFA7
- n0s0KZ2cHIsemtBM8b2WXSQG9CjqAJHVkDhrBWKThDRF7k80oiJdEQlTEiVhaEDURXq+2XmG
- jpCnvRQDb28EJSsQlNEAzwzHMeplddfB0vCg9fRk/kOBMDBtGsTvNT9OYUZD+7jaf0gvBvBB
- lbKmmMMX7uJB+ejY7bnw6ePNrVPErWyfHzR5WYrIFUtgoR3LigKnw5apzc7UIV9G8uiIcZEn
- C+QJCK43jgnkPcSmwVPztcrkbC84g1K5v2Dxh9amXKLBA1/i+CAY8JWMTepsFohIFMXNLj+B
- RJoOcR4HGYXZ6CAJa3Glu3mCmYqHTOKwezJTAvmsCLd3W7WxOGF8BbBjVaPjcZfavOvkin0u
- DaFvhAmrzN6lL0msY17JCZo046z8oAqkyvEflFbC0S1R/POzehKrzQ1RFRD3/YzzlhmIowkM
- BpTqNBeHEzQAlIhQuyu1ugmQtfsYYq6FPmWMRfFPes/4JUU/PQARAQABtCVOaXRlc2ggTmFy
- YXlhbiBMYWwgPG5pbGFsQHJlZGhhdC5jb20+iQI9BBMBCAAnBQJZeKUKAhsjBQkJZgGABQsJ
- CAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEKOGQNwGMqM56lEP/A2KMs/pu0URcVk/kqVwcBhU
- SnvB8DP3lDWDnmVrAkFEOnPX7GTbactQ41wF/xwjwmEmTzLrMRZpkqz2y9mV0hWHjqoXbOCS
- 6RwK3ri5e2ThIPoGxFLt6TrMHgCRwm8YuOSJ97o+uohCTN8pmQ86KMUrDNwMqRkeTRW9wWIQ
- EdDqW44VwelnyPwcmWHBNNb1Kd8j3xKlHtnS45vc6WuoKxYRBTQOwI/5uFpDZtZ1a5kq9Ak/
- MOPDDZpd84rqd+IvgMw5z4a5QlkvOTpScD21G3gjmtTEtyfahltyDK/5i8IaQC3YiXJCrqxE
- r7/4JMZeOYiKpE9iZMtS90t4wBgbVTqAGH1nE/ifZVAUcCtycD0f3egX9CHe45Ad4fsF3edQ
- ESa5tZAogiA4Hc/yQpnnf43a3aQ67XPOJXxS0Qptzu4vfF9h7kTKYWSrVesOU3QKYbjEAf95
- NewF9FhAlYqYrwIwnuAZ8TdXVDYt7Z3z506//sf6zoRwYIDA8RDqFGRuPMXUsoUnf/KKPrtR
- ceLcSUP/JCNiYbf1/QtW8S6Ca/4qJFXQHp0knqJPGmwuFHsarSdpvZQ9qpxD3FnuPyo64S2N
- Dfq8TAeifNp2pAmPY2PAHQ3nOmKgMG8Gn5QiORvMUGzSz8Lo31LW58NdBKbh6bci5+t/HE0H
- pnyVf5xhNC/FuQINBFl4pQoBEACr+MgxWHUP76oNNYjRiNDhaIVtnPRqxiZ9v4H5FPxJy9UD
- Bqr54rifr1E+K+yYNPt/Po43vVL2cAyfyI/LVLlhiY4yH6T1n+Di/hSkkviCaf13gczuvgz4
- KVYLwojU8+naJUsiCJw01MjO3pg9GQ+47HgsnRjCdNmmHiUQqksMIfd8k3reO9SUNlEmDDNB
- XuSzkHjE5y/R/6p8uXaVpiKPfHoULjNRWaFc3d2JGmxJpBdpYnajoz61m7XJlgwl/B5Ql/6B
- dHGaX3VHxOZsfRfugwYF9CkrPbyO5PK7yJ5vaiWre7aQ9bmCtXAomvF1q3/qRwZp77k6i9R3
- tWfXjZDOQokw0u6d6DYJ0Vkfcwheg2i/Mf/epQl7Pf846G3PgSnyVK6cRwerBl5a68w7xqVU
- 4KgAh0DePjtDcbcXsKRT9D63cfyfrNE+ea4i0SVik6+N4nAj1HbzWHTk2KIxTsJXypibOKFX
- 2VykltxutR1sUfZBYMkfU4PogE7NjVEU7KtuCOSAkYzIWrZNEQrxYkxHLJsWruhSYNRsqVBy
- KvY6JAsq/i5yhVd5JKKU8wIOgSwC9P6mXYRgwPyfg15GZpnw+Fpey4bCDkT5fMOaCcS+vSU1
- UaFmC4Ogzpe2BW2DOaPU5Ik99zUFNn6cRmOOXArrryjFlLT5oSOe4IposgWzdwARAQABiQIl
- BBgBCAAPBQJZeKUKAhsMBQkJZgGAAAoJEKOGQNwGMqM5ELoP/jj9d9gF1Al4+9bngUlYohYu
- 0sxyZo9IZ7Yb7cHuJzOMqfgoP4tydP4QCuyd9Q2OHHL5AL4VFNb8SvqAxxYSPuDJTI3JZwI7
- d8JTPKwpulMSUaJE8ZH9n8A/+sdC3CAD4QafVBcCcbFe1jifHmQRdDrvHV9Es14QVAOTZhnJ
- vweENyHEIxkpLsyUUDuVypIo6y/Cws+EBCWt27BJi9GH/EOTB0wb+2ghCs/i3h8a+bi+bS7L
- FCCm/AxIqxRurh2UySn0P/2+2eZvneJ1/uTgfxnjeSlwQJ1BWzMAdAHQO1/lnbyZgEZEtUZJ
- x9d9ASekTtJjBMKJXAw7GbB2dAA/QmbA+Q+Xuamzm/1imigz6L6sOt2n/X/SSc33w8RJUyor
- SvAIoG/zU2Y76pKTgbpQqMDmkmNYFMLcAukpvC4ki3Sf086TdMgkjqtnpTkEElMSFJC8npXv
- 3QnGGOIfFug/qs8z03DLPBz9VYS26jiiN7QIJVpeeEdN/LKnaz5LO+h5kNAyj44qdF2T2AiF
- HxnZnxO5JNP5uISQH3FjxxGxJkdJ8jKzZV7aT37sC+Rp0o3KNc+GXTR+GSVq87Xfuhx0LRST
- NK9ZhT0+qkiN7npFLtNtbzwqaqceq3XhafmCiw8xrtzCnlB/C4SiBr/93Ip4kihXJ0EuHSLn
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <3888d486-d046-b35f-a365-655f8c4d3bf2@redhat.com>
-Date:   Mon, 28 Oct 2019 10:34:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191022221223.17338.5860.stgit@localhost.localdomain>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: pN3RLijUNBGf8cXbvpCiQA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Mon, 28 Oct 2019 10:34:31 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g7so9720508wmk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:34:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=BEYu7m/BP15PKxS3B/UgDB/KRkLT0CCRGNyhfdY7cDM=;
+        b=Wys/SgWUXZA1zYzmzVS6ULJQ+rZkhvNARj/2aQx3Um+V5En3UGIAUu5lPaAq6NlAoC
+         oXnZzYO1AIRzADf997O87rUnvIOU5cxuJ8WhHTPVAZUpKxpsafFeXDIFDeRYePVcuJMd
+         ncbSTz05rd692UnYqEoD9+YWYIW5LMsdew9vFFhtU18msfjeYJfonuLa5m259cgEKyje
+         SEWRJhnlKeZ56uomr6cJby2wzWmLizFDMdnB5/ox+FzMWfZqoBeU3hkRhrSA2e1MA/MB
+         YjVW2DiYtI5UlBW8CrK7NHf+LKIiOmyJwPdfD2UazoqsmUwiVCWkjqtdrvgzWXx79lL3
+         GaEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BEYu7m/BP15PKxS3B/UgDB/KRkLT0CCRGNyhfdY7cDM=;
+        b=d/ctPdPqlK2dD4Q8LUF8qp6gGdWgYKG+iYzW+BhyTn91gkIY39qZNbtInk+DsduRNv
+         1p0BLOZzVRnPmg3dlmz5CYUrgClioRE/NnMA/Accm0d/eobnxfQQ3K7MzFDnPoxsUMSD
+         7/KQAgDbF3Dprjb80C3nEmIlBtQvOeceDbZouC/Iq4gRWvSIm6Idz6j0bfWtKwuHzGYB
+         ocR1jQh6jZbd1OSW/BZPTsPsEuuzb+tUISxCFyPRL4CFnU+HSoQbUdIXlD2rL2S03eLu
+         sW98Lzrmqiofw+A253hO4f/h8wRlqKO9/fM7CaNlIWV/pauufFqVWFORvU4QLfCD3Arn
+         o80Q==
+X-Gm-Message-State: APjAAAU+pPIYJbnbRulzzv9tXSzj0AuVRRRmBTRMsEVyf7hrtCd7cvc+
+        qt7eWMJmSbWBbtZVb5bvSQiwaQ==
+X-Google-Smtp-Source: APXvYqw/Rz1E14kfnWirGGYn7JTX/0QpzRHnvSQKGEFhux5jdWCMpKgGmfoZRG/bs0HLPhi4vTirdA==
+X-Received: by 2002:a1c:48c4:: with SMTP id v187mr267338wma.27.1572273267709;
+        Mon, 28 Oct 2019 07:34:27 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:d48d:c917:1f3e:4a87])
+        by smtp.gmail.com with ESMTPSA id g5sm14166144wmg.12.2019.10.28.07.34.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 07:34:27 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rjw@rjwysocki.net
+Cc:     mathieu.poirier@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org
+Subject: [PATCH V5 1/3] cpuidle: play_idle: Make play_idle more flexible
+Date:   Mon, 28 Oct 2019 15:34:17 +0100
+Message-Id: <20191028143419.16236-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The play_idle function has two users, the intel powerclamp and the
+idle_injection.
 
-On 10/22/19 6:27 PM, Alexander Duyck wrote:
+The idle injection cooling device uses the function via the
+idle_injection powercap's APIs. Unfortunately, play_idle is currently
+limited by the idle state depth: by default the deepest idle state is
+selected. On the ARM[64] platforms, most of the time it is the cluster
+idle state, the exit latency and the residency can be very high. That
+reduces the scope of the idle injection usage because the impact on
+the performances can be very significant.
 
+If the idle injection cycles can be done with a shallow state like a
+retention state, the cooling effect would eventually give similar
+results than the cpufreq cooling device.
 
-[...]
-> Below are the results from various benchmarks. I primarily focused on two
-> tests. The first is the will-it-scale/page_fault2 test, and the other is
-> a modified version of will-it-scale/page_fault1 that was enabled to use
-> THP. I did this as it allows for better visibility into different parts
-> of the memory subsystem. The guest is running on one node of a E5-2630 v3
-> CPU with 48G of RAM that I split up into two logical nodes in the guest
-> in order to test with NUMA as well.
->
-> Test=09=09    page_fault1 (THP)     page_fault2
-> Baseline=09 1  1256106.33  +/-0.09%   482202.67  +/-0.46%
->                 16  8864441.67  +/-0.09%  3734692.00  +/-1.23%
->
-> Patches applied  1  1257096.00  +/-0.06%   477436.00  +/-0.16%
->                 16  8864677.33  +/-0.06%  3800037.00  +/-0.19%
->
-> Patches enabled=09 1  1258420.00  +/-0.04%   480080.00  +/-0.07%
->  MADV disabled  16  8753840.00  +/-1.27%  3782764.00  +/-0.37%
->
-> Patches enabled=09 1  1267916.33  +/-0.08%   472075.67  +/-0.39%
->                 16  8287050.33  +/-0.67%  3774500.33  +/-0.11%
+In order to prepare the function to receive an idle state parameter,
+let's replace the 'use_deepest_state' boolean field with 'use_state'
+and use this value to enter the specific idle state.
 
-If I am not mistaken then you are only observing the number of processes (a=
-nd
-not the number of threads) launched over the 1st and the 16th vcpu=C2=A0 re=
-ported by
-will-it-scale?
+The current code keeps the default behavior which is go to the deepest
+idle state.
 
---=20
-Thanks
-Nitesh
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+---
+  V5:
+   - Fix s2idle default idle state value:
+     https://lkml.org/lkml/2019/10/15/522
+---
+ drivers/cpuidle/cpuidle.c | 21 +++++++++++----------
+ include/linux/cpuidle.h   | 13 ++++++-------
+ kernel/sched/idle.c       | 11 +++++++----
+ 3 files changed, 24 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+index 0895b988fa92..f8b54f277589 100644
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -99,31 +99,31 @@ static int find_deepest_state(struct cpuidle_driver *drv,
+ }
+ 
+ /**
+- * cpuidle_use_deepest_state - Set/clear governor override flag.
+- * @enable: New value of the flag.
++ * cpuidle_use_state - Force the cpuidle framework to enter an idle state.
++ * @state: An integer for an idle state
+  *
+- * Set/unset the current CPU to use the deepest idle state (override governors
+- * going forward if set).
++ * Specify an idle state the cpuidle framework must step in and bypass
++ * the idle state selection process.
+  */
+-void cpuidle_use_deepest_state(bool enable)
++void cpuidle_use_state(int state)
+ {
+ 	struct cpuidle_device *dev;
+ 
+ 	preempt_disable();
+ 	dev = cpuidle_get_device();
+ 	if (dev)
+-		dev->use_deepest_state = enable;
++		dev->use_state = state;
+ 	preempt_enable();
+ }
+ 
+ /**
+  * cpuidle_find_deepest_state - Find the deepest available idle state.
+- * @drv: cpuidle driver for the given CPU.
+- * @dev: cpuidle device for the given CPU.
+  */
+-int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+-			       struct cpuidle_device *dev)
++int cpuidle_find_deepest_state(void)
+ {
++	struct cpuidle_device *dev = cpuidle_get_device();
++	struct cpuidle_driver *drv = cpuidle_get_cpu_driver(dev);
++
+ 	return find_deepest_state(drv, dev, UINT_MAX, 0, false);
+ }
+ 
+@@ -554,6 +554,7 @@ static void __cpuidle_unregister_device(struct cpuidle_device *dev)
+ static void __cpuidle_device_init(struct cpuidle_device *dev)
+ {
+ 	memset(dev->states_usage, 0, sizeof(dev->states_usage));
++	dev->use_state = CPUIDLE_STATE_NOUSE;
+ 	dev->last_residency = 0;
+ 	dev->next_hrtimer = 0;
+ }
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index 4b6b5bea8f79..b5602ab28601 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -15,6 +15,7 @@
+ #include <linux/list.h>
+ #include <linux/hrtimer.h>
+ 
++#define CPUIDLE_STATE_NOUSE	-1
+ #define CPUIDLE_STATE_MAX	10
+ #define CPUIDLE_NAME_LEN	16
+ #define CPUIDLE_DESC_LEN	32
+@@ -80,11 +81,11 @@ struct cpuidle_driver_kobj;
+ struct cpuidle_device {
+ 	unsigned int		registered:1;
+ 	unsigned int		enabled:1;
+-	unsigned int		use_deepest_state:1;
+ 	unsigned int		poll_time_limit:1;
+ 	unsigned int		cpu;
+ 	ktime_t			next_hrtimer;
+ 
++	int			use_state;
+ 	int			last_state_idx;
+ 	int			last_residency;
+ 	u64			poll_limit_ns;
+@@ -203,19 +204,17 @@ static inline struct cpuidle_device *cpuidle_get_device(void) {return NULL; }
+ #endif
+ 
+ #ifdef CONFIG_CPU_IDLE
+-extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+-				      struct cpuidle_device *dev);
++extern int cpuidle_find_deepest_state(void);
+ extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
+ 				struct cpuidle_device *dev);
+-extern void cpuidle_use_deepest_state(bool enable);
++extern void cpuidle_use_state(int state);
+ #else
+-static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+-					     struct cpuidle_device *dev)
++static inline int cpuidle_find_deepest_state(void)
+ {return -ENODEV; }
+ static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
+ 				       struct cpuidle_device *dev)
+ {return -ENODEV; }
+-static inline void cpuidle_use_deepest_state(bool enable)
++static inline void cpuidle_use_state(int state)
+ {
+ }
+ #endif
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 8dad5aa600ea..fc7f5216b579 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -165,7 +165,8 @@ static void cpuidle_idle_call(void)
+ 	 * until a proper wakeup interrupt happens.
+ 	 */
+ 
+-	if (idle_should_enter_s2idle() || dev->use_deepest_state) {
++	if (idle_should_enter_s2idle() ||
++	    dev->use_state != CPUIDLE_STATE_NOUSE) {
+ 		if (idle_should_enter_s2idle()) {
+ 			rcu_idle_enter();
+ 
+@@ -176,12 +177,14 @@ static void cpuidle_idle_call(void)
+ 			}
+ 
+ 			rcu_idle_exit();
++			next_state = cpuidle_find_deepest_state();
++		} else {
++			next_state = dev->use_state;
+ 		}
+ 
+ 		tick_nohz_idle_stop_tick();
+ 		rcu_idle_enter();
+ 
+-		next_state = cpuidle_find_deepest_state(drv, dev);
+ 		call_cpuidle(drv, dev, next_state);
+ 	} else {
+ 		bool stop_tick = true;
+@@ -328,7 +331,7 @@ void play_idle(unsigned long duration_us)
+ 	rcu_sleep_check();
+ 	preempt_disable();
+ 	current->flags |= PF_IDLE;
+-	cpuidle_use_deepest_state(true);
++	cpuidle_use_state(cpuidle_find_deepest_state());
+ 
+ 	it.done = 0;
+ 	hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+@@ -339,7 +342,7 @@ void play_idle(unsigned long duration_us)
+ 	while (!READ_ONCE(it.done))
+ 		do_idle();
+ 
+-	cpuidle_use_deepest_state(false);
++	cpuidle_use_state(CPUIDLE_STATE_NOUSE);
+ 	current->flags &= ~PF_IDLE;
+ 
+ 	preempt_fold_need_resched();
+-- 
+2.17.1
 
