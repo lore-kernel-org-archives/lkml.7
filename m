@@ -4,63 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F953CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A403DCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AEF218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D03208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572274616;
-	bh=9tllBxO6iZE/wNXIaj44vxuxta2i7XWsLVpos0Plfds=;
+	s=default; t=1572274617;
+	bh=QYdHmgTyRVIVXwiClwdjXChz9pTZ8G+QcBmCt7N4dm0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=XxPxKLjDblWvMvkK1Y+Lj9UznWbCKad52IivCjfXThW+Sbj7ysk356dkN/6CMT9yk
-	 r6x8rurM5OqDomRHII90tzW7Lefn08na4aFDQC+auSmzCetu8VXhG/fW0iUJdFtSKO
-	 SflMvrxUfFP6SBqat5L1T5pIivbbkt/ORI9bA4Qg=
+	b=Pjvzcl/fRl4TAxh2nmev0PtBNGYig44LqjEF2V907gS6rguPROPkxl8npQiIddY/p
+	 wYfy3WGV6V5MMFS0ZhGSx+W9EiI7DEhHIcfrQajvMuhlI2VT+d8Xcipfi8r4PS2o3b
+	 eDxiw+jL6jklu+vKFapBsBnchZbTU9eKH4+wCg2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390450AbfJ1O4v (ORCPT
+        id S2390478AbfJ1O44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:56:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39846 "EHLO
+        Mon, 28 Oct 2019 10:56:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40078 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390426AbfJ1O4t (ORCPT
+        with ESMTP id S2390428AbfJ1O4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:56:49 -0400
+        Mon, 28 Oct 2019 10:56:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=aacqV5nj/gG01sskTrzwE2VcR2Ffj1PwXKPwaCUoKC4=; b=cK5vMjbVyFJ2
-        PQ0lTJrK00lRYGa9l2T71D0ELFEg367gD6DCLfhJpFoG9Nv378r2InvxQnftVxnaAEkkSJv4SICgx
-        e2AbvyvQV8W1Vl6tUsJc0fev2ElW1EGmijfYpSaCQl12wjXg9FjAeps6cwf/6iim8yRcNKk6RfUJO
-        erUeM=;
+        List-Archive; bh=AFCr3rynD8V4Xu0si+l9pX7hWrr9yeLzz/mOG9Iw2wc=; b=G0w0eKogHrhP
+        q8K6V3DrJgZC7vPrVoys+O16CN+nQi6vYsFPu8CvMZEwCu5kkSS4vSxjP3s7vUiAjyT4NK3LXZEyV
+        jL/XjtfWFgEw2xMIxEP60y7Y8B3QdjH5BHZfNy8tuaf8+JJbATHxKGqcJUUP1mlVNnb1QD2L2Btzj
+        J8NKk=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iP6Rj-0008Rl-5g; Mon, 28 Oct 2019 14:56:39 +0000
+        id 1iP6Rk-0008Rv-0Q; Mon, 28 Oct 2019 14:56:40 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id BC4A127403E4; Mon, 28 Oct 2019 14:56:37 +0000 (GMT)
+        id 6969827403EF; Mon, 28 Oct 2019 14:56:38 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     alsa-devel@alsa-project.org, dgreid@chromium.org,
-        dianders@chromium.org, enric.balletbo@collabora.com,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jaroslav Kysela <perex@perex.cz>,
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     alsa-devel@alsa-project.org, "Cc:"@sirena.co.uk,
+        "Cc:"@sirena.co.uk, emamd001@umn.edu,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jaroslav Kysela <perex@perex.cz>, kjlu@umn.edu,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        tzungbi@chromium.org
-Subject: Applied "ASoC: rockchip: rockchip_max98090: Enable SHDN to fix headset detection" to the asoc tree
-In-Reply-To: <20191028095229.99438-1-cychiang@chromium.org>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        smccaman@umn.edu, Takashi Iwai <tiwai@suse.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+Subject: Applied "ASoC: SOF: Fix memory leak in sof_dfsentry_write" to the asoc tree
+In-Reply-To: <20191027194856.4056-1-navid.emamdoost@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191028145637.BC4A127403E4@ypsilon.sirena.org.uk>
-Date:   Mon, 28 Oct 2019 14:56:37 +0000 (GMT)
+Message-Id: <20191028145638.6969827403EF@ypsilon.sirena.org.uk>
+Date:   Mon, 28 Oct 2019 14:56:38 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,7 +69,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rockchip: rockchip_max98090: Enable SHDN to fix headset detection
+   ASoC: SOF: Fix memory leak in sof_dfsentry_write
 
 has been applied to the asoc tree at
 
@@ -93,50 +94,40 @@ to this mail.
 Thanks,
 Mark
 
-From 07c1b73e2a027ea9a52677beeb6a943a3e357139 Mon Sep 17 00:00:00 2001
-From: Cheng-Yi Chiang <cychiang@chromium.org>
-Date: Mon, 28 Oct 2019 17:52:29 +0800
-Subject: [PATCH] ASoC: rockchip: rockchip_max98090: Enable SHDN to fix headset
- detection
+From c0a333d842ef67ac04adc72ff79dc1ccc3dca4ed Mon Sep 17 00:00:00 2001
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
+Date: Sun, 27 Oct 2019 14:48:47 -0500
+Subject: [PATCH] ASoC: SOF: Fix memory leak in sof_dfsentry_write
 
-max98090 spec states that chip needs to be in turned-on state to supply
-mic bias. Enable SHDN dapm widget along with MICBIAS widget to
-actually turn on mic bias for proper headset button detection.
-This is similar to cht_ti_jack_event in
-sound/soc/intel/boards/cht_bsw_max98090_ti.c.
+In the implementation of sof_dfsentry_write() memory allocated for
+string is leaked in case of an error. Go to error handling path if the
+d_name.name is not valid.
 
-Note that due to ts3a227e reports the jack event right away before the
-notifier is registered, if headset is plugged on boot, headset button
-will not get detected until headset is unplugged and plugged. This is
-still an issue to be fixed.
-
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Link: https://lore.kernel.org/r/20191028095229.99438-1-cychiang@chromium.org
+Fixes: 091c12e1f50c ("ASoC: SOF: debug: add new debugfs entries for IPC flood test")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Link: https://lore.kernel.org/r/20191027194856.4056-1-navid.emamdoost@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/rockchip/rockchip_max98090.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/soc/sof/debug.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-index 0097df1fae66..e80b09143b63 100644
---- a/sound/soc/rockchip/rockchip_max98090.c
-+++ b/sound/soc/rockchip/rockchip_max98090.c
-@@ -66,10 +66,13 @@ static int rk_jack_event(struct notifier_block *nb, unsigned long event,
- 	struct snd_soc_jack *jack = (struct snd_soc_jack *)data;
- 	struct snd_soc_dapm_context *dapm = &jack->card->dapm;
- 
--	if (event & SND_JACK_MICROPHONE)
-+	if (event & SND_JACK_MICROPHONE) {
- 		snd_soc_dapm_force_enable_pin(dapm, "MICBIAS");
--	else
-+		snd_soc_dapm_force_enable_pin(dapm, "SHDN");
-+	} else {
- 		snd_soc_dapm_disable_pin(dapm, "MICBIAS");
-+		snd_soc_dapm_disable_pin(dapm, "SHDN");
+diff --git a/sound/soc/sof/debug.c b/sound/soc/sof/debug.c
+index 54cd431faab7..5529e8eeca46 100644
+--- a/sound/soc/sof/debug.c
++++ b/sound/soc/sof/debug.c
+@@ -152,8 +152,10 @@ static ssize_t sof_dfsentry_write(struct file *file, const char __user *buffer,
+ 	 */
+ 	dentry = file->f_path.dentry;
+ 	if (strcmp(dentry->d_name.name, "ipc_flood_count") &&
+-	    strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
+-		return -EINVAL;
++	    strcmp(dentry->d_name.name, "ipc_flood_duration_ms")) {
++		ret = -EINVAL;
++		goto out;
 +	}
  
- 	snd_soc_dapm_sync(dapm);
- 
+ 	if (!strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
+ 		flood_duration_test = true;
 -- 
 2.20.1
 
