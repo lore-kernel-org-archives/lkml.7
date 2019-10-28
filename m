@@ -2,74 +2,67 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCFACA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EE4CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7E9214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572268087;
-	bh=eN/t8vEWe/l66u2wjNSnil60tzYkWczNbhhncntG/Qs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WX246HuU7QrerBTKzl8entYpVA939EgODKR3WbycN6R/IJpLuYMi/hU351uKPk8kn
-	 7DvWJdSSNONWHn9saFIVXPbKZqL/CHKXYQIWV3ihuDLyG8wXRyH3EZDucqA+sliM0T
-	 inF8WdRpQH0Cr2rHjDwQaZVwceIFZj835cUJEk6g=
+	by mail.kernel.org (Postfix) with ESMTP id 021B720717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388911AbfJ1NIG (ORCPT
+        id S1728927AbfJ1NNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388578AbfJ1NIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:08:06 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C3B320717;
-        Mon, 28 Oct 2019 13:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572268085;
-        bh=eN/t8vEWe/l66u2wjNSnil60tzYkWczNbhhncntG/Qs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZfkGtUdc9OP38mduRSaP02AMOobq0kjRV6BLT/zrP1C7FrZmLgeZHvo0m0ie71UHm
-         LWJ8gu0J128Zy0RjjMH5ewZpCMqpsTw1ComTsNYRxfdXotnteA5mSV60+6r4u5RIog
-         pvgl+7uUOKkBe4ZV31SnYN/7z2viBWJcmeuR2JJY=
-Date:   Mon, 28 Oct 2019 21:07:36 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, ping.bai@nxp.com, jun.li@nxp.com,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM64: imx8mn: Change compatible string for sdma
-Message-ID: <20191028130734.GK16985@dragon>
-References: <1571992807-31378-1-git-send-email-shengjiu.wang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571992807-31378-1-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Mon, 28 Oct 2019 09:13:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58156 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726940AbfJ1NNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:13:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8A71FB384;
+        Mon, 28 Oct 2019 13:13:21 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 14:13:20 +0100
+Message-ID: <s5hr22xau8f.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     syzbot <syzbot+8f2612936028bfd28f28@syzkaller.appspotmail.com>
+Cc:     <allison@lohutok.net>, <alsa-devel@alsa-project.org>,
+        <benquike@gmail.com>, <dan.carpenter@oracle.com>,
+        <glider@google.com>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <perex@perex.cz>,
+        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
+        <tiwai@suse.com>, <wang6495@umn.edu>, <yuehaibing@huawei.com>
+Subject: Re: KMSAN: uninit-value in get_term_name
+In-Reply-To: <000000000000f838060595f602a7@google.com>
+References: <000000000000f838060595f602a7@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 04:40:07PM +0800, Shengjiu Wang wrote:
-> SDMA in i.MX8MN should use same configuration as i.MX8MQ
-> So need to change compatible string to be "fsl,imx8mq-sdma".
+On Mon, 28 Oct 2019 11:32:07 +0100,
+syzbot wrote:
 > 
-> Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Uninit was stored to memory at:
+>  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
+>  kmsan_internal_chain_origin+0xbd/0x180 mm/kmsan/kmsan.c:319
+>  __msan_chain_origin+0x6b/0xd0 mm/kmsan/kmsan_instr.c:179
+>  parse_term_proc_unit+0x73d/0x7e0 sound/usb/mixer.c:896
+>  __check_input_term+0x13ef/0x2360 sound/usb/mixer.c:989
 
-Updated subject like below, and applied the patch.
+So this comes from the invalid descriptor for a processing unit, and
+it's very likely the same issue as already spotted -- the validator up
+to 5.3-rc4 had a bug that passed the invalid descriptor falsely.
+This should have been covered by 5.3-rc5, commit ba8bf0967a15 ("ALSA:
+usb-audio: Fix copy&paste error in the validator").
 
-  arm64: dts: imx8mn: fix compatible string for sdma
 
-Shawn
+thanks,
+
+Takashi
