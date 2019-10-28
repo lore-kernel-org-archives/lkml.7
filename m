@@ -2,123 +2,132 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D57CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4456CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 369A820873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5A320873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:56:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lu3gtq98"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="hncKEA8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731550AbfJ1DwN (ORCPT
+        id S1730028AbfJ1D4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 23:52:13 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42302 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728917AbfJ1DwM (ORCPT
+        Sun, 27 Oct 2019 23:56:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36691 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728116AbfJ1D4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 23:52:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572234732;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6E/VIYauZRkR+EOHGifF88F6ifejkfSEd/ycozu4oc0=;
-        b=Lu3gtq98o55AAaBpAhXuvv3yho+UoByMn8psW6aYVNlLqkzKpcZrwF3Pq6T37yZoVsz/i9
-        jNYW/wjFXCChcZSqRAxLzwvfZ2nTaXC/oH74LTmRARQimGr4bSHCOI+zu+vp1OgyBEz5lf
-        Mky6fTV5FLksDTJq3C47KkLmkxsrGXA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-283-uGx5hqUSPcKVVpELU8IOMQ-1; Sun, 27 Oct 2019 23:52:08 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F0765EC;
-        Mon, 28 Oct 2019 03:52:07 +0000 (UTC)
-Received: from [10.72.12.246] (ovpn-12-246.pek2.redhat.com [10.72.12.246])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BD96B6012C;
-        Mon, 28 Oct 2019 03:52:02 +0000 (UTC)
-Subject: Re: [PATCH net-next] vringh: fix copy direction of
- vringh_iov_push_kern()
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191024035718.7690-1-jasowang@redhat.com>
- <20191027060328-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <f8c51ab6-d328-b574-d5c4-ed4a8cd2c3ec@redhat.com>
-Date:   Mon, 28 Oct 2019 11:52:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 27 Oct 2019 23:56:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w18so8334662wrt.3
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 20:56:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=0vLsyW8NZdsJrokYW5bbOufgyVkfiUX005e5X8CUSXI=;
+        b=hncKEA8qdd0QmUevaWITA2VktUV43rc2uT/rxLwEg6tyOQp/QqEBhGf8sAeeHZUYpp
+         WrVTr6LDhPBL8LPncb+rLFxl7Jic2XOShGTXrXXZYarg7x4sdFs6vZ297kv8Bk381LTE
+         f3z+wiwp0vus5bZkNdFYQWEtED4X83QbZxV429+V0Ap6RLivzbfxzoURopwp3KLoLGTb
+         FqOexhEKxMlWw8gURws8x2+h5lshZLOcNMy7oSbcZJ0Ridp4kK0V/fYpCisKGFxIOFxS
+         dOlQpP2Cx6Rf+br4E8YhPkyHyTQTzSC8EVuNGCwa8Y74eU7983x4epV09ETdlY7O/Ma7
+         Ubew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=0vLsyW8NZdsJrokYW5bbOufgyVkfiUX005e5X8CUSXI=;
+        b=JBXCEcSapddZc7QDRIF7A9KLLc+UzUpFZ8Bp3On8hvPOLH0zCtKfcn2QI/PhFuW7+h
+         XGdpDAC2ds85K2WwXOoGjXLtS9apNZi1PRwWzI2CcFj1csjxqAEXTmlPcU3r1kTT24yS
+         iXQT9mkRdmd6b9S6yYEjTqwwo3arBeGT2GSMJtlE09ZQd/KfAm4ZrS1mftIJf0AP6682
+         tAv+gyqWr3wXzWed4P6gtSZExi+qiujIkQwtM7CQmC6LUk54658RC1SJDBKy6uwM2J6P
+         969NHyAJMCluBsXe7W58JnFH6ZChSr972nDgAT9440qbc8OrrSljtt84Bi06YLUaSYh0
+         v3YA==
+X-Gm-Message-State: APjAAAWEP8bnvtp1OmeEL5bpvcqyDMm74XrJZ10yNfbWjdgWjjo/Wn+5
+        spzdWCh4LXNJs5EIcsVZmTA+4g==
+X-Google-Smtp-Source: APXvYqx9+S7dhRG0S1tGovUu8rBcJzqXF07gAxWW/U8XemmBmXd9xxWQPvuRmUmZe2GJd/CVdPTpzA==
+X-Received: by 2002:a5d:44c6:: with SMTP id z6mr12689692wrr.313.1572234960101;
+        Sun, 27 Oct 2019 20:56:00 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id h17sm10500158wme.6.2019.10.27.20.55.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2019 20:55:59 -0700 (PDT)
+Message-ID: <5db666cf.1c69fb81.c005a.46f9@mx.google.com>
+Date:   Sun, 27 Oct 2019 20:55:59 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191027060328-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: uGx5hqUSPcKVVpELU8IOMQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: linux-4.4.y
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Kernel: v4.4.197-42-gc1c6537ef129
+X-Kernelci-Report-Type: boot
+In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
+References: <20191027203056.220821342@linuxfoundation.org>
+Subject: Re: [PATCH 4.4 00/41] 4.4.198-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+stable-rc/linux-4.4.y boot: 88 boots: 0 failed, 80 passed with 7 offline, 1=
+ conflict (v4.4.197-42-gc1c6537ef129)
 
-On 2019/10/27 =E4=B8=8B=E5=8D=886:04, Michael S. Tsirkin wrote:
-> On Thu, Oct 24, 2019 at 11:57:18AM +0800, Jason Wang wrote:
->> We want to copy from iov to buf, so the direction was wrong.
->>
->> Note: no real user for the helper, but it will be used by future
->> features.
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> I'm still inclined to merge it now, incorrect code tends to
-> proliferate.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.4.y/kernel/v4.4.197-42-gc1c6537ef129/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
+/kernel/v4.4.197-42-gc1c6537ef129/
 
+Tree: stable-rc
+Branch: linux-4.4.y
+Git Describe: v4.4.197-42-gc1c6537ef129
+Git Commit: c1c6537ef129f3034eecbe2f57b332978eae2d2c
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 42 unique boards, 17 SoC families, 13 builds out of 190
 
-I'm fine with this, so I believe you will merge this patch?
+Offline Platforms:
 
-Thanks
+arm:
 
+    multi_v7_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
 
->
->> ---
->>   drivers/vhost/vringh.c | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
->> index 08ad0d1f0476..a0a2d74967ef 100644
->> --- a/drivers/vhost/vringh.c
->> +++ b/drivers/vhost/vringh.c
->> @@ -852,6 +852,12 @@ static inline int xfer_kern(void *src, void *dst, s=
-ize_t len)
->>   =09return 0;
->>   }
->>  =20
->> +static inline int kern_xfer(void *dst, void *src, size_t len)
->> +{
->> +=09memcpy(dst, src, len);
->> +=09return 0;
->> +}
->> +
->>   /**
->>    * vringh_init_kern - initialize a vringh for a kernelspace vring.
->>    * @vrh: the vringh to initialize.
->> @@ -958,7 +964,7 @@ EXPORT_SYMBOL(vringh_iov_pull_kern);
->>   ssize_t vringh_iov_push_kern(struct vringh_kiov *wiov,
->>   =09=09=09     const void *src, size_t len)
->>   {
->> -=09return vringh_iov_xfer(wiov, (void *)src, len, xfer_kern);
->> +=09return vringh_iov_xfer(wiov, (void *)src, len, kern_xfer);
->>   }
->>   EXPORT_SYMBOL(vringh_iov_push_kern);
->>  =20
->> --=20
->> 2.19.1
+    sunxi_defconfig:
+        gcc-8
+            sun5i-r8-chip: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
 
+    davinci_all_defconfig:
+        gcc-8
+            dm365evm,legacy: 1 offline lab
+
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+
+Conflicting Boot Failure Detected: (These likely are not failures as other =
+labs are reporting PASS. Needs review.)
+
+x86_64:
+    x86_64_defconfig:
+        qemu_x86_64:
+            lab-collabora: PASS (gcc-8)
+            lab-baylibre: FAIL (gcc-8)
+
+---
+For more info write to <info@kernelci.org>
