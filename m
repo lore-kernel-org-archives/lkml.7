@@ -2,98 +2,67 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AD7CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7C4CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56F821721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:29:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rPw09B5p"
+	by mail.kernel.org (Postfix) with ESMTP id B0B1521721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733258AbfJ1U3y (ORCPT
+        id S1733298AbfJ1UaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:29:54 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38586 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbfJ1U3y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:29:54 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w8so6243279plq.5
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 13:29:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=WeECtJnzslq+3WsgfzFxA4T6kzwJDi2w9834CWvUQDQ=;
-        b=rPw09B5peYfusomKmiOxxzTbeVm0asYJLc9fmGRItXzuM4PpftzeBc+1d5ljPwz6y5
-         GYwLs7z0lb1nXXX6kz+BqPjluz+bDq/WT+0f9W9PC0YwtJWllm4OTTBcZ57hNjQLYd6p
-         7Qn95QOroC3qyN8HTpcaHoB+1tOCvzTbNFmCLmDiM7vM2/zyKHxOZQt/u+aacMro/lOB
-         pZJfwAPg49plLKAAC7oZhcQCjZUfpokZZ5H+pMurD2UtWuJZUBT+VjFPRlh8+qqdpGe7
-         a/sED/I4RvQ+2b3wfR7IhKx/T0SsLbo7ILPls68u6ORcvBCxFVm+5lcUIARZJ7ys5ll6
-         1U+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=WeECtJnzslq+3WsgfzFxA4T6kzwJDi2w9834CWvUQDQ=;
-        b=GE+VdwU7tAiKwF3XjJxL5YoRRN7TJ9Tad5e3dEcSoBtfwLN5r3BEUYAjXTIon8+WBe
-         4M4Nplxq3ZkmiupxJdd8N+psYx71orfRQdsxGeZ3szcXB6fU02bNXFHggxbHB/e4qbKL
-         Su4QltIU8/VACf9VbtYeZyAcJvGgYvzTpMcgwJ98z6K0rKcIf+xdAE9lcmNfjokaPcVb
-         4kvs2Rusne6uZLlvC1rXbC1hOFRr9t6yNcp+/sOlWATtbkdOdNey7E7jetnK4FNVzGIH
-         PO2El2ieGeKmgY5HrZ5UR7fNESegt/vzD4jwdA1UB4yhZRG8pGua3iljUgW6by8vF6Ln
-         kajA==
-X-Gm-Message-State: APjAAAXdXhsuY+wcXtDQg86ypHc9f2/sDYzECq/+ye2ID6bKRAuLki+i
-        tgbTdX7ivWmILzWMpE2lDlc=
-X-Google-Smtp-Source: APXvYqwjNvJULb6kT/qC3Ov7B/zxAIizTKoZgE8m46ZWkE1T1hS3d0q3S+bN6qSAtCiEUJtbC/SKIA==
-X-Received: by 2002:a17:902:6bc4:: with SMTP id m4mr21103928plt.103.1572294592207;
-        Mon, 28 Oct 2019 13:29:52 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id j24sm10934315pff.71.2019.10.28.13.29.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 13:29:51 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 01:59:45 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     alcooperx@gmail.com, kishon@ti.com, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] phy: broadcom: phy-brcm-usb-init.c: Fix comparing pointer to
- 0
-Message-ID: <20191028202945.GA29284@saurav>
+        Mon, 28 Oct 2019 16:30:25 -0400
+Received: from mga06.intel.com ([134.134.136.31]:42314 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727960AbfJ1UaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 16:30:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 13:30:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
+   d="scan'208";a="210952406"
+Received: from shrehore-mobl1.ti.intel.com (HELO localhost) ([10.251.82.5])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Oct 2019 13:30:16 -0700
+Date:   Mon, 28 Oct 2019 22:30:14 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     David Howells <dhowells@redhat.com>, Petr Vorel <pvorel@suse.cz>,
+        shuah <shuah@kernel.org>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-integrity@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] selftest/trustedkeys: TPM 1.2 trusted keys test
+Message-ID: <20191028203014.GA8279@linux.intel.com>
+References: <1571944467-13097-1-git-send-email-zohar@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1571944467-13097-1-git-send-email-zohar@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compare pointer-typed values to NULL rather than 0
+On Thu, Oct 24, 2019 at 03:14:27PM -0400, Mimi Zohar wrote:
+> Create, save and load trusted keys test
+> 
+> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> 
+> Change log v1:
+> - Replace the directions for using Trousers to take ownership of the TPM
+> with directions for using the IBM TSS.
+> - Differentiate between different types of errors.  Recent bug is causing
+> "add_key: Timer expired".
+> ---
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
- drivers/phy/broadcom/phy-brcm-usb-init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Is not really usable as a selftest because of 3rd party dependencies.
 
-diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.c b/drivers/phy/broadcom/phy-brcm-usb-init.c
-index 3c53625f8bc2..2ea1e84b544b 100644
---- a/drivers/phy/broadcom/phy-brcm-usb-init.c
-+++ b/drivers/phy/broadcom/phy-brcm-usb-init.c
-@@ -707,7 +707,7 @@ static void brcmusb_usb3_otp_fix(struct brcm_usb_init_params *params)
- 	void __iomem *xhci_ec_base = params->xhci_ec_regs;
- 	u32 val;
- 
--	if (params->family_id != 0x74371000 || xhci_ec_base == 0)
-+	if (params->family_id != 0x74371000 || xhci_ec_base == NULL)
- 		return;
- 	brcmusb_writel(0xa20c, USB_XHCI_EC_REG(xhci_ec_base, IRAADR));
- 	val = brcmusb_readl(USB_XHCI_EC_REG(xhci_ec_base, IRADAT));
--- 
-2.20.1
-
+/Jarkko
