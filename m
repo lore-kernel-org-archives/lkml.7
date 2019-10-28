@@ -2,142 +2,123 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45758C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3228CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C27821721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93C621721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEVfVXYq"
+	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="TZgFUJfk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391015AbfJ1QaT (ORCPT
+        id S2391032AbfJ1QaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:30:19 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35373 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730711AbfJ1QaS (ORCPT
+        Mon, 28 Oct 2019 12:30:25 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42532 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730711AbfJ1QaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:30:18 -0400
-Received: by mail-io1-f67.google.com with SMTP id h9so11457947ioh.2;
-        Mon, 28 Oct 2019 09:30:18 -0700 (PDT)
+        Mon, 28 Oct 2019 12:30:24 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 21so7202142pfj.9
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 09:30:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V/+YXkmrDex7nEr+gkqIoyiFItObqxb735/pgi9TyOw=;
-        b=IEVfVXYqi71X+5wVl3Ese6uVmR7+J/VABWSAUt7H4jonMAuWXEZACHPKzDWU8PaTdQ
-         lRfIaqsTOOqdC5QeAI95fcxyC2ALi8O2yrs7v2oszQwXMyqLSeu98BMk8/d4Y4HOTZCW
-         Ip3dgukKFPd8Z+K/JVq17v79VV8bhl5POK/5YviTYJ19ZSLcyB1vPkcQbC3dx6E+1Op8
-         rxl6p/utkpHicJVLDdRasCAKRULk6rq0gId0DIzIyLkCjkQOmXS+tziKwY5XhuGq6VVm
-         /TMxt+tb3v26IeEHYmc44XaG8cjhvOKaMysrOafos6Iyr3V6O8RhD5xbccRIugY0lNxW
-         YRbw==
+        d=pensando.io; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=SQuBb1DCXEr8h1ECCdUIOg6XQFl3p+ONu+5Oivf+rCw=;
+        b=TZgFUJfk5s8fMqvLgcfoSfoH5/QODG8LGopHISdASnARo4nD5nanqf1siljcA53hK2
+         vJV+9nCLl0JOol9OWtGW3dmp1E7ZDBU0UEuiti6O/DqNrFSqJ77V0D3IEYEtKDcnK9Um
+         QGEeQDx4e6qmmuWaIINHFTEbknU1vbikTO+mRvMgYxMuy3yZaHEtfeVlJddlIByq/prL
+         799VU5HYR/o4NpDliCg+aylRupNiBLgPSypRvBKwYSsE6CRaVMKoaqc8TJNTvyOhaXFE
+         EN/RcKC8UUtXz5aJSwfkCKgSnPJuKEFnV3x7+pKGwJXLIWyxJ0k3Rs2Hp/eAWkBEeWeh
+         Wj2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V/+YXkmrDex7nEr+gkqIoyiFItObqxb735/pgi9TyOw=;
-        b=lAlegK43bXiqqDJ/+mdRkMMG03p1L60y4ffqLHscu+ctWKwtZpLyFim/8LG5HhouJj
-         LcsGg3WVviR2JK4RrxbZ2SQ5BVnvBhulg5Q5449mVOQXTkXi+8OdV2gVv0mvOi7dP/oS
-         WD+jF1889qvC/O9fJJR0887TxuXmndUJtQB5zDOQ+1qxZxlwLi78CScvWKJNzMPwrzuc
-         /PwBrliA0x88Xj5PSZhYCEhnfnaMsiRp60+EYAC5FpiS/xbFQ/bGwWm17EASGcB41eLt
-         jpeEXLhEQCn5JXYd0OvE++RveCvXPdb3qtvC0UzLpsqO4Itz2198JXx6ewFt++ka1vWE
-         J4pg==
-X-Gm-Message-State: APjAAAVKH+x4qeIv4oNjpbdvAgdPLzbvkaRSL4fvcmdc5AuaUZ5Ykh3K
-        MUQfRMASqIvhP8FB7ndmHn7PXAgHotOa2rNdGeU=
-X-Google-Smtp-Source: APXvYqzk/zLyOx63qqddiGsEf2n1A10g0Xbr4HwW628LXscP5JAk3K//9Mo38REgUHJBpGQfWEZeoUeMnJ3rGvH8ZNI=
-X-Received: by 2002:a02:330e:: with SMTP id c14mr18313186jae.5.1572280217811;
- Mon, 28 Oct 2019 09:30:17 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=SQuBb1DCXEr8h1ECCdUIOg6XQFl3p+ONu+5Oivf+rCw=;
+        b=WNq7A51whTsQh0VEf9J/+vvj5tqLvyEM5ENYJ79WM3nKSOALG/Acgt3pRAMj33OqB2
+         4402sGooSlHLy8QQJOXqkKYwypvXNv8mPEqizd6ZHWC5aH49TTvPn4CJDJAgr85usGqI
+         QPoYmw2B54bt7JfcMmoRb1x51FFO9lB3w1t4eZX/Re4lMuQlxNLST39WsdJWyHMBz8tT
+         rMDgugGykyQmmIKJ7pISTsoDhMA2bktBklA4KYj2zs4Vy9GyyWm13HnJQjUaHyJH4Eh4
+         tm7IgkTDX9FG9XoAoDosAOOT9AjSwG3bgzE6hwyh0qNwT+EMO5n4eQ5lHVplK/igGbtf
+         LMaw==
+X-Gm-Message-State: APjAAAV7c6HVuFRTQ8M/VcTAKL0DfYWvT46N5/JTMw6H2VALPIAzU3dC
+        SLb9wHl3X2ILYqaOdUAouM/tLg==
+X-Google-Smtp-Source: APXvYqy36OBf3DTn/iAU+tRcnAOHj5pMGpTO3ypHFAqBrCmS9Alu7BSIuIlAMijtuMScIJF29o1VQA==
+X-Received: by 2002:a62:8704:: with SMTP id i4mr21102540pfe.15.1572280223335;
+        Mon, 28 Oct 2019 09:30:23 -0700 (PDT)
+Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
+        by smtp.gmail.com with ESMTPSA id s7sm11329948pgq.91.2019.10.28.09.30.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 28 Oct 2019 09:30:22 -0700 (PDT)
+Subject: Re: [PATCH net-next] ionic: Remove set but not used variable
+ 'sg_desc'
+To:     YueHaibing <yuehaibing@huawei.com>,
+        Pensando Drivers <drivers@pensando.io>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20191028120121.20743-1-yuehaibing@huawei.com>
+From:   Shannon Nelson <snelson@pensando.io>
+Message-ID: <a9acbf5c-a6d7-0115-2ca9-53368ba12508@pensando.io>
+Date:   Mon, 28 Oct 2019 09:30:21 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191026042519.29446-1-navid.emamdoost@gmail.com> <d9c04318-586a-bfc2-fce6-6218c6bab1d6@linux.intel.com>
-In-Reply-To: <d9c04318-586a-bfc2-fce6-6218c6bab1d6@linux.intel.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Mon, 28 Oct 2019 11:30:06 -0500
-Message-ID: <CAEkB2EQXmHJoMJJJULHHFy4gp6a=QiCe5SoxkWehnpKWNVw=_A@mail.gmail.com>
-Subject: Re: [PATCH] media: aspeed-video: Fix memory leaks in aspeed_video_probe
-To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc:     linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
-        Kangjie Lu <kjlu@umn.edu>, openbmc@lists.ozlabs.org,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191028120121.20743-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 11:27 AM Jae Hyun Yoo
-<jae.hyun.yoo@linux.intel.com> wrote:
+On 10/28/19 5:01 AM, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 >
-> Hi Navid,
+> drivers/net/ethernet/pensando/ionic/ionic_txrx.c: In function 'ionic_rx_empty':
+> drivers/net/ethernet/pensando/ionic/ionic_txrx.c:405:28: warning:
+>   variable 'sg_desc' set but not used [-Wunused-but-set-variable]
 >
-> On 10/25/2019 9:25 PM, Navid Emamdoost wrote:
-> > In the implementation of aspeed_video_probe() the allocated memory for
-> > video should be released in case of failure. Release video if either
-> > devm_ioremap_resource() or aspeed_video_init() or
-> > aspeed_video_setup_video() fails.
-> >
-> > Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > ---
-> >   drivers/media/platform/aspeed-video.c | 14 ++++++++++----
-> >   1 file changed, 10 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-> > index eb12f3793062..8c473356132d 100644
-> > --- a/drivers/media/platform/aspeed-video.c
-> > +++ b/drivers/media/platform/aspeed-video.c
-> > @@ -1663,18 +1663,24 @@ static int aspeed_video_probe(struct platform_device *pdev)
-> >
-> >       video->base = devm_ioremap_resource(video->dev, res);
-> >
-> > -     if (IS_ERR(video->base))
-> > -             return PTR_ERR(video->base);
-> > +     if (IS_ERR(video->base)) {
-> > +             rc = PTR_ERR(video->base);
-> > +             goto free_video;
-> > +     }
-> >
-> >       rc = aspeed_video_init(video);
-> >       if (rc)
-> > -             return rc;
-> > +             goto free_video;
-> >
-> >       rc = aspeed_video_setup_video(video);
-> >       if (rc)
-> > -             return rc;
-> > +             goto free_video;
-> >
-> >       return 0;
-> > +
-> > +free_video:
-> > +     kfree(video);
-> > +     return rc;
-> >   }
-> >
-> >   static int aspeed_video_remove(struct platform_device *pdev)
-> >
+> It is never used, so can be removed.
 >
-> Can we simply change kzalloc in aspeed_video_probe with devm_kzalloc
-> so that we don't need to take care of freeing of video? I think it would
-> be more simpler.
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Sounds a neat plan, will send v2.
-
->
-> Cheers,
->
-> Jae
+Acked-by: Shannon Nelson <snelson@pensando.io>
 
 
+> ---
+>   drivers/net/ethernet/pensando/ionic/ionic_txrx.c | 2 --
+>   1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+> index 0aeac3157160..97e79949b359 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+> @@ -402,7 +402,6 @@ static void ionic_rx_fill_cb(void *arg)
+>   
+>   void ionic_rx_empty(struct ionic_queue *q)
+>   {
+> -	struct ionic_rxq_sg_desc *sg_desc;
+>   	struct ionic_desc_info *cur;
+>   	struct ionic_rxq_desc *desc;
+>   	unsigned int i;
+> @@ -412,7 +411,6 @@ void ionic_rx_empty(struct ionic_queue *q)
+>   		desc->addr = 0;
+>   		desc->len = 0;
+>   
+> -		sg_desc = cur->sg_desc;
+>   		for (i = 0; i < cur->npages; i++) {
+>   			if (likely(cur->pages[i].page)) {
+>   				ionic_rx_page_free(q, cur->pages[i].page,
+>
+>
+>
 
--- 
-Navid.
