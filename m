@@ -2,54 +2,52 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642FECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A343CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37541208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D86821721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Wpap3FJf"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YvEIq1+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390854AbfJ1QMb (ORCPT
+        id S2390843AbfJ1QMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:12:31 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61586 "EHLO
+        Mon, 28 Oct 2019 12:12:30 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23722 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390825AbfJ1QM2 (ORCPT
+        by vger.kernel.org with ESMTP id S2390826AbfJ1QM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:12:28 -0400
+        Mon, 28 Oct 2019 12:12:29 -0400
 Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9SFuC3Q007135;
-        Mon, 28 Oct 2019 17:11:55 +0100
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9SFuCiJ007143;
+        Mon, 28 Oct 2019 17:11:54 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=hs9ioC3FUJXhQf7N0szd3cgJObNevzhxvfuz9gmEXh8=;
- b=Wpap3FJf02ByLfmEWx9FQx24YE+6nbvxX+EN3K5zctz/trU6NDbryNX/JyB1H3gE2ek0
- dMPzjXS5+0UNs5glJx6oenf+5J2GngjIF6W6FNzEJHcle1jkF9Ou/9pP9DX6fnXqaUYw
- cvHq1pbCilG4b42kPTIpNmd9tirQPM+Uxet39c04osMVx9YetBlsVzXcjJan65YtInrB
- puMnJYmDkQNXGguQ0/Wtx3MKsDpFBdeVGj7TjsLV0v9/R4ozcTZlE/3HwDKFTanm1Ynq
- IewwaAMIjqBxe0P4LmeDTNrMXB9P55iufz7iZEUGxEKxtlzQ3Cj1eBtOU7GKLXkzXwFU QQ== 
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=ULIF3nGXJmIbXhgf4TYuqp1B8PHksrpUdhfUfjdzh7g=;
+ b=YvEIq1+R8QzfF3ZFSdqiEMZX5FrHw2X+7+YPzgc9tTFY2FuXcwz3ozfzfA0wMqYfKNrT
+ yDXuz+PuKy6P1IovkdYg/RMR8KR24EQGPic+HwDMidiEuLNnmEol7uu53+eZleYtC/9y
+ pcTflqj3KFuQXrLiNU2jXzWQiOJ7dEh2SxnGSl4/1gnuax95aindMURTem4nW0jvgpP0
+ XTn6uJNpbgoEUQne6XbNfLMqyMOMM0si86/10jNd+QaBSZ4nvSd4dV5JyleBOrgOZfd5
+ 2gDrAvgKwWZAPANlNpKDnLzywIcUuq8x+NiBIkGrMhTuyROVH6mNGjQ58owoSlGOwU5r 7Q== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vvbm0b68j-1
+        by mx07-00178001.pphosted.com with ESMTP id 2vvbm0b68c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Oct 2019 17:11:55 +0100
+        Mon, 28 Oct 2019 17:11:54 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 861EB100038;
-        Mon, 28 Oct 2019 17:11:55 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 713B32B1E79;
-        Mon, 28 Oct 2019 17:11:55 +0100 (CET)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 28 Oct
- 2019 17:11:55 +0100
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 00E0D100038;
+        Mon, 28 Oct 2019 17:11:54 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E0C252B1E73;
+        Mon, 28 Oct 2019 17:11:53 +0100 (CET)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 28 Oct
+ 2019 17:11:53 +0100
 Received: from localhost (10.48.0.192) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 28 Oct 2019 17:11:54 +0100
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 28 Oct 2019 17:11:53 +0100
 From:   Fabrice Gasnier <fabrice.gasnier@st.com>
 To:     <jic23@kernel.org>, <robh+dt@kernel.org>
 CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
@@ -59,12 +57,10 @@ CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] dt-bindings: iio: stm32-adc: add max clock rate property
-Date:   Mon, 28 Oct 2019 17:11:47 +0100
-Message-ID: <1572279108-25916-2-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH 0/2] iio: adc: stm32: add max clock rate
+Date:   Mon, 28 Oct 2019 17:11:46 +0100
+Message-ID: <1572279108-25916-1-git-send-email-fabrice.gasnier@st.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572279108-25916-1-git-send-email-fabrice.gasnier@st.com>
-References: <1572279108-25916-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.48.0.192]
@@ -77,24 +73,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Add optional dt property to tune maximum desired analog clock rate.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Fabrice Gasnier (2):
+  dt-bindings: iio: stm32-adc: add max clock rate property
+  iio: adc: stm32: allow to tune analog clock
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-index 4c0da8c..8de9331 100644
---- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-@@ -53,6 +53,8 @@ Optional properties:
-   analog input switches on stm32mp1.
- - st,syscfg: Phandle to system configuration controller. It can be used to
-   control the analog circuitry on stm32mp1.
-+- st,max-clk-rate-hz: Allow to specify desired max clock rate used by analog
-+  circuitry.
- 
- Contents of a stm32 adc child node:
- -----------------------------------
+ .../devicetree/bindings/iio/adc/st,stm32-adc.txt         |  2 ++
+ drivers/iio/adc/stm32-adc-core.c                         | 16 +++++++++++++---
+ 2 files changed, 15 insertions(+), 3 deletions(-)
+
 -- 
 2.7.4
 
