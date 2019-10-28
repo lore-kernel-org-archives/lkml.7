@@ -2,118 +2,92 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D004CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302F8CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3468A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:27:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxsLjvXe"
+	by mail.kernel.org (Postfix) with ESMTP id 102E620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:29:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389005AbfJ1N11 (ORCPT
+        id S2389021AbfJ1N3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:27:27 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43219 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfJ1N11 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:27:27 -0400
-Received: by mail-pl1-f193.google.com with SMTP id v5so5571531ply.10;
-        Mon, 28 Oct 2019 06:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m82WuZFIPuaz/xDcmdAtFNmGLYLSIvKFnSpY+e0Rr/8=;
-        b=XxsLjvXeFlFJnZv77GLwIK8SZNTDqwb7cc7HQmkcu+gGtubvG+oi5kLcn641B9uAhT
-         Imjkr4zOwiheXC3Tt0akZPdeScucEhxZ2Bojhcn3R2IRGuN0odNBNR+TqxObUfc6V5Lq
-         BDEWPO1h1cMeCIFUajcaa35JqDV2ou1RDxCShbPUVfd9AQ9cxfFE8vrMCi4rfXJSQb8x
-         leLUKF/nPTnbJledc6kcNlxN74x9H6hc3zoNt9D/1ANS2tFiyLEEA7Eb4M+s4HNGgJ+w
-         BQJfJzTTIDdR6lCXqkQY0Ftanam8+QoiKwhdzUXInM1sJkiOfV30sfSDNvw+4DM5fQsD
-         T4fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m82WuZFIPuaz/xDcmdAtFNmGLYLSIvKFnSpY+e0Rr/8=;
-        b=At88Bmhnacp8chGv30MopUg+vERosSR5RPJShYd9F1lsSaFnPNTQLYaCnsXGZPvVy1
-         LTJtis01xiC4dmGwnoC+KDhDzUbBHVCWVrUzxuBYbxzrAKkypWiCgb1mED8kqW7x0s9t
-         2fvwBpkyKsRqTFDm3zB8bq7cn9PUTd4V/+Mfr7BZWQAFk7hOi//L9DDo2yepCoycg0OU
-         M6sKjgUwhQQbEeu0g8O49heB3NRIlVRH6Dk9wujTQiSNkzQ5iAqDhtTlXzmk9NaQXLMG
-         E3d7yco8GAXLh4laEbuzzRiy48HdV6Ghjw35z+OA+SKRfa8cZZ3lLP7n8QLrArkKsYzM
-         VPCQ==
-X-Gm-Message-State: APjAAAVidmjmvw5cj8txizE2hb7TzN1ze9WK1u8Ls9LqLMzcq0Ks58Ex
-        OivLYE4ZxuHMxonIcbZV2YQnK2Dc
-X-Google-Smtp-Source: APXvYqyfNFfZt/94g2Xhm2J+dNpQR0RuL4kH0F5u4ynhxy1z3BUV6UuA9j66ce9Mw/+x+BBmq09mZg==
-X-Received: by 2002:a17:902:6ac3:: with SMTP id i3mr11909551plt.294.1572269245749;
-        Mon, 28 Oct 2019 06:27:25 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a16sm11940383pfa.53.2019.10.28.06.27.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 06:27:24 -0700 (PDT)
-Subject: Re: [PATCH] nvme: Add hardware monitoring support
-To:     Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc:     Chris Healy <Chris.Healy@zii.aero>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org,
-        Akinobu Mita <akinobu.mita@gmail.com>, linux-pm@vger.kernel.org
-References: <20191028024156.23964-1-linux@roeck-us.net>
- <20191028073953.GA20443@lst.de>
- <20191028080858.GB1718@redsun51.ssa.fujisawa.hgst.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <769941ad-22a7-a046-60cd-b084457d9789@roeck-us.net>
-Date:   Mon, 28 Oct 2019 06:27:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 09:29:53 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60228 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726691AbfJ1N3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:29:53 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3E0FFF9A41F616FE4F0C;
+        Mon, 28 Oct 2019 21:29:49 +0800 (CST)
+Received: from HGHY4Z004218071.china.huawei.com (10.133.224.57) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 28 Oct 2019 21:29:41 +0800
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+To:     <bhelgaas@google.com>
+CC:     <zhengxiang9@huawei.com>, <wangxiongfeng2@huawei.com>,
+        <wanghaibin.wang@huawei.com>, <guoheyi@huawei.com>,
+        <yebiaoxiang@huawei.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <willy@infradead.org>,
+        <rjw@rjwysocki.net>, <tglx@linutronix.de>, <guohanjun@huawei.com>,
+        <yangyingliang@huawei.com>
+Subject: [PATCH] pci: lock the pci_cfg_wait queue for the consistency of data
+Date:   Mon, 28 Oct 2019 17:18:09 +0800
+Message-ID: <20191028091809.35212-1-zhengxiang9@huawei.com>
+X-Mailer: git-send-email 2.15.1.windows.2
 MIME-Version: 1.0
-In-Reply-To: <20191028080858.GB1718@redsun51.ssa.fujisawa.hgst.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.224.57]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/19 1:08 AM, Keith Busch wrote:
-> On Mon, Oct 28, 2019 at 08:39:53AM +0100, Christoph Hellwig wrote:
->> On Sun, Oct 27, 2019 at 07:41:56PM -0700, Guenter Roeck wrote:
->>> nvme devices report temperature information in the controller information
->>> (for limits) and in the smart log. Currently, the only means to retrieve
->>> this information is the nvme command line interface, which requires
->>> super-user privileges.
->>>
->>> At the same time, it would be desirable to use NVME temperature information
->>> for thermal control.
->>>
->>> This patch adds support to read NVME temperatures from the kernel using the
->>> hwmon API and adds temperature zones for NVME drives. The thermal subsystem
->>> can use this information to set thermal policies, and userspace can access
->>> it using libsensors and/or the "sensors" command.
->>
->> So these reported values seem to generate some interest.  Adding Akinobu
->> Mita who also planned to wire them up to the thermal framework.  I don't
->> really know either upper layer so I'm not sure which is the right one,
->> but with this just like with the previous series I am quite worried that
->> we add a lot of kernel boilerplate code for information people can
->> trivially get using nvme-cli.
->  > I think it's nvme-cli requires root, where this conveniently doesn't
-> need those elevated rights.
-> 
+Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
+and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
 
-The other point here is the thermal framework. One can not wire that up
-through userspace, and even if it was possible to do it, that would defeat
-the idea of having the thermal subsystem in the kernel running on its own,
-without requiring userspace attention.
+However, since the commit "cdcb33f98244" merged, the accesses to
+the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
+insufficient and we need to hold an additional queue lock while
+read/write the wait queue.
 
-> I'm not familiar with either upper level framework either; my only review
-> comment for this patch is to use devm_kfree() for the error cases.
-> 
-Makes sense. I'll address that in v2.
+So let's use the add_wait_queue()/remove_wait_queue() instead of
+__add_wait_queue()/__remove_wait_queue().
 
-Guenter
+Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
+Cc: Heyi Guo <guoheyi@huawei.com>
+Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
+Cc: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ drivers/pci/access.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 2fccb5762c76..247bf36e0047 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+ {
+ 	DECLARE_WAITQUEUE(wait, current);
+ 
+-	__add_wait_queue(&pci_cfg_wait, &wait);
++	add_wait_queue(&pci_cfg_wait, &wait);
+ 	do {
+ 		set_current_state(TASK_UNINTERRUPTIBLE);
+ 		raw_spin_unlock_irq(&pci_lock);
+ 		schedule();
+ 		raw_spin_lock_irq(&pci_lock);
+ 	} while (dev->block_cfg_access);
+-	__remove_wait_queue(&pci_cfg_wait, &wait);
++	remove_wait_queue(&pci_cfg_wait, &wait);
+ }
+ 
+ /* Returns 0 on success, negative values indicate error. */
+-- 
+2.19.1
+
+
