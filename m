@@ -2,107 +2,107 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9552CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528D7CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F64D21835
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271FA217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uFlM1uXL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSUvninV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388753AbfJ1VBU (ORCPT
+        id S2388770AbfJ1VCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:01:20 -0400
-Received: from ozlabs.org ([203.11.71.1]:59531 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729449AbfJ1VBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:01:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4726Zj4rCHz9sPd;
-        Tue, 29 Oct 2019 08:01:17 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572296477;
-        bh=vI7mZ+DC2IUrUk3rLTrQd/wmba5TysXkf2AZ6nWrBpA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uFlM1uXLeWuuiwlydsS7YidEYoMA4PQEf9qkBxUfNzltxHmgeUsBnJdtoj2Q2xpF0
-         6Z2450x+JLkNEvQgOgOqhkOfIB2zSY5+zclyrl2EnM4hEskIBL+8KvuDs1nW6K8vjf
-         TgD3HQbNzagqqHcOIvSRNykYCKGVoZVL+eDEYtVguQL1yo7E0yszvfGpNARin7tK72
-         MUxTMqiycabIILD6R8k7yhI2KVK7QyqoVkhHrU32Suz8GPApl71tcwgVRIHePO3vZg
-         PkpMkZuqqiZMyx0PJeuFr0Q57aif+45lZc6QU2LYAHkP3zfnoJz0UmZSWMey/pfRhV
-         Pqnk1C62ZxDUg==
-Date:   Tue, 29 Oct 2019 08:01:16 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the rcu tree
-Message-ID: <20191029080116.1ba4849f@canb.auug.org.au>
-In-Reply-To: <20191029075041.7bf3f723@canb.auug.org.au>
-References: <20191029075041.7bf3f723@canb.auug.org.au>
+        Mon, 28 Oct 2019 17:02:54 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44118 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729037AbfJ1VCy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:02:54 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q26so4130860pfn.11;
+        Mon, 28 Oct 2019 14:02:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=jOsPk8O61mge9n7NaaqisDZ0F14LpJepTwa7yUngAe0=;
+        b=uSUvninV+/uL4MGUfbE7yXkdkq2d6KHpOThqfXiI2l0ggHiWTzZjOXRn8iSgAHhOLz
+         Xjck1xLi74AyKGCH6KHqoC3wvUXhponr69K8lmAScP63spwSssiouBnzSwvlNdl4c8rL
+         Y0+VPNTXe+nnr+EAUG2WhU0zZUrEf9SqtBOI7Og8smDM9r9OgxiTT8iUvqiXybtPz953
+         7yN5NQ6T0+Ckb+VKpRpZkvhUPzB0K1LRp7HO6dsETge8Bc4uqgnq1YHXCXNi6wvpQ314
+         bScz8tY62gcECXrIJ+X4geBd0BEZgvTVGeFEs4QqEtwqUdUTXq7o4kA7mXqieKE/d3II
+         pEMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=jOsPk8O61mge9n7NaaqisDZ0F14LpJepTwa7yUngAe0=;
+        b=EJORYo+34lmbVk8bw8tacS7hsAoGgNgnWSoExyZAY/JtOeBF5vMuh7mn5KJLDgH1r/
+         jqjHYTBtiGxBW8vHfxrdepWstwN08LtYgGiZ9cVGBn3d6qLEPyEFyIfhFcOsHI7yYOKS
+         K1YyZPxO90eQPQknzdAbgPSmUDBsG+ocqk2yq9grJspLjV4VqmOr/uLgSw8W52owSvQb
+         MUyeoLfB1wJ9Nj/Y/Sp70wNKQuVra/VFvnvC/9RNYztYQ50scTUKjBHJxT/sz9t9gwv7
+         kXwXRhz2kSlOjVd0+2FRZo+/ZtG/k/P3noXh1g+jWoq6MMZnmN8qTGuqOsHmFVg6yS/d
+         qapA==
+X-Gm-Message-State: APjAAAVqwOqgnpY27qXBGSJu6Yy40BdWvoqQvQ/5T3MmL65y8Ekq9baR
+        93tH1ZHTXEEKX0ExhYoncq8=
+X-Google-Smtp-Source: APXvYqwICjoQQCp5Sef5P9/pJpLavd43gIrGTZeXBi53Nj/HFTdCSswNzcioCn1T/QWF/+hWvFnBGg==
+X-Received: by 2002:a63:c24f:: with SMTP id l15mr2638233pgg.279.1572296573054;
+        Mon, 28 Oct 2019 14:02:53 -0700 (PDT)
+Received: from saurav ([27.62.167.137])
+        by smtp.gmail.com with ESMTPSA id x139sm11878979pgx.92.2019.10.28.14.02.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 14:02:52 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 02:32:45 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     agross@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
+        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-arm-msm@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] scsi: ufs: ufs-qcom.c: remove unneeded variable
+Message-ID: <20191028210244.GA29784@saurav>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2_3MiMKp.=Q08gpA/RR.sl5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2_3MiMKp.=Q08gpA/RR.sl5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+ret variable is not modified in ufs_qcom_suspend().
 
-Hi all,
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+ drivers/scsi/ufs/ufs-qcom.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-[Resending with correct address syntax]
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index a5b71487a206..0ef24cabe1dc 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -530,7 +530,6 @@ static int ufs_qcom_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ {
+ 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+ 	struct phy *phy = host->generic_phy;
+-	int ret = 0;
+ 
+ 	if (ufs_qcom_is_link_off(hba)) {
+ 		/*
+@@ -545,7 +544,7 @@ static int ufs_qcom_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 		ufs_qcom_disable_lane_clks(host);
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int ufs_qcom_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+-- 
+2.20.1
 
-On Tue, 29 Oct 2019 07:50:41 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> [Resent with Paul's new (working) address]
->=20
-> In commit
->=20
->   292d1bb21aba ("rcu: Several rcu_segcblist functions can be static")
->=20
-> Fixes tag
->=20
->   Fixes: ab2ef5c7b4d1 ("rcu/nocb: Atomic ->len field in rcu_segcblist str=
-ucture")
->=20
-> has these problem(s):
->=20
->   - Target SHA1 does not exist
->=20
-> Did you mean
->=20
-> Fixes: eda669a6a2c5 ("rcu/nocb: Atomic ->len field in rcu_segcblist struc=
-ture")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2_3MiMKp.=Q08gpA/RR.sl5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl23VxwACgkQAVBC80lX
-0GykzQf/ef0FNsoIOZzbbVQqUrFGJsZmkHA2XdN56h6R0Nd02f/8jYrPVRN6Id26
-rIQtKlky62q3jrT9kuEJ9rNz2x0ue+sEQgMLXrYtn7Xr6sR0JEvY4VeDdRo0XWAh
-71LXl2P43vz0Cyrk5hPKRK3gKfyGnUWsZxLkeFQII5G43vRE4r18+AlnPLACxQ0q
-2Omndy+O9yVzTyPfTQY0sjdShH99E5MCSokMYFQEN5UmoVpKBf1xLVEB+R1hGrUz
-9Pdapb20c6XYbWG+7b1/R3x1HAzSG5vk8uikVyU8LhEx1wid60wVvjUSTSARrzuk
-052a1S1yNZFQkFG6bTBNWxskQqpKjg==
-=H+im
------END PGP SIGNATURE-----
-
---Sig_/2_3MiMKp.=Q08gpA/RR.sl5--
