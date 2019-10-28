@@ -6,89 +6,105 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE58CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FE7CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664E120873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D874720873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="BnjEv6k2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KWbq6AFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731147AbfJ1Tcr (ORCPT
+        id S1731226AbfJ1TdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 15:32:47 -0400
-Received: from mail-wm1-f49.google.com ([209.85.128.49]:36613 "EHLO
-        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731089AbfJ1Tcq (ORCPT
+        Mon, 28 Oct 2019 15:33:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45837 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731156AbfJ1TdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 15:32:46 -0400
-Received: by mail-wm1-f49.google.com with SMTP id c22so165669wmd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:32:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=9hHVMUPScWA9p0edtvl4OSplyE525X8If3YYHyAoBsg=;
-        b=BnjEv6k2DPgHOtK6dzkEHZ/6VJHsUk3BhMIYI2Lka+NyUIB908bYXsnON6WQpPNrzM
-         Sc7Vxzuy61aPvXRsAQbGSVl8/ERDZpGisMn+BPMwSQN2qGhJbJwEZjRtYiMG84PkKlBQ
-         Pfb5AQnTWBqgpM9ZPn3uVI6cH0tpa6qr1Ikxo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=9hHVMUPScWA9p0edtvl4OSplyE525X8If3YYHyAoBsg=;
-        b=d8qKIXFF/8SJ+QaYKtqWD5Un1V16XZtVUCjHA8gE1GbdWRLODmJDbGCJbZu5Kfw+S3
-         d83+ZUKBCivzyaHzMdT1SnVdbVg8fNdDT3UCQiPMYqfoKOTyIo53Q62pbB+VThwOEoPF
-         FCTqfc+94YJtfAlaQnbYhNNo7AkyxxhUQ9TdR5WumSrVtBUJyzeWvLT4KcNEaUjSuOAG
-         RvPeFYfimSQk+dGX8FerhRkQ0BsiGPSZjv9i+hWG/zM2AOIweONaRVqRI6sQ/JHPeFld
-         HbG1EHOtVlgcb2/5S+26D1MFAnEG2La0CZ6EByIDuV66KEdZrpbUbO2hHz+kn0H1AYWr
-         Dk3A==
-X-Gm-Message-State: APjAAAWupI11DDq7dJ9jyoUtKvoHggy5W/GldXUh7c7Y9r7aObXEV77f
-        dpl+HdWV34WXEIZeVvSUocdxQHFgIhRNxHA2
-X-Google-Smtp-Source: APXvYqzP+GtzCEn3dB8WMT7Qr9gfXo/78jAWJKBJdK3mPsm5WP+yqF7Z0EnfRMO4aztOA49EusgzMg==
-X-Received: by 2002:a1c:8086:: with SMTP id b128mr799019wmd.104.1572291164041;
-        Mon, 28 Oct 2019 12:32:44 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id e24sm634279wme.26.2019.10.28.12.32.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 12:32:43 -0700 (PDT)
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.co>
-Cc:     linux-sparse@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: detecting misuse of of_get_property
-Message-ID: <ec277c12-c608-6326-7723-be8cab4f524a@rasmusvillemoes.dk>
-Date:   Mon, 28 Oct 2019 20:32:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 15:33:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572291203;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2YZ7F3vF7jMcA3PDwa/7MxLquCpsOuFuGZy7i0YeAWQ=;
+        b=KWbq6AFyKsGBcIdkq156H6A3VQ8Mte/hTLDQSGJLANzAvaFIUkSsrO1F8DXZlXLhTqf6XR
+        H33368XyFckcf5dcROkExhDfjbR7he5BbqfCz709Y1ttjdNQ+OxO5qRk92Lk+iGajdPS1w
+        BjqhO47WbftoNT0wWHmOKNhCrR5ubak=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-X62VVYcVMR-ZX8x6VVJrsg-1; Mon, 28 Oct 2019 15:33:17 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9B7C85B6EE;
+        Mon, 28 Oct 2019 19:33:14 +0000 (UTC)
+Received: from krava (ovpn-204-45.brq.redhat.com [10.40.204.45])
+        by smtp.corp.redhat.com (Postfix) with SMTP id DD96A1001B32;
+        Mon, 28 Oct 2019 19:33:09 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 20:33:08 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v3 6/9] perf tools: add destructors for parse event terms
+Message-ID: <20191028193308.GC28772@krava>
+References: <20191023005337.196160-1-irogers@google.com>
+ <20191024190202.109403-1-irogers@google.com>
+ <20191024190202.109403-7-irogers@google.com>
+ <20191025082714.GH31679@krava>
+ <CAP-5=fU6quu74JwZSd70UMTSS2wf_29hBgvdXfJZedOfrE7ohw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAP-5=fU6quu74JwZSd70UMTSS2wf_29hBgvdXfJZedOfrE7ohw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: X62VVYcVMR-ZX8x6VVJrsg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Oct 25, 2019 at 09:08:34AM -0700, Ian Rogers wrote:
+> On Fri, Oct 25, 2019 at 1:27 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Thu, Oct 24, 2019 at 12:01:59PM -0700, Ian Rogers wrote:
+> > > If parsing fails then destructors are ran to clean the up the stack.
+> > > Rename the head union member to make the term and evlist use cases mo=
+re
+> > > distinct, this simplifies matching the correct destructor.
+> >
+> > nice did not know about this.. looks like it's been in bison for some t=
+ime, right?
+>=20
+> Looks like it wasn't in Bison 1 but in Bison 2, we're at Bison 3 and
+> Bison 2 is > 14 years old:
+> https://web.archive.org/web/20050924004158/http://www.gnu.org/software/bi=
+son/manual/html_mono/bison.html#Destructor-Decl
 
-I just spent some time trying to convert some so far PPC-only drivers to
-be more generic. One of the things I had to do was convert stuff like
+sounds safe ;-)
 
-  u32 *val = of_get_property(np, "bla", NULL);
-  do_stuff_with(*val);
+thanks,
+jirka
 
-with
-
-  of_property_read_u32(np, "bla", &val);
-  do_stuff_with(val);
-
-(error checking omitted for simplicity). The problem is that
-of_get_property() just returns void*. When the property is just a
-string, there's no problem interpreting that as a char*. But when the
-property is a number of array of numbers, I'd like some way to flag
-casting it to u32* as an error - if you cast it to a (pointer to integer
-type wider than char), it must be to a __be32*. Is there some way
-sparse/smatch could help find such cases?
-
-Rasmus
