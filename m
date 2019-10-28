@@ -2,145 +2,305 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E3DCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A27CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD2D21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="AZy+yxIS"
+	by mail.kernel.org (Postfix) with ESMTP id 9084A20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404096AbfJ1RNn (ORCPT
+        id S2404106AbfJ1RSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 13:13:43 -0400
-Received: from mail-eopbgr750120.outbound.protection.outlook.com ([40.107.75.120]:60930
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404084AbfJ1RNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 13:13:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DejBMjT4I/P8E/QRkbyGxmaq1fcwbnA41euPAxvm1xyzJYraBWaIY7nHXsdJgi7EQ9Ji7rE0CE0amzUUEcHRAvv9KU63H4DvFpQpL+80RkIwHteL2GMZW7enyOtEvrh1MgCEKJHpdZOfinZOpTBvylQbpOLpDqfAlxBfLiP4c2tjHlPe/k3Di2/br680dAtfflWa5Gh3D4dR72IAZmqgeJhHBujwDE/Gh7A+Dk2LFj4AVfGLEgZP4+9noukpExiBNT0rWeGHd3jKFovcvOXdaI3v/r0ETwIvtay5oafdPmOrKMoJqutvHrQeT5l/PAbvz0JsjhuTxic0Cs/1faThgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NsMvEHkd4wUe7tTgUP6ASC1CasjoW6tHlZufAUVyg+E=;
- b=Ju2d9I2mTCCtpwgmtTGypI852GHpDwGFZKUIrc28B07LuohLu2BjCbT4nVykZf/NctgVVe27VoMq0mylnZHF7eoXni5EjFi4ryPKIxVXxfvacyJvTkvZGd7DO5os659Qrr3cL6lRDaskFeBZTeZUCTBCckgFDFiqKKY9saMuKAvjFfdz4qkcgRVcXdcZ3qQnLSY1wKdLeiHgHofCEaFhbLYisULT6id55FVuSz+ImGiII+m7BSI1XqCCei/IRSrb23U7ivi0xlqdwm6wePYRyDrWQLtnJYuuRhITgnwIanZMjPIzvVnCX/7uha8m8/hJOpHh1vtRVxebJeUUufxO3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NsMvEHkd4wUe7tTgUP6ASC1CasjoW6tHlZufAUVyg+E=;
- b=AZy+yxIS5UamXiFG6W6TtG4LzAfGkzkCK2fP9vfnmP36mYWQuT4pedjeIkbfRMMrKmYhl6Y9DDm8llnwRvi/+E9KGiz50yCewcWZaQfRiQZ0zrMsa+ByIcId5xQCdsJ34PR3jrccwa9GS/bt88csOSuaw39lzSPGJfB3BpXXX4U=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0858.namprd21.prod.outlook.com (10.173.172.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.8; Mon, 28 Oct 2019 17:13:40 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::9cc3:f167:bb63:799]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::9cc3:f167:bb63:799%5]) with mapi id 15.20.2408.016; Mon, 28 Oct 2019
- 17:13:40 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     Andrea Parri <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, vkuznets <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>
-Subject: RE: [PATCH v2] x86/hyperv: Set pv_info.name to "Hyper-V"
-Thread-Topic: [PATCH v2] x86/hyperv: Set pv_info.name to "Hyper-V"
-Thread-Index: AQHVg0RIF4xP+GrFYUaioMALFqP6h6dbq8mAgBSm4wCAAAyGQA==
-Date:   Mon, 28 Oct 2019 17:13:40 +0000
-Message-ID: <DM5PR21MB0137A44A544F95F244CBAC9CD7660@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20191015103502.13156-1-parri.andrea@gmail.com>
- <DM5PR21MB01377F713A553FCF721EF99DD7930@DM5PR21MB0137.namprd21.prod.outlook.com>
- <20191028162734.GI1554@sasha-vm>
-In-Reply-To: <20191028162734.GI1554@sasha-vm>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-28T17:13:37.9882423Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5a82d85b-2f45-4c77-9da6-1ff770341b4b;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [167.220.2.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6fed338f-2736-459c-ec6f-08d75bca2de7
-x-ms-traffictypediagnostic: DM5PR21MB0858:|DM5PR21MB0858:|DM5PR21MB0858:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR21MB0858BC50E200E58872C5E075D7660@DM5PR21MB0858.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
-x-forefront-prvs: 0204F0BDE2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(376002)(366004)(136003)(39860400002)(189003)(199004)(476003)(4744005)(5660300002)(81156014)(64756008)(66946007)(66556008)(66476007)(26005)(66446008)(446003)(76116006)(8990500004)(305945005)(229853002)(4326008)(11346002)(256004)(8676002)(74316002)(6246003)(186003)(6916009)(81166006)(2906002)(71200400001)(71190400001)(33656002)(10090500001)(52536014)(316002)(66066001)(10290500003)(478600001)(22452003)(86362001)(54906003)(3846002)(14454004)(6116002)(25786009)(486006)(7736002)(6436002)(6506007)(55016002)(9686003)(8936002)(76176011)(7416002)(99286004)(102836004)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0858;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zU2tu0nBPI32mRg8VE41P2XfpEdQUxsTGvPKpStZBNFWr1Q7mT8ryJFWoivUoao5VTXAQyEnBZepIPszEdlS45A9mPxixbDoYUb9+RPCDIAnXrDjT0G7xuOzTTpplq35q35zTwwMJwZczTDwq3r4mv1nk7rT77rnxNdyqqEjbq0TfGrua/Khk48mzPulbnhodmsNG6eMVMi2VAjLV6lOxd89uFbdDhotuJzGSRyO4xT1ebxlbZdYDQsPIc6TnjyeWp5FYckIx0dW3jMTUwvNheMbAEzXO0u6tky3e6/YjYXrd+NOYr+I496M5otE6IE5AJJpv/YjxwmeKNt1VzLiQexMJA5AYwOYsiydbAZemss0ndGNwhVpsbZBAdpdw8xWChL2N68kqXQDM19o3gOu8HpjOYeYiKSY79Nb0fZSC5eVpBNjU+zwFf0TnabKaRLr
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 28 Oct 2019 13:18:11 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:52736 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730454AbfJ1RSL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 13:18:11 -0400
+Received: by mail-il1-f198.google.com with SMTP id t23so10275621ila.19
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 10:18:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=cbt9l8HimPacD4gTquI3ZWa3mV2sHz+7E5RjywMP6iA=;
+        b=XJfD6jHUXLSG5/l64HGW+hKtmF7o6e2rKNwQcqzNewVU1s0/eXtdbtxLNFCmqaSkGR
+         LXew21lfiD4Pk2g/S1dPCZvNrkCBC44rzoPe4Ni4imTEEZdXHIyXQ8UdQi2/DSKO7of3
+         R/RCR/mmK6CFhYm5iVG1ABjkAok6mDGdBe9rMwyD15osWht4tOAXTPaX91aKAV28TrLY
+         +ZkI3GpkRp74tXqDXjUbTGqOOayeYDsflAr5uXIBFGbIJeL6u1i5PvPs/Sq6p5Wugrpv
+         L2KicZ3UpqrgiGI4uv6l3l3i8qPp46MAuH0wP8ZvjGCURCnv5k79NLLw2bHYlP1wipxu
+         Wt7w==
+X-Gm-Message-State: APjAAAVE5Zff2117pnBM4FZ+5GGJ5XmcOqllM1ADS4Z8oSqZyJsjlZ6y
+        /4lHZDuvvu+Ko3F91eR9plTCQkSlzoCE+pp1fVSJymYrp/os
+X-Google-Smtp-Source: APXvYqzd0kngwL635O8OAElFAfgxFZ9E7ghLGZXtiB/rFaHx0Tu3cy3dHCj/58AVG1LU+k25b3QR2vEr54cUOACshXqTvVNGVLLQ
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fed338f-2736-459c-ec6f-08d75bca2de7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 17:13:40.5890
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Py0oC+Q7mnhazZguhBds3T0O0SzpfWtwfOhiKb0joIjycY8Yvwd11SG4MnQH2yM+y1If31WJv+6uw1PuT4H3nvHyGrh9f7K8HlbDzNBgsoQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0858
+X-Received: by 2002:a92:9f1c:: with SMTP id u28mr20070746ili.97.1572283089171;
+ Mon, 28 Oct 2019 10:18:09 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 10:18:09 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000044a7f0595fbaf2c@google.com>
+Subject: INFO: trying to register non-static key in bond_3ad_update_ad_actor_settings
+From:   syzbot <syzbot+8da67f407bcba2c72e6e@syzkaller.appspotmail.com>
+To:     andy@greyhouse.net, davem@davemloft.net, j.vosburgh@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vfalico@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sasha Levin <sashal@kernel.org> Sent: Monday, October 28, 2019 9:28 A=
-M
-> On Tue, Oct 15, 2019 at 01:06:33PM +0000, Michael Kelley wrote:
-> >From: Andrea Parri <parri.andrea@gmail.com> Sent: Tuesday, October 15, 2=
-019 3:35 AM
-> >>
-> >> Michael reported that the x86/hyperv initialization code printed the
-> >> following dmesg when running in a VM on Hyper-V:
-> >>
-> >>   [    0.000738] Booting paravirtualized kernel on bare hardware
-> >>
-> >> Let the x86/hyperv initialization code set pv_info.name to "Hyper-V";
-> >> with this addition, the dmesg read:
-> >>
-> >>   [    0.000172] Booting paravirtualized kernel on Hyper-V
-> >>
-> >> Reported-by: Michael Kelley <mikelley@microsoft.com>
-> >> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-> >
-> >Reviewed-by: Michael Kelley <mikelley@microsoft.com>
->=20
-> Thomas, will you be taking this? Would you rather have me deal with the
-> hyperv bits under arch/x86/?
->=20
+Hello,
 
-Thomas has already pulled this one.  It's in Linus' tree.
+syzbot found the following crash on:
 
-Michael
+HEAD commit:    60c1769a Add linux-next specific files for 20191028
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14b90574e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cb86688f30db053d
+dashboard link: https://syzkaller.appspot.com/bug?extid=8da67f407bcba2c72e6e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8da67f407bcba2c72e6e@syzkaller.appspotmail.com
+
+validate_nla: 2 callbacks suppressed
+netlink: 'syz-executor.2': attribute type 24 has an invalid length.
+netlink: 'syz-executor.2': attribute type 1 has an invalid length.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 1 PID: 16587 Comm: syz-executor.2 Not tainted 5.4.0-rc5-next-20191028  
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  assign_lock_key kernel/locking/lockdep.c:881 [inline]
+  register_lock_class+0x179e/0x1850 kernel/locking/lockdep.c:1190
+  __lock_acquire+0xf4/0x4a00 kernel/locking/lockdep.c:3837
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  bond_3ad_update_ad_actor_settings+0x37b/0x7b0  
+drivers/net/bonding/bond_3ad.c:2260
+  bond_option_ad_actor_sys_prio_set+0x67/0x80  
+drivers/net/bonding/bond_options.c:1434
+  __bond_opt_set+0x2a1/0x540 drivers/net/bonding/bond_options.c:677
+  bond_changelink+0x14ed/0x1bd0 drivers/net/bonding/bond_netlink.c:413
+  bond_newlink+0x2d/0x90 drivers/net/bonding/bond_netlink.c:454
+  __rtnl_newlink+0x10a1/0x16e0 net/core/rtnetlink.c:3268
+  rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3326
+  rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5387
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5405
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x8cf/0xda0 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:638 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:658
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2312
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2357
+  __do_sys_sendmsg net/socket.c:2366 [inline]
+  __se_sys_sendmsg net/socket.c:2364 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2364
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459f39
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f1ca6c7ac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459f39
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1ca6c7b6d4
+R13: 00000000004c8320 R14: 00000000004de420 R15: 00000000ffffffff
+kobject: 'bond5' (0000000030c8073b): kobject_add_internal: parent: 'net',  
+set: 'devices'
+kobject: 'bond5' (0000000030c8073b): kobject_uevent_env
+kobject: 'bond5' (0000000030c8073b): fill_kobj_path: path  
+= '/devices/virtual/net/bond5'
+kobject: 'queues' (00000000b3044d36): kobject_add_internal:  
+parent: 'bond5', set: '<NULL>'
+kobject: 'queues' (00000000b3044d36): kobject_uevent_env
+kobject: 'queues' (00000000b3044d36): kobject_uevent_env: filter function  
+caused the event to drop!
+kobject: 'rx-0' (0000000011e747e6): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-0' (0000000011e747e6): kobject_uevent_env
+kobject: 'rx-0' (0000000011e747e6): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-0'
+kobject: 'rx-1' (00000000497026af): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-1' (00000000497026af): kobject_uevent_env
+kobject: 'rx-1' (00000000497026af): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-1'
+kobject: 'rx-2' (00000000010759d0): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-2' (00000000010759d0): kobject_uevent_env
+kobject: 'rx-2' (00000000010759d0): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-2'
+kobject: 'rx-3' (00000000834e4fdb): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-3' (00000000834e4fdb): kobject_uevent_env
+kobject: 'rx-3' (00000000834e4fdb): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-3'
+kobject: 'rx-4' (000000002f04b4d0): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-4' (000000002f04b4d0): kobject_uevent_env
+kobject: 'rx-4' (000000002f04b4d0): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-4'
+kobject: 'rx-5' (00000000a8e87ede): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-5' (00000000a8e87ede): kobject_uevent_env
+kobject: 'rx-5' (00000000a8e87ede): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-5'
+kobject: 'rx-6' (0000000046771599): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-6' (0000000046771599): kobject_uevent_env
+kobject: 'rx-6' (0000000046771599): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-6'
+kobject: 'rx-7' (000000000bbe727f): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-7' (000000000bbe727f): kobject_uevent_env
+kobject: 'rx-7' (000000000bbe727f): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-7'
+kobject: 'rx-8' (000000003b71f1bf): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-8' (000000003b71f1bf): kobject_uevent_env
+kobject: 'rx-8' (000000003b71f1bf): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-8'
+kobject: 'rx-9' (000000005c8857f9): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-9' (000000005c8857f9): kobject_uevent_env
+kobject: 'rx-9' (000000005c8857f9): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-9'
+kobject: 'rx-10' (0000000045ac7b51): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-10' (0000000045ac7b51): kobject_uevent_env
+kobject: 'rx-10' (0000000045ac7b51): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-10'
+kobject: 'rx-11' (00000000b5982a0d): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-11' (00000000b5982a0d): kobject_uevent_env
+kobject: 'rx-11' (00000000b5982a0d): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-11'
+kobject: 'rx-12' (00000000e8dc1f87): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-12' (00000000e8dc1f87): kobject_uevent_env
+kobject: 'rx-12' (00000000e8dc1f87): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-12'
+kobject: 'rx-13' (00000000d7795584): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-13' (00000000d7795584): kobject_uevent_env
+kobject: 'rx-13' (00000000d7795584): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-13'
+kobject: 'rx-14' (00000000596eebf3): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-14' (00000000596eebf3): kobject_uevent_env
+kobject: 'rx-14' (00000000596eebf3): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-14'
+kobject: 'rx-15' (00000000b045f7e4): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-15' (00000000b045f7e4): kobject_uevent_env
+kobject: 'rx-15' (00000000b045f7e4): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/rx-15'
+kobject: 'tx-0' (00000000c6dcb83c): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-0' (00000000c6dcb83c): kobject_uevent_env
+kobject: 'tx-0' (00000000c6dcb83c): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-0'
+kobject: 'tx-1' (00000000cd679d8e): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-1' (00000000cd679d8e): kobject_uevent_env
+kobject: 'tx-1' (00000000cd679d8e): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-1'
+kobject: 'tx-2' (000000005e9289ef): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-2' (000000005e9289ef): kobject_uevent_env
+kobject: 'tx-2' (000000005e9289ef): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-2'
+kobject: 'tx-3' (000000007d096435): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-3' (000000007d096435): kobject_uevent_env
+kobject: 'tx-3' (000000007d096435): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-3'
+kobject: 'tx-4' (00000000e86e5471): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-4' (00000000e86e5471): kobject_uevent_env
+kobject: 'tx-4' (00000000e86e5471): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-4'
+kobject: 'tx-5' (00000000a81574e7): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-5' (00000000a81574e7): kobject_uevent_env
+kobject: 'tx-5' (00000000a81574e7): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-5'
+kobject: 'tx-6' (00000000de9466a0): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-6' (00000000de9466a0): kobject_uevent_env
+kobject: 'tx-6' (00000000de9466a0): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-6'
+kobject: 'tx-7' (00000000088bce98): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-7' (00000000088bce98): kobject_uevent_env
+kobject: 'tx-7' (00000000088bce98): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-7'
+kobject: 'tx-8' (0000000092dedf13): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-8' (0000000092dedf13): kobject_uevent_env
+kobject: 'tx-8' (0000000092dedf13): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-8'
+kobject: 'tx-9' (000000003d373759): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-9' (000000003d373759): kobject_uevent_env
+kobject: 'tx-9' (000000003d373759): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-9'
+kobject: 'tx-10' (00000000cc775474): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-10' (00000000cc775474): kobject_uevent_env
+kobject: 'tx-10' (00000000cc775474): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-10'
+kobject: 'tx-11' (000000007f0d872a): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-11' (000000007f0d872a): kobject_uevent_env
+kobject: 'tx-11' (000000007f0d872a): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-11'
+kobject: 'tx-12' (0000000081bcd29c): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-12' (0000000081bcd29c): kobject_uevent_env
+kobject: 'tx-12' (0000000081bcd29c): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-12'
+kobject: 'tx-13' (0000000005fecb61): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-13' (0000000005fecb61): kobject_uevent_env
+kobject: 'tx-13' (0000000005fecb61): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-13'
+kobject: 'tx-14' (00000000de8334e0): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-14' (00000000de8334e0): kobject_uevent_env
+kobject: 'tx-14' (00000000de8334e0): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-14'
+kobject: 'tx-15' (000000009cc7f5e5): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-15' (000000009cc7f5e5): kobject_uevent_env
+kobject: 'tx-15' (000000009cc7f5e5): fill_kobj_path: path  
+= '/devices/virtual/net/bond5/queues/tx-15'
+kobject: 'batman_adv' (00000000ff71c398): kobject_add_internal:  
+parent: 'bond5', set: '<NULL>'
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
