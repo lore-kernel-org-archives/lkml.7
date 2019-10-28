@@ -2,150 +2,94 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D8BCA9EBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C73C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B56214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF2E214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572259864;
-	bh=9OhlQBQfGJwsaiYR0zQLkgRNjoR5DNpZiAm81WHbbLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U+4DLrRTG70gyr8FX0o0AGq/QuDYCkgOI2s0i68she1RFYBu19RJ3OKoex82ptl4g
-	 a+8Vuj9gvktMG47CR0gB5xaUDwbcUh41wZ5p0nml61N/1aOlY7HR2BPlFkS/ScdMAh
-	 WR766R4dEr9sg9D/f1hGgtRMBO45N1zNzzcoAs60=
+	s=default; t=1572259986;
+	bh=tHjg3W9+kxMv7JTyv8PuBslUaJvyq3nF3E3FIig4dCk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QEEqAON5kQro4l0mgBG7eBN1txm7NC8/uzjQZ81rP2rcVbyGWRjGzJjUyA0m1hMjM
+	 0YoIJiwHjJO+n7T8OmDACS09wM/fBBJOfwXD1ZUnnmUzEp3O8E4yRAqHlB1J7tE0+U
+	 EILzXOMTVom3nguC4dx5jrokZPvLU6QaBaFVzoTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388342AbfJ1KvD (ORCPT
+        id S2388371AbfJ1KxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 06:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388297AbfJ1KvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 06:51:02 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B62B820873;
-        Mon, 28 Oct 2019 10:50:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572259860;
-        bh=9OhlQBQfGJwsaiYR0zQLkgRNjoR5DNpZiAm81WHbbLs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p0+JkOhaq96U+qp1FtMCnoQh25qovOzVvaK0XbvsxNlL6o/ivlM38FyDig2PM5jPw
-         ix1nl7s6ElT53Ah3vTvvkjhPLi9FzNMvMjPVh4h1C68GZlmlPOj5bBz1lt639hBz6U
-         972wNv6KP7fM88gg8bUFRslUrGRjhchW6LOPUhFg=
-Date:   Mon, 28 Oct 2019 18:50:39 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Fancy Fang <chen.fang@nxp.com>
-Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v4] clk: imx7ulp: do not export out IMX7ULP_CLK_MIPI_PLL
- clock
-Message-ID: <20191028105038.GB16985@dragon>
-References: <20191028080545.28275-1-chen.fang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028080545.28275-1-chen.fang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Mon, 28 Oct 2019 06:53:05 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:36798 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729177AbfJ1KxE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 06:53:04 -0400
+Received: from [91.217.168.176] (helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iP2du-00024r-Ni; Mon, 28 Oct 2019 11:52:58 +0100
+Date:   Mon, 28 Oct 2019 10:52:57 +0000
+Message-ID: <86y2x5xhti.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Andrew Murray" <Andrew.Murray@arm.com>,
+        Jayachandran C <jnair@marvell.com>,
+        "Robert Richter" <rrichter@marvell.com>
+Subject: Re: [PATCH v2 04/36] irqchip/gic-v3-its: Make is_v4 use a TYPER copy
+In-Reply-To: <9cd5e4d7-b0cf-8ad3-7b0c-f1177a106371@huawei.com>
+References: <20191027144234.8395-1-maz@kernel.org>
+        <20191027144234.8395-5-maz@kernel.org>
+        <9cd5e4d7-b0cf-8ad3-7b0c-f1177a106371@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 91.217.168.176
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, jnair@marvell.com, rrichter@marvell.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 08:07:59AM +0000, Fancy Fang wrote:
-> The mipi pll clock comes from the MIPI PHY PLL output, so
-> it should not be a fixed clock.
+On Mon, 28 Oct 2019 09:34:42 +0000,
+Zenghui Yu <yuzenghui@huawei.com> wrote:
 > 
-> MIPI PHY PLL is in the MIPI DSI space, and it is used as
-> the bit clock for transferring the pixel data out and its
-> output clock is configured according to the display mode.
+> Hi Marc,
 > 
-> So it should be used only for MIPI DSI and not be exported
-> out for other usages.
+> On 2019/10/27 22:42, Marc Zyngier wrote:
+> > Instead of caching the GICv4 compatibility in a discrete way, cache the
+> > TYPER register instead, which can then be used to implement the same
+> > functionnality. This will get used more extensively in subsequent patches.
+> > 
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
 > 
-> Signed-off-by: Fancy Fang <chen.fang@nxp.com>
-> ---
-> ChangeLog v3->v4:
->  * Add some comments to 'IMX7ULP_CLK_MIPI_PLL'
->    clock.
-> 
->  Documentation/devicetree/bindings/clock/imx7ulp-clock.txt | 1 -
->  drivers/clk/imx/clk-imx7ulp.c                             | 3 +--
->  include/dt-bindings/clock/imx7ulp-clock.h                 | 6 ++++++
->  3 files changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
-> index a4f8cd478f92..93d89adb7afe 100644
-> --- a/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
-> @@ -82,7 +82,6 @@ pcc2: pcc2@403f0000 {
->  		 <&scg1 IMX7ULP_CLK_APLL_PFD0>,
->  		 <&scg1 IMX7ULP_CLK_UPLL>,
->  		 <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>,
-> -		 <&scg1 IMX7ULP_CLK_MIPI_PLL>,
->  		 <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>,
->  		 <&scg1 IMX7ULP_CLK_ROSC>,
->  		 <&scg1 IMX7ULP_CLK_SPLL_BUS_CLK>;
-> diff --git a/drivers/clk/imx/clk-imx7ulp.c b/drivers/clk/imx/clk-imx7ulp.c
-> index 2022d9bead91..459b120b71d5 100644
-> --- a/drivers/clk/imx/clk-imx7ulp.c
-> +++ b/drivers/clk/imx/clk-imx7ulp.c
-> @@ -28,7 +28,7 @@ static const char * const scs_sels[]		= { "dummy", "sosc", "sirc", "firc", "dumm
->  static const char * const ddr_sels[]		= { "apll_pfd_sel", "upll", };
->  static const char * const nic_sels[]		= { "firc", "ddr_clk", };
->  static const char * const periph_plat_sels[]	= { "dummy", "nic1_bus_clk", "nic1_clk", "ddr_clk", "apll_pfd2", "apll_pfd1", "apll_pfd0", "upll", };
-> -static const char * const periph_bus_sels[]	= { "dummy", "sosc_bus_clk", "mpll", "firc_bus_clk", "rosc", "nic1_bus_clk", "nic1_clk", "spll_bus_clk", };
-> +static const char * const periph_bus_sels[]	= { "dummy", "sosc_bus_clk", "dummy", "firc_bus_clk", "rosc", "nic1_bus_clk", "nic1_clk", "spll_bus_clk", };
->  static const char * const arm_sels[]		= { "divcore", "dummy", "dummy", "hsrun_divcore", };
->  
->  /* used by sosc/sirc/firc/ddr/spll/apll dividers */
-> @@ -75,7 +75,6 @@ static void __init imx7ulp_clk_scg1_init(struct device_node *np)
->  	clks[IMX7ULP_CLK_SOSC]		= imx_obtain_fixed_clk_hw(np, "sosc");
->  	clks[IMX7ULP_CLK_SIRC]		= imx_obtain_fixed_clk_hw(np, "sirc");
->  	clks[IMX7ULP_CLK_FIRC]		= imx_obtain_fixed_clk_hw(np, "firc");
-> -	clks[IMX7ULP_CLK_MIPI_PLL]	= imx_obtain_fixed_clk_hw(np, "mpll");
->  	clks[IMX7ULP_CLK_UPLL]		= imx_obtain_fixed_clk_hw(np, "upll");
->  
->  	/* SCG1 */
-> diff --git a/include/dt-bindings/clock/imx7ulp-clock.h b/include/dt-bindings/clock/imx7ulp-clock.h
-> index 6f66f9005c81..e9ef62f211fe 100644
-> --- a/include/dt-bindings/clock/imx7ulp-clock.h
-> +++ b/include/dt-bindings/clock/imx7ulp-clock.h
-> @@ -49,7 +49,13 @@
->  #define IMX7ULP_CLK_NIC1_DIV		36
->  #define IMX7ULP_CLK_NIC1_BUS_DIV	37
->  #define IMX7ULP_CLK_NIC1_EXT_DIV	38
-> +
-> +/* mpll clock is a special clock comes from
-> + * mipi DPHY PLL and should be used only for
-> + * mipi dsi instead of any other peripheral.
-> + */
->  #define IMX7ULP_CLK_MIPI_PLL		39
-> +
+> nit: You may need to rebase some patches on top of mainline when
+> you finally decide to take them in, i.e., as we currently have
+> get_its_list(), which will use the legacy its->is_v4.
 
-The point of comment is to tell that the clock ID is unsupported and
-shouldn't be used in DT.
+Yeah, I was planning on rebasing the whole irqchip-next branch on top
+of -rc5 to avoid this kind of problems.
 
-I reworded the comment and applied the patch.
+> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 
-Shawn
+Thanks for that.
 
->  #define IMX7ULP_CLK_SIRC		40
->  #define IMX7ULP_CLK_SOSC_BUS_CLK	41
->  #define IMX7ULP_CLK_FIRC_BUS_CLK	42
-> -- 
-> 2.17.1
-> 
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
