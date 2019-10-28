@@ -2,114 +2,183 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737E9CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AD5CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C39F214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83CAD214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="oNO8+LLH"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PlNYfcGW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391133AbfJ1Sb2 (ORCPT
+        id S1726967AbfJ1Sh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 14:31:28 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:41976 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387407AbfJ1Sb1 (ORCPT
+        Mon, 28 Oct 2019 14:37:27 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57238 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfJ1Sh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 14:31:27 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 1B74CA31
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 18:31:26 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zJHCD8JGeDp3 for <linux-kernel@vger.kernel.org>;
-        Mon, 28 Oct 2019 13:31:25 -0500 (CDT)
-Received: from mail-yw1-f70.google.com (mail-yw1-f70.google.com [209.85.161.70])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id DBF60AA5
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 13:31:25 -0500 (CDT)
-Received: by mail-yw1-f70.google.com with SMTP id m36so8064020ywh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 11:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=tt/VlbO+igImLkepQJBqwL30PnoA8x9FYvcXGMTcDYw=;
-        b=oNO8+LLHuVipTV+Rmo33B3yON7KyUc9Xj/Pfe8UT1QPRw01PV6eWl4WHxhg+9SvBZ0
-         bqscgIZdzeoQ8IDLZ+0i7jpFyHxw8oin0pPI85H9xjH+ZiugAxI7LYEq4oCB3R/t/8O9
-         P9NmBYOztPK9w7xgbg982mHdMuuUtwOufxCq00e94XU8xEBtjVN9q2yvz/aAl4Gsw4n/
-         Y21aeTWKjmxUx5zC4y2uCsTo/vzdgf+uRr09xIxVvn0ITT0WEByyWq6IQCwnMA1BAIiQ
-         NKebG+Q/ALGkz/AiQWBhLGddIleFsBRSnclNxPt7HJdNi2GyMz4saYe5STIzNQDWdgCE
-         PRGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tt/VlbO+igImLkepQJBqwL30PnoA8x9FYvcXGMTcDYw=;
-        b=s77mquVsl2IkfFz7dgVT4GetBF1iBsbYWDEZKWcjEc1YXClCRZi/tQcekYaC7hxcI8
-         Hs7FCAKjMmO0E27QAkM/PwZ1Ft8ZW2IiVNzAGMUtV20rYJOHHWISCRzz3lnVH2XkkS0A
-         E3NyWi3ITIpmKZR8O3NwzIHBS8NBKJhMSX020rVqfA34qNataiuHZoi2C1R4Y8SPuSoy
-         cpBWKUEOk60bSzx2E2Y5NhFeQeTvHtfKxez529ya4cwoJHAAtbncaPqFY/dEKlKeO+km
-         nY1gSdJL4mDff5qFjapBpMPy/RCu5txR4UQTZRyHGm3hmgAnGu6LDn4wdD+WmWaoIK0+
-         XwUQ==
-X-Gm-Message-State: APjAAAV9XJHDfjc90b+oK5i+qzPXNfzC4VMZE23GGFYdMO5L3KnDspWg
-        giNv43LTmjdObh0buE39SrxNK6KJYtFijoG8ToYEPxXyWeDDzDxVEWNis80P6++epUAZ5yZanMa
-        qX97jjgir5CsIqg+RyePycZG1d1zv
-X-Received: by 2002:a81:848b:: with SMTP id u133mr14474837ywf.249.1572287485189;
-        Mon, 28 Oct 2019 11:31:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzdS2/es6j9HHrsCkQGYL6DtKHSGg0H+WNsXY+UpzKPg1CIgtE3W/3jPS5Q92CHzMEUvQZuBA==
-X-Received: by 2002:a81:848b:: with SMTP id u133mr14474807ywf.249.1572287484704;
-        Mon, 28 Oct 2019 11:31:24 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id v198sm7033511ywv.44.2019.10.28.11.31.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 11:31:24 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] acpi: fix potential race conditions bypassing checks
-Date:   Mon, 28 Oct 2019 13:31:14 -0500
-Message-Id: <20191028183114.15709-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Mon, 28 Oct 2019 14:37:26 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SIbKdF034409;
+        Mon, 28 Oct 2019 13:37:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572287840;
+        bh=Qullg3/iDdm3fXb2oDGatHkWR3NFfKVfLUoihQpmjOI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=PlNYfcGWyKVtLcoZmNHjSJDv01/n4trcgKLCOtjYbPZss3kFvp71/GiodUMlJhj3x
+         fiti4q5HOIYDM+5BGhUa/Ku1WRJSYqU2DOlXgOnKWJRq7F9j0Rqk31599UylPhfKXV
+         VIAS3zZ4gjS0b29gd0EvPWP0vR/0nvM7N3liLvXw=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9SIbKnv076900
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 28 Oct 2019 13:37:20 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
+ Oct 2019 13:37:08 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 28 Oct 2019 13:37:08 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SIbJ1K046239;
+        Mon, 28 Oct 2019 13:37:19 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v15 01/19] dt: bindings: Add multicolor class dt bindings documention
+Date:   Mon, 28 Oct 2019 13:36:11 -0500
+Message-ID: <20191028183629.11779-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20191028183629.11779-1-dmurphy@ti.com>
+References: <20191028183629.11779-1-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"obj" is a local variable. Elements are deep-copied from external
-package to obj and security-checked. The original code is
-seemingly fine; however, compilers optimize the deep copies into
-shallow copies, introducing potential race conditions. For
-example, the checks for type and length may be bypassed. The fix
-tells compilers to not optimize the deep copy by inserting
-"volatile".
+Add DT bindings for the LEDs multicolor class framework.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/acpi/processor_throttling.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/leds/leds-class-multicolor.txt   | 98 +++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
 
-diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
-index 532a1ae3595a..6f4d86f8a9ce 100644
---- a/drivers/acpi/processor_throttling.c
-+++ b/drivers/acpi/processor_throttling.c
-@@ -413,7 +413,7 @@ static int acpi_processor_get_throttling_control(struct acpi_processor *pr)
- 	acpi_status status = 0;
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
- 	union acpi_object *ptc = NULL;
--	union acpi_object obj = { 0 };
-+	volatile union acpi_object obj = { 0 };
- 	struct acpi_processor_throttling *throttling;
- 
- 	status = acpi_evaluate_object(pr->handle, "_PTC", NULL, &buffer);
+diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+new file mode 100644
+index 000000000000..4b1bd82f2a42
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+@@ -0,0 +1,98 @@
++* Multicolor LED properties
++
++Bindings for multi color LEDs show how to describe current outputs of
++either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
++etc.) or standalone LEDs, to achieve logically grouped multi-color LED
++modules. This is achieved by adding multi-led nodes layer to the
++monochrome LED bindings.
++
++The nodes and properties defined in this document are unique to the multicolor
++LED class.  Common LED nodes and properties are inherited from the common.txt
++within this documentation directory.
++
++Required LED child properties:
++	- color : For multicolor LED support this property should be defined as
++		  LED_COLOR_ID_MULTI and further definition can be found in
++		  include/linux/leds/common.h.
++
++led-controller@30 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "ti,lp5024";
++	reg = <0x29>;
++
++	multi-led@1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <1>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_CHARGING;
++
++
++		led@3 {
++			reg = <3>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@5 {
++			reg = <5>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++	multi-led@2 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++		reg = <2>;
++		ti,led-bank = <2 3 5>;
++
++		led@6 {
++			reg = <0x6>;
++			color = <LED_COLOR_ID_RED>;
++			led-sources = <6 9 15>;
++		};
++
++		led@7 {
++			reg = <0x7>;
++			color = <LED_COLOR_ID_GREEN>;
++			led-sources = <7 10 16>;
++		};
++
++		led@8 {
++			reg = <0x8>;
++			color = <LED_COLOR_ID_BLUE>;
++			led-sources = <8 11 17>;
++		};
++	};
++
++	multi-led@4 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <4>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++
++		led@12 {
++			reg = <12>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@14 {
++			reg = <14>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++};
 -- 
-2.17.1
+2.22.0.214.g8dca754b1e
 
