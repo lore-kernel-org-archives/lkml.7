@@ -2,118 +2,92 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F5CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD7ACA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82CC320650
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DbyZ1xQI"
+	by mail.kernel.org (Postfix) with ESMTP id 09AE5214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572249425;
+	bh=7WSAwIvIMmCnPFbnYVFD8qYwityLxzs0vjC/ubdcMoA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hqxCV21i27Nm2Zk7EKbw0LBXaGtP2kW4wo3CYTuF5xrAAOi9ijxmkEj4dODSyG8P0
+	 6SqraddD1+6tCT8Bi8/zVcvTNc8zsR8O31lvPVXs5WsfUdmJ0XY64jsDGQER8uFcCD
+	 9CxpdKKf8uD1wuiqR4DkWXDV9kkSiuJTuQJqDQEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733076AbfJ1H4d (ORCPT
+        id S1733090AbfJ1H5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 03:56:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31343 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733025AbfJ1H4d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 03:56:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572249391;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=7eZcqHF8b9Ji9D25pn09VHOG3WM+NKx8xJbvY/2TLqA=;
-        b=DbyZ1xQIU/cQOKXqY36GKaDvmznKy9CqnikuRE7wX9jOVLqZhYAi6cbeCSOufpoHqhgVim
-        GDPbVRO08mf6aaXlJTNLRfAXJN3U+m6avExz5fyBOd4ZtgOpU9VwYD2gPK2yNzCJNYz5Js
-        B+MQQEuR/n8IOTUqbl1jkLAChFJrum0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-4OgiWQmOM_uxrvdeBN2Qdg-1; Mon, 28 Oct 2019 03:56:29 -0400
-Received: by mail-wr1-f72.google.com with SMTP id e14so5873107wrm.21
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 00:56:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S5NXpo19hb3uDxW1OhHDcHE5G0aGpOZOkhWsFlEbgJg=;
-        b=COT9+6GIXMmkegpDg1G3rTcVGk0vphac3ZENHuVihlsxWRA2QUaQlMfk7zhE52tP1o
-         65AsLs2zfLghnBapBjEZDQQ4VpGgXgKO7smDzP5x9C53ZnX1EO27nDKQzM+GMf0E/Gas
-         doHuBm37Ena4MgfPosP6NHSoFLfb/QZJiaJK2vCYLbwGdj04TpvhuL1ogaT729Y3+ldP
-         nxtridVOimG3wrO7W+GLLH2hvDWEyw8nbDVA5gYX8xzswc6jAAKCAUpNbde0T4K1MuUT
-         FhGYj4F6kUBPaR3XP90NiFN12DoiIAoNECK9XAbDhyx2D1ibctvMUHIvYmA32LZjNU8C
-         yahg==
-X-Gm-Message-State: APjAAAX8OQa1bR/KT446KL5aBlJEB3BmIJoDLC4ZrEjyZBySBth00Jpu
-        mz+yLn5djkaIvQE2zyvE2TvQroV4w8BSimY/5wSMa0sKIVqt4v02Oj/avZduzdcwyyqRrHn4KL0
-        WlBSmlSETVH1/YTlFRQrgIecO
-X-Received: by 2002:a1c:a6c8:: with SMTP id p191mr13488543wme.99.1572249388645;
-        Mon, 28 Oct 2019 00:56:28 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxdujLnbZ/mVVjeXxdogH1Figcm+nBuCvScMbkWCn3k8Tpyjlo4tv3ouf7+I5YMO36ZXlV4Ug==
-X-Received: by 2002:a1c:a6c8:: with SMTP id p191mr13488519wme.99.1572249388348;
-        Mon, 28 Oct 2019 00:56:28 -0700 (PDT)
-Received: from [192.168.42.37] (mob-37-176-198-149.net.vodafone.it. [37.176.198.149])
-        by smtp.gmail.com with ESMTPSA id v9sm8889789wro.51.2019.10.28.00.56.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Oct 2019 00:56:27 -0700 (PDT)
-Subject: Re: [PATCH] KVM: vmx, svm: always run with EFER.NXE=1 when shadow
- paging is active
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-References: <20191027152323.24326-1-pbonzini@redhat.com>
- <20191028065919.AB8C3208C0@mail.kernel.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <b08a0103-312e-5441-9ffe-33c9df0a9d57@redhat.com>
-Date:   Mon, 28 Oct 2019 08:56:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 28 Oct 2019 03:57:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733079AbfJ1H5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 03:57:03 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A96620650;
+        Mon, 28 Oct 2019 07:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572249423;
+        bh=7WSAwIvIMmCnPFbnYVFD8qYwityLxzs0vjC/ubdcMoA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gx3AXM/ir5pciLBeAaR22OBYiMfLES8rhG0Iv3VHtB96zQoTXZS3w1aCpbsvSN8e5
+         ky/KDRl2xKeD+GUeARJYhc5rbRRRlQqhTDfskXucyXRD/4nBjXhB1w1ETnyBRYz8XK
+         w+YvPKXqQnWo2HIIsMdnRQ2zoAYX1HEbk5uxsoYc=
+Date:   Mon, 28 Oct 2019 15:56:40 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Rogerio Pimentel da Silva <rpimentel.silva@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: imx8mq-evk: Add remote control
+Message-ID: <20191028075638.GS16985@dragon>
+References: <20191022192038.30094-1-rpimentel.silva@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191028065919.AB8C3208C0@mail.kernel.org>
-Content-Language: en-US
-X-MC-Unique: 4OgiWQmOM_uxrvdeBN2Qdg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022192038.30094-1-rpimentel.silva@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/10/19 07:59, Sasha Levin wrote:
->=20
-> This commit has been processed because it contains a -stable tag.
-> The stable tag indicates that it's relevant for the following trees: all
->=20
-> The bot has tested the following trees: v5.3.7, v4.19.80, v4.14.150, v4.9=
-.197, v4.4.197.
->=20
-> v5.3.7: Build OK!
-> v4.19.80: Failed to apply! Possible dependencies:
->     Unable to calculate
->=20
-> v4.14.150: Failed to apply! Possible dependencies:
->     Unable to calculate
->=20
-> v4.9.197: Failed to apply! Possible dependencies:
->     Unable to calculate
->=20
-> v4.4.197: Failed to apply! Possible dependencies:
->     Unable to calculate
->=20
->=20
-> NOTE: The patch will not be queued to stable trees until it is upstream.
->=20
-> How should we proceed with this patch?
+On Tue, Oct 22, 2019 at 04:20:34PM -0300, Rogerio Pimentel da Silva wrote:
+> Add remote control to i.MX8M EVK device tree.
+> 
+> The rc protocol must be selected by writing to:
+> /sys/devices/platform/ir-receiver/rc/rc0/protocols
+> 
+> On my tests, I used "nec" rc protocol:
+> echo nec > protocols
+> 
+> Tested using evetest:
+> evtest /dev/input/event0
+> 
+> Output log for each key pressed:
+> Event: 
+> time 1568122608.267845, -------------- SYN_REPORT ------------
+> Event: 
+> time 1568122610.503835, type 4 (EV_MSC), code 4 (MSC_SCAN), value 440
+> 
+> Signed-off-by: Rogerio Pimentel da Silva <rpimentel.silva@gmail.com>
 
-It should apply just fine to all branches, just to arch/x86/kvm/vmx.c
-instead of arch/x86/kvm/vmx/vmx.c.
-
-Paolo
-
+Applied, thanks.
