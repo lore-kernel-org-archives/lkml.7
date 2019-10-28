@@ -2,263 +2,146 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E69CCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94478CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A9A214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Zacx0/8b"
+	by mail.kernel.org (Postfix) with ESMTP id 5A5A920578
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:45:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfJ1Xmi (ORCPT
+        id S1726413AbfJ1Xpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 19:42:38 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34783 "EHLO ozlabs.org"
+        Mon, 28 Oct 2019 19:45:49 -0400
+Received: from vps-vb.mhejs.net ([37.28.154.113]:58632 "EHLO vps-vb.mhejs.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726594AbfJ1Xmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 19:42:38 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 472B8n2r5Nz9sPT;
-        Tue, 29 Oct 2019 10:42:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1572306153;
-        bh=zM9aG91VYCIzqsK3fq3CpiFSFcyS/yCl9U34kBR9aKw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Zacx0/8bXcg8sPp6+Ng1v5UyQ8KpygDaig8MLEjvgywnCoQ+G+aHX9jxWyuIodIz8
-         HJCWxp4jnFFNzuZqsojXmhLN1F1BKsLa9Fh1Nf8valLJZ6f7ZhCAg+qI4/EkCtgdRQ
-         1k81BercgHnWGujjMgTJr6w2+64y5b9INeZ6q43Z8Gz6pPK+0KX1uSxBg+dflEIZBo
-         agl5374DzJXd4RfLr7zyBeYvzSaGurPG76Kncd52kXOIKRl4DHSVWJVoxbYEh7Iz7R
-         CiFmds3M8JWQJq7Z6gOSyHrt7kIfmZRMUwrdbM+jNE8nr7A/4/9Uff/iqT1dpUSNhq
-         zG/OKMl+0qOwA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.vnet.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        id S1725880AbfJ1Xps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 19:45:48 -0400
+Received: from MUA
+        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92.3)
+        (envelope-from <mail@maciej.szmigiero.name>)
+        id 1iPEhc-0008T8-SS; Tue, 29 Oct 2019 00:45:36 +0100
+Subject: Re: [PATCH v3] hwrng: core: Freeze khwrng thread during suspend
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-Subject: Re: [PATCH v9 2/8] powerpc/ima: add support to initialize ima policy rules
-In-Reply-To: <482b2f08-f810-6ed0-4b32-0d5e64246ece@linux.microsoft.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com> <20191024034717.70552-3-nayna@linux.ibm.com> <dd7e04fc-25e8-280f-b565-bdb031939655@linux.microsoft.com> <27dbe08e-5473-4dd0-d2ad-2df591e23f5e@linux.vnet.ibm.com> <482b2f08-f810-6ed0-4b32-0d5e64246ece@linux.microsoft.com>
-Date:   Tue, 29 Oct 2019 10:42:32 +1100
-Message-ID: <87lft4h1xz.fsf@mpe.ellerman.id.au>
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>
+References: <20190805233241.220521-1-swboyd@chromium.org>
+From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mail@maciej.szmigiero.name; prefer-encrypt=mutual; keydata=
+ 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 PA==
+Message-ID: <4a45b3e0-ed3a-61d3-bfc6-957c7ba631bb@maciej.szmigiero.name>
+Date:   Tue, 29 Oct 2019 00:45:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190805233241.220521-1-swboyd@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lakshmi,
+Hi Stephen,
 
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
-> On 10/25/2019 10:02 AM, Nayna Jain wrote:
->
->  >> Is there any way to not use conditional compilation in
->  >> the above array definition? Maybe define different functions to get
->  >> "secure_rules" for when CONFIG_MODULE_SIG_FORCE is defined and when
->  >> it is not defined.
->  >
->  > How will you decide which function to be called ?
->
-> Define the array in the C file:
->
-> const char *const secure_rules_kernel_check[] = {
->     "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
->     NULL
-> };
->
-> const char *const secure_rules_kernel_module_check[] = {
->     "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
->     "appraise func=MODULE_CHECK appraise_type=imasig|modsig",
->     NULL
-> };
->
-> And, in the header file :
+On 06.08.2019 01:32, Stephen Boyd wrote:
+> The hwrng_fill() function can run while devices are suspending and
+> resuming. If the hwrng is behind a bus such as i2c or SPI and that bus
+> is suspended, the hwrng may hang the bus while attempting to add some
+> randomness. It's been observed on ChromeOS devices with suspend-to-idle
+> (s2idle) and an i2c based hwrng that this kthread may run and ask the
+> hwrng device for randomness before the i2c bus has been resumed.
+> 
+> Let's make this kthread freezable so that we don't try to touch the
+> hwrng during suspend/resume. This ensures that we can't cause the hwrng
+> backing driver to get into a bad state because the device is guaranteed
+> to be resumed before the hwrng kthread is thawed.
 
-But there's no reason for any of this to be in a header, it's all
-contained in one file.
+This patch broke suspend with virtio-rng loaded (it hangs).
 
-Moving things into a header purely to avoid a single #ifdef in a C file
-is a backward step.
+The problematic call chain is:
+virtrng_freeze() -> remove_common() -> hwrng_unregister() ->
+kthread_stop().
 
-> extern const char *const secure_rules_kernel_check;
-> extern const char *const secure_rules_kernel_module_check;
->
-> #ifdef CONFIG_MODULE_SIG_FORCE
-> const char *secure_rules() { return secure_rules_kernel_check; }
-> #else
-> const char *secure_rules() { return secure_rules_kernel_module_check;}
-> #endif // #ifdef CONFIG_MODULE_SIG_FORCE
->
-> If you want to avoid duplication, secure_rules_kernel_check and 
-> secure_rules_kernel_module_check could be defined in separate C files 
-> and conditionally compiled (in Makefile).
+It looks like kthread_stop() can't finish on a frozen khwrng thread.
 
-Again that's just lots of added complication for no real benefit.
+Reverting this commit makes a VM with virtio-rng driver loaded
+suspend and resume correctly again.
 
-> I was just trying to suggest the guidelines given in
-> "Section 21) Conditional Compilation" in coding-style.rst.
->
-> It says:
-> Whenever possible don't use preprocessor conditionals (#ifdef, #if) in 
-> .c files;...
-
-The key phrase being "guideline" :)
-
-That suggestion is aimed at avoiding code with lots of ifdefs sprinkled
-through the body of functions. Code written in that way can be very hard
-to read because you have to mentally pre-process it first, and then read
-the C-level logic. See below for an example.
-
-Moving the pre-processing out of line into helpers means when you're
-reading the function you can just reason about the C control flow.
-
-The reference to ".c files" is really talking about moving logic that is
-#ifdef'ed into static inline helpers. Those typically go in headers, but
-they don't have to if there's no other reason for them to be in a
-header.
-
-So where the code is all in one C file it would be completely fine to
-have an #ifdef in the C file around a static inline helper.
-
-But in this case where the #ifdef is just in an array I think it's
-entirely fine to just keep the #ifdef. Its presence there doesn't
-complicate the logic in anyway.
-
-cheers
-
-
-
-This is a "good" (bad) example of what we're trying to avoid:
-
-static long ppc_set_hwdebug(struct task_struct *child,
-		     struct ppc_hw_breakpoint *bp_info)
-{
-#ifdef CONFIG_HAVE_HW_BREAKPOINT
-	int len = 0;
-	struct thread_struct *thread = &(child->thread);
-	struct perf_event *bp;
-	struct perf_event_attr attr;
-#endif /* CONFIG_HAVE_HW_BREAKPOINT */
-#ifndef CONFIG_PPC_ADV_DEBUG_REGS
-	struct arch_hw_breakpoint brk;
-#endif
-
-	if (bp_info->version != 1)
-		return -ENOTSUPP;
-#ifdef CONFIG_PPC_ADV_DEBUG_REGS
-	/*
-	 * Check for invalid flags and combinations
-	 */
-	if ((bp_info->trigger_type == 0) ||
-	    (bp_info->trigger_type & ~(PPC_BREAKPOINT_TRIGGER_EXECUTE |
-				       PPC_BREAKPOINT_TRIGGER_RW)) ||
-	    (bp_info->addr_mode & ~PPC_BREAKPOINT_MODE_MASK) ||
-	    (bp_info->condition_mode &
-	     ~(PPC_BREAKPOINT_CONDITION_MODE |
-	       PPC_BREAKPOINT_CONDITION_BE_ALL)))
-		return -EINVAL;
-#if CONFIG_PPC_ADV_DEBUG_DVCS == 0
-	if (bp_info->condition_mode != PPC_BREAKPOINT_CONDITION_NONE)
-		return -EINVAL;
-#endif
-
-	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_EXECUTE) {
-		if ((bp_info->trigger_type != PPC_BREAKPOINT_TRIGGER_EXECUTE) ||
-		    (bp_info->condition_mode != PPC_BREAKPOINT_CONDITION_NONE))
-			return -EINVAL;
-		return set_instruction_bp(child, bp_info);
-	}
-	if (bp_info->addr_mode == PPC_BREAKPOINT_MODE_EXACT)
-		return set_dac(child, bp_info);
-
-#ifdef CONFIG_PPC_ADV_DEBUG_DAC_RANGE
-	return set_dac_range(child, bp_info);
-#else
-	return -EINVAL;
-#endif
-#else /* !CONFIG_PPC_ADV_DEBUG_DVCS */
-	/*
-	 * We only support one data breakpoint
-	 */
-	if ((bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_RW) == 0 ||
-	    (bp_info->trigger_type & ~PPC_BREAKPOINT_TRIGGER_RW) != 0 ||
-	    bp_info->condition_mode != PPC_BREAKPOINT_CONDITION_NONE)
-		return -EINVAL;
-
-	if ((unsigned long)bp_info->addr >= TASK_SIZE)
-		return -EIO;
-
-	brk.address = bp_info->addr & ~7UL;
-	brk.type = HW_BRK_TYPE_TRANSLATE;
-	brk.len = 8;
-	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_READ)
-		brk.type |= HW_BRK_TYPE_READ;
-	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_WRITE)
-		brk.type |= HW_BRK_TYPE_WRITE;
-#ifdef CONFIG_HAVE_HW_BREAKPOINT
-	/*
-	 * Check if the request is for 'range' breakpoints. We can
-	 * support it if range < 8 bytes.
-	 */
-	if (bp_info->addr_mode == PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE)
-		len = bp_info->addr2 - bp_info->addr;
-	else if (bp_info->addr_mode == PPC_BREAKPOINT_MODE_EXACT)
-		len = 1;
-	else
-		return -EINVAL;
-	bp = thread->ptrace_bps[0];
-	if (bp)
-		return -ENOSPC;
-
-	/* Create a new breakpoint request if one doesn't exist already */
-	hw_breakpoint_init(&attr);
-	attr.bp_addr = (unsigned long)bp_info->addr & ~HW_BREAKPOINT_ALIGN;
-	attr.bp_len = len;
-	arch_bp_generic_fields(brk.type, &attr.bp_type);
-
-	thread->ptrace_bps[0] = bp = register_user_hw_breakpoint(&attr,
-					       ptrace_triggered, NULL, child);
-	if (IS_ERR(bp)) {
-		thread->ptrace_bps[0] = NULL;
-		return PTR_ERR(bp);
-	}
-
-	return 1;
-#endif /* CONFIG_HAVE_HW_BREAKPOINT */
-
-	if (bp_info->addr_mode != PPC_BREAKPOINT_MODE_EXACT)
-		return -EINVAL;
-
-	if (child->thread.hw_brk.address)
-		return -ENOSPC;
-
-	if (!ppc_breakpoint_available())
-		return -ENODEV;
-
-	child->thread.hw_brk = brk;
-
-	return 1;
-#endif /* !CONFIG_PPC_ADV_DEBUG_DVCS */
-}
-
+Maciej
