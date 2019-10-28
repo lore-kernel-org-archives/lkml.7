@@ -2,155 +2,186 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2A4CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A7BCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4264821783
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CCB21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hbfgBkj1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bvQwmEjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390247AbfJ1Okx (ORCPT
+        id S2390253AbfJ1OmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:40:53 -0400
-Received: from mout.web.de ([212.227.17.12]:54539 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390235AbfJ1Okw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:40:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1572273619;
-        bh=QHqqOg7p5UzgEReo+nUABxaEFdkS1OmskZNlAFvY00g=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=hbfgBkj14ES3bTP4wJgu2/+HxltU6x7ci+1j5OAlPFd7OpPYKNTFXk8h9zSYiugV5
-         MhyCXrgbR/2UXPJo57MyrafJzMqjj28niZDeYUEgkCYkaGAR1EgMWRk6gDNEuuN3f/
-         r/nGZklY8zLya19tQlzbet77epN5rFuYsGOEMWwI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.155.234]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MXHXF-1iSY1W2J0v-00WDbn; Mon, 28
- Oct 2019 15:40:19 +0100
-Subject: Re: [alsa-devel] ALSA: korg1212: Checking exception handling in
- snd_korg1212_create()
-To:     Takashi Iwai <tiwai@suse.de>, Navid Emamdoost <emamd001@umn.edu>,
-        alsa-devel@alsa-project.org, linux-doc@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <s5hmudlmldk.wl-tiwai@suse.de>
- <ec3647df-0e54-4aaa-7ec7-b3dec0fa1965@web.de> <s5ho8y1au4h.wl-tiwai@suse.de>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <0daa3e27-3d1f-3040-f8e7-92ce91a97687@web.de>
-Date:   Mon, 28 Oct 2019 15:40:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 28 Oct 2019 10:42:02 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15113 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728425AbfJ1OmC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 10:42:02 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5db6fe400000>; Mon, 28 Oct 2019 07:42:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 28 Oct 2019 07:42:00 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 28 Oct 2019 07:42:00 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
+ 2019 14:42:00 +0000
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
+ DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Mon, 28 Oct 2019 14:41:59 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 7902243032; Mon, 28 Oct 2019 16:41:57 +0200 (EET)
+Date:   Mon, 28 Oct 2019 16:41:57 +0200
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Prashant Gaikwad" <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] clk: tegra: divider: Support enable-bit for Super
+ clocks
+Message-ID: <20191028144157.GD27141@pdeschrijver-desktop.Nvidia.com>
+References: <20190723025245.27754-1-digetx@gmail.com>
+ <20190723025245.27754-2-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <s5ho8y1au4h.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TL43P9tqVb4G71gLlqBig/UUEguOCr8CxXDNfqZ0eDcapP/uWaJ
- XWlt1pfEYl91vE6AggTfHjM0jed8NPO2IOFqtalGtbxOIUarKrHM7ENV8+sUxRFcnCaRzKg
- IQ04ZEVMV+favQFma0gcWdk7+mTc6H6Ta23MsDS1ATMkyvpp56VtsphOJGQF0LHC8k8srv1
- LVs55KIUbMZvJt25uKghw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:H9T3rOFvefQ=:tvluSqaundhOP/M560f1uw
- 3vLwoVdlDDZpU+EBHKPwJqRrYldzTVhfwvwonxt4tLb5U1YDbpnLoWzxwX/u0M5UGoKlJIW7+
- Lcg1jsGUFwSSJPryre8rdm+HBk4Fm2rk2nf69ApyuzyGp5PokydCs4eaYuNgnDyN+EPmac8Hk
- OeKQYRKrun0riUWmKuRQcjdRPBlGmF99wWKxUMBLFOZBtxxchmuWOe4k4IkOlDcB4xfwDuImJ
- ao4z9wcxIwowDDAEmT7gD1heVEsYwk+3YJYtsUXnMOaPHr3zxkoEKRIv3bDlSnj9zFn5b59PG
- bDoMVlsp5i6RbPg0UtfeCznDjpnv5BqlDngG5J3p+KyM/L5MVtKLOmdeobg/8/UJx9NtyTTr1
- DFfiypeJM6Ip1ZbQJl7T9fHTteCXfG2iVDA+b4sWg/btl1ErSzqsZHAyx0lQYDmZMQrXo05Zl
- prjwwT9YWG9mSb8aAxy0Fhmux+9ctqigU/XR6NIQoCojNiJIwjeLJy+tuPfaIHJHp/GEvG3+J
- TAD6Ei2ZjIFqQGKF87BqFUGMqmc9JeuEPk/D0PS9Jx1ENCTdnFq1WGFjVli9sJYo+z8ENdRmb
- 20Bp87JYY3w/lupL6ZlPE2xs1GAtGJku9m/3qE+QfaXkLV4brQq8NraSB5Ghkl0uuNcXJUoYs
- 1G9CA4Ri0XUx1354OG1VXeIORuBaCqW4BrszLzF1ignZ19etS4h+VC+V6HIXvYB0XamTBrBDv
- YcMECII+oVkslu9TOMG+DXZ3paHBBatd5xIKKKHzrwAY3iBeiGYK2HGkfvIiodvkQJvJg7M4D
- PZYvBlxqme5YO+GiZRJcSxAeBwrjVIPg5sg42J2zuRzj3Q2tJDB45RXjlZLXb7h5H7hKPk6qV
- vs3BuBoPRMEoB+hJMBwgFdGdmU6Ayo7SNa7zsvRZD/OpRRQ3ZO7g4iUG66QSNf7nP2dPTU80l
- gKqX8bq5JCA+Snz7bNdqY9Xawk/mw8e4XbXrAsjNZnMhHZF9+kG61j0qhQrLqhoFYj90Zt64d
- iIPuTzuT+5GGq0DQnlwkXJ9w8HgulVjvyGHapXXUFJ7Qkio1+JI00Xuo+P7m1yPxVM6uVuOTL
- m58KzynHXv0h/b+A7x4KD8sgre1xyfHY+KHJQEEXzrcNbmRPWoHh7rI4PwxndY795/iDeNy0P
- ERb8bObjo0y1Gw2mnAMlu4mnsCvkJ909zZea4PUO7dNoioqUHRTsA5lec7WjdserHt41w42jB
- HfcfLegpbvhRIZcH6p177NC0P6EgRwilq26E4oM35TMvi4slz3qxhIz76Xww=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190723025245.27754-2-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572273728; bh=06nnWkX/y2hBb/UJENOgGV/3SZIw81i3749bZO7gUGg=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=bvQwmEjcBJGTgHHPkQCfdBxKvgc4KtOOSQ6K6A6J2mBqC5wA7qZOIvgQW4reP1rlp
+         5G9pBGCEBL1hWz6kV0Z/j1b1gpFEQ5MSXXgQvJ7nCk8u/siM6GE/4Mb0t8s5Z9ET2e
+         9mB2MP991+31ePo9SdJ5XS2T86thlnvT0QE8JK/S1jVFB+FpGbYdh1VAaxXMe2lMuv
+         1fZ+cL/Zyg6/u9sxgGa81R/ooiXhk7XrVOuw8MfCaB4zK9Rr5WroXSeF3zo9aqGeOs
+         KiHwf+QGSN8n6AhYyZea4T7Qexqof4E5C37NMdMqtTl7/ffEUFYQycnUr+bnFDdfnh
+         AflViycU0wQLg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Can the properties of this programming interface be documented also tog=
-ether
->> with the function declaration for the safer handling of ALSA components=
-?
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/sound/kernel-api/writing-an-alsa-driver.rst?id=3Dd6d5df1db6=
-e9d7f8f76d2911707f7d5877251b02#n567
->
-> I can think of only adding some comment at each point mentioning that
-> the resource will be managed by the device destructor.
+On Tue, Jul 23, 2019 at 05:52:45AM +0300, Dmitry Osipenko wrote:
+> All Super clocks have a divider that has the enable bit.
+> 
 
-* Which places will be corresponding update candidates?
+This is broken to begin with. The only clock of this type in upstream is SCLK
+I think. However, this clock is not a normal divider, it's a skipper, so
+the normal divider logic doesn't work for it. In practice this clock is
+only used when scaling SCLK, which is not (yet) done in the upstream
+kernel due to the complex DVFS relationship between sclk, hclk and pclk.
+A driver for it can be found here:
+https://nv-tegra.nvidia.com/gitweb/?p=linux-4.9.git;a=blob;f=drivers/clk/tegra/clk-skipper.c;h=f5da4f6ca44fe194c87f66be70c708e9791db74d;hb=eb8dd21affa2be45fc29be8c082194ac4032393a
+As you can see in that tree, we eventually splitted sclk into three
+clocks:
 
-* Would you like to choose the wording?
+sclk_mux (controls SCLK_BURST_POLICY register)
+sclk (controls SOURCE_SYS register which is like a normal peripheral
+clock but without the mux)
+sclk_skipper (controls SCLK_DIVIDER)
+
+Peter.
 
 
->> Can any more API information help to improve automatic source code anal=
-ysis
->> around similar functions?
->
-> If anything we can add, let me know.
-
-Will any tags become more helpful also for the software documentation?
-
-Regards,
-Markus
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+> 
+> Changelog:
+> 
+> v2: Improved commit's message.
+> 
+>  drivers/clk/tegra/clk-divider.c | 12 ++++++++++++
+>  drivers/clk/tegra/clk-super.c   |  1 +
+>  drivers/clk/tegra/clk.h         |  4 ++++
+>  3 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
+> index f33c19045386..a980b9bddecd 100644
+> --- a/drivers/clk/tegra/clk-divider.c
+> +++ b/drivers/clk/tegra/clk-divider.c
+> @@ -17,6 +17,7 @@
+>  #define get_max_div(d) div_mask(d)
+>  
+>  #define PERIPH_CLK_UART_DIV_ENB BIT(24)
+> +#define SUPER_CLK_DIV_ENB BIT(31)
+>  
+>  static int get_div(struct tegra_clk_frac_div *divider, unsigned long rate,
+>  		   unsigned long parent_rate)
+> @@ -46,6 +47,10 @@ static unsigned long clk_frac_div_recalc_rate(struct clk_hw *hw,
+>  	    !(reg & PERIPH_CLK_UART_DIV_ENB))
+>  		return rate;
+>  
+> +	if ((divider->flags & TEGRA_DIVIDER_SUPER) &&
+> +	    !(reg & SUPER_CLK_DIV_ENB))
+> +		return rate;
+> +
+>  	div = (reg >> divider->shift) & div_mask(divider);
+>  
+>  	mul = get_mul(divider);
+> @@ -96,6 +101,13 @@ static int clk_frac_div_set_rate(struct clk_hw *hw, unsigned long rate,
+>  	val &= ~(div_mask(divider) << divider->shift);
+>  	val |= div << divider->shift;
+>  
+> +	if (divider->flags & TEGRA_DIVIDER_SUPER) {
+> +		if (div)
+> +			val |= SUPER_CLK_DIV_ENB;
+> +		else
+> +			val &= ~SUPER_CLK_DIV_ENB;
+> +	}
+> +
+>  	if (divider->flags & TEGRA_DIVIDER_UART) {
+>  		if (div)
+>  			val |= PERIPH_CLK_UART_DIV_ENB;
+> diff --git a/drivers/clk/tegra/clk-super.c b/drivers/clk/tegra/clk-super.c
+> index 39ef31b46df5..4d8e36b04f03 100644
+> --- a/drivers/clk/tegra/clk-super.c
+> +++ b/drivers/clk/tegra/clk-super.c
+> @@ -220,6 +220,7 @@ struct clk *tegra_clk_register_super_clk(const char *name,
+>  	super->frac_div.width = 8;
+>  	super->frac_div.frac_width = 1;
+>  	super->frac_div.lock = lock;
+> +	super->frac_div.flags = TEGRA_DIVIDER_SUPER;
+>  	super->div_ops = &tegra_clk_frac_div_ops;
+>  
+>  	/* Data in .init is copied by clk_register(), so stack variable OK */
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index 905bf1096558..a4fbf55930aa 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -53,6 +53,9 @@ struct clk *tegra_clk_register_sync_source(const char *name,
+>   * TEGRA_DIVIDER_UART - UART module divider has additional enable bit which is
+>   *      set when divider value is not 0. This flags indicates that the divider
+>   *      is for UART module.
+> + * TEGRA_DIVIDER_SUPER - Super clock divider has additional enable bit which
+> + *      is set when divider value is not 0. This flags indicates that the
+> + *      divider is for super clock.
+>   */
+>  struct tegra_clk_frac_div {
+>  	struct clk_hw	hw;
+> @@ -70,6 +73,7 @@ struct tegra_clk_frac_div {
+>  #define TEGRA_DIVIDER_FIXED BIT(1)
+>  #define TEGRA_DIVIDER_INT BIT(2)
+>  #define TEGRA_DIVIDER_UART BIT(3)
+> +#define TEGRA_DIVIDER_SUPER BIT(4)
+>  
+>  extern const struct clk_ops tegra_clk_frac_div_ops;
+>  struct clk *tegra_clk_register_divider(const char *name,
+> -- 
+> 2.22.0
+> 
