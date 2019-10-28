@@ -2,129 +2,68 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC1BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD980CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B2E20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8130B208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572228143;
+	bh=Do82FeXN8awZBXeYHmhMD0gIwU/ryeyx/q5LviT3/Tc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RoTMSYNUCkUN2SqgAu9UIwsSgJRw3LAbJZ41KrTheL1sSu0wT0LRtegrNbhhrwzdc
+	 UjmLgOmk/HvN1vbl6/u0CO4MlUkpxDm+nJoqlTbMcHhGVrZfSu36Yp080rBBqYobA0
+	 1bIV7widY7JN93c9042b3G05kzhYe2R6gOG37ML4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbfJ1B5y (ORCPT
+        id S1729069AbfJ1CCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 21:57:54 -0400
-Received: from mga11.intel.com ([192.55.52.93]:16201 "EHLO mga11.intel.com"
+        Sun, 27 Oct 2019 22:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727598AbfJ1B5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 21:57:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 18:57:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,238,1569308400"; 
-   d="scan'208";a="229541691"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
-  by fmsmga002.fm.intel.com with ESMTP; 27 Oct 2019 18:57:51 -0700
-Date:   Mon, 28 Oct 2019 09:58:42 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     alex.williamson@redhat.com, maxime.coquelin@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        dan.daly@intel.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, lingshan.zhu@intel.com
-Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
-Message-ID: <20191028015842.GA9005@___>
-References: <106834b5-dae5-82b2-0f97-16951709d075@redhat.com>
- <20191023101135.GA6367@___>
- <5a7bc5da-d501-2750-90bf-545dd55f85fa@redhat.com>
- <20191024042155.GA21090@___>
- <d37529e1-5147-bbe5-cb9d-299bd6d4aa1a@redhat.com>
- <d4cc4f4e-2635-4041-2f68-cd043a97f25a@redhat.com>
- <20191024091839.GA17463@___>
- <fefc82a3-a137-bc03-e1c3-8de79b238080@redhat.com>
- <e7e239ba-2461-4f8d-7dd7-0f557ac7f4bf@redhat.com>
- <20191025080143-mutt-send-email-mst@kernel.org>
+        id S1728018AbfJ1CCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 22:02:22 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94DD120717;
+        Mon, 28 Oct 2019 02:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572228141;
+        bh=Do82FeXN8awZBXeYHmhMD0gIwU/ryeyx/q5LviT3/Tc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OKvTPp3EB/nnvm4PwcjJqcKfMWkbZtxSC6N/VumoCmho5JpUULbOoulGOShiBwmdE
+         sId2xvYE7FozosKKV6bLodoMIXvB1ETC6sb1yqLZT5SnT3zOrv6jlgeV58NB1y38TF
+         cYlaPvq+ZwejZysO8w36ZeXp8EfU5s16qHfcYueM=
+Date:   Mon, 28 Oct 2019 10:02:03 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: imx6dl-yapp4: Enable UART2
+Message-ID: <20191028020202.GC16985@dragon>
+References: <1571233762-4444-1-git-send-email-michal.vokac@ysoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191025080143-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1571233762-4444-1-git-send-email-michal.vokac@ysoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 08:16:26AM -0400, Michael S. Tsirkin wrote:
-> On Fri, Oct 25, 2019 at 05:54:55PM +0800, Jason Wang wrote:
-> > On 2019/10/24 下午6:42, Jason Wang wrote:
-> > > 
-> > > Yes.
-> > > 
-> > > 
-> > > >   And we should try to avoid
-> > > > putting ctrl vq and Rx/Tx vqs in the same DMA space to prevent
-> > > > guests having the chance to bypass the host (e.g. QEMU) to
-> > > > setup the backend accelerator directly.
-> > > 
-> > > 
-> > > That's really good point.  So when "vhost" type is created, parent
-> > > should assume addr of ctrl_vq is hva.
-> > > 
-> > > Thanks
-> > 
-> > 
-> > This works for vhost but not virtio since there's no way for virtio kernel
-> > driver to differ ctrl_vq with the rest when doing DMA map. One possible
-> > solution is to provide DMA domain isolation between virtqueues. Then ctrl vq
-> > can use its dedicated DMA domain for the work.
+On Wed, Oct 16, 2019 at 03:49:22PM +0200, Michal Vokáč wrote:
+> The second UART is needed for 3D or MFD printer control.
+> 
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 
-It might not be a bad idea to let the parent drivers distinguish
-between virtio-mdev mdevs and vhost-mdev mdevs in ctrl-vq handling
-by mdev's class id.
-
-> > 
-> > Anyway, this could be done in the future. We can have a version first that
-> > doesn't support ctrl_vq.
-
-+1, thanks
-
-> > 
-> > Thanks
-> 
-> Well no ctrl_vq implies either no offloads, or no XDP (since XDP needs
-> to disable offloads dynamically).
-> 
->         if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS)
->             && (virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_TSO4) ||
->                 virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_TSO6) ||
->                 virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_ECN) ||
->                 virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_UFO) ||
->                 virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_CSUM))) {
->                 NL_SET_ERR_MSG_MOD(extack, "Can't set XDP while host is implementing LRO/CSUM, disable LRO/CSUM first");
->                 return -EOPNOTSUPP;
->         }
-> 
-> neither is very attractive.
-> 
-> So yes ok just for development but we do need to figure out how it will
-> work down the road in production.
-
-Totally agree.
-
-> 
-> So really this specific virtio net device does not support control vq,
-> instead it supports a different transport specific way to send commands
-> to device.
-> 
-> Some kind of extension to the transport? Ideas?
-> 
-> 
-> -- 
-> MST
+Applied, thanks.
