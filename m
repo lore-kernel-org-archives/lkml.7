@@ -2,123 +2,73 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3228CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2D7CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93C621721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9915221744
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="TZgFUJfk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uxYjW9/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391032AbfJ1QaZ (ORCPT
+        id S1732825AbfJ1Qaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:30:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42532 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730711AbfJ1QaY (ORCPT
+        Mon, 28 Oct 2019 12:30:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47700 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730494AbfJ1Qaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:30:24 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 21so7202142pfj.9
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 09:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=SQuBb1DCXEr8h1ECCdUIOg6XQFl3p+ONu+5Oivf+rCw=;
-        b=TZgFUJfk5s8fMqvLgcfoSfoH5/QODG8LGopHISdASnARo4nD5nanqf1siljcA53hK2
-         vJV+9nCLl0JOol9OWtGW3dmp1E7ZDBU0UEuiti6O/DqNrFSqJ77V0D3IEYEtKDcnK9Um
-         QGEeQDx4e6qmmuWaIINHFTEbknU1vbikTO+mRvMgYxMuy3yZaHEtfeVlJddlIByq/prL
-         799VU5HYR/o4NpDliCg+aylRupNiBLgPSypRvBKwYSsE6CRaVMKoaqc8TJNTvyOhaXFE
-         EN/RcKC8UUtXz5aJSwfkCKgSnPJuKEFnV3x7+pKGwJXLIWyxJ0k3Rs2Hp/eAWkBEeWeh
-         Wj2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=SQuBb1DCXEr8h1ECCdUIOg6XQFl3p+ONu+5Oivf+rCw=;
-        b=WNq7A51whTsQh0VEf9J/+vvj5tqLvyEM5ENYJ79WM3nKSOALG/Acgt3pRAMj33OqB2
-         4402sGooSlHLy8QQJOXqkKYwypvXNv8mPEqizd6ZHWC5aH49TTvPn4CJDJAgr85usGqI
-         QPoYmw2B54bt7JfcMmoRb1x51FFO9lB3w1t4eZX/Re4lMuQlxNLST39WsdJWyHMBz8tT
-         rMDgugGykyQmmIKJ7pISTsoDhMA2bktBklA4KYj2zs4Vy9GyyWm13HnJQjUaHyJH4Eh4
-         tm7IgkTDX9FG9XoAoDosAOOT9AjSwG3bgzE6hwyh0qNwT+EMO5n4eQ5lHVplK/igGbtf
-         LMaw==
-X-Gm-Message-State: APjAAAV7c6HVuFRTQ8M/VcTAKL0DfYWvT46N5/JTMw6H2VALPIAzU3dC
-        SLb9wHl3X2ILYqaOdUAouM/tLg==
-X-Google-Smtp-Source: APXvYqy36OBf3DTn/iAU+tRcnAOHj5pMGpTO3ypHFAqBrCmS9Alu7BSIuIlAMijtuMScIJF29o1VQA==
-X-Received: by 2002:a62:8704:: with SMTP id i4mr21102540pfe.15.1572280223335;
-        Mon, 28 Oct 2019 09:30:23 -0700 (PDT)
-Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
-        by smtp.gmail.com with ESMTPSA id s7sm11329948pgq.91.2019.10.28.09.30.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 09:30:22 -0700 (PDT)
-Subject: Re: [PATCH net-next] ionic: Remove set but not used variable
- 'sg_desc'
-To:     YueHaibing <yuehaibing@huawei.com>,
-        Pensando Drivers <drivers@pensando.io>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20191028120121.20743-1-yuehaibing@huawei.com>
-From:   Shannon Nelson <snelson@pensando.io>
-Message-ID: <a9acbf5c-a6d7-0115-2ca9-53368ba12508@pensando.io>
-Date:   Mon, 28 Oct 2019 09:30:21 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Mon, 28 Oct 2019 12:30:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GRzG+D+EP5Y4GBT80JjuD057rfFJXLiQlYewtqIWXho=; b=uxYjW9/kDRXPaB3lgbUvwENbu
+        ZQ6mKzPyrL0cC/t3n5wJU4GmHyBPXJk3SJ9vd6w3qnuwdnTlAwIPNfsUInTMKQyRZ2FvTweKHc9Nm
+        kBdzDvDRnT4Lp6936/JiW+/J/RljZEkckZpVpzllfnyXVxN36/QhRbHvvc2n+iVPt/B6oEXLUXMoQ
+        7x59LIK/dmit3HQumIEb87qdx4D5qX/XhSsG66DiJ0oG4/7Ntori1TOGdrDFKfhDuwgC0RThwKZQU
+        Q3XHUgbbkeGmJLL7/Nv778t0F03/mbAZqewoc4+U6OXEVuzJDka23xKnTtBo9rhQ+yDaH+O95pZYy
+        +Jt9TM80A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iP7uj-0006Uv-OI; Mon, 28 Oct 2019 16:30:41 +0000
+Date:   Mon, 28 Oct 2019 09:30:41 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Xiang Zheng <zhengxiang9@huawei.com>
+Cc:     bhelgaas@google.com, wangxiongfeng2@huawei.com,
+        wanghaibin.wang@huawei.com, guoheyi@huawei.com,
+        yebiaoxiang@huawei.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        tglx@linutronix.de, guohanjun@huawei.com, yangyingliang@huawei.com
+Subject: Re: [PATCH] pci: lock the pci_cfg_wait queue for the consistency of
+ data
+Message-ID: <20191028163041.GA8257@bombadil.infradead.org>
+References: <20191028091809.35212-1-zhengxiang9@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191028120121.20743-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028091809.35212-1-zhengxiang9@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/19 5:01 AM, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/net/ethernet/pensando/ionic/ionic_txrx.c: In function 'ionic_rx_empty':
-> drivers/net/ethernet/pensando/ionic/ionic_txrx.c:405:28: warning:
->   variable 'sg_desc' set but not used [-Wunused-but-set-variable]
->
-> It is never used, so can be removed.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Mon, Oct 28, 2019 at 05:18:09PM +0800, Xiang Zheng wrote:
+> Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
+> and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
+> 
+> However, since the commit "cdcb33f98244" merged, the accesses to
+> the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
+> insufficient and we need to hold an additional queue lock while
+> read/write the wait queue.
+> 
+> So let's use the add_wait_queue()/remove_wait_queue() instead of
+> __add_wait_queue()/__remove_wait_queue().
 
-Acked-by: Shannon Nelson <snelson@pensando.io>
-
-
-> ---
->   drivers/net/ethernet/pensando/ionic/ionic_txrx.c | 2 --
->   1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> index 0aeac3157160..97e79949b359 100644
-> --- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> +++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> @@ -402,7 +402,6 @@ static void ionic_rx_fill_cb(void *arg)
->   
->   void ionic_rx_empty(struct ionic_queue *q)
->   {
-> -	struct ionic_rxq_sg_desc *sg_desc;
->   	struct ionic_desc_info *cur;
->   	struct ionic_rxq_desc *desc;
->   	unsigned int i;
-> @@ -412,7 +411,6 @@ void ionic_rx_empty(struct ionic_queue *q)
->   		desc->addr = 0;
->   		desc->len = 0;
->   
-> -		sg_desc = cur->sg_desc;
->   		for (i = 0; i < cur->npages; i++) {
->   			if (likely(cur->pages[i].page)) {
->   				ionic_rx_page_free(q, cur->pages[i].page,
->
->
->
-
+As I said earlier, this reintroduces the deadlock addressed by
+cdcb33f9824429a926b971bf041a6cec238f91ff
