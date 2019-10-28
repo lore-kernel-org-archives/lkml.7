@@ -2,84 +2,78 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB130CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72011CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EB321744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:43:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dJwW5ArC"
+	by mail.kernel.org (Postfix) with ESMTP id 5254421721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403862AbfJ1Qnu (ORCPT
+        id S2403877AbfJ1QsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:43:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40796 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733000AbfJ1Qnu (ORCPT
+        Mon, 28 Oct 2019 12:48:03 -0400
+Received: from webclient5.webclient5.de ([136.243.32.184]:55093 "EHLO
+        webclient5.webclient5.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403866AbfJ1QsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:43:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=g5yZ/J7rj95A/9mEJqR2HV55CqslV5uoj7lv7XPA0rc=; b=dJwW5ArCzatGekooY+ha+CWwu
-        ThNNd7ykejxHNKbVeSj0xbgKJfcUO8ZrxVjr9jxoAjrHZbyaNWo3tFg6xpfhXReTENzgkalslfbLK
-        G6xld+FPgAKkTO2yg2lMv1wLIZaKF0adCUafWcFBU3yryjAdGKUXp2Im4PBn8JjpACBBfg9cu7VlB
-        bZqHKbWR/VdDj4Xb5yS9yekFFPh6uiwbffZbP+nJSKvUl+ufQWu6LLWYpGvGhDtKKoJapaIZnW413
-        G5Ht3EEUAkxGVT/jHWpLOmxMICqmGFAS2T+pFfHKIKlKfdEZjoC9hx96neWSyp05WWQ1wMBJnTqTU
-        P6tgWCi6Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP874-0001H0-Ak; Mon, 28 Oct 2019 16:43:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D3E95306098;
-        Mon, 28 Oct 2019 17:42:23 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 31B0D2B400ACC; Mon, 28 Oct 2019 17:43:24 +0100 (CET)
-Date:   Mon, 28 Oct 2019 17:43:24 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>, Joerg Roedel <joro@8bytes.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kan.liang@intel.com,
-        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v4 0/6]  KVM: x86/vPMU: Efficiency optimization by
- reusing last created perf_event
-Message-ID: <20191028164324.GJ4097@hirez.programming.kicks-ass.net>
-References: <20191027105243.34339-1-like.xu@linux.intel.com>
+        Mon, 28 Oct 2019 12:48:02 -0400
+X-Greylist: delayed 447 seconds by postgrey-1.27 at vger.kernel.org; Mon, 28 Oct 2019 12:48:01 EDT
+Received: from olorin.ladisch.de (x2f7f95e.dyn.telefonica.de [2.247.249.94])
+        by webclient5.webclient5.de (Postfix) with ESMTPSA id 7F6BC5583F65;
+        Mon, 28 Oct 2019 17:40:32 +0100 (CET)
+Subject: Re: [PATCH] ALSA: usb-audio: Fix memory leak in __snd_usbmidi_create
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     Takashi Iwai <tiwai@suse.de>, Navid Emamdoost <emamd001@umn.edu>,
+        Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191027221007.14317-1-navid.emamdoost@gmail.com>
+ <s5hpnihmlk3.wl-tiwai@suse.de>
+ <CAEkB2ESwKEQYQx75BnaHf4aUQHObx4jf0hreQx_KTeZ+QCjL4g@mail.gmail.com>
+From:   Clemens Ladisch <clemens@ladisch.de>
+Message-ID: <d623a621-c62a-7ae9-958c-8709fb0c8c7d@ladisch.de>
+Date:   Mon, 28 Oct 2019 17:38:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191027105243.34339-1-like.xu@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAEkB2ESwKEQYQx75BnaHf4aUQHObx4jf0hreQx_KTeZ+QCjL4g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.99.4 at webclient5
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 06:52:37PM +0800, Like Xu wrote:
-> For perf subsystem, please help review first two patches.
+Navid Emamdoost wrote:
+> On Mon, Oct 28, 2019 at 1:27 AM Takashi Iwai <tiwai@suse.de> wrote:
+>> On Sun, 27 Oct 2019 23:10:06 +0100,
+>> Navid Emamdoost wrote:
+>>> In the implementation of __snd_usbmidi_create() there is a memory leak
+>>> caused by incorrect goto destination. Go to free_midi if
+>>> snd_usbmidi_create_endpoints_midiman() or snd_usbmidi_create_endpoints()
+>>> fail.
+>>
+>> No, this will lead to double-free.  After registering the rawmidi
+>> interface at snd_usbmidi_create_rawmidi(), the common destructor will
+>> be called via rawmidi private_free callback, and this will release the
+>> all resources already.
+>
+> Now I can see how rawmidi private_free is set up to release the
+> resources, but what concerns me is that at the moment of endpoint/port
+> creation umidi is not yet added to the midi_list.
+> In other words, what I see is that we still have just one local
+> pointer to umidi if any of snd_usbmidi_create_endpoint* fail.
 
-> Like Xu (6):
->   perf/core: Provide a kernel-internal interface to recalibrate event
->     period
->   perf/core: Provide a kernel-internal interface to pause perf_event
+The snd_rawmidi device is automatically registered with the card, so the
+line "rmidi->private_free = snd_usbmidi_rawmidi_free;" is the exact point
+where the ownership of umidi changes.  midi_list does not matter.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+Regards,
+Clemens
