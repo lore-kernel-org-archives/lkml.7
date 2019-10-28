@@ -2,172 +2,95 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7BDCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2ECCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0217C21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:18:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ts5QbPW9"
+	by mail.kernel.org (Postfix) with ESMTP id 58F0221479
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390868AbfJ1QSk (ORCPT
+        id S2390878AbfJ1QSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:18:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40427 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732278AbfJ1QSk (ORCPT
+        Mon, 28 Oct 2019 12:18:52 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38805 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732236AbfJ1QSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:18:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572279519;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MsdkRdIWUcvVqHqhfGpK3uHN2hfGr9QSmqHuEm4E9/s=;
-        b=Ts5QbPW9wwdS1laYQ1uMm0DEWhArPKSLWXnARuDZudAVc1AdLqra3DNgZ91H8Xjx5h1Q5H
-        /67T7jVyUYddNUAWANCJsuwdOahpso7u433SUnqI1zFY+FLfQdBI2ZUxWkCQDlnBajuuil
-        rkJ8nwW/dWTt7m3frchhjDqccDjuClQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-399-dSLwM00ZOTSQqIdsIQsxYw-1; Mon, 28 Oct 2019 12:18:32 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7CD8476;
-        Mon, 28 Oct 2019 16:18:29 +0000 (UTC)
-Received: from [10.36.117.63] (ovpn-117-63.ams2.redhat.com [10.36.117.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 037663DA6;
-        Mon, 28 Oct 2019 16:18:20 +0000 (UTC)
-Subject: Re: kernel BUG at mm/vmscan.c:LINE! (2)
-To:     Minchan Kim <minchan@kernel.org>,
-        syzbot <syzbot+8e6326965378936537c3@syzkaller.appspotmail.com>
-Cc:     akpm@linux-foundation.org, chris@chrisdown.name, chris@zankel.net,
-        dancol@google.com, dave.hansen@intel.com, hannes@cmpxchg.org,
-        hdanton@sina.com, james.bottomley@hansenpartnership.com,
-        kirill.shutemov@linux.intel.com, ktkhai@virtuozzo.com,
-        laoar.shao@gmail.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mgorman@techsingularity.net, mhocko@kernel.org,
-        mhocko@suse.com, oleksandr@redhat.com, ralf@linux-mips.org,
-        rth@twiddle.net, sfr@canb.auug.org.au, shakeelb@google.com,
-        sonnyrao@google.com, surenb@google.com,
-        syzkaller-bugs@googlegroups.com, timmurray@google.com,
-        yang.shi@linux.alibaba.com
-References: <000000000000a9694d058f261963@google.com>
- <20190802200643.GA181880@google.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <658defc9-8727-dfbd-7e27-94f7cc36cf4a@redhat.com>
-Date:   Mon, 28 Oct 2019 17:18:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 28 Oct 2019 12:18:51 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w3so7197377pgt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 09:18:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QpmthTIEs+c5yGXXMTwUSatMm4+bH1uRyJfRSy9ZDhk=;
+        b=HpqRDQZrqVt9EqHu3x4UZ/uRUFpcNYunB8IUXcgGqTiG9mzrJumjlcjS5uKhFIpt81
+         9hYfz2Rj7M5vP6PK3Mr8Uzimp1xbq0Mppt6lC7tDDTGQ7wGt1S4bBNUTyEU91oX0tVKS
+         7yJiJsdFMQY1vvZCiYDXuojPj9iMisFHR+yi5CZMAm/eYpAP0OVsxA8CWOjpqJyB9x+d
+         cF3ynxxAgLySJEADmovRM8nlosAWEpbiKIKtvMIi/UW1G0zibTLkcnW+JWQPzub8spQy
+         S5nf+QXiPb03UcDdmI1CmFqQwg6n3BBfL9rjxWQnkYx2J6h6e+YXeZuN3oRzVYo2eFrQ
+         QqeA==
+X-Gm-Message-State: APjAAAU5k4lo8EpSvVqbGoQvQtoAvSj+12/CaxQUdQiZe5h3GrvlgDlm
+        pRGD1js20UZje+E9ZPVLeyp5+79DS+k=
+X-Google-Smtp-Source: APXvYqyd9jCSleQmDl9sJd8W1fU4Txw9Q/nHfaw1bZocKNgNJqUKMT3S9+BnYVhjiJ4rddR9kCuV8w==
+X-Received: by 2002:a62:1c08:: with SMTP id c8mr21981759pfc.212.1572279531274;
+        Mon, 28 Oct 2019 09:18:51 -0700 (PDT)
+Received: from sultan-box.localdomain ([104.200.129.62])
+        by smtp.gmail.com with ESMTPSA id f26sm5206592pgf.22.2019.10.28.09.18.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 09:18:50 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 09:18:48 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Gal Pressman <galpress@amazon.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scatterlist: Speed up for_each_sg() loop macro
+Message-ID: <20191028161848.GA32593@sultan-box.localdomain>
+References: <20191025213359.7538-1-sultan@kerneltoast.com>
+ <20191028141734.GD29652@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <20190802200643.GA181880@google.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: dSLwM00ZOTSQqIdsIQsxYw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028141734.GD29652@ziepe.ca>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.08.19 22:06, Minchan Kim wrote:
-> On Fri, Aug 02, 2019 at 10:58:05AM -0700, syzbot wrote:
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    0d8b3265 Add linux-next specific files for 20190729
->> git tree:       linux-next
->> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1663c7d06000=
-00
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dae96f3b8a7e8=
-85f7
->> dashboard link: https://syzkaller.appspot.com/bug?extid=3D8e632696537893=
-6537c3
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D133c437c60=
-0000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D156458546000=
-00
->>
->> The bug was bisected to:
->>
->> commit 06a833a1167e9cbb43a9a4317ec24585c6ec85cb
->> Author: Minchan Kim <minchan@kernel.org>
->> Date:   Sat Jul 27 05:12:38 2019 +0000
->>
->>      mm: introduce MADV_PAGEOUT
->>
->> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D1545f7646=
-00000
->> final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D1745f7646=
-00000
->> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1345f7646000=
-00
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commi=
-t:
->> Reported-by: syzbot+8e6326965378936537c3@syzkaller.appspotmail.com
->> Fixes: 06a833a1167e ("mm: introduce MADV_PAGEOUT")
->>
->> raw: 01fffc0000090025 dead000000000100 dead000000000122 ffff88809c49f741
->> raw: 0000000000020000 0000000000000000 00000002ffffffff ffff88821b6eaac0
->> page dumped because: VM_BUG_ON_PAGE(PageActive(page))
->> page->mem_cgroup:ffff88821b6eaac0
->> ------------[ cut here ]------------
->> kernel BUG at mm/vmscan.c:1156!
->> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
->> CPU: 1 PID: 9846 Comm: syz-executor110 Not tainted 5.3.0-rc2-next-201907=
-29
->> #54
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->> Google 01/01/2011
->> RIP: 0010:shrink_page_list+0x2872/0x5430 mm/vmscan.c:1156
->=20
-> My old version had PG_active flag clear but it seems to lose it with revi=
-sing
-> patchsets. Thanks, Sizbot!
->=20
->  From 66d64988619ef7e86b0002b2fc20fdf5b84ad49c Mon Sep 17 00:00:00 2001
-> From: Minchan Kim <minchan@kernel.org>
-> Date: Sat, 3 Aug 2019 04:54:02 +0900
-> Subject: [PATCH] mm: Clear PG_active on MADV_PAGEOUT
->=20
-> shrink_page_list expects every pages as argument should be no active
-> LRU pages so we need to clear PG_active.
->=20
-> Reported-by: syzbot+8e6326965378936537c3@syzkaller.appspotmail.com
-> Fixes: 06a833a1167e ("mm: introduce MADV_PAGEOUT")
+On Mon, Oct 28, 2019 at 11:17:34AM -0300, Jason Gunthorpe wrote:
+> This is a big change in the algorithm, why are you sure it is OK?
 
-I think this should be
+I'm sure it's OK because the test module I provided in the commit message
+encapsulates all the possible edge cases of sg chaining:
+-An sglist with >=1 && <=(SG_MAX_SINGLE_ALLOC-1) nents (no chaining, the last
+ element in the array is unused)
+-An sglist with SG_MAX_SINGLE_ALLOC nents (no chaining, the last element in the
+ array isn't an sg chain link)
+-An sglist with >SG_MAX_SINGLE_ALLOC && <=2*(SG_MAX_SINGLE_ALLOC-1) nents (there
+ is one chain to another array, and the other array's last element is unused)
+-An sglist with (2*SG_MAX_SINGLE_ALLOC)-1 nents (there is one chain to another
+ array, and the other array's last element isn't an sg chain link)
+-An sglist with 2*SG_MAX_SINGLE_ALLOC nents (there are two chains to other
+ arrays, and the 3rd array contains 2 sgs & its last element is unused)
+-An sglist with >2*SG_MAX_SINGLE_ALLOC && <(3*SG_MAX_SINGLE_ALLOC)-1 nents
+ (there are two chains to other arrays, and the 3rd array's last element isn't
+ an sg chain)
 
-Fixed: 1a4e58cce84e ("mm: introduce MADV_PAGEOUT")
+I just made my module test nents >=1 && <=3*SG_MAX_SINGLE_ALLOC for simplicity.
+My proposed for_each_sg() also handles nents==0 the same as before by doing
+nothing.
 
+> Did you compare with just inlining sg_net?
 
-$ git show 1a4e58cce84e
-commit 1a4e58cce84ee88129d5d49c064bd2852b481357
-Author: Minchan Kim <minchan@kernel.org>
-Date:   Wed Sep 25 16:49:15 2019 -0700
+Yes. Forcefully inlining sg_next() had no impact on performance.
 
-     mm: introduce MADV_PAGEOUT
-[...]
-
-$ git tag --contains 1a4e58cce84ee88129d5d49c064bd2852b481357
-[...]
-v5.4-rc5
-
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+Sultan
