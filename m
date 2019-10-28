@@ -2,112 +2,126 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BBECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDD2CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0471120873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1A820873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ViMLsw9H"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="qjFYqB3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbfJ1T3U (ORCPT
+        id S1730869AbfJ1Tat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 15:29:20 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29126 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730396AbfJ1T3T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 15:29:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572290958;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YHdfyKuL2l12ILhMSzFqfHrz78VdODcHNr4fpbKG+Vc=;
-        b=ViMLsw9HP3F0idrLUctSSxRG7OQ/ia1J10bf0CBO2b0eNPkSLks9VC9lEpzvWV6nRiJSzK
-        4oRn/x+QIz5gmWlrtzMpsxQvY4a72INc2q7e5z+5E1tlAlp2VclKu/2BPei2OWgER8krQ+
-        btIi4s2piw/rG/ZNC3wFK5YWAXqQg1k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-23-6bQKFF1vMbiXZZ95VKYQag-1; Mon, 28 Oct 2019 15:29:14 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03F055E4;
-        Mon, 28 Oct 2019 19:29:13 +0000 (UTC)
-Received: from krava (ovpn-204-45.brq.redhat.com [10.40.204.45])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4EE7960BF7;
-        Mon, 28 Oct 2019 19:29:10 +0000 (UTC)
-Date:   Mon, 28 Oct 2019 20:29:08 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf annotate: fix heap overflow
-Message-ID: <20191028192908.GA28772@krava>
-References: <20191026035644.217548-1-irogers@google.com>
-MIME-Version: 1.0
-In-Reply-To: <20191026035644.217548-1-irogers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 6bQKFF1vMbiXZZ95VKYQag-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+        Mon, 28 Oct 2019 15:30:49 -0400
+Received: from mail-eopbgr130081.outbound.protection.outlook.com ([40.107.13.81]:19629
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730396AbfJ1Tas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 15:30:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XPDpgsQkjcuSEduqW0OWhDvNjMrNckiMqyxPYoETTARux1sGxbnGn4XdJBLGR/BCdyekH+QwtdMLOQTZ8/Rizio/IPUy5rdBlUWQZ2VlLZve76cLPP3BjJ/twSQWvHI73G6yLNL2oJzZ1qI48vxcrUbsbqIHgiALBYV8tbfYhY5IP0kHFDzyZxv0EtGRLzO4NEMr/oDFMLEJ1SzbMVvZ90uShZvRxQNp+2rd8StT5MaWFPiUjcsx/c8vIEQirCKpy05s0zedAWsM++TpZ7PypAotbQM1fRYKW823Le/kwfNcLDlUzdm/zUG9hzrVLcjUpev72jWo9SXCkmytJcazwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2RSG1/6QAZ9vBkcI7EnrtsuWoCxps+c04ZZXBF/KA+s=;
+ b=TZWOkDCIJ9k1r9nks0TG7DOKCntp6pNwt90oZIduUC1okPIzJ3OSlljFqE8w12oAIF/JjpYVnzu42iJM/GKeNPLL7eUk0i9YYerZ8d8MkCO9NUDmwKRvnYNvpFCEWvmMvJ5kjDk5Zmb5jhDtUEBvbo1OY4H3AY4Gb2EtA5pJtqjugiiBRATjoQ6JE5O46gH8wes2GDtCGP5UT24+Hz8QQiN0nvz4MQ1EP0xiJ5g/aSvN67YfHulkb3kSmMDf9PaOSj2ptt1mQQJWbiXQSnfDZm1+B/pLi+56DbDAQ8v9VJA5a/muc3VVHJtDW9r+fsf+/3KHwI0Dmd+ekMvVSi28KA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2RSG1/6QAZ9vBkcI7EnrtsuWoCxps+c04ZZXBF/KA+s=;
+ b=qjFYqB3WhzW9dKXoOYtk+R3g5gMEs7PwjcikpO5sAxSJufIkZYl/+HDF1aEkHRes7TosK9Q7YqrM6TqXHEq5eYErPNySnHCaoYfFOmQk5ehhR7pegwM+AF9rfdMw91CyKimQOAFDVkq1F6b3/RFO2cBudw+M/JWsa3QohwnmXUM=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5759.eurprd05.prod.outlook.com (20.178.122.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.24; Mon, 28 Oct 2019 19:30:41 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2387.027; Mon, 28 Oct 2019
+ 19:30:41 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Doug Ledford <dledford@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Erez Alfasi <ereza@mellanox.com>
+Subject: Re: linux-next: manual merge of the rdma tree with Linus' tree
+Thread-Topic: linux-next: manual merge of the rdma tree with Linus' tree
+Thread-Index: AQHVif4rvTaScq/oik+Qu9xpmvtv2adweFcA
+Date:   Mon, 28 Oct 2019 19:30:41 +0000
+Message-ID: <20191028193032.GA22766@mellanox.com>
+References: <20191024110115.7cc32b99@canb.auug.org.au>
+In-Reply-To: <20191024110115.7cc32b99@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BN6PR11CA0012.namprd11.prod.outlook.com
+ (2603:10b6:405:2::22) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.162.113.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 993ab9c2-64d8-4cd3-f50c-08d75bdd517c
+x-ms-traffictypediagnostic: VI1PR05MB5759:|VI1PR05MB5759:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB5759055AD3A65038C4D06D32CF660@VI1PR05MB5759.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:478;
+x-forefront-prvs: 0204F0BDE2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(396003)(136003)(366004)(199004)(189003)(53754006)(186003)(71200400001)(256004)(14444005)(4744005)(66066001)(102836004)(71190400001)(11346002)(446003)(2616005)(99286004)(107886003)(6916009)(4326008)(2906002)(6506007)(6246003)(386003)(54906003)(3846002)(316002)(6116002)(478600001)(1076003)(486006)(25786009)(86362001)(33656002)(76176011)(66476007)(66446008)(66556008)(64756008)(52116002)(476003)(6436002)(36756003)(7736002)(6512007)(66946007)(6486002)(81156014)(14454004)(229853002)(8936002)(5660300002)(305945005)(26005)(81166006)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5759;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: T3Z0fyPEQ5ZTOH5LEMfXgDJhXibSLzju3TlA63Mdzdr9AOl6eUnXeLB+d5JKrIpPKVE7wE7KGqz+xOP8b1uOJhA42R/paoyK9CLvbmP5ItBmMAHtnTpXl7zn6AWln9P610XgmfrFqCPsnFhlub+w5WFeipOk02OgyWCwF4QAn9O6CX1/OHyjhr+Kb2ykd/5XPZYFFi8Y3Fvqwbr8VFG2Nxf7297adpwSvvjmLC5vA9QsM4YaoeLzGLKLlOGdrgYMdiGIaT2awlLLSmvyelz1mqz5R6DnkJU4GHIx94CLKG6IFsQxuCTyUNWoCGMgFqc3+7CWNbb2xAld1QYdUnOvKxTNDN9vFGzZyKqIgQglTzGIIFXR4z6azVcSyZ4aehjsT8CMFJc2lcpEcgRWx8tOflkq7THyCXIAGDPh3iRziZJ9FTsYZmM8BSk2KVmcFfit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B1419A389989994B87A7B697E5BA9ABD@eurprd05.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 993ab9c2-64d8-4cd3-f50c-08d75bdd517c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 19:30:41.2006
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OKwb11/TnK27hppS09CbcL1UB+0dEDYEzD1a8YxODmCZW4thCGdlyRzhS46FME3Mx8zvKGno5PEeOJ6KMh10+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5759
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 08:56:44PM -0700, Ian Rogers wrote:
-> Fix expand_tabs that copies the source lines '\0' and then appends
-> another '\0' at a potentially out of bounds address.
-
-not sure it could get out of bounds, but i think
-the change is right, it matches the memcpy before
-and I dont see reason to add +1
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
-
+On Thu, Oct 24, 2019 at 11:01:15AM +1100, Stephen Rothwell wrote:
+> Hi all,
 >=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/annotate.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Today's linux-next merge of the rdma tree got a conflict in:
 >=20
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index ef1866a902c4..bee0fee122f8 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -1892,7 +1892,7 @@ static char *expand_tabs(char *line, char **storage=
-, size_t *storage_len)
->  =09}
-> =20
->  =09/* Expand the last region. */
-> -=09len =3D line_len + 1 - src;
-> +=09len =3D line_len - src;
->  =09memcpy(&new_line[dst], &line[src], len);
->  =09dst +=3D len;
->  =09new_line[dst] =3D '\0';
-> --=20
-> 2.24.0.rc0.303.g954a862665-goog
+>   drivers/infiniband/hw/mlx5/odp.c
 >=20
+> between commit:
+>=20
+>   9dc775e7f550 ("RDMA/odp: Lift umem_mutex out of ib_umem_odp_unmap_dma_p=
+ages()")
+>=20
+> from Linus' tree and commit:
+>=20
+>   a3de94e3d61e ("IB/mlx5: Introduce ODP diagnostic counters")
+>=20
+> from the rdma tree.
+>=20
+> I fixed it up (see below - but maybe the mlx5_update_odp_stats()
+> also needs to move after the moved mutex_unlock()?)=20
 
+nope, this resolution is right, thanks
+
+Jason
