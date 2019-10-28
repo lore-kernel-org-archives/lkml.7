@@ -2,40 +2,43 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EE4CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F65CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 021B720717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA14E20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbfJ1NNX (ORCPT
+        id S1729944AbfJ1NPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:13:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58156 "EHLO mx1.suse.de"
+        Mon, 28 Oct 2019 09:15:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59160 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726940AbfJ1NNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:13:23 -0400
+        id S1726508AbfJ1NPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:15:44 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8A71FB384;
-        Mon, 28 Oct 2019 13:13:21 +0000 (UTC)
-Date:   Mon, 28 Oct 2019 14:13:20 +0100
-Message-ID: <s5hr22xau8f.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id D6165AE0C;
+        Mon, 28 Oct 2019 13:15:42 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 14:15:42 +0100
+Message-ID: <s5ho8y1au4h.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     syzbot <syzbot+8f2612936028bfd28f28@syzkaller.appspotmail.com>
-Cc:     <allison@lohutok.net>, <alsa-devel@alsa-project.org>,
-        <benquike@gmail.com>, <dan.carpenter@oracle.com>,
-        <glider@google.com>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <perex@perex.cz>,
-        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
-        <tiwai@suse.com>, <wang6495@umn.edu>, <yuehaibing@huawei.com>
-Subject: Re: KMSAN: uninit-value in get_term_name
-In-Reply-To: <000000000000f838060595f602a7@google.com>
-References: <000000000000f838060595f602a7@google.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Navid Emamdoost <emamd001@umn.edu>, alsa-devel@alsa-project.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+Subject: Re: [alsa-devel] ALSA: korg1212: Checking exception handling in snd_korg1212_create()
+In-Reply-To: <ec3647df-0e54-4aaa-7ec7-b3dec0fa1965@web.de>
+References: <s5hmudlmldk.wl-tiwai@suse.de>
+        <ec3647df-0e54-4aaa-7ec7-b3dec0fa1965@web.de>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -46,23 +49,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019 11:32:07 +0100,
-syzbot wrote:
+On Mon, 28 Oct 2019 10:00:21 +0100,
+Markus Elfring wrote:
 > 
-> Uninit was stored to memory at:
->  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
->  kmsan_internal_chain_origin+0xbd/0x180 mm/kmsan/kmsan.c:319
->  __msan_chain_origin+0x6b/0xd0 mm/kmsan/kmsan_instr.c:179
->  parse_term_proc_unit+0x73d/0x7e0 sound/usb/mixer.c:896
->  __check_input_term+0x13ef/0x2360 sound/usb/mixer.c:989
+> > The code path is after snd_device_new() which has its own destructor callback.
+> 
+> Thanks for your reminder.
+> 
+> Can the properties of this programming interface be documented also together
+> with the function declaration for the safer handling of ALSA components?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/sound/kernel-api/writing-an-alsa-driver.rst?id=d6d5df1db6e9d7f8f76d2911707f7d5877251b02#n567
 
-So this comes from the invalid descriptor for a processing unit, and
-it's very likely the same issue as already spotted -- the validator up
-to 5.3-rc4 had a bug that passed the invalid descriptor falsely.
-This should have been covered by 5.3-rc5, commit ba8bf0967a15 ("ALSA:
-usb-audio: Fix copy&paste error in the validator").
+I can think of only adding some comment at each point mentioning that
+the resource will be managed by the device destructor.
 
+> Can any more API information help to improve automatic source code analysis
+> around similar functions?
 
-thanks,
+If anything we can add, let me know.
+
 
 Takashi
