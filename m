@@ -2,110 +2,98 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFDDCA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E704CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43E5214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572270005;
-	bh=UZ8dGa7oJwy+aRMXt45rmpZRu20mhvclaF5fSnAE4dg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=XOE+s9fabGkcG6WLHiDfH0iitzBhDxiKpn4G0icnxTfFqhjLTnii1A8pzJIGSDhCm
-	 Zp03XBAoumQUUYnPbWMNcmno9tE8CaVVyOtajhvZB5a2lYq7HgaxQonGp6yvSxu0SK
-	 a0RvFbjkkVjF/a2ZUfLXzK1w3ApC9sj837X4+0+U=
+	by mail.kernel.org (Postfix) with ESMTP id 6EE19214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:41:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389606AbfJ1NkE (ORCPT
+        id S2389617AbfJ1NlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:40:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729742AbfJ1NkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:40:04 -0400
-Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B1F4214B2;
-        Mon, 28 Oct 2019 13:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572270003;
-        bh=UZ8dGa7oJwy+aRMXt45rmpZRu20mhvclaF5fSnAE4dg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=hOdD2adQ1NIAyqHNn+N1EINazgzUM2evLaa4K9JbledZF+4UJtlYQaRv4P011M0mQ
-         p3fZykUE+sawKaWceaxyB/s3h5CDCdx79SjuQYT6zURxIfzBF7neo5dre3aNdivcut
-         hV0sDP/d4IYuOo2kw4Ij1S40dxvwE09NyS95e+NA=
-Date:   Mon, 28 Oct 2019 06:40:01 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH tip/core/rcu 03/10] drivers/gpu: Replace
- rcu_swap_protected() with rcu_replace()
-Message-ID: <20191028134001.GM4465@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191022191136.GA25627@paulmck-ThinkPad-P72>
- <20191022191215.25781-3-paulmck@kernel.org>
- <157226744651.5420.128752979550120657@jlahtine-desk.ger.corp.intel.com>
+        Mon, 28 Oct 2019 09:41:21 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2498 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729328AbfJ1NlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:41:21 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 57AF6E9C1175435F54AB;
+        Mon, 28 Oct 2019 21:41:19 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 28 Oct 2019 21:41:18 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 28 Oct 2019 21:41:18 +0800
+Date:   Mon, 28 Oct 2019 21:44:05 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>
+CC:     Chao Yu <chao@kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        Gao Xiang <xiang@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] erofs: support superblock checksum
+Message-ID: <20191028134405.GA186556@architecture4>
+References: <20191022180620.19638-1-pratikshinde320@gmail.com>
+ <20191023040557.230886-1-gaoxiang25@huawei.com>
+ <f158affb-c5c5-9cbe-d87d-17210bc635fe@huawei.com>
+ <20191023084536.GA16289@architecture4>
+ <df7d7427-e7ca-5135-5db2-640eda30d253@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <157226744651.5420.128752979550120657@jlahtine-desk.ger.corp.intel.com>
+In-Reply-To: <df7d7427-e7ca-5135-5db2-640eda30d253@huawei.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme704-chm.china.huawei.com (10.1.199.100) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 02:57:26PM +0200, Joonas Lahtinen wrote:
-> Quoting paulmck@kernel.org (2019-10-22 22:12:08)
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
+Hi Chao,
+
+On Mon, Oct 28, 2019 at 08:36:00PM +0800, Chao Yu wrote:
+> On 2019/10/23 16:45, Gao Xiang wrote:
+
+<snip>
+
+> > That is quite a good point. :-)
 > > 
-> > This commit replaces the use of rcu_swap_protected() with the more
-> > intuitively appealing rcu_replace() as a step towards removing
-> > rcu_swap_protected().
-> > 
-> > Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > [ paulmck: From rcu_replace() to rcu_replace_pointer() per Ingo Molnar. ]
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> > Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> > Cc: David Airlie <airlied@linux.ie>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-> > Cc: <intel-gfx@lists.freedesktop.org>
-> > Cc: <dri-devel@lists.freedesktop.org>
+> > My first thought is to check the following payloads of sb (e.g, some per-fs
+> > metadata should be checked at mount time together. or for small images, check
+> > the whole image at the mount time) as well since if we introduce a new feature
+> > to some kernel version, forward compatibility needs to be considered. So it's
+> > better to make proper scalability, for this case, we have some choices:
+> >  1) limit `chksum_blocks' upbound at runtime (e.g. refuse >= 65536 blocks,
+> >     totally 256M.)
+> >  2) just get rid of the whole `chksum_blocks' mess and checksum the first 4k
+> >     at all, don't consider any latter scalability.
 > 
-> "drm/i915:" preferred as the subject prefix for increased specificity.
+> Xiang, sorry for later reply...
+> 
+> I prefer method 2), let's enable chksum feature only on superblock first,
+> chksum_blocks feature can be added later.
 
-"drm/i915" it is!
+Okay, got it. I will resend patch soon.
 
-> Let me know which tree you end up merging with.
+Thanks,
+Gao Xiang
 
-I expect to be sending a pull request for inclusion into the -tip
-tree in a day or three.
-
-> Reviewed-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-
-Applied, thank you!
-
-							Thanx, Paul
+> 
+> Thanks,
+> 
+> > 
+> > Some perferred idea about this? I plan to release erofs-utils v1.0 tomorrow
+> > and hold up this feature for the next erofs-utils release, but I think we can
+> > get it ready for v5.5 since it is not quite complex feature...
+> > 
+> > Thanks,
+> > Gao Xiang
+> > 
+> > .
+> > 
