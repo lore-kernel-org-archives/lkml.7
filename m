@@ -2,100 +2,93 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B30BCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6141FCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3016120717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BAE820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:12:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a6WH1c4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfJ1WCd (ORCPT
+        id S1726730AbfJ1WL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 18:02:33 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41438 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbfJ1WCd (ORCPT
+        Mon, 28 Oct 2019 18:11:56 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51087 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJ1WL4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 18:02:33 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l3so7897583pgr.8;
-        Mon, 28 Oct 2019 15:02:33 -0700 (PDT)
+        Mon, 28 Oct 2019 18:11:56 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 11so577602wmk.0;
+        Mon, 28 Oct 2019 15:11:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YjMWv87Txz8ruISksDEwTY/yiCDggkCZffCKhGJVPqo=;
+        b=a6WH1c4A3Zp2KbScjqDYgpeYNoumQEFfWVGo6UgRuVMOiL5sHK7jRmR5ZDlTNjSmre
+         t1+uA2Lv1NWloGTHH5bAooKYLv85rP6Gj+xTMT45L9dh1NeWI+ZJcGTfnIxtFvWFtsaI
+         QnZUQ3HI1FUHsnAtB5zaLSINszDZgYfP+TR8dRx1LpN3DGxMoIVLVZBMzb+vk6/A1rb8
+         nBr9Hn6+6Fj/D8baXWVHftCCzOX7+lZCHwhnNGbLK7ActolTE8p4ZEVjRkdMO6+DjhBK
+         WTiijBceKnhXmwUlyLQ3zYxsW1GB3Thr6s5EoPDAXEMIqDZ0tEDYtz/lcVIUrnkltqnX
+         Cw8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bz8VblbiHFOYjXJUCKtVNIb5vyB/ffU+wnMQeoK63HA=;
-        b=KnvXI1WsgXuwg8s9LptklJyQxQd5aY2nokkWuvcvx7c56Mi60/CZDAnkG/GWtMg2SK
-         r0a6EQA4u/YwnS4pxsVNW6S4XvpcJ0gDhcD6ew2WBAhxEvbBSrzj1kij9iH2tOVvIn4k
-         nI0YPeZr/BdocNWdo0IVGQ98yASN52RhYLayr5ZwnGFwSPMUzfD3Dpn3hOJUT6ArSoZa
-         7nUOg5Hw/wObU3h0mZHiIKzPCZEPFJ00eicXTSJVA/xEcxuevu/Iz7X7EK/apYTUU/0B
-         nyaebaNqRDWb62CkPA+lwsDUzByKPwPFQno1Thk7oALsSKlmH6XTJw0FWjnXB0FlLXFD
-         AE2g==
-X-Gm-Message-State: APjAAAWn31Js/NQN1x7Drt9P6CEbPJyBybOmEgJQp7eSUYjB/ON5qLof
-        WJVklnbzkzu6GjXnOSh5AWk=
-X-Google-Smtp-Source: APXvYqzLZZpO28g4Qa4rOV1u5j3YqZfy9PqRC0dUwOtqx1k/09KdM2J4ogP2MWOFdrWLc6kZdQuF1A==
-X-Received: by 2002:a62:c1c1:: with SMTP id i184mr22769658pfg.65.1572300152794;
-        Mon, 28 Oct 2019 15:02:32 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id m2sm11457894pff.154.2019.10.28.15.02.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Oct 2019 15:02:32 -0700 (PDT)
-Subject: Re: [PATCH 0/9] Consolidate {get,put}_unaligned_[bl]e24() definitions
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191028200700.213753-1-bvanassche@acm.org>
- <20191028215258.GO4643@worktop.programming.kicks-ass.net>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <d9c00250-7880-fa0b-75c3-2cdd58da0fd3@acm.org>
-Date:   Mon, 28 Oct 2019 15:02:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YjMWv87Txz8ruISksDEwTY/yiCDggkCZffCKhGJVPqo=;
+        b=l/74bDcJbZNMAmaouzBFI5QH7XMIz/R85W2rdFvjbqtwSPXl4tiLwHRVuhZ3dm9nN/
+         aVQFNlU9dmjdttd5qgc7K5uOgB1kRPc7yQaoQk+sS5uI3Vs99zS6CgU5Pyq3w9kHqJ0D
+         V3c5J3DtvTWVQMLJrRIKmvCP4ghR5OaCJQBi3tq2InTM5DM8oQ912ZctfbdY9cy5usXo
+         V/T44+RHt5ThXwvUq7x/EE/9FYeM9dJrn7DcuT3G15VfTcJiji402Ss5PlvYBwA+Uzk2
+         rUJL9s/jVbNbLsx5aQ5Y4Wv1+WzdJOIRfyRjvIKZNV+YuEXw9nAkf6lvIWM6YB3eDlYk
+         BjYA==
+X-Gm-Message-State: APjAAAV5x1QRvJh3yLdOleb2g+S+LK2xC64OtJs5Qm9eucSkXwKxR5QH
+        iOJz/zTVkvm3w/GqS+M3le4=
+X-Google-Smtp-Source: APXvYqxVhyqboSyYmsgvo32+aV4wHUK0cx8Hd7TlVaxn75jcJJUtRP9dEehXjF3+7RcW6VFNqRPZIQ==
+X-Received: by 2002:a1c:7311:: with SMTP id d17mr1159537wmb.49.1572300714030;
+        Mon, 28 Oct 2019 15:11:54 -0700 (PDT)
+Received: from desk.local ([2a02:a03f:40ac:ce00:6dcd:e18f:2cd1:7611])
+        by smtp.gmail.com with ESMTPSA id r1sm12939065wrw.60.2019.10.28.15.11.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 15:11:53 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 23:11:52 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sparse@vger.kernel.org
+Subject: Re: [PATCH 4/8] riscv: ensure RISC-V C model definitions are passed
+ to static analyzers
+Message-ID: <20191028221151.bpbp27x6xeotbvm5@desk.local>
+References: <alpine.DEB.2.21.9999.1910172138320.3026@viisi.sifive.com>
+ <mhng-8e06672c-a3e1-4dde-bbe9-ba1d8ab79645@palmer-si-x1e>
 MIME-Version: 1.0
-In-Reply-To: <20191028215258.GO4643@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mhng-8e06672c-a3e1-4dde-bbe9-ba1d8ab79645@palmer-si-x1e>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/19 2:52 PM, Peter Zijlstra wrote:
-> On Mon, Oct 28, 2019 at 01:06:51PM -0700, Bart Van Assche wrote:
->> Hi Peter,
->>
->> This patch series moves the existing {get,put}_unaligned_[bl]e24() definitions
->> into include/linux/unaligned/generic.h. This patch series also introduces a function
->> for sign-extending 24-bit into 32-bit integers and introduces users for all new
->> functions and macros. Please consider this patch series for kernel version v5.5.
+On Tue, Oct 22, 2019 at 08:09:59AM -0700, Palmer Dabbelt wrote:
 > 
-> While I applaud the effort (and didn't see anything off in a hurry), I do
-> wonder why you think I should route these patches.
-> 
-> I don't think I've ever touched the unaligned accessors...
+> It's probably worth going through all our argument-dependent builtin
+> definitions at the same time.  They're generated by
+> riscv_cpu_cpp_builtins():
+> https://github.com/gcc-mirror/gcc/blob/master/gcc/config/riscv/riscv-c.c#L35
 
-(+ Andrew Morton)
+Yes, I agree.
+However, these are higly dependent on parsing -march and this is quite
+arch-specific which sparse is not really needed for.
 
-Hi Peter,
+I'll add some infrastructure for this in the followings weeks.
 
-I wasn't sure which kernel maintainer to send this patch series to.
-
-Andrew, I think that the include/linux/unaligned/generic.h header file 
-went upstream through your tree in 2008. Can you perhaps recommend me to 
-which kernel maintainer I should send this patch series? An archived 
-version of this patch series is available at 
-https://lore.kernel.org/lkml/20191028200700.213753-1-bvanassche@acm.org/T/#t.
-
-Thanks,
-
-Bart.
-
-
+-- Luc
