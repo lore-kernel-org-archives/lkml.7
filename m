@@ -2,198 +2,138 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11145CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD91CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C435B208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X3uqHRaz"
+	by mail.kernel.org (Postfix) with ESMTP id 9BA98208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572304977;
+	bh=EF3dpHK4pg7pwvoigV06vGz0l4QtJ4OUEpMzNif67vo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=NjoPy0sZvs5RR5QCYoE0RRUZgImLKJEvrCR6thPsIKRyWozbM5v1r8xa9EuFqfDOk
+	 yTJhvtlEqEQCuIiEnEBkMONnFWeUT+nAq2zlURcXNadF4dVuHqPlSNwZfZsGX1kzpg
+	 h1pXDm/eqq1Ki43Tds1UavjDwoAeqPXc5gqALTFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731250AbfJ1XSV (ORCPT
+        id S1729712AbfJ1XWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 19:18:21 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58946 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfJ1XSV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 19:18:21 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SNELWV177951;
-        Mon, 28 Oct 2019 23:18:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=9d3JR5jpAcTUbBrCVGrVI6UPR6/10AURvRYnUEBmtvA=;
- b=X3uqHRazdNah/AnrMsqezGnZumRr+M71vsbBDaBoxFZH7h9WmfdagifSETMC+RLCDPHA
- T2rtMFlWt3gk93DLLmPD4cmYrHf5OL+1YGYpjX6OJ/g6c3vkvaHtr2Cfu0yM9NNyPujE
- gfbyzKRVh6P9Xoj7DF/KEBlv5n+XDNTiArQ49Q4v3V0turbnbAg6akRavH0r55OMp9i7
- C6we+D2Pnhm1wX+feYyzBzWY1Sn/nt8iq3JoU9udTa5is/IfFO3w8goV1qFJES7gdOt+
- NhFIJxUSkPlJnswS21kzVrP9rUzQqU9p1vJ1iz/VA7wUMewIFqCw9UtauLv/EJHS5fyJ VQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vve3q53s3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 23:18:11 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SNHcHV109864;
-        Mon, 28 Oct 2019 23:18:11 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vvyksswsf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 23:18:10 +0000
-Received: from abhmp0023.oracle.com (abhmp0023.oracle.com [141.146.116.29])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9SNI7Nl004624;
-        Mon, 28 Oct 2019 23:18:08 GMT
-Received: from localhost (/10.159.156.71)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 28 Oct 2019 23:18:07 +0000
-Date:   Mon, 28 Oct 2019 16:18:06 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: build failure after merge of the xfs tree
-Message-ID: <20191028231806.GA15222@magnolia>
-References: <20191029101151.54807d2f@canb.auug.org.au>
+        Mon, 28 Oct 2019 19:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726346AbfJ1XWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 19:22:55 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F2BF208C0;
+        Mon, 28 Oct 2019 23:22:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572304973;
+        bh=EF3dpHK4pg7pwvoigV06vGz0l4QtJ4OUEpMzNif67vo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=0zJaP2YlmqoKKDO5r+bJo7bwQ/zhEEqsjeamRB0iZnCxE4HHqgU5mrI65bGcwtLgp
+         pHQJvjNuT323U7owH7/YFLloIbjqeGU8jpQme6sGjyMWL+ZITWEalGJkeCZVTWGt4I
+         ox+KLd72GesflBEVj0KiF7HdQ5iTd+YjVTGenpDE=
+Date:   Mon, 28 Oct 2019 18:22:51 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v9 5/8] PCI/AER: Allow clearing Error Status Register in
+ FF mode
+Message-ID: <20191028232251.GA205542@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029101151.54807d2f@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910280219
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910280218
+In-Reply-To: <a6de212ec82651ca6361e21926497a26c590d037.1570145778.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 10:11:51AM +1100, Stephen Rothwell wrote:
-> Hi all,
+On Thu, Oct 03, 2019 at 04:39:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> After merging the xfs tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
+> As per PCI firmware specification r3.2 Downstream Port Containment
+> Related Enhancements ECN, sec 4.5.1, table 4-6,
 
-<groan> Yeah, that's the same thing reported by the kbuild robot an hour
-ago.  FWIW I pushed a fixed branch but I guess it's too late for today,
-oh well....
+That table adds bit 7, "DPC config control" to the _OSC control field
+and talks about modifying registers in the DPC capability.
 
-...the root cause of course was the stray '}' in one of the commits,
-that I didn't catch because compat ioctls are hard. :(
+It doesn't say anything about firmware-first or about the OS modifying
+registers in the AER capability.  But this patch doesn't do anything
+related to DPC or _OSC.
 
-Sorry about the mess.
-
---D
-
-> fs/compat_ioctl.c: In function '__do_compat_sys_ioctl':
-> fs/compat_ioctl.c:1056:2: error: case label not within a switch statement
->  1056 |  case FICLONE:
->       |  ^~~~
-> fs/compat_ioctl.c:1057:2: error: case label not within a switch statement
->  1057 |  case FICLONERANGE:
->       |  ^~~~
-> fs/compat_ioctl.c:1058:2: error: case label not within a switch statement
->  1058 |  case FIDEDUPERANGE:
->       |  ^~~~
-> fs/compat_ioctl.c:1059:2: error: case label not within a switch statement
->  1059 |  case FS_IOC_FIEMAP:
->       |  ^~~~
-> fs/compat_ioctl.c:1062:2: error: case label not within a switch statement
->  1062 |  case FIBMAP:
->       |  ^~~~
-> fs/compat_ioctl.c:1063:2: error: case label not within a switch statement
->  1063 |  case FIGETBSZ:
->       |  ^~~~
-> fs/compat_ioctl.c:1064:2: error: case label not within a switch statement
->  1064 |  case FIONREAD:
->       |  ^~~~
-> fs/compat_ioctl.c:1066:4: error: break statement not within loop or switch
->  1066 |    break;
->       |    ^~~~~
-> fs/compat_ioctl.c:1069:2: error: 'default' label not within a switch statement
->  1069 |  default:
->       |  ^~~~~~~
-> fs/compat_ioctl.c:1078:3: error: break statement not within loop or switch
->  1078 |   break;
->       |   ^~~~~
-> fs/compat_ioctl.c:1077:4: error: label 'do_ioctl' used but not defined
->  1077 |    goto do_ioctl;
->       |    ^~~~
-> fs/compat_ioctl.c:1073:5: error: label 'out_fput' used but not defined
->  1073 |     goto out_fput;
->       |     ^~~~
-> fs/compat_ioctl.c:1005:3: error: label 'out' used but not defined
->  1005 |   goto out;
->       |   ^~~~
-> fs/compat_ioctl.c:1079:2: warning: no return statement in function returning non-void [-Wreturn-type]
->  1079 |  }
->       |  ^
-> fs/compat_ioctl.c: At top level:
-> fs/compat_ioctl.c:1081:2: error: expected identifier or '(' before 'if'
->  1081 |  if (compat_ioctl_check_table(XFORM(cmd)))
->       |  ^~
-> fs/compat_ioctl.c:1084:2: warning: data definition has no type or storage class
->  1084 |  error = do_ioctl_trans(cmd, arg, f.file);
->       |  ^~~~~
-> fs/compat_ioctl.c:1084:2: error: type defaults to 'int' in declaration of 'error' [-Werror=implicit-int]
-> fs/compat_ioctl.c:1084:25: error: 'cmd' undeclared here (not in a function)
->  1084 |  error = do_ioctl_trans(cmd, arg, f.file);
->       |                         ^~~
-> fs/compat_ioctl.c:1084:30: error: 'arg' undeclared here (not in a function)
->  1084 |  error = do_ioctl_trans(cmd, arg, f.file);
->       |                              ^~~
-> fs/compat_ioctl.c:1084:35: error: 'f' undeclared here (not in a function); did you mean 'fd'?
->  1084 |  error = do_ioctl_trans(cmd, arg, f.file);
->       |                                   ^
->       |                                   fd
-> fs/compat_ioctl.c:1085:2: error: expected identifier or '(' before 'if'
->  1085 |  if (error == -ENOIOCTLCMD)
->       |  ^~
-> fs/compat_ioctl.c:1088:2: error: expected identifier or '(' before 'goto'
->  1088 |  goto out_fput;
->       |  ^~~~
-> fs/compat_ioctl.c:1090:15: error: expected '=', ',', ';', 'asm' or '__attribute__' before ':' token
->  1090 |  found_handler:
->       |               ^
-> fs/compat_ioctl.c:1092:10: error: expected '=', ',', ';', 'asm' or '__attribute__' before ':' token
->  1092 |  do_ioctl:
->       |          ^
-> fs/compat_ioctl.c:1094:10: error: expected '=', ',', ';', 'asm' or '__attribute__' before ':' token
->  1094 |  out_fput:
->       |          ^
-> fs/compat_ioctl.c:1096:5: error: expected '=', ',', ';', 'asm' or '__attribute__' before ':' token
->  1096 |  out:
->       |     ^
-> fs/compat_ioctl.c:1098:1: error: expected identifier or '(' before '}' token
->  1098 | }
->       | ^
-> fs/compat_ioctl.c:976:12: warning: 'compat_ioctl_check_table' defined but not used [-Wunused-function]
->   976 | static int compat_ioctl_check_table(unsigned int xcmd)
->       |            ^~~~~~~~~~~~~~~~~~~~~~~~
+> Error Disconnect
+> Recover (EDR) support allows OS to handle error recovery and
+> clearing Error Registers even in FF mode. So remove FF mode checks in
+> pci_cleanup_aer_uncorrect_error_status(), pci_aer_clear_fatal_status()
+> and pci_cleanup_aer_error_status_regs() functions.
 > 
-> Caused by commit
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Acked-by: Keith Busch <keith.busch@intel.com>
+> ---
+>  drivers/pci/pcie/aer.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
 > 
->   d5e20bfa0b77 ("fs: add generic UNRESVSP and ZERO_RANGE ioctl handlers")
-> 
-> I have used the xfs tree from next-20191028 for today.
-> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index b45bc47d04fe..e1509bb900c5 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -383,9 +383,6 @@ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
+>  	if (!pos)
+>  		return -EIO;
+>  
+> -	if (pcie_aer_get_firmware_first(dev))
+> -		return -EIO;
+> -
+>  	/* Clear status bits for ERR_NONFATAL errors only */
+>  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
+>  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
+> @@ -406,9 +403,6 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+>  	if (!pos)
+>  		return;
+>  
+> -	if (pcie_aer_get_firmware_first(dev))
+> -		return;
+> -
+>  	/* Clear status bits for ERR_FATAL errors only */
+>  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
+>  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
+
+> @@ -430,9 +424,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+>  	if (!pos)
+>  		return -EIO;
+>  
+> -	if (pcie_aer_get_firmware_first(dev))
+> -		return -EIO;
+> -
+>  	port_type = pci_pcie_type(dev);
+>  	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+>  		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
+> @@ -455,7 +446,8 @@ void pci_aer_init(struct pci_dev *dev)
+>  	if (dev->aer_cap)
+>  		dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
+>  
+> -	pci_cleanup_aer_error_status_regs(dev);
+> +	if (!pcie_aer_get_firmware_first(dev))
+> +		pci_cleanup_aer_error_status_regs(dev);
+
+This effectively moves the "if (pcie_aer_get_firmware_first())" check
+from pci_cleanup_aer_error_status_regs() into one of the callers.  But
+there are two other callers: pci_aer_init() and pci_restore_state().
+Do they need the change, or do you want to cleanup the AER error
+registers there, but not here?
+
+>  }
+>  
+>  void pci_aer_exit(struct pci_dev *dev)
 > -- 
-> Cheers,
-> Stephen Rothwell
-
-
+> 2.21.0
+> 
