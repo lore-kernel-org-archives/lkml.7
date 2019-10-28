@@ -2,140 +2,98 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEEFCA9EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF59CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DA121479
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B098C20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KdOrf3hp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cucz40bZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388151AbfJ1KHv (ORCPT
+        id S2388164AbfJ1KLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 06:07:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57008 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730905AbfJ1KHu (ORCPT
+        Mon, 28 Oct 2019 06:11:21 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40806 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732215AbfJ1KLV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 06:07:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=h2Q4yMabWumXaZW53yYMs/vUzD0t62txBeu69uMhfXs=; b=KdOrf3hpp77uq0JTZQt6zyPlH
-        XzejktAexd5FqlOvsyVuhOIZLVZYCCpD+rrX/G2HzAGICCFlGupJiJe2LJkzaJoopYPoXLi3tB08G
-        Ls7JjRtUd4tASjW2E04Et3J1uEuWLgiyGRlYNV0qST6JZnMjtowztrV37P73yT0RAgVhucM3Edkj7
-        EQqVHKS7GhMVYk8tpVjJMYMJME/KK22DVdlK6hMvizKkAWsXZ75mT3G1ud3zBFNyQN24CjCXHvR+f
-        dLKCpkJAgbJKs0zRidkly+UiydCgHXt1JlOgTgtV5Nf++7RimZiCV8gBcSW9dI6M9GO2pJOUheIas
-        RWfyYVPtQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP1vo-0004CG-GA; Mon, 28 Oct 2019 10:07:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 83EEC30025A;
-        Mon, 28 Oct 2019 11:06:21 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9D5C1201E3430; Mon, 28 Oct 2019 11:07:21 +0100 (CET)
-Date:   Mon, 28 Oct 2019 11:07:21 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Petr Mladek <pmladek@suse.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jeyu@kernel.org,
-        live-patching@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
-Message-ID: <20191028100721.GK4131@hirez.programming.kicks-ass.net>
-References: <20191018074634.801435443@infradead.org>
- <20191021135312.jbbxsuipxldocdjk@treble>
- <20191021141402.GI1817@hirez.programming.kicks-ass.net>
- <20191023114835.GT1817@hirez.programming.kicks-ass.net>
- <20191023170025.f34g3vxaqr4f5gqh@treble>
- <20191024131634.GC4131@hirez.programming.kicks-ass.net>
- <20191025064456.6jjrngm4m3mspaxw@pathway.suse.cz>
- <20191025084300.GG4131@hirez.programming.kicks-ass.net>
- <20191025100612.GB5671@hirez.programming.kicks-ass.net>
- <20191026011741.xywerjv62vdmz6sp@treble>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191026011741.xywerjv62vdmz6sp@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 28 Oct 2019 06:11:21 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 15so6591198pgt.7
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 03:11:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=1p7hyilQyLC0LoGK1FT1eESXa0Fk3YdfBZS2estKH68=;
+        b=cucz40bZRRrdO+e+HJGqz+I/9B2vU7e56mSOqqOdRHE/RZPibLqsfWu1ch2dr7DHX3
+         lqPPvTD3byOFkERnOlHE0oRmOu4pFTqY5GSRau/NsxvRJObzn6E7FepKen7ivRt3F2+d
+         Ct+POSt0czcTq39fvtm/uE0My3IEVK9mjVs8Bqqh+3Qvz1S9xL27OrRUcol4rYL1yxep
+         68CjipFi3LIVl8MGlQ0IvZVKsKrI3qkkpagNYFnm5vNDRvwYkclnvNOHc69BwEokS6N/
+         MKIIZE9HU94gwOF1hYcY9KoIHqtFyX8Rm44SzDyWvmKc2E54dhz8NYWoOFcl95/a9Zk5
+         wEjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1p7hyilQyLC0LoGK1FT1eESXa0Fk3YdfBZS2estKH68=;
+        b=rPgoKM3be7Jj3wxG0WN6RajzbDvPptBNXRRZrFXADcnugzU9SdMWfFe9+TCWMsn7sC
+         sbGsQRIyefctuh5zhAVWDfX4zfaxLWpbzzCHCkjqWuoyFHtjCLjey2E67YiVXLEvtwjm
+         O1nH1Ck0yE40G3M63gpIC3vcW1Kd9NMsHyGQbK6gV9WZRDPOQ4pv230fcn9lW1TxFVbH
+         eXtLzV0gzvcgM5UVbG+ePiEDVrg5vKEqhyKCSWjkoggH9XhcIvILGuRrF/HoDKBS4sbZ
+         dQGF4KF12+nq/Rg3VEg63KNJQQbq6okt6mzn4fh0xAWYxgtFJzZq05iqrbuEmYdtxDlF
+         yRKg==
+X-Gm-Message-State: APjAAAVuPGhxPmw6gA4EO61A5dEf9kywT99WeoTDZiH6EEIXPMmLok9p
+        w3d5+yq4SPEcTaBStHTc4G+2cg==
+X-Google-Smtp-Source: APXvYqyUQbhozdji5PoUp9pBffE1WZ62zPZ70Ne570w03Yia1eFR4XRvUaRNh7fWaaSL77lSy1TF+Q==
+X-Received: by 2002:a63:540c:: with SMTP id i12mr10145632pgb.322.1572257478956;
+        Mon, 28 Oct 2019 03:11:18 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id m26sm3071872pgd.87.2019.10.28.03.11.14
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 28 Oct 2019 03:11:17 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     broonie@kernel.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org,
+        baolin.wang7@gmail.com, ling_ling.xu@unisoc.com,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] spi: sprd: adi: Add missing lock protection when rebooting
+Date:   Mon, 28 Oct 2019 18:10:30 +0800
+Message-Id: <7b04711127434555e3a1a86bc6be99860cd86668.1572257085.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 08:17:41PM -0500, Josh Poimboeuf wrote:
+From: Lingling Xu <ling_ling.xu@unisoc.com>
 
-> + *    The following restrictions apply to module-specific relocation sections:
-> + *
-> + *    a) References to vmlinux symbols are not allowed.  Otherwise there might
-> + *       be module init ordering issues, and crashes might occur in some of the
-> + *       other kernel patching components like paravirt patching or jump
-> + *       labels.  All references to vmlinux symbols should use either normal
-> + *       relas (for exported symbols) or vmlinux-specific klp relas (for
-> + *       unexported symbols).  This restriction is enforced in
-> + *       klp_resolve_symbols().
+When rebooting the system, we should lock the watchdog after
+configuration to make sure the watchdog can reboot the system
+successfully.
 
-Right.
+Signed-off-by: Lingling Xu <ling_ling.xu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/spi/spi-sprd-adi.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-> + *    b) Relocations to special sections like __jump_table and .altinstructions
-> + *       aren't allowed.  In other words, there should never be a
-> + *       .klp.rela.{module}.__jump_table section.  This will definitely cause
-> + *       initialization ordering issues, as such special sections are processed
-> + *       during the loading of the klp module itself, *not* the to-be-patched
-> + *       module.  This means that e.g., it's not currently possible to patch a
-> + *       module function which uses a static key jump label, if you want to
-> + *       have the replacement function also use the same static key.  In this
-> + *       case, a non-static interface like static_key_enabled() can be used in
-> + *       the new function instead.
+diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
+index 9a05128..9613cfe 100644
+--- a/drivers/spi/spi-sprd-adi.c
++++ b/drivers/spi/spi-sprd-adi.c
+@@ -393,6 +393,9 @@ static int sprd_adi_restart_handler(struct notifier_block *this,
+ 	val |= BIT_WDG_RUN | BIT_WDG_RST;
+ 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_CTRL, val);
+ 
++	/* Lock the watchdog */
++	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOCK, ~WDG_UNLOCK_KEY);
++
+ 	mdelay(1000);
+ 
+ 	dev_emerg(sadi->dev, "Unable to restart system\n");
+-- 
+1.7.9.5
 
-Idem for .static_call_sites I suppose..
-
-Is there any enforcement on this? I'm thinking it should be possible to
-detect the presence of these sections and yell a bit.
-
-OTOH, it should be possible to actually handle this, but let's do that
-later.
-
-> + *       On the other hand, a .klp.rela.vmlinux.__jump_table section is fine,
-> + *       as it can be resolved early enough during the load of the klp module,
-> + *       as described above.
-> + */
-
-> diff --git a/kernel/module.c b/kernel/module.c
-> index fe5bd382759c..ff4347385f05 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -2327,11 +2327,9 @@ static int apply_relocations(struct module *mod, const struct load_info *info)
->  		if (!(info->sechdrs[infosec].sh_flags & SHF_ALLOC))
->  			continue;
->  
-> -		/* Livepatch relocation sections are applied by livepatch */
->  		if (info->sechdrs[i].sh_flags & SHF_RELA_LIVEPATCH)
-> -			continue;
-> -
-> -		if (info->sechdrs[i].sh_type == SHT_REL)
-> +			err = klp_write_relocations(mod, NULL);
-> +		else if (info->sechdrs[i].sh_type == SHT_REL)
->  			err = apply_relocate(info->sechdrs, info->strtab,
->  					     info->index.sym, i, mod);
->  		else if (info->sechdrs[i].sh_type == SHT_RELA)
-
-Like here, we can yell and error if .klp.rela.{mod}.__jump_table
-sections are encountered.
-
-
-Other than that, this should work I suppose.
