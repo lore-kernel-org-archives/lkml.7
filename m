@@ -2,277 +2,201 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B762CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A808FCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055E520873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QvcWnIHq"
+	by mail.kernel.org (Postfix) with ESMTP id 7A49820717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:42:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbfJ1Thk (ORCPT
+        id S1731410AbfJ1TmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 15:37:40 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46314 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731026AbfJ1Thk (ORCPT
+        Mon, 28 Oct 2019 15:42:10 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:52395 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731350AbfJ1TmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 15:37:40 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SJbZVZ038320;
-        Mon, 28 Oct 2019 14:37:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572291455;
-        bh=cbtTrRaSsCfpjI7gQwPoHhlE0M1uLY2FHqk1RGO2A4E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QvcWnIHqS9uIJ0fUroBIsza9B8AqUA2nOGavgxAwsNzplWHfRby5iEtkTRNO3cy1N
-         /8hI8QcGdRvSc2FIAaeL3r9c5RXVaNOteq/BKL9QsSo/WIoxV3wufUfeRlR6MojLfM
-         nrpxaFYp9ZqWAu6j8Htj0rSMlnxuLQaJsbAilYlE=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9SJbZmx035081
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 28 Oct 2019 14:37:35 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
- Oct 2019 14:37:23 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 28 Oct 2019 14:37:23 -0500
-Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SJbY2l097943;
-        Mon, 28 Oct 2019 14:37:34 -0500
-Subject: Re: [PATCH v15 04/19] leds: multicolor: Introduce a multicolor class
- definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191028183629.11779-1-dmurphy@ti.com>
- <20191028183629.11779-5-dmurphy@ti.com>
- <6dbd4e43-4832-4f8e-4eb9-8b7c878c270e@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <5e4ff68d-bb53-d3cd-f1b7-68c418342657@ti.com>
-Date:   Mon, 28 Oct 2019 14:36:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 15:42:09 -0400
+Received: by mail-il1-f200.google.com with SMTP id t23so10659908ila.19
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:42:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=bmHQZULhVT/ity23PwxxYsAfoKEIMgz2aD/aW3UZN3A=;
+        b=a6uL/8kWEWa62B3LbpnF2XL2k7IEnIVs7URQfmIxbVPwp0zMJmsNWEY3SV6k6rQy3h
+         XBevDXJCfDTZ+zG6Q4n4uOGYTm/6SRSS30M0/xzC4507Kw4IwpZEgDFGXy05h5Rri3Jb
+         hnujBRAW99YEIgK05GZWKIOsbdAzYPie4R11dM+5EKLwk1frl2tumqskIAJDxTahwG6d
+         GWbNRwqFyJpq6gLiGn+1Mqfy+nBDoeo9iEw95SmtPGkSfphv7aL6W6l222JhHwhk2C6G
+         2EqCetLUBj4MjmjZ8s3Ob5+BdpHZq9RTRyR8vZO1lsVb5Y2CoK0LuWigG0VPTe7GPRhX
+         UyoQ==
+X-Gm-Message-State: APjAAAUMPFcC0zIYpiotT3cCNhBNO/7X0B+QPbndeKtrzV8F9HQ1bdp5
+        I+aAB6pAnfcfq3/VuE5eP7FGr/2kzqe/OW91upOvLRU5HLU9
+X-Google-Smtp-Source: APXvYqx2Um6zGQ7ftrIQ/vQSOO4cILfPxfDLxYPw/PLv9+/EIRONRZMKMY7PizhqNGrOAoEfKO95ewRO//gqi1099MXx/bydhxoF
 MIME-Version: 1.0
-In-Reply-To: <6dbd4e43-4832-4f8e-4eb9-8b7c878c270e@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Received: by 2002:a05:6638:1f1:: with SMTP id t17mr18831455jaq.130.1572291728662;
+ Mon, 28 Oct 2019 12:42:08 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 12:42:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f86a4f0595fdb152@google.com>
+Subject: INFO: task hung in io_wq_destroy
+From:   syzbot <syzbot+0f1cc17f85154f400465@syzkaller.appspotmail.com>
+To:     andriy.shevchenko@linux.intel.com, axboe@kernel.dk,
+        davem@davemloft.net, f.fainelli@gmail.com,
+        gregkh@linuxfoundation.org, idosch@mellanox.com,
+        kimbrownkd@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        petrm@mellanox.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, viro@zeniv.linux.org.uk, wanghai26@huawei.com,
+        yuehaibing@huawei.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+Hello,
 
-On 10/28/19 2:22 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> Thank you for the v15.
->
-> On 10/28/19 7:36 PM, Dan Murphy wrote:
->> Introduce a multicolor class that groups colored LEDs
->> within a LED node.
->>
->> The multi color class groups monochrome LEDs and allows controlling two
->> aspects of the final combined color: hue and lightness. The former is
->> controlled via <color>_intensity files and the latter is controlled
->> via brightness file.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../ABI/testing/sysfs-class-led-multicolor    |  36 +++
->>   Documentation/leds/index.rst                  |   1 +
->>   Documentation/leds/leds-class-multicolor.rst  | 100 +++++++
->>   drivers/leds/Kconfig                          |  10 +
->>   drivers/leds/Makefile                         |   1 +
->>   drivers/leds/led-class-multicolor.c           | 271 ++++++++++++++++++
->>   include/linux/led-class-multicolor.h          | 139 +++++++++
->>   7 files changed, 558 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
->>   create mode 100644 Documentation/leds/leds-class-multicolor.rst
->>   create mode 100644 drivers/leds/led-class-multicolor.c
->>   create mode 100644 include/linux/led-class-multicolor.h
->>
->> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
->> new file mode 100644
->> index 000000000000..3d1f9d726c70
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
->> @@ -0,0 +1,36 @@
->> +What:		/sys/class/leds/<led>/brightness
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read/write
->> +		Writing to this file will update all LEDs within the group to a
->> +		calculated percentage of what each color LED intensity is set
->> +		to. The percentage is calculated for each grouped LED via the
->> +		equation below:
->> +
->> +		led_brightness = brightness * <color>_intensity/<color>_max_intensity
->> +
->> +		For additional details please refer to
->> +		Documentation/leds/leds-class-multicolor.rst.
->> +
->> +		The value of the color is from 0 to
->> +		/sys/class/leds/<led>/max_brightness.
->> +
->> +What:		/sys/class/leds/<led>/colors/<color>_intensity
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read/write
->> +		The <color>_intensity file is created based on the color
->> +		defined by the registrar of the class.
->> +		There is one file per color presented.
->> +
->> +		The value of the color is from 0 to
->> +		/sys/class/leds/<led>/colors/<color>_max_intensity.
->> +
->> +What:		/sys/class/leds/<led>/colors/<color>_max_intensity
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read only
->> +		Maximum intensity level for the LED color.
->> diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
->> index 060f4e485897..bc70c6aa7138 100644
->> --- a/Documentation/leds/index.rst
->> +++ b/Documentation/leds/index.rst
->> @@ -9,6 +9,7 @@ LEDs
->>   
->>      leds-class
->>      leds-class-flash
->> +   leds-class-multicolor
->>      ledtrig-oneshot
->>      ledtrig-transient
->>      ledtrig-usbport
->> diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
->> new file mode 100644
->> index 000000000000..c8a224cead51
->> --- /dev/null
->> +++ b/Documentation/leds/leds-class-multicolor.rst
->> @@ -0,0 +1,100 @@
->> +====================================
->> +Multi Color LED handling under Linux
->> +====================================
->> +
->> +Description
->> +===========
->> +The multi color class groups monochrome LEDs and allows controlling two
->> +aspects of the final combined color: hue and lightness. The former is
->> +controlled via <color>_intensity files and the latter is controlled
->> +via brightness file.
->> +
->> +For more details on hue and lightness notions please refer to
->> +https://en.wikipedia.org/wiki/CIECAM02.
->> +
->> +Note that intensity files only cache the written value and the actual
->> +change of hardware state occurs upon writing brightness file. This
->> +allows for changing many factors of the perceived color in a virtually
->> +unnoticeable way for the human observer.
->> +
->> +Multicolor Class Control
->> +========================
->> +The multicolor class presents the LED groups under a directory called "colors".
->> +This directory is a child under the LED parent node created by the led_class
->> +framework.  The led_class framework is documented in led-class.rst within this
->> +documentation directory.
->> +
->> +Each colored LED will have two files created under the colors directory
->> +<color>_intensity and <color>_max_intensity. These files will contain
->> +one of LED_COLOR_ID_* definitions from the header
->> +include/dt-bindings/leds/common.h.
->> +
->> +Directory Layout Example
->> +========================
->> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-> s/rgb/multicolor/ according to the led_colors[LED_COLOR_ID_MULTI].
+syzbot found the following crash on:
 
-Ack but this probably would not be multicolor either based on LED node 
-naming conventions.
+HEAD commit:    139c2d13 Add linux-next specific files for 20191025
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=137a3e97600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28fd7a693df38d29
+dashboard link: https://syzkaller.appspot.com/bug?extid=0f1cc17f85154f400465
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15415bdf600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=101fa6e4e00000
+
+The bug was bisected to:
+
+commit 3f982fff29b4ad339b36e9cf43422d1039f9917a
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Thu Oct 24 17:35:03 2019 +0000
+
+     Merge branch 'for-5.5/drivers' into for-next
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17f7e44ce00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=140fe44ce00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=100fe44ce00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0f1cc17f85154f400465@syzkaller.appspotmail.com
+Fixes: 3f982fff29b4 ("Merge branch 'for-5.5/drivers' into for-next")
+
+INFO: task syz-executor696:18072 blocked for more than 143 seconds.
+       Not tainted 5.4.0-rc4-next-20191025 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor696 D28160 18072   9609 0x00004004
+Call Trace:
+  context_switch kernel/sched/core.c:3385 [inline]
+  __schedule+0x94a/0x1e70 kernel/sched/core.c:4070
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4144
+  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+  do_wait_for_common kernel/sched/completion.c:83 [inline]
+  __wait_for_common kernel/sched/completion.c:104 [inline]
+  wait_for_common kernel/sched/completion.c:115 [inline]
+  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+  io_wq_destroy+0x247/0x470 fs/io-wq.c:784
+  io_finish_async+0x102/0x180 fs/io_uring.c:2890
+  io_ring_ctx_free fs/io_uring.c:3615 [inline]
+  io_ring_ctx_wait_and_kill+0x249/0x710 fs/io_uring.c:3683
+  io_uring_release+0x42/0x50 fs/io_uring.c:3691
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4019d0
+Code: 01 f0 ff ff 0f 83 20 0c 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
+44 00 00 83 3d fd 2c 2d 00 00 75 14 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 f4 0b 00 00 c3 48 83 ec 08 e8 5a 01 00 00
+RSP: 002b:00007ffdcb9bf4b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 00000000004019d0
+RDX: 0000000000401970 RSI: 0000000020000080 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000004 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000670
+R13: 0000000000402ae0 R14: 0000000000000000 R15: 0000000000000000
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1078:
+  #0: ffffffff88faba80 (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x279 kernel/locking/lockdep.c:5336
+1 lock held by rsyslogd/9148:
+  #0: ffff888099aa8660 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+2 locks held by getty/9238:
+  #0: ffff88809a77f090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f472e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9239:
+  #0: ffff8880a7bc7090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f4f2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9240:
+  #0: ffff8880a83e7090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f3d2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9241:
+  #0: ffff88808e706090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f292e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9242:
+  #0: ffff8880a7b75090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f312e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9243:
+  #0: ffff8880a130f090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f532e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9244:
+  #0: ffff88809b09e090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f212e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 PID: 1078 Comm: khungtaskd Not tainted 5.4.0-rc4-next-20191025 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:269 [inline]
+  watchdog+0xc8f/0x1350 kernel/hung_task.c:353
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1 skipped: idling at native_safe_halt+0xe/0x10  
+arch/x86/include/asm/irqflags.h:60
 
 
->> +-rw-r--r--    1 root     root          4096 Jul  7 03:10 blue_intensity
->> +-r--r--r--    1 root     root          4096 Jul  7 03:10 blue_max_intensity
->> +-rw-r--r--    1 root     root          4096 Jul  7 03:10 green_intensity
->> +-r--r--r--    1 root     root          4096 Jul  7 03:10 green_max_intensity
->> +-rw-r--r--    1 root     root          4096 Jul  7 03:10 red_intensity
->> +-r--r--r--    1 root     root          4096 Jul  7 03:10 red_max_intensity
->> +
-> [...]
->> +static int led_multicolor_init_color(struct led_classdev_mc *mcled_cdev,
->> +				     int color_id)
->> +{
->> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
->> +	struct led_mc_color_entry *mc_priv;
->> +	char *intensity_file_name;
->> +	char *max_intensity_file_name;
->> +	size_t len;
->> +	int ret;
->> +
->> +	mc_priv = devm_kzalloc(led_cdev->dev, sizeof(*mc_priv), GFP_KERNEL);
->> +	if (!mc_priv)
->> +		return -ENOMEM;
->> +
->> +	mc_priv->led_color_id = color_id;
->> +	mc_priv->mcled_cdev = mcled_cdev;
->> +
->> +	sysfs_attr_init(&mc_priv->intensity_attr.attr);
->> +	len = strlen(led_colors[color_id]) + strlen(INTENSITY_NAME) + 1;
->> +	intensity_file_name = kzalloc(len, GFP_KERNEL);
->> +	if (!intensity_file_name)
->> +		return -ENOMEM;
->> +
->> +	snprintf(intensity_file_name, len, "%s%s",
->> +		 led_colors[color_id], INTENSITY_NAME);
->> +	mc_priv->intensity_attr.attr.name = intensity_file_name;
->> +	mc_priv->intensity_attr.attr.mode = 0644;
->> +	mc_priv->intensity_attr.store = intensity_store;
->> +	mc_priv->intensity_attr.show = intensity_show;
->> +	ret = sysfs_add_file_to_group(&led_cdev->dev->kobj,
->> +				      &mc_priv->intensity_attr.attr,
->> +				      led_color_group.name);
->> +	if (ret)
->> +		goto intensity_err_out;
->> +
->> +	sysfs_attr_init(&mc_priv->max_intensity_attr.attr);
->> +	len = strlen(led_colors[color_id]) + strlen(MAX_INTENSITY_NAME) + 1;
->> +	max_intensity_file_name = kzalloc(len, GFP_KERNEL);
->> +	if (!max_intensity_file_name) {
->> +		ret = -ENOMEM;
->> +		goto intensity_err_out;
->> +	}
->> +
->> +	snprintf(max_intensity_file_name, len, "%s%s",
->> +		 led_colors[color_id], MAX_INTENSITY_NAME);
->> +	mc_priv->max_intensity_attr.attr.name = max_intensity_file_name;
->> +	mc_priv->max_intensity_attr.attr.mode = 0444;
->> +	mc_priv->max_intensity_attr.show = max_intensity_show;
->> +	ret = sysfs_add_file_to_group(&led_cdev->dev->kobj,
->> +				      &mc_priv->max_intensity_attr.attr,
->> +				      led_color_group.name);
->> +	if (ret)
->> +		goto max_intensity_err_out;
->> +
->> +	mc_priv->max_intensity = LED_FULL;
->> +	list_add_tail(&mc_priv->list, &mcled_cdev->color_list);
-> I still would prefer dynamically allocated array here. Also there are
-> things I would see differently in the patch 13/19 as already discussed.
->
-> Nonetheless I am giving my preliminary ack for this series just to
-> give a hint to others to join the review.
->
-Replies were given on the 13/19 patch.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Dan
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
