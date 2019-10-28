@@ -2,127 +2,75 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB30CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912BDCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8083920717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UNsO2OmZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5B3E720B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572252130;
+	bh=VHBaBmrmobgxunBw4GiqPhty21KBWr0wMzEozp9PbLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=auMCs9WOak1M4QZZ0IvgaSrxyLF1lKw+d72KZGM4ESnpiWhpSoWGwoJn4s8rU7jNT
+	 F4p9F0pjQUj3gdNEX6zOAINDktCkHMOpNBWbtwb/8WvM1KgL8x7dsO8nCKaB0vSPy0
+	 65BkIjGxL/ivYUv1TPQjeMoU5xPDZU998a2eK37U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387611AbfJ1IkY (ORCPT
+        id S2387623AbfJ1ImJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 04:40:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51240 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731611AbfJ1IkY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 04:40:24 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S8ShU8008098;
-        Mon, 28 Oct 2019 08:40:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=AAreTZABI2sh5zxTgDMdtRwIgOOV26iDp41KT28HdQ0=;
- b=UNsO2OmZ6Ov72DOxYYNKxnT5P4or0VeIn9lktNKJymAjn73V43N6R9p/X7p/hIke7nUf
- eHp5Suj32ekGYYTf8IL3JTCWYpTc7Lv7nsRwE3fEHO+ZniEUuBi0eemVEk7vjFUR9OGa
- n3PJq8NXCmYbkTM/WLfnmpIo5LwreP8aij3wKnqeRhjc73z4adcUf7Q2AgjuNcatU6Vd
- G2HROdVQ3rynTQHtYi2RtZX7sRZ4h66Z/MeWIkmiEgiep+P9rYj0ERTT+/ED4Iids7Uo
- P/a8guaDSjf+8/tKqtxZrrzf67e3EuhDz30oih7tIkx99FxLsVfmhFtCIraColSugwVj UA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2vvumf57vw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 08:40:16 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S8SAHp122316;
-        Mon, 28 Oct 2019 08:40:15 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2vwakxm0y3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 08:40:15 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9S8eE0s024446;
-        Mon, 28 Oct 2019 08:40:14 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 28 Oct 2019 01:40:13 -0700
-Date:   Mon, 28 Oct 2019 11:40:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Cristiane Naves <cristianenavescardoso09@gmail.com>,
-        outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: octeon: Remove unneeded variable
-Message-ID: <20191028084007.GC1922@kadam>
-References: <20191026222453.GA14562@cristiane-Inspiron-5420>
- <20191028082732.GE1944@kadam>
- <alpine.DEB.2.21.1910280934430.2348@hadrien>
+        Mon, 28 Oct 2019 04:42:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731611AbfJ1ImJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 04:42:09 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70BE720717;
+        Mon, 28 Oct 2019 08:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572252128;
+        bh=VHBaBmrmobgxunBw4GiqPhty21KBWr0wMzEozp9PbLg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B8pD3SNNE/tr0/anqxjmHrDa/yx+yeEP0+TGvePIHlpCUOHXTrOTqPT98JJeaVEEW
+         uKN1ACoMTZ+OnG8fF9caSOiV/MeF6jPZuwENWRQ0r6f85agS65ajyKJRKrdzq+gq4G
+         B8KvRY8wKAK9z6INjEmdy6tvHY1BVGQtOmFSakK0=
+Date:   Mon, 28 Oct 2019 16:41:49 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 1/3] ARM: dts: imx6q: Add missing cooling device
+ properties for CPUs
+Message-ID: <20191028084148.GV16985@dragon>
+References: <1571884465-19720-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1910280934430.2348@hadrien>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910280086
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910280086
+In-Reply-To: <1571884465-19720-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 09:36:04AM +0100, Julia Lawall wrote:
+On Thu, Oct 24, 2019 at 10:34:23AM +0800, Anson Huang wrote:
+> The cooling device properties "#cooling-cells" should either be present
+> for all the CPUs of a cluster or none. If these are present only for a
+> subset of CPUs of a cluster then things will start falling apart as soon
+> as the CPUs are brought online in a different order. For example, this
+> will happen because the operating system looks for such properties in the
+> CPU node it is trying to bring up, so that it can register a cooling
+> device.
 > 
+> Add such missing properties.
 > 
-> On Mon, 28 Oct 2019, Dan Carpenter wrote:
-> 
-> > On Sat, Oct 26, 2019 at 07:24:53PM -0300, Cristiane Naves wrote:
-> > > Remove unneeded variable used to store return value. Issue found by
-> > > coccicheck.
-> > >
-> > > Signed-off-by: Cristiane Naves <cristianenavescardoso09@gmail.com>
-> > > ---
-> > >  drivers/staging/octeon/octeon-stubs.h | 4 +---
-> > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-> > > index b07f5e2..d53bd801 100644
-> > > --- a/drivers/staging/octeon/octeon-stubs.h
-> > > +++ b/drivers/staging/octeon/octeon-stubs.h
-> > > @@ -1387,9 +1387,7 @@ static inline cvmx_pko_status_t cvmx_pko_send_packet_finish(uint64_t port,
-> > >  		uint64_t queue, union cvmx_pko_command_word0 pko_command,
-> > >  		union cvmx_buf_ptr packet, cvmx_pko_lock_t use_locking)
-> > >  {
-> > > -	cvmx_pko_status_t ret = 0;
-> > > -
-> > > -	return ret;
-> > > +	return 0;
-> >
-> > What is the point of this function anyway?
-> 
-> Given that it is in octeon-stubs.h, it seems that the point is to get the
-> code to compile when COMPILE_TEST is set.  There is a real definition in
-> arch/mips/include/asm/octeon/cvmx-pko.h
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Oh yeah...  Duh.  I saw that it was in stubs but I just assumed that it
-was stubs for something which was never implemented or left over code...
-
-My bad.
-
-regards,
-dan carpente
-
+Applied all, thanks.
