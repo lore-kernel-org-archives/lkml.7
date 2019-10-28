@@ -2,106 +2,116 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC98CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CAECA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0148214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="f1WGJM1k"
+	by mail.kernel.org (Postfix) with ESMTP id CEBA2205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389089AbfJ1MbZ (ORCPT
+        id S2389110AbfJ1MgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:31:25 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36578 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729360AbfJ1MbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:31:25 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u16so7657988lfq.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 05:31:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cIXc50+5NShj5GVfLHp2Ko6erwsoS1EC2cpl3eH9z0g=;
-        b=f1WGJM1kyUToCExwbx/CdRQ76h7eSHjP+Y2ccs7CiP8DAWylaZe+hpT8xFznruu1DT
-         7ajCJV0H9YK/GJpA+RJ5fJgGUN3PA3nB6KeRngGp4hqooSTu6FsxJxQ1B/r7ohchci1J
-         rOdq7M75ixPhHlQlbvE/6BfBwcQBea5JRZn0jBwi5s8lO0Iw410C6OV1CBEefaFxV0wE
-         gQ9Y2fVed8YRw7RTDjOevxVTVHdbKabSDZSwr2y0wl1HVfJemKYwWHjL06zOfxDuqLEP
-         lBE4RP4mp8ioGF3UESn0+NOuFrS+O1PUkD+bE3LdcWSC1rFzkUTJQgSUGXXGhk6G+/8v
-         21Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cIXc50+5NShj5GVfLHp2Ko6erwsoS1EC2cpl3eH9z0g=;
-        b=POFwRP1bAU/2pW+if0tvSUsiPVpgdldfZJU8RjYr2zeD5ch8S2pwE+k3T4sd8zScvo
-         nmSAj7LSiF/In9AxnXBTGvV8pYyqtwOutkH7ZVz0S759z81FRfdZfEFW2BODmzyign+4
-         uoWJISP8UY5Dh2TNWwcTTiCahg2fa1ALRuZp7X6Phj3GBg6t8Q7gRHNP2cUQ0pHKNVNf
-         wBiS1YJDEvhPtsAcX4A2JSgWWmVv5wm6UoKD9kzflZE6m+Pg8nGcArGikD3tGzyKYehL
-         x3SGeSr+GrneFEuOcVn7iUdutrO9yrHkPz4p6z6bsXcu3vogrQKaLRSzPHsbpRawoFFW
-         qhmA==
-X-Gm-Message-State: APjAAAVYMImfOg4Wp8hmPjoslQpdflsgztwC75H4kNjMqr4dPARH3VKW
-        vwPaxTu3/PcfezMPfIltPp+aBA==
-X-Google-Smtp-Source: APXvYqzXshtDXv1YEsaKl5HV85rzz0BM+nqGCOx2pc/Myp1qFpjohRxVgQfnpbkmMhUoV9YmeetT/g==
-X-Received: by 2002:a19:c790:: with SMTP id x138mr4355216lff.61.1572265883446;
-        Mon, 28 Oct 2019 05:31:23 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id e8sm7535160ljf.1.2019.10.28.05.31.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 05:31:22 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id B38B1100242; Mon, 28 Oct 2019 15:31:24 +0300 (+03)
-Date:   Mon, 28 Oct 2019 15:31:24 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191028123124.ogkk5ogjlamvwc2s@box>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
+        Mon, 28 Oct 2019 08:36:11 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50236 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389043AbfJ1MgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 08:36:11 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 21712E3E9323C23C9E06;
+        Mon, 28 Oct 2019 20:36:08 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 28 Oct
+ 2019 20:36:01 +0800
+Subject: Re: [PATCH v4] erofs: support superblock checksum
+To:     Gao Xiang <gaoxiang25@huawei.com>
+CC:     Chao Yu <chao@kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        Gao Xiang <xiang@kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191022180620.19638-1-pratikshinde320@gmail.com>
+ <20191023040557.230886-1-gaoxiang25@huawei.com>
+ <f158affb-c5c5-9cbe-d87d-17210bc635fe@huawei.com>
+ <20191023084536.GA16289@architecture4>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <df7d7427-e7ca-5135-5db2-640eda30d253@huawei.com>
+Date:   Mon, 28 Oct 2019 20:36:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572171452-7958-2-git-send-email-rppt@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191023084536.GA16289@architecture4>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 12:17:32PM +0200, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
+On 2019/10/23 16:45, Gao Xiang wrote:
+> Hi Chao,
 > 
-> The mappings created with MAP_EXCLUSIVE are visible only in the context of
-> the owning process and can be used by applications to store secret
-> information that will not be visible not only to other processes but to the
-> kernel as well.
+> On Wed, Oct 23, 2019 at 04:15:29PM +0800, Chao Yu wrote:
+>> Hi, Xiang, Pratik,
+>>
+>> On 2019/10/23 12:05, Gao Xiang wrote:
 > 
-> The pages in these mappings are removed from the kernel direct map and
-> marked with PG_user_exclusive flag. When the exclusive area is unmapped,
-> the pages are mapped back into the direct map.
+> <snip>
+> 
+>>>  }
+>>>  
+>>> +static int erofs_superblock_csum_verify(struct super_block *sb, void *sbdata)
+>>> +{
+>>> +	struct erofs_super_block *dsb;
+>>> +	u32 expected_crc, nblocks, crc;
+>>> +	void *kaddr;
+>>> +	struct page *page;
+>>> +	int i;
+>>> +
+>>> +	dsb = kmemdup(sbdata + EROFS_SUPER_OFFSET,
+>>> +		      EROFS_BLKSIZ - EROFS_SUPER_OFFSET, GFP_KERNEL);
+>>> +	if (!dsb)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	expected_crc = le32_to_cpu(dsb->checksum);
+>>> +	nblocks = le32_to_cpu(dsb->chksum_blocks);
+>>
+>> Now, we try to use nblocks's value before checking its validation, I guess fuzz
+>> test can easily make the value extreme larger, result in checking latter blocks
+>> unnecessarily.
+>>
+>> IMO, we'd better
+>> 1. check validation of superblock to make sure all fields in sb are valid
+>> 2. use .nblocks to count and check payload blocks following sb
+> 
+> That is quite a good point. :-)
+> 
+> My first thought is to check the following payloads of sb (e.g, some per-fs
+> metadata should be checked at mount time together. or for small images, check
+> the whole image at the mount time) as well since if we introduce a new feature
+> to some kernel version, forward compatibility needs to be considered. So it's
+> better to make proper scalability, for this case, we have some choices:
+>  1) limit `chksum_blocks' upbound at runtime (e.g. refuse >= 65536 blocks,
+>     totally 256M.)
+>  2) just get rid of the whole `chksum_blocks' mess and checksum the first 4k
+>     at all, don't consider any latter scalability.
 
-I probably blind, but I don't see where you manipulate direct map...
+Xiang, sorry for later reply...
 
--- 
- Kirill A. Shutemov
+I prefer method 2), let's enable chksum feature only on superblock first,
+chksum_blocks feature can be added later.
+
+Thanks,
+
+> 
+> Some perferred idea about this? I plan to release erofs-utils v1.0 tomorrow
+> and hold up this feature for the next erofs-utils release, but I think we can
+> get it ready for v5.5 since it is not quite complex feature...
+> 
+> Thanks,
+> Gao Xiang
+> 
+> .
+> 
