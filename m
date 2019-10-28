@@ -2,106 +2,178 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA88CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10368CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F15320717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:24:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="us+Pieu7"
+	by mail.kernel.org (Postfix) with ESMTP id D6CEB20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbfJ1CYJ (ORCPT
+        id S1729417AbfJ1C0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 22:24:09 -0400
-Received: from ozlabs.org ([203.11.71.1]:34453 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726940AbfJ1CYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 22:24:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 471dnc3xQLz9sPc;
-        Mon, 28 Oct 2019 13:24:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572229446;
-        bh=qYcQoEM3UHZbjWJc/Um38bq7lJbnjY616gfZK+WwFWw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=us+Pieu7Yk1uxGMiY0nNZv47xuOVeQj4dPVC91Qi3uXQk8mQrG/5ZXn/jYuudQoln
-         /ZEX8ZRrGucT75LalctjOYh5nYS13T+NhZ97cix5nF+fT2XXsAZK38COL8HCKyhfXq
-         +Xkvig693gqZ+9JE3RPCx17zz4fZwHWDBiQJvuqWoallB3KqopPVnuQkN2NCowa1Dx
-         WTEO9FJmvhHhc4xCW2fQ837QsLrzoMLcyzIZoe2KTTzvqG4rgp8DxmMNBjjlUL4ZRn
-         OhR4tUM/fM04WCTb6uClrBN2sY9pcphTyl/m+y9YsptkdauooWP3mRhLxvO5hXa145
-         TJKaZRx77U+2Q==
-Date:   Mon, 28 Oct 2019 13:24:03 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Sun, 27 Oct 2019 22:26:08 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:3977 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726940AbfJ1C0H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 22:26:07 -0400
+X-UUID: 985bdf8ceb1f4401b9b4289eca2bc7f3-20191028
+X-UUID: 985bdf8ceb1f4401b9b4289eca2bc7f3-20191028
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1443399686; Mon, 28 Oct 2019 10:26:01 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 28 Oct 2019 10:25:58 +0800
+Received: from [10.17.3.153] (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 28 Oct 2019 10:25:58 +0800
+Message-ID: <1572229558.27439.6.camel@mhfsdcap03>
+Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+CC:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brian Welty <brian.welty@intel.com>,
-        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Subject: linux-next: manual merge of the drm-misc tree with the amdgpu tree
-Message-ID: <20191028132403.24736cbd@canb.auug.org.au>
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg 
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Date:   Mon, 28 Oct 2019 10:25:58 +0800
+In-Reply-To: <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
+References: <20191017084033.28299-1-xia.jiang@mediatek.com>
+         <20191017084033.28299-6-xia.jiang@mediatek.com>
+         <20191023103945.GA41089@chromium.org> <1571906317.6254.64.camel@mhfsdcap03>
+         <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UcJ+k.++mkDo1NJ71qEng27";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UcJ+k.++mkDo1NJ71qEng27
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2019-10-24 at 18:23 +0900, Tomasz Figa wrote:
+> On Thu, Oct 24, 2019 at 5:38 PM Xia Jiang <xia.jiang@mediatek.com> wrote:
+> >
+> > On Wed, 2019-10-23 at 19:39 +0900, Tomasz Figa wrote:
+> > > Hi Xia,
+> > >
+> > > On Thu, Oct 17, 2019 at 04:40:38PM +0800, Xia Jiang wrote:
+> > > > Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jpeg
+> > > > decode and encode have great similarities with function operation.
+> > > >
+> > > > Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> > > > ---
+> > > > v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for encoder,
+> > > >     one for decoder.
+> > > >     split mtk_jpeg_set_default_params() to two functions, one for
+> > > >     encoder, one for decoder.
+> > > >     add cropping support for encoder in g/s_selection ioctls.
+> > > >     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP1.
+> > > >     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 65535 by
+> > > >     specification.
+> > > >     move width shifting operation behind aligning operation in
+> > > >     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
+> > > >     fix user abuseing data_offset issue for DMABUF in
+> > > >     mtk_jpeg_set_enc_src().
+> > > >     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_HEIGHT
+> > > >                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH from
+> > > >                         'int' type to 'unsigned int' type.
+> > > >                         fix msleadingly indented of 'else'.
+> > > >
+> > > > v3: delete Change-Id.
+> > > >     only test once handler->error after the last v4l2_ctrl_new_std().
+> > > >     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new patch.
+> > > >
+> > > > v2: fix compliance test fail, check created buffer size in driver.
+> > > > ---
+> > > >  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
+> > > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 +++++++++++++++---
+> > > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
+> > > >  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
+> > > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
+> > > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
+> > > >  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
+> > > >  7 files changed, 1004 insertions(+), 146 deletions(-)
+> > > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
+> > > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
+> > > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_reg.h
+> > > >
+> > >
+> > > First of all, thanks for the patch!
+> > >
+> > > Please check my comments below.
+> > >
+> > > My general feeling about this code is that the encoder hardware block is
+> > > completely orthogonal from the decoder block and there is very little code
+> > > reuse from the original decoder driver.
+> > >
+> > > Moreover, a lot of existing code now needs if (decoder) { ... } else {... }
+> > > segments, which complicates the code.
+> > >
+> > > Would it perhaps make sense to instead create a separate mtk-jpeg-enc
+> > > driver?
+> > >
+> > Dear Tomasz,
+> >
+> > Thanks for your comments.
+> >
+> > My reasons about the architecture of jpeg enc driver are as follows:
+> >
+> > The first internal design and realization of jpeg enc driver was a
+> > separate driver, but found that mtk_jpeg_core.c and mtk_jpeg_enc_core.c
+> > have lots of reuse.Because that  the core.c mainly contains realization
+> > of v4L2 ioctl functions and some logic which are high similarity between
+> > encoder and decoder.
+> >
+> > The jpeg encoder and decoder are two independent hardwares exactly, so
+> > the code about hardware specification(register setting) are
+> > separated(mtk_jpeg_enc_hw.c and mtk_jpeg_dec_hw.c).
+> >
+> > As for 17 existing code segments contain if(decoder){} else {}, they are
+> > not complicated IMHO.The complicated(multilayer nested) functions are
+> > separated in V4 version as Hans recommendation.
+> >
+> > By the way,the upstreamed module s5p-jpeg
+> > (https://elixir.bootlin.com/linux/latest/source/drivers/media/platform/s5p-jpeg/jpeg-core.c#L1998) also use encoder and decoder mode in the common core.c, but their encoder and decoder are the same hardware.Maybe our jpeg enc and dec are designed into one hardware in the future.In that case the current architecture is more compatible.
+> >
+> > So I prefer the current design.
+> >
+> 
+> Would you be able to give some numbers to show the code reuse to
+> justify using the same driver? From my observation, a new driver would
+> result in a significantly cleaner code. If there is a further hardware
+> architecture change, that would likely require another driver, because
+> it wouldn't be compatible with existing programming model anyway.
+> 
+> Regardless of that, if we end up with reusing the same driver, I'd
+> like you to fix the issues existing in the current base before adding
+> the encoder functionality.
+Dear Tomasz,
+I've counted about 1000 lines of code that can be reused.The reused code
+is 75 percent of the original code.
 
-Hi all,
+If you agree to reuse the same driver,I will fix the issues existing in
+the current driver.
 
-Today's linux-next merge of the drm-misc tree got a conflict in:
+Best Regards,
+Xia Jiang
+> 
+> Best regards,
+> Tomasz
 
-  drivers/gpu/drm/ttm/ttm_bo_util.c
 
-between commit:
-
-  6d9d5ba31dd1 ("drm/ttm: Refactor ttm_bo_pipeline_move")
-
-from the amdgpu tree and commit:
-
-  ef38321897cf ("drm/ttm: use the parent resv for ghost objects v3")
-
-from the drm-misc tree.
-
-I fixed it up (the code changed by the latter was removed by the former)
-and can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/UcJ+k.++mkDo1NJ71qEng27
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl22UUMACgkQAVBC80lX
-0Gxj3gf/YpGb2wujp5HwPB1Juk892oY8c/DVCnHqOhNMCbqAryBTDwy9aZiH1uWA
-adoUktY1SzHjYrlkMjfi1D2hp3If2NHWFm6BhNzy6Z11J1miQ7MIWyXBWJ7dMPoF
-R+g/V+F8GYbB+3f+IlJuu9CZtotPrCuZdx2mUnD/Y8oV1YWhj+7/lUcPxpuZrOBC
-HvckEPlqzpB9GeM+6P/hjiy9vbQBJUWsJ8qXq/wtF/+e+ourvpLzwVpgC/aOydPx
-eq/eqvJ8Z5+eYPpNDTU19L49jvFGCWXuUjrRSskHMSrzeZI6smVaAYkokSQj/Nae
-25fUeWgca7IwPq3/EMt3BCGqsG0Xjw==
-=AJ4R
------END PGP SIGNATURE-----
-
---Sig_/UcJ+k.++mkDo1NJ71qEng27--
