@@ -2,105 +2,203 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6C5CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D0ACA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A502086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572271080;
-	bh=sFq6WLRbsDHn3Meg4K3ag08QcEsXHR9zXySA4lIlSnM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iMCJ/UlVMpEu61lNbWG0sci3COQZjZq8q6Gbo/HK64Rd95SMO1KIZ+qq1W+Qk9Kxm
-	 D9Cy+DKMoa+NK1ik92UmmSvrt44LsvGjZMSGiCY805f1kzONa6WDR1/Gl2Jf/8CHO+
-	 kw7aD6KbpdxOTP3HuHYAl0XfpNn3UAoSXdecACVo=
+	by mail.kernel.org (Postfix) with ESMTP id 9B656214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389683AbfJ1N57 (ORCPT
+        id S2389699AbfJ1N7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54762 "EHLO mail.kernel.org"
+        Mon, 28 Oct 2019 09:59:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:40158 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727243AbfJ1N57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:57:59 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03919208C0;
-        Mon, 28 Oct 2019 13:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572271078;
-        bh=sFq6WLRbsDHn3Meg4K3ag08QcEsXHR9zXySA4lIlSnM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E0wyGZ4Ow60kJlx6divewxBfdGys5c9bRLh9qWtlvfn9NqJ9uiBcPVzuHxp/KmknJ
-         JdFjyuMjMENQnpYBewFxLHn4Zyf6uOuo4j6qtakvh9fux29qD76HYlaggOwHkqnD0w
-         wHSmoPuILDaZ/iL9cewx4rRgr9/p31LgHLnUZxsE=
-Date:   Mon, 28 Oct 2019 14:57:56 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/41] 4.4.198-stable review
-Message-ID: <20191028135756.GA97772@kroah.com>
-References: <20191027203056.220821342@linuxfoundation.org>
- <3961082b-17bc-cef7-f0e5-7bf029b2de2a@roeck-us.net>
- <20191028134905.GA53500@kroah.com>
+        id S1727243AbfJ1N7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:59:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C7B41F1;
+        Mon, 28 Oct 2019 06:59:18 -0700 (PDT)
+Received: from e112269-lin.cambridge.arm.com (unknown [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11B1C3F6C4;
+        Mon, 28 Oct 2019 06:59:15 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v14 00/22] Generic page walk and ptdump
+Date:   Mon, 28 Oct 2019 13:58:48 +0000
+Message-Id: <20191028135910.33253-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028134905.GA53500@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 02:49:05PM +0100, Greg Kroah-Hartman wrote:
-> On Mon, Oct 28, 2019 at 06:32:14AM -0700, Guenter Roeck wrote:
-> > On 10/27/19 2:00 PM, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 4.4.198 release.
-> > > There are 41 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
-> > > Anything received after that time might be too late.
-> > > 
-> > 
-> > 
-> > Building mips:defconfig ... failed
-> > --------------
-> > Error log:
-> > In file included from /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/include/asm/bitops.h:21,
-> >                  from /opt/buildbot/slave/stable-queue-4.9/build/include/linux/bitops.h:17,
-> >                  from /opt/buildbot/slave/stable-queue-4.9/build/include/linux/kernel.h:10,
-> >                  from /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:15:
-> > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c: In function 'cpu_probe':
-> > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/include/asm/cpu-features.h:349:31: error: implicit declaration of function '__ase' [-Werror=implicit-function-declaration]
-> >   349 | #define cpu_has_loongson_mmi  __ase(MIPS_ASE_LOONGSON_MMI)
-> >       |                               ^~~~~
-> > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:2079:6: note: in expansion of macro 'cpu_has_loongson_mmi'
-> >  2079 |  if (cpu_has_loongson_mmi)
-> >       |      ^~~~~~~~~~~~~~~~~~~~
-> > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:2083:16: error: 'HWCAP_LOONGSON_CAM' undeclared (first use in this function); did you mean 'HWCAP_LOONGSON_EXT'?
-> >  2083 |   elf_hwcap |= HWCAP_LOONGSON_CAM;
-> >       |                ^~~~~~~~~~~~~~~~~~
-> >       |                HWCAP_LOONGSON_EXT
-> > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:2083:16: note: each undeclared identifier is reported only once for each function it appears in
-> > 
-> > 
-> > Affects all mips builds in v{4.4, 4.9, 4.14}.
-> 
-> Ugh, let me see what happened...
+Many architectures current have a debugfs file for dumping the kernel
+page tables. Currently each architecture has to implement custom
+functions for this because the details of walking the page tables used
+by the kernel are different between architectures.
 
-Ok, two MIPS patches dropped from 4.4, 4.9, and 4.14 queues, and -rc2
-are now pushed out for all 3 of those trees.  It "should" be clean now.
+This series extends the capabilities of walk_page_range() so that it can
+deal with the page tables of the kernel (which have no VMAs and can
+contain larger huge pages than exist for user space). A generic PTDUMP
+implementation is the implemented making use of the new functionality of
+walk_page_range() and finally arm64 and x86 are switch to using it,
+removing the custom table walkers.
 
-thanks,
+To enable a generic page table walker to walk the unusual mappings of
+the kernel we need to implement a set of functions which let us know
+when the walker has reached the leaf entry. After a suggestion from Will
+Deacon I've chosen the name p?d_leaf() as this (hopefully) describes
+the purpose (and is a new name so has no historic baggage). Some
+architectures have p?d_large macros but this is easily confused with
+"large pages".
 
-greg k-h
+This series ends with a generic PTDUMP implemention for arm64 and x86.
+
+Mostly this is a clean up and there should be very little functional
+change. The exceptions are:
+
+* arm64 PTDUMP debugfs now displays pages which aren't present (patch 22).
+
+* arm64 has the ability to efficiently process KASAN pages (which
+  previously only x86 implemented). This means that the combination of
+  KASAN and DEBUG_WX is now useable.
+
+Also available as a git tree:
+git://linux-arm.org/linux-sp.git walk_page_range/v14
+
+Changes since v13:
+https://lore.kernel.org/lkml/20191024093716.49420-1-steven.price@arm.com/
+ * Fixed typo in arc definition of pmd_leaf() spotted by the kbuild test
+   robot
+ * Added tags
+
+Changes since v12:
+https://lore.kernel.org/lkml/20191018101248.33727-1-steven.price@arm.com/
+ * Correct code format in riscv pud_leaf()/pmd_leaf()
+ * v12 may not have reached everyone because of mail server problems
+   (which are now hopefully resolved!)
+
+Changes since v11:
+https://lore.kernel.org/lkml/20191007153822.16518-1-steven.price@arm.com/
+ * Use "-1" as dummy depth parameter in patch 14.
+
+Changes since v10:
+https://lore.kernel.org/lkml/20190731154603.41797-1-steven.price@arm.com/
+ * Rebased to v5.4-rc1 - mainly various updates to deal with the
+   splitting out of ops from struct mm_walk.
+ * Deal with PGD_LEVEL_MULT not always being constant on x86.
+
+Changes since v9:
+https://lore.kernel.org/lkml/20190722154210.42799-1-steven.price@arm.com/
+ * Moved generic macros to first page in the series and explained the
+   macro naming in the commit message.
+ * mips: Moved macros to pgtable.h as they are now valid for both 32 and 64
+   bit
+ * x86: Dropped patch which changed the debugfs output for x86, instead
+   we have...
+ * new patch adding 'depth' parameter to pte_hole. This is used to
+   provide the necessary information to output lines for 'holes' in the
+   debugfs files
+ * new patch changing arm64 debugfs output to include holes to match x86
+ * generic ptdump KASAN handling has been simplified and now works with
+   CONFIG_DEBUG_VIRTUAL.
+
+Changes since v8:
+https://lore.kernel.org/lkml/20190403141627.11664-1-steven.price@arm.com/
+ * Rename from p?d_large() to p?d_leaf()
+ * Dropped patches migrating arm64/x86 custom walkers to
+   walk_page_range() in favour of adding a generic PTDUMP implementation
+   and migrating arm64/x86 to that instead.
+ * Rebased to v5.3-rc1
+
+Steven Price (22):
+  mm: Add generic p?d_leaf() macros
+  arc: mm: Add p?d_leaf() definitions
+  arm: mm: Add p?d_leaf() definitions
+  arm64: mm: Add p?d_leaf() definitions
+  mips: mm: Add p?d_leaf() definitions
+  powerpc: mm: Add p?d_leaf() definitions
+  riscv: mm: Add p?d_leaf() definitions
+  s390: mm: Add p?d_leaf() definitions
+  sparc: mm: Add p?d_leaf() definitions
+  x86: mm: Add p?d_leaf() definitions
+  mm: pagewalk: Add p4d_entry() and pgd_entry()
+  mm: pagewalk: Allow walking without vma
+  mm: pagewalk: Add test_p?d callbacks
+  mm: pagewalk: Add 'depth' parameter to pte_hole
+  x86: mm: Point to struct seq_file from struct pg_state
+  x86: mm+efi: Convert ptdump_walk_pgd_level() to take a mm_struct
+  x86: mm: Convert ptdump_walk_pgd_level_debugfs() to take an mm_struct
+  x86: mm: Convert ptdump_walk_pgd_level_core() to take an mm_struct
+  mm: Add generic ptdump
+  x86: mm: Convert dump_pagetables to use walk_page_range
+  arm64: mm: Convert mm/dump.c to use walk_page_range()
+  arm64: mm: Display non-present entries in ptdump
+
+ arch/arc/include/asm/pgtable.h               |   1 +
+ arch/arm/include/asm/pgtable-2level.h        |   1 +
+ arch/arm/include/asm/pgtable-3level.h        |   1 +
+ arch/arm64/Kconfig                           |   1 +
+ arch/arm64/Kconfig.debug                     |  19 +-
+ arch/arm64/include/asm/pgtable.h             |   2 +
+ arch/arm64/include/asm/ptdump.h              |   8 +-
+ arch/arm64/mm/Makefile                       |   4 +-
+ arch/arm64/mm/dump.c                         | 142 +++-----
+ arch/arm64/mm/mmu.c                          |   4 +-
+ arch/arm64/mm/ptdump_debugfs.c               |   2 +-
+ arch/mips/include/asm/pgtable.h              |   5 +
+ arch/powerpc/include/asm/book3s/64/pgtable.h |  30 +-
+ arch/riscv/include/asm/pgtable-64.h          |   7 +
+ arch/riscv/include/asm/pgtable.h             |   7 +
+ arch/s390/include/asm/pgtable.h              |   2 +
+ arch/sparc/include/asm/pgtable_64.h          |   2 +
+ arch/x86/Kconfig                             |   1 +
+ arch/x86/Kconfig.debug                       |  20 +-
+ arch/x86/include/asm/pgtable.h               |  10 +-
+ arch/x86/mm/Makefile                         |   4 +-
+ arch/x86/mm/debug_pagetables.c               |   8 +-
+ arch/x86/mm/dump_pagetables.c                | 332 +++++--------------
+ arch/x86/platform/efi/efi_32.c               |   2 +-
+ arch/x86/platform/efi/efi_64.c               |   4 +-
+ drivers/firmware/efi/arm-runtime.c           |   2 +-
+ fs/proc/task_mmu.c                           |   4 +-
+ include/asm-generic/pgtable.h                |  20 ++
+ include/linux/pagewalk.h                     |  37 ++-
+ include/linux/ptdump.h                       |  21 ++
+ mm/Kconfig.debug                             |  21 ++
+ mm/Makefile                                  |   1 +
+ mm/hmm.c                                     |   8 +-
+ mm/migrate.c                                 |   5 +-
+ mm/mincore.c                                 |   1 +
+ mm/pagewalk.c                                | 107 ++++--
+ mm/ptdump.c                                  | 150 +++++++++
+ 37 files changed, 551 insertions(+), 445 deletions(-)
+ create mode 100644 include/linux/ptdump.h
+ create mode 100644 mm/ptdump.c
+
+-- 
+2.20.1
+
