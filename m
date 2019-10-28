@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA51CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C2CC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95C020B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F89221848
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbfJ1Csp (ORCPT
+        id S1730864AbfJ1Csp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 27 Oct 2019 22:48:45 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:4802 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730614AbfJ1Csh (ORCPT
+Received: from mailgw02.mediatek.com ([210.61.82.184]:47938 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730623AbfJ1Csi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 22:48:37 -0400
-X-UUID: c8372600d8c04f268754635775783d57-20191028
-X-UUID: c8372600d8c04f268754635775783d57-20191028
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        Sun, 27 Oct 2019 22:48:38 -0400
+X-UUID: cef434dc8f8a48aca114eb333c900920-20191028
+X-UUID: cef434dc8f8a48aca114eb333c900920-20191028
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
         (envelope-from <weiyi.lu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 534953903; Mon, 28 Oct 2019 10:48:28 +0800
+        with ESMTP id 521179705; Mon, 28 Oct 2019 10:48:28 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 28 Oct 2019 10:48:26 +0800
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 28 Oct 2019 10:48:27 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 28 Oct 2019 10:48:26 +0800
+ Transport; Mon, 28 Oct 2019 10:48:27 +0800
 From:   Weiyi Lu <weiyi.lu@mediatek.com>
 To:     Nicolas Boichat <drinkcat@chromium.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -44,155 +44,285 @@ CC:     James Liao <jamesjj.liao@mediatek.com>,
         <linux-mediatek@lists.infradead.org>,
         <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>,
         Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v8 06/14] soc: mediatek: Refactor sram control
-Date:   Mon, 28 Oct 2019 10:48:10 +0800
-Message-ID: <1572230898-7860-7-git-send-email-weiyi.lu@mediatek.com>
+Subject: [PATCH v8 12/14] soc: mediatek: Add MT8183 scpsys support
+Date:   Mon, 28 Oct 2019 10:48:16 +0800
+Message-ID: <1572230898-7860-13-git-send-email-weiyi.lu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1572230898-7860-1-git-send-email-weiyi.lu@mediatek.com>
 References: <1572230898-7860-1-git-send-email-weiyi.lu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 86B95A856905D4D404B343024F68AA31574B70147CDB32FD4E3CE27F2C5A48922000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put sram enable and disable control in separate functions.
+Add scpsys driver for MT8183
 
 Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 ---
- drivers/soc/mediatek/mtk-scpsys.c | 79 +++++++++++++++++++++++++--------------
- 1 file changed, 51 insertions(+), 28 deletions(-)
+ drivers/soc/mediatek/mtk-scpsys.c | 226 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 226 insertions(+)
 
 diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index 73e4a1a..ad0f619 100644
+index 992e5b3..eb828d9 100644
 --- a/drivers/soc/mediatek/mtk-scpsys.c
 +++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -230,12 +230,55 @@ static int scpsys_clk_enable(struct clk *clk[], int max_num)
- 	return ret;
- }
+@@ -20,6 +20,7 @@
+ #include <dt-bindings/power/mt7622-power.h>
+ #include <dt-bindings/power/mt7623a-power.h>
+ #include <dt-bindings/power/mt8173-power.h>
++#include <dt-bindings/power/mt8183-power.h>
  
-+static int scpsys_sram_enable(struct scp_domain *scpd, void __iomem *ctl_addr)
-+{
-+	u32 val;
-+	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
-+	int tmp;
+ #define MTK_POLL_DELAY_US   10
+ #define MTK_POLL_TIMEOUT    USEC_PER_SEC
+@@ -1129,6 +1130,217 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+ 	{MT8173_POWER_DOMAIN_MFG_2D, MT8173_POWER_DOMAIN_MFG},
+ };
+ 
++/*
++ * MT8183 power domain support
++ */
 +
-+	val = readl(ctl_addr) & ~scpd->data->sram_pdn_bits;
-+	writel(val, ctl_addr);
++static const struct scp_domain_data scp_domain_data_mt8183[] = {
++	[MT8183_POWER_DOMAIN_AUDIO] = {
++		.name = "audio",
++		.sta_mask = PWR_STATUS_AUDIO,
++		.ctl_offs = 0x0314,
++		.sram_pdn_bits = GENMASK(11, 8),
++		.sram_pdn_ack_bits = GENMASK(15, 12),
++		.basic_clk_id = {"audio", "audio1", "audio2"},
++	},
++	[MT8183_POWER_DOMAIN_CONN] = {
++		.name = "conn",
++		.sta_mask = PWR_STATUS_CONN,
++		.ctl_offs = 0x032c,
++		.sram_pdn_bits = 0,
++		.sram_pdn_ack_bits = 0,
++		.bp_table = {
++			BUS_PROT(IFR_TYPE, 0x2a0, 0x2a4, 0, 0x228,
++				BIT(13) | BIT(14), BIT(13) | BIT(14)),
++		},
++	},
++	[MT8183_POWER_DOMAIN_MFG_ASYNC] = {
++		.name = "mfg_async",
++		.sta_mask = PWR_STATUS_MFG_ASYNC,
++		.ctl_offs = 0x0334,
++		.sram_pdn_bits = 0,
++		.sram_pdn_ack_bits = 0,
++		.basic_clk_id = {"mfg"},
++	},
++	[MT8183_POWER_DOMAIN_MFG] = {
++		.name = "mfg",
++		.sta_mask = PWR_STATUS_MFG,
++		.ctl_offs = 0x0338,
++		.sram_pdn_bits = GENMASK(8, 8),
++		.sram_pdn_ack_bits = GENMASK(12, 12),
++	},
++	[MT8183_POWER_DOMAIN_MFG_CORE0] = {
++		.name = "mfg_core0",
++		.sta_mask = BIT(7),
++		.ctl_offs = 0x034c,
++		.sram_pdn_bits = GENMASK(8, 8),
++		.sram_pdn_ack_bits = GENMASK(12, 12),
++	},
++	[MT8183_POWER_DOMAIN_MFG_CORE1] = {
++		.name = "mfg_core1",
++		.sta_mask = BIT(20),
++		.ctl_offs = 0x0310,
++		.sram_pdn_bits = GENMASK(8, 8),
++		.sram_pdn_ack_bits = GENMASK(12, 12),
++	},
++	[MT8183_POWER_DOMAIN_MFG_2D] = {
++		.name = "mfg_2d",
++		.sta_mask = PWR_STATUS_MFG_2D,
++		.ctl_offs = 0x0348,
++		.sram_pdn_bits = GENMASK(8, 8),
++		.sram_pdn_ack_bits = GENMASK(12, 12),
++		.bp_table = {
++			BUS_PROT(IFR_TYPE, 0x2a8, 0x2ac, 0, 0x258,
++				BIT(19) | BIT(20) | BIT(21),
++				BIT(19) | BIT(20) | BIT(21)),
++			BUS_PROT(IFR_TYPE, 0x2a0, 0x2a4, 0, 0x228,
++				BIT(21) | BIT(22), BIT(21) | BIT(22)),
++		},
++	},
++	[MT8183_POWER_DOMAIN_DISP] = {
++		.name = "disp",
++		.sta_mask = PWR_STATUS_DISP,
++		.ctl_offs = 0x030c,
++		.sram_pdn_bits = GENMASK(8, 8),
++		.sram_pdn_ack_bits = GENMASK(12, 12),
++		.basic_clk_id = {"mm"},
++		.subsys_clk_prefix = "mm",
++		.bp_table = {
++			BUS_PROT(IFR_TYPE, 0x2a8, 0x2ac, 0, 0x258,
++				BIT(16) | BIT(17), BIT(16) | BIT(17)),
++			BUS_PROT(IFR_TYPE, 0x2a0, 0x2a4, 0, 0x228,
++				BIT(10) | BIT(11), BIT(10) | BIT(11)),
++			BUS_PROT(SMI_TYPE, 0x3c4, 0x3c8, 0, 0x3c0,
++				GENMASK(7, 0), GENMASK(7, 0)),
++		},
++	},
++	[MT8183_POWER_DOMAIN_CAM] = {
++		.name = "cam",
++		.sta_mask = BIT(25),
++		.ctl_offs = 0x0344,
++		.sram_pdn_bits = GENMASK(9, 8),
++		.sram_pdn_ack_bits = GENMASK(13, 12),
++		.basic_clk_id = {"cam"},
++		.subsys_clk_prefix = "cam",
++		.bp_table = {
++			BUS_PROT(IFR_TYPE, 0x2d4, 0x2d8, 0, 0x2ec,
++				BIT(4) | BIT(5) | BIT(9) | BIT(13),
++				BIT(4) | BIT(5) | BIT(9) | BIT(13)),
++			BUS_PROT(IFR_TYPE, 0x2a0, 0x2a4, 0, 0x228,
++				BIT(28), BIT(28)),
++			BUS_PROT(IFR_TYPE, 0x2d4, 0x2d8, 0, 0x2ec,
++				BIT(11), 0),
++			BUS_PROT(SMI_TYPE, 0x3c4, 0x3c8, 0, 0x3c0,
++				BIT(3) | BIT(4), BIT(3) | BIT(4)),
++		},
++	},
++	[MT8183_POWER_DOMAIN_ISP] = {
++		.name = "isp",
++		.sta_mask = PWR_STATUS_ISP,
++		.ctl_offs = 0x0308,
++		.sram_pdn_bits = GENMASK(9, 8),
++		.sram_pdn_ack_bits = GENMASK(13, 12),
++		.basic_clk_id = {"isp"},
++		.subsys_clk_prefix = "isp",
++		.bp_table = {
++			BUS_PROT(IFR_TYPE, 0x2d4, 0x2d8, 0, 0x2ec,
++				BIT(3) | BIT(8), BIT(3) | BIT(8)),
++			BUS_PROT(IFR_TYPE, 0x2d4, 0x2d8, 0, 0x2ec,
++				BIT(10), 0),
++			BUS_PROT(SMI_TYPE, 0x3c4, 0x3c8, 0, 0x3c0,
++				BIT(2), BIT(2)),
++		},
++	},
++	[MT8183_POWER_DOMAIN_VDEC] = {
++		.name = "vdec",
++		.sta_mask = BIT(31),
++		.ctl_offs = 0x0300,
++		.sram_pdn_bits = GENMASK(8, 8),
++		.sram_pdn_ack_bits = GENMASK(12, 12),
++		.bp_table = {
++			BUS_PROT(SMI_TYPE, 0x3c4, 0x3c8, 0, 0x3c0,
++				BIT(7), BIT(7)),
++		},
++	},
++	[MT8183_POWER_DOMAIN_VENC] = {
++		.name = "venc",
++		.sta_mask = PWR_STATUS_VENC,
++		.ctl_offs = 0x0304,
++		.sram_pdn_bits = GENMASK(11, 8),
++		.sram_pdn_ack_bits = GENMASK(15, 12),
++		.bp_table = {
++			BUS_PROT(SMI_TYPE, 0x3c4, 0x3c8, 0, 0x3c0,
++				BIT(1), BIT(1)),
++		},
++	},
++	[MT8183_POWER_DOMAIN_VPU_TOP] = {
++		.name = "vpu_top",
++		.sta_mask = BIT(26),
++		.ctl_offs = 0x0324,
++		.sram_pdn_bits = GENMASK(8, 8),
++		.sram_pdn_ack_bits = GENMASK(12, 12),
++		.basic_clk_id = {"vpu", "vpu1"},
++		.subsys_clk_prefix = "vpu",
++		.bp_table = {
++			BUS_PROT(IFR_TYPE, 0x2d4, 0x2d8, 0, 0x2ec,
++				GENMASK(9, 6) | BIT(12),
++				GENMASK(9, 6) | BIT(12)),
++			BUS_PROT(IFR_TYPE, 0x2a0, 0x2a4, 0, 0x228,
++				BIT(27), BIT(27)),
++			BUS_PROT(IFR_TYPE, 0x2d4, 0x2d8, 0, 0x2ec,
++				BIT(10) | BIT(11), BIT(10) | BIT(11)),
++			BUS_PROT(SMI_TYPE, 0x3c4, 0x3c8, 0, 0x3c0,
++				BIT(5) | BIT(6), BIT(5) | BIT(6)),
++		},
++	},
++	[MT8183_POWER_DOMAIN_VPU_CORE0] = {
++		.name = "vpu_core0",
++		.sta_mask = BIT(27),
++		.ctl_offs = 0x33c,
++		.sram_iso_ctrl = true,
++		.sram_pdn_bits = GENMASK(11, 8),
++		.sram_pdn_ack_bits = GENMASK(13, 12),
++		.basic_clk_id = {"vpu2"},
++		.bp_table = {
++			BUS_PROT(IFR_TYPE, 0x2c4, 0x2c8, 0, 0x2e4,
++				BIT(6), BIT(6)),
++			BUS_PROT(IFR_TYPE, 0x2c4, 0x2c8, 0, 0x2e4,
++				BIT(0) | BIT(2) | BIT(4),
++				BIT(0) | BIT(2) | BIT(4)),
++		},
++	},
++	[MT8183_POWER_DOMAIN_VPU_CORE1] = {
++		.name = "vpu_core1",
++		.sta_mask = BIT(28),
++		.ctl_offs = 0x0340,
++		.sram_iso_ctrl = true,
++		.sram_pdn_bits = GENMASK(11, 8),
++		.sram_pdn_ack_bits = GENMASK(13, 12),
++		.basic_clk_id = {"vpu3"},
++		.bp_table = {
++			BUS_PROT(IFR_TYPE, 0x2c4, 0x2c8, 0, 0x2e4,
++				BIT(7), BIT(7)),
++			BUS_PROT(IFR_TYPE, 0x2c4, 0x2c8, 0, 0x2e4,
++				BIT(1) | BIT(3) | BIT(5),
++				BIT(1) | BIT(3) | BIT(5)),
++		},
++	},
++};
 +
-+	/* Either wait until SRAM_PDN_ACK all 0 or have a force wait */
-+	if (MTK_SCPD_CAPS(scpd, MTK_SCPD_FWAIT_SRAM)) {
-+		/*
-+		 * Currently, MTK_SCPD_FWAIT_SRAM is necessary only for
-+		 * MT7622_POWER_DOMAIN_WB and thus just a trivial setup
-+		 * is applied here.
-+		 */
-+		usleep_range(12000, 12100);
-+	} else {
-+		/* Either wait until SRAM_PDN_ACK all 1 or 0 */
-+		int ret = readl_poll_timeout(ctl_addr, tmp,
-+				(tmp & pdn_ack) == 0,
-+				MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-+		if (ret < 0)
-+			return ret;
++static const struct scp_subdomain scp_subdomain_mt8183[] = {
++	{MT8183_POWER_DOMAIN_MFG_ASYNC, MT8183_POWER_DOMAIN_MFG},
++	{MT8183_POWER_DOMAIN_MFG, MT8183_POWER_DOMAIN_MFG_2D},
++	{MT8183_POWER_DOMAIN_MFG, MT8183_POWER_DOMAIN_MFG_CORE0},
++	{MT8183_POWER_DOMAIN_MFG, MT8183_POWER_DOMAIN_MFG_CORE1},
++	{MT8183_POWER_DOMAIN_DISP, MT8183_POWER_DOMAIN_CAM},
++	{MT8183_POWER_DOMAIN_DISP, MT8183_POWER_DOMAIN_ISP},
++	{MT8183_POWER_DOMAIN_DISP, MT8183_POWER_DOMAIN_VDEC},
++	{MT8183_POWER_DOMAIN_DISP, MT8183_POWER_DOMAIN_VENC},
++	{MT8183_POWER_DOMAIN_DISP, MT8183_POWER_DOMAIN_VPU_TOP},
++	{MT8183_POWER_DOMAIN_VPU_TOP, MT8183_POWER_DOMAIN_VPU_CORE0},
++	{MT8183_POWER_DOMAIN_VPU_TOP, MT8183_POWER_DOMAIN_VPU_CORE1},
++};
++
+ static const struct scp_soc_data mt2701_data = {
+ 	.domains = scp_domain_data_mt2701,
+ 	.num_domains = ARRAY_SIZE(scp_domain_data_mt2701),
+@@ -1195,6 +1407,17 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+ 	.bus_prot_reg_update = true,
+ };
+ 
++static const struct scp_soc_data mt8183_data = {
++	.domains = scp_domain_data_mt8183,
++	.num_domains = ARRAY_SIZE(scp_domain_data_mt8183),
++	.subdomains = scp_subdomain_mt8183,
++	.num_subdomains = ARRAY_SIZE(scp_subdomain_mt8183),
++	.regs = {
++		.pwr_sta_offs = 0x0180,
++		.pwr_sta2nd_offs = 0x0184
 +	}
++};
 +
-+	return 0;
-+}
-+
-+static int scpsys_sram_disable(struct scp_domain *scpd, void __iomem *ctl_addr)
-+{
-+	u32 val;
-+	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
-+	int tmp;
-+
-+	val = readl(ctl_addr) | scpd->data->sram_pdn_bits;
-+	writel(val, ctl_addr);
-+
-+	/* Either wait until SRAM_PDN_ACK all 1 or 0 */
-+	return readl_poll_timeout(ctl_addr, tmp,
-+			(tmp & pdn_ack) == pdn_ack,
-+			MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-+}
-+
- static int scpsys_power_on(struct generic_pm_domain *genpd)
- {
- 	struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
- 	struct scp *scp = scpd->scp;
- 	void __iomem *ctl_addr = scp->base + scpd->data->ctl_offs;
--	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
- 	u32 val;
- 	int ret, tmp;
- 
-@@ -247,6 +290,7 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 	if (ret)
- 		goto err_clk;
- 
-+	/* subsys power on */
- 	val = readl(ctl_addr);
- 	val |= PWR_ON_BIT;
- 	writel(val, ctl_addr);
-@@ -268,24 +312,9 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 	val |= PWR_RST_B_BIT;
- 	writel(val, ctl_addr);
- 
--	val &= ~scpd->data->sram_pdn_bits;
--	writel(val, ctl_addr);
--
--	/* Either wait until SRAM_PDN_ACK all 0 or have a force wait */
--	if (MTK_SCPD_CAPS(scpd, MTK_SCPD_FWAIT_SRAM)) {
--		/*
--		 * Currently, MTK_SCPD_FWAIT_SRAM is necessary only for
--		 * MT7622_POWER_DOMAIN_WB and thus just a trivial setup is
--		 * applied here.
--		 */
--		usleep_range(12000, 12100);
--
--	} else {
--		ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
--					 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
--		if (ret < 0)
--			goto err_pwr_ack;
--	}
-+	ret = scpsys_sram_enable(scpd, ctl_addr);
-+	if (ret < 0)
-+		goto err_pwr_ack;
- 
- 	if (scpd->data->bus_prot_mask) {
- 		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
-@@ -312,7 +341,6 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
- 	struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
- 	struct scp *scp = scpd->scp;
- 	void __iomem *ctl_addr = scp->base + scpd->data->ctl_offs;
--	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
- 	u32 val;
- 	int ret, tmp;
- 
-@@ -324,17 +352,12 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
- 			goto out;
+ /*
+  * scpsys driver init
+  */
+@@ -1219,6 +1442,9 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+ 		.compatible = "mediatek,mt8173-scpsys",
+ 		.data = &mt8173_data,
+ 	}, {
++		.compatible = "mediatek,mt8183-scpsys",
++		.data = &mt8183_data,
++	}, {
+ 		/* sentinel */
  	}
- 
--	val = readl(ctl_addr);
--	val |= scpd->data->sram_pdn_bits;
--	writel(val, ctl_addr);
--
--	/* wait until SRAM_PDN_ACK all 1 */
--	ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == pdn_ack,
--				 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-+	ret = scpsys_sram_disable(scpd, ctl_addr);
- 	if (ret < 0)
- 		goto out;
- 
--	val |= PWR_ISO_BIT;
-+	/* subsys power off */
-+	val = readl(ctl_addr) | PWR_ISO_BIT;
- 	writel(val, ctl_addr);
- 
- 	val &= ~PWR_RST_B_BIT;
+ };
 -- 
 1.8.1.1.dirty
 
