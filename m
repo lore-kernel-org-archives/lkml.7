@@ -4,86 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A566ECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F837CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81622214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9E1214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403991AbfJ1RBj (ORCPT
+        id S2404004AbfJ1RDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 13:01:39 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40367 "EHLO mga02.intel.com"
+        Mon, 28 Oct 2019 13:03:03 -0400
+Received: from mga02.intel.com ([134.134.136.20]:40553 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbfJ1RBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 13:01:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1730463AbfJ1RDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 13:03:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 10:01:32 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 10:03:02 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
-   d="scan'208";a="211488272"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.148]) ([10.7.153.148])
-  by orsmga002.jf.intel.com with ESMTP; 28 Oct 2019 10:01:19 -0700
-Subject: Re: [PATCH v2] media: aspeed-video: Fix memory leaks in
- aspeed_video_probe
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Eddie James <eajames@linux.ibm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, linux-media@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <d9c04318-586a-bfc2-fce6-6218c6bab1d6@linux.intel.com>
- <20191028165827.24949-1-navid.emamdoost@gmail.com>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <6450dbb4-aa6f-627d-7e5d-21a20f560d60@linux.intel.com>
-Date:   Mon, 28 Oct 2019 10:01:19 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+   d="scan'208";a="203319319"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 28 Oct 2019 10:02:57 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iP8Pw-0009Bk-RH; Tue, 29 Oct 2019 01:02:56 +0800
+Date:   Tue, 29 Oct 2019 01:02:46 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org,
+        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+Subject: [RFC PATCH] ASoC: rockchip_max98090: rk_card_configs[] can be static
+Message-ID: <20191028170246.5uhqmm4gc576yrsh@4978f4969bb8>
+References: <20191025133007.11190-4-cychiang@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20191028165827.24949-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025133007.11190-4-cychiang@chromium.org>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/2019 9:58 AM, Navid Emamdoost wrote:
-> In the implementation of aspeed_video_probe() the allocated memory for
-> video should be released if either devm_ioremap_resource()
-> or aspeed_video_init() or aspeed_video_setup_video() fails. Replace
-> kzalloc() with devm_kzalloc to avoid explicit release for video.
-> 
-> Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> Changes in v2:
-> 	-- replace kzalloc with devm_kzalloc based on Jae Hyun Yoo
-> suggestion
-> 
->   drivers/media/platform/aspeed-video.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-> index eb12f3793062..2aa8ea2f9824 100644
-> --- a/drivers/media/platform/aspeed-video.c
-> +++ b/drivers/media/platform/aspeed-video.c
-> @@ -1646,7 +1646,7 @@ static int aspeed_video_probe(struct platform_device *pdev)
->   {
->   	int rc;
->   	struct resource *res;
-> -	struct aspeed_video *video = kzalloc(sizeof(*video), GFP_KERNEL);
-> +	struct aspeed_video *video = devm_kzalloc(sizeof(*video), GFP_KERNEL);
 
-It can't be compiled. devm_kzalloc should have 3 parameters.
+Fixes: 0cc0922ae849 ("ASoC: rockchip_max98090: Optionally support HDMI use case")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ rockchip_max98090.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-
-Jae
+diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
+index 550e577897198..a476749931387 100644
+--- a/sound/soc/rockchip/rockchip_max98090.c
++++ b/sound/soc/rockchip/rockchip_max98090.c
+@@ -472,7 +472,7 @@ static int snd_rk_mc_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
+-struct rk_card_config rk_card_configs[] = {
++static struct rk_card_config rk_card_configs[] = {
+ 	[RK_USE_MAX98090] = {
+ 		.usage = RK_USE_MAX98090,
+ 		.card = &rockchip_max98090_card,
