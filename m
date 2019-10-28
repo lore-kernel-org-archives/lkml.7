@@ -2,128 +2,65 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA032CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220B9CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C88214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21562086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388941AbfJ1MLf (ORCPT
+        id S1728532AbfJ1MNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:11:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37476 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388835AbfJ1MK4 (ORCPT
+        Mon, 28 Oct 2019 08:13:02 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:40510 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727085AbfJ1MNC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:10:56 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9SC4OeZ059897
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 08:10:55 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vwyw0gf4k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 08:10:55 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 28 Oct 2019 12:10:53 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 28 Oct 2019 12:10:48 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9SCAkZb50135174
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 12:10:46 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 522B5A4051;
-        Mon, 28 Oct 2019 12:10:46 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DDF40A404D;
-        Mon, 28 Oct 2019 12:10:43 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.151.87])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 28 Oct 2019 12:10:43 +0000 (GMT)
-Subject: Re: [PATCH v9 0/8] powerpc: Enabling IMA arch specific secure boot
- policies
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Date:   Mon, 28 Oct 2019 08:10:43 -0400
-In-Reply-To: <20191024034717.70552-1-nayna@linux.ibm.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com>
+        Mon, 28 Oct 2019 08:13:02 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92.2)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1iP3tC-0003GO-4w; Mon, 28 Oct 2019 13:12:50 +0100
+Message-ID: <d0fc94581e0dce37d993c55edaae8fc40eaa7601.camel@sipsolutions.net>
+Subject: Re: [PATCH] cfg80211: Fix memory leak in
+ cfg80211_inform_single_bss_frame_data
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 28 Oct 2019 13:12:47 +0100
+In-Reply-To: <20191027181600.11149-1-navid.emamdoost@gmail.com> (sfid-20191027_191610_218836_6E8601E7)
+References: <20191027181600.11149-1-navid.emamdoost@gmail.com>
+         (sfid-20191027_191610_218836_6E8601E7)
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102812-4275-0000-0000-000003786D27
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102812-4276-0000-0000-0000388B9F9F
-Message-Id: <1572264643.4532.244.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=860 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910280124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-23 at 22:47 -0500, Nayna Jain wrote:
-> This patchset extends the previous version[1] by adding support for
-> checking against a blacklist of binary hashes.
-> 
-> The IMA subsystem supports custom, built-in, arch-specific policies to
-> define the files to be measured and appraised. These policies are honored
-> based on priority, where arch-specific policy is the highest and custom
-> is the lowest.
-> 
-> PowerNV system uses a Linux-based bootloader to kexec the OS. The
-> bootloader kernel relies on IMA for signature verification of the OS
-> kernel before doing the kexec. This patchset adds support for powerpc
-> arch-specific IMA policies that are conditionally defined based on a
-> system's secure boot and trusted boot states. The OS secure boot and
-> trusted boot states are determined via device-tree properties.
-> 
-> The verification needs to be performed only for binaries that are not
-> blacklisted. The kernel currently only checks against the blacklist of
-> keys. However, doing so results in blacklisting all the binaries that
-> are signed by the same key. In order to prevent just one particular
-> binary from being loaded, it must be checked against a blacklist of
-> binary hashes. This patchset also adds support to IMA for checking
-> against a hash blacklist for files. signed by appended signature.
-> 
-> [1] http://patchwork.ozlabs.org/cover/1149262/ 
+On Sun, 2019-10-27 at 13:15 -0500, Navid Emamdoost wrote:
+> In the implementation of cfg80211_inform_single_bss_frame_data() the
+> allocated memory for ies is leaked in case of an error. Release ies if
+> cfg80211_bss_update() fails.
 
-Thanks, Nayna.
+I'm pretty sure it's more complicated than this patch (and the previous
+one) - we already do free this at least in the case that "new =
+kzalloc(...)" fails in cfg80211_bss_update().
 
-Please feel free to add my Signed-off-by tag on patches (2, 4, 5, 7 &
-8).
+Your Fixes: tag is also wrong, back then we didn't even have the dynamic
+allocation of the IEs.
 
-thanks,
+I'm dropping this patch and the other and will make a note to eventually
+look at the lifetime issue here you point out, but if you want to work
+on it instead let me know.
 
-Mimi
+johannes
 
