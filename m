@@ -2,109 +2,135 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FE7CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE71BC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D874720873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0B320873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KWbq6AFy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V94Ht2Ih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbfJ1TdY (ORCPT
+        id S1731285AbfJ1Tfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 15:33:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45837 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731156AbfJ1TdY (ORCPT
+        Mon, 28 Oct 2019 15:35:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44632 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731026AbfJ1Tfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 15:33:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572291203;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2YZ7F3vF7jMcA3PDwa/7MxLquCpsOuFuGZy7i0YeAWQ=;
-        b=KWbq6AFyKsGBcIdkq156H6A3VQ8Mte/hTLDQSGJLANzAvaFIUkSsrO1F8DXZlXLhTqf6XR
-        H33368XyFckcf5dcROkExhDfjbR7he5BbqfCz709Y1ttjdNQ+OxO5qRk92Lk+iGajdPS1w
-        BjqhO47WbftoNT0wWHmOKNhCrR5ubak=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-X62VVYcVMR-ZX8x6VVJrsg-1; Mon, 28 Oct 2019 15:33:17 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9B7C85B6EE;
-        Mon, 28 Oct 2019 19:33:14 +0000 (UTC)
-Received: from krava (ovpn-204-45.brq.redhat.com [10.40.204.45])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DD96A1001B32;
-        Mon, 28 Oct 2019 19:33:09 +0000 (UTC)
-Date:   Mon, 28 Oct 2019 20:33:08 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 6/9] perf tools: add destructors for parse event terms
-Message-ID: <20191028193308.GC28772@krava>
-References: <20191023005337.196160-1-irogers@google.com>
- <20191024190202.109403-1-irogers@google.com>
- <20191024190202.109403-7-irogers@google.com>
- <20191025082714.GH31679@krava>
- <CAP-5=fU6quu74JwZSd70UMTSS2wf_29hBgvdXfJZedOfrE7ohw@mail.gmail.com>
+        Mon, 28 Oct 2019 15:35:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NDY5AH4p+bLAbpsvUbEjoqi5MI8sSoQUy+3LKF6BLu8=; b=V94Ht2Ih0GepVbT+BKXO9h9/h
+        GnxOoQ+mNCXZRWzQGf8uxSCP4Tfg6iAVBSxn37xK/GuYJURNJh4MnrGbqEDTMKM7BPxDlD21xMeZJ
+        /hXHte4Kf6IvSkWdr8+OZ9ScZMCSmwMtBII+5u7DpzyHxX8sArfkzHld8AzNtoEJzcb15RZCfH2hZ
+        9Z3OiavEwYh/W/zIX0dy5xJhZpoTgJtkYsXLdFjWeu2Fmge4evV7cpwxlhGDP8Blrzi2rE7TFywJH
+        G3Gpvkv8HmzfnBNStwSKwh+oHq1y0OXUaQnB25zfpMuf1t17fGHh+OB2InJYszDBgElNxC828V+ET
+        7uOYuStTA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPAnw-0005TA-VN; Mon, 28 Oct 2019 19:35:53 +0000
+Subject: Re: linux-next: Tree for Oct 28 (objtool)
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20191028195154.4b6651dd@canb.auug.org.au>
+ <b7c7bb28-1810-88e5-1899-a90123d26627@infradead.org>
+ <20191028160215.ruzhvlwqaumw4krm@treble>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <cc9c0f83-ce06-19a3-eb07-5fe19e5ca2f2@infradead.org>
+Date:   Mon, 28 Oct 2019 12:35:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fU6quu74JwZSd70UMTSS2wf_29hBgvdXfJZedOfrE7ohw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: X62VVYcVMR-ZX8x6VVJrsg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191028160215.ruzhvlwqaumw4krm@treble>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 09:08:34AM -0700, Ian Rogers wrote:
-> On Fri, Oct 25, 2019 at 1:27 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Thu, Oct 24, 2019 at 12:01:59PM -0700, Ian Rogers wrote:
-> > > If parsing fails then destructors are ran to clean the up the stack.
-> > > Rename the head union member to make the term and evlist use cases mo=
-re
-> > > distinct, this simplifies matching the correct destructor.
-> >
-> > nice did not know about this.. looks like it's been in bison for some t=
-ime, right?
->=20
-> Looks like it wasn't in Bison 1 but in Bison 2, we're at Bison 3 and
-> Bison 2 is > 14 years old:
-> https://web.archive.org/web/20050924004158/http://www.gnu.org/software/bi=
-son/manual/html_mono/bison.html#Destructor-Decl
+On 10/28/19 9:02 AM, Josh Poimboeuf wrote:
+> On Mon, Oct 28, 2019 at 08:31:28AM -0700, Randy Dunlap wrote:
+>> On 10/28/19 1:51 AM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20191025:
+>>>
+>>
+>>
+>> on x86_64:
+>>
+>> kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x14: unreachable instruction
+>>
+>> .o file is attached.
+> 
+> Silly GCC.  Does this fix it?
 
-sounds safe ;-)
+Yes, thanks.
 
-thanks,
-jirka
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> index 4b1c3b664f51..d58587391b96 100644
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -83,7 +83,7 @@ static inline void exit_thread(struct task_struct *tsk)
+>  {
+>  }
+>  #endif
+> -extern void do_group_exit(int);
+> +extern void __noreturn do_group_exit(int);
+>  
+>  extern void exit_files(struct task_struct *);
+>  extern void exit_itimers(struct signal_struct *);
+> diff --git a/kernel/exit.c b/kernel/exit.c
+> index f2d20ab74422..bdc4122d904d 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -894,7 +894,7 @@ SYSCALL_DEFINE1(exit, int, error_code)
+>   * Take down every thread in the group.  This is called by fatal signals
+>   * as well as by sys_exit_group (below).
+>   */
+> -void
+> +void __noreturn
+>  do_group_exit(int exit_code)
+>  {
+>  	struct signal_struct *sig = current->signal;
+> @@ -931,7 +931,6 @@ SYSCALL_DEFINE1(exit_group, int, error_code)
+>  {
+>  	do_group_exit((error_code & 0xff) << 8);
+>  	/* NOTREACHED */
+> -	return 0;
+>  }
+>  
+>  struct waitid_info {
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 543c068096b1..97919469c787 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -135,6 +135,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
+>  		"__stack_chk_fail",
+>  		"panic",
+>  		"do_exit",
+> +		"do_group_exit",
+>  		"do_task_dead",
+>  		"__module_put_and_exit",
+>  		"complete_and_exit",
+> 
+
+
+-- 
+~Randy
