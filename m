@@ -7,57 +7,63 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563FACA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D26CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C6A208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33405208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572274611;
-	bh=ODJx56nlJy1W6iDmBrhQcIZb6ql0H9u5V5MjFI6O45s=;
+	s=default; t=1572274613;
+	bh=IhxCXzDYni/8yl//7apJB4pRA0tjr/HghX/4URUHPAA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=JhJAWsxg8v+d8zlorsZYRbkSLMkAqphOCm0h6NRljnpfMgy7IcnpYv8ruxucXba6U
-	 GXtuaKmPAl12Aqqt7XO+Emumi/hyIv0SvubZHdsXURnxF7e7EqYkgsGkE96EFjpgxt
-	 KfAJ8BDWLOF/VtP1klDibxggEXq6rLaxyz753ABM=
+	b=fNe0be/KQr5tFIy29dbDehqzovc8xC2CE4z9UlY0Ga2ws4wdRaxI0TXBcpc8xw0rN
+	 fJmk+EOOZgarvbCi2xd/+fGHWNEmcbGQlfH/gdmZhGG8Fs7AYRKgOrEX4SIN9+A9Ls
+	 53nchvQ4fsa7l8AAk4kfnuH0KMSeLwE1Z9ergltg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390439AbfJ1O4u (ORCPT
+        id S2390459AbfJ1O4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:56:50 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39844 "EHLO
+        Mon, 28 Oct 2019 10:56:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39886 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727227AbfJ1O4s (ORCPT
+        with ESMTP id S2390428AbfJ1O4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:56:48 -0400
+        Mon, 28 Oct 2019 10:56:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=x2dhPKkjICNRAo5195SCmNYSzw31Hm7SfRI2gVEfL0k=; b=CWm/IXmIypJq
-        fBbcSGmPD5XKf6Kh6WUekoRpA/xXAEeBOPaioTlB8ao117Na+W9RTiVzYaWxBtdvMVkwMWtQ4wZ0P
-        n+we0zXK2kbl7mV0dXOXy3q/TfSlll7JhQ2JxUfD/YkRYsSb4H5nTtyKmZJaWF3FCDEmJjho6Ks8/
-        SYSss=;
+        List-Archive; bh=tN8epsZEkS31NtdlX45cDOmGF5PCzR59bS9MnzLxSmg=; b=BlTZDNucaG1B
+        kxm0DU1bGKzsOQw96Q+YQqdQrdJSBmRSPt3YiBXWZYnVqeOZwTh5ybIKq65Ybktnp1pZSbLBHnPeb
+        YFvUMyj0QqiJJI+DP8LQsNT1jquBZ4kK3//kxlYFxXMe3j5ACViX2bRNToEsbRiDliprT/JOrLKaA
+        VsgpA=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iP6Ri-0008Ra-Hy; Mon, 28 Oct 2019 14:56:38 +0000
+        id 1iP6Rj-0008Rp-Hj; Mon, 28 Oct 2019 14:56:39 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D3FAA27403FD; Mon, 28 Oct 2019 14:56:36 +0000 (GMT)
+        id 3045F27414F2; Mon, 28 Oct 2019 14:56:38 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        festevam@gmail.com, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mark Brown <broonie@kernel.org>, nicoleotsuka@gmail.com,
-        Nicolin Chen <nicoleotsuka@gmail.com>, perex@perex.cz,
-        timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
-Subject: Applied "ASoC: fsl_asrc: refine the setting of internal clock divider" to the asoc tree
-In-Reply-To: <23c634e4bf58afce5b3ae67f5f42e8d1cae2639a.1572252307.git.shengjiu.wang@nxp.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     alsa-devel@alsa-project.org, "Cc:"@sirena.co.uk,
+        "Cc:"@sirena.co.uk, emamd001@umn.edu,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>, kjlu@umn.edu,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Slawomir Blauciak <slawomir.blauciak@linux.intel.com>,
+        smccaman@umn.edu, Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: SOF: ipc: Fix memory leak in sof_set_get_large_ctrl_data" to the asoc tree
+In-Reply-To: <20191027215330.12729-1-navid.emamdoost@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191028145636.D3FAA27403FD@ypsilon.sirena.org.uk>
-Date:   Mon, 28 Oct 2019 14:56:36 +0000 (GMT)
+Message-Id: <20191028145638.3045F27414F2@ypsilon.sirena.org.uk>
+Date:   Mon, 28 Oct 2019 14:56:38 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +71,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: fsl_asrc: refine the setting of internal clock divider
+   ASoC: SOF: ipc: Fix memory leak in sof_set_get_large_ctrl_data
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,121 +96,40 @@ to this mail.
 Thanks,
 Mark
 
-From b39eb1e250c32c695a780f1814086f2bfa0fb593 Mon Sep 17 00:00:00 2001
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-Date: Mon, 28 Oct 2019 17:10:29 +0800
-Subject: [PATCH] ASoC: fsl_asrc: refine the setting of internal clock divider
+From 45c1380358b12bf2d1db20a5874e9544f56b34ab Mon Sep 17 00:00:00 2001
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
+Date: Sun, 27 Oct 2019 16:53:24 -0500
+Subject: [PATCH] ASoC: SOF: ipc: Fix memory leak in
+ sof_set_get_large_ctrl_data
 
-The output divider should align with the output sample
-rate, if use ideal sample rate, there will be a lot of overload,
-which would cause underrun.
+In the implementation of sof_set_get_large_ctrl_data() there is a memory
+leak in case an error. Release partdata if sof_get_ctrl_copy_params()
+fails.
 
-The maximum divider of asrc clock is 1024, but there is no
-judgement for this limitation in driver, which may cause the divider
-setting not correct.
-
-For non-ideal ratio mode, the clock rate should divide the sample
-rate with no remainder, and the quotient should be less than 1024.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Link: https://lore.kernel.org/r/23c634e4bf58afce5b3ae67f5f42e8d1cae2639a.1572252307.git.shengjiu.wang@nxp.com
+Fixes: 54d198d5019d ("ASoC: SOF: Propagate sof_get_ctrl_copy_params() error properly")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Link: https://lore.kernel.org/r/20191027215330.12729-1-navid.emamdoost@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/fsl/fsl_asrc.c | 45 ++++++++++++++++++++++++++++++----------
- 1 file changed, 34 insertions(+), 11 deletions(-)
+ sound/soc/sof/ipc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index 0bf91a6f54b9..a3cfceea7d2f 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -259,8 +259,15 @@ static int fsl_asrc_set_ideal_ratio(struct fsl_asrc_pair *pair,
-  * It configures those ASRC registers according to a configuration instance
-  * of struct asrc_config which includes in/output sample rate, width, channel
-  * and clock settings.
-+ *
-+ * Note:
-+ * The ideal ratio configuration can work with a flexible clock rate setting.
-+ * Using IDEAL_RATIO_RATE gives a faster converting speed but overloads ASRC.
-+ * For a regular audio playback, the clock rate should not be slower than an
-+ * clock rate aligning with the output sample rate; For a use case requiring
-+ * faster conversion, set use_ideal_rate to have the faster speed.
-  */
--static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
-+static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- {
- 	struct asrc_config *config = pair->config;
- 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-@@ -268,7 +275,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
- 	enum asrc_word_width input_word_width;
- 	enum asrc_word_width output_word_width;
- 	u32 inrate, outrate, indiv, outdiv;
--	u32 clk_index[2], div[2];
-+	u32 clk_index[2], div[2], rem[2];
-+	u64 clk_rate;
- 	int in, out, channels;
- 	int pre_proc, post_proc;
- 	struct clk *clk;
-@@ -351,27 +359,42 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
- 	/* We only have output clock for ideal ratio mode */
- 	clk = asrc_priv->asrck_clk[clk_index[ideal ? OUT : IN]];
- 
--	div[IN] = clk_get_rate(clk) / inrate;
--	if (div[IN] == 0) {
-+	clk_rate = clk_get_rate(clk);
-+	rem[IN] = do_div(clk_rate, inrate);
-+	div[IN] = (u32)clk_rate;
-+
-+	/*
-+	 * The divider range is [1, 1024], defined by the hardware. For non-
-+	 * ideal ratio configuration, clock rate has to be strictly aligned
-+	 * with the sample rate. For ideal ratio configuration, clock rates
-+	 * only result in different converting speeds. So remainder does not
-+	 * matter, as long as we keep the divider within its valid range.
-+	 */
-+	if (div[IN] == 0 || (!ideal && (div[IN] > 1024 || rem[IN] != 0))) {
- 		pair_err("failed to support input sample rate %dHz by asrck_%x\n",
- 				inrate, clk_index[ideal ? OUT : IN]);
- 		return -EINVAL;
- 	}
- 
--	clk = asrc_priv->asrck_clk[clk_index[OUT]];
-+	div[IN] = min_t(u32, 1024, div[IN]);
- 
--	/* Use fixed output rate for Ideal Ratio mode (INCLK_NONE) */
--	if (ideal)
--		div[OUT] = clk_get_rate(clk) / IDEAL_RATIO_RATE;
-+	clk = asrc_priv->asrck_clk[clk_index[OUT]];
-+	clk_rate = clk_get_rate(clk);
-+	if (ideal && use_ideal_rate)
-+		rem[OUT] = do_div(clk_rate, IDEAL_RATIO_RATE);
+diff --git a/sound/soc/sof/ipc.c b/sound/soc/sof/ipc.c
+index b2f359d2f7e5..086eeeab8679 100644
+--- a/sound/soc/sof/ipc.c
++++ b/sound/soc/sof/ipc.c
+@@ -572,8 +572,10 @@ static int sof_set_get_large_ctrl_data(struct snd_sof_dev *sdev,
  	else
--		div[OUT] = clk_get_rate(clk) / outrate;
-+		rem[OUT] = do_div(clk_rate, outrate);
-+	div[OUT] = clk_rate;
+ 		err = sof_get_ctrl_copy_params(cdata->type, partdata, cdata,
+ 					       sparams);
+-	if (err < 0)
++	if (err < 0) {
++		kfree(partdata);
+ 		return err;
++	}
  
--	if (div[OUT] == 0) {
-+	/* Output divider has the same limitation as the input one */
-+	if (div[OUT] == 0 || (!ideal && (div[OUT] > 1024 || rem[OUT] != 0))) {
- 		pair_err("failed to support output sample rate %dHz by asrck_%x\n",
- 				outrate, clk_index[OUT]);
- 		return -EINVAL;
- 	}
- 
-+	div[OUT] = min_t(u32, 1024, div[OUT]);
-+
- 	/* Set the channel number */
- 	channels = config->channel_num;
- 
-@@ -560,7 +583,7 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
- 		config.output_sample_rate = rate;
- 	}
- 
--	ret = fsl_asrc_config_pair(pair);
-+	ret = fsl_asrc_config_pair(pair, false);
- 	if (ret) {
- 		dev_err(dai->dev, "fail to config asrc pair\n");
- 		return ret;
+ 	msg_bytes = sparams->msg_bytes;
+ 	pl_size = sparams->pl_size;
 -- 
 2.20.1
 
