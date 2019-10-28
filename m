@@ -2,119 +2,119 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8C9CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58886CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29983214B2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3275F214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QW7T+7VH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ntu1jzmh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbfJ1TCQ (ORCPT
+        id S1729513AbfJ1TDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 15:02:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40734 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727218AbfJ1TCP (ORCPT
+        Mon, 28 Oct 2019 15:03:24 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54542 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727218AbfJ1TDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 15:02:15 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r4so1848810pfl.7;
-        Mon, 28 Oct 2019 12:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=PmpdsSGsRTPJg2gNTTOfS95j5BoFg8jBx/R2QLL6v8o=;
-        b=QW7T+7VH6bTSUJYpsD9DofS5t+hGVEVgukx4XTG2cdwHVABcuTyxDvXDzm2s6jXVkl
-         FKlzE+PLCsasuboJsXYTruoMlgNyiLCMDrKDbf734HlHC5jNJdRYmi7eXhHGmgJU/01d
-         HQxR3y9390Q18ZG5BEq2w8Ydb6sQ7IMTV311i4NalN9JErK2yRYnUSQwz1YZw3LApoyC
-         S8l+ZQuAqqsdHXE0FSvPa4U2UtnkpDvyPOiQIdtFpHG+9of7o4AMm6pRD65fq3Uf/wlp
-         nJXViN8T5db66wedrvWSTypMJJGqd2YNacV9gGsR+4IkSo011Cvjpyn0T+GJOr3lVFvZ
-         Kbpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=PmpdsSGsRTPJg2gNTTOfS95j5BoFg8jBx/R2QLL6v8o=;
-        b=cEY77S21h5Ef6AV1DaShOiB++uvFh7VMioK0pH/j3F0nfB1Rdl+WS3uhJqMIlQYnk3
-         NMepotGx1iOHCreTQ4jQRGTd4VwzxVScky4Nab7VGv27zD9dM1iOzteoWLsQvJYfu53J
-         qyCD/5t016ITNHw5KRyVfqQFeM3QOAkzIhv43cEnrc/Rlezc36O1jKi50nmJv8+r6EnX
-         P49Pw4csch8vDdflX2J1ucouEigfDvouo1poFm3B9ZidcJz9EC2Sv6cSlkjJRwkILApa
-         1CIR95nkwLaRmDgBu4xUelBSU5D31uhaj7Vdd8NoDoWc2tqwaq8Ia3mucHG2Fq59a3EJ
-         g4FQ==
-X-Gm-Message-State: APjAAAVOTA9A7bLUrIKRr1rD/PsV5JziyXr4CwImxaRS+bCQt9n1I+Ac
-        QSzVd1VXr3wNK7Cn3WMFNTU=
-X-Google-Smtp-Source: APXvYqxO42ZaEHFpqCWyXwQl9XRe8E2yopQYCUGESm+/HHd6jbR7fJ0AkMPbiQOxHHLSgYtXGxP5zQ==
-X-Received: by 2002:a17:90a:eb02:: with SMTP id j2mr1061881pjz.80.1572289334957;
-        Mon, 28 Oct 2019 12:02:14 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id q184sm12627210pfc.111.2019.10.28.12.02.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 12:02:14 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 00:32:04 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     kvalo@codeaurora.org, davem@davemloft.net, swinslow@gmail.com,
-        will@kernel.org, opensource@jilayne.com,
-        saurav.girepunje@gmail.com, baijiaju1990@gmail.com,
-        tglx@linutronix.de, linux-wireless@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] b43: Fix use true/false for bool type
-Message-ID: <20191028190204.GA27248@saurav>
+        Mon, 28 Oct 2019 15:03:23 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SIx2ic177038;
+        Mon, 28 Oct 2019 19:03:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=6agxqUj4VUttRHvYAAr3cLu5nf2S/KDZSzHnLTVjMgs=;
+ b=Ntu1jzmhDcHN5V6tBrLbuw7Wuvb3uKmxLygQd6DWuN5wFY1jNUw4MVhQ0FLLk32dBfEw
+ zk1XOXQXeoLnOqdP8XDYfVZjGXuGy1vh2aNnG/I/a5c9efnYRPbXssRDKEmjezymjKoN
+ 199v2L8JXX1UFGpxrmrOtRft4EGRBnbiOxM4qxtfztzXHXgMgDHebmfF45ureDwrS9ba
+ jAiXHmyTi5DQUxsHdJ8ObncklYWb50xNQChr4ulxox0grzK8+jSDnpAQ7F15znRQ4iiG
+ 98hWo3qL3gnf0AoENsYcxDPNQPC54QJb3zYsrd5oN1DHrYAq5D4vckKgJ7wIpQxjhCSJ YA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2vve3q41mp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 19:03:13 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SIvqrJ191966;
+        Mon, 28 Oct 2019 19:03:13 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2vwakyhj44-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 19:03:13 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9SJ394i005045;
+        Mon, 28 Oct 2019 19:03:10 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 28 Oct 2019 12:03:09 -0700
+Date:   Mon, 28 Oct 2019 22:02:59 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Cristiane Naves <cristianenavescardoso09@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Re: [PATCH v3 1/2] staging: rtl8712: Fix Alignment of open
+ parenthesis
+Message-ID: <20191028190259.GF1944@kadam>
+References: <cover.1572273794.git.cristianenavescardoso09@gmail.com>
+ <158960d90adff42169bb7ce968a4082bf3e73387.1572273794.git.cristianenavescardoso09@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <158960d90adff42169bb7ce968a4082bf3e73387.1572273794.git.cristianenavescardoso09@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910280180
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910280181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use true/false on bool type variable assignment.
+On Mon, Oct 28, 2019 at 12:15:52PM -0300, Cristiane Naves wrote:
+> Fix alignment should match open parenthesis. Issue found by checkpatch.
+> 
+> Signed-off-by: Cristiane Naves <cristianenavescardoso09@gmail.com>
+> ---
+>  drivers/staging/rtl8712/rtl8712_recv.c | 36 +++++++++++++++++-----------------
+>  1 file changed, 18 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8712/rtl8712_recv.c b/drivers/staging/rtl8712/rtl8712_recv.c
+> index af12c16..304d031 100644
+> --- a/drivers/staging/rtl8712/rtl8712_recv.c
+> +++ b/drivers/staging/rtl8712/rtl8712_recv.c
+> @@ -61,13 +61,13 @@ void r8712_init_recv_priv(struct recv_priv *precvpriv,
+>  		precvbuf->ref_cnt = 0;
+>  		precvbuf->adapter = padapter;
+>  		list_add_tail(&precvbuf->list,
+> -				 &(precvpriv->free_recv_buf_queue.queue));
+> +			      (&precvpriv->free_recv_buf_queue.queue));
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
- drivers/net/wireless/broadcom/b43/main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+You did this correctly in v2.
 
-diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-index b85603e91c7a..39da1a4c30ac 100644
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -3600,7 +3600,7 @@ static void b43_tx_work(struct work_struct *work)
- 			else
- 				err = b43_dma_tx(dev, skb);
- 			if (err == -ENOSPC) {
--				wl->tx_queue_stopped[queue_num] = 1;
-+				wl->tx_queue_stopped[queue_num] = true;
- 				ieee80211_stop_queue(wl->hw, queue_num);
- 				skb_queue_head(&wl->tx_queue[queue_num], skb);
- 				break;
-@@ -3611,7 +3611,7 @@ static void b43_tx_work(struct work_struct *work)
- 		}
- 
- 		if (!err)
--			wl->tx_queue_stopped[queue_num] = 0;
-+			wl->tx_queue_stopped[queue_num] = false;
- 	}
- 
- #if B43_DEBUG
-@@ -5603,7 +5603,7 @@ static struct b43_wl *b43_wireless_init(struct b43_bus_dev *dev)
- 	/* Initialize queues and flags. */
- 	for (queue_num = 0; queue_num < B43_QOS_QUEUE_NUM; queue_num++) {
- 		skb_queue_head_init(&wl->tx_queue[queue_num]);
--		wl->tx_queue_stopped[queue_num] = 0;
-+		wl->tx_queue_stopped[queue_num] = false;
- 	}
- 
- 	snprintf(chip_name, ARRAY_SIZE(chip_name),
--- 
-2.20.1
+-				 &(precvpriv->free_recv_buf_queue.queue));
++			      &precvpriv->free_recv_buf_queue.queue);
+
+>  		precvbuf++;
+>  	}
+>  	precvpriv->free_recv_buf_queue_cnt = NR_RECVBUFF;
+>  	tasklet_init(&precvpriv->recv_tasklet,
+
+regards,
+dan carpenter
 
