@@ -2,106 +2,98 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E642CCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCBDCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC77E20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:26:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="atWtbQR8"
+	by mail.kernel.org (Postfix) with ESMTP id 93CBA208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572265680;
+	bh=Dy4kNkqAc5FB3Uxpoin/0kwgXwhVB0Cp5tDuaZ5XN0I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LkeFyz31x/8In/ZbcquDxF0fZqHa6+9kkz6ExAnQSxFcaapfY9BRSV4hkI4Ao7jDA
+	 tORZXqbpgNhohdA+9cwlxSHsZYR4K9HiEv8bufcdC+qeNvw2+l7q6fzo5y9CSdErkP
+	 Ahg6Z57pA2ueukOmWvqquugZxrJLpTQWelQotpUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388758AbfJ1M0K (ORCPT
+        id S2389059AbfJ1M17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:26:10 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37211 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfJ1M0K (ORCPT
+        Mon, 28 Oct 2019 08:27:59 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40376 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbfJ1M17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:26:10 -0400
-Received: by mail-lj1-f194.google.com with SMTP id l21so11113091lje.4
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 05:26:08 -0700 (PDT)
+        Mon, 28 Oct 2019 08:27:59 -0400
+Received: by mail-lf1-f65.google.com with SMTP id f4so1648434lfk.7
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 05:27:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z5AyluMv2qTfIyVRClKMssZVhcw31wtXHvj4WXII8HU=;
-        b=atWtbQR8Vni3TfC0Ou+ohngYF0wSzz2oI54BLC4Rn0pqqrVdXXHERQ7J2p9qypr+XZ
-         w671rRO+1w3oacaPradqsKCJKlFCWwcrTivnMSaNfwPfhoseesQb5wtHpqc4FP0FISd0
-         664FGjtxUlOHAWuIOuwnJArSlmxtXFthdxka+5/ccWlD1JBBYOkECofJn0IMld3RyFlY
-         1yGBplLXLudj5uorCML+YK9r7r19qeJyUdMsdgF4z/xbfdl9feVaeMHMZEnSQhV7mNPM
-         613OuKvidHEzy0CXc7uILZPNmIWYvzmvaKvQDZ1wGiu4KMzl6+CIKWGBgoa2S9twYun7
-         cTXQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lGx03eBCF/ZR/TJOysj+IjW5mFyYp/9PThI32ukvUbA=;
+        b=TlTg/tPa+Cb2+B62nozWpbPUhV8ULgTksO+p1fl72Kr55S79U99txmRCJ60LBlWifg
+         3f15B172AD36UWaHBr3vrgBAc9IpQ2hR+Y793XsAT5c3FmiBK+BJ3mLyHFGO7kplB+ms
+         x7VgD3i+NS30ikRDRUeMZ55lKRiyMQEhf4pU8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z5AyluMv2qTfIyVRClKMssZVhcw31wtXHvj4WXII8HU=;
-        b=CME1PV9q4ggWC29VnXg+IK7qboEzJSa7rS/0Lhp+RMBT2eb5AJcfx/xPa4K1tBXD7t
-         NIzcURokt1ZtV5QdWdzTsMFQ4SQcJ1RosK+48hHsnXXeh+9HciJ2vFXMpsFCRPvjNuST
-         sgPCvU1NjKJKChnyrvbKKfwxsIP5L+0g3i/XtaVQ2Exu2KwPEJy7xf5jkDgEDRQuKH9j
-         jLAomDMGNrcQ7bxJkLVUcXVaGRH0mQ6xnwp5IXBzRffSgGDrid9bDEGJfu5Cu55S1kdC
-         O2i6aviNlfcAUk12fZeO2rDlz1ql7Dq4V7hxsCeWVp2ymn16+wylHY0nyPchvm0L/tcB
-         HwUQ==
-X-Gm-Message-State: APjAAAWjGuHYqugLYoWloUXV3wwWViXFkMtfQXz0J5SS71RU9WGusNnl
-        K23TLPpAMZe3OTPEJGMoG4j3/A==
-X-Google-Smtp-Source: APXvYqzX/kNTOsUwdnrZG6QsXdZ+qGMpKvs2rtBhXMpIja+rf/TeDoG0fNE0SxHQ7hNz799BexRZpw==
-X-Received: by 2002:a2e:2bc7:: with SMTP id r68mr12017511ljr.27.1572265568148;
-        Mon, 28 Oct 2019 05:26:08 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id 87sm4571309ljs.23.2019.10.28.05.26.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 05:26:07 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 30BA4100242; Mon, 28 Oct 2019 15:26:09 +0300 (+03)
-Date:   Mon, 28 Oct 2019 15:26:09 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [RFC v2] mm: add page preemption
-Message-ID: <20191028122609.k5suvp7b57oxglvj@box>
-References: <20191026112808.14268-1-hdanton@sina.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lGx03eBCF/ZR/TJOysj+IjW5mFyYp/9PThI32ukvUbA=;
+        b=p38Z0W25EypdpZOyvUlDjYnllUxNWVv4aoBEPN9ZF91LOYaobx8S6F/swX2tQL57RD
+         RX8aUcjoZSS7egWCXDa5wu7FRbV4XiKOZmss3M7OoSSv0xVYEogRjNrr3GfxryUPrsf8
+         cPbIs2eMglKq4iOJx2ppzbODvDwEI6ZL24XSyqWVxmnfqBpIkCJPT8bJj8OwneAGtzEU
+         C7wglMztXSd84EZnbUleOpG79cO2zd5jSdMzWYn/Mmi0OzyQQN2+ouT+x8OQr3C6/Idk
+         i24otYL+v5opz2gpz9/5GHURUmub1Kwff8JL2pA50va6Akk/cUqnDJizbZatJeGBCZr7
+         jckg==
+X-Gm-Message-State: APjAAAXahifQ63gUhQf6cK9SbirvijSViJJEYf9E+buSKWk/PE15KZod
+        gHXt+s6OoEthsXcxHIvBhGDg+GZQsGQ1DA==
+X-Google-Smtp-Source: APXvYqxw5z+G6SP3WexCa4LZ7XJC9/YWv2kZd0YZfAgN+mAV/wjiJ4vJOZRTsYV5Fh/d3x6y4DBD2w==
+X-Received: by 2002:ac2:5b42:: with SMTP id i2mr11478590lfp.164.1572265676379;
+        Mon, 28 Oct 2019 05:27:56 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id e14sm5243773ljb.75.2019.10.28.05.27.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Oct 2019 05:27:50 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id u22so11115043lji.7
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 05:27:48 -0700 (PDT)
+X-Received: by 2002:a05:651c:154:: with SMTP id c20mr4826222ljd.1.1572265668380;
+ Mon, 28 Oct 2019 05:27:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191026112808.14268-1-hdanton@sina.com>
-User-Agent: NeoMutt/20180716
+References: <157225848971.557.16257813537984792761.stgit@buzz>
+In-Reply-To: <157225848971.557.16257813537984792761.stgit@buzz>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 28 Oct 2019 13:27:32 +0100
+X-Gmail-Original-Message-ID: <CAHk-=wiCDPd1ivoU5BJBMSt5cmKnX0XFWiinfegyknfoipif0g@mail.gmail.com>
+Message-ID: <CAHk-=wiCDPd1ivoU5BJBMSt5cmKnX0XFWiinfegyknfoipif0g@mail.gmail.com>
+Subject: Re: [PATCH RFC] fs/fcntl: add fcntl F_GET_RSS
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 07:28:08PM +0800, Hillf Danton wrote:
-> @@ -218,6 +219,9 @@ struct page {
->  
->  #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
->  	int _last_cpupid;
-> +#else
-> +	int prio;
-> +#define CONFIG_PAGE_PREEMPTION PP
->  #endif
->  } _struct_page_alignment;
->  
+On Mon, Oct 28, 2019 at 11:28 AM Konstantin Khlebnikov
+<khlebnikov@yandex-team.ru> wrote:
+>
+> This implements fcntl() for getting amount of resident memory in cache.
+> Kernel already maintains counter for each inode, this patch just exposes
+> it into userspace. Returned size is in kilobytes like values in procfs.
 
-No.
+This doesn't actually explain why anybody would want it, and what the
+usage scenario is.
 
-There's a really good reason we trying hard to push the _last_cpuid into
-page flags instead of growing the struct page by 4 bytes.
-
-I don't think your feature worth 0.1% of RAM and a lot of cache misses
-that this change would generate.
-
--- 
- Kirill A. Shutemov
+             Linus
