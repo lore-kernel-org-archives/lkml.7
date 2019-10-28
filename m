@@ -2,86 +2,99 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3CDCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BA6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A007F21850
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD4921783
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:20:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JP4d5d7R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMh/MkDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387916AbfJ1JUR (ORCPT
+        id S2387931AbfJ1JUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 05:20:17 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40335 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727664AbfJ1JUR (ORCPT
+        Mon, 28 Oct 2019 05:20:20 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54053 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727664AbfJ1JUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 05:20:17 -0400
-Received: by mail-wm1-f66.google.com with SMTP id w9so8257888wmm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 02:20:15 -0700 (PDT)
+        Mon, 28 Oct 2019 05:20:19 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n7so8565719wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 02:20:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=UntOsok0RJA5xyBdV5DE84ry7KtJuNs3rA69E2z2DlM=;
-        b=JP4d5d7Rp2a/4tRoivSLq+T9QpD49Linqp+deoL1VU3fPfpuQx1pkHQc0AfSvCfx4S
-         82e22oG+ChZcIaEWz2LAlG7Uv6N5f7OqHWgD8fs5Vi3gEPxj7GQtWAvfBDi0kHC32QWu
-         /fyaI9E+kMjFLnw/Pe06IVT5vCAny2fA4QgtTxE0TW8ElrzkyucDbRNs74XJz1+s00My
-         qFHluGcSUbJsjB/LxULcAycCqhuSAfpePvB4FQpwDD6QbgPQq7tQ15nlOWqRppw+sdpS
-         rotuwM+0dwCWSbLcG2OwUT9Tc5Fc2UEbpWBRuTtCvWsFzWBgwBMmsSgnrcQc7tpmlbmp
-         Us3Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=wIuGwn2jgbDtMcHHOszupBu+fQifNyNj/PTHe+Q5iEw=;
+        b=CMh/MkDfospgY1lS3Xa8YLvgA9gN95y9aLEw+FmGBfX8eZl2bSwff0ji6BoiaaTSLy
+         MOJK+6FLYglo4N6XVNJmnHdND7sNqftfNoXJocRfHqY8UgcbKumVjpa7W7zjCIHbjphq
+         Bpsq49P0mzhpqPzd1E2iLq2T1Yka06IFlCMvpJAl5jyGgJp0O0Pwz43p6dJmNQ4csW9l
+         T5RLdsVBLcBayfL+eTTaDCLM7Pq+42LucGCwv9KfRrGvRvVt4stEiYwVyGh0LkMF4pBb
+         LkrHy+VKanwipDT7oyQZU28VX1uF6YWijZbK+woXWBY/8RAsAdecnMhEVnz4uW68Issh
+         qwsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UntOsok0RJA5xyBdV5DE84ry7KtJuNs3rA69E2z2DlM=;
-        b=ifVqWR/UWKa1sPhsRDZ/CCA+u/1Chgi5+6Bl3w1Kco2sZq8Eiq7hwHqdbzMqjZ1Fqq
-         8EyNcolgrGV94v28Y9VpAV0ylYEW8Nzf6HcmZQkujXAACxEDKx/lvbS1HzaFKTRqjuPO
-         d1NM2uZbdMbqAC9GhXHDwvCqriWdBQucxpnB0Y5h3ulR5MICG/LYBVJuSduYiPnNgqHq
-         WaFDSH6SfXFG0m1X3Mn5qpYf57x5R/KRDxOlrPMEcdMMYoJLfW2nTsy4HLL0J5Y/ya3V
-         PDt1mBQexVG8gPv7bHGSMn2rCApcZlgPhKm9PxlyRzi5xXNaUnWVku2ntmcUyNgnpVJv
-         nPdg==
-X-Gm-Message-State: APjAAAW3NM48hBKpLnyXx2pfSNtbqP22Yc5MqM6ehZtowfkDaT743yKS
-        1zj3KucqyVJY1lz4DeLGQYw=
-X-Google-Smtp-Source: APXvYqyJUBnyICbDWxYuvED5P/6503b/z3i6qtHWN/gRRjhaGQcOu9SUYbms5Y7BWsojxsYdr9mnyA==
-X-Received: by 2002:a7b:c753:: with SMTP id w19mr15828228wmk.25.1572254415073;
-        Mon, 28 Oct 2019 02:20:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=wIuGwn2jgbDtMcHHOszupBu+fQifNyNj/PTHe+Q5iEw=;
+        b=dQdeG9GOJw0/8t2IeT/plhYicjUZ9vjv9nIeb2SsfIT0P5+1/266JEgLHv1SzVaVxK
+         ym5162PSvhlSZnyYw/rlFZ/DUi/eEGB1IZu2476sSwnWisWg9zhigsuvseRB4JZnV20i
+         Zm6k23ZM7YQNsU6JXDh3O9m0J3bWoM9cYUl12TJ2kuHSNBjcKYu3tDXXuDYL5/kUoOJg
+         YBAxO+XH+dsjtOVFG3sojtY2vyx6OQb00zvPHbn9GWjTtlkmaK2da/k9rj0EyeZUuSx2
+         guLP6osYmarAlzibV8IbEYEe25Ecoh3rDhxDz9PbTvu3xUTX9jALsTKXZ7gi/xL+IOZh
+         /ZfA==
+X-Gm-Message-State: APjAAAVvZGyE6IKDDplzGHYJ3ic0tBYGZumCQ9IirxzMy29q7nmb+AMM
+        a61B2hA5v85srMDbC4UU1ATkssOWf8Dnww==
+X-Google-Smtp-Source: APXvYqxBcssIkhamPko/fax5AmALlb8thgEIQaTOHQbgFgVvAlPSNmDGOtswJVwTfhME3llhdxSSmw==
+X-Received: by 2002:a1c:1d10:: with SMTP id d16mr15486351wmd.14.1572254417401;
+        Mon, 28 Oct 2019 02:20:17 -0700 (PDT)
 Received: from localhost.localdomain ([197.254.95.38])
-        by smtp.googlemail.com with ESMTPSA id z9sm11427513wrv.1.2019.10.28.02.20.12
+        by smtp.googlemail.com with ESMTPSA id z9sm11427513wrv.1.2019.10.28.02.20.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 02:20:14 -0700 (PDT)
+        Mon, 28 Oct 2019 02:20:16 -0700 (PDT)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
 Cc:     alexander.deucher@amd.com, christian.koenig@amd.com,
         David1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch,
         outreachy-kernel@googlegroups.com
-Subject: [Outreachy][PATCH 0/2] sparse warning cleanup
-Date:   Mon, 28 Oct 2019 12:20:03 +0300
-Message-Id: <20191028092005.31121-1-wambui.karugax@gmail.com>
+Subject: [Outreachy][PATCH 1/2] drm/amd: declare amdgpu_exp_hw_support in amdgpu.h
+Date:   Mon, 28 Oct 2019 12:20:04 +0300
+Message-Id: <20191028092005.31121-2-wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191028092005.31121-1-wambui.karugax@gmail.com>
+References: <20191028092005.31121-1-wambui.karugax@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset addresses the sparse warning about the
-`amdgpu_exp_hw_support` variable and corrects the mispelling of the
-word "_LENTH".
+Declare `amdgpu_exp_hw_support` as extern in amdgpu.h to address the
+following sparse warning:
+drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:118:5: warning: symbol 'amdgpu_exp_hw_support' was not declared. Should it be static?
 
-Wambui Karuga (2):
-  drm/amd: declare amdgpu_exp_hw_support in amdgpu.h
-  drm/amd: correct "_LENTH" mispelling in constant
+Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+Suggested-by: Harry Wentland <harry.wentland@amd.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/gpu/drm/amd/amdgpu/amdgpu.h        | 5 +++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 ++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    | 2 +-
- 3 files changed, 6 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+index f4d9041ef430..3610defdfae1 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+@@ -140,6 +140,7 @@ extern int amdgpu_vm_fragment_size;
+ extern int amdgpu_vm_fault_stop;
+ extern int amdgpu_vm_debug;
+ extern int amdgpu_vm_update_mode;
++extern int amdgpu_exp_hw_support;
+ extern int amdgpu_dc;
+ extern int amdgpu_sched_jobs;
+ extern int amdgpu_sched_hw_submission;
 -- 
 2.17.1
 
