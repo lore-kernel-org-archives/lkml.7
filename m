@@ -2,180 +2,140 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69B7CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C83BCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC65521734
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572273187;
-	bh=uBafmYZtjPMwKogdIRbd9ewyuSPO8qrIg0LiiywuY0M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zDu5ajHobZEzVHWbeDpBdDXD1C2HZ+UotGDeOE5XQhbaO2yvJWgI4yn6BMsHAGuWN
-	 C3bKCRbpMM/YNs6An0FgUwfGwsUuMcnoKzXpBtJBOb8HqaOsv5t+zLcVXiN8pWfp5c
-	 GwqBhzWNjVEAYhFZHDT2upeeiqIQcZeOlGJ6Mwz0=
+	by mail.kernel.org (Postfix) with ESMTP id 20D5F208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:33:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="irsXVZVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390114AbfJ1OdG (ORCPT
+        id S2390126AbfJ1Oda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:33:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390102AbfJ1OdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:33:06 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDAC1208C0;
-        Mon, 28 Oct 2019 14:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572273185;
-        bh=uBafmYZtjPMwKogdIRbd9ewyuSPO8qrIg0LiiywuY0M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2mSCPBEhdDJxFiUBH2CUlBroCVPG2Z4czuTICCq0bxeUgK0eaO9UeJTf8t+YYNfUx
-         WFwGbTJnjWLsSBFR+ywalEVUSYw4YYA80IXDwY+0EVbCMnQFVaJfRwXlMjYFHW8J+x
-         XJ4hKiceXG4z2w9eyzhZtQxWdZSUP/HUz8vffNro=
-Date:   Mon, 28 Oct 2019 22:32:42 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     s.hauer@pengutronix.de, robh+dt@kernel.org, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com,
+        Mon, 28 Oct 2019 10:33:30 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34009 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390052AbfJ1Od3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 10:33:29 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b128so7011191pfa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jRXui8mziHn1dHv5sVSn9Ol454G9W6p0Jp5i7su5XVo=;
+        b=irsXVZVgMMIM/IxRyTrk/qvcpBGoyEqBd5lsDi83dqdq4Ij85W6nXIMi6d68nrg5mP
+         m6dlG15ZtcjLhwSGfAy8IBHJm0XFBTuLkMkcujDc+Jz1uFwMhqmA7fHXnnoH/eWLwHO6
+         e9l/L2TkOw6FadXSJL0Je2cED/hKn7LLI0rEqqOzKqUSSuDmRm3Y94/BFnNdOFgvlK/u
+         r6m3dcKiBjkSkA+6OC//ADulFoKMPfhnqdWnsN6mlCplwyHpgndtLX09a4EKzsqzZNF5
+         inPLg24/mKcrAVmYDM9nEN9k7aOUFGcU2NUl/TD0RloUuibGiFYlPXJ91nIEUl6FoBJN
+         QFPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jRXui8mziHn1dHv5sVSn9Ol454G9W6p0Jp5i7su5XVo=;
+        b=WW5cymnnTjuqn8sc2C8NAo14YJxdM59QVaYv2NlkCxUwePXY2E64DVc+x+Qh7eWW1a
+         aAifYeGHBNMyFH4P5iJASQWx1R2ECM4wd+9myZQfBItydq4LAS1pQZFfKVshZ5eKZdaZ
+         /IBCIYiUmIqjmfMrrpN3wy/uKIBl9NA4GxWGCfelHyIgTM1NGu3PGfxPnQVTPUiKEtY1
+         4scnfcXJG6aGtwEpF2Wu5GlOR/UpfyP1jd8QeL596L7cwMM53lHZWRcMHQcYllgZhFtF
+         n7yiptr9RVX9arj+TzsiBamy+2mgIPKg55nB6ng4+xMMs3VMzz/bU3j+cCcvVfF++d3J
+         cWag==
+X-Gm-Message-State: APjAAAUbWRMblL0nSBB/C1J5WvLfz5ZpQldo31fghmHaa8p759uOFTXA
+        e1IWUmA0dhbEvnffH8iFmPWN
+X-Google-Smtp-Source: APXvYqzGnQ3oWUKcqs6cX+pDXEkapuTymujVJwAUXj1ZSC41/Q+HtHirj1nbVtMWKAisgsEBnI8rUA==
+X-Received: by 2002:a63:4553:: with SMTP id u19mr20936350pgk.436.1572273208969;
+        Mon, 28 Oct 2019 07:33:28 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6004:d1fe:706d:952a:57bd:23b6])
+        by smtp.gmail.com with ESMTPSA id o7sm5154561pjo.7.2019.10.28.07.33.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 28 Oct 2019 07:33:28 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 20:03:17 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         darshak.patel@einfochips.com, prajose.john@einfochips.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, pavel@ucw.cz,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH 2/3] arm64: dts: freescale: Add devicetree support for
- Thor96 board
-Message-ID: <20191028143240.GO16985@dragon>
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 3/3] mtd: spi-nor: Add support for w25q256jw
+Message-ID: <20191028143317.GB29312@Mani-XPS-13-9360>
 References: <20191024144235.3182-1-manivannan.sadhasivam@linaro.org>
- <20191024144235.3182-3-manivannan.sadhasivam@linaro.org>
- <20191028115110.GE16985@dragon>
- <20191028142732.GA29312@Mani-XPS-13-9360>
+ <20191024144235.3182-4-manivannan.sadhasivam@linaro.org>
+ <bf435b43-f118-f3cb-73ed-5fa67905c4aa@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028142732.GA29312@Mani-XPS-13-9360>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <bf435b43-f118-f3cb-73ed-5fa67905c4aa@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 07:57:32PM +0530, Manivannan Sadhasivam wrote:
-> Hi Shawn,
+Hi Vignesh,
+
+On Mon, Oct 28, 2019 at 05:20:40PM +0530, Vignesh Raghavendra wrote:
+> Hi,
 > 
-> On Mon, Oct 28, 2019 at 07:51:12PM +0800, Shawn Guo wrote:
-> > On Thu, Oct 24, 2019 at 08:12:34PM +0530, Manivannan Sadhasivam wrote:
-> > > Add devicetree support for Thor96 board from Einfochips. This board is
-> > > one of the 96Boards Consumer Edition platform powered by the NXP
-> > > i.MX8MQ SoC.
-> > > 
-> > > Following are the features supported currently:
-> > > 
-> > > 1. uSD
-> > > 2. WiFi/BT
-> > > 3. Ethernet
-> > > 4. EEPROM (M24256)
-> > > 5. NOR Flash (W25Q256JW)
-> > > 6. 2xUSB3.0 ports and 1xUSB2.0 port at HS expansion
-> > > 
-> > > More information about this board can be found in Arrow website:
-> > > https://www.arrow.com/en/products/i.imx8-thor96/arrow-development-tools
-> > > 
-> > > Link to 96Boards CE Specification: https://linaro.co/ce-specification
-> > > 
-> > > Signed-off-by: Darshak Patel <darshak.patel@einfochips.com>
-> > > [Mani: cleaned up for upstream]
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
-> > >  .../boot/dts/freescale/imx8mq-thor96.dts      | 581 ++++++++++++++++++
-> > >  2 files changed, 582 insertions(+)
-> > >  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> > > index 93fce8f0c66d..dec1662019be 100644
-> > > --- a/arch/arm64/boot/dts/freescale/Makefile
-> > > +++ b/arch/arm64/boot/dts/freescale/Makefile
-> > > @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-hummingboard-pulse.dtb
-> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
-> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen.dtb
-> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-pico-pi.dtb
-> > > +dtb-$(CONFIG_ARCH_MXC) += imx8mq-thor96.dtb
-> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
-> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
-> > >  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-thor96.dts b/arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
-> > > new file mode 100644
-> > > index 000000000000..e1adf24c2602
-> > > --- /dev/null
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
-> > > @@ -0,0 +1,581 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * Copyright 2019 Einfochips
-> > > + * Copyright 2019 Linaro Ltd.
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +
-> > > +#include "imx8mq.dtsi"
-> > > +
-> > > +/ {
-> > > +	model = "Einfochips i.MX8MQ Thor96";
-> > > +	compatible = "einfochips,imx8mq-thor96", "fsl,imx8mq";
-> > > +
-> > > +	chosen {
-> > > +		stdout-path = &uart1;
-> > > +	};
-> > > +
-> > > +	memory@40000000 {
-> > > +		device_type = "memory";
-> > > +		reg = <0x00000000 0x40000000 0 0x80000000>;
-> > > +	};
-> > > +
-> > > +	leds {
-> > > +		compatible = "gpio-leds";
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&pinctrl_leds>;
-> > > +
-> > > +		user-led1 {
-> > > +			label = "green:user1";
-> > > +			gpios = <&gpio4 21 GPIO_ACTIVE_HIGH>;
-> > > +			linux,default-trigger = "heartbeat";
-> > > +		};
-> > > +
-> > > +		user-led2 {
-> > > +			label = "green:user2";
-> > > +			gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-> > > +			linux,default-trigger = "none";
+> On 24/10/19 8:12 PM, Manivannan Sadhasivam wrote:
+> > Add MTD support for w25q256jw SPI NOR chip from Winbond. This chip
+> > supports dual/quad I/O mode with 512 blocks of memory organized in
+> > 4KB sectors. 
+> 
+> 512 blocks of memory organized into 64KB sector, right? In additional
+> flash also supports 4KB small sector.
+> 
+
+Yeah, the wording is wrong here. Will fix it.
+
+Thanks,
+Mani
+
+> Regards
+> Vignesh
+> 
+> > The device has been validated using Thor96 board.
+> 
+> 
+> > Cc: Marek Vasut <marek.vasut@gmail.com>
+> > Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+> > Cc: David Woodhouse <dwmw2@infradead.org>
+> > Cc: Brian Norris <computersforpeace@gmail.com>
+> > Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> > Cc: Richard Weinberger <richard@nod.at>
+> > Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> > Cc: linux-mtd@lists.infradead.org
+> > Signed-off-by: Darshak Patel <darshak.patel@einfochips.com>
+> > [Mani: cleaned up for upstream]
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/mtd/spi-nor/spi-nor.c | 2 ++
+> >  1 file changed, 2 insertions(+)
 > > 
-> > I see linux,default-trigger is defined in Documentation/devicetree/bindings/leds/common.txt
-> > with given string values. "none" and the following ones are not there.
-> > I'm not sure how this works.
+> > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> > index 1d8621d43160..2c25b371d9f0 100644
+> > --- a/drivers/mtd/spi-nor/spi-nor.c
+> > +++ b/drivers/mtd/spi-nor/spi-nor.c
+> > @@ -2482,6 +2482,8 @@ static const struct flash_info spi_nor_ids[] = {
+> >  	{ "w25q256", INFO(0xef4019, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> >  	{ "w25q256jvm", INFO(0xef7019, 0, 64 * 1024, 512,
+> >  			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> > +	{ "w25q256jw", INFO(0xef6019, 0, 64 * 1024, 512,
+> > +			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> >  	{ "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
+> >  			SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
+> >  
 > > 
-> 
-> The devicetree binding is not updated. I think folks just added triggers
-> to the respective places but didn't bother to update the binding.
-
-Can you please bring the bindings up to date?  It will help people like
-me a lot.
-
-Shawn
-
-> 
-> For instance, mmc* trigger is registered here:
-> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/mmc/core/host.c#L476
-> 
-> For `none`, it is like removing the trigger. This is the default mode if the
-> trigger property is not present:
-> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/leds/led-triggers.c#L113
-> 
-> You can see the list of LED triggers by `cat`ing this file:
-> /sys/class/leds/<led>/trigger
-> 
-> Copied Pavel and LED list for reference.
