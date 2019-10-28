@@ -2,123 +2,104 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056F5CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63505CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B98214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F8B208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572305171;
-	bh=q0OTmR1wgzTZD6EaP5k/W/AbGqmVSJjg13ZftmTiSZE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=S17neGE1TRAlFUd3MoydP2SkLsOt72X7qUOUx9SEs+7Xej4Onk/zii+AIHhcjNJeo
-	 7UjTHtSeksqrmI8sRLxZNue9MCF6oQ6L5F588fiqP8/HrOV2NbAJGUyVn+pW9S34TU
-	 z84ATRAzl1PJqHYv1zoo651QDA1+B6bzkwmpebNM=
+	s=default; t=1572305256;
+	bh=bjSV5yV8N18Dq9EKwCo1gotWA9fJzywtcEjkGdWpJOA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=LMuAHs3nUAKJwyexpL9QBqqMrDUt5WNvcwoCaFaxcuz8Xb1ipKtFYXE/ZtEV8BbKP
+	 UCGM3fg/O1/gySlrMmEd6L5UpiRMPGTja60kk/gHwLcl5WnxKsj/Drjzb5LCNem8gR
+	 DbY5DYbzcudp1Cilp7+1GmYN/HbCKmC6zbgDxn7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731328AbfJ1X0K (ORCPT
+        id S1731355AbfJ1X1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 19:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41474 "EHLO mail.kernel.org"
+        Mon, 28 Oct 2019 19:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfJ1X0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 19:26:10 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725951AbfJ1X1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 19:27:34 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D497321835;
-        Mon, 28 Oct 2019 23:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E70BF208C0;
+        Mon, 28 Oct 2019 23:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572305169;
-        bh=q0OTmR1wgzTZD6EaP5k/W/AbGqmVSJjg13ZftmTiSZE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hezMheFbDN23JCAY51dksxmJGn0f0gJFzlQ8PYwJy4eQmyUpqFhnzr863IXmnm6ZY
-         kcB9f8rfz07kpiqgLMVBNNbp+poxaJxOovMwaRP++vNhaK++Mkx/XqdgjR5SO05Klx
-         iC8UVKO2J1iWAez6QSVAdSSs6K5+czLaTrL27/J4=
-Received: by mail-qt1-f179.google.com with SMTP id x14so7020839qtq.3;
-        Mon, 28 Oct 2019 16:26:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAXA12PoJAjIQharsHtY33lEuNdXU5kQnmcVaGF/9Rk2mAYevXvN
-        bsEa+1uMlI61Yl2eoqp1wRj36gmF2P68X46kvA==
-X-Google-Smtp-Source: APXvYqyIOnmWjP3GoLFvC7z60bp1fpcfLf2ubB7T6b3H6DBWuYxFoBuWQX2ZNarU+6b5ojoZdspaBlyJz9Lj0u5QWLs=
-X-Received: by 2002:aed:2706:: with SMTP id n6mr523854qtd.224.1572305168028;
- Mon, 28 Oct 2019 16:26:08 -0700 (PDT)
+        s=default; t=1572305254;
+        bh=bjSV5yV8N18Dq9EKwCo1gotWA9fJzywtcEjkGdWpJOA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nXB7DvZ6vS4pgehWbzRDpiy4VxMcTcMPcUaSmBhBWaMcNr0owOzulO3xp9OZblG5u
+         DpHnxeMehkGewYHi4AP/wznDM6vQJc18YNgXturxdXl9aRAREOY4PFCKhaGk/X6YTu
+         52vd4z4MZxnhrYt/7G1WnBbi6kFChdewe4jNr1uk=
+Date:   Mon, 28 Oct 2019 18:27:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v9 7/8] PCI/DPC: Clear AER registers in EDR mode
+Message-ID: <20191028232732.GA206631@google.com>
 MIME-Version: 1.0
-References: <20190912213257.24147-1-andreas@kemnade.info> <20190912213257.24147-2-andreas@kemnade.info>
-In-Reply-To: <20190912213257.24147-2-andreas@kemnade.info>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 28 Oct 2019 18:25:56 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+zDYifFntHMqmqU4qmsj7_nafN+W7a0Vh+HdwGvVj5TA@mail.gmail.com>
-Message-ID: <CAL_Jsq+zDYifFntHMqmqU4qmsj7_nafN+W7a0Vh+HdwGvVj5TA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: backlight: lm3630a: add enable_gpios
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4e51ce547feb6251ee2c64a4141c6dc772717ac.1570145778.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 4:33 PM Andreas Kemnade <andreas@kemnade.info> wrote:
->
-> add enable-gpios to describe HWEN pin
->
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+On Thu, Oct 03, 2019 at 04:39:03PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> As per PCI firmware specification r3.2 Downstream Port Containment
+> Related Enhancements ECN, 
 
-This breaking linux-next now...
+Specific reference, please, e.g., the section/table/figure of the PCI
+Firmware Spec being modified by the ECN.
 
+> OS is responsible for clearing the AER
+> registers in EDR mode. So clear AER registers in dpc_process_error()
+> function.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Acked-by: Keith Busch <keith.busch@intel.com>
 > ---
-> changes in v2: added example
-> changes in v3: added Acked-by
-> changes in v4: moved enable-gpios to the right position
->   in the example
->  .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> index dc129d9a329e..c8470628fe02 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> @@ -29,6 +29,10 @@ properties:
->    '#size-cells':
->      const: 0
->
-> +  enable-gpios:
-> +    description: GPIO to use to enable/disable the backlight (HWEN pin).
-> +    maxItems: 1
+>  drivers/pci/pcie/dpc.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index fafc55c00fe0..de2d892bc7c4 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -275,6 +275,10 @@ static void dpc_process_error(struct dpc_dev *dpc)
+>  		pci_aer_clear_fatal_status(pdev);
+>  	}
+>  
+> +	/* In EDR mode, OS is responsible for clearing AER registers */
+> +	if (dpc->firmware_dpc)
+
+I guess "EDR mode" is effectively the same as "firmware-first mode"?
+
+At least, the only place we set "firmware_dpc = 1" is:
+
+  +       if (pcie_aer_get_firmware_first(pdev))
+  +               dpc->firmware_dpc = 1;
+
+If they're the same, why do we need two different names for it?
+
+> +		pci_cleanup_aer_error_status_regs(pdev);
 > +
->  required:
->    - compatible
->    - reg
-> @@ -96,6 +100,7 @@ examples:
->          led-controller@38 {
->                  compatible = "ti,lm3630a";
->                  reg = <0x38>;
-> +                enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
-
-Error: Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dts:24.46-47
-syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml]
-Error 1
-scripts/Makefile.lib:314: recipe for target
-'Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml'
-failed
-
-You need the include for the define.
-
-Rob
+>  	/*
+>  	 * Irrespective of whether the DPC event is triggered by
+>  	 * ERR_FATAL or ERR_NONFATAL, since the link is already down,
+> -- 
+> 2.21.0
+> 
