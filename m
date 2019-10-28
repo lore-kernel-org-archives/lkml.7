@@ -2,69 +2,99 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51599CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55676CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3085821850
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2510521D7F
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WKz+T/W5";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BdpVt/oh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387982AbfJ1JVH (ORCPT
+        id S2388001AbfJ1JVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 05:21:07 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36634 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731818AbfJ1JVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 05:21:06 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9833292B863420F96A74;
-        Mon, 28 Oct 2019 17:21:04 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 28 Oct 2019
- 17:20:55 +0800
-Subject: Re: [PATCH v2 02/36] irqchip/gic-v3-its: Factor out wait_for_syncr
- primitive
-To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-kernel@vger.kernel.org>
-CC:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Andrew Murray" <Andrew.Murray@arm.com>,
-        Jayachandran C <jnair@marvell.com>,
-        "Robert Richter" <rrichter@marvell.com>
-References: <20191027144234.8395-1-maz@kernel.org>
- <20191027144234.8395-3-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <3c618f47-de32-3868-7aaa-ca146e1e028c@huawei.com>
-Date:   Mon, 28 Oct 2019 17:20:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 28 Oct 2019 05:21:16 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53488 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731818AbfJ1JVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 05:21:14 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1804D60AD7; Mon, 28 Oct 2019 09:21:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572254474;
+        bh=VadqlEYYfxB7OwaJryx2n7rtLMjDQtS6L+9F+QovAbc=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=WKz+T/W5uKEyyW/O27wOpwhCdee/+JYZpj1lC8uhPHZeMV90qnZBEUU1hE1ATU3zx
+         dvnwkzNs+ZpMRGQnPmacOBk/D9ImEwzBEuVUJTXBYeTaG8GQpAYL93+GkJZWlO/YD3
+         9LamebTs+Mukr5XHg1mk2pqXAUuHOOuTay0smbYA=
+Received: from potku.adurom.net (unknown [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 245736078F;
+        Mon, 28 Oct 2019 09:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572254472;
+        bh=VadqlEYYfxB7OwaJryx2n7rtLMjDQtS6L+9F+QovAbc=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=BdpVt/ohSPBR7p2rO6SPXPW9cFEAK4uwm4aH6CJZR/v9kZuK6rWpRnmdFTQvQujEs
+         4gvci4q/6+ySyXE/Ivj6B4mNKOWYeN+N8su3LLoY4EiR7Ah1cyAnR1DRl4hMr7933u
+         UGuNnejw+TkYRIXHydpStd+SJZFa410ecaGvD1Ko=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 245736078F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>
+Cc:     davem@davemloft.net, allison@lohutok.net,
+        kstewart@linuxfoundation.org, opensource@jilayne.com,
+        mcgrof@kernel.org, saurav.girepunje@gmail.com, tglx@linutronix.de,
+        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        saurav.girepunje@hotmail.com
+Subject: Re: [PATCH] net: wireless: broadcom: Fix use true/false for bool type variable.
+References: <20191027042422.GA7956@saurav>
+Date:   Mon, 28 Oct 2019 11:21:05 +0200
+In-Reply-To: <20191027042422.GA7956@saurav> (Saurav Girepunje's message of
+        "Sun, 27 Oct 2019 09:54:26 +0530")
+Message-ID: <87wocp8bum.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20191027144234.8395-3-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/27 22:42, Marc Zyngier wrote:
-> Waiting for a redistributor to have performed an operation is a
-> common thing to do, and the idiom is already spread around.
-> As we're going to make even more use of this, let's have a primitive
-> that does just that.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+(manually fixing the Cc field)
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Saurav Girepunje <saurav.girepunje@gmail.com> writes:
 
+> use true/false for bool type variables assignment.
+>
+> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+
+I don't see any of your three patches in linux-wireless list and hence
+neither in patchwork:
+
+https://patchwork.kernel.org/project/linux-wireless/list/?state=*
+
+One reason might be the ';' character in the To field:
+
+To: kvalo@codeaurora.org;, davem@davemloft.net;, allison@lohutok.net;,
+	kstewart@linuxfoundation.org;, opensource@jilayne.com;,
+	mcgrof@kernel.org;, saurav.girepunje@gmail.com;, tglx@linutronix.de
+	;, linux-wireless@vger.kernel.org;, b43-dev@lists.infradead.org;,
+	netdev@vger.kernel.org;, linux-kernel@vger.kernel.org;
+
+Please fix that and resend all patches. Also the title prefix should be
+'b43:':
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#commit_title_is_wrong
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
