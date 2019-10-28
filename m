@@ -2,98 +2,95 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0D5CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120A2CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FEB20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:48:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rPu8xMyY"
+	by mail.kernel.org (Postfix) with ESMTP id CEFD020830
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbfJ1Us4 (ORCPT
+        id S2388323AbfJ1UtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:48:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:43959 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbfJ1Us4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:48:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4726JP4V1Vz9sPK;
-        Tue, 29 Oct 2019 07:48:53 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572295733;
-        bh=/93MLdafeQeivcemDGE3gagKGbyuQ4PaosU63LPUVHU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rPu8xMyYqACUYFADD/8EJFgFJQHPa7f3G2XA1RK7HJmVIDccJLKD0RYJOTRSrJWBv
-         v8h1aEvj0e5gZVL2MeM2vGfNsALPeouklaeeiv/VrKc50ccs4iqVopNQUmD6LzhKY6
-         NCrDbJMiJSuMU8Hdayht29xhe+4MZYMzMRIzwNfDU+nPo7d+YqlGrlqwtOoFnjuI2v
-         FSFnJflx6RbRy8dj3JXH7tTTyqD+uMbOcEH3awrMJ+NGzpAdPeRLlbVG1QemcsHDjD
-         g0lhmPSZxKkBzME9jqiy2k+/GblqbdNV7sPaAdV+kzKRHm+37bVS2lQjTP7kJKyfSA
-         joVKe3l/3oeyA==
-Date:   Tue, 29 Oct 2019 07:48:48 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the rcu tree
-Message-ID: <20191029074848.12af3e7d@canb.auug.org.au>
+        Mon, 28 Oct 2019 16:49:22 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43453 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJ1UtW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 16:49:22 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l24so7740453pgh.10;
+        Mon, 28 Oct 2019 13:49:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HBgNemMhR9CUsDe/6tQk2VfkcoWYsw39YAXnZT0ZnH4=;
+        b=lFHglUnChLx9cB68s4qqjfezpYcGMoTVvPYru5JioSS0faNra8tAePbKviOO3lEtbo
+         KdctVh7Pbq0kI29N9my86aj/PPYGgroIKl4+12TjQ0WdekozVOZLGhOndxfriz0m3WO7
+         YIJCOgLEhvM1fV0ZcWNThjWxQaDIwwWmmJoJwrW3tSuINA/bLarvkz3gbbL2aJ9q0WLf
+         0/4n01SnFQrquEb/y0sZ15ZjIXXKZ6TL2aG3PdX24McnqM7br04yXXXAf+zdgYYX45IY
+         lcuHBjzhw52Fru6qRhlK0KrRTxw5EpHcKx4FGZYljjs5AbVCNvM0r0grljrbVZchM8a3
+         G8zQ==
+X-Gm-Message-State: APjAAAU3+56defQycorerbpQ5iMKdUp0nvii8XeNE/wFUEEh/MPJL4d4
+        H8xo9Yv90/p+niPxuOreq+0=
+X-Google-Smtp-Source: APXvYqwQ4ry51rhVYgmLz2b5bp2lq6bYQba/60wABozGNpXhyFV0GSW5uq1QIq3i06N0XaA180/qNg==
+X-Received: by 2002:a62:1ac6:: with SMTP id a189mr22586809pfa.96.1572295761570;
+        Mon, 28 Oct 2019 13:49:21 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id 184sm12199766pfu.58.2019.10.28.13.49.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Oct 2019 13:49:20 -0700 (PDT)
+Subject: Re: [PATCH 9/9] ASoC/fsl_spdif: Use put_unaligned_be24() instead of
+ open-coding it
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+References: <20191028200700.213753-1-bvanassche@acm.org>
+ <20191028200700.213753-10-bvanassche@acm.org>
+ <20191028202414.GK5015@sirena.co.uk>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <31dc0244-834f-0829-352f-77b468b18857@acm.org>
+Date:   Mon, 28 Oct 2019 13:49:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/EX5s2RWSi14QDHog1WqOo6p";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191028202414.GK5015@sirena.co.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EX5s2RWSi14QDHog1WqOo6p
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 10/28/19 1:24 PM, Mark Brown wrote:
+> On Mon, Oct 28, 2019 at 01:07:00PM -0700, Bart Van Assche wrote:
+>> This patch makes the code easier to read.
+> 
+> I only have this patch from the series but no cover letter, what's the
+> story with dependencies?
 
-Hi all,
+Hi Mark,
 
-n commit
+The entire patch series including the cover letter is available on e.g. 
+the Lore linux-kernel archive: 
+https://lore.kernel.org/lkml/20191028200700.213753-1-bvanassche@acm.org/T/#t
 
-  292d1bb21aba ("rcu: Several rcu_segcblist functions can be static")
+Thanks,
 
-Fixes tag
+Bart.
 
-  Fixes: ab2ef5c7b4d1 ("rcu/nocb: Atomic ->len field in rcu_segcblist struc=
-ture")
 
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: eda669a6a2c5 ("rcu/nocb: Atomic ->len field in rcu_segcblist structu=
-re")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/EX5s2RWSi14QDHog1WqOo6p
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl23VDAACgkQAVBC80lX
-0Gz7hgf9F4Eue/ca/49d6nGFr8Xzl6l91xlk/qTR2u0Y4c4VQbeApYftfRyRgv3i
-P2Sf4hb1N7Rn085w+bU3JQHNTFmK4Xh0fj8cfTYmlZ92/EaZGa3Qrq7SBYfNBnUc
-899YtFf4YNbh+OFWOP66HDIfJoRzl+lyQTak9bhjmKfKNawCUASDh7+IASJMukQh
-6NHKcWHB4g5+rPhMF1EufJg2r5GzqASFI+/u38uA45gOFrsuLP9wPbw0Tmr/et1d
-uMdlkt6NzxmZPFc9P+vqpaH02IGTAkZQ8PXXmI1p/x95HiLsngVUqgszVwo9F5XA
-YYGPEFbJRpIT7UkAv3vO19YLxyRaSg==
-=qWqB
------END PGP SIGNATURE-----
-
---Sig_/EX5s2RWSi14QDHog1WqOo6p--
