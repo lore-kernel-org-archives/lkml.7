@@ -2,107 +2,142 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208ABCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45758C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F135621744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C27821721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:30:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEVfVXYq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732836AbfJ1Q37 (ORCPT
+        id S2391015AbfJ1QaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:29:59 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35625 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731006AbfJ1Q36 (ORCPT
+        Mon, 28 Oct 2019 12:30:19 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35373 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730711AbfJ1QaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:29:58 -0400
-Received: by mail-pl1-f193.google.com with SMTP id x6so1789681pln.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 09:29:58 -0700 (PDT)
+        Mon, 28 Oct 2019 12:30:18 -0400
+Received: by mail-io1-f67.google.com with SMTP id h9so11457947ioh.2;
+        Mon, 28 Oct 2019 09:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V/+YXkmrDex7nEr+gkqIoyiFItObqxb735/pgi9TyOw=;
+        b=IEVfVXYqi71X+5wVl3Ese6uVmR7+J/VABWSAUt7H4jonMAuWXEZACHPKzDWU8PaTdQ
+         lRfIaqsTOOqdC5QeAI95fcxyC2ALi8O2yrs7v2oszQwXMyqLSeu98BMk8/d4Y4HOTZCW
+         Ip3dgukKFPd8Z+K/JVq17v79VV8bhl5POK/5YviTYJ19ZSLcyB1vPkcQbC3dx6E+1Op8
+         rxl6p/utkpHicJVLDdRasCAKRULk6rq0gId0DIzIyLkCjkQOmXS+tziKwY5XhuGq6VVm
+         /TMxt+tb3v26IeEHYmc44XaG8cjhvOKaMysrOafos6Iyr3V6O8RhD5xbccRIugY0lNxW
+         YRbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/8Rur5Pty80k5lMPnsEahXbKqsft7F2CsN6kEZIOz70=;
-        b=sZGHfis8SxT7PDy4BnFG9d9khmAs7D0xY82w0NiROTk9y8cAL3Mfm+JccTBx502v0l
-         5FHTEHkYaJ1JrxXYPynO22BJluJsmBBkLWru2W+2fEFEUTUljaicTXxihoxENqZyWfTY
-         9LS08zGaB9x9E5MMsfOA5MeKQJ2/GoQvmSM3F5zr4Dqs6KS+IjTeT8TA1NfrBq74ekc/
-         WtE9PcZFYj8TUxEvwfjVGysIaCRwiEDl3YbUeRr6ndrNG55FoGtHmXoQqfLPgdA7Nbf9
-         ImCrpp6hY24/zfZGmT+x28YDaT6qBN2JSwp+cAm4C9lXlRwvg1UvvwHONOyVfiqXp0dh
-         M3PQ==
-X-Gm-Message-State: APjAAAX9f7rqV7iPvPM1d6oyTy2IjpF9q6x+fmeg4u7ZfKSZJrNaX5Jq
-        iCpTYnlZyX+Zs0xVZLkbm47Owb+CsDU=
-X-Google-Smtp-Source: APXvYqyB3RWH6nYv7x0esbua2q9ojgiV2P6KlFMaQB7idk9fb+6U1s2NeegBOpsT8MQU5oDDsG5ZKw==
-X-Received: by 2002:a17:902:a98b:: with SMTP id bh11mr20116578plb.321.1572280197972;
-        Mon, 28 Oct 2019 09:29:57 -0700 (PDT)
-Received: from sultan-box.localdomain ([104.200.129.62])
-        by smtp.gmail.com with ESMTPSA id v2sm11423626pgf.39.2019.10.28.09.29.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 09:29:57 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 09:29:55 -0700
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Gal Pressman <galpress@amazon.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scatterlist: Speed up for_each_sg() loop macro
-Message-ID: <20191028162955.GB32593@sultan-box.localdomain>
-References: <20191025213359.7538-1-sultan@kerneltoast.com>
- <20191028141734.GD29652@ziepe.ca>
- <20191028161848.GA32593@sultan-box.localdomain>
- <20191028162320.GF29652@ziepe.ca>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V/+YXkmrDex7nEr+gkqIoyiFItObqxb735/pgi9TyOw=;
+        b=lAlegK43bXiqqDJ/+mdRkMMG03p1L60y4ffqLHscu+ctWKwtZpLyFim/8LG5HhouJj
+         LcsGg3WVviR2JK4RrxbZ2SQ5BVnvBhulg5Q5449mVOQXTkXi+8OdV2gVv0mvOi7dP/oS
+         WD+jF1889qvC/O9fJJR0887TxuXmndUJtQB5zDOQ+1qxZxlwLi78CScvWKJNzMPwrzuc
+         /PwBrliA0x88Xj5PSZhYCEhnfnaMsiRp60+EYAC5FpiS/xbFQ/bGwWm17EASGcB41eLt
+         jpeEXLhEQCn5JXYd0OvE++RveCvXPdb3qtvC0UzLpsqO4Itz2198JXx6ewFt++ka1vWE
+         J4pg==
+X-Gm-Message-State: APjAAAVKH+x4qeIv4oNjpbdvAgdPLzbvkaRSL4fvcmdc5AuaUZ5Ykh3K
+        MUQfRMASqIvhP8FB7ndmHn7PXAgHotOa2rNdGeU=
+X-Google-Smtp-Source: APXvYqzk/zLyOx63qqddiGsEf2n1A10g0Xbr4HwW628LXscP5JAk3K//9Mo38REgUHJBpGQfWEZeoUeMnJ3rGvH8ZNI=
+X-Received: by 2002:a02:330e:: with SMTP id c14mr18313186jae.5.1572280217811;
+ Mon, 28 Oct 2019 09:30:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028162320.GF29652@ziepe.ca>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191026042519.29446-1-navid.emamdoost@gmail.com> <d9c04318-586a-bfc2-fce6-6218c6bab1d6@linux.intel.com>
+In-Reply-To: <d9c04318-586a-bfc2-fce6-6218c6bab1d6@linux.intel.com>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Mon, 28 Oct 2019 11:30:06 -0500
+Message-ID: <CAEkB2EQXmHJoMJJJULHHFy4gp6a=QiCe5SoxkWehnpKWNVw=_A@mail.gmail.com>
+Subject: Re: [PATCH] media: aspeed-video: Fix memory leaks in aspeed_video_probe
+To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc:     linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
+        Kangjie Lu <kjlu@umn.edu>, openbmc@lists.ozlabs.org,
+        Eddie James <eajames@linux.ibm.com>,
+        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 01:23:20PM -0300, Jason Gunthorpe wrote:
-> On Mon, Oct 28, 2019 at 09:18:48AM -0700, Sultan Alsawaf wrote:
-> > On Mon, Oct 28, 2019 at 11:17:34AM -0300, Jason Gunthorpe wrote:
-> > > This is a big change in the algorithm, why are you sure it is OK?
-> > 
-> > I'm sure it's OK because the test module I provided in the commit message
-> > encapsulates all the possible edge cases of sg chaining:
-> > -An sglist with >=1 && <=(SG_MAX_SINGLE_ALLOC-1) nents (no chaining, the last
-> >  element in the array is unused)
-> > -An sglist with SG_MAX_SINGLE_ALLOC nents (no chaining, the last element in the
-> >  array isn't an sg chain link)
-> > -An sglist with >SG_MAX_SINGLE_ALLOC && <=2*(SG_MAX_SINGLE_ALLOC-1) nents (there
-> >  is one chain to another array, and the other array's last element is unused)
-> > -An sglist with (2*SG_MAX_SINGLE_ALLOC)-1 nents (there is one chain to another
-> >  array, and the other array's last element isn't an sg chain link)
-> > -An sglist with 2*SG_MAX_SINGLE_ALLOC nents (there are two chains to other
-> >  arrays, and the 3rd array contains 2 sgs & its last element is unused)
-> > -An sglist with >2*SG_MAX_SINGLE_ALLOC && <(3*SG_MAX_SINGLE_ALLOC)-1 nents
-> >  (there are two chains to other arrays, and the 3rd array's last element isn't
-> >  an sg chain)
-> 
-> This testing is making assumptions about how 'nr' is used and the
-> construction of the sgl though
-> 
-> If any chains are partially populated, or for some reason the driver
-> starts at a different sgl, it will break. You'll need to somehow
-> show none of those possibilities are happening.
+On Mon, Oct 28, 2019 at 11:27 AM Jae Hyun Yoo
+<jae.hyun.yoo@linux.intel.com> wrote:
+>
+> Hi Navid,
+>
+> On 10/25/2019 9:25 PM, Navid Emamdoost wrote:
+> > In the implementation of aspeed_video_probe() the allocated memory for
+> > video should be released in case of failure. Release video if either
+> > devm_ioremap_resource() or aspeed_video_init() or
+> > aspeed_video_setup_video() fails.
+> >
+> > Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
+> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > ---
+> >   drivers/media/platform/aspeed-video.c | 14 ++++++++++----
+> >   1 file changed, 10 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+> > index eb12f3793062..8c473356132d 100644
+> > --- a/drivers/media/platform/aspeed-video.c
+> > +++ b/drivers/media/platform/aspeed-video.c
+> > @@ -1663,18 +1663,24 @@ static int aspeed_video_probe(struct platform_device *pdev)
+> >
+> >       video->base = devm_ioremap_resource(video->dev, res);
+> >
+> > -     if (IS_ERR(video->base))
+> > -             return PTR_ERR(video->base);
+> > +     if (IS_ERR(video->base)) {
+> > +             rc = PTR_ERR(video->base);
+> > +             goto free_video;
+> > +     }
+> >
+> >       rc = aspeed_video_init(video);
+> >       if (rc)
+> > -             return rc;
+> > +             goto free_video;
+> >
+> >       rc = aspeed_video_setup_video(video);
+> >       if (rc)
+> > -             return rc;
+> > +             goto free_video;
+> >
+> >       return 0;
+> > +
+> > +free_video:
+> > +     kfree(video);
+> > +     return rc;
+> >   }
+> >
+> >   static int aspeed_video_remove(struct platform_device *pdev)
+> >
+>
+> Can we simply change kzalloc in aspeed_video_probe with devm_kzalloc
+> so that we don't need to take care of freeing of video? I think it would
+> be more simpler.
 
-I haven't personally witnessed any for_each_sg() use that starts at a different
-sgl, but this is something I considered as well. The optimal solution would be
-to alter for_each_sg() to replace the `sg` and `nr` arguments with a single
-sg_table pointer argument instead. Users that genuinely need to start at a
-different sgl can just craft their own for-loop with sg_next.
+Sounds a neat plan, will send v2.
 
-This would require changes to a lot of files though, and I wanted to see how the
-mailing list felt about this change before embarking on that.
+>
+> Cheers,
+>
+> Jae
 
-Sultan
+
+
+-- 
+Navid.
