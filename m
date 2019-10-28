@@ -7,57 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D82CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8C2CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA681208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F58821783
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572274638;
-	bh=0wG4JNgcPOz44xUHMlyaO0/ILqVp3/HjHU5SaF4yo0Y=;
+	s=default; t=1572274644;
+	bh=xRrm6JBJeP+LcNvhoisJ2xn9IWWqH7oZwgPmf823Rn8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=lKst3FnJqVXKyVe65/m56x8TSpWIvEUojwS6eK6xQEILyFLx0TSJz4jugD2UXcl7y
-	 Zq2p/KQlzhFnxzfQUkvzA6+9gRrTDNvzILKpr99u31tXvsHe/G4OJWVLzMcaJcCWbR
-	 Fp+trwHWF260Iak6R06NmVgaQe0PEMLKX4RRoO2Y=
+	b=aFs6BZ5KUnXnniktGwuJRwafJ5pacJ1lrbMGEnSFzULKFcxUpwHDnZZszwTLx3SkW
+	 SX0jANqmpuxN2Y26fYMzjs2Jlikg3+3UyqMhI4h1j+7qMZYskW74XGl7B+4GDFZyEx
+	 HCDDg4J+hB4bUMLilkQ1qwodGk0xehzlEmvt4q/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390539AbfJ1O5R (ORCPT
+        id S2390552AbfJ1O5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:57:17 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39876 "EHLO
+        Mon, 28 Oct 2019 10:57:23 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39798 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390427AbfJ1O4t (ORCPT
+        with ESMTP id S1729847AbfJ1O4r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:56:49 -0400
+        Mon, 28 Oct 2019 10:56:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=lLXTCpICWi659xs2yPkSm7HYK750Tj1NUn0NyJCUbx4=; b=tUqOqnfn92Yu
-        E2xQO9YXBZx1AKlOdAdfx9pMdxD0yByLumn5KM9rhoRntlwnPOv/ay8ZmPSf/TyEG72Kf5cAdb5V1
-        vU7EW+oNTsO+Nw2Axk2g60e8JzenuLIn6YzGYqrkvgyE8OkeReRxYhSFM3XKYgXne8EPun3A1+aur
-        zod0c=;
+        List-Archive; bh=u+mJui0ruzCLEmUKsU0/VGpV9GrOClCKbHC9GKMJOjo=; b=gV2bpDY3iQO8
+        S6FQqHkEOQBf2B2E2PJ9cmFjoHLPC8lJexj7PcHMUsMCkFDcca9420PkzP88ctRiDYwU86DV4Ddit
+        6Yroml3b+C1UvHVqL4CWCrmhi1wjuYPm/yPCmckz5144wA8M51jO8MlyRia9MYudPziLAYcf0BIaG
+        4IHsY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iP6Ri-0008RZ-BZ; Mon, 28 Oct 2019 14:56:38 +0000
+        id 1iP6Rp-0008TD-CN; Mon, 28 Oct 2019 14:56:45 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 9EEAF27403F6; Mon, 28 Oct 2019 14:56:36 +0000 (GMT)
+        id D037C27403EE; Mon, 28 Oct 2019 14:56:44 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        festevam@gmail.com, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mark Brown <broonie@kernel.org>, nicoleotsuka@gmail.com,
-        Nicolin Chen <nicoleotsuka@gmail.com>, perex@perex.cz,
-        timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
-Subject: Applied "ASoC: fsl_esai: Add spin lock to protect reset, stop and start" to the asoc tree
-In-Reply-To: <52e92c4221a83e39a84a6cd92fc3d5479b44894c.1572252321.git.shengjiu.wang@nxp.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: core: Release coupled_rdevs on regulator_init_coupling() error" to the regulator tree
+In-Reply-To: <20191025002240.25288-1-digetx@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191028145636.9EEAF27403F6@ypsilon.sirena.org.uk>
-Date:   Mon, 28 Oct 2019 14:56:36 +0000 (GMT)
+Message-Id: <20191028145644.D037C27403EE@ypsilon.sirena.org.uk>
+Date:   Mon, 28 Oct 2019 14:56:44 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +60,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: fsl_esai: Add spin lock to protect reset, stop and start
+   regulator: core: Release coupled_rdevs on regulator_init_coupling() error
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,103 +85,35 @@ to this mail.
 Thanks,
 Mark
 
-From 35dac627471938eda89fa39ee4ead1f7667e0f57 Mon Sep 17 00:00:00 2001
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-Date: Mon, 28 Oct 2019 17:11:05 +0800
-Subject: [PATCH] ASoC: fsl_esai: Add spin lock to protect reset, stop and
- start
+From 26c2c997aa1a6c5522f6619910ba025e53e69763 Mon Sep 17 00:00:00 2001
+From: Dmitry Osipenko <digetx@gmail.com>
+Date: Fri, 25 Oct 2019 03:22:39 +0300
+Subject: [PATCH] regulator: core: Release coupled_rdevs on
+ regulator_init_coupling() error
 
-xrun may happen at the end of stream, the
-trigger->fsl_esai_trigger_stop maybe called in the middle of
-fsl_esai_hw_reset, this may cause esai in wrong state
-after stop, and there may be endless xrun interrupt.
+This patch fixes memory leak which should happen if regulator's coupling
+fails to initialize.
 
-This issue may also happen with trigger->fsl_esai_trigger_start.
-
-So Add spin lock to lock those functions.
-
-Fixes: 7ccafa2b3879 ("ASoC: fsl_esai: recover the channel swap after xrun")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Link: https://lore.kernel.org/r/52e92c4221a83e39a84a6cd92fc3d5479b44894c.1572252321.git.shengjiu.wang@nxp.com
+Fixes: d8ca7d184b33 ("regulator: core: Introduce API for regulators coupling customization")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20191025002240.25288-1-digetx@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/fsl/fsl_esai.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/regulator/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
-index a78e4ab478df..c7a49d03463a 100644
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -33,6 +33,7 @@
-  * @fsysclk: system clock source to derive HCK, SCK and FS
-  * @spbaclk: SPBA clock (optional, depending on SoC design)
-  * @task: tasklet to handle the reset operation
-+ * @lock: spin lock between hw_reset() and trigger()
-  * @fifo_depth: depth of tx/rx FIFO
-  * @slot_width: width of each DAI slot
-  * @slots: number of slots
-@@ -56,6 +57,7 @@ struct fsl_esai {
- 	struct clk *fsysclk;
- 	struct clk *spbaclk;
- 	struct tasklet_struct task;
-+	spinlock_t lock; /* Protect hw_reset and trigger */
- 	u32 fifo_depth;
- 	u32 slot_width;
- 	u32 slots;
-@@ -676,8 +678,10 @@ static void fsl_esai_hw_reset(unsigned long arg)
- {
- 	struct fsl_esai *esai_priv = (struct fsl_esai *)arg;
- 	bool tx = true, rx = false, enabled[2];
-+	unsigned long lock_flags;
- 	u32 tfcr, rfcr;
- 
-+	spin_lock_irqsave(&esai_priv->lock, lock_flags);
- 	/* Save the registers */
- 	regmap_read(esai_priv->regmap, REG_ESAI_TFCR, &tfcr);
- 	regmap_read(esai_priv->regmap, REG_ESAI_RFCR, &rfcr);
-@@ -715,6 +719,8 @@ static void fsl_esai_hw_reset(unsigned long arg)
- 		fsl_esai_trigger_start(esai_priv, tx);
- 	if (enabled[rx])
- 		fsl_esai_trigger_start(esai_priv, rx);
-+
-+	spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
- }
- 
- static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
-@@ -722,6 +728,7 @@ static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
- {
- 	struct fsl_esai *esai_priv = snd_soc_dai_get_drvdata(dai);
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-+	unsigned long lock_flags;
- 
- 	esai_priv->channels[tx] = substream->runtime->channels;
- 
-@@ -729,12 +736,16 @@ static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		spin_lock_irqsave(&esai_priv->lock, lock_flags);
- 		fsl_esai_trigger_start(esai_priv, tx);
-+		spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
- 		break;
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		spin_lock_irqsave(&esai_priv->lock, lock_flags);
- 		fsl_esai_trigger_stop(esai_priv, tx);
-+		spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -1002,6 +1013,7 @@ static int fsl_esai_probe(struct platform_device *pdev)
- 
- 	dev_set_drvdata(&pdev->dev, esai_priv);
- 
-+	spin_lock_init(&esai_priv->lock);
- 	ret = fsl_esai_hw_init(esai_priv);
- 	if (ret)
- 		return ret;
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index a46be221dbdc..51ce280c1ce1 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -5198,6 +5198,7 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	regulator_remove_coupling(rdev);
+ 	mutex_unlock(&regulator_list_mutex);
+ wash:
++	kfree(rdev->coupling_desc.coupled_rdevs);
+ 	kfree(rdev->constraints);
+ 	mutex_lock(&regulator_list_mutex);
+ 	regulator_ena_gpio_free(rdev);
 -- 
 2.20.1
 
