@@ -2,91 +2,181 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2793CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51CBCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A0F20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E0820717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389065AbfJ1MVY (ORCPT
+        id S2389034AbfJ1MV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:21:24 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:40652 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389047AbfJ1MVX (ORCPT
+        Mon, 28 Oct 2019 08:21:57 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:34830 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726302AbfJ1MV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:21:23 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iP41N-0003VP-51; Mon, 28 Oct 2019 13:21:17 +0100
-Message-ID: <e5b07b4ce51f806ce79b1ae06ff3cbabbaa4873d.camel@sipsolutions.net>
-Subject: Re: [PATCH v2] 802.11n IBSS: wlan0 stops receiving packets due to
- aggregation after sender reboot
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Krzysztof =?UTF-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 28 Oct 2019 13:21:15 +0100
-In-Reply-To: <m37e4tjfbu.fsf@t19.piap.pl>
-References: <m34l02mh71.fsf@t19.piap.pl> <m37e4tjfbu.fsf@t19.piap.pl>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 28 Oct 2019 08:21:57 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 5727D634C87;
+        Mon, 28 Oct 2019 14:21:16 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1iP41L-0001Ir-Cg; Mon, 28 Oct 2019 14:21:15 +0200
+Date:   Mon, 28 Oct 2019 14:21:15 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191028122115.GB4928@valkosipuli.retiisi.org.uk>
+References: <20191025175908.14260-1-manivannan.sadhasivam@linaro.org>
+ <20191025175908.14260-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025175908.14260-2-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-25 at 12:21 +0200, Krzysztof Hałasa wrote:
-> Fix a bug where the mac80211 RX aggregation code sets a new aggregation
-> "session" at the remote station's request, but the head_seq_num
-> (the sequence number the receiver expects to receive) isn't reset.
+Hi Manivannan,
+
+Thanks for the update.
+
+On Fri, Oct 25, 2019 at 11:29:07PM +0530, Manivannan Sadhasivam wrote:
+> Add YAML devicetree binding for IMX296 CMOS image sensor.
 > 
-> Spotted on a pair of AR9580 in IBSS mode.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../devicetree/bindings/media/i2c/imx296.yaml | 98 +++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
 > 
-> Signed-off-by: Krzysztof Halasa <khalasa@piap.pl>
-> 
-> diff --git a/net/mac80211/agg-rx.c b/net/mac80211/agg-rx.c
-> index 4d1c335e06e5..67733bd61297 100644
-> --- a/net/mac80211/agg-rx.c
-> +++ b/net/mac80211/agg-rx.c
-> @@ -354,10 +354,13 @@ void ___ieee80211_start_rx_ba_session(struct sta_info *sta,
->  			 */
->  			rcu_read_lock();
->  			tid_rx = rcu_dereference(sta->ampdu_mlme.tid_rx[tid]);
-> -			if (tid_rx && tid_rx->timeout == timeout)
-> +			if (tid_rx && tid_rx->timeout == timeout) {
-> +				tid_rx->ssn = start_seq_num;
-> +				tid_rx->head_seq_num = start_seq_num;
->  				status = WLAN_STATUS_SUCCESS;
+> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> new file mode 100644
+> index 000000000000..4e204fd7cf90
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> @@ -0,0 +1,98 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> +
+> +maintainers:
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +description: |-
+> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> +  features a global shutter with variable charge-integration time. It is
+> +  programmable through I2C and 4-wire interfaces. The sensor output is
+> +  available via CSI-2 serial data output (1 Lane).
+> +
+> +properties:
+> +  compatible:
+> +    const: sony,imx296
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description:
+> +      Input clock for the sensor.
+> +    items:
+> +      - const: mclk
+> +
+> +  clock-frequency:
+> +    description:
+> +      Frequency of the mclk clock in Hertz.
+> +    default: 37125000
 
-This is wrong, this is the case of *updating an existing session*, we
-must not reset the head SN then.
+I think you could omit the default.
 
-I think you just got very lucky (or unlucky) to have the same dialog
-token, because we start from 0 - maybe we should initialize it to a
-random value to flush out such issues.
+> +
+> +  vddo-supply:
+> +    description:
+> +      Definition of the regulator used as interface power supply.
+> +    maxItems: 1
+> +
+> +  vdda-supply:
+> +    description:
+> +      Definition of the regulator used as analog power supply.
+> +    maxItems: 1
+> +
+> +  vddd-supply:
+> +    description:
+> +      Definition of the regulator used as digital power supply.
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description:
+> +      The phandle and specifier for the GPIO that controls sensor reset.
+> +    maxItems: 1
+> +
+> +  # See ../video-interfaces.txt for details
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - clock-frequency
+> +  - vddo-supply
+> +  - vdda-supply
+> +  - vddd-supply
 
-Really what I think probably happened is that one of your stations lost
-the connection to the other, and didn't tell it about it in any way - so
-the other kept all the status alive.
+I think the port and endpoint nodes should documented here as well.
 
-I suspect to make all this work well we need to not only have the fixes
-I made recently to actually send and parse deauth frames, but also to
-even send an auth and reset the state when we receive that, so if we
-move out of range and even the deauth frame is lost, we can still reset
-properly.
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    imx296: camera-sensor@1a {
+> +        compatible = "sony,imx296";
+> +        reg = <0x1a>;
+> +        reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&camera_rear_default>;
+> +        clocks = <&gcc 90>;
+> +        clock-names = "mclk";
+> +        clock-frequency = <37125000>;
+> +        vddo-supply = <&camera_vddo_1v8>;
+> +        vdda-supply = <&camera_vdda_3v3>;
+> +        vddd-supply = <&camera_vddd_1v2>;
+> +
+> +        port {
+> +            imx296_ep: endpoint {
+> +                remote-endpoint = <&csiphy0_ep>;
+> +            };
+> +        };
+> +    };
+> +
+> +...
 
-In any case, this is not the right approach - we need to handle the
-"lost connection" case better I suspect, but since you don't say what
-really happened I don't really know that that's what you're seeing.
+-- 
+Regards,
 
-johannes
-
+Sakari Ailus
