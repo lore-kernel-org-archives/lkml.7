@@ -2,124 +2,79 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3BBCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836E9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 495112070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:38:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJFVIuDr"
+	by mail.kernel.org (Postfix) with ESMTP id 5797920659
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbfJ1BiO (ORCPT
+        id S1729112AbfJ1Bpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 21:38:14 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36802 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbfJ1BiN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 21:38:13 -0400
-Received: by mail-ed1-f68.google.com with SMTP id bm15so6625842edb.3;
-        Sun, 27 Oct 2019 18:38:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zncCQd975Gz2HvK2SjXCCS9OAbsNjkyZCeZT6yaW7zQ=;
-        b=MJFVIuDrAyz9pDLgpUUl9PU1eZbzKuPQNiEAzcQW1qYjBZjuoWDjrqGy9uWwBC66Cd
-         dI3yEdlYrJi9nlHlHzafl7i8WvKj/XLHxPbDWEtsBpUBMumEUFvInIYQnVTLK+ti+7tO
-         BA7mgqjIeTWS1O1WIN27xKabnFwlPMrDCiIPvQUPLPAq7HMw8gsza012bODYpDuy2/vD
-         taxlG8IqDmUdHTSnMyFv5PMGM92EtSdVF5rDTJo3CJh1YqlOtU4Zj+9HaR42o5jK8e3s
-         jenl27VKb6t9BWfqRxFCO0FEO8G9hJFf5yNF0aRrMh28ErjfYLPp42bc4NbualuBRcp/
-         eA5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zncCQd975Gz2HvK2SjXCCS9OAbsNjkyZCeZT6yaW7zQ=;
-        b=DFGzwfx7yteJn42AglkjGVDhQhojYv2DjzleECKTqc+pztvOGPfEXA2d/5tk0/DXf3
-         HefSkC8lA/107Ewu5E22Y0uIfSTrESpKRjVSwlgoXCvMW+cgMZ0qdSLfOE+5kLm9Alhm
-         /4MM0aSIw9E3u2qXLBQQoKrrOPbeA3HNcsW5+atPv1nzMQ2/8pZgebnfjEnKzOY5fjOX
-         9UINNcm0IVC647VWr5Vzm+iavjy+EBhq7MsYZS6DS975daPXxiM+C4Fd/LkwpuosR5eR
-         UA9zAcynxlZDh1L75MPCDbVhvCXK7W7pKxHG4x74cC+PXN++eZDivoxyPJlbCIYylIto
-         fSIQ==
-X-Gm-Message-State: APjAAAW29Is33njqt1Ai7j8xIc+++cMRXFCaEr5PkdeZyamW+iAz96H+
-        op0WMfVM4sbGdlkNso32CAYkfylr1hBmYe8yGmaskbsfjpE=
-X-Google-Smtp-Source: APXvYqzgnaDiUcH3IYDfQVBOpeExgcPu32wDgAZkOKAPutypEopBXKs6avGlVlBxf+yhnsEi3FfGHSOF7QMkbQk2/Ug=
-X-Received: by 2002:a17:906:1d4d:: with SMTP id o13mr10006173ejh.196.1572226690648;
- Sun, 27 Oct 2019 18:38:10 -0700 (PDT)
+        Sun, 27 Oct 2019 21:45:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47968 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728141AbfJ1Bpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 21:45:44 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A6D1890E3AA43C01C4FF;
+        Mon, 28 Oct 2019 09:45:41 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 28 Oct 2019 09:45:31 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.de>, <pierre-louis.bossart@linux.intel.com>,
+        <daniel.baluta@nxp.com>, <rdunlap@infradead.org>,
+        <ranjani.sridharan@linux.intel.com>, <arnd@arndb.de>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH -next] ASoC: SOF: select SND_INTEL_DSP_CONFIG in SND_SOC_SOF_PCI
+Date:   Mon, 28 Oct 2019 09:45:11 +0800
+Message-ID: <20191028014511.73472-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191017025058.31528-1-hslester96@gmail.com> <CAHp75Vd2SMERjtvNumxAF1HSp8GSThmcyx96zkFzUXKwnD5d2Q@mail.gmail.com>
- <CANhBUQ2yxGbjk_DgXbip=TPT=evzA5naoJSY9t1_Ep47e9oupw@mail.gmail.com>
- <CAHp75VeLyTi=gqfNr-=Tg36yQs_fYG__iQAxAEKdks0mqsTbug@mail.gmail.com>
- <CANhBUQ1CnCHiY8tkCMcXZ3DAPcfnQZgfA_Fj4qf3yYBKGg10Wg@mail.gmail.com> <CAHp75Vdb19w02zKHo1tqAtF8TmT=z6Ye2YFfxVw_TGtO3VxfLA@mail.gmail.com>
-In-Reply-To: <CAHp75Vdb19w02zKHo1tqAtF8TmT=z6Ye2YFfxVw_TGtO3VxfLA@mail.gmail.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Mon, 28 Oct 2019 09:38:00 +0800
-Message-ID: <CANhBUQ2WJaFrk5JBDbTjaTM5mv0ebwdcHBoR8ODm28X_mOukLA@mail.gmail.com>
-Subject: Re: [PATCH] spi: pxa2xx: Add missed security checks
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 10:04 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Oct 18, 2019 at 2:37 PM Chuhong Yuan <hslester96@gmail.com> wrote:
-> > On Fri, Oct 18, 2019 at 7:14 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Fri, Oct 18, 2019 at 1:39 PM Chuhong Yuan <hslester96@gmail.com> wrote:
-> > > > On Fri, Oct 18, 2019 at 5:35 PM Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com> wrote:
-> > > > > On Fri, Oct 18, 2019 at 8:59 AM Chuhong Yuan <hslester96@gmail.com> wrote:
->
-> > > > > I'm not sure they are mandatory for all platforms.
-> > > > > To be on the safe side, you simple need to add _optional() to the both
-> > > > > call along with above change.
-> > > > >
-> > > >
-> > > > As I know, this is the only one in spi which does not have a check for
-> > > > devm_clk_get.
-> > >
-> > > For some it still may be optional. That's why better to check it and
-> > > mention in the commit message.
-> > >
-> > > > Even if add _optional(), they still may return errors and need security checks.
-> > >
-> > > Of course, see "along with" in my previous comment.
-> > >
-> >
-> > Got it. I will send version 2 in which both _optional() and security
-> > checks will be added.
->
-> Let me be clear. I didn't check if _optional() needed or not. You need
-> to investigate this before sending new verison.
-> And in either case this should be explained in commit message.
->
+When SND_SOC_SOF_PCI=y, and SND_INTEL_DSP_CONFIG=m, below
+errors can be seen:
+sound/soc/sof/sof-pci-dev.o: In function `sof_pci_probe':
+sof-pci-dev.c:(.text+0xb9): undefined reference to
+`snd_intel_dsp_driver_probe'
 
-I have checked this file again and found ssp->clk is used by clk_get_rate in
-pxa2xx_spi_probe.
-Therefore, it should not be NULL and _optional cannot be used here.
-Besides, ssp->irq is also used in pxa2xx_spi_probe.
-Hence, I think this patch is fine.
+After commit 82d9d54a6c0e ("ALSA: hda: add Intel DSP
+configuration / probe code"), sof_pci_probe() will call
+snd_intel_dsp_driver_probe(), so it should select
+SND_INTEL_DSP_CONFIG in Kconfig SND_SOC_SOF_PCI.
 
-Regards,
-Chuhong
+Fixes: 82d9d54a6c0e ("ALSA: hda: add Intel DSP configuration / probe code")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ sound/soc/sof/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-> --
-> With Best Regards,
-> Andy Shevchenko
+diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
+index 56a3ab6..a9b2be2 100644
+--- a/sound/soc/sof/Kconfig
++++ b/sound/soc/sof/Kconfig
+@@ -16,6 +16,7 @@ config SND_SOC_SOF_PCI
+ 	select SND_SOC_ACPI if ACPI
+ 	select SND_SOC_SOF_OPTIONS
+ 	select SND_SOC_SOF_INTEL_PCI if SND_SOC_SOF_INTEL_TOPLEVEL
++	select SND_INTEL_DSP_CONFIG
+ 	help
+ 	  This adds support for PCI enumeration. This option is
+ 	  required to enable Intel Skylake+ devices
+-- 
+2.7.4
+
