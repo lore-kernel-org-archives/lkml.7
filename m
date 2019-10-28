@@ -2,151 +2,109 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB2CC47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23F1CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED1820873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2F520873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388310AbfJ1Kqv (ORCPT
+        id S2388317AbfJ1KrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 06:46:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41562 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730796AbfJ1Kqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 06:46:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2A7BBB1B0;
-        Mon, 28 Oct 2019 10:46:49 +0000 (UTC)
-Subject: Re: [PATCH v2 2/8] dt-bindings: rtc: realtek: Convert RTD119x to
- schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191020040817.16882-1-afaerber@suse.de>
- <20191020040817.16882-3-afaerber@suse.de> <20191025212015.GA29978@bogus>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <5491f3ed-93bf-1c4d-60f8-5d646c3bd2fb@suse.de>
-Date:   Mon, 28 Oct 2019 11:46:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 28 Oct 2019 06:47:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:38454 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728227AbfJ1KrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 06:47:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C4C11F1;
+        Mon, 28 Oct 2019 03:47:16 -0700 (PDT)
+Received: from [10.1.194.43] (unknown [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 904C83F71E;
+        Mon, 28 Oct 2019 03:47:13 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+Subject: Re: [PATCH v13 12/22] mm: pagewalk: Allow walking without vma
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>, linux-mm@kvack.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, kbuild-all@lists.01.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vineet Gupta <vgupta@synopsys.com>
+References: <20191024093716.49420-13-steven.price@arm.com>
+ <201910271514.G7Dilhf7%lkp@intel.com>
+Message-ID: <14bd3b3c-268b-4a4f-2ee7-17ba6f10f31d@arm.com>
+Date:   Mon, 28 Oct 2019 10:46:55 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191025212015.GA29978@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <201910271514.G7Dilhf7%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 25.10.19 um 23:20 schrieb Rob Herring:
-> On Sun, Oct 20, 2019 at 06:08:11AM +0200, Andreas Färber wrote:
->> Convert the RTD119x binding to a YAML schema.
->>
->> Signed-off-by: Andreas Färber <afaerber@suse.de>
->> ---
->>  v2: New
->>  
->>  .../devicetree/bindings/rtc/realtek,rtd119x.txt    | 16 ---------
->>  .../devicetree/bindings/rtc/realtek,rtd119x.yaml   | 38 ++++++++++++++++++++++
->>  2 files changed, 38 insertions(+), 16 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
->>  create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+On 27/10/2019 07:59, kbuild test robot wrote:
+> Hi Steven,
 > 
+> Thank you for the patch! Yet something to improve:
 > 
->> diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
->> new file mode 100644
->> index 000000000000..71b7396bd469
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
-
-While renaming the file to .yaml I would like to also rename it to 1195.
-It would need to be 1x9x to cover RTD1195 and e.g. RTD1296, and looking
-forward the wildcard may need to be 1xxx to cover also RTD1619, which
-quickly becomes unrecognizable.
-
->> @@ -0,0 +1,38 @@
->> +# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v5.4-rc4 next-20191025]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 > 
-> Missing ()
+> url:    https://github.com/0day-ci/linux/commits/Steven-Price/Generic-page-walk-and-ptdump/20191027-140322
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 5a1e843c66fa6438f389045981c37e4073917641
+> config: arc-defconfig (attached as .config)
+> compiler: arc-elf-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=arc 
 
-Fixed.
+First off, these instructions don't work! make.cross attempts to
+download a sparc toolchain.
 
-> 
-> Though I'm not sure it matters other than consistency.
-> 
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/rtc/realtek,rtd119x.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Realtek RTD129x Real-Time Clock
->> +
->> +allOf:
->> +  - $ref: "rtc.yaml#"
->> +
->> +maintainers:
->> +  - Andreas Färber <afaerber@suse.de>
->> +
->> +properties:
->> +  compatible:
->> +    const: realtek,rtd1295-rtc
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +    description: Specifies the clock gate
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +
->> +examples:
->> +  - |
->> +	rtc@9801b600 {
->> +		compatible = "realtek,rtd1295-clk";
+However, the issue is actually quite easy to see if you look more
+closely at patch 2:
 
-This reveals a bug in the original binding example. Fixed to -rtc.
+> +#define pmd_leaf(x)                    (pmd_val(pmd) & _PAGE_HW_SZ)
 
->> +		reg = <0x9801b600 0x100>;
->> +		clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
-> 
-> You need the include file here or the example won't build (run 'make 
-> dt_binding_check').
+That 'pmd' variable should really have been 'x'!
 
-We can't. You acked the clk binding but the driver never got any review,
-so it didn't get merged and cannot be depended on here.
+Below diff should fix this up - I'll repost with this squashed in shortly:
 
-I've changed it to an artificial 42 so that dt_binding_check passes.
-I've also needed to fix the indentation to 4 spaces.
+----8<----
+diff --git a/arch/arc/include/asm/pgtable.h b/arch/arc/include/asm/pgtable.h
+index 5ec798e50836..b4a0cf27ac1c 100644
+--- a/arch/arc/include/asm/pgtable.h
++++ b/arch/arc/include/asm/pgtable.h
+@@ -274,7 +274,7 @@ static inline void pmd_set(pmd_t *pmdp, pte_t *ptep)
+ #define pmd_none(x)                    (!pmd_val(x))
+ #define        pmd_bad(x)                      ((pmd_val(x) & ~PAGE_MASK))
+ #define pmd_present(x)                 (pmd_val(x))
+-#define pmd_leaf(x)                    (pmd_val(pmd) & _PAGE_HW_SZ)
++#define pmd_leaf(x)                    (pmd_val(x) & _PAGE_HW_SZ)
+ #define pmd_clear(xp)                  do { pmd_val(*(xp)) = 0; } while (0)
 
-Regards,
-Andreas
-
-> 
->> +	};
->> +...
->> -- 
->> 2.16.4
->>
-
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+ #define pte_page(pte)          pfn_to_page(pte_pfn(pte))
