@@ -2,126 +2,68 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EC2C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86C7CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD6B21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B658F21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbfJ1NFg (ORCPT
+        id S2388491AbfJ1NF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:05:36 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5201 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726816AbfJ1NFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:05:36 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 045BF4DEF3DE6ABFDDF8;
-        Mon, 28 Oct 2019 21:05:28 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 28 Oct 2019
- 21:05:23 +0800
-Date:   Mon, 28 Oct 2019 13:05:15 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     Jakub Ladman <ladmanj@volny.cz>, Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hwmon@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH][RESEND] New driver for TLV493D-A1B6 I2C chip, input and
- hwmon class device.
-Message-ID: <20191028130515.00003bb0@huawei.com>
-In-Reply-To: <20191018205637.GS35946@dtor-ws>
-References: <966f09b8-0936-6d90-2ec8-bcb1b94c81aa@volny.cz>
-        <20191018205637.GS35946@dtor-ws>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 28 Oct 2019 09:05:59 -0400
+Received: from albireo.enyo.de ([37.24.231.21]:37754 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbfJ1NF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:05:59 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iP4iW-0007eV-DQ; Mon, 28 Oct 2019 13:05:52 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1iP4iW-0008D3-8w; Mon, 28 Oct 2019 14:05:52 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH RFC] fs/fcntl: add fcntl F_GET_RSS
+References: <157225848971.557.16257813537984792761.stgit@buzz>
+        <87k18p6qjk.fsf@mid.deneb.enyo.de>
+        <d7e76bee-80c3-d787-b854-91e631ab29cd@yandex-team.ru>
+Date:   Mon, 28 Oct 2019 14:05:52 +0100
+In-Reply-To: <d7e76bee-80c3-d787-b854-91e631ab29cd@yandex-team.ru> (Konstantin
+        Khlebnikov's message of "Mon, 28 Oct 2019 15:55:19 +0300")
+Message-ID: <87ftjd6mvj.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 13:56:37 -0700
-Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+* Konstantin Khlebnikov:
 
-> Hi Jakub,
-> 
-> On Fri, Oct 18, 2019 at 10:10:19PM +0200, Jakub Ladman wrote:
-> > Dear maintainers.
-> > 
-> > As a linux-patch newbie i made some mistakes in my first attempt to send
-> > this patch.
-> > This patch contains a new driver for i2c connected chip, Infineon
-> > TLV493D-A1B6.
-> > The chip is 3D hall-effect sensor with thermometer.
-> > 
-> > This particular driver senses magnetic field rotation in X/Y plane with 1
-> > degree resolution and +/- 1 degree error.
-> > 
-> > Input device is created for the angle sensing part.
-> > Hwmon device is created for the thermometer part.
-> > 
-> > Input device axis must be configured by device-tree. There are also optional
-> > parameters regarding absolute/relative mode switching, minimum step in
-> > relative mode, filtering and thermometer calibration.
-> > 
-> > We are using that device as high reliability rotary encoder.  
-> 
-> I wonder if IIO subsystem that support s magnetometers and temperature
-> sensors would not be a better hone for this.
-> 
-> CC-ing Jonathan.
-> 
-Hi Jakub, Dmitry,
+> On 28/10/2019 14.46, Florian Weimer wrote:
+>> * Konstantin Khlebnikov:
+>> 
+>>> This implements fcntl() for getting amount of resident memory in cache.
+>>> Kernel already maintains counter for each inode, this patch just exposes
+>>> it into userspace. Returned size is in kilobytes like values in procfs.
+>> 
+>> I think this needs a 32-bit compat implementation which clamps the
+>> returned value to INT_MAX.
+>> 
+>
+> 32-bit machine couldn't hold more than 2TB cache in one file.
+> Even radix tree wouldn't fit into low memory area.
 
-Sorry for slow reply, was on vacation.
-
-Anyhow, from a quick glance at the datasheet this looks like a fairly standard
-magnetometer, be it one designed for use with an associated magnet, rather than
-intended for use to measure the earths magnetic field (compass type chips).
-
-These devices only become an 'input device' once the relative positioning relative
-to the magnet is known.  We should probably figure out a way to represent that
-in DT etc for devices where it is known.  Whether we then do a bridge to input
-using that info in kernel or pass it all up to userspace to deal with is a
-separate issue, that position information needs to be described first.  My suspicion
-is that it would be hard to handle the maths in kernel, but I've not tried
-working it out!
-
-So this would fit in IIO, even if the eventual 'use case' is classic input
-(I'm guessing a rotary dial).
-
-We have a driver for a part with similar support undergoing revisions at the
-moment:
-
-https://www.azoteq.com/images/stories/pdf/iqs624_datasheet.pdf
-
-There might be other hall effect devices like this in IIO, I can't recall but
-I certainly have one in my todo pile.
-
-+CC linux-iio
-
-Thanks,
-
-Jonathan
-
-
-> Also, your mailer mangled your patch pretty badly, please consider using
-> git send-email next time.
-
-
-> 
-> Thanks.
-> 
-
-
+I meant a 32-bit process running on a 64-bit kernel.
