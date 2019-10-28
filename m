@@ -2,104 +2,136 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C602CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA98CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1DE7214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572275268;
-	bh=cJMrQBmRRDz/62veZ93a0sKQIk1acNGPtdue49LiYbs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NSz84T2E7B3VQVBikTChshXLTpkqCWyaB5GRRa95FLADtLDTCTCvQPRvnX2fPa+Wh
-	 vSynStdhb7j3Rs5uuhL3xnRmhBWLzy6i5gvDB26QQsU7cixDFmjANzZ7fxS2A8oUmX
-	 ZpfQ9NiXusLDV9/oCwpi2Csbv0gUDEfdJpustIro=
+	by mail.kernel.org (Postfix) with ESMTP id 3F3A220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bN8dMf3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389605AbfJ1PHr (ORCPT
+        id S2390528AbfJ1PMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:07:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726945AbfJ1PHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:07:47 -0400
-Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 381F621783;
-        Mon, 28 Oct 2019 15:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572275266;
-        bh=cJMrQBmRRDz/62veZ93a0sKQIk1acNGPtdue49LiYbs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AFOiqgHOn4bnIA/yXpqo/OVM/Zt94fxcrVsVZNAa+Ovs2QpfFZpj3Ps5x0C5VS/RK
-         ON9J97+O52qxT0Tq4SARIcCqNV5AwlAHh6I69cfTJAz9SQKpmrXTaN2zEWdbIc/yhI
-         ypy5BipHf5ltz/RjxpxOFA2IcoqkbkHBcwW6+rAY=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Scott Wood <swood@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH] timers/nohz: Update nohz load even if tick already stopped
-Date:   Mon, 28 Oct 2019 16:07:16 +0100
-Message-Id: <20191028150716.22890-1-frederic@kernel.org>
-X-Mailer: git-send-email 2.23.0
+        Mon, 28 Oct 2019 11:12:18 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:47928 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728436AbfJ1PMR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 11:12:17 -0400
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 6412220F3BFB;
+        Mon, 28 Oct 2019 08:12:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6412220F3BFB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1572275536;
+        bh=oeOl1+MJVTxWNtYdrB+2Qje7BiiU/JQDN6GoQIL9Ybo=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=bN8dMf3AEpu9A5EX0gfGwLbF9kuPqBl4+Sl+0vtz8OL1o4VRhA0FC34is+ZfURZ8A
+         lod7XvSBjyWh6qVbvP/vjFwJw9FDS9yDR07nc/er9FZzqWasMyHRvNHZW4E45xCkrW
+         V98LqHeKeMhsO2VVp0vy7k4SRfZfJsP1WYmJ7xtM=
+Subject: Re: [PATCH v2 3/4] KEYS: Added BUILTIN_TRUSTED_KEYS enum to measure
+ keys added to builtin_trusted_keys keyring
+To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
+        casey@schaufler-ca.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+References: <20191023233950.22072-1-nramas@linux.microsoft.com>
+ <20191023233950.22072-4-nramas@linux.microsoft.com>
+ <1572186810.4532.206.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <8494baa1-c4db-f08b-26c9-2e56279075d0@linux.microsoft.com>
+Date:   Mon, 28 Oct 2019 08:12:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <1572186810.4532.206.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Wood <swood@redhat.com>
+On 10/27/19 7:33 AM, Mimi Zohar wrote:
 
-The way loadavg is tracked during nohz only pays attention to the load
-upon entering nohz. This can be particularly noticeable if nohz is
-entered while non-idle, and then the cpu goes idle and stays that way for
-a long time. We've had reports of a loadavg near 150 on a mostly idle
-system.
+> .builtin_trusted_keys is a trusted keyring, which is created by the
+> kernel.  It cannot be deleted or replaced by userspace, so it should
+> be possible to correlate a keyring name with a keyring number on
+> policy load.
 
-Calling calc_load_nohz_start() regardless of whether the tick is already
-stopped addresses the issue when going idle. Tracking load changes when
-not going idle (e.g. multiple SCHED_FIFO tasks coming and going) is not
-addressed by this patch.
+Yes - at policy load we can map a keyring name to a keyring number.
 
-Signed-off-by: Scott Wood <swood@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
----
- kernel/time/tick-sched.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+But at runtime we still need to know if the keyring parameter passed to 
+the IMA hook function is configured to be measured.
 
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index c2748232f607..f55ddeb652a3 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -763,6 +763,9 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
- 		ts->do_timer_last = 0;
- 	}
- 
-+	/* Even if the tick was already stopped, load may have changed */
-+	calc_load_nohz_start();
-+
- 	/* Skip reprogram of event if its not changed */
- 	if (ts->tick_stopped && (expires == ts->next_tick)) {
- 		/* Sanity check: make sure clockevent is actually programmed */
-@@ -783,7 +786,6 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
- 	 * the scheduler tick in nohz_restart_sched_tick.
- 	 */
- 	if (!ts->tick_stopped) {
--		calc_load_nohz_start();
- 		quiet_vmstat();
- 
- 		ts->last_tick = hrtimer_get_expires(&ts->sched_timer);
--- 
-2.23.0
+void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+				   unsigned long flags, bool create);
+{
+    => Get the keyring number for the given "keyring".
+    => Check if the keyring number is in the configured IMA policy.
+    => If yes, measure the key.
+    => Else, do nothing.
+}
+
+Did I misunderstand what you had stated?
+
+>> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+>> index fc376a323908..25566c74e679 100644
+>> --- a/Documentation/ABI/testing/ima_policy
+>> +++ b/Documentation/ABI/testing/ima_policy
+>> @@ -29,6 +29,7 @@ Description:
+>>   				[FIRMWARE_CHECK]
+>>   				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+>>   				[KEXEC_CMDLINE]
+>> +				[BUILTIN_TRUSTED_KEYS]
+> 
+> The .builtin_trusted_keys is the name of a keyring, not of an IMA
+> hook.  Define a new IMA policy "keyring=" option, where keyring is
+> optional.  Some IMA policy rules might look like:
+> 
+> # measure all keys
+> measure func=KEYRING_CHECK
+> 
+> # measure keys on the IMA keyring
+> measure func=KEYRING_CHECK keyring=".ima"
+> 
+> # measure keys on the BUILTIN and IMA keyrings into a different PCR
+> measure func=KEYRING_CHECK keyring=".builtin_trusted_keys|.ima" pcr=11
+
+I agree - I'll take a look at this.
+
+> "func", in this case, should be something like "KEYRING_CHECK".  No
+> mapping is necessary.
+Agree.
+
+> 
+>>   	if (!ima_initialized) {
+>> -		ima_queue_key_for_measurement(key, NONE);
+>> +		ima_queue_key_for_measurement(key, func);
+>>   		return;
+>>   	}
+>>   
+>>   	pk = key->payload.data[asym_crypto];
+>>   	process_buffer_measurement(pk->key, pk->keylen,
+>>   				   key->description,
+>> -				   NONE, 0);
+>> +				   func, 0);
+> 
+> Pass the "keyring" to process_buffer_measurement() and on to
+> ima_get_action(), so that ima_get_action() determines whether the
+> keyring is in policy.
+
+Agree.
+
+thanks,
+  -lakshmi
+
 
