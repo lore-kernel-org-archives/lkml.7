@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D1ECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B85CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02A621835
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66EA621924
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:59:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389833AbfJ1N7w (ORCPT
+        id S2389844AbfJ1N7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:59:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:40496 "EHLO foss.arm.com"
+        Mon, 28 Oct 2019 09:59:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:40528 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbfJ1N7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:59:50 -0400
+        id S2389835AbfJ1N7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:59:52 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6BF7E1F1;
-        Mon, 28 Oct 2019 06:59:49 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52A1D337;
+        Mon, 28 Oct 2019 06:59:52 -0700 (PDT)
 Received: from e112269-lin.cambridge.arm.com (unknown [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6F7F3F6C4;
-        Mon, 28 Oct 2019 06:59:46 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A2C263F6C4;
+        Mon, 28 Oct 2019 06:59:49 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -43,10 +44,11 @@ Cc:     Steven Price <steven.price@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v14 10/22] x86: mm: Add p?d_leaf() definitions
-Date:   Mon, 28 Oct 2019 13:58:58 +0000
-Message-Id: <20191028135910.33253-11-steven.price@arm.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Zong Li <zong.li@sifive.com>
+Subject: [PATCH v14 11/22] mm: pagewalk: Add p4d_entry() and pgd_entry()
+Date:   Mon, 28 Oct 2019 13:58:59 +0000
+Message-Id: <20191028135910.33253-12-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191028135910.33253-1-steven.price@arm.com>
 References: <20191028135910.33253-1-steven.price@arm.com>
@@ -57,63 +59,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-walk_page_range() is going to be allowed to walk page tables other than
-those of user space. For this it needs to know when it has reached a
-'leaf' entry in the page tables. This information is provided by the
-p?d_leaf() functions/macros.
+pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
+("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
+no users. We're about to add users so reintroduce them, along with
+p4d_entry() as we now have 5 levels of tables.
 
-For x86 we already have p?d_large() functions, so simply add macros to
-provide the generic p?d_leaf() names for the generic code.
+Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
+PUD-sized transparent hugepages") already re-added pud_entry() but with
+different semantics to the other callbacks. Since there have never
+been upstream users of this, revert the semantics back to match the
+other callbacks. This means pud_entry() is called for all entries, not
+just transparent huge pages.
 
+Tested-by: Zong Li <zong.li@sifive.com>
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/x86/include/asm/pgtable.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/pagewalk.h | 19 +++++++++++++------
+ mm/pagewalk.c            | 27 ++++++++++++++++-----------
+ 2 files changed, 29 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 0bc530c4eb13..6986a451619e 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -239,6 +239,7 @@ static inline unsigned long pgd_pfn(pgd_t pgd)
- 	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
- }
+diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+index bddd9759bab9..12004b097eae 100644
+--- a/include/linux/pagewalk.h
++++ b/include/linux/pagewalk.h
+@@ -8,15 +8,15 @@ struct mm_walk;
  
-+#define p4d_leaf	p4d_large
- static inline int p4d_large(p4d_t p4d)
- {
- 	/* No 512 GiB pages yet */
-@@ -247,6 +248,7 @@ static inline int p4d_large(p4d_t p4d)
+ /**
+  * mm_walk_ops - callbacks for walk_page_range
+- * @pud_entry:		if set, called for each non-empty PUD (2nd-level) entry
+- *			this handler should only handle pud_trans_huge() puds.
+- *			the pmd_entry or pte_entry callbacks will be used for
+- *			regular PUDs.
+- * @pmd_entry:		if set, called for each non-empty PMD (3rd-level) entry
++ * @pgd_entry:		if set, called for each non-empty PGD (top-level) entry
++ * @p4d_entry:		if set, called for each non-empty P4D entry
++ * @pud_entry:		if set, called for each non-empty PUD entry
++ * @pmd_entry:		if set, called for each non-empty PMD entry
+  *			this handler is required to be able to handle
+  *			pmd_trans_huge() pmds.  They may simply choose to
+  *			split_huge_page() instead of handling it explicitly.
+- * @pte_entry:		if set, called for each non-empty PTE (4th-level) entry
++ * @pte_entry:		if set, called for each non-empty PTE (lowest-level)
++ *			entry
+  * @pte_hole:		if set, called for each hole at all levels
+  * @hugetlb_entry:	if set, called for each hugetlb entry
+  * @test_walk:		caller specific callback function to determine whether
+@@ -24,8 +24,15 @@ struct mm_walk;
+  *			"do page table walk over the current vma", returning
+  *			a negative value means "abort current page table walk
+  *			right now" and returning 1 means "skip the current vma"
++ *
++ * p?d_entry callbacks are called even if those levels are folded on a
++ * particular architecture/configuration.
+  */
+ struct mm_walk_ops {
++	int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
++			 unsigned long next, struct mm_walk *walk);
++	int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
++			 unsigned long next, struct mm_walk *walk);
+ 	int (*pud_entry)(pud_t *pud, unsigned long addr,
+ 			 unsigned long next, struct mm_walk *walk);
+ 	int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index d48c2a986ea3..fc4d98a3a5a0 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -93,15 +93,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+ 		}
  
- #define pte_page(pte)	pfn_to_page(pte_pfn(pte))
+ 		if (ops->pud_entry) {
+-			spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
+-
+-			if (ptl) {
+-				err = ops->pud_entry(pud, addr, next, walk);
+-				spin_unlock(ptl);
+-				if (err)
+-					break;
+-				continue;
+-			}
++			err = ops->pud_entry(pud, addr, next, walk);
++			if (err)
++				break;
+ 		}
  
-+#define pmd_leaf	pmd_large
- static inline int pmd_large(pmd_t pte)
- {
- 	return pmd_flags(pte) & _PAGE_PSE;
-@@ -874,6 +876,7 @@ static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
- 	return (pmd_t *)pud_page_vaddr(*pud) + pmd_index(address);
- }
- 
-+#define pud_leaf	pud_large
- static inline int pud_large(pud_t pud)
- {
- 	return (pud_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
-@@ -885,6 +888,7 @@ static inline int pud_bad(pud_t pud)
- 	return (pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
- }
- #else
-+#define pud_leaf	pud_large
- static inline int pud_large(pud_t pud)
- {
- 	return 0;
-@@ -1233,6 +1237,7 @@ static inline bool pgdp_maps_userspace(void *__ptr)
- 	return (((ptr & ~PAGE_MASK) / sizeof(pgd_t)) < PGD_KERNEL_START);
- }
- 
-+#define pgd_leaf	pgd_large
- static inline int pgd_large(pgd_t pgd) { return 0; }
- 
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
+ 		split_huge_pud(walk->vma, pud, addr);
+@@ -135,7 +129,12 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
+ 				break;
+ 			continue;
+ 		}
+-		if (ops->pmd_entry || ops->pte_entry)
++		if (ops->p4d_entry) {
++			err = ops->p4d_entry(p4d, addr, next, walk);
++			if (err)
++				break;
++		}
++		if (ops->pud_entry || ops->pmd_entry || ops->pte_entry)
+ 			err = walk_pud_range(p4d, addr, next, walk);
+ 		if (err)
+ 			break;
+@@ -162,7 +161,13 @@ static int walk_pgd_range(unsigned long addr, unsigned long end,
+ 				break;
+ 			continue;
+ 		}
+-		if (ops->pmd_entry || ops->pte_entry)
++		if (ops->pgd_entry) {
++			err = ops->pgd_entry(pgd, addr, next, walk);
++			if (err)
++				break;
++		}
++		if (ops->p4d_entry || ops->pud_entry || ops->pmd_entry ||
++		    ops->pte_entry)
+ 			err = walk_p4d_range(pgd, addr, next, walk);
+ 		if (err)
+ 			break;
 -- 
 2.20.1
 
