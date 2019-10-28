@@ -2,68 +2,144 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FCACA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76E5CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBEB214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572263579;
-	bh=8hJIjJ+E1m4Pah5tqGcOg9p22uWWbGt4oxsXkgRt41c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ruXCxEhDx4Rk6JbySYfYADxTaOoBERRm0esqVcHS5oxr0VU0WxdRR4Q30zGX3qohc
-	 8m63stEonRD9PFqPRKRIpQDqsXD5EROJn6mO0lixcqj5e/NBx4S83crJcTq35nQ7j5
-	 BDYjra/BKQKhNi8xWJ0ipKdgBN/SvgXyS0NcI9wg=
+	by mail.kernel.org (Postfix) with ESMTP id 8C90B214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388714AbfJ1Lw6 (ORCPT
+        id S2388729AbfJ1LzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 07:52:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727585AbfJ1Lw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 07:52:57 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BEB1214D9;
-        Mon, 28 Oct 2019 11:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572263577;
-        bh=8hJIjJ+E1m4Pah5tqGcOg9p22uWWbGt4oxsXkgRt41c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1O2hMHl5Eb6yDgwV6YAT1XyKM9RjSxMVU1knnHxtWZR1B7oVbkc1B7CmbmrXHVDm3
-         l0zcoTxLtYU9MZmUNcijVKBvHXa7nhKJgxKv50L/4HaXvoAkpnAfHyIEgVzgDhDOvi
-         EfeObR+r6I0GjvN/r8qlqZQ7gI89UZBF+j4SP7RM=
-Date:   Mon, 28 Oct 2019 19:52:35 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Kosina <trivial@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH trivial] ARM: dts: imx53: Spelling
- s/configration/configuration/
-Message-ID: <20191028115233.GF16985@dragon>
-References: <20191024144443.27761-1-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024144443.27761-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Mon, 28 Oct 2019 07:55:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54168 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388719AbfJ1LzJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 07:55:09 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9SBqliO065063
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:55:09 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vwwp8vdsa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:55:08 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 28 Oct 2019 11:55:06 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 28 Oct 2019 11:55:01 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9SBsxh127263030
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 11:55:00 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D430E11C050;
+        Mon, 28 Oct 2019 11:54:59 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7AD1811C04A;
+        Mon, 28 Oct 2019 11:54:57 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.151.87])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 28 Oct 2019 11:54:57 +0000 (GMT)
+Subject: Re: [PATCH v9 2/8] powerpc/ima: add support to initialize ima
+ policy rules
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.vnet.ibm.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>
+Date:   Mon, 28 Oct 2019 07:54:56 -0400
+In-Reply-To: <1572133923.4532.79.camel@linux.ibm.com>
+References: <20191024034717.70552-1-nayna@linux.ibm.com>
+         <20191024034717.70552-3-nayna@linux.ibm.com>
+         <dd7e04fc-25e8-280f-b565-bdb031939655@linux.microsoft.com>
+         <27dbe08e-5473-4dd0-d2ad-2df591e23f5e@linux.vnet.ibm.com>
+         <1572133923.4532.79.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102811-0012-0000-0000-0000035E5E70
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102811-0013-0000-0000-000021999B74
+Message-Id: <1572263696.4532.240.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910280122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 04:44:43PM +0200, Geert Uytterhoeven wrote:
-> Fix misspelling of "configuration".
+On Sat, 2019-10-26 at 19:52 -0400, Mimi Zohar wrote:
+> On Fri, 2019-10-25 at 12:02 -0500, Nayna Jain wrote:
+> > On 10/24/19 12:35 PM, Lakshmi Ramasubramanian wrote:
+> > > On 10/23/2019 8:47 PM, Nayna Jain wrote:
+> > >
+> > >> +/*
+> > >> + * The "secure_rules" are enabled only on "secureboot" enabled systems.
+> > >> + * These rules verify the file signatures against known good values.
+> > >> + * The "appraise_type=imasig|modsig" option allows the known good 
+> > >> signature
+> > >> + * to be stored as an xattr or as an appended signature.
+> > >> + *
+> > >> + * To avoid duplicate signature verification as much as possible, 
+> > >> the IMA
+> > >> + * policy rule for module appraisal is added only if 
+> > >> CONFIG_MODULE_SIG_FORCE
+> > >> + * is not enabled.
+> > >> + */
+> > >> +static const char *const secure_rules[] = {
+> > >> +    "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+> > >> +#ifndef CONFIG_MODULE_SIG_FORCE
+> > >> +    "appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+> > >> +#endif
+> > >> +    NULL
+> > >> +};
+> > >
+> > > Is there any way to not use conditional compilation in the above array 
+> > > definition? Maybe define different functions to get "secure_rules" for 
+> > > when CONFIG_MODULE_SIG_FORCE is defined and when it is not defined.
+> > 
+> > How will you decide which function to be called ?
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> You could call "is_module_sig_enforced()".
 
-Applied, thanks.
+Calling is_module_sig_enforce() would prevent verifying the same
+kernel module appended signature twice, when CONFIG_MODULE_SIG is
+enabled, but not CONFIG_MODULE_SIG_FORCE.  This comes at the expense
+of having to define additional policies.
+
+Unlike for the kernel image, there is no coordination between lockdown
+and IMA for kernel modules signature verification.  I suggest
+deferring defining additional policies to when the lockdown/IMA
+coordination is addressed.
+
+Mimi
+
