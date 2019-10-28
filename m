@@ -7,61 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A403DCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E25ECA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D03208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EA8217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572274617;
-	bh=QYdHmgTyRVIVXwiClwdjXChz9pTZ8G+QcBmCt7N4dm0=;
+	s=default; t=1572274619;
+	bh=4J9tlhUXWKOExte274s25gQJmJj6So6ycQ3YIvjjgwM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Pjvzcl/fRl4TAxh2nmev0PtBNGYig44LqjEF2V907gS6rguPROPkxl8npQiIddY/p
-	 wYfy3WGV6V5MMFS0ZhGSx+W9EiI7DEhHIcfrQajvMuhlI2VT+d8Xcipfi8r4PS2o3b
-	 eDxiw+jL6jklu+vKFapBsBnchZbTU9eKH4+wCg2c=
+	b=aFlsIfcKogXbyWt3L40JZRhZ9DUM6Z/NFnDjtMZI9LUrQiFPsDvmW5ZjrI03Clu+1
+	 Q3Owi68HhuiL15j5gwkK5M+WB30lWcA4wfCeSxI/5HJKIBel1Hp4RVl8ZsC8XBe5tz
+	 U6OqxNK8S3cSdB1xpOtIzt5pdENHGSxG8LapHr5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390478AbfJ1O44 (ORCPT
+        id S2390491AbfJ1O46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:56:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40078 "EHLO
+        Mon, 28 Oct 2019 10:56:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40088 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390428AbfJ1O4z (ORCPT
+        with ESMTP id S2390461AbfJ1O44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:56:55 -0400
+        Mon, 28 Oct 2019 10:56:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=AFCr3rynD8V4Xu0si+l9pX7hWrr9yeLzz/mOG9Iw2wc=; b=G0w0eKogHrhP
-        q8K6V3DrJgZC7vPrVoys+O16CN+nQi6vYsFPu8CvMZEwCu5kkSS4vSxjP3s7vUiAjyT4NK3LXZEyV
-        jL/XjtfWFgEw2xMIxEP60y7Y8B3QdjH5BHZfNy8tuaf8+JJbATHxKGqcJUUP1mlVNnb1QD2L2Btzj
-        J8NKk=;
+        List-Archive; bh=le0uDCgGujH8CUVq/g9+3lWEiEFwcja0kTihGY6f+ic=; b=qqJ1uci6dSdK
+        xT4wb+ckK/TxS2XswsvYaKZ0cQFhSbNytK+Dgbs8yg3AyCdAT8W87Dtk9W9u3rheKL1ETKcxQd0ku
+        3Ujgleaq2Tw8PB3vVMu9H9jgbfWhvU2WVXP9gBruNVxQAMQTPQnrh2LqX+bv+WzpDQ5o4dU0TFlhv
+        6UUmQ=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iP6Rk-0008Rv-0Q; Mon, 28 Oct 2019 14:56:40 +0000
+        id 1iP6Ru-0008Tn-QH; Mon, 28 Oct 2019 14:56:50 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 6969827403EF; Mon, 28 Oct 2019 14:56:38 +0000 (GMT)
+        id 137E127403E4; Mon, 28 Oct 2019 14:56:49 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     alsa-devel@alsa-project.org, "Cc:"@sirena.co.uk,
-        "Cc:"@sirena.co.uk, emamd001@umn.edu,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>, kjlu@umn.edu,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        smccaman@umn.edu, Takashi Iwai <tiwai@suse.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-Subject: Applied "ASoC: SOF: Fix memory leak in sof_dfsentry_write" to the asoc tree
-In-Reply-To: <20191027194856.4056-1-navid.emamdoost@gmail.com>
+To:     Lingling Xu <ling_ling.xu@unisoc.com>
+Cc:     baolin.wang7@gmail.com, Baolin Wang <baolin.wang@linaro.org>,
+        baolin.wang@linaro.org, broonie@kernel.org,
+        ling_ling.xu@unisoc.com, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        orsonzhai@gmail.com, zhang.lyra@gmail.com
+Subject: Applied "spi: sprd: adi: Set BIT_WDG_NEW bit when rebooting" to the spi tree
+In-Reply-To: <5655318a7252c9ea518c2f7950a61228ab8f42bf.1572257085.git.baolin.wang@linaro.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20191028145638.6969827403EF@ypsilon.sirena.org.uk>
-Date:   Mon, 28 Oct 2019 14:56:38 +0000 (GMT)
+Message-Id: <20191028145650.137E127403E4@ypsilon.sirena.org.uk>
+Date:   Mon, 28 Oct 2019 14:56:49 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: SOF: Fix memory leak in sof_dfsentry_write
+   spi: sprd: adi: Set BIT_WDG_NEW bit when rebooting
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -94,40 +89,50 @@ to this mail.
 Thanks,
 Mark
 
-From c0a333d842ef67ac04adc72ff79dc1ccc3dca4ed Mon Sep 17 00:00:00 2001
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
-Date: Sun, 27 Oct 2019 14:48:47 -0500
-Subject: [PATCH] ASoC: SOF: Fix memory leak in sof_dfsentry_write
+From 1d00a67c2da2d8d82e6dcc5b398d9f6db656d9be Mon Sep 17 00:00:00 2001
+From: Lingling Xu <ling_ling.xu@unisoc.com>
+Date: Mon, 28 Oct 2019 18:10:31 +0800
+Subject: [PATCH] spi: sprd: adi: Set BIT_WDG_NEW bit when rebooting
 
-In the implementation of sof_dfsentry_write() memory allocated for
-string is leaked in case of an error. Go to error handling path if the
-d_name.name is not valid.
+When rebooting system, the PMIC watchdog time loading may not be loaded
+correctly when another system is feeding the PMIC watchdog, since we did
+not check the watchdog busy status before loading time values.
 
-Fixes: 091c12e1f50c ("ASoC: SOF: debug: add new debugfs entries for IPC flood test")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Link: https://lore.kernel.org/r/20191027194856.4056-1-navid.emamdoost@gmail.com
+Thus we should set the BIT_WDG_NEW bit before loading time values, that
+can support multiple loads without checking busy status to make sure the
+time values can be loaded successfully to avoid this potential issue.
+
+Signed-off-by: Lingling Xu <ling_ling.xu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Link: https://lore.kernel.org/r/5655318a7252c9ea518c2f7950a61228ab8f42bf.1572257085.git.baolin.wang@linaro.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sof/debug.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/spi/spi-sprd-adi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/soc/sof/debug.c b/sound/soc/sof/debug.c
-index 54cd431faab7..5529e8eeca46 100644
---- a/sound/soc/sof/debug.c
-+++ b/sound/soc/sof/debug.c
-@@ -152,8 +152,10 @@ static ssize_t sof_dfsentry_write(struct file *file, const char __user *buffer,
- 	 */
- 	dentry = file->f_path.dentry;
- 	if (strcmp(dentry->d_name.name, "ipc_flood_count") &&
--	    strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
--		return -EINVAL;
-+	    strcmp(dentry->d_name.name, "ipc_flood_duration_ms")) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
+diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
+index 9613cfe3c0a2..87dadb6b8ebf 100644
+--- a/drivers/spi/spi-sprd-adi.c
++++ b/drivers/spi/spi-sprd-adi.c
+@@ -77,6 +77,7 @@
  
- 	if (!strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
- 		flood_duration_test = true;
+ /* Bits definitions for register REG_WDG_CTRL */
+ #define BIT_WDG_RUN			BIT(1)
++#define BIT_WDG_NEW			BIT(2)
+ #define BIT_WDG_RST			BIT(3)
+ 
+ /* Registers definitions for PMIC */
+@@ -383,6 +384,10 @@ static int sprd_adi_restart_handler(struct notifier_block *this,
+ 	/* Unlock the watchdog */
+ 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOCK, WDG_UNLOCK_KEY);
+ 
++	sprd_adi_read(sadi, sadi->slave_pbase + REG_WDG_CTRL, &val);
++	val |= BIT_WDG_NEW;
++	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_CTRL, val);
++
+ 	/* Load the watchdog timeout value, 50ms is always enough. */
+ 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOAD_LOW,
+ 		       WDG_LOAD_VAL & WDG_LOAD_MASK);
 -- 
 2.20.1
 
