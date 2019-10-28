@@ -2,68 +2,74 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D86C7CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCFACA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B658F21783
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7E9214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572268087;
+	bh=eN/t8vEWe/l66u2wjNSnil60tzYkWczNbhhncntG/Qs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WX246HuU7QrerBTKzl8entYpVA939EgODKR3WbycN6R/IJpLuYMi/hU351uKPk8kn
+	 7DvWJdSSNONWHn9saFIVXPbKZqL/CHKXYQIWV3ihuDLyG8wXRyH3EZDucqA+sliM0T
+	 inF8WdRpQH0Cr2rHjDwQaZVwceIFZj835cUJEk6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388491AbfJ1NF7 (ORCPT
+        id S2388911AbfJ1NIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:05:59 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:37754 "EHLO albireo.enyo.de"
+        Mon, 28 Oct 2019 09:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfJ1NF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:05:59 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iP4iW-0007eV-DQ; Mon, 28 Oct 2019 13:05:52 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1iP4iW-0008D3-8w; Mon, 28 Oct 2019 14:05:52 +0100
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-Subject: Re: [PATCH RFC] fs/fcntl: add fcntl F_GET_RSS
-References: <157225848971.557.16257813537984792761.stgit@buzz>
-        <87k18p6qjk.fsf@mid.deneb.enyo.de>
-        <d7e76bee-80c3-d787-b854-91e631ab29cd@yandex-team.ru>
-Date:   Mon, 28 Oct 2019 14:05:52 +0100
-In-Reply-To: <d7e76bee-80c3-d787-b854-91e631ab29cd@yandex-team.ru> (Konstantin
-        Khlebnikov's message of "Mon, 28 Oct 2019 15:55:19 +0300")
-Message-ID: <87ftjd6mvj.fsf@mid.deneb.enyo.de>
+        id S2388578AbfJ1NIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:08:06 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C3B320717;
+        Mon, 28 Oct 2019 13:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572268085;
+        bh=eN/t8vEWe/l66u2wjNSnil60tzYkWczNbhhncntG/Qs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZfkGtUdc9OP38mduRSaP02AMOobq0kjRV6BLT/zrP1C7FrZmLgeZHvo0m0ie71UHm
+         LWJ8gu0J128Zy0RjjMH5ewZpCMqpsTw1ComTsNYRxfdXotnteA5mSV60+6r4u5RIog
+         pvgl+7uUOKkBe4ZV31SnYN/7z2viBWJcmeuR2JJY=
+Date:   Mon, 28 Oct 2019 21:07:36 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, ping.bai@nxp.com, jun.li@nxp.com,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM64: imx8mn: Change compatible string for sdma
+Message-ID: <20191028130734.GK16985@dragon>
+References: <1571992807-31378-1-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571992807-31378-1-git-send-email-shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Konstantin Khlebnikov:
+On Fri, Oct 25, 2019 at 04:40:07PM +0800, Shengjiu Wang wrote:
+> SDMA in i.MX8MN should use same configuration as i.MX8MQ
+> So need to change compatible string to be "fsl,imx8mq-sdma".
+> 
+> Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-> On 28/10/2019 14.46, Florian Weimer wrote:
->> * Konstantin Khlebnikov:
->> 
->>> This implements fcntl() for getting amount of resident memory in cache.
->>> Kernel already maintains counter for each inode, this patch just exposes
->>> it into userspace. Returned size is in kilobytes like values in procfs.
->> 
->> I think this needs a 32-bit compat implementation which clamps the
->> returned value to INT_MAX.
->> 
->
-> 32-bit machine couldn't hold more than 2TB cache in one file.
-> Even radix tree wouldn't fit into low memory area.
+Updated subject like below, and applied the patch.
 
-I meant a 32-bit process running on a 64-bit kernel.
+  arm64: dts: imx8mn: fix compatible string for sdma
+
+Shawn
