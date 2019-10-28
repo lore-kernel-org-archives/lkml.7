@@ -2,151 +2,257 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA80BCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654D1CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E13120862
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:32:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JPH3CYBE"
+	by mail.kernel.org (Postfix) with ESMTP id 2A18F20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbfJ1WcI (ORCPT
+        id S1729075AbfJ1WeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 18:32:08 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:24226 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfJ1WcI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 18:32:08 -0400
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x9SMW3Of018587;
-        Tue, 29 Oct 2019 07:32:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x9SMW3Of018587
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572301923;
-        bh=tIP4fKcYYiTBe/euc/pda7lr3cd3MV9rfCdBDeRqBKo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JPH3CYBEIwSwtmGVb6OjoxOB0Op9I5l/EayD+2DD+47pJ9jpXjG9Rpln0Oa5qlH4D
-         W46CZmmZ38u57ZVSr/NyU5z07EDG1sTjrGXTHwMiesmzy6CwM7rWXAIbADlg7E7Klp
-         jCTgS7aohaCM2w7Tt+gAXP7ABh4m3LQzp29H1fMgjAHzd6EiMIathzUQ5MwVWbqcy0
-         BbSwWmV+qonTL6aglUJVXaQ1zHLJ3unCQyUSW0QMPHCsoGxOBb2YSsk/AdS8Sb1QpO
-         rqbMix+0+bpMV8wT5go371efLTbCyJtmXIAgUgdXis6A9vlYYBFncAbh/MnagMGjFY
-         /ts9qL26tT89g==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id f21so2914994uan.3;
-        Mon, 28 Oct 2019 15:32:03 -0700 (PDT)
-X-Gm-Message-State: APjAAAW6N/MUEd3YdX02TXbwYXwDHeD8YFP9IJ6HWpB7Kns/8EXRZnxB
-        Pox9f+upfMlJokZsAQdT26GBiczEh9ZnCSYDBHc=
-X-Google-Smtp-Source: APXvYqxn7KT8oRYTTG6hcVMbiPB+u9M5Aux/bjBkpKFFDfjd7wY1m48s+soU/yxmQ5dWOTaQonunwGhWoetABruCEOk=
-X-Received: by 2002:a9f:2382:: with SMTP id 2mr9634833uao.95.1572301922136;
- Mon, 28 Oct 2019 15:32:02 -0700 (PDT)
+        Mon, 28 Oct 2019 18:34:09 -0400
+Received: from mga01.intel.com ([192.55.52.88]:48858 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfJ1WeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 18:34:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 15:34:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
+   d="scan'208";a="205300605"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Oct 2019 15:34:07 -0700
+Date:   Mon, 28 Oct 2019 15:38:31 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v7 08/11] iommu/vt-d: Misc macro clean up for SVM
+Message-ID: <20191028153831.0594d56e@jacob-builder>
+In-Reply-To: <c07409eb-83e1-58eb-92d9-7e3c8208d5b7@linux.intel.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1571946904-86776-9-git-send-email-jacob.jun.pan@linux.intel.com>
+        <c07409eb-83e1-58eb-92d9-7e3c8208d5b7@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191028155639.30330-1-e5ten.arch@gmail.com>
-In-Reply-To: <20191028155639.30330-1-e5ten.arch@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 29 Oct 2019 07:31:24 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS41TxKMLBj3_N=WE57CT7ttHes+7GdLWNW-mAgPkvW7w@mail.gmail.com>
-Message-ID: <CAK7LNAS41TxKMLBj3_N=WE57CT7ttHes+7GdLWNW-mAgPkvW7w@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: support byacc as alternative YACC to bison
-To:     Ethan Sommer <e5ten.arch@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 1:02 AM Ethan Sommer <e5ten.arch@gmail.com> wrote:
->
-> Switches to a more portable set of flags for generating the same file
-> names instead of the bison-specific --defines, uses the more portable -V
-> instead of --version, and explicitly defines YYSTYPE in lex.l, which
-> bison implicitly defines if not present but byacc does not.
->
-> Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
-> ---
+On Sat, 26 Oct 2019 09:00:51 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
+> Hi,
+> 
+> On 10/25/19 3:55 AM, Jacob Pan wrote:
+> > Use combined macros for_each_svm_dev() to simplify SVM device
+> > iteration and error checking.
+> > 
+> > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> > ---
+> >   drivers/iommu/intel-svm.c | 89
+> > ++++++++++++++++++++++------------------------- 1 file changed, 42
+> > insertions(+), 47 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> > index a9a7f85a09bc..a18b02a9709d 100644
+> > --- a/drivers/iommu/intel-svm.c
+> > +++ b/drivers/iommu/intel-svm.c
+> > @@ -212,6 +212,10 @@ static const struct mmu_notifier_ops
+> > intel_mmuops = { static DEFINE_MUTEX(pasid_mutex);
+> >   static LIST_HEAD(global_svm_list);
+> >   
+> > +#define for_each_svm_dev(svm, dev)			\
+> > +	list_for_each_entry(sdev, &svm->devs, list)	\
+> > +	if (dev == sdev->dev)				\
+> > +
+> >   int intel_svm_bind_mm(struct device *dev, int *pasid, int flags,
+> > struct svm_dev_ops *ops) {
+> >   	struct intel_iommu *iommu =
+> > intel_svm_device_to_iommu(dev); @@ -257,15 +261,13 @@ int
+> > intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct
+> > svm_dev_ goto out; }
+> >   
+> > -			list_for_each_entry(sdev, &svm->devs,
+> > list) {
+> > -				if (dev == sdev->dev) {
+> > -					if (sdev->ops != ops) {
+> > -						ret = -EBUSY;
+> > -						goto out;
+> > -					}
+> > -					sdev->users++;
+> > -					goto success;
+> > +			for_each_svm_dev(svm, dev) {
+> > +				if (sdev->ops != ops) {
+> > +					ret = -EBUSY;
+> > +					goto out;
+> >   				}
+> > +				sdev->users++;
+> > +				goto success;
+> >   			}
+> >   
+> >   			break;
+> > @@ -402,50 +404,43 @@ int intel_svm_unbind_mm(struct device *dev,
+> > int pasid) goto out;
+> >   
+> >   	svm = ioasid_find(NULL, pasid, NULL);
+> > -	if (IS_ERR(svm)) {
+> > +	if (IS_ERR_OR_NULL(svm)) {
+> >   		ret = PTR_ERR(svm);
+> >   		goto out;
+> >   	}
+> >   
+> > -	if (!svm)
+> > -		goto out;  
+> 
+> If svm == NULL here, this function will return success. This isn't
+> expected, right?
+> 
+you are right, should handle separately.
 
-I applied this patch, and tried the latest byacc,
-but I still cannot build kconfig probably because
-%destructor is not supported.
-byacc does not seem to work anyway.
+Thanks!
+> Others looks good to me.
+> 
+> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> 
+> Best regards,
+> baolu
+> 
+> > -
+> > -	list_for_each_entry(sdev, &svm->devs, list) {
+> > -		if (dev == sdev->dev) {
+> > -			ret = 0;
+> > -			sdev->users--;
+> > -			if (!sdev->users) {
+> > -				list_del_rcu(&sdev->list);
+> > -				/* Flush the PASID cache and IOTLB
+> > for this device.
+> > -				 * Note that we do depend on the
+> > hardware *not* using
+> > -				 * the PASID any more. Just as we
+> > depend on other
+> > -				 * devices never using PASIDs that
+> > they have no right
+> > -				 * to use. We have a *shared*
+> > PASID table, because it's
+> > -				 * large and has to be physically
+> > contiguous. So it's
+> > -				 * hard to be as defensive as we
+> > might like. */
+> > -				intel_pasid_tear_down_entry(iommu,
+> > dev, svm->pasid);
+> > -				intel_flush_svm_range_dev(svm,
+> > sdev, 0, -1, 0);
+> > -				kfree_rcu(sdev, rcu);
+> > -
+> > -				if (list_empty(&svm->devs)) {
+> > -					/* Clear private data so
+> > that free pass check */
+> > -
+> > ioasid_set_data(svm->pasid, NULL);
+> > -					ioasid_free(svm->pasid);
+> > -					if (svm->mm)
+> > -
+> > mmu_notifier_unregister(&svm->notifier, svm->mm); -
+> > -					list_del(&svm->list);
+> > -
+> > -					/* We mandate that no page
+> > faults may be outstanding
+> > -					 * for the PASID when
+> > intel_svm_unbind_mm() is called.
+> > -					 * If that is not obeyed,
+> > subtle errors will happen.
+> > -					 * Let's make them less
+> > subtle... */
+> > -					memset(svm, 0x6b,
+> > sizeof(*svm));
+> > -					kfree(svm);
+> > -				}
+> > +	for_each_svm_dev(svm, dev) {
+> > +		ret = 0;
+> > +		sdev->users--;
+> > +		if (!sdev->users) {
+> > +			list_del_rcu(&sdev->list);
+> > +			/* Flush the PASID cache and IOTLB for
+> > this device.
+> > +			 * Note that we do depend on the hardware
+> > *not* using
+> > +			 * the PASID any more. Just as we depend
+> > on other
+> > +			 * devices never using PASIDs that they
+> > have no right
+> > +			 * to use. We have a *shared* PASID table,
+> > because it's
+> > +			 * large and has to be physically
+> > contiguous. So it's
+> > +			 * hard to be as defensive as we might
+> > like. */
+> > +			intel_pasid_tear_down_entry(iommu, dev,
+> > svm->pasid);
+> > +			intel_flush_svm_range_dev(svm, sdev, 0,
+> > -1, 0);
+> > +			kfree_rcu(sdev, rcu);
+> > +
+> > +			if (list_empty(&svm->devs)) {
+> > +				/* Clear private data so that free
+> > pass check */
+> > +				ioasid_set_data(svm->pasid, NULL);
+> > +				ioasid_free(svm->pasid);
+> > +				if (svm->mm)
+> > +
+> > mmu_notifier_unregister(&svm->notifier, svm->mm);
+> > +				list_del(&svm->list);
+> > +				/* We mandate that no page faults
+> > may be outstanding
+> > +				 * for the PASID when
+> > intel_svm_unbind_mm() is called.
+> > +				 * If that is not obeyed, subtle
+> > errors will happen.
+> > +				 * Let's make them less subtle...
+> > */
+> > +				memset(svm, 0x6b, sizeof(*svm));
+> > +				kfree(svm);
+> >   			}
+> > -			break;
+> >   		}
+> > +		break;
+> >   	}
+> >    out:
+> >   	mutex_unlock(&pasid_mutex);
+> > @@ -581,7 +576,7 @@ static irqreturn_t prq_event_thread(int irq,
+> > void *d)
+> >   			 * to unbind the mm while any page faults
+> > are outstanding.
+> >   			 * So we only need RCU to protect the
+> > internal idr code. */ rcu_read_unlock();
+> > -			if (IS_ERR(svm) || !svm) {
+> > +			if (IS_ERR_OR_NULL(svm)) {
+> >   				pr_err("%s: Page request for
+> > invalid PASID %d: %08llx %08llx\n", iommu->name, req->pasid,
+> > ((unsigned long long *)req)[0], ((unsigned long long *)req)[1]);
+> >   
 
-
-
-$ /home/masahiro/bin/yacc  -V
-/home/masahiro/bin/yacc - 1.9 20190617
-masahiro@grover:~/ref/linux$ make YACC=/home/masahiro/bin/yacc  defconfig
-  YACC    scripts/kconfig/parser.tab.[ch]
-/home/masahiro/bin/yacc: e - line 104 of "scripts/kconfig/parser.y",
-syntax error
-%destructor {
-^
-make[1]: *** [scripts/Makefile.host;17: scripts/kconfig/parser.tab.h] Error 1
-make[1]: *** Deleting file 'scripts/kconfig/parser.tab.h'
-make[1]: *** [scripts/kconfig/parser.tab.h] Deleting file
-'scripts/kconfig/parser.tab.c'
-make: *** [Makefile;567: defconfig] Error 2
-
-
->  scripts/Makefile.host     | 2 +-
->  scripts/genksyms/Makefile | 2 +-
->  scripts/genksyms/lex.l    | 2 ++
->  3 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-> index 4c51c95d40f4..64e98e1d4825 100644
-> --- a/scripts/Makefile.host
-> +++ b/scripts/Makefile.host
-> @@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
->  # YACC
->  # ---------------------------------------------------------------------------
->  quiet_cmd_bison = YACC    $(basename $@).[ch]
-> -      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
-> +      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
->
->  $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
->         $(call if_changed,bison)
-> diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
-> index 78629f515e78..397c2dc8182b 100644
-> --- a/scripts/genksyms/Makefile
-> +++ b/scripts/genksyms/Makefile
-> @@ -15,7 +15,7 @@ genksyms-objs := genksyms.o parse.tab.o lex.lex.o
->  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
->
->  quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
-> -      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
-> +      cmd_bison_no_warn = $(YACC) -V >/dev/null; \
->                           $(cmd_bison) 2>/dev/null
->
->  $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
-> diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
-> index e265c5d96861..0580c088527f 100644
-> --- a/scripts/genksyms/lex.l
-> +++ b/scripts/genksyms/lex.l
-> @@ -19,6 +19,8 @@
->  #include "genksyms.h"
->  #include "parse.tab.h"
->
-> +extern YYSTYPE yylval;
-> +
->  /* We've got a two-level lexer here.  We let flex do basic tokenization
->     and then we categorize those basic tokens in the second stage.  */
->  #define YY_DECL                static int yylex1(void)
-> --
-> 2.23.0
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+[Jacob Pan]
