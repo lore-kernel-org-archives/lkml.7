@@ -2,105 +2,80 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863E0CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88946CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F3221721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F40421721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572281956;
+	bh=UYouAhSgD6Ci8zsPE6rdCP7HF2cJHswezxxOQTzMf9k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bo1y0Z3HkCoyr20XizeeApaSRUuyd+2V8UF+MFbbF4EYQ7rGCz+k4TLaRNK/h+lL7
+	 kwiGs0agED849hEN6lXlRILeWm9ZnrP3nzo6E5Xx3q0EhFfDhvZsdHoR3F0JQd6+2B
+	 1RuQ5iGw60P4JSEqAPvBrxVuUaUPlLr8+4Xy/qbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403956AbfJ1Q7M (ORCPT
+        id S2403966AbfJ1Q7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:59:12 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:58104 "EHLO ale.deltatee.com"
+        Mon, 28 Oct 2019 12:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfJ1Q7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730463AbfJ1Q7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 28 Oct 2019 12:59:12 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1iP8M5-00089J-Ka; Mon, 28 Oct 2019 10:58:58 -0600
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20191025202535.12036-1-logang@deltatee.com>
- <20191025202535.12036-4-logang@deltatee.com> <20191027150937.GC5843@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <94c1e177-4848-c88b-ec26-3da118fd18dc@deltatee.com>
-Date:   Mon, 28 Oct 2019 10:58:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4911F208C0;
+        Mon, 28 Oct 2019 16:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572281951;
+        bh=UYouAhSgD6Ci8zsPE6rdCP7HF2cJHswezxxOQTzMf9k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yqs9XFdFAkSZIlT5PTS4XYl6FpeFgw1NlLwbUkgyqiDIRfL4FbaXiFLxBciPFCsEg
+         QlPMhcoiXGwxlACI9zioIW/pJEICg79mqqsTLYbioElb2HIJt/VtjZFJdEpUPqVPLx
+         hhKOQV6Pp764XR1ZfW3Tha9FZJzg3OGuyfe48B2E=
+Date:   Mon, 28 Oct 2019 17:59:09 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     devel@driverdev.osuosl.org, eric@anholt.net, wahrenst@gmx.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: vc04_services: replace g_free_fragments_mutex
+ with spinlock
+Message-ID: <20191028165909.GA469472@kroah.com>
+References: <20191027221530.12080-1-dave@stgolabs.net>
+ <20191028155354.s3bgq2wazwlh32km@linux-p48b>
+ <20191028162412.GA321492@kroah.com>
+ <20191028163537.b2pspgdl6ceevcxv@linux-p48b>
 MIME-Version: 1.0
-In-Reply-To: <20191027150937.GC5843@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, kbusch@kernel.org, sagi@grimberg.me, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC PATCH 3/3] nvme: Introduce nvme_execute_passthru_rq_nowait()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028163537.b2pspgdl6ceevcxv@linux-p48b>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-10-27 9:09 a.m., Christoph Hellwig wrote:
-> On Fri, Oct 25, 2019 at 02:25:35PM -0600, Logan Gunthorpe wrote:
->> This function is similar to nvme_execute_passthru_rq() but does
->> not wait and will call a callback when the request is complete.
->>
->> The new function can also be called in interrupt context, so if there
->> are side effects, the request will be executed in a work queue to
->> avoid sleeping.
+On Mon, Oct 28, 2019 at 09:35:37AM -0700, Davidlohr Bueso wrote:
+> On Mon, 28 Oct 2019, Greg KH wrote:
+> > This is obviously not in a format I can apply it in :(
 > 
-> Why would you ever call it from interrupt context?  All the target
-> submission handlers should run in process context.
+> What are you talking about? I sent you the original patch,
+> then Cc'ed the drivers mailing list. So you still have a
+> patch you can apply... this is quite a common way of doing
+> things (Ccing for future references to someone or another
+> ml). I don't understand why you are hairsplitting over this
+> patch.
 
-Oh, I mis-understood this a bit and worded that incorrectly. The intent
-is to avoid having to call nvme_passthru_end() in the completion handler
-which can be in interrupt context.
+I don't understand what is going on at all.  Is this patch already
+applied?  If not, then yes, I need it in a format I can apply it in.  If
+it's already applied to my tree/branch, then there's no need to send it
+at all.
 
->> +void nvme_execute_passthru_rq_nowait(struct request *rq, rq_end_io_fn *done)
->> +{
->> +	struct nvme_command *cmd = nvme_req(rq)->cmd;
->> +	struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
->> +	struct nvme_ns *ns = rq->q->queuedata;
->> +	struct gendisk *disk = ns ? ns->disk : NULL;
->> +	u32 effects;
->> +
->> +	/*
->> +	 * This function may be called in interrupt context, so we cannot sleep
->> +	 * but nvme_passthru_[start|end]() may sleep so we need to execute
->> +	 * the command in a work queue.
->> +	 */
->> +	effects = nvme_command_effects(ctrl, ns, cmd->common.opcode);
->> +	if (effects) {
->> +		rq->end_io = done;
->> +		INIT_WORK(&nvme_req(rq)->work, nvme_execute_passthru_rq_work);
->> +		queue_work(nvme_wq, &nvme_req(rq)->work);
-> 
-> But independent of the target code - I'd much rather leave this to the
-> caller.  Just call nvme_command_effects in the target code, then if
-> there are not side effects use blk_execute_rq_nowait directly, else
-> schedule a workqueue in the target code and call
-> nvme_execute_passthru_rq from it.
+totally confused,
 
-Ok, that seems sensible. Except it conflicts a bit with Sagi's feedback:
-presumably we need to cancel the work items during nvme_stop_ctrl() and
-that's going to be rather difficult to do from the caller. Are we saying
-this is unnecessary? It's not clear to me if passthru_start/end is going
-to be affected by nvme_stop_ctrl() which I believe is the main concern.
-
-Logan
-
+greg k-h
