@@ -2,89 +2,509 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A90DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF494CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDA520873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:01:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="W23eHQzZ"
+	by mail.kernel.org (Postfix) with ESMTP id A37BC20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:03:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbfJ1GA4 (ORCPT
+        id S1731327AbfJ1GDl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 02:00:56 -0400
-Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21437 "EHLO
-        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfJ1GAz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 02:00:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1572242409; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=dB0bWUOERgGvT48DiOHzsKDaiV/DBnXlOQMIOZ4J+Tq4cjwF5rNgUSmEPDPfRFjKk10y6nZPLNHd6mCk6QQadcCAyeV2dgm2Pre/yv/7qh1lYw5dCsAaYuHGe0qDIA65fluBvMh8K4Gv2rYx5pZvlh7olPZE7wmHphbE3noaPPY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1572242409; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=+K/LZwImnPy9DLEwMasEs/dRwXl/m7WGIau4MogUkRc=; 
-        b=aoeMYjS+ByuvjpItNDCO+/H/HZP8sPCz7oQn7heFP8/830SLdk2l5WZ6BAHkIfiR8Vxd9skKXKlLy0CDsQzzuvGRES8vtH5mAyPakmoAaDr7hsJYE0EhzeR63eFJgCE7mB6nF/ZtqelNMZoafX4N0NR84qsYx5y6paigi2J/uek=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=didiksetiawan.com;
-        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
-        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1572242409;
-        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        l=862; bh=+K/LZwImnPy9DLEwMasEs/dRwXl/m7WGIau4MogUkRc=;
-        b=W23eHQzZ4YGWIT028KQojAVgH+H+XjCrUS1Vm7cY1Obkfd7/duzPTuJy/Z179GmA
-        CasL0sKJCb1gweppm0xhGC9CRbiUbQAfRgDF9tGhxfdCHEsjCLtasDNNRAhhRPPYBMw
-        E7TOeX9NYWpDGtygDitP6UgezNpJak/K8AsfI0to=
-Received: from notebook (117.102.74.82 [117.102.74.82]) by mx.zohomail.com
-        with SMTPS id 15722424079661003.1516840715439; Sun, 27 Oct 2019 23:00:07 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 12:59:57 +0700
-From:   Didik Setiawan <ds@didiksetiawan.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 000/119] 4.14.151-stable review
-Message-ID: <20191028055957.GA20979@notebook>
-References: <20191027203259.948006506@linuxfoundation.org>
+        Mon, 28 Oct 2019 02:03:41 -0400
+Received: from mga03.intel.com ([134.134.136.65]:22643 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730394AbfJ1GDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:03:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 23:03:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,239,1569308400"; 
+   d="scan'208";a="203179906"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga006.jf.intel.com with ESMTP; 27 Oct 2019 23:03:39 -0700
+Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 27 Oct 2019 23:03:38 -0700
+Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
+ FMSMSX114.amr.corp.intel.com (10.18.116.8) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 27 Oct 2019 23:03:38 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
+ SHSMSX106.ccr.corp.intel.com ([169.254.10.248]) with mapi id 14.03.0439.000;
+ Mon, 28 Oct 2019 14:03:37 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: RE: [PATCH v7 09/11] iommu/vt-d: Add bind guest PASID support
+Thread-Topic: [PATCH v7 09/11] iommu/vt-d: Add bind guest PASID support
+Thread-Index: AQHViqRYHs7rkU/ej0S5OBwc0DBZHqdq78JwgAApg4CABHtLgA==
+Date:   Mon, 28 Oct 2019 06:03:36 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D5DB7B8@SHSMSX104.ccr.corp.intel.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1571946904-86776-10-git-send-email-jacob.jun.pan@linux.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDDA6@SHSMSX104.ccr.corp.intel.com>
+ <20191025103337.1e51c0c9@jacob-builder>
+In-Reply-To: <20191025103337.1e51c0c9@jacob-builder>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZjE4OTNlMGEtOGNmYS00N2ZhLWEwMDItNjJmMDA1ZTAyZDQzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieG9MMDlReStuaVNySVF5cmFtVE1MUHJvXC9iTWlyZ082Tk1sbUdcL3laM3BldDRaZkdoSkpOM1RPeGJ4UEM0RldDIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 09:59:37PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.151 release.
-> There are 119 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
+> Sent: Saturday, October 26, 2019 1:34 AM
 > 
-> Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
-> Anything received after that time might be too late.
+> Hi Kevin,
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.151-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
 > 
-> thanks,
+> On Fri, 25 Oct 2019 07:19:26 +0000
+> "Tian, Kevin" <kevin.tian@intel.com> wrote:
 > 
-> greg k-h
+> > > From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
+> > > Sent: Friday, October 25, 2019 3:55 AM
+> > >
+> > > When supporting guest SVA with emulated IOMMU, the guest PASID
+> > > table is shadowed in VMM. Updates to guest vIOMMU PASID table
+> > > will result in PASID cache flush which will be passed down to
+> > > the host as bind guest PASID calls.
+> >
+> > will be translated into binding/unbinding guest PASID calls to update
+> > the host shadow PASID table.
+> >
+> yours is more precise, will replace.
+> > >
+> > > For the SL page tables, it will be harvested from device's
+> > > default domain (request w/o PASID), or aux domain in case of
+> > > mediated device.
+> >
+> > harvested -> copied or linked to?
+> Kind of the same, but I agree copied is more technical and precise
+> term. Will change.
+> 
+> > >
+> > >     .-------------.  .---------------------------.
+> > >     |   vIOMMU    |  | Guest process CR3, FL only|
+> > >     |             |  '---------------------------'
+> > >     .----------------/
+> > >     | PASID Entry |--- PASID cache flush -
+> > >     '-------------'                       |
+> > >     |             |                       V
+> > >     |             |                CR3 in GPA
+> > >     '-------------'
+> > > Guest
+> > > ------| Shadow |--------------------------|--------
+> > >       v        v                          v
+> > > Host
+> > >     .-------------.  .----------------------.
+> > >     |   pIOMMU    |  | Bind FL for GVA-GPA  |
+> > >     |             |  '----------------------'
+> > >     .----------------/  |
+> > >     | PASID Entry |     V (Nested xlate)
+> > >     '----------------\.------------------------------.
+> > >     |             |   |SL for GPA-HPA, default domain|
+> > >     |             |   '------------------------------'
+> > >     '-------------'
+> > > Where:
+> > >  - FL = First level/stage one page tables
+> > >  - SL = Second level/stage two page tables
+> > >
+> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+> > > ---
+> > >  drivers/iommu/intel-iommu.c |   4 +
+> > >  drivers/iommu/intel-svm.c   | 184
+> > > ++++++++++++++++++++++++++++++++++++++++++++
+> > >  include/linux/intel-iommu.h |   8 +-
+> > >  include/linux/intel-svm.h   |  17 ++++
+> > >  4 files changed, 212 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/iommu/intel-iommu.c
+> > > b/drivers/iommu/intel-iommu.c index acd1ac787d8b..5fab32fbc4b4
+> > > 100644 --- a/drivers/iommu/intel-iommu.c
+> > > +++ b/drivers/iommu/intel-iommu.c
+> > > @@ -6026,6 +6026,10 @@ const struct iommu_ops intel_iommu_ops =
+> {
+> > >  	.dev_disable_feat	= intel_iommu_dev_disable_feat,
+> > >  	.is_attach_deferred	=
+> > > intel_iommu_is_attach_deferred, .pgsize_bitmap		=
+> > > INTEL_IOMMU_PGSIZES, +#ifdef CONFIG_INTEL_IOMMU_SVM
+> > > +	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+> > > +	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+> > > +#endif
+> >
+> > again, pure PASID management logic should be separated from SVM.
+> >
+> I am not following, these two functions are SVM functionality, not
+> pure PASID management which is already separated in ioasid.c
 
-Compiled, booted, and no regressions found on my x86_64 system.
+I should say pure "scalable mode" logic. Above callbacks are not
+related to host SVM per se. They are serving gpasid requests from
+guest side, thus part of generic scalable mode capability.
 
-Thanks,
-Didik Setiawan
+> 
+> > >  };
+> > >
+> > >  static void quirk_iommu_igfx(struct pci_dev *dev)
+> > > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> > > index a18b02a9709d..ae13a310cf96 100644
+> > > --- a/drivers/iommu/intel-svm.c
+> > > +++ b/drivers/iommu/intel-svm.c
+> > > @@ -216,6 +216,190 @@ static LIST_HEAD(global_svm_list);
+> > >  	list_for_each_entry(sdev, &svm->devs, list)	\
+> > >  	if (dev == sdev->dev)				\
+> > >
+> > > +int intel_svm_bind_gpasid(struct iommu_domain *domain,
+> > > +			struct device *dev,
+> > > +			struct iommu_gpasid_bind_data *data)
+> > > +{
+> > > +	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> > > +	struct dmar_domain *ddomain;
+> > > +	struct intel_svm_dev *sdev;
+> > > +	struct intel_svm *svm;
+> > > +	int ret = 0;
+> > > +
+> > > +	if (WARN_ON(!iommu) || !data)
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
+> > > +		data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (dev_is_pci(dev)) {
+> > > +		/* VT-d supports devices with full 20 bit PASIDs
+> > > only */
+> > > +		if (pci_max_pasids(to_pci_dev(dev)) != PASID_MAX)
+> > > +			return -EINVAL;
+> > > +	}
+> >
+> > what about non-pci devices? It just moves forward w/o any check here?
+> >
+> Good catch, we only support PCI-device on Intel. Even mdev has to pass
+> the pdev to bind. Will add the else case.
+> 
+> > > +
+> > > +	/*
+> > > +	 * We only check host PASID range, we have no knowledge to
+> > > check
+> > > +	 * guest PASID range nor do we use the guest PASID.
+> > > +	 */
+> > > +	if (data->hpasid <= 0 || data->hpasid >= PASID_MAX)
+> > > +		return -EINVAL;
+> > > +
+> > > +	ddomain = to_dmar_domain(domain);
+> > > +	/* REVISIT:
+> > > +	 * Sanity check adddress width and paging mode support
+> > > +	 * width matching in two dimensions:
+> > > +	 * 1. paging mode CPU <= IOMMU
+> > > +	 * 2. address width Guest <= Host.
+> > > +	 */
+> >
+> > Is lacking of above logic harmful? If not, we should add
+> >
+> It is better to add the check now, not solely rely on QEMU.
+> 
+> > > +	mutex_lock(&pasid_mutex);
+> > > +	svm = ioasid_find(NULL, data->hpasid, NULL);
+> > > +	if (IS_ERR(svm)) {
+> > > +		ret = PTR_ERR(svm);
+> > > +		goto out;
+> > > +	}
+> > > +	if (svm) {
+> > > +		/*
+> > > +		 * If we found svm for the PASID, there must be at
+> > > +		 * least one device bond, otherwise svm should be
+> > > freed.
+> > > +		 */
+> > > +		BUG_ON(list_empty(&svm->devs));
+> > > +
+> > > +		for_each_svm_dev(svm, dev) {
+> > > +			/* In case of multiple sub-devices of the
+> > > same pdev assigned, we should
+> > > +			 * allow multiple bind calls with the same
+> > > PASID and pdev.
+> > > +			 */
+> > > +			sdev->users++;
+> > > +			goto out;
+> >
+> > sorry if I overlooked, but I didn't see any check on the PASID
+> > actually belonging to this process. At least should check the
+> > match between svm->mm and get_task_mm? also check
+> > whether a previous binding between this hpasid and gpasid
+> > already exists.
+> >
+> We had some discussions on whom should be responsible for checking
+> ownership. I tend to think VFIO is right place but I guess we can also
+> double check here.
+> Good point, we should check the same H-G PASID bind already exists.
+> > > +		}
+> > > +	} else {
+> > > +		/* We come here when PASID has never been bond to a
+> > > device. */
+> > > +		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
+> > > +		if (!svm) {
+> > > +			ret = -ENOMEM;
+> > > +			goto out;
+> > > +		}
+> > > +		/* REVISIT: upper layer/VFIO can track host
+> > > process that bind the PASID.
+> > > +		 * ioasid_set = mm might be sufficient for vfio to
+> > > check pasid VMM
+> > > +		 * ownership.
+> > > +		 */
+> >
+> > Is it correct to leave the check to the caller?
+> >
+> Ditto, we will double check. But since this is related to the guest, I
+> feel iommu driver check mm might be too restrictive. I am not sure if
+> any VMM could have more than one process? One process does alloc, the
+> other does bind.
 
+one process, and there might be multiple threads each corresponding
+to a vCPU.
+
+> 
+> > > +		svm->mm = get_task_mm(current);
+> > > +		svm->pasid = data->hpasid;
+> > > +		if (data->flags & IOMMU_SVA_GPASID_VAL) {
+> > > +			svm->gpasid = data->gpasid;
+> > > +			svm->flags |= SVM_FLAG_GUEST_PASID;
+> > > +		}
+> > > +		ioasid_set_data(data->hpasid, svm);
+> > > +		INIT_LIST_HEAD_RCU(&svm->devs);
+> > > +		INIT_LIST_HEAD(&svm->list);
+> > > +
+> > > +		mmput(svm->mm);
+> > > +	}
+> > > +	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
+> > > +	if (!sdev) {
+> > > +		if (list_empty(&svm->devs))
+> > > +			kfree(svm);
+> > > +		ret = -ENOMEM;
+> > > +		goto out;
+> > > +	}
+> > > +	sdev->dev = dev;
+> > > +	sdev->users = 1;
+> > > +
+> > > +	/* Set up device context entry for PASID if not enabled
+> > > already */
+> > > +	ret = intel_iommu_enable_pasid(iommu, sdev->dev);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to enable PASID
+> > > capability\n");
+> > > +		kfree(sdev);
+> > > +		goto out;
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * For guest bind, we need to set up PASID table entry as
+> > > follows:
+> > > +	 * - FLPM matches guest paging mode
+> > > +	 * - turn on nested mode
+> > > +	 * - SL guest address width matching
+> > > +	 */
+> > > +	ret = intel_pasid_setup_nested(iommu,
+> > > +				dev,
+> > > +				(pgd_t *)data->gpgd,
+> > > +				data->hpasid,
+> > > +				&data->vtd,
+> > > +				ddomain,
+> > > +				data->addr_width);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to set up PASID %llu in
+> > > nested mode, Err %d\n",
+> > > +			data->hpasid, ret);
+> > > +		kfree(sdev);
+> >
+> > disable pasid? revert ioasid_set_data?
+> >
+> Good catch, will do.
+> > > +		goto out;
+> > > +	}
+> > > +	svm->flags |= SVM_FLAG_GUEST_MODE;
+> > > +
+> > > +	init_rcu_head(&sdev->rcu);
+> > > +	list_add_rcu(&sdev->list, &svm->devs);
+> > > + out:
+> > > +	mutex_unlock(&pasid_mutex);
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +int intel_svm_unbind_gpasid(struct device *dev, int pasid)
+> > > +{
+> > > +	struct intel_svm_dev *sdev;
+> > > +	struct intel_iommu *iommu;
+> > > +	struct intel_svm *svm;
+> > > +	int ret = -EINVAL;
+> > > +
+> > > +	mutex_lock(&pasid_mutex);
+> > > +	iommu = intel_svm_device_to_iommu(dev);
+> > > +	if (!iommu)
+> > > +		goto out;
+> > > +
+> > > +	svm = ioasid_find(NULL, pasid, NULL);
+> > > +	if (IS_ERR_OR_NULL(svm)) {
+> > > +		ret = PTR_ERR(svm);
+> > > +		goto out;
+> > > +	}
+> > > +
+> > > +	for_each_svm_dev(svm, dev) {
+> > > +		ret = 0;
+> > > +		sdev->users--;
+> > > +		if (!sdev->users) {
+> > > +			list_del_rcu(&sdev->list);
+> > > +			intel_pasid_tear_down_entry(iommu, dev,
+> > > svm-
+> > > >pasid);
+> > > +			/* TODO: Drain in flight PRQ for the PASID
+> > > since it
+> > > +			 * may get reused soon, we don't want to
+> > > +			 * confuse with its previous life.
+> > > +			 * intel_svm_drain_prq(dev, pasid);
+> > > +			 */
+> > > +			kfree_rcu(sdev, rcu);
+> > > +
+> > > +			if (list_empty(&svm->devs)) {
+> > > +				list_del(&svm->list);
+> > > +				kfree(svm);
+> > > +				/*
+> > > +				 * We do not free PASID here until
+> > > explicit call
+> > > +				 * from VFIO to free. The PASID
+> > > life cycle
+> > > +				 * management is largely tied to
+> > > VFIO management
+> > > +				 * of assigned device life cycles.
+> > > In case of
+> > > +				 * guest exit without a explicit
+> > > free PASID call,
+> > > +				 * the responsibility lies in VFIO
+> > > layer to free
+> > > +				 * the PASIDs allocated for the
+> > > guest.
+> > > +				 * For security reasons, VFIO has
+> > > to track the
+> > > +				 * PASID ownership per guest
+> > > anyway to ensure
+> > > +				 * that PASID allocated by one
+> > > guest cannot be
+> > > +				 * used by another.
+> > > +				 */
+> > > +				ioasid_set_data(pasid, NULL);
+> > > +			}
+> > > +		}
+> > > +		break;
+> > > +	}
+> > > + out:
+> > > +	mutex_unlock(&pasid_mutex);
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > >  int intel_svm_bind_mm(struct device *dev, int *pasid, int flags,
+> > > struct svm_dev_ops *ops)
+> > >  {
+> > >  	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> > > diff --git a/include/linux/intel-iommu.h
+> > > b/include/linux/intel-iommu.h index 3dba6ad3e9ad..6c74c71b1ebf
+> > > 100644 --- a/include/linux/intel-iommu.h
+> > > +++ b/include/linux/intel-iommu.h
+> > > @@ -673,7 +673,9 @@ int intel_iommu_enable_pasid(struct
+> intel_iommu
+> > > *iommu, struct device *dev);
+> > >  int intel_svm_init(struct intel_iommu *iommu);
+> > >  extern int intel_svm_enable_prq(struct intel_iommu *iommu);
+> > >  extern int intel_svm_finish_prq(struct intel_iommu *iommu);
+> > > -
+> > > +extern int intel_svm_bind_gpasid(struct iommu_domain *domain,
+> > > +		struct device *dev, struct iommu_gpasid_bind_data
+> > > *data); +extern int intel_svm_unbind_gpasid(struct device *dev, int
+> > > pasid); struct svm_dev_ops;
+> > >
+> > >  struct intel_svm_dev {
+> > > @@ -690,9 +692,13 @@ struct intel_svm_dev {
+> > >  struct intel_svm {
+> > >  	struct mmu_notifier notifier;
+> > >  	struct mm_struct *mm;
+> > > +
+> > >  	struct intel_iommu *iommu;
+> > >  	int flags;
+> > >  	int pasid;
+> > > +	int gpasid; /* Guest PASID in case of vSVA bind with
+> > > non-identity host
+> > > +		     * to guest PASID mapping.
+> > > +		     */
+> > >  	struct list_head devs;
+> > >  	struct list_head list;
+> > >  };
+> > > diff --git a/include/linux/intel-svm.h b/include/linux/intel-svm.h
+> > > index 94f047a8a845..a2c189ad0b01 100644
+> > > --- a/include/linux/intel-svm.h
+> > > +++ b/include/linux/intel-svm.h
+> > > @@ -44,6 +44,23 @@ struct svm_dev_ops {
+> > >   * do such IOTLB flushes automatically.
+> > >   */
+> > >  #define SVM_FLAG_SUPERVISOR_MODE	(1<<1)
+> > > +/*
+> > > + * The SVM_FLAG_GUEST_MODE flag is used when a guest process
+> bind
+> > > to a device.
+> > > + * In this case the mm_struct is in the guest kernel or userspace,
+> > > its life
+> > > + * cycle is managed by VMM and VFIO layer. For IOMMU driver, this
+> > > API provides
+> > > + * means to bind/unbind guest CR3 with PASIDs allocated for a
+> > > device.
+> > > + */
+> > > +#define SVM_FLAG_GUEST_MODE	(1<<2)
+> > > +/*
+> > > + * The SVM_FLAG_GUEST_PASID flag is used when a guest has its own
+> > > PASID space,
+> > > + * which requires guest and host PASID translation at both
+> > > directions. We keep
+> > > + * track of guest PASID in order to provide lookup service to
+> > > device drivers.
+> > > + * One such example is a physical function (PF) driver that
+> > > supports mediated
+> > > + * device (mdev) assignment. Guest programming of mdev
+> > > configuration space can
+> > > + * only be done with guest PASID, therefore PF driver needs to
+> > > find the matching
+> > > + * host PASID to program the real hardware.
+> > > + */
+> > > +#define SVM_FLAG_GUEST_PASID	(1<<3)
+> > >
+> > >  #ifdef CONFIG_INTEL_IOMMU_SVM
+> > >
+> > > --
+> > > 2.7.4
+> >
+> 
+> [Jacob Pan]
