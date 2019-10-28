@@ -2,368 +2,163 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3E1CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C53CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE07208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sby/GrYJ"
+	by mail.kernel.org (Postfix) with ESMTP id 659F7208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbfJ1JMk (ORCPT
+        id S2387846AbfJ1JNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 05:12:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53316 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387596AbfJ1JMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 05:12:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GAgGAUJziIAZoCqHkKoD8AXS8jroyopvdOonwHmBT8Y=; b=Sby/GrYJpm26R/oCT4tElJP61
-        P587ZlFbL4xuE8zYgZZAaEau4CM6TUWaan+j6TY5oif7drpbuzIQgBt7ZBU3fQ7lh0nEhCDqDji8S
-        QZ80cMPJDjWcy73bObVjCfrqh2Qn4tkF5eRp74Cgvloj+2Rn6bVaV8LdB1fXiw6dY//5knI1H9aY5
-        SVymgo39zXiXuRyKEgqy45Tu0Yy/llWcrIjAzhOoOhrziWnFnimqSzzcUHtrdruZfF7WURLmMkU/p
-        8GuaT10CpEQF8C44C/za/NN6AovHxJeSR/m7ZW/xUjrtjDt/uXLV9mfF6MeObUsVO0vf0yLo04C8L
-        BlFTJVRIg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP14h-0002DE-S4; Mon, 28 Oct 2019 09:12:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8EFFC30025A;
-        Mon, 28 Oct 2019 10:11:29 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9343D20AD6A3E; Mon, 28 Oct 2019 10:12:29 +0100 (CET)
-Date:   Mon, 28 Oct 2019 10:12:29 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        mingo@redhat.com, acme@kernel.org, ast@fb.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH bpf-next 1/5] perf/core: Add PERF_FORMAT_LOST read_format
-Message-ID: <20191028091229.GJ4131@hirez.programming.kicks-ass.net>
-References: <20190917133056.5545-1-dxu@dxuuu.xyz>
- <20190917133056.5545-2-dxu@dxuuu.xyz>
- <20190924083342.GA21640@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924083342.GA21640@krava>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 28 Oct 2019 05:13:55 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54496 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387596AbfJ1JNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 05:13:55 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 50C351A0706;
+        Mon, 28 Oct 2019 10:13:52 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 021761A0715;
+        Mon, 28 Oct 2019 10:13:47 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7DCF2402E2;
+        Mon, 28 Oct 2019 17:13:40 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V3] ASoC: fsl_asrc: refine the setting of internal clock divider
+Date:   Mon, 28 Oct 2019 17:10:29 +0800
+Message-Id: <23c634e4bf58afce5b3ae67f5f42e8d1cae2639a.1572252307.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 10:33:42AM +0200, Jiri Olsa wrote:
-> On Tue, Sep 17, 2019 at 06:30:52AM -0700, Daniel Xu wrote:
-> 
-> SNIP
-> 
-> > +	PERF_FORMAT_MAX = 1U << 5,		/* non-ABI */
-> >  };
-> >  
-> >  #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 0463c1151bae..ee08d3ed6299 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -1715,6 +1715,9 @@ static void __perf_event_read_size(struct perf_event *event, int nr_siblings)
-> >  	if (event->attr.read_format & PERF_FORMAT_ID)
-> >  		entry += sizeof(u64);
-> >  
-> > +	if (event->attr.read_format & PERF_FORMAT_LOST)
-> > +		entry += sizeof(u64);
-> > +
-> >  	if (event->attr.read_format & PERF_FORMAT_GROUP) {
-> >  		nr += nr_siblings;
-> >  		size += sizeof(u64);
-> > @@ -4734,6 +4737,24 @@ u64 perf_event_read_value(struct perf_event *event, u64 *enabled, u64 *running)
-> >  }
-> >  EXPORT_SYMBOL_GPL(perf_event_read_value);
-> >  
-> > +static struct pmu perf_kprobe;
-> > +static u64 perf_event_lost(struct perf_event *event)
-> > +{
-> > +	struct ring_buffer *rb;
-> > +	u64 lost = 0;
-> > +
-> > +	rcu_read_lock();
-> > +	rb = rcu_dereference(event->rb);
-> > +	if (likely(!!rb))
-> > +		lost += local_read(&rb->lost);
-> > +	rcu_read_unlock();
-> > +
-> > +	if (event->attr.type == perf_kprobe.type)
-> > +		lost += perf_kprobe_missed(event);
-> 
-> not sure what was the peterz's suggestion, but here you are mixing
-> ring buffer's lost count with kprobes missed count, seems wrong
+The output divider should align with the output sample
+rate, if use ideal sample rate, there will be a lot of overload,
+which would cause underrun.
 
-Jiri is right, this isn't quite what I meant.
+The maximum divider of asrc clock is 1024, but there is no
+judgement for this limitation in driver, which may cause the divider
+setting not correct.
 
-The below is what I was thinking of (I also renamed everything to
-missing, to avoid confusion).
+For non-ideal ratio mode, the clock rate should divide the sample
+rate with no remainder, and the quotient should be less than 1024.
 
-But now that I wrote it, I'm a little scared of what I had to do for
-__perf_sw_event(). Let me ponder that a little bit more.
-
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 ---
- include/linux/perf_event.h      |  1 +
- include/linux/trace_events.h    |  1 +
- include/uapi/linux/perf_event.h |  5 ++++-
- kernel/events/core.c            | 42 +++++++++++++++++++++++++++++++++--------
- kernel/trace/trace_event_perf.c |  4 +++-
- kernel/trace/trace_kprobe.c     |  8 ++++++++
- 6 files changed, 51 insertions(+), 10 deletions(-)
+Change in v3
+- refine comments
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index a9ef8be8c83a..ec6c867203c3 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -625,6 +625,7 @@ struct perf_event {
- 	unsigned int			attach_state;
- 	local64_t			count;
- 	atomic64_t			child_count;
-+	local64_t			missed;
- 
- 	/*
- 	 * These are the total time in nanoseconds that the event
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index a379255c14a9..18d315a0f0f9 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -603,6 +603,7 @@ extern int bpf_get_kprobe_info(const struct perf_event *event,
- 			       u32 *fd_type, const char **symbol,
- 			       u64 *probe_offset, u64 *probe_addr,
- 			       bool perf_type_tracepoint);
-+extern u64 perf_kprobe_missed(const struct perf_event *event);
- #endif
- #ifdef CONFIG_UPROBE_EVENTS
- extern int  perf_uprobe_init(struct perf_event *event,
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index bb7b271397a6..2dd3c3f21087 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -273,6 +273,7 @@ enum {
-  *	  { u64		time_enabled; } && PERF_FORMAT_TOTAL_TIME_ENABLED
-  *	  { u64		time_running; } && PERF_FORMAT_TOTAL_TIME_RUNNING
-  *	  { u64		id;           } && PERF_FORMAT_ID
-+ *	  { u64		missed;       } && PERF_FORMAT_MISSED
-  *	} && !PERF_FORMAT_GROUP
-  *
-  *	{ u64		nr;
-@@ -280,6 +281,7 @@ enum {
-  *	  { u64		time_running; } && PERF_FORMAT_TOTAL_TIME_RUNNING
-  *	  { u64		value;
-  *	    { u64	id;           } && PERF_FORMAT_ID
-+ *	    { u64	missed;       } && PERF_FORMAT_MISSED
-  *	  }		cntr[nr];
-  *	} && PERF_FORMAT_GROUP
-  * };
-@@ -289,8 +291,9 @@ enum perf_event_read_format {
- 	PERF_FORMAT_TOTAL_TIME_RUNNING		= 1U << 1,
- 	PERF_FORMAT_ID				= 1U << 2,
- 	PERF_FORMAT_GROUP			= 1U << 3,
-+	PERF_FORMAT_MISSED			= 1U << 4,
- 
--	PERF_FORMAT_MAX = 1U << 4,		/* non-ABI */
-+	PERF_FORMAT_MAX = 1U << 5,		/* non-ABI */
- };
- 
- #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index d8b9034857d7..7e72f919d2e7 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1817,6 +1817,9 @@ static void __perf_event_read_size(struct perf_event *event, int nr_siblings)
- 	if (event->attr.read_format & PERF_FORMAT_ID)
- 		entry += sizeof(u64);
- 
-+	if (event->attr.read_format & PERF_FORMAT_MISSED)
-+		entry += sizeof(u64);
-+
- 	if (event->attr.read_format & PERF_FORMAT_GROUP) {
- 		nr += nr_siblings;
- 		size += sizeof(u64);
-@@ -4994,6 +4997,15 @@ u64 perf_event_read_value(struct perf_event *event, u64 *enabled, u64 *running)
- }
- EXPORT_SYMBOL_GPL(perf_event_read_value);
- 
-+static struct pmu perf_kprobe;
-+static u64 perf_event_missed(struct perf_event *event)
-+{
-+	if (event->attr.type == perf_kprobe.type)
-+		return perf_kprobe_missed(event);
-+
-+	return local64_read(&event->missed);
-+}
-+
- static int __perf_read_group_add(struct perf_event *leader,
- 					u64 read_format, u64 *values)
+Change in v2
+- remove p2p/m2m word
+- use use_ideal_rate
+
+ sound/soc/fsl/fsl_asrc.c | 45 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 34 insertions(+), 11 deletions(-)
+
+diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+index 0bf91a6f54b9..a3cfceea7d2f 100644
+--- a/sound/soc/fsl/fsl_asrc.c
++++ b/sound/soc/fsl/fsl_asrc.c
+@@ -259,8 +259,15 @@ static int fsl_asrc_set_ideal_ratio(struct fsl_asrc_pair *pair,
+  * It configures those ASRC registers according to a configuration instance
+  * of struct asrc_config which includes in/output sample rate, width, channel
+  * and clock settings.
++ *
++ * Note:
++ * The ideal ratio configuration can work with a flexible clock rate setting.
++ * Using IDEAL_RATIO_RATE gives a faster converting speed but overloads ASRC.
++ * For a regular audio playback, the clock rate should not be slower than an
++ * clock rate aligning with the output sample rate; For a use case requiring
++ * faster conversion, set use_ideal_rate to have the faster speed.
+  */
+-static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
++static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
  {
-@@ -5030,11 +5042,15 @@ static int __perf_read_group_add(struct perf_event *leader,
- 	values[n++] += perf_event_count(leader);
- 	if (read_format & PERF_FORMAT_ID)
- 		values[n++] = primary_event_id(leader);
-+	if (read_format & PERF_FORMAT_MISSED)
-+		values[n++] = perf_event_missed(leader);
+ 	struct asrc_config *config = pair->config;
+ 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+@@ -268,7 +275,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+ 	enum asrc_word_width input_word_width;
+ 	enum asrc_word_width output_word_width;
+ 	u32 inrate, outrate, indiv, outdiv;
+-	u32 clk_index[2], div[2];
++	u32 clk_index[2], div[2], rem[2];
++	u64 clk_rate;
+ 	int in, out, channels;
+ 	int pre_proc, post_proc;
+ 	struct clk *clk;
+@@ -351,27 +359,42 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+ 	/* We only have output clock for ideal ratio mode */
+ 	clk = asrc_priv->asrck_clk[clk_index[ideal ? OUT : IN]];
  
- 	for_each_sibling_event(sub, leader) {
- 		values[n++] += perf_event_count(sub);
- 		if (read_format & PERF_FORMAT_ID)
- 			values[n++] = primary_event_id(sub);
-+		if (read_format & PERF_FORMAT_MISSED)
-+			values[n++] = perf_event_missed(sub);
+-	div[IN] = clk_get_rate(clk) / inrate;
+-	if (div[IN] == 0) {
++	clk_rate = clk_get_rate(clk);
++	rem[IN] = do_div(clk_rate, inrate);
++	div[IN] = (u32)clk_rate;
++
++	/*
++	 * The divider range is [1, 1024], defined by the hardware. For non-
++	 * ideal ratio configuration, clock rate has to be strictly aligned
++	 * with the sample rate. For ideal ratio configuration, clock rates
++	 * only result in different converting speeds. So remainder does not
++	 * matter, as long as we keep the divider within its valid range.
++	 */
++	if (div[IN] == 0 || (!ideal && (div[IN] > 1024 || rem[IN] != 0))) {
+ 		pair_err("failed to support input sample rate %dHz by asrck_%x\n",
+ 				inrate, clk_index[ideal ? OUT : IN]);
+ 		return -EINVAL;
  	}
  
- 	raw_spin_unlock_irqrestore(&ctx->lock, flags);
-@@ -5091,7 +5107,7 @@ static int perf_read_one(struct perf_event *event,
- 				 u64 read_format, char __user *buf)
- {
- 	u64 enabled, running;
--	u64 values[4];
-+	u64 values[5];
- 	int n = 0;
- 
- 	values[n++] = __perf_event_read_value(event, &enabled, &running);
-@@ -5101,6 +5117,8 @@ static int perf_read_one(struct perf_event *event,
- 		values[n++] = running;
- 	if (read_format & PERF_FORMAT_ID)
- 		values[n++] = primary_event_id(event);
-+	if (read_format & PERF_FORMAT_MISSED)
-+		values[n++] = perf_event_lost(event);
- 
- 	if (copy_to_user(buf, values, n * sizeof(u64)))
- 		return -EFAULT;
-@@ -6427,7 +6445,7 @@ static void perf_output_read_one(struct perf_output_handle *handle,
- 				 u64 enabled, u64 running)
- {
- 	u64 read_format = event->attr.read_format;
--	u64 values[4];
-+	u64 values[5];
- 	int n = 0;
- 
- 	values[n++] = perf_event_count(event);
-@@ -6441,6 +6459,8 @@ static void perf_output_read_one(struct perf_output_handle *handle,
- 	}
- 	if (read_format & PERF_FORMAT_ID)
- 		values[n++] = primary_event_id(event);
-+	if (read_format & PERF_FORMAT_MISSED)
-+		values[n++] = perf_event_lost(event);
- 
- 	__output_copy(handle, values, n * sizeof(u64));
- }
-@@ -6451,7 +6471,7 @@ static void perf_output_read_group(struct perf_output_handle *handle,
- {
- 	struct perf_event *leader = event->group_leader, *sub;
- 	u64 read_format = event->attr.read_format;
--	u64 values[5];
-+	u64 values[6];
- 	int n = 0;
- 
- 	values[n++] = 1 + leader->nr_siblings;
-@@ -6469,6 +6489,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
- 	values[n++] = perf_event_count(leader);
- 	if (read_format & PERF_FORMAT_ID)
- 		values[n++] = primary_event_id(leader);
-+	if (read_format & PERF_FORMAT_MISSED)
-+		values[n++] = perf_event_lost(leader);
- 
- 	__output_copy(handle, values, n * sizeof(u64));
- 
-@@ -6482,6 +6504,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
- 		values[n++] = perf_event_count(sub);
- 		if (read_format & PERF_FORMAT_ID)
- 			values[n++] = primary_event_id(sub);
-+		if (read_format & PERF_FORMAT_MISSED)
-+			values[n++] = perf_event_lost(sub);
- 
- 		__output_copy(handle, values, n * sizeof(u64));
- 	}
-@@ -8500,7 +8524,6 @@ static int perf_exclude_event(struct perf_event *event,
- static int perf_swevent_match(struct perf_event *event,
- 				enum perf_type_id type,
- 				u32 event_id,
--				struct perf_sample_data *data,
- 				struct pt_regs *regs)
- {
- 	if (event->attr.type != type)
-@@ -8579,8 +8602,12 @@ static void do_perf_sw_event(enum perf_type_id type, u32 event_id,
- 		goto end;
- 
- 	hlist_for_each_entry_rcu(event, head, hlist_entry) {
--		if (perf_swevent_match(event, type, event_id, data, regs))
--			perf_swevent_event(event, nr, data, regs);
-+		if (perf_swevent_match(event, type, event_id, regs)) {
-+			if (nr == ~0ULL)
-+				local64_inc(&event->missed);
-+			else
-+				perf_swevent_event(event, nr, data, regs);
-+		}
- 	}
- end:
- 	rcu_read_unlock();
-@@ -8621,12 +8648,11 @@ void __perf_sw_event(u32 event_id, u64 nr, struct pt_regs *regs, u64 addr)
- 	preempt_disable_notrace();
- 	rctx = perf_swevent_get_recursion_context();
- 	if (unlikely(rctx < 0))
--		goto fail;
-+		nr = ~0ULL;
- 
- 	___perf_sw_event(event_id, nr, regs, addr);
- 
- 	perf_swevent_put_recursion_context(rctx);
--fail:
- 	preempt_enable_notrace();
- }
- 
-diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-index 0917fee6ee7c..73a0de204d7a 100644
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -458,8 +458,10 @@ perf_ftrace_function_call(unsigned long ip, unsigned long parent_ip,
- 	perf_fetch_caller_regs(&regs);
- 
- 	entry = perf_trace_buf_alloc(ENTRY_SIZE, NULL, &rctx);
--	if (!entry)
-+	if (!entry) {
-+		local64_inc(&event->missed);
- 		return;
-+	}
- 
- 	entry->ip = ip;
- 	entry->parent_ip = parent_ip;
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 66e0a8ff1c01..5e1889c161e3 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -233,6 +233,14 @@ bool trace_kprobe_error_injectable(struct trace_event_call *call)
- 	       false;
- }
- 
-+u64 perf_kprobe_missed(const struct perf_event *event)
-+{
-+	struct trace_event_call *call = event->tp_event;
-+	struct trace_kprobe *tk = (struct trace_kprobe *)call->data;
++	div[IN] = min_t(u32, 1024, div[IN]);
 +
-+	return tk->rp.kp.nmissed;
-+}
-+
- static int register_kprobe_event(struct trace_kprobe *tk);
- static int unregister_kprobe_event(struct trace_kprobe *tk);
+ 	clk = asrc_priv->asrck_clk[clk_index[OUT]];
+-
+-	/* Use fixed output rate for Ideal Ratio mode (INCLK_NONE) */
+-	if (ideal)
+-		div[OUT] = clk_get_rate(clk) / IDEAL_RATIO_RATE;
++	clk_rate = clk_get_rate(clk);
++	if (ideal && use_ideal_rate)
++		rem[OUT] = do_div(clk_rate, IDEAL_RATIO_RATE);
+ 	else
+-		div[OUT] = clk_get_rate(clk) / outrate;
++		rem[OUT] = do_div(clk_rate, outrate);
++	div[OUT] = clk_rate;
  
+-	if (div[OUT] == 0) {
++	/* Output divider has the same limitation as the input one */
++	if (div[OUT] == 0 || (!ideal && (div[OUT] > 1024 || rem[OUT] != 0))) {
+ 		pair_err("failed to support output sample rate %dHz by asrck_%x\n",
+ 				outrate, clk_index[OUT]);
+ 		return -EINVAL;
+ 	}
+ 
++	div[OUT] = min_t(u32, 1024, div[OUT]);
++
+ 	/* Set the channel number */
+ 	channels = config->channel_num;
+ 
+@@ -560,7 +583,7 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+ 		config.output_sample_rate = rate;
+ 	}
+ 
+-	ret = fsl_asrc_config_pair(pair);
++	ret = fsl_asrc_config_pair(pair, false);
+ 	if (ret) {
+ 		dev_err(dai->dev, "fail to config asrc pair\n");
+ 		return ret;
+-- 
+2.21.0
+
