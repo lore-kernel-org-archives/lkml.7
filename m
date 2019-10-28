@@ -2,67 +2,129 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890E8CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE93CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1FE20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572252620;
-	bh=+5M9OtDgLy8Q7yETJhCbFnqnlXWY4NSUDSLFI8obc28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2m9UNw0XXee7oVtvwdUF+OgVLUgMIahrrlvHuBdpjZyWzrOU3NgpR/8AljANoCiqE
-	 Nm+AhVevEPHghD2z3xb5pl547tIACyWbNhhAaYLrLBPogVvDw0Ag6Vi5XmmOiSF5zV
-	 0Jbyra6ibO9ayjhorLFUhP7TUZfIJErOI7wOfTws=
+	by mail.kernel.org (Postfix) with ESMTP id 930622086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:51:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TIOdz48+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387679AbfJ1IuT (ORCPT
+        id S2387690AbfJ1Iv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 04:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730954AbfJ1IuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 04:50:19 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 339F92086D;
-        Mon, 28 Oct 2019 08:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572252618;
-        bh=+5M9OtDgLy8Q7yETJhCbFnqnlXWY4NSUDSLFI8obc28=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GRYRk77Z25V+FWj5u5mJlznZktX8VvU+f4yWpGSPfoXWaYPLkTS/1KEmWE7PN186N
-         HBhfUXqjEwAworijpgQR42yIFjhsOVuLzOIpAYqzIFKzmtuNj9CdujjjAtMzIr/e/m
-         O17Za8zefbIgJgj1QTDtrQR/g/8Hnurd6d7Z5PQk=
-Date:   Mon, 28 Oct 2019 16:49:59 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH] ARM: dts: imx6ul: Disable gpt2 by default
-Message-ID: <20191028084957.GY16985@dragon>
-References: <1571885965-28928-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 28 Oct 2019 04:51:28 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40498 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731992AbfJ1Iv2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 04:51:28 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S8iF4M025773;
+        Mon, 28 Oct 2019 08:51:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=9saFiIVD4K6KegoAkGcpay9swJ3gk/oMJYVDWNV8Qi4=;
+ b=TIOdz48+ewtjbEyPALjjHR+lOvRYfu1LTeJz3GVTpOz3KprrbtCwFkFqpag0MT0yBliM
+ Hu8tSGwXojbST6PIES9FZ8Y4AzXu4fwoaxK6M5uHJ5YxhK7vcAIN+NLul2XCUeFshUU3
+ yOY/MDgKQdVr9DGDtRzRPVu5aaEUb+UYQHxSk8vEmIkjxcElhRraot1ZTkt7o6su0H4d
+ P7gqHY9mir57x28yuhBduSgwnVq7MOiqOSb3IugU4ooO5Tqp8pJxn9qqswt1vP5CbI+J
+ Oa9Km8Kvhgx8PiJShmupG04TRHLNOri8CVZySO0hgs1g/UZaliTmD/rKNmZDy9D06/TT FQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vvumf5cru-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 08:51:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S8mXgT169533;
+        Mon, 28 Oct 2019 08:51:19 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2vwakxmkfe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 08:51:19 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9S8pGSg026381;
+        Mon, 28 Oct 2019 08:51:17 GMT
+Received: from [192.168.1.13] (/114.88.246.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 28 Oct 2019 01:51:16 -0700
+Subject: Re: INFO: task syz-executor can't die for more than 143 seconds. (2)
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, axboe@kernel.dk
+Cc:     syzbot <syzbot+b48daca8639150bc5e73@syzkaller.appspotmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <000000000000c52dbf05958f3f3a@google.com>
+ <3fbc4bb2-a03b-fbfa-4803-47a6d0075ff2@I-love.SAKURA.ne.jp>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <24296ff7-4a5f-2bd9-63c7-07831f7b4d8d@oracle.com>
+Date:   Mon, 28 Oct 2019 16:51:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571885965-28928-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <3fbc4bb2-a03b-fbfa-4803-47a6d0075ff2@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=997
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910280087
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910280087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 10:59:25AM +0800, Anson Huang wrote:
-> i.MX GPT driver ONLY supports 1 instance, i.MX6UL already has
-> GPT1 enabled by default, so GPT2 should be disabled.
+On 10/24/19 6:08 PM, Tetsuo Handa wrote:
+> On 2019/10/23 16:56, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    c4b9850b Add linux-next specific files for 20191018
+>> git tree:       linux-next
+>> console output: https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_log.txt-3Fx-3D177b3ab0e00000&d=DwICaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=wOlNeKk9puri9Fvxn8bGDrlWHd-4GPMeJ9rb2CVqXaE&s=PZfBliKlYjm16VnyPzu-3i0SgqlbByIB0iI8jVhcGuk&e= 
+>> kernel config:  https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_.config-3Fx-3Dc940ef12efcd1ec&d=DwICaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=wOlNeKk9puri9Fvxn8bGDrlWHd-4GPMeJ9rb2CVqXaE&s=z8tV220wKFTQIJH1tSYLUl8ecAnll94C_mFVcHkuTlc&e= 
+>> dashboard link: https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_bug-3Fextid-3Db48daca8639150bc5e73&d=DwICaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=wOlNeKk9puri9Fvxn8bGDrlWHd-4GPMeJ9rb2CVqXaE&s=VZ2ZdnAqEd_AkXJujidN3EgwscGpUAdsZjuObKjXN-U&e= 
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> syz repro:      https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_repro.syz-3Fx-3D1356b8ff600000&d=DwICaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=wOlNeKk9puri9Fvxn8bGDrlWHd-4GPMeJ9rb2CVqXaE&s=Q_svUYj2OBYmIJXnResNzOWVUCyjRpxnpun2Cu15S9M&e= 
+>> C reproducer:   https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_repro.c-3Fx-3D14f48687600000&d=DwICaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=wOlNeKk9puri9Fvxn8bGDrlWHd-4GPMeJ9rb2CVqXaE&s=FGZNxR7w-rU29MhJxJtno-c_wUXCJHgPC5V1YNp7h58&e= 
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> The reproducer is trying to allocate 64TB of disk space on /dev/nullb0 using fallocate()
+> but __blkdev_issue_zero_pages() cannot bail out upon SIGKILL (and therefore cannot
+> terminate for minutes). Can we make it killable? 
 
-Applied, thanks.
+Yeah, I think we can consider add fatal_signal_pending(current) checking in the while() loop..
+
+> I don't know what action is needed
+> for undoing this loop...
+> 
+>         while (nr_sects != 0) {
+>                 bio = blk_next_bio(bio, __blkdev_sectors_to_bio_pages(nr_sects),
+>                                    gfp_mask);
+>                 bio->bi_iter.bi_sector = sector;
+>                 bio_set_dev(bio, bdev);
+>                 bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
+> 
+>                 while (nr_sects != 0) {
+>                         sz = min((sector_t) PAGE_SIZE, nr_sects << 9);
+>                         bi_size = bio_add_page(bio, ZERO_PAGE(0), sz, 0);
+>                         nr_sects -= bi_size >> 9;
+>                         sector += bi_size >> 9;
+>                         if (bi_size < sz)
+>                                 break;
+>                 }
+>                 cond_resched();
+>         }
+> 
+
