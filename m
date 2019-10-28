@@ -2,155 +2,97 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD982CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998CACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE7A20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646752184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bT52vDaG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731749AbfJ1GH0 (ORCPT
+        id S1731778AbfJ1GHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 02:07:26 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:53470 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731635AbfJ1GHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:07:30 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44499 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731716AbfJ1GHZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 28 Oct 2019 02:07:25 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B2C5E200161;
-        Mon, 28 Oct 2019 07:07:22 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 67BDB2006FD;
-        Mon, 28 Oct 2019 07:07:09 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 324304029E;
-        Mon, 28 Oct 2019 14:06:55 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, leonard.crestez@nxp.com,
-        abel.vesa@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com,
-        jun.li@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
-        mripard@kernel.org, vkoul@kernel.org, jagan@amarulasolutions.com,
-        dinguyen@kernel.org, marcin.juszkiewicz@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH RESEND 4/4] arm64: dts: imx8mm: Add thermal zone support
-Date:   Mon, 28 Oct 2019 14:03:38 +0800
-Message-Id: <1572242618-18806-4-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572242618-18806-1-git-send-email-Anson.Huang@nxp.com>
-References: <1572242618-18806-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Received: by mail-pl1-f193.google.com with SMTP id q16so4813908pll.11;
+        Sun, 27 Oct 2019 23:07:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=N3AnrnW8m8clFq9XuX9N6KUkxKYhGl3KT2G9TPIKHEM=;
+        b=bT52vDaGBuwdvyDqaSD1/IYjhM9gTx5GKu0rpFGpTnEp+vUUEry3qL26DvF4gTll+C
+         Tsg6NIxfTMU8UPtxYojqJlAet/oJktqwY9hMv/NDujzqn4f9kiDSME3+3Y5hsnAZS8LH
+         b96WrKIg58YXA5n6e3vcYIbyRDeSKZ0L2Ueus/iaZ2zqkrsVtUx4BWc40Kh+ilZ4/LNZ
+         EHGZjbFwgKMJDf4C1WMnZJvA9ZFBV9yCqGpVsiTi/9XlEinuePMUleGRp0TX/bTtKGZR
+         at4sGrNQYyv/v9eiv0dUdUzNvwDMCVD0p2bAAbiJ5bcTyZQFuRRYux5r5cjpnTLJKQcZ
+         z2fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=N3AnrnW8m8clFq9XuX9N6KUkxKYhGl3KT2G9TPIKHEM=;
+        b=pRc47WoXAgvhq2dvxWUadAteefh1aYHeiuNIMlnx7HRZL9XB2WbWrIIAYFk+6AKdGT
+         Vp0z2L6FIbpxRUwwnZiMstadnbGDW4lEVfTI7E8Uy2xDpgjqNd4VYLPmVsW9lqs+TrDc
+         lwmXzIEhxR6BXAJh9FZjWxP1JPJQZ4A5g0o7s/I90OwVlSBZQAhEryooGTI0psd9+ot4
+         rZJtm/RC8pjVNSo7CiA5A2Vhf7p/sbliBihKu1qBee4KQxeCK7BMXpFTsdzcgrl6qiTr
+         Tk4ZTclS39i8LW0n/O8i4SAmF6povxovY71HOuz/F1Ib9utha55TuAQqnnZ7MVzKasHR
+         aU+w==
+X-Gm-Message-State: APjAAAUewOKAVeyYLaK88d82EMhSLtvlDR351DQWr+3me+pJzzF2bUCx
+        jQycC6ldHumFJu4q6QXStq8=
+X-Google-Smtp-Source: APXvYqzUSnrIvw+xmNvs6HOdzZLoYxHxyluQ5VYTuyR6cYdBdKLk+sZRLjYcH4wWEmk0/9YY5QsZZw==
+X-Received: by 2002:a17:902:347:: with SMTP id 65mr16901116pld.161.1572242844300;
+        Sun, 27 Oct 2019 23:07:24 -0700 (PDT)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:539:cf3b:393e:2dcf:24de:b4fb])
+        by smtp.gmail.com with ESMTPSA id 70sm746781pfw.160.2019.10.27.23.07.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2019 23:07:23 -0700 (PDT)
+From:   madhuparnabhowmik04@gmail.com
+To:     corbet@lwn.net, mchehab+samsung@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH] Documentation: driver-api: index: Removed non-existing document driver-api/sgi-ioc4 from the toctree.
+Date:   Mon, 28 Oct 2019 11:37:10 +0530
+Message-Id: <20191028060710.15154-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add thermal zone and tmu node to support i.MX8MM thermal
-driver, ONLY cpu thermal zone is supported, and cpu cooling
-is also added.
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+This patches fixes the WARNING: toctree contains reference
+to nonexisting document u'driver-api/sgi-ioc4'by removing
+it from the toctree in the index.rst file.
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 43 +++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ Documentation/driver-api/index.rst | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 5ff9b6b..ade930f 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -68,6 +68,7 @@
- 			nvmem-cells = <&cpu_speed_grade>;
- 			nvmem-cell-names = "speed_grade";
- 			cpu-idle-states = <&cpu_pd_wait>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_1: cpu@1 {
-@@ -80,6 +81,7 @@
- 			next-level-cache = <&A53_L2>;
- 			operating-points-v2 = <&a53_opp_table>;
- 			cpu-idle-states = <&cpu_pd_wait>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_2: cpu@2 {
-@@ -92,6 +94,7 @@
- 			next-level-cache = <&A53_L2>;
- 			operating-points-v2 = <&a53_opp_table>;
- 			cpu-idle-states = <&cpu_pd_wait>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_3: cpu@3 {
-@@ -104,6 +107,7 @@
- 			next-level-cache = <&A53_L2>;
- 			operating-points-v2 = <&a53_opp_table>;
- 			cpu-idle-states = <&cpu_pd_wait>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_L2: l2-cache0 {
-@@ -209,6 +213,38 @@
- 		arm,no-tick-in-suspend;
- 	};
- 
-+	thermal-zones {
-+		cpu-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <2000>;
-+			thermal-sensors = <&tmu>;
-+			trips {
-+				cpu_alert0: trip0 {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu_crit0: trip1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert0>;
-+					cooling-device =
-+						<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+	};
-+
- 	usbphynop1: usbphynop1 {
- 		compatible = "usb-nop-xceiv";
- 		clocks = <&clk IMX8MM_CLK_USB_PHY_REF>;
-@@ -368,6 +404,13 @@
- 				gpio-ranges = <&iomuxc 0 119 30>;
- 			};
- 
-+			tmu: tmu@30260000 {
-+				compatible = "fsl,imx8mm-tmu";
-+				reg = <0x30260000 0x10000>;
-+				clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
-+				#thermal-sensor-cells = <0>;
-+			};
-+
- 			wdog1: watchdog@30280000 {
- 				compatible = "fsl,imx8mm-wdt", "fsl,imx21-wdt";
- 				reg = <0x30280000 0x10000>;
+diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
+index 38e638abe3eb..6d46ceeb62c4 100644
+--- a/Documentation/driver-api/index.rst
++++ b/Documentation/driver-api/index.rst
+@@ -93,7 +93,6 @@ available subsections can be seen below.
+    pwm
+    rfkill
+    serial/index
+-   sgi-ioc4
+    sm501
+    smsc_ece1099
+    switchtec
 -- 
-2.7.4
+2.17.1
 
