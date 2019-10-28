@@ -2,79 +2,123 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8225CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF26CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8D2217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C51321835
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:24:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6vYaxKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbfJ1PXb (ORCPT
+        id S1729837AbfJ1PYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:23:31 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57551 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728522AbfJ1PXb (ORCPT
+        Mon, 28 Oct 2019 11:24:18 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35394 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbfJ1PYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:23:31 -0400
-Received: from cust-east-parth2-46-193-72-114.wb.wifirst.net (46.193.72.114) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id c030794400d0e802; Mon, 28 Oct 2019 16:23:29 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: Clarify the comment in cpufreq_set_policy()
-Date:   Mon, 28 Oct 2019 16:23:28 +0100
-Message-ID: <3398893.vxru0tI2Zt@kreacher>
-In-Reply-To: <ec3e8e001b35c9244f6406932335d7156b611373.1571739473.git.viresh.kumar@linaro.org>
-References: <ec3e8e001b35c9244f6406932335d7156b611373.1571739473.git.viresh.kumar@linaro.org>
+        Mon, 28 Oct 2019 11:24:17 -0400
+Received: by mail-il1-f194.google.com with SMTP id p8so8536564ilp.2;
+        Mon, 28 Oct 2019 08:24:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d5lAMRfHtk2EQ8kdZ9OB3W0LQMkhl/amzHwPWCWvW14=;
+        b=Z6vYaxKPcOGy25FF9pf7qir9Rqlme+c8mQkk8btbXmmVTT6UYwfOsWMly7W9XEBI8o
+         HgHhJ9AIO22Uuqga8nvRkREa14Tot8KYdkJYmaQV4aLJEuxiRnEnGyopc36qgx47eVwQ
+         b3alzoWycnAQaPezRAm/VrlBY/C2qzw2fG/lFzRhHuf6vNIJMuf+sxbrykS33gOIZ1ai
+         IFSna665SU1lHebs9BEOZwxW+MLBL3wk79T+hm1g5RlSo4wbP2ar3eE49gDiP+rtSP07
+         A8KAmicIlutBIEc579NOBUdeHFKSvtwXKaLzxAil4m13JC2TeI6SlhgwE8i9Cwn+okdC
+         SVMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d5lAMRfHtk2EQ8kdZ9OB3W0LQMkhl/amzHwPWCWvW14=;
+        b=tVuWr9OA3e1g2pezHrCFb7R5DDB2ME8DKnSX9itBLsQ/s5OMwPrBgbCS1jwgPOvEr5
+         ohyO3T3zfLEcMHbmmMKsJz7avwo+GdCggMzutan4shHmJqsMPgVuYHkuSQDySYJata8k
+         OBcQi/ywbbktc20FQHachYiHHGVFnpIe4u84dT/iGwLDlAX5XFNkihIDsEj94Zp6QK17
+         Ya6LiBqniZs/uf+0i2CqRuVrHiMJOfflh7tXPtlsG21xhDVMT1gwCl2ODPkfPEH6/nDa
+         APA8XFS5PubMdBRChpnYeJyHEl66H38OlsPnUz5fcPMHpX7FQraLzfPC+63t1UpWRv3X
+         rbrQ==
+X-Gm-Message-State: APjAAAWaAYKNHuSyrCU1uJmIvjqdmIPzKYK+nqKa+iRYFZasFEe6guqu
+        V0AslAob+6DY4mAIeVPN9TCYdQcmsFJ9VngQqw0=
+X-Google-Smtp-Source: APXvYqyfgTgUajiGv2w6khwqi9U4IsCrcrOyR1GO4gPo2AlNqjopyIrCsEicGQbR4CIN0pp166szPL4Do0g9w/mvrSU=
+X-Received: by 2002:a92:9f1c:: with SMTP id u28mr19473440ili.97.1572276256522;
+ Mon, 28 Oct 2019 08:24:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20191022221223.17338.5860.stgit@localhost.localdomain> <3888d486-d046-b35f-a365-655f8c4d3bf2@redhat.com>
+In-Reply-To: <3888d486-d046-b35f-a365-655f8c4d3bf2@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 28 Oct 2019 08:24:05 -0700
+Message-ID: <CAKgT0UdkPwsc8KrSAURt1FuD8nX8o50CLDcd21RQw8AW7PVMVg@mail.gmail.com>
+Subject: Re: [PATCH v12 0/6] mm / virtio: Provide support for unused page reporting
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Oscar Salvador <osalvador@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, October 22, 2019 12:17:57 PM CET Viresh Kumar wrote:
-> One of the responsibility of the ->verify() callback is to make sure
-> that the policy's min frequency is <= max frequency as this isn't
-> guaranteed by the QoS framework which gave us those values.
-> 
-> Update the comment in cpufreq_set_policy() to clarify that.
-> 
-> Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cpufreq.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 2e698b5f0f80..b4b5f11c2f1e 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -2384,7 +2384,10 @@ int cpufreq_set_policy(struct cpufreq_policy *policy,
->  	new_policy->min = freq_qos_read_value(&policy->constraints, FREQ_QOS_MIN);
->  	new_policy->max = freq_qos_read_value(&policy->constraints, FREQ_QOS_MAX);
->  
-> -	/* verify the cpu speed can be set within this limit */
-> +	/*
-> +	 * Verify that the cpu speed can be set within this limit and make sure
-> +	 * min <= max.
-> +	 */
->  	ret = cpufreq_driver->verify(new_policy);
->  	if (ret)
->  		return ret;
-> 
+On Mon, Oct 28, 2019 at 7:34 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>
+>
+> On 10/22/19 6:27 PM, Alexander Duyck wrote:
+>
+>
+> [...]
+> > Below are the results from various benchmarks. I primarily focused on two
+> > tests. The first is the will-it-scale/page_fault2 test, and the other is
+> > a modified version of will-it-scale/page_fault1 that was enabled to use
+> > THP. I did this as it allows for better visibility into different parts
+> > of the memory subsystem. The guest is running on one node of a E5-2630 v3
+> > CPU with 48G of RAM that I split up into two logical nodes in the guest
+> > in order to test with NUMA as well.
+> >
+> > Test              page_fault1 (THP)     page_fault2
+> > Baseline       1  1256106.33  +/-0.09%   482202.67  +/-0.46%
+> >                 16  8864441.67  +/-0.09%  3734692.00  +/-1.23%
+> >
+> > Patches applied  1  1257096.00  +/-0.06%   477436.00  +/-0.16%
+> >                 16  8864677.33  +/-0.06%  3800037.00  +/-0.19%
+> >
+> > Patches enabled        1  1258420.00  +/-0.04%   480080.00  +/-0.07%
+> >  MADV disabled  16  8753840.00  +/-1.27%  3782764.00  +/-0.37%
+> >
+> > Patches enabled        1  1267916.33  +/-0.08%   472075.67  +/-0.39%
+> >                 16  8287050.33  +/-0.67%  3774500.33  +/-0.11%
+>
+> If I am not mistaken then you are only observing the number of processes (and
+> not the number of threads) launched over the 1st and the 16th vcpu  reported by
+> will-it-scale?
 
-Applying for 5.5, thanks!
-
-
-
-
+You are correct these results are for the processes. I monitored them
+for 1 - 16, but only included the results for 1 and 16 since those
+seem to be the most relevant data points.
