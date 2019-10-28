@@ -2,119 +2,119 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F9BCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 05:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C40CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 05:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA6A20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 05:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D4D20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 05:49:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZVEgl5I"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NJD2B3O+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbfJ1FjJ (ORCPT
+        id S1729447AbfJ1Ftf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 01:39:09 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33543 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfJ1FjI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 01:39:08 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c184so6139255pfb.0;
-        Sun, 27 Oct 2019 22:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4TLpVWf2CVPtyv8muRNOfqy/oxK+saaX3jSceO7ujLs=;
-        b=oZVEgl5I+XusKxKa+xY4nYK7sD66jVdrJs27Ogmpwsdcz6uQwAa81c716UmcsjQoHT
-         LJvXK6RZ8LpQGeiNsl2UvFkbYbLV6lvRDZ2CvnjAcHL6ZTjp4gIi/nRR/wUKCI6n3gKj
-         nrszOz5PD4X8t0T1vui0e/jvUA16Pd+vEbP1sTpCQ+mdmKO6VXbGBNHxhx5QT4UZ/F9s
-         HyuZ7/AF9LWwr3HoPkTT31q84Z2uovUt/VnE9RlCbweFrMcwf/pU5LxwKmQz9s58N1BQ
-         Syv413sOBtU3J8bOH7+JC2nPpC0wvNE/d7HexwdWVVzqlqMtn4LwVExzpufy/YwEZwFR
-         /scw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4TLpVWf2CVPtyv8muRNOfqy/oxK+saaX3jSceO7ujLs=;
-        b=OMbyRQIu76TF8qzFvH5mmGg0jGP0px2Ex7jx91wuynuN7yhdzq25Lgz1NAafQhv/2a
-         JNwxEHk2FZu/lQXmPCdSwI/F42HqSxk8XizoE1yWHtdObCyx+HKXg0YG1PYUTGFdNI1o
-         ACKfpYY9u7fdK/LHDxiTPaXHeNonkLLLeluSqxARh71seRmQtKRuZ2yxsIFovBmXP746
-         jS6y9jwutjYdXI9DoGje3dctS3qLDNSQTUXVyYrgEpHHFZVRzC2txn1t/VsM3O6sG/vE
-         oy5H4J6kvIfzRQE2OsJS+tfH+xCDfnPA25QMZiM6oluSr9oEF2+oi220pkO3bhQ6GbH3
-         6TPQ==
-X-Gm-Message-State: APjAAAW6rAgVJPmxS4hVBtZ8rAAX3sbYFMPeybDZrSEc/7jwP98RaDbT
-        /4YjsDYYbZs18avrxZfLJa8=
-X-Google-Smtp-Source: APXvYqznWT2B8o3TXTpO5S61wCXRH+CISbuywggih+NT11L9qppGsMrPmOHGdacuRlsUQSe4ZI1Bsw==
-X-Received: by 2002:a17:90a:24ca:: with SMTP id i68mr20825227pje.11.1572241147645;
-        Sun, 27 Oct 2019 22:39:07 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 22sm9354320pfo.131.2019.10.27.22.39.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 22:39:06 -0700 (PDT)
-Date:   Sun, 27 Oct 2019 22:39:04 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andrew Duggan <aduggan@synaptics.com>
-Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Simon Wood <simon@mungewell.org>,
-        Nick Dyer <nick@shmanahar.org>
-Subject: Re: [PATCH 1/3] Input: synaptics-rmi4 - disable the relative
- position IRQ in the F12 driver
-Message-ID: <20191028053904.GG163068@dtor-ws>
-References: <20191025002527.3189-1-aduggan@synaptics.com>
- <20191025002527.3189-2-aduggan@synaptics.com>
+        Mon, 28 Oct 2019 01:49:35 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51029 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfJ1Ftf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 01:49:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 471kLg1Qqcz9sPK;
+        Mon, 28 Oct 2019 16:49:31 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572241772;
+        bh=tstUNT1brLDFJRPvtcAeyQmxp+7U7USa0PXA8ftu9+4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NJD2B3O+sidrtCTnKWj5vvxBtI/NzOK621TAUp2H9PSWcJMCSVF8GwzFTHu//liP5
+         aezBR3iX8cuLtrf9B5Lck/SreohkiVK+x3Re7maIiLQ3TQpWHSOb3nr72+dpg/7O0e
+         TWTgwxjv8METpLpvJKnTWblefgzgA82vrA/lTFdRpI7aV8okLwheGpbnFJAuxwppil
+         D2uxa4NPKJYxnOTDJThlSHscQxV14xxZ0iRZkJhzJi0AP5dDnU7BZIV4NX9VW7WzNL
+         xrTQ0Nr4iOok7xJw+JQlMgpPij+j9ENawGQGR5U9I+UO1BlsU7+2x+TZT8rpXF0tw1
+         ze7wXaz1WTPyw==
+Date:   Mon, 28 Oct 2019 16:49:24 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Smart <jsmart2021@gmail.com>
+Subject: Re: linux-next: build failure after merge of the scsi-mkp tree
+Message-ID: <20191028164924.232e32e5@canb.auug.org.au>
+In-Reply-To: <20191025140736.0c9e9d64@canb.auug.org.au>
+References: <20191025140736.0c9e9d64@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025002527.3189-2-aduggan@synaptics.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/G3U/WFfGWlEPv9ohSoD/NlH";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+--Sig_/G3U/WFfGWlEPv9ohSoD/NlH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 25, 2019 at 12:25:56AM +0000, Andrew Duggan wrote:
-> This patch fixes an issue seen on HID touchpads which report finger
-> positions using RMI4 Function 12. The issue manifests itself as
-> spurious button presses as described in:
-> https://www.spinics.net/lists/linux-input/msg58618.html
-> 
-> Commit 24d28e4f1271 ("Input: synaptics-rmi4 - convert irq distribution
-> to irq_domain") switched the RMI4 driver to using an irq_domain to handle
-> RMI4 function interrupts. Functions with more then one interrupt now have
-> each interrupt mapped to their own IRQ and IRQ handler. The result of
-> this change is that the F12 IRQ handler was now getting called twice. Once
-> for the absolute data interrupt and once for the relative data interrupt.
-> For HID devices, calling rmi_f12_attention() a second time causes the
-> attn_data data pointer and size to be set incorrectly. When the touchpad
-> button is pressed, F30 will generate an interrupt and attempt to read the
-> F30 data from the invalid attn_data data pointer and report incorrect
-> button events.
+Hi all,
 
-Maybe we should create only 1 interrupt per function instead of
-multiple? It looks like the functions read their entire block of data on
-any interrupt received.
+On Fri, 25 Oct 2019 14:07:36 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the scsi-mkp tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+>=20
+> drivers/scsi/lpfc/lpfc_debugfs.c: In function 'lpfc_debugfs_ras_log_relea=
+se':
+> drivers/scsi/lpfc/lpfc_debugfs.c:2109:2: error: implicit declaration of f=
+unction 'vfree'; did you mean 'kvfree'? [-Werror=3Dimplicit-function-declar=
+ation]
+>  2109 |  vfree(debug->buffer);
+>       |  ^~~~~
+>       |  kvfree
+> drivers/scsi/lpfc/lpfc_debugfs.c: In function 'lpfc_debugfs_ras_log_open':
+> drivers/scsi/lpfc/lpfc_debugfs.c:2150:18: error: implicit declaration of =
+function 'vmalloc'; did you mean 'kvmalloc'? [-Werror=3Dimplicit-function-d=
+eclaration]
+>  2150 |  debug->buffer =3D vmalloc(size);
+>       |                  ^~~~~~~
+>       |                  kvmalloc
+> drivers/scsi/lpfc/lpfc_debugfs.c:2150:16: warning: assignment to 'char *'=
+ from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>  2150 |  debug->buffer =3D vmalloc(size);
+>       |                ^
+>=20
+> Caused by commit
+>=20
+>   95bfc6d8ad86 ("scsi: lpfc: Make FW logging dynamically configurable")
+>=20
+> I have used the scsi-mkp tree from next-20191024 for today.
 
-> 
-> This patch disables the F12 relative interrupt which prevents
-> rmi_f12_attention() from being called twice.
+This build failure now appears in the scsi tree build.  I have applied the
+fix from James Smart for today.
 
-Don't we have similar issue with F11, and maybe others?
+--=20
+Cheers,
+Stephen Rothwell
 
-Also, as far as F12 goes, I see that it may mark sensor as reporting
-relative coordinates, but I do not see where it would actually emit
-relative events. I must be missing something here...
+--Sig_/G3U/WFfGWlEPv9ohSoD/NlH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Thanks.
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Dmitry
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl22gWQACgkQAVBC80lX
+0Gzx5wf+OuWnhPVqdmOeG9S0LWw9rudHHt4o2sAFEopbPgwkn3i8vrP467Exz+Ho
+DdxerHWZUmUDGX7kFw5lAPoCycknLATak3G1ialcyp6A+6iKhFcUu+dhCmMzPxcB
+Nm/bcznEI9QdIVFRKajJ2ZU7pwrqh3cBdm6QeUbEivaj0EZyLHY4SYBE553LdmSy
+PHBcrpB3cAXYKrC2gWroHRLi5Y1oZaRVgTpPXob1c7BsJNY5ZAMyuTnsfZQI9zqq
+5Y23R5k/do2i75wBh9Imzb7jCmwtTn7QJrUTHoUjFBviy3bByavBpHc64XcibCCI
+0W1b2gHYa5an3Vvs52mwro/mbZ1auA==
+=dCSO
+-----END PGP SIGNATURE-----
+
+--Sig_/G3U/WFfGWlEPv9ohSoD/NlH--
