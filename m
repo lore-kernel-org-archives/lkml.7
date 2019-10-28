@@ -2,175 +2,141 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E419CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8415DCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F070D21D80
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539F0218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LAKtQVm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391152AbfJ1VG7 (ORCPT
+        id S2391168AbfJ1VHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:06:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:44723 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727689AbfJ1VG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:06:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 14:06:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
-   d="scan'208";a="224760115"
-Received: from shrehore-mobl1.ti.intel.com (HELO localhost) ([10.251.82.5])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 14:06:50 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v23 20/24] x86/traps: Attempt to fixup exceptions in vDSO before signaling
-Date:   Mon, 28 Oct 2019 23:03:20 +0200
-Message-Id: <20191028210324.12475-21-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
-References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+        Mon, 28 Oct 2019 17:07:04 -0400
+Received: from mail-eopbgr690114.outbound.protection.outlook.com ([40.107.69.114]:46142
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727689AbfJ1VHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:07:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e/Tp2xrfiJrLfPm0qtc/Pyz2MUwhtb+8SF5F7Jh3wLXxUsMJBp0NgNeZ42X40YJNNcfgl68dG/LmAW8EN2EN2zzlX5lwcBMKgt0Hgqwvg1QIyHFdRGw03cFw9mhZ/mJdgxiJztyBP1FaZ6rypj1af1Q56QiLekR98YtUKz8tlpPMY/bRM6fTmKivuH7tfIEGFizGw+3cF86d6488fk1TJQIRzVswtHWMy/4xgZ8ukuCmmUxPqRmTQhZEZKir9Iv7rHW+7lRd7FjISq9Qu6yeKpTNM0e/bxzfzq/ipgi+a1dPvc62GHdJy5oJ7UYThCDugZ519y/Teh07T3xbZFTdYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9Hev7w3w9cjL2lfPvS3vqONu1MIvPnz/3BL3sv8hG4Y=;
+ b=Fv6fMm3SW9apAcgnSOoVY/VDKNoIvV5KxMwV5TZNv2g22zKvca3XDbN2QVSQ2OlYzmMwEMsT1ij8Vwv/dWMnq6PMI+vEvpU+vFwBzxUf0oUTwB1mE9Yan4Y0hMLPZOF/gO3qPdzZgjBj9nRvjmkYqH+b1jjoOgxlAhJi5qjZ2yw+STh2GCQNKrdIVJljZEnOO1m/hTzPIZn85XLKVb18WyU84sOUvEo7Nzxb0d5RzuQOGmG35K9VfzxUMkxvPQxa5C9BU8Ds4vOdmvio/ZKo0YzgP8bQkzmoU4Ao5GKJQf/G3woOIO+Ct487lcu9Ub7ZCq14ImWGdin2GVC1Zd9fgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9Hev7w3w9cjL2lfPvS3vqONu1MIvPnz/3BL3sv8hG4Y=;
+ b=LAKtQVm6sjztOniGN+vD4k6ND6NUpL+as+6UYYDVSI+bT3lrX4jui7FdxGukkacvAEmq5YJzuA6l7SxLfmoIBK+DcvRGZrQtc24AWkrP4iU+GXfZmRmyZaqNFQlqEw0Y3ac23va5qmqwYaAMHNSNcVap042eR0uDPUOE8oyqkqI=
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
+ DM6PR21MB1404.namprd21.prod.outlook.com (20.180.22.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.8; Mon, 28 Oct 2019 21:07:00 +0000
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::756e:8d3f:e463:3bf7]) by DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::756e:8d3f:e463:3bf7%3]) with mapi id 15.20.2408.016; Mon, 28 Oct 2019
+ 21:07:00 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next, 1/4] hv_netvsc: Fix error handling in
+ netvsc_set_features()
+Thread-Topic: [PATCH net-next, 1/4] hv_netvsc: Fix error handling in
+ netvsc_set_features()
+Thread-Index: AQHVjdOjYlIhZIotN0y++mx45ndm5A==
+Date:   Mon, 28 Oct 2019 21:07:00 +0000
+Message-ID: <1572296801-4789-2-git-send-email-haiyangz@microsoft.com>
+References: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR04CA0076.namprd04.prod.outlook.com
+ (2603:10b6:102:1::44) To DM6PR21MB1242.namprd21.prod.outlook.com
+ (2603:10b6:5:169::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 2
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: dff32482-79dd-4a36-7cbd-08d75beac642
+x-ms-traffictypediagnostic: DM6PR21MB1404:|DM6PR21MB1404:|DM6PR21MB1404:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB14048E7E296802D280E712F6AC660@DM6PR21MB1404.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0204F0BDE2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(346002)(396003)(39860400002)(136003)(199004)(189003)(6512007)(446003)(4744005)(36756003)(54906003)(50226002)(486006)(22452003)(2616005)(476003)(305945005)(14454004)(478600001)(2501003)(6392003)(66066001)(7846003)(66476007)(66446008)(64756008)(66556008)(66946007)(10290500003)(6436002)(386003)(10090500001)(102836004)(7736002)(99286004)(11346002)(76176011)(52116002)(5660300002)(14444005)(186003)(26005)(6506007)(256004)(8936002)(81156014)(81166006)(6116002)(6486002)(3846002)(4326008)(8676002)(2201001)(316002)(110136005)(25786009)(2906002)(4720700003)(71200400001)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1404;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 150dfI15io5Iip/mixFvqsCLuDRsOmAXa8QxxfKBzo6bNGGE9HG6JD+Wjo/+XpIXBOfgLLNiJP85Jwjjl2kPxHEqMc3nrJHMn8Y/0SSS+okppB3l4hZ2/aTq9reRMVj4ZTTMlB7ApqZDJqWR+z9IOjgkjd+ZbT+C88AHMsl42d5zYwXw7n8nLoghF4BdIGayhwLvLlUpQ6MTfFAxUGR5nQbN3U6s92KivB1fIZ5mWZtYFXiFMCsk8cN/phaQc3070BAO5vkFUwIm6S2pr3QI0FOLWINrr6X5SqGXyqXRQvQHqlbrMl3F59851AlHpKp5cgypTyN/7kqDqOw/U4ySVDrISoVSB3rVYEqe5yIdYPI7BSRm4da/ceScCWtAqNWrUiuaxmi+iNVu7GixZf2e8ox/a5rVqr5L+fOLSfWLr0GP/04OEzAKeqRBS6AzPsLG
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dff32482-79dd-4a36-7cbd-08d75beac642
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 21:07:00.5603
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YxgnShzQfIC8LSjQIt/C6S9TXTev3oe1GA3JdL73gPYzjMvIjyOv4nt4iWj7Vmd8UAxbTePN33/BsdWxrbsysA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1404
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+When an error is returned by rndis_filter_set_offload_params(), we should
+still assign the unaffected features to ndev->features. Otherwise, these
+features will be missing.
 
-vDSO functions can now leverage an exception fixup mechanism similar to
-kernel exception fixup.  For vDSO exception fixup, the initial user is
-Intel's Software Guard Extensions (SGX), which will wrap the low-level
-transitions to/from the enclave, i.e. EENTER and ERESUME instructions,
-in a vDSO function and leverage fixup to intercept exceptions that would
-otherwise generate a signal.  This allows the vDSO wrapper to return the
-fault information directly to its caller, obviating the need for SGX
-applications and libraries to juggle signal handlers.
-
-Attempt to fixup vDSO exceptions immediately prior to populating and
-sending signal information.  Except for the delivery mechanism, an
-exception in a vDSO function should be treated like any other exception
-in userspace, e.g. any fault that is successfully handled by the kernel
-should not be directly visible to userspace.
-
-Although it's debatable whether or not all exceptions are of interest to
-enclaves, defer to the vDSO fixup to decide whether to do fixup or
-generate a signal.  Future users of vDSO fixup, if there ever are any,
-will undoubtedly have different requirements than SGX enclaves, e.g. the
-fixup vs. signal logic can be made function specific if/when necessary.
-
-Suggested-by: Andy Lutomirski <luto@amacapital.net>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Fixes: d6792a5a0747 ("hv_netvsc: Add handler for LRO setting change")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
- arch/x86/kernel/traps.c | 14 ++++++++++++++
- arch/x86/mm/fault.c     |  8 ++++++++
- 2 files changed, 22 insertions(+)
+ drivers/net/hyperv/netvsc_drv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 4bb0f8447112..9f06a3441f10 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -61,6 +61,7 @@
- #include <asm/mpx.h>
- #include <asm/vm86.h>
- #include <asm/umip.h>
-+#include <asm/vdso.h>
- 
- #ifdef CONFIG_X86_64
- #include <asm/x86_init.h>
-@@ -210,6 +211,9 @@ do_trap_no_signal(struct task_struct *tsk, int trapnr, const char *str,
- 		tsk->thread.error_code = error_code;
- 		tsk->thread.trap_nr = trapnr;
- 		die(str, regs, error_code);
-+	} else {
-+		if (fixup_vdso_exception(regs, trapnr, error_code, 0))
-+			return 0;
- 	}
- 
- 	/*
-@@ -557,6 +561,9 @@ do_general_protection(struct pt_regs *regs, long error_code)
- 		return;
- 	}
- 
-+	if (fixup_vdso_exception(regs, X86_TRAP_GP, error_code, 0))
-+		return;
-+
- 	tsk->thread.error_code = error_code;
- 	tsk->thread.trap_nr = X86_TRAP_GP;
- 
-@@ -771,6 +778,10 @@ dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
- 							SIGTRAP) == NOTIFY_STOP)
- 		goto exit;
- 
-+	if (user_mode(regs) &&
-+	    fixup_vdso_exception(regs, X86_TRAP_DB, error_code, 0))
-+		goto exit;
-+
- 	/*
- 	 * Let others (NMI) know that the debug stack is in use
- 	 * as we may switch to the interrupt stack.
-@@ -851,6 +862,9 @@ static void math_error(struct pt_regs *regs, int error_code, int trapnr)
- 	if (!si_code)
- 		return;
- 
-+	if (fixup_vdso_exception(regs, trapnr, error_code, 0))
-+		return;
-+
- 	force_sig_fault(SIGFPE, si_code,
- 			(void __user *)uprobe_get_trap_addr(regs));
- }
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 0e0842e941eb..105252776172 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -29,6 +29,7 @@
- #include <asm/efi.h>			/* efi_recover_from_page_fault()*/
- #include <asm/desc.h>			/* store_idt(), ...		*/
- #include <asm/cpu_entry_area.h>		/* exception stack		*/
-+#include <asm/vdso.h>			/* fixup_vdso_exception()	*/
- 
- #define CREATE_TRACE_POINTS
- #include <asm/trace/exceptions.h>
-@@ -901,6 +902,10 @@ __bad_area_nosemaphore(struct pt_regs *regs, unsigned long error_code,
- 
- 		sanitize_error_code(address, &error_code);
- 
-+		if (fixup_vdso_exception(regs, X86_TRAP_PF, error_code,
-+		    address))
-+			return;
-+
- 		if (likely(show_unhandled_signals))
- 			show_signal_msg(regs, error_code, address, tsk);
- 
-@@ -1018,6 +1023,9 @@ do_sigbus(struct pt_regs *regs, unsigned long error_code, unsigned long address,
- 
- 	sanitize_error_code(address, &error_code);
- 
-+	if (fixup_vdso_exception(regs, X86_TRAP_PF, error_code, address))
-+		return;
-+
- 	set_signal_archinfo(address, error_code);
- 
- #ifdef CONFIG_MEMORY_FAILURE
--- 
-2.20.1
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
+v.c
+index 39dddcd..734e411 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1807,8 +1807,10 @@ static int netvsc_set_features(struct net_device *nd=
+ev,
+=20
+ 	ret =3D rndis_filter_set_offload_params(ndev, nvdev, &offloads);
+=20
+-	if (ret)
++	if (ret) {
+ 		features ^=3D NETIF_F_LRO;
++		ndev->features =3D features;
++	}
+=20
+ syncvf:
+ 	if (!vf_netdev)
+--=20
+1.8.3.1
 
