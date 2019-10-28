@@ -2,129 +2,97 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFF7CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9254ECA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14DD217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649A420717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aU1Ig+FC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jneJ72df"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391077AbfJ1QfQ (ORCPT
+        id S2391087AbfJ1Qfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:35:16 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41810 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729420AbfJ1QfQ (ORCPT
+        Mon, 28 Oct 2019 12:35:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57484 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730703AbfJ1Qfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:35:16 -0400
-Received: by mail-il1-f193.google.com with SMTP id z10so8728346ilo.8
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 09:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=21j/dEL0woCR7rVyFBJA5jrlm9GOTcbrkftyZXegyKo=;
-        b=aU1Ig+FCiz7v2IaiVq8NhUuGtv0bCBMp3YsGpTDegyuWP+LJPtteTZlzwPwajX8jCv
-         NRz4cASxes89dYC6sB0CbiJxU/1CaUWgP7M34Cky4H6G6hxoEdT4OV4YIrB4r4FgHBmg
-         5mQ15GrEag5lIB+QOYnvkJWdLW053YG6Ivi4+z853DDikUjFGGKLm4OPisECfiH+my7Z
-         gN2OD5tu8Hd5h8meTBFNmA2I3Ykf7ci8D8kC6KC95b/1meOlz3l8pWGmww+XIK+vVvrQ
-         UybrDCU6sLgBPJ485nRSyr3ZVTP69vtt89S4QiUmL3yOSOe/2T2//dKXaeedoG5hjdPq
-         nHvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=21j/dEL0woCR7rVyFBJA5jrlm9GOTcbrkftyZXegyKo=;
-        b=GNyjLLeIXD8SV9824wfOmp0xxbx6olxUaX5NNZxk8Fy3vSNac3lFM+Q95cQ5TUeifJ
-         95ZYg9A62rCesawPNdYGMw5iFTppCmQkYl41ZwuCE6OpdhzibgXhPuOUJJYvJNOuv4Ab
-         ErrdAnIFk8nf3fVNIwt7SAnVti9BD2ze9jAhJwBpXakfxxGoBSynRwGKAHGbnjMDuX0c
-         67eA2pzqVqpvdClc7KOiu6WFl/88Xg9H12PYkcj9XnZ9RCvkUZKZLcAnH5rEEXEIn0im
-         bBGHGT0DYuqCwQ+fa4ZtPv9ZFMrW4+MJDbsP4mrmDFrrfrkpHyLHQyl+t2qPH21bNvLG
-         c68g==
-X-Gm-Message-State: APjAAAWEYutuDsrF0WXTBY+6pue1m/7QqDviCrvOhyrwwOn6/Ax5+KgD
-        fz3zUNP2RZ6ZESfKtcsvi0XQ7AcfhNLFExDE/Bg=
-X-Google-Smtp-Source: APXvYqxZHTQgUs3vZ4EyKxk1J2VBxbW1V/6qsk4AKLh6jW/960J5msDNOgE9rFT9PBlWL6y2v0qTQSUQ5QvAY+3DS7Q=
-X-Received: by 2002:a92:d94a:: with SMTP id l10mr17910669ilq.227.1572280515345;
- Mon, 28 Oct 2019 09:35:15 -0700 (PDT)
+        Mon, 28 Oct 2019 12:35:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4+K1/bmKx0JfCqxKDmPlAQkjGMz5sdzpbSR198DLpb8=; b=jneJ72dfq8edkHH/ghw9EkV+p
+        os2ENaXowtdPqJC7h2bw4WQTgKxQp7v4EXT6y4P9GrhBj96VdI28RuD6W37WuSWoKB30cnf3ks1wH
+        U+F8SJOQMXnakDWNavHCYFS1pItaDQf5yworCIZkmrGmkFVUVRKa7IhbvLd99zVB2/ydTWyYA1kGe
+        RkkcXxlnSP7xQ+unnklzAgqe8lObhhMAA1X15hZKaG5wCSvL7avJWFSk+CP0Z2SyA4s8D0fvfTwnf
+        TltRH/cBPFT9jjh5vZAPQ/UGlMLdS6RX741PazXsEvZ/w6kLwM86eBAkV/eeOT34R7bY3FTBsJslh
+        BLR+aFV8A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iP7zB-0001Pq-Le; Mon, 28 Oct 2019 16:35:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1C30B306091;
+        Mon, 28 Oct 2019 17:34:15 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6B66E20C4EA0B; Mon, 28 Oct 2019 17:35:15 +0100 (CET)
+Date:   Mon, 28 Oct 2019 17:35:15 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
+        rabin@rab.in, Mark Rutland <mark.rutland@arm.com>,
+        james.morse@arm.com
+Subject: Re: [PATCH v4 13/16] arm/ftrace: Use __patch_text_real()
+Message-ID: <20191028163515.GE5671@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.687479693@infradead.org>
+ <20191028162525.GF5576@willie-the-truck>
+ <20191028163421.GI4097@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20191027215330.12729-1-navid.emamdoost@gmail.com> <fb4fa7f3-fefb-e2d0-da4d-842396a7c251@linux.intel.com>
-In-Reply-To: <fb4fa7f3-fefb-e2d0-da4d-842396a7c251@linux.intel.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Mon, 28 Oct 2019 11:35:04 -0500
-Message-ID: <CAEkB2ETrEu6SxBC+OfPNe_DqNn-=4c9p=1d9Cz5XR3NbbcD2OQ@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: SOF: ipc: Fix memory leak in sof_set_get_large_ctrl_data
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pan Xiuli <xiuli.pan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Slawomir Blauciak <slawomir.blauciak@linux.intel.com>,
-        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028163421.GI4097@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 9:15 PM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
->
->
->
-> On 10/27/19 4:53 PM, Navid Emamdoost wrote:
-> > In the implementation of sof_set_get_large_ctrl_data() there is a memory
-> > leak in case an error. Release partdata if sof_get_ctrl_copy_params()
-> > fails.
-> >
-> > Fixes: 54d198d5019d ("ASoC: SOF: Propagate sof_get_ctrl_copy_params() error properly")
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
->
-> Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->
-> May I ask which tool you used to find those issues, looks like we have a
-> gap here?
+On Mon, Oct 28, 2019 at 05:34:21PM +0100, Peter Zijlstra wrote:
+> On Mon, Oct 28, 2019 at 04:25:26PM +0000, Will Deacon wrote:
+> > > @@ -97,10 +100,7 @@ static int ftrace_modify_code(unsigned l
+> > >  			return -EINVAL;
+> > >  	}
+> > >  
+> > > -	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
+> > > -		return -EPERM;
+> > > -
+> > > -	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
+> > > +	__patch_text_real((void *)pc, new, patch_text_remap);
+> > 
+> > Why can't you just pass 'true' for patch_text_remap? AFAICT, the only
+> > time you want to pass false is during early boot when the text is
+> > assumedly still writable without the fixmap.
+> 
+> Ah, it will also become true for module loading once we rework where we
 
-We are developing a research tool to find such cases. Not sure what
-gap you are referring to, but we statically track the allocation and
-look for an appropriate release/assignment of the pointer.
+'false'. That is module loading will again be able to poke without
+alias map.
 
-
->
-> > ---
-> >   sound/soc/sof/ipc.c | 4 +++-
-> >   1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/sound/soc/sof/ipc.c b/sound/soc/sof/ipc.c
-> > index b2f359d2f7e5..086eeeab8679 100644
-> > --- a/sound/soc/sof/ipc.c
-> > +++ b/sound/soc/sof/ipc.c
-> > @@ -572,8 +572,10 @@ static int sof_set_get_large_ctrl_data(struct snd_sof_dev *sdev,
-> >       else
-> >               err = sof_get_ctrl_copy_params(cdata->type, partdata, cdata,
-> >                                              sparams);
-> > -     if (err < 0)
-> > +     if (err < 0) {
-> > +             kfree(partdata);
-> >               return err;
-> > +     }
-> >
-> >       msg_bytes = sparams->msg_bytes;
-> >       pl_size = sparams->pl_size;
-> >
-
-
-
---
-Navid.
+> flip the module text RO,X. See this patch:
+> 
+>   https://lkml.kernel.org/r/20191018074634.858645375@infradead.org
+> 
+> But for that to land, there's still a few other issues to fix (KLP).
