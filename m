@@ -2,418 +2,148 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53A7CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A634CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8BDB222CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89B321920
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KfLt3mCC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391193AbfJ1VHW (ORCPT
+        id S2391195AbfJ1VH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:07:22 -0400
-Received: from mga07.intel.com ([134.134.136.100]:17891 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390260AbfJ1VHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:07:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 14:07:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
-   d="scan'208";a="224760167"
-Received: from shrehore-mobl1.ti.intel.com (HELO localhost) ([10.251.82.5])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 14:06:59 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v23 21/24] x86/vdso: Add __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
-Date:   Mon, 28 Oct 2019 23:03:21 +0200
-Message-Id: <20191028210324.12475-22-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
-References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+        Mon, 28 Oct 2019 17:07:28 -0400
+Received: from mail-eopbgr750137.outbound.protection.outlook.com ([40.107.75.137]:55799
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730207AbfJ1VHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:07:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fubqZpJnaC8u5GQihyapZd/aXLRv3dEb8BL9o5zpcFFtZgQrSUlW0IicQCa1q0wktoIrA6beu7ElxqDyR2ceqdrorhQSUG7ZQQfiz19+5WbkGrtoiFXB9Rq7W+ImlfUZLkww0DdctbAPDsGJURxl6X4u1bBZsby67lnG1jOb1GDjSNkj+fMzgfNAcREMjGAav9H6o6+pZuaLneYXlcIX14YEETXUFOPrsrB5K0FJdQnoJjZ7grjeH5QtcoftECY2pafBOd0iyfEZzVU1LEY4JakuLW0rqEQmuD5P+hSWCRqyYAvhrtc+kzIP6+CGZkuf2uaFwwEi5xbUh8lTht7B7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PXEKnuN40jJ5SBw+kVEj2OgD4rOSYa6KtHCy4GTVcp0=;
+ b=MsH/aNLD6wsFdiQOg0ZtzVwP8gLPGPbK7eLxHJx9PM4ts4+T0DXiDuB3Ug53Yvu2SoM9mnQ2UqjczkXQ4mRmvC5uU33cvPM/Jf5NJdeh/9dDgziaHQQp0lspI5A9YuRQlp9275Sz7Us7KKwaqPdkhV6L8raKr0OcW0LxKPskZ0BH5U+TsM0wgCbDCiAvfZlO4a6qWKXIyzlr1qoCM+0ZMBDlSP8eUYtiEZXvV4ScnK8+2g3zeHqCUPV21GMjqgtSkCcVei/5WWuCQJP8iHZvwSwVCbUz7BkHBSYBlV8JVmUOwGaSAZ2eKxeK8acunTr0qY6UPXIEE/s7KLDZctz5Sg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PXEKnuN40jJ5SBw+kVEj2OgD4rOSYa6KtHCy4GTVcp0=;
+ b=KfLt3mCCdtZPX7zXPTxXGznGIz1TBdy+jkm/wTI1s4BY8RKAIoEahwdNqnUBelXEKCoyWiC6aY2Rz9ljBw+HgrCojkBGAlK2itE8lCfePiqDUDDR9d9Kl7GmZM7mIOoZunwpdQnatuIRrXbP+jqXHZfE/HaGuXc7WlnORsD7nks=
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
+ DM6PR21MB1404.namprd21.prod.outlook.com (20.180.22.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.8; Mon, 28 Oct 2019 21:07:11 +0000
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::756e:8d3f:e463:3bf7]) by DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::756e:8d3f:e463:3bf7%3]) with mapi id 15.20.2408.016; Mon, 28 Oct 2019
+ 21:07:11 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next, 4/4] hv_netvsc: Update document for XDP support
+Thread-Topic: [PATCH net-next, 4/4] hv_netvsc: Update document for XDP support
+Thread-Index: AQHVjdOqeF2skKD6Y0io1FAqZWRRAw==
+Date:   Mon, 28 Oct 2019 21:07:11 +0000
+Message-ID: <1572296801-4789-5-git-send-email-haiyangz@microsoft.com>
+References: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR04CA0076.namprd04.prod.outlook.com
+ (2603:10b6:102:1::44) To DM6PR21MB1242.namprd21.prod.outlook.com
+ (2603:10b6:5:169::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 2
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b5df6643-1b7a-423a-8c18-08d75beacc99
+x-ms-traffictypediagnostic: DM6PR21MB1404:|DM6PR21MB1404:|DM6PR21MB1404:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB14049BFC29E7ADE4E00BE821AC660@DM6PR21MB1404.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0204F0BDE2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(346002)(396003)(39860400002)(136003)(199004)(189003)(6512007)(446003)(36756003)(54906003)(50226002)(486006)(22452003)(2616005)(476003)(305945005)(14454004)(478600001)(2501003)(6392003)(66066001)(7846003)(66476007)(66446008)(64756008)(66556008)(66946007)(10290500003)(6436002)(386003)(10090500001)(102836004)(7736002)(99286004)(11346002)(76176011)(52116002)(5660300002)(186003)(26005)(6506007)(256004)(8936002)(81156014)(81166006)(6116002)(6486002)(3846002)(4326008)(8676002)(2201001)(316002)(110136005)(25786009)(2906002)(4720700003)(71200400001)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1404;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: N2iu8QmvCapfjPeyHZjuDypd2A2cbxTl33hDk1j8ao+8ILwOJ+Fc2R6k4BdfcO78e8jF//lop4cZy87auDxGCJTpKZn/1fmNSLPRoHgmLU5Da8g4vRWKtj1/Mj0yMP3xCwcVLc1mIdsHG9QZDvKbqjGknOEataRn/XX5wO9QzYna8rEsiKT7LN0Dj4X93h1iMJv1hKDHEs6Blaxt2BZ/+9wVfa5Rt5QsOKJmZvx6mHbFm+GIgDi4uns7bsIMcMwmm6UZgm4mryky/XdvfnZ0U1IamvT8HyfjakdVsuOIW9q9vC4xJbHLu42oXshrqRhlpcBpCONoKoMtPJPcjojRl25f1QtFn68vyDS/VZZX2gPIKrfW2Ytyi3gdVJN6AVUObs0ohG7HFp8b16rhfZaY1KoMdFR4WWXR6+uWVCfomtJx0z8PHviqhvghED9FnO40
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5df6643-1b7a-423a-8c18-08d75beacc99
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 21:07:11.1213
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KMNWNELcFRmEOdzrLnQ8aJ1PWR/TcqXTh4no8W6DD5VLqb5BCr9e4fY8t8kLD991IRZAn7Fv7XtbDIlepQ/OOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1404
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+Added the new section in the document regarding XDP support
+by hv_netvsc driver.
 
-Intel Software Guard Extensions (SGX) introduces a new CPL3-only enclave
-mode that runs as a sort of black box shared object that is hosted by an
-untrusted normal CPL3 process.
-
-Skipping over a great deal of gory architecture details[1], SGX was
-designed in such a way that the host process can utilize a library to
-build, launch and run an enclave.  This is roughly analogous to how
-e.g. libc implementations are used by most applications so that the
-application can focus on its business logic.
-
-The big gotcha is that because enclaves can generate *and* handle
-exceptions, any SGX library must be prepared to handle nearly any
-exception at any time (well, any time a thread is executing in an
-enclave).  In Linux, this means the SGX library must register a
-signal handler in order to intercept relevant exceptions and forward
-them to the enclave (or in some cases, take action on behalf of the
-enclave).  Unfortunately, Linux's signal mechanism doesn't mesh well
-with libraries, e.g. signal handlers are process wide, are difficult
-to chain, etc...  This becomes particularly nasty when using multiple
-levels of libraries that register signal handlers, e.g. running an
-enclave via cgo inside of the Go runtime.
-
-In comes vDSO to save the day.  Now that vDSO can fixup exceptions,
-add a function, __vdso_sgx_enter_enclave(), to wrap enclave transitions
-and intercept any exceptions that occur when running the enclave.
-
-__vdso_sgx_enter_enclave() does NOT adhere to the x86-64 ABI and instead
-uses a custom calling convention.  The primary motivation is to avoid
-issues that arise due to asynchronous enclave exits.  The x86-64 ABI
-requires that EFLAGS.DF, MXCSR and FCW be preserved by the callee, and
-unfortunately for the vDSO, the aformentioned registers/bits are not
-restored after an asynchronous exit, e.g. EFLAGS.DF is in an unknown
-state while MXCSR and FCW are reset to their init values.  So the vDSO
-cannot simply pass the buck by requiring enclaves to adhere to the
-x86-64 ABI.  That leaves three somewhat reasonable options:
-
-  1) Save/restore non-volatile GPRs, MXCSR and FCW, and clear EFLAGS.DF
-
-     + 100% compliant with the x86-64 ABI
-     + Callable from any code
-     + Minimal documentation required
-     - Restoring MXCSR/FCW is likely unnecessary 99% of the time
-     - Slow
-
-  2) Save/restore non-volatile GPRs and clear EFLAGS.DF
-
-     + Mostly compliant with the x86-64 ABI
-     + Callable from any code that doesn't use SIMD registers
-     - Need to document deviations from x86-64 ABI, i.e. MXCSR and FCW
-
-  3) Require the caller to save/restore everything.
-
-     + Fast
-     + Userspace can pass all GPRs to the enclave (minus EAX, RBX and RCX)
-     - Custom ABI
-     - For all intents and purposes must be called from an assembly wrapper
-
-__vdso_sgx_enter_enclave() implements option (3).  The custom ABI is
-mostly a documentation issue, and even that is offset by the fact that
-being more similar to hardware's ENCLU[EENTER/ERESUME] ABI reduces the
-amount of documentation needed for the vDSO, e.g. options (2) and (3)
-would need to document which registers are marshalled to/from enclaves.
-Requiring an assembly wrapper imparts minimal pain on userspace as SGX
-libraries and/or applications need a healthy chunk of assembly, e.g. in
-the enclave, regardless of the vDSO's implementation.
-
-Note, the C-like pseudocode describing the assembly routine is wrapped
-in a non-existent macro instead of in a comment to trick kernel-doc into
-auto-parsing the documentation and function prototype.  This is a double
-win as the pseudocode is intended to aid kernel developers, not userland
-enclave developers.
-
-[1] Documentation/x86/sgx/1.Architecture.rst
-
-Suggested-by: Andy Lutomirski <luto@amacapital.net>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Co-developed-by: Cedric Xing <cedric.xing@intel.com>
-Signed-off-by: Cedric Xing <cedric.xing@intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
- arch/x86/entry/vdso/Makefile             |   2 +
- arch/x86/entry/vdso/vdso.lds.S           |   1 +
- arch/x86/entry/vdso/vsgx_enter_enclave.S | 187 +++++++++++++++++++++++
- arch/x86/include/uapi/asm/sgx.h          |  37 +++++
- 4 files changed, 227 insertions(+)
- create mode 100644 arch/x86/entry/vdso/vsgx_enter_enclave.S
+ .../networking/device_drivers/microsoft/netvsc.txt         | 14 ++++++++++=
+++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 111228445add..53ab19dae6e1 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -24,6 +24,7 @@ VDSO32-$(CONFIG_IA32_EMULATION)	:= y
- 
- # files to link into the vdso
- vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
-+vobjs-$(VDSO64-y)		+= vsgx_enter_enclave.o
- 
- # files to link into kernel
- obj-y				+= vma.o extable.o
-@@ -92,6 +93,7 @@ CFLAGS_REMOVE_vclock_gettime.o = -pg
- CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
- CFLAGS_REMOVE_vgetcpu.o = -pg
- CFLAGS_REMOVE_vvar.o = -pg
-+CFLAGS_REMOVE_vsgx_enter_enclave.o = -pg
- 
- #
- # X32 processes use x32 vDSO to access 64bit kernel data.
-diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
-index 36b644e16272..4bf48462fca7 100644
---- a/arch/x86/entry/vdso/vdso.lds.S
-+++ b/arch/x86/entry/vdso/vdso.lds.S
-@@ -27,6 +27,7 @@ VERSION {
- 		__vdso_time;
- 		clock_getres;
- 		__vdso_clock_getres;
-+		__vdso_sgx_enter_enclave;
- 	local: *;
- 	};
- }
-diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-new file mode 100644
-index 000000000000..c6ca6e6031b6
---- /dev/null
-+++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-@@ -0,0 +1,187 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+diff --git a/Documentation/networking/device_drivers/microsoft/netvsc.txt b=
+/Documentation/networking/device_drivers/microsoft/netvsc.txt
+index 3bfa635..69ccfca 100644
+--- a/Documentation/networking/device_drivers/microsoft/netvsc.txt
++++ b/Documentation/networking/device_drivers/microsoft/netvsc.txt
+@@ -82,3 +82,17 @@ Features
+   contain one or more packets. The send buffer is an optimization, the dri=
+ver
+   will use slower method to handle very large packets or if the send buffe=
+r
+   area is exhausted.
 +
-+#include <linux/linkage.h>
-+#include <asm/export.h>
-+#include <asm/errno.h>
++  XDP support
++  -----------
++  XDP (eXpress Data Path) is a feature that runs eBPF bytecode at the earl=
+y
++  stage when packets arrive at a NIC card. The goal is to increase perform=
+ance
++  for packet processing, reducing the overhead of SKB allocation and other
++  upper network layers.
 +
-+#include "extable.h"
++  hv_netvsc supports XDP in native mode, and transparently sets the XDP
++  program on the associated VF NIC as well.
 +
-+#define EX_LEAF		0*8
-+#define EX_TRAPNR	0*8+4
-+#define EX_ERROR_CODE	0*8+6
-+#define EX_ADDRESS	1*8
-+
-+.code64
-+.section .text, "ax"
-+
-+/**
-+ * __vdso_sgx_enter_enclave() - Enter an SGX enclave
-+ * @leaf:	ENCLU leaf, must be EENTER or ERESUME
-+ * @tcs:	TCS, must be non-NULL
-+ * @e:		Optional struct sgx_enclave_exception instance
-+ * @handler:	Optional enclave exit handler
-+ *
-+ * **Important!**  __vdso_sgx_enter_enclave() is **NOT** compliant with the
-+ * x86-64 ABI, i.e. cannot be called from standard C code.
-+ *
-+ * Input ABI:
-+ *  @leaf	%eax
-+ *  @tcs	8(%rsp)
-+ *  @e 		0x10(%rsp)
-+ *  @handler	0x18(%rsp)
-+ *
-+ * Output ABI:
-+ *  @ret	%eax
-+ *
-+ * All general purpose registers except RAX, RBX and RCX are passed as-is to
-+ * the enclave. RAX, RBX and RCX are consumed by EENTER and ERESUME and are
-+ * loaded with @leaf, asynchronous exit pointer, and @tcs respectively.
-+ *
-+ * RBP and the stack are used to anchor __vdso_sgx_enter_enclave() to the
-+ * pre-enclave state, e.g. to retrieve @e and @handler after an enclave exit.
-+ * All other registers are available for use by the enclave and its runtime,
-+ * e.g. an enclave can push additional data onto the stack (and modify RSP) to
-+ * pass information to the optional exit handler (see below).
-+ *
-+ * Most exceptions reported on ENCLU, including those that occur within the
-+ * enclave, are fixed up and reported synchronously instead of being delivered
-+ * via a standard signal. Debug Exceptions (#DB) and Breakpoints (#BP) are
-+ * never fixed up and are always delivered via standard signals. On synchrously
-+ * reported exceptions, -EFAULT is returned and details about the exception are
-+ * recorded in @e, the optional sgx_enclave_exception struct.
-+
-+ * If an exit handler is provided, the handler will be invoked on synchronous
-+ * exits from the enclave and for all synchronously reported exceptions. In
-+ * latter case, @e is filled prior to invoking the handler.
-+ *
-+ * The exit handler's return value is interpreted as follows:
-+ *  >0:		continue, restart __vdso_sgx_enter_enclave() with @ret as @leaf
-+ *   0:		success, return @ret to the caller
-+ *  <0:		error, return @ret to the caller
-+ *
-+ * The userspace exit handler is responsible for unwinding the stack, e.g. to
-+ * pop @e, u_rsp and @tcs, prior to returning to __vdso_sgx_enter_enclave().
-+ * The exit handler may also transfer control, e.g. via longjmp() or a C++
-+ * exception, without returning to __vdso_sgx_enter_enclave().
-+ *
-+ * Return:
-+ *  0 on success,
-+ *  -EINVAL if ENCLU leaf is not allowed,
-+ *  -EFAULT if an exception occurs on ENCLU or within the enclave
-+ *  -errno for all other negative values returned by the userspace exit handler
-+ */
-+#ifdef SGX_KERNEL_DOC
-+/* C-style function prototype to coerce kernel-doc into parsing the comment. */
-+int __vdso_sgx_enter_enclave(int leaf, void *tcs,
-+			     struct sgx_enclave_exception *e,
-+			     sgx_enclave_exit_handler_t handler);
-+#endif
-+ENTRY(__vdso_sgx_enter_enclave)
-+	/* Prolog */
-+	.cfi_startproc
-+	push	%rbp
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%rbp, 0
-+	mov	%rsp, %rbp
-+	.cfi_def_cfa_register	%rbp
-+
-+.Lenter_enclave:
-+	/* EENTER <= leaf <= ERESUME */
-+	cmp	$0x2, %eax
-+	jb	.Linvalid_leaf
-+	cmp	$0x3, %eax
-+	ja	.Linvalid_leaf
-+
-+	/* Load TCS and AEP */
-+	mov	0x10(%rbp), %rbx
-+	lea	.Lasync_exit_pointer(%rip), %rcx
-+
-+	/* Single ENCLU serving as both EENTER and AEP (ERESUME) */
-+.Lasync_exit_pointer:
-+.Lenclu_eenter_eresume:
-+	enclu
-+
-+	/* EEXIT jumps here unless the enclave is doing something fancy. */
-+	xor	%eax, %eax
-+
-+	/* Invoke userspace's exit handler if one was provided. */
-+.Lhandle_exit:
-+	cmp	$0, 0x20(%rbp)
-+	jne	.Linvoke_userspace_handler
-+
-+.Lout:
-+	leave
-+	.cfi_def_cfa		%rsp, 8
-+	ret
-+
-+	/* The out-of-line code runs with the pre-leave stack frame. */
-+	.cfi_def_cfa		%rbp, 16
-+
-+.Linvalid_leaf:
-+	mov	$(-EINVAL), %eax
-+	jmp	.Lout
-+
-+.Lhandle_exception:
-+	mov	0x18(%rbp), %rcx
-+	test    %rcx, %rcx
-+	je	.Lskip_exception_info
-+
-+	/* Fill optional exception info. */
-+	mov	%eax, EX_LEAF(%rcx)
-+	mov	%di,  EX_TRAPNR(%rcx)
-+	mov	%si,  EX_ERROR_CODE(%rcx)
-+	mov	%rdx, EX_ADDRESS(%rcx)
-+.Lskip_exception_info:
-+	mov	$(-EFAULT), %eax
-+	jmp	.Lhandle_exit
-+
-+.Linvoke_userspace_handler:
-+	/* Pass the untrusted RSP (at exit) to the callback via %rcx. */
-+	mov	%rsp, %rcx
-+
-+	/* Save the untrusted RSP in %rbx (non-volatile register). */
-+	mov	%rsp, %rbx
-+
-+	/*
-+	 * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
-+	 * _after_ pushing the parameters on the stack, hence the bonus push.
-+	 */
-+	and	$-0x10, %rsp
-+	push	%rax
-+
-+	/* Push @e, the "return" value and @tcs as params to the callback. */
-+	push	0x18(%rbp)
-+	push	%rax
-+	push	0x10(%rbp)
-+
-+	/* Clear RFLAGS.DF per x86_64 ABI */
-+	cld
-+
-+	/* Load the callback pointer to %rax and invoke it via retpoline. */
-+	mov	0x20(%rbp), %rax
-+	call	.Lretpoline
-+
-+	/* Restore %rsp to its post-exit value. */
-+	mov	%rbx, %rsp
-+
-+	/*
-+	 * If the return from callback is zero or negative, return immediately,
-+	 * else re-execute ENCLU with the postive return value interpreted as
-+	 * the requested ENCLU leaf.
-+	 */
-+	cmp	$0, %eax
-+	jle	.Lout
-+	jmp	.Lenter_enclave
-+
-+.Lretpoline:
-+	call	2f
-+1:	pause
-+	lfence
-+	jmp	1b
-+2:	mov	%rax, (%rsp)
-+	ret
-+	.cfi_endproc
-+
-+_ASM_VDSO_EXTABLE_HANDLE(.Lenclu_eenter_eresume, .Lhandle_exception)
-+
-+ENDPROC(__vdso_sgx_enter_enclave)
-diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
-index e7b20f1e41b3..88644b6ad849 100644
---- a/arch/x86/include/uapi/asm/sgx.h
-+++ b/arch/x86/include/uapi/asm/sgx.h
-@@ -72,4 +72,41 @@ struct sgx_enclave_set_attribute {
- 	__u64 attribute_fd;
- };
- 
-+/**
-+ * struct sgx_enclave_exception - structure to report exceptions encountered in
-+ *				  __vdso_sgx_enter_enclave()
-+ *
-+ * @leaf:	ENCLU leaf from \%eax at time of exception
-+ * @trapnr:	exception trap number, a.k.a. fault vector
-+ * @error_code:	exception error code
-+ * @address:	exception address, e.g. CR2 on a #PF
-+ * @reserved:	reserved for future use
-+ */
-+struct sgx_enclave_exception {
-+	__u32 leaf;
-+	__u16 trapnr;
-+	__u16 error_code;
-+	__u64 address;
-+	__u64 reserved[2];
-+};
-+
-+/**
-+ * typedef sgx_enclave_exit_handler_t - Exit handler function accepted by
-+ *					__vdso_sgx_enter_enclave()
-+ *
-+ * @rdi:	RDI at the time of enclave exit
-+ * @rsi:	RSI at the time of enclave exit
-+ * @rdx:	RDX at the time of enclave exit
-+ * @ursp:	RSP at the time of enclave exit (untrusted stack)
-+ * @r8:		R8 at the time of enclave exit
-+ * @r9:		R9 at the time of enclave exit
-+ * @tcs:	Thread Control Structure used to enter enclave
-+ * @ret:	0 on success (EEXIT), -EFAULT on an exception
-+ * @e:		Pointer to struct sgx_enclave_exception (as provided by caller)
-+ */
-+typedef int (*sgx_enclave_exit_handler_t)(long rdi, long rsi, long rdx,
-+					  long ursp, long r8, long r9,
-+					  void *tcs, int ret,
-+					  struct sgx_enclave_exception *e);
-+
- #endif /* _UAPI_ASM_X86_SGX_H */
--- 
-2.20.1
++  XDP program cannot run with LRO (RSC) enabled, so you need to disable LR=
+O
++  before running XDP:
++	ethtool -K eth0 lro off
+--=20
+1.8.3.1
 
