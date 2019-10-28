@@ -2,150 +2,87 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91876CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894F3CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E17A20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C89321734
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bh8hnmGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389212AbfJ1Mms (ORCPT
+        id S2389226AbfJ1Mmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:42:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:44069 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389163AbfJ1Mmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:42:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 05:42:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
-   d="scan'208";a="374218666"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
-  by orsmga005.jf.intel.com with ESMTP; 28 Oct 2019 05:42:44 -0700
-Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
- Trail Whiskey Cove PMIC
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
- <20191025075335.GC32742@smile.fi.intel.com>
- <20191025075540.GD32742@smile.fi.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <166c9855-910d-a70c-ba86-6aebe5f2346d@intel.com>
-Date:   Mon, 28 Oct 2019 14:41:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 08:42:55 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54440 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389163AbfJ1Mmy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 08:42:54 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SCgrhd067016;
+        Mon, 28 Oct 2019 07:42:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572266573;
+        bh=CXZBLVs16lsTdOcw1G+j84Zl3El0VgK+ujWfvioNpWY=;
+        h=From:To:CC:Subject:Date;
+        b=bh8hnmGd43dMlk/0XjiEMoJqENQezobucAZzk6kiV9Lm+QjVK1n5ccK7VYN53Szu9
+         QgpajpWrTE/+Yg1QhWYXl1kZDCj1gFXHZ+7kYsTMybuvlpkPGv0XRmfwe1DcLPU1R0
+         Al+dLZCYkUJ1a3kxDUxg09u1cAMHOHCvTzxJHyZs=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9SCgrFZ068845
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 28 Oct 2019 07:42:53 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
+ Oct 2019 07:42:41 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 28 Oct 2019 07:42:41 -0500
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SCgogq063574;
+        Mon, 28 Oct 2019 07:42:51 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <s-anna@ti.com>
+Subject: [PATCH 00/17] remoteproc: omap changes on top of v5.4-rc1
+Date:   Mon, 28 Oct 2019 14:42:21 +0200
+Message-ID: <20191028124238.19224-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191025075540.GD32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/10/19 10:55 AM, Andy Shevchenko wrote:
-> On Fri, Oct 25, 2019 at 10:53:35AM +0300, Andy Shevchenko wrote:
->> On Thu, Oct 24, 2019 at 02:29:37PM +0000, Andrey Zhizhikin wrote:
->>> This patchset introduces additional regulator driver for Intel Cherry
->>> Trail Whiskey Cove PMIC. It also adds a cell in mfd driver for this
->>> PMIC, which is used to instantiate this regulator.
->>>
->>> Regulator support for this PMIC was present in kernel release from Intel
->>> targeted Aero platform, but was not entirely ported upstream and has
->>> been omitted in mainline kernel releases. Consecutively, absence of
->>> regulator caused the SD Card interface not to be provided with Vqcc
->>> voltage source needed to operate with UHS-I cards.
->>>
->>> Following patches are addessing this issue and making sd card interface
->>> to be fully operable with UHS-I cards. Regulator driver lists an ACPI id
->>> of the SD Card interface in consumers and exposes optional "vqmmc"
->>> voltage source, which mmc driver uses to switch signalling voltages
->>> between 1.8V and 3.3V. 
->>>
->>> This set contains of 2 patches: one is implementing the regulator driver
->>> (based on a non upstreamed version from Intel Aero), and another patch
->>> registers this driver as mfd cell in exising Whiskey Cove PMIC driver.
->>
->> Thank you.
->> Hans, Cc'ed, has quite interested in these kind of patches.
->> Am I right, Hans?
-> 
-> Since it's about UHS/SD, Cc to Adrian as well.
-> 
+Hi,
 
-My only concern is that the driver might conflict with ACPI methods trying
-to do the same thing, e.g. there is one ACPI SDHC instance from GPDWin DSDT
-with code like this:
+Mostly this is a facelift of the pretty old OMAP remoteproc code base,
+supporting now DT, runtime PM, ti-sysc, and dropping legacy omap hwmod
+support. Also timer + watchdog support is added, and couple of bugfixes.
 
-  If ((Arg2 == 0x03))
-   {
-       ADBG ("DSM 1p8")
-       If ((^^I2C7.AVBL == One))
-       {
-           If ((PMID == One))
-           {
-               DATA = 0x59
-               ^^I2C7.DL03 = BUFF /* \_SB_.PCI0.SHC1.BUFF */
-           }
-           ElseIf ((PMID == 0x02))
-           {
-               BUFF = ^^I2C7.XD31 /* \_SB_.PCI0.I2C7.XD31 */
-               If ((STAT == Zero))
-               {
-                   DATA |= 0x10
-                   ^^I2C7.XD31 = BUFF /* \_SB_.PCI0.SHC1.BUFF */
-               }
+The series hasn't been posted before mostly due to missing OMAP reset
+support, which has just been lately posted out and is getting merged to
+5.5.
 
-               BUFF = ^^I2C7.XD32 /* \_SB_.PCI0.I2C7.XD32 */
-               If ((STAT == Zero))
-               {
-                   DATA |= 0x0B
-                   DATA &= 0xEB
-                   ^^I2C7.XD32 = BUFF /* \_SB_.PCI0.SHC1.BUFF */
-               }
+For proper functionality, this series depends at least on the clock [1]
+and reset [2] series sent out by me, but to compile, it only needs [1].
 
-               Sleep (0x0A)
-               BUFF = ^^I2C7.XD31 /* \_SB_.PCI0.I2C7.XD31 */
-               If ((STAT == Zero))
-               {
-                   DATA |= 0x20
-                   ^^I2C7.XD31 = BUFF /* \_SB_.PCI0.SHC1.BUFF */
-               }
-           }
-           ElseIf ((PMID == 0x03))
-           {
-               Local0 = ^^I2C7.PMI5.GET (One, 0x6E, 0x67)
-               Sleep (0x0A)
-               Local0 &= 0xF8
-               ^^I2C7.PMI5.SET (One, 0x6E, 0x67, Local0)
-               Sleep (0x64)
-               Local0 = ^^I2C7.PMI5.GET (One, 0x6E, 0x67)
-               Sleep (0x0A)
-               Local0 |= One
-               Local0 &= 0xF9
-               ^^I2C7.PMI5.SET (One, 0x6E, 0x67, Local0)
-               Sleep (0x0A)
-               ^^I2C7.PMI5.SET (One, 0x6E, 0xC6, 0x1F)
-               Sleep (0x0A)
-           }
-       }
+-Tero
 
-       SDVL = One
-       Return (0x03)
-   }
+[1] TI Clock series: https://patchwork.kernel.org/cover/11143025/
+[2] TI Reset series: https://patchwork.kernel.org/cover/11179573/
 
 
-
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
