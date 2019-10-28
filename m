@@ -2,293 +2,142 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CA8CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6306CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D890821924
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBBC221835
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:07:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NsYY3RCc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391213AbfJ1VHe (ORCPT
+        id S2404095AbfJ1VHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:07:34 -0400
-Received: from mga11.intel.com ([192.55.52.93]:6148 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390208AbfJ1VHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:07:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 14:07:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
-   d="scan'208";a="224760197"
-Received: from shrehore-mobl1.ti.intel.com (HELO localhost) ([10.251.82.5])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 14:07:10 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH v23 22/24] selftests/x86: Add vDSO selftest for SGX
-Date:   Mon, 28 Oct 2019 23:03:22 +0200
-Message-Id: <20191028210324.12475-23-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
-References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+        Mon, 28 Oct 2019 17:07:37 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30938 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391197AbfJ1VHY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:07:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572296843;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vaN691EUnxF95m8CQyGbqME6xNGoyr91KYIIBfK7uXs=;
+        b=NsYY3RCcrSSRK7N43bEJtZ75r4ut492io9M3kXqnv1Vnd2QxLuOUk2tRBmrI0f7Xc6siyu
+        PLyC2rwit7/d19vH3a4fMivKPMHLVxqCFihwoi7g76UrbDkdmmdWqwNKP0/Ke/hF7eILQP
+        5sycfsZPQXb9TKA2RCgr4zZ9MT7NfHY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-124-pWsCm5gWORa93cR4oE7e_g-1; Mon, 28 Oct 2019 17:07:20 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 851AF1804971;
+        Mon, 28 Oct 2019 21:07:17 +0000 (UTC)
+Received: from krava (ovpn-204-45.brq.redhat.com [10.40.204.45])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4928926359;
+        Mon, 28 Oct 2019 21:07:13 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 22:07:12 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v4 4/9] perf tools: splice events onto evlist even on
+ error
+Message-ID: <20191028210712.GB6158@krava>
+References: <20191024190202.109403-1-irogers@google.com>
+ <20191025180827.191916-1-irogers@google.com>
+ <20191025180827.191916-5-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191025180827.191916-5-irogers@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: pWsCm5gWORa93cR4oE7e_g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expand the selftest by invoking the enclave by using
-__vdso_sgx_enter_enclave() in addition to direct ENCLS[EENTER].
+On Fri, Oct 25, 2019 at 11:08:22AM -0700, Ian Rogers wrote:
+> If event parsing fails the event list is leaked, instead splice the list
+> onto the out result and let the caller cleanup.
+>=20
+> An example input for parse_events found by libFuzzer that reproduces
+> this memory leak is 'm{'.
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Cc: linux-sgx@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- tools/testing/selftests/x86/sgx/main.c     | 132 +++++++++++++++++++++
- tools/testing/selftests/x86/sgx/sgx_call.S |  43 +++++++
- tools/testing/selftests/x86/sgx/sgx_call.h |   3 +
- 3 files changed, 178 insertions(+)
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-diff --git a/tools/testing/selftests/x86/sgx/main.c b/tools/testing/selftests/x86/sgx/main.c
-index a1a9e75099c2..df6846098f6f 100644
---- a/tools/testing/selftests/x86/sgx/main.c
-+++ b/tools/testing/selftests/x86/sgx/main.c
-@@ -23,6 +23,109 @@
- #define PAGE_SIZE  4096
- 
- static const uint64_t MAGIC = 0x1122334455667788ULL;
-+void *eenter;
-+
-+struct vdso_symtab {
-+	Elf64_Sym *elf_symtab;
-+	const char *elf_symstrtab;
-+	Elf64_Word *elf_hashtab;
-+};
-+
-+static void *vdso_get_base_addr(char *envp[])
-+{
-+	Elf64_auxv_t *auxv;
-+	int i;
-+
-+	for (i = 0; envp[i]; i++)
-+		;
-+
-+	auxv = (Elf64_auxv_t *)&envp[i + 1];
-+
-+	for (i = 0; auxv[i].a_type != AT_NULL; i++) {
-+		if (auxv[i].a_type == AT_SYSINFO_EHDR)
-+			return (void *)auxv[i].a_un.a_val;
-+	}
-+
-+	return NULL;
-+}
-+
-+static Elf64_Dyn *vdso_get_dyntab(void *addr)
-+{
-+	Elf64_Ehdr *ehdr = addr;
-+	Elf64_Phdr *phdrtab = addr + ehdr->e_phoff;
-+	int i;
-+
-+	for (i = 0; i < ehdr->e_phnum; i++)
-+		if (phdrtab[i].p_type == PT_DYNAMIC)
-+			return addr + phdrtab[i].p_offset;
-+
-+	return NULL;
-+}
-+
-+static void *vdso_get_dyn(void *addr, Elf64_Dyn *dyntab, Elf64_Sxword tag)
-+{
-+	int i;
-+
-+	for (i = 0; dyntab[i].d_tag != DT_NULL; i++)
-+		if (dyntab[i].d_tag == tag)
-+			return addr + dyntab[i].d_un.d_ptr;
-+
-+	return NULL;
-+}
-+
-+static bool vdso_get_symtab(void *addr, struct vdso_symtab *symtab)
-+{
-+	Elf64_Dyn *dyntab = vdso_get_dyntab(addr);
-+
-+	symtab->elf_symtab = vdso_get_dyn(addr, dyntab, DT_SYMTAB);
-+	if (!symtab->elf_symtab)
-+		return false;
-+
-+	symtab->elf_symstrtab = vdso_get_dyn(addr, dyntab, DT_STRTAB);
-+	if (!symtab->elf_symstrtab)
-+		return false;
-+
-+	symtab->elf_hashtab = vdso_get_dyn(addr, dyntab, DT_HASH);
-+	if (!symtab->elf_hashtab)
-+		return false;
-+
-+	return true;
-+}
-+
-+static unsigned long elf_sym_hash(const char *name)
-+{
-+	unsigned long h = 0, high;
-+
-+	while (*name) {
-+		h = (h << 4) + *name++;
-+		high = h & 0xf0000000;
-+
-+		if (high)
-+			h ^= high >> 24;
-+
-+		h &= ~high;
-+	}
-+
-+	return h;
-+}
-+
-+static Elf64_Sym *vdso_symtab_get(struct vdso_symtab *symtab, const char *name)
-+{
-+	Elf64_Word bucketnum = symtab->elf_hashtab[0];
-+	Elf64_Word *buckettab = &symtab->elf_hashtab[2];
-+	Elf64_Word *chaintab = &symtab->elf_hashtab[2 + bucketnum];
-+	Elf64_Sym *sym;
-+	Elf64_Word i;
-+
-+	for (i = buckettab[elf_sym_hash(name) % bucketnum]; i != STN_UNDEF;
-+	     i = chaintab[i]) {
-+		sym = &symtab->elf_symtab[i];
-+		if (!strcmp(name, &symtab->elf_symstrtab[sym->st_name]))
-+			return sym;
-+	}
-+
-+	return NULL;
-+}
- 
- static bool encl_create(int dev_fd, unsigned long bin_size,
- 			struct sgx_secs *secs)
-@@ -212,10 +315,14 @@ bool load_sigstruct(const char *path, void *sigstruct)
- 
- int main(int argc, char *argv[], char *envp[])
- {
-+	struct sgx_enclave_exception exception;
- 	struct sgx_sigstruct sigstruct;
-+	struct vdso_symtab symtab;
-+	Elf64_Sym *eenter_sym;
- 	struct sgx_secs secs;
- 	uint64_t result = 0;
- 	off_t bin_size;
-+	void *addr;
- 	void *bin;
- 
- 	if (!encl_data_map("encl.bin", &bin, &bin_size))
-@@ -237,5 +344,30 @@ int main(int argc, char *argv[], char *envp[])
- 
- 	printf("Output: 0x%lx\n", result);
- 
-+	memset(&exception, 0, sizeof(exception));
-+
-+	addr = vdso_get_base_addr(envp);
-+	if (!addr)
-+		exit(1);
-+
-+	if (!vdso_get_symtab(addr, &symtab))
-+		exit(1);
-+
-+	eenter_sym = vdso_symtab_get(&symtab, "__vdso_sgx_enter_enclave");
-+	if (!eenter_sym)
-+		exit(1);
-+	eenter = addr + eenter_sym->st_value;
-+
-+	printf("Input: 0x%lx\n", MAGIC);
-+
-+	sgx_call_vdso((void *)&MAGIC, &result, 0, NULL, NULL, NULL,
-+		      (void *)secs.base, &exception, NULL);
-+	if (result != MAGIC) {
-+		fprintf(stderr, "0x%lx != 0x%lx\n", result, MAGIC);
-+		exit(1);
-+	}
-+
-+	printf("Output: 0x%lx\n", result);
-+
- 	exit(0);
- }
-diff --git a/tools/testing/selftests/x86/sgx/sgx_call.S b/tools/testing/selftests/x86/sgx/sgx_call.S
-index ca4c7893f9d9..e71f44f7a995 100644
---- a/tools/testing/selftests/x86/sgx/sgx_call.S
-+++ b/tools/testing/selftests/x86/sgx/sgx_call.S
-@@ -21,3 +21,46 @@ sgx_async_exit:
- 	ENCLU
- 	pop	%rbx
- 	ret
-+
-+	.global sgx_call_vdso
-+sgx_call_vdso:
-+	.cfi_startproc
-+	push	%r15
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%r15, 0
-+	push	%r14
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%r14, 0
-+	push	%r13
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%r13, 0
-+	push	%r12
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%r12, 0
-+	push	%rbx
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%rbx, 0
-+	push	$0
-+	.cfi_adjust_cfa_offset	8
-+	push	0x48(%rsp)
-+	.cfi_adjust_cfa_offset	8
-+	push	0x48(%rsp)
-+	.cfi_adjust_cfa_offset	8
-+	push	0x48(%rsp)
-+	.cfi_adjust_cfa_offset	8
-+	mov	$2, %eax
-+	call	*eenter(%rip)
-+	add	$0x20, %rsp
-+	.cfi_adjust_cfa_offset	-0x20
-+	pop	%rbx
-+	.cfi_adjust_cfa_offset	-8
-+	pop	%r12
-+	.cfi_adjust_cfa_offset	-8
-+	pop	%r13
-+	.cfi_adjust_cfa_offset	-8
-+	pop	%r14
-+	.cfi_adjust_cfa_offset	-8
-+	pop	%r15
-+	.cfi_adjust_cfa_offset	-8
-+	ret
-+	.cfi_endproc
-diff --git a/tools/testing/selftests/x86/sgx/sgx_call.h b/tools/testing/selftests/x86/sgx/sgx_call.h
-index bf72068ada23..a4072c5ecce7 100644
---- a/tools/testing/selftests/x86/sgx/sgx_call.h
-+++ b/tools/testing/selftests/x86/sgx/sgx_call.h
-@@ -8,4 +8,7 @@
- 
- void sgx_call_eenter(void *rdi, void *rsi, void *entry);
- 
-+int sgx_call_vdso(void *rdi, void *rsi, long rdx, void *rcx, void *r8, void *r9,
-+		  void *tcs, struct sgx_enclave_exception *ei, void *cb);
-+
- #endif /* SGX_CALL_H */
--- 
-2.20.1
+thanks,
+jirka
+
+> ---
+>  tools/perf/util/parse-events.c | 17 +++++++++++------
+>  1 file changed, 11 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
+s.c
+> index c516d0cce946..4c4c6f3e866a 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1952,15 +1952,20 @@ int parse_events(struct evlist *evlist, const cha=
+r *str,
+> =20
+>  =09ret =3D parse_events__scanner(str, &parse_state, PE_START_EVENTS);
+>  =09perf_pmu__parse_cleanup();
+> +
+> +=09if (!ret && list_empty(&parse_state.list)) {
+> +=09=09WARN_ONCE(true, "WARNING: event parser found nothing\n");
+> +=09=09return -1;
+> +=09}
+> +
+> +=09/*
+> +=09 * Add list to the evlist even with errors to allow callers to clean =
+up.
+> +=09 */
+> +=09perf_evlist__splice_list_tail(evlist, &parse_state.list);
+> +
+>  =09if (!ret) {
+>  =09=09struct evsel *last;
+> =20
+> -=09=09if (list_empty(&parse_state.list)) {
+> -=09=09=09WARN_ONCE(true, "WARNING: event parser found nothing\n");
+> -=09=09=09return -1;
+> -=09=09}
+> -
+> -=09=09perf_evlist__splice_list_tail(evlist, &parse_state.list);
+>  =09=09evlist->nr_groups +=3D parse_state.nr_groups;
+>  =09=09last =3D evlist__last(evlist);
+>  =09=09last->cmdline_group_boundary =3D true;
+> --=20
+> 2.24.0.rc0.303.g954a862665-goog
+>=20
 
