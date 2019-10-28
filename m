@@ -2,145 +2,125 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E5DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9949CA9EBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34F320717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:15:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmWK048t"
+	by mail.kernel.org (Postfix) with ESMTP id BBDB821850
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572254308;
+	bh=Y0pjFTnEi7fofZFVzScrzdhMzlM8KuUwtUfFJMd6jEM=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=gz5DxqMcPehg1EZ9z68CQssai/gjXXg6nYoWsUrFEF7xUBPpf+bk4KsvZbJvU79Q1
+	 ip34iIccWE/21qkkL1K+Bv8CLB7FThcI1hB+vs0e2L3vzBON7Mm6Y2cuePEqT6NcTg
+	 X7CTXNJNb6rwu2gj7PaODlDLGgEJI2UxM/Cry/3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387867AbfJ1JPn (ORCPT
+        id S2387881AbfJ1JS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 05:15:43 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34642 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727664AbfJ1JPn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 05:15:43 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c25so1573884qkk.1;
-        Mon, 28 Oct 2019 02:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OT9vPn7ycGD7jBjGQjG9ZHBs+GjEiewGN8zg5+tO7oY=;
-        b=lmWK048tWPiLv2pOVdnF9PqCQUVr4N5gJNqTaqBojtv+qbIOpKBtZZTTJFEeYMcAmd
-         dwl7iI66sosJV6h5tmEmdVyIKvIEQ01QFD4om9+g/x8aL3V5+OjhqBoza6KfaYYYHoqo
-         /Hd+CnQs2s09wwBkm+QK8mfpVbw89LE2MtT0YZoyftLIuJC6K4yLgpq6/M66aBg9/9Lo
-         qt1QjIhvUng/xxUPzsT+b3FnIfxKIUAN3JyfoMeDddX79n0WZBNAwiolZ509Okk7UyLz
-         WeXpXgStdF198MTF2pI21AUtcIKQCZMrIdpVQQWc8JYBg7fq1IZq8nExtF1VlDpBtX8y
-         ngzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OT9vPn7ycGD7jBjGQjG9ZHBs+GjEiewGN8zg5+tO7oY=;
-        b=I9e2Xniq6Jh1CZg+giWPa4TiFiEexi8yoWBzsBTK9P1DGVZDUhAW/HtvsiZiUsesPr
-         Ig76sIuVLcwNbjmhAhtcn9QQ8RSb+hp36Xju9Roniqh3KsZyZFbiBWjUgNGktgQd32C0
-         utencHxEiXyFz0i6b0OxHmFo+aUykxEmTh2OTh1f+wpxT/lrISMqsamLXLLw7BAmBqt6
-         PXAP4T9/qvmy+ZjalAJqzdAgNghOg4A4pr/83KNkTPm+KIU5F4YjgoVy4kVK4P/YL4TX
-         trZCNMvf5nj8iJtl9AUDdvLcyyRGlAKUVe64pPOdrKeTSR+INjU/VJ6k7/m0Fha4daKf
-         hDEw==
-X-Gm-Message-State: APjAAAVX5lmTkgb860wubmWAWRzoGgfWRR+BtHPRz7JOV3whu5k/gFqa
-        x5pomIGsailffKS9hg8So3tPPnTXPdX7ICZRpSk=
-X-Google-Smtp-Source: APXvYqyKCAJKhdOJh+PbCAnM3MbXA1qxBjY4PetCB75UbrWI078RRPEm92FmplgeX5uxV0Dy0CGCuPMH7iIARo5ZXWI=
-X-Received: by 2002:a37:ab04:: with SMTP id u4mr15165699qke.114.1572254142067;
- Mon, 28 Oct 2019 02:15:42 -0700 (PDT)
+        Mon, 28 Oct 2019 05:18:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727664AbfJ1JS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 05:18:27 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1F3B20717;
+        Mon, 28 Oct 2019 09:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572254305;
+        bh=Y0pjFTnEi7fofZFVzScrzdhMzlM8KuUwtUfFJMd6jEM=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=RgzxngTnQ5mhx9Hl2fC158gkHbjFpCK1xE9h+M1GjeCZxXb6MUInbliEaxAObjuqL
+         wSQcKENaW7bda+XlQFMQ4kSrY/CYQhZIb7yuVvXU8ecOVokkeGpi3FpJqjni84Zghu
+         HHQWsB9WCGlUQTC7Hz+Y655Ladb2jywc3qV2avTY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <cover.1571722391.git.baolin.wang@linaro.org> <487c2e45810c6dc6485638474136e375cb567807.1571722391.git.baolin.wang@linaro.org>
- <50696230-75f4-3de4-7424-c33d531ee159@intel.com> <CAMz4kuJAwV7f=pjUqs1nO3+L5NbcwCQrCi-HGUPPXgp7rWUs=g@mail.gmail.com>
- <CAMz4kuKfqMoM3WdaG8o0JHpXeUZHYpLt4P15BsOriU2h2OV--A@mail.gmail.com> <60aabcc6-9def-1472-0e1f-3fec391ef1cd@intel.com>
-In-Reply-To: <60aabcc6-9def-1472-0e1f-3fec391ef1cd@intel.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Mon, 28 Oct 2019 17:15:30 +0800
-Message-ID: <CADBw62qf4qM7c-3YWEpo-8o9qw6RD2_G7qqqBDZZC4Ht37SNnA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] mmc: host: sdhci: Add request_done ops for struct sdhci_ops
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Baolin Wang <baolin.wang@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191018154201.1276638-5-arnd@arndb.de>
+References: <20191018154052.1276506-1-arnd@arndb.de> <20191018154201.1276638-5-arnd@arndb.de>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org,
+        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        alsa-devel@alsa-project.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 05/46] ARM: pxa: split up mach/hardware.h
+To:     Arnd Bergmann <arnd@arndb.de>, Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+User-Agent: alot/0.8.1
+Date:   Mon, 28 Oct 2019 02:18:24 -0700
+Message-Id: <20191028091825.A1F3B20717@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 5:11 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 28/10/19 10:38 AM, Baolin Wang wrote:
-> > On Mon, 28 Oct 2019 at 16:27, Baolin Wang <baolin.wang@linaro.org> wrote:
-> >>
-> >> Hi Adrian,
-> >>
-> >> On Mon, 28 Oct 2019 at 16:20, Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>>
-> >>> On 22/10/19 8:58 AM, Baolin Wang wrote:
-> >>>> Add request_done ops for struct sdhci_ops as a preparation in case some
-> >>>> host controllers have different method to complete one request, such as
-> >>>> supporting request completion of MMC software queue.
-> >>>>
-> >>>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> >>>> ---
-> >>>>  drivers/mmc/host/sdhci.c |   12 ++++++++++--
-> >>>>  drivers/mmc/host/sdhci.h |    2 ++
-> >>>>  2 files changed, 12 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> >>>> index b056400..850241f 100644
-> >>>> --- a/drivers/mmc/host/sdhci.c
-> >>>> +++ b/drivers/mmc/host/sdhci.c
-> >>>> @@ -2729,7 +2729,10 @@ static bool sdhci_request_done(struct sdhci_host *host)
-> >>>>
-> >>>>       spin_unlock_irqrestore(&host->lock, flags);
-> >>>>
-> >>>> -     mmc_request_done(host->mmc, mrq);
-> >>>> +     if (host->ops->request_done)
-> >>>> +             host->ops->request_done(host, mrq);
-> >>>
-> >>> For hsq, couldn't this result in sdhci_request() being called interrupt
-> >>> context here.
-> >>
-> >> Right, now it did not support.
-> >>
-> >>>
-> >>> To prevent that you would need to add a condition to sdhci_defer_done() so
-> >>> it always defers when using hsq.
-> >>
-> >> Yes, but now the condition can be matched in sdhci_defer_done()  when
-> >> using hsq. So no need to worry that the sdhci_request() will be called
-> >> in interrupt
-> >> context in this patch set. Thanks.
-> >>
-> >
-> > Wait, sorry, I realized some drivers may not select the
-> > SDHCI_REQ_USE_DMA flag in sdhci_defer_done()  when using hsq. OK, So
-> > how about below changes?
-> >
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index 850241f..6c7a396 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -3035,7 +3035,7 @@ static inline bool sdhci_defer_done(struct
-> > sdhci_host *host,
-> >  {
-> >         struct mmc_data *data = mrq->data;
-> >
-> > -       return host->pending_reset ||
-> > +       return IS_ENABLED(CONFIG_MMC_HSQ) || host->pending_reset ||
->
-> Just because it is configured does not mean it is used.  How about adding a
-> variable host->always_defer_done and set it in sdhci_sprd_probe().
+Quoting Arnd Bergmann (2019-10-18 08:41:20)
+> The mach/hardware.h is included in lots of places, and it provides
+> three different things on pxa:
+>=20
+> - the cpu_is_pxa* macros
+> - an indirect inclusion of mach/addr-map.h
+> - the __REG() and io_pv2() helper macros
+>=20
+> Split it up into separate <linux/soc/pxa/cpu.h> and mach/pxa-regs.h
+> headers, then change all the files that use mach/hardware.h to
+> include the exact set of those three headers that they actually
+> need, allowing for further more targeted cleanup.
+>=20
+> linux/soc/pxa/cpu.h can remain permanently exported and is now in
+> a global location along with similar headers. pxa-regs.h and
+> addr-map.h are only used in a very small number of drivers now
+> and can be moved to arch/arm/mach-pxa/ directly when those drivers
+> are to pass the necessary data as resources.
+>=20
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: linux-mtd@lists.infradead.org
+> Cc: linux-rtc@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-watchdog@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-Sure, sounds reasonable to me. Thanks.
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+
