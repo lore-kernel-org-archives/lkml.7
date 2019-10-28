@@ -2,78 +2,70 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A535CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF77CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6EA20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204A520B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572251904;
+	bh=iDlj1N5pY/4IkC0huCZ6VrSYnvV4S5FkKFE256YWrNQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fJjLTfOcCLRcHVEW0OA0v60hsNCoO0shQOZyzDLr1jUW7Eh+6mkqIr3Bb4vv4FF/j
+	 99auwq+c/IoCWQa1UOahGOwYZNOWpFUMIjqecTBEhZjS+w11fKeGM4BGYkX92YdToM
+	 U1LSRVTl1hhgzVfsdl7QWy9OdiU6FWT0xWdZvyyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732176AbfJ1IgF (ORCPT
+        id S2387570AbfJ1IiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 04:36:05 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:51440 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732003AbfJ1IgF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 04:36:05 -0400
-X-IronPort-AV: E=Sophos;i="5.68,239,1569276000"; 
-   d="scan'208";a="408749677"
-Received: from unknown (HELO hadrien) ([91.217.168.176])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 09:36:04 +0100
-Date:   Mon, 28 Oct 2019 09:36:04 +0100 (CET)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-cc:     Cristiane Naves <cristianenavescardoso09@gmail.com>,
-        outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: octeon: Remove unneeded variable
-In-Reply-To: <20191028082732.GE1944@kadam>
-Message-ID: <alpine.DEB.2.21.1910280934430.2348@hadrien>
-References: <20191026222453.GA14562@cristiane-Inspiron-5420> <20191028082732.GE1944@kadam>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 28 Oct 2019 04:38:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731611AbfJ1IiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 04:38:22 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B45820717;
+        Mon, 28 Oct 2019 08:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572251902;
+        bh=iDlj1N5pY/4IkC0huCZ6VrSYnvV4S5FkKFE256YWrNQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BlaVlCOyd0ITuRjB0ReA+dQeZ4XPjTXCWZTqVydm8ymaGERKl9XppneYJq0X/aLFs
+         Td/UhPUtZaCLxo9mxkNpa+G8PUbFhg1f+VKCm3XZiMVLDRsTajrkRmVXvlA5aRBL41
+         UR/E/lXOBdMoyobWdRiiRHXTSR9+a853oWEkFP+0=
+Date:   Mon, 28 Oct 2019 16:38:01 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
+        daniel.lezcano@linaro.org, ping.bai@nxp.com, daniel.baluta@nxp.com,
+        jun.li@nxp.com, abel.vesa@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mm: Remove duplicated machine
+ compatible
+Message-ID: <20191028083759.GU16985@dragon>
+References: <1571812481-28308-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571812481-28308-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 23, 2019 at 02:34:40PM +0800, Anson Huang wrote:
+> Machine compatible string normally is located in board DT, remove
+> the duplicated one from SoC dtsi.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-
-On Mon, 28 Oct 2019, Dan Carpenter wrote:
-
-> On Sat, Oct 26, 2019 at 07:24:53PM -0300, Cristiane Naves wrote:
-> > Remove unneeded variable used to store return value. Issue found by
-> > coccicheck.
-> >
-> > Signed-off-by: Cristiane Naves <cristianenavescardoso09@gmail.com>
-> > ---
-> >  drivers/staging/octeon/octeon-stubs.h | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-> > index b07f5e2..d53bd801 100644
-> > --- a/drivers/staging/octeon/octeon-stubs.h
-> > +++ b/drivers/staging/octeon/octeon-stubs.h
-> > @@ -1387,9 +1387,7 @@ static inline cvmx_pko_status_t cvmx_pko_send_packet_finish(uint64_t port,
-> >  		uint64_t queue, union cvmx_pko_command_word0 pko_command,
-> >  		union cvmx_buf_ptr packet, cvmx_pko_lock_t use_locking)
-> >  {
-> > -	cvmx_pko_status_t ret = 0;
-> > -
-> > -	return ret;
-> > +	return 0;
->
-> What is the point of this function anyway?
-
-Given that it is in octeon-stubs.h, it seems that the point is to get the
-code to compile when COMPILE_TEST is set.  There is a real definition in
-arch/mips/include/asm/octeon/cvmx-pko.h
-
-julia
+Applied both, thanks.
