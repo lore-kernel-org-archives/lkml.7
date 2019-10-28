@@ -2,104 +2,129 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4B5CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADDBCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB52E21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:55:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bKOxV1my"
+	by mail.kernel.org (Postfix) with ESMTP id B774C21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403918AbfJ1Qzm (ORCPT
+        id S2403930AbfJ1Q4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:55:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51842 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfJ1Qzm (ORCPT
+        Mon, 28 Oct 2019 12:56:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58650 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726234AbfJ1Q4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:55:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=H+zZ/pHimBDhBBnI6Lvxg+HhhSJoDwfhbO80w+AkCs0=; b=bKOxV1myDjndo2kkGn3Qi918F
-        CN4VqUX0k4OL6OJch7JXOWtqN4FILtRUK07WCShTpwdBSnoyai3rIYBVUFhaZfbdCK7lb41dBbBPM
-        XNIV6lE1lSjukEJsLVqgTy7ilVBWnFJs6Oh4C6KIx5Uwu/00zk2yKJZYAFrjhiIXXdW2U+8Ado7EC
-        pdUigELE1aZlAcdEAzRJ2mCAOt40ZJTuN9gBo1T8c4H0vCWT5DIlKzIBYZQ74KBw4voifAEL2UBnW
-        gq6/MWPl7wN2P6f9sY9jXfaks/RovEpd/Rq+49FEJKYeL/JWp9BtO7Sq7bZGoTXFatWnGkrUnxLZ+
-        84cP1++wQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP8Ib-0008Fx-Uu; Mon, 28 Oct 2019 16:55:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AAFFE300EBF;
-        Mon, 28 Oct 2019 17:54:19 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0659020C4EA0B; Mon, 28 Oct 2019 17:55:20 +0100 (CET)
-Date:   Mon, 28 Oct 2019 17:55:19 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
-        rabin@rab.in, Mark Rutland <mark.rutland@arm.com>,
-        james.morse@arm.com
-Subject: Re: [PATCH v4 13/16] arm/ftrace: Use __patch_text_real()
-Message-ID: <20191028165519.GF4114@hirez.programming.kicks-ass.net>
-References: <20191018073525.768931536@infradead.org>
- <20191018074634.687479693@infradead.org>
- <20191028162525.GF5576@willie-the-truck>
- <20191028163421.GI4097@hirez.programming.kicks-ass.net>
- <20191028164758.GH5576@willie-the-truck>
+        Mon, 28 Oct 2019 12:56:05 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9SGqpac179175
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:56:03 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vx1nrxn9e-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:56:03 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <iii@linux.ibm.com>;
+        Mon, 28 Oct 2019 16:56:02 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 28 Oct 2019 16:56:00 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9SGtwJa38273158
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 16:55:58 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C82AAE045;
+        Mon, 28 Oct 2019 16:55:58 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4BEADAE04D;
+        Mon, 28 Oct 2019 16:55:58 +0000 (GMT)
+Received: from white.boeblingen.de.ibm.com (unknown [9.152.97.44])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 28 Oct 2019 16:55:58 +0000 (GMT)
+From:   Ilya Leoshkevich <iii@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH] mm/sparse.c: mark populate_section_memmap as __meminit
+Date:   Mon, 28 Oct 2019 17:55:49 +0100
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028164758.GH5576@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102816-0008-0000-0000-000003287607
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102816-0009-0000-0000-00004A47B510
+Message-Id: <20191028165549.14478-1-iii@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910280163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 04:47:59PM +0000, Will Deacon wrote:
-> On Mon, Oct 28, 2019 at 05:34:21PM +0100, Peter Zijlstra wrote:
-> > On Mon, Oct 28, 2019 at 04:25:26PM +0000, Will Deacon wrote:
-> > > On Fri, Oct 18, 2019 at 09:35:38AM +0200, Peter Zijlstra wrote:
-> > > > @@ -97,10 +100,7 @@ static int ftrace_modify_code(unsigned l
-> > > >  			return -EINVAL;
-> > > >  	}
-> > > >  
-> > > > -	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
-> > > > -		return -EPERM;
-> > > > -
-> > > > -	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
-> > > > +	__patch_text_real((void *)pc, new, patch_text_remap);
-> > > 
-> > > Why can't you just pass 'true' for patch_text_remap? AFAICT, the only
-> > > time you want to pass false is during early boot when the text is
-> > > assumedly still writable without the fixmap.
-> > 
-> > Ah, it will also become true for module loading once we rework where we
-> > flip the module text RO,X. See this patch:
-> > 
-> >   https://lkml.kernel.org/r/20191018074634.858645375@infradead.org
-> > 
-> > But for that to land, there's still a few other issues to fix (KLP).
-> 
-> Passing 'true' would still work though, right? Just feels a bit error
-> prone having to maintain the state of patch_test_remap() and remember
-> that 'ftrace_lock' is holding the concurrency together.
+Building the kernel on s390 with -Og produces the following warning:
 
-It should, provided your fixmap stuff is working when we do the early
-stuff I suppose. Module loading will be a wee bit slower too, but I'm
-not the person to care about that.
+WARNING: vmlinux.o(.text+0x28dabe): Section mismatch in reference from the function populate_section_memmap() to the function .meminit.text:__populate_section_memmap()
+The function populate_section_memmap() references
+the function __meminit __populate_section_memmap().
+This is often because populate_section_memmap lacks a __meminit
+annotation or the annotation of __populate_section_memmap is wrong.
+
+While -Og is not supported, in theory this might still happen with
+another compiler or on another architecture. So fix this by using the
+correct section annotations.
+
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+---
+ mm/sparse.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/mm/sparse.c b/mm/sparse.c
+index f6891c1992b1..0f1f36443a96 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -448,7 +448,7 @@ static unsigned long __init section_map_size(void)
+ 	return PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION);
+ }
+ 
+-struct page __init *__populate_section_memmap(unsigned long pfn,
++struct page __meminit *__populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	unsigned long size = section_map_size();
+@@ -647,7 +647,7 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ #endif
+ 
+ #ifdef CONFIG_SPARSEMEM_VMEMMAP
+-static struct page *populate_section_memmap(unsigned long pfn,
++static struct page * __meminit populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	return __populate_section_memmap(pfn, nr_pages, nid, altmap);
+@@ -669,7 +669,7 @@ static void free_map_bootmem(struct page *memmap)
+ 	vmemmap_free(start, end, NULL);
+ }
+ #else
+-struct page *populate_section_memmap(unsigned long pfn,
++struct page * __meminit populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	struct page *page, *ret;
+-- 
+2.23.0
+
