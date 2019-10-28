@@ -2,123 +2,114 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF26CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287AACA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C51321835
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF8521783
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6vYaxKP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G4fNPx62"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbfJ1PYS (ORCPT
+        id S1730232AbfJ1PYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:24:18 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35394 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfJ1PYR (ORCPT
+        Mon, 28 Oct 2019 11:24:37 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59184 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfJ1PYh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:24:17 -0400
-Received: by mail-il1-f194.google.com with SMTP id p8so8536564ilp.2;
-        Mon, 28 Oct 2019 08:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d5lAMRfHtk2EQ8kdZ9OB3W0LQMkhl/amzHwPWCWvW14=;
-        b=Z6vYaxKPcOGy25FF9pf7qir9Rqlme+c8mQkk8btbXmmVTT6UYwfOsWMly7W9XEBI8o
-         HgHhJ9AIO22Uuqga8nvRkREa14Tot8KYdkJYmaQV4aLJEuxiRnEnGyopc36qgx47eVwQ
-         b3alzoWycnAQaPezRAm/VrlBY/C2qzw2fG/lFzRhHuf6vNIJMuf+sxbrykS33gOIZ1ai
-         IFSna665SU1lHebs9BEOZwxW+MLBL3wk79T+hm1g5RlSo4wbP2ar3eE49gDiP+rtSP07
-         A8KAmicIlutBIEc579NOBUdeHFKSvtwXKaLzxAil4m13JC2TeI6SlhgwE8i9Cwn+okdC
-         SVMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d5lAMRfHtk2EQ8kdZ9OB3W0LQMkhl/amzHwPWCWvW14=;
-        b=tVuWr9OA3e1g2pezHrCFb7R5DDB2ME8DKnSX9itBLsQ/s5OMwPrBgbCS1jwgPOvEr5
-         ohyO3T3zfLEcMHbmmMKsJz7avwo+GdCggMzutan4shHmJqsMPgVuYHkuSQDySYJata8k
-         OBcQi/ywbbktc20FQHachYiHHGVFnpIe4u84dT/iGwLDlAX5XFNkihIDsEj94Zp6QK17
-         Ya6LiBqniZs/uf+0i2CqRuVrHiMJOfflh7tXPtlsG21xhDVMT1gwCl2ODPkfPEH6/nDa
-         APA8XFS5PubMdBRChpnYeJyHEl66H38OlsPnUz5fcPMHpX7FQraLzfPC+63t1UpWRv3X
-         rbrQ==
-X-Gm-Message-State: APjAAAWaAYKNHuSyrCU1uJmIvjqdmIPzKYK+nqKa+iRYFZasFEe6guqu
-        V0AslAob+6DY4mAIeVPN9TCYdQcmsFJ9VngQqw0=
-X-Google-Smtp-Source: APXvYqyfgTgUajiGv2w6khwqi9U4IsCrcrOyR1GO4gPo2AlNqjopyIrCsEicGQbR4CIN0pp166szPL4Do0g9w/mvrSU=
-X-Received: by 2002:a92:9f1c:: with SMTP id u28mr19473440ili.97.1572276256522;
- Mon, 28 Oct 2019 08:24:16 -0700 (PDT)
+        Mon, 28 Oct 2019 11:24:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wzqTOdWSiprs38KOBFUNMMK0k7THK4/IC0X8dH0u1NU=; b=G4fNPx62fbipN9nDeu/f5s+nf
+        NO9yIj1UogFJcWkqtEoEVuHEP99H6z4UqZzHCeRm4yzyDFFtx+o8AUM1jk38olV09nmG+1HpQuU0M
+        u3ckNys0R3GUjOeRr7/WuOjSrJSgoNyCFaoM70BHS5RdLfmYZsuMKPhjXjfnpeOg0pVzroWmYb739
+        lDIwdLRnMxIebG1q+zilSjzZwaTHKBEoEnudyMDWl2XzLC+yFDpYJA3e/TSgmFiAFQksNu7a/TZsg
+        DxwIEU6vlRsKe55yeA5emFh9LvlXowxWfQLXIHOsyhNt/1D4cpH6XRTjp6aj0/qRg+x7drkVmhxWt
+        /EKOBBs9w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iP6sY-0002o9-RT; Mon, 28 Oct 2019 15:24:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 485A13040CB;
+        Mon, 28 Oct 2019 16:23:21 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 760212B4468C9; Mon, 28 Oct 2019 16:24:21 +0100 (CET)
+Date:   Mon, 28 Oct 2019 16:24:21 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+Subject: Re: [Patch v4 3/6] sched/fair: Enable CFS periodic tick to update
+ thermal pressure
+Message-ID: <20191028152421.GD4097@hirez.programming.kicks-ass.net>
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <1571776465-29763-4-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-References: <20191022221223.17338.5860.stgit@localhost.localdomain> <3888d486-d046-b35f-a365-655f8c4d3bf2@redhat.com>
-In-Reply-To: <3888d486-d046-b35f-a365-655f8c4d3bf2@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 28 Oct 2019 08:24:05 -0700
-Message-ID: <CAKgT0UdkPwsc8KrSAURt1FuD8nX8o50CLDcd21RQw8AW7PVMVg@mail.gmail.com>
-Subject: Re: [PATCH v12 0/6] mm / virtio: Provide support for unused page reporting
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        David Hildenbrand <david@redhat.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Oscar Salvador <osalvador@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571776465-29763-4-git-send-email-thara.gopinath@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 7:34 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->
->
-> On 10/22/19 6:27 PM, Alexander Duyck wrote:
->
->
-> [...]
-> > Below are the results from various benchmarks. I primarily focused on two
-> > tests. The first is the will-it-scale/page_fault2 test, and the other is
-> > a modified version of will-it-scale/page_fault1 that was enabled to use
-> > THP. I did this as it allows for better visibility into different parts
-> > of the memory subsystem. The guest is running on one node of a E5-2630 v3
-> > CPU with 48G of RAM that I split up into two logical nodes in the guest
-> > in order to test with NUMA as well.
-> >
-> > Test              page_fault1 (THP)     page_fault2
-> > Baseline       1  1256106.33  +/-0.09%   482202.67  +/-0.46%
-> >                 16  8864441.67  +/-0.09%  3734692.00  +/-1.23%
-> >
-> > Patches applied  1  1257096.00  +/-0.06%   477436.00  +/-0.16%
-> >                 16  8864677.33  +/-0.06%  3800037.00  +/-0.19%
-> >
-> > Patches enabled        1  1258420.00  +/-0.04%   480080.00  +/-0.07%
-> >  MADV disabled  16  8753840.00  +/-1.27%  3782764.00  +/-0.37%
-> >
-> > Patches enabled        1  1267916.33  +/-0.08%   472075.67  +/-0.39%
-> >                 16  8287050.33  +/-0.67%  3774500.33  +/-0.11%
->
-> If I am not mistaken then you are only observing the number of processes (and
-> not the number of threads) launched over the 1st and the 16th vcpu  reported by
-> will-it-scale?
+On Tue, Oct 22, 2019 at 04:34:22PM -0400, Thara Gopinath wrote:
+> Introduce support in CFS periodic tick to trigger the process of
+> computing average thermal pressure for a cpu.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  kernel/sched/fair.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 682a754..4f9c2cb 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -21,6 +21,7 @@
+>   *  Copyright (C) 2007 Red Hat, Inc., Peter Zijlstra
+>   */
+>  #include "sched.h"
+> +#include "thermal.h"
+>  
+>  #include <trace/events/sched.h>
+>  
+> @@ -7574,6 +7575,8 @@ static void update_blocked_averages(int cpu)
+>  		done = false;
+>  
+>  	update_blocked_load_status(rq, !done);
+> +
+> +	trigger_thermal_pressure_average(rq);
+>  	rq_unlock_irqrestore(rq, &rf);
+>  }
 
-You are correct these results are for the processes. I monitored them
-for 1 - 16, but only included the results for 1 and 16 since those
-seem to be the most relevant data points.
+This changes only 1 of the 2 implementations of
+update_blocked_averages(). Also, how does this interact with
+rq->has_blocked_load ?
+
+> @@ -9933,6 +9936,8 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+>  
+>  	update_misfit_status(curr, rq);
+>  	update_overutilized_status(task_rq(curr));
+> +
+> +	trigger_thermal_pressure_average(rq);
+>  }
+
+This seems to imply all this thermal stuff is fair only, in which case I
+could suggest putting those few lines in fair.c. ~45 extra lines on
+1e5+ lines really doesn't matter.
