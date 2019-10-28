@@ -2,218 +2,168 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B40CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D258CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6105F21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295E721734
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:02:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iVuCnOTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbfJ1NCN (ORCPT
+        id S1730171AbfJ1NCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:02:13 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:45737 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729839AbfJ1NCM (ORCPT
+        Mon, 28 Oct 2019 09:02:52 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58120 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbfJ1NCv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:02:12 -0400
-Received: by mail-il1-f200.google.com with SMTP id n84so3761822ila.12
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 06:02:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jz8xl1j2uKLt8ScyvhQgkFIWQqtE47psXnzDRQuYc18=;
-        b=oFX0+NAPpS9DsjOI0mEsNrx2UYrCZPC2Bo8SshCi/7k/XExblm+LsTWhLpfi/5VsbI
-         pvIYX01PDuPYf1kwga7bW6Y0GI+pYx9/YWXgvA/A1+mATqLV5+o39mZ/UD7AwZjj7Jte
-         mvm9ZZ6cMAKbWMLgHMDpjndmJPYYpADU8ot3wHIpNfjT+6q9eX1z7cxkI73lDyX29erI
-         QLjFPLuW3egW/AiYZHqdgfHFMIjoL9CzvXIsJkG6WivxkNfEEdQ4ybY7snZg9AQyqChJ
-         CE4sOEZoJdVWfZEHqUlRGLbQZqkwSOoWSsOQ8yShNm0TeK8Dmm52MzbAQCcvIdBnVRbk
-         TDMw==
-X-Gm-Message-State: APjAAAU+qK4MuJGMD0vzUEr/ixEbH4bi/3glmmUgqwgrtg/fdG+wKaLo
-        WcVl099FUXysqqDCXK9L1js60zFt9ExyzcrvCfS49g+3hC02
-X-Google-Smtp-Source: APXvYqy//1Z6TJg7L9QtS1YDVHSXuBfWZAserqESBK+3V3MFQd08PU3irJDL5DnKxie//iGiYXFX5QYQMsf8aLbMwC+2ab2kb+lP
+        Mon, 28 Oct 2019 09:02:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=MD08IaRMVjFfIvRAApgyfhpfS8l+L1midKNfES5kgEA=; b=iVuCnOTx3bu24bTobnX/UCxlxV
+        N6hi3SNHwJSRZ7ZlcJu7AmOqwupaA2XqqnUZNUsH/5g1h/WoWnJqbpd5WffYih5nPPhGcZgA8Zkpn
+        wnD8xNIb0ud5jo5VK37coPAhnv/kP5H4hcIc/lw46bATKBhSiay1/sZcYF2cRJ/4xp4Fxrk3CWuW2
+        JkthbZFukVVI4T6iRh0zY4DwnHqe5DQDOmhEEbJCNnbng0uM+g0GyOm7bEFy1h2kRnqCFC2RcrKG2
+        n5rKgxVYDZc2KXLlAzH2ZrbQxgAJmt4PFkWM6G1n4p+hdsfx6kEEIibemkJaVrAg53cGlD0GLvFiC
+        BzBdut/Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iP4fC-0007Ai-Mb; Mon, 28 Oct 2019 13:02:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 17245306091;
+        Mon, 28 Oct 2019 14:01:21 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3FB7520761E44; Mon, 28 Oct 2019 14:02:22 +0100 (CET)
+Date:   Mon, 28 Oct 2019 14:02:22 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/numa: advanced per-cgroup numa statistic
+Message-ID: <20191028130222.GM4131@hirez.programming.kicks-ass.net>
+References: <46b0fd25-7b73-aa80-372a-9fcd025154cb@linux.alibaba.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:8394:: with SMTP id p20mr20701579ilk.73.1572267729866;
- Mon, 28 Oct 2019 06:02:09 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 06:02:09 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000087dae30595f81b6e@google.com>
-Subject: KASAN: use-after-free Read in as102_release
-From:   syzbot <syzbot+17c206675b3da3f91a29@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, andreyknvl@google.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, rfontana@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <46b0fd25-7b73-aa80-372a-9fcd025154cb@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Oct 24, 2019 at 11:08:01AM +0800, 王贇 wrote:
+> Currently there are no good approach to monitoring the per-cgroup
+> numa efficiency, this could be a trouble especially when groups
+> are sharing CPUs, it's impossible to tell which one caused the
+> remote-memory access by reading hardware counter since multiple
+> workloads could sharing the same CPU, which make it painful when
+> one want to find out the root cause and fix the issue.
+> 
+> In order to address this, we introduced new per-cgroup statistic
+> for numa:
+>   * the numa locality to imply the numa balancing efficiency
+>   * the numa execution time on each node
+> 
+> The task locality is the local page accessing ratio traced on numa
+> balancing PF, and the group locality is the topology of task execution
+> time, sectioned by the locality into 8 regions.
+> 
+> For example the new entry 'cpu.numa_stat' show:
+>   locality 15393 21259 13023 44461 21247 17012 28496 145402
+>   exectime 311900 407166
+> 
+> Here we know the workloads executed 311900ms on node_0 and 407166ms
+> on node_1, tasks with locality around 0~12% executed for 15393 ms, and
+> tasks with locality around 88~100% executed for 145402 ms, which imply
+> most of the memory access is local access, for the workloads of this
+> group.
+> 
+> By monitoring the new statistic, we will be able to know the numa
+> efficiency of each per-cgroup workloads on machine, whatever they
+> sharing the CPUs or not, we will be able to find out which one
+> introduced the remote access mostly.
+> 
+> Besides, per-node memory topology from 'memory.numa_stat' become
+> more useful when we have the per-node execution time, workloads
+> always executing on node_0 while it's memory is all on node_1 is
+> usually a bad case.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Michal Koutný <mkoutny@suse.com>
+> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
 
-syzbot found the following crash on:
-
-HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=167d6170e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5fe29bc39eff9627
-dashboard link: https://syzkaller.appspot.com/bug?extid=17c206675b3da3f91a29
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+17c206675b3da3f91a29@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in atomic_read  
-include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in refcount_sub_and_test_checked+0x75/0x1c0  
-lib/refcount.c:182
-Read of size 4 at addr ffff8881cf500140 by task syz-executor.1/11762
-
-CPU: 0 PID: 11762 Comm: syz-executor.1 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
-  kasan_report+0xe/0x20 mm/kasan/common.c:634
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
-  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
-  refcount_sub_and_test_checked+0x75/0x1c0 lib/refcount.c:182
-  kref_put include/linux/kref.h:64 [inline]
-  as102_release+0x48/0x80 drivers/media/usb/as102/as102_usb_drv.c:458
-  __fput+0x2d7/0x840 fs/file_table.c:280
-  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x413ad1
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffda9b2bc30 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000413ad1
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
-RBP: 0000000000000001 R08: 00000000dbb17c24 R09: 00000000dbb17c28
-R10: 00007ffda9b2bd10 R11: 0000000000000293 R12: 000000000075bf20
-R13: 00000000000919fe R14: 0000000000761f98 R15: 000000000075bf2c
-
-Allocated by task 2794:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:690 [inline]
-  as102_usb_probe+0x4e/0x3c5 drivers/media/usb/as102/as102_usb_drv.c:350
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2201
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2201
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
-  port_event drivers/usb/core/hub.c:5469 [inline]
-  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 2794:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
-  slab_free_hook mm/slub.c:1424 [inline]
-  slab_free_freelist_hook mm/slub.c:1475 [inline]
-  slab_free mm/slub.c:3018 [inline]
-  kfree+0xe4/0x320 mm/slub.c:3967
-  as102_usb_probe.cold+0x133/0x369  
-drivers/media/usb/as102/as102_usb_drv.c:412
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2201
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2201
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
-  port_event drivers/usb/core/hub.c:5469 [inline]
-  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881cf500000
-  which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 320 bytes inside of
-  4096-byte region [ffff8881cf500000, ffff8881cf501000)
-The buggy address belongs to the page:
-page:ffffea00073d4000 refcount:1 mapcount:0 mapping:ffff8881da00c280  
-index:0xffff8881cf506000 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 ffffea0007323408 ffffea0007396008 ffff8881da00c280
-raw: 0000000000000000 0000000000040004 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881cf500000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cf500080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8881cf500100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                            ^
-  ffff8881cf500180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cf500200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Mel, can you have a peek at this too?
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+So this is the part I like least:
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> +DEFINE_PER_CPU(struct numa_stat, root_numa_stat);
+> +
+> +int alloc_tg_numa_stat(struct task_group *tg)
+> +{
+> +	tg->numa_stat = alloc_percpu(struct numa_stat);
+> +	if (!tg->numa_stat)
+> +		return 0;
+> +
+> +	return 1;
+> +}
+> +
+> +void free_tg_numa_stat(struct task_group *tg)
+> +{
+> +	free_percpu(tg->numa_stat);
+> +}
+> +
+> +static void update_tg_numa_stat(struct task_struct *p)
+> +{
+> +	struct task_group *tg;
+> +	unsigned long remote = p->numa_faults_locality[3];
+> +	unsigned long local = p->numa_faults_locality[4];
+> +	int idx = -1;
+> +
+> +	/* Tobe scaled? */
+> +	if (remote || local)
+> +		idx = NR_NL_INTERVAL * local / (remote + local + 1);
+> +
+> +	rcu_read_lock();
+> +
+> +	tg = task_group(p);
+> +	while (tg) {
+> +		/* skip account when there are no faults records */
+> +		if (idx != -1)
+> +			this_cpu_inc(tg->numa_stat->locality[idx]);
+> +
+> +		this_cpu_inc(tg->numa_stat->jiffies);
+> +
+> +		tg = tg->parent;
+> +	}
+> +
+> +	rcu_read_unlock();
+> +}
+
+Thing is, we already have a cgroup hierarchy walk in the tick; see
+task_tick_fair().
+
+On top of that, you're walking an entirely different set of pointers,
+instead of cfs_rq, you're walking tg->parent, which pretty much
+guarantees you're adding even more cache misses.
+
+How about you stick those numa_stats in cfs_rq (with cacheline
+alignment) and see if you can frob your update loop into the cgroup walk
+we already do.
