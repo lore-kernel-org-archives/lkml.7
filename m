@@ -2,140 +2,147 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C83BCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92414CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D5F208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646CC208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:34:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="irsXVZVg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TXQEWSsI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390126AbfJ1Oda (ORCPT
+        id S2390168AbfJ1Oef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:33:30 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34009 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390052AbfJ1Od3 (ORCPT
+        Mon, 28 Oct 2019 10:34:35 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44068 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390129AbfJ1Oec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:33:29 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b128so7011191pfa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:33:29 -0700 (PDT)
+        Mon, 28 Oct 2019 10:34:32 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z11so10107402wro.11
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:34:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jRXui8mziHn1dHv5sVSn9Ol454G9W6p0Jp5i7su5XVo=;
-        b=irsXVZVgMMIM/IxRyTrk/qvcpBGoyEqBd5lsDi83dqdq4Ij85W6nXIMi6d68nrg5mP
-         m6dlG15ZtcjLhwSGfAy8IBHJm0XFBTuLkMkcujDc+Jz1uFwMhqmA7fHXnnoH/eWLwHO6
-         e9l/L2TkOw6FadXSJL0Je2cED/hKn7LLI0rEqqOzKqUSSuDmRm3Y94/BFnNdOFgvlK/u
-         r6m3dcKiBjkSkA+6OC//ADulFoKMPfhnqdWnsN6mlCplwyHpgndtLX09a4EKzsqzZNF5
-         inPLg24/mKcrAVmYDM9nEN9k7aOUFGcU2NUl/TD0RloUuibGiFYlPXJ91nIEUl6FoBJN
-         QFPA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=jIb0znJW8mP39K4r84V/kqqf7AJDYmG+b4HzDQKU0ZQ=;
+        b=TXQEWSsIxMhEel2/32mRMXyje9EVV48QhKGMmTjMsQ5lsi7y+YfS/jKhZ8RxLZ05wb
+         pXtrqB2aTjtTnkduKY8R7WtD7Cttq4bWYFlICHLu9nKL4IVYq4DSURApuzhj63LqHkN1
+         Rx0bva1eRDRZY+J0Hf2iUINh2p/aPPzb19R+FZpbPBZWI6kc5z6Rkr/SVS/72QJpTvln
+         j8LRpMIjJNm1jlKwbM0wzfx27krdk8jiOhxqeO7pb5NmjFS0LpQtYgzpE5tQA5Xkj3rS
+         px+7uXDWhBop4VZu0+dPCDLOTJeaeEntAljci9rFRXtsLkZpvYUrdqjkYQoaVLeQICHL
+         9JUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jRXui8mziHn1dHv5sVSn9Ol454G9W6p0Jp5i7su5XVo=;
-        b=WW5cymnnTjuqn8sc2C8NAo14YJxdM59QVaYv2NlkCxUwePXY2E64DVc+x+Qh7eWW1a
-         aAifYeGHBNMyFH4P5iJASQWx1R2ECM4wd+9myZQfBItydq4LAS1pQZFfKVshZ5eKZdaZ
-         /IBCIYiUmIqjmfMrrpN3wy/uKIBl9NA4GxWGCfelHyIgTM1NGu3PGfxPnQVTPUiKEtY1
-         4scnfcXJG6aGtwEpF2Wu5GlOR/UpfyP1jd8QeL596L7cwMM53lHZWRcMHQcYllgZhFtF
-         n7yiptr9RVX9arj+TzsiBamy+2mgIPKg55nB6ng4+xMMs3VMzz/bU3j+cCcvVfF++d3J
-         cWag==
-X-Gm-Message-State: APjAAAUbWRMblL0nSBB/C1J5WvLfz5ZpQldo31fghmHaa8p759uOFTXA
-        e1IWUmA0dhbEvnffH8iFmPWN
-X-Google-Smtp-Source: APXvYqzGnQ3oWUKcqs6cX+pDXEkapuTymujVJwAUXj1ZSC41/Q+HtHirj1nbVtMWKAisgsEBnI8rUA==
-X-Received: by 2002:a63:4553:: with SMTP id u19mr20936350pgk.436.1572273208969;
-        Mon, 28 Oct 2019 07:33:28 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6004:d1fe:706d:952a:57bd:23b6])
-        by smtp.gmail.com with ESMTPSA id o7sm5154561pjo.7.2019.10.28.07.33.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 28 Oct 2019 07:33:28 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 20:03:17 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        darshak.patel@einfochips.com, prajose.john@einfochips.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 3/3] mtd: spi-nor: Add support for w25q256jw
-Message-ID: <20191028143317.GB29312@Mani-XPS-13-9360>
-References: <20191024144235.3182-1-manivannan.sadhasivam@linaro.org>
- <20191024144235.3182-4-manivannan.sadhasivam@linaro.org>
- <bf435b43-f118-f3cb-73ed-5fa67905c4aa@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf435b43-f118-f3cb-73ed-5fa67905c4aa@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=jIb0znJW8mP39K4r84V/kqqf7AJDYmG+b4HzDQKU0ZQ=;
+        b=RRAbZc97bYB62BsNCn8q/zPynbGWAa/igXrHGa2Y+jU627if9lNGDXWrNkaDxPj9dc
+         NDHRbCUIpwarL36W82m37dt6/bURDX/oJiLtGr8gSTglOirIMDiAtXWIOZl9xnncYFRd
+         hQAknj+P+rzq+Undh3lGB7KfEFVSqsMLFPcprAkHXKOQmv60XS4nt7S7nd6psEjMCsgY
+         lwnlcUAcK5ll9U67SrpXoIBC0tGFeKJkxUxEdKHJKLBKHNgfy1PNgfscktLnY9vS85iv
+         9+jYdXDVKgfx7R1xcZYFPiMRWOoaU8dBuIM8nI5GSI2VMt/mbVB+PBx2lxbqpsY1alj4
+         CBuA==
+X-Gm-Message-State: APjAAAWwHjVhk1X1ZmS0fIDpnrAlD3cCnuQ0PV1Klc4mWC/5qUjYJJHu
+        AjF/wzs97bf1l3Vg2iJETncAroS3rsI=
+X-Google-Smtp-Source: APXvYqxpp/1GKFQaoddFzjPOeh5D5pudsLSOWKNgvPiu2elWA5y+RTACLTyjjBfpW6ZHoMDlWTtLJg==
+X-Received: by 2002:a5d:44c5:: with SMTP id z5mr14560159wrr.252.1572273270013;
+        Mon, 28 Oct 2019 07:34:30 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:d48d:c917:1f3e:4a87])
+        by smtp.gmail.com with ESMTPSA id g5sm14166144wmg.12.2019.10.28.07.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 07:34:29 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rjw@rjwysocki.net
+Cc:     mathieu.poirier@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org
+Subject: [PATCH V5 3/3] powercap/drivers/idle_inject: Specify the idle state to inject
+Date:   Mon, 28 Oct 2019 15:34:19 +0100
+Message-Id: <20191028143419.16236-3-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191028143419.16236-1-daniel.lezcano@linaro.org>
+References: <20191028143419.16236-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vignesh,
+Currently the idle injection framework only allows to inject the
+deepest idle state available on the system.
 
-On Mon, Oct 28, 2019 at 05:20:40PM +0530, Vignesh Raghavendra wrote:
-> Hi,
-> 
-> On 24/10/19 8:12 PM, Manivannan Sadhasivam wrote:
-> > Add MTD support for w25q256jw SPI NOR chip from Winbond. This chip
-> > supports dual/quad I/O mode with 512 blocks of memory organized in
-> > 4KB sectors. 
-> 
-> 512 blocks of memory organized into 64KB sector, right? In additional
-> flash also supports 4KB small sector.
-> 
+Give the opportunity to specify which idle state we want to inject by
+adding a new function helper to set the state and use it when calling
+play_idle().
 
-Yeah, the wording is wrong here. Will fix it.
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ drivers/powercap/idle_inject.c | 14 +++++++++++++-
+ include/linux/idle_inject.h    |  3 +++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-Thanks,
-Mani
+diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
+index 233c878cbf46..5e1efc71ed1c 100644
+--- a/drivers/powercap/idle_inject.c
++++ b/drivers/powercap/idle_inject.c
+@@ -66,6 +66,7 @@ struct idle_inject_thread {
+  */
+ struct idle_inject_device {
+ 	struct hrtimer timer;
++	int state;
+ 	unsigned int idle_duration_us;
+ 	unsigned int run_duration_us;
+ 	unsigned long int cpumask[0];
+@@ -140,7 +141,7 @@ static void idle_inject_fn(unsigned int cpu)
+ 	iit->should_run = 0;
+ 
+ 	play_idle(READ_ONCE(ii_dev->idle_duration_us),
+-		  cpuidle_find_deepest_state());
++		  READ_ONCE(ii_dev->state));
+ }
+ 
+ /**
+@@ -171,6 +172,16 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 	*idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
+ }
+ 
++/**
++ * idle_inject_set_state - set the idle state to inject
++ * @state: an integer for the idle state to inject
++ */
++void idle_inject_set_state(struct idle_inject_device *ii_dev, int state)
++{
++	if (state >= CPUIDLE_STATE_NOUSE && state < CPUIDLE_STATE_MAX)
++		WRITE_ONCE(ii_dev->state, state);
++}
++
+ /**
+  * idle_inject_start - start idle injections
+  * @ii_dev: idle injection control device structure
+@@ -299,6 +310,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
+ 	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
+ 	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	ii_dev->timer.function = idle_inject_timer_fn;
++	ii_dev->state = 0;
+ 
+ 	for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
+ 
+diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
+index a445cd1a36c5..e2b26b9ccd34 100644
+--- a/include/linux/idle_inject.h
++++ b/include/linux/idle_inject.h
+@@ -26,4 +26,7 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
+ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 				 unsigned int *run_duration_us,
+ 				 unsigned int *idle_duration_us);
++
++void idle_inject_set_state(struct idle_inject_device *ii_dev, int state);
++
+ #endif /* __IDLE_INJECT_H__ */
+-- 
+2.17.1
 
-> Regards
-> Vignesh
-> 
-> > The device has been validated using Thor96 board.
-> 
-> 
-> > Cc: Marek Vasut <marek.vasut@gmail.com>
-> > Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
-> > Cc: David Woodhouse <dwmw2@infradead.org>
-> > Cc: Brian Norris <computersforpeace@gmail.com>
-> > Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> > Cc: Richard Weinberger <richard@nod.at>
-> > Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> > Cc: linux-mtd@lists.infradead.org
-> > Signed-off-by: Darshak Patel <darshak.patel@einfochips.com>
-> > [Mani: cleaned up for upstream]
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/mtd/spi-nor/spi-nor.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> > index 1d8621d43160..2c25b371d9f0 100644
-> > --- a/drivers/mtd/spi-nor/spi-nor.c
-> > +++ b/drivers/mtd/spi-nor/spi-nor.c
-> > @@ -2482,6 +2482,8 @@ static const struct flash_info spi_nor_ids[] = {
-> >  	{ "w25q256", INFO(0xef4019, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> >  	{ "w25q256jvm", INFO(0xef7019, 0, 64 * 1024, 512,
-> >  			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> > +	{ "w25q256jw", INFO(0xef6019, 0, 64 * 1024, 512,
-> > +			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> >  	{ "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
-> >  			SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
-> >  
-> > 
