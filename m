@@ -6,154 +6,157 @@ X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DE6CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A43CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4324920862
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3715220862
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731845AbfJ1RVt (ORCPT
+        id S2404152AbfJ1RXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 13:21:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40877 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730212AbfJ1RVs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 13:21:48 -0400
-Received: from [91.217.168.176] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iP8i8-0004dS-SK; Mon, 28 Oct 2019 17:21:44 +0000
-Date:   Mon, 28 Oct 2019 18:21:44 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: For review: documentation of clone3() system call
-Message-ID: <20191028172143.4vnnjpdljfnexaq5@wittgenstein>
-References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
- <CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com>
+        Mon, 28 Oct 2019 13:23:02 -0400
+Received: from mga06.intel.com ([134.134.136.31]:29992 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730212AbfJ1RXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 13:23:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 10:23:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
+   d="scan'208";a="193326794"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 28 Oct 2019 10:22:58 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iP8jJ-0001Ik-UR; Tue, 29 Oct 2019 01:22:57 +0800
+Date:   Tue, 29 Oct 2019 01:21:56 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Lars Poeschel <poeschel@lemonage.de>
+Cc:     kbuild-all@lists.01.org, Lars Poeschel <poeschel@lemonage.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Steve Winslow <swinslow@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:NFC SUBSYSTEM" <netdev@vger.kernel.org>,
+        Johan Hovold <johan@kernel.org>,
+        Claudiu Beznea <Claudiu.Beznea@microchip.com>,
+        David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v10 5/7] nfc: pn533: add UART phy driver
+Message-ID: <201910290150.Mhd8u8Ot%lkp@intel.com>
+References: <20191025142521.22695-6-poeschel@lemonage.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191025142521.22695-6-poeschel@lemonage.de>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 04:12:09PM +0100, Jann Horn wrote:
-> On Fri, Oct 25, 2019 at 6:59 PM Michael Kerrisk (man-pages)
-> <mtk.manpages@gmail.com> wrote:
-> > I've made a first shot at adding documentation for clone3(). You can
-> > see the diff here:
-> > https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/commit/?id=faa0e55ae9e490d71c826546bbdef954a1800969
-> [...]
-> >    clone3()
-> >        The  clone3() system call provides a superset of the functionality
-> >        of the older clone() interface.  It also provides a number of  API
-> >        improvements,  including: space for additional flags bits; cleaner
-> >        separation in the use of various arguments;  and  the  ability  to
-> >        specify the size of the child's stack area.
-> 
-> You might want to note somewhere that its flags can't be
-> seccomp-filtered because they're stored in memory, making it
-> inappropriate to use in heavily sandboxed processes.
+Hi Lars,
 
-Hm, I don't think that belongs on the clone manpage. Granted that
-process creation is an important syscall but so are a bunch of others
-that aren't filterable because of pointer arguments.
-We can probably mention on the seccomp manpage that seccomp can't filter
-on pointer arguments and then provide a list of examples. If you setup a
-seccomp filter and don't know that you can't filter syscalls with
-pointer args that seems pretty bad to begin with.
+Thank you for the patch! Perhaps something to improve:
 
-> 
-> >            struct clone_args {
-> >                u64 flags;        /* Flags bit mask */
-> >                u64 pidfd;        /* Where to store PID file descriptor
-> >                                     (int *) */
-> >                u64 child_tid;    /* Where to store child TID,
-> >                                     in child's memory (int *) */
-> >                u64 parent_tid;   /* Where to store child TID,
-> >                                     in parent's memory (int *) */
-> >                u64 exit_signal;  /* Signal to deliver to parent on
-> >                                     child termination */
-> >                u64 stack;        /* Pointer to lowest byte of stack */
-> >                u64 stack_size;   /* Size of stack */
-> >                u64 tls;          /* Location of new TLS */
-> >            };
-> >
-> >        The size argument that is supplied to clone3() should be  initial‐
-> >        ized  to  the  size of this structure.  (The existence of the size
-> >        argument permits future extensions to the clone_args structure.)
-> >
-> >        The stack for the child process is  specified  via  cl_args.stack,
-> >        which   points   to  the  lowest  byte  of  the  stack  area,  and
-> 
-> Here and in the comment in the struct above, you say that .stack
-> "points to the lowest byte of the stack area", but isn't that
-> architecture-dependent? For most architectures, I think it should
-> instead be "is the initial stack pointer", with the exception of IA64
-> (and maybe others, I'm not sure). For example, on X86, when launching
-> a thread with an initially empty stack, it points directly *after* the
-> end of the stack area.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.4-rc5 next-20191028]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-re arch and stack_size: You mentioned ia64 below (I snipped this part.)
-but it's not the only one. With legacy clone it's _passed_ for any
-architecture that has CONFIG_CLONE_BACKWARDS3. That includes at least
-microblaze and ia64 I think. But only ia64 makes _actual use_ of this in
-copy_thread() by doing user_stack_base + user_stack_size - 16. I think ia64
-only needs stack_size because of the split page-table layout where two
-stacks grow in different directions; so the stack doesn't grow
-dynamically. Afair, stack_size is mainly used when PF_KTHREAD is true
-but that can't be set from userspace anyway, so _shrug_.
+url:    https://github.com/0day-ci/linux/commits/Lars-Poeschel/nfc-pn533-add-uart-phy-driver/20191028-222313
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 0365fb6baeb1ebefbbdad9e3f48bab9b3ccb8df3
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-One thing I never liked about clone() was that userspace had to know
-about stack direction. And there is a lot of ugly code in userspace that
-has nasty clone() wrappers like:
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-pid_t wrap_clone(int (*fn)(void *), void *arg, int flags, int *pidfd)
-{
-	pid_t ret;
-	void *stack;
 
-	stack = malloc(__STACK_SIZE);
-	if (!stack) {
-		SYSERROR("Failed to allocate clone stack");
-		return -ENOMEM;
-	}
+sparse warnings: (new ones prefixed by >>)
 
-#ifdef __ia64__
-	ret = __clone2(fn, stack, __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
-#else
-	ret = clone(fn, stack + __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
-#endif
-	return ret;
-}
+>> drivers/nfc/pn533/uart.c:174:35: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned short [usertype] frame_len @@    got resunsigned short [usertype] frame_len @@
+>> drivers/nfc/pn533/uart.c:174:35: sparse:    expected unsigned short [usertype] frame_len
+>> drivers/nfc/pn533/uart.c:174:35: sparse:    got restricted __be16 [usertype] datalen
 
-where stack + stack_size is addition on a void pointer which usually
-clang and gcc are not very happy about.
-I wanted to bring this up on the mailing list soon: If possible, I don't
-want userspace to need to know about stack direction and just have stack
-point to the beginning and then have the kernel do the + stack_size
-after the copy_clone_args_from_user() if the arch needs it. For example,
-by having a dumb helder similar to copy_thread_tls()/coyp_thread() that
-either does the + stack_size or not. Right now, clone3() is supported on
-parisc and afaict, the stack grows upwards for it. I'm not sure if there
-are obvious reasons why that won't work or it would be a bad idea...
+vim +174 drivers/nfc/pn533/uart.c
 
-Christian
+   133	
+   134	/*
+   135	 * scans the buffer if it contains a pn532 frame. It is not checked if the
+   136	 * frame is really valid. This is later done with pn533_rx_frame_is_valid.
+   137	 * This is useful for malformed or errornous transmitted frames. Adjusts the
+   138	 * bufferposition where the frame starts, since pn533_recv_frame expects a
+   139	 * well formed frame.
+   140	 */
+   141	static int pn532_uart_rx_is_frame(struct sk_buff *skb)
+   142	{
+   143		struct pn533_std_frame *std;
+   144		struct pn533_ext_frame *ext;
+   145		u16 frame_len;
+   146		int i;
+   147	
+   148		for (i = 0; i + PN533_STD_FRAME_ACK_SIZE <= skb->len; i++) {
+   149			std = (struct pn533_std_frame *)&skb->data[i];
+   150			/* search start code */
+   151			if (std->start_frame != cpu_to_be16(PN533_STD_FRAME_SOF))
+   152				continue;
+   153	
+   154			/* frame type */
+   155			switch (std->datalen) {
+   156			case PN533_FRAME_DATALEN_ACK:
+   157				if (std->datalen_checksum == 0xff) {
+   158					skb_pull(skb, i);
+   159					return 1;
+   160				}
+   161	
+   162				break;
+   163			case PN533_FRAME_DATALEN_ERROR:
+   164				if ((std->datalen_checksum == 0xff) &&
+   165						(skb->len >=
+   166						 PN533_STD_ERROR_FRAME_SIZE)) {
+   167					skb_pull(skb, i);
+   168					return 1;
+   169				}
+   170	
+   171				break;
+   172			case PN533_FRAME_DATALEN_EXTENDED:
+   173				ext = (struct pn533_ext_frame *)&skb->data[i];
+ > 174				frame_len = ext->datalen;
+   175				if (skb->len >= frame_len +
+   176						sizeof(struct pn533_ext_frame) +
+   177						2 /* CKS + Postamble */) {
+   178					skb_pull(skb, i);
+   179					return 1;
+   180				}
+   181	
+   182				break;
+   183			default: /* normal information frame */
+   184				frame_len = std->datalen;
+   185				if (skb->len >= frame_len +
+   186						sizeof(struct pn533_std_frame) +
+   187						2 /* CKS + Postamble */) {
+   188					skb_pull(skb, i);
+   189					return 1;
+   190				}
+   191	
+   192				break;
+   193			}
+   194		}
+   195	
+   196		return 0;
+   197	}
+   198	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
