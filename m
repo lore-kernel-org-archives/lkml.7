@@ -2,107 +2,98 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A6DC47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFD2CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A9420830
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DF121835
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:12:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djJHw5Zo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390592AbfJ1PMx (ORCPT
+        id S2390601AbfJ1PM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:12:53 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60193 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731098AbfJ1PMx (ORCPT
+        Mon, 28 Oct 2019 11:12:58 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36086 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727786AbfJ1PM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:12:53 -0400
-Received: from cust-east-parth2-46-193-72-114.wb.wifirst.net (46.193.72.114) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 83bf5fa78bdd09e1; Mon, 28 Oct 2019 16:12:50 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v7 01/12] acpi/numa: Establish a new drivers/acpi/numa/ directory
-Date:   Mon, 28 Oct 2019 16:12:49 +0100
-Message-ID: <1666116.19LcctqB44@kreacher>
-In-Reply-To: <CAPcyv4js1XqSe1kNeWob=ftscYFKQF+04PrKj7XDiEWUWvnMvQ@mail.gmail.com>
-References: <157118756627.2063440.9878062995925617180.stgit@dwillia2-desk3.amr.corp.intel.com> <CAJZ5v0j_-iSqiysZiW=J8Y5FCAjnPC7ZvevrLsYhngWr6mT6GQ@mail.gmail.com> <CAPcyv4js1XqSe1kNeWob=ftscYFKQF+04PrKj7XDiEWUWvnMvQ@mail.gmail.com>
+        Mon, 28 Oct 2019 11:12:57 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x14so4746584qtq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 08:12:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Rj/mLsST/N2k9IF2aWftGlir972zQLwYBEZ8L6s+jBw=;
+        b=djJHw5Zorjm802K3vKcF1InAi67JmjRlPUHVD9hYRwO7h9q/nv5/d7AQAzNzO+0D+9
+         vmvMgh2Nv1rP1nooWYv2dxFyTogwXdA6/zHiVgVDWZtRuq5k1VUG+fxDm63mXrvRue/s
+         smqNeNozUi2he4kDToeOIJRmXH+ujjk+hEuyFf0f9YN5jopLFz5nmS4Z0KDtGWbhq2rV
+         6pgz190FPmtTAxgAX/77Z7DrUy6WLpXEbeOF4uoGd7vn0sg3KMBwwnQkUZ0DcKiKor1P
+         xemNWU+yvI2UlKpKVmmWkRt4bPXAKIYKsUNpCgTTI61vwiv1c9tKoYZBRvZiLMCLKOHe
+         0F7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Rj/mLsST/N2k9IF2aWftGlir972zQLwYBEZ8L6s+jBw=;
+        b=gilVVZo49YfniY4MbsSJBEqJ8OJ9Z9XKCb4Y8lAEQ78A7MdyOGylVZVkH267e7ycKT
+         i9dROYQueb9zaR/kxYWrAiRMLEmnVIXoX8qekW8n5tJ2YWY7uhyDwWfaCaVQaEllYi9N
+         h5sfQ4CzebwwdC95qR2uA9rFe/FWqsN0MPVdPh0/U5oHMrHbWGlfqAvcQaumPJtDoNvn
+         thWU27fv6SGMXgiG5A6+ejYdxrRBghT+mLdAD+kCFLL/n+e/XSuO7w6gz0V3gaobWsDq
+         3FDrOSnTuGenNOmRYTUXLwuzFI+wrfxTbYmpFlo3068UshAi+4DzDCwS9GJOlijvaZNB
+         MVsA==
+X-Gm-Message-State: APjAAAUqVJzb/UqId1AIcz/3tpiJgZ+Ps0Lg9bRl5211n+KbAJVJIZdi
+        gO2248lvTe3qyMYam3MtC68=
+X-Google-Smtp-Source: APXvYqw0sFYMyUCcowoJNcFQcDPt5wU2NEuGQL2TVbB9BmHxILzhKeKegCSoeiA7g1FL9jz0k4Z/wA==
+X-Received: by 2002:ac8:7410:: with SMTP id p16mr18315726qtq.62.1572275576385;
+        Mon, 28 Oct 2019 08:12:56 -0700 (PDT)
+Received: from cristiane-Inspiron-5420 ([131.100.148.220])
+        by smtp.gmail.com with ESMTPSA id u23sm3608098qtq.88.2019.10.28.08.12.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 28 Oct 2019 08:12:55 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 12:12:51 -0300
+From:   Cristiane Naves <cristianenavescardoso09@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] Cleanup in rtl8712
+Message-ID: <cover.1572273794.git.cristianenavescardoso09@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, October 22, 2019 6:48:12 PM CET Dan Williams wrote:
-> On Tue, Oct 22, 2019 at 3:02 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Fri, Oct 18, 2019 at 11:25 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > >  On Wed, Oct 16, 2019 at 3:13 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >
-> > > > Currently hmat.c lives under an "hmat" directory which does not enhance
-> > > > the description of the file. The initial motivation for giving hmat.c
-> > > > its own directory was to delineate it as mm functionality in contrast to
-> > > > ACPI device driver functionality.
-> > > >
-> > > > As ACPI continues to play an increasing role in conveying
-> > > > memory location and performance topology information to the OS take the
-> > > > opportunity to co-locate these NUMA relevant tables in a combined
-> > > > directory.
-> > > >
-> > > > numa.c is renamed to srat.c and moved to drivers/acpi/numa/ along with
-> > > > hmat.c.
-> > > >
-> > > > Cc: Len Brown <lenb@kernel.org>
-> > > > Cc: Keith Busch <kbusch@kernel.org>
-> > > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > >
-> > > Please note that https://patchwork.kernel.org/patch/11078171/ is being
-> > > pushed to Linus (it is overdue anyway), so if it is pulled, there will
-> > > be a merge conflict with this patch.
-> > >
-> > > Respin maybe?
-> >
-> > Actually, would you mind it if I took this one into the ACPI tree right away?
-> >
-> > There's https://patchwork.kernel.org/patch/11198373/ queued up that,
-> > again, will clash with it.
-> >
-> > Also, there is the generic Initiator proximity domains series from
-> > Jonathan depending on it and I would like to move forward with that
-> > one if there are no objections.
-> 
-> Given Ard has acked all the EFI core and ARM changes can we proceed
-> with merging the EFI Specific Purpose Memory series through Rafael's
-> tree? It would need acks from x86 maintainers.
+Cleanup in rtl8712
 
-In the face of the lack of responses here, I think I will apply this patch
-alone and expose a stable branch containing it in case somebody else wants
-to pull it in.
+Changes in v2:
+ - Arranging conflict between author name and signed-off-by.
+ - Remove unnecessary parentheses.
+ - Change the driver name to rtl8712
 
-Thanks!
+Changes in v3:
+ - Change alignment of eth_type
+ - Change alignment of SN_EQUAL
+ - Remove commit of unneeded parentheses.
 
+Cristiane Naves (2):
+  staging: rtl8712: Fix Alignment of open parenthesis
+  staging: rtl8712: Remove lines before a close brace
 
+ drivers/staging/rtl8712/rtl8712_recv.c | 38 ++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
+-- 
+2.7.4
 
