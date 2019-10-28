@@ -2,70 +2,112 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282D3CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB075CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17B221479
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A91F218BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:48:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PLniqjIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732634AbfJ1VsC (ORCPT
+        id S1732748AbfJ1VsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:48:02 -0400
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:22441 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730592AbfJ1VsC (ORCPT
+        Mon, 28 Oct 2019 17:48:10 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13859 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730592AbfJ1VsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:48:02 -0400
-Received: from belgarion ([90.55.204.252])
-        by mwinf5d17 with ME
-        id K9o0210015TFNlm039o0FH; Mon, 28 Oct 2019 22:48:00 +0100
-X-ME-Helo: belgarion
-X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
-X-ME-Date: Mon, 28 Oct 2019 22:48:00 +0100
-X-ME-IP: 90.55.204.252
-From:   Robert Jarzmik <robert.jarzmik@free.fr>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH 31/46] ASoC: pxa: ac97: use normal MMIO accessors
-References: <20191018154052.1276506-1-arnd@arndb.de>
-        <20191018154201.1276638-31-arnd@arndb.de>
-X-URL:  http://belgarath.falguerolles.org/
-Date:   Mon, 28 Oct 2019 22:47:59 +0100
-In-Reply-To: <20191018154201.1276638-31-arnd@arndb.de> (Arnd Bergmann's
-        message of "Fri, 18 Oct 2019 17:41:46 +0200")
-Message-ID: <87lft4k0ds.fsf@belgarion.home>
-User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
+        Mon, 28 Oct 2019 17:48:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5db7621e0000>; Mon, 28 Oct 2019 14:48:14 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 28 Oct 2019 14:48:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 28 Oct 2019 14:48:09 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
+ 2019 21:48:09 +0000
+Received: from [10.26.11.236] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
+ 2019 21:48:06 +0000
+Subject: Re: [PATCH 5.3 000/197] 5.3.8-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191027203351.684916567@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <ec238058-1eaf-a33f-cbbf-fd49e1ddaa82@nvidia.com>
+Date:   Mon, 28 Oct 2019 21:48:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572299294; bh=mTTcSVLUyOS1hjod0gJhHeIejk2l8cyWa7r8Zx3f7Z8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PLniqjIKvJXZBKLVt21jBjooxKlKn2wPXwq0fqRhKYzzSSNOgWGnAuSusZZC/tz+O
+         +6U9zPGeJxiQZymRC7xt3mASYiVBSYFOT5v0qxY0JQBeuJBsiUyECpSOEw2XwAsxzl
+         ATOFHwVHFmNEq42iv4kGwwUr6awRBolKzTKlQqFraexvA9gaheyLa1qntKiS3c4wKE
+         FsgTrem1KwBKyAJkBbYj3URUkGC0M6lKwbHC0t3OAfmQ9oOViATF5G+Pjd+kKvuytQ
+         IxI4BR7WomyKx8/K3tTPKchdRE/QQZRADJD4WexD7SCqfDBDLNV1AKAD263PKr6Mly
+         fRz9hrLx94n8Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
 
-> To avoid dereferencing hardwired constant pointers from a global header
-> file, change the driver to use devm_platform_ioremap_resource for getting
-> an __iomem pointer, and then using readl/writel on that.
->
-> Each pointer dereference gets changed by a search&replace, which leads
-> to a few overlong lines, but seems less risky than trying to clean up
-> the code at the same time.
->
-> Cc: alsa-devel@alsa-project.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+On 27/10/2019 20:58, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.8 release.
+> There are 197 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.8-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Cheers.
+All tests are passing for Tegra ...
 
---
-Robert
+Test results for stable-v5.3:
+    12 builds:	12 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    38 tests:	38 pass, 0 fail
+
+Linux version:	5.3.8-rc1-g740177dc0d52
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
