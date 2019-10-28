@@ -2,154 +2,129 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB87BCA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFF7CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC9820717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A14DD217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itcaaYE+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aU1Ig+FC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391066AbfJ1QfF (ORCPT
+        id S2391077AbfJ1QfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:35:05 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38294 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729420AbfJ1QfF (ORCPT
+        Mon, 28 Oct 2019 12:35:16 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41810 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729420AbfJ1QfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:35:05 -0400
-Received: by mail-qk1-f194.google.com with SMTP id e2so509875qkn.5;
-        Mon, 28 Oct 2019 09:35:04 -0700 (PDT)
+        Mon, 28 Oct 2019 12:35:16 -0400
+Received: by mail-il1-f193.google.com with SMTP id z10so8728346ilo.8
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 09:35:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=V+aaQaPqwGlljXNVka1r+JhSy4Zf+a+9Gc7qygXgWUc=;
-        b=itcaaYE+6GYl7pYCTNs783iHbnIXCBRhBT5HZoTDKGLtfzAmiJNHHZsE4VFqtDZx7T
-         UqJ5M23i3aReXLRLW3WGspIaS+/ocHq9m7583tJgeZnU7eY/Qh125Nr/w8wiCbtU67Cw
-         dWYE/5gZRtPf7EvpL/YdTqqvIYg3+PCr/Tkyonte6symJr172CQ6zldSCfZatb4WPSy2
-         C7NcLPS1mvVB61RuZV9BzUj5JjlDNhH3qaXE1luUZu8LXHSWsInDhnv3RGQZCX5ZfCRj
-         GQiVUxdKOilZEoi7zjvyQyztqEHWtj9KrpvsHkGklyjP9le1t3HkthmY7aiVJMT41Wuh
-         0n+Q==
+         :cc;
+        bh=21j/dEL0woCR7rVyFBJA5jrlm9GOTcbrkftyZXegyKo=;
+        b=aU1Ig+FCiz7v2IaiVq8NhUuGtv0bCBMp3YsGpTDegyuWP+LJPtteTZlzwPwajX8jCv
+         NRz4cASxes89dYC6sB0CbiJxU/1CaUWgP7M34Cky4H6G6hxoEdT4OV4YIrB4r4FgHBmg
+         5mQ15GrEag5lIB+QOYnvkJWdLW053YG6Ivi4+z853DDikUjFGGKLm4OPisECfiH+my7Z
+         gN2OD5tu8Hd5h8meTBFNmA2I3Ykf7ci8D8kC6KC95b/1meOlz3l8pWGmww+XIK+vVvrQ
+         UybrDCU6sLgBPJ485nRSyr3ZVTP69vtt89S4QiUmL3yOSOe/2T2//dKXaeedoG5hjdPq
+         nHvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=V+aaQaPqwGlljXNVka1r+JhSy4Zf+a+9Gc7qygXgWUc=;
-        b=ASMMI/+Srf43jWZCru+Cp3fSQEduxmVe6h/KJfsIoFPYFiMXY27W5BsNlMa7Sa4+sk
-         8dkJEHQdqNHrXnLWu7XDoOdyvVg5jviiMpafsXrEc2hb0FJ6caGY9T95vMEiSRfEdITc
-         2t4wjBRVbfjovqmwLelQEnKQpGuD/vGVb9L/OUi8SlSDEExYCgRO2VFj25cED1zUX36d
-         G2y+qu5Q00V6RmizSda9o0/ir+Z6B5KggheoxY2Rbtr1IR9d1subgBO2ZB5DCDdjCOMS
-         fx0KpXbgdbPY8zxhofudy7t2i5eVVi7G6d4tM8g75JvyYhtqs+ynyQNSg0zsPrYagi5v
-         eonA==
-X-Gm-Message-State: APjAAAWxrDxssT/lc/hfLcqHVj1opDeWVqrvJEBtf3ZIlk24x4KCcURw
-        kEVY2sGj8CSawsQt7HayUXIbmpBbFkXld8KElPk=
-X-Google-Smtp-Source: APXvYqz0dPnDdjILrb5YtPndmQYL57MVOTiyyCF/W1X8UTqB8VyxmZorl20aGamjoPhIGXNrrvpfAqtAA09M6XH9vJA=
-X-Received: by 2002:a37:8f83:: with SMTP id r125mr17141253qkd.36.1572280503386;
- Mon, 28 Oct 2019 09:35:03 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=21j/dEL0woCR7rVyFBJA5jrlm9GOTcbrkftyZXegyKo=;
+        b=GNyjLLeIXD8SV9824wfOmp0xxbx6olxUaX5NNZxk8Fy3vSNac3lFM+Q95cQ5TUeifJ
+         95ZYg9A62rCesawPNdYGMw5iFTppCmQkYl41ZwuCE6OpdhzibgXhPuOUJJYvJNOuv4Ab
+         ErrdAnIFk8nf3fVNIwt7SAnVti9BD2ze9jAhJwBpXakfxxGoBSynRwGKAHGbnjMDuX0c
+         67eA2pzqVqpvdClc7KOiu6WFl/88Xg9H12PYkcj9XnZ9RCvkUZKZLcAnH5rEEXEIn0im
+         bBGHGT0DYuqCwQ+fa4ZtPv9ZFMrW4+MJDbsP4mrmDFrrfrkpHyLHQyl+t2qPH21bNvLG
+         c68g==
+X-Gm-Message-State: APjAAAWEYutuDsrF0WXTBY+6pue1m/7QqDviCrvOhyrwwOn6/Ax5+KgD
+        fz3zUNP2RZ6ZESfKtcsvi0XQ7AcfhNLFExDE/Bg=
+X-Google-Smtp-Source: APXvYqxZHTQgUs3vZ4EyKxk1J2VBxbW1V/6qsk4AKLh6jW/960J5msDNOgE9rFT9PBlWL6y2v0qTQSUQ5QvAY+3DS7Q=
+X-Received: by 2002:a92:d94a:: with SMTP id l10mr17910669ilq.227.1572280515345;
+ Mon, 28 Oct 2019 09:35:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191027052042.GK29418@shao2-debian>
-In-Reply-To: <20191027052042.GK29418@shao2-debian>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 28 Oct 2019 09:34:52 -0700
-Message-ID: <CAEf4BzabWfxxCwxLUbcAyTSZuc-qMd2ROBvVo8kgCg1cUx7r7w@mail.gmail.com>
-Subject: Re: [libbpf] dd4436bb83: kernel_selftests.bpf.test_section_names.fail
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@lists.01.org,
-        bpf <bpf@vger.kernel.org>
+References: <20191027215330.12729-1-navid.emamdoost@gmail.com> <fb4fa7f3-fefb-e2d0-da4d-842396a7c251@linux.intel.com>
+In-Reply-To: <fb4fa7f3-fefb-e2d0-da4d-842396a7c251@linux.intel.com>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Mon, 28 Oct 2019 11:35:04 -0500
+Message-ID: <CAEkB2ETrEu6SxBC+OfPNe_DqNn-=4c9p=1d9Cz5XR3NbbcD2OQ@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: SOF: ipc: Fix memory leak in sof_set_get_large_ctrl_data
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Slawomir Blauciak <slawomir.blauciak@linux.intel.com>,
+        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 10:28 PM kernel test robot
-<rong.a.chen@intel.com> wrote:
->
-> FYI, we noticed the following commit (built with gcc-7):
->
-> commit: dd4436bb838338cfda253d7f012610a73e4078fd ("libbpf: Teach bpf_obje=
-ct__open to guess program types")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
->
-> in testcase: kernel_selftests
-> with following parameters:
->
->         group: kselftests-00
->
-> test-description: The kernel contains a set of "self tests" under the too=
-ls/testing/selftests/ directory. These are intended to be small unit tests =
-to exercise individual code paths in the kernel.
-> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+On Sun, Oct 27, 2019 at 9:15 PM Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> wrote:
 >
 >
-> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -=
-m 8G
 >
-> caused below changes (please refer to attached dmesg/kmsg for entire log/=
-backtrace):
+> On 10/27/19 4:53 PM, Navid Emamdoost wrote:
+> > In the implementation of sof_set_get_large_ctrl_data() there is a memory
+> > leak in case an error. Release partdata if sof_get_ctrl_copy_params()
+> > fails.
+> >
+> > Fixes: 54d198d5019d ("ASoC: SOF: Propagate sof_get_ctrl_copy_params() error properly")
+> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 >
+> Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 >
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> May I ask which tool you used to find those issues, looks like we have a
+> gap here?
+
+We are developing a research tool to find such cases. Not sure what
+gap you are referring to, but we statically track the allocation and
+look for an appropriate release/assignment of the pointer.
 
 
-This was already fixed in 9bc6384b3644 ("selftests/bpf: Move
-test_section_names into test_progs and fix it"), does this robot
-automatically pick fixes like this and resolves the issue?
+>
+> > ---
+> >   sound/soc/sof/ipc.c | 4 +++-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/sound/soc/sof/ipc.c b/sound/soc/sof/ipc.c
+> > index b2f359d2f7e5..086eeeab8679 100644
+> > --- a/sound/soc/sof/ipc.c
+> > +++ b/sound/soc/sof/ipc.c
+> > @@ -572,8 +572,10 @@ static int sof_set_get_large_ctrl_data(struct snd_sof_dev *sdev,
+> >       else
+> >               err = sof_get_ctrl_copy_params(cdata->type, partdata, cdata,
+> >                                              sparams);
+> > -     if (err < 0)
+> > +     if (err < 0) {
+> > +             kfree(partdata);
+> >               return err;
+> > +     }
+> >
+> >       msg_bytes = sparams->msg_bytes;
+> >       pl_size = sparams->pl_size;
+> >
 
->
->
-> # selftests: bpf: test_section_names
-> # libbpf: failed to guess program type based on ELF section name 'InvAliD=
-'
-> # libbpf: supported section(type) names are: socket kprobe/ uprobe/ kretp=
-robe/ uretprobe/ classifier action tracepoint/ tp/ raw_tracepoint/ raw_tp/ =
-tp_btf/ xdp perf_event lwt_in lwt_out lwt_xmit lwt_seg6local cgroup_skb/ing=
-ress cgroup_skb/egress cgroup/skb cgroup/sock cgroup/post_bind4 cgroup/post=
-_bind6 cgroup/dev sockops sk_skb/stream_parser sk_skb/stream_verdict sk_skb=
- sk_msg lirc_mode2 flow_dissector cgroup/bind4 cgroup/bind6 cgroup/connect4=
- cgroup/connect6 cgroup/sendmsg4 cgroup/sendmsg6 cgroup/recvmsg4 cgroup/rec=
-vmsg6 cgroup/sysctl cgroup/getsockopt cgroup/setsockopt
-> # test_section_names: prog: unexpected rc=3D-3 for InvAliD
-> # libbpf: failed to guess program type based on ELF section name 'cgroup'
-> # libbpf: supported section(type) names are: socket kprobe/ uprobe/ kretp=
-robe/ uretprobe/ classifier action tracepoint/ tp/ raw_tracepoint/ raw_tp/ =
-tp_btf/ xdp perf_event lwt_in lwt_out lwt_xmit lwt_seg6local cgroup_skb/ing=
-ress cgroup_skb/egress cgroup/skb cgroup/sock cgroup/post_bind4 cgroup/post=
-_bind6 cgroup/dev sockops sk_skb/stream_parser sk_skb/stream_verdict sk_skb=
- sk_msg lirc_mode2 flow_dissector cgroup/bind4 cgroup/bind6 cgroup/connect4=
- cgroup/connect6 cgroup/sendmsg4 cgroup/sendmsg6 cgroup/recvmsg4 cgroup/rec=
-vmsg6 cgroup/sysctl cgroup/getsockopt cgroup/setsockopt
-> # test_section_names: prog: unexpected rc=3D-3 for cgroup
-> # Summary: 38 PASSED, 2 FAILED
-> not ok 18 selftests: bpf: test_section_names
->
->
-> To reproduce:
->
->         # build kernel
->         cd linux
->         cp config-5.4.0-rc1-00595-gdd4436bb83833 .config
->         make HOSTCC=3Dgcc-7 CC=3Dgcc-7 ARCH=3Dx86_64 olddefconfig prepare=
- modules_prepare bzImage
->
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp qemu -k <bzImage> job-script # job-script is attached in =
-this email
->
->
->
-> Thanks,
-> Rong Chen
->
+
+
+--
+Navid.
