@@ -2,139 +2,82 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B05AC47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56648CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE799214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572264096;
-	bh=7l51Tf/Rpvd4APPr9YhiQKI2qTfKJAwzghAiuVldklc=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=2d4eRFEXdc4wwNkW9wHFeCcA0MlBJml8IrvGaxPCBeBdAqyH/9Tv2VabSVYsNAqtb
-	 ICVdv0JEAbdnrr3pScRvGLONNMlZzDSOTXIP1jkyRo0pMVxMVXujZXgBFNFXcn8xNI
-	 +o/JMyJkZXvSGNNIjnMHf1rKIMKSEo99DOzWO++M=
+	by mail.kernel.org (Postfix) with ESMTP id 341B12086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388701AbfJ1MBf (ORCPT
+        id S2388775AbfJ1MBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:01:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbfJ1MBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:01:34 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E85F2086D;
-        Mon, 28 Oct 2019 12:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572264093;
-        bh=7l51Tf/Rpvd4APPr9YhiQKI2qTfKJAwzghAiuVldklc=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=dVBGlTgnyQ+3dFD20QojrvGrnCVQYwCiC7EeyMVFHS4DiX57IZyYVUS4pquoVuEc5
-         UUEiLY0XodyjpKfJRjcwQPSO2yDbUdtuJ4iip06KB+n174g7vPhR3FEVh7Fap3bjOu
-         8lLesUr0A0gmHnaA4SOzFlahNoa0c63VYqhKpJSI=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 28 Oct 2019 08:01:49 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5210 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726466AbfJ1MBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 08:01:48 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4D7F0CFBA305898AA362;
+        Mon, 28 Oct 2019 20:01:46 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 28 Oct 2019 20:01:37 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     YueHaibing <yuehaibing@huawei.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH net-next] ionic: Remove set but not used variable 'sg_desc'
+Date:   Mon, 28 Oct 2019 12:01:21 +0000
+Message-ID: <20191028120121.20743-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191021022516.gecunkpahu7okvm5@vireshk-i7>
-References: <2700308706c0d46ca06eeb973079a1f18bf553dd.1571390916.git.viresh.kumar@linaro.org> <20191018211214.444D32089C@mail.kernel.org> <20191021022516.gecunkpahu7okvm5@vireshk-i7>
-Cc:     Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>,
-        linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        linux-kernel@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] opp: Reinitialize the list_kref before adding the static OPPs again
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 28 Oct 2019 05:01:32 -0700
-Message-Id: <20191028120133.3E85F2086D@mail.kernel.org>
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Viresh Kumar (2019-10-20 19:25:16)
-> On 18-10-19, 14:12, Stephen Boyd wrote:
-> > Quoting Viresh Kumar (2019-10-18 02:28:41)
-> > > The list_kref reaches a count of 0 when all the static OPPs are remov=
-ed,
-> > > for example when dev_pm_opp_of_cpumask_remove_table() is called, thou=
-gh
-> > > the actual OPP table may not get freed as it may still be referenced =
-by
-> > > other parts of the kernel, like from a call to
-> > > dev_pm_opp_set_supported_hw(). And if we call
-> > > dev_pm_opp_of_cpumask_add_table() again at this point, we must
-> > > reinitialize the list_kref otherwise the kernel will hit a WARN() in
-> > > kref infrastructure for incrementing a kref with value 0.
-> > >=20
-> > > Fixes: 11e1a1648298 ("opp: Don't decrement uninitialized list_kref")
-> > > Reported-by: Dmitry Osipenko <digetx@gmail.com>
-> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > > ---
-> > >  drivers/opp/of.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > >=20
-> > > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> > > index 6dc41faf74b5..1cbb58240b80 100644
-> > > --- a/drivers/opp/of.c
-> > > +++ b/drivers/opp/of.c
-> > > @@ -663,6 +663,13 @@ static int _of_add_opp_table_v2(struct device *d=
-ev, struct opp_table *opp_table)
-> > >                 return 0;
-> > >         }
-> > > =20
-> > > +       /*
-> > > +        * Re-initialize list_kref every time we add static OPPs to t=
-he OPP
-> > > +        * table as the reference count may be 0 after the last tie s=
-tatic OPPs
-> >=20
-> > s/tie/time/
-> >=20
-> > > +        * were removed.
-> > > +        */
-> > > +       kref_init(&opp_table->list_kref);
-> >=20
-> > It seems racy.
->=20
-> I am not sure if I see a race here, but maybe I am missing something.
-> Care to explain ?
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Some static OPP is removed at the same time that this function is
-called?
+drivers/net/ethernet/pensando/ionic/ionic_txrx.c: In function 'ionic_rx_empty':
+drivers/net/ethernet/pensando/ionic/ionic_txrx.c:405:28: warning:
+ variable 'sg_desc' set but not used [-Wunused-but-set-variable]
 
->=20
-> > Why are we doing this vs. making an entirely new and
-> > different OPP structure? Or why is the count reaching 0 when something
-> > is obviously still referencing it?
->=20
-> The kref for the opp table is opp_table->kref and the one here is
-> different. This is list_kref which is used for freeing OPPs added
-> statically from the DT. The static OPPs get added to the OPP table
-> when one calls dev_pm_opp_of_cpumask_add_table() and must be removed
-> on a call to dev_pm_opp_of_cpumask_remove_table(). The opp table
-> structure may not get freed at this moment though as it is still
-> referenced by the caller of dev_pm_opp_set_supported_hw().
->=20
-> And now when we try to add the static OPPs again (re-insertion of
-> cpufreq module), we need to reinitialize the list_kref again as its
-> count reached 0 earlier and the resources (static OPPs) were freed.
->=20
+It is never used, so can be removed.
 
-Right. I don't understand why the count reaches 0 if we can still get a
-pointer to something. I guess we've got this kref thing that has a
-lifetime beyond the life of what it's tracking, which is weird. Usually
-the kref is embedded inside the pointer that is returned by the "get"
-call, but here it's outside it and used to track when we should free
-static OPPs. Why are we removing static OPPs? Shouldn't they just stick
-around forever until the device is deleted vs. populated over and over
-again?
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/ethernet/pensando/ionic/ionic_txrx.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+index 0aeac3157160..97e79949b359 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+@@ -402,7 +402,6 @@ static void ionic_rx_fill_cb(void *arg)
+ 
+ void ionic_rx_empty(struct ionic_queue *q)
+ {
+-	struct ionic_rxq_sg_desc *sg_desc;
+ 	struct ionic_desc_info *cur;
+ 	struct ionic_rxq_desc *desc;
+ 	unsigned int i;
+@@ -412,7 +411,6 @@ void ionic_rx_empty(struct ionic_queue *q)
+ 		desc->addr = 0;
+ 		desc->len = 0;
+ 
+-		sg_desc = cur->sg_desc;
+ 		for (i = 0; i < cur->npages; i++) {
+ 			if (likely(cur->pages[i].page)) {
+ 				ionic_rx_page_free(q, cur->pages[i].page,
+
+
 
