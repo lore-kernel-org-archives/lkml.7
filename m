@@ -2,72 +2,56 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD55ECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A6CCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88AC920830
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD3A208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388404AbfJ1UxN (ORCPT
+        id S2388430AbfJ1UxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:53:13 -0400
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:26952 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJ1UxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:53:13 -0400
-Received: from belgarion ([90.55.204.252])
-        by mwinf5d17 with ME
-        id K8tA2100f5TFNlm038tB4x; Mon, 28 Oct 2019 21:53:11 +0100
-X-ME-Helo: belgarion
-X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
-X-ME-Date: Mon, 28 Oct 2019 21:53:11 +0100
-X-ME-IP: 90.55.204.252
-From:   Robert Jarzmik <robert.jarzmik@free.fr>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 17/46] ARM: pxa: poodle: use platform data for poodle asoc driver
-References: <20191018154052.1276506-1-arnd@arndb.de>
-        <20191018154201.1276638-17-arnd@arndb.de>
-X-URL:  http://belgarath.falguerolles.org/
-Date:   Mon, 28 Oct 2019 21:53:10 +0100
-In-Reply-To: <20191018154201.1276638-17-arnd@arndb.de> (Arnd Bergmann's
-        message of "Fri, 18 Oct 2019 17:41:32 +0200")
-Message-ID: <875zk8mw21.fsf@belgarion.home>
-User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
+        Mon, 28 Oct 2019 16:53:18 -0400
+Received: from mga17.intel.com ([192.55.52.151]:43583 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfJ1UxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 16:53:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 13:53:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
+   d="scan'208";a="205279169"
+Received: from shrehore-mobl1.ti.intel.com (HELO localhost) ([10.251.82.5])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Oct 2019 13:53:14 -0700
+Date:   Mon, 28 Oct 2019 22:53:13 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jerry Snitselaar <jsnitsel@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v2] tpm: Add major_version sysfs file
+Message-ID: <20191028205313.GH8279@linux.intel.com>
+References: <20191025193103.30226-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025193103.30226-1-jsnitsel@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+On Fri, Oct 25, 2019 at 12:31:03PM -0700, Jerry Snitselaar wrote:
+> +	return sprintf(buf, "%s\n", chip->flags & TPM_CHIP_FLAG_TPM2
+> +		       ? "2.0" : "1.2");
 
-> The poodle audio driver shows its age by using a custom
-> gpio api for the "locomo" support chip.
->
-> In a perfect world, this would get converted to use gpiolib
-> and a gpio lookup table.
->
-> As the world is not perfect, just pass all the required data
-> in a custom platform_data structure. to avoid the globally
-> visible mach/poodle.h header.
->
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: alsa-devel@alsa-project.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+This is not right. Should be either "1" or "2".
 
-Cheers.
-
---
-Robert
+/Jarkko
