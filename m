@@ -2,247 +2,106 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB40CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B6DCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F9D21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E90214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:49:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/IpsRc5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbfJ1Wrx (ORCPT
+        id S1730022AbfJ1WtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 18:47:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:49738 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729767AbfJ1Wrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 18:47:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 15:47:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
-   d="scan'208";a="374362478"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 28 Oct 2019 15:47:51 -0700
-Date:   Mon, 28 Oct 2019 15:52:15 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v7 03/11] iommu/vt-d: Add custom allocator for IOASID
-Message-ID: <20191028155215.2bee0297@jacob-builder>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC33@SHSMSX104.ccr.corp.intel.com>
-References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1571946904-86776-4-git-send-email-jacob.jun.pan@linux.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC33@SHSMSX104.ccr.corp.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 28 Oct 2019 18:49:19 -0400
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:38416 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJ1WtT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 18:49:19 -0400
+Received: by mail-wr1-f49.google.com with SMTP id v9so11592944wrq.5;
+        Mon, 28 Oct 2019 15:49:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=A2jEsBOs5Fgq1k1SUjS53cvLXGYRrdoo13cMo5AIHyk=;
+        b=i/IpsRc5S8qtvd4Hd2Jajl2muQJLkQ9Z8YMjvk6JZSa68F2SqLABksVza3TMROQk1l
+         /4QBiNY1iKt19N2BdTTsYSNeafJcDTRO2E4QtC+5aruM0hW4mtc5ftJT2S5L8GFlPVO6
+         YKMW91bU1FKH8m7wjlo0qMRlZEa5yscXWnOT5TtkxhV6uvyZw6int+SGf31E8CCgtgK/
+         +PnCW1FPhrNJnrlSQzaig+42FGFhZKigWWA1U5aJGoTzmzNKFNpQRyc3dJn4Eh6uVJle
+         kVA2eUWPyplVvIfzyavyLQm4lpmFVVkZvdSAmIfbVaktYI6/5+jFr0jbVFruWSb1RxEh
+         +Lzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A2jEsBOs5Fgq1k1SUjS53cvLXGYRrdoo13cMo5AIHyk=;
+        b=DOrr8kb/MjohnRRbaqHcEszxolytGIe8Dgei8oQL1LUrA3Nff//Mxuf5qNwQxA0nBS
+         xWxojUwDCOKhrHjhWThGDZTEr/kfdW8XkZGc/5YTIk5nWlSq0gyMC6zurDNAwoabSCXC
+         U3l27oaFPvOs65VVKUg8CcEx7mvB9JTDFQ4NQTSFEhbfFJyXYrBHPyj/xaA21wELXaz+
+         QMIa1AsxYTtH20yqWcBcPQ+12sCEP8ZnKHJZKXEl+ISnczRuO9PPgwD1K1rpFQ/9UAJk
+         0+rqcdSAS847FnL6IxOra+VK9IsNCRrf1HaOWO7BWSLspaj4yPeekfr6KS0J8kUw/o/x
+         ZxTA==
+X-Gm-Message-State: APjAAAUld68BVZGsIO9kwDqZGaTytTsHKb6Y7shLIUpugWCzg05ViHpe
+        x3Ky8nPzqOFpaLpa5JTXKaIA5eXI
+X-Google-Smtp-Source: APXvYqxkisLhWG9uNXHLiB27lzGZOriN/QcZjrQazkEnS+bedp3Okzy6CzZwUI/6m/n3bBjwuOviOg==
+X-Received: by 2002:adf:f44e:: with SMTP id f14mr16228477wrp.56.1572302957156;
+        Mon, 28 Oct 2019 15:49:17 -0700 (PDT)
+Received: from desk.local ([2a02:a03f:40ac:ce00:6dcd:e18f:2cd1:7611])
+        by smtp.gmail.com with ESMTPSA id u7sm14094078wre.59.2019.10.28.15.49.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 15:49:16 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 23:49:15 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Dan Carpenter <dan.carpenter@oracle.co>,
+        linux-sparse@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: detecting misuse of of_get_property
+Message-ID: <20191028224914.enpqjkcvbxyeexnl@desk.local>
+References: <ec277c12-c608-6326-7723-be8cab4f524a@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec277c12-c608-6326-7723-be8cab4f524a@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 25 Oct 2019 06:31:04 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+On Mon, Oct 28, 2019 at 08:32:42PM +0100, Rasmus Villemoes wrote:
+> Hi,
+> 
+> I just spent some time trying to convert some so far PPC-only drivers to
+> be more generic. One of the things I had to do was convert stuff like
+> 
+>   u32 *val = of_get_property(np, "bla", NULL);
+>   do_stuff_with(*val);
+> 
+> with
+> 
+>   of_property_read_u32(np, "bla", &val);
+>   do_stuff_with(val);
+> 
+> (error checking omitted for simplicity). The problem is that
+> of_get_property() just returns void*. When the property is just a
+> string, there's no problem interpreting that as a char*. But when the
+> property is a number of array of numbers, I'd like some way to flag
+> casting it to u32* as an error - if you cast it to a (pointer to integer
+> type wider than char), it must be to a __be32*. Is there some way
+> sparse/smatch could help find such cases?
 
-> > From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
-> > Sent: Friday, October 25, 2019 3:55 AM
-> > 
-> > When VT-d driver runs in the guest, PASID allocation must be
-> > performed via virtual command interface. This patch registers a
-> > custom IOASID allocator which takes precedence over the default
-> > XArray based allocator. The resulting IOASID allocation will always
-> > come from the host. This ensures that PASID namespace is system-
-> > wide.
-> > 
-> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/Kconfig       |  1 +
-> >  drivers/iommu/intel-iommu.c | 67
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/intel-iommu.h |  2 ++
-> >  3 files changed, 70 insertions(+)
-> > 
-> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > index fd50ddffffbf..961fe5795a90 100644
-> > --- a/drivers/iommu/Kconfig
-> > +++ b/drivers/iommu/Kconfig
-> > @@ -211,6 +211,7 @@ config INTEL_IOMMU_SVM
-> >  	bool "Support for Shared Virtual Memory with Intel IOMMU"
-> >  	depends on INTEL_IOMMU && X86
-> >  	select PCI_PASID
-> > +	select IOASID
-> >  	select MMU_NOTIFIER
-> >  	help
-> >  	  Shared Virtual Memory (SVM) provides a facility for
-> > devices diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 3f974919d3bd..ced1d89ef977
-> > 100644 --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -1706,6 +1706,9 @@ static void free_dmar_iommu(struct intel_iommu
-> > *iommu)
-> >  		if (ecap_prs(iommu->ecap))
-> >  			intel_svm_finish_prq(iommu);
-> >  	}
-> > +	if (ecap_vcs(iommu->ecap) && vccap_pasid(iommu->vccap))
-> > +
-> > ioasid_unregister_allocator(&iommu->pasid_allocator); +
-> >  #endif
-> >  }
-> > 
-> > @@ -4910,6 +4913,44 @@ static int __init
-> > probe_acpi_namespace_devices(void)
-> >  	return 0;
-> >  }
-> > 
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max,
-> > void *data) +{
-> > +	struct intel_iommu *iommu = data;
-> > +	ioasid_t ioasid;
-> > +
-> > +	/*
-> > +	 * VT-d virtual command interface always uses the full 20
-> > bit
-> > +	 * PASID range. Host can partition guest PASID range based
-> > on
-> > +	 * policies but it is out of guest's control.
-> > +	 */
-> > +	if (min < PASID_MIN || max > intel_pasid_max_id)
-> > +		return INVALID_IOASID;
-> > +
-> > +	if (vcmd_alloc_pasid(iommu, &ioasid))
-> > +		return INVALID_IOASID;
-> > +
-> > +	return ioasid;
-> > +}
-> > +
-> > +static void intel_ioasid_free(ioasid_t ioasid, void *data)
-> > +{
-> > +	struct intel_iommu *iommu = data;
-> > +
-> > +	if (!iommu)
-> > +		return;
-> > +	/*
-> > +	 * Sanity check the ioasid owner is done at upper layer,
-> > e.g. VFIO
-> > +	 * We can only free the PASID when all the devices are
-> > unbond.  
-> 
-> unbond -> unbound
-> 
-will fix
-> > +	 */
-> > +	if (ioasid_find(NULL, ioasid, NULL)) {
-> > +		pr_alert("Cannot free active IOASID %d\n", ioasid);
-> > +		return;
-> > +	}
-> > +	vcmd_free_pasid(iommu, ioasid);
-> > +}
-> > +#endif
-> > +
-> >  int __init intel_iommu_init(void)
-> >  {
-> >  	int ret = -ENODEV;
-> > @@ -5020,6 +5061,32 @@ int __init intel_iommu_init(void)
-> >  				       "%s", iommu->name);
-> >  		iommu_device_set_ops(&iommu->iommu,
-> > &intel_iommu_ops);
-> >  		iommu_device_register(&iommu->iommu);
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +		if (ecap_vcs(iommu->ecap) &&
-> > vccap_pasid(iommu->vccap)) {
-> > +			pr_info("Register custom PASID
-> > allocator\n");
-> > +			/*
-> > +			 * Register a custom ASID allocator if we
-> > are running
-> > +			 * in a guest, the purpose is to have a
-> > system wide PASID
-> > +			 * namespace among all PASID users.
-> > +			 * There can be multiple vIOMMUs in each
-> > guest but only
-> > +			 * one allocator is active. All vIOMMU
-> > allocators will
-> > +			 * eventually be calling the same host
-> > allocator.
-> > +			 */
-> > +			iommu->pasid_allocator.alloc =
-> > intel_ioasid_alloc;
-> > +			iommu->pasid_allocator.free =
-> > intel_ioasid_free;
-> > +			iommu->pasid_allocator.pdata = (void
-> > *)iommu;
-> > +			ret = ioasid_register_allocator(&iommu-  
-> > >pasid_allocator);  
-> > +			if (ret) {
-> > +				pr_warn("Custom PASID allocator
-> > registeration failed\n");  
-> 
-> registration
-will fix
+If I understand you correctly, you would need a kind of 'soft'
+bitwise pointer?
+I guess it shouldn't be too hard to add a new flag which would
+allow cast of bitwise pointers to pointers to char/void (see
+at end of evaluate.c:evaluate_cast()).
 
-Thanks!
-> 
-> > +				/*
-> > +				 * Disable scalable mode on this
-> > IOMMU if there
-> > +				 * is no custom allocator. Mixing
-> > SM capable vIOMMU
-> > +				 * and non-SM vIOMMU are not
-> > supported.
-> > +				 */
-> > +				intel_iommu_sm = 0;
-> > +			}
-> > +		}
-> > +#endif
-> >  	}
-> > 
-> >  	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
-> > diff --git a/include/linux/intel-iommu.h
-> > b/include/linux/intel-iommu.h index 1d4b8dcdc5d8..c624733cb2e6
-> > 100644 --- a/include/linux/intel-iommu.h
-> > +++ b/include/linux/intel-iommu.h
-> > @@ -19,6 +19,7 @@
-> >  #include <linux/iommu.h>
-> >  #include <linux/io-64-nonatomic-lo-hi.h>
-> >  #include <linux/dmar.h>
-> > +#include <linux/ioasid.h>
-> > 
-> >  #include <asm/cacheflush.h>
-> >  #include <asm/iommu.h>
-> > @@ -546,6 +547,7 @@ struct intel_iommu {
-> >  #ifdef CONFIG_INTEL_IOMMU_SVM
-> >  	struct page_req_dsc *prq;
-> >  	unsigned char prq_name[16];    /* Name for PRQ interrupt */
-> > +	struct ioasid_allocator_ops pasid_allocator; /* Custom
-> > allocator for PASIDs */
-> >  #endif
-> >  	struct q_inval  *qi;            /* Queued invalidation
-> > info */ u32 *iommu_state; /* Store iommu states between suspend and
-> > resume.*/
-> > --
-> > 2.7.4  
-> 
+Note: casts from bitwise pointer to void* are already allowed.
 
-[Jacob Pan]
+-- Luc
