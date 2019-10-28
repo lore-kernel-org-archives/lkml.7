@@ -2,129 +2,84 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ECCCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C89ACA9EBC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA8E21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022AE21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 10:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ZuHBSifu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FgDpTFpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388275AbfJ1Kis (ORCPT
+        id S2388279AbfJ1Knr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 06:38:48 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:56058 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388234AbfJ1Kis (ORCPT
+        Mon, 28 Oct 2019 06:43:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35926 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732891AbfJ1Knq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 06:38:48 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 63A172E146B;
-        Mon, 28 Oct 2019 13:38:44 +0300 (MSK)
-Received: from iva8-b53eb3f76dc7.qloud-c.yandex.net (iva8-b53eb3f76dc7.qloud-c.yandex.net [2a02:6b8:c0c:2ca1:0:640:b53e:b3f7])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id BUnN8RUcgy-ch9WZfD9;
-        Mon, 28 Oct 2019 13:38:44 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1572259124; bh=BUd74mhZhB63Gk6S1rzlQQdwN5kUFsdKTQsJCf4kM78=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=ZuHBSifukQ1eCeHwe634/PMRXHkwuSqZdtr+YKRUCcjvaYRdOEzOIZu+qP6o4ws/a
-         nEn4BVc315P13VWZUqVeQfXgElqXXxCCsw8lcDlTTEqZ8JiSUcae3YDtnbthAFIfoW
-         EGB5eZISd+9TO3GOv+73O0nYbYRAIah4v87sCh4w=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
-        by iva8-b53eb3f76dc7.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id k7moP2jRqY-chWOJ7us;
-        Mon, 28 Oct 2019 13:38:43 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] fs/ext4: get project quota from inode for mangling statfs
- results
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Theodore Ts'o <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        Jan Kara <jack@suse.com>
-Cc:     Li Xi <lixi@ddn.com>, Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Date:   Mon, 28 Oct 2019 13:38:43 +0300
-Message-ID: <157225912326.3929.8539227851002947260.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 28 Oct 2019 06:43:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nar9Iq7Q7mTUudrNdJ/jj69T2ZUNiLNNiPhobZAvyPM=; b=FgDpTFpvRAHkibxg6VtMsFgC2
+        sDSt8Yp+REORhqdfaPb8sB455Z0xfr7MDZlIap8nAU8BjZg/gZXg/MUjeilLECHPtSPIfPvxnq5Af
+        yEMTOmUzzTWra7TXvpnhHnNJ+mZl3jSCl3gdsJ7XgrNUBrRKODUdR5eckaVSoonpOHQSL1SaC7d0D
+        /WFWsV4WVGS+M9+Vx9WM+nAGspV7Z9YdaocylsyTYr2qNF3/k+pLAqTW1GyhJXzHV3db3nNz4dMR8
+        CkK7UEflpptcaMx+tKo6F7SBb+I/W/bJFp6LZtzLHrv/gG4zSEM+2Uoydv/XmamDWiYU/kTUl+hQ1
+        /kVvEXfKA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iP2Uo-0003zV-N0; Mon, 28 Oct 2019 10:43:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D5332300E4D;
+        Mon, 28 Oct 2019 11:42:31 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 10EE120761E44; Mon, 28 Oct 2019 11:43:32 +0100 (CET)
+Date:   Mon, 28 Oct 2019 11:43:32 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Petr Mladek <pmladek@suse.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jeyu@kernel.org,
+        live-patching@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191028104332.GL4131@hirez.programming.kicks-ass.net>
+References: <20191018074634.801435443@infradead.org>
+ <20191021135312.jbbxsuipxldocdjk@treble>
+ <20191021141402.GI1817@hirez.programming.kicks-ass.net>
+ <20191023114835.GT1817@hirez.programming.kicks-ass.net>
+ <20191023170025.f34g3vxaqr4f5gqh@treble>
+ <20191024131634.GC4131@hirez.programming.kicks-ass.net>
+ <20191025064456.6jjrngm4m3mspaxw@pathway.suse.cz>
+ <20191025084300.GG4131@hirez.programming.kicks-ass.net>
+ <20191025100612.GB5671@hirez.programming.kicks-ass.net>
+ <20191026011741.xywerjv62vdmz6sp@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191026011741.xywerjv62vdmz6sp@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now ext4_statfs_project() does quota lookup by id every time.
-This is costly operation, especially if there is no inode who hold
-reference to this quota and dqget() reads it from disk each time.
+On Fri, Oct 25, 2019 at 08:17:41PM -0500, Josh Poimboeuf wrote:
 
-Function ext4_statfs_project() could be moved into generic quota code,
-it is required for every filesystem which uses generic project quota.
+> I can take over the livepatch-specific patches if you want.  Or however
+> you want to do it.
 
-Reported-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- fs/ext4/super.c |   25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
-
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index dd654e53ba3d..f841c66aa499 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5532,18 +5532,23 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- }
- 
- #ifdef CONFIG_QUOTA
--static int ext4_statfs_project(struct super_block *sb,
--			       kprojid_t projid, struct kstatfs *buf)
-+static int ext4_statfs_project(struct inode *inode, struct kstatfs *buf)
- {
--	struct kqid qid;
-+	struct super_block *sb = inode->i_sb;
- 	struct dquot *dquot;
- 	u64 limit;
- 	u64 curblock;
-+	int err;
-+
-+	err = dquot_initialize(inode);
-+	if (err)
-+		return err;
-+
-+	spin_lock(&inode->i_lock);
-+	dquot = ext4_get_dquots(inode)[PRJQUOTA];
-+	if (!dquot)
-+		goto out_unlock;
- 
--	qid = make_kqid_projid(projid);
--	dquot = dqget(sb, qid);
--	if (IS_ERR(dquot))
--		return PTR_ERR(dquot);
- 	spin_lock(&dquot->dq_dqb_lock);
- 
- 	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
-@@ -5569,7 +5574,9 @@ static int ext4_statfs_project(struct super_block *sb,
- 	}
- 
- 	spin_unlock(&dquot->dq_dqb_lock);
--	dqput(dquot);
-+out_unlock:
-+	spin_unlock(&inode->i_lock);
-+
- 	return 0;
- }
- #endif
-@@ -5609,7 +5616,7 @@ static int ext4_statfs(struct dentry *dentry, struct kstatfs *buf)
- #ifdef CONFIG_QUOTA
- 	if (ext4_test_inode_flag(dentry->d_inode, EXT4_INODE_PROJINHERIT) &&
- 	    sb_has_quota_limits_enabled(sb, PRJQUOTA))
--		ext4_statfs_project(sb, EXT4_I(dentry->d_inode)->i_projid, buf);
-+		ext4_statfs_project(dentry->d_inode, buf);
- #endif
- 	return 0;
- }
-
+Sure, feel free to take and route the livepatch patches. Then I'll wait
+until those and the ARM64 patches land before I'll pick this up again.
