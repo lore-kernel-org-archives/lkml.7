@@ -2,100 +2,99 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F0CCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6F3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863FB20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5747820873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:32:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pk7fgpH4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732981AbfJ1H3Z (ORCPT
+        id S1732985AbfJ1Hc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 03:29:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:28197 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730235AbfJ1H3Z (ORCPT
+        Mon, 28 Oct 2019 03:32:58 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41794 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730235AbfJ1Hc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 03:29:25 -0400
-X-UUID: 9a0ae1fdd78b4f489b6a9f0e21b44ff3-20191028
-X-UUID: 9a0ae1fdd78b4f489b6a9f0e21b44ff3-20191028
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <eason.yen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 817277668; Mon, 28 Oct 2019 15:29:21 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 28 Oct 2019 15:29:13 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 28 Oct 2019 15:29:14 +0800
-From:   Eason Yen <eason.yen@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, Eason Yen <eason.yen@mediatek.com>
-Subject: [PATCH v1 1/1] soc: mediatek: add SMC fid table for SIP interface
-Date:   Mon, 28 Oct 2019 15:29:09 +0800
-Message-ID: <1572247749-4276-2-git-send-email-eason.yen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1572247749-4276-1-git-send-email-eason.yen@mediatek.com>
-References: <1572247749-4276-1-git-send-email-eason.yen@mediatek.com>
+        Mon, 28 Oct 2019 03:32:57 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S7T95S159059;
+        Mon, 28 Oct 2019 07:32:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=jOkh6Pes5+Pp0tUmWlRazAo1B1JEuBBAsR0+VNYAQAM=;
+ b=pk7fgpH48/L+eltaBuV5griotY/UYEqNr9Eyc1AX7vdmJnFrKWUmJQwWNMdT63jAYXaw
+ GsmztkzzCVy6hVJ16MlcwUE8SOavTc5qceh0Ybro0eszcrQFYKdD0Y4e4UuGc3/rXh6O
+ L9CtQGduzNUv8GJgGne4ULtv05EIhpUdJkv5fnRCQMLcg+uEHJ9RwmLU8Im+zVSeUbeX
+ UUCSPmpRnyJ1iG1qxJHSg4AhIhGBnr0jJmJIdNR11h6P5HatJx+clgqrhKX8iO7N8+tW
+ NqAmhl2keQ3PPxS47qMQytyCEJQeNhZUrb0M13DHkgWoT1sqgex7uqupGHRu52ajBWZl pw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vvumf4wpe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 07:32:38 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S7Sk7e186426;
+        Mon, 28 Oct 2019 07:30:37 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2vwakxgx4v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 07:30:37 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9S7UXG0015943;
+        Mon, 28 Oct 2019 07:30:34 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 28 Oct 2019 00:30:32 -0700
+Date:   Mon, 28 Oct 2019 10:30:25 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <error27@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        zhanglin <zhang.lin16@zte.com.cn>
+Subject: Re: [PATCH] kernel: sys.c: Avoid copying possible padding bytes in
+ copy_to_user
+Message-ID: <20191028073025.GB1944@kadam>
+References: <dfa331c00881d61c8ee51577a082d8bebd61805c.camel@perches.com>
+ <alpine.DEB.2.21.1910270644590.3186@hadrien>
+ <92212e57d45f4410be654183f5dcb1e98d636ef2.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92212e57d45f4410be654183f5dcb1e98d636ef2.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=623
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910280075
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=726 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910280075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Add a header file to provide SIP interface to ATF
-2. Add AUDIO SMC fid
+We should be able to use memzero_explicit(), right?
 
-Change-Id: I218e9f571cea079268a5414725a81e9b35702e33
-Signed-off-by: Eason Yen <eason.yen@mediatek.com>
----
- include/linux/soc/mediatek/mtk_sip_svc.h |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
+The fact that we memset() can't be used to prevent information leaks has
+always worried me.  Everyone predicted that we would have bugs like this
+where memset doesn't work as expected.
 
-diff --git a/include/linux/soc/mediatek/mtk_sip_svc.h b/include/linux/soc/mediatek/mtk_sip_svc.h
-new file mode 100644
-index 0000000..00ee0f4
---- /dev/null
-+++ b/include/linux/soc/mediatek/mtk_sip_svc.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ */
-+
-+#ifndef __MTK_SIP_SVC_H__
-+#define __MTK_SIP_SVC_H__
-+
-+#include <linux/kernel.h>
-+
-+/* Error Code */
-+#define SIP_SVC_E_SUCCESS               0
-+#define SIP_SVC_E_NOT_SUPPORTED         -1
-+#define SIP_SVC_E_INVALID_PARAMS        -2
-+#define SIP_SVC_E_INVALID_Range         -3
-+#define SIP_SVC_E_PERMISSION_DENY       -4
-+
-+#ifdef CONFIG_ARM64
-+#define MTK_SIP_SMC_AARCH_BIT			0x40000000
-+#else
-+#define MTK_SIP_SMC_AARCH_BIT			0x00000000
-+#endif
-+
-+/* AUDIO related SMC call */
-+#define MTK_SIP_AUDIO_CONTROL \
-+	(0x82000517 | MTK_SIP_SMC_AARCH_BIT)
-+#endif
-+/* __MTK_SIP_SVC_H__ */
--- 
-1.7.9.5
+regards,
+dan carpenter
 
