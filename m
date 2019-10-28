@@ -2,117 +2,146 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC6FCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87E2CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 971E9208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572274433;
-	bh=Qfg8BT4ZtmHuxe41W6DiJHavA4zpxHfzooisC4Hp12E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fYeDOsrkj+oMC4vJ6Baa9sTi/B+DBLO6wWqNufbdxGxR4fs10x7LzKgVN/GDxmqui
-	 I87rJtq2O7DXGYL/Q1l+kNXRVVar/LSCNjcNMyHdtmqTaCKqnQocQ9Ore3YBnpxs9i
-	 YGS3FpMqKVangs0bO6Hk+Cih22NIu3qe58+QRc+4=
+	by mail.kernel.org (Postfix) with ESMTP id AAB8A208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390378AbfJ1Oxw (ORCPT
+        id S2390388AbfJ1Oyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:53:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727227AbfJ1Oxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:53:52 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 28 Oct 2019 10:54:52 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:24338 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727227AbfJ1Oyw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 10:54:52 -0400
+Received: from pps.filterd (m0148664.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9SElNki002671;
+        Mon, 28 Oct 2019 14:54:45 GMT
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2vww9k2bc4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Oct 2019 14:54:45 +0000
+Received: from G1W8106.americas.hpqcorp.net (g1w8106.austin.hp.com [16.193.72.61])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38293208C0;
-        Mon, 28 Oct 2019 14:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572274431;
-        bh=Qfg8BT4ZtmHuxe41W6DiJHavA4zpxHfzooisC4Hp12E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zkvko9wWADl+2U9ZfduDj/L6WsRbQTomQU5U+aDPsWqjNqSeB2tlEfKPk2bL1DI6U
-         6OYp/kF0xFdtfWfwcrxIfFy3dUwG+G7ia+GcP+QjQ4TxYQ7CAzJno3HFCbeKbDDFVg
-         0FMRaDVwMzLge+OEBpAITPNHE+ihWyhr5ZdSnkx4=
-Date:   Mon, 28 Oct 2019 23:53:47 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BUGFIX PATCH V2 0/6] perf/probe: Additional fixes for range
- only functions
-Message-Id: <20191028235347.8167bb3b56eeb86be3d93606@kernel.org>
-In-Reply-To: <20191028141655.GA4943@kernel.org>
-References: <157208041894.16551.2733647209130045685.stgit@devnote2>
-        <20191028141655.GA4943@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by g4t3427.houston.hpe.com (Postfix) with ESMTPS id 4454E66;
+        Mon, 28 Oct 2019 14:54:44 +0000 (UTC)
+Received: from G4W9334.americas.hpqcorp.net (16.208.32.120) by
+ G1W8106.americas.hpqcorp.net (16.193.72.61) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 28 Oct 2019 14:54:38 +0000
+Received: from G9W9209.americas.hpqcorp.net (2002:10dc:429c::10dc:429c) by
+ G4W9334.americas.hpqcorp.net (2002:10d0:2078::10d0:2078) with Microsoft SMTP
+ Server (TLS) id 15.0.1367.3; Mon, 28 Oct 2019 14:54:37 +0000
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (15.241.52.10) by
+ G9W9209.americas.hpqcorp.net (16.220.66.156) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3 via Frontend Transport; Mon, 28 Oct 2019 14:54:37 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Mowqx2GHrYmNkRbmnkAcy4GH/UWIrfqQn+Aloaq6gxvovLIiXXhLA30bmiERDhIw6GcfPyzgFwXMEXe2bZ3fTBq3tGBHqMAh4kI95+IVQGDeVqxep1w7HhS2gp1rj/xY11sZ4EiN9VFZ+ZQJJ8GIHTvmHxpvxJ+VXZD42NQ7vwhDDhxKeY1R+eNxFhDnFzWmK6hL1VT7H3AkcIlbNbmikkEg0qBFv10fwre8wUkLghqzfmzl2f3e8QRdIbY24MhqbTRRucPp5srRLjSmIfo4E0JRNQVVWK00qV+P+/Drb1RN3cUVd6Y94qOmT3/Aw1g8aFDCk2raCZaq5wN2I4eBGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ejIpsXs5aEam98mzdh6pCqtzYYcv1k8ADbSxOD5j06Y=;
+ b=jS2K43yRc6g2pUpK4+iqUwz9791hPg1ZYuvWxFRF4BuGe5I9J3hUqk3lpo+4wuxn8wZk3BD61Npd4cIynqSPcu9W6oOOJgsFPVUx+Zu8owhzvA1ICmTyT26Zxz6cd65IMGhX9ga3d4aPBEzZU0e0ZJfj66yLafPKY/B4G7dtROIPZjjmGAiKpnOf4zzsJS/uHFDOvC29lh/CjtDZvj9CsXrkZPH2jfaHsQ7QOGHCFe5XFlxEdkEKlBwg3z6+xKESR3vOJWfm40dzBKBOlCz5tEoJj5zTh4nu9RsZCgAIQPT3i7j4kao87PBpDm6sIOTLt5hkG8/fAMneBPGxj2sJ5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com; dkim=pass
+ header.d=hpe.com; arc=none
+Received: from TU4PR8401MB0607.NAMPRD84.PROD.OUTLOOK.COM (10.169.44.19) by
+ TU4PR8401MB1262.NAMPRD84.PROD.OUTLOOK.COM (10.169.49.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Mon, 28 Oct 2019 14:54:35 +0000
+Received: from TU4PR8401MB0607.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::94e7:1fd4:5529:1507]) by TU4PR8401MB0607.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::94e7:1fd4:5529:1507%11]) with mapi id 15.20.2387.025; Mon, 28 Oct
+ 2019 14:54:35 +0000
+From:   "Kani, Toshi" <toshi.kani@hpe.com>
+To:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "d.scott.phillips@intel.com" <d.scott.phillips@intel.com>
+CC:     "decui@microsoft.com" <decui@microsoft.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "Hoemann, Jerry" <jerry.hoemann@hpe.com>,
+        "stuart.w.hayes@gmail.com" <stuart.w.hayes@gmail.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] uapi: Add the BSD-2-Clause license to ndctl.h
+Thread-Topic: [PATCH] uapi: Add the BSD-2-Clause license to ndctl.h
+Thread-Index: AQHVi12UNgRpx6AWwkGexQAAJqZgUqdr9RaAgAADGwCABDA+AA==
+Date:   Mon, 28 Oct 2019 14:54:35 +0000
+Message-ID: <76ca7b4effada2c7219f66c211946a8178994d1c.camel@hpe.com>
+References: <20191025175553.63271-1-d.scott.phillips@intel.com>
+         <CAPcyv4iQpO+JF8b7NUJUZ3fQFU=PWFeiWrXSd47QGnQPeRsrTg@mail.gmail.com>
+         <38f7f4852ad1cc76c7c7473a6fda85cb9acae14c.camel@intel.com>
+In-Reply-To: <38f7f4852ad1cc76c7c7473a6fda85cb9acae14c.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+x-originating-ip: [15.219.163.3]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e7b9d402-331f-42c6-0bd2-08d75bb6bfc2
+x-ms-traffictypediagnostic: TU4PR8401MB1262:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TU4PR8401MB126298062CE5897AFB6F7C7782660@TU4PR8401MB1262.NAMPRD84.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0204F0BDE2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(376002)(136003)(39860400002)(189003)(199004)(186003)(86362001)(476003)(2616005)(229853002)(36756003)(26005)(25786009)(7736002)(478600001)(102836004)(6512007)(66476007)(66446008)(64756008)(5660300002)(6436002)(76176011)(11346002)(14454004)(66946007)(76116006)(6506007)(446003)(2201001)(53546011)(110136005)(2501003)(6486002)(54906003)(486006)(4326008)(256004)(305945005)(8936002)(81156014)(8676002)(99286004)(118296001)(4001150100001)(81166006)(66066001)(6116002)(6246003)(71190400001)(58126008)(3846002)(316002)(2906002)(71200400001)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:TU4PR8401MB1262;H:TU4PR8401MB0607.NAMPRD84.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hpe.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nRkLRyWDv4Zr8Am8SdyMFn7icYq9s4+YCUfxQlf2sCvmz8BRZHrAxP111SBpA1bWGqpuGku0SDubmDlJfDYgcrGX4XYk7BNgcw7m1xFVAdWgvs6wYL/BDByQvhiXFqUel02Vq42/+7xkmxB72sQzagAYi0NV23rVtDfRuuigzg7qxc3mAo1QMv/FdqDBALRX49+gWI6MB3iAvPZwFADlatxpXBRzob8VnAEKweDWoRX3qOieCfP/ypjDRKHkLKcgY011sXXn+DlS6a9kW4kq9DGUfEepCmGke/rNhDBIYgRKMrhcT0TnYB3aGYOeeEAqdJxG3Zz3LH+3QaGzlJjdMXzDFCk/ehQa9oO/PdNFyOUBrvZiRTmHsr4etUv5UHEqCIBKtGaSEDDA6ZrBQtSfQednm1vgoR7DNt5Qwa+siIYWrxF3IXogwKxTE5X5ia/+
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <180F81A0C7C33A4CB124EF3C7D0C09E7@NAMPRD84.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7b9d402-331f-42c6-0bd2-08d75bb6bfc2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 14:54:35.4155
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: i6uvaQ5k+KvlgZAufNV1Gv6+moM+huJc9gpzbiCKI1K1hnKAW2QVC0U5c3rmg0Qpsd+dkBxQKIfv7HEBpd83Gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TU4PR8401MB1262
+X-OriginatorOrg: hpe.com
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-28_06:2019-10-28,2019-10-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1011 mlxscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910280153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019 11:16:55 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> Em Sat, Oct 26, 2019 at 06:00:19PM +0900, Masami Hiramatsu escreveu:
-> > Hi Arnaldo,
-> > 
-> > I've updated examples in patch description in this v2.
-> > No changes in the code itself. I ran it on Ubuntu 19.04
-> > (linux-5.0.0-32-generic).
-> > 
-> > Please replace previous one with this.
-> 
-> Can you please take a look at my perf/core branch? I have these already
-> there:
-> 
-> 5e72f4349eff perf probe: Fix to show ranges of variables in functions without entry_pc
-> 50fc0fda5f2c perf probe: Fix to show inlined function callsite without entry_pc
-> d7bf48229b85 perf probe: Fix to list probe event with correct line number
-> 39cee497850a perf probe: Fix to probe an inline function which has no entry pc
-> 6150bad27ebd perf probe: Fix to probe a function which has no entry pc
-> fdaea9eea92d perf probe: Fix wrong address verification
-> 
-> And I added committer notes doing the tests.
-
-Yes, I confirmed your comments on the patches. It looks good to me.
-
-Thank you!
-
-> 
-> - Arnaldo
->  
-> > Thank you,
-> > 
-> > ---
-> > 
-> > Masami Hiramatsu (6):
-> >       perf/probe: Fix wrong address verification
-> >       perf/probe: Fix to probe a function which has no entry pc
-> >       perf/probe: Fix to probe an inline function which has no entry pc
-> >       perf/probe: Fix to list probe event with correct line number
-> >       perf/probe: Fix to show inlined function callsite without entry_pc
-> >       perf/probe: Fix to show ranges of variables in functions without entry_pc
-> > 
-> > 
-> >  tools/perf/util/dwarf-aux.c    |    6 +++---
-> >  tools/perf/util/probe-finder.c |   40 ++++++++++++++--------------------------
-> >  2 files changed, 17 insertions(+), 29 deletions(-)
-> > 
-> > --
-> > Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
-> 
-> -- 
-> 
-> - Arnaldo
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+T24gRnJpLCAyMDE5LTEwLTI1IGF0IDIyOjU2ICswMDAwLCBWZXJtYSwgVmlzaGFsIEwgd3JvdGU6
+DQo+IE9uIEZyaSwgMjAxOS0xMC0yNSBhdCAxNTo0NSAtMDcwMCwgRGFuIFdpbGxpYW1zIHdyb3Rl
+Og0KPiA+IE9uIEZyaSwgT2N0IDI1LCAyMDE5IGF0IDEwOjU1IEFNIEQgU2NvdHQgUGhpbGxpcHMN
+Cj4gPiA8ZC5zY290dC5waGlsbGlwc0BpbnRlbC5jb20+IHdyb3RlOg0KPiA+ID4gQWxsb3cgbmRj
+dGwuaCB0byBiZSBsaWNlbnNlZCB3aXRoIEJTRC0yLUNsYXVzZSBzbyB0aGF0IG90aGVyDQo+ID4g
+PiBvcGVyYXRpbmcgc3lzdGVtcyBjYW4gcHJvdmlkZSB0aGUgc2FtZSB1c2VyIGxldmVsIGludGVy
+ZmFjZS4NCj4gPiA+IC0tLQ0KPiA+ID4gDQo+ID4gPiBJJ3ZlIGJlZW4gd29ya2luZyBvbiBudmRp
+bW0gc3VwcG9ydCBpbiBGcmVlQlNEIGFuZCB3b3VsZCBsaWtlIHRvDQo+ID4gPiBvZmZlciB0aGUg
+c2FtZSBuZGN0bCBBUEkgdGhlcmUgdG8gZWFzZSBwb3J0aW5nIG9mIGFwcGxpY2F0aW9uDQo+ID4g
+PiBjb2RlLiBIZXJlIEknbSBwcm9wb3NpbmcgdG8gYWRkIHRoZSBCU0QtMi1DbGF1c2UgbGljZW5z
+ZSB0byB0aGlzDQo+ID4gPiBoZWFkZXIgZmlsZSwgc28gdGhhdCBpdCBjYW4gbGF0ZXIgYmUgY29w
+aWVkIGludG8gRnJlZUJTRC4NCj4gPiA+IA0KPiA+ID4gSSBiZWxpZXZlIHRoYXQgYWxsIHRoZSBh
+dXRob3JzIG9mIGNoYW5nZXMgdG8gdGhpcyBmaWxlIChpbiB0aGUgVG86DQo+ID4gPiBsaXN0KSB3
+b3VsZCBuZWVkIHRvIGFncmVlIHRvIHRoaXMgY2hhbmdlIGJlZm9yZSBpdCBjb3VsZCBiZQ0KPiA+
+ID4gYWNjZXB0ZWQsIHNvIGFueSBzaWduZWQtb2ZmLWJ5IGlzIGludGVudGlvbmFsbHkgb21taXRl
+ZCBmb3Igbm93Lg0KPiA+ID4gVGhhbmtzLA0KPiA+IA0KPiA+IEkgaGF2ZSBubyBwcm9ibGVtIHdp
+dGggdGhpcyBjaGFuZ2UsIGJ1dCBsZXQncyB0YWtlIHRoZSBvcHBvcnR1bml0eSB0bw0KPiA+IGxl
+dCBTUERYIGRvIGl0cyBqb2IgYW5kIGRyb3AgdGhlIGZ1bGwgbGljZW5zZSB0ZXh0Lg0KPiANCj4g
+VGhpcyBpcyBmaW5lIGJ5IG1lIHRvbywgYmFycmluZyB0aGUgZnVsbCBsaWNlbnNlIHRleHQgdnMu
+IFNQRFggY2F2ZWF0DQo+IERhbiBtZW50aW9ucy4NCg0KSSBhZ3JlZSB3aXRoIHRoZSBwbGFuLg0K
+DQpUaGFua3MsDQpUb3NoaQ0K
