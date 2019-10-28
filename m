@@ -7,20 +7,20 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E530ECA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32165CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4B4214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F0B214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="OD/lK/7E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="abKHpX5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388664AbfJ1LnD (ORCPT
+        id S2388653AbfJ1LnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 07:43:03 -0400
-Received: from dougal.metanate.com ([90.155.101.14]:47937 "EHLO metanate.com"
+        Mon, 28 Oct 2019 07:43:02 -0400
+Received: from dougal.metanate.com ([90.155.101.14]:40476 "EHLO metanate.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729941AbfJ1LnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727385AbfJ1LnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 28 Oct 2019 07:43:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/simple; d=metanate.com;
          s=stronger; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
@@ -28,25 +28,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/simple; d=metanate.com;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=zSqO7Gbt5gFHhPgKnnb70g2Sd1MZYdjH1WNB38pjbSY=; b=OD/lK/7ESCD34gj9SUJGd6S+A4
-        ZYTY7/ZbACOVtsMl9wTwor4rVAA1Zya0eDOfbk8xlvpWMwTiJHDG/5YnGYEBdR/2M5XzbUT3KStaC
-        wLKmPQVXWdWrM7tZNTM38OmcIJjMxZ1FxtDNqNghIoADwFmAbfDpC9+Ubh4Bq4TH6ET4kv2s5rnkp
-        LtJ+UZbX8F2mYHBBjNjzBkXL6S8on3wsHM7r6s76zWDjqjlTK+6MWGJdJPOGLBEAokyE7sQQd2QIY
-        J9MRlwmYxRzGZDXQ9xTAJJP5M1HliW1fWbQsUG4IQSU+dh8OtOc5yXRWNFOeHTrJ0I+rSEINiYE9z
-        r56Ajgxg==;
+        bh=lwODNx/KjIj+Y/Cod9TZnDM+jFNNhhm9mbvUKZSiSdY=; b=abKHpX5LsJ0gM4zh/a3HRf7+Dz
+        4Y8eWJJaa/6e+/94YeREhIkRrZFkeKv/YejskVC7f5/x7SiHQGYtztOKOSGpz5cBv5bvQk7HSEzQ9
+        45M2hqjGCXMQTeLuss0aOt+3fF+m3OPXbY+RATZKN1lF/tCA/2LKUNhWV+5LhfjQsVxqS350kNk4x
+        XLiH0UFgUq/t/LGQDtUbKoqldOdohrQF8aZfVrp5cYYpo/mmSB4udFKeZcb4fxNkXRmDmYy/ytMbO
+        2odavFBBkmzCerU1A5woP2lhBkkvGFL/dSPJMeak8jayBO+oVaDuD6cJya4DxhxoIBl+T0xL3S12o
+        Pe62aF2A==;
 Received: from dougal.metanate.com ([192.168.88.1] helo=localhost.localdomain)
         by email.metanate.com with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92.3)
         (envelope-from <john@metanate.com>)
-        id 1iP3QH-00010o-JZ; Mon, 28 Oct 2019 11:42:57 +0000
+        id 1iP3QH-00010o-AE; Mon, 28 Oct 2019 11:42:57 +0000
 From:   John Keeping <john@metanate.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, John Keeping <john@metanate.com>
-Subject: [PATCH v2 6/6] USB: gadget: f_hid: return ENODEV from read/write after deletion
-Date:   Mon, 28 Oct 2019 11:42:28 +0000
-Message-Id: <20191028114228.3679219-7-john@metanate.com>
+Subject: [PATCH v2 2/6] USB: gadget: f_hid: switch to IDR for tracking minors
+Date:   Mon, 28 Oct 2019 11:42:24 +0000
+Message-Id: <20191028114228.3679219-3-john@metanate.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191028114228.3679219-1-john@metanate.com>
 References: <20191024164538.3161474-1-john@metanate.com>
@@ -59,79 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a file descriptor to /dev/hidgN is kept open after the gadget
-function has been deleted, reading or writing will block indefinitely
-since no requests will ever be processed.
+In the following commits, we are going to move the cdev allocation up to
+the module initialisation, and will look up the associated f_hidg
+structure from the open operation.
 
-Add a flag to note that the function has been deleted and check this in
-read & write if there is no other action to take.  When setting this
-flag, also wake up any readers/writers so that they get ENODEV
-immediately.
+Start preparing for this by switching from IDA to IDR.
 
 Signed-off-by: John Keeping <john@metanate.com>
 ---
 v2:
 - No changes
 
- drivers/usb/gadget/function/f_hid.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/function/f_hid.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
-index 3d848f7a4cca..a65bdf08ca54 100644
+index e5e18d02b77a..1eb8b545e5b4 100644
 --- a/drivers/usb/gadget/function/f_hid.c
 +++ b/drivers/usb/gadget/function/f_hid.c
-@@ -59,6 +59,7 @@ struct f_hidg {
- 	struct usb_request		*req;
+@@ -24,8 +24,8 @@
  
- 	struct kref			kref;
-+	bool				deleted;
- 	int				minor;
- 	struct usb_function		func;
+ static int major, minors;
+ static struct class *hidg_class;
+-static DEFINE_IDA(hidg_ida);
+-static DEFINE_MUTEX(hidg_ida_lock); /* protects access to hidg_ida */
++static DEFINE_IDR(hidg_idr);
++static DEFINE_MUTEX(hidg_idr_lock); /* protects access to hidg_idr */
  
-@@ -271,10 +272,14 @@ static ssize_t f_hidg_read(struct file *file, char __user *buffer,
- 	/* wait for at least one buffer to complete */
- 	while (!READ_COND) {
- 		spin_unlock_irqrestore(&hidg->read_spinlock, flags);
-+		if (READ_ONCE(hidg->deleted))
-+			return -ENODEV;
-+
- 		if (file->f_flags & O_NONBLOCK)
- 			return -EAGAIN;
+ /*-------------------------------------------------------------------------*/
+ /*                            HID gadget struct                            */
+@@ -851,9 +851,9 @@ static inline int hidg_get_minor(void)
+ {
+ 	int ret;
  
--		if (wait_event_interruptible(hidg->read_queue, READ_COND))
-+		if (wait_event_interruptible(hidg->read_queue,
-+				READ_COND || READ_ONCE(hidg->deleted)))
- 			return -ERESTARTSYS;
+-	ret = ida_simple_get(&hidg_ida, 0, 0, GFP_KERNEL);
++	ret = idr_alloc(&hidg_idr, NULL, 0, 0, GFP_KERNEL);
+ 	if (ret >= HIDG_MINORS) {
+-		ida_simple_remove(&hidg_ida, ret);
++		idr_remove(&hidg_idr, ret);
+ 		ret = -ENODEV;
+ 	}
  
- 		spin_lock_irqsave(&hidg->read_spinlock, flags);
-@@ -358,11 +363,14 @@ static ssize_t f_hidg_write(struct file *file, const char __user *buffer,
- 	/* write queue */
- 	while (!WRITE_COND) {
- 		spin_unlock_irqrestore(&hidg->write_spinlock, flags);
-+		if (READ_ONCE(hidg->deleted))
-+			return -ENODEV;
-+
- 		if (file->f_flags & O_NONBLOCK)
- 			return -EAGAIN;
+@@ -996,7 +996,7 @@ static const struct config_item_type hid_func_type = {
  
--		if (wait_event_interruptible_exclusive(
--				hidg->write_queue, WRITE_COND))
-+		if (wait_event_interruptible_exclusive(hidg->write_queue,
-+				WRITE_COND || READ_ONCE(hidg->deleted)))
- 			return -ERESTARTSYS;
+ static inline void hidg_put_minor(int minor)
+ {
+-	ida_simple_remove(&hidg_ida, minor);
++	idr_remove(&hidg_idr, minor);
+ }
  
- 		spin_lock_irqsave(&hidg->write_spinlock, flags);
-@@ -1070,6 +1078,10 @@ static void hidg_free(struct usb_function *f)
+ static void hidg_free_inst(struct usb_function_instance *f)
+@@ -1005,9 +1005,9 @@ static void hidg_free_inst(struct usb_function_instance *f)
  
- 	hidg = func_to_hidg(f);
- 	opts = container_of(f->fi, struct f_hid_opts, func_inst);
-+	WRITE_ONCE(hidg->deleted, true);
-+	wake_up(&hidg->read_queue);
-+	wake_up(&hidg->write_queue);
-+
- 	kref_put(&hidg->kref, hidg_release);
- 	mutex_lock(&opts->lock);
- 	--opts->refcnt;
+ 	opts = container_of(f, struct f_hid_opts, func_inst);
+ 
+-	mutex_lock(&hidg_ida_lock);
++	mutex_lock(&hidg_idr_lock);
+ 	hidg_put_minor(opts->minor);
+-	mutex_unlock(&hidg_ida_lock);
++	mutex_unlock(&hidg_idr_lock);
+ 
+ 	if (opts->report_desc_alloc)
+ 		kfree(opts->report_desc);
+@@ -1027,7 +1027,7 @@ static struct usb_function_instance *hidg_alloc_inst(void)
+ 	opts->func_inst.free_func_inst = hidg_free_inst;
+ 	ret = &opts->func_inst;
+ 
+-	mutex_lock(&hidg_ida_lock);
++	mutex_lock(&hidg_idr_lock);
+ 
+ 	opts->minor = hidg_get_minor();
+ 	if (opts->minor < 0) {
+@@ -1038,7 +1038,7 @@ static struct usb_function_instance *hidg_alloc_inst(void)
+ 	config_group_init_type_name(&opts->func_inst.group, "", &hid_func_type);
+ 
+ unlock:
+-	mutex_unlock(&hidg_ida_lock);
++	mutex_unlock(&hidg_idr_lock);
+ 	return ret;
+ }
+ 
 -- 
 2.23.0
 
