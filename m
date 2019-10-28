@@ -2,119 +2,108 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6585CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0AACA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964F221721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2EA21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404053AbfJ1RIt (ORCPT
+        id S2404061AbfJ1RKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 13:08:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22426 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726851AbfJ1RIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 13:08:48 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9SH7IBp108392
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 13:08:48 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vx3dptq3u-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 13:08:47 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 28 Oct 2019 17:08:45 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 28 Oct 2019 17:08:41 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9SH8eA143516212
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 17:08:40 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50D4B4203F;
-        Mon, 28 Oct 2019 17:08:40 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1BD2842041;
-        Mon, 28 Oct 2019 17:08:39 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.151.87])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 28 Oct 2019 17:08:38 +0000 (GMT)
-Subject: Re: [PATCH v2 3/4] KEYS: Added BUILTIN_TRUSTED_KEYS enum to measure
- keys added to builtin_trusted_keys keyring
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, casey@schaufler-ca.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Mon, 28 Oct 2019 13:08:38 -0400
-In-Reply-To: <8494baa1-c4db-f08b-26c9-2e56279075d0@linux.microsoft.com>
-References: <20191023233950.22072-1-nramas@linux.microsoft.com>
-         <20191023233950.22072-4-nramas@linux.microsoft.com>
-         <1572186810.4532.206.camel@linux.ibm.com>
-         <8494baa1-c4db-f08b-26c9-2e56279075d0@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102817-0020-0000-0000-000003804EA6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102817-0021-0000-0000-000021D653C1
-Message-Id: <1572282518.4532.260.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=976 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910280166
+        Mon, 28 Oct 2019 13:10:25 -0400
+Received: from mga05.intel.com ([192.55.52.43]:55198 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730243AbfJ1RKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 13:10:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 10:10:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
+   d="scan'208";a="400870656"
+Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Oct 2019 10:10:22 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com, adrian.hunter@intel.com,
+        mathieu.poirier@linaro.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH v3 1/3] perf: Allow using AUX data in perf samples
+In-Reply-To: <20191028162840.GD5671@hirez.programming.kicks-ass.net>
+References: <20191025140835.53665-1-alexander.shishkin@linux.intel.com> <20191025140835.53665-2-alexander.shishkin@linux.intel.com> <20191028162712.GH4097@hirez.programming.kicks-ass.net> <20191028162840.GD5671@hirez.programming.kicks-ass.net>
+Date:   Mon, 28 Oct 2019 19:10:21 +0200
+Message-ID: <87r22wg5j6.fsf@ashishki-desk.ger.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-28 at 08:12 -0700, Lakshmi Ramasubramanian wrote:
-> On 10/27/19 7:33 AM, Mimi Zohar wrote:
-> 
-> > .builtin_trusted_keys is a trusted keyring, which is created by the
-> > kernel.  It cannot be deleted or replaced by userspace, so it should
-> > be possible to correlate a keyring name with a keyring number on
-> > policy load.
-> 
-> Yes - at policy load we can map a keyring name to a keyring number.
-> 
-> But at runtime we still need to know if the keyring parameter passed to 
-> the IMA hook function is configured to be measured.
-> 
-> void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-> 				   unsigned long flags, bool create);
-> {
->     => Get the keyring number for the given "keyring".
+Peter Zijlstra <peterz@infradead.org> writes:
 
-There is no "getting" involved here.  Pass "keyring" to
-process_buffer_measurement and on to ima_get_action().
+> On Mon, Oct 28, 2019 at 05:27:12PM +0100, Peter Zijlstra wrote:
+>> And while I get why we need recursion protection for pmu::snapshot_aux,
+>> I'm a little puzzled on why it is over the padding, that is, why isn't
+>> the whole of aux_in_sampling inside (the newly minted)
+>> perf_pmu_snapshot_aux() ?
+>
+> That is, given the previous delta, the below.
+>
+> ---
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6292,9 +6292,17 @@ long perf_pmu_snapshot_aux(struct perf_e
+>  	 * IRQs need to be disabled to prevent IPIs from racing with us.
+>  	 */
+>  	local_irq_save(flags);
+> +	/*
+> +	 * Guard against NMI hits inside the critical section;
+> +	 * see also perf_prepare_sample_aux().
+> +	 */
+> +	WRITE_ONCE(rb->aux_in_sampling, 1);
+> +	barrier();
+>  
+>  	ret = event->pmu->snapshot_aux(event, handle, size);
+>  
+> +	barrier();
+> +	WRITE_ONCE(rb->aux_in_sampling, 0);
+>  	local_irq_restore(flags);
+>  
+>  	return ret;
+> @@ -6316,13 +6324,6 @@ static void perf_aux_sample_output(struc
+>  	if (!rb)
+>  		return;
+>  
+> -	/*
+> -	 * Guard against NMI hits inside the critical section;
+> -	 * see also perf_prepare_sample_aux().
+> -	 */
+> -	WRITE_ONCE(rb->aux_in_sampling, 1);
+> -	barrier();
+> -
+>  	size = perf_pmu_snapshot_aux(sampler, handle, data->aux_size);
+>  
+>  	/*
+> @@ -6348,9 +6349,6 @@ static void perf_aux_sample_output(struc
+>  	}
+>  
+>  out_clear:
+> -	barrier();
+> -	WRITE_ONCE(rb->aux_in_sampling, 0);
+> -
+>  	ring_buffer_put(rb);
 
->     => Check if the keyring number is in the configured IMA policy.
+I can't tell without applying these, if the labels still make sense. But
+this one probably becomes "out_put" at this point.
 
-ima_get_action() should do a simple compare of the valued stored in
-the IMA policy with the value returned by key_serial().
-
-Mimi
-
->     => If yes, measure the key.
->     => Else, do nothing.
-> }
-
-> Did I misunderstand what you had stated?
-
+Thanks,
+--
+Alex
