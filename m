@@ -2,187 +2,325 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC57CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD91CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9CB20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53B220862
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404249AbfJ1SFC (ORCPT
+        id S2404314AbfJ1SGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 14:05:02 -0400
-Received: from m9a0002g.houston.softwaregrp.com ([15.124.64.67]:54592 "EHLO
-        m9a0002g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730690AbfJ1SFC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 14:05:02 -0400
-Received: FROM m9a0002g.houston.softwaregrp.com (15.121.0.190) BY m9a0002g.houston.softwaregrp.com WITH ESMTP;
- Mon, 28 Oct 2019 18:04:16 +0000
-Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
- M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 28 Oct 2019 18:04:40 +0000
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (15.124.72.10) by
- M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Mon, 28 Oct 2019 18:04:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DCZR9n+aOhp9unMfOGUg2MWK9zgl0cMkxbm+ohMkNRhnm5uYXfASCp+0yqhA+Omc60Yn6A8OawjbmgX62kkU5k0PHreWpcjRDml0QcaAqAuzZeYOJEttvgL3Lr36hpgWpztbLOOdhrJhpRCjmgo3qNGJdP5yMDxoumGABMZbgIn2KjrN6BEXkaN9V4/1HzOnck3QoH2uUQOob+bjmgr1eWJy4x4quqtlsQROFMiiFSI0+OEEtJr5u3wbs6jkq4RieAajETZC8iYItVDdkADSR+OxmmH74GXTJwHqUrz7zSg4Qg8OkXSMwFgGtYaVJ2z5hKvFtCFH5TIkBqUmOaV5/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EBCqRrfB4l68Dsxfc+7eIS8wJi93wNvkXn6u6caCMKM=;
- b=Wf0PQe2H+UQCTdjDMZ/bv8dX/XltzfU0OA0/SNMNaianHf8N4KsyznASHJjdHrykRahW6gs1Zk039M3nWWy4d/yXSILnK8WfvW5/zNGWa7M5Lv4TyNs9fUM0uRbbuHK1yUsINSCZHGqqa7UZiIkhRB/bZM5SDr4S1Q8bFydY8xb6i0m51+s7Eph6qHeNWCdf+Y5BL1E+uE2ULNvjg7VSIB+S3mMKZiO3ZVdeGxp6K+LclasKSkbIfIC43jkzTxpT8O0182J+ejb4ZZzLJEogoL0wTE4l7k2HSD+5kgc16OaXowjO2Z4ZMMXz8yReNXnHojAFePX8UfEXJxgohG47Cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Received: from MN2PR18MB3278.namprd18.prod.outlook.com (10.255.237.204) by
- MN2PR18MB2654.namprd18.prod.outlook.com (20.179.84.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.24; Mon, 28 Oct 2019 18:04:39 +0000
-Received: from MN2PR18MB3278.namprd18.prod.outlook.com
- ([fe80::b499:7a76:fb32:b220]) by MN2PR18MB3278.namprd18.prod.outlook.com
- ([fe80::b499:7a76:fb32:b220%6]) with mapi id 15.20.2387.025; Mon, 28 Oct 2019
- 18:04:39 +0000
-From:   Lee Duncan <LDuncan@suse.com>
-To:     "wubo (T)" <wubo40@huawei.com>,
-        "cleech@redhat.com" <cleech@redhat.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>,
-        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>
-Subject: Re: [PATCH] scsi: avoid potential deadloop in iscsi_if_rx func
-Thread-Topic: [PATCH] scsi: avoid potential deadloop in iscsi_if_rx func
-Thread-Index: AdWL2reJ1uh470cQT+idNsWy+95OAQB3236A
-Date:   Mon, 28 Oct 2019 18:04:39 +0000
-Message-ID: <92b221da-18a8-8b7b-0436-ca59088fd45b@suse.com>
-References: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DE9E71@DGGEML525-MBS.china.huawei.com>
-In-Reply-To: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DE9E71@DGGEML525-MBS.china.huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0188.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a::32) To MN2PR18MB3278.namprd18.prod.outlook.com
- (2603:10b6:208:168::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=LDuncan@suse.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [73.25.22.216]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d3d2cc07-cfdb-43a6-1b20-08d75bd14d0e
-x-ms-traffictypediagnostic: MN2PR18MB2654:
-x-microsoft-antispam-prvs: <MN2PR18MB26548845768C58A7FA235B76DA660@MN2PR18MB2654.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0204F0BDE2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(199004)(189003)(66946007)(66476007)(66556008)(66446008)(64756008)(8676002)(81156014)(81166006)(476003)(6512007)(11346002)(486006)(76176011)(52116002)(2616005)(99286004)(6246003)(2906002)(8936002)(446003)(186003)(102836004)(6486002)(229853002)(5660300002)(386003)(6506007)(53546011)(66066001)(6436002)(25786009)(14444005)(256004)(31696002)(478600001)(7736002)(71190400001)(31686004)(305945005)(2501003)(110136005)(316002)(54906003)(3846002)(71200400001)(6116002)(36756003)(4326008)(2201001)(14454004)(80792005)(86362001)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR18MB2654;H:MN2PR18MB3278.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EOHwDFZqLwCVKBT7no7fuFqLe/Y/qz8ZV8iQvrTBdQmRfkNY92LAWrngfmUaLntZXxyxBuRplkkSi+SmpGJZ7enB1MltbYgYFIU0puXsqlD4aboe+PnFn1FtI6aUI4b+3ESUYOtbrgrV4NeYzSSQyyGxtF7IsO7EcZAmtvJtGf2b5sp1cRHYY4fuloAgQaDqeRcB9uXeJKt8FjbPHV9jJvD8IsWN99EmOzGAXLSN8+jDbyaA+aEJzr+JSmRGf/DPZ5UQ0i+n23zR+LAkoHVz5bbEnUUmOa9EBTq305Mbg0B/1Gv2eS/jgbG/PmRakyFRp8ic1hPccoWIteGNO0A762LOS0AcLtHn940Ei9VVHLq4Z+gP+8RzwmyPaRcf3255JQ10vmUNMKbhSyXqA9kQmMYFuW4sE0PKBIqKig0QhhVqpGI9QirGd25GzaRLhb/k
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A01683403433E34B9164BF4A357C6CF5@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 28 Oct 2019 14:06:08 -0400
+Received: from mga07.intel.com ([134.134.136.100]:6053 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730690AbfJ1SGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 14:06:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 11:06:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
+   d="scan'208";a="210930585"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 28 Oct 2019 11:06:02 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 28 Oct 2019 20:06:01 +0200
+Date:   Mon, 28 Oct 2019 20:06:01 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Matthias Andree <matthias.andree@gmx.de>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
+ spec
+Message-ID: <20191028180601.GA2593@lahna.fi.intel.com>
+References: <20191028112852.GU2593@lahna.fi.intel.com>
+ <20191028134247.GA85892@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3d2cc07-cfdb-43a6-1b20-08d75bd14d0e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 18:04:39.6376
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 989AR3NvcfrtIwZYVDk3052DEou2NX8A46SkLpETzUDGQ/VUrmfIXq0cvtfFlVqj5TUkXAdgkWiEZgB9HCI1KQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2654
-X-OriginatorOrg: suse.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028134247.GA85892@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTAvMjYvMTkgMTo1NSBBTSwgd3VibyAoVCkgd3JvdGU6DQo+IEZyb206IEJvIFd1IDx3dWJv
-NDBAaHVhd2VpLmNvbT4NCj4gDQo+IEluIGlzY3NpX2lmX3J4IGZ1bmMsIGFmdGVyIHJlY2Vpdmlu
-ZyBvbmUgcmVxdWVzdCB0aHJvdWdoIGlzY3NpX2lmX3JlY3ZfbXNnDQo+IGZ1bmMsaXNjc2lfaWZf
-c2VuZF9yZXBseSB3aWxsIGJlIGNhbGxlZCB0byB0cnkgdG8gcmVwbHkgdGhlIHJlcXVlc3QgaW4g
-DQo+IGRvLWxvb3AuIElmIHRoZSByZXR1cm4gb2YgaXNjc2lfaWZfc2VuZF9yZXBseSBmdW5jIGZh
-aWxzIGFsbCB0aGUgdGltZSwgb25lDQo+IGRlYWRsb29wIHdpbGwgb2NjdXIuDQo+ICANCj4gRm9y
-IGV4YW1wbGUsIGEgY2xpZW50IG9ubHkgc2VuZCBtc2cgd2l0aG91dCBjYWxsaW5nIHJlY3Ztc2cg
-ZnVuYywgdGhlbiBpdA0KPiB3aWxsIHJlc3VsdCBpbiB0aGUgd2F0Y2hkb2cgc29mdCBsb2NrdXAu
-IFRoZSBkZXRhaWxzIGFyZSBnaXZlbiBhcyBmb2xsb3dzLA0KPiANCj4gRGV0YWlscyBvZiB0aGUg
-c3BlY2lhbCBjYXNlIHdoaWNoIGNhbiBjYXVzZSBkZWFkbG9vcDoNCj4gc29ja19mZCA9IHNvY2tl
-dChBRl9ORVRMSU5LLCBTT0NLX1JBVywgTkVUTElOS19JU0NTSSk7IA0KPiAuLi4gDQo+IHJldHZh
-bCA9IGJpbmQoc29ja19mZCwgKHN0cnVjdCBzb2NrIGFkZHIqKSAmIHNyY19hZGRyLCBzaXplb2Yg
-KHNyY19hZGRyKTsgDQo+IC4uLiANCj4gd2hpbGUgKDEpIHsgDQo+IAlzdGF0ZV9zbWcgPSBzZW5k
-bXNnKHNvY2tfZmQsICZtc2csIDApOyANCj4gfSANCj4gLy8gTm90ZTogcmVjdm1zZyAoc29ja19m
-ZCwgJiBtc2csIDApIGlzIG5vdCBwcm9jZXNzZWQgaGVyZS4gDQo+IGNsb3NlKHNvY2tfZmQpOyAN
-Cj4gDQo+IHdhdGNoZG9nOiBCVUc6IHNvZnQgbG9ja3VwIC0gQ1BVIzcgc3R1Y2sgZm9yIDIycyEg
-W25ldGxpbmtfdGVzdDoyNTMzMDVdDQo+IFNhbXBsZSB0aW1lOiA0MDAwODk3NTI4IG5zKEhaOiAy
-NTApDQo+IFNhbXBsZSBzdGF0OiANCj4gY3VycjogdXNlcjogNjc1NTAzNDgxNTYwLCBuaWNlOiAz
-MjE3MjQwNTAsIHN5czogNDQ4Njg5NTA2NzUwLCBpZGxlOiA0NjU0MDU0MjQwNTMwLCBpb3dhaXQ6
-IDQwODg1NTUwNzAwLCBpcnE6IDE0MTYxMTc0MDIwLCBzb2Z0aXJxOiA4MTA0MzI0MTQwLCBzdDog
-MA0KPiBkZXRhOiB1c2VyOiAwLCBuaWNlOiAwLCBzeXM6IDM5OTgyMTAxMDAsIGlkbGU6IDAsIGlv
-d2FpdDogMCwgaXJxOiAxNTQ3MTcwLCBzb2Z0aXJxOiAyNDI4NzAsIHN0OiAwDQo+IFNhbXBsZSBz
-b2Z0aXJxOg0KPiAJVElNRVI6ICAgICAgICA5OTINCj4gCVNDSEVEOiAgICAgICAgICA4DQo+IFNh
-bXBsZSBpcnFzdGF0Og0KPiAgaXJxICAgIDI6IGRlbHRhICAgICAgIDEwMDMsIGN1cnI6ICAgIDMx
-MDM4MDIsIGFyY2hfdGltZXINCj4gQ1BVOiA3IFBJRDogMjUzMzA1IENvbW06IG5ldGxpbmtfdGVz
-dCBLZHVtcDogbG9hZGVkIFRhaW50ZWQ6IEcgICAgICAgICAgIE9FICAgICANCj4gSGFyZHdhcmUg
-bmFtZTogUUVNVSBLVk0gVmlydHVhbCBNYWNoaW5lLCBCSU9TIDAuMC4wIDAyLzA2LzIwMTUNCj4g
-cHN0YXRlOiA0MDQwMDAwNSAoblpjdiBkYWlmICtQQU4gLVVBTykNCj4gcGMgOiBfX2FsbG9jX3Nr
-YisweDEwNC8weDFiMA0KPiBsciA6IF9fYWxsb2Nfc2tiKzB4OWMvMHgxYjANCj4gc3AgOiBmZmZm
-MDAwMDMzNjAzYTMwDQo+IHgyOTogZmZmZjAwMDAzMzYwM2EzMCB4Mjg6IDAwMDAwMDAwMDAwMDAy
-ZGQgDQo+IHgyNzogZmZmZjgwMGIzNGNlZDgxMCB4MjY6IGZmZmY4MDBiYTc1NjlmMDAgDQo+IHgy
-NTogMDAwMDAwMDBmZmZmZmZmZiB4MjQ6IDAwMDAwMDAwMDAwMDAwMDAgDQo+IHgyMzogZmZmZjgw
-MGY3YzQzZjYwMCB4MjI6IDAwMDAwMDAwMDA0ODAwMjAgDQo+IHgyMTogZmZmZjAwMDAwOTFkOTAw
-MCB4MjA6IGZmZmY4MDBiMzRlZmYyMDAgDQo+IHgxOTogZmZmZjgwMGJhNzU2OWYwMCB4MTg6IDAw
-MDAwMDAwMDAwMDAwMDAgDQo+IHgxNzogMDAwMDAwMDAwMDAwMDAwMCB4MTY6IDAwMDAwMDAwMDAw
-MDAwMDAgDQo+IHgxNTogMDAwMDAwMDAwMDAwMDAwMCB4MTQ6IDAwMDEwMDAxMDEwMDAxMDAgDQo+
-IHgxMzogMDAwMDAwMDEwMTAxMDAwMCB4MTI6IDAxMDEwMDAwMDEwMTAxMDAgDQo+IHgxMTogMDAw
-MTAxMDEwMTAxMDAwMSB4MTA6IDAwMDAwMDAwMDAwMDAyZGQgDQo+IHg5IDogZmZmZjAwMDAzMzYw
-M2Q1OCB4OCA6IGZmZmY4MDBiMzRlZmY0MDAgDQo+IHg3IDogZmZmZjgwMGJhNzU2OTIwMCB4NiA6
-IGZmZmY4MDBiMzRlZmY0MDAgDQo+IHg1IDogMDAwMDAwMDAwMDAwMDAwMCB4NCA6IDAwMDAwMDAw
-ZmZmZmZmZmYgDQo+IHgzIDogMDAwMDAwMDAwMDAwMDAwMCB4MiA6IDAwMDAwMDAwMDAwMDAwMDEg
-DQo+IHgxIDogZmZmZjgwMGIzNGVmZjJjMCB4MCA6IDAwMDAwMDAwMDAwMDAzMDAgDQo+IENhbGwg
-dHJhY2U6DQo+IF9fYWxsb2Nfc2tiKzB4MTA0LzB4MWIwDQo+IGlzY3NpX2lmX3J4KzB4MTQ0LzB4
-MTJiYyBbc2NzaV90cmFuc3BvcnRfaXNjc2ldDQo+IG5ldGxpbmtfdW5pY2FzdCsweDFlMC8weDI1
-OA0KPiBuZXRsaW5rX3NlbmRtc2crMHgzMTAvMHgzNzgNCj4gc29ja19zZW5kbXNnKzB4NGMvMHg3
-MA0KPiBzb2NrX3dyaXRlX2l0ZXIrMHg5MC8weGYwDQo+IF9fdmZzX3dyaXRlKzB4MTFjLzB4MTkw
-DQo+IHZmc193cml0ZSsweGFjLzB4MWMwDQo+IGtzeXNfd3JpdGUrMHg2Yy8weGQ4DQo+IF9fYXJt
-NjRfc3lzX3dyaXRlKzB4MjQvMHgzMA0KPiBlbDBfc3ZjX2NvbW1vbisweDc4LzB4MTMwDQo+IGVs
-MF9zdmNfaGFuZGxlcisweDM4LzB4NzgNCj4gZWwwX3N2YysweDgvMHhjDQo+IA0KPiBIZXJlLCB3
-ZSBhZGQgb25lIGxpbWl0IG9mIHJldHJ5IHRpbWVzIGluIGRvLWxvb3AgdG8gYXZvaWQgdGhlIGRl
-YWRsb29wLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQm8gV3UgPHd1Ym80MEBodWF3ZWkuY29tPg0K
-PiBSZXZpZXdlZC1ieTogWmhpcWlhbmcgTGl1IDxsaXV6aGlxaWFuZzI2QGh1YXdlaS5jb20+DQo+
-IC0tLQ0KPiAgZHJpdmVycy9zY3NpL3Njc2lfdHJhbnNwb3J0X2lzY3NpLmMgfCA2ICsrKysrKw0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvc2NzaS9zY3NpX3RyYW5zcG9ydF9pc2NzaS5jIGIvZHJpdmVycy9zY3NpL3Njc2lfdHJh
-bnNwb3J0X2lzY3NpLmMNCj4gaW5kZXggNDE3Yjg2OGQ4NzM1Li5mMzc3YmZlZDZiMGMgMTAwNjQ0
-DQo+IC0tLSBhL2RyaXZlcnMvc2NzaS9zY3NpX3RyYW5zcG9ydF9pc2NzaS5jDQo+ICsrKyBiL2Ry
-aXZlcnMvc2NzaS9zY3NpX3RyYW5zcG9ydF9pc2NzaS5jDQo+IEBAIC0yNCw2ICsyNCw4IEBADQo+
-ICANCj4gICNkZWZpbmUgSVNDU0lfVFJBTlNQT1JUX1ZFUlNJT04gIjIuMC04NzAiDQo+ICANCj4g
-KyNkZWZpbmUgSVNDU0lfU0VORF9NQVhfQUxMT1dFRCAgICAgMTANCj4gKw0KPiAgI2RlZmluZSBD
-UkVBVEVfVFJBQ0VfUE9JTlRTDQo+ICAjaW5jbHVkZSA8dHJhY2UvZXZlbnRzL2lzY3NpLmg+DQo+
-ICANCj4gQEAgLTM2ODIsNiArMzY4NCw3IEBAIGlzY3NpX2lmX3J4KHN0cnVjdCBza19idWZmICpz
-a2IpDQo+ICAJCXN0cnVjdCBubG1zZ2hkcgkqbmxoOw0KPiAgCQlzdHJ1Y3QgaXNjc2lfdWV2ZW50
-ICpldjsNCj4gIAkJdWludDMyX3QgZ3JvdXA7DQo+ICsJCWludCByZXRyaWVzID0gSVNDU0lfU0VO
-RF9NQVhfQUxMT1dFRDsNCj4gIA0KPiAgCQlubGggPSBubG1zZ19oZHIoc2tiKTsNCj4gIAkJaWYg
-KG5saC0+bmxtc2dfbGVuIDwgc2l6ZW9mKCpubGgpICsgc2l6ZW9mKCpldikgfHwNCj4gQEAgLTM3
-MTAsOCArMzcxMywxMSBAQCBpc2NzaV9pZl9yeChzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQ0KPiAgCQkJ
-CWJyZWFrOw0KPiAgCQkJaWYgKGV2LT50eXBlID09IElTQ1NJX1VFVkVOVF9HRVRfQ0hBUCAmJiAh
-ZXJyKQ0KPiAgCQkJCWJyZWFrOw0KPiArCQkJaWYgKHJldHJpZXMgPD0gMCkNCj4gKwkJCQlicmVh
-azsNCj4gIAkJCWVyciA9IGlzY3NpX2lmX3NlbmRfcmVwbHkocG9ydGlkLCBubGgtPm5sbXNnX3R5
-cGUsDQo+ICAJCQkJCQkgIGV2LCBzaXplb2YoKmV2KSk7DQo+ICsJCQlyZXRyaWVzLS07DQo+ICAJ
-CX0gd2hpbGUgKGVyciA8IDAgJiYgZXJyICE9IC1FQ09OTlJFRlVTRUQgJiYgZXJyICE9IC1FU1JD
-SCk7DQo+ICAJCXNrYl9wdWxsKHNrYiwgcmxlbik7DQo+ICAJfQ0KPiANCg0KWW91IGNvdWxkIGhh
-dmUgdXNlZCAiaWYgKC0tcmV0cmllcyA8IDApIiAob3Igc29tZSB2YXJpYXRpb24gdGhlcmVvZikg
-YnV0DQp0aGF0IG1heSBub3QgYmUgYXMgY2xlYXIsIGFuZCBjZXJ0YWlubHkgaXMgb25seSBhIG5p
-dC4gU28gSSdtIGZpbmUgd2l0aA0KdGhhdC4NCg0KQnV0IEkgd291bGQgbGlrZSB0byBzZWUgc29t
-ZSBzb3J0IG9mIGVycm9yIG9yIGV2ZW4gZGVidWcga2VybmVsIG1lc3NhZ2UNCmlmIHdlIHRpbWUg
-b3V0IHdhaXRpbmcgdG8gcmVjZWl2ZSBhIHJlc3BvbnNlLiBPdGhlcndpc2UsIGhvdyB3aWxsIHNv
-bWUNCmh1bWFuIGRpYWdub3NlIHRoaXMgcHJvYmxlbT8NCg0KLS0gDQpMZWUgRHVuY2FuDQo=
+On Mon, Oct 28, 2019 at 08:42:47AM -0500, Bjorn Helgaas wrote:
+> On Mon, Oct 28, 2019 at 01:28:52PM +0200, Mika Westerberg wrote:
+> > On Sat, Oct 26, 2019 at 09:19:38AM -0500, Bjorn Helgaas wrote:
+> > > On Fri, Oct 04, 2019 at 03:39:47PM +0300, Mika Westerberg wrote:
+> > > > Currently Linux does not follow PCIe spec regarding the required delays
+> > > > after reset. A concrete example is a Thunderbolt add-in-card that
+> > > > consists of a PCIe switch and two PCIe endpoints:
+> > > > 
+> > > >   +-1b.0-[01-6b]----00.0-[02-6b]--+-00.0-[03]----00.0 TBT controller
+> > > >                                   +-01.0-[04-36]-- DS hotplug port
+> > > >                                   +-02.0-[37]----00.0 xHCI controller
+> > > >                                   \-04.0-[38-6b]-- DS hotplug port
+> > > > 
+> > > > The root port (1b.0) and the PCIe switch downstream ports are all PCIe
+> > > > gen3 so they support 8GT/s link speeds.
+> > > > 
+> > > > We wait for the PCIe hierarchy to enter D3cold (runtime):
+> > > > 
+> > > >   pcieport 0000:00:1b.0: power state changed by ACPI to D3cold
+> > > > 
+> > > > When it wakes up from D3cold, according to the PCIe 4.0 section 5.8 the
+> > > > PCIe switch is put to reset and its power is re-applied. This means that
+> > > > we must follow the rules in PCIe 4.0 section 6.6.1.
+> > > 
+> > > If you have the PCIe 5.0 spec, can you update these references to
+> > > that?  If not, I'm happy to do it for you.
+> > 
+> > I do have it and sure, I'll update them.
+> > 
+> > > > For the PCIe gen3 ports we are dealing with here, the following applies:
+> > > > 
+> > > >   With a Downstream Port that supports Link speeds greater than 5.0
+> > > >   GT/s, software must wait a minimum of 100 ms after Link training
+> > > >   completes before sending a Configuration Request to the device
+> > > >   immediately below that Port. Software can determine when Link training
+> > > >   completes by polling the Data Link Layer Link Active bit or by setting
+> > > >   up an associated interrupt (see Section 6.7.3.3).
+> > > > 
+> > > > Translating this into the above topology we would need to do this (DLLLA
+> > > > stands for Data Link Layer Link Active):
+> > > > 
+> > > >   0000:00:1b.0: wait for 100 ms after DLLLA is set before access to 0000:01:00.0
+> > > >   0000:02:00.0: wait for 100 ms after DLLLA is set before access to 0000:03:00.0
+> > > >   0000:02:02.0: wait for 100 ms after DLLLA is set before access to 0000:37:00.0
+> > > > 
+> > > > I've instrumented the kernel with some additional logging so we can see
+> > > > the actual delays performed:
+> > > > 
+> > > >   pcieport 0000:00:1b.0: power state changed by ACPI to D0
+> > > >   pcieport 0000:00:1b.0: waiting for D3cold delay of 100 ms
+> > > >   pcieport 0000:00:1b.0: waiting for D3hot delay of 10 ms
+> > > >   pcieport 0000:02:01.0: waiting for D3hot delay of 10 ms
+> > > >   pcieport 0000:02:04.0: waiting for D3hot delay of 10 ms
+> > > > 
+> > > > For the switch upstream port (01:00.0 reachable through 00:1b.0 root
+> > > > port) we wait for 100 ms but not taking into account the DLLLA
+> > > > requirement. We then wait 10 ms for D3hot -> D0 transition of the root
+> > > > port and the two downstream hotplug ports. This means that we deviate
+> > > > from what the spec requires.
+> > > > 
+> > > > Performing the same check for system sleep (s2idle) transitions it turns
+> > > > out to be even worse. None of the mandatory delays are performed. If
+> > > > this would be S3 instead of s2idle then according to PCI FW spec 3.2
+> > > > section 4.6.8. there is a specific _DSM that allows the OS to skip the
+> > > > delays but this platform does not provide the _DSM and does not go to S3
+> > > > anyway so no firmware is involved that could already handle these
+> > > > delays.
+> > > > 
+> > > > On this particular platform these delays are not actually needed because
+> > > > there is an additional delay as part of the ACPI power resource that is
+> > > > used to turn on power to the hierarchy but since that additional delay
+> > > > is not required by any of standards (PCIe, ACPI) it is not present in
+> > > > the Intel Ice Lake, for example where missing the mandatory delays
+> > > > causes pciehp to start tearing down the stack too early (links are not
+> > > > yet trained). Below is an example how it looks like when this happens:
+> > > > 
+> > > >   pcieport 0000:83:04.0: pciehp: Slot(4): Card not present
+> > > >   pcieport 0000:87:04.0: PME# disabled
+> > > >   pcieport 0000:83:04.0: pciehp: pciehp_unconfigure_device: domain:bus:dev = 0000:86:00
+> > > >   pcieport 0000:86:00.0: Refused to change power state, currently in D3
+> > > >   pcieport 0000:86:00.0: restoring config space at offset 0x3c (was 0xffffffff, writing 0x201ff)
+> > > >   pcieport 0000:86:00.0: restoring config space at offset 0x38 (was 0xffffffff, writing 0x0)
+> > > >   ...
+> > > > 
+> > > > There is also one reported case (see the bugzilla link below) where the
+> > > > missing delay causes xHCI on a Titan Ridge controller fail to runtime
+> > > > resume when USB-C dock is plugged. This does not involve pciehp but
+> > > > instead it PCI core fails to runtime resume the xHCI device:
+> > > > 
+> > > >   pcieport 0000:04:02.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
+> > > >   pcieport 0000:04:02.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100406)
+> > > >   xhci_hcd 0000:39:00.0: Refused to change power state, currently in D3
+> > > >   xhci_hcd 0000:39:00.0: restoring config space at offset 0x3c (was 0xffffffff, writing 0x1ff)
+> > > >   xhci_hcd 0000:39:00.0: restoring config space at offset 0x38 (was 0xffffffff, writing 0x0)
+> > > >   ...
+> > > > 
+> > > > For this reason, introduce a new function pci_bridge_wait_for_secondary_bus()
+> > > > that is called on PCI core resume and runtime resume paths accordingly
+> > > > if the bridge entered D3cold (and thus went through reset).
+> > > > 
+> > > > This is second attempt to add the missing delays. The previous solution
+> > > > in commit c2bf1fc212f7 ("PCI: Add missing link delays required by the
+> > > > PCIe spec") was reverted because of two issues it caused:
+> > > > 
+> > > >   1. One system become unresponsive after S3 resume due to PME service
+> > > >      spinning in pcie_pme_work_fn(). The root port in question reports
+> > > >      that the xHCI sent PME but the xHCI device itself does not have PME
+> > > >      status set. The PME status bit is never cleared in the root port
+> > > >      resulting the indefinite loop in pcie_pme_work_fn().
+> > > > 
+> > > >   2. Slows down resume if the root/downstream port does not support
+> > > >      Data Link Layer Active Reporting because pcie_wait_for_link_delay()
+> > > >      waits 1100 ms in that case.
+> > > > 
+> > > > This version should avoid the above issues because we restrict the delay
+> > > > to happen only if the port went into D3cold.
+> > > > 
+> > > > Link: https://lore.kernel.org/linux-pci/SL2P216MB01878BBCD75F21D882AEEA2880C60@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM/
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=203885
+> > > > Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > > Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > ---
+> > > >  drivers/pci/pci-driver.c | 18 ++++++++
+> > > >  drivers/pci/pci.c        | 92 +++++++++++++++++++++++++++++++++++++---
+> > > >  drivers/pci/pci.h        |  1 +
+> > > >  3 files changed, 104 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > > > index a8124e47bf6e..74a144c9cf4e 100644
+> > > > --- a/drivers/pci/pci-driver.c
+> > > > +++ b/drivers/pci/pci-driver.c
+> > > > @@ -917,6 +917,7 @@ static int pci_pm_suspend_noirq(struct device *dev)
+> > > >  static int pci_pm_resume_noirq(struct device *dev)
+> > > >  {
+> > > >  	struct pci_dev *pci_dev = to_pci_dev(dev);
+> > > > +	bool d3cold = pci_dev->current_state == PCI_D3cold;
+> > > >  	struct device_driver *drv = dev->driver;
+> > > >  	int error = 0;
+> > > >  
+> > > > @@ -947,6 +948,14 @@ static int pci_pm_resume_noirq(struct device *dev)
+> > > >  
+> > > >  	pcie_pme_root_status_cleanup(pci_dev);
+> > > >  
+> > > > +	/*
+> > > > +	 * If the hierarchy went into D3cold wait for the secondary bus to
+> > > > +	 * become accessible. This is important for PCIe to prevent pciehp
+> > > > +	 * from tearing down the downstream devices too soon.
+> 
+> > > Can we move this closer to where we initiate the reset?  It's pretty
+> > > hard to tell from looking at pci_pm_resume_noirq() that there's a
+> > > reset happening here.
+> > 
+> > Well we actually don't do explicit reset but instead we power the thing
+> > on from D3cold.
+> 
+> The point is that it's too hard to maintain unless we can connect the
+> delay with the related hardware event.
+
+The related hardware event is resume in this case. Can you point me to
+the actual point where you want me to put this?
+
+> > > For D3cold->D0, I guess that would be somewhere down in
+> > > platform_pci_set_power_state()?  Maybe acpi_pci_set_power_state()?
+> > > What about the mid_pci_set_power_state() path?  Does that need this
+> > > too?
+> > 
+> > I can take a look if it can be placed there. Yes,
+> > mid_pci_set_power_state() may at least in theory need it too although I
+> > don't remember any MID platforms with real PCIe devices.
+> 
+> I don't know how the OS is supposed to know if these are real PCIe
+> devices or not.  If we don't know, we have to assume they work per
+> spec and may require the delays per spec.
+
+Well MID devices are pretty much "hard-coded" the OS knows everything
+there is connected.
+
+> > > In the ACPI spec, _PS0 doesn't say anything about delays.  _ON (which
+> > > I assume is not for PCI devices themselves) *does* say firmware is
+> > > responsible for sequencing delays, so I would tend to assume it's
+> > > really firmware's job and we shouldn't need to do this in the kernel
+> > > at all.
+> > 
+> > _ON is also for PCI device itself but all those methods are not just for
+> > PCI so they don't really talk about any PCI specific delays. You need to
+> > look at other specs. For example PCI FW spec v3.2 section 4.6.9 says
+> > this about the _DSM that can be used to decrease the delays:
+> > 
+> >   This function is optional. If the platform does not provide it, the
+> >   operating system must adhere to all timing requirements as described
+> >   in the PCI Express Base specification and/or applicable form factor
+> >   specification, including values contained in Readiness Time Reporting
+> >   capability structure.
+> 
+> I don't think this _DSM tells us anything about delays after _ON,
+> _PS0, etc.  All the delays it mentions are for transitions the OS can
+> do natively without the _ON, _PS0, etc methods.  It makes no mention
+> of those methods, or of the D3cold->D0 transition (which would require
+> them).
+
+D3cold->D0 transition is explained in PCI spec 5.0 page 492 (there is
+picture). You can see that D3cold -> D0 involves fundamental reset.
+Section 6.6.1 (page 551) then says that rundamental reset is one
+category of conventional reset. Now, that _DSM allows lowering the init
+time after conventional reset. So to me it talks exactly about those
+delays (also PCIe cannot go into D3cold without help from the platform,
+ACPI in this case).
+
+> > Relevant PCIe spec section is 6.6.1 (also referenced in the changelog).
+> > 
+> > [If you have access to ECN titled "Async Hot-Plug Updates" (you can find
+> > it in PCI-SIG site) that document has a nice table about the delays in
+> > page 32. It compares surprise hotplug with downstream port containment
+> > for async hotplug]
+> 
+> Thanks for the pointer, that ECN looks very useful.  It does talk
+> about delays in general, but I don't see anything that clarifies
+> whether ACPI methods or the OS is responsible for them.
+
+No but the _DSM description above is pretty clear about that. At least
+for me it is clear.
+
+> > > What about D3hot->D0?  When a bridge (Root Port or Switch Downstream
+> > > Port) is in D3hot, I'm not really clear on the state of its link.  If
+> > > the link is down, I assume putting the bridge in D0 will bring it up
+> > > and we'd have to wait for that?  If so, we'd need to do something in
+> > > the reset path, e.g., pci_pm_reset()?
+> > 
+> > AFAIK the link goes into L1 when the function is programmed to any other
+> > D state than D0. 
+> 
+> Yes, and the "function" here is the one on the *downstream* end, e.g.,
+> the Endpoint or Switch Upstream Port.  When the upstream bridge (Root
+> Port or Switch Downstream Port) is in a non-D0 state, the downstream
+> component is unreachable (memory, I/O, and type 1 config requests are
+> terminated by the bridge as unsupported requests).
+
+Yes, the link is in L1 (its PM state is determined by the D-state of the
+downstream component. From there you can get it back to functional state
+by programming the downstream port to D0 (the link is still in L1)
+followed by programming the function itself to D0 which brings the link
+back to L0. It does not involve conventional reset (see picture in page
+492 of PCIe 5.0 spec). The recovery delays needed are listed in the same
+page.
+
+> > If we don't put the device into D3cold then I think it
+> > stays in L1 where it can be brought back by writing D0 to PM register
+> > which does not need any other delay than the D3hot -> D0 (10ms).
+> 
+> In pci_pm_reset(), we're doing the D0->D3hot->D0 transitions
+> specifically to do a reset, so No_Soft_Reset is false.  Doesn't 6.6.1
+> say we need at least 100ms here?
+
+No since it does not go into D3cold. It just "reset" the thing if it
+happens to do internal reset after D3hot -> D0.
+
+Actually looking at the spec 5.3.1.4 it seems that pci_pm_reset() may
+depend on something not guaranteed:
+
+  If the No_Soft_Reset bit is Clear, functional context is not required
+  to be maintained by the Function in the D3hot state, however it is not
+  guaranteed that functional context will be cleared and software must
+  not depend on such behavior.
