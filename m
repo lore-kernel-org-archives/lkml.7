@@ -2,127 +2,147 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3C6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7878CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A9620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD2B208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 01:14:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="T5Ij2Z7/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbfJ1BNJ (ORCPT
+        id S1729245AbfJ1BN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 21:13:09 -0400
-Received: from mga18.intel.com ([134.134.136.126]:57247 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727509AbfJ1BNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 21:13:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 18:13:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,238,1569308400"; 
-   d="scan'208";a="224486495"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Oct 2019 18:13:02 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iOtag-0004hM-6I; Mon, 28 Oct 2019 09:13:02 +0800
-Date:   Mon, 28 Oct 2019 09:12:52 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     kbuild-all@lists.01.org, alastair@d-silva.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Greg Kurz <groug@kaod.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [RFC PATCH] nvdimm: scm_get() can be static
-Message-ID: <20191028011252.ebr7djanid6k25ok@4978f4969bb8>
-References: <20191025044721.16617-9-alastair@au1.ibm.com>
+        Sun, 27 Oct 2019 21:13:59 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:48472 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729206AbfJ1BN7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 21:13:59 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x9S1DsWb032507;
+        Mon, 28 Oct 2019 10:13:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x9S1DsWb032507
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572225235;
+        bh=EfLEmTvlm/lG3uBmRFOrAGC4amACh1c7WhoFmdPquZQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=T5Ij2Z7/wrylG14MkqDiGT7nxBMAAKVyzvPW+LdXqmIixiQdJf5AtAK4xOiis1x30
+         t3U0yKm4t2ZTM1jnZ8eLwFcn6qUXvWoNqEMpP4WE46hJiXghK5Lxq6mExrukMVHjSd
+         3qRit1Dm7VKvWoXpFubC2zX0IBvW5Jn3h5y6POK149Jt0WZ6uGZzRz2g6GMGAp1AZL
+         Pfs70r7/JLO0KMd8AuuxS1BKhRisKE6E0Jzzo+0p+X8cvqgk10FYAGGTKYKrMUpUze
+         8mWOYbFCTX7J0YU3itTe+0QDJ4OAOTByzUf8VBGqgLKYD4YDkT9T1lVzBID4fZ+WKX
+         cvqzXiEzcnHrA==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id k1so2684639vsm.0;
+        Sun, 27 Oct 2019 18:13:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAVRKHKKX2Dr9vdqIVzGimR5XPYHn0tkrkrWgOIz6xym4OhtCJaa
+        B10WAHVCajrmm7J6vTpt1XBUSXyRcI1kP9W61p0=
+X-Google-Smtp-Source: APXvYqyr0LevgJ+Ag2O+ArhDzyh7iTWrIUjn66Lsp9ynwMy1czakgrO35QtlQOeJbZe6f+RnnOZ8aym5cgT7C1jAfHg=
+X-Received: by 2002:a67:e290:: with SMTP id g16mr7786820vsf.54.1572225233664;
+ Sun, 27 Oct 2019 18:13:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025044721.16617-9-alastair@au1.ibm.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191028115740.791bdeba@canb.auug.org.au>
+In-Reply-To: <20191028115740.791bdeba@canb.auug.org.au>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 28 Oct 2019 10:13:17 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS-k6JnYBqzFHXd5D2LrtF111ch-zqkkCaygTGfKaY5_A@mail.gmail.com>
+Message-ID: <CAK7LNAS-k6JnYBqzFHXd5D2LrtF111ch-zqkkCaygTGfKaY5_A@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the amdgpu tree with Linus' tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 28, 2019 at 9:57 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the amdgpu tree got a conflict in:
+>
+>   drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+>
+> between commit:
+>
+>   54b8ae66ae1a ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
+>
+> from Linus' tree and commits:
+>
+>   4f952528add3 ("drm/amdgpu: fix stack alignment ABI mismatch for Clang")
+>   971463bea55c ("drm/amdgpu: fix stack alignment ABI mismatch for GCC 7.1+")
+>   101d09f07966 ("drm/amdgpu: enable -msse2 for GCC 7.1+ users")
+>
+> from the amdgpu tree.
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-Fixes: 0d40f55b9035 ("nvdimm: Add driver for OpenCAPI Storage Class Memory")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- ocxl-scm.c          |    4 ++--
- ocxl-scm_internal.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvdimm/ocxl-scm.c b/drivers/nvdimm/ocxl-scm.c
-index f4e6cc022de8a..c169cb0bc71d4 100644
---- a/drivers/nvdimm/ocxl-scm.c
-+++ b/drivers/nvdimm/ocxl-scm.c
-@@ -733,7 +733,7 @@ static void scm_put(struct scm_data *scm_data)
- 	put_device(&scm_data->dev);
- }
- 
--struct scm_data *scm_get(struct scm_data *scm_data)
-+static struct scm_data *scm_get(struct scm_data *scm_data)
- {
- 	return (get_device(&scm_data->dev) == NULL) ? NULL : scm_data;
- }
-@@ -2142,7 +2142,7 @@ static int scm_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	return -ENXIO;
- }
- 
--struct pci_driver scm_pci_driver = {
-+static struct pci_driver scm_pci_driver = {
- 	.name = "ocxl-scm",
- 	.id_table = scm_pci_tbl,
- 	.probe = scm_probe,
-diff --git a/drivers/nvdimm/ocxl-scm_internal.c b/drivers/nvdimm/ocxl-scm_internal.c
-index e7c247835817b..ee11fb72e1ecd 100644
---- a/drivers/nvdimm/ocxl-scm_internal.c
-+++ b/drivers/nvdimm/ocxl-scm_internal.c
-@@ -64,8 +64,8 @@ int scm_admin_command_request(struct scm_data *scm_data, u8 op_code)
- 	return scm_command_request(scm_data, &scm_data->admin_command, op_code);
- }
- 
--int scm_command_response(const struct scm_data *scm_data,
--			 const struct command_metadata *cmd)
-+static int scm_command_response(const struct scm_data *scm_data,
-+				const struct command_metadata *cmd)
- {
- 	u64 val;
- 	u16 id;
+I believe subsystems should queue up patches
+against -rc1 or a later tag.
+
+Developing based on an older version
+causes unneeded conflicts like this.
+
+
+
+
+> --
+> Cheers,
+> Stephen Rothwell
+>
+> diff --cc drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+> index ddb8d5649e79,be3a614963c6..000000000000
+> --- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+> @@@ -10,16 -10,21 +10,21 @@@ ifdef CONFIG_DRM_AMD_DC_DSC_SUPPOR
+>   DCN20 += dcn20_dsc.o
+>   endif
+>
+> - ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+> -       cc_stack_align := -mpreferred-stack-boundary=4
+> - else ifneq ($(call cc-option, -mstack-alignment=16),)
+> -       cc_stack_align := -mstack-alignment=16
+> - endif
+>  -CFLAGS_dcn20_resource.o := -mhard-float -msse
+> ++CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o := -mhard-float -msse
+>
+> - CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o := -mhard-float -msse $(cc_stack_align)
+> + ifdef CONFIG_CC_IS_GCC
+> + ifeq ($(call cc-ifversion, -lt, 0701, y), y)
+> + IS_OLD_GCC = 1
+> + endif
+> + endif
+>
+> - ifdef CONFIG_CC_IS_CLANG
+> + ifdef IS_OLD_GCC
+> + # Stack alignment mismatch, proceed with caution.
+> + # GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
+> + # (8B stack alignment).
+>  -CFLAGS_dcn20_resource.o += -mpreferred-stack-boundary=4
+> ++CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o += -mpreferred-stack-boundary=4
+> + else
+>  -CFLAGS_dcn20_resource.o += -msse2
+>  +CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o += -msse2
+>   endif
+>
+>   AMD_DAL_DCN20 = $(addprefix $(AMDDALPATH)/dc/dcn20/,$(DCN20))
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
