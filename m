@@ -2,154 +2,154 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA028CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB87BCA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4B220717
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC9820717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GCLVOBm/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itcaaYE+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733114AbfJ1Qew (ORCPT
+        id S2391066AbfJ1QfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:34:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54698 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729420AbfJ1Qew (ORCPT
+        Mon, 28 Oct 2019 12:35:05 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38294 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729420AbfJ1QfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:34:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+PJ/cpShLksxhXNNFQzNtVO1Gbe6G/ZmOiI95RIQce8=; b=GCLVOBm/AQ5lGmzipioJfLuii
-        NJIAO+hNF72A3wMGAYq+jfA+4lyjSUzTMNyZuDrJvjjlNhEup02/qtXEib006wQfw1GNe9qAnhWLG
-        T1CetWl1qhf9gUa67j0CWOua8ErGUPSlVApNsPYaaBp4bp8r2qp2nK1nvJe9z1a2gB7TN62XXPk1m
-        eMy6SHnjhQZNoxfB+Yoq4JNTzeYu0aXZtYDOKxG2ruBlOOakyr5VB4i+k1PK6rNRSO/wJ+sRdGSIw
-        rcYxAJbdzBYjG4EQzMwv3zBAQTsOciEZOJVxmGtqvDnutDhVpoSgmAajpwf+D6hEDCQRS+bbmOl1C
-        LIk8Blh+g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP7yK-0007uC-JH; Mon, 28 Oct 2019 16:34:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 90DC23002B0;
-        Mon, 28 Oct 2019 17:33:21 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E173020C4EA0B; Mon, 28 Oct 2019 17:34:21 +0100 (CET)
-Date:   Mon, 28 Oct 2019 17:34:21 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
-        rabin@rab.in, Mark Rutland <mark.rutland@arm.com>,
-        james.morse@arm.com
-Subject: Re: [PATCH v4 13/16] arm/ftrace: Use __patch_text_real()
-Message-ID: <20191028163421.GI4097@hirez.programming.kicks-ass.net>
-References: <20191018073525.768931536@infradead.org>
- <20191018074634.687479693@infradead.org>
- <20191028162525.GF5576@willie-the-truck>
+        Mon, 28 Oct 2019 12:35:05 -0400
+Received: by mail-qk1-f194.google.com with SMTP id e2so509875qkn.5;
+        Mon, 28 Oct 2019 09:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=V+aaQaPqwGlljXNVka1r+JhSy4Zf+a+9Gc7qygXgWUc=;
+        b=itcaaYE+6GYl7pYCTNs783iHbnIXCBRhBT5HZoTDKGLtfzAmiJNHHZsE4VFqtDZx7T
+         UqJ5M23i3aReXLRLW3WGspIaS+/ocHq9m7583tJgeZnU7eY/Qh125Nr/w8wiCbtU67Cw
+         dWYE/5gZRtPf7EvpL/YdTqqvIYg3+PCr/Tkyonte6symJr172CQ6zldSCfZatb4WPSy2
+         C7NcLPS1mvVB61RuZV9BzUj5JjlDNhH3qaXE1luUZu8LXHSWsInDhnv3RGQZCX5ZfCRj
+         GQiVUxdKOilZEoi7zjvyQyztqEHWtj9KrpvsHkGklyjP9le1t3HkthmY7aiVJMT41Wuh
+         0n+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=V+aaQaPqwGlljXNVka1r+JhSy4Zf+a+9Gc7qygXgWUc=;
+        b=ASMMI/+Srf43jWZCru+Cp3fSQEduxmVe6h/KJfsIoFPYFiMXY27W5BsNlMa7Sa4+sk
+         8dkJEHQdqNHrXnLWu7XDoOdyvVg5jviiMpafsXrEc2hb0FJ6caGY9T95vMEiSRfEdITc
+         2t4wjBRVbfjovqmwLelQEnKQpGuD/vGVb9L/OUi8SlSDEExYCgRO2VFj25cED1zUX36d
+         G2y+qu5Q00V6RmizSda9o0/ir+Z6B5KggheoxY2Rbtr1IR9d1subgBO2ZB5DCDdjCOMS
+         fx0KpXbgdbPY8zxhofudy7t2i5eVVi7G6d4tM8g75JvyYhtqs+ynyQNSg0zsPrYagi5v
+         eonA==
+X-Gm-Message-State: APjAAAWxrDxssT/lc/hfLcqHVj1opDeWVqrvJEBtf3ZIlk24x4KCcURw
+        kEVY2sGj8CSawsQt7HayUXIbmpBbFkXld8KElPk=
+X-Google-Smtp-Source: APXvYqz0dPnDdjILrb5YtPndmQYL57MVOTiyyCF/W1X8UTqB8VyxmZorl20aGamjoPhIGXNrrvpfAqtAA09M6XH9vJA=
+X-Received: by 2002:a37:8f83:: with SMTP id r125mr17141253qkd.36.1572280503386;
+ Mon, 28 Oct 2019 09:35:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028162525.GF5576@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191027052042.GK29418@shao2-debian>
+In-Reply-To: <20191027052042.GK29418@shao2-debian>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 28 Oct 2019 09:34:52 -0700
+Message-ID: <CAEf4BzabWfxxCwxLUbcAyTSZuc-qMd2ROBvVo8kgCg1cUx7r7w@mail.gmail.com>
+Subject: Re: [libbpf] dd4436bb83: kernel_selftests.bpf.test_section_names.fail
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@lists.01.org,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 04:25:26PM +0000, Will Deacon wrote:
-> Hi Peter,
-> 
-> On Fri, Oct 18, 2019 at 09:35:38AM +0200, Peter Zijlstra wrote:
-> > Instead of flipping text protection, use the patch_text infrastructure
-> > that uses a fixmap alias where required.
-> > 
-> > This removes the last user of set_all_modules_text_*().
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Cc: ard.biesheuvel@linaro.org
-> > Cc: rabin@rab.in
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: james.morse@arm.com
-> > ---
-> >  arch/arm/kernel/ftrace.c |   16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> > 
-> > --- a/arch/arm/kernel/ftrace.c
-> > +++ b/arch/arm/kernel/ftrace.c
-> > @@ -22,6 +22,7 @@
-> >  #include <asm/ftrace.h>
-> >  #include <asm/insn.h>
-> >  #include <asm/set_memory.h>
-> > +#include <asm/patch.h>
-> >  
-> >  #ifdef CONFIG_THUMB2_KERNEL
-> >  #define	NOP		0xf85deb04	/* pop.w {lr} */
-> > @@ -31,13 +32,15 @@
-> >  
-> >  #ifdef CONFIG_DYNAMIC_FTRACE
-> >  
-> > +static int patch_text_remap = 0;
-> > +
-> >  static int __ftrace_modify_code(void *data)
-> >  {
-> >  	int *command = data;
-> >  
-> > -	set_kernel_text_rw();
-> > +	patch_text_remap++;
-> >  	ftrace_modify_all_code(*command);
-> > -	set_kernel_text_ro();
-> > +	patch_text_remap--;
-> >  
-> >  	return 0;
-> >  }
-> > @@ -59,13 +62,13 @@ static unsigned long adjust_address(stru
-> >  
-> >  int ftrace_arch_code_modify_prepare(void)
-> >  {
-> > -	set_all_modules_text_rw();
-> > +	patch_text_remap++;
-> >  	return 0;
-> >  }
-> >  
-> >  int ftrace_arch_code_modify_post_process(void)
-> >  {
-> > -	set_all_modules_text_ro();
-> > +	patch_text_remap--;
-> >  	/* Make sure any TLB misses during machine stop are cleared. */
-> >  	flush_tlb_all();
-> >  	return 0;
-> > @@ -97,10 +100,7 @@ static int ftrace_modify_code(unsigned l
-> >  			return -EINVAL;
-> >  	}
-> >  
-> > -	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
-> > -		return -EPERM;
-> > -
-> > -	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
-> > +	__patch_text_real((void *)pc, new, patch_text_remap);
-> 
-> Why can't you just pass 'true' for patch_text_remap? AFAICT, the only
-> time you want to pass false is during early boot when the text is
-> assumedly still writable without the fixmap.
+On Sat, Oct 26, 2019 at 10:28 PM kernel test robot
+<rong.a.chen@intel.com> wrote:
+>
+> FYI, we noticed the following commit (built with gcc-7):
+>
+> commit: dd4436bb838338cfda253d7f012610a73e4078fd ("libbpf: Teach bpf_obje=
+ct__open to guess program types")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>
+> in testcase: kernel_selftests
+> with following parameters:
+>
+>         group: kselftests-00
+>
+> test-description: The kernel contains a set of "self tests" under the too=
+ls/testing/selftests/ directory. These are intended to be small unit tests =
+to exercise individual code paths in the kernel.
+> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+>
+>
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -=
+m 8G
+>
+> caused below changes (please refer to attached dmesg/kmsg for entire log/=
+backtrace):
+>
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
 
-Ah, it will also become true for module loading once we rework where we
-flip the module text RO,X. See this patch:
 
-  https://lkml.kernel.org/r/20191018074634.858645375@infradead.org
+This was already fixed in 9bc6384b3644 ("selftests/bpf: Move
+test_section_names into test_progs and fix it"), does this robot
+automatically pick fixes like this and resolves the issue?
 
-But for that to land, there's still a few other issues to fix (KLP).
+>
+>
+> # selftests: bpf: test_section_names
+> # libbpf: failed to guess program type based on ELF section name 'InvAliD=
+'
+> # libbpf: supported section(type) names are: socket kprobe/ uprobe/ kretp=
+robe/ uretprobe/ classifier action tracepoint/ tp/ raw_tracepoint/ raw_tp/ =
+tp_btf/ xdp perf_event lwt_in lwt_out lwt_xmit lwt_seg6local cgroup_skb/ing=
+ress cgroup_skb/egress cgroup/skb cgroup/sock cgroup/post_bind4 cgroup/post=
+_bind6 cgroup/dev sockops sk_skb/stream_parser sk_skb/stream_verdict sk_skb=
+ sk_msg lirc_mode2 flow_dissector cgroup/bind4 cgroup/bind6 cgroup/connect4=
+ cgroup/connect6 cgroup/sendmsg4 cgroup/sendmsg6 cgroup/recvmsg4 cgroup/rec=
+vmsg6 cgroup/sysctl cgroup/getsockopt cgroup/setsockopt
+> # test_section_names: prog: unexpected rc=3D-3 for InvAliD
+> # libbpf: failed to guess program type based on ELF section name 'cgroup'
+> # libbpf: supported section(type) names are: socket kprobe/ uprobe/ kretp=
+robe/ uretprobe/ classifier action tracepoint/ tp/ raw_tracepoint/ raw_tp/ =
+tp_btf/ xdp perf_event lwt_in lwt_out lwt_xmit lwt_seg6local cgroup_skb/ing=
+ress cgroup_skb/egress cgroup/skb cgroup/sock cgroup/post_bind4 cgroup/post=
+_bind6 cgroup/dev sockops sk_skb/stream_parser sk_skb/stream_verdict sk_skb=
+ sk_msg lirc_mode2 flow_dissector cgroup/bind4 cgroup/bind6 cgroup/connect4=
+ cgroup/connect6 cgroup/sendmsg4 cgroup/sendmsg6 cgroup/recvmsg4 cgroup/rec=
+vmsg6 cgroup/sysctl cgroup/getsockopt cgroup/setsockopt
+> # test_section_names: prog: unexpected rc=3D-3 for cgroup
+> # Summary: 38 PASSED, 2 FAILED
+> not ok 18 selftests: bpf: test_section_names
+>
+>
+> To reproduce:
+>
+>         # build kernel
+>         cd linux
+>         cp config-5.4.0-rc1-00595-gdd4436bb83833 .config
+>         make HOSTCC=3Dgcc-7 CC=3Dgcc-7 ARCH=3Dx86_64 olddefconfig prepare=
+ modules_prepare bzImage
+>
+>         git clone https://github.com/intel/lkp-tests.git
+>         cd lkp-tests
+>         bin/lkp qemu -k <bzImage> job-script # job-script is attached in =
+this email
+>
+>
+>
+> Thanks,
+> Rong Chen
+>
