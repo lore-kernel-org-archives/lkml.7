@@ -2,117 +2,106 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013F3CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E264ECA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB61C218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572301249;
-	bh=VSBk7YAMwCwbsPuvRCBw6UeuvHY7STvzXKIvzV2nyuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XH3Ga3nNsyhFD7eVIMrQ0/QEg/mRX7OQNF3VneEcL8Awt60z/+f3XjXoWOjWRLN/R
-	 Hm3OaVGi4Yl9ozp1w48oYrVJqvaNCCNOouCWxHyc9y1xTaWLbd2fD8oOZnNOSdRCl0
-	 6X5gJDnWbFK0QXqjR1rxJyzgRABxU4UTCX6GyOFQ=
+	by mail.kernel.org (Postfix) with ESMTP id B1F09217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:24:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="drzNa+/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfJ1WUs (ORCPT
+        id S1727794AbfJ1WYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 18:20:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727601AbfJ1WUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 18:20:48 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F6A821479;
-        Mon, 28 Oct 2019 22:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572301247;
-        bh=VSBk7YAMwCwbsPuvRCBw6UeuvHY7STvzXKIvzV2nyuI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0gosvq7R5GnXKiYYLDbPH29ONaAKpYHE02ZEPnzDUcqvXqhp72Teg/Ds/g3vOOu+v
-         FG4avd2WmHPRGFFlHNloeY/x+Kqn7qS/tlQLnwyI/SyJIWS26MT+8t3UyWWDNnzYML
-         dc4R4LPqV+P2GObHwW+vgu32hGQhqxFZzIWcYSL4=
-Date:   Mon, 28 Oct 2019 22:20:42 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "moderated list:ARM SMMU DRIVERS" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] iommu/arm-smmu: fix "hang" when games exit
-Message-ID: <20191028222042.GB8532@willie-the-truck>
-References: <418d8426-f299-1269-2b2e-f86677cf22c2@arm.com>
- <20191007204906.19571-1-robdclark@gmail.com>
+        Mon, 28 Oct 2019 18:24:09 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36399 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ1WYJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 18:24:09 -0400
+Received: by mail-oi1-f195.google.com with SMTP id j7so7320580oib.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 15:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r2oZkcbSPejQY7cz80oHS9fpmT93sVGHDU0X3tx1u58=;
+        b=drzNa+/Dszlh/bn18l5YMKuFsawU1IqoJickE5gJYg70HnGq1M35FAzxLHS885Xcqh
+         a+575bpErnIGrxVE/hbeXohi75WuBFQtWAjN0r+P3LJDQyM7jePUOeu8MGopEUMjjH/t
+         DFBj0RF+IXv1eK/hpFNw+oWywiRPpZNF1LLO7SJ71U1QqG0+1is+uXX2da0kENDk4wsq
+         Jrl3k7Ia+cYxTUEYQvywZ6SgEN3jAZ78e6z4vj4RbFunhJRg7r6lxkNQ8/L0S/plVXx0
+         qzrLqryUAjNcA6vYvOj/NhY3TPBll3NbICSMdNEamTD3RzWWuZ4GCDNvmKvhRwaHu7UO
+         HOdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r2oZkcbSPejQY7cz80oHS9fpmT93sVGHDU0X3tx1u58=;
+        b=giZDg7J9vq+8jCRDc0SWqVbHfGgVX/orz8nRH8Av0b8HCN2u1Ah3ljvk6c//oXiAst
+         93ofHfEPwonDi0FAJXdevnqtt0zVsPdPLiXH3zWJfY780uMdLAV3m2/0GTrDGLPk0vKJ
+         dHKq/ELyto3m93K0BrWilWaMiTZY76fEdreO5QJsq11+GSfXAF5H119NWCbRNnizEDZv
+         qRnou0uEo5URXDWx5Ai0tuSFULaq+tAuy0hp3h33fbWaq0ms5+55ZB7SFmPy3MHKCSbF
+         112oC/2VsjZSfUrxPuL0fPfioriKtDHMk7i168KNetwSciLXRw6e+Xox0n841ruB0mNS
+         5s/A==
+X-Gm-Message-State: APjAAAUW1Pr1qVjyXT16QvhqZW8wSLqbPBjZABxPtjNCrj491w6FAG2d
+        bT1hIG08DnENuJwZeA+RPmSPqghcmsfdv+xzk0gobg==
+X-Google-Smtp-Source: APXvYqwnzz+cE9Sm5n4t9XdS6VL/NqxXZYddSpQ/iGURH0y0OzEDe7qOi50WKmaRadslXLCPhh1klrU3egyz/LefQbQ=
+X-Received: by 2002:a05:6808:113:: with SMTP id b19mr1232160oie.169.1572301447788;
+ Mon, 28 Oct 2019 15:24:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007204906.19571-1-robdclark@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191025234834.28214-1-john.stultz@linaro.org>
+ <20191025234834.28214-2-john.stultz@linaro.org> <20191028074642.GB31867@infradead.org>
+ <CALAqxLXqLUpew9XptiXZGodf5M3qyNmD-D1-2CHZ9PRfPTBRRQ@mail.gmail.com>
+In-Reply-To: <CALAqxLXqLUpew9XptiXZGodf5M3qyNmD-D1-2CHZ9PRfPTBRRQ@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 28 Oct 2019 15:23:57 -0700
+Message-ID: <CALAqxLVW8KQVKwu=AY5Hkv7m9_L6djDy8h0se46MA+t_9_CCgg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/2] mm: cma: Export cma symbols for cma heap as a module
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Sandeep Patil <sspatil@google.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yue Hu <huyue2@yulong.com>, Mike Rapoport <rppt@linux.ibm.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Mon, Oct 28, 2019 at 11:39 AM John Stultz <john.stultz@linaro.org> wrote:
+> On Mon, Oct 28, 2019 at 12:46 AM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Fri, Oct 25, 2019 at 11:48:33PM +0000, John Stultz wrote:
+> > >  struct cma *dma_contiguous_default_area;
+> > > +EXPORT_SYMBOL(dma_contiguous_default_area);
+> >
+> > Please CC the dma maintainer.  And no, you have no business using this.
+>
+> Sure thing. And I'll look again to see why I was needing to pull that
+> one in to get it to build.
 
-On Mon, Oct 07, 2019 at 01:49:06PM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> When games, browser, or anything using a lot of GPU buffers exits, there
-> can be many hundreds or thousands of buffers to unmap and free.  If the
-> GPU is otherwise suspended, this can cause arm-smmu to resume/suspend
-> for each buffer, resulting 5-10 seconds worth of reprogramming the
-> context bank (arm_smmu_write_context_bank()/arm_smmu_write_s2cr()/etc).
-> To the user it would appear that the system just locked up.
-> 
-> A simple solution is to use pm_runtime_put_autosuspend() instead, so we
-> don't immediately suspend the SMMU device.
+Ah. So looking a bit closer, I'm needing this due to my using
+dev_get_cma_area()  to get the default cma area for the dmabuf
+cma_heap.
 
-Please can you reword the subject to be a bit more useful? The commit
-message is great, but the subject is a bit like "fix bug in code" to me.
+Do you have a suggestion for how to get a reference to the default CMA
+area without exporting dma_contiguous_default_area? Would it be
+preferred to move dev_get_cma_area() into the .c file and
+EXPORT_SYMBOL_GPL that function?
 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
-> v1: original
-> v2: unconditionally use autosuspend, rather than deciding based on what
->     consumer does
-> 
->  drivers/iommu/arm-smmu.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 3f1d55fb43c4..b7b41f5001bc 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -289,7 +289,7 @@ static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
->  static inline void arm_smmu_rpm_put(struct arm_smmu_device *smmu)
->  {
->  	if (pm_runtime_enabled(smmu->dev))
-> -		pm_runtime_put(smmu->dev);
-> +		pm_runtime_put_autosuspend(smmu->dev);
->  }
->  
->  static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
-> @@ -1445,6 +1445,9 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  	/* Looks ok, so add the device to the domain */
->  	ret = arm_smmu_domain_add_master(smmu_domain, fwspec);
-
-Please can you put a comment here explaining what this is doing? An abridged
-version of the commit message is fine.
-
-> +	pm_runtime_set_autosuspend_delay(smmu->dev, 20);
-> +	pm_runtime_use_autosuspend(smmu->dev);
-
-Cheers,
-
-Will
+thanks
+-john
