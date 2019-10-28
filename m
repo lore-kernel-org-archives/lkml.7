@@ -2,47 +2,75 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289ADCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF037CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18E9205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC20320659
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:10:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="mLTX2WFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389736AbfJ1OHg (ORCPT
+        id S1730000AbfJ1OKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:07:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:41247 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730388AbfJ1OHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:07:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 07:07:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
-   d="scan'208";a="224640543"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 07:07:34 -0700
-Cc:     baolu.lu@linux.intel.com, linux-kernel@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH] iommu/intel: Use fallback generic_device_group() for ACPI
- devices
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        iommu@lists.linux-foundation.org
-References: <20191004205554.21055-1-chris@chris-wilson.co.uk>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <b73f0c36-42a7-95be-3166-df7fe372c905@linux.intel.com>
-Date:   Mon, 28 Oct 2019 22:04:56 +0800
+        Mon, 28 Oct 2019 10:10:03 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:33892 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728383AbfJ1OKD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 10:10:03 -0400
+Received: by mail-il1-f195.google.com with SMTP id a13so8315210ilp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:10:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=kr5iIONmkKZJVxLZgVwCjkI7onir+j8sN/xM4cByuJ0=;
+        b=mLTX2WFgA3I8a4rG062yWLJFpkzXdtX2gl/+Cb+bSgNW+lePV51gEXQtkrnw83Kfky
+         Jci05OF2/yaVajJIiQXDf2mTYMJSOv4cENARR2PvUwQgacfZwSUpf7bBWx/SOPe0851f
+         OQZStjptb461wFrqPT+uLfuMmCrdHA4cZH0TnuMY1rOHXx4Oi6PW/22u0Mxfpk2Tsl0w
+         Ks1UmMSEDqFSm9pUXJzGgh4TYzR6CHLaUI2oFeXYq3XwyYEXHpcSwrX0uD2Ygvnxwk/j
+         GHw/xsarhG+WIsBH3wrs455v06+BV6JZo3h14P4dgnW1HrYp+0qAy6F+8QRkdDq+e/KZ
+         VDmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kr5iIONmkKZJVxLZgVwCjkI7onir+j8sN/xM4cByuJ0=;
+        b=jwgugZpT78/WgHfsw8EmFjBsjpsIcglPCKTyGGCTY9YM3pxUtjn9rzyO4OjMVrUmfl
+         NaI8GHEzLgOoIBNgpjNqMOVbtbFFxoaziLUTBHq/rtKhZ+VFxKGPJaxwWFmU6s8Jx1tj
+         CKzWcoKgvU7O0cTEwVpJ0bYThDcl151Y1yQACMym7apFhKISRdhNt+zTnS5XRGzvx9W9
+         v8F1HoIg7pl112l5J8rQMxgHV8PNvrCH2eI4rOkIsN9K28fLm525yzMO6sWNQENUB4ZI
+         FllQBThkmEeaYdQXGOYf4JUuXNXfg4r6MqcnCu2icauDi+bXYk37mL+mLbt95r4iAPpe
+         sGVg==
+X-Gm-Message-State: APjAAAVwtuD+frr7UNDs3taZSeFJ9OY/Y4pquzndDCCvs0LLYeFTfIex
+        6P2LfhxEY9NYJB41yU4RAywS3w==
+X-Google-Smtp-Source: APXvYqyu2qmdiR4OZs+ChJ3ToBacy+uLfEdYJlGXR8GYIvKhPgHoVVNo6nCm3lSS7AjYt83yv3RrLA==
+X-Received: by 2002:a92:d643:: with SMTP id x3mr20836934ilp.203.1572271800046;
+        Mon, 28 Oct 2019 07:10:00 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id n3sm1660456ilm.8.2019.10.28.07.09.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 28 Oct 2019 07:09:58 -0700 (PDT)
+Subject: Re: KASAN: use-after-free Read in io_uring_setup
+To:     syzbot <syzbot+6f03d895a6cd0d06187f@syzkaller.appspotmail.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <0000000000007c4f500595f35bf4@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <883b3cf9-1d92-a22f-e946-0936d09d36c0@kernel.dk>
+Date:   Mon, 28 Oct 2019 08:09:57 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191004205554.21055-1-chris@chris-wilson.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <0000000000007c4f500595f35bf4@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,137 +78,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
-
-Just a quick scan of the dmesg attached in the bugzilla.
-
-There are 6 devices reported in ANDD.
-
-[    0.458662] DMAR: ANDD device: 1 name: \_SB.PCI0.I2C0
-[    0.458683] DMAR: ANDD device: 2 name: \_SB.PCI0.I2C1
-[    0.458704] DMAR: ANDD device: 3 name: \_SB.PCI0.SPI0
-[    0.458724] DMAR: ANDD device: 4 name: \_SB.PCI0.SPI1
-[    0.458745] DMAR: ANDD device: 6 name: \_SB.PCI0.UA01
-[    0.458766] DMAR: ANDD device: 7 name: \_SB.PCI0.SDHC
-
-On 10/5/19 4:55 AM, Chris Wilson wrote:
-> [    2.073922] DMAR: ACPI device "INT33C2:00" under DMAR at fed91000 as 00:15.1
-> [    2.073983] DMAR: ACPI device "INT33C3:00" under DMAR at fed91000 as 00:15.2
-> [    2.074027] DMAR: ACPI device "INT33C0:00" under DMAR at fed91000 as 00:15.3
-> [    2.074072] DMAR: ACPI device "INT33C1:00" under DMAR at fed91000 as 00:15.4
-
-Four of them have been mapped to pci devices with device# 15:
-
-> [    2.074114] DMAR: Failed to find handle for ACPI object \_SB.PCI0.UA01
-> [    2.074156] DMAR: Failed to find handle for ACPI object \_SB.PCI0.SDHC
-
-And 2 failed to be probed due to lack of ACPI objects.
-
-> [    2.074208] DMAR: No ATSR found
-> [    2.074572] DMAR: dmar0: Using Queued invalidation
-> [    2.074629] DMAR: dmar1: Using Queued invalidation
-> [    2.110029] pci 0000:00:00.0: Adding to iommu group 0
-> [    2.115703] pci 0000:00:02.0: Adding to iommu group 1
-> [    2.116221] pci 0000:00:03.0: Adding to iommu group 2
-> [    2.116759] pci 0000:00:14.0: Adding to iommu group 3
-> [    2.117276] pci 0000:00:16.0: Adding to iommu group 4
-> [    2.117762] pci 0000:00:1b.0: Adding to iommu group 5
-> [    2.118264] pci 0000:00:1c.0: Adding to iommu group 6
-> [    2.118733] pci 0000:00:1c.2: Adding to iommu group 7
-> [    2.119289] pci 0000:00:1d.0: Adding to iommu group 8
-> [    2.119846] pci 0000:00:1f.0: Adding to iommu group 9
-> [    2.119960] pci 0000:00:1f.2: Adding to iommu group 9
-> [    2.120073] pci 0000:00:1f.3: Adding to iommu group 9
-> [    2.120549] pci 0000:06:00.0: Adding to iommu group 10
-
-IOMMU pci bus scan didn't see pci devices with device# 15.
-
-Are these hidden devices? Do you mind posting the output of lspci
-command? With this fix, do these devices work well?
-
-Best regards,
-baolu
-
-> [    2.120631] ------------[ cut here ]------------
-> [    2.120681] WARNING: CPU: 2 PID: 1 at drivers/iommu/iommu.c:1275 pci_device_group+0x109/0x120
-> [    2.120723] Modules linked in:
-> [    2.120744] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-CI-CI_DRM_7000+ #1
-> [    2.120782] Hardware name: Dell Inc. XPS 12-9Q33/XPS 12-9Q33, BIOS A04 12/03/2013
-> [    2.120821] RIP: 0010:pci_device_group+0x109/0x120
-> [    2.120848] Code: e9 ff ff 48 85 c0 48 89 c5 75 bd 48 8d 74 24 10 4c 89 e7 e8 49 ea ff ff 48 85 c0 48 89 c5 75 a8 e8 fc ee ff ff 48 89 c5 eb 9e <0f> 0b 48 c7 c5 ea ff ff ff eb 93 e8 37 5f a7 ff 0f 1f 80 00 00 00
-> [    2.120933] RSP: 0000:ffffc90000037cd0 EFLAGS: 00010202
-> [    2.120961] RAX: ffffffff81639810 RBX: ffffffffffffffea RCX: 0000000000000000
-> [    2.120996] RDX: 0000000000000000 RSI: 00000000403efd19 RDI: ffff888119999c08
-> [    2.121031] RBP: ffff888119999c08 R08: ffff88811a5188f8 R09: 00000000fffffffe
-> [    2.121066] R10: 00000000ca7d066a R11: 000000002161dc90 R12: ffff888118320a58
-> [    2.121100] R13: ffff888119fc1e50 R14: 0000000000000001 R15: ffff888119fc2300
-> [    2.121136] FS:  0000000000000000(0000) GS:ffff88811b900000(0000) knlGS:0000000000000000
-> [    2.121176] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    2.121205] CR2: 0000000000000000 CR3: 0000000005210001 CR4: 00000000001606e0
-> [    2.121240] Call Trace:
-> [    2.121264]  iommu_group_get_for_dev+0x77/0x210
-> [    2.121295]  intel_iommu_add_device+0x54/0x1c0
-> [    2.121323]  iommu_probe_device+0x43/0xc0
-> [    2.121350]  intel_iommu_init+0x11fb/0x12c9
-> [    2.121383]  ? set_debug_rodata+0xc/0xc
-> [    2.121410]  ? set_debug_rodata+0xc/0xc
-> [    2.121434]  ? e820__memblock_setup+0x5b/0x5b
-> [    2.121458]  ? pci_iommu_init+0x11/0x3a
-> [    2.121471]  ? rcu_read_lock_sched_held+0x4d/0x80
-> [    2.121471]  pci_iommu_init+0x11/0x3a
-> [    2.121471]  do_one_initcall+0x58/0x2ff
-> [    2.121471]  ? set_debug_rodata+0xc/0xc
-> [    2.121471]  ? rcu_read_lock_sched_held+0x4d/0x80
-> [    2.121471]  kernel_init_freeable+0x137/0x1c7
-> [    2.121471]  ? rest_init+0x250/0x250
-> [    2.121471]  kernel_init+0x5/0x100
-> [    2.121471]  ret_from_fork+0x3a/0x50
-> [    2.121471] irq event stamp: 1252438
-> [    2.121471] hardirqs last  enabled at (1252437): [<ffffffff8123f4ed>] __slab_alloc.isra.84.constprop.89+0x4d/0x70
-> [    2.121471] hardirqs last disabled at (1252438): [<ffffffff81001bba>] trace_hardirqs_off_thunk+0x1a/0x20
-> [    2.121471] softirqs last  enabled at (1252382): [<ffffffff81c00385>] __do_softirq+0x385/0x47f
-> [    2.121471] softirqs last disabled at (1252375): [<ffffffff810b7f4a>] irq_exit+0xba/0xc0
-> [    2.121471] ---[ end trace 610717c918cf08f3 ]---
-> [    2.121974] DMAR: ACPI name space devices didn't probe correctly
-> [    2.122069] DMAR: Intel(R) Virtualization Technology for Directed I/O
+On 10/28/19 1:22 AM, syzbot wrote:
+> Hello,
 > 
-> Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111906
-> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> ---
-> Take the patch with a pinch of salt; it seems to be the pattern used by
-> other iommu backends, but I don't know if it is even suitable for iommu
-> and what appear to be ACPI devices rather than the expected PCI.
-> ---
->   drivers/iommu/intel-iommu.c | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
+> syzbot found the following crash on:
 > 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index ed321b808176..e231be0d0534 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5939,6 +5939,14 @@ static bool intel_iommu_is_attach_deferred(struct iommu_domain *domain,
->   	return dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO;
->   }
->   
-> +static struct iommu_group *intel_iommu_device_group(struct device *dev)
-> +{
-> +	if (dev_is_pci(dev))
-> +		return pci_device_group(dev);
-> +	else
-> +		return generic_device_group(dev);
-> +}
-> +
->   const struct iommu_ops intel_iommu_ops = {
->   	.capable		= intel_iommu_capable,
->   	.domain_alloc		= intel_iommu_domain_alloc,
-> @@ -5956,7 +5964,7 @@ const struct iommu_ops intel_iommu_ops = {
->   	.get_resv_regions	= intel_iommu_get_resv_regions,
->   	.put_resv_regions	= intel_iommu_put_resv_regions,
->   	.apply_resv_region	= intel_iommu_apply_resv_region,
-> -	.device_group		= pci_device_group,
-> +	.device_group		= intel_iommu_device_group,
->   	.dev_has_feat		= intel_iommu_dev_has_feat,
->   	.dev_feat_enabled	= intel_iommu_dev_feat_enabled,
->   	.dev_enable_feat	= intel_iommu_dev_enable_feat,
+> HEAD commit:    5a1e843c Merge tag 'mips_fixes_5.4_3' of git://git.kernel...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10e2001f600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=420126a10fdda0f1
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6f03d895a6cd0d06187f
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d4fa97600000
 > 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+6f03d895a6cd0d06187f@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KASAN: use-after-free in io_uring_create fs/io_uring.c:3842 [inline]
+> BUG: KASAN: use-after-free in io_uring_setup+0x1877/0x18c0
+> fs/io_uring.c:3881
+> Read of size 8 at addr ffff888082284048 by task syz-executor.5/11342
+> 
+> CPU: 1 PID: 11342 Comm: syz-executor.5 Not tainted 5.4.0-rc4+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>    __dump_stack lib/dump_stack.c:77 [inline]
+>    dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>    print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+>    __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+>    kasan_report+0x12/0x20 mm/kasan/common.c:634
+>    __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+>    io_uring_create fs/io_uring.c:3842 [inline]
+>    io_uring_setup+0x1877/0x18c0 fs/io_uring.c:3881
+>    __do_sys_io_uring_setup fs/io_uring.c:3894 [inline]
+>    __se_sys_io_uring_setup fs/io_uring.c:3891 [inline]
+>    __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:3891
+>    do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x459f39
+> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f313e126c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
+> RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 0000000000459f39
+> RDX: 0000000000000000 RSI: 00000000200005c0 RDI: 000000040000000e
+> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f313e1276d4
+> R13: 00000000004c1512 R14: 00000000004d4da8 R15: 00000000ffffffff
+> 
+> Allocated by task 11342:
+>    save_stack+0x23/0x90 mm/kasan/common.c:69
+>    set_track mm/kasan/common.c:77 [inline]
+>    __kasan_kmalloc mm/kasan/common.c:510 [inline]
+>    __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+>    kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+>    kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
+>    kmalloc include/linux/slab.h:556 [inline]
+>    kzalloc include/linux/slab.h:690 [inline]
+>    io_ring_ctx_alloc fs/io_uring.c:393 [inline]
+>    io_uring_create fs/io_uring.c:3811 [inline]
+>    io_uring_setup+0xec6/0x18c0 fs/io_uring.c:3881
+>    __do_sys_io_uring_setup fs/io_uring.c:3894 [inline]
+>    __se_sys_io_uring_setup fs/io_uring.c:3891 [inline]
+>    __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:3891
+>    do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Freed by task 11335:
+>    save_stack+0x23/0x90 mm/kasan/common.c:69
+>    set_track mm/kasan/common.c:77 [inline]
+>    kasan_set_free_info mm/kasan/common.c:332 [inline]
+>    __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+>    kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+>    __cache_free mm/slab.c:3425 [inline]
+>    kfree+0x10a/0x2c0 mm/slab.c:3756
+>    io_ring_ctx_free fs/io_uring.c:3552 [inline]
+>    io_ring_ctx_wait_and_kill+0x4d7/0x6c0 fs/io_uring.c:3592
+>    io_uring_release+0x42/0x50 fs/io_uring.c:3600
+>    __fput+0x2ff/0x890 fs/file_table.c:280
+>    ____fput+0x16/0x20 fs/file_table.c:313
+>    task_work_run+0x145/0x1c0 kernel/task_work.c:113
+>    tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>    exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+>    prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+>    syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+>    do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> The buggy address belongs to the object at ffff888082284000
+>    which belongs to the cache kmalloc-2k of size 2048
+> The buggy address is located 72 bytes inside of
+>    2048-byte region [ffff888082284000, ffff888082284800)
+> The buggy address belongs to the page:
+> page:ffffea000208a100 refcount:1 mapcount:0 mapping:ffff8880aa400e00
+> index:0x0
+> flags: 0x1fffc0000000200(slab)
+> raw: 01fffc0000000200 ffffea0002a1bc88 ffffea00023fa248 ffff8880aa400e00
+> raw: 0000000000000000 ffff888082284000 0000000100000001 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Memory state around the buggy address:
+>    ffff888082283f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>    ffff888082283f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>> ffff888082284000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                                                 ^
+>    ffff888082284080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>    ffff888082284100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+
+Interesting, looks like a malicious case that attempts to close the
+fd as soon as it's installed. As a result of that, the rest of the
+setup will be done on a ring that's already torn down. The below should
+fix that.
+
+Totally untested, haven't tried the reproducer yet.
+
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index ba1431046c98..749637ca9cf7 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3821,6 +3821,12 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p)
+ 	ctx->account_mem = account_mem;
+ 	ctx->user = user;
+ 
++	/*
++	 * Grab an initial reference to the ctx, so we ensure we have one
++	 * by the time the fd is installed.
++	 */
++	percpu_ref_get(&ctx->refs);
++
+ 	ret = io_allocate_scq_urings(ctx, p);
+ 	if (ret)
+ 		goto err;
+@@ -3851,8 +3857,10 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p)
+ 	p->cq_off.cqes = offsetof(struct io_rings, cqes);
+ 
+ 	p->features = IORING_FEAT_SINGLE_MMAP;
++	percpu_ref_put(&ctx->refs);
+ 	return ret;
+ err:
++	percpu_ref_put(&ctx->refs);
+ 	io_ring_ctx_wait_and_kill(ctx);
+ 	return ret;
+ }
+
+-- 
+Jens Axboe
+
