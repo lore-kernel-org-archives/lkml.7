@@ -2,78 +2,94 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72011CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC66FCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5254421721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A1D208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572281287;
+	bh=bbAcMWRdFqGrmy2OuA3CTz7sLtDh6gOvZ+wqs7mptqo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dmg/lRQ81A8LSgaBqCtUbinfZRN3NfzCANtfQWmkNtvb/Ho8YMMATZYbEHpnf5bzz
+	 14La+6E0JczFqwvT/aQraAX2MFoRaQUodHf4rVBkfyMwkPu2itVmaYVR5osrUWDt1e
+	 Gj5UbtOIytlAjVGlZYWXuPWCiI73sQd9UjQq6KlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403877AbfJ1QsD (ORCPT
+        id S2403889AbfJ1QsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:48:03 -0400
-Received: from webclient5.webclient5.de ([136.243.32.184]:55093 "EHLO
-        webclient5.webclient5.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403866AbfJ1QsC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:48:02 -0400
-X-Greylist: delayed 447 seconds by postgrey-1.27 at vger.kernel.org; Mon, 28 Oct 2019 12:48:01 EDT
-Received: from olorin.ladisch.de (x2f7f95e.dyn.telefonica.de [2.247.249.94])
-        by webclient5.webclient5.de (Postfix) with ESMTPSA id 7F6BC5583F65;
-        Mon, 28 Oct 2019 17:40:32 +0100 (CET)
-Subject: Re: [PATCH] ALSA: usb-audio: Fix memory leak in __snd_usbmidi_create
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Takashi Iwai <tiwai@suse.de>, Navid Emamdoost <emamd001@umn.edu>,
-        Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191027221007.14317-1-navid.emamdoost@gmail.com>
- <s5hpnihmlk3.wl-tiwai@suse.de>
- <CAEkB2ESwKEQYQx75BnaHf4aUQHObx4jf0hreQx_KTeZ+QCjL4g@mail.gmail.com>
-From:   Clemens Ladisch <clemens@ladisch.de>
-Message-ID: <d623a621-c62a-7ae9-958c-8709fb0c8c7d@ladisch.de>
-Date:   Mon, 28 Oct 2019 17:38:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 28 Oct 2019 12:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403879AbfJ1QsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 12:48:05 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5395921744;
+        Mon, 28 Oct 2019 16:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572281285;
+        bh=bbAcMWRdFqGrmy2OuA3CTz7sLtDh6gOvZ+wqs7mptqo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=x4dioR8DAvAWhOCE0qby3MBEkKc9wMrAmJgXt1Q/vAGLgRN0MNBDHsqYcZ9KG8MjW
+         UOsfENg19XlYbNruJmLyBGF3jRXMM019HEi/1H2vuhu/+fn939SldCEHukgCSb77qR
+         ZjTp3x4Rjjqe4f4awXIyOJ6t85e48ShF1suaKSX4=
+Date:   Mon, 28 Oct 2019 16:47:59 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
+        rabin@rab.in, Mark Rutland <mark.rutland@arm.com>,
+        james.morse@arm.com
+Subject: Re: [PATCH v4 13/16] arm/ftrace: Use __patch_text_real()
+Message-ID: <20191028164758.GH5576@willie-the-truck>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.687479693@infradead.org>
+ <20191028162525.GF5576@willie-the-truck>
+ <20191028163421.GI4097@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAEkB2ESwKEQYQx75BnaHf4aUQHObx4jf0hreQx_KTeZ+QCjL4g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.99.4 at webclient5
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028163421.GI4097@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Navid Emamdoost wrote:
-> On Mon, Oct 28, 2019 at 1:27 AM Takashi Iwai <tiwai@suse.de> wrote:
->> On Sun, 27 Oct 2019 23:10:06 +0100,
->> Navid Emamdoost wrote:
->>> In the implementation of __snd_usbmidi_create() there is a memory leak
->>> caused by incorrect goto destination. Go to free_midi if
->>> snd_usbmidi_create_endpoints_midiman() or snd_usbmidi_create_endpoints()
->>> fail.
->>
->> No, this will lead to double-free.  After registering the rawmidi
->> interface at snd_usbmidi_create_rawmidi(), the common destructor will
->> be called via rawmidi private_free callback, and this will release the
->> all resources already.
->
-> Now I can see how rawmidi private_free is set up to release the
-> resources, but what concerns me is that at the moment of endpoint/port
-> creation umidi is not yet added to the midi_list.
-> In other words, what I see is that we still have just one local
-> pointer to umidi if any of snd_usbmidi_create_endpoint* fail.
+On Mon, Oct 28, 2019 at 05:34:21PM +0100, Peter Zijlstra wrote:
+> On Mon, Oct 28, 2019 at 04:25:26PM +0000, Will Deacon wrote:
+> > On Fri, Oct 18, 2019 at 09:35:38AM +0200, Peter Zijlstra wrote:
+> > > @@ -97,10 +100,7 @@ static int ftrace_modify_code(unsigned l
+> > >  			return -EINVAL;
+> > >  	}
+> > >  
+> > > -	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
+> > > -		return -EPERM;
+> > > -
+> > > -	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
+> > > +	__patch_text_real((void *)pc, new, patch_text_remap);
+> > 
+> > Why can't you just pass 'true' for patch_text_remap? AFAICT, the only
+> > time you want to pass false is during early boot when the text is
+> > assumedly still writable without the fixmap.
+> 
+> Ah, it will also become true for module loading once we rework where we
+> flip the module text RO,X. See this patch:
+> 
+>   https://lkml.kernel.org/r/20191018074634.858645375@infradead.org
+> 
+> But for that to land, there's still a few other issues to fix (KLP).
 
-The snd_rawmidi device is automatically registered with the card, so the
-line "rmidi->private_free = snd_usbmidi_rawmidi_free;" is the exact point
-where the ownership of umidi changes.  midi_list does not matter.
+Passing 'true' would still work though, right? Just feels a bit error
+prone having to maintain the state of patch_test_remap() and remember
+that 'ftrace_lock' is holding the concurrency together.
 
-
-Regards,
-Clemens
+Will
