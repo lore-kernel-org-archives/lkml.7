@@ -2,136 +2,306 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508C4CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFFDCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6DD214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:38:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KOtAhmLx"
+	by mail.kernel.org (Postfix) with ESMTP id 49D6520679
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 22:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfJ1WiR (ORCPT
+        id S1729589AbfJ1Wls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 18:38:17 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:37388 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729432AbfJ1WiQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 18:38:16 -0400
-Received: by mail-il1-f195.google.com with SMTP id v2so9638978ilq.4
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 15:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1pqft6NUgSGPSsYgTI6KAW/EqfWsmOX+X7GP8nWIKRQ=;
-        b=KOtAhmLxM5DZQvf2Ll3f33KbklGMeTG2PKDxS+jixVpbEYv/r2fkX8rWW/POBAh8EZ
-         bhaa9F6E4wiUOAv7xzTF/OPYtmaoF81sAIOIN1D7uz2hMlzRn/GbsAID1pmlxlh0ULbu
-         KCWrpiKfUYuFXj/u1i4vCnm4AsCswlKrH1PH0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1pqft6NUgSGPSsYgTI6KAW/EqfWsmOX+X7GP8nWIKRQ=;
-        b=qeqZBl0bZcuPGz+1sVsvjwYIWkInt9HpM7hHA6t/UwE7h8suTXryTQHH4xt+QBdZCi
-         lT4kgqmSk3ewnKY/ChxtIEY3HT5edyQdAMS3Ki1RWzrcUf58CsEfr/Xrl5GIY6SZ3Jd2
-         df+BODwdC2MsoHOckbWspsQb51uIqS3ZvY7yfJ0tn/OSCGfqVoWQDP/TgDwamt0gvpNp
-         oJrXcpIkjRAw4aSeG4kEu9TNikpqiGCgFXlFvLaIkwM+cJVc5iKOvVQQPkb5YzT1tKyL
-         V63zGHv6Js0tWGBXBXuqA6jk7h8TasmzG08uAa1QBFGsYjLj76HHM8bq/2trCBgkgGJ4
-         sbBw==
-X-Gm-Message-State: APjAAAUmOsGq211reT+VMduhmEFEdAU9sBDwzWxSZ+3G6tz3BYtofDKU
-        3no1jHmccOwcAV55gomx8Cos+wbjDyG0h/mI3xlDqg==
-X-Google-Smtp-Source: APXvYqzOjbPZql47NIkJK7AmtptD85c0h2swAJ0981IFdP5pW7aIvp/4iQe9Q33o2yPDwnBDa7OGwzugpAmPA0ld6FE=
-X-Received: by 2002:a92:6e0a:: with SMTP id j10mr5422292ilc.26.1572302295420;
- Mon, 28 Oct 2019 15:38:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <418d8426-f299-1269-2b2e-f86677cf22c2@arm.com> <20191007204906.19571-1-robdclark@gmail.com>
- <20191028222042.GB8532@willie-the-truck>
-In-Reply-To: <20191028222042.GB8532@willie-the-truck>
-From:   Rob Clark <robdclark@chromium.org>
-Date:   Mon, 28 Oct 2019 15:38:04 -0700
-Message-ID: <CAJs_Fx7zRWsTPiAg0PFt+8nJPpHpzSkxW6XMMJwozVO6vyB78A@mail.gmail.com>
-Subject: Re: [PATCH v2] iommu/arm-smmu: fix "hang" when games exit
-To:     Will Deacon <will@kernel.org>
-Cc:     Rob Clark <robdclark@gmail.com>, iommu@lists.linux-foundation.org,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Robin Murphy <robin.murphy@arm.com>,
+        Mon, 28 Oct 2019 18:41:48 -0400
+Received: from mga07.intel.com ([134.134.136.100]:23723 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfJ1Wlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 18:41:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 15:41:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
+   d="scan'208";a="374361343"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 28 Oct 2019 15:41:47 -0700
+Date:   Mon, 28 Oct 2019 15:46:11 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Joerg Roedel <joro@8bytes.org>,
-        "moderated list:ARM SMMU DRIVERS" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v7 04/11] iommu/vt-d: Replace Intel specific PASID
+ allocator with IOASID
+Message-ID: <20191028154611.5c9979fd@jacob-builder>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC87@SHSMSX104.ccr.corp.intel.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1571946904-86776-5-git-send-email-jacob.jun.pan@linux.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC87@SHSMSX104.ccr.corp.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 3:20 PM Will Deacon <will@kernel.org> wrote:
->
-> Hi Rob,
->
-> On Mon, Oct 07, 2019 at 01:49:06PM -0700, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > When games, browser, or anything using a lot of GPU buffers exits, there
-> > can be many hundreds or thousands of buffers to unmap and free.  If the
-> > GPU is otherwise suspended, this can cause arm-smmu to resume/suspend
-> > for each buffer, resulting 5-10 seconds worth of reprogramming the
-> > context bank (arm_smmu_write_context_bank()/arm_smmu_write_s2cr()/etc).
-> > To the user it would appear that the system just locked up.
-> >
-> > A simple solution is to use pm_runtime_put_autosuspend() instead, so we
-> > don't immediately suspend the SMMU device.
->
-> Please can you reword the subject to be a bit more useful? The commit
-> message is great, but the subject is a bit like "fix bug in code" to me.
+On Fri, 25 Oct 2019 06:41:16 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-yeah, not the best $subject, but I wasn't quite sure how to fit
-something better in a reasonable # of chars.. maybe something like:
-"iommu/arm-smmu: optimize unmap but avoiding toggling runpm state"?
-
-BR,
--R
-
-
->
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
+> > Sent: Friday, October 25, 2019 3:55 AM
+> > 
+> > Make use of generic IOASID code to manage PASID allocation,
+> > free, and lookup. Replace Intel specific code.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
+> 
+> better push this patch separately. It's a generic cleanup.
+> 
+True but might be more efficient to have this cleanup patch paved way.
+Since the follow up new guest SVA code uses the new API. So I wanted to
+get rid of the old code completely.
 > > ---
-> > v1: original
-> > v2: unconditionally use autosuspend, rather than deciding based on what
-> >     consumer does
-> >
-> >  drivers/iommu/arm-smmu.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> > index 3f1d55fb43c4..b7b41f5001bc 100644
-> > --- a/drivers/iommu/arm-smmu.c
-> > +++ b/drivers/iommu/arm-smmu.c
-> > @@ -289,7 +289,7 @@ static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
-> >  static inline void arm_smmu_rpm_put(struct arm_smmu_device *smmu)
-> >  {
-> >       if (pm_runtime_enabled(smmu->dev))
-> > -             pm_runtime_put(smmu->dev);
-> > +             pm_runtime_put_autosuspend(smmu->dev);
+> >  drivers/iommu/intel-iommu.c | 12 ++++++------
+> >  drivers/iommu/intel-pasid.c | 36
+> > ------------------------------------ drivers/iommu/intel-svm.c   |
+> > 39 +++++++++++++++++++++++---------------- 3 files changed, 29
+> > insertions(+), 58 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index ced1d89ef977..2ea09b988a23
+> > 100644 --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -5311,7 +5311,7 @@ static void auxiliary_unlink_device(struct
+> > dmar_domain *domain,
+> >  	domain->auxd_refcnt--;
+> > 
+> >  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
+> > -		intel_pasid_free_id(domain->default_pasid);
+> > +		ioasid_free(domain->default_pasid);
 > >  }
-> >
-> >  static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
-> > @@ -1445,6 +1445,9 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
-> >       /* Looks ok, so add the device to the domain */
-> >       ret = arm_smmu_domain_add_master(smmu_domain, fwspec);
->
-> Please can you put a comment here explaining what this is doing? An abridged
-> version of the commit message is fine.
->
-> > +     pm_runtime_set_autosuspend_delay(smmu->dev, 20);
-> > +     pm_runtime_use_autosuspend(smmu->dev);
->
-> Cheers,
->
-> Will
+> > 
+> >  static int aux_domain_add_dev(struct dmar_domain *domain,
+> > @@ -5329,10 +5329,10 @@ static int aux_domain_add_dev(struct
+> > dmar_domain *domain,
+> >  	if (domain->default_pasid <= 0) {
+> >  		int pasid;
+> > 
+> > -		pasid = intel_pasid_alloc_id(domain, PASID_MIN,
+> > -
+> > pci_max_pasids(to_pci_dev(dev)),
+> > -					     GFP_KERNEL);
+> > -		if (pasid <= 0) {
+> > +		/* No private data needed for the default pasid */
+> > +		pasid = ioasid_alloc(NULL, PASID_MIN,
+> > pci_max_pasids(to_pci_dev(dev)) - 1,
+> > +				NULL);
+> > +		if (pasid == INVALID_IOASID) {
+> >  			pr_err("Can't allocate default pasid\n");
+> >  			return -ENODEV;
+> >  		}
+> > @@ -5368,7 +5368,7 @@ static int aux_domain_add_dev(struct
+> > dmar_domain *domain,
+> >  	spin_unlock(&iommu->lock);
+> >  	spin_unlock_irqrestore(&device_domain_lock, flags);
+> >  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
+> > -		intel_pasid_free_id(domain->default_pasid);
+> > +		ioasid_free(domain->default_pasid);
+> > 
+> >  	return ret;
+> >  }
+> > diff --git a/drivers/iommu/intel-pasid.c
+> > b/drivers/iommu/intel-pasid.c index d81e857d2b25..e79d680fe300
+> > 100644 --- a/drivers/iommu/intel-pasid.c
+> > +++ b/drivers/iommu/intel-pasid.c
+> > @@ -26,42 +26,6 @@
+> >   */
+> >  static DEFINE_SPINLOCK(pasid_lock);
+> >  u32 intel_pasid_max_id = PASID_MAX;
+> > -static DEFINE_IDR(pasid_idr);
+> > -
+> > -int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp)
+> > -{
+> > -	int ret, min, max;
+> > -
+> > -	min = max_t(int, start, PASID_MIN);
+> > -	max = min_t(int, end, intel_pasid_max_id);
+> > -
+> > -	WARN_ON(in_interrupt());
+> > -	idr_preload(gfp);
+> > -	spin_lock(&pasid_lock);
+> > -	ret = idr_alloc(&pasid_idr, ptr, min, max, GFP_ATOMIC);
+> > -	spin_unlock(&pasid_lock);
+> > -	idr_preload_end();
+> > -
+> > -	return ret;
+> > -}
+> > -
+> > -void intel_pasid_free_id(int pasid)
+> > -{
+> > -	spin_lock(&pasid_lock);
+> > -	idr_remove(&pasid_idr, pasid);
+> > -	spin_unlock(&pasid_lock);
+> > -}
+> > -
+> > -void *intel_pasid_lookup_id(int pasid)
+> > -{
+> > -	void *p;
+> > -
+> > -	spin_lock(&pasid_lock);
+> > -	p = idr_find(&pasid_idr, pasid);
+> > -	spin_unlock(&pasid_lock);
+> > -
+> > -	return p;
+> > -}
+> > 
+> >  int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
+> > *pasid) {
+> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> > index 9b159132405d..a9a7f85a09bc 100644
+> > --- a/drivers/iommu/intel-svm.c
+> > +++ b/drivers/iommu/intel-svm.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/dmar.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/mm_types.h>
+> > +#include <linux/ioasid.h>
+> >  #include <asm/page.h>
+> > 
+> >  #include "intel-pasid.h"
+> > @@ -318,16 +319,15 @@ int intel_svm_bind_mm(struct device *dev, int
+> > *pasid, int flags, struct svm_dev_
+> >  		if (pasid_max > intel_pasid_max_id)
+> >  			pasid_max = intel_pasid_max_id;
+> > 
+> > -		/* Do not use PASID 0 in caching mode (virtualised
+> > IOMMU) */
+> > -		ret = intel_pasid_alloc_id(svm,
+> > -					   !!cap_caching_mode(iommu->cap),
+> > -					   pasid_max - 1,
+> > GFP_KERNEL);
+> > -		if (ret < 0) {
+> > +		/* Do not use PASID 0, reserved for RID to PASID */
+> > +		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
+> > +					pasid_max - 1, svm);
+> > +		if (svm->pasid == INVALID_IOASID) {
+> >  			kfree(svm);
+> >  			kfree(sdev);
+> > +			ret = ENOSPC;
+> >  			goto out;
+> >  		}
+> > -		svm->pasid = ret;
+> >  		svm->notifier.ops = &intel_mmuops;
+> >  		svm->mm = mm;
+> >  		svm->flags = flags;
+> > @@ -337,7 +337,7 @@ int intel_svm_bind_mm(struct device *dev, int
+> > *pasid, int flags, struct svm_dev_
+> >  		if (mm) {
+> >  			ret =
+> > mmu_notifier_register(&svm->notifier, mm); if (ret) {
+> > -				intel_pasid_free_id(svm->pasid);
+> > +				ioasid_free(svm->pasid);
+> >  				kfree(svm);
+> >  				kfree(sdev);
+> >  				goto out;
+> > @@ -353,7 +353,7 @@ int intel_svm_bind_mm(struct device *dev, int
+> > *pasid, int flags, struct svm_dev_
+> >  		if (ret) {
+> >  			if (mm)
+> >  				mmu_notifier_unregister(&svm->notifier,
+> > mm);
+> > -			intel_pasid_free_id(svm->pasid);
+> > +			ioasid_free(svm->pasid);
+> >  			kfree(svm);
+> >  			kfree(sdev);
+> >  			goto out;
+> > @@ -401,7 +401,12 @@ int intel_svm_unbind_mm(struct device *dev, int
+> > pasid)
+> >  	if (!iommu)
+> >  		goto out;
+> > 
+> > -	svm = intel_pasid_lookup_id(pasid);
+> > +	svm = ioasid_find(NULL, pasid, NULL);
+> > +	if (IS_ERR(svm)) {
+> > +		ret = PTR_ERR(svm);
+> > +		goto out;
+> > +	}
+> > +
+> >  	if (!svm)
+> >  		goto out;
+> > 
+> > @@ -423,7 +428,9 @@ int intel_svm_unbind_mm(struct device *dev, int
+> > pasid)
+> >  				kfree_rcu(sdev, rcu);
+> > 
+> >  				if (list_empty(&svm->devs)) {
+> > -
+> > intel_pasid_free_id(svm->pasid);
+> > +					/* Clear private data so
+> > that free pass check */
+> > +
+> > ioasid_set_data(svm->pasid, NULL);
+> > +					ioasid_free(svm->pasid);
+> >  					if (svm->mm)
+> > 
+> > 	mmu_notifier_unregister(&svm->notifier, svm->mm);
+> > 
+> > @@ -458,10 +465,11 @@ int intel_svm_is_pasid_valid(struct device
+> > *dev, int pasid)
+> >  	if (!iommu)
+> >  		goto out;
+> > 
+> > -	svm = intel_pasid_lookup_id(pasid);
+> > -	if (!svm)
+> > +	svm = ioasid_find(NULL, pasid, NULL);
+> > +	if (IS_ERR(svm)) {
+> > +		ret = PTR_ERR(svm);
+> >  		goto out;
+> > -
+> > +	}
+> >  	/* init_mm is used in this case */
+> >  	if (!svm->mm)
+> >  		ret = 1;
+> > @@ -568,13 +576,12 @@ static irqreturn_t prq_event_thread(int irq,
+> > void *d)
+> > 
+> >  		if (!svm || svm->pasid != req->pasid) {
+> >  			rcu_read_lock();
+> > -			svm = intel_pasid_lookup_id(req->pasid);
+> > +			svm = ioasid_find(NULL, req->pasid, NULL);
+> >  			/* It *can't* go away, because the driver
+> > is not permitted
+> >  			 * to unbind the mm while any page faults
+> > are outstanding.
+> >  			 * So we only need RCU to protect the
+> > internal idr code. */
+> >  			rcu_read_unlock();
+> > -
+> > -			if (!svm) {
+> > +			if (IS_ERR(svm) || !svm) {
+> >  				pr_err("%s: Page request for
+> > invalid PASID %d: %08llx %08llx\n",
+> >  				       iommu->name, req->pasid,
+> > ((unsigned long long *)req)[0],
+> >  				       ((unsigned long long
+> > *)req)[1]); --
+> > 2.7.4  
+> 
+
+[Jacob Pan]
