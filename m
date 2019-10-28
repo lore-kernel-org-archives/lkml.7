@@ -2,96 +2,101 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D200CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98772CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53668214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E05214E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 17:56:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="PcVqPg+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404217AbfJ1Rz0 (ORCPT
+        id S2404227AbfJ1R4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 13:55:26 -0400
-Received: from mga03.intel.com ([134.134.136.65]:65313 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730395AbfJ1RzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 13:55:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 10:55:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
-   d="scan'208";a="211502982"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.148]) ([10.7.153.148])
-  by orsmga002.jf.intel.com with ESMTP; 28 Oct 2019 10:55:24 -0700
-Subject: Re: [PATCH v3] media: aspeed-video: Fix memory leaks in
- aspeed_video_probe
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
-        kjlu@umn.edu, openbmc@lists.ozlabs.org,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        emamd001@umn.edu, smccaman@umn.edu,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <da959329-aa40-b6e7-dcc9-48183a8da716@linux.intel.com>
- <20191028171838.28533-1-navid.emamdoost@gmail.com>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <57550f1e-87b8-79c4-b1d6-7672b1ce11dc@linux.intel.com>
-Date:   Mon, 28 Oct 2019 10:55:24 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 13:56:09 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.162]:11954 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730395AbfJ1R4J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 13:56:09 -0400
+X-Greylist: delayed 357 seconds by postgrey-1.27 at vger.kernel.org; Mon, 28 Oct 2019 13:56:08 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1572285367;
+        s=strato-dkim-0002; d=aepfle.de;
+        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=O1Y3cHLchpCrbqj8e6xjlT/zTElzb7HM0YYVa7PBPnQ=;
+        b=PcVqPg+GPcG7+B6KA4OGjbngaVWjXIMoQG9EeQs2wasC8wDH+Lm7MPTMpbq+kR9dIE
+        AozAsUIDDFf/80hpJOCbh3Hl3VUb+OY3/Nr1QEWgYnSaLQYRpRIPO0gYr/IXJodiYVnu
+        OHncsi6lPLj8CBq0PjjomJL3Az/lQEiTLw1v9uCcr5c1aIBMQDlfNt1g8ULexjI0sT3x
+        vcdFxf0ExYeldcEiULADyr/xSvqI4zhd2iZ/aO/2rhgi4kuQmk8iuV8Y0mDd7Z/Rw9H8
+        mxKVo+JhSIhpc+NcuO5ZTHOli1Nr00J7/jK0yAAi8triGrIFhNgdbGG+hTs1OUGqd1nE
+        Aa+A==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4AUztn93FPS2dyuYM9i8w=="
+X-RZG-CLASS-ID: mo00
+Received: from sender
+        by smtp.strato.de (RZmta 44.28.1 SBL|AUTH)
+        with ESMTPSA id e01a77v9SHo6tns
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 28 Oct 2019 18:50:06 +0100 (CET)
+Date:   Mon, 28 Oct 2019 18:49:55 +0100
+From:   Olaf Hering <olaf@aepfle.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "open list:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
+Message-ID: <20191028184955.24dbb7d4.olaf@aepfle.de>
+In-Reply-To: <20191028161754.GF1554@sasha-vm>
+References: <20191024144943.26199-1-olaf@aepfle.de>
+        <20191028161754.GF1554@sasha-vm>
+X-Mailer: Claws Mail 2019.05.18 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191028171838.28533-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/IuoZQOlE/DrovulyPpUOb_M"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/2019 10:18 AM, Navid Emamdoost wrote:
-> In the implementation of aspeed_video_probe() the allocated memory for
-> video should be released if either devm_ioremap_resource()
-> or aspeed_video_init() or aspeed_video_setup_video() fails. Replace
-> kzalloc() with devm_kzalloc to avoid explicit release for video.
-> 
-> Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> Changes in v3:
-> 	-- fix call to devm_kzalloc()
+--Sig_/IuoZQOlE/DrovulyPpUOb_M
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Better keep all change history at here.
+Am Mon, 28 Oct 2019 12:17:54 -0400
+schrieb Sasha Levin <sashal@kernel.org>:
 
-> ---
->   drivers/media/platform/aspeed-video.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-> index eb12f3793062..70797b41447c 100644
-> --- a/drivers/media/platform/aspeed-video.c
-> +++ b/drivers/media/platform/aspeed-video.c
-> @@ -1646,7 +1646,8 @@ static int aspeed_video_probe(struct platform_device *pdev)
->   {
->   	int rc;
->   	struct resource *res;
-> -	struct aspeed_video *video = kzalloc(sizeof(*video), GFP_KERNEL);
-> +	struct aspeed_video *video =
-> +		devm_kzalloc(&pdev->dev, sizeof(*video), GFP_KERNEL);
+> undefined reference to `pthread_create'
 
-For a case of assignment in definition section, let it go over the 80
-chars.
+Does "make V=3D1 -C tools/hv" work for you?
+This is what I use.
 
-With this fixed:
+Olaf
 
-Reviewed-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+--Sig_/IuoZQOlE/DrovulyPpUOb_M
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
 
->   	if (!video)
->   		return -ENOMEM;
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl23KkMACgkQ86SN7mm1
+DoCRWQ/+LG5xpg4eIZaIs/EnRBJawuXuQ1KF4Uz20eoKmJkSXAvwSG0SF7CmgrHV
+OPnIugF9R02hFD686YOLSZJDqsCs5s+GHRMLMorRQOfBgXZlnbA7WL4Kj4T9EyiW
+q+yRzGefuekOAn/shc+ARHVCmhOglL/Uq/Cu/H7V7rGSNBLuc1JAHY2jQsasg+ds
+1YdVMWl3vVcZOP9X/JgBjC4DPXryer8MkAg8A01vV6NPGe2GJbm98mJOZBvUg7aO
+0QtRG+rR+c3mJelE9XWLrl+AT7Rl38H0x6qqMGxOUIrFfQBBlcgB9hA/DuxZXTN4
+eEDHRQbvCdLlBJ/+WHM4qxTU6ZaSkVpdQWPf+EpsoTHaQpRNYStD6LKh4+AWtKrW
+mTvZQvmt7qaGvPVX0hwDHlC8HwP0CJhNpBPCM6svozAyukfYrSKwxajV2Mvrul3D
+CXz4zWOk9qjYrjZKJecI93M3PekMoHbtN6AO7aTZKLBgtruGD5qf64bzpvb6cWUn
+7rsytsn5JfUY8PjRcDDDlpgqki5VE4YCQKRsOHyACjdtoXRVAltqTPSfhsmqU5MT
+eLQeyBLbMvGKxII83A8dLoU6FxdWAmsq1Yd7NtCKvSbLhPESnmbHb8dfFyvJtAmR
+062L5egcECYBkLgcwMZ06d1qXxrp8I0t2MDv9qu2xFFQjkT9Jp8=
+=lVDa
+-----END PGP SIGNATURE-----
+
+--Sig_/IuoZQOlE/DrovulyPpUOb_M--
