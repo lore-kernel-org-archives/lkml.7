@@ -2,125 +2,135 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9949CA9EBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541AFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBDB821850
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572254308;
-	bh=Y0pjFTnEi7fofZFVzScrzdhMzlM8KuUwtUfFJMd6jEM=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=gz5DxqMcPehg1EZ9z68CQssai/gjXXg6nYoWsUrFEF7xUBPpf+bk4KsvZbJvU79Q1
-	 ip34iIccWE/21qkkL1K+Bv8CLB7FThcI1hB+vs0e2L3vzBON7Mm6Y2cuePEqT6NcTg
-	 X7CTXNJNb6rwu2gj7PaODlDLGgEJI2UxM/Cry/3I=
+	by mail.kernel.org (Postfix) with ESMTP id 2C0F521783
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 09:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387881AbfJ1JS1 (ORCPT
+        id S2387894AbfJ1JSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 05:18:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727664AbfJ1JS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 05:18:27 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1F3B20717;
-        Mon, 28 Oct 2019 09:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572254305;
-        bh=Y0pjFTnEi7fofZFVzScrzdhMzlM8KuUwtUfFJMd6jEM=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=RgzxngTnQ5mhx9Hl2fC158gkHbjFpCK1xE9h+M1GjeCZxXb6MUInbliEaxAObjuqL
-         wSQcKENaW7bda+XlQFMQ4kSrY/CYQhZIb7yuVvXU8ecOVokkeGpi3FpJqjni84Zghu
-         HHQWsB9WCGlUQTC7Hz+Y655Ladb2jywc3qV2avTY=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 28 Oct 2019 05:18:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57538 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727664AbfJ1JSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 05:18:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5496BB009;
+        Mon, 28 Oct 2019 09:18:37 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 09:18:36 +0000
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <ukernel@gmail.com>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ceph: Fix use-after-free in __ceph_remove_cap
+Message-ID: <20191028091836.GA8558@hermes.olymp>
+References: <9c1fe73500ca7dece15c73d7534b9e0ec417c83a.camel@kernel.org>
+ <20191025130524.31755-1-lhenriques@suse.com>
+ <1a9ac7d3097efe53ad6f2fda4dd584204dd7eba2.camel@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191018154201.1276638-5-arnd@arndb.de>
-References: <20191018154052.1276506-1-arnd@arndb.de> <20191018154201.1276638-5-arnd@arndb.de>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        alsa-devel@alsa-project.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 05/46] ARM: pxa: split up mach/hardware.h
-To:     Arnd Bergmann <arnd@arndb.de>, Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-User-Agent: alot/0.8.1
-Date:   Mon, 28 Oct 2019 02:18:24 -0700
-Message-Id: <20191028091825.A1F3B20717@mail.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1a9ac7d3097efe53ad6f2fda4dd584204dd7eba2.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Arnd Bergmann (2019-10-18 08:41:20)
-> The mach/hardware.h is included in lots of places, and it provides
-> three different things on pxa:
->=20
-> - the cpu_is_pxa* macros
-> - an indirect inclusion of mach/addr-map.h
-> - the __REG() and io_pv2() helper macros
->=20
-> Split it up into separate <linux/soc/pxa/cpu.h> and mach/pxa-regs.h
-> headers, then change all the files that use mach/hardware.h to
-> include the exact set of those three headers that they actually
-> need, allowing for further more targeted cleanup.
->=20
-> linux/soc/pxa/cpu.h can remain permanently exported and is now in
-> a global location along with similar headers. pxa-regs.h and
-> addr-map.h are only used in a very small number of drivers now
-> and can be moved to arch/arm/mach-pxa/ directly when those drivers
-> are to pass the necessary data as resources.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-input@vger.kernel.org
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: linux-mtd@lists.infradead.org
-> Cc: linux-rtc@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
+On Sun, Oct 27, 2019 at 08:31:49AM -0400, Jeff Layton wrote:
+> On Fri, 2019-10-25 at 14:05 +0100, Luis Henriques wrote:
+> > KASAN reports a use-after-free when running xfstest generic/531, with the
+> > following trace:
+> > 
+> > [  293.903362]  kasan_report+0xe/0x20
+> > [  293.903365]  rb_erase+0x1f/0x790
+> > [  293.903370]  __ceph_remove_cap+0x201/0x370
+> > [  293.903375]  __ceph_remove_caps+0x4b/0x70
+> > [  293.903380]  ceph_evict_inode+0x4e/0x360
+> > [  293.903386]  evict+0x169/0x290
+> > [  293.903390]  __dentry_kill+0x16f/0x250
+> > [  293.903394]  dput+0x1c6/0x440
+> > [  293.903398]  __fput+0x184/0x330
+> > [  293.903404]  task_work_run+0xb9/0xe0
+> > [  293.903410]  exit_to_usermode_loop+0xd3/0xe0
+> > [  293.903413]  do_syscall_64+0x1a0/0x1c0
+> > [  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > This happens because __ceph_remove_cap() may queue a cap release
+> > (__ceph_queue_cap_release) which can be scheduled before that cap is
+> > removed from the inode list with
+> > 
+> > 	rb_erase(&cap->ci_node, &ci->i_caps);
+> > 
+> > And, when this finally happens, the use-after-free will occur.
+> > 
+> > This can be fixed by removing the cap from the inode list before being
+> > removed from the session list, and thus eliminating the risk of an UAF.
+> > 
+> > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > ---
+> > Hi!
+> > 
+> > So, after spending some time trying to find possible races throught code
+> > review and testing, I modified the fix according to Jeff's suggestion.
+> > 
+> > Cheers,
+> > Luis
+> > 
+> > fs/ceph/caps.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> > index d3b9c9d5c1bd..a9ce858c37d0 100644
+> > --- a/fs/ceph/caps.c
+> > +++ b/fs/ceph/caps.c
+> > @@ -1058,6 +1058,11 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
+> >  
+> >  	dout("__ceph_remove_cap %p from %p\n", cap, &ci->vfs_inode);
+> >  
+> > +	/* remove from inode list */
+> > +	rb_erase(&cap->ci_node, &ci->i_caps);
+> > +	if (ci->i_auth_cap == cap)
+> > +		ci->i_auth_cap = NULL;
+> > +
+> >  	/* remove from session list */
+> >  	spin_lock(&session->s_cap_lock);
+> >  	if (session->s_cap_iterator == cap) {
+> > @@ -1091,11 +1096,6 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
+> >  
+> >  	spin_unlock(&session->s_cap_lock);
+> >  
+> > -	/* remove from inode list */
+> > -	rb_erase(&cap->ci_node, &ci->i_caps);
+> > -	if (ci->i_auth_cap == cap)
+> > -		ci->i_auth_cap = NULL;
+> > -
+> >  	if (removed)
+> >  		ceph_put_cap(mdsc, cap);
+> >  
+> 
+> Looks good. Merged with a slight modification to the comment:
+> 
+> +       /* remove from inode's cap rbtree, and clear auth cap */
+> 
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Awesome, thanks.  Regarding CC: stable@, feel free to add that too.  I
+guess it makes sense, even if this issue has been there for a while
+apparently without any reports.  (Although UAFs may have non-obvious
+side effects, I guess...)
 
+Cheers,
+--
+Luís
+
+> Thanks!
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
