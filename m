@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D8DCA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63613CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C1520578
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437E3214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389496AbfJ1Mnh (ORCPT
+        id S1727317AbfJ1Mnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:43:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44674 "EHLO
+        Mon, 28 Oct 2019 08:43:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44678 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389395AbfJ1Mnc (ORCPT
+        with ESMTP id S2389453AbfJ1Mnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:43:32 -0400
+        Mon, 28 Oct 2019 08:43:33 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iP4Mi-0002Nj-M4; Mon, 28 Oct 2019 13:43:20 +0100
+        id 1iP4Mh-0002Lq-Lh; Mon, 28 Oct 2019 13:43:19 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 593761C0482;
-        Mon, 28 Oct 2019 13:43:20 +0100 (CET)
-Date:   Mon, 28 Oct 2019 12:43:20 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4D0131C047C;
+        Mon, 28 Oct 2019 13:43:19 +0100 (CET)
+Date:   Mon, 28 Oct 2019 12:43:19 -0000
 From:   "tip-bot2 for Alexey Budankov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/core, perf/x86: Introduce swap_task_ctx()
- method at 'struct pmu'
+Subject: [tip: perf/core] perf/x86: Synchronize PMU task contexts on optimized
+ context switches
 Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -51,10 +51,10 @@ Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
         Vince Weaver <vincent.weaver@maine.edu>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <9a0aa84a-f062-9b64-3133-373658550c4b@linux.intel.com>
-References: <9a0aa84a-f062-9b64-3133-373658550c4b@linux.intel.com>
+In-Reply-To: <9c6445a9-bdba-ef03-3859-f1f91198f27a@linux.intel.com>
+References: <9c6445a9-bdba-ef03-3859-f1f91198f27a@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <157226660008.29376.17028800323168322771.tip-bot2@tip-bot2>
+Message-ID: <157226659905.29376.4151373731366750163.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,18 +70,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     fc1adfe306b71e094df636012f8c0fed971cad45
-Gitweb:        https://git.kernel.org/tip/fc1adfe306b71e094df636012f8c0fed971cad45
+Commit-ID:     c2b98a8661514f29a44ebd0925cf4b1503beb48c
+Gitweb:        https://git.kernel.org/tip/c2b98a8661514f29a44ebd0925cf4b1503beb48c
 Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
-AuthorDate:    Wed, 23 Oct 2019 10:11:04 +03:00
+AuthorDate:    Wed, 23 Oct 2019 10:13:56 +03:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 28 Oct 2019 12:50:59 +01:00
+CommitterDate: Mon, 28 Oct 2019 12:51:01 +01:00
 
-perf/core, perf/x86: Introduce swap_task_ctx() method at 'struct pmu'
+perf/x86: Synchronize PMU task contexts on optimized context switches
 
-Declare swap_task_ctx() methods at the generic and x86 specific
-pmu types to bridge calls to platform specific PMU code on optimized
-context switch path between equivalent task perf event contexts.
+Install Intel specific PMU task context synchronization adapter and
+extend optimized context switch path with PMU specific task context
+synchronization to fix LBR callstack virtualization on context switches.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -99,49 +99,62 @@ Cc: Song Liu <songliubraving@fb.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/9a0aa84a-f062-9b64-3133-373658550c4b@linux.intel.com
+Link: https://lkml.kernel.org/r/9c6445a9-bdba-ef03-3859-f1f91198f27a@linux.intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/perf_event.h |  8 ++++++++
- include/linux/perf_event.h   |  9 +++++++++
- 2 files changed, 17 insertions(+)
+ arch/x86/events/intel/core.c |  7 +++++++
+ kernel/events/core.c         | 13 ++++++++++++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index ecacfbf..5384317 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -683,6 +683,14 @@ struct x86_pmu {
- 	atomic_t	lbr_exclusive[x86_lbr_exclusive_max];
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index bbf6588..dc64b16 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3820,6 +3820,12 @@ static void intel_pmu_sched_task(struct perf_event_context *ctx,
+ 	intel_pmu_lbr_sched_task(ctx, sched_in);
+ }
  
- 	/*
-+	 * perf task context (i.e. struct perf_event_context::task_ctx_data)
-+	 * switch helper to bridge calls from perf/core to perf/x86.
-+	 * See struct pmu::swap_task_ctx() usage for examples;
-+	 */
-+	void		(*swap_task_ctx)(struct perf_event_context *prev,
-+					 struct perf_event_context *next);
++static void intel_pmu_swap_task_ctx(struct perf_event_context *prev,
++				    struct perf_event_context *next)
++{
++	intel_pmu_lbr_swap_task_ctx(prev, next);
++}
 +
-+	/*
- 	 * AMD bits
- 	 */
- 	unsigned int	amd_nb_constraints : 1;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 4f77b22..011dcbd 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -410,6 +410,15 @@ struct pmu {
- 	 */
- 	size_t				task_ctx_size;
+ static int intel_pmu_check_period(struct perf_event *event, u64 value)
+ {
+ 	return intel_pmu_has_bts_period(event, value) ? -EINVAL : 0;
+@@ -3955,6 +3961,7 @@ static __initconst const struct x86_pmu intel_pmu = {
  
-+	/*
-+	 * PMU specific parts of task perf event context (i.e. ctx->task_ctx_data)
-+	 * can be synchronized using this function. See Intel LBR callstack support
-+	 * implementation and Perf core context switch handling callbacks for usage
-+	 * examples.
-+	 */
-+	void (*swap_task_ctx)		(struct perf_event_context *prev,
-+					 struct perf_event_context *next);
-+					/* optional */
+ 	.guest_get_msrs		= intel_guest_get_msrs,
+ 	.sched_task		= intel_pmu_sched_task,
++	.swap_task_ctx		= intel_pmu_swap_task_ctx,
  
- 	/*
- 	 * Set up pmu-private data structures for an AUX area
+ 	.check_period		= intel_pmu_check_period,
+ 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 0940c88..f48d38b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3204,10 +3204,21 @@ static void perf_event_context_sched_out(struct task_struct *task, int ctxn,
+ 		raw_spin_lock(&ctx->lock);
+ 		raw_spin_lock_nested(&next_ctx->lock, SINGLE_DEPTH_NESTING);
+ 		if (context_equiv(ctx, next_ctx)) {
++			struct pmu *pmu = ctx->pmu;
++
+ 			WRITE_ONCE(ctx->task, next);
+ 			WRITE_ONCE(next_ctx->task, task);
+ 
+-			swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
++			/*
++			 * PMU specific parts of task perf context can require
++			 * additional synchronization. As an example of such
++			 * synchronization see implementation details of Intel
++			 * LBR call stack data profiling;
++			 */
++			if (pmu->swap_task_ctx)
++				pmu->swap_task_ctx(ctx, next_ctx);
++			else
++				swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
+ 
+ 			/*
+ 			 * RCU_INIT_POINTER here is safe because we've not
