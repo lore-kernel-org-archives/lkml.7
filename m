@@ -6,94 +6,96 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E704CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CE6CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE19214B2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E4321D80
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389617AbfJ1NlV (ORCPT
+        id S2389628AbfJ1Nlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:41:21 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2498 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729328AbfJ1NlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:41:21 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 57AF6E9C1175435F54AB;
-        Mon, 28 Oct 2019 21:41:19 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 28 Oct 2019 21:41:18 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Mon, 28 Oct 2019 21:41:18 +0800
-Date:   Mon, 28 Oct 2019 21:44:05 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>
-CC:     Chao Yu <chao@kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        Gao Xiang <xiang@kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] erofs: support superblock checksum
-Message-ID: <20191028134405.GA186556@architecture4>
-References: <20191022180620.19638-1-pratikshinde320@gmail.com>
- <20191023040557.230886-1-gaoxiang25@huawei.com>
- <f158affb-c5c5-9cbe-d87d-17210bc635fe@huawei.com>
- <20191023084536.GA16289@architecture4>
- <df7d7427-e7ca-5135-5db2-640eda30d253@huawei.com>
+        Mon, 28 Oct 2019 09:41:35 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39117 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729328AbfJ1Nlf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:41:35 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iP5H3-0006uL-5A; Mon, 28 Oct 2019 14:41:33 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iP5H1-0005La-MM; Mon, 28 Oct 2019 14:41:31 +0100
+Date:   Mon, 28 Oct 2019 14:41:31 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        Leo Li <leoyang.li@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Clark Wang <xiaoning.wang@nxp.com>,
+        Xiaobo Xie <xiaobo.xie@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        Jiafei Pan <jiafei.pan@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [EXT] Re: [RESEND v2] i2c: imx: support slave mode for imx I2C
+ driver
+Message-ID: <20191028134131.5pq2vaqojx4gpfth@pengutronix.de>
+References: <20191009101802.19309-1-biwen.li@nxp.com>
+ <113865e9-e846-1079-6f58-7fddb245398c@pengutronix.de>
+ <DB7PR04MB449066A02FB9FD0A795CFAFB8F650@DB7PR04MB4490.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <df7d7427-e7ca-5135-5db2-640eda30d253@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme704-chm.china.huawei.com (10.1.199.100) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DB7PR04MB449066A02FB9FD0A795CFAFB8F650@DB7PR04MB4490.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+Hello,
 
-On Mon, Oct 28, 2019 at 08:36:00PM +0800, Chao Yu wrote:
-> On 2019/10/23 16:45, Gao Xiang wrote:
-
-<snip>
-
-> > That is quite a good point. :-)
+On Fri, Oct 25, 2019 at 04:02:11AM +0000, Biwen Li wrote:
+> > I'm trying to test you patch on i.MX6S RIoTBoard. So far I fail to get it
+> > working with following setup:
+> > 1. register i2c-gpio
+> > 2. connect i2c-gpio SCL to i2c-imx SCL pin and i2c-gpio SDA to i2c-imx SDA
+> > pin 3. run this command to register i2c slave eeprom on i2c-imx:
+> > echo slave-24c02 0x1064 > /sys/bus/i2c/devices/i2c-3/new_device
+> > 4. run "i2cdetect 4" on i2c-gpio to detect eeprom on i2c-imx slave.
 > > 
-> > My first thought is to check the following payloads of sb (e.g, some per-fs
-> > metadata should be checked at mount time together. or for small images, check
-> > the whole image at the mount time) as well since if we introduce a new feature
-> > to some kernel version, forward compatibility needs to be considered. So it's
-> > better to make proper scalability, for this case, we have some choices:
-> >  1) limit `chksum_blocks' upbound at runtime (e.g. refuse >= 65536 blocks,
-> >     totally 256M.)
-> >  2) just get rid of the whole `chksum_blocks' mess and checksum the first 4k
-> >     at all, don't consider any latter scalability.
-> 
-> Xiang, sorry for later reply...
-> 
-> I prefer method 2), let's enable chksum feature only on superblock first,
-> chksum_blocks feature can be added later.
+> > So far, nothing was detected and even irq counter of i2c-imx didn't
+> > increased.
+> > 
+> > Do I'm missing some thing? Please, help me to test you patch.
+> You not miss anything, but the i2c-gpio driver from upstream is not
+> workable on imx(I have tested the i2c-gpio driver with oscilloscope
+> on imx8mm-evk, I cannot get any signal from the i2c-gpio bus).
 
-Okay, got it. I will resend patch soon.
+In general the GPIOs are known to work, so I wonder what the problem is.
+If it relies on being able to read the state of an output it might help
+to set the SION bit on the related pins.
 
-Thanks,
-Gao Xiang
+Best regards
+Uwe
 
-> 
-> Thanks,
-> 
-> > 
-> > Some perferred idea about this? I plan to release erofs-utils v1.0 tomorrow
-> > and hold up this feature for the next erofs-utils release, but I think we can
-> > get it ready for v5.5 since it is not quite complex feature...
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> > .
-> > 
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
