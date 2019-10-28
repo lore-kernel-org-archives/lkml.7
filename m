@@ -2,196 +2,157 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE652CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A8CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B660E21734
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42EE720578
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:44:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u0Qzlixe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389541AbfJ1MoA (ORCPT
+        id S2389361AbfJ1MnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:44:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44662 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389434AbfJ1Mnb (ORCPT
+        Mon, 28 Oct 2019 08:43:16 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54500 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389339AbfJ1MnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:43:31 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iP4Mg-0002Lk-Qe; Mon, 28 Oct 2019 13:43:19 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6BFAC1C047C;
-        Mon, 28 Oct 2019 13:43:18 +0100 (CET)
-Date:   Mon, 28 Oct 2019 12:43:18 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/core: Optimize perf_init_event()
-Cc:     Andi Kleen <andi@firstfloor.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>, Kan <kan.liang@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
+        Mon, 28 Oct 2019 08:43:14 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SChC52067164;
+        Mon, 28 Oct 2019 07:43:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572266593;
+        bh=+vxhIXyc/GT5P7zxyphEpVcZECI2GZVgNs5s8U8O+pQ=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=u0QzlixeDwNvypkxpLzvPQj+vw0UwhdJv1lvJ87HrOQ7rePOORO0j9yiSQznNsJOg
+         iN5aenQeznZuxbUzuZgGGg+7PdfqpNtxE0GTqOhr/XgOTVeh4wqOd+Yw2hz/XC2LfF
+         HVpZsE+yz+L7H0dJkxTxZIeGmGN1Zn2qszC4vrw4=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9SChCIi040394
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 28 Oct 2019 07:43:12 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
+ Oct 2019 07:43:00 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 28 Oct 2019 07:43:00 -0500
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SCgoh1063574;
+        Mon, 28 Oct 2019 07:43:10 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH 09/17] remoteproc/omap: Remove the unused fields from platform data
+Date:   Mon, 28 Oct 2019 14:42:30 +0200
+Message-ID: <20191028124238.19224-10-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191028124238.19224-1-t-kristo@ti.com>
+References: <20191028124238.19224-1-t-kristo@ti.com>
 MIME-Version: 1.0
-Message-ID: <157226659819.29376.10779332665046803611.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+From: Suman Anna <s-anna@ti.com>
 
-Commit-ID:     66d258c5b048840991de49697264af75f5b09def
-Gitweb:        https://git.kernel.org/tip/66d258c5b048840991de49697264af75f5b09def
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Thu, 17 Oct 2019 20:31:03 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 28 Oct 2019 12:51:02 +01:00
+The following fields: .name, .oh_name, .oh_name_opt, .mbox_name,
+.firmware, .ops and .set_bootaddr, are removed from the platform data,
+as these are no longer needed after the addition of DT support to the
+OMAP remoteproc driver.
 
-perf/core: Optimize perf_init_event()
+The .name field was used to give a name to the remoteproc, and this
+is replaced with the device name. The .ops field was never used by
+the OMAP remoteproc driver. The .mbox_name was used to define the
+sub-mailbox node used for communication with the remote processor,
+and is retrieved using the 'mboxes' property in the DT node. The
+.firmware field is encoded directly in the OMAP remoteproc driver and
+is retrieved using driver match data. The .set_bootaddr ops was used
+for using a OMAP Control Module API to configure the boot address for
+the processor, and is now implemented within the driver using a
+syscon property.
 
-Andi reported that he was hitting the linear search in
-perf_init_event() a lot. Make more agressive use of the IDR lookup to
-avoid hitting the linear search.
+The .oh_name field is used to define the primary hwmod for the processor
+node, and is represented using the 'ti,hwmods' property in the DT node.
+The .oh_name_opt field was primarily defined to identify the hwmod for
+the second cpu in a dual Cortex-M3/M4 IPU processor sub-system. This
+hwmod entry is no longer defined usually, but rather a single hwmod
+representing both the processors in the IPU sub-system is defined.
+A single firmware image (either in SMP-mode or a combined image for
+non-SMP mode) is used, with both the resets released together always
+as part of the device management. Any power management and recovery
+aspects require that both the processors be managed as one entity due
+to the presence of shared MMU and unicache within the IPU sub-system.
 
-With exception of PERF_TYPE_SOFTWARE (which relies on a hideous hack),
-we can put everything in the IDR. On top of that, we can alias
-TYPE_HARDWARE and TYPE_HW_CACHE to TYPE_RAW on the lookup side.
+The OMAP remoteproc platform data structure is eventually expected
+to be removed completely once the other dependencies with the
+mach-omap layer are met.
 
-This greatly reduces the chances of hitting the linear search.
-
-Reported-by: Andi Kleen <andi@firstfloor.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan <kan.liang@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
- kernel/events/core.c | 41 ++++++++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 11 deletions(-)
+ include/linux/platform_data/remoteproc-omap.h | 17 +----------------
+ 1 file changed, 1 insertion(+), 16 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ea70ca6..4d67c5d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10080,7 +10080,7 @@ static struct lock_class_key cpuctx_lock;
+diff --git a/include/linux/platform_data/remoteproc-omap.h b/include/linux/platform_data/remoteproc-omap.h
+index 7e3a16097672..6bea01e199fe 100644
+--- a/include/linux/platform_data/remoteproc-omap.h
++++ b/include/linux/platform_data/remoteproc-omap.h
+@@ -2,38 +2,23 @@
+ /*
+  * Remote Processor - omap-specific bits
+  *
+- * Copyright (C) 2011 Texas Instruments, Inc.
++ * Copyright (C) 2011-2018 Texas Instruments Incorporated - http://www.ti.com/
+  * Copyright (C) 2011 Google, Inc.
+  */
  
- int perf_pmu_register(struct pmu *pmu, const char *name, int type)
- {
--	int cpu, ret;
-+	int cpu, ret, max = PERF_TYPE_MAX;
+ #ifndef _PLAT_REMOTEPROC_H
+ #define _PLAT_REMOTEPROC_H
  
- 	mutex_lock(&pmus_lock);
- 	ret = -ENOMEM;
-@@ -10093,12 +10093,17 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
- 		goto skip_type;
- 	pmu->name = name;
+-struct rproc_ops;
+ struct platform_device;
  
--	if (type < 0) {
--		type = idr_alloc(&pmu_idr, pmu, PERF_TYPE_MAX, 0, GFP_KERNEL);
--		if (type < 0) {
--			ret = type;
-+	if (type != PERF_TYPE_SOFTWARE) {
-+		if (type >= 0)
-+			max = type;
-+
-+		ret = idr_alloc(&pmu_idr, pmu, max, 0, GFP_KERNEL);
-+		if (ret < 0)
- 			goto free_pdc;
--		}
-+
-+		WARN_ON(type >= 0 && ret != type);
-+
-+		type = ret;
- 	}
- 	pmu->type = type;
+ /*
+  * struct omap_rproc_pdata - omap remoteproc's platform data
+- * @name: the remoteproc's name
+- * @oh_name: omap hwmod device
+- * @oh_name_opt: optional, secondary omap hwmod device
+- * @firmware: name of firmware file to load
+- * @mbox_name: name of omap mailbox device to use with this rproc
+- * @ops: start/stop rproc handlers
+  * @device_enable: omap-specific handler for enabling a device
+  * @device_shutdown: omap-specific handler for shutting down a device
+- * @set_bootaddr: omap-specific handler for setting the rproc boot address
+  */
+ struct omap_rproc_pdata {
+-	const char *name;
+-	const char *oh_name;
+-	const char *oh_name_opt;
+-	const char *firmware;
+-	const char *mbox_name;
+-	const struct rproc_ops *ops;
+ 	int (*device_enable)(struct platform_device *pdev);
+ 	int (*device_shutdown)(struct platform_device *pdev);
+-	void (*set_bootaddr)(u32);
+ };
  
-@@ -10188,7 +10193,7 @@ free_dev:
- 	put_device(pmu->dev);
- 
- free_idr:
--	if (pmu->type >= PERF_TYPE_MAX)
-+	if (pmu->type != PERF_TYPE_SOFTWARE)
- 		idr_remove(&pmu_idr, pmu->type);
- 
- free_pdc:
-@@ -10210,7 +10215,7 @@ void perf_pmu_unregister(struct pmu *pmu)
- 	synchronize_rcu();
- 
- 	free_percpu(pmu->pmu_disable_count);
--	if (pmu->type >= PERF_TYPE_MAX)
-+	if (pmu->type != PERF_TYPE_SOFTWARE)
- 		idr_remove(&pmu_idr, pmu->type);
- 	if (pmu_bus_running) {
- 		if (pmu->nr_addr_filters)
-@@ -10280,9 +10285,8 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
- 
- static struct pmu *perf_init_event(struct perf_event *event)
- {
-+	int idx, type, ret;
- 	struct pmu *pmu;
--	int idx;
--	int ret;
- 
- 	idx = srcu_read_lock(&pmus_srcu);
- 
-@@ -10295,12 +10299,27 @@ static struct pmu *perf_init_event(struct perf_event *event)
- 	}
- 
- 	rcu_read_lock();
--	pmu = idr_find(&pmu_idr, event->attr.type);
-+	/*
-+	 * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
-+	 * are often aliases for PERF_TYPE_RAW.
-+	 */
-+	type = event->attr.type;
-+	if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE)
-+		type = PERF_TYPE_RAW;
-+
-+again:
-+	pmu = idr_find(&pmu_idr, type);
- 	rcu_read_unlock();
- 	if (pmu) {
- 		ret = perf_try_init_event(pmu, event);
-+		if (ret == -ENOENT && event->attr.type != type) {
-+			type = event->attr.type;
-+			goto again;
-+		}
-+
- 		if (ret)
- 			pmu = ERR_PTR(ret);
-+
- 		goto unlock;
- 	}
- 
+ #if defined(CONFIG_OMAP_REMOTEPROC) || defined(CONFIG_OMAP_REMOTEPROC_MODULE)
+-- 
+2.17.1
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
