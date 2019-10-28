@@ -2,131 +2,196 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AE9CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E048CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919EB218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345A720880
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:59:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYAW/Y0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbfJ1X7Z convert rfc822-to-8bit (ORCPT
+        id S1729686AbfJ1X7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 19:59:25 -0400
-Received: from mail-oln040092066087.outbound.protection.outlook.com ([40.92.66.87]:26615
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725951AbfJ1X7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 19:59:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FgdUu/N37ZrXeORuXqrrvIedZMl9B7hymMpwQH2Y3rRa77adewZg6YbAx2ajEjewcOIrb4qI5bM4bkAFqQkOLUK2olwqASOXvWRtfN7MEfUCSrPUfmX+GlPJhWjACLQ+IZSLLclRL8yoBQ3f7tFwMAHGOeSQAzosn9iYyob3vaMCWxw+NT2UlmNGJpR0JmVn12SLiQZ+bCgeeczaysbmB1jHZX9UTCy6sxo8C8SJTZFmnJu5yDDMxokpwW2lTom727R2XDb3YUIoazmMkb3yT2LGTeuxrgR/6g16CobfSJNI9F3drx9HqoyVVsnl/YXD18luRQY3ykml0PAdhkemXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0guVEAM4gvARIEGkxOBk/y5mkJPBDeAw9uqMShafNH4=;
- b=IfBpIeeclwhK949/N5KscRy3tO+Y01QVWJ8Ey6QxjxwCwleG98oeUSZDIQxAdjvL00dTiu9ugJmQcdMGO+8gi+bgn+WEUbDrd8mtc+BUpYd5p8ogaqyjghYhcEBknG/AZSFrKD94QTS6ASGETHpiG1aIzEqCywOOxSJxOWNXK+t/EbSPXObvpun/Z2mge35iony2T0HQbn6gw5cwtqg+XJt1sQGpghSY/0b1N7BEoASgmc6Otkh5/rG7XctuHarxV8bEGKWGGiv+Vkd5F7CqCD4QqARf1o0X252LhLnL+dSS9YEX/oXqwaKpF7zfQwjz7k+d9/JnOPaZgR8ut3hrJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from VE1EUR01FT033.eop-EUR01.prod.protection.outlook.com
- (10.152.2.59) by VE1EUR01HT230.eop-EUR01.prod.protection.outlook.com
- (10.152.3.214) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Mon, 28 Oct
- 2019 23:59:21 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.2.51) by
- VE1EUR01FT033.mail.protection.outlook.com (10.152.2.230) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20 via Frontend Transport; Mon, 28 Oct 2019 23:59:21 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b1cf:db6f:95fc:84cc]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b1cf:db6f:95fc:84cc%7]) with mapi id 15.20.2387.025; Mon, 28 Oct 2019
- 23:59:20 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-CC:     Jonas Karlman <jonas@kwiboo.se>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/3] media: uapi: h264: clarify expected scaling list order
-Thread-Topic: [PATCH 0/3] media: uapi: h264: clarify expected scaling list
- order
-Thread-Index: AQHVjeu3dy81TAwYmEyjctNGvFIgqA==
-Date:   Mon, 28 Oct 2019 23:59:20 +0000
-Message-ID: <HE1PR06MB4011D3B8C200D13829648D86AC660@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR06CA0102.eurprd06.prod.outlook.com
- (2603:10a6:208:fa::43) To HE1PR06MB4011.eurprd06.prod.outlook.com
- (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:6930FCBDB8FA4E42FE39AEB45C14AA429A977ADF7B00162D2E000457ED822758;UpperCasedChecksum:04B2E817A52969BAF3C3B257E46894891D2C29F77DB15DE5754AED832A811088;SizeAsReceived:7658;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [fOa/MAEXHSWYUt6xU9RxICC9OcQYJvuk]
-x-microsoft-original-message-id: <20191028235902.13486-1-jonas@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: VE1EUR01HT230:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6lY20dd1wBidLQxfolgn3+3Ol8qV2fhaGCdGp5Z7LyfDSDMAUNDS9PdLATlcJmAt1v0YLRkGpgTqIYh9YHvuPPpgOFuKrB8OPsAL/vaJgCvB3/QFBWHbvk8SH4ylkV1b5J7jxrZ62v6e1wDqk22x1aoayLcaeiouX4oCcYlGJhxDuFuexWHhQgipfQVP+9e9/I6MbifwxtnhEQE9BBUcdaIT0piq+tWbXpIJtb751bg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Mon, 28 Oct 2019 19:59:46 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40566 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfJ1X7p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 19:59:45 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p5so1389144plr.7;
+        Mon, 28 Oct 2019 16:59:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=6PbNC9ZYBewrGx4YYy/4pVIAWb+IMk+47XVy1Sx5zzI=;
+        b=HYAW/Y0L2chXTWqpU2iL0mEYEyFN8O5JV3K7uT5zi5MVAHM10rAzOumCdJH84zYxS+
+         6KQq51xBpAp+0GQjRvOibReUcU59U3AUuy1kQUQ5CcdwbzgoBwp0KdeN6itX3xSo5UQt
+         /mMMuxzxj/B7EGZayugehJU3wbrFEknjC+t+/sf5/LUs5Mr0rkWMLHvjdv6ao6IUbVCf
+         mS/H6anHtrzQWKZmdnph7Hx4LDFc1h3T5W1gxadaykgczBZakktCleeu5MV+gy2d37/d
+         ebNnz9/PmR6LKowLihYoAiAvHmgj3N+3IbUVfnIaVRrnL8N4c6OjMLxR/1QN5mTnFtKz
+         15Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=6PbNC9ZYBewrGx4YYy/4pVIAWb+IMk+47XVy1Sx5zzI=;
+        b=nzVcVyl5WJ9KjEHBs6JYoHAlCHcWk51sKAlew5lxYTUou5tIE9aVnEPO+r/fjyjuYM
+         X2RUBriw6muwmQvaviBod0WQAhfUwRr2rOrqE95sI+oq2v4BueuhoZopBaPIYmA/YDcZ
+         yYK6RlxOQkJU+jX8NGE+tiIf+sHN3S878XixHj760CqgbqFGHolioazrSYx2zC0xOFUS
+         f/KfT79YR/HhbxxFZt/duAcs7EOKpA8aTuUZnnesB2rq70RpqVrjHers2T9VtrMSTunM
+         L8s64pnmTwFSn8CekXc+yiWVn4XC9Q2s0CqUgVNUWDPLuHaBN4buyvcZJ0/Z+jHxJcYc
+         /Lpw==
+X-Gm-Message-State: APjAAAU3Dr/zQ4g8kFLPAuTgfEmm/eVsRuzLycqp+2OeGKohHvHh0QOL
+        ZkN4Bo1dc4W7OvSElFluZH8=
+X-Google-Smtp-Source: APXvYqxHQOFG5/pQ1j8cv44WDxjt9j7KSDG8Izwx7Veg0LydX0N9MI97H/fzaTvx1p1mbLvx6KdoyA==
+X-Received: by 2002:a17:902:7089:: with SMTP id z9mr751398plk.51.1572307184139;
+        Mon, 28 Oct 2019 16:59:44 -0700 (PDT)
+Received: from [172.30.89.111] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
+        by smtp.gmail.com with ESMTPSA id r33sm579115pjb.5.2019.10.28.16.59.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 28 Oct 2019 16:59:43 -0700 (PDT)
+Subject: Re: [PATCH 2/2] dt-bindings: timer: imx: gpt: Add pin group bindings
+ for input capture
+To:     Rob Herring <robh@kernel.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:CLOCKSOURCE, CLOCKEVENT DRIVERS" 
+        <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191016010544.14561-1-slongerbeam@gmail.com>
+ <20191016010544.14561-3-slongerbeam@gmail.com> <20191027212121.GA3049@bogus>
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+Message-ID: <2daa37a6-83a7-ec08-b89c-a07268b3ea4a@gmail.com>
+Date:   Mon, 28 Oct 2019 16:59:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: d195b223-6d5c-43dd-6e77-08d75c02d960
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 23:59:20.9176
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT230
+In-Reply-To: <20191027212121.GA3049@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a suggested clarification on the expect order of lists and values
-to use in the H264 scaling matrix ctrl, cedrus and hantro currently expect
-values in two different orders.
+Hi Rob,
 
-The suggestion is to use the same value order that vaapi, vdpau and nvdec use,
-i.e. have the scaling list values in "matrix order"/"raster order",
-after the inverse scanning process has been applied.
+Thanks for reviewing.
 
-This also contains a clarification on the order of the scaling lists.
+On 10/27/19 2:21 PM, Rob Herring wrote:
+> On Tue, Oct 15, 2019 at 06:05:44PM -0700, Steve Longerbeam wrote:
+>> Add pin group bindings to support input capture function of the i.MX
+>> GPT.
+>>
+>> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+>> ---
+>>   .../devicetree/bindings/timer/fsl,imxgpt.txt  | 28 +++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
+>> index 5d8fd5b52598..32797b7b0d02 100644
+>> --- a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
+>> +++ b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
+>> @@ -33,6 +33,13 @@ Required properties:
+>>              an entry for each entry in clock-names.
+>>   - clock-names : must include "ipg" entry first, then "per" entry.
+>>   
+>> +Optional properties:
+>> +
+>> +- pinctrl-0: For the i.MX GPT to support the Input Capture function,
+>> +  	     the input capture channel pin groups must be listed here.
+>> +- pinctrl-names: must be "default".
+>> +
+>> +
+>>   Example:
+>>   
+>>   gpt1: timer@10003000 {
+>> @@ -43,3 +50,24 @@ gpt1: timer@10003000 {
+>>   		 <&clks IMX27_CLK_PER1_GATE>;
+>>   	clock-names = "ipg", "per";
+>>   };
+>> +
+>> +
+>> +Example with input capture channel 0 support:
+>> +
+>> +pinctrl_gpt_input_capture0: gptinputcapture0grp {
+>> +	fsl,pins = <
+>> +		MX6QDL_PAD_SD1_DAT0__GPT_CAPTURE1 0x1b0b0
+>> +	>;
+>> +};
+>> +
+>> +gpt: gpt@2098000 {
+> timer@...
 
-Expected scaling list order will be,
-for 4x4: Intra Y, Intra Cb, Intra Cr, Inter Y, Inter Cb, Inter Cr,
-for 8x8: Intra Y, Inter Y, Intra Cb, Inter Cb, Intra Cr, Inter Cr.
+Ok.
 
-This series is based on feedback and discussion of [1]
+>
+> I don't really think this merits another example though.
 
-[1] https://patchwork.linuxtv.org/patch/58525/
+Ok.
 
-Jonas Karlman (3):
-  media: uapi: h264: clarify expected scaling_list_4x4/8x8 order
-  media: cedrus: Use correct H264 8x8 scaling list
-  media: hantro: Do not reorder H264 scaling list
+But for version 2 of this patch-set I'd like to run some ideas by you.
 
- .../media/uapi/v4l/ext-ctrls-codec.rst        |  8 ++-
- drivers/staging/media/hantro/hantro_h264.c    | 51 +++++--------------
- .../staging/media/sunxi/cedrus/cedrus_h264.c  |  4 +-
- 3 files changed, 20 insertions(+), 43 deletions(-)
+Because in this version I did not make any attempt to create a generic 
+timer capture framework. I just exported a couple imx-specific functions 
+to request and free a timer input capture channel in the imx-gpt driver.
 
--- 
-2.17.1
+So for version 2 I am thinking about a simple framework that other SoC 
+timers with timer input capture support can make use of.
+
+To begin with I don't see that timer input capture warrants the 
+definition of a new device. At least for imx, timer input capture is 
+just one function of the imx GPT, where the other is Output Compare 
+which is used for the system timer. I think that is likely the case for 
+most all SoC timers, that is, input capture and output compare are 
+tightly interwoven functions of general purpose timers.
+
+So I'm thinking there needs to be an additional #input-capture-cells 
+property that defines how many input capture channels the timer 
+contains, where a channel refers to a single input signal edge that can 
+capture the timer counter. The imx GPT has two input capture channels (2 
+separate input signals).
+
+For example, on imx:
+
+gpt: timer@2098000 {
+	compatible = "fsl,imx6q-gpt", "fsl,imx31-gpt";
+	/* ... */
+	#input-capture-cells = <1>;
+	pinctrl-names = "default", "icap1";
+	pinctrl-0 = <&pinctrl_gpt_input_capture0>;
+	pinctrl-1 = <&pinctrl_gpt_input_capture1>;
+};
+
+
+A device that is a listener/consumer of an timer capture event would then refer to a timer capture channel:
+
+some-device {
+	/* ... */
+	timer-input-capture = <&gpt 0>;
+};
+
+
+Is this a sound approach? Let me know what you think.
+
+Thanks,
+Steve
 
