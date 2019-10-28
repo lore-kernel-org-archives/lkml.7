@@ -2,135 +2,132 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B81DCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0488FCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C952196F
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4A621721
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:02:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ITdmLhs/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWcB+L+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390763AbfJ1QC1 (ORCPT
+        id S2390775AbfJ1QCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:02:27 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57205 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728864AbfJ1QC1 (ORCPT
+        Mon, 28 Oct 2019 12:02:53 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42595 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728864AbfJ1QCx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:02:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572278546;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CFA3UR5epXPZ3Q+P89ar8BSxRkGTnC0ptnFKZThT7Yg=;
-        b=ITdmLhs/KYsuixH1RtA4f1kIe13tUtFSzMIj3Kzmn1LgZSlq7s/aIq735ZwhYMHLQFReBg
-        3KP/uwpCKCEy5WCG6nHSqwZG0uMDZJ9Ft4UorZ3cjGLiEaDmkt8T/3I3udGQH04EWW9o8O
-        tD3SmN6vVj/HuEEv8g1gkJtD2YE7T8w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-333-Wg_rjzE3NdiicPaLXu_-kA-1; Mon, 28 Oct 2019 12:02:19 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70E86801E64;
-        Mon, 28 Oct 2019 16:02:18 +0000 (UTC)
-Received: from treble (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6F5AF600C9;
-        Mon, 28 Oct 2019 16:02:17 +0000 (UTC)
-Date:   Mon, 28 Oct 2019 11:02:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Oct 28 (objtool)
-Message-ID: <20191028160215.ruzhvlwqaumw4krm@treble>
-References: <20191028195154.4b6651dd@canb.auug.org.au>
- <b7c7bb28-1810-88e5-1899-a90123d26627@infradead.org>
+        Mon, 28 Oct 2019 12:02:53 -0400
+Received: by mail-il1-f196.google.com with SMTP id o16so8627058ilq.9;
+        Mon, 28 Oct 2019 09:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u+kZn6IyZZfN/0mlluWthGclsf/q1ikalY90VR/nHBU=;
+        b=pWcB+L+0mUwnOrVH0ALZ95dR9onLwO5cUAyZQpQnV6hLnzSMZrkkkaJAEF4WFT/xTt
+         nHo4+XYqDEGUkCUZMAn04Hz1fR2eXxWCPYvQ/96CDRm5APZpoSDlyTcY5qSR8olSdxBG
+         lCVXCTjk6LYiPqyzTDXIc9x+EJwyuaZKEINk7FVKob9s+nDDEID12gZyyVTYwHJhslmX
+         JWnGQiaREqGFl05g254TF/dQPGdRgYzHmZ7SSnK8a7PBQ7XJ3MTpvMCtWCzdmoj1udpA
+         FxrLT3MqhuAZIlWn2sqrEbW6vqHiLWRBkovD6TJDQfPDYfIuDN6C/kG8KWfAvdbWoY2a
+         cAmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u+kZn6IyZZfN/0mlluWthGclsf/q1ikalY90VR/nHBU=;
+        b=g0PbtfR7VkR0olc/ye5d2k0pbky2stWwJ+ZbMGx9b/CXCfmKXE65UTwYyW3zdmO9bH
+         /c2eB9emcCYDT2PGEDd4N+g3VcKHpDl7DLO/zb4+qiI3/IcrfMuI5mnTEUl8kY/2EO45
+         9JEUcmKsad4OrCkql2pyVJiOv+4fwR3ICA5L+W2kk4Nm0iowT9scg0WB+4r6/44RWSNE
+         Gnv9Q3Og9e6LaK+b4r7UBm1tVzmvzX+LtMRK3lJFGPySY6tPZMybnaXZZRdoFvYaINHX
+         JrO/aWiSUw+PTsZHkCOyU8SprP128zGuuIolJBOIacWklavYoxm/JUwABcJTM30Br/7q
+         /6OQ==
+X-Gm-Message-State: APjAAAWOzpb22QTD5QD49dCHgTOWYq2dDi2KDE9pCGE+8WO5Cbaz7FDy
+        nwGch5kZ2ZC8TGQE1YmzCJ5CDcsX
+X-Google-Smtp-Source: APXvYqwtxC7hbRBlLLQaOvoES+rjeZt1ijbjiPAWdyitxy/scxKFyp/QCggwlSnY+oBbOpOKpq+9uA==
+X-Received: by 2002:a92:6f08:: with SMTP id k8mr20274149ilc.57.1572278571279;
+        Mon, 28 Oct 2019 09:02:51 -0700 (PDT)
+Received: from dell.localdomain ([216.249.49.8])
+        by smtp.googlemail.com with ESMTPSA id 133sm1618424ila.25.2019.10.28.09.02.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 09:02:50 -0700 (PDT)
+From:   Ethan Sommer <e5ten.arch@gmail.com>
+Cc:     Ethan Sommer <e5ten.arch@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: support byacc as alternative YACC to bison
+Date:   Mon, 28 Oct 2019 11:56:37 -0400
+Message-Id: <20191028155639.30330-1-e5ten.arch@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <b7c7bb28-1810-88e5-1899-a90123d26627@infradead.org>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: Wg_rjzE3NdiicPaLXu_-kA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 08:31:28AM -0700, Randy Dunlap wrote:
-> On 10/28/19 1:51 AM, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > Changes since 20191025:
-> >=20
->=20
->=20
-> on x86_64:
->=20
-> kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x14: unreachable=
- instruction
->=20
-> .o file is attached.
+Switches to a more portable set of flags for generating the same file
+names instead of the bison-specific --defines, uses the more portable -V
+instead of --version, and explicitly defines YYSTYPE in lex.l, which
+bison implicitly defines if not present but byacc does not.
 
-Silly GCC.  Does this fix it?
+Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
+---
+ scripts/Makefile.host     | 2 +-
+ scripts/genksyms/Makefile | 2 +-
+ scripts/genksyms/lex.l    | 2 ++
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index 4b1c3b664f51..d58587391b96 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -83,7 +83,7 @@ static inline void exit_thread(struct task_struct *tsk)
- {
- }
- #endif
--extern void do_group_exit(int);
-+extern void __noreturn do_group_exit(int);
-=20
- extern void exit_files(struct task_struct *);
- extern void exit_itimers(struct signal_struct *);
-diff --git a/kernel/exit.c b/kernel/exit.c
-index f2d20ab74422..bdc4122d904d 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -894,7 +894,7 @@ SYSCALL_DEFINE1(exit, int, error_code)
-  * Take down every thread in the group.  This is called by fatal signals
-  * as well as by sys_exit_group (below).
-  */
--void
-+void __noreturn
- do_group_exit(int exit_code)
- {
- =09struct signal_struct *sig =3D current->signal;
-@@ -931,7 +931,6 @@ SYSCALL_DEFINE1(exit_group, int, error_code)
- {
- =09do_group_exit((error_code & 0xff) << 8);
- =09/* NOTREACHED */
--=09return 0;
- }
-=20
- struct waitid_info {
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 543c068096b1..97919469c787 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -135,6 +135,7 @@ static bool __dead_end_function(struct objtool_file *fi=
-le, struct symbol *func,
- =09=09"__stack_chk_fail",
- =09=09"panic",
- =09=09"do_exit",
-+=09=09"do_group_exit",
- =09=09"do_task_dead",
- =09=09"__module_put_and_exit",
- =09=09"complete_and_exit",
+diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+index 4c51c95d40f4..64e98e1d4825 100644
+--- a/scripts/Makefile.host
++++ b/scripts/Makefile.host
+@@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
+ # YACC
+ # ---------------------------------------------------------------------------
+ quiet_cmd_bison = YACC    $(basename $@).[ch]
+-      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
++      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
+ 
+ $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
+ 	$(call if_changed,bison)
+diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
+index 78629f515e78..397c2dc8182b 100644
+--- a/scripts/genksyms/Makefile
++++ b/scripts/genksyms/Makefile
+@@ -15,7 +15,7 @@ genksyms-objs	:= genksyms.o parse.tab.o lex.lex.o
+ ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+ 
+ quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
+-      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
++      cmd_bison_no_warn = $(YACC) -V >/dev/null; \
+ 			  $(cmd_bison) 2>/dev/null
+ 
+ $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
+diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
+index e265c5d96861..0580c088527f 100644
+--- a/scripts/genksyms/lex.l
++++ b/scripts/genksyms/lex.l
+@@ -19,6 +19,8 @@
+ #include "genksyms.h"
+ #include "parse.tab.h"
+ 
++extern YYSTYPE yylval;
++
+ /* We've got a two-level lexer here.  We let flex do basic tokenization
+    and then we categorize those basic tokens in the second stage.  */
+ #define YY_DECL		static int yylex1(void)
+-- 
+2.23.0
 
