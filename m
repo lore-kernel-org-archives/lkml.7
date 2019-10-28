@@ -2,126 +2,106 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B8FCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D192ACA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198AE214B2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8EA204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 19:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O0yZqC1v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kr+58qlw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfJ1T5q (ORCPT
+        id S1726810AbfJ1T6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 15:57:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37459 "EHLO
+        Mon, 28 Oct 2019 15:58:54 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44493 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfJ1T5p (ORCPT
+        with ESMTP id S1725776AbfJ1T6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 15:57:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u9so2908098pfn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:57:45 -0700 (PDT)
+        Mon, 28 Oct 2019 15:58:54 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q26so3999177pfn.11;
+        Mon, 28 Oct 2019 12:58:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+wOJCmH0g8vAxxe+FcShlh+2/nEo9CAjIamY0wkPKUQ=;
-        b=O0yZqC1vKJdTDSM5n1ypj42P6mUYqFnfIcgablhmOvhVLjS1Ybl9gj4HXCMp/vZ/Jg
-         IlXkNeniJ714HLUGdQmrikkPN3FAzyra+IIBoiYFS+hSOqqXECKH+9kL8TmBRqTz+il7
-         BXn0qi51LmPYcG+sXB1pj3nora5+8WYXfasYo=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=mUUwYm2J4X9AJ/m0x6sMLtjI+0msH+IroBSGwyonZQg=;
+        b=Kr+58qlwc2ermSgdCkMendRK93dGnsQ9/wcP+2QXe/ZhgaKwKYBHjpXqbKD0s+/i49
+         wqCOQIRuPqk4i1wpLLZlD6DdrUqRixVQyNe/4u9QVfCwiAZ/jTFaM6AC+XBVTn7+FYW1
+         oWSX46ptaB74p2i76Z1aB/q396JNSy4hfgOJYPy+fsUuyfzJwffFI/AQVuFGzucvIyOV
+         hEOIfIIpoRDnDxAyLt6A6UmJImPw+FDV8xPUPAzDCTXb5YZ9/6Z9fW+HbZtPm3hZdanV
+         zEdkG7sk4etqQXxYYM7wDTIxHwWeUSPd6x+em0hFXw+3BjvTWI8oZG/fcoWIiuOmo0Gr
+         sNFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+wOJCmH0g8vAxxe+FcShlh+2/nEo9CAjIamY0wkPKUQ=;
-        b=IYW6XqtLWvuUi2C71U/uP5PMWXLRKsWsLfTuK7le/CkU9NHd0owd2ZeRevdSso5xMd
-         00p7+rV0khsfhAXTWAQcKASfQCamqn4xO94L7CbMSasqZuC1dpW9rQ6nWg618r0S9ZNL
-         O/LX6ak3oP8amGuOKLiRagYWmhgWBd12tfvLYlyZoJYLTTYB4l2FNvhFTjRP1M2HV6f+
-         YufiAf+OREMzFhnqq2IgsaULcf6tmoGoZmS0xBEE6YvOLkQy7MEnKKxujY2dWtVwpkQD
-         rd6Vku5kQknacxtDT6uhEUeVuACF3KFwfMW0k28T9AGoSrd/8qtlsAPKDuQMO7kK35d7
-         6SBQ==
-X-Gm-Message-State: APjAAAXvtM8i18wNfihxRw0mlW95keAIQkjkcZVN/pwPpwP+uUHm5mbO
-        qYp9PASKCIA8BoYgS4PEYMrbHA==
-X-Google-Smtp-Source: APXvYqyKAiln1b5mOZI7AcApDWWXQnpclGuce0+3km3MXnlFB0MT9wWVjjgen/Fg+kiLaMYGZZoRxg==
-X-Received: by 2002:a62:e10c:: with SMTP id q12mr13396875pfh.248.1572292664956;
-        Mon, 28 Oct 2019 12:57:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y129sm12883990pgb.28.2019.10.28.12.57.43
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=mUUwYm2J4X9AJ/m0x6sMLtjI+0msH+IroBSGwyonZQg=;
+        b=j1A3hBxyI7WiaQY/2pUFOSlxjn8B1OQUj6VSk0doXLX9aNi5akxe4NiBQhsNXIRTWT
+         r4ldGptQmSD2ToxMib4z3LyB+OpkDjB5JStiQffb01JdONV3ZwoOB3uWBHPeUH08/uBp
+         LfFsfLUmt9I9GVibAEPAAzhNAv7oQuKL8qPMOK2K2Q9XhTxNicUhewycc/nqrNgfKaPx
+         EEv9+2Z5H/50zlAxyu9wHOTtGKi/4SjaxvIP4bsUzAhYRh6tS226kcP32n7B6QAdckbl
+         AcbyiBtunaLSIIiaLDI1uBA2cmrmQ54sZdmV/PfmuoGRS/vG1zfi0Zmv0kKj3b1z+x7H
+         gyxQ==
+X-Gm-Message-State: APjAAAXni5ZzTqU0dsGDD4Ev1uFqFjZVfq/pk7ZFnt1Ot+fsL7eRVwtZ
+        RGfTYAmOdyrqMgW+XXxVUgY=
+X-Google-Smtp-Source: APXvYqxmNOlFl+8UCIExMbtEghL6rJkdU+mbae+gk/jlG2s6cpuUnqbwShlRdqMyzSqgb7CMfJzAig==
+X-Received: by 2002:a17:90a:9201:: with SMTP id m1mr1376390pjo.74.1572292731971;
+        Mon, 28 Oct 2019 12:58:51 -0700 (PDT)
+Received: from saurav ([27.62.167.137])
+        by smtp.gmail.com with ESMTPSA id x192sm12472924pfc.109.2019.10.28.12.58.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 12:57:43 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 12:57:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 05/17] add support for Clang's Shadow Call Stack (SCS)
-Message-ID: <201910281250.25FBA8533@keescook>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191024225132.13410-1-samitolvanen@google.com>
- <20191024225132.13410-6-samitolvanen@google.com>
- <20191025105643.GD40270@lakrids.cambridge.arm.com>
- <CABCJKuc+XiDRdqfvjwCF7y=1wX3QO0MCUpeu4Gdcz91+nmnEAQ@mail.gmail.com>
- <20191028163532.GA52213@lakrids.cambridge.arm.com>
+        Mon, 28 Oct 2019 12:58:51 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 01:28:44 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     QLogic-Storage-Upstream@qlogic.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] scsi: qla4xxx: ql4_init.c: Remove Unneeded variable status
+Message-ID: <20191028195844.GA28740@saurav>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028163532.GA52213@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 04:35:33PM +0000, Mark Rutland wrote:
-> On Fri, Oct 25, 2019 at 01:49:21PM -0700, Sami Tolvanen wrote:
-> > To keep the address of the currently active shadow stack out of
-> > memory, the arm64 implementation clears this field when it loads x18
-> > and saves the current value before a context switch. The generic code
-> > doesn't expect the arch code to necessarily do so, but does allow it.
-> > This requires us to use __scs_base() when accessing the base pointer
-> > and to reset it in idle tasks before they're reused, hence
-> > scs_task_reset().
-> 
-> Ok. That'd be worth a comment somewhere, since it adds a number of
-> things which would otherwise be unnecessary.
-> 
-> IIUC this assumes an adversary who knows the address of a task's
-> thread_info, and has an arbitrary-read (to extract the SCS base from
-> thead_info) and an arbitrary-write (to modify the SCS area).
-> 
-> Assuming that's the case, I don't think this buys much. If said
-> adversary controls two userspace threads A and B, they only need to wait
-> until A is context-switched out or in userspace, and read A's SCS base
-> using B.
-> 
-> Given that, I'd rather always store the SCS base in the thread_info, and
-> simplify the rest of the code manipulating it.
+Remove unneeded variable status in qla4xxx_process_ddb_changed()
 
-I'd like to keep this as-is since it provides a temporal protection.
-Having arbitrary kernel read and write at arbitrary time is a very
-powerful attack primitive, and is, IMO, not very common. Many attacks
-tend to be chains of bugs that give attackers narrow visibility in to the
-kernel at specific moments. I would say this design is more about stopping
-"current" from dumping thread_info (as there are many more opportunities
-for current to see its own thread_info compared to arbitrary addresses
-or another task's thread_info). As such, I think it's a reasonable
-precaution to take.
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+ drivers/scsi/qla4xxx/ql4_init.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/drivers/scsi/qla4xxx/ql4_init.c b/drivers/scsi/qla4xxx/ql4_init.c
+index 2bf5e3e639e1..8942c48740cb 100644
+--- a/drivers/scsi/qla4xxx/ql4_init.c
++++ b/drivers/scsi/qla4xxx/ql4_init.c
+@@ -1167,7 +1167,6 @@ int qla4xxx_process_ddb_changed(struct scsi_qla_host *ha,
+ 				uint32_t state, uint32_t conn_err)
+ {
+ 	struct ddb_entry *ddb_entry;
+-	int status = QLA_ERROR;
+ 
+ 	/* check for out of range index */
+ 	if (fw_ddb_index >= MAX_DDB_ENTRIES)
+@@ -1189,7 +1188,7 @@ int qla4xxx_process_ddb_changed(struct scsi_qla_host *ha,
+ 	ddb_entry->ddb_change(ha, fw_ddb_index, ddb_entry, state);
+ 
+ exit_ddb_event:
+-	return status;
++	return QLA_ERROR;
+ }
+ 
+ /**
 -- 
-Kees Cook
+2.20.1
+
