@@ -2,114 +2,175 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287AACA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBF0CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF8521783
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A58721783
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 15:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G4fNPx62"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QngVd56b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbfJ1PYh (ORCPT
+        id S1728860AbfJ1PZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:24:37 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59184 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfJ1PYh (ORCPT
+        Mon, 28 Oct 2019 11:25:02 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37705 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbfJ1PZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:24:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wzqTOdWSiprs38KOBFUNMMK0k7THK4/IC0X8dH0u1NU=; b=G4fNPx62fbipN9nDeu/f5s+nf
-        NO9yIj1UogFJcWkqtEoEVuHEP99H6z4UqZzHCeRm4yzyDFFtx+o8AUM1jk38olV09nmG+1HpQuU0M
-        u3ckNys0R3GUjOeRr7/WuOjSrJSgoNyCFaoM70BHS5RdLfmYZsuMKPhjXjfnpeOg0pVzroWmYb739
-        lDIwdLRnMxIebG1q+zilSjzZwaTHKBEoEnudyMDWl2XzLC+yFDpYJA3e/TSgmFiAFQksNu7a/TZsg
-        DxwIEU6vlRsKe55yeA5emFh9LvlXowxWfQLXIHOsyhNt/1D4cpH6XRTjp6aj0/qRg+x7drkVmhxWt
-        /EKOBBs9w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP6sY-0002o9-RT; Mon, 28 Oct 2019 15:24:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 485A13040CB;
-        Mon, 28 Oct 2019 16:23:21 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 760212B4468C9; Mon, 28 Oct 2019 16:24:21 +0100 (CET)
-Date:   Mon, 28 Oct 2019 16:24:21 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     mingo@redhat.com, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        edubezval@gmail.com, qperret@google.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, daniel.lezcano@linaro.org
-Subject: Re: [Patch v4 3/6] sched/fair: Enable CFS periodic tick to update
- thermal pressure
-Message-ID: <20191028152421.GD4097@hirez.programming.kicks-ass.net>
-References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
- <1571776465-29763-4-git-send-email-thara.gopinath@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571776465-29763-4-git-send-email-thara.gopinath@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 28 Oct 2019 11:25:01 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u9so2369552pfn.4;
+        Mon, 28 Oct 2019 08:25:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=pL2Y/Napl6xRtES8uxsPO4Id7Om/+VG/4N+uJFv9jeU=;
+        b=QngVd56bCF3awkXja0+4u23UGHljYZp+veoLXhE5fBAhNDlZ5j6rFPLuyU+XvJDSw2
+         zPGZSxQPVvaofcptT9Lbw82nA65AhUnRhPXS9m6okpPS1KtCu4K9hwGMr1ZyLYin0jWZ
+         cVpCL1DFlX3RHKvnes+Q7FwrF+zhr3foaTgkhk4zSO1SeNYEdGHA1vrSVFAjQ3FY3Et8
+         8dVQY9SIEsovfoZzmG6s1wGr4Bd1YTzddnVkJcsekfggOEgttJjw73U+udEO01qPR3gF
+         +xwUKIgkioQY0UHjs98IDi+COfScDwNQbxak7mpISHPPqETOt/3jxW71U6UnzUgQ1mod
+         N3Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pL2Y/Napl6xRtES8uxsPO4Id7Om/+VG/4N+uJFv9jeU=;
+        b=MvSh/CropdxZQ/BxBkzsFm+AdPQc4Ji5ADg2r6RfG7ya4RYnw5hWGw+0yCc6SUbyzh
+         1E5U3qCVy7a/HXVu9shZ0T4QjffppeQjyjA0i6jBHaLKpXPHe3484vn3Ql7m0imaEa7s
+         DJGJK3k9lelnCSwNN395Q+71OASjvbZb9XioxDDqKxB+JBDzuF7ZtW7l2gFQ1BALQ0Yh
+         3+dehGYUd8FAkrf1ke3a9VKdajF+uXIoc43OqYOtNjaeZdynwIZ31TbS59dwIIvFL0lP
+         Nn5DZ1uphu7vCbtotqWuqk95Z7r5YzabpquM52rEjmk/Fc9vrKINdKFoNOt0wHEn2/2b
+         byHA==
+X-Gm-Message-State: APjAAAXa9DNnqVTpFmeCpitjSqcGhENqIpZRaRfwA2MwR8bjfiajeuFe
+        w0OpGQA9piSg8jm87dEkqCg=
+X-Google-Smtp-Source: APXvYqxouyzNm6f/ekIsibuoJxCA9z/lYenaWWg2c48z768Wjkey77dRgkBqRfYg4UMU9OoMmENmkA==
+X-Received: by 2002:a17:90a:4804:: with SMTP id a4mr693067pjh.102.1572276300287;
+        Mon, 28 Oct 2019 08:25:00 -0700 (PDT)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:51e:687:393e:2dcf:24de:b4fb])
+        by smtp.gmail.com with ESMTPSA id j25sm10691763pfi.113.2019.10.28.08.24.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 08:24:59 -0700 (PDT)
+From:   madhuparnabhowmik04@gmail.com
+To:     paulmck@kernel.org, joel@joelfernandes.org, corbet@lwn.net
+Cc:     linux-doc@vger.kernel.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH 2/2] Documentation: RCU: Converted arrayRCU.txt to arrayRCU.rst.
+Date:   Mon, 28 Oct 2019 20:54:49 +0530
+Message-Id: <20191028152449.27264-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 04:34:22PM -0400, Thara Gopinath wrote:
-> Introduce support in CFS periodic tick to trigger the process of
-> computing average thermal pressure for a cpu.
-> 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->  kernel/sched/fair.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 682a754..4f9c2cb 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -21,6 +21,7 @@
->   *  Copyright (C) 2007 Red Hat, Inc., Peter Zijlstra
->   */
->  #include "sched.h"
-> +#include "thermal.h"
->  
->  #include <trace/events/sched.h>
->  
-> @@ -7574,6 +7575,8 @@ static void update_blocked_averages(int cpu)
->  		done = false;
->  
->  	update_blocked_load_status(rq, !done);
-> +
-> +	trigger_thermal_pressure_average(rq);
->  	rq_unlock_irqrestore(rq, &rf);
->  }
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-This changes only 1 of the 2 implementations of
-update_blocked_averages(). Also, how does this interact with
-rq->has_blocked_load ?
+This patch converts arrayRCU from txt to rst format.
+arrayRCU.rst is also added in the index.rst file.
 
-> @@ -9933,6 +9936,8 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
->  
->  	update_misfit_status(curr, rq);
->  	update_overutilized_status(task_rq(curr));
-> +
-> +	trigger_thermal_pressure_average(rq);
->  }
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+---
+ .../RCU/{arrayRCU.txt => arrayRCU.rst}         | 18 ++++++++++++++----
+ Documentation/RCU/index.rst                    |  1 +
+ 2 files changed, 15 insertions(+), 4 deletions(-)
+ rename Documentation/RCU/{arrayRCU.txt => arrayRCU.rst} (91%)
 
-This seems to imply all this thermal stuff is fair only, in which case I
-could suggest putting those few lines in fair.c. ~45 extra lines on
-1e5+ lines really doesn't matter.
+diff --git a/Documentation/RCU/arrayRCU.txt b/Documentation/RCU/arrayRCU.rst
+similarity index 91%
+rename from Documentation/RCU/arrayRCU.txt
+rename to Documentation/RCU/arrayRCU.rst
+index f05a9afb2c39..c8a26f7b2577 100644
+--- a/Documentation/RCU/arrayRCU.txt
++++ b/Documentation/RCU/arrayRCU.rst
+@@ -1,4 +1,7 @@
++.. _array_rcu_doc:
++
+ Using RCU to Protect Read-Mostly Arrays
++=======================================
+ 
+ 
+ Although RCU is more commonly used to protect linked lists, it can
+@@ -26,6 +29,7 @@ described in the following sections.
+ 
+ 
+ Situation 1: Hash Tables
++------------------------
+ 
+ Hash tables are often implemented as an array, where each array entry
+ has a linked-list hash chain.  Each hash chain can be protected by RCU
+@@ -34,6 +38,7 @@ to other array-of-list situations, such as radix trees.
+ 
+ 
+ Situation 2: Static Arrays
++--------------------------
+ 
+ Static arrays, where the data (rather than a pointer to the data) is
+ located in each array element, and where the array is never resized,
+@@ -41,11 +46,14 @@ have not been used with RCU.  Rik van Riel recommends using seqlock in
+ this situation, which would also have minimal read-side overhead as long
+ as updates are rare.
+ 
+-Quick Quiz:  Why is it so important that updates be rare when
+-	     using seqlock?
++Quick Quiz:
++		Why is it so important that updates be rare when using seqlock?
++
++:ref:`Answer to Quick Quiz <answer_quick_quiz_seqlock>`
+ 
+ 
+ Situation 3: Resizeable Arrays
++------------------------------
+ 
+ Use of RCU for resizeable arrays is demonstrated by the grow_ary()
+ function formerly used by the System V IPC code.  The array is used
+@@ -60,7 +68,7 @@ the remainder of the new, updates the ids->entries pointer to point to
+ the new array, and invokes ipc_rcu_putref() to free up the old array.
+ Note that rcu_assign_pointer() is used to update the ids->entries pointer,
+ which includes any memory barriers required on whatever architecture
+-you are running on.
++you are running on.::
+ 
+ 	static int grow_ary(struct ipc_ids* ids, int newsize)
+ 	{
+@@ -112,7 +120,7 @@ a simple check suffices.  The pointer to the structure corresponding
+ to the desired IPC object is placed in "out", with NULL indicating
+ a non-existent entry.  After acquiring "out->lock", the "out->deleted"
+ flag indicates whether the IPC object is in the process of being
+-deleted, and, if not, the pointer is returned.
++deleted, and, if not, the pointer is returned.::
+ 
+ 	struct kern_ipc_perm* ipc_lock(struct ipc_ids* ids, int id)
+ 	{
+@@ -144,8 +152,10 @@ deleted, and, if not, the pointer is returned.
+ 		return out;
+ 	}
+ 
++.. _answer_quick_quiz_seqlock:
+ 
+ Answer to Quick Quiz:
++	Why is it so important that updates be rare when using seqlock?
+ 
+ 	The reason that it is important that updates be rare when
+ 	using seqlock is that frequent updates can livelock readers.
+diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+index 340a9725676c..c4586602e7e2 100644
+--- a/Documentation/RCU/index.rst
++++ b/Documentation/RCU/index.rst
+@@ -7,6 +7,7 @@ RCU concepts
+ .. toctree::
+    :maxdepth: 1
+ 
++   arrayRCU
+    rcu
+    listRCU
+    UP
+-- 
+2.17.1
+
