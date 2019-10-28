@@ -2,132 +2,93 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4456CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28DFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5A320873
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:56:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="hncKEA8q"
+	by mail.kernel.org (Postfix) with ESMTP id 742F320873
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 03:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbfJ1D4C (ORCPT
+        id S1731003AbfJ1D6v convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 23:56:02 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36691 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728116AbfJ1D4C (ORCPT
+        Sun, 27 Oct 2019 23:58:51 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:58336 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728048AbfJ1D6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 23:56:02 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w18so8334662wrt.3
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 20:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=0vLsyW8NZdsJrokYW5bbOufgyVkfiUX005e5X8CUSXI=;
-        b=hncKEA8qdd0QmUevaWITA2VktUV43rc2uT/rxLwEg6tyOQp/QqEBhGf8sAeeHZUYpp
-         WrVTr6LDhPBL8LPncb+rLFxl7Jic2XOShGTXrXXZYarg7x4sdFs6vZ297kv8Bk381LTE
-         f3z+wiwp0vus5bZkNdFYQWEtED4X83QbZxV429+V0Ap6RLivzbfxzoURopwp3KLoLGTb
-         FqOexhEKxMlWw8gURws8x2+h5lshZLOcNMy7oSbcZJ0Ridp4kK0V/fYpCisKGFxIOFxS
-         dOlQpP2Cx6Rf+br4E8YhPkyHyTQTzSC8EVuNGCwa8Y74eU7983x4epV09ETdlY7O/Ma7
-         Ubew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=0vLsyW8NZdsJrokYW5bbOufgyVkfiUX005e5X8CUSXI=;
-        b=JBXCEcSapddZc7QDRIF7A9KLLc+UzUpFZ8Bp3On8hvPOLH0zCtKfcn2QI/PhFuW7+h
-         XGdpDAC2ds85K2WwXOoGjXLtS9apNZi1PRwWzI2CcFj1csjxqAEXTmlPcU3r1kTT24yS
-         iXQT9mkRdmd6b9S6yYEjTqwwo3arBeGT2GSMJtlE09ZQd/KfAm4ZrS1mftIJf0AP6682
-         tAv+gyqWr3wXzWed4P6gtSZExi+qiujIkQwtM7CQmC6LUk54658RC1SJDBKy6uwM2J6P
-         969NHyAJMCluBsXe7W58JnFH6ZChSr972nDgAT9440qbc8OrrSljtt84Bi06YLUaSYh0
-         v3YA==
-X-Gm-Message-State: APjAAAWEP8bnvtp1OmeEL5bpvcqyDMm74XrJZ10yNfbWjdgWjjo/Wn+5
-        spzdWCh4LXNJs5EIcsVZmTA+4g==
-X-Google-Smtp-Source: APXvYqx9+S7dhRG0S1tGovUu8rBcJzqXF07gAxWW/U8XemmBmXd9xxWQPvuRmUmZe2GJd/CVdPTpzA==
-X-Received: by 2002:a5d:44c6:: with SMTP id z6mr12689692wrr.313.1572234960101;
-        Sun, 27 Oct 2019 20:56:00 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id h17sm10500158wme.6.2019.10.27.20.55.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 20:55:59 -0700 (PDT)
-Message-ID: <5db666cf.1c69fb81.c005a.46f9@mx.google.com>
-Date:   Sun, 27 Oct 2019 20:55:59 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Sun, 27 Oct 2019 23:58:51 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9S3wUbQ013774, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV02.realtek.com.tw [172.21.6.19])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTP id x9S3wUbQ013774;
+        Mon, 28 Oct 2019 11:58:30 +0800
+Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
+ RTITCASV02.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Mon, 28 Oct
+ 2019 11:58:29 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "oliver@neukum.org" <oliver@neukum.org>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nic_swsd <nic_swsd@realtek.com>
+Subject: RE: [PATCH 2/2] r8152: Add macpassthru support for ThinkPad Thunderbolt 3 Dock Gen 2
+Thread-Topic: [PATCH 2/2] r8152: Add macpassthru support for ThinkPad
+ Thunderbolt 3 Dock Gen 2
+Thread-Index: AQHViyNIwWDKAImfZESSShiKae+s26dvaNpQ
+Date:   Mon, 28 Oct 2019 03:58:28 +0000
+Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18EEE4D@RTITMBSVM03.realtek.com.tw>
+References: <20191025105919.689-1-kai.heng.feng@canonical.com>
+ <20191025105919.689-2-kai.heng.feng@canonical.com>
+In-Reply-To: <20191025105919.689-2-kai.heng.feng@canonical.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: linux-4.4.y
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Kernel: v4.4.197-42-gc1c6537ef129
-X-Kernelci-Report-Type: boot
-In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
-References: <20191027203056.220821342@linuxfoundation.org>
-Subject: Re: [PATCH 4.4 00/41] 4.4.198-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.4.y boot: 88 boots: 0 failed, 80 passed with 7 offline, 1=
- conflict (v4.4.197-42-gc1c6537ef129)
+Kai-Heng Feng [mailto:kai.heng.feng@canonical.com]
+> Sent: Friday, October 25, 2019 6:59 PM
+[...]
+> @@ -6626,6 +6648,9 @@ static int rtl8152_probe(struct usb_interface *intf,
+>  		netdev->hw_features &= ~NETIF_F_RXCSUM;
+>  	}
+> 
+> +	if (id->driver_info & R8152_QUIRK_LENOVO_MACPASSTHRU)
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.4.y/kernel/v4.4.197-42-gc1c6537ef129/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
-/kernel/v4.4.197-42-gc1c6537ef129/
+Do you really need this?
+It seems the information of idVendor and idProduct is enough. 
 
-Tree: stable-rc
-Branch: linux-4.4.y
-Git Describe: v4.4.197-42-gc1c6537ef129
-Git Commit: c1c6537ef129f3034eecbe2f57b332978eae2d2c
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 42 unique boards, 17 SoC families, 13 builds out of 190
+> +		set_bit(LENOVO_MACPASSTHRU, &tp->flags);
+> +
+>  	if (le16_to_cpu(udev->descriptor.bcdDevice) == 0x3011 && udev->serial
+> &&
+>  	    (!strcmp(udev->serial, "000001000000") ||
+>  	     !strcmp(udev->serial, "000002000000"))) {
+> @@ -6754,6 +6779,8 @@ static const struct usb_device_id rtl8152_table[] = {
+>  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f, 0)},
+>  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062, 0)},
+>  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3069, 0)},
+> +	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3082,
+> +			R8152_QUIRK_LENOVO_MACPASSTHRU)},
 
-Offline Platforms:
+This limits the usage of driver_info. For example, I couldn't
+use it to store a pointer address anymore.
 
-arm:
+>  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7205, 0)},
+>  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x720c, 0)},
+>  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7214, 0)},
+> --
+> 2.17.1
 
-    multi_v7_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-
-Conflicting Boot Failure Detected: (These likely are not failures as other =
-labs are reporting PASS. Needs review.)
-
-x86_64:
-    x86_64_defconfig:
-        qemu_x86_64:
-            lab-collabora: PASS (gcc-8)
-            lab-baylibre: FAIL (gcc-8)
-
----
-For more info write to <info@kernelci.org>
