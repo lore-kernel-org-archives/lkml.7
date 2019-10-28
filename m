@@ -2,126 +2,129 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44732CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAA0CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1468D21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:55:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Eq0UIKx9"
+	by mail.kernel.org (Postfix) with ESMTP id 9DB74218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572299787;
+	bh=8z6cLakerOz4WB/lec4BSVSyFlt8nfGEwkqPr1hMtkU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pYuHeNK1kSFbacrhggfRqQgzkHAnMHvAP85kFOq0jDLGa4N0wbrS+2Nel9Beo6mw5
+	 asOcVJNhxdn0QjBunbogaQC/PPky+rmavKhHnnHIJn4/oo+3cHMzkz+6kCrPW4Xwdt
+	 IpX7ybcCuyhkYKf+Ixs533xyi/jeaoVLOTKZq3OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733133AbfJ1Vzq (ORCPT
+        id S2388638AbfJ1V40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:55:46 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50466 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729738AbfJ1Vzq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:55:46 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SLdedh130336;
-        Mon, 28 Oct 2019 21:55:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=vW9HPKVYMznqHzF8geI9qQef2HKilZPmiEdrUsUJ6Ks=;
- b=Eq0UIKx91jjWil8T1A6jc/VIEHLt1oXjm7U+Y4vFJ8AmcPVJXc66x17iqaUQEChXE3/o
- jyjYrhagg5tuHOYcLDjVh/9mVroLzVrfUEAVWyApK+eXpM3nPo/1RvDkmb2plcjtpWqP
- t638uJ8rJHgt4oZa6UN9UCdROif13ewM2IwzkEXxdw2Dd8VauknTgIdx0bCSIiTW0Y30
- V4j2rK5Y0acric3eJ3sKiGdLhF+jbqsh7SLLxmRRyFDNhQtQukPKMTKpu2rjaYo00eQh
- azdStuF6XdYSjGQKaONEa1NgC/4MCaQBbCqEmIwDAQUj7sk4tTCKlMnHjn+Gyhidg+S7 6A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2vvdju50s4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 21:55:22 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SLh7wX136377;
-        Mon, 28 Oct 2019 21:55:22 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2vvyn0fp59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 21:55:22 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9SLtFuP000759;
-        Mon, 28 Oct 2019 21:55:15 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 28 Oct 2019 14:55:14 -0700
-Subject: Re: [PATCH] mm: huge_pte_offset() returns pte_t *, not integer
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        linux-kernel@lists.codethink.co.uk
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191016095111.29163-1-ben.dooks@codethink.co.uk>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <bd0ac181-7334-9970-b16a-ce7fd78d30ec@oracle.com>
-Date:   Mon, 28 Oct 2019 14:55:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 28 Oct 2019 17:56:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729738AbfJ1V40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:56:26 -0400
+Received: from earth.universe (tmo-096-224.customers.d1-online.com [80.187.96.224])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B46121479;
+        Mon, 28 Oct 2019 21:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572299785;
+        bh=8z6cLakerOz4WB/lec4BSVSyFlt8nfGEwkqPr1hMtkU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MVearnut9RaAziRb0P2YELOLgsjrczgHMXYyaqfgG2xOu/NR9DtEtGIjy3jKwL6G3
+         A+JfyyXKZVOMfCNj9G3krwujddqTbl7+H9P2Wnor+PEW2PBmER9xZFybzigrM5SsyS
+         6GReker5+FrR86XgsovxdbhCRIhUL4ZO0TOeA4dg=
+Received: by earth.universe (Postfix, from userid 1000)
+        id D7E863C09B2; Mon, 28 Oct 2019 22:56:15 +0100 (CET)
+Date:   Mon, 28 Oct 2019 22:56:15 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power: supply: cpcap-charger: Make
+ cpcap_charger_voltage_to_regval static
+Message-ID: <20191028215615.3efezzsc5gji722q@earth.universe>
+References: <1571672407-58950-1-git-send-email-zhongjiang@huawei.com>
+ <5DB71465.6050203@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191016095111.29163-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910280203
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910280203
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nnsnvouks6a7nqnj"
+Content-Disposition: inline
+In-Reply-To: <5DB71465.6050203@huawei.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Andrew
-There are already a few hugetlbfs cleanups in the mm tree.
 
-On 10/16/19 2:51 AM, Ben Dooks (Codethink) wrote:
-> The huge_pte_offset() returns a pte_t *, not an integer
-> so when huge-tlb is off, the replacement inline macro
-> should return a pte_t * too.
-> 
-> This fixes the following sparse warning:
-> 
-> mm/page_vma_mapped.c:156:29: warning: Using plain integer as NULL pointer
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+--nnsnvouks6a7nqnj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That is simple enough,
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
--- 
-Mike Kravetz
+Hi,
 
-> ---
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  include/linux/hugetlb.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> index 53fc34f930d0..e42c76aa1577 100644
-> --- a/include/linux/hugetlb.h
-> +++ b/include/linux/hugetlb.h
-> @@ -185,7 +185,7 @@ static inline void hugetlb_show_meminfo(void)
->  #define hugetlb_free_pgd_range(tlb, addr, end, floor, ceiling) ({BUG(); 0; })
->  #define hugetlb_mcopy_atomic_pte(dst_mm, dst_pte, dst_vma, dst_addr, \
->  				src_addr, pagep)	({ BUG(); 0; })
-> -#define huge_pte_offset(mm, address, sz)	0
-> +#define huge_pte_offset(mm, address, sz)	(pte_t *)NULL
->  
->  static inline bool isolate_huge_page(struct page *page, struct list_head *list)
->  {
-> 
+https://lkml.org/lkml/2019/10/21/1018
+
+That's e3da2ce04e12 to be specific.
+
+-- Sebastian
+
+On Tue, Oct 29, 2019 at 12:16:37AM +0800, zhong jiang wrote:
+> ping.
+>=20
+> On 2019/10/21 23:40, zhong jiang wrote:
+> > The GCC complains the following case when compiling kernel.
+> >
+> > drivers/power/supply/cpcap-charger.c:563:5: warning: symbol 'cpcap_char=
+ger_voltage_to_regval' was not declared. Should it be static?
+> >
+> > Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> > ---
+> >  drivers/power/supply/cpcap-charger.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/power/supply/cpcap-charger.c b/drivers/power/suppl=
+y/cpcap-charger.c
+> > index 40d96b8..c0d452e 100644
+> > --- a/drivers/power/supply/cpcap-charger.c
+> > +++ b/drivers/power/supply/cpcap-charger.c
+> > @@ -560,7 +560,7 @@ static void cpcap_charger_update_state(struct cpcap=
+_charger_ddata *ddata,
+> >  	dev_dbg(ddata->dev, "state: %s\n", status);
+> >  }
+> > =20
+> > -int cpcap_charger_voltage_to_regval(int voltage)
+> > +static int cpcap_charger_voltage_to_regval(int voltage)
+> >  {
+> >  	int offset;
+> > =20
+>=20
+>=20
+
+--nnsnvouks6a7nqnj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl23Y/wACgkQ2O7X88g7
++prsiA/8CFPmGfF8s7d5QI8hJ1R1KnjkOc5kHSIx954UNaHfA/gdjA3jy4oqjDDM
+t6nIZUWphJerbqGPfOZIwOQdOhAmjTV5LAtRLkg+IVxEvF2jQXYMaM9Ip5Nke35a
+pULPnkSeWARvMFZZYKnxG6OPe6AL8eqRaHBXRWC/Gd0XL5ndqW5SWgDeNOubmJtj
+lRmJcVh8s5IB3FafOTlTGA5GQosqrxIa5fWrXL3d/bC0gE9WXa5BKw0XAgv9OSr2
+dDJBpMemDCtQmXcmEN7LFg5OD4PUChdL2L60FOPpJnlpcktqNMUdUJ3S9dGuG9RZ
+QmYnv2zyC9PRWf0pH0K6ovLsqQrIx0SQm9+PK6jSTyJH/KFuaeHCsdO17wq/BetW
+VBZ00Bh+1hXovCQ3lwb6cIqh22hddY0KJiABOfd2kG6cw7tphLyYK8s4YQYYOBrh
+GmHU2iLak+inpvB9IX/EtbCwWgahRnI2Hxp9LS15nxt4pyg1Pj+A1264IzPE6EMl
+t43BGPt3MSjDIXlUDaR+MV3ibyCzwiq6j3tfihvNWcEiDQgdGSBANAvAXduo8po7
+MtgkWlgBvnGSrfcdP60aKblFEqUXQUFCCzTx59j1h6Z6WUckHfZYN55BOsh9LkwW
+VNAuWqJDP9iaCNz49ove8YjDuuCq6T5JH+jCPusa6Pg1obbvbYw=
+=NLra
+-----END PGP SIGNATURE-----
+
+--nnsnvouks6a7nqnj--
