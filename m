@@ -2,411 +2,431 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B87CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FFACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46E5208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:46:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IFKEpdMJ"
+	by mail.kernel.org (Postfix) with ESMTP id 4B421208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbfJ1Cqp (ORCPT
+        id S1730431AbfJ1Cqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 22:46:45 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22674 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726934AbfJ1Cqp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 22:46:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572230803;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/Fdk7DVi2nvrAZJ+61fCty7G6n5t8JZQpkDM2dHFJDo=;
-        b=IFKEpdMJjTOYw5+eYO9eaQ/LKqvHOWxYBeBnYN+48krdvuj0Z2TP4dLn5jbFjxEJFJv7Bi
-        ZrA0OuPWLMh6SBorbOF+WuUBhu54A3M0e5yD7+2doE9wT/H+l2EOZS78KPegQEpNHWpFXh
-        saO8uH9ypsQ4yz762X6zRWIzlN6Ot6o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-140-fK7imRLoOWu2cGbm1iwlyw-1; Sun, 27 Oct 2019 22:46:35 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8503D800D49;
-        Mon, 28 Oct 2019 02:46:33 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-41.pek2.redhat.com [10.72.12.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3861960A9F;
-        Mon, 28 Oct 2019 02:46:20 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, bhe@redhat.com, dyoung@redhat.com, jgross@suse.com,
-        dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
-        horms@verge.net.au, kexec@lists.infradead.org
-Subject: [PATCH 2/2 v6] x86/kdump: clean up all the code related to the backup region
-Date:   Mon, 28 Oct 2019 10:45:51 +0800
-Message-Id: <20191028024551.4278-3-lijiang@redhat.com>
-In-Reply-To: <20191028024551.4278-1-lijiang@redhat.com>
-References: <20191028024551.4278-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: fK7imRLoOWu2cGbm1iwlyw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Sun, 27 Oct 2019 22:46:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47182 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726934AbfJ1Cqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 22:46:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E30CAABD3;
+        Mon, 28 Oct 2019 02:46:45 +0000 (UTC)
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     valdis.kletnieks@vt.edu, gregkh@linuxfoundation.org
+Cc:     dave@stgolabs.net, linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers/staging/exfat: Replace binary semaphores for mutexes
+Date:   Sun, 27 Oct 2019 19:45:19 -0700
+Message-Id: <20191028024519.32344-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the crashkernel kernel command line option is specified, the
-low 1MiB memory will always be reserved, which makes that the memory
-allocated later won't fall into the low 1MiB area, thereby, it's not
-necessary to create a backup region and also no need to copy the first
-640k content to a backup region.
+At a slight footprint cost (24 vs 32 bytes), mutexes are more optimal
+than semaphores; it's also a nicer interface for mutual exclusion,
+which is why they are encouraged over binary semaphores, when possible.
+There is also lockdep support.
 
-Currently, the code related to the backup region can be safely removed,
-so lets clean up.
+For both v_sem and z_sem, their semantics imply traditional lock
+ownership; that is, the lock owner is the same for both lock/unlock
+operations and nothing is done in irq context. Therefore it is safe
+to convert.
 
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- arch/x86/include/asm/kexec.h       | 10 ----
- arch/x86/include/asm/purgatory.h   | 10 ----
- arch/x86/kernel/crash.c            | 87 ++++--------------------------
- arch/x86/kernel/machine_kexec_64.c | 47 ----------------
- arch/x86/purgatory/purgatory.c     | 19 -------
- 5 files changed, 11 insertions(+), 162 deletions(-)
+This is part of further reducing semaphore users in the kernel.
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 5e7d6b46de97..6802c59e8252 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -66,10 +66,6 @@ struct kimage;
- # define KEXEC_ARCH KEXEC_ARCH_X86_64
- #endif
-=20
--/* Memory to backup during crash kdump */
--#define KEXEC_BACKUP_SRC_START=09(0UL)
--#define KEXEC_BACKUP_SRC_END=09(640 * 1024UL - 1)=09/* 640K */
--
- /*
-  * This function is responsible for capturing register states if coming
-  * via panic otherwise just fix up the ss and sp if coming via kernel
-@@ -154,12 +150,6 @@ struct kimage_arch {
- =09pud_t *pud;
- =09pmd_t *pmd;
- =09pte_t *pte;
--=09/* Details of backup region */
--=09unsigned long backup_src_start;
--=09unsigned long backup_src_sz;
--
--=09/* Physical address of backup segment */
--=09unsigned long backup_load_addr;
-=20
- =09/* Core ELF header buffer */
- =09void *elf_headers;
-diff --git a/arch/x86/include/asm/purgatory.h b/arch/x86/include/asm/purgat=
-ory.h
-index 92c34e517da1..5528e9325049 100644
---- a/arch/x86/include/asm/purgatory.h
-+++ b/arch/x86/include/asm/purgatory.h
-@@ -6,16 +6,6 @@
- #include <linux/purgatory.h>
-=20
- extern void purgatory(void);
--/*
-- * These forward declarations serve two purposes:
-- *
-- * 1) Make sparse happy when checking arch/purgatory
-- * 2) Document that these are required to be global so the symbol
-- *    lookup in kexec works
-- */
--extern unsigned long purgatory_backup_dest;
--extern unsigned long purgatory_backup_src;
--extern unsigned long purgatory_backup_sz;
- #endif=09/* __ASSEMBLY__ */
-=20
- #endif /* _ASM_PURGATORY_H */
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index eb651fbde92a..ef54b3ffb0f6 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -173,8 +173,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs=
-)
-=20
- #ifdef CONFIG_KEXEC_FILE
-=20
--static unsigned long crash_zero_bytes;
--
- static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
+ drivers/staging/exfat/exfat.h       |  2 +-
+ drivers/staging/exfat/exfat_super.c | 84 ++++++++++++++++++-------------------
+ 2 files changed, 43 insertions(+), 43 deletions(-)
+
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index 6c12f2d79f4d..95c02f55de60 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -618,7 +618,7 @@ struct fs_info_t {
+ 	u32 dev_ejected;	/* block device operation error flag */
+ 
+ 	struct fs_func *fs_func;
+-	struct semaphore v_sem;
++	struct mutex v_mutex;
+ 
+ 	/* FAT cache */
+ 	struct buf_cache_t FAT_cache_array[FAT_CACHE_SIZE];
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index 5f6caee819a6..c0b09b2dbe96 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -283,7 +283,7 @@ static const struct dentry_operations exfat_dentry_ops = {
+ 	.d_compare      = exfat_cmp,
+ };
+ 
+-static DEFINE_SEMAPHORE(z_sem);
++static DEFINE_MUTEX(z_mutex);
+ 
+ static inline void fs_sync(struct super_block *sb, bool do_sync)
  {
- =09unsigned int *nr_ranges =3D arg;
-@@ -217,6 +215,11 @@ static int elf_header_exclude_ranges(struct crash_mem =
-*cmem)
- {
- =09int ret =3D 0;
-=20
-+=09/* Exclude the low 1MiB because it is always reserved */
-+=09ret =3D crash_exclude_mem_range(cmem, 0, 1<<20);
-+=09if (ret)
-+=09=09return ret;
-+
- =09/* Exclude crashkernel region */
- =09ret =3D crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end)=
-;
- =09if (ret)
-@@ -246,9 +249,7 @@ static int prepare_elf_headers(struct kimage *image, vo=
-id **addr,
- =09=09=09=09=09unsigned long *sz)
- {
- =09struct crash_mem *cmem;
--=09Elf64_Ehdr *ehdr;
--=09Elf64_Phdr *phdr;
--=09int ret, i;
-+=09int ret;
-=20
- =09cmem =3D fill_up_crash_elf_data();
- =09if (!cmem)
-@@ -267,22 +268,7 @@ static int prepare_elf_headers(struct kimage *image, v=
-oid **addr,
- =09/* By default prepare 64bit headers */
- =09ret =3D  crash_prepare_elf64_headers(cmem,
- =09=09=09=09IS_ENABLED(CONFIG_X86_64), addr, sz);
--=09if (ret)
--=09=09goto out;
-=20
--=09/*
--=09 * If a range matches backup region, adjust offset to backup
--=09 * segment.
--=09 */
--=09ehdr =3D (Elf64_Ehdr *)*addr;
--=09phdr =3D (Elf64_Phdr *)(ehdr + 1);
--=09for (i =3D 0; i < ehdr->e_phnum; phdr++, i++)
--=09=09if (phdr->p_type =3D=3D PT_LOAD &&
--=09=09=09=09phdr->p_paddr =3D=3D image->arch.backup_src_start &&
--=09=09=09=09phdr->p_memsz =3D=3D image->arch.backup_src_sz) {
--=09=09=09phdr->p_offset =3D image->arch.backup_load_addr;
--=09=09=09break;
--=09=09}
+@@ -352,11 +352,11 @@ static int ffsMountVol(struct super_block *sb)
+ 
+ 	pr_info("[EXFAT] trying to mount...\n");
+ 
+-	down(&z_sem);
++        mutex_lock(&z_mutex);
+ 
+ 	buf_init(sb);
+ 
+-	sema_init(&p_fs->v_sem, 1);
++	mutex_init(&p_fs->v_mutex);
+ 	p_fs->dev_ejected = 0;
+ 
+ 	/* open the block device */
+@@ -441,7 +441,7 @@ static int ffsMountVol(struct super_block *sb)
+ 	pr_info("[EXFAT] mounted successfully\n");
+ 
  out:
- =09vfree(cmem);
- =09return ret;
-@@ -321,19 +307,11 @@ static int memmap_exclude_ranges(struct kimage *image=
-, struct crash_mem *cmem,
- =09=09=09=09 unsigned long long mend)
- {
- =09unsigned long start, end;
--=09int ret =3D 0;
-=20
- =09cmem->ranges[0].start =3D mstart;
- =09cmem->ranges[0].end =3D mend;
- =09cmem->nr_ranges =3D 1;
-=20
--=09/* Exclude Backup region */
--=09start =3D image->arch.backup_load_addr;
--=09end =3D start + image->arch.backup_src_sz - 1;
--=09ret =3D crash_exclude_mem_range(cmem, start, end);
--=09if (ret)
--=09=09return ret;
--
- =09/* Exclude elf header region */
- =09start =3D image->arch.elf_load_addr;
- =09end =3D start + image->arch.elf_headers_sz - 1;
-@@ -356,11 +334,11 @@ int crash_setup_memmap_entries(struct kimage *image, =
-struct boot_params *params)
- =09memset(&cmd, 0, sizeof(struct crash_memmap_data));
- =09cmd.params =3D params;
-=20
--=09/* Add first 640K segment */
--=09ei.addr =3D image->arch.backup_src_start;
--=09ei.size =3D image->arch.backup_src_sz;
--=09ei.type =3D E820_TYPE_RAM;
--=09add_e820_entry(params, &ei);
-+=09/* Add the low 1MiB */
-+=09cmd.type =3D E820_TYPE_RAM;
-+=09flags =3D IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-+=09walk_iomem_res_desc(IORES_DESC_NONE, flags, 0, (1<<20)-1, &cmd,
-+=09=09=09memmap_entry_callback);
-=20
- =09/* Add ACPI tables */
- =09cmd.type =3D E820_TYPE_ACPI;
-@@ -409,55 +387,12 @@ int crash_setup_memmap_entries(struct kimage *image, =
-struct boot_params *params)
- =09return ret;
+-	up(&z_sem);
++	mutex_unlock(&z_mutex);
+ 
+ 	return ret;
  }
-=20
--static int determine_backup_region(struct resource *res, void *arg)
--{
--=09struct kimage *image =3D arg;
--
--=09image->arch.backup_src_start =3D res->start;
--=09image->arch.backup_src_sz =3D resource_size(res);
--
--=09/* Expecting only one range for backup region */
--=09return 1;
--}
--
- int crash_load_segments(struct kimage *image)
- {
- =09int ret;
- =09struct kexec_buf kbuf =3D { .image =3D image, .buf_min =3D 0,
- =09=09=09=09  .buf_max =3D ULONG_MAX, .top_down =3D false };
-=20
--=09/*
--=09 * Determine and load a segment for backup area. First 640K RAM
--=09 * region is backup source
--=09 */
--
--=09ret =3D walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_EN=
-D,
--=09=09=09=09image, determine_backup_region);
--
--=09/* Zero or postive return values are ok */
--=09if (ret < 0)
--=09=09return ret;
--
--=09/* Add backup segment. */
--=09if (image->arch.backup_src_sz) {
--=09=09kbuf.buffer =3D &crash_zero_bytes;
--=09=09kbuf.bufsz =3D sizeof(crash_zero_bytes);
--=09=09kbuf.memsz =3D image->arch.backup_src_sz;
--=09=09kbuf.buf_align =3D PAGE_SIZE;
--=09=09/*
--=09=09 * Ideally there is no source for backup segment. This is
--=09=09 * copied in purgatory after crash. Just add a zero filled
--=09=09 * segment for now to make sure checksum logic works fine.
--=09=09 */
--=09=09ret =3D kexec_add_buffer(&kbuf);
--=09=09if (ret)
--=09=09=09return ret;
--=09=09image->arch.backup_load_addr =3D kbuf.mem;
--=09=09pr_debug("Loaded backup region at 0x%lx backup_start=3D0x%lx memsz=
-=3D0x%lx\n",
--=09=09=09 image->arch.backup_load_addr,
--=09=09=09 image->arch.backup_src_start, kbuf.memsz);
--=09}
--
- =09/* Prepare elf headers and add a segment */
- =09ret =3D prepare_elf_headers(image, &kbuf.buffer, &kbuf.bufsz);
- =09if (ret)
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_k=
-exec_64.c
-index 42d7c15c45f1..8afe2a8e41f8 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -300,48 +300,6 @@ static void load_segments(void)
- =09=09);
+@@ -453,10 +453,10 @@ static int ffsUmountVol(struct super_block *sb)
+ 
+ 	pr_info("[EXFAT] trying to unmount...\n");
+ 
+-	down(&z_sem);
++	mutex_lock(&z_mutex);
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+@@ -480,8 +480,8 @@ static int ffsUmountVol(struct super_block *sb)
+ 	buf_shutdown(sb);
+ 
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
+-	up(&z_sem);
++	mutex_unlock(&p_fs->v_mutex);
++	mutex_unlock(&z_mutex);
+ 
+ 	pr_info("[EXFAT] unmounted successfully\n");
+ 
+@@ -498,7 +498,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	if (p_fs->used_clusters == UINT_MAX)
+ 		p_fs->used_clusters = p_fs->fs_func->count_used_clusters(sb);
+@@ -513,7 +513,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
+ 		err = FFS_MEDIAERR;
+ 
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return err;
  }
-=20
--#ifdef CONFIG_KEXEC_FILE
--/* Update purgatory as needed after various image segments have been prepa=
-red */
--static int arch_update_purgatory(struct kimage *image)
--{
--=09int ret =3D 0;
--
--=09if (!image->file_mode)
--=09=09return 0;
--
--=09/* Setup copying of backup region */
--=09if (image->type =3D=3D KEXEC_TYPE_CRASH) {
--=09=09ret =3D kexec_purgatory_get_set_symbol(image,
--=09=09=09=09"purgatory_backup_dest",
--=09=09=09=09&image->arch.backup_load_addr,
--=09=09=09=09sizeof(image->arch.backup_load_addr), 0);
--=09=09if (ret)
--=09=09=09return ret;
--
--=09=09ret =3D kexec_purgatory_get_set_symbol(image,
--=09=09=09=09"purgatory_backup_src",
--=09=09=09=09&image->arch.backup_src_start,
--=09=09=09=09sizeof(image->arch.backup_src_start), 0);
--=09=09if (ret)
--=09=09=09return ret;
--
--=09=09ret =3D kexec_purgatory_get_set_symbol(image,
--=09=09=09=09"purgatory_backup_sz",
--=09=09=09=09&image->arch.backup_src_sz,
--=09=09=09=09sizeof(image->arch.backup_src_sz), 0);
--=09=09if (ret)
--=09=09=09return ret;
--=09}
--
--=09return ret;
--}
--#else /* !CONFIG_KEXEC_FILE */
--static inline int arch_update_purgatory(struct kimage *image)
--{
--=09return 0;
--}
--#endif /* CONFIG_KEXEC_FILE */
--
- int machine_kexec_prepare(struct kimage *image)
- {
- =09unsigned long start_pgtable;
-@@ -355,11 +313,6 @@ int machine_kexec_prepare(struct kimage *image)
- =09if (result)
- =09=09return result;
-=20
--=09/* update purgatory as needed */
--=09result =3D arch_update_purgatory(image);
--=09if (result)
--=09=09return result;
--
- =09return 0;
+@@ -524,7 +524,7 @@ static int ffsSyncVol(struct super_block *sb, bool do_sync)
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* synchronize the file system */
+ 	fs_sync(sb, do_sync);
+@@ -534,7 +534,7 @@ static int ffsSyncVol(struct super_block *sb, bool do_sync)
+ 		err = FFS_MEDIAERR;
+ 
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return err;
  }
-=20
-diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.=
-c
-index 3b95410ff0f8..2961234d0795 100644
---- a/arch/x86/purgatory/purgatory.c
-+++ b/arch/x86/purgatory/purgatory.c
-@@ -14,28 +14,10 @@
-=20
- #include "../boot/string.h"
-=20
--unsigned long purgatory_backup_dest __section(.kexec-purgatory);
--unsigned long purgatory_backup_src __section(.kexec-purgatory);
--unsigned long purgatory_backup_sz __section(.kexec-purgatory);
--
- u8 purgatory_sha256_digest[SHA256_DIGEST_SIZE] __section(.kexec-purgatory)=
-;
-=20
- struct kexec_sha_region purgatory_sha_regions[KEXEC_SEGMENT_MAX] __section=
-(.kexec-purgatory);
-=20
--/*
-- * On x86, second kernel requries first 640K of memory to boot. Copy
-- * first 640K to a backup region in reserved memory range so that second
-- * kernel can use first 640K.
-- */
--static int copy_backup_region(void)
--{
--=09if (purgatory_backup_dest) {
--=09=09memcpy((void *)purgatory_backup_dest,
--=09=09       (void *)purgatory_backup_src, purgatory_backup_sz);
--=09}
--=09return 0;
--}
--
- static int verify_sha256_digest(void)
- {
- =09struct kexec_sha_region *ptr, *end;
-@@ -66,7 +48,6 @@ void purgatory(void)
- =09=09for (;;)
- =09=09=09;
- =09}
--=09copy_backup_region();
+@@ -561,7 +561,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check the validity of directory name in the given pathname */
+ 	ret = resolve_path(inode, path, &dir, &uni_name);
+@@ -635,7 +635,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
+ 		ret = FFS_MEDIAERR;
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
  }
-=20
- /*
---=20
-2.17.1
+@@ -654,7 +654,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check the validity of directory name in the given pathname */
+ 	ret = resolve_path(inode, path, &dir, &uni_name);
+@@ -676,7 +676,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -703,7 +703,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check if the given file ID is opened */
+ 	if (fid->type != TYPE_FILE) {
+@@ -800,7 +800,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -833,7 +833,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check if the given file ID is opened */
+ 	if (fid->type != TYPE_FILE) {
+@@ -1057,7 +1057,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1080,7 +1080,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
+ 		 new_size);
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check if the given file ID is opened */
+ 	if (fid->type != TYPE_FILE) {
+@@ -1190,7 +1190,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
+ out:
+ 	pr_debug("%s exited (%d)\n", __func__, ret);
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1238,7 +1238,7 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	update_parent_info(fid, old_parent_inode);
+ 
+@@ -1336,7 +1336,7 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
+ 		ret = FFS_MEDIAERR;
+ out2:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1355,7 +1355,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	dir.dir = fid->dir.dir;
+ 	dir.size = fid->dir.size;
+@@ -1398,7 +1398,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
+ 		ret = FFS_MEDIAERR;
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1433,7 +1433,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
+ 	}
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* get the directory entry of given file */
+ 	if (p_fs->vol_type == EXFAT) {
+@@ -1487,7 +1487,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
+ 		ret = FFS_MEDIAERR;
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1511,7 +1511,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
+ 	pr_debug("%s entered\n", __func__);
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	if (is_dir) {
+ 		if ((fid->dir.dir == p_fs->root_dir) &&
+@@ -1640,7 +1640,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	pr_debug("%s exited successfully\n", __func__);
+ 	return ret;
+@@ -1661,7 +1661,7 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
+ 	pr_debug("%s entered (inode %p info %p\n", __func__, inode, info);
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	if (is_dir) {
+ 		if ((fid->dir.dir == p_fs->root_dir) &&
+@@ -1727,7 +1727,7 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	pr_debug("%s exited (%d)\n", __func__, ret);
+ 
+@@ -1753,7 +1753,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	fid->rwoffset = (s64)(clu_offset) << p_fs->cluster_size_bits;
+ 
+@@ -1881,7 +1881,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1905,7 +1905,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check the validity of directory name in the given old pathname */
+ 	ret = resolve_path(inode, path, &dir, &uni_name);
+@@ -1925,7 +1925,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
+ 		ret = FFS_MEDIAERR;
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1955,7 +1955,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
+ 		return FFS_PERMISSIONERR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	if (fid->entry == -1) {
+ 		dir.dir = p_fs->root_dir;
+@@ -2124,7 +2124,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -2154,7 +2154,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 	}
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	clu_to_free.dir = fid->start_clu;
+ 	clu_to_free.size = (s32)((fid->size - 1) >> p_fs->cluster_size_bits) + 1;
+@@ -2187,7 +2187,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -3983,10 +3983,10 @@ static void exfat_debug_kill_sb(struct super_block *sb)
+ 			 * invalidate_bdev drops all device cache include
+ 			 * dirty. We use this to simulate device removal.
+ 			 */
+-			down(&p_fs->v_sem);
++			mutex_lock(&p_fs->v_mutex);
+ 			FAT_release_all(sb);
+ 			buf_release_all(sb);
+-			up(&p_fs->v_sem);
++			mutex_unlock(&p_fs->v_mutex);
+ 
+ 			invalidate_bdev(bdev);
+ 		}
+-- 
+2.16.4
 
