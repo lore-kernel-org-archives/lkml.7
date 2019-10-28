@@ -2,148 +2,131 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E419ECA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AE9CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B645F20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:56:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="YufQZxIn"
+	by mail.kernel.org (Postfix) with ESMTP id 919EB218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfJ1X43 (ORCPT
+        id S1729300AbfJ1X7Z convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 19:56:29 -0400
-Received: from vps.xff.cz ([195.181.215.36]:51132 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbfJ1X43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 19:56:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572306987; bh=VBiEzOAOkY+HDeeyqrk83KEuJjLXMJSGG+CM5QrE39g=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=YufQZxInPttFYT6kzs3T5+jAucMqqOWMW/BQdx8nH+P1aKOpk54J+TJTZCy5axAgP
-         aB3T2T6Et0qFkkNERhYiJSCfK6LYbfnyVbP8svit4mwtQiSAcK8UTI7BW639zK7Efp
-         JL4dB+NkMq9L5KuxC0cywXAqiUAYULDboPx7Qz8M=
-Date:   Tue, 29 Oct 2019 00:56:26 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
+        Mon, 28 Oct 2019 19:59:25 -0400
+Received: from mail-oln040092066087.outbound.protection.outlook.com ([40.92.66.87]:26615
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725951AbfJ1X7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 19:59:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FgdUu/N37ZrXeORuXqrrvIedZMl9B7hymMpwQH2Y3rRa77adewZg6YbAx2ajEjewcOIrb4qI5bM4bkAFqQkOLUK2olwqASOXvWRtfN7MEfUCSrPUfmX+GlPJhWjACLQ+IZSLLclRL8yoBQ3f7tFwMAHGOeSQAzosn9iYyob3vaMCWxw+NT2UlmNGJpR0JmVn12SLiQZ+bCgeeczaysbmB1jHZX9UTCy6sxo8C8SJTZFmnJu5yDDMxokpwW2lTom727R2XDb3YUIoazmMkb3yT2LGTeuxrgR/6g16CobfSJNI9F3drx9HqoyVVsnl/YXD18luRQY3ykml0PAdhkemXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0guVEAM4gvARIEGkxOBk/y5mkJPBDeAw9uqMShafNH4=;
+ b=IfBpIeeclwhK949/N5KscRy3tO+Y01QVWJ8Ey6QxjxwCwleG98oeUSZDIQxAdjvL00dTiu9ugJmQcdMGO+8gi+bgn+WEUbDrd8mtc+BUpYd5p8ogaqyjghYhcEBknG/AZSFrKD94QTS6ASGETHpiG1aIzEqCywOOxSJxOWNXK+t/EbSPXObvpun/Z2mge35iony2T0HQbn6gw5cwtqg+XJt1sQGpghSY/0b1N7BEoASgmc6Otkh5/rG7XctuHarxV8bEGKWGGiv+Vkd5F7CqCD4QqARf1o0X252LhLnL+dSS9YEX/oXqwaKpF7zfQwjz7k+d9/JnOPaZgR8ut3hrJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from VE1EUR01FT033.eop-EUR01.prod.protection.outlook.com
+ (10.152.2.59) by VE1EUR01HT230.eop-EUR01.prod.protection.outlook.com
+ (10.152.3.214) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Mon, 28 Oct
+ 2019 23:59:21 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.2.51) by
+ VE1EUR01FT033.mail.protection.outlook.com (10.152.2.230) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20 via Frontend Transport; Mon, 28 Oct 2019 23:59:21 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::b1cf:db6f:95fc:84cc]) by HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::b1cf:db6f:95fc:84cc%7]) with mapi id 15.20.2387.025; Mon, 28 Oct 2019
+ 23:59:20 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
         Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:SUN4I LOW RES ADC ATTACHED TABLET KEYS DRIVER" 
-        <linux-input@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] input: sun4i-lradc-keys: Add wakup support
-Message-ID: <20191028235626.5afvszxtppsieywi@core.my.home>
-Mail-Followup-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        "open list:SUN4I LOW RES ADC ATTACHED TABLET KEYS DRIVER" <linux-input@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191028221502.3503543-1-megous@megous.com>
- <20191028233828.GA57214@dtor-ws>
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+CC:     Jonas Karlman <jonas@kwiboo.se>, Hans Verkuil <hverkuil@xs4all.nl>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] media: uapi: h264: clarify expected scaling list order
+Thread-Topic: [PATCH 0/3] media: uapi: h264: clarify expected scaling list
+ order
+Thread-Index: AQHVjeu3dy81TAwYmEyjctNGvFIgqA==
+Date:   Mon, 28 Oct 2019 23:59:20 +0000
+Message-ID: <HE1PR06MB4011D3B8C200D13829648D86AC660@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Accept-Language: sv-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR06CA0102.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::43) To HE1PR06MB4011.eurprd06.prod.outlook.com
+ (2603:10a6:7:9c::32)
+x-incomingtopheadermarker: OriginalChecksum:6930FCBDB8FA4E42FE39AEB45C14AA429A977ADF7B00162D2E000457ED822758;UpperCasedChecksum:04B2E817A52969BAF3C3B257E46894891D2C29F77DB15DE5754AED832A811088;SizeAsReceived:7658;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-tmn:  [fOa/MAEXHSWYUt6xU9RxICC9OcQYJvuk]
+x-microsoft-original-message-id: <20191028235902.13486-1-jonas@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: VE1EUR01HT230:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6lY20dd1wBidLQxfolgn3+3Ol8qV2fhaGCdGp5Z7LyfDSDMAUNDS9PdLATlcJmAt1v0YLRkGpgTqIYh9YHvuPPpgOFuKrB8OPsAL/vaJgCvB3/QFBWHbvk8SH4ylkV1b5J7jxrZ62v6e1wDqk22x1aoayLcaeiouX4oCcYlGJhxDuFuexWHhQgipfQVP+9e9/I6MbifwxtnhEQE9BBUcdaIT0piq+tWbXpIJtb751bg=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028233828.GA57214@dtor-ws>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: d195b223-6d5c-43dd-6e77-08d75c02d960
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 23:59:20.9176
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT230
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dmitry,
+This is a suggested clarification on the expect order of lists and values
+to use in the H264 scaling matrix ctrl, cedrus and hantro currently expect
+values in two different orders.
 
-On Mon, Oct 28, 2019 at 04:38:28PM -0700, Dmitry Torokhov wrote:
-> Hi Ondrej,
-> 
-> On Mon, Oct 28, 2019 at 11:15:02PM +0100, Ondrej Jirman wrote:
-> > Allow the driver to wakeup the system on key press.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  drivers/input/keyboard/sun4i-lradc-keys.c | 22 ++++++++++++++++++----
-> >  1 file changed, 18 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/input/keyboard/sun4i-lradc-keys.c b/drivers/input/keyboard/sun4i-lradc-keys.c
-> > index 4a796bed48ac..bba679d7b54b 100644
-> > --- a/drivers/input/keyboard/sun4i-lradc-keys.c
-> > +++ b/drivers/input/keyboard/sun4i-lradc-keys.c
-> > @@ -22,6 +22,8 @@
-> >  #include <linux/module.h>
-> >  #include <linux/of_platform.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/pm_wakeirq.h>
-> > +#include <linux/pm_wakeup.h>
-> >  #include <linux/regulator/consumer.h>
-> >  #include <linux/slab.h>
-> >  
-> > @@ -226,8 +228,7 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
-> >  {
-> >  	struct sun4i_lradc_data *lradc;
-> >  	struct device *dev = &pdev->dev;
-> > -	int i;
-> > -	int error;
-> > +	int i, error, irq;
-> >  
-> >  	lradc = devm_kzalloc(dev, sizeof(struct sun4i_lradc_data), GFP_KERNEL);
-> >  	if (!lradc)
-> > @@ -272,8 +273,13 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
-> >  	if (IS_ERR(lradc->base))
-> >  		return PTR_ERR(lradc->base);
-> >  
-> > -	error = devm_request_irq(dev, platform_get_irq(pdev, 0),
-> > -				 sun4i_lradc_irq, 0,
-> > +	irq = platform_get_irq(pdev, 0);
-> > +	if (irq < 0) {
-> > +		dev_err(&pdev->dev, "Failed to get IRQ\n");
-> > +		return irq;
-> > +	}
-> > +
-> > +	error = devm_request_irq(dev, irq, sun4i_lradc_irq, 0,
-> >  				 "sun4i-a10-lradc-keys", lradc);
-> >  	if (error)
-> >  		return error;
-> > @@ -282,6 +288,14 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
-> >  	if (error)
-> >  		return error;
-> >  
-> > +	device_init_wakeup(dev, true);
-> 
-> I do not think we want to do this unconditionally. Can we maybe key off
-> "wakeup-source" device property.
+The suggestion is to use the same value order that vaapi, vdpau and nvdec use,
+i.e. have the scaling list values in "matrix order"/"raster order",
+after the inverse scanning process has been applied.
 
-Sure thing.
+This also contains a clarification on the order of the scaling lists.
 
-> > +
-> > +	error = dev_pm_set_wake_irq(dev, irq);
-> > +	if (error) {
-> > +		dev_err(dev, "Could not set wake IRQ\n");
-> > +		return error;
-> > +	}
-> > +
-> 
-> I wonder if we could teach platform driver core to handle this for us.
+Expected scaling list order will be,
+for 4x4: Intra Y, Intra Cb, Intra Cr, Inter Y, Inter Cb, Inter Cr,
+for 8x8: Intra Y, Inter Y, Intra Cb, Inter Cb, Intra Cr, Inter Cr.
 
-Not sure, some drivers do enable/disable wake_irq by hand in suspend/resume
-callbacks, so it would probably need to be opt-in somehow. I guess calling the
-function like this is one way to make it opt-in.
+This series is based on feedback and discussion of [1]
 
-The other way may be by passing a flag somewhere, like to
-request_threaded_irq. Did you have something more concrete in mind?
+[1] https://patchwork.linuxtv.org/patch/58525/
 
-regards,
-	o.
+Jonas Karlman (3):
+  media: uapi: h264: clarify expected scaling_list_4x4/8x8 order
+  media: cedrus: Use correct H264 8x8 scaling list
+  media: hantro: Do not reorder H264 scaling list
 
-> Thanks.
-> 
-> -- 
-> Dmitry
+ .../media/uapi/v4l/ext-ctrls-codec.rst        |  8 ++-
+ drivers/staging/media/hantro/hantro_h264.c    | 51 +++++--------------
+ .../staging/media/sunxi/cedrus/cedrus_h264.c  |  4 +-
+ 3 files changed, 20 insertions(+), 43 deletions(-)
+
+-- 
+2.17.1
+
