@@ -2,198 +2,139 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81367CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B05AC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B64B208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:00:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fL0Mvlyt"
+	by mail.kernel.org (Postfix) with ESMTP id EE799214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572264096;
+	bh=7l51Tf/Rpvd4APPr9YhiQKI2qTfKJAwzghAiuVldklc=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=2d4eRFEXdc4wwNkW9wHFeCcA0MlBJml8IrvGaxPCBeBdAqyH/9Tv2VabSVYsNAqtb
+	 ICVdv0JEAbdnrr3pScRvGLONNMlZzDSOTXIP1jkyRo0pMVxMVXujZXgBFNFXcn8xNI
+	 +o/JMyJkZXvSGNNIjnMHf1rKIMKSEo99DOzWO++M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388750AbfJ1MAK (ORCPT
+        id S2388701AbfJ1MBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:00:10 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.21]:29050 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388739AbfJ1MAK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:00:10 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id C8048386F
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:00:08 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id P3gtiTqsnOdBHP3guimd7y; Mon, 28 Oct 2019 07:00:08 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dQ39lxip28i3pj6HRN02soGt5VCuNJZsCBFioHO+7i4=; b=fL0Mvlyt0tWrAWjwGfJkBTtS8I
-        fXkh9HrmfboDj9FIFdS2jdELa9E+fzrY+qXQzgSgiYZigyNyHwe1nw8dggncJ2ABVpP49Ad1IKaCT
-        g/A4nkF/4T6qy3gsIgzNH3LDSZ9BzpLqM03OvY8EkuXakamgRvZoFoLgSyBFGKIPv5yXYMu6bTJUp
-        ZOJev6bExQMTdbD04C/AmXJRIVN++ABw8CoH2B/iVNX9QtpYh+b0L/CEMG6IempaJCBW1ti7+g6Tq
-        4LJpihkXtG5I4ga3me7ZI5F3EvKVGBYKobgV6ErLXsva5udNkYiWoZdqn/FOl33UIBEeXQtX12wZ4
-        oKbRPCKw==;
-Received: from [187.192.2.30] (port=60020 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iP3gt-002dIG-A5; Mon, 28 Oct 2019 07:00:07 -0500
-To:     Igor Russkikh <irusskikh@marvell.com>,
-        Igor Russkikh <Igor.Russkikh@aquantia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dmitry Bezrukov <Dmitry.Bezrukov@aquantia.com>,
-        Nikita Danilov <Nikita.Danilov@aquantia.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191028065633.GA2412@embeddedor>
- <ad34c73f-19ee-eb83-221b-cd9fac1d44d5@marvell.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [EXT] [PATCH net-next] net: aquantia: fix error handling in
- aq_nic_init
-Message-ID: <16c059aa-04a9-1301-fa72-eb475f3f3c6f@embeddedor.com>
-Date:   Mon, 28 Oct 2019 07:00:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 08:01:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726466AbfJ1MBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 08:01:34 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E85F2086D;
+        Mon, 28 Oct 2019 12:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572264093;
+        bh=7l51Tf/Rpvd4APPr9YhiQKI2qTfKJAwzghAiuVldklc=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=dVBGlTgnyQ+3dFD20QojrvGrnCVQYwCiC7EeyMVFHS4DiX57IZyYVUS4pquoVuEc5
+         UUEiLY0XodyjpKfJRjcwQPSO2yDbUdtuJ4iip06KB+n174g7vPhR3FEVh7Fap3bjOu
+         8lLesUr0A0gmHnaA4SOzFlahNoa0c63VYqhKpJSI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <ad34c73f-19ee-eb83-221b-cd9fac1d44d5@marvell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.2.30
-X-Source-L: No
-X-Exim-ID: 1iP3gt-002dIG-A5
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.2.30]:60020
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191021022516.gecunkpahu7okvm5@vireshk-i7>
+References: <2700308706c0d46ca06eeb973079a1f18bf553dd.1571390916.git.viresh.kumar@linaro.org> <20191018211214.444D32089C@mail.kernel.org> <20191021022516.gecunkpahu7okvm5@vireshk-i7>
+Cc:     Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        linux-kernel@vger.kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] opp: Reinitialize the list_kref before adding the static OPPs again
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 28 Oct 2019 05:01:32 -0700
+Message-Id: <20191028120133.3E85F2086D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Viresh Kumar (2019-10-20 19:25:16)
+> On 18-10-19, 14:12, Stephen Boyd wrote:
+> > Quoting Viresh Kumar (2019-10-18 02:28:41)
+> > > The list_kref reaches a count of 0 when all the static OPPs are remov=
+ed,
+> > > for example when dev_pm_opp_of_cpumask_remove_table() is called, thou=
+gh
+> > > the actual OPP table may not get freed as it may still be referenced =
+by
+> > > other parts of the kernel, like from a call to
+> > > dev_pm_opp_set_supported_hw(). And if we call
+> > > dev_pm_opp_of_cpumask_add_table() again at this point, we must
+> > > reinitialize the list_kref otherwise the kernel will hit a WARN() in
+> > > kref infrastructure for incrementing a kref with value 0.
+> > >=20
+> > > Fixes: 11e1a1648298 ("opp: Don't decrement uninitialized list_kref")
+> > > Reported-by: Dmitry Osipenko <digetx@gmail.com>
+> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > > ---
+> > >  drivers/opp/of.c | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > >=20
+> > > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> > > index 6dc41faf74b5..1cbb58240b80 100644
+> > > --- a/drivers/opp/of.c
+> > > +++ b/drivers/opp/of.c
+> > > @@ -663,6 +663,13 @@ static int _of_add_opp_table_v2(struct device *d=
+ev, struct opp_table *opp_table)
+> > >                 return 0;
+> > >         }
+> > > =20
+> > > +       /*
+> > > +        * Re-initialize list_kref every time we add static OPPs to t=
+he OPP
+> > > +        * table as the reference count may be 0 after the last tie s=
+tatic OPPs
+> >=20
+> > s/tie/time/
+> >=20
+> > > +        * were removed.
+> > > +        */
+> > > +       kref_init(&opp_table->list_kref);
+> >=20
+> > It seems racy.
+>=20
+> I am not sure if I see a race here, but maybe I am missing something.
+> Care to explain ?
 
+Some static OPP is removed at the same time that this function is
+called?
 
-On 10/28/19 05:53, Igor Russkikh wrote:
-> 
->> Fix currenty ignored returned error by properly error checking
->> aq_phy_init().
->>
->> Addresses-Coverity-ID: 1487376 ("Unused value")
->> Fixes: dbcd6806af42 ("net: aquantia: add support for Phy access")
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
->> index 433adc099e44..1914aa0a19d0 100644
->> --- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
->> +++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
->> @@ -341,7 +341,8 @@ int aq_nic_init(struct aq_nic_s *self)
->>  
->>  	if (self->aq_nic_cfg.aq_hw_caps->media_type == AQ_HW_MEDIA_TYPE_TP) {
->>  		self->aq_hw->phy_id = HW_ATL_PHY_ID_MAX;
->> -		err = aq_phy_init(self->aq_hw);
->> +		if (!aq_phy_init(self->aq_hw))
->> +			goto err_exit;
->>  	}
->>  
->>  	for (i = 0U, aq_vec = self->aq_vec[0];
->>
-> 
-> Hi Gustavo,
-> 
+>=20
+> > Why are we doing this vs. making an entirely new and
+> > different OPP structure? Or why is the count reaching 0 when something
+> > is obviously still referencing it?
+>=20
+> The kref for the opp table is opp_table->kref and the one here is
+> different. This is list_kref which is used for freeing OPPs added
+> statically from the DT. The static OPPs get added to the OPP table
+> when one calls dev_pm_opp_of_cpumask_add_table() and must be removed
+> on a call to dev_pm_opp_of_cpumask_remove_table(). The opp table
+> structure may not get freed at this moment though as it is still
+> referenced by the caller of dev_pm_opp_set_supported_hw().
+>=20
+> And now when we try to add the static OPPs again (re-insertion of
+> cpufreq module), we need to reinitialize the list_kref again as its
+> count reached 0 earlier and the resources (static OPPs) were freed.
+>=20
 
-Hi!
-
-> I'd say the intention here was to ignore the error, as driver may still live if
-> something unexpected happened on Phy access path.
-> 
-
-I see. Please, see my comments below...
-
-> Notice in the above fix you leave `err` as zero but do error path return -
-> that'll break the datapath.
-> 
-
-You're right. I totally missed that.
-
-> I'd prefer to fix this with simple
-> 
->      (void)aq_phy_init(self->aq_hw);
-> 
-
-Yep. This is much better. Otherwise, both static analyzers and developers
-get confused. :p
-
-Something even better is to add both a cast and a comment explaining why
-the return value is not being checked in this case (as you do above).
-
-Thanks
---
-Gustavo
+Right. I don't understand why the count reaches 0 if we can still get a
+pointer to something. I guess we've got this kref thing that has a
+lifetime beyond the life of what it's tracking, which is weird. Usually
+the kref is embedded inside the pointer that is returned by the "get"
+call, but here it's outside it and used to track when we should free
+static OPPs. Why are we removing static OPPs? Shouldn't they just stick
+around forever until the device is deleted vs. populated over and over
+again?
 
