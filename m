@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5B6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C86BCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14CB321848
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7CA20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 02:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbfJ1Csb (ORCPT
+        id S1730568AbfJ1Cse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 22:48:31 -0400
+        Sun, 27 Oct 2019 22:48:34 -0400
 Received: from mailgw01.mediatek.com ([210.61.82.183]:53869 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729515AbfJ1Csb (ORCPT
+        with ESMTP id S1730441AbfJ1Csc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 22:48:31 -0400
-X-UUID: 92fd90fa50f64250bb5734bcbfada58f-20191028
-X-UUID: 92fd90fa50f64250bb5734bcbfada58f-20191028
+        Sun, 27 Oct 2019 22:48:32 -0400
+X-UUID: a91cb2c505a543fe9054be2e40c49529-20191028
+X-UUID: a91cb2c505a543fe9054be2e40c49529-20191028
 Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
         (envelope-from <weiyi.lu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1247046895; Mon, 28 Oct 2019 10:48:27 +0800
+        with ESMTP id 2066027172; Mon, 28 Oct 2019 10:48:27 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 28 Oct 2019 10:48:25 +0800
+ 15.0.1395.4; Mon, 28 Oct 2019 10:48:26 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 28 Oct 2019 10:48:25 +0800
+ Transport; Mon, 28 Oct 2019 10:48:26 +0800
 From:   Weiyi Lu <weiyi.lu@mediatek.com>
 To:     Nicolas Boichat <drinkcat@chromium.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -44,9 +44,9 @@ CC:     James Liao <jamesjj.liao@mediatek.com>,
         <linux-mediatek@lists.infradead.org>,
         <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>,
         Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v8 01/14] dt-bindings: mediatek: Add property to mt8183 smi-common
-Date:   Mon, 28 Oct 2019 10:48:05 +0800
-Message-ID: <1572230898-7860-2-git-send-email-weiyi.lu@mediatek.com>
+Subject: [PATCH v8 07/14] soc: mediatek: Refactor bus protection control
+Date:   Mon, 28 Oct 2019 10:48:11 +0800
+Message-ID: <1572230898-7860-8-git-send-email-weiyi.lu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1572230898-7860-1-git-send-email-weiyi.lu@mediatek.com>
 References: <1572230898-7860-1-git-send-email-weiyi.lu@mediatek.com>
@@ -58,26 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For scpsys driver using regmap based syscon driver API.
+Put bus protection enable and disable control in separate functions.
 
 Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
 ---
- .../devicetree/bindings/memory-controllers/mediatek,smi-common.txt      | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/mediatek/mtk-scpsys.c | 44 ++++++++++++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt b/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
-index b478ade..01744ec 100644
---- a/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
-@@ -20,7 +20,7 @@ Required properties:
- 	"mediatek,mt2712-smi-common"
- 	"mediatek,mt7623-smi-common", "mediatek,mt2701-smi-common"
- 	"mediatek,mt8173-smi-common"
--	"mediatek,mt8183-smi-common"
-+	"mediatek,mt8183-smi-common", "syscon"
- - reg : the register and size of the SMI block.
- - power-domains : a phandle to the power domain of this local arbiter.
- - clocks : Must contain an entry for each entry in clock-names.
+diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+index ad0f619..fb2b027 100644
+--- a/drivers/soc/mediatek/mtk-scpsys.c
++++ b/drivers/soc/mediatek/mtk-scpsys.c
+@@ -274,6 +274,30 @@ static int scpsys_sram_disable(struct scp_domain *scpd, void __iomem *ctl_addr)
+ 			MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
+ }
+ 
++static int scpsys_bus_protect_enable(struct scp_domain *scpd)
++{
++	struct scp *scp = scpd->scp;
++
++	if (!scpd->data->bus_prot_mask)
++		return 0;
++
++	return mtk_infracfg_set_bus_protection(scp->infracfg,
++			scpd->data->bus_prot_mask,
++			scp->bus_prot_reg_update);
++}
++
++static int scpsys_bus_protect_disable(struct scp_domain *scpd)
++{
++	struct scp *scp = scpd->scp;
++
++	if (!scpd->data->bus_prot_mask)
++		return 0;
++
++	return mtk_infracfg_clear_bus_protection(scp->infracfg,
++			scpd->data->bus_prot_mask,
++			scp->bus_prot_reg_update);
++}
++
+ static int scpsys_power_on(struct generic_pm_domain *genpd)
+ {
+ 	struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
+@@ -316,13 +340,9 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
+ 	if (ret < 0)
+ 		goto err_pwr_ack;
+ 
+-	if (scpd->data->bus_prot_mask) {
+-		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
+-				scpd->data->bus_prot_mask,
+-				scp->bus_prot_reg_update);
+-		if (ret)
+-			goto err_pwr_ack;
+-	}
++	ret = scpsys_bus_protect_disable(scpd);
++	if (ret < 0)
++		goto err_pwr_ack;
+ 
+ 	return 0;
+ 
+@@ -344,13 +364,9 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
+ 	u32 val;
+ 	int ret, tmp;
+ 
+-	if (scpd->data->bus_prot_mask) {
+-		ret = mtk_infracfg_set_bus_protection(scp->infracfg,
+-				scpd->data->bus_prot_mask,
+-				scp->bus_prot_reg_update);
+-		if (ret)
+-			goto out;
+-	}
++	ret = scpsys_bus_protect_enable(scpd);
++	if (ret < 0)
++		goto out;
+ 
+ 	ret = scpsys_sram_disable(scpd, ctl_addr);
+ 	if (ret < 0)
 -- 
 1.8.1.1.dirty
 
