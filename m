@@ -2,106 +2,107 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADC4CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22884CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA3021721
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC11218BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:45:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="fcUjf9zk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388133AbfJ1UpX (ORCPT
+        id S2388178AbfJ1Up0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:45:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45370 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725867AbfJ1UpX (ORCPT
+        Mon, 28 Oct 2019 16:45:26 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37307 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJ1UpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:45:23 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9SKdqrX136406
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 16:45:22 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vx4sunhq2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 16:45:22 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 28 Oct 2019 20:45:19 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 28 Oct 2019 20:45:16 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9SKjF4125428188
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 20:45:15 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 525B34C040;
-        Mon, 28 Oct 2019 20:45:15 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 53C814C046;
-        Mon, 28 Oct 2019 20:45:14 +0000 (GMT)
-Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 28 Oct 2019 20:45:14 +0000 (GMT)
-Subject: Re: [PATCH v1] selftest/trustedkeys: TPM 1.2 trusted keys test
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     David Howells <dhowells@redhat.com>, Petr Vorel <pvorel@suse.cz>,
-        shuah <shuah@kernel.org>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-integrity@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 28 Oct 2019 16:45:13 -0400
-In-Reply-To: <20191028203014.GA8279@linux.intel.com>
-References: <1571944467-13097-1-git-send-email-zohar@linux.ibm.com>
-         <20191028203014.GA8279@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102820-0028-0000-0000-000003B07F8B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102820-0029-0000-0000-00002472BDE2
-Message-Id: <1572295513.4532.270.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910280195
+        Mon, 28 Oct 2019 16:45:24 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p1so7753731pgi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 13:45:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=KOjhDV2bOtkoryUtZNdedbIyz5aUvjz8VRxxdiXfCZg=;
+        b=fcUjf9zk+4oJ62eLTSygNM/iUtrrnBl2+URBZKh9513ri3eVyRIWYt6bIgH6oBx4X0
+         LB5TPZm0P2iY/11cju/J8f/fRgRBSAwMe0CVXk0tW/1XHV0t8T2PQd/ceyOdSMnCnni5
+         9LeWRxiN2X+mhcgqmGe1cusQKUg8mFqlilKv2a9SwKST9Q/GowMmIwMwzcO2c2AGkhL4
+         xKH5DOsYPndupfQyJrxwYB7Z09GUJSFWJ7UqrM1qLKEiwtJqH80kHN5F87HbqAbzaiMR
+         uc5E7aoW6XA++r+uZ3QAikuJFPVAapX76VSsqSRNVeE3589Cdh9fCi9NV4M6qqamGUpI
+         w21Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=KOjhDV2bOtkoryUtZNdedbIyz5aUvjz8VRxxdiXfCZg=;
+        b=XOCB4SxzxiNTnU8IlmA4X2YLL4LlbXjmP4/+FjHb4oFzmECHxByTJcV9vO7Zbq7c9A
+         cVgwXtv/CFDJhYPj7YfO4v47OUxuDF57POL9K+tve5TPkseXcGKQxiVtLwJPKQP0MySo
+         2pefiqV9e4Rp9Er/Zh57Kc2i8ltnd2OVzs4JiPhr55CBff0G0POKVmSQKvacyw3/v90W
+         hSrpz2SeKSdfcpVEV4IbSVodqHOcEEGbQfVdFNVD3rrECUYiVRBHgn8/KotzDNC9JiST
+         AlDFDm5GghgnoC9cKy2wUDzA8H/PFisuyeMNCnfPPXbw9D2TQcqM1l0w3uUf4fbHOI3+
+         vroA==
+X-Gm-Message-State: APjAAAW6tcA1iDVgInE4bnmOSG0rvSKYCTxKsFKa8Up7WO8SfsNkktHP
+        jBdrrTNTGNlrbSDvMOTKmXsoRw==
+X-Google-Smtp-Source: APXvYqz+3RSrMew/VEEbk6rofjrWlXLaxsQq8rNZqiU1GY8aOt/v3M5nMsymLZnECmWFFPRlRADoVg==
+X-Received: by 2002:a63:a03:: with SMTP id 3mr24167392pgk.112.1572295524109;
+        Mon, 28 Oct 2019 13:45:24 -0700 (PDT)
+Received: from [100.96.218.121] (241.sub-174-237-138.myvzw.com. [174.237.138.241])
+        by smtp.gmail.com with ESMTPSA id l72sm372781pjb.18.2019.10.28.13.45.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Oct 2019 13:45:22 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
+Date:   Mon, 28 Oct 2019 14:44:23 -0600
+Message-Id: <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, x86@kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+In-Reply-To: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+To:     Mike Rapoport <rppt@kernel.org>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-28 at 22:30 +0200, Jarkko Sakkinen wrote:
-> On Thu, Oct 24, 2019 at 03:14:27PM -0400, Mimi Zohar wrote:
-> > Create, save and load trusted keys test
-> > 
-> > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> > 
-> > Change log v1:
-> > - Replace the directions for using Trousers to take ownership of the TPM
-> > with directions for using the IBM TSS.
-> > - Differentiate between different types of errors.  Recent bug is causing
-> > "add_key: Timer expired".
-> > ---
-> 
-> Is not really usable as a selftest because of 3rd party dependencies.
 
-As part of diagnosing trusted keys failure, there is some
-hints/directions as to how to take TPM 1.2 ownership, but it does not
-take ownership.  The previous version included directions for using
-Trousers.  This version provides directions for using the IBM TSS.
- Feel free to include additional hints/directions.
+> On Oct 27, 2019, at 4:17 AM, Mike Rapoport <rppt@kernel.org> wrote:
+>=20
+> =EF=BB=BFFrom: Mike Rapoport <rppt@linux.ibm.com>
+>=20
+> Hi,
+>=20
+> The patch below aims to allow applications to create mappins that have
+> pages visible only to the owning process. Such mappings could be used to
+> store secrets so that these secrets are not visible neither to other
+> processes nor to the kernel.
+>=20
+> I've only tested the basic functionality, the changes should be verified
+> against THP/migration/compaction. Yet, I'd appreciate early feedback.
 
-Mimi
-   
-
+I=E2=80=99ve contemplated the concept a fair amount, and I think you should c=
+onsider a change to the API. In particular, rather than having it be a MAP_ f=
+lag, make it a chardev.  You can, at least at first, allow only MAP_SHARED, a=
+nd admins can decide who gets to use it.  It might also play better with the=
+ VM overall, and you won=E2=80=99t need a VM_ flag for it =E2=80=94 you can j=
+ust wire up .fault to do the right thing.
