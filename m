@@ -2,42 +2,46 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C08CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B29CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9355321744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817C921744
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390262AbfJ1Omr (ORCPT
+        id S2390286AbfJ1OoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:42:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57792 "EHLO mx1.suse.de"
+        Mon, 28 Oct 2019 10:44:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59076 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727982AbfJ1Omr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:42:47 -0400
+        id S1727982AbfJ1OoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 10:44:21 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4F486B521;
-        Mon, 28 Oct 2019 14:42:45 +0000 (UTC)
-Date:   Mon, 28 Oct 2019 15:42:44 +0100
-Message-ID: <s5hwocp9biz.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 3C01CAC2D;
+        Mon, 28 Oct 2019 14:44:19 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 15:44:19 +0100
+Message-ID: <s5hv9s99bgc.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     syzbot <syzbot+0620f79a1978b1133fd7@syzkaller.appspotmail.com>,
-        alsa-devel@alsa-project.org, andreyknvl@google.com,
-        benquike@gmail.com, g@b4.vu, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, perex@perex.cz, rfontana@redhat.com,
-        syzkaller-bugs@googlegroups.com, tiwai@suse.com,
-        yuehaibing@huawei.com
-Subject: Re: KASAN: slab-out-of-bounds Read in build_audio_procunit
-In-Reply-To: <20191028143406.GE1922@kadam>
-References: <000000000000df5189059580f8e9@google.com>
-        <s5hsgnkdbsl.wl-tiwai@suse.de>
-        <20191028143406.GE1922@kadam>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Navid Emamdoost <emamd001@umn.edu>, alsa-devel@alsa-project.org,
+        linux-doc@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [alsa-devel] ALSA: korg1212: Checking exception handling in snd_korg1212_create()
+In-Reply-To: <0daa3e27-3d1f-3040-f8e7-92ce91a97687@web.de>
+References: <s5hmudlmldk.wl-tiwai@suse.de>
+        <ec3647df-0e54-4aaa-7ec7-b3dec0fa1965@web.de>
+        <s5ho8y1au4h.wl-tiwai@suse.de>
+        <0daa3e27-3d1f-3040-f8e7-92ce91a97687@web.de>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -48,44 +52,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019 15:34:06 +0100,
-Dan Carpenter wrote:
+On Mon, 28 Oct 2019 15:40:09 +0100,
+Markus Elfring wrote:
 > 
-> I wish that this could have been detected with static analysis...
+> >> Can the properties of this programming interface be documented also together
+> >> with the function declaration for the safer handling of ALSA components?
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/sound/kernel-api/writing-an-alsa-driver.rst?id=d6d5df1db6e9d7f8f76d2911707f7d5877251b02#n567
+> >
+> > I can think of only adding some comment at each point mentioning that
+> > the resource will be managed by the device destructor.
 > 
-> On Tue, Oct 22, 2019 at 05:45:14PM +0200, Takashi Iwai wrote:
-> > diff --git a/sound/usb/validate.c b/sound/usb/validate.c
-> > index 3c8f73a0eb12..a5e584b60dcd 100644
-> > --- a/sound/usb/validate.c
-> > +++ b/sound/usb/validate.c
-> > @@ -75,7 +75,7 @@ static bool validate_processing_unit(const void *p,
-> >  
-> >  	if (d->bLength < sizeof(*d))
->             ^^^^^^^^^^^^^^^^^^^^^^^
-> So we know that d->bLength is >= 10.
-> 
-> >  		return false;
-> > -	len = d->bLength < sizeof(*d) + d->bNrInPins;
->         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> Len is 1 or 0.
-> 
-> > +	len = sizeof(*d) + d->bNrInPins;
-> >  	if (d->bLength < len)
->             ^^^^^^^^^^^^^^^^
-> 
-> So this condition can't be false.
-> 
-> >  		return false;
-> 
-> But it just makes this return into dead code and we have a lot of dead
-> code paths in the kernel so it doesn't make sense to generate a warning.
-> ...  I don't know if I have a solution.
-> 
-> Maybe some day we will have a vim pluggin which will highlight all the
-> dead paths and someone would notice that it that way.
+> * Which places will be corresponding update candidates?
 
-That'd be awesome :)  Of even a simple checker code that can run in
-the git commit hook should suffice for careless maintainers like me.
+At each place where this kind of code is seen.
+
+> * Would you like to choose the wording?
+
+I myself don't mind as long as it's clearly understandable for human
+being.
+
+> >> Can any more API information help to improve automatic source code analysis
+> >> around similar functions?
+> >
+> > If anything we can add, let me know.
+> 
+> Will any tags become more helpful also for the software documentation?
+
+It's my question.
 
 
 thanks,
