@@ -2,95 +2,114 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C68C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80FFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94FD020B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572249745;
-	bh=KuLjpqvbGMtLUlNc5kaoR6YIjcyREiGv1q4fu5cS1Ak=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I0Vw8VFuKhW1mOSjGbHoqxyXDdCWYXZFobpkXqtW6TuMRJvreEBF0TNEjQsaepRvc
-	 4Amp9n14CyW3Zu2SVd2Swx5iqNZTH1niv5xLrQwmicHWH36n9+DaUjySuMdbSSORVk
-	 /gZVTWUcQlAzfSV2aekOf32CS7MOtw0Lt3o1sVdo=
+	by mail.kernel.org (Postfix) with ESMTP id 7B0FD20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:03:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fhh373ct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733175AbfJ1ICY (ORCPT
+        id S1733134AbfJ1IDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 04:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730328AbfJ1ICY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 04:02:24 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47DB120862;
-        Mon, 28 Oct 2019 08:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572249743;
-        bh=KuLjpqvbGMtLUlNc5kaoR6YIjcyREiGv1q4fu5cS1Ak=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G0s2Mz00gd0TJaorDXv098tL6oibTl1MVsC5aqs1AmlXJ2/v5v2aMW92DdobIt2vH
-         8iwPoE63nv6SkXiWQf+ARi4Nzym8RMF5TM26GsvGCmxLalkZNuQbWULECL/kcPCAYK
-         cBhUL+esadSCp39Vvt1uiALdImM8eQOKF6Il7wfQ=
-Date:   Mon, 28 Oct 2019 04:02:20 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH] KVM: vmx, svm: always run with EFER.NXE=1 when shadow
- paging is active
-Message-ID: <20191028080220.GH1560@sasha-vm>
-References: <20191027152323.24326-1-pbonzini@redhat.com>
- <20191028065919.AB8C3208C0@mail.kernel.org>
- <b08a0103-312e-5441-9ffe-33c9df0a9d57@redhat.com>
+        Mon, 28 Oct 2019 04:03:44 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59500 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730328AbfJ1IDn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 04:03:43 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S7wZSL186412;
+        Mon, 28 Oct 2019 08:03:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=QNBVBBb+Lx5XvQn0JPrdAgEUun+ZptEUgDhb2ofkyYA=;
+ b=fhh373ct+z1eyJ7TBkjKBqZEEQJ+ejOFlWUMU+Xh6ISqG0u721KH7368GfYzJmh6z6ql
+ J44WipsVoIY2VBF+l+18PlqmGm5a61J6h0ZIvljidQbMLqAh/jAJFgg+an65uYG/s8kz
+ 5dsIdQOaNkKJ08kVO3gSJTrVEon9sK4QFnTKSQfJC2MCF63lObSHBpnRywRuLOJF9BVa
+ F//l71SYIGtgs1+M3IrMym2fxlddKFw1xsHCUTI1u/X2Zc+eNR1eEYzB+jVgFtsLw0Qz
+ 5Z4hFIqlOLS/NWe6pMMkRKBbFU6r1view37IsXUaXiu18m3clWGJ8KCWkcenxwAaE3SM TA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2vve3q04q8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 08:03:31 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S7wsfF179089;
+        Mon, 28 Oct 2019 08:01:31 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2vvymy5gwg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 08:01:31 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9S81UmT026440;
+        Mon, 28 Oct 2019 08:01:30 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 28 Oct 2019 01:01:29 -0700
+Date:   Mon, 28 Oct 2019 11:01:13 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Cristiane Naves <cristianenavescardoso09@gmail.com>,
+        outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Re: [RESEND PATCH 1/2] staging: rtl8712: Fix Alignment of open
+ parenthesis
+Message-ID: <20191028080113.GD1944@kadam>
+References: <cover.1572051351.git.cristianenavescardoso09@gmail.com>
+ <e3842148b6dd01c47678f517a07772c75046c50f.1572051351.git.cristianenavescardoso09@gmail.com>
+ <25960b2a5dfe3f5f2c6579ef718f90a139ba84d7.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b08a0103-312e-5441-9ffe-33c9df0a9d57@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <25960b2a5dfe3f5f2c6579ef718f90a139ba84d7.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910280080
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910280080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 08:56:26AM +0100, Paolo Bonzini wrote:
->On 28/10/19 07:59, Sasha Levin wrote:
->>
->> This commit has been processed because it contains a -stable tag.
->> The stable tag indicates that it's relevant for the following trees: all
->>
->> The bot has tested the following trees: v5.3.7, v4.19.80, v4.14.150, v4.9.197, v4.4.197.
->>
->> v5.3.7: Build OK!
->> v4.19.80: Failed to apply! Possible dependencies:
->>     Unable to calculate
->>
->> v4.14.150: Failed to apply! Possible dependencies:
->>     Unable to calculate
->>
->> v4.9.197: Failed to apply! Possible dependencies:
->>     Unable to calculate
->>
->> v4.4.197: Failed to apply! Possible dependencies:
->>     Unable to calculate
->>
->>
->> NOTE: The patch will not be queued to stable trees until it is upstream.
->>
->> How should we proceed with this patch?
->
->It should apply just fine to all branches, just to arch/x86/kvm/vmx.c
->instead of arch/x86/kvm/vmx/vmx.c.
+On Fri, Oct 25, 2019 at 06:50:25PM -0700, Joe Perches wrote:
+> On Fri, 2019-10-25 at 22:09 -0300, Cristiane Naves wrote:
+> > Fix alignment should match open parenthesis.Issue found by checkpatch.
+> 
+> Beyond doing style cleanups, please always try
+> to make the code more readable.
+> 
+> > diff --git a/drivers/staging/rtl8712/rtl8712_recv.c b/drivers/staging/rtl8712/rtl8712_recv.c
+> []
+> > @@ -61,13 +61,13 @@ void r8712_init_recv_priv(struct recv_priv *precvpriv,
+> >  		precvbuf->ref_cnt = 0;
+> >  		precvbuf->adapter = padapter;
+> >  		list_add_tail(&precvbuf->list,
+> > -				 &(precvpriv->free_recv_buf_queue.queue));
+> > +			      &(precvpriv->free_recv_buf_queue.queue));
+> 
+> Please remove the unnecessary parentheses too
+> 
 
-I wonder if we should be carrying symlinks in the stable branches to
-make this smoother...
+Removing the parentheses increases your chance of the patch being
+rejected on the one thing per patch rule...
 
--- 
-Thanks,
-Sasha
+regards,
+dan carpenter
+
