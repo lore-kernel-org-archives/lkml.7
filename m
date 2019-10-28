@@ -2,111 +2,64 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CB8CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713D1CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CC6217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:39:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DGMb6z2r"
+	by mail.kernel.org (Postfix) with ESMTP id 49773217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731561AbfJ1Vjq (ORCPT
+        id S1731684AbfJ1VlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:39:46 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:13767 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfJ1Vjq (ORCPT
+        Mon, 28 Oct 2019 17:41:07 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:49664 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfJ1VlG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:39:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5db760270000>; Mon, 28 Oct 2019 14:39:51 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 28 Oct 2019 14:39:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 28 Oct 2019 14:39:45 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
- 2019 21:39:45 +0000
-Received: from [10.26.11.236] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
- 2019 21:39:43 +0000
-Subject: Re: [PATCH 4.14 000/119] 4.14.151-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191027203259.948006506@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b72b3182-05ae-05ca-097d-9455004dd0a0@nvidia.com>
-Date:   Mon, 28 Oct 2019 21:39:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 17:41:06 -0400
+Received: from belgarion ([90.55.204.252])
+        by mwinf5d17 with ME
+        id K9h32100F5TFNlm039h4zn; Mon, 28 Oct 2019 22:41:04 +0100
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Mon, 28 Oct 2019 22:41:04 +0100
+X-ME-IP: 90.55.204.252
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH 28/46] input: touchscreen: mainstone: sync with zylonite driver
+References: <20191018154052.1276506-1-arnd@arndb.de>
+        <20191018154201.1276638-28-arnd@arndb.de>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Mon, 28 Oct 2019 22:40:58 +0100
+In-Reply-To: <20191018154201.1276638-28-arnd@arndb.de> (Arnd Bergmann's
+        message of "Fri, 18 Oct 2019 17:41:43 +0200")
+Message-ID: <87tv7sk0ph.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572298791; bh=fhMyqk6THznxJRTcXV2DAlL0WYnOqXH/64mpv/8CGq8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DGMb6z2ry/ChBM6ViscMkcfl7VK+4tmWYivW/H+khieSSTptw0AGRUkz8u705FNIP
-         UkxeiusanFREx9yBui4pmlm8TZceAuj1//yLBNvyY8UboqvRAK0D5Gr+EVrGrgB8VL
-         TCa+YuvDLOr0NfU6SUjrlbsItgmhMy/tilA9sT5tJIMS90OQvc7xjbHNQmq3p/1nq/
-         QOwZcnZ/JjVougdqRTYXTbRXASzseX7senxje068ejbd+Cgkr5qPKJDS1GAgkWZMrh
-         tELT9E8IFj4CTnzuDAT+zxMAKbvYHvgD5v0sluV56S/CF5gWuM0vaGpSS4VOzbBSCt
-         vQyEOn2KydsNw==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Arnd Bergmann <arnd@arndb.de> writes:
 
-On 27/10/2019 20:59, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.151 release.
-> There are 119 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.151-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> +	} else if (machine_is_zylonite()) {
+> +		pen_int = 1;
+>  	}
+I don't understand that part, why do you check for a zylonite board in this file
+?
 
-All tests are passing for Tegra ...
+Cheers.
 
-Test results for stable-v4.14:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    24 tests:	24 pass, 0 fail
-
-Linux version:	4.14.151-rc1-g22148a87efce
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+--
+Robert
