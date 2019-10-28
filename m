@@ -2,179 +2,150 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30D8CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5F3CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84EDA20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395A421783
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572285758;
-	bh=Hyg++zfQSMX+47X9Z7dJD9TriyOsl/OxnbC82FMuQLA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=mJjNAH/sQiyx+vwz22J0sYyGRHij9YPOWXCwnsYSRk2QFkOsHy1os0uJLbHd078xj
-	 8XVbA52pfkG/a9E6cEIO9r7EG57g2z2K212n9/YkQl8ehly+LeDcb7UTuRInOraP+g
-	 7kLn/QkhE3n1yFmmmxJGcd6+bzhlQXY4tf3vhl6I=
+	s=default; t=1572285780;
+	bh=z+ls7tY9FydbXkZifzUsINlks/TY83Qg10OvpMJem5Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VyvNH+XrObK/D0ivQwB5rywZFhKOYTGzoSlb0ZU67FCcx00fLoVeD9C1xmE5LAcle
+	 tMl6q9cZobmL3FaE5qkGwRcqbsI4M01+vvozPdqvN+Vn8RoMT47jOcvlhCACRYoI83
+	 2oMKJyH93XkBwQwJQSyyLd3dweQw1hGSf/t5NJjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404303AbfJ1SCh (ORCPT
+        id S2390853AbfJ1SC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 14:02:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42870 "EHLO mail.kernel.org"
+        Mon, 28 Oct 2019 14:02:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730859AbfJ1SCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 14:02:36 -0400
-Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1732035AbfJ1SC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 14:02:58 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 253A620862;
-        Mon, 28 Oct 2019 18:02:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A966D222C5
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 18:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572285755;
-        bh=Hyg++zfQSMX+47X9Z7dJD9TriyOsl/OxnbC82FMuQLA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=qNfN5tlvR6Bc/HSOU2T5NwEH9tG876FuSY2Z9rzu8ckVYKZhUlhZZrUo7IRm8luG7
-         l0Q0zKiZWrYCqc1okeIwqoF0Sz28N1jbDTXgyTGrEUqW+h9PMDoTFT33gV0cByPup+
-         IsGWDrTlyxhOLYfdMgB19mVKHTo1nMBXgKCq8tT8=
-Date:   Mon, 28 Oct 2019 11:02:33 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     madhuparnabhowmik04@gmail.com
-Cc:     joel@joelfernandes.org, corbet@lwn.net, linux-doc@vger.kernel.org,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnbhowmik04@gmail.com>
-Subject: Re: [PATCH 2/2] Documentation: RCU: Converted arrayRCU.txt to
- arrayRCU.rst.
-Message-ID: <20191028180233.GO4465@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191028151936.27016-1-madhuparnabhowmik04@gmail.com>
+        s=default; t=1572285776;
+        bh=z+ls7tY9FydbXkZifzUsINlks/TY83Qg10OvpMJem5Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HDA/GO3/EzfOrCmw0z6mWZJU2StimT/3qGL5kVoF5IN+iSrQ5Y26PbsCL9FFqNZY9
+         WijMqBubXjpjqsmMx2ylXS+uUIaI/5UZEZxxTKhNapZ3c89cxyC+K+8N7SRk5SYOoZ
+         BF/b/kIC8WQf6Lwh2dNWvHfEnSUIskyVn+7hb0Mk=
+Received: by mail-wr1-f53.google.com with SMTP id z11so10857822wro.11
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 11:02:56 -0700 (PDT)
+X-Gm-Message-State: APjAAAWJJc6h0bta+cRdA8kPoxxIb5r8QLsUd2pSB3OIjawLDO3kjI2c
+        KPMSxeCatGCRajuNzTzd8fGYoWA0raNsMt+CtYOj9g==
+X-Google-Smtp-Source: APXvYqy7x0ASppBEte9OgIi2QvqoTeo3Dt67Eh2LZfQJDrxC9mcnlae7ZaTq6ZE+bgOnJknfBOOe3jq4iyXOYZ9wPXw=
+X-Received: by 2002:a5d:51c2:: with SMTP id n2mr15773727wrv.149.1572285775063;
+ Mon, 28 Oct 2019 11:02:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028151936.27016-1-madhuparnabhowmik04@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org> <1572171452-7958-2-git-send-email-rppt@kernel.org>
+In-Reply-To: <1572171452-7958-2-git-send-email-rppt@kernel.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 28 Oct 2019 11:02:44 -0700
+X-Gmail-Original-Message-ID: <CALCETrWW2AEhO0TY8Xr7Fe5u9c7WB7zg4d2TPp3G6b9X1pO8BA@mail.gmail.com>
+Message-ID: <CALCETrWW2AEhO0TY8Xr7Fe5u9c7WB7zg4d2TPp3G6b9X1pO8BA@mail.gmail.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, X86 ML <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 08:49:36PM +0530, madhuparnabhowmik04@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> 
-> This patch converts arrayRCU from txt to rst format.
-> arrayRCU.rst is also added in the index.rst file.
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnbhowmik04@gmail.com>
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-
-Thank you, but this does not apply to the -rcu git repo's "dev" branch.
-Could you please tell me what commit you developed this against?
-
-FYI, the location and much more about -rcu may be found here:
-
-https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/rcutodo.html
-
-							Thanx, Paul
-
+On Sun, Oct 27, 2019 at 3:17 AM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> From: Mike Rapoport <rppt@linux.ibm.com>
+>
+> The mappings created with MAP_EXCLUSIVE are visible only in the context of
+> the owning process and can be used by applications to store secret
+> information that will not be visible not only to other processes but to the
+> kernel as well.
+>
+> The pages in these mappings are removed from the kernel direct map and
+> marked with PG_user_exclusive flag. When the exclusive area is unmapped,
+> the pages are mapped back into the direct map.
+>
+> The MAP_EXCLUSIVE flag implies MAP_POPULATE and MAP_LOCKED.
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > ---
->  .../RCU/{arrayRCU.txt => arrayRCU.rst}         | 18 ++++++++++++++----
->  Documentation/RCU/index.rst                    |  1 +
->  2 files changed, 15 insertions(+), 4 deletions(-)
->  rename Documentation/RCU/{arrayRCU.txt => arrayRCU.rst} (91%)
-> 
-> diff --git a/Documentation/RCU/arrayRCU.txt b/Documentation/RCU/arrayRCU.rst
-> similarity index 91%
-> rename from Documentation/RCU/arrayRCU.txt
-> rename to Documentation/RCU/arrayRCU.rst
-> index f05a9afb2c39..c8a26f7b2577 100644
-> --- a/Documentation/RCU/arrayRCU.txt
-> +++ b/Documentation/RCU/arrayRCU.rst
-> @@ -1,4 +1,7 @@
-> +.. _array_rcu_doc:
+>  arch/x86/mm/fault.c                    | 14 ++++++++++
+>  fs/proc/task_mmu.c                     |  1 +
+>  include/linux/mm.h                     |  9 +++++++
+>  include/linux/page-flags.h             |  7 +++++
+>  include/linux/page_excl.h              | 49 ++++++++++++++++++++++++++++++++++
+>  include/trace/events/mmflags.h         |  9 ++++++-
+>  include/uapi/asm-generic/mman-common.h |  1 +
+>  kernel/fork.c                          |  3 ++-
+>  mm/Kconfig                             |  3 +++
+>  mm/gup.c                               |  8 ++++++
+>  mm/memory.c                            |  3 +++
+>  mm/mmap.c                              | 16 +++++++++++
+>  mm/page_alloc.c                        |  5 ++++
+>  13 files changed, 126 insertions(+), 2 deletions(-)
+>  create mode 100644 include/linux/page_excl.h
+>
+> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> index 9ceacd1..8f73a75 100644
+> --- a/arch/x86/mm/fault.c
+> +++ b/arch/x86/mm/fault.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/context_tracking.h>    /* exception_enter(), ...       */
+>  #include <linux/uaccess.h>             /* faulthandler_disabled()      */
+>  #include <linux/efi.h>                 /* efi_recover_from_page_fault()*/
+> +#include <linux/page_excl.h>           /* page_is_user_exclusive()     */
+>  #include <linux/mm_types.h>
+>
+>  #include <asm/cpufeature.h>            /* boot_cpu_has, ...            */
+> @@ -1218,6 +1219,13 @@ static int fault_in_kernel_space(unsigned long address)
+>         return address >= TASK_SIZE_MAX;
+>  }
+>
+> +static bool fault_in_user_exclusive_page(unsigned long address)
+> +{
+> +       struct page *page = virt_to_page(address);
 > +
->  Using RCU to Protect Read-Mostly Arrays
-> +=======================================
->  
->  
->  Although RCU is more commonly used to protect linked lists, it can
-> @@ -26,6 +29,7 @@ described in the following sections.
->  
->  
->  Situation 1: Hash Tables
-> +------------------------
->  
->  Hash tables are often implemented as an array, where each array entry
->  has a linked-list hash chain.  Each hash chain can be protected by RCU
-> @@ -34,6 +38,7 @@ to other array-of-list situations, such as radix trees.
->  
->  
->  Situation 2: Static Arrays
-> +--------------------------
->  
->  Static arrays, where the data (rather than a pointer to the data) is
->  located in each array element, and where the array is never resized,
-> @@ -41,11 +46,14 @@ have not been used with RCU.  Rik van Riel recommends using seqlock in
->  this situation, which would also have minimal read-side overhead as long
->  as updates are rare.
->  
-> -Quick Quiz:  Why is it so important that updates be rare when
-> -	     using seqlock?
-> +Quick Quiz:
-> +		Why is it so important that updates be rare when using seqlock?
+> +       return page_is_user_exclusive(page);
+> +}
 > +
-> +:ref:`Answer to Quick Quiz <answer_quick_quiz_seqlock>`
->  
->  
->  Situation 3: Resizeable Arrays
-> +------------------------------
->  
->  Use of RCU for resizeable arrays is demonstrated by the grow_ary()
->  function formerly used by the System V IPC code.  The array is used
-> @@ -60,7 +68,7 @@ the remainder of the new, updates the ids->entries pointer to point to
->  the new array, and invokes ipc_rcu_putref() to free up the old array.
->  Note that rcu_assign_pointer() is used to update the ids->entries pointer,
->  which includes any memory barriers required on whatever architecture
-> -you are running on.
-> +you are running on.::
->  
->  	static int grow_ary(struct ipc_ids* ids, int newsize)
->  	{
-> @@ -112,7 +120,7 @@ a simple check suffices.  The pointer to the structure corresponding
->  to the desired IPC object is placed in "out", with NULL indicating
->  a non-existent entry.  After acquiring "out->lock", the "out->deleted"
->  flag indicates whether the IPC object is in the process of being
-> -deleted, and, if not, the pointer is returned.
-> +deleted, and, if not, the pointer is returned.::
->  
->  	struct kern_ipc_perm* ipc_lock(struct ipc_ids* ids, int id)
->  	{
-> @@ -144,8 +152,10 @@ deleted, and, if not, the pointer is returned.
->  		return out;
->  	}
->  
-> +.. _answer_quick_quiz_seqlock:
->  
->  Answer to Quick Quiz:
-> +	Why is it so important that updates be rare when using seqlock?
->  
->  	The reason that it is important that updates be rare when
->  	using seqlock is that frequent updates can livelock readers.
-> diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
-> index 340a9725676c..c4586602e7e2 100644
-> --- a/Documentation/RCU/index.rst
-> +++ b/Documentation/RCU/index.rst
-> @@ -7,6 +7,7 @@ RCU concepts
->  .. toctree::
->     :maxdepth: 1
->  
-> +   arrayRCU
->     rcu
->     listRCU
->     UP
-> -- 
-> 2.17.1
-> 
+>  /*
+>   * Called for all faults where 'address' is part of the kernel address
+>   * space.  Might get called for faults that originate from *code* that
+> @@ -1261,6 +1269,12 @@ do_kern_addr_fault(struct pt_regs *regs, unsigned long hw_error_code,
+>         if (spurious_kernel_fault(hw_error_code, address))
+>                 return;
+>
+> +       /* FIXME: warn and handle gracefully */
+> +       if (unlikely(fault_in_user_exclusive_page(address))) {
+> +               pr_err("page fault in user exclusive page at %lx", address);
+> +               force_sig_fault(SIGSEGV, SEGV_MAPERR, (void __user *)address);
+> +       }
+
+Sending a signal here is not a reasonable thing to do in response to
+an unexpected kernel fault.  You need to OOPS.  Printing a nice
+message would be nice.
+
+--Andy
