@@ -2,111 +2,92 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD845CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00F1CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF2E214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DA821744
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572280059;
+	bh=87V2MWqDlCCbrhdsVXEBFo+I8AOmCrxItTTuwv33jbA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o9WNI2R+49mCChbUpApdSBdjUP29890Igr+kyBsxEK1H1VxCnZkg+JH9ONJv2gZFR
+	 4e90FN5gc5spQdv+ZV9mHlq4QKzhzkIWXVK2pDj1exX6A/MeSnHtSwM8BD1yo46g5r
+	 cMuB6ygsFOgIDwhPYTJnFHBdMccjO/0qgv3c+PtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390976AbfJ1Q1a (ORCPT
+        id S2390987AbfJ1Q1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:27:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:4473 "EHLO mga14.intel.com"
+        Mon, 28 Oct 2019 12:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732424AbfJ1Q1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:27:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 09:27:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
-   d="scan'208";a="211478039"
-Received: from unknown (HELO [10.7.153.148]) ([10.7.153.148])
-  by orsmga002.jf.intel.com with ESMTP; 28 Oct 2019 09:27:29 -0700
-Subject: Re: [PATCH] media: aspeed-video: Fix memory leaks in
- aspeed_video_probe
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
-        kjlu@umn.edu, openbmc@lists.ozlabs.org,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        emamd001@umn.edu, smccaman@umn.edu,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20191026042519.29446-1-navid.emamdoost@gmail.com>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <d9c04318-586a-bfc2-fce6-6218c6bab1d6@linux.intel.com>
-Date:   Mon, 28 Oct 2019 09:27:30 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1732424AbfJ1Q1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 12:27:37 -0400
+Received: from localhost (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3680214E0;
+        Mon, 28 Oct 2019 16:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572280057;
+        bh=87V2MWqDlCCbrhdsVXEBFo+I8AOmCrxItTTuwv33jbA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1QDkZEp6d/vPMTHdg+fbYMN12R7tYmMvgoiA3Y+tVlZJPImcmFjOHo21RTvbTzhKX
+         h3ucNoT3UB33LDMg2fxKiFrFA2OlG4y4CcVgJnLBb4TsYm47k11xIpM+SxfOZroJ+B
+         2X2xanl98GhY1qKURwoJet5bjliTnk8XeoXQApp8=
+Date:   Mon, 28 Oct 2019 12:27:34 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Andrea Parri <parri.andrea@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, vkuznets <vkuznets@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH v2] x86/hyperv: Set pv_info.name to "Hyper-V"
+Message-ID: <20191028162734.GI1554@sasha-vm>
+References: <20191015103502.13156-1-parri.andrea@gmail.com>
+ <DM5PR21MB01377F713A553FCF721EF99DD7930@DM5PR21MB0137.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20191026042519.29446-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <DM5PR21MB01377F713A553FCF721EF99DD7930@DM5PR21MB0137.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Navid,
+On Tue, Oct 15, 2019 at 01:06:33PM +0000, Michael Kelley wrote:
+>From: Andrea Parri <parri.andrea@gmail.com> Sent: Tuesday, October 15, 2019 3:35 AM
+>>
+>> Michael reported that the x86/hyperv initialization code printed the
+>> following dmesg when running in a VM on Hyper-V:
+>>
+>>   [    0.000738] Booting paravirtualized kernel on bare hardware
+>>
+>> Let the x86/hyperv initialization code set pv_info.name to "Hyper-V";
+>> with this addition, the dmesg read:
+>>
+>>   [    0.000172] Booting paravirtualized kernel on Hyper-V
+>>
+>> Reported-by: Michael Kelley <mikelley@microsoft.com>
+>> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+>
+>Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-On 10/25/2019 9:25 PM, Navid Emamdoost wrote:
-> In the implementation of aspeed_video_probe() the allocated memory for
-> video should be released in case of failure. Release video if either
-> devm_ioremap_resource() or aspeed_video_init() or
-> aspeed_video_setup_video() fails.
-> 
-> Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->   drivers/media/platform/aspeed-video.c | 14 ++++++++++----
->   1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-> index eb12f3793062..8c473356132d 100644
-> --- a/drivers/media/platform/aspeed-video.c
-> +++ b/drivers/media/platform/aspeed-video.c
-> @@ -1663,18 +1663,24 @@ static int aspeed_video_probe(struct platform_device *pdev)
->   
->   	video->base = devm_ioremap_resource(video->dev, res);
->   
-> -	if (IS_ERR(video->base))
-> -		return PTR_ERR(video->base);
-> +	if (IS_ERR(video->base)) {
-> +		rc = PTR_ERR(video->base);
-> +		goto free_video;
-> +	}
->   
->   	rc = aspeed_video_init(video);
->   	if (rc)
-> -		return rc;
-> +		goto free_video;
->   
->   	rc = aspeed_video_setup_video(video);
->   	if (rc)
-> -		return rc;
-> +		goto free_video;
->   
->   	return 0;
-> +
-> +free_video:
-> +	kfree(video);
-> +	return rc;
->   }
->   
->   static int aspeed_video_remove(struct platform_device *pdev)
-> 
+Thomas, will you be taking this? Would you rather have me deal with the
+hyperv bits under arch/x86/?
 
-Can we simply change kzalloc in aspeed_video_probe with devm_kzalloc
-so that we don't need to take care of freeing of video? I think it would
-be more simpler.
-
-Cheers,
-
-Jae
+-- 
+Thanks,
+Sasha
