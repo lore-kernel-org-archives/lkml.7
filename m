@@ -2,140 +2,151 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E10CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A6ECA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06BA218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572274625;
-	bh=gXZHEBtFXxpGRVdIN8wnrb1rJXESg9DHFUNQuioIchE=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=k7DIgageSivV+6Z3xp/DCCWYcLkrAVYx3WjCs+2IcHlH71jOrT2wJYIUmc7BQ4kAY
-	 j6o7bVZxn/d+oRGu341EBLFgvLXiu24I74rPYiV/C3jWv/9LIAxONgz/h4ISR3ZIKj
-	 S9586K1SRc2pGg/88xBmjzNcaqSg/3zKwEjqhpfc=
+	by mail.kernel.org (Postfix) with ESMTP id C9D92218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ltTYQgdf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390513AbfJ1O5D (ORCPT
+        id S2390527AbfJ1O5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:57:03 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40268 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390502AbfJ1O5C (ORCPT
+        Mon, 28 Oct 2019 10:57:11 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:16617 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390461AbfJ1O5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:57:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=pRAnZ2eosKV/53G9bqUjly+zJvMmzCGpbgurzDJUuFc=; b=ji8GRUakC0x3
-        My3BXG8nqht1NWURYP4Hl6TLrXwU+YQJQtG1BZ97HpUaz0DgR5UWjv9SY44Yy/KwuFpDAejKo3hHh
-        2130boS1xvfTbbKSPf/G1NXAijvKgw2nBNq0W+VUokakasfTmtqnI6lDnbLH6PMpRjyuNcgU3nNcv
-        rz4rM=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iP6Ri-0008Rf-UG; Mon, 28 Oct 2019 14:56:39 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 5632E2740B7F; Mon, 28 Oct 2019 14:56:37 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        dannym@scratchpost.org, georgii.staroselskii@emlid.com,
-        kuninori.morimoto.gx@renesas.com, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, mripard@kernel.org,
-        perex@perex.cz, tglx@linutronix.de, tiwai@suse.com, wens@csie.org,
-        yuehaibing@huawei.com
-Subject: Applied "ASoC: sunxi: sun4i-codec: remove unneeded semicolon" to the asoc tree
-In-Reply-To: <20191025120801.16236-1-yuehaibing@huawei.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191028145637.5632E2740B7F@ypsilon.sirena.org.uk>
-Date:   Mon, 28 Oct 2019 14:56:37 +0000 (GMT)
+        Mon, 28 Oct 2019 10:57:10 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5db701cd0001>; Mon, 28 Oct 2019 07:57:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 28 Oct 2019 07:57:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 28 Oct 2019 07:57:09 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
+ 2019 14:57:08 +0000
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
+ DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Mon, 28 Oct 2019 14:57:08 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id C8DA543032; Mon, 28 Oct 2019 16:57:06 +0200 (EET)
+Date:   Mon, 28 Oct 2019 16:57:06 +0200
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        "Nicolas Chauvet" <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 01/17] clk: tegra: Add custom CCLK implementation
+Message-ID: <20191028145706.GF27141@pdeschrijver-desktop.Nvidia.com>
+References: <20191015211618.20758-1-digetx@gmail.com>
+ <20191015211618.20758-2-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191015211618.20758-2-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572274637; bh=a3iQGGwz0Ivg7sfs0KItL4POFuee26IhkUhjou3eb4M=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=ltTYQgdfMjWQKG2jN1sK+ylYqIivDrD90MVQgPlGFVpj2Sp27DCwSzppeJbib+j0j
+         CLEn+3hwOL3Fvb3JPx5nmrIeLBJuGCOGjdGnF196NJippTqXGkyD45hQ3XydK2WOZ5
+         w3afkvcQ2jUpA188B3DIQoik5OX2/feYlEqZdf68hVJ0iu4IbVBq4t+pArmqjBeCxH
+         UctsgV6EGdwyyuaaQJSo4clSL9PAzOHwIW16j96+H21FqJGnv4J8JcSDkmNQO4zH+n
+         toCpLsBLEgVUD3to458/C7zcPfhcz9Xu/xwUfqsIYqWMlPkP1Vsn27NJTdzaVxmVAV
+         Rbi+wn2KM9YWg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Wed, Oct 16, 2019 at 12:16:02AM +0300, Dmitry Osipenko wrote:
+> CCLK stands for "CPU Clock", CPU core is running off CCLK. CCLK supports
+> multiple parents and it has internal clock divider which uses clock
+> skipping technique, meaning that CPU's voltage should correspond to the
+> parent clock rate and not CCLK. PLLX is the main CCLK parent that provides
+> clock rates above 1GHz and it has special property such that the CCLK's
+> internal divider is set into bypass mode when PLLX is set as a parent for
+> CCLK.
+> 
+> This patch forks generic Super Clock into CCLK implementation which takes
+> into account all CCLK specifics. The proper CCLK implementation is needed
+> by the upcoming Tegra20 CPUFreq driver update that will allow to utilize
+> the generic cpufreq-dt driver by moving intermediate clock handling into
+> the clock driver. Note that technically this all could be squashed into
+> clk-super, but result will be messier.
+> 
+> Note that currently all CCLKLP bits are left in the clk-super.c and only
+> CCLKG is supported by clk-tegra-super-cclk. It shouldn't be difficult
+> to move the CCLKLP bits, but CCLKLP is not used by anything in kernel
+> and thus better not to touch it for now.
 
-   ASoC: sunxi: sun4i-codec: remove unneeded semicolon
+..
 
-has been applied to the asoc tree at
+> +	super->reg = reg;
+> +	super->lock = lock;
+> +	super->width = 4;
+> +	super->flags = clk_super_flags;
+> +	super->frac_div.reg = reg + 4;
+> +	super->frac_div.shift = 16;
+> +	super->frac_div.width = 8;
+> +	super->frac_div.frac_width = 1;
+> +	super->frac_div.lock = lock;
+> +	super->frac_div.flags = TEGRA_DIVIDER_SUPER;
+> +	super->div_ops = &tegra_clk_frac_div_ops;
+> +
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+This is not right. The super clock divider is not a divider, it's a
+pulse skipper.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 24d05966b560b88d37d90e64f018af2fed888104 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Fri, 25 Oct 2019 20:08:01 +0800
-Subject: [PATCH] ASoC: sunxi: sun4i-codec: remove unneeded semicolon
-
-remove unneeded semicolon.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20191025120801.16236-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/sunxi/sun4i-codec.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
-index ee448d5e07a6..34f3e0be3058 100644
---- a/sound/soc/sunxi/sun4i-codec.c
-+++ b/sound/soc/sunxi/sun4i-codec.c
-@@ -1442,7 +1442,7 @@ static struct snd_soc_card *sun8i_a23_codec_create_card(struct device *dev)
- 	if (!aux_dev.dlc.of_node) {
- 		dev_err(dev, "Can't find analog controls for codec.\n");
- 		return ERR_PTR(-EINVAL);
--	};
-+	}
- 
- 	card->dai_link = sun4i_codec_create_link(dev, &card->num_links);
- 	if (!card->dai_link)
-@@ -1480,7 +1480,7 @@ static struct snd_soc_card *sun8i_h3_codec_create_card(struct device *dev)
- 	if (!aux_dev.dlc.of_node) {
- 		dev_err(dev, "Can't find analog controls for codec.\n");
- 		return ERR_PTR(-EINVAL);
--	};
-+	}
- 
- 	card->dai_link = sun4i_codec_create_link(dev, &card->num_links);
- 	if (!card->dai_link)
-@@ -1518,7 +1518,7 @@ static struct snd_soc_card *sun8i_v3s_codec_create_card(struct device *dev)
- 	if (!aux_dev.dlc.of_node) {
- 		dev_err(dev, "Can't find analog controls for codec.\n");
- 		return ERR_PTR(-EINVAL);
--	};
-+	}
- 
- 	card->dai_link = sun4i_codec_create_link(dev, &card->num_links);
- 	if (!card->dai_link)
--- 
-2.20.1
-
+> +	/* Data in .init is copied by clk_register(), so stack variable OK */
+> +	super->hw.init = &init;
+> +
+> +	clk = clk_register(NULL, &super->hw);
+> +	if (IS_ERR(clk))
+> +		kfree(super);
+> +
+> +	return clk;
+> +}
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index f81c10654aa9..095595a5b8a8 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -699,6 +699,10 @@ struct clk *tegra_clk_register_super_clk(const char *name,
+>  		const char * const *parent_names, u8 num_parents,
+>  		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
+>  		spinlock_t *lock);
+> +struct clk *tegra_clk_register_super_cclk(const char *name,
+> +		const char * const *parent_names, u8 num_parents,
+> +		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
+> +		spinlock_t *lock);
+>  
+>  /**
+>   * struct tegra_sdmmc_mux - switch divider with Low Jitter inputs for SDMMC
+> -- 
+> 2.23.0
+> 
