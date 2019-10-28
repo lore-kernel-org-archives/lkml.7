@@ -2,94 +2,105 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45873CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C43CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5380208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B899521744
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:54:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="FuYFnqnL"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="D809WesW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbfJ1Qu5 (ORCPT
+        id S1731722AbfJ1Qyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:50:57 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:60568 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726067AbfJ1Qu5 (ORCPT
+        Mon, 28 Oct 2019 12:54:40 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33129 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfJ1Qyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:50:57 -0400
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id C8F7C2E098C;
-        Mon, 28 Oct 2019 19:50:53 +0300 (MSK)
-Received: from myt5-6212ef07a9ec.qloud-c.yandex.net (myt5-6212ef07a9ec.qloud-c.yandex.net [2a02:6b8:c12:3b2d:0:640:6212:ef07])
-        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id mZxdmCtIYN-orlSdj0x;
-        Mon, 28 Oct 2019 19:50:53 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1572281453; bh=118Ya5YU895aT4nYO/kh6q7oC2jIJWTHCPfcXWmapWc=;
-        h=Message-ID:Date:To:From:Subject;
-        b=FuYFnqnLKpUX2GSOy1BLHIGwxcOPUIuEwmtdZGZ9mlxLsQVIWEEUt1OAWixrhlHRS
-         ccXVIAQqcs+RGFTGj7F2+/yvydAZ8ZeNIP4W+VVOW+6op7oAjp/lT3HgsmlT6u9EOD
-         1cCQHU2qmuGq4jDumK7r0FDcg/xszRXIMKMk+h4E=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
-        by myt5-6212ef07a9ec.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id jPBulGAOyt-orWO4C5u;
-        Mon, 28 Oct 2019 19:50:53 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] libtraceevent: fix parsing event argument types
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Mon, 28 Oct 2019 12:54:40 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y39so10197794qty.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 09:54:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=105SgWr73rkCfFA8RUlFBrEu0cuARq8iF9sCl/XmecQ=;
+        b=D809WesW5aARmHw7dbnNX7Sk5rQ2y+pFrIc2DgjXchK/YRj5BW4EiGysxjaZzM0uPR
+         /9aG7XNER9S+OAbZ5TBLAZ62j2BYpV+/FJ5VpVII7Uyr9q684czFkxtfNuJva1Od0PtL
+         IaAF/hWU+LH3F84U64QlD/vTsl3L3/buAJDo/CFJreOCcrl7V+bfOPoDhZTxGKE5qUqj
+         cO40NzBUbRZEsFD+AhKr1UMToVI4plOC/u1pt5dsVoe8rr89XgWEa/KRZdG30obUOUEg
+         UP8KEw7bkB5uEBk381U49i2SvxSmIFLRmICiK/jcJ98HWcSl/W/MzLnh+zDyYFLFRzyT
+         z8Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=105SgWr73rkCfFA8RUlFBrEu0cuARq8iF9sCl/XmecQ=;
+        b=Vs6QmaT7i71OZ7eg2oNYJ2JEBm3nnY1LcI11yiwZ4rd8nCLDbh95nIqNxDGtWaNsoH
+         FlJkGbsNofLe9/L3Ne8xovfF/2JAfO5RevOJ34UlTe4mocGFwVL5tL9yiNMxMpv4vyh4
+         zJJ7mmPQhuTEI7IQnXbACsUpJx4Tv208aJpd/BIu9d/xmAJ8beInCwoM74YXZguO+HTE
+         1ULLt2xhgxeTiorBc+jQVDN20rgiwdTlyEAYkTPSmFpZd8byrZbTOfJ1hnL2uuCEwC9C
+         qIAQZxUiknZ/GTXedubVntntXx/uAh8Tn1/STRhVEY5JCgCvrzPcHaYznAp8TjSmuKhp
+         Jr5w==
+X-Gm-Message-State: APjAAAWMxcY+rGD3bFJEzv76GMjJLYKEfXQLfMngMosMOASEg4z4LCyv
+        1ZOft7xQMiY+rBxSoGHI+okWeQ==
+X-Google-Smtp-Source: APXvYqw9v0xKTPSNMThwz+LbT4dlwgz4Y5n6SMjm1bFyq2tzXxRqh/VRyPO1cIf4bhhSN+4IX3grvQ==
+X-Received: by 2002:a0c:870d:: with SMTP id 13mr10631507qvh.245.1572281677617;
+        Mon, 28 Oct 2019 09:54:37 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id u189sm6080976qkd.62.2019.10.28.09.54.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 28 Oct 2019 09:54:36 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iP8Hs-0004oo-Ae; Mon, 28 Oct 2019 13:54:36 -0300
+Date:   Mon, 28 Oct 2019 13:54:36 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Lijun Ou <oulijun@huawei.com>, Wei Hu <xavier.huwei@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Tao Tian <tiantao6@huawei.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Yangyang Li <liyangyang20@huawei.com>,
+        linux-rdma@vger.kernel.org, kernel-janitors@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Mon, 28 Oct 2019 19:50:53 +0300
-Message-ID: <157228145325.7530.4974461761228678289.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+Subject: Re: [PATCH][next] RDMA/hns: fix memory leak on 'context' on error
+ return path
+Message-ID: <20191028165436.GA18470@ziepe.ca>
+References: <20191024131034.19989-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024131034.19989-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing "%o" and "%X". Ext4 events use "%o" for printing i_mode.
+On Thu, Oct 24, 2019 at 02:10:34PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently, the error return path when the call to function
+> dev->dfx->query_cqc_info fails will leak object 'context'. Fix this
+> by making the error return path via 'err' return return codes rather
+> than -EMSGSIZE, set ret appropriately for all error return paths and
+> for the memory leak now return via 'err' with -EINVAL rather than
+> just returning without freeing context.
+> 
+> Addresses-Coverity: ("Resource leak")
+> Fixes: e1c9a0dc2939 ("RDMA/hns: Dump detailed driver-specific CQ")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/infiniband/hw/hns/hns_roce_restrack.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- tools/lib/traceevent/event-parse.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Applied to for-next with the note to remove the EINVAL return
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index d948475585ce..beaa8b8c08ff 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -4395,8 +4395,10 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
- 				/* fall through */
- 			case 'd':
- 			case 'u':
--			case 'x':
- 			case 'i':
-+			case 'x':
-+			case 'X':
-+			case 'o':
- 				switch (ls) {
- 				case 0:
- 					vsize = 4;
-@@ -5078,10 +5080,11 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_e
- 
- 				/* fall through */
- 			case 'd':
-+			case 'u':
- 			case 'i':
- 			case 'x':
- 			case 'X':
--			case 'u':
-+			case 'o':
- 				if (!arg) {
- 					do_warning_event(event, "no argument match");
- 					event->flags |= TEP_EVENT_FL_FAILED;
-
+Thanks,
+Jason
