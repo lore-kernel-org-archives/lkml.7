@@ -2,229 +2,254 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF037CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE8DCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC20320659
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7263F20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 14:13:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="mLTX2WFg"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C+wt+VFf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbfJ1OKD (ORCPT
+        id S2389942AbfJ1ONk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:10:03 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33892 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728383AbfJ1OKD (ORCPT
+        Mon, 28 Oct 2019 10:13:40 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:8205 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730033AbfJ1ONj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:10:03 -0400
-Received: by mail-il1-f195.google.com with SMTP id a13so8315210ilp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=kr5iIONmkKZJVxLZgVwCjkI7onir+j8sN/xM4cByuJ0=;
-        b=mLTX2WFgA3I8a4rG062yWLJFpkzXdtX2gl/+Cb+bSgNW+lePV51gEXQtkrnw83Kfky
-         Jci05OF2/yaVajJIiQXDf2mTYMJSOv4cENARR2PvUwQgacfZwSUpf7bBWx/SOPe0851f
-         OQZStjptb461wFrqPT+uLfuMmCrdHA4cZH0TnuMY1rOHXx4Oi6PW/22u0Mxfpk2Tsl0w
-         Ks1UmMSEDqFSm9pUXJzGgh4TYzR6CHLaUI2oFeXYq3XwyYEXHpcSwrX0uD2Ygvnxwk/j
-         GHw/xsarhG+WIsBH3wrs455v06+BV6JZo3h14P4dgnW1HrYp+0qAy6F+8QRkdDq+e/KZ
-         VDmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kr5iIONmkKZJVxLZgVwCjkI7onir+j8sN/xM4cByuJ0=;
-        b=jwgugZpT78/WgHfsw8EmFjBsjpsIcglPCKTyGGCTY9YM3pxUtjn9rzyO4OjMVrUmfl
-         NaI8GHEzLgOoIBNgpjNqMOVbtbFFxoaziLUTBHq/rtKhZ+VFxKGPJaxwWFmU6s8Jx1tj
-         CKzWcoKgvU7O0cTEwVpJ0bYThDcl151Y1yQACMym7apFhKISRdhNt+zTnS5XRGzvx9W9
-         v8F1HoIg7pl112l5J8rQMxgHV8PNvrCH2eI4rOkIsN9K28fLm525yzMO6sWNQENUB4ZI
-         FllQBThkmEeaYdQXGOYf4JUuXNXfg4r6MqcnCu2icauDi+bXYk37mL+mLbt95r4iAPpe
-         sGVg==
-X-Gm-Message-State: APjAAAVwtuD+frr7UNDs3taZSeFJ9OY/Y4pquzndDCCvs0LLYeFTfIex
-        6P2LfhxEY9NYJB41yU4RAywS3w==
-X-Google-Smtp-Source: APXvYqyu2qmdiR4OZs+ChJ3ToBacy+uLfEdYJlGXR8GYIvKhPgHoVVNo6nCm3lSS7AjYt83yv3RrLA==
-X-Received: by 2002:a92:d643:: with SMTP id x3mr20836934ilp.203.1572271800046;
-        Mon, 28 Oct 2019 07:10:00 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id n3sm1660456ilm.8.2019.10.28.07.09.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 07:09:58 -0700 (PDT)
-Subject: Re: KASAN: use-after-free Read in io_uring_setup
-To:     syzbot <syzbot+6f03d895a6cd0d06187f@syzkaller.appspotmail.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <0000000000007c4f500595f35bf4@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <883b3cf9-1d92-a22f-e946-0936d09d36c0@kernel.dk>
-Date:   Mon, 28 Oct 2019 08:09:57 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 10:13:39 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5db6f7980000>; Mon, 28 Oct 2019 07:13:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 28 Oct 2019 07:13:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 28 Oct 2019 07:13:38 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
+ 2019 14:13:37 +0000
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
+ DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Mon, 28 Oct 2019 14:13:37 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 5E8D8428E8; Mon, 28 Oct 2019 16:13:35 +0200 (EET)
+Date:   Mon, 28 Oct 2019 16:13:35 +0200
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/2] soc/tegra: pmc: Query PCLK clock rate at probe
+ time
+Message-ID: <20191028141335.GB27141@pdeschrijver-desktop.Nvidia.com>
+References: <20190926191755.27131-1-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <0000000000007c4f500595f35bf4@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190926191755.27131-1-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572272024; bh=GDdUfoTlXuJ/I5h4xpmH5KabIPSUTO+CAkxSTq9NI6Y=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=C+wt+VFfd03mwv2emI5ZsD8P1D2pDOPG/XL4PkZmWtjz4Qo0C07C+GxirIP283Lmo
+         Oa+j0863L0VYSSsaQgrfOuQxiOllpQechRCyPLQysbxd5XccE7ywdMmj3XCafACKXh
+         d9l3BiY2Ksp393k2lLECaZHrIiKMix4ozWep0/4qlz2gneYLSD55ZtaPPwL9aRhd7b
+         4J3uNr6dKa3k1ScpE6WXuT2gaDJXUS2Q7yysNZXL/CJl3fHrCQe9HX9CXVf3YuH3O9
+         paZTpqIGe/LkrFWIz3QiBfFpk2IA/BZOirEkmtCWn6f/4m3xt5pUKBSAUvrVLYSsyD
+         7y/XKrmRGwWqg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/19 1:22 AM, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    5a1e843c Merge tag 'mips_fixes_5.4_3' of git://git.kernel...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10e2001f600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=420126a10fdda0f1
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6f03d895a6cd0d06187f
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d4fa97600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+6f03d895a6cd0d06187f@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in io_uring_create fs/io_uring.c:3842 [inline]
-> BUG: KASAN: use-after-free in io_uring_setup+0x1877/0x18c0
-> fs/io_uring.c:3881
-> Read of size 8 at addr ffff888082284048 by task syz-executor.5/11342
-> 
-> CPU: 1 PID: 11342 Comm: syz-executor.5 Not tainted 5.4.0-rc4+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->    __dump_stack lib/dump_stack.c:77 [inline]
->    dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->    print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
->    __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
->    kasan_report+0x12/0x20 mm/kasan/common.c:634
->    __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
->    io_uring_create fs/io_uring.c:3842 [inline]
->    io_uring_setup+0x1877/0x18c0 fs/io_uring.c:3881
->    __do_sys_io_uring_setup fs/io_uring.c:3894 [inline]
->    __se_sys_io_uring_setup fs/io_uring.c:3891 [inline]
->    __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:3891
->    do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459f39
-> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f313e126c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-> RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 0000000000459f39
-> RDX: 0000000000000000 RSI: 00000000200005c0 RDI: 000000040000000e
-> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f313e1276d4
-> R13: 00000000004c1512 R14: 00000000004d4da8 R15: 00000000ffffffff
-> 
-> Allocated by task 11342:
->    save_stack+0x23/0x90 mm/kasan/common.c:69
->    set_track mm/kasan/common.c:77 [inline]
->    __kasan_kmalloc mm/kasan/common.c:510 [inline]
->    __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
->    kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
->    kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
->    kmalloc include/linux/slab.h:556 [inline]
->    kzalloc include/linux/slab.h:690 [inline]
->    io_ring_ctx_alloc fs/io_uring.c:393 [inline]
->    io_uring_create fs/io_uring.c:3811 [inline]
->    io_uring_setup+0xec6/0x18c0 fs/io_uring.c:3881
->    __do_sys_io_uring_setup fs/io_uring.c:3894 [inline]
->    __se_sys_io_uring_setup fs/io_uring.c:3891 [inline]
->    __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:3891
->    do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Freed by task 11335:
->    save_stack+0x23/0x90 mm/kasan/common.c:69
->    set_track mm/kasan/common.c:77 [inline]
->    kasan_set_free_info mm/kasan/common.c:332 [inline]
->    __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
->    kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
->    __cache_free mm/slab.c:3425 [inline]
->    kfree+0x10a/0x2c0 mm/slab.c:3756
->    io_ring_ctx_free fs/io_uring.c:3552 [inline]
->    io_ring_ctx_wait_and_kill+0x4d7/0x6c0 fs/io_uring.c:3592
->    io_uring_release+0x42/0x50 fs/io_uring.c:3600
->    __fput+0x2ff/0x890 fs/file_table.c:280
->    ____fput+0x16/0x20 fs/file_table.c:313
->    task_work_run+0x145/0x1c0 kernel/task_work.c:113
->    tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->    exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
->    prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
->    syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
->    do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> The buggy address belongs to the object at ffff888082284000
->    which belongs to the cache kmalloc-2k of size 2048
-> The buggy address is located 72 bytes inside of
->    2048-byte region [ffff888082284000, ffff888082284800)
-> The buggy address belongs to the page:
-> page:ffffea000208a100 refcount:1 mapcount:0 mapping:ffff8880aa400e00
-> index:0x0
-> flags: 0x1fffc0000000200(slab)
-> raw: 01fffc0000000200 ffffea0002a1bc88 ffffea00023fa248 ffff8880aa400e00
-> raw: 0000000000000000 ffff888082284000 0000000100000001 0000000000000000
-> page dumped because: kasan: bad access detected
-> 
-> Memory state around the buggy address:
->    ffff888082283f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->    ffff888082283f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->> ffff888082284000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                                                 ^
->    ffff888082284080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->    ffff888082284100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
+Acked-By  Peter De Schrijver <pdeschrijver@nvidia.com>
 
-Interesting, looks like a malicious case that attempts to close the
-fd as soon as it's installed. As a result of that, the rest of the
-setup will be done on a ring that's already torn down. The below should
-fix that.
-
-Totally untested, haven't tried the reproducer yet.
-
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index ba1431046c98..749637ca9cf7 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -3821,6 +3821,12 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p)
- 	ctx->account_mem = account_mem;
- 	ctx->user = user;
- 
-+	/*
-+	 * Grab an initial reference to the ctx, so we ensure we have one
-+	 * by the time the fd is installed.
-+	 */
-+	percpu_ref_get(&ctx->refs);
-+
- 	ret = io_allocate_scq_urings(ctx, p);
- 	if (ret)
- 		goto err;
-@@ -3851,8 +3857,10 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p)
- 	p->cq_off.cqes = offsetof(struct io_rings, cqes);
- 
- 	p->features = IORING_FEAT_SINGLE_MMAP;
-+	percpu_ref_put(&ctx->refs);
- 	return ret;
- err:
-+	percpu_ref_put(&ctx->refs);
- 	io_ring_ctx_wait_and_kill(ctx);
- 	return ret;
- }
-
--- 
-Jens Axboe
-
+On Thu, Sep 26, 2019 at 10:17:54PM +0300, Dmitry Osipenko wrote:
+> It is possible to get a lockup if kernel decides to enter LP2 cpuidle
+> from some clk-notifier, in that case CCF's "prepare" mutex is kept locked
+> and thus clk_get_rate(pclk) blocks on the same mutex with interrupts being
+> disabled, hanging machine.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+> 
+> Changelog:
+> 
+> v5: Clk notifier now takes powergates_lock to avoid potential racing with
+>     tegra_io_pad_*().
+> 
+>     The original fallback to 100MHz when clk_get_rate() fails is preserved
+>     now.
+> 
+> v4: Added clk-notifier to track PCLK rate-changes, which may become useful
+>     in the future. That's done in response to v3 review comment from Peter
+>     De Schrijver.
+> 
+>     Now properly handling case where clk pointer is intentionally NULL on
+>     the driver's probe.
+> 
+> v3: Changed commit's message because I actually recalled what was the
+>     initial reason for the patch, since the problem reoccurred once again.
+> 
+> v2: Addressed review comments that were made by Jon Hunter to v1 by
+>     not moving the memory barrier, replacing one missed clk_get_rate()
+>     with pmc->rate, handling possible clk_get_rate() error on probe and
+>     slightly adjusting the commits message.
+> 
+>  drivers/soc/tegra/pmc.c | 71 ++++++++++++++++++++++++++++++++---------
+>  1 file changed, 56 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 9f9c1c677cf4..ee39ded6bc7b 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -309,6 +309,7 @@ static const char * const tegra210_reset_sources[] = {
+>   * @pctl_dev: pin controller exposed by the PMC
+>   * @domain: IRQ domain provided by the PMC
+>   * @irq: chip implementation for the IRQ domain
+> + * @clk_nb: pclk clock changes handler
+>   */
+>  struct tegra_pmc {
+>  	struct device *dev;
+> @@ -344,6 +345,8 @@ struct tegra_pmc {
+>  
+>  	struct irq_domain *domain;
+>  	struct irq_chip irq;
+> +
+> +	struct notifier_block clk_nb;
+>  };
+>  
+>  static struct tegra_pmc *pmc = &(struct tegra_pmc) {
+> @@ -1192,7 +1195,7 @@ static int tegra_io_pad_prepare(struct tegra_pmc *pmc, enum tegra_io_pad id,
+>  		return err;
+>  
+>  	if (pmc->clk) {
+> -		rate = clk_get_rate(pmc->clk);
+> +		rate = pmc->rate;
+>  		if (!rate) {
+>  			dev_err(pmc->dev, "failed to get clock rate\n");
+>  			return -ENODEV;
+> @@ -1433,6 +1436,7 @@ void tegra_pmc_set_suspend_mode(enum tegra_suspend_mode mode)
+>  void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>  {
+>  	unsigned long long rate = 0;
+> +	u64 ticks;
+>  	u32 value;
+>  
+>  	switch (mode) {
+> @@ -1441,7 +1445,7 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>  		break;
+>  
+>  	case TEGRA_SUSPEND_LP2:
+> -		rate = clk_get_rate(pmc->clk);
+> +		rate = pmc->rate;
+>  		break;
+>  
+>  	default:
+> @@ -1451,21 +1455,15 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>  	if (WARN_ON_ONCE(rate == 0))
+>  		rate = 100000000;
+>  
+> -	if (rate != pmc->rate) {
+> -		u64 ticks;
+> -
+> -		ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
+> -		do_div(ticks, USEC_PER_SEC);
+> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
+> -
+> -		ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
+> -		do_div(ticks, USEC_PER_SEC);
+> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+> +	ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
+> +	do_div(ticks, USEC_PER_SEC);
+> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
+>  
+> -		wmb();
+> +	ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
+> +	do_div(ticks, USEC_PER_SEC);
+> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+>  
+> -		pmc->rate = rate;
+> -	}
+> +	wmb();
+>  
+>  	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>  	value &= ~PMC_CNTRL_SIDE_EFFECT_LP0;
+> @@ -2019,6 +2017,30 @@ static int tegra_pmc_irq_init(struct tegra_pmc *pmc)
+>  	return 0;
+>  }
+>  
+> +static int tegra_pmc_clk_notify_cb(struct notifier_block *nb,
+> +				   unsigned long action, void *ptr)
+> +{
+> +	struct tegra_pmc *pmc = container_of(nb, struct tegra_pmc, clk_nb);
+> +	struct clk_notifier_data *data = ptr;
+> +
+> +	switch (action) {
+> +	case PRE_RATE_CHANGE:
+> +		mutex_lock(&pmc->powergates_lock);
+> +		break;
+> +	case POST_RATE_CHANGE:
+> +		pmc->rate = data->new_rate;
+> +		/* fall through */
+> +	case ABORT_RATE_CHANGE:
+> +		mutex_unlock(&pmc->powergates_lock);
+> +		break;
+> +	default:
+> +		WARN_ON_ONCE(1);
+> +		return notifier_from_errno(-EINVAL);
+> +	}
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+>  static int tegra_pmc_probe(struct platform_device *pdev)
+>  {
+>  	void __iomem *base;
+> @@ -2082,6 +2104,23 @@ static int tegra_pmc_probe(struct platform_device *pdev)
+>  		pmc->clk = NULL;
+>  	}
+>  
+> +	/*
+> +	 * PCLK clock rate can't be retrieved using CLK API because it
+> +	 * causes lockup if CPU enters LP2 idle state from some other
+> +	 * CLK notifier, hence we're caching the rate's value locally.
+> +	 */
+> +	if (pmc->clk) {
+> +		pmc->clk_nb.notifier_call = tegra_pmc_clk_notify_cb;
+> +		err = clk_notifier_register(pmc->clk, &pmc->clk_nb);
+> +		if (err) {
+> +			dev_err(&pdev->dev,
+> +				"failed to register clk notifier\n");
+> +			return err;
+> +		}
+> +
+> +		pmc->rate = clk_get_rate(pmc->clk);
+> +	}
+> +
+>  	pmc->dev = &pdev->dev;
+>  
+>  	tegra_pmc_init(pmc);
+> @@ -2133,6 +2172,8 @@ static int tegra_pmc_probe(struct platform_device *pdev)
+>  cleanup_sysfs:
+>  	device_remove_file(&pdev->dev, &dev_attr_reset_reason);
+>  	device_remove_file(&pdev->dev, &dev_attr_reset_level);
+> +	clk_notifier_unregister(pmc->clk, &pmc->clk_nb);
+> +
+>  	return err;
+>  }
+>  
+> -- 
+> 2.23.0
+> 
