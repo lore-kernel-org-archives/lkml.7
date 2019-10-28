@@ -2,138 +2,62 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD91CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD913CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA98208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572304977;
-	bh=EF3dpHK4pg7pwvoigV06vGz0l4QtJ4OUEpMzNif67vo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=NjoPy0sZvs5RR5QCYoE0RRUZgImLKJEvrCR6thPsIKRyWozbM5v1r8xa9EuFqfDOk
-	 yTJhvtlEqEQCuIiEnEBkMONnFWeUT+nAq2zlURcXNadF4dVuHqPlSNwZfZsGX1kzpg
-	 h1pXDm/eqq1Ki43Tds1UavjDwoAeqPXc5gqALTFo=
+	by mail.kernel.org (Postfix) with ESMTP id 93506208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbfJ1XWz (ORCPT
+        id S1731302AbfJ1XYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 19:22:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbfJ1XWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 19:22:55 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F2BF208C0;
-        Mon, 28 Oct 2019 23:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572304973;
-        bh=EF3dpHK4pg7pwvoigV06vGz0l4QtJ4OUEpMzNif67vo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=0zJaP2YlmqoKKDO5r+bJo7bwQ/zhEEqsjeamRB0iZnCxE4HHqgU5mrI65bGcwtLgp
-         pHQJvjNuT323U7owH7/YFLloIbjqeGU8jpQme6sGjyMWL+ZITWEalGJkeCZVTWGt4I
-         ox+KLd72GesflBEVj0KiF7HdQ5iTd+YjVTGenpDE=
-Date:   Mon, 28 Oct 2019 18:22:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v9 5/8] PCI/AER: Allow clearing Error Status Register in
- FF mode
-Message-ID: <20191028232251.GA205542@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6de212ec82651ca6361e21926497a26c590d037.1570145778.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 28 Oct 2019 19:24:12 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:46546 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfJ1XYM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 19:24:12 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3910E14BE91D7;
+        Mon, 28 Oct 2019 16:24:11 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 16:24:10 -0700 (PDT)
+Message-Id: <20191028.162410.844978847156294593.davem@davemloft.net>
+To:     benh@kernel.crashing.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vijaykhemka@fb.com, openbmc@lists.ozlabs.org, joel@jms.id.au,
+        linux-aspeed@lists.ozlabs.org
+Subject: Re: [PATCH] net: ethernet: ftgmac100: Fix DMA coherency issue with
+ SW checksum
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <572a7d510ace5e5a5ba41c4774d330133291c82a.camel@kernel.crashing.org>
+References: <572a7d510ace5e5a5ba41c4774d330133291c82a.camel@kernel.crashing.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 28 Oct 2019 16:24:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 04:39:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> As per PCI firmware specification r3.2 Downstream Port Containment
-> Related Enhancements ECN, sec 4.5.1, table 4-6,
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Date: Fri, 25 Oct 2019 13:47:24 +1100
 
-That table adds bit 7, "DPC config control" to the _OSC control field
-and talks about modifying registers in the DPC capability.
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Fixes: 05690d633f30 ftgmac100: Upgrade to NETIF_F_HW_CSUM
 
-It doesn't say anything about firmware-first or about the OS modifying
-registers in the AER capability.  But this patch doesn't do anything
-related to DPC or _OSC.
+Please put the commit header string inside double quotes and parenthesis
+(" ")
 
-> Error Disconnect
-> Recover (EDR) support allows OS to handle error recovery and
-> clearing Error Registers even in FF mode. So remove FF mode checks in
-> pci_cleanup_aer_uncorrect_error_status(), pci_aer_clear_fatal_status()
-> and pci_cleanup_aer_error_status_regs() functions.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Acked-by: Keith Busch <keith.busch@intel.com>
-> ---
->  drivers/pci/pcie/aer.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index b45bc47d04fe..e1509bb900c5 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -383,9 +383,6 @@ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
->  	if (!pos)
->  		return -EIO;
->  
-> -	if (pcie_aer_get_firmware_first(dev))
-> -		return -EIO;
-> -
->  	/* Clear status bits for ERR_NONFATAL errors only */
->  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
->  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
-> @@ -406,9 +403,6 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
->  	if (!pos)
->  		return;
->  
-> -	if (pcie_aer_get_firmware_first(dev))
-> -		return;
-> -
->  	/* Clear status bits for ERR_FATAL errors only */
->  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
->  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
+> CC: stable@vger.kernel.org [v4.12+]
 
-> @@ -430,9 +424,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
->  	if (!pos)
->  		return -EIO;
->  
-> -	if (pcie_aer_get_firmware_first(dev))
-> -		return -EIO;
-> -
->  	port_type = pci_pcie_type(dev);
->  	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
->  		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
-> @@ -455,7 +446,8 @@ void pci_aer_init(struct pci_dev *dev)
->  	if (dev->aer_cap)
->  		dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
->  
-> -	pci_cleanup_aer_error_status_regs(dev);
-> +	if (!pcie_aer_get_firmware_first(dev))
-> +		pci_cleanup_aer_error_status_regs(dev);
+Do not CC: stable for networking submissions as per the netdev FAQ.
 
-This effectively moves the "if (pcie_aer_get_firmware_first())" check
-from pci_cleanup_aer_error_status_regs() into one of the callers.  But
-there are two other callers: pci_aer_init() and pci_restore_state().
-Do they need the change, or do you want to cleanup the AER error
-registers there, but not here?
-
->  }
->  
->  void pci_aer_exit(struct pci_dev *dev)
-> -- 
-> 2.21.0
-> 
+All fixed up, and queued up for -stable, thanks Ben.
