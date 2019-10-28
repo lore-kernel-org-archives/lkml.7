@@ -2,349 +2,157 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51719CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6705BCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2786D21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C492208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 16:12:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eipmSO+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390813AbfJ1QJY (ORCPT
+        id S2390823AbfJ1QM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 12:09:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:62407 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730787AbfJ1QJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 12:09:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 09:09:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,240,1569308400"; 
-   d="scan'208";a="374268350"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 28 Oct 2019 09:09:23 -0700
-Date:   Mon, 28 Oct 2019 09:13:46 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v7 11/11] iommu/vt-d: Add svm/sva invalidate function
-Message-ID: <20191028091346.07fb3134@jacob-builder>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDE06@SHSMSX104.ccr.corp.intel.com>
-References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1571946904-86776-12-git-send-email-jacob.jun.pan@linux.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDE06@SHSMSX104.ccr.corp.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 28 Oct 2019 12:12:26 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:44731 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730436AbfJ1QMZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 12:12:25 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9SFu2aq023368;
+        Mon, 28 Oct 2019 17:11:57 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=CM9gDRKKxbqasjyuOfTE0X/UG/yfSLvoQfkO2xJSMkU=;
+ b=eipmSO+CXc1j0cU38m0HAn+OGIpV1ILX9Fy2IvNLSEBTrYS/gV0WHkrWkm/LIFr1fG1Z
+ M8bU2jkArGGi4gcvN97WQyirUUmS90WM2lHtAU62eRCzZxajl0JKf3CBXGUe9mkaaLQi
+ 1bb9ZREKkAcY0ptcyuj8vGAVvY7WlvjbUz0AQmK2jvrD1UiIE7KTrPVSdl6GUJd299Vj
+ sCQ87vZ+YjvZYV+j6JG4vexoM+Ys4TC8nwgTIUF4kR8iQNzfa3RhB89axWhgXvY0U53S
+ GS0Z4k1A1XsN/KTsSUK6UAjzaAaqfLevykid0cJaRATAoH4//DIF9AmFyXUg2GDUN7xP 8g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2vvbww33yj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Oct 2019 17:11:57 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1F3D3100034;
+        Mon, 28 Oct 2019 17:11:57 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0EE9F2B1E73;
+        Mon, 28 Oct 2019 17:11:57 +0100 (CET)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 28 Oct
+ 2019 17:11:56 +0100
+Received: from localhost (10.48.0.192) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 28 Oct 2019 17:11:56 +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <jic23@kernel.org>, <robh+dt@kernel.org>
+CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/2] iio: adc: stm32: allow to tune analog clock
+Date:   Mon, 28 Oct 2019 17:11:48 +0100
+Message-ID: <1572279108-25916-3-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572279108-25916-1-git-send-email-fabrice.gasnier@st.com>
+References: <1572279108-25916-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.192]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-28_06:2019-10-28,2019-10-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 25 Oct 2019 07:27:26 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+Add new optional dt property to tune analog clock prescaler.
+Driver looks for optional "st,max-clk-rate-hz", then computes
+best approximation below that rate, using ADC internal prescaler.
 
-> > From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
-> > Sent: Friday, October 25, 2019 3:55 AM
-> > 
-> > When Shared Virtual Address (SVA) is enabled for a guest OS via
-> > vIOMMU, we need to provide invalidation support at IOMMU API and
-> > driver
-> > level. This patch adds Intel VT-d specific function to implement
-> > iommu passdown invalidate API for shared virtual address.
-> > 
-> > The use case is for supporting caching structure invalidation
-> > of assigned SVM capable devices. Emulated IOMMU exposes queue
-> > invalidation capability and passes down all descriptors from the
-> > guest to the physical IOMMU.  
-> 
-> specifically you may clarify that only invalidations related to
-> first-level page table is passed down, because it's guest 
-> structure being bound to the first-level. other descriptors
-> are emulated or translated into other necessary operations.
-> 
-Sounds good, will do.
-> > 
-> > The assumption is that guest to host device ID mapping should be
-> > resolved prior to calling IOMMU driver. Based on the device handle,
-> > host IOMMU driver can replace certain fields before submit to the
-> > invalidation queue.  
-> 
-> what is device ID? it's a bit confusing term here.
-> 
-Device ID meant requester IDs, or guest to host PCI BDF mapping should
-be resolved such that passdown invalidation is targeting host PCI
-device. I will rephrase.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-> > ---
-> >  drivers/iommu/intel-iommu.c | 170
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 170 insertions(+)
-> > 
-> > diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 5fab32fbc4b4..a73e76d6457a
-> > 100644 --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -5491,6 +5491,175 @@ static void
-> > intel_iommu_aux_detach_device(struct iommu_domain *domain,
-> >  	aux_domain_remove_dev(to_dmar_domain(domain), dev);
-> >  }
-> > 
-> > +/*
-> > + * 2D array for converting and sanitizing IOMMU generic TLB
-> > granularity to
-> > + * VT-d granularity. Invalidation is typically included in the
-> > unmap operation
-> > + * as a result of DMA or VFIO unmap. However, for assigned device
-> > where guest
-> > + * could own the first level page tables without being shadowed by
-> > QEMU. In
-> > + * this case there is no pass down unmap to the host IOMMU as a
-> > result of unmap
-> > + * in the guest. Only invalidations are trapped and passed down.
-> > + * In all cases, only first level TLB invalidation (request with
-> > PASID) can be
-> > + * passed down, therefore we do not include IOTLB granularity for
-> > request
-> > + * without PASID (second level).
-> > + *
-> > + * For an example, to find the VT-d granularity encoding for IOTLB
-> > + * type and page selective granularity within PASID:
-> > + * X: indexed by iommu cache type
-> > + * Y: indexed by enum iommu_inv_granularity
-> > + * [IOMMU_CACHE_INV_TYPE_IOTLB][IOMMU_INV_GRANU_ADDR]
-> > + *
-> > + * Granu_map array indicates validity of the table. 1: valid, 0:
-> > invalid
-> > + *
-> > + */
-> > +const static int
-> > inv_type_granu_map[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRAN
-> > U_NR] = {
-> > +	/* PASID based IOTLB, support PASID selective and page
-> > selective */
-> > +	{0, 1, 1},
-> > +	/* PASID based dev TLBs, only support all PASIDs or single
-> > PASID */
-> > +	{1, 1, 0},  
-> 
-> I forgot previous discussion. is it necessary to pass down dev TLB
-> invalidation requests? Can it be handled by host iOMMU driver
-> automatically?
-> 
-> > +	/* PASID cache */
-> > +	{1, 1, 0}
-> > +};
-> > +
-> > +const static u64
-> > inv_type_granu_table[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRAN
-> > U_NR] = {
-> > +	/* PASID based IOTLB */
-> > +	{0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
-> > +	/* PASID based dev TLBs */
-> > +	{QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},
-> > +	/* PASID cache */
-> > +	{QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},
-> > +};
-> > +
-> > +static inline int to_vtd_granularity(int type, int granu, u64
-> > *vtd_granu) +{
-> > +	if (type >= IOMMU_CACHE_INV_TYPE_NR || granu >=
-> > IOMMU_INV_GRANU_NR ||
-> > +		!inv_type_granu_map[type][granu])
-> > +		return -EINVAL;
-> > +
-> > +	*vtd_granu = inv_type_granu_table[type][granu];
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
-> > +{
-> > +	u64 nr_pages = (granu_size * nr_granules) >>
-> > VTD_PAGE_SHIFT; +
-> > +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9
-> > for 2MB, etc.
-> > +	 * IOMMU cache invalidate API passes granu_size in bytes,
-> > and number of
-> > +	 * granu size in contiguous memory.
-> > +	 */
-> > +	return order_base_2(nr_pages);
-> > +}
-> > +
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
-> > +		struct device *dev, struct
-> > iommu_cache_invalidate_info *inv_info)
-> > +{
-> > +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
-> > +	struct device_domain_info *info;
-> > +	struct intel_iommu *iommu;
-> > +	unsigned long flags;
-> > +	int cache_type;
-> > +	u8 bus, devfn;
-> > +	u16 did, sid;
-> > +	int ret = 0;
-> > +	u64 size;
-> > +
-> > +	if (!inv_info || !dmar_domain ||
-> > +		inv_info->version !=
-> > IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
-> > +		return -EINVAL;
-> > +
-> > +	if (!dev || !dev_is_pci(dev))
-> > +		return -ENODEV;
-> > +
-> > +	iommu = device_to_iommu(dev, &bus, &devfn);
-> > +	if (!iommu)
-> > +		return -ENODEV;
-> > +
-> > +	spin_lock_irqsave(&device_domain_lock, flags);
-> > +	spin_lock(&iommu->lock);
-> > +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus,
-> > devfn);
-> > +	if (!info) {
-> > +		ret = -EINVAL;
-> > +		goto out_unlock;
-> > +	}
-> > +	did = dmar_domain->iommu_did[iommu->seq_id];
-> > +	sid = PCI_DEVID(bus, devfn);
-> > +	size = to_vtd_size(inv_info->addr_info.granule_size,
-> > inv_info-  
-> > >addr_info.nb_granules);  
-> > +
-> > +	for_each_set_bit(cache_type, (unsigned long
-> > *)&inv_info->cache, IOMMU_CACHE_INV_TYPE_NR) {
-> > +		u64 granu = 0;
-> > +		u64 pasid = 0;
-> > +
-> > +		ret = to_vtd_granularity(cache_type,
-> > inv_info->granularity, &granu);
-> > +		if (ret) {
-> > +			pr_err("Invalid cache type and granu
-> > combination %d/%d\n", cache_type,
-> > +				inv_info->granularity);
-> > +			break;
-> > +		}
-> > +
-> > +		/* PASID is stored in different locations based on
-> > granularity */
-> > +		if (inv_info->granularity == IOMMU_INV_GRANU_PASID)
-> > +			pasid = inv_info->pasid_info.pasid;
-> > +		else if (inv_info->granularity ==
-> > IOMMU_INV_GRANU_ADDR)
-> > +			pasid = inv_info->addr_info.pasid;
-> > +		else {
-> > +			pr_err("Cannot find PASID for given cache
-> > type and granularity\n");
-> > +			break;
-> > +		}
-> > +
-> > +		switch (BIT(cache_type)) {
-> > +		case IOMMU_CACHE_INV_TYPE_IOTLB:
-> > +			if (size && (inv_info->addr_info.addr &
-> > ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
-> > +				pr_err("Address out of range,
-> > 0x%llx, size order %llu\n",
-> > +					inv_info->addr_info.addr,
-> > size);
-> > +				ret = -ERANGE;
-> > +				goto out_unlock;
-> > +			}
-> > +
-> > +			qi_flush_piotlb(iommu, did,
-> > mm_to_dma_pfn(inv_info->addr_info.addr),
-> > +					pasid, size, granu,
-> > inv_info-  
-> > >addr_info.flags & IOMMU_INV_ADDR_FLAGS_LEAF);  
-> > +
-> > +			/*
-> > +			 * Always flush device IOTLB if ATS is
-> > enabled since guest
-> > +			 * vIOMMU exposes CM = 1, no device IOTLB
-> > flush will be passed
-> > +			 * down.
-> > +			 */
-> > +			if (info->ats_enabled) {
-> > +				qi_flush_dev_piotlb(iommu, sid,
-> > info->pfsid,
-> > +						pasid,
-> > info->ats_qdep,
-> > +
-> > inv_info->addr_info.addr, size,
-> > +						granu);
-> > +			}
-> > +			break;
-> > +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
-> > +			if (info->ats_enabled) {
-> > +				qi_flush_dev_piotlb(iommu, sid,
-> > info->pfsid,
-> > +
-> > inv_info->addr_info.pasid, info->ats_qdep,
-> > +
-> > inv_info->addr_info.addr, size,
-> > +						granu);
-> > +			} else
-> > +				pr_warn("Passdown device IOTLB
-> > flush w/o ATS!\n");
-> > +
-> > +			break;
-> > +		case IOMMU_CACHE_INV_TYPE_PASID:
-> > +			qi_flush_pasid_cache(iommu, did, granu,
-> > inv_info-  
-> > >pasid_info.pasid);  
-> > +
-> > +			break;
-> > +		default:
-> > +			dev_err(dev, "Unsupported IOMMU
-> > invalidation type %d\n",
-> > +				cache_type);
-> > +			ret = -EINVAL;
-> > +		}
-> > +	}
-> > +out_unlock:
-> > +	spin_unlock(&iommu->lock);
-> > +	spin_unlock_irqrestore(&device_domain_lock, flags);
-> > +
-> > +	return ret;
-> > +}
-> > +#endif
-> > +
-> >  static int intel_iommu_map(struct iommu_domain *domain,
-> >  			   unsigned long iova, phys_addr_t hpa,
-> >  			   size_t size, int iommu_prot)
-> > @@ -6027,6 +6196,7 @@ const struct iommu_ops intel_iommu_ops = {
-> >  	.is_attach_deferred	=
-> > intel_iommu_is_attach_deferred, .pgsize_bitmap		=
-> > INTEL_IOMMU_PGSIZES, #ifdef CONFIG_INTEL_IOMMU_SVM
-> > +	.cache_invalidate	= intel_iommu_sva_invalidate,
-> >  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
-> >  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
-> >  #endif
-> > --
-> > 2.7.4  
-> 
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/iio/adc/stm32-adc-core.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-[Jacob Pan]
+diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+index 20c626c..6537f4f 100644
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -79,6 +79,7 @@ struct stm32_adc_priv_cfg {
+  * @domain:		irq domain reference
+  * @aclk:		clock reference for the analog circuitry
+  * @bclk:		bus clock common for all ADCs, depends on part used
++ * @max_clk_rate:	desired maximum clock rate
+  * @booster:		booster supply reference
+  * @vdd:		vdd supply reference
+  * @vdda:		vdda analog supply reference
+@@ -95,6 +96,7 @@ struct stm32_adc_priv {
+ 	struct irq_domain		*domain;
+ 	struct clk			*aclk;
+ 	struct clk			*bclk;
++	u32				max_clk_rate;
+ 	struct regulator		*booster;
+ 	struct regulator		*vdd;
+ 	struct regulator		*vdda;
+@@ -141,7 +143,7 @@ static int stm32f4_adc_clk_sel(struct platform_device *pdev,
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(stm32f4_pclk_div); i++) {
+-		if ((rate / stm32f4_pclk_div[i]) <= priv->cfg->max_clk_rate_hz)
++		if ((rate / stm32f4_pclk_div[i]) <= priv->max_clk_rate)
+ 			break;
+ 	}
+ 	if (i >= ARRAY_SIZE(stm32f4_pclk_div)) {
+@@ -230,7 +232,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+ 			if (ckmode)
+ 				continue;
+ 
+-			if ((rate / div) <= priv->cfg->max_clk_rate_hz)
++			if ((rate / div) <= priv->max_clk_rate)
+ 				goto out;
+ 		}
+ 	}
+@@ -250,7 +252,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+ 		if (!ckmode)
+ 			continue;
+ 
+-		if ((rate / div) <= priv->cfg->max_clk_rate_hz)
++		if ((rate / div) <= priv->max_clk_rate)
+ 			goto out;
+ 	}
+ 
+@@ -655,6 +657,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct resource *res;
++	u32 max_rate;
+ 	int ret;
+ 
+ 	if (!pdev->dev.of_node)
+@@ -731,6 +734,13 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	priv->common.vref_mv = ret / 1000;
+ 	dev_dbg(&pdev->dev, "vref+=%dmV\n", priv->common.vref_mv);
+ 
++	ret = of_property_read_u32(pdev->dev.of_node, "st,max-clk-rate-hz",
++				   &max_rate);
++	if (!ret)
++		priv->max_clk_rate = min(max_rate, priv->cfg->max_clk_rate_hz);
++	else
++		priv->max_clk_rate = priv->cfg->max_clk_rate_hz;
++
+ 	ret = priv->cfg->clk_sel(pdev, priv);
+ 	if (ret < 0)
+ 		goto err_hw_stop;
+-- 
+2.7.4
+
