@@ -2,120 +2,110 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F684CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C490ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B21208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E10208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 08:27:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sytDF/Lp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mKkzgyJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733296AbfJ1I1Z (ORCPT
+        id S1733307AbfJ1I15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 04:27:25 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35844 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731531AbfJ1I1Z (ORCPT
+        Mon, 28 Oct 2019 04:27:57 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39054 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731531AbfJ1I14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 04:27:25 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v24so10319464ljj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 01:27:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S/zfjSlN7u+hfp01M44eaJLCnlc5zQ4qw+KWC99u9BM=;
-        b=sytDF/LpIKW8EXGur4LbXrE+yh/7bGUeOhM7ESSOCmAeRXGFamQM2GqvB/dnrnhOOz
-         HJ1oawodXFoA4G9SydsaWIwhhP5dUu4+2FLWegqBQIRpUPaGHS/J45+LmfVtYndtu/2U
-         SOycRGXSLdPZ3Y/M3qEMaCUHMPn3Q+v2bJoADHxDuRiLE/lDAkyLmefqDArHLxZTnDLL
-         QXFvKSwImjfWrIldauQ3y6ybc/8trdmlTlBijYZoR9FlTEbUoJGU04JuPkhn0irc6mSF
-         VSppXpahjxIP7jMZgJLfy5Avdx+ofpu3y3PJ5q/P+3lTW1o2JRQ3uFL3RWbeR6hf6gpy
-         WbbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S/zfjSlN7u+hfp01M44eaJLCnlc5zQ4qw+KWC99u9BM=;
-        b=jzRuPZNENlsDrXG+GPoFxTGJL4fshS4oajRTAij32bGZJKZY0aNkL4YOOcrX09DXKN
-         MTslA3NYTgMmzzZlEahP+06jxOzM9DKtT+yAUuvfG9SPVXYPNpCQbfbqi1SEnRxx0Ijg
-         flmA5PtWGZ4fxLsrbIA0NB6X1312GF3lvrE4YWaDAzzJuCBbqlC9cdAzVS8Rr2CT8Cw+
-         2nRAaiMhOpHoSSbjhUUWyouSlWscWbZcykNYwGeadHPlx9bdaeZNikjUk+n0cQnqbuoT
-         ZW6Cf20m6wobaeKsR/AaTk1knE7WEEWhKrnzk9y3ffuo/SLgkQYwN5VaCGHbVjBFayin
-         a7qA==
-X-Gm-Message-State: APjAAAVySNoBoE6tod6tX/7y68DVCRxmn1aAwN4G0c5xyQ8BMO0WVZ1A
-        LYcvoLlvUlvVsmCcbIgsh0T4xah3h+Wbc+NDJD/cjA==
-X-Google-Smtp-Source: APXvYqzExEgAonVIK0s8drjd9/+rKx6/flub9iWkh6nWmYDyeMrqk42lhkg/vgs25eYx/quu0eDOEroi+OfIFTN5TNA=
-X-Received: by 2002:a2e:a415:: with SMTP id p21mr10848136ljn.59.1572251241736;
- Mon, 28 Oct 2019 01:27:21 -0700 (PDT)
+        Mon, 28 Oct 2019 04:27:56 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S8Oakt028354;
+        Mon, 28 Oct 2019 08:27:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=7o48n+uEPUganz3JjAED7CtR2SsbStGSOoNK4sq0Wgo=;
+ b=mKkzgyJyfrjtOQ45McVAuIaKQEtWTPjrw9bZpKYgSLIQBUSFKkfJ+7xAhCmY7YmCZyLc
+ cCRwJ+zlyLhnPYAc9OrIswmt6Bg791yEl2f+YZ+6E6heT7LP41rVul+77uJBMT/eBt2e
+ VcHe8/PjhRO96XQ1W5r+bpLveCAKHCummfcLMEgqpwyNBCGEInGlTkfkr9Ce67MlpfUd
+ o7KuhhFXAO/MPB7cTUw7+6zRqvowMuv+QzE6/s/QEx6iCG5fmj7t7rK/w6qUacmfzgCI
+ bGoYSZCSvnUcBxqLnEOdjU0YJ/quxJsKeO8REN8d9BSC4K9FlMJ+NAlFbBSvKs7iEBZX bQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2vvdju0cfu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 08:27:47 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9S8Ou1T131667;
+        Mon, 28 Oct 2019 08:27:46 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2vvykrb2uq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 08:27:46 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9S8Ribl012667;
+        Mon, 28 Oct 2019 08:27:44 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 28 Oct 2019 01:27:44 -0700
+Date:   Mon, 28 Oct 2019 11:27:32 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Cristiane Naves <cristianenavescardoso09@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH] staging: octeon: Remove unneeded variable
+Message-ID: <20191028082732.GE1944@kadam>
+References: <20191026222453.GA14562@cristiane-Inspiron-5420>
 MIME-Version: 1.0
-References: <cover.1571722391.git.baolin.wang@linaro.org> <487c2e45810c6dc6485638474136e375cb567807.1571722391.git.baolin.wang@linaro.org>
- <50696230-75f4-3de4-7424-c33d531ee159@intel.com>
-In-Reply-To: <50696230-75f4-3de4-7424-c33d531ee159@intel.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Mon, 28 Oct 2019 16:27:09 +0800
-Message-ID: <CAMz4kuJAwV7f=pjUqs1nO3+L5NbcwCQrCi-HGUPPXgp7rWUs=g@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] mmc: host: sdhci: Add request_done ops for struct sdhci_ops
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        baolin.wang7@gmail.com, linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191026222453.GA14562@cristiane-Inspiron-5420>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910280085
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9423 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910280085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+On Sat, Oct 26, 2019 at 07:24:53PM -0300, Cristiane Naves wrote:
+> Remove unneeded variable used to store return value. Issue found by
+> coccicheck.
+> 
+> Signed-off-by: Cristiane Naves <cristianenavescardoso09@gmail.com>
+> ---
+>  drivers/staging/octeon/octeon-stubs.h | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
+> index b07f5e2..d53bd801 100644
+> --- a/drivers/staging/octeon/octeon-stubs.h
+> +++ b/drivers/staging/octeon/octeon-stubs.h
+> @@ -1387,9 +1387,7 @@ static inline cvmx_pko_status_t cvmx_pko_send_packet_finish(uint64_t port,
+>  		uint64_t queue, union cvmx_pko_command_word0 pko_command,
+>  		union cvmx_buf_ptr packet, cvmx_pko_lock_t use_locking)
+>  {
+> -	cvmx_pko_status_t ret = 0;
+> -
+> -	return ret;
+> +	return 0;
 
-On Mon, 28 Oct 2019 at 16:20, Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 22/10/19 8:58 AM, Baolin Wang wrote:
-> > Add request_done ops for struct sdhci_ops as a preparation in case some
-> > host controllers have different method to complete one request, such as
-> > supporting request completion of MMC software queue.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > ---
-> >  drivers/mmc/host/sdhci.c |   12 ++++++++++--
-> >  drivers/mmc/host/sdhci.h |    2 ++
-> >  2 files changed, 12 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index b056400..850241f 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -2729,7 +2729,10 @@ static bool sdhci_request_done(struct sdhci_host *host)
-> >
-> >       spin_unlock_irqrestore(&host->lock, flags);
-> >
-> > -     mmc_request_done(host->mmc, mrq);
-> > +     if (host->ops->request_done)
-> > +             host->ops->request_done(host, mrq);
->
-> For hsq, couldn't this result in sdhci_request() being called interrupt
-> context here.
+What is the point of this function anyway?
 
-Right, now it did not support.
+regards,
+dan carpenter
 
->
-> To prevent that you would need to add a condition to sdhci_defer_done() so
-> it always defers when using hsq.
-
-Yes, but now the condition can be matched in sdhci_defer_done()  when
-using hsq. So no need to worry that the sdhci_request() will be called
-in interrupt
-context in this patch set. Thanks.
-
--- 
-Baolin Wang
-Best Regards
