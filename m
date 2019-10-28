@@ -2,126 +2,131 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621BDCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E546BCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 364EE21734
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:16:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="utV3o3aT"
+	by mail.kernel.org (Postfix) with ESMTP id B846620717
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 13:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572268678;
+	bh=NbPrpNWukhwArDUUIISrsPsSj3KaIzOulncG5+Yab5Y=;
+	h=Date:From:To:cc:Subject:List-ID:From;
+	b=ekyUK2hQto7lnc1g5Xe6ufT9HSt/DZ/ArN2OCxWuzs3yd1JpffkPhHcokGicoxeP0
+	 wg1BQMvjZtIpI8XlCIbWZi1USab7USFIH2kI32l/40Bw4FnaEZE04m1jjPF8owZVch
+	 TriZbRrh8C5ebQaFKU5ZNpC04XU0UzOSxocsCymg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388774AbfJ1NQY (ORCPT
+        id S2388808AbfJ1NR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:16:24 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34075 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388553AbfJ1NQX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:16:23 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 139so11126856ljf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 06:16:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RcPtv5d4Xhg7Yg5t5dc7cf1sdnUkFOizbhSvjAdERFI=;
-        b=utV3o3aTqHm5KCIW69feKUGPuTsUaHcp/zpYcTzvlXi3Olyfe1n4hKAzlQ3gdcEU3p
-         +QuGe8rjB2g0Q7BIO4DNZGZICNhpkadVJx6bhQNCcPFHCbbNxkbF8orYFak5554TAru/
-         zMFayG+JhL2iTkDnZS3Ij6Xzb7NTBaWhtt+JCUB0Rwk/pt5gSDRIBDeaJ43vJywfeHAW
-         SVXD2yhcM/0PInIsF3BvsDNaIHhqr3EAHAyEtdAxKawuv7fbhwNuNFOfPrC/zMa/xlJp
-         RMwOt9XPvVBsYbuKzo3XnYLSDEEF3Q9ZhMMpv50JXGIKgrSy8rO2t6dogMuXPfXa0Yni
-         l7eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RcPtv5d4Xhg7Yg5t5dc7cf1sdnUkFOizbhSvjAdERFI=;
-        b=THABzz71MeP+9tnm5XeSEjxuNMh/qhvPC9UXyyZdjz473fP4y580O1L1RI1IiZY1KU
-         Il+5ydsM0+wzCIkc4NsWK05g6W+P605iTZnkpISbIeE/Vlx8lOhfuLnMP7KxTtwlPSnP
-         wsSDpCr+MryvKIUvrUDn5MSwvEa9+JBjccVn1XF2E9NLKsifuGKLwiv/BSJ030XJDGwy
-         Ik2li4xYyBXF9g6pnr4J7ZiP6advFx4dZCZCk67ERAgH6cAzoKmSfvc5ysCm/o2FCVYn
-         Mqd4EV+2UHGlP8bY/GXP32K4W+v7n0CaVIoXTzVZ8JEDrKjnCAc3eBBjmYPepMYgWeXa
-         bqRQ==
-X-Gm-Message-State: APjAAAVMBxdyjA9lBmKoXsxcBPtCN8XGNYRgNYppEND9wNMH32rJ+ZrO
-        oTPdquKvmfUPB+umFaZ/+3k1EQ==
-X-Google-Smtp-Source: APXvYqyVfI0y1z4XXrCEM0pRrVCY4qmeS3CAaTSlq5hy1wZcRGDvnKux7ec6kYLSUeqeBO51XxbZtg==
-X-Received: by 2002:a2e:924a:: with SMTP id v10mr11766000ljg.134.1572268582067;
-        Mon, 28 Oct 2019 06:16:22 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id y20sm8981461ljd.99.2019.10.28.06.16.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 06:16:21 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 23644100242; Mon, 28 Oct 2019 16:16:23 +0300 (+03)
-Date:   Mon, 28 Oct 2019 16:16:23 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191028131623.zwuwguhm4v4s5imh@box>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
- <20191028123124.ogkk5ogjlamvwc2s@box>
- <20191028130018.GA7192@rapoport-lnx>
+        Mon, 28 Oct 2019 09:17:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfJ1NR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:17:57 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 711D720650;
+        Mon, 28 Oct 2019 13:17:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572268676;
+        bh=NbPrpNWukhwArDUUIISrsPsSj3KaIzOulncG5+Yab5Y=;
+        h=Date:From:To:cc:Subject:From;
+        b=T/dfpVBxamwNNfI4CiEuzohQg0Ls7AmReY0dj1VhXk3sB6CbXaBqsbGOUnqU7Nrja
+         5dTD5JfMPtb95SMUV7ICp2YAidW5TnkkS87v7UYrwl35PgdtC9KJOELfOvIMfL2tPo
+         qZ6exzIxGYPxCp2GCCMfs4SwESEGcY6/NDkQCoAs=
+Date:   Mon, 28 Oct 2019 14:17:53 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [GIT PULL] HID fixes for 5.4
+Message-ID: <nycvar.YFH.7.76.1910281411130.13160@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028130018.GA7192@rapoport-lnx>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=ISO-8859-2
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 02:00:19PM +0100, Mike Rapoport wrote:
-> On Mon, Oct 28, 2019 at 03:31:24PM +0300, Kirill A. Shutemov wrote:
-> > On Sun, Oct 27, 2019 at 12:17:32PM +0200, Mike Rapoport wrote:
-> > > From: Mike Rapoport <rppt@linux.ibm.com>
-> > > 
-> > > The mappings created with MAP_EXCLUSIVE are visible only in the context of
-> > > the owning process and can be used by applications to store secret
-> > > information that will not be visible not only to other processes but to the
-> > > kernel as well.
-> > > 
-> > > The pages in these mappings are removed from the kernel direct map and
-> > > marked with PG_user_exclusive flag. When the exclusive area is unmapped,
-> > > the pages are mapped back into the direct map.
-> > 
-> > I probably blind, but I don't see where you manipulate direct map...
-> 
-> __get_user_pages() calls __set_page_user_exclusive() which in turn calls
-> set_direct_map_invalid_noflush() that makes the page not present.
+Linus,
 
-Ah. okay.
+please pull from
 
-I think active use of this feature will lead to performance degradation of
-the system with time.
+  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
 
-Setting a single 4k page non-present in the direct mapping will require
-splitting 2M or 1G page we usually map direct mapping with. And it's one
-way road. We don't have any mechanism to map the memory with huge page
-again after the application has freed the page.
+to receive fixes for HID subsystem:
 
-It might be okay if all these pages cluster together, but I don't think we
-have a way to achieve it easily.
+=====
+- HID++ device support regression fixes (race condition during cleanup, 
+  device detection fix, opps fix) from Andrey Smirnov
+- disable PM on i2c-hid, as it's causing problems with a lot of devices;
+  other OSes apparently don't implement/enable it either; from Kai-Heng 
+  Feng
+- error handling fix in intel-ish driver, from Zhang Lixu
+- syzbot fuzzer fix for HID core code from Alan Stern
+- a few other tiny fixups (printk message cleanup, new device ID)
+=====
+
+Thanks.
+
+----------------------------------------------------------------
+Alan Stern (1):
+      HID: Fix assumption that devices have inputs
+
+Andrey Smirnov (3):
+      HID: logitech-hidpp: split g920_get_config()
+      HID: logitech-hidpp: rework device validation
+      HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()
+
+Colin Ian King (1):
+      HID: prodikeys: make array keys static const, makes object smaller
+
+Hans de Goede (1):
+      HID: i2c-hid: add Trekstor Primebook C11B to descriptor override
+
+Kai-Heng Feng (1):
+      HID: i2c-hid: Remove runtime power management
+
+Micha³ Miros³aw (1):
+      HID: fix error message in hid_open_report()
+
+Nicolas Boichat (1):
+      HID: google: add magnemite/masterball USB ids
+
+Zhang Lixu (1):
+      HID: intel-ish-hid: fix wrong error handling in ishtp_cl_alloc_tx_ring()
+
+ drivers/hid/hid-axff.c                           |  11 +-
+ drivers/hid/hid-core.c                           |   7 +-
+ drivers/hid/hid-dr.c                             |  12 +-
+ drivers/hid/hid-emsff.c                          |  12 +-
+ drivers/hid/hid-gaff.c                           |  12 +-
+ drivers/hid/hid-google-hammer.c                  |   4 +
+ drivers/hid/hid-holtekff.c                       |  12 +-
+ drivers/hid/hid-ids.h                            |   2 +
+ drivers/hid/hid-lg2ff.c                          |  12 +-
+ drivers/hid/hid-lg3ff.c                          |  11 +-
+ drivers/hid/hid-lg4ff.c                          |  11 +-
+ drivers/hid/hid-lgff.c                           |  11 +-
+ drivers/hid/hid-logitech-hidpp.c                 | 248 +++++++++++++----------
+ drivers/hid/hid-microsoft.c                      |  12 +-
+ drivers/hid/hid-prodikeys.c                      |   4 +-
+ drivers/hid/hid-sony.c                           |  12 +-
+ drivers/hid/hid-tmff.c                           |  12 +-
+ drivers/hid/hid-zpff.c                           |  12 +-
+ drivers/hid/i2c-hid/i2c-hid-core.c               | 118 +----------
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c         |  19 ++
+ drivers/hid/intel-ish-hid/ishtp/client-buffers.c |   2 +-
+ 21 files changed, 297 insertions(+), 259 deletions(-)
 
 -- 
- Kirill A. Shutemov
+Jiri Kosina
+SUSE Labs
+
