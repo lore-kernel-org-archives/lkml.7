@@ -3,143 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76E5CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867C6C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C90B214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6670D208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388729AbfJ1LzK (ORCPT
+        id S2388737AbfJ1L7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 07:55:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54168 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388719AbfJ1LzJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 07:55:09 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9SBqliO065063
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:55:09 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vwwp8vdsa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 07:55:08 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 28 Oct 2019 11:55:06 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 28 Oct 2019 11:55:01 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9SBsxh127263030
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 11:55:00 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D430E11C050;
-        Mon, 28 Oct 2019 11:54:59 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7AD1811C04A;
-        Mon, 28 Oct 2019 11:54:57 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.151.87])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 28 Oct 2019 11:54:57 +0000 (GMT)
-Subject: Re: [PATCH v9 2/8] powerpc/ima: add support to initialize ima
- policy rules
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.vnet.ibm.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-Date:   Mon, 28 Oct 2019 07:54:56 -0400
-In-Reply-To: <1572133923.4532.79.camel@linux.ibm.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com>
-         <20191024034717.70552-3-nayna@linux.ibm.com>
-         <dd7e04fc-25e8-280f-b565-bdb031939655@linux.microsoft.com>
-         <27dbe08e-5473-4dd0-d2ad-2df591e23f5e@linux.vnet.ibm.com>
-         <1572133923.4532.79.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Mon, 28 Oct 2019 07:59:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:39164 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727479AbfJ1L7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 07:59:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D77B21F1;
+        Mon, 28 Oct 2019 04:59:09 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B53003F6C4;
+        Mon, 28 Oct 2019 04:59:08 -0700 (PDT)
+Subject: Re: [PATCH] iommu/dma: Add support for DMA_ATTR_SYS_CACHE
+To:     Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc:     isaacm@codeaurora.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, joro@8bytes.org,
+        m.szyprowski@samsung.com, pratikp@codeaurora.org,
+        lmark@codeaurora.org
+References: <1572050616-6143-1-git-send-email-isaacm@codeaurora.org>
+ <20191026053026.GA14545@lst.de>
+ <e5fe861d7d506eb41c23f3fc047efdfa@codeaurora.org>
+ <20191028074156.GB20443@lst.de> <20191028112457.GB4122@willie-the-truck>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <c1b37c8d-7bdc-eb81-19c2-29f50568150a@arm.com>
+Date:   Mon, 28 Oct 2019 11:59:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20191028112457.GB4122@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102811-0012-0000-0000-0000035E5E70
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102811-0013-0000-0000-000021999B74
-Message-Id: <1572263696.4532.240.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910280122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-10-26 at 19:52 -0400, Mimi Zohar wrote:
-> On Fri, 2019-10-25 at 12:02 -0500, Nayna Jain wrote:
-> > On 10/24/19 12:35 PM, Lakshmi Ramasubramanian wrote:
-> > > On 10/23/2019 8:47 PM, Nayna Jain wrote:
-> > >
-> > >> +/*
-> > >> + * The "secure_rules" are enabled only on "secureboot" enabled systems.
-> > >> + * These rules verify the file signatures against known good values.
-> > >> + * The "appraise_type=imasig|modsig" option allows the known good 
-> > >> signature
-> > >> + * to be stored as an xattr or as an appended signature.
-> > >> + *
-> > >> + * To avoid duplicate signature verification as much as possible, 
-> > >> the IMA
-> > >> + * policy rule for module appraisal is added only if 
-> > >> CONFIG_MODULE_SIG_FORCE
-> > >> + * is not enabled.
-> > >> + */
-> > >> +static const char *const secure_rules[] = {
-> > >> +    "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-> > >> +#ifndef CONFIG_MODULE_SIG_FORCE
-> > >> +    "appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-> > >> +#endif
-> > >> +    NULL
-> > >> +};
-> > >
-> > > Is there any way to not use conditional compilation in the above array 
-> > > definition? Maybe define different functions to get "secure_rules" for 
-> > > when CONFIG_MODULE_SIG_FORCE is defined and when it is not defined.
-> > 
-> > How will you decide which function to be called ?
+On 28/10/2019 11:24, Will Deacon wrote:
+> Hi Christoph,
 > 
-> You could call "is_module_sig_enforced()".
+> On Mon, Oct 28, 2019 at 08:41:56AM +0100, Christoph Hellwig wrote:
+>> On Sat, Oct 26, 2019 at 03:12:57AM -0700, isaacm@codeaurora.org wrote:
+>>> On 2019-10-25 22:30, Christoph Hellwig wrote:
+>>>> The definition makes very little sense.
+>>> Can you please clarify what part doesn’t make sense, and why?
+>>
+>> It looks like complete garbage to me.  That might just be because it
+>> uses tons of terms I've never heard of of and which aren't used anywhere
+>> in the DMA API.  It also might be because it doesn't explain how the
+>> flag might actually be practically useful.
+> 
+> Agreed. The way I /think/ it works is that on many SoCs there is a
+> system/last-level cache (LLC) which effectively sits in front of memory for
+> all masters. Even if a device isn't coherent with the CPU caches, we still
+> want to be able to allocate into the LLC. Why this doesn't happen
+> automatically is beyond me, but it appears that on these Qualcomm designs
+> you actually have to set the memory attributes up in the page-table to
+> ensure that the resulting memory transactions are non-cacheable for the CPU
+> but cacheable for the LLC. Without any changes, the transactions are
+> non-cacheable in both of them which assumedly has a performance cost.
+> 
+> But you can see that I'm piecing things together myself here. Isaac?
 
-Calling is_module_sig_enforce() would prevent verifying the same
-kernel module appended signature twice, when CONFIG_MODULE_SIG is
-enabled, but not CONFIG_MODULE_SIG_FORCE.  This comes at the expense
-of having to define additional policies.
+FWIW, that's pretty much how Pratik and Jordan explained it to me - the 
+LLC sits directly in front of memory and is more or less transparent, 
+although it might treat CPU and device accesses slightly differently (I 
+don't remember exactly how the inner cacheablility attribute interacts). 
+Certain devices don't get much benefit from the LLC, hence the desire 
+for finer-grained control of their outer allocation policy to avoid more 
+thrashing than necessary. Furthermore, for stuff in the 
+video/GPU/display area certain jobs benefit more than others, hence the 
+desire to go even finer-grained than a per-device control in order to 
+maximise LLC effectiveness.
 
-Unlike for the kernel image, there is no coordination between lockdown
-and IMA for kernel modules signature verification.  I suggest
-deferring defining additional policies to when the lockdown/IMA
-coordination is addressed.
+Robin.
 
-Mimi
-
+>>> This is
+>>> really just an extension of this patch that got mainlined, so that clients
+>>> that use the DMA API can use IOMMU_QCOM_SYS_CACHE as well:
+>>> https://patchwork.kernel.org/patch/10946099/
+>>>>   Any without a user in the same series it is a complete no-go anyway.
+>>> IOMMU_QCOM_SYS_CACHE does not have any current users in the mainline, nor
+>>> did it have it in the patch series in which it got merged, yet it is still
+>>> present? Furthermore, there are plans to upstream support for one of our
+>>> SoCs that may benefit from this, as seen here:
+>>> https://www.spinics.net/lists/iommu/msg39608.html.
+>>
+>> Which means it should have never been merged.  As a general policy we do
+>> not add code to the Linux kernel without actual users.
+> 
+> Yes, in this case I was hoping a user would materialise via a different
+> tree, but it didn't happen, hence my post last week about removing this
+> altogether:
+> 
+> https://lore.kernel.org/linux-iommu/20191024153832.GA7966@jcrouse1-lnx.qualcomm.com/T/#t
+> 
+> which I suspect prompted this patch that unfortunately fails to solve the
+> problem.
+> 
+> Will
+> 
