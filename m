@@ -2,130 +2,262 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B4CCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA694CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7F721835
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:05:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Pdz/q+9O"
+	by mail.kernel.org (Postfix) with ESMTP id BBEB0222CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 21:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389528AbfJ1VF6 (ORCPT
+        id S2389588AbfJ1VGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:05:58 -0400
-Received: from mail-eopbgr720106.outbound.protection.outlook.com ([40.107.72.106]:61027
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728898AbfJ1VF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:05:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BWbaYZXUAHAePcHlzoJAdCTi9p5esULjEN7Kg7ZzGDKvgqjCG+vfFbw4ntZcyO01zZoEZbdUQAEAduj0Bio7DL7n+7UuZOxl9ZKrndYWDlIDeOaAOdA1JyqE2uIYj9YqugfRUebNt1nYYyqlHhd7g2w3IzqtJdevgvr2OnNkDBIx1z/WXxGAXTfdBx1r9mJpXlry6O4c2OalF+KA8IRPMd+MoNBv/b2N3M3Pq10EKPvsLP99tFsJvgACO6PJ9iVc6M/6sNJvr3eEtXs94jNjFRVKKRiek7atP982APVzqLMtGkvhPrO9flHPI4nY58jVAtzSevY2a4yWs2ZyGmroWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PMQHH992GH6xm7PefP3WLRh4uhfxzuoIrpD1II7fCHU=;
- b=SS22IwFBu0hUdtXQvGIX6sp2d8NCoT+QJgUViKJMIB0KTdAeG0r9GfA6N7/ImjQ6AVp3OXp1D50D9fH2PXO+rzgFItfkAP9VyCOWe32kfwjYVrUl4E3UN7SHz0O4itkEEb+dmjusXiz/Cn3TxJqh7c0J1/PyKADBVTOPTa/YrBRtHihqv8CpUTsRAQo8lHFo07i7AGP85/oVaVzHkEwwmetqoQvTf6tbIua8qaoeNNOrjdEGgxwl4EeRq8+Crtx36OTbqYFDGiNT5gNsp7gzs96CZHRcgwG0X+gBAgiV0rizX6msVtGhPL7S4hUlnucf0YXlKCBjXFKNEpca6+Fmjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PMQHH992GH6xm7PefP3WLRh4uhfxzuoIrpD1II7fCHU=;
- b=Pdz/q+9OxcdgRPo+wLFISnw0l7+tJhjPYtZoPP/RiB4d54Z10hGPdkhZ/aM5AE8HFWgpuYhgVWByBEBShzyT2snSu/z/kdekdO30wk5cID1ZlF8Vu76ZCIlDsmgGb2ppPisqeJDOznP8K79rvDdz+dmwZscrsIU/v38/dVBCBqg=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1291.namprd21.prod.outlook.com (20.179.52.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.8; Mon, 28 Oct 2019 21:05:55 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::756e:8d3f:e463:3bf7]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::756e:8d3f:e463:3bf7%3]) with mapi id 15.20.2408.016; Mon, 28 Oct 2019
- 21:05:55 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next, 0/4] hv_netvsc: Add XDP support and some error
- handling fixes
-Thread-Topic: [PATCH net-next, 0/4] hv_netvsc: Add XDP support and some error
- handling fixes
-Thread-Index: AQHVjdN8XpVK0YFZh0GRTvA7dQ24Yg==
-Date:   Mon, 28 Oct 2019 21:05:55 +0000
-Message-ID: <1572296693-4431-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1401CA0008.namprd14.prod.outlook.com
- (2603:10b6:301:4b::18) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f340c248-fe83-4a03-7952-08d75bea9f2e
-x-ms-traffictypediagnostic: DM6PR21MB1291:|DM6PR21MB1291:|DM6PR21MB1291:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB1291ACB9509B4C0FE7D32306AC660@DM6PR21MB1291.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 0204F0BDE2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(396003)(39860400002)(376002)(136003)(189003)(199004)(8936002)(26005)(10290500003)(5660300002)(256004)(7736002)(186003)(6116002)(10090500001)(6506007)(25786009)(386003)(102836004)(305945005)(71190400001)(14444005)(4326008)(3846002)(6436002)(36756003)(7846003)(6392003)(81156014)(81166006)(5024004)(8676002)(6486002)(66066001)(6512007)(54906003)(478600001)(2201001)(71200400001)(110136005)(22452003)(50226002)(52116002)(2616005)(4720700003)(14454004)(486006)(476003)(99286004)(66446008)(66946007)(64756008)(66556008)(66476007)(2906002)(2501003)(316002)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1291;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7tiUchZFI0K+Qs0EKtQSrxPsl6RX7up3hD4pfIGCizN26cDFmMbmDeNk0dGklBEBQ1qrhJcO56p2EkFo+/30IZ7uFYhu2bFPVeXiSRiIto5eCC2cNlzyUO3rNmewlSAQeJn4PIBmK9mYGmuQZKA3gaJuHpPO0NMKPJGZI4FTlcke7rlKmG54bYbAggl2Zx4qDIPHimeutOHeFJCPoOzfK6wiN+bLuBFWp7K1DnlowmJ2ePFv8JcLEYS1rsTNtPHgRMIan/N5rF6rfeiW5WGLGNJgrIQoiBfG7guMoNDfe+kk1xRQW5sVcyG05ksjFNGLrgd9BYQDWbRGfBk6vheZ/nSIf4tvu0BNYpGNqKZlzG1pdnLbiE4I69R5YmuoW9nBP4LeWM3YJVnpZK0U7yTLR44iRPWCQHbr2y9jnnhUZzly+hkw8GEGLgidurK+S+AD
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 28 Oct 2019 17:06:06 -0400
+Received: from mga09.intel.com ([134.134.136.24]:24397 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389544AbfJ1VGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:06:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 14:06:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,241,1569308400"; 
+   d="scan'208";a="224759940"
+Received: from shrehore-mobl1.ti.intel.com (HELO localhost) ([10.251.82.5])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 14:05:56 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH v23 15/24] x86/sgx: Add provisioning
+Date:   Mon, 28 Oct 2019 23:03:15 +0200
+Message-Id: <20191028210324.12475-16-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f340c248-fe83-4a03-7952-08d75bea9f2e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 21:05:55.0480
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Xz9xXICF4Ktzm+hFA8oR1wjppMEhCCWG6u2sY2treulsHrzE1wH7walR3KjHAO/c4RyKSKzp5dgD0BTW5CRzMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1291
+Content-Type: text/plain; charset=a
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set fixes some error handling issues in netvsc driver,
-and add XDP support.
+In order to provide a mechanism for devilering provisoning rights:
 
-Haiyang Zhang (4):
-  hv_netvsc: Fix error handling in netvsc_set_features()
-  hv_netvsc: Fix error handling in netvsc_attach()
-  hv_netvsc: Add XDP support
-  hv_netvsc: Update document for XDP support
+1. Add a new device file /dev/sgx/provision that works as a token for
+   allowing an enclave to have the provisioning privileges.
+2. Add a new ioctl called SGX_IOC_ENCLAVE_SET_ATTRIBUTE that accepts the
+   following data structure:
 
- .../networking/device_drivers/microsoft/netvsc.txt |  14 ++
- drivers/net/hyperv/Makefile                        |   2 +-
- drivers/net/hyperv/hyperv_net.h                    |  15 ++
- drivers/net/hyperv/netvsc.c                        |   8 +-
- drivers/net/hyperv/netvsc_bpf.c                    | 211 +++++++++++++++++=
-++++
- drivers/net/hyperv/netvsc_drv.c                    | 150 ++++++++++++---
- 6 files changed, 374 insertions(+), 26 deletions(-)
- create mode 100644 drivers/net/hyperv/netvsc_bpf.c
+   struct sgx_enclave_set_attribute {
+           __u64 addr;
+           __u64 attribute_fd;
+   };
 
---=20
-1.8.3.1
+A daemon could sit on top of /dev/sgx/provision and send a file
+descriptor of this file to a process that needs to be able to provision
+enclaves.
+
+The way this API is used is straight-forward. Lets assume that dev_fd is
+a handle to /dev/sgx/enclave and prov_fd is a handle to
+/dev/sgx/provision.  You would allow SGX_IOC_ENCLAVE_CREATE to
+initialize an enclave with the PROVISIONKEY attribute by
+
+params.addr = <enclave address>;
+params.token_fd = prov_fd;
+
+ioctl(dev_fd, SGX_IOC_ENCLAVE_SET_ATTRIBUTE, &params);
+
+Cc: linux-security-module@vger.kernel.org
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ arch/x86/include/uapi/asm/sgx.h  | 11 ++++++++
+ arch/x86/kernel/cpu/sgx/driver.c | 23 +++++++++++++++-
+ arch/x86/kernel/cpu/sgx/driver.h |  2 ++
+ arch/x86/kernel/cpu/sgx/ioctl.c  | 47 ++++++++++++++++++++++++++++++++
+ 4 files changed, 82 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
+index e0f79ebdfd8a..e7b20f1e41b3 100644
+--- a/arch/x86/include/uapi/asm/sgx.h
++++ b/arch/x86/include/uapi/asm/sgx.h
+@@ -25,6 +25,8 @@ enum sgx_page_flags {
+ 	_IOWR(SGX_MAGIC, 0x01, struct sgx_enclave_add_pages)
+ #define SGX_IOC_ENCLAVE_INIT \
+ 	_IOW(SGX_MAGIC, 0x02, struct sgx_enclave_init)
++#define SGX_IOC_ENCLAVE_SET_ATTRIBUTE \
++	_IOW(SGX_MAGIC, 0x03, struct sgx_enclave_set_attribute)
+ 
+ /**
+  * struct sgx_enclave_create - parameter structure for the
+@@ -61,4 +63,13 @@ struct sgx_enclave_init {
+ 	__u64 sigstruct;
+ };
+ 
++/**
++ * struct sgx_enclave_set_attribute - parameter structure for the
++ *				      %SGX_IOC_ENCLAVE_SET_ATTRIBUTE ioctl
++ * @attribute_fd:	file handle of the attribute file in the securityfs
++ */
++struct sgx_enclave_set_attribute {
++	__u64 attribute_fd;
++};
++
+ #endif /* _UAPI_ASM_X86_SGX_H */
+diff --git a/arch/x86/kernel/cpu/sgx/driver.c b/arch/x86/kernel/cpu/sgx/driver.c
+index c724dcccf2e2..4d996463b213 100644
+--- a/arch/x86/kernel/cpu/sgx/driver.c
++++ b/arch/x86/kernel/cpu/sgx/driver.c
+@@ -141,12 +141,18 @@ static const struct file_operations sgx_encl_fops = {
+ 	.get_unmapped_area	= sgx_get_unmapped_area,
+ };
+ 
++const struct file_operations sgx_provision_fops = {
++	.owner			= THIS_MODULE,
++};
++
+ static struct bus_type sgx_bus_type = {
+ 	.name	= "sgx",
+ };
+ 
+ static struct device sgx_encl_dev;
+ static struct cdev sgx_encl_cdev;
++static struct device sgx_provision_dev;
++static struct cdev sgx_provision_cdev;
+ static dev_t sgx_devt;
+ 
+ static void sgx_dev_release(struct device *dev)
+@@ -223,22 +229,37 @@ int __init sgx_drv_init(void)
+ 	if (ret)
+ 		goto err_chrdev_region;
+ 
++	ret = sgx_dev_init("sgx/provision", &sgx_provision_dev,
++			   &sgx_provision_cdev, &sgx_provision_fops, 1);
++	if (ret)
++		goto err_encl_dev;
++
+ 	sgx_encl_wq = alloc_workqueue("sgx-encl-wq",
+ 				      WQ_UNBOUND | WQ_FREEZABLE, 1);
+ 	if (!sgx_encl_wq) {
+ 		ret = -ENOMEM;
+-		goto err_encl_dev;
++		goto err_provision_dev;
+ 	}
+ 
+ 	ret = cdev_device_add(&sgx_encl_cdev, &sgx_encl_dev);
+ 	if (ret)
+ 		goto err_encl_wq;
+ 
++	ret = cdev_device_add(&sgx_provision_cdev, &sgx_provision_dev);
++	if (ret)
++		goto err_encl_cdev;
++
+ 	return 0;
+ 
++err_encl_cdev:
++	cdev_device_del(&sgx_encl_cdev, &sgx_encl_dev);
++
+ err_encl_wq:
+ 	destroy_workqueue(sgx_encl_wq);
+ 
++err_provision_dev:
++	put_device(&sgx_provision_dev);
++
+ err_encl_dev:
+ 	put_device(&sgx_encl_dev);
+ 
+diff --git a/arch/x86/kernel/cpu/sgx/driver.h b/arch/x86/kernel/cpu/sgx/driver.h
+index e95c6e86c0c6..2f13886522a8 100644
+--- a/arch/x86/kernel/cpu/sgx/driver.h
++++ b/arch/x86/kernel/cpu/sgx/driver.h
+@@ -25,6 +25,8 @@ extern u64 sgx_attributes_reserved_mask;
+ extern u64 sgx_xfrm_reserved_mask;
+ extern u32 sgx_xsave_size_tbl[64];
+ 
++extern const struct file_operations sgx_provision_fops;
++
+ long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg);
+ 
+ int sgx_drv_init(void);
+diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
+index 691efac24ed7..e71618cef90c 100644
+--- a/arch/x86/kernel/cpu/sgx/ioctl.c
++++ b/arch/x86/kernel/cpu/sgx/ioctl.c
+@@ -622,6 +622,50 @@ static long sgx_ioc_enclave_init(struct sgx_encl *encl, void __user *arg)
+ 	return ret;
+ }
+ 
++/**
++ * sgx_ioc_enclave_set_attribute - handler for %SGX_IOC_ENCLAVE_SET_ATTRIBUTE
++ * @filep:	open file to /dev/sgx
++ * @arg:	userspace pointer to a struct sgx_enclave_set_attribute instance
++ *
++ * Mark the enclave as being allowed to access a restricted attribute bit.
++ * The requested attribute is specified via the attribute_fd field in the
++ * provided struct sgx_enclave_set_attribute.  The attribute_fd must be a
++ * handle to an SGX attribute file, e.g. “/dev/sgx/provision".
++ *
++ * Failure to explicitly request access to a restricted attribute will cause
++ * sgx_ioc_enclave_init() to fail.  Currently, the only restricted attribute
++ * is access to the PROVISION_KEY.
++ *
++ * Note, access to the EINITTOKEN_KEY is disallowed entirely.
++ *
++ * Return: 0 on success, -errno otherwise
++ */
++static long sgx_ioc_enclave_set_attribute(struct sgx_encl *encl,
++					  void __user *arg)
++{
++	struct sgx_enclave_set_attribute params;
++	struct file *attribute_file;
++	int ret;
++
++	if (copy_from_user(&params, arg, sizeof(params)))
++		return -EFAULT;
++
++	attribute_file = fget(params.attribute_fd);
++	if (!attribute_file)
++		return -EINVAL;
++
++	if (attribute_file->f_op != &sgx_provision_fops) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	encl->allowed_attributes |= SGX_ATTR_PROVISIONKEY;
++	ret = 0;
++
++out:
++	fput(attribute_file);
++	return ret;
++}
+ 
+ long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
+ {
+@@ -645,6 +689,9 @@ long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
+ 	case SGX_IOC_ENCLAVE_INIT:
+ 		ret = sgx_ioc_enclave_init(encl, (void __user *)arg);
+ 		break;
++	case SGX_IOC_ENCLAVE_SET_ATTRIBUTE:
++		ret = sgx_ioc_enclave_set_attribute(encl, (void __user *)arg);
++		break;
+ 	default:
+ 		ret = -ENOIOCTLCMD;
+ 		break;
+-- 
+2.20.1
 
