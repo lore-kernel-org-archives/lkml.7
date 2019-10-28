@@ -2,125 +2,118 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11C4CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F82ACA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA6920862
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A25D20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:13:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JhyDsvpT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aXOPdyC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404337AbfJ1SND (ORCPT
+        id S2404348AbfJ1SNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 14:13:03 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37722 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730690AbfJ1SND (ORCPT
+        Mon, 28 Oct 2019 14:13:15 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35478 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730690AbfJ1SNO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 14:13:03 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p1so7421999pgi.4;
-        Mon, 28 Oct 2019 11:13:03 -0700 (PDT)
+        Mon, 28 Oct 2019 14:13:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c8so7429906pgb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 11:13:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7/YManxxrXMGA7cACVdmSHAatXDpp8qM6jzpbsBeexY=;
-        b=JhyDsvpTchOiMxVkb7YsfkV5FYRi7ywU6edxD96DTLFkyE7Y9DihOEkVV20CHw8f+Q
-         snB62JN12f5r6M81w/veOo/d2H/1yS11TsolCjiSzasH9T7BdktZ4CKeZFM4CrVUPc3e
-         3desTUy9k1tiP+Yd0aEbDOGHnf01l/5ZMDVYAXCn/VX4wfjs+re6Pm7FVKSYjARGlZNd
-         YUnARW0RVCUqoONMXPgXC98AhmrujOrXfWnwmi6g/SmsrNLZQteLG08z8Xh3Ztkf/YOS
-         v+MzN/6r2pib4FnxYtRW0c2WmWSFWIh5lKdaqdoAiWOHAH4kkKngTI4QkBqkJmRNMier
-         VMfA==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=KooIewZwbvjOkWEaBdb5ogJ6e+TbvWJNeEYKOS8P4w0=;
+        b=aXOPdyC7AweFFSfB2Js2hABhLVh569kDj2ZgxMqXyvHOioQ44WsxywP8Nq31GJ6cKv
+         YUa5fMowMfM7tx0PM80F+R8UHmwYIQKqUE3grO68emWgJqvBb99ab3Ctd1d8hAFxcME2
+         oER/fc54s77GQl3EKM+ZwgA/pJux/e2Z2KOd9119hrzSUIbsrFBs7ndjLvbQ4iSWhN0s
+         dDcGwgVs491Pbv0m9/hJpBkU6yTXVPf/eELu2doKVz5UNWHQYh3nlbVpOjSYS4I6V1Tq
+         HJPDbnBscNga+uPSi5aaQU73/uKcDNSw1erHBde1yMu7Qaijq6V+uwHCZnxJLjAtJm3w
+         f07w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7/YManxxrXMGA7cACVdmSHAatXDpp8qM6jzpbsBeexY=;
-        b=dQMybcafo/WU7MreXIwhQWl0g1JBrvvlTJdey3nK2DbGMmT/kE/A4xwfTx2Q0YM/TE
-         9LSDqSsjTVcDV7KQ7QOoBfbo4zjXP/G6fZm1CIWzBXpYxLvC46B3IRKOOmpXB9Kq9vkL
-         WIGUOrK9NcEEvYPObD+xsU+62wJBXzEgevX2fN6CA2nxN+uR69dwaECzH80L/UYant9L
-         jl6m4Ob1O1UA1lWMYGTJXwkVLN8XA9Wek0B0wOXGJXbS/NCF6JEUVN2BoOiExVHvUxVa
-         BeOdtJcFLLApmrZZN4KK8MuWr0N34j9FoUjTC8CxzRwbcKD6UcKoBb9UQ+A8jvLaJVeX
-         j/BA==
-X-Gm-Message-State: APjAAAU6PXSnlLal3ME1UNVgNdTYIh3NPK9p8zJFueZ+alH7pRS0+jiq
-        UUXet7Mz69cm0+TO9ytKcGNUNPu5
-X-Google-Smtp-Source: APXvYqxT37Qs5qDMEEYQ89TSleRCWeDfazdObpqvImSAFVuPZt/n41i/9zLL/BPIwh8ZtGoPSLXt5g==
-X-Received: by 2002:a17:90a:f991:: with SMTP id cq17mr796327pjb.30.1572286382386;
-        Mon, 28 Oct 2019 11:13:02 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 19sm185492pjd.23.2019.10.28.11.13.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 28 Oct 2019 11:13:00 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 11:12:59 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/41] 4.4.198-stable review
-Message-ID: <20191028181259.GA875@roeck-us.net>
-References: <20191027203056.220821342@linuxfoundation.org>
- <3961082b-17bc-cef7-f0e5-7bf029b2de2a@roeck-us.net>
- <20191028134905.GA53500@kroah.com>
- <20191028135756.GA97772@kroah.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=KooIewZwbvjOkWEaBdb5ogJ6e+TbvWJNeEYKOS8P4w0=;
+        b=ghQfmcSkwVopfPth3NSe6ovrRIexxcgWbIT+TJR5cE8bRgq1AY0EpeSvvbTEy1RLal
+         ijgdnObuFWe6NcAM8zIAnQy9W12IautG3kpOqsJISPit8mchIP6jXPwgD+Sc+AoxBuu/
+         AXErHkDbGvZ0Ixbs/a8kN4hYFr1iK1wyVl1pBDf0vOczXrqQhVW+vRhapI5oJrTk1c81
+         HJTuB/PYENWwPpQrzvnWyAEM3ypJo/kFxwp9krWDc1wJ7WMz88BQUTIMKmqBM5fU1oPb
+         /aLiMJQPBg0slK0H7q1dLSVmhSMfsmmxYysNul6smw9E+QoMfOfvKoFQ3rNRJSbJ3GvX
+         0Qvg==
+X-Gm-Message-State: APjAAAVF525DmMBQOI1Utz2UzEENuqjQPYgPCWVpQccx3y5sG8rVQhWd
+        BTC8Fi0lRxI37YkHeybAELY=
+X-Google-Smtp-Source: APXvYqzHPPHColxTNgsQHdD5XILpojNAlx6D2TKkfWzX4v+PiR9dJvyKzns3v8vgG8I/ERhrikrQ0g==
+X-Received: by 2002:a17:90a:2369:: with SMTP id f96mr664908pje.127.1572286393809;
+        Mon, 28 Oct 2019 11:13:13 -0700 (PDT)
+Received: from saurav ([27.62.167.137])
+        by smtp.gmail.com with ESMTPSA id g38sm17039156pgb.27.2019.10.28.11.13.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 11:13:13 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 23:43:01 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     joern@lazybastard.org, dwmw2@infradead.org,
+        computersforpeace@gmail.com, marek.vasut@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] mtd: devices: phram.c: Fix multiple kfree statement from
+ phram_setup
+Message-ID: <20191028181300.GA26250@saurav>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028135756.GA97772@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 02:57:56PM +0100, Greg Kroah-Hartman wrote:
-> On Mon, Oct 28, 2019 at 02:49:05PM +0100, Greg Kroah-Hartman wrote:
-> > On Mon, Oct 28, 2019 at 06:32:14AM -0700, Guenter Roeck wrote:
-> > > On 10/27/19 2:00 PM, Greg Kroah-Hartman wrote:
-> > > > This is the start of the stable review cycle for the 4.4.198 release.
-> > > > There are 41 patches in this series, all will be posted as a response
-> > > > to this one.  If anyone has any issues with these being applied, please
-> > > > let me know.
-> > > > 
-> > > > Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
-> > > > Anything received after that time might be too late.
-> > > > 
-> > > 
-> > > 
-> > > Building mips:defconfig ... failed
-> > > --------------
-> > > Error log:
-> > > In file included from /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/include/asm/bitops.h:21,
-> > >                  from /opt/buildbot/slave/stable-queue-4.9/build/include/linux/bitops.h:17,
-> > >                  from /opt/buildbot/slave/stable-queue-4.9/build/include/linux/kernel.h:10,
-> > >                  from /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:15:
-> > > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c: In function 'cpu_probe':
-> > > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/include/asm/cpu-features.h:349:31: error: implicit declaration of function '__ase' [-Werror=implicit-function-declaration]
-> > >   349 | #define cpu_has_loongson_mmi  __ase(MIPS_ASE_LOONGSON_MMI)
-> > >       |                               ^~~~~
-> > > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:2079:6: note: in expansion of macro 'cpu_has_loongson_mmi'
-> > >  2079 |  if (cpu_has_loongson_mmi)
-> > >       |      ^~~~~~~~~~~~~~~~~~~~
-> > > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:2083:16: error: 'HWCAP_LOONGSON_CAM' undeclared (first use in this function); did you mean 'HWCAP_LOONGSON_EXT'?
-> > >  2083 |   elf_hwcap |= HWCAP_LOONGSON_CAM;
-> > >       |                ^~~~~~~~~~~~~~~~~~
-> > >       |                HWCAP_LOONGSON_EXT
-> > > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:2083:16: note: each undeclared identifier is reported only once for each function it appears in
-> > > 
-> > > 
-> > > Affects all mips builds in v{4.4, 4.9, 4.14}.
-> > 
-> > Ugh, let me see what happened...
-> 
-> Ok, two MIPS patches dropped from 4.4, 4.9, and 4.14 queues, and -rc2
-> are now pushed out for all 3 of those trees.  It "should" be clean now.
-> 
-Confirmed.
+Remove multiple kfree statement from phram_setup() in phram.c
 
-Thanks,
-Guenter
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+ drivers/mtd/devices/phram.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
+index c467286ca007..38f95a1517ac 100644
+--- a/drivers/mtd/devices/phram.c
++++ b/drivers/mtd/devices/phram.c
+@@ -243,22 +243,22 @@ static int phram_setup(const char *val)
+ 
+ 	ret = parse_num64(&start, token[1]);
+ 	if (ret) {
+-		kfree(name);
+ 		parse_err("illegal start address\n");
++		goto free_nam;
+ 	}
+ 
+ 	ret = parse_num64(&len, token[2]);
+ 	if (ret) {
+-		kfree(name);
+ 		parse_err("illegal device length\n");
++		goto free_nam;
+ 	}
+ 
+ 	ret = register_device(name, start, len);
+ 	if (!ret)
+ 		pr_info("%s device: %#llx at %#llx\n", name, len, start);
+-	else
+-		kfree(name);
+ 
++free_nam:
++	kfree(name);
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
+
