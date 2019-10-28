@@ -2,126 +2,119 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35836C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 04:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7120CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 05:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10CDC21783
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 04:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD0E20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 05:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfJ1E6T convert rfc822-to-8bit (ORCPT
+        id S1727483AbfJ1FKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 00:58:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41841 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfJ1E6S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 00:58:18 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iOx6e-0003jq-Lt
-        for linux-kernel@vger.kernel.org; Mon, 28 Oct 2019 04:58:16 +0000
-Received: by mail-pg1-f199.google.com with SMTP id l6so7401432pgq.16
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 21:58:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=/EG7yq3okU4wk/5he/oQsCiGYKz5l1BrEDtNp22dINI=;
-        b=URa+X2vZYIukWyvxxIJ3Qt92wFW31EUJtTR9w3fBySYoiBrWpuLHGqZJIyJL1mW2+m
-         kWnnZIyDf/11B5VqMhKTdWL++QDIWczSV0gfZaBy+uHsUH7XEYs/5EpHIG/nwx9S10JJ
-         +wo9tBOBxBl16dO4h0HpUUIGLLpdzI8XZQ0NnNZ2TjYOVL/BIAnGOYXNfSVpuI8EBGfg
-         qn2BCC5/Rj0ymlyR3rBRN4jzyVxScw0yCbES+P+GPdfFiQT06K4EQOvAiIirUDsbzVSk
-         QTMWyMZGVONJeXtYc2hmeLW41+6BFt5+WO8XZvlvAlMhyUxUra5Wxt0RvSzv/o3/uejS
-         ubgg==
-X-Gm-Message-State: APjAAAXQr45TMjQOCyAa0f0ggedeHYI98JDbH1+Lc2jPhSUBLzwqFJga
-        IFJzD99emfWQpuRh3ras57EHxTmKCA5GKnUsJGwGYHCAeSRNzddxD3zCCprL5HCqxqamF3RReja
-        On9BuejN0DMWziNjWQaQBQfeZvUrF+7ypNGLLdTW9dQ==
-X-Received: by 2002:a63:ce4a:: with SMTP id r10mr18037352pgi.82.1572238695344;
-        Sun, 27 Oct 2019 21:58:15 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxf7cGAOrHZX6mqNmmABB2ChDH0RPOgv4rgfBLIVuao1ZEmU6jcFyL3+82tR8QvhCZM57Me2g==
-X-Received: by 2002:a63:ce4a:: with SMTP id r10mr18037315pgi.82.1572238694870;
-        Sun, 27 Oct 2019 21:58:14 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-74a9-e8b4-eac5-9609.dynamic-ip6.hinet.net (2001-b011-380f-3c42-74a9-e8b4-eac5-9609.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:74a9:e8b4:eac5:9609])
-        by smtp.gmail.com with ESMTPSA id w6sm9419087pfw.84.2019.10.27.21.58.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 27 Oct 2019 21:58:14 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601\))
-Subject: Re: [PATCH 2/2] r8152: Add macpassthru support for ThinkPad
- Thunderbolt 3 Dock Gen 2
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <0835B3720019904CB8F7AA43166CEEB2F18EEE4D@RTITMBSVM03.realtek.com.tw>
-Date:   Mon, 28 Oct 2019 12:58:11 +0800
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "oliver@neukum.org" <oliver@neukum.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nic_swsd <nic_swsd@realtek.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <3980F066-6783-45A6-9B34-1D838C2C1A2C@canonical.com>
-References: <20191025105919.689-1-kai.heng.feng@canonical.com>
- <20191025105919.689-2-kai.heng.feng@canonical.com>
- <0835B3720019904CB8F7AA43166CEEB2F18EEE4D@RTITMBSVM03.realtek.com.tw>
-To:     Hayes Wang <hayeswang@realtek.com>
-X-Mailer: Apple Mail (2.3601)
+        Mon, 28 Oct 2019 01:10:09 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4774 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726550AbfJ1FKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 01:10:08 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 88206953F4F381262697;
+        Mon, 28 Oct 2019 13:10:01 +0800 (CST)
+Received: from huawei.com (10.67.189.167) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 28 Oct 2019
+ 13:09:52 +0800
+From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+To:     <davem@davemloft.net>, <yisen.zhuang@huawei.com>,
+        <salil.mehta@huawei.com>, <xiaojiangfeng@huawei.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <leeyou.li@huawei.com>, <zhanghan23@huawei.com>,
+        <nixiaoming@huawei.com>, <zhangqiang.cn@hisilicon.com>,
+        <dingjingcheng@hisilicon.com>, <joe@perches.com>
+Subject: [PATCH v2] net: hisilicon: Fix ping latency when deal with high throughput
+Date:   Mon, 28 Oct 2019 13:09:46 +0800
+Message-ID: <1572239386-67767-1-git-send-email-xiaojiangfeng@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.167]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is due to error in over budget processing.
+When dealing with high throughput, the used buffers
+that exceeds the budget is not cleaned up. In addition,
+it takes a lot of cycles to clean up the used buffer,
+and then the buffer where the valid data is located can take effect.
 
-> On Oct 28, 2019, at 11:58, Hayes Wang <hayeswang@realtek.com> wrote:
-> 
-> Kai-Heng Feng [mailto:kai.heng.feng@canonical.com]
->> Sent: Friday, October 25, 2019 6:59 PM
-> [...]
->> @@ -6626,6 +6648,9 @@ static int rtl8152_probe(struct usb_interface *intf,
->> 		netdev->hw_features &= ~NETIF_F_RXCSUM;
->> 	}
->> 
->> +	if (id->driver_info & R8152_QUIRK_LENOVO_MACPASSTHRU)
-> 
-> Do you really need this?
-> It seems the information of idVendor and idProduct is enough. 
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+---
+ChangeLog v1->v2:
+- Make rx_cnt_remaining part of struct hip04_priv.
+---
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-Both idVendor and idProduct are just part of "struct usb_device_id".
-IMO it's clearer to add quirks there.
-
-> 
->> +		set_bit(LENOVO_MACPASSTHRU, &tp->flags);
->> +
->> 	if (le16_to_cpu(udev->descriptor.bcdDevice) == 0x3011 && udev->serial
->> &&
->> 	    (!strcmp(udev->serial, "000001000000") ||
->> 	     !strcmp(udev->serial, "000002000000"))) {
->> @@ -6754,6 +6779,8 @@ static const struct usb_device_id rtl8152_table[] = {
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f, 0)},
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062, 0)},
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3069, 0)},
->> +	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3082,
->> +			R8152_QUIRK_LENOVO_MACPASSTHRU)},
-> 
-> This limits the usage of driver_info. For example, I couldn't
-> use it to store a pointer address anymore.
-
-But will the driver ever use .driver_info for pointers?
-There are many driver use it for quirks and quirks only.
-
-Kai-Heng
-
-> 
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7205, 0)},
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x720c, 0)},
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7214, 0)},
->> --
->> 2.17.1
-> 
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index c841674..f51bc02 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -237,6 +237,7 @@ struct hip04_priv {
+ 	dma_addr_t rx_phys[RX_DESC_NUM];
+ 	unsigned int rx_head;
+ 	unsigned int rx_buf_size;
++	unsigned int rx_cnt_remaining;
+ 
+ 	struct device_node *phy_node;
+ 	struct phy_device *phy;
+@@ -575,7 +576,6 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 	struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
+ 	struct net_device *ndev = priv->ndev;
+ 	struct net_device_stats *stats = &ndev->stats;
+-	unsigned int cnt = hip04_recv_cnt(priv);
+ 	struct rx_desc *desc;
+ 	struct sk_buff *skb;
+ 	unsigned char *buf;
+@@ -588,8 +588,8 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 
+ 	/* clean up tx descriptors */
+ 	tx_remaining = hip04_tx_reclaim(ndev, false);
+-
+-	while (cnt && !last) {
++	priv->rx_cnt_remaining += hip04_recv_cnt(priv);
++	while (priv->rx_cnt_remaining && !last) {
+ 		buf = priv->rx_buf[priv->rx_head];
+ 		skb = build_skb(buf, priv->rx_buf_size);
+ 		if (unlikely(!skb)) {
+@@ -635,11 +635,13 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 		hip04_set_recv_desc(priv, phys);
+ 
+ 		priv->rx_head = RX_NEXT(priv->rx_head);
+-		if (rx >= budget)
++		if (rx >= budget) {
++			--priv->rx_cnt_remaining;
+ 			goto done;
++		}
+ 
+-		if (--cnt == 0)
+-			cnt = hip04_recv_cnt(priv);
++		if (--priv->rx_cnt_remaining == 0)
++			priv->rx_cnt_remaining += hip04_recv_cnt(priv);
+ 	}
+ 
+ 	if (!(priv->reg_inten & RCV_INT)) {
+@@ -724,6 +726,7 @@ static int hip04_mac_open(struct net_device *ndev)
+ 	int i;
+ 
+ 	priv->rx_head = 0;
++	priv->rx_cnt_remaining = 0;
+ 	priv->tx_head = 0;
+ 	priv->tx_tail = 0;
+ 	hip04_reset_ppe(priv);
+-- 
+1.8.5.6
 
