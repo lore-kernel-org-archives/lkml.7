@@ -2,169 +2,352 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A86CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F49CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF972086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:18:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HraHgELT"
+	by mail.kernel.org (Postfix) with ESMTP id 18FD82086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 12:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389016AbfJ1MSD (ORCPT
+        id S2389022AbfJ1MVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:18:03 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:62973 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728321AbfJ1MSD (ORCPT
+        Mon, 28 Oct 2019 08:21:18 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:55726 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbfJ1MVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 08:18:03 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191028121800epoutp03d2a16197bbc88bebc2dbc5a18e3918a0~RzsKpEdWR1817818178epoutp03k
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 12:18:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191028121800epoutp03d2a16197bbc88bebc2dbc5a18e3918a0~RzsKpEdWR1817818178epoutp03k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572265080;
-        bh=0LFmfyIwGTeUHxbQOwSG3EtppNsBrL7xPrgGbm4gJ3U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HraHgELTectkUt24BWos4igHtbDeAGUPYEe9aO1zu7YuF2BlSSvkd9XjONgWgnERW
-         oWHukiKIubdyEe9QV192yy56PqE6zXn2hQPCoJ2S0H3TeGHyzZPiQaT204Wteq/TmV
-         e+dMxyCHDGXi3DWgFDt38UAFSAUEtX7pw/vwHADY=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20191028121759epcas5p24cdfa929093897d184248c0411080847~RzsJe6nDJ1905819058epcas5p29;
-        Mon, 28 Oct 2019 12:17:59 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AF.CD.20245.77CD6BD5; Mon, 28 Oct 2019 21:17:59 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191028121758epcas5p2dda6d0842be32bcab2e6025fac1f3e78~RzsI_jMAw1905819058epcas5p28;
-        Mon, 28 Oct 2019 12:17:58 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191028121758epsmtrp25c2fed104ab163f2955307216c65aa6e~RzsI924o51489714897epsmtrp2f;
-        Mon, 28 Oct 2019 12:17:58 +0000 (GMT)
-X-AuditID: b6c32a4b-fa1ff70000014f15-b7-5db6dc77cfc9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        84.89.24756.67CD6BD5; Mon, 28 Oct 2019 21:17:58 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191028121756epsmtip155a5e7347bd6cdbf346af49bf49b989c~RzsHZtJH72323023230epsmtip1W;
-        Mon, 28 Oct 2019 12:17:56 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, pankaj.dubey@samsung.com,
-        Anvesh Salveru <anvesh.s@samsung.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: [PATCH v2 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant
- PHYs
-Date:   Mon, 28 Oct 2019 17:46:28 +0530
-Message-Id: <1572264988-17455-3-git-send-email-anvesh.s@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSa0hTYRjHeXeuzpaHKfhk6IehhIZamXSgMimDkUGFn4osRx5UmtvYdGpG
-        SJY5aSYaoqbO7rrMYpqZ4m2pq3ALnRLi7GZlidZSsXRKNc+kb7////k/F15eGhP/wgPoNEUG
-        p1bI5BJSiLc+Dw0Nz3K0Jm7rasbY/D9PCdbafpNg71xMZQ19NoJtnyik2PqFSoq1t1eTrLXW
-        QrIzrq8Ue+vJAhUrlDbWNiLps6oJSlpnypQWtxiRtKV7HknnTUFHyRPCPcmcPE3LqSNjkoSp
-        Nb39AtWgOHvu2k+Uh/KZIuRFA7MT9DNDZBES0mKmA4F1shjjxRyCweU6j1hEYP9RT663vPk4
-        4il0InCUmxAvLglgpqIFuVMksxWW+jupIkTTfsxxsOQR7gzGfEMwPmsj3Blf5gh0X5laY5wJ
-        gTqbGXeziImDlQanZ1sQjNl0mJu9mIPgshrXjgWmjYRxyw2cD8XBbF+Zh31h2tJC8RwA8987
-        PYOUoJ+46/HPw/WJQsTzPugZqcbdh2JMKDxqj3TbGLMR9K5PArcNjAgKC8Q8SqCgMpdvBLht
-        GMN4lkKNYZjgn6ECwe8P5WQJCqz6P7QOISPaxKk06SmcJloVpeCyIjSydE2mIiXijDLdhNa+
-        Q1h8GzLZDpsRQyPJBlGJvTVRTMi0mpx0MwIak/iJhgb/WaJkWc45Tq08rc6Ucxoz2kzjEn9R
-        KTF6UsykyDK4sxyn4tTrVQHtFZCHyqhdPkpqsQkTiQq7wwNXUx4v08PNS00vvLPjO4yG+2OO
-        steE7EFT76rqgs8pXe3xpsCrjuD9PrFbFvZG9VwewHu/vMOnX4Ycs/q/1UU5lVPCV95yY/lA
-        aXxSjK4qdyVx2nXvkLOhK/pAQvLD8NH3I58NO+yTAq0+2Lk7IkGrkOCaVNn2MEytkf0F6PY/
-        PAoDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsWy7bCSnG7ZnW2xBhtmSVs0/9/OanF210JW
-        iyVNGRbzj5xjtdh1t4PdYsWXmewWl3fNYbM4O+84m8Wb3y/YLRZt/cLuwOWxZt4aRo+ds+6y
-        eyzYVOrRt2UVo8eW/Z8ZPT5vkgtgi+KySUnNySxLLdK3S+DKmHvwKFPBGaGKT/0fGRsYmwW6
-        GDk5JARMJK4/usLcxcjFISSwm1Fi1bUzjBAJCYkve7+yQdjCEiv/PWcHsYUEmpgkHm0KBrHZ
-        BLQlfh7dCxTn4BARiJbY8EoIZA6zwHtGiZmXn4DNERbwlZi34TfYHBYBVYkF5w6xgNi8Ai4S
-        f1Z+gJovJ3HzXCcziM0p4Crx++wqNohdLhIrzu5gncDIt4CRYRWjZGpBcW56brFhgWFearle
-        cWJucWleul5yfu4mRnBgamnuYLy8JP4QowAHoxIP74ur22KFWBPLiitzDzFKcDArifBePAMU
-        4k1JrKxKLcqPLyrNSS0+xCjNwaIkzvs071ikkEB6YklqdmpqQWoRTJaJg1OqgbFcn4EtcGF0
-        Bm/X7BwmWVm33QVbPVPbtzZpPeNNOtb+/z7zoy69J/qvr3Ym3io70JwjnNbSuV4oXn3usXe2
-        tuJeFt7n5RRMJuyuOLHx2qvJa/RXPpx++jCXyto4mU2zPNb+WsRb0rgs+NFn7XThWQHv+WZY
-        8jjEWinmMSo0lC47syblz7nTOkosxRmJhlrMRcWJALwWJz1IAgAA
-X-CMS-MailID: 20191028121758epcas5p2dda6d0842be32bcab2e6025fac1f3e78
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191028121758epcas5p2dda6d0842be32bcab2e6025fac1f3e78
-References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
-        <CGME20191028121758epcas5p2dda6d0842be32bcab2e6025fac1f3e78@epcas5p2.samsung.com>
+        Mon, 28 Oct 2019 08:21:17 -0400
+Received: from cpe-2606-a000-111b-43ee-0-0-0-115f.dyn6.twc.com ([2606:a000:111b:43ee::115f] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1iP416-0002vS-W3; Mon, 28 Oct 2019 08:21:09 -0400
+Date:   Mon, 28 Oct 2019 08:20:55 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
+        dwalsh@redhat.com, mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V7 04/21] audit: convert to contid list to check
+ for orch/engine ownership
+Message-ID: <20191028122055.GA27683@hmswarspite.think-freely.org>
+References: <cover.1568834524.git.rgb@redhat.com>
+ <6fb4e270bfafef3d0477a06b0365fdcc5a5305b5.1568834524.git.rgb@redhat.com>
+ <20190926144629.GB7235@hmswarspite.think-freely.org>
+ <20191025200019.vfd66aygccpf5yoe@madcap2.tricolour.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025200019.vfd66aygccpf5yoe@madcap2.tricolour.ca>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many platforms use DesignWare controller but the PHY can be different in
-different platforms. If the PHY is compliant to the ZRX-DC specification
-it helps lower power consumption during power states.
+On Fri, Oct 25, 2019 at 04:00:19PM -0400, Richard Guy Briggs wrote:
+> On 2019-09-26 10:46, Neil Horman wrote:
+> > On Wed, Sep 18, 2019 at 09:22:21PM -0400, Richard Guy Briggs wrote:
+> > > Store the audit container identifier in a refcounted kernel object that
+> > > is added to the master list of audit container identifiers.  This will
+> > > allow multiple container orchestrators/engines to work on the same
+> > > machine without danger of inadvertantly re-using an existing identifier.
+> > > It will also allow an orchestrator to inject a process into an existing
+> > > container by checking if the original container owner is the one
+> > > injecting the task.  A hash table list is used to optimize searches.
+> > > 
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > ---
+> > >  include/linux/audit.h | 26 ++++++++++++++--
+> > >  kernel/audit.c        | 86 ++++++++++++++++++++++++++++++++++++++++++++++++---
+> > >  kernel/audit.h        |  8 +++++
+> > >  3 files changed, 112 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > index f2e3b81f2942..e317807cdd3e 100644
+> > > --- a/include/linux/audit.h
+> > > +++ b/include/linux/audit.h
+> > > @@ -95,10 +95,18 @@ struct audit_ntp_data {
+> > >  struct audit_ntp_data {};
+> > >  #endif
+> > >  
+> > > +struct audit_cont {
+> > > +	struct list_head	list;
+> > > +	u64			id;
+> > > +	struct task_struct	*owner;
+> > > +	refcount_t              refcount;
+> > > +	struct rcu_head         rcu;
+> > > +};
+> > > +
+> > >  struct audit_task_info {
+> > >  	kuid_t			loginuid;
+> > >  	unsigned int		sessionid;
+> > > -	u64			contid;
+> > > +	struct audit_cont	*cont;
+> > >  #ifdef CONFIG_AUDITSYSCALL
+> > >  	struct audit_context	*ctx;
+> > >  #endif
+> > > @@ -203,11 +211,15 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
+> > >  
+> > >  static inline u64 audit_get_contid(struct task_struct *tsk)
+> > >  {
+> > > -	if (!tsk->audit)
+> > > +	if (!tsk->audit || !tsk->audit->cont)
+> > >  		return AUDIT_CID_UNSET;
+> > > -	return tsk->audit->contid;
+> > > +	return tsk->audit->cont->id;
+> > >  }
+> > >  
+> > > +extern struct audit_cont *audit_cont(struct task_struct *tsk);
+> > > +
+> > > +extern void audit_cont_put(struct audit_cont *cont);
+> > > +
+> > I see that you manual increment this refcount at various call sites, why
+> > no corresponding audit_contid_hold function?
+> 
+> I was trying to avoid the get function due to having one site where I
+> needed the pointer for later but didn't need a refcount to it so that I
+> could release the refcount it if it was replaced by another cont object.
+> A hold function would just contain one line that would call the
+> refcount_inc().  If I did convert things over to a get function, it
+> would hide some of this extra conditional code in the main calling
+> function, but in one place I could just call put immediately to
+> neutralize that unneeded refcount.
+> 
+Ok, but this pattern:
 
-If current data rate is 8.0 GT/s or higher and PHY is not compliant to
-ZRX-DC specification, then after every 100ms link should transition to
-recovery state during the low power states.
+static inline u64 __audit_contid_get(struct audit_cont *c) {
+        return c->id;
+}
 
-DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+audit_contid_get(struct audit_cont *c) {
+        refcount_hold(c)
+        return __audit_contid_get(c)
+}
 
-Platforms with ZRX-DC compliant PHY can set "snps,phy-zrxdc-compliant"
-property in controller DT node to specify this property to the controller.
+Squares that up, doesn't it?  It gives you an internal non refcount
+holding version then to use.
 
-CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
-Change in v2:
- - trivial change in patch description
+> Would you see any issue with that extra get/put refcount that would only
+> happen in the case of changing a contid in a nesting situation?
+> 
+No, I personally wouldn't have an issue with it, but the above would
+make it pretty readable I think
 
- drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
- drivers/pci/controller/dwc/pcie-designware.h | 3 +++
- 2 files changed, 10 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 820488dfeaed..6560d9f765d7 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -556,4 +556,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 		       PCIE_PL_CHK_REG_CHK_REG_START;
- 		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
- 	}
-+
-+	if (of_property_read_bool(np, "snps,phy-zrxdc-compliant")) {
-+		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-+		val &= ~PORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
-+		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-+	}
-+
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 5a18e94e52c8..427a55ec43c6 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -60,6 +60,9 @@
- #define PCIE_MSI_INTR0_MASK		0x82C
- #define PCIE_MSI_INTR0_STATUS		0x830
- 
-+#define PCIE_PORT_GEN3_RELATED		0x890
-+#define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL		BIT(0)
-+
- #define PCIE_ATU_VIEWPORT		0x900
- #define PCIE_ATU_REGION_INBOUND		BIT(31)
- #define PCIE_ATU_REGION_OUTBOUND	0
--- 
-2.17.1
-
+> > Neil
+> > 
+> > >  extern u32 audit_enabled;
+> > >  
+> > >  extern int audit_signal_info(int sig, struct task_struct *t);
+> > > @@ -277,6 +289,14 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
+> > >  	return AUDIT_CID_UNSET;
+> > >  }
+> > >  
+> > > +static inline struct audit_cont *audit_cont(struct task_struct *tsk)
+> > > +{
+> > > +	return NULL;
+> > > +}
+> > > +
+> > > +static inline void audit_cont_put(struct audit_cont *cont)
+> > > +{ }
+> > > +
+> > >  #define audit_enabled AUDIT_OFF
+> > >  
+> > >  static inline int audit_signal_info(int sig, struct task_struct *t)
+> > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > index a36ea57cbb61..ea0899130cc1 100644
+> > > --- a/kernel/audit.c
+> > > +++ b/kernel/audit.c
+> > > @@ -137,6 +137,8 @@ struct audit_net {
+> > >  
+> > >  /* Hash for inode-based rules */
+> > >  struct list_head audit_inode_hash[AUDIT_INODE_BUCKETS];
+> > > +/* Hash for contid-based rules */
+> > > +struct list_head audit_contid_hash[AUDIT_CONTID_BUCKETS];
+> > >  
+> > >  static struct kmem_cache *audit_buffer_cache;
+> > >  
+> > > @@ -204,6 +206,8 @@ struct audit_reply {
+> > >  
+> > >  static struct kmem_cache *audit_task_cache;
+> > >  
+> > > +static DEFINE_SPINLOCK(audit_contid_list_lock);
+> > > +
+> > >  void __init audit_task_init(void)
+> > >  {
+> > >  	audit_task_cache = kmem_cache_create("audit_task",
+> > > @@ -231,7 +235,9 @@ int audit_alloc(struct task_struct *tsk)
+> > >  	}
+> > >  	info->loginuid = audit_get_loginuid(current);
+> > >  	info->sessionid = audit_get_sessionid(current);
+> > > -	info->contid = audit_get_contid(current);
+> > > +	info->cont = audit_cont(current);
+> > > +	if (info->cont)
+> > > +		refcount_inc(&info->cont->refcount);
+> > >  	tsk->audit = info;
+> > >  
+> > >  	ret = audit_alloc_syscall(tsk);
+> > > @@ -246,7 +252,7 @@ int audit_alloc(struct task_struct *tsk)
+> > >  struct audit_task_info init_struct_audit = {
+> > >  	.loginuid = INVALID_UID,
+> > >  	.sessionid = AUDIT_SID_UNSET,
+> > > -	.contid = AUDIT_CID_UNSET,
+> > > +	.cont = NULL,
+> > >  #ifdef CONFIG_AUDITSYSCALL
+> > >  	.ctx = NULL,
+> > >  #endif
+> > > @@ -266,6 +272,9 @@ void audit_free(struct task_struct *tsk)
+> > >  	/* Freeing the audit_task_info struct must be performed after
+> > >  	 * audit_log_exit() due to need for loginuid and sessionid.
+> > >  	 */
+> > > +	spin_lock(&audit_contid_list_lock); 
+> > > +	audit_cont_put(tsk->audit->cont);
+> > > +	spin_unlock(&audit_contid_list_lock); 
+> > >  	info = tsk->audit;
+> > >  	tsk->audit = NULL;
+> > >  	kmem_cache_free(audit_task_cache, info);
+> > > @@ -1657,6 +1666,9 @@ static int __init audit_init(void)
+> > >  	for (i = 0; i < AUDIT_INODE_BUCKETS; i++)
+> > >  		INIT_LIST_HEAD(&audit_inode_hash[i]);
+> > >  
+> > > +	for (i = 0; i < AUDIT_CONTID_BUCKETS; i++)
+> > > +		INIT_LIST_HEAD(&audit_contid_hash[i]);
+> > > +
+> > >  	mutex_init(&audit_cmd_mutex.lock);
+> > >  	audit_cmd_mutex.owner = NULL;
+> > >  
+> > > @@ -2356,6 +2368,32 @@ int audit_signal_info(int sig, struct task_struct *t)
+> > >  	return audit_signal_info_syscall(t);
+> > >  }
+> > >  
+> > > +struct audit_cont *audit_cont(struct task_struct *tsk)
+> > > +{
+> > > +	if (!tsk->audit || !tsk->audit->cont)
+> > > +		return NULL;
+> > > +	return tsk->audit->cont;
+> > > +}
+> > > +
+> > > +/* audit_contid_list_lock must be held by caller */
+> > > +void audit_cont_put(struct audit_cont *cont)
+> > > +{
+> > > +	if (!cont)
+> > > +		return;
+> > > +	if (refcount_dec_and_test(&cont->refcount)) {
+> > > +		put_task_struct(cont->owner);
+> > > +		list_del_rcu(&cont->list);
+> > > +		kfree_rcu(cont, rcu);
+> > > +	}
+> > > +}
+> > > +
+> > > +static struct task_struct *audit_cont_owner(struct task_struct *tsk)
+> > > +{
+> > > +	if (tsk->audit && tsk->audit->cont)
+> > > +		return tsk->audit->cont->owner;
+> > > +	return NULL;
+> > > +}
+> > > +
+> > >  /*
+> > >   * audit_set_contid - set current task's audit contid
+> > >   * @task: target task
+> > > @@ -2382,9 +2420,12 @@ int audit_set_contid(struct task_struct *task, u64 contid)
+> > >  	}
+> > >  	oldcontid = audit_get_contid(task);
+> > >  	read_lock(&tasklist_lock);
+> > > -	/* Don't allow the audit containerid to be unset */
+> > > +	/* Don't allow the contid to be unset */
+> > >  	if (!audit_contid_valid(contid))
+> > >  		rc = -EINVAL;
+> > > +	/* Don't allow the contid to be set to the same value again */
+> > > +	else if (contid == oldcontid) {
+> > > +		rc = -EADDRINUSE;
+> > >  	/* if we don't have caps, reject */
+> > >  	else if (!capable(CAP_AUDIT_CONTROL))
+> > >  		rc = -EPERM;
+> > > @@ -2397,8 +2438,43 @@ int audit_set_contid(struct task_struct *task, u64 contid)
+> > >  	else if (audit_contid_set(task))
+> > >  		rc = -ECHILD;
+> > >  	read_unlock(&tasklist_lock);
+> > > -	if (!rc)
+> > > -		task->audit->contid = contid;
+> > > +	if (!rc) {
+> > > +		struct audit_cont *oldcont = audit_cont(task);
+> > > +		struct audit_cont *cont = NULL;
+> > > +		struct audit_cont *newcont = NULL;
+> > > +		int h = audit_hash_contid(contid);
+> > > +
+> > > +		spin_lock(&audit_contid_list_lock);
+> > > +		list_for_each_entry_rcu(cont, &audit_contid_hash[h], list)
+> > > +			if (cont->id == contid) {
+> > > +				/* task injection to existing container */
+> > > +				if (current == cont->owner) {
+> > > +					refcount_inc(&cont->refcount);
+> > > +					newcont = cont;
+> > > +				} else {
+> > > +					rc = -ENOTUNIQ;
+> > > +					goto conterror;
+> > > +				}
+> > > +			}
+> > > +		if (!newcont) {
+> > > +			newcont = kmalloc(sizeof(struct audit_cont), GFP_ATOMIC);
+> > > +			if (newcont) {
+> > > +				INIT_LIST_HEAD(&newcont->list);
+> > > +				newcont->id = contid;
+> > > +				get_task_struct(current);
+> > > +				newcont->owner = current;
+> > > +				refcount_set(&newcont->refcount, 1);
+> > > +				list_add_rcu(&newcont->list, &audit_contid_hash[h]);
+> > > +			} else {
+> > > +				rc = -ENOMEM;
+> > > +				goto conterror;
+> > > +			}
+> > > +		}
+> > > +		task->audit->cont = newcont;
+> > > +		audit_cont_put(oldcont);
+> > > +conterror:
+> > > +		spin_unlock(&audit_contid_list_lock);
+> > > +	}
+> > >  	task_unlock(task);
+> > >  
+> > >  	if (!audit_enabled)
+> > > diff --git a/kernel/audit.h b/kernel/audit.h
+> > > index 16bd03b88e0d..e4a31aa92dfe 100644
+> > > --- a/kernel/audit.h
+> > > +++ b/kernel/audit.h
+> > > @@ -211,6 +211,14 @@ static inline int audit_hash_ino(u32 ino)
+> > >  	return (ino & (AUDIT_INODE_BUCKETS-1));
+> > >  }
+> > >  
+> > > +#define AUDIT_CONTID_BUCKETS	32
+> > > +extern struct list_head audit_contid_hash[AUDIT_CONTID_BUCKETS];
+> > > +
+> > > +static inline int audit_hash_contid(u64 contid)
+> > > +{
+> > > +	return (contid & (AUDIT_CONTID_BUCKETS-1));
+> > > +}
+> > > +
+> > >  /* Indicates that audit should log the full pathname. */
+> > >  #define AUDIT_NAME_FULL -1
+> > >  
+> > > -- 
+> > > 1.8.3.1
+> > > 
+> > > 
+> 
+> - RGB
+> 
+> --
+> Richard Guy Briggs <rgb@redhat.com>
+> Sr. S/W Engineer, Kernel Security, Base Operating Systems
+> Remote, Ottawa, Red Hat Canada
+> IRC: rgb, SunRaycer
+> Voice: +1.647.777.2635, Internal: (81) 32635
+> 
+> 
