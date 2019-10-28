@@ -2,125 +2,89 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FD9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 04:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09847CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 04:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D7020663
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 04:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C545A2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 04:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pHl3lffz"
+	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="Y87v6ugj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbfJ1E35 (ORCPT
+        id S1726314AbfJ1Ejq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 00:29:57 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:37330 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfJ1E35 (ORCPT
+        Mon, 28 Oct 2019 00:39:46 -0400
+Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21427 "EHLO
+        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbfJ1Ejp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 00:29:57 -0400
-Received: by mail-yb1-f196.google.com with SMTP id z125so3622440ybc.4
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 21:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kay/B6Pbmp52GXhHLdI41CSSdennX3J2TNNpq3dL5KE=;
-        b=pHl3lffzuwfzmHI3pzQCCUD+EgCKcge0eQF50bDurCUXGU05HAlRKes7teALt2xETM
-         B88kFIKmourv44FDT/Y5HnD7uhWT8HsCCgnXxNiZzpf7wbpgD++IclOzcO6zDB3N0GIB
-         zMc34/Ya4/sb0EDCAGMLteY6Tl/H/CTEiVdsdDgGNMFL6nKgkRRhelAbP+gIsuoJdIlw
-         HARizMQS6Ga7f02I9a54VIcpGQNyN4bS1wShB5b3A8WPjl0TRhjMXc7iu1ZYwtT5Bkgz
-         Bmh2bQ6D7dim34qCoVv3gCLtwikssyw0nmQUO7CVowYjsjYkqsed+Fr8pRIqllq4wU37
-         giow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kay/B6Pbmp52GXhHLdI41CSSdennX3J2TNNpq3dL5KE=;
-        b=hQS6vTrsskygDGJ5EXe7wzyzfMPiS+LdbdNMqGLtAWwvYpOzwy7a7PqYz8iXWBcSNu
-         q6WK6DUz/fKJzCdf+r+SrhIW+h3KvDDTtrozhOM5L/07k+yKz3CAHo5fdrLTs+TEMoW3
-         ZHquDLU8wm1T/rWXtEiZHkPbHWeWLFXZTMcMirs4QrZWWmaz3jnnpHlJBtGR5xKxMaHY
-         O7XgAyfmi4Eg6oItYbqJS7dfxLJErZueD7yhoCoK/xbbE1IFoktUg460M0a7LqfG4Dm7
-         w6CtOtsIpANe6ZDNCwl9tqGa9gA4GfFXAb5pc7xc7M40MviDKfkItIfaO6DbV/u+M51I
-         t3sg==
-X-Gm-Message-State: APjAAAWu6fMfjsP6swJ86m6MGjZscsRSCmKfCw0gM7ZGO4THUOrQAE9h
-        CiUkQ8IHyPEHGy3dJ0hSHBNIh8SySjC/ouNFosmvkA==
-X-Google-Smtp-Source: APXvYqwTW4qR98/8ui/7P1JiCS/B04syzKwKFdZ0+Ts/9BW7FhAHzDKoF8E7+F7v+6/coxyI7YvuoQJI9Lz1BkY0DkQ=
-X-Received: by 2002:a25:19c5:: with SMTP id 188mr11659594ybz.253.1572236995910;
- Sun, 27 Oct 2019 21:29:55 -0700 (PDT)
+        Mon, 28 Oct 2019 00:39:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1572237546; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=CpFBBWjERBJ3cKBVNHuwjpaeShDrpL4mDpk7NZ/tDyJWVtn9TNshu4m6ZQQkaoMPTMqzo0IVFfp9Xj53bazhhgXb7Xuv/5KR4R8G5YoY7xO/8Bn6362cFrEp4Z0nEgRzWFazFlxOE4yMdVyn16m9BCeT5dqkwFBCV1AtXNSdIXk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1572237546; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=bFB0pVj3q69YS47LEB4+p6yzNDeTqcKBksznuz1aAK4=; 
+        b=aC+sm7wsAvU5S2SO3ES9e6/5p4+fYhdoaabzMKsy699BHTJgAwd+5ool0SlCw5S/xDX4+tzA3VW/X8BgyGu/nvsVG3hKCEY1rRqbOfjVVOl+KtUNedTHZhnbj3hFaSTfHmJuc07Be9rYKGB95r+t4/3nUBALEiZVY/3jIIPodUA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=didiksetiawan.com;
+        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
+        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1572237546;
+        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        l=855; bh=bFB0pVj3q69YS47LEB4+p6yzNDeTqcKBksznuz1aAK4=;
+        b=Y87v6ugjcp23bN6Kta9K+OChjIE4bN6hKDf8sJII6dQQj46CVI7YBCv2TqH5otg8
+        uf/zo02zcZeq92Nik1JBl26BuBFGq9wqBwIIYML5fF9TwJn49i8B8TbkOZlDJUtHBXR
+        mm6Cfee/1vwWg/+NhK7FgfT0L9Kc0s8cuiR8Ntss=
+Received: from notebook (117.102.74.82 [117.102.74.82]) by mx.zohomail.com
+        with SMTPS id 1572237544365671.9832677221943; Sun, 27 Oct 2019 21:39:04 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 11:38:55 +0700
+From:   Didik Setiawan <ds@didiksetiawan.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.3 000/197] 5.3.8-stable review
+Message-ID: <20191028043855.GA18500@notebook>
+References: <20191027203351.684916567@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20191028021442.5450-1-richardw.yang@linux.intel.com>
-In-Reply-To: <20191028021442.5450-1-richardw.yang@linux.intel.com>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Sun, 27 Oct 2019 21:29:43 -0700
-Message-ID: <CANN689FNPD1U+gGaO5PmCuMULvkzOffOAPuB8fmyhVLHSqM7Vw@mail.gmail.com>
-Subject: Re: [Patch v2 1/2] lib/rbtree: set successor's parent unconditionally
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Code looks fine, for both commits in this series. Please make sure to
-double check that lib/rbtree_test does not show any performance
-regressions, but assuming they don't, looks great !
+On Sun, Oct 27, 2019 at 09:58:38PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.8 release.
+> There are 197 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.8-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+ 
+Compiled, booted, and no regressions found on my x86_64 system.
 
-Reviewed-By: Michel Lespinasse <walken@google.com>
+Thanks,
+Didik Setiawan
 
-On Sun, Oct 27, 2019 at 7:15 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
->
-> Both in Case 2 and 3, we exchange n and s. This mean no matter whether
-> child2 is NULL or not, successor's parent should be assigned to node's.
->
-> This patch takes this step out to make it explicit and reduce the
-> ambiguity.
->
-> Besides, this step reduces some symbol size like rb_erase().
->
->    KERN_CONFIG       upstream       patched
->    OPT_FOR_PERF      877            870
->    OPT_FOR_SIZE      635            621
->
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> ---
->  include/linux/rbtree_augmented.h | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/include/linux/rbtree_augmented.h b/include/linux/rbtree_augmented.h
-> index fdd421b8d9ae..99c42e1a74b8 100644
-> --- a/include/linux/rbtree_augmented.h
-> +++ b/include/linux/rbtree_augmented.h
-> @@ -283,14 +283,13 @@ __rb_erase_augmented(struct rb_node *node, struct rb_root *root,
->                 __rb_change_child(node, successor, tmp, root);
->
->                 if (child2) {
-> -                       successor->__rb_parent_color = pc;
->                         rb_set_parent_color(child2, parent, RB_BLACK);
->                         rebalance = NULL;
->                 } else {
->                         unsigned long pc2 = successor->__rb_parent_color;
-> -                       successor->__rb_parent_color = pc;
->                         rebalance = __rb_is_black(pc2) ? parent : NULL;
->                 }
-> +               successor->__rb_parent_color = pc;
->                 tmp = successor;
->         }
->
-> --
-> 2.17.1
->
-
-
--- 
-Michel "Walken" Lespinasse
-A program is never fully debugged until the last user dies.
