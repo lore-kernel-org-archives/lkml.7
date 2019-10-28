@@ -2,153 +2,112 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E514CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF0DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CFC208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C2C20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 07:19:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IDbqdbrB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="xWHIGGQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730967AbfJ1HOB (ORCPT
+        id S1732417AbfJ1HTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 03:14:01 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30944 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730751AbfJ1HOB (ORCPT
+        Mon, 28 Oct 2019 03:19:21 -0400
+Received: from gateway20.websitewelcome.com ([192.185.53.25]:20950 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730751AbfJ1HTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 03:14:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572246839;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gF7SCUNNkREDqMPabWX15Cl/xUWOTTN3vml4/5CORAM=;
-        b=IDbqdbrBFW6fPEdNNbt3S1V91E/yQ7jWhwRWw2lcCp/Gjxp8/R1Cwaz9/wsZ9N6Tg1ry0n
-        uosGleQIzvLuhbUiOCUpcftsHj/AbzWJWWdeHRnPBnReUcI8+jKx6KhxG5UbKN3f94rMQ/
-        mdRwyHTyiWzO4uYSjEEUi5AVizCetfE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-tcVWAHiHOTGi6qxv19Hl2g-1; Mon, 28 Oct 2019 03:13:55 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED404800D41;
-        Mon, 28 Oct 2019 07:13:54 +0000 (UTC)
-Received: from [10.72.12.88] (ovpn-12-88.pek2.redhat.com [10.72.12.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 84B035DA32;
-        Mon, 28 Oct 2019 07:13:49 +0000 (UTC)
-Subject: Re: [PATCH] virtio_ring: fix stalls for packed rings
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Marvin Liu <yong.liu@intel.com>, stable@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20191027100705.11644-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <efe3c06f-0a80-c266-c7fc-ac33901f51c7@redhat.com>
-Date:   Mon, 28 Oct 2019 15:13:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 28 Oct 2019 03:19:20 -0400
+X-Greylist: delayed 1363 seconds by postgrey-1.27 at vger.kernel.org; Mon, 28 Oct 2019 03:19:20 EDT
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 6B6F9400D0068
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 00:48:29 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id OyxAi0Et4BnGaOyxAieeqj; Mon, 28 Oct 2019 01:56:36 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=oCTskRlbgqD+J7aWayjsVtQZcA0SIwA4npc4QiguN5o=; b=xWHIGGQZ1Iab0c2jpYjZZ0O1Oy
+        idQhgFCv+VHyiZt9qhZtSPdqDV6XWoIjQ9LD9elLoup1AYbW8Td72bRF5lr0kkTihUp9DFdPudO0w
+        KilHebfPbteyYM7s9JyCgKXe6/ElNoP+cG7dRzqIL1av6S0RlGiwAw9u/tNY93aU9rsixr8gzgC58
+        d9XboNFx4FZBVoAi7BKsnMhiX1fqZqBhQf0s5TLXo0rPGmRIKAWt/7DM9p3HQu3YiVKUoXYUiW4V9
+        ZNmCDkfOgd5NUgYkoeyuMfUpp9/IE/PiVxJiM1ix1ElIS4MotV1xg2ioyWlJqbnSE88n/uPSbEkS2
+        cPVkDtwA==;
+Received: from [187.192.2.30] (port=58438 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1iOyx9-0040bs-6Y; Mon, 28 Oct 2019 01:56:35 -0500
+Date:   Mon, 28 Oct 2019 01:56:33 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Igor Russkikh <igor.russkikh@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dmitry Bezrukov <dmitry.bezrukov@aquantia.com>,
+        Nikita Danilov <nikita.danilov@aquantia.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH net-next] net: aquantia: fix error handling in aq_nic_init
+Message-ID: <20191028065633.GA2412@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20191027100705.11644-1-mst@redhat.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: tcVWAHiHOTGi6qxv19Hl2g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.2.30
+X-Source-L: No
+X-Exim-ID: 1iOyx9-0040bs-6Y
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.2.30]:58438
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix currenty ignored returned error by properly error checking
+aq_phy_init().
 
-On 2019/10/27 =E4=B8=8B=E5=8D=886:08, Michael S. Tsirkin wrote:
-> From: Marvin Liu <yong.liu@intel.com>
->
-> When VIRTIO_F_RING_EVENT_IDX is negotiated, virtio devices can
-> use virtqueue_enable_cb_delayed_packed to reduce the number of device
-> interrupts.  At the moment, this is the case for virtio-net when the
-> napi_tx module parameter is set to false.
->
-> In this case, the virtio driver selects an event offset and expects that
-> the device will send a notification when rolling over the event offset
-> in the ring.  However, if this roll-over happens before the event
-> suppression structure update, the notification won't be sent. To address
-> this race condition the driver needs to check wether the device rolled
-> over the offset after updating the event suppression structure.
->
-> With VIRTIO_F_RING_PACKED, the virtio driver did this by reading the
-> flags field of the descriptor at the specified offset.
->
-> Unfortunately, checking at the event offset isn't reliable: if
-> descriptors are chained (e.g. when INDIRECT is off) not all descriptors
-> are overwritten by the device, so it's possible that the device skipped
-> the specific descriptor driver is checking when writing out used
-> descriptors. If this happens, the driver won't detect the race condition
-> and will incorrectly expect the device to send a notification.
->
-> For virtio-net, the result will be a TX queue stall, with the
-> transmission getting blocked forever.
->
-> With the packed ring, it isn't easy to find a location which is
-> guaranteed to change upon the roll-over, except the next device
-> descriptor, as described in the spec:
->
->          Writes of device and driver descriptors can generally be
->          reordered, but each side (driver and device) are only required t=
-o
->          poll (or test) a single location in memory: the next device desc=
-riptor after
->          the one they processed previously, in circular order.
->
-> while this might be sub-optimal, let's do exactly this for now.
->
-> Cc: stable@vger.kernel.org
-Fixes: f51f982682e2a ("virtio_ring: leverage event idx in packed ring")
-> Cc: Jason Wang <jasowang@redhat.com>
-> Signed-off-by: Marvin Liu <yong.liu@intel.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->
-> So this is what I have in my tree now - this is just Marvin's patch
-> with a tweaked description.
->
->
->   drivers/virtio/virtio_ring.c | 7 +++----
->   1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index bdc08244a648..a8041e451e9e 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -1499,9 +1499,6 @@ static bool virtqueue_enable_cb_delayed_packed(stru=
-ct virtqueue *_vq)
->   =09=09 * counter first before updating event flags.
->   =09=09 */
->   =09=09virtio_wmb(vq->weak_barriers);
-> -=09} else {
-> -=09=09used_idx =3D vq->last_used_idx;
-> -=09=09wrap_counter =3D vq->packed.used_wrap_counter;
->   =09}
->  =20
->   =09if (vq->packed.event_flags_shadow =3D=3D VRING_PACKED_EVENT_FLAG_DIS=
-ABLE) {
-> @@ -1518,7 +1515,9 @@ static bool virtqueue_enable_cb_delayed_packed(stru=
-ct virtqueue *_vq)
->   =09 */
->   =09virtio_mb(vq->weak_barriers);
->  =20
-> -=09if (is_used_desc_packed(vq, used_idx, wrap_counter)) {
-> +=09if (is_used_desc_packed(vq,
-> +=09=09=09=09vq->last_used_idx,
-> +=09=09=09=09vq->packed.used_wrap_counter)) {
->   =09=09END_USE(vq);
->   =09=09return false;
->   =09}
+Addresses-Coverity-ID: 1487376 ("Unused value")
+Fixes: dbcd6806af42 ("net: aquantia: add support for Phy access")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+index 433adc099e44..1914aa0a19d0 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+@@ -341,7 +341,8 @@ int aq_nic_init(struct aq_nic_s *self)
+ 
+ 	if (self->aq_nic_cfg.aq_hw_caps->media_type == AQ_HW_MEDIA_TYPE_TP) {
+ 		self->aq_hw->phy_id = HW_ATL_PHY_ID_MAX;
+-		err = aq_phy_init(self->aq_hw);
++		if (!aq_phy_init(self->aq_hw))
++			goto err_exit;
+ 	}
+ 
+ 	for (i = 0U, aq_vec = self->aq_vec[0];
+-- 
+2.23.0
 
