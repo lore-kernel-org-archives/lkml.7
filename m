@@ -5,413 +5,134 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B180CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFC5CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0AD214B2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08272214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 18:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PZpDh11Q"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iX3CrWfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfJ1Si3 (ORCPT
+        id S1727577AbfJ1Sic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 14:38:29 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38448 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbfJ1Si2 (ORCPT
+        Mon, 28 Oct 2019 14:38:32 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38630 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbfJ1Sib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 14:38:28 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SIc1gK049738;
-        Mon, 28 Oct 2019 13:38:01 -0500
+        Mon, 28 Oct 2019 14:38:31 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SIcRBn017363;
+        Mon, 28 Oct 2019 13:38:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572287881;
-        bh=ynnE2bcE7/pjTvuXLjgDaxUYtz5RYI+D7gB1BXxX9Io=;
+        s=ti-com-17Q1; t=1572287907;
+        bh=95PMofJsyIEn3NAsJyz9IppOg+cVPNREQZwHO7yf3yY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=PZpDh11QGJWwYaad9skPE/CUd4cIC5Me+WYKErMsoFogY5l8sMQnGU4Yp9wnQJOTm
-         rsaaW9I/4JY6tPLKkP87759xHDaMeg7VrLIOiGX1u+2pi1i+qvc73dCHd2QmTtneOQ
-         3LFLU/0Rknli/TDd1qODhz90x+3bXsIdFozVueOQ=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9SIc1Nd077895
+        b=iX3CrWfGwnNgnAkWM+ihgsCA3eQqTyAXNIKRjjtL6xvV0WvkWs5kAWnrpR3h1OoZu
+         P9WCz/n2JnNtlk0nLLlHZusdG0n7Pr/MUgv5YJOGfnO0PNtOsafhQnSpde+zUq7837
+         Gfki7pZo4KXhr7tg9EKzGg+s/1Z41R8xGJ1OkERg=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9SIcRsu078854
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 28 Oct 2019 13:38:01 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 28 Oct 2019 13:38:27 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
- Oct 2019 13:37:49 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 13:38:15 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 28 Oct 2019 13:37:49 -0500
+ Frontend Transport; Mon, 28 Oct 2019 13:38:27 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SIc1HH056000;
-        Mon, 28 Oct 2019 13:38:01 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SIcRMT048762;
+        Mon, 28 Oct 2019 13:38:27 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v15 08/19] dt: bindings: lp55xx: Update binding for Multicolor Framework
-Date:   Mon, 28 Oct 2019 13:36:18 -0500
-Message-ID: <20191028183629.11779-9-dmurphy@ti.com>
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v15 11/19] ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+Date:   Mon, 28 Oct 2019 13:36:21 -0500
+Message-ID: <20191028183629.11779-12-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20191028183629.11779-1-dmurphy@ti.com>
 References: <20191028183629.11779-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the DT binding to include the properties to use the
-multicolor framework for the devices that use the LP55xx
-framework.
+Add the reg property to each channel node.  This update is
+to accomodate the multicolor framework.  In addition to the
+accomodation this allows the LEDs to be placed on any channel
+and allow designs to skip channels as opposed to requiring
+sequential order.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Tony Lindgren <tony@atomide.com>
-CC: "Benoît Cousson" <bcousson@baylibre.com>
 CC: Linus Walleij <linus.walleij@linaro.org>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
 ---
- .../devicetree/bindings/leds/leds-lp55xx.txt  | 149 +++++++++++++++---
- 1 file changed, 124 insertions(+), 25 deletions(-)
+ arch/arm/boot/dts/ste-href.dtsi | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-index bfe2805c5534..0ccc1efc2499 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-@@ -1,6 +1,8 @@
- Binding for TI/National Semiconductor LP55xx LED Drivers
- 
- Required properties:
-+- #address-cells: 1
-+- #size-cells: 0
- - compatible: one of
- 	national,lp5521
- 	national,lp5523
-@@ -14,6 +16,18 @@ Required properties:
- Each child has own specific current settings
- - led-cur: Current setting at each LED channel (mA x10, 0 if LED is not connected)
- - max-cur: Maximun current at each LED channel.
-+- reg: Output channel for the LED.  This is zero based channel identifier and
-+	the data sheet is a one based channel identifier.
-+	reg value to output to LED output number
-+	D1 = reg value is 0
-+	D2 = reg value is 1
-+	D3 = reg value is 2
-+	D4 = reg value is 3
-+	D5 = reg value is 4
-+	D6 = reg value is 5
-+	D7 = reg value is 6
-+	D8 = reg value is 7
-+	D9 = reg value is 8
- 
- Optional properties:
- - enable-gpio: GPIO attached to the chip's enable pin
-@@ -35,23 +49,28 @@ example 1) LP5521
- on channel 0.
- 
- lp5521@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "national,lp5521";
- 	reg = <0x32>;
- 	label = "lp5521_pri";
- 	clock-mode = /bits/ 8 <2>;
- 
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 		linux,default-trigger = "heartbeat";
- 	};
- 
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 	};
- 
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 	};
-@@ -70,59 +89,70 @@ ASEL1    ASEL0    Address
-  VEN      VEN       35h
- 
- lp5523@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "national,lp5523";
- 	reg = <0x32>;
- 	clock-mode = /bits/ 8 <1>;
- 
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan3 {
-+	chan@3 {
-+		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan4 {
-+	chan@4 {
-+		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan5 {
-+	chan@5 {
-+		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan6 {
-+	chan@6 {
-+		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan7 {
-+	chan@7 {
-+		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan8 {
-+	chan@8 {
-+		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
-@@ -133,29 +163,35 @@ example 3) LP5562
- 4 channels are defined.
- 
- lp5562@30 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "ti,lp5562";
- 	reg = <0x30>;
- 	clock-mode = /bits/8 <2>;
- 
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		chan-name = "R";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		chan-name = "G";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		chan-name = "B";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan3 {
-+	chan@3 {
-+		reg = <3>;
- 		chan-name = "W";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
-@@ -167,62 +203,125 @@ example 4) LP8501
- Others are same as LP5523.
- 
- lp8501@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "ti,lp8501";
- 	reg = <0x32>;
- 	clock-mode = /bits/ 8 <2>;
- 	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
- 
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan3 {
-+	chan@3 {
-+		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan4 {
-+	chan@4 {
-+		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan5 {
-+	chan@5 {
-+		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan6 {
-+	chan@6 {
-+		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan7 {
-+	chan@7 {
-+		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan8 {
-+	chan@8 {
-+		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- };
-+
-+Multicolor Framework Support
-+In addition to the nodes and properties defined above for device support the
-+properties below are needed for multicolor framework support as defined in
-+Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-+
-+Required child properties for multicolor framework
-+	- color : Must be LED_COLOR_ID_MULTI
-+	- function : see Documentation/devicetree/bindings/leds/common.txt
-+
-+Required grandchildren properties
-+	- reg : This is the LED output of the device
-+	- color : see Documentation/devicetree/bindings/leds/common.txt
-+
-+Multicolor LED example:
-+led-controller@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "national,lp5523";
-+	reg = <0x32>;
-+	clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+	multi-led@2 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <2>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_STANDBY;
-+		linux,default-trigger = "heartbeat";
-+
-+		led@0 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x0>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@1 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x1>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+
-+		led@6 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x6>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+	};
-+};
+diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+index 4f6acbd8c040..8a873da102d3 100644
+--- a/arch/arm/boot/dts/ste-href.dtsi
++++ b/arch/arm/boot/dts/ste-href.dtsi
+@@ -56,16 +56,21 @@
+ 				reg = <0x33>;
+ 				label = "lp5521_pri";
+ 				clock-mode = /bits/ 8 <2>;
+-				chan0 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				chan@0 {
++					reg = <0>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 					linux,default-trigger = "heartbeat";
+ 				};
+-				chan1 {
++				chan@1 {
++					reg = <1>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
+-				chan2 {
++				chan@2 {
++					reg = <2>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
+@@ -75,15 +80,20 @@
+ 				reg = <0x34>;
+ 				label = "lp5521_sec";
+ 				clock-mode = /bits/ 8 <2>;
+-				chan0 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				chan@0 {
++					reg = <0>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
+-				chan1 {
++				chan@1 {
++					reg = <1>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
+-				chan2 {
++				chan@2 {
++					reg = <2>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
 -- 
 2.22.0.214.g8dca754b1e
 
