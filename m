@@ -2,82 +2,72 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA27CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD55ECA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F85218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88AC920830
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 20:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388396AbfJ1UvZ (ORCPT
+        id S2388404AbfJ1UxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 16:51:25 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54387 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJ1UvZ (ORCPT
+        Mon, 28 Oct 2019 16:53:13 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:26952 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJ1UxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:51:25 -0400
-Received: from cust-east-parth2-46-193-72-114.wb.wifirst.net (46.193.72.114) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id ae23aec7c4df68ae; Mon, 28 Oct 2019 21:51:22 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] acpi: fix potential race conditions bypassing checks
-Date:   Mon, 28 Oct 2019 21:51:22 +0100
-Message-ID: <3605712.hsAW26GfSv@kreacher>
-In-Reply-To: <20191028183114.15709-1-kjlu@umn.edu>
-References: <20191028183114.15709-1-kjlu@umn.edu>
+        Mon, 28 Oct 2019 16:53:13 -0400
+Received: from belgarion ([90.55.204.252])
+        by mwinf5d17 with ME
+        id K8tA2100f5TFNlm038tB4x; Mon, 28 Oct 2019 21:53:11 +0100
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Mon, 28 Oct 2019 21:53:11 +0100
+X-ME-IP: 90.55.204.252
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 17/46] ARM: pxa: poodle: use platform data for poodle asoc driver
+References: <20191018154052.1276506-1-arnd@arndb.de>
+        <20191018154201.1276638-17-arnd@arndb.de>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Mon, 28 Oct 2019 21:53:10 +0100
+In-Reply-To: <20191018154201.1276638-17-arnd@arndb.de> (Arnd Bergmann's
+        message of "Fri, 18 Oct 2019 17:41:32 +0200")
+Message-ID: <875zk8mw21.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, October 28, 2019 7:31:14 PM CET Kangjie Lu wrote:
-> "obj" is a local variable. Elements are deep-copied from external
-> package to obj and security-checked. The original code is
-> seemingly fine; however, compilers optimize the deep copies into
-> shallow copies, introducing potential race conditions. For
-> example, the checks for type and length may be bypassed.
+Arnd Bergmann <arnd@arndb.de> writes:
 
-How exactly?
+> The poodle audio driver shows its age by using a custom
+> gpio api for the "locomo" support chip.
+>
+> In a perfect world, this would get converted to use gpiolib
+> and a gpio lookup table.
+>
+> As the world is not perfect, just pass all the required data
+> in a custom platform_data structure. to avoid the globally
+> visible mach/poodle.h header.
+>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 
-What compiler(s) do such optimizations in this particular case?
+Cheers.
 
-> The fix tells compilers to not optimize the deep copy by inserting
-> "volatile".
-
-Have you actually analyzed the object code produced by the compiler with and
-without the volatile to determine whether or not it has an effect as expected
-on code generation?
-
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->  drivers/acpi/processor_throttling.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
-> index 532a1ae3595a..6f4d86f8a9ce 100644
-> --- a/drivers/acpi/processor_throttling.c
-> +++ b/drivers/acpi/processor_throttling.c
-> @@ -413,7 +413,7 @@ static int acpi_processor_get_throttling_control(struct acpi_processor *pr)
->  	acpi_status status = 0;
->  	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
->  	union acpi_object *ptc = NULL;
-> -	union acpi_object obj = { 0 };
-> +	volatile union acpi_object obj = { 0 };
->  	struct acpi_processor_throttling *throttling;
->  
->  	status = acpi_evaluate_object(pr->handle, "_PTC", NULL, &buffer);
-> 
-
-
-
-
+--
+Robert
