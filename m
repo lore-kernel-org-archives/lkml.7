@@ -2,79 +2,83 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ADECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE32CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036FC214E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33AB1214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:20:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="kpBWMmsb"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="aOTb4mCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfJ1LON (ORCPT
+        id S1728726AbfJ1LUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 07:14:13 -0400
-Received: from knopi.disroot.org ([178.21.23.139]:34198 "EHLO
-        knopi.disroot.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ1LON (ORCPT
+        Mon, 28 Oct 2019 07:20:55 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:41610 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727163AbfJ1LUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 07:14:13 -0400
-X-Greylist: delayed 348 seconds by postgrey-1.27 at vger.kernel.org; Mon, 28 Oct 2019 07:14:12 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by disroot.org (Postfix) with ESMTP id A667130B3D;
-        Mon, 28 Oct 2019 12:08:23 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at disroot.org
-Received: from knopi.disroot.org ([127.0.0.1])
-        by localhost (disroot.org [127.0.0.1]) (amavisd-new, port 10024)
-        with UTF8SMTP id 2l6BXwpU0LXA; Mon, 28 Oct 2019 12:08:22 +0100 (CET)
-From:   Dhanuka Warusadura <csx@disroot.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-        t=1572260902; bh=s1qf9ZKS5xrrd7dcGul2Q+7zTiwuK5JOO7Osfl0QXxE=;
-        h=From:To:Cc:Subject:Date;
-        b=kpBWMmsbz1Af+NAs4+nHDlo8hHRxMWl+pW32NcVPeoJZz4c1SG40r9aWYrLrHGlqr
-         pI8LdT8MkjKyAb9u1XGVx4f74dMnwSa19WrSMO9unW5/ZDhN91iSxF62Zp1z6MBHRT
-         PEs0ArcA3s5EVuItJIXENxJezFAuWA92d/SqR7JQqXU1Q6RXVNZfp3uEMnDZ/xzumv
-         staxkvT2w8zUSBYHBYkAhDKNPVcq39nz6DzoRWceWOjq1ZNblP7YxxE+5RT2q6etMm
-         qoO2DwH13b+pIy4wnExTt1/xWtrI39eJ+xmhW8KbY2WuGUhaa6zhfIfjuj6PD116GN
-         qaRkVamggMtgw==
-To:     zbr@ioremap.net, skhan@linuxfoundation.org, mchehab@kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Dhanuka Warusadura <csx@disroot.org>
-Subject: [PATCH] Fixes documentation warning.
-Date:   Mon, 28 Oct 2019 16:37:44 +0530
-Message-Id: <20191028110744.6523-1-csx@disroot.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 28 Oct 2019 07:20:55 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 3ED9B2E14E7;
+        Mon, 28 Oct 2019 14:20:52 +0300 (MSK)
+Received: from myt4-4db2488e778a.qloud-c.yandex.net (myt4-4db2488e778a.qloud-c.yandex.net [2a02:6b8:c00:884:0:640:4db2:488e])
+        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id JysqeZpZ3P-Kp9ud7sV;
+        Mon, 28 Oct 2019 14:20:52 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1572261652; bh=8XwSiEkPC9qn9resugp5JbDrv4IyCtiDq/CQDPF6oiY=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=aOTb4mCQwAKdSGLq1PQZE9I3SRWh+HZt0QF2TTF7e2a6SV9hJ3A7PG89Jvw3hRubY
+         R5QiEkOs+cvQ3gUnXVOkPCgOBUEVuXnf6Y5l7B54F+tiZezohUk7rtBug8VpmKj2xU
+         oHG4G0QDMPHmsDBnO0SrSQtH+cD382KMs8OyukVo=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
+        by myt4-4db2488e778a.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id o1Ru44CYmh-KpVKoKKg;
+        Mon, 28 Oct 2019 14:20:51 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC] fs/fcntl: add fcntl F_GET_RSS
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+References: <157225848971.557.16257813537984792761.stgit@buzz>
+ <20191028111034.GS2963@bombadil.infradead.org>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <33978ec2-ac27-1b8b-ba33-3bd2c66aa016@yandex-team.ru>
+Date:   Mon, 28 Oct 2019 14:20:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191028111034.GS2963@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes - warning: Function parameter or member 'of_match_table'
-not described in 'w1_family'
+On 28/10/2019 14.10, Matthew Wilcox wrote:
+> On Mon, Oct 28, 2019 at 01:28:09PM +0300, Konstantin Khlebnikov wrote:
+>> +	if (dax_mapping(mapping))
+>> +		pages = READ_ONCE(mapping->nrexceptional);
+>> +	else
+>> +		pages = READ_ONCE(mapping->nrpages);
+> 
+> I'm not sure this is the right calculation for DAX files.  We haven't
+> allocated any memory for DAX; we're just accessing storage directly.
+> The entries in the page caache are just translation from file offset to
+> physical address.
+> 
 
-Signed-off-by: Dhanuka Warusadura <csx@disroot.org>
----
- include/linux/w1.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/w1.h b/include/linux/w1.h
-index 7da0c7588e04..cebf3464bc03 100644
---- a/include/linux/w1.h
-+++ b/include/linux/w1.h
-@@ -262,6 +262,7 @@ struct w1_family_ops {
-  * @family_entry:	family linked list
-  * @fid:		8 bit family identifier
-  * @fops:		operations for this family
-+ * @of_match_table: open firmware match table
-  * @refcnt:		reference counter
-  */
- struct w1_family {
--- 
-2.24.0.rc1
-
+Yep, makes sense. If RSS declared as memory usage then this chunk must do
+pages = READ_ONCE(mapping->nrpages) unconditionally and report 0 for DAX.
