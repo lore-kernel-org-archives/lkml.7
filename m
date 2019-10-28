@@ -2,72 +2,119 @@ Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A516CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65486CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B78208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:10:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C2Fk946f"
+	by mail.kernel.org (Postfix) with ESMTP id 453C8208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 11:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfJ1LKj (ORCPT
+        id S1726465AbfJ1LLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 07:10:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47362 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ1LKi (ORCPT
+        Mon, 28 Oct 2019 07:11:02 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:8678 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ1LLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 07:10:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QYRGqons38NtMgtcv+gzyzZCBRvkASR8tK2x6q26fog=; b=C2Fk946fmaN4QY8nAYZ1vMm2I
-        w0+gKnBQrGuUVKOFpgp4SK2A5VKbLkM3ClkVdoLUznnQA0dzuDaj9icom7IfIUBW5ujgQZT8xqSLo
-        vTiFTK5CZQgI9b6lcrtDBgnJCyRuF1avCfiAf7IMcXr6Nij4E/32a21gqi2o+SxkN5tyrkKCSvtDI
-        4/yE9UG0hGsfX10WoOekfQ8N51JSZQCd3jSPmalVxKYLP/pDxAF2nXeyYsym4IWAFw5xLjDFku72w
-        JXA17Jerqj3nWG+uUa94+7F4+cjrT8ekYPyfJuvu5lyg64HUkwPTXK3VjPlqgcZ5C3Ned657hv4il
-        uw7PAqTww==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iP2uw-0007FD-Nb; Mon, 28 Oct 2019 11:10:34 +0000
-Date:   Mon, 28 Oct 2019 04:10:34 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-Subject: Re: [PATCH RFC] fs/fcntl: add fcntl F_GET_RSS
-Message-ID: <20191028111034.GS2963@bombadil.infradead.org>
-References: <157225848971.557.16257813537984792761.stgit@buzz>
+        Mon, 28 Oct 2019 07:11:02 -0400
+Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 28 Oct
+ 2019 19:11:13 +0800
+Subject: Re: [PATCH RESEND v2 1/4] dt-bindings: power: add Amlogic secure
+ power domains bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Kevin Hilman <khilman@baylibre.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com>
+ <1570695678-42623-2-git-send-email-jianxin.pan@amlogic.com>
+ <20191014173900.GA6886@bogus>
+ <622c7785-8254-5473-6b35-7287830f3c60@amlogic.com>
+ <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <730e5611-6dc0-5bf0-0489-4091bda18c9e@amlogic.com>
+Date:   Mon, 28 Oct 2019 19:11:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157225848971.557.16257813537984792761.stgit@buzz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.18.29.227]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 01:28:09PM +0300, Konstantin Khlebnikov wrote:
-> +	if (dax_mapping(mapping))
-> +		pages = READ_ONCE(mapping->nrexceptional);
-> +	else
-> +		pages = READ_ONCE(mapping->nrpages);
+Hi Rob,
 
-I'm not sure this is the right calculation for DAX files.  We haven't
-allocated any memory for DAX; we're just accessing storage directly.
-The entries in the page caache are just translation from file offset to
-physical address.
+On 2019/10/26 4:19, Rob Herring wrote:
+> On Wed, Oct 16, 2019 at 6:26 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 2019/10/15 1:39, Rob Herring wrote:
+>>> On Thu, Oct 10, 2019 at 04:21:15AM -0400, Jianxin Pan wrote:
+>>>> Add the bindings for the Amlogic Secure power domains, controlling the
+>>>> secure power domains.
+>>>>
+>>>> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
+>>>> power domain registers are in secure world.
+>>>>
+>>>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>>>> ---
+>>>>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 ++++++++++++++++++++++
+>>>>  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++
+>>>>  2 files changed, 74 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>>>> +
+>>>> +  secure-monitor:
+>>>> +    description: phandle to the secure-monitor node
+>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>
+>>> Why not just a child node of this node?
+>>>
+>> Thanks for the review.
+>>
+>> I followed the style of the previous series of meson：
+>>
+>>   46         efuse: efuse {
+>>   47                 compatible = "amlogic,meson-gxbb-efuse";
+>>   48                 clocks = <&clkc CLKID_EFUSE>;
+>>   49                 #address-cells = <1>;
+>>   50                 #size-cells = <1>;
+>>   51                 read-only;
+>>   52                 secure-monitor = <&sm>;
+>>   53         };
+> 
+> Looks like that was not reviewed by me and is only in linux-next.
+> Please make functions exposed by secure world a child of the secure
+> firmware node.
+> 
+> Really for power domains, you only need to add a '#power-domain-cells'
+> property to the secure monitor node.
+> 
+OK, I will update them in the next version. 
+Thanks for the review.
+> Rob
+> 
+> .
+> 
 
