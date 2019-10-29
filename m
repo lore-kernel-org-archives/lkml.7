@@ -2,76 +2,69 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB10CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23534CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5394C20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:21:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="1gVT2E7K"
+	by mail.kernel.org (Postfix) with ESMTP id 02F9E20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:21:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbfJ2HVC (ORCPT
+        id S1728826AbfJ2HUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:21:02 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:39672 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728547AbfJ2HUi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:20:38 -0400
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 558EF2E1492;
-        Tue, 29 Oct 2019 10:20:35 +0300 (MSK)
-Received: from iva8-b53eb3f76dc7.qloud-c.yandex.net (iva8-b53eb3f76dc7.qloud-c.yandex.net [2a02:6b8:c0c:2ca1:0:640:b53e:b3f7])
-        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id z9I2k0eD4G-KYl0QrA6;
-        Tue, 29 Oct 2019 10:20:35 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1572333635; bh=ybO1Y2oq7Ib/EvpNL4QHXvV2p9s8Wjfoqf8YgObcVK8=;
-        h=In-Reply-To:Message-ID:Date:References:To:From:Subject:Cc;
-        b=1gVT2E7Kb5Wqsk8xqwFHfzj7ey/Sl4tf7LsGReR8lVZTJGvNiRGkSpFZ1P5QfOlfu
-         RvJTvz7WRKdqCJVKcQwyLkrIDZPWJSPaOtDl0Ot7x+vSMd4u+m8FLisUobJl6N8inN
-         gCis+y8CafSp6pnnkNV/iTjpVANuGMIcwXZx4REs=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
-        by iva8-b53eb3f76dc7.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id NZ48FxkpSN-KYWaqv0C;
-        Tue, 29 Oct 2019 10:20:34 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] ext4: deaccount delayed allocations at freeing inode in
- ext4_evict_inode()
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
-        linux-kernel@vger.kernel.org
-Cc:     Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
-        Eric Whitney <enwlinux@gmail.com>
-References: <157233344808.4027.17162642259754563372.stgit@buzz>
-Message-ID: <427b6718-0893-0f0f-f5db-5ad45b949a09@yandex-team.ru>
-Date:   Tue, 29 Oct 2019 10:20:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 03:20:34 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60300 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728032AbfJ2HUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 03:20:32 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 369BCB063877C594D3FB;
+        Tue, 29 Oct 2019 15:20:22 +0800 (CST)
+Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 29 Oct 2019 15:20:15 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <maz@kernel.org>, <eric.auger@redhat.com>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>, Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH 0/3] KVM: arm/arm64: vgic: Some cleanups and fixes
+Date:   Tue, 29 Oct 2019 15:19:16 +0800
+Message-ID: <20191029071919.177-1-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
 MIME-Version: 1.0
-In-Reply-To: <157233344808.4027.17162642259754563372.stgit@buzz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/10/2019 10.17, Konstantin Khlebnikov wrote:
-> If inode->i_blocks is zero then ext4_evict_inode() skips ext4_truncate().
-> Delayed allocation extents are freed later in ext4_clear_inode() but this
-> happens when quota reference is already dropped. This leads to leak of
-> reserved space in quota block, which disappears after umount-mount.
-> 
-> This seems broken for a long time but worked somehow until recent changes
-> in delayed allocation.
+Hi KVM/ARM maintainers,
 
-FYI, perf cannot correctly parse related perf events without this:
+This series contains three cleanups (fixes) I've collected when looking
+through the vgic code. Please consider taking them if you're happy with
+them.
 
-https://lore.kernel.org/lkml/157228145325.7530.4974461761228678289.stgit@buzz/
+Thanks!
+
+Zenghui Yu (3):
+  KVM: arm/arm64: vgic: Remove the declaration of
+    kvm_send_userspace_msi()
+  KVM: arm/arm64: vgic: Fix some comments typo
+  KVM: arm/arm64: vgic: Don't rely on the wrong pending table
+
+ include/kvm/arm_vgic.h      | 4 +---
+ virt/kvm/arm/vgic/vgic-v3.c | 8 ++++----
+ virt/kvm/arm/vgic/vgic-v4.c | 2 +-
+ 3 files changed, 6 insertions(+), 8 deletions(-)
+
+-- 
+2.19.1
+
+
