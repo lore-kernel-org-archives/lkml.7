@@ -2,98 +2,118 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA289CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D96AC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997292086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB65020659
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732829AbfJ2Jb3 (ORCPT
+        id S1729482AbfJ2Jca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:31:29 -0400
-Received: from mga01.intel.com ([192.55.52.88]:24077 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfJ2Jb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:31:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:31:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="202787906"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 02:31:27 -0700
-Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id A1C6A5802C4;
-        Tue, 29 Oct 2019 02:31:19 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
- link
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-References: <20191022125950.GA133170@google.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <c1aadeea-7904-1455-5393-c4998fbd8037@linux.intel.com>
-Date:   Tue, 29 Oct 2019 17:31:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 05:32:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47870 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725791AbfJ2Jc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:32:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E24A2B277;
+        Tue, 29 Oct 2019 09:32:27 +0000 (UTC)
+Date:   Tue, 29 Oct 2019 10:32:26 +0100
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] KVM: vmx, svm: always run with EFER.NXE=1 when shadow
+ paging is active
+Message-ID: <20191029093226.GE838@suse.de>
+References: <20191027152323.24326-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191022125950.GA133170@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191027152323.24326-1-pbonzini@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Paolo,
 
-On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
-> [+cc Rafael, linux-pm, beginning of discussion at
-> https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
->
-> On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
->> On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
->>> On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
->>>> On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
->>>>> PCIe RC driver on Intel Gateway SoCs have a requirement
->>>>> of changing link width and speed on the fly.
->>> Please add more details about why this is needed.  Since you're adding
->>> sysfs files, it sounds like it's not actually the *driver* that needs
->>> this; it's something in userspace?
->> We have use cases to change the link speed and width on the fly.
->> One is EMI check and other is power saving.  Some battery backed
->> applications have to switch PCIe link from higher GEN to GEN1 and
->> width to x1. During the cases like external power supply got
->> disconnected or broken. Once external power supply is connected then
->> switch PCIe link to higher GEN and width.
-> That sounds plausible, but of course nothing there is specific to the
-> Intel Gateway, so we should implement this generically so it would
-> work on all hardware.
-Agree.
->
-> I'm not sure what the interface should look like -- should it be a
-> low-level interface as you propose where userspace would have to
-> identify each link of interest, or is there some system-wide
-> power/performance knob that could tune all links?  Cc'd Rafael and
-> linux-pm in case they have ideas.
+On Sun, Oct 27, 2019 at 04:23:23PM +0100, Paolo Bonzini wrote:
+> VMX already does so if the host has SMEP, in order to support the combination of
+> CR0.WP=1 and CR4.SMEP=1.  However, it is perfectly safe to always do so, and in
+> fact VMX already ends up running with EFER.NXE=1 on old processors that lack the
+> "load EFER" controls, because it may help avoiding a slow MSR write.  Removing
+> all the conditionals simplifies the code.
+> 
+> SVM does not have similar code, but it should since recent AMD processors do
+> support SMEP.  So this patch also makes the code for the two vendors more similar
+> while fixing NPT=0, CR0.WP=1 and CR4.SMEP=1 on AMD processors.
+> 
+> Cc: stable@vger.kernel.org
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-To my knowledge sysfs is the appropriate way to go.
-If there are any other best possible knobs, will be helpful.
+Looks good to me.
 
-Regards,
-Dilip
+Reviewed-by: Joerg Roedel <jroedel@suse.de>
 
->
-> Bjorn
+> ---
+>  arch/x86/kvm/svm.c     | 10 ++++++++--
+>  arch/x86/kvm/vmx/vmx.c | 14 +++-----------
+>  2 files changed, 11 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index b6feb6a11a8d..2c452293c7cc 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -732,8 +732,14 @@ static int get_npt_level(struct kvm_vcpu *vcpu)
+>  static void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+>  {
+>  	vcpu->arch.efer = efer;
+> -	if (!npt_enabled && !(efer & EFER_LMA))
+> -		efer &= ~EFER_LME;
+> +
+> +	if (!npt_enabled) {
+> +		/* Shadow paging assumes NX to be available.  */
+> +		efer |= EFER_NX;
+> +
+> +		if (!(efer & EFER_LMA))
+> +			efer &= ~EFER_LME;
+> +	}
+>  
+>  	to_svm(vcpu)->vmcb->save.efer = efer | EFER_SVME;
+>  	mark_dirty(to_svm(vcpu)->vmcb, VMCB_CR);
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 2a2ba277c676..e191d41afb34 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -896,17 +896,9 @@ static bool update_transition_efer(struct vcpu_vmx *vmx, int efer_offset)
+>  	u64 guest_efer = vmx->vcpu.arch.efer;
+>  	u64 ignore_bits = 0;
+>  
+> -	if (!enable_ept) {
+> -		/*
+> -		 * NX is needed to handle CR0.WP=1, CR4.SMEP=1.  Testing
+> -		 * host CPUID is more efficient than testing guest CPUID
+> -		 * or CR4.  Host SMEP is anyway a requirement for guest SMEP.
+> -		 */
+> -		if (boot_cpu_has(X86_FEATURE_SMEP))
+> -			guest_efer |= EFER_NX;
+> -		else if (!(guest_efer & EFER_NX))
+> -			ignore_bits |= EFER_NX;
+> -	}
+> +	/* Shadow paging assumes NX to be available.  */
+> +	if (!enable_ept)
+> +		guest_efer |= EFER_NX;
+>  
+>  	/*
+>  	 * LMA and LME handled by hardware; SCE meaningless outside long mode.
+> -- 
+> 2.21.0
