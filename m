@@ -2,118 +2,148 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD637CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EE6CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10152067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8982067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="RUiChNT+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFzI+Hef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfJ2UIH (ORCPT
+        id S1726463AbfJ2UO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:08:07 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35456 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727182AbfJ2UIH (ORCPT
+        Tue, 29 Oct 2019 16:14:59 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:36536 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfJ2UO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:08:07 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m7so64744lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 13:08:04 -0700 (PDT)
+        Tue, 29 Oct 2019 16:14:59 -0400
+Received: by mail-vs1-f68.google.com with SMTP id q21so120125vsg.3;
+        Tue, 29 Oct 2019 13:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fW2Zh/fTxEZOQPa2raWuuwC2pp8Sz2KHBFNnTB4eWEs=;
-        b=RUiChNT+/TnFFn5bjZwy2byqh22AKTbCJCBObmS8MMm0mlDFMZ3+ZUQvfEUKFxPfHG
-         gKxqOXG9HM6Q9ws432DlC69CJ1HXXWAvsTZqvIDSOMrVjajWeWOgimDKr+6kQy+WHMTC
-         b29b5ymq9R3f4xru5r7JFju+iQs56sx4I/u3o=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oUPe8+g8QO9sbSdgxCxbpw5Ik2ET6/dUf4DYcYcM6yo=;
+        b=BFzI+Hef2YM7faql8YQLVbAj/vTVRqfN6eo0ORO5IJf70grC0sFJ268g2mBt34wWMe
+         Qomx8NknUb/aEVhhw+DwoNrDzLExV28KK6fywNgG5aJJEGFhhtixUzjJbRdip7uP/o0x
+         vCbyQVEnk4YE+H8dGTWMJvPoqFH5T54Tb1OZVLhHJM26GqEePtGwGfUbLHJWbMZkTpkn
+         lCPNJB7oFjQONippofSVpo1QMMhA3sZ/KArvgGnVOJiVA4gks7uClrIJQlvv1tUC6/ed
+         Wgc0lYwWM5F2awtR9wO7VAO2Ql8NL3rgR3mQ7ZbzV/q0FOsvaVAewDlocjZraHrz4Csw
+         VkHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fW2Zh/fTxEZOQPa2raWuuwC2pp8Sz2KHBFNnTB4eWEs=;
-        b=JBeaY6EJspOGWR3Gh1zmdZ3IRl/Aqd7K/gEKgc/bAEst7QGZ1hyQ6+lk4L1ULMkp1G
-         Wge9V45PsXd0l+wRIMLWnESBOkD4De2zIG7sutX1l4Ka3/33wT/6VZKMFlr7oDt8ksDb
-         9JSfezlHp1EROyf1yZfbT75mGBk6T7wI6RFe/mVbTcvkXqCHtfyjjHAwsdrsEfDpDYSP
-         yahTwPzmWdcY7Cn0PPFqh/ey28VmZ5Mghq/euh5gJ9T0HyXJBgHjMx6PizqRaF5AGMcj
-         kU8UO9GhLXn2ZcJlQ3nPe7NhCxKFwxVrB9+CwoVUeVxVF9X/lfWkwZs6LiIc32W3T0B4
-         WoBQ==
-X-Gm-Message-State: APjAAAVXiyi8DKGuW1OaUmiMEsIx4Hq9lZwFC6RNvYoSOQE0JFMvS9ZZ
-        /YM22biPgIHtguUZ1B5+298TWBDB0ac=
-X-Google-Smtp-Source: APXvYqzrxTfHZiXkL4r08L/mBr55DZk5LZ8cDufkeXKRww3LG076jKVtRPf00+Gs2EEPUjqjgwsFZQ==
-X-Received: by 2002:a2e:8204:: with SMTP id w4mr3977803ljg.212.1572379683232;
-        Tue, 29 Oct 2019 13:08:03 -0700 (PDT)
-Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id w20sm9606082lff.46.2019.10.29.13.07.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Oct 2019 13:08:00 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 4/4] bonding: balance ICMP echoes in layer3+4
- mode
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Blakey <paulb@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191029135053.10055-1-mcroce@redhat.com>
- <20191029135053.10055-5-mcroce@redhat.com>
- <5be14e4e-807f-486d-d11a-3113901e72fe@cumulusnetworks.com>
- <a7ef0f1b-e7f5-229c-3087-6eaed9652185@cumulusnetworks.com>
- <CAGnkfhwmPxFhhEawxgTp9qt_Uw=HiN3kDVk9f33mr7wEJyp1NA@mail.gmail.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <568200b1-fa27-6cb2-7586-d79829b24e4c@cumulusnetworks.com>
-Date:   Tue, 29 Oct 2019 22:07:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oUPe8+g8QO9sbSdgxCxbpw5Ik2ET6/dUf4DYcYcM6yo=;
+        b=j9CkuvtAj3qteTsGjXGRJZ1C7QDC0Ac3RMPgpKDt2CpZUSUNaJQC3KO5/I8e4lFshd
+         Twb1rkZrItBclIQl8khTsupvfl8uG6HqPV37exEe6/LXZ28XTYlPO1nX1PXsT4DbhYHF
+         TNCWmN86lbsufUz1+qrOP8bt0ICORYqci2ouTFw0oSVioruAnVCrfS7LERyo/Zk1j2wT
+         L5nu6H6ASY6jq5tgMFsLU7hH3RRufgyA0ypS6unuQDxg0CPy0QQxTB4fbyVa8Ky+auob
+         KiDYWyvzfzCWdgPY9Pg6d9AbBkHr9vqQs+MtnnbtUMVZkyCRW1NF2d5wkngZx3oGiI8e
+         ftDg==
+X-Gm-Message-State: APjAAAWzsyf5TjQ7W4NjA+T6YJteW+BRTs2qZ1w4ssNqaiJ6i2XgDmt2
+        P3xUriVXYAkFigBxoIKGjTA7KPrH8Ns2wBolhQQU7zvf
+X-Google-Smtp-Source: APXvYqy0iF0H7fg/gsdfMDCBT84OIlFj1y2W5tngZwsKJpQshGzllj3js0Eni7wBdglkOB28ZATWs+uadUcUC67yoJo=
+X-Received: by 2002:a67:fb45:: with SMTP id e5mr2737596vsr.96.1572380097240;
+ Tue, 29 Oct 2019 13:14:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAGnkfhwmPxFhhEawxgTp9qt_Uw=HiN3kDVk9f33mr7wEJyp1NA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191025103919.128171-1-christian.gmeiner@gmail.com> <6026247c6700516988111c77a8e951e03d09e96e.camel@pengutronix.de>
+In-Reply-To: <6026247c6700516988111c77a8e951e03d09e96e.camel@pengutronix.de>
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+Date:   Tue, 29 Oct 2019 22:14:55 +0100
+Message-ID: <CAH9NwWeDgJTFw0stQ9QnB8dkuc6x9XrJJMdjjB-a7Ov-mgxahw@mail.gmail.com>
+Subject: Re: [PATCH] etnaviv: fix dumping of iommuv2
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        stable@vger.kernel.org,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Russell King <linux+etnaviv@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/10/2019 21:45, Matteo Croce wrote:
-> On Tue, Oct 29, 2019 at 7:41 PM Nikolay Aleksandrov
-> <nikolay@cumulusnetworks.com> wrote:
->>
->> On 29/10/2019 20:35, Nikolay Aleksandrov wrote:
->>> Hi Matteo,
->>> Wouldn't it be more useful and simpler to use some field to choose the slave (override the hash
->>> completely) in a deterministic way from user-space ?
->>> For example the mark can be interpreted as a slave id in the bonding (should be
->>> optional, to avoid breaking existing setups). ping already supports -m and
->>> anything else can set it, this way it can be used to do monitoring for a specific
->>> slave with any protocol and would be a much simpler change.
->>> User-space can then implement any logic for the monitoring case and as a minor bonus
->>> can monitor the slaves in parallel. And the opposite as well - if people don't want
->>> these balanced for some reason, they wouldn't enable it.
->>>
->>
->> Ooh I just noticed you'd like to balance replies as well. Nevermind
->>
-> 
-> Also, the bonding could be in a router in the middle so no way to read the mark.
-> 
+Hi Lucas,
 
-Yeah, of course. I was just thinking from the host monitoring POV as I thought
-that was the initial intent (reading the last set's discussion).
+Am Di., 29. Okt. 2019 um 18:18 Uhr schrieb Lucas Stach <l.stach@pengutronix.de>:
+>
+> Hi Christian,
+>
+> On Fr, 2019-10-25 at 12:39 +0200, Christian Gmeiner wrote:
+> > etnaviv_iommuv2_dump_size(..) returns the number of PTE * SZ_4K but etnaviv_iommuv2_dump(..)
+> > increments buf pointer even if there is no PTE. This results in a bad buf pointer which gets
+> > used for memcpy(..).
+> >
+> > [  264.408474] 8<--- cut here ---
+> > [  264.412048] Unable to handle kernel paging request at virtual address f1a2c268
+> > [  264.419321] pgd = e5846004
+> > [  264.422069] [f1a2c268] *pgd=00000000
+> > [  264.425702] Internal error: Oops: 805 [#1] SMP ARM
+> > [  264.430520] Modules linked in:
+> > [  264.433616] CPU: 2 PID: 130 Comm: kworker/2:2 Tainted: G        W         5.4.0-rc4 #10
+> > [  264.441643] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+> > [  264.448227] Workqueue: events drm_sched_job_timedout
+> > [  264.453237] PC is at memcpy+0x50/0x330
+> > [  264.457012] LR is at 0x2
+> > [  264.459572] pc : [<c0c04650>]    lr : [<00000002>]    psr: 200f0013
+> > [  264.465863] sp : ec96fe64  ip : 00000002  fp : 00000140
+> > [  264.471112] r10: 00003000  r9 : ec688040  r8 : 00000002
+> > [  264.476364] r7 : 00000002  r6 : 00000002  r5 : 00000002  r4 : 00000002
+> > [  264.482917] r3 : 00000002  r2 : 00000f60  r1 : f162a020  r0 : f1a2c268
+> > [  264.489472] Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+> > [  264.496635] Control: 10c5387d  Table: 3d26804a  DAC: 00000051
+> > [  264.502407] Process kworker/2:2 (pid: 130, stack limit = 0xe8f69f3d)
+> > [  264.508786] Stack: (0xec96fe64 to 0xec970000)
+> > [  264.513180] fe60:          f1622000 f162218c f162c000 414e5445 f1a2c268 00000ffc c0655a8c
+> > [  264.521394] fe80: 00000000 0000012a f162c268 c064fd78 c0657350 c0187f64 00000001 00000000
+> > [  264.529606] fea0: ed0f9c00 00000001 00000002 435d587d ec688140 ec688100 ed0f9c00 ec688040
+> > [  264.537818] fec0: ed0f9c00 c1308b28 ec96ff1c c13e55b0 c13e41c8 c0657358 ec688260 ed0f9c18
+> > [  264.546029] fee0: ec688100 c0641278 ec688260 ec2f6180 ee1ba700 ee1bda00 c1308b28 c0149b98
+> > [  264.554240] ff00: 00000001 00000000 c0149ae4 c0c21fb0 00000000 00000000 c014a194 c1a4be34
+> > [  264.562452] ff20: c1870740 00000000 c1015384 435d587d ffffe000 ec2f6180 ec2f6194 ee1ba700
+> > [  264.570663] ff40: 00000008 ee1ba734 c1305900 ee1ba700 ffffe000 c014a0e4 ec9537a4 c0c28e64
+> > [  264.578874] ff60: ec96e000 00000000 ec2be780 ec2f99c0 ec96e000 ec2f6180 c014a0b8 ec13fe90
+> > [  264.587086] ff80: ec2be7b8 c0152890 ec96e000 ec2f99c0 c0152750 00000000 00000000 00000000
+> > [  264.595296] ffa0: 00000000 00000000 00000000 c01010b4 00000000 00000000 00000000 00000000
+> > [  264.603506] ffc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > [  264.611716] ffe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+> > [  264.619944] [<c0c04650>] (memcpy) from [<c0655a8c>] (etnaviv_iommuv2_dump+0x58/0x60)
+> > [  264.627738] [<c0655a8c>] (etnaviv_iommuv2_dump) from [<c064fd78>] (etnaviv_core_dump+0x140/0x45c)
+> > [  264.636658] [<c064fd78>] (etnaviv_core_dump) from [<c0657358>] (etnaviv_sched_timedout_job+0x8c/0xb8)
+> > [  264.645923] [<c0657358>] (etnaviv_sched_timedout_job) from [<c0641278>] (drm_sched_job_timedout+0x38/0x88)
+> > [  264.655631] [<c0641278>] (drm_sched_job_timedout) from [<c0149b98>] (process_one_work+0x2c4/0x7e4)
+> > [  264.664633] [<c0149b98>] (process_one_work) from [<c014a0e4>] (worker_thread+0x2c/0x59c)
+> > [  264.672765] [<c014a0e4>] (worker_thread) from [<c0152890>] (kthread+0x140/0x158)
+> > [  264.680200] [<c0152890>] (kthread) from [<c01010b4>] (ret_from_fork+0x14/0x20)
+> > [  264.687448] Exception stack(0xec96ffb0 to 0xec96fff8)
+> > [  264.692530] ffa0:                                     00000000 00000000 00000000 00000000
+> > [  264.700741] ffc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > [  264.708949] ffe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > [  264.715599] Code: f5d1f05c f5d1f07c e8b151f8 e2522020 (e8a051f8)
+> > [  264.721727] ---[ end trace 8afcd79e9e2725b3 ]---
+>
+> Code change is fine, but the commit message has a lot of lines over 80
+> characters and generally the kernel trace is mostly noise. I trimmed it
+> out and applied it to my fixes branch. If you don't agree with my
+> changes, please shout now as I'm planning on sending the fixes pull
+> tomorrow.
+>
 
-Anyway the patch looks good to me,
-Reviewed-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+I am fine with that!
 
+-- 
+thanks
+--
+Christian Gmeiner, MSc
+
+https://christian-gmeiner.info/privacypolicy
