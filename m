@@ -2,104 +2,143 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90C2CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81646CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88AF21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53B1B21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:25:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDPnGskH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbfJ2CZS (ORCPT
+        id S1730666AbfJ2CZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:25:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:16789 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727987AbfJ2CZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:25:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 19:25:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,242,1569308400"; 
-   d="scan'208";a="224826095"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 19:25:15 -0700
-Cc:     baolu.lu@linux.intel.com,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v7 03/11] iommu/vt-d: Add custom allocator for IOASID
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>
-References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1571946904-86776-4-git-send-email-jacob.jun.pan@linux.intel.com>
- <ae437be4-e633-e670-0e1f-d07b4364f651@linux.intel.com>
- <20191024214311.43d76a5c@jacob-builder>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC60@SHSMSX104.ccr.corp.intel.com>
- <e950cde8-8cd9-6089-c833-23d2ffb539d1@linux.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D5D0FF0@SHSMSX104.ccr.corp.intel.com>
- <20191028154900.0be0a48f@jacob-builder>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <0d8bd9c3-4e01-ab12-8671-ff25a4821ed7@linux.intel.com>
-Date:   Tue, 29 Oct 2019 10:22:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 22:25:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25904 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727987AbfJ2CZu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 22:25:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572315949;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Cg6FL8Z4Oi0Duw5nqpZmkZl+hK4mK8GPQGyMFpvz9kE=;
+        b=FDPnGskH2/WbXLNHgSXiuFZs0oQq0oWG29wOFjsLe6sZL4Wqo2/+yMSut8e3p2gq2A5W9z
+        y4oBVmxrkAMIF69z92xY7pAMQ1PDf8+VbzBVr3grCJYyVCzLUowYtVBrLRTD+2eLxp5Vhx
+        XMo0NdZRqzM5SWiIk+IbRiYDlk2qrXc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-288-8x8w1UA6NZOwtEZSwEzdbg-1; Mon, 28 Oct 2019 22:25:47 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35EC28017DD;
+        Tue, 29 Oct 2019 02:25:46 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C23295C1D6;
+        Tue, 29 Oct 2019 02:25:38 +0000 (UTC)
+Date:   Tue, 29 Oct 2019 10:25:33 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Gal Pressman <galpress@amazon.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scatterlist: Speed up for_each_sg() loop macro
+Message-ID: <20191029022533.GE22088@ming.t460p>
+References: <20191025213359.7538-1-sultan@kerneltoast.com>
 MIME-Version: 1.0
-In-Reply-To: <20191028154900.0be0a48f@jacob-builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191025213359.7538-1-sultan@kerneltoast.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 8x8w1UA6NZOwtEZSwEzdbg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Oct 25, 2019 at 02:33:58PM -0700, Sultan Alsawaf wrote:
+> From: Sultan Alsawaf <sultan@kerneltoast.com>
+>=20
+> Scatterlists are chained in predictable arrays of up to
+> SG_MAX_SINGLE_ALLOC sg structs in length. Using this knowledge, speed up
+> for_each_sg() by using constant operations to determine when to simply
+> increment the sg pointer by one or get the next sg array in the chain.
+>=20
+> Rudimentary measurements with a trivial loop body show that this yields
+> roughly a 2x performance gain.
+>=20
+> The following simple test module proves the correctness of the new loop
+> definition by testing all the different edge cases of sg chains:
+> #include <linux/module.h>
+> #include <linux/scatterlist.h>
+> #include <linux/slab.h>
+>=20
+> static int __init test_for_each_sg(void)
+> {
+> =09static const gfp_t gfp_flags =3D GFP_KERNEL | __GFP_NOFAIL;
+>         struct scatterlist *sg;
+>         struct sg_table *table;
+>         long old =3D 0, new =3D 0;
+>         unsigned int i, nents;
+>=20
+>         table =3D kmalloc(sizeof(*table), gfp_flags);
+>         for (nents =3D 1; nents <=3D 3 * SG_MAX_SINGLE_ALLOC; nents++) {
+>                 BUG_ON(sg_alloc_table(table, nents, gfp_flags));
+>                 for (sg =3D table->sgl; sg; sg =3D sg_next(sg))
+>                         old ^=3D (long)sg;
+>                 for_each_sg(table->sgl, sg, nents, i)
+>                         new ^=3D (long)sg;
+>                 sg_free_table(table);
+>         }
+>=20
+>         BUG_ON(old !=3D new);
+>         kfree(table);
+>         return 0;
+> }
+> module_init(test_for_each_sg);
+>=20
+> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+> ---
+>  include/linux/scatterlist.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
+> index 556ec1ea2574..73f7fd6702d7 100644
+> --- a/include/linux/scatterlist.h
+> +++ b/include/linux/scatterlist.h
+> @@ -146,7 +146,10 @@ static inline void sg_set_buf(struct scatterlist *sg=
+, const void *buf,
+>   * Loop over each sg element, following the pointer to a new list if nec=
+essary
+>   */
+>  #define for_each_sg(sglist, sg, nr, __i)=09\
+> -=09for (__i =3D 0, sg =3D (sglist); __i < (nr); __i++, sg =3D sg_next(sg=
+))
+> +=09for (__i =3D 0, sg =3D (sglist); __i < (nr);=09=09\
+> +=09     likely(++__i % (SG_MAX_SINGLE_ALLOC - 1) ||=09\
+> +=09=09    (__i + 1) >=3D (nr)) ? sg++ :=09=09=09\
+> +=09=09    (sg =3D sg_chain_ptr(sg + 1)))
+> =20
 
-On 10/29/19 6:49 AM, Jacob Pan wrote:
->>>> I'm not sure whether tying above logic to SVA is the right
->>>> approach. If vcmd interface doesn't work, the whole SM mode
->>>> doesn't make sense which is based on PASID-granular protection
->>>> (SVA is only one usage atop). If the only remaining usage of SM
->>>> is to map gIOVA using reserved PASID#0, then why not disabling SM
->>>> and just fallback to legacy mode?
->>>>
->>>> Based on that I prefer to disabling the SM mode completely (better
->>>> through an interface), and move the logic out of CONFIG_INTEL_
->>>> IOMMU_SVM
->>>>   
->>> Unfortunately, it is dangerous to disable SM after boot. SM uses
->>> different root/device contexts and pasid table formats. Disabling SM
->>> after boot requires changing above from SM format into legacy
->>> format.
->> You are correct.
->>
->>> Since ioasid registration failure is a rare case. How about moving
->>> this part of code up to the early stage of intel_iommu_init() and
->>> returning error if hardware present vcmd capability but software
->>> fails to register a custom ioasid allocator?
->>>    
->> It makes sense to me.
->>
-> sounds good to me too, the earlier the less to clean up.
+sg_alloc_table_chained() may put a small sglist as the first chunk, then
+chained with big one, and your patch breaks such usage.
 
-Actually, we even could return error directly and abort the iommu
-initialization. The registration of custom ioasid allocator fails only
-when memory runs out or software is buggy. In either cases, we should
-abort iommu initialization.
 
-Best regards,
-baolu
+Thanks,
+Ming
 
