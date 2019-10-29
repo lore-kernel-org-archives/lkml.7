@@ -2,151 +2,110 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72365CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC11BCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4600E2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eMchEOvQ"
+	by mail.kernel.org (Postfix) with ESMTP id 822CD20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbfJ2HXT (ORCPT
+        id S1727484AbfJ2HWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:23:19 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:36121 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387670AbfJ2HXE (ORCPT
+        Tue, 29 Oct 2019 03:22:55 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:7825 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727636AbfJ2HWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:23:04 -0400
-Received: by mail-ua1-f68.google.com with SMTP id f21so3192012uan.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 00:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0SUH6/NtBC3ilVCpdONozL4mS3Prp0pIL3y1hHCcxAk=;
-        b=eMchEOvQ/jKSqC7IlUVOrUOu2sRq3JlNHSwrSwCVZV7hyYX+NwsA3oadySVIS2GMhv
-         Fvs0xOAQNNajFRHYthK70jYXsoHFLR0MqpOCX4UruR1XUSVhwPotDPQQJvLDpR6Qs35N
-         fO+lH1wwkAdlVyFMk0fkQlRl+r7cTgEooYDbw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0SUH6/NtBC3ilVCpdONozL4mS3Prp0pIL3y1hHCcxAk=;
-        b=FvrCwGacAnqLVQvraznTvPJd18Wo2/kP3vIac2V6sFlOfuyp8BYOOL4vBO4NoIlGJH
-         Bbc+RizlTnr576BUW6zDT4h5ehAPgBcpZPPWmydtpgyovapz4QIJdlmCPbxOQohfjow3
-         f+D5GD9NwOHaGoi7Pw01IPF7SIaSBorL+OwdYj99+53jiaJLtxEQF4ld3WBFPyDnKEsJ
-         UNGsrk6DkRqW5nBRdGAZGsUWp3oayYke7+8UVWcUpAfHjAGSLZqiBO/NNrbwqOeI/yVr
-         8EO3l1IxyH/FryQoHKuMxARLdsDgHvRlJQzLruSsgrbt0TGNoA94DTnCAhzdvLhvJ1/b
-         GoYA==
-X-Gm-Message-State: APjAAAWayI0jdXz7GDK4EDs6h/Z84bPAaVQwGfGfpsTlJodcr1SgDmww
-        VMo2z8qid/Fnhb9p53i4n3Pkldgg3KKpcKjELi9TCqUDg4A=
-X-Google-Smtp-Source: APXvYqwu6KYbConXB0iKr6Mov1RGaa3I/esweFtuANMt32BxSyqi5DbWOfQ88/Vd4VamORlLwO9ez57AWW6x/2gTwcw=
-X-Received: by 2002:ab0:6503:: with SMTP id w3mr7651016uam.17.1572333783797;
- Tue, 29 Oct 2019 00:23:03 -0700 (PDT)
+        Tue, 29 Oct 2019 03:22:46 -0400
+IronPort-SDR: YQAHsy5Bd9LZOxlVewDqKKn247Mw9mW3kGrZOnPa0NRNcjV9pVBGLQFnwIUATb/APu412cMBsj
+ Jkxi9uSENAlnCzKlaxn7kPPOxRHwtYjdmygPzf9m2SGrOnYEBAD+c4tG+q2WpWJMtDQuix5oCh
+ uXB0ZkeRnGpZhv4BJJDwsANG81K9OKU6HXaa9Sr47VsFF4o3Ot5RRDJxS+9ikh8CXkI+XQzCRj
+ dXrdVaAHlbNy2FSUirk6n+T3RoMvGo0d2d56p+86eHl+EQhEq5PErvpRtbaaIrRhoQaUHmlqs8
+ q8w=
+X-IronPort-AV: E=Sophos;i="5.68,243,1569312000"; 
+   d="scan'208";a="44509452"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 28 Oct 2019 23:22:45 -0800
+IronPort-SDR: KCB17F0OT/OX3BfbxSF7LSVRiIRoCRkawe+MTXfaGaFn38Rl5WqBWbQNRXNgJ4W4qdbYO7ej0z
+ Qc1+EtAcW8OR2O/h7jNRooywdjevnjA4P2J3Q7RQn8FazooQ905xC4HXt0Iwytk2bifk7EkYMa
+ H/PhBP6fayqtSukiOI+In/hvZC4srgHgZX/w+l2DXmXv2Qp5u3KWXC0e+Zt+RbAeUbxGmp51cC
+ 6Dbg3FQSkaywxpJe2EoG1AXM/UQfmZGPfp635dXhVuAaljGoTWxuMphBcUh3HaawVGzjwa7n4f
+ Nxk=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
+        <Andrew_Gabbasov@mentor.com>
+Subject: [PATCH v4 42/48] Input: Atmel: handle ReportID "0x00" while processing T5 messages
+Date:   Tue, 29 Oct 2019 16:20:04 +0900
+Message-ID: <20191029072010.8492-43-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191029072010.8492-1-jiada_wang@mentor.com>
+References: <20191029072010.8492-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
-References: <20191023024348.225969-1-ikjn@chromium.org> <20191025194101.GA4734@bogus>
-In-Reply-To: <20191025194101.GA4734@bogus>
-From:   Ikjoon Jang <ikjn@chromium.org>
-Date:   Tue, 29 Oct 2019 15:22:52 +0800
-Message-ID: <CAATdQgDxC_1EH4cBqf7deEqRjtRU1s4o=L8vOztvVZ7NS_q9Mw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: input: Add DT bindings for Whiskers switch
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Nicolas Boitchat <drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 3:41 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Oct 23, 2019 at 10:43:48AM +0800, Ikjoon Jang wrote:
-> > Add the DT binding document for Hammer's TABLET_MODE switch.
->
-> This doesn't have any properties. Why does it need to be in DT? Just
-> have the EC driver instantiate it.
->
-> >
-> > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> > ---
-> >  .../devicetree/bindings/input/cros-cbas.yaml  | 22 +++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/cros-cbas.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/cros-cbas.yaml b/Documentation/devicetree/bindings/input/cros-cbas.yaml
-> > new file mode 100644
-> > index 000000000000..3bc989c6a295
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/cros-cbas.yaml
-> > @@ -0,0 +1,22 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->
-> (GPL-2.0-only OR BSD-2-Clause) for new bindings please.
+From: Deepak Das <deepak_das@mentor.com>
 
-This will be GPL-2.0-only in next patch.
+ReportID "0x00" is reserved by Atmel and should not be used by any
+Atmel touch controller.
 
->
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/input/cros-cbas.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ChromeOS Hammer's Base Attached Switch
-> > +
-> > +maintainers:
-> > +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > +
-> > +description:
-> > +  This device is used to signal when a detachable base is attached to a
-> > +  Chrome OS tablet. The node for this device must be under a cros-ec node
-> > +  like google,cros-ec-spi or google,cros-ec-i2c.
->
-> This should probably just be part of an EC schema where it can be
-> enforced that this is a child node. It could be either embedded into it
-> or referenced. I'd lean toward the former given this is only a
-> compatible string...
+reportID is the first byte retrieved from T5 message payload.
+Currently Atmel driver continues to process the T5 messages even if
+the reportID "0x00" is returned by Touch Controller.
 
-Sorry for basic questions here but I'm a bit confused,
-"embedding" means that cros-ec.txt should be converted
-into json schema first and embed this child bindings into there?
+This commit modifies Atmel touch driver to return -EINVAL if ReportID
+"0x00" is received while processing T5 messages.
 
-Many Chrome OS tablets have a switch exposed by 'cros-ec-keyb' device
-which is directly controlled by EC. But this 'cros_cbas' switch device is for
-other types of tablets which need additional logics on EC and HID.
+Signed-off-by: Deepak Das <deepak_das@mentor.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Currently it doesn't need to have other properties, but maybe it could require
-additional properties or device links in the future, plus this device
-is not just
-a EC subdevice, so I'd prefer this to be a separate binding.
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index e02097193229..7a5b0bd4b82e 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -76,6 +76,7 @@
+ #define MXT_PROCI_TOUCHSEQUENCELOGGER	93
+ #define MXT_TOUCH_MULTITOUCHSCREEN_T100 100
+ #define MXT_PROCI_ACTIVESTYLUS_T107	107
++#define MXT_RPTID_RESERVED		0
+ 
+ /* MXT_GEN_MESSAGE_T5 object */
+ #define MXT_RPTID_NOMSG		0xff
+@@ -1384,6 +1385,11 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
+ 	u8 report_id = message[0];
+ 	bool dump = data->debug_enabled;
+ 
++	if (report_id == MXT_RPTID_RESERVED) {
++		dev_err(&data->client->dev,
++			"Received Reserved ReportID 0x00\n");
++		return -EINVAL;
++	}
+ 	if (report_id == MXT_RPTID_NOMSG)
+ 		return 0;
+ 
+@@ -1454,6 +1460,8 @@ static int mxt_read_and_process_messages(struct mxt_data *data, u8 count)
+ 		ret = mxt_proc_message(data,
+ 			data->msg_buf + data->T5_msg_size * i);
+ 
++		if (ret < 0)
++			return ret;
+ 		if (ret == 1)
+ 			num_valid++;
+ 	}
+-- 
+2.17.1
 
->
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: google,cros-cbas
-> > +
-> > +required:
-> > +  - compatible
->
-> Add here:
->
-> additionalProperties: false.
-
-Okay, I will add this in a new patch set , thank you!
-
->
-> > --
-> > 2.23.0.866.gb869b98d4c-goog
-> >
