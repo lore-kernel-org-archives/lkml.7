@@ -2,233 +2,223 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA5ACA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555A0CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9248E21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149B721479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:49:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apgH1+FG"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DGaATEtf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfJ2AsC (ORCPT
+        id S1727201AbfJ2Atr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 20:48:02 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34909 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJ2AsB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 20:48:01 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y6so9198476lfj.2;
-        Mon, 28 Oct 2019 17:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Oh/OJ5hPhsq81kIBvC+sXtskfkbQfbT6/s+yrv+9eXo=;
-        b=apgH1+FGot3BqmDg+26T+hWSxeNOqVfofnShuJiFlsBAyDnaBBpIXtNyl5DTjbV9F8
-         SZZi10UhtwVaDLPVc+EmLTl3GlUfhHJP4Y/cVBxoievmiibUYrstMXuAGW4PqCBOV0gK
-         oiU4A7l/ZHTgFZEskHmfWz2IlpexAGf4kZkx2ql3/Ib5yCzLkScBdjc+Abjt4SR316E0
-         j6wQKwvql3ZV08y1/Gop5Odqw3d3kXJthA8xxozMAX6Rz8dQ54dmMlZIf+gXyUZ3t7qv
-         Hyyjeiwf+MUJWs6AosbbiRzrGkZ+dkgVAjHJmjJb4Ng9YQ4FjEfFtGlmSqQD7G4cJrIZ
-         AbFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Oh/OJ5hPhsq81kIBvC+sXtskfkbQfbT6/s+yrv+9eXo=;
-        b=qMjF1oO2hvRyf37/B5a1PhPo5hGoRHDsizuZIfpl8KofxSc6Ic8N1JbCGnuNreLBrw
-         2qZwMfEqpfU7iHMSW0hkTdyvivhy3fFWRz23TK5Tm5HXPFQd6WtnThk0/CdmZuNrobNK
-         v6xrUY+y3EZMRwmejd/of0o2Ks1CXHrMIDxRaB/qLnNSGDAJFD93lup+h3AqaK0WrhKK
-         orFuRLdLQibcSgUKUtwCEpEAE7awD8Nl9lgjNHotOOw8blzTuuNj7LfCc9YrEQuEDjwW
-         KqsHL2EBLsJXDnd9IY8805OB3ne9Q8v58rx6ep4wUzUFEqm8LS79qTpu5MlybzcQhcUQ
-         G8Fw==
-X-Gm-Message-State: APjAAAWTL7Ng+848sN+q7COu+vEQIhHcf2L8j+tKvaPQAKJ7+LFsiQhd
-        gEcKOup+CYzQQ5bjcyLDdDbUJ/R0
-X-Google-Smtp-Source: APXvYqzvuJ05fvFMCQCSap8zPzMCmqR1b41PQuP/CHPYMCzmWMiHpKRoFseciyuaLC6sE5/52OPY2w==
-X-Received: by 2002:a19:3f0a:: with SMTP id m10mr350872lfa.67.1572310078439;
-        Mon, 28 Oct 2019 17:47:58 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id f22sm5347554lfk.56.2019.10.28.17.47.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Oct 2019 17:47:57 -0700 (PDT)
-Subject: Re: [PATCH v6 00/18] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191015170015.1135-1-digetx@gmail.com>
- <20191016192133.GB26038@pdeschrijver-desktop.Nvidia.com>
- <72636eb3-5354-eea3-3a51-4975a04186b2@gmail.com>
- <53ee8bd3-5c53-f0aa-175c-7fa3024d0af5@gmail.com>
- <20191028140443.GA27141@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <40de641f-c38e-51ee-ae27-c5db468c45b5@gmail.com>
-Date:   Tue, 29 Oct 2019 03:47:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191028140443.GA27141@pdeschrijver-desktop.Nvidia.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 28 Oct 2019 20:49:47 -0400
+Received: from mail-eopbgr60059.outbound.protection.outlook.com ([40.107.6.59]:25668
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725848AbfJ2Atr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 20:49:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QqlP0RAvmyaGTxdGyx3hpO+vZMWxkvhCN9vyFIWeeM41xcvgR2v3zs5GeHiQaZ22g2Bavva62cVmDs1lVivsf++gKwUNW/Rh+0nM28+Lh71sZOu+XrWFseLGhoZ9NrINieCH7FAijghqQv/pUQBSV8dhzYzzqe7nYO/YPlxv4sw2V2Ww/6i4nsZQunGCEPO9MK1dKPuZFkKEINsdSvJmjyD4GorLoG7jmE3JrQ3wurt45U3fzS0JJbhYn+FV41KH8y/gXrUtLa2lHZcDWh4mqGJ5GsFUgmsGM5ZW9PpcyZeD7JgK8tdxRZqk+QwesXRaMMTqBg0S8d4lp32VVRmifg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9XmhbovCtGoGD9bAjhU33oNMwNATrzirVVYM3riq28M=;
+ b=NvMtyIoUCm6cJVcwwQqId8xLYu+MR+VpVN/IdWZqdRGhFMpOweqLzueMaETY/vWwGMAMFeECqP3VSYZKeAS7UnwPaV1abV035YBvWMlZ4cH33J/bExA3rCbW/ROuBiQWCmSy0YqeLtsOD2CAehZz2J+VB+iMS/LqIJnBTj+vh+XccqRDqAVo/uLlEUIGGLvs4cwKhuLQUWdL03l+7lqunIsJwvpd3mzqAGfuFWWDIpVy1WgW/I6qiBsIEZFHXz7iDbrBfHeiTuwF56Xy/ZBukEWOgRYATYz7Y5YNC+b7FOaxkknoRN6JQRE3Xj7yw0lTwwTL3Z2S2qIXIYZzbNX0zA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9XmhbovCtGoGD9bAjhU33oNMwNATrzirVVYM3riq28M=;
+ b=DGaATEtfon5MsUmkQVC+Q+LN2IC43zib5DrKGc+TNDYVsY8vYqtoX8yUO/0WM93yHSfNTVMBnoS8YVYknb1couc9XxfkISyIReC6qyw5D/gAIUbBe/QlItlnAhmRAyYZrelWKLE/j1BX6WAtwkPclb16yRRtoEQ90mrla+JUQ+0=
+Received: from AM6PR04MB4936.eurprd04.prod.outlook.com (20.177.34.20) by
+ AM6PR04MB4182.eurprd04.prod.outlook.com (52.135.163.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Tue, 29 Oct 2019 00:49:41 +0000
+Received: from AM6PR04MB4936.eurprd04.prod.outlook.com
+ ([fe80::912a:3593:7e23:72d0]) by AM6PR04MB4936.eurprd04.prod.outlook.com
+ ([fe80::912a:3593:7e23:72d0%7]) with mapi id 15.20.2387.027; Tue, 29 Oct 2019
+ 00:49:41 +0000
+From:   Fancy Fang <chen.fang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH v4] clk: imx7ulp: do not export out IMX7ULP_CLK_MIPI_PLL
+ clock
+Thread-Topic: [PATCH v4] clk: imx7ulp: do not export out IMX7ULP_CLK_MIPI_PLL
+ clock
+Thread-Index: AQHVjWbPxL+wRlx07k+0T7BaUjsAXKdv4ESAgADqFUA=
+Date:   Tue, 29 Oct 2019 00:49:41 +0000
+Message-ID: <AM6PR04MB49365C9CB797E0FDE65B6856F3610@AM6PR04MB4936.eurprd04.prod.outlook.com>
+References: <20191028080545.28275-1-chen.fang@nxp.com>
+ <20191028105038.GB16985@dragon>
+In-Reply-To: <20191028105038.GB16985@dragon>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=chen.fang@nxp.com; 
+x-originating-ip: [116.230.161.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5c3950ac-a054-477d-8721-08d75c09e24a
+x-ms-traffictypediagnostic: AM6PR04MB4182:|AM6PR04MB4182:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB41824DFEC1EF7545A36BF15DF3610@AM6PR04MB4182.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0205EDCD76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(396003)(376002)(136003)(199004)(189003)(13464003)(54534003)(186003)(9686003)(6436002)(66476007)(66556008)(64756008)(66446008)(316002)(54906003)(66066001)(66946007)(76116006)(14454004)(102836004)(53546011)(26005)(2906002)(7696005)(55016002)(6246003)(76176011)(99286004)(446003)(11346002)(25786009)(229853002)(486006)(4326008)(476003)(6916009)(6506007)(478600001)(6116002)(3846002)(8936002)(81166006)(81156014)(8676002)(256004)(305945005)(86362001)(52536014)(7736002)(74316002)(71200400001)(33656002)(5660300002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4182;H:AM6PR04MB4936.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CyWs15jouB9Yof8ccjXzAOOVmW7tDlrYVSIfvqoZH34whcJXxgH0PjIuwVo8Wwk80Crece8KUaxv3SMxqOz97ALtRvzxKuy3YRriV+lcDpRCxl6jrIz5/8aQN6JgyY3AfNy4cMz22qrqcwm2TATlLqY+yspVHJXoolTjMhVQYd7C0EORycGhBp5Pwld3xnMXBZ8wSEncUrN4YxU3XdxH6QU5uTBKd3zdQbtDA17iUFma2+PqrvPdxm7QgryupOnL34mRd+Qn46xQ4GVblZn27x+ZTFpEUfLb+G68sgp44V+ye+2l3kBzrbn6TRwIx8uRrQBMlYTPah8TnvvSg/lPn+nCTSEcKKxw35fo/7gTbVZnyHqRiy8kZQpzuwW7/IKJMxgXI8Y1L3zn5A3gOERo8mWrNhGEfviAkw0czA1U0dtm1lrf3XbWicpUVx3fN3Sj
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c3950ac-a054-477d-8721-08d75c09e24a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 00:49:41.5531
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7q+DHWhhtqMGdplegKLq36bnUjvIFoNbj6l7SC/QobHjX2HRMN0fqYCjfhcZnNIxmiCmbE/z2LnmfpmbzLljlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.10.2019 17:04, Peter De Schrijver пишет:
-> On Wed, Oct 16, 2019 at 11:14:07PM +0300, Dmitry Osipenko wrote:
->> 16.10.2019 22:47, Dmitry Osipenko пишет:
->>> 16.10.2019 22:21, Peter De Schrijver пишет:
->>>> On Tue, Oct 15, 2019 at 07:59:57PM +0300, Dmitry Osipenko wrote:
->>>>> Hello,
->>>>>
->>>>> This series does the following:
->>>>>
->>>>>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
->>>>>      into common drivers/cpuidle/ directory.
->>>>>
->>>>>   2. Enables CPU cluster power-down idling state on Tegra30.
->>>>>
->>>>> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
->>>>> and of the Tegra's arch code in general. Please review, thanks!
->>>>>
->>>>> Changelog:
->>>>>
->>>>> v6: - Addressed request from Thierry Reding to change the way patches are
->>>>>       organized by making changes in a more incremental manner.
->>>>>
->>>>>     - tegra_sleep_cpu() now checks for the secondary CPUs to be offline
->>>>>       in the "Make outer_disable() open-coded" patch.
->>>>>
->>>>> v5: - Rebased on a recent linux-next, fixed one minor conflict in Kconfig.
->>>>>
->>>>>     - Improved commit's message of the "Support CPU cluster power-down state
->>>>>       on Tegra30" patch.
->>>>>
->>>>>     - The "Support CPU cluster power-down state on Tegra30" patch is also
->>>>>       got split and now there is additional "Make outer_disable() open-coded"
->>>>>       patch.
->>>>>
->>>>>     - Made minor cosmetic changes to the "Introduce unified driver for
->>>>>       NVIDIA Tegra SoCs" patch by improving error message and renaming
->>>>>       one variable.
->>>>>
->>>>> v4: - Fixed compilation with !CONFIG_CACHE_L2X0 (and tested that it still
->>>>>       works).
->>>>>
->>>>>     - Replaced ktime_compare() with ktime_before() in the new driver,
->>>>>       for consistency.
->>>>>
->>>>> v3: - Addressed review comments that were made by Jon Hunter to v2 by
->>>>>       splitting patches into smaller (and simpler) chunks, better
->>>>>       documenting changes in the commit messages and using proper error
->>>>>       codes in the code.
->>>>>
->>>>>       Warnings are replaced with a useful error messages in the code of
->>>>>       "Introduce unified driver for NVIDIA Tegra SoCs" patch.
->>>>>
->>>>>       Secondary CPUs parking timeout increased to 100ms because I found
->>>>>       that it actually may happen to take more than 1ms if CPU is running
->>>>>       on a *very* low frequency.
->>>>>
->>>>>       Added diagnostic messages that are reporting Flow Controller state
->>>>>       when CPU parking fails.
->>>>>
->>>>>       Further polished cpuidle driver's code.
->>>>>
->>>>>       The coupled state entering is now aborted if there is a pending SGI
->>>>>       (Software Generated Interrupt) because it will be lost after GIC's
->>>>>       power-cycling. Like it was done by the old Tegra20 CPUIDLE driver.
->>>>>
->>>>> v2: - Added patches to enable the new cpuidle driver in the defconfigs:
->>>>>
->>>>>         ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
->>>>>         ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
->>>>>
->>>>>     - Dropped patches that removed CPUIDLE_FLAG_TIMER_STOP from the idling
->>>>>       states because that flag actually doesn't have any negative effects,
->>>>>       but still is correct for the case of a local CPU timer on older Tegra
->>>>>       SoCs:
->>>>>
->>>>>         cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from Tegra114/124 idle-state
->>>>>         cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from all states
->>>>>
->>>>>     - The "Add unified driver for NVIDIA Tegra SoCs" patch got more polish.
->>>>>       Tegra30 and Terga114 states are now squashed into a single common C7
->>>>>       state (following Parker TRM terminology, see 17.2.2.2 Power Management
->>>>>       States), more comments added, etc minor changes.
->>>>
->>>> It would be useful to switch the power state terminology to the one used
->>>> for later chips:
->>>>
->>>> LP0 becomes SC7
->>>> LP1 becomes C1
->>>> LP2 becomes CC7
->>>>
->>>> Meaning of these states is as follows
->>>>
->>>> C is a core state:
->>>>
->>>> C1 clock gating
->>>> C2 not defined
->>>> C3 not defined
->>>> C4 not defined
->>>> C5 not defined
->>>> C6 not defined for ARM cores
->>>> C7 power-gating
->>>>
->>>> CC is a CPU cluster C state:
->>>>
->>>> CC1 cluster clock gated
->>>> CC2 not defined
->>>> CC3 fmax@Vmin: not used prior to Tegra186
->>>> CC4: cluster retention: no longer supported
->>>> CC5: not defined
->>>> CC6: cluster power gating
->>>> CC7: cluster rail gating
->>>>
->>>> SC is a System C state:
->>>>
->>>> SC1: not defined
->>>> SC2: not defined
->>>> SC3: not defined
->>>> SC4: not defined
->>>> SC5: not defined
->>>> SC6: not defined
->>>> SC7: VDD_SOC off
->>>
->>> Hello Peter,
->>>
->>> But new "drivers/cpuidle/cpuidle-tegra.c" uses exactly that terminology,
->>> please see "cpuidle: Refactor and move NVIDIA Tegra20 driver into
->>> drivers/cpuidle/" and further patches. Am I missing something? Or do you
->>> want the renaming to be a separate patch?
->>>
->>
->> Or maybe you're suggesting to change the names everywhere and not only
->> in the cpuidle driver? Please clarify :)
-> 
-> At least some of the variable and function names still say lp2?
 
-The cpuidle driver uses LP2 terminology for everything that comes from
-the external arch / firmware includes. But it says CC6 for everything
-that is internal to the driver. So yes, there is a bit of new/old
-terminology mixing in the code.
 
-The arch code / PMC driver / TF firmware are all saying LP2. The LP2
-naming is also a part of the device-tree binding.
+> -----Original Message-----
+> From: Shawn Guo <shawnguo@kernel.org>
+> Sent: Monday, October 28, 2019 6:51 PM
+> To: Fancy Fang <chen.fang@nxp.com>
+> Cc: sboyd@kernel.org; linux-clk@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> mturquette@baylibre.com; s.hauer@pengutronix.de; kernel@pengutronix.de;
+> dl-linux-imx <linux-imx@nxp.com>
+> Subject: Re: [PATCH v4] clk: imx7ulp: do not export out IMX7ULP_CLK_MIPI_=
+PLL
+> clock
+>=20
+> On Mon, Oct 28, 2019 at 08:07:59AM +0000, Fancy Fang wrote:
+> > The mipi pll clock comes from the MIPI PHY PLL output, so
+> > it should not be a fixed clock.
+> >
+> > MIPI PHY PLL is in the MIPI DSI space, and it is used as
+> > the bit clock for transferring the pixel data out and its
+> > output clock is configured according to the display mode.
+> >
+> > So it should be used only for MIPI DSI and not be exported
+> > out for other usages.
+> >
+> > Signed-off-by: Fancy Fang <chen.fang@nxp.com>
+> > ---
+> > ChangeLog v3->v4:
+> >  * Add some comments to 'IMX7ULP_CLK_MIPI_PLL'
+> >    clock.
+> >
+> >  Documentation/devicetree/bindings/clock/imx7ulp-clock.txt | 1 -
+> >  drivers/clk/imx/clk-imx7ulp.c                             | 3 +--
+> >  include/dt-bindings/clock/imx7ulp-clock.h                 | 6 ++++++
+> >  3 files changed, 7 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
+> b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
+> > index a4f8cd478f92..93d89adb7afe 100644
+> > --- a/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
+> > +++ b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
+> > @@ -82,7 +82,6 @@ pcc2: pcc2@403f0000 {
+> >  		 <&scg1 IMX7ULP_CLK_APLL_PFD0>,
+> >  		 <&scg1 IMX7ULP_CLK_UPLL>,
+> >  		 <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>,
+> > -		 <&scg1 IMX7ULP_CLK_MIPI_PLL>,
+> >  		 <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>,
+> >  		 <&scg1 IMX7ULP_CLK_ROSC>,
+> >  		 <&scg1 IMX7ULP_CLK_SPLL_BUS_CLK>;
+> > diff --git a/drivers/clk/imx/clk-imx7ulp.c b/drivers/clk/imx/clk-imx7ul=
+p.c
+> > index 2022d9bead91..459b120b71d5 100644
+> > --- a/drivers/clk/imx/clk-imx7ulp.c
+> > +++ b/drivers/clk/imx/clk-imx7ulp.c
+> > @@ -28,7 +28,7 @@ static const char * const scs_sels[]		=3D { "dummy",
+> "sosc", "sirc", "firc", "dumm
+> >  static const char * const ddr_sels[]		=3D { "apll_pfd_sel", "upll", };
+> >  static const char * const nic_sels[]		=3D { "firc", "ddr_clk", };
+> >  static const char * const periph_plat_sels[]	=3D { "dummy", "nic1_bus_=
+clk",
+> "nic1_clk", "ddr_clk", "apll_pfd2", "apll_pfd1", "apll_pfd0", "upll", };
+> > -static const char * const periph_bus_sels[]	=3D { "dummy", "sosc_bus_c=
+lk",
+> "mpll", "firc_bus_clk", "rosc", "nic1_bus_clk", "nic1_clk", "spll_bus_clk=
+", };
+> > +static const char * const periph_bus_sels[]	=3D { "dummy", "sosc_bus_c=
+lk",
+> "dummy", "firc_bus_clk", "rosc", "nic1_bus_clk", "nic1_clk", "spll_bus_cl=
+k", };
+> >  static const char * const arm_sels[]		=3D { "divcore", "dummy", "dummy=
+",
+> "hsrun_divcore", };
+> >
+> >  /* used by sosc/sirc/firc/ddr/spll/apll dividers */
+> > @@ -75,7 +75,6 @@ static void __init imx7ulp_clk_scg1_init(struct
+> device_node *np)
+> >  	clks[IMX7ULP_CLK_SOSC]		=3D imx_obtain_fixed_clk_hw(np, "sosc");
+> >  	clks[IMX7ULP_CLK_SIRC]		=3D imx_obtain_fixed_clk_hw(np, "sirc");
+> >  	clks[IMX7ULP_CLK_FIRC]		=3D imx_obtain_fixed_clk_hw(np, "firc");
+> > -	clks[IMX7ULP_CLK_MIPI_PLL]	=3D imx_obtain_fixed_clk_hw(np, "mpll");
+> >  	clks[IMX7ULP_CLK_UPLL]		=3D imx_obtain_fixed_clk_hw(np, "upll");
+> >
+> >  	/* SCG1 */
+> > diff --git a/include/dt-bindings/clock/imx7ulp-clock.h
+> b/include/dt-bindings/clock/imx7ulp-clock.h
+> > index 6f66f9005c81..e9ef62f211fe 100644
+> > --- a/include/dt-bindings/clock/imx7ulp-clock.h
+> > +++ b/include/dt-bindings/clock/imx7ulp-clock.h
+> > @@ -49,7 +49,13 @@
+> >  #define IMX7ULP_CLK_NIC1_DIV		36
+> >  #define IMX7ULP_CLK_NIC1_BUS_DIV	37
+> >  #define IMX7ULP_CLK_NIC1_EXT_DIV	38
+> > +
+> > +/* mpll clock is a special clock comes from
+> > + * mipi DPHY PLL and should be used only for
+> > + * mipi dsi instead of any other peripheral.
+> > + */
+> >  #define IMX7ULP_CLK_MIPI_PLL		39
+> > +
+>=20
+> The point of comment is to tell that the clock ID is unsupported and
+> shouldn't be used in DT.
+>=20
+> I reworded the comment and applied the patch.
 
-It will be a lot of mess to rename the mach-tegra/pm.c code. I guess
-eventually it could be moved to drivers/soc/, so maybe it will be better
-to postpone the renaming until then?
+OK. Thank you.
+
+Best regards,
+Fancy Fang
+>=20
+> Shawn
+>=20
+> >  #define IMX7ULP_CLK_SIRC		40
+> >  #define IMX7ULP_CLK_SOSC_BUS_CLK	41
+> >  #define IMX7ULP_CLK_FIRC_BUS_CLK	42
+> > --
+> > 2.17.1
+> >
