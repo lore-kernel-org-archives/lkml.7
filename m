@@ -2,284 +2,1016 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055F6CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA95CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F3020830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E1920830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572340794;
+	bh=+ADlWj/trAKwMwhM/PFaiE64YlRdyWJaMQ+BUVkBX8M=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=bku1fvs+HVLm1QhIQtHlqwpSOXUzKoveMJ4k2KZ2gUAkrXDD8MUgAKkk6tdZaxWJl
+	 bEeqfnCHyFuypEW1IXbVYtvzg6LvA8IuAa+lVSybTbJgl/4Td5yVYCrDOAu1AJdq8i
+	 pfu59z8S+gFxznPzifZZfCOs3wqS9fDJevprLpvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732270AbfJ2JTm (ORCPT
+        id S1732338AbfJ2JTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:19:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41138 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732215AbfJ2JTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:19:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A38DAB31B;
-        Tue, 29 Oct 2019 09:19:38 +0000 (UTC)
-Message-ID: <4c4c002302dbbb736f9301a7eb43916ab7fbb288.camel@suse.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-From:   Dario Faggioli <dfaggioli@suse.com>
-To:     Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?ISO-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Date:   Tue, 29 Oct 2019 10:19:36 +0100
-In-Reply-To: <277737d6034b3da072d3b0b808d2fa6e110038b0.camel@suse.com>
-References: <20190726152101.GA27884@sinkpad>
-         <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
-         <20190802153715.GA18075@sinkpad>
-         <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
-         <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
-         <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
-         <20190911140204.GA52872@aaronlu>
-         <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
-         <20190912120400.GA16200@aaronlu>
-         <CAERHkrsrszO4hJqVy=g7P74h9d_YJzW7GY4ptPKykTX-mc9Mdg@mail.gmail.com>
-         <20190915141402.GA1349@aaronlu>
-         <277737d6034b3da072d3b0b808d2fa6e110038b0.camel@suse.com>
-Organization: SUSE
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-QZ2Sx9AbyhnnxfJkgIdN"
-User-Agent: Evolution 3.34.1 
+        Tue, 29 Oct 2019 05:19:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727228AbfJ2JTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:19:52 -0400
+Received: from localhost (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0280C20717;
+        Tue, 29 Oct 2019 09:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572340789;
+        bh=+ADlWj/trAKwMwhM/PFaiE64YlRdyWJaMQ+BUVkBX8M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=1mS5l7p6k58WrXhFLJ7A0pDNi5XFRkTmUmKNQ8nwUVvIyHERqMZSVGMqoUUIAqH13
+         ixo0NcM7ZlA38XeIJdLHRXAaFfAeCBB6AkJ+kH72a6VrYSVlSMI/qYsLz6NGKSPTW9
+         lniknVLE+H/CgcDC49hSMo+zgLp7sUxAnC15KoD0=
+Date:   Tue, 29 Oct 2019 10:19:46 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.3.8
+Message-ID: <20191029091946.GA582013@kroah.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-QZ2Sx9AbyhnnxfJkgIdN
-Content-Type: text/plain; charset="UTF-8"
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-10-29 at 10:11 +0100, Dario Faggioli wrote:
-> On Sun, 2019-09-15 at 22:14 +0800, Aaron Lu wrote:
-> > I'm using the following branch as base which is v5.1.5 based:
-> > https://github.com/digitalocean/linux-coresched coresched-v3-
-> > v5.1.5-
-> > test
-> >=20
-> > And I have pushed Tim's branch to:
-> > https://github.com/aaronlu/linux coresched-v3-v5.1.5-test-tim
-> >=20
-> > Mine:
-> > https://github.com/aaronlu/linux coresched-v3-v5.1.5-test-
-> > core_vruntime
-> >=20
-> Hello,
->=20
-> As anticipated, I've been trying to follow the development of this
-> feature and, in the meantime, I have done some benchmarks.
->=20
-> I actually have a lot of data (and am planning for more), so I am
-> sending a few emails, each one with a subset of the numbers in it,
-> instead than just one which would be beyond giant! :-)
->=20
-MEMCACHED/MUTILATE
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+I'm announcing the release of the 5.3.8 kernel.
 
-http://xenbits.xen.org/people/dariof/benchmarks/results/linux/core-sched/mm=
-tests/boxes/wayrath/coresched-email-7_mutilate.txt
+All users of the 5.3 kernel series must upgrade.
 
-                                 v                      v                  =
-   BM                     BM                     BM                     BM =
-                    BM                     BM
-                             BM-HT                BM-noHT                  =
-   HT                   noHT                 csc-HT        csc_stallfix-HT =
-            csc_tim-HT        csc_vruntime-HT
-Hmean     1    60672.24 (   0.00%)    60476.27 (  -0.32%)    61303.65 (   1=
-.04%)    61353.05 (   1.12%)    57026.54 *  -6.01%*    56874.19 *  -6.26%* =
-   56781.04 *  -6.41%*    56642.48 *  -6.64%*
-Hmean     3   149695.40 (   0.00%)   131084.79 * -12.43%*   150802.12 (   0=
-.74%)   131058.25 * -12.45%*   138260.22 *  -7.64%*   138002.31 *  -7.81%* =
-  136907.04 *  -8.54%*   138317.36 *  -7.60%*
-Hmean     5   198656.98 (   0.00%)   181719.88 *  -8.53%*   196429.59 (  -1=
-.12%)   186468.57 *  -6.14%*   171612.43 * -13.61%*   176464.24 * -11.17%* =
-  162578.64 * -18.16%*   170196.51 * -14.33%*
-Hmean     7   180858.07 (   0.00%)   187088.17 *   3.44%*   181549.92 (   0=
-.38%)   189813.97 *   4.95%*   166898.82 *  -7.72%*   164724.43 *  -8.92%* =
-  143102.58 * -20.88%*   128900.19 * -28.73%*
-Hmean     8   157176.91 (   0.00%)   190533.25 *  21.22%*   159795.04 (   1=
-.67%)   188249.31 *  19.77%*   168399.58 *   7.14%*   169700.06 *   7.97%* =
-  137152.66 * -12.74%*   123355.03 * -21.52%*
-Stddev    1      551.36 (   0.00%)       52.18 (  90.54%)      306.31 (  44=
-.44%)      385.01 (  30.17%)      353.37 (  35.91%)      350.76 (  36.38%) =
-     476.56 (  13.57%)      279.80 (  49.25%)
-Stddev    3     1206.26 (   0.00%)     2368.98 ( -96.39%)      652.07 (  45=
-.94%)     1300.67 (  -7.83%)     1849.15 ( -53.30%)     2434.55 (-101.83%) =
-    1063.43 (  11.84%)     1825.98 ( -51.38%)
-Stddev    5     3843.30 (   0.00%)      122.92 (  96.80%)     2883.77 (  24=
-.97%)      481.11 (  87.48%)     4099.56 (  -6.67%)     4424.91 ( -15.13%) =
-     596.25 (  84.49%)     1345.78 (  64.98%)
-Stddev    7     2990.97 (   0.00%)     1645.75 (  44.98%)     6567.23 (-119=
-.57%)     5422.57 ( -81.30%)     3191.68 (  -6.71%)     2438.38 (  18.48%) =
-    1211.94 (  59.48%)      705.34 (  76.42%)
-Stddev    8     3637.12 (   0.00%)     1490.36 (  59.02%)     3386.42 (   6=
-.89%)     2437.43 (  32.98%)     1056.02 (  70.97%)     1391.07 (  61.75%) =
-    1488.57 (  59.07%)      774.85 (  78.70%)
-                                 v                      v                  =
-   VM                     VM                     VM                     VM =
-                    VM                     VM
-                             VM-HT                VM-noHT                  =
-   HT                   noHT                 csc-HT        csc_stallfix-HT =
-            csc_tim-HT        csc_vruntime-HT
-Hmean     1    42580.67 (   0.00%)    53440.15 *  25.50%*    54293.03 *  27=
-.51%*    52771.89 *  23.93%*    53689.85 *  26.09%*    53804.35 *  26.36%* =
-   53730.74 *  26.19%*    53902.75 *  26.59%*
-Hmean     3   115732.63 (   0.00%)    70651.66 * -38.95%*   125537.18 *   8=
-.47%*    70738.43 * -38.88%*   126041.27 *   8.91%*   126387.30 *   9.21%* =
-  127285.87 *   9.98%*   126816.33 *   9.58%*
-Hmean     5   176633.72 (   0.00%)    22349.68 * -87.35%*   182113.02 *   3=
-.10%*    19850.93 * -88.76%*   137910.40 * -21.92%*   180934.44 *   2.43%* =
-  175009.60 (  -0.92%)   174758.21 (  -1.06%)
-Hmean     7   182512.86 (   0.00%)    48728.14 * -73.30%*   186272.46 *   2=
-.06%*    49015.69 * -73.14%*   157398.75 * -13.76%*   184989.00 (   1.36%) =
-  172307.74 *  -5.59%*   173203.24 *  -5.10%*
-Hmean     8   192244.37 (   0.00%)    65283.21 * -66.04%*   195435.08 (   1=
-.66%)    63616.87 * -66.91%*   176288.98 *  -8.30%*   192413.50 (   0.09%) =
-  188699.07 (  -1.84%)   185870.91 *  -3.32%*
-Stddev    1      337.79 (   0.00%)      523.30 ( -54.92%)       22.90 (  93=
-.22%)      353.55 (  -4.67%)      196.63 (  41.79%)      470.55 ( -39.30%) =
-     414.86 ( -22.82%)      190.50 (  43.60%)
-Stddev    3     1945.52 (   0.00%)      420.36 (  78.39%)     1365.07 (  29=
-.84%)      954.82 (  50.92%)     1136.12 (  41.60%)     1674.98 (  13.91%) =
-    1539.07 (  20.89%)     1129.09 (  41.96%)
-Stddev    5      964.02 (   0.00%)     2121.27 (-120.05%)     3232.44 (-235=
-.31%)     2284.37 (-136.96%)     8374.66 (-768.73%)     3156.06 (-227.39%) =
-     948.17 (   1.64%)     2700.91 (-180.17%)
-Stddev    7     1028.64 (   0.00%)     1740.95 ( -69.25%)     2860.04 (-178=
-.04%)     3366.68 (-227.29%)     3360.79 (-226.72%)     4762.47 (-362.99%) =
-    2968.56 (-188.59%)     1429.88 ( -39.01%)
-Stddev    8     3794.15 (   0.00%)     1893.82 (  50.09%)      565.06 (  85=
-.11%)      893.04 (  76.46%)     3201.43 (  15.62%)     1931.66 (  49.09%) =
-     360.93 (  90.49%)     1945.37 (  48.73%)
-                                 v                      v                  =
-   VM                     VM                     VM                     VM =
-                    VM                     VM
-                          VM-v4-HT             VM-v4-noHT                  =
-v4-HT                v4-noHT              v4-csc-HT     v4-csc_stallfix-HT =
-         v4-csc_tim-HT     v4-csc_vruntime-HT
-Hmean     1    44216.52 (   0.00%)    53968.94 *  22.06%*    54078.28 *  22=
-.30%*    54290.57 *  22.78%*    53552.08 *  21.11%*    51342.78 *  16.12%* =
-   53967.09 *  22.05%*    53790.48 *  21.65%*
-Hmean     3   105120.19 (   0.00%)   120769.59 *  14.89%*   121460.04 *  15=
-.54%*   117410.09 *  11.69%*   120296.87 *  14.44%*   109089.25 (   3.78%) =
-  123133.70 *  17.14%*   123614.82 *  17.59%*
-Hmean     4   144618.05 (   0.00%)   167039.86 *  15.50%*   178922.55 *  23=
-.72%*   175641.36 *  21.45%*   185338.19 *  28.16%*   148152.02 (   2.44%) =
-  179709.39 *  24.26%*   179754.74 *  24.30%*
-Stddev    1      144.30 (   0.00%)      101.12 (  29.93%)      420.02 (-191=
-.08%)      294.43 (-104.04%)      300.29 (-108.10%)      330.58 (-129.10%) =
-     353.69 (-145.11%)      142.58 (   1.19%)
-Stddev    3     3300.71 (   0.00%)      905.78 (  72.56%)     2537.34 (  23=
-.13%)     3289.78 (   0.33%)     1113.35 (  66.27%)     2685.20 (  18.65%) =
-    8425.99 (-155.28%)     2280.72 (  30.90%)
-Stddev    4     1828.49 (   0.00%)     9851.42 (-438.77%)     2779.22 ( -52=
-.00%)     3312.07 ( -81.14%)     7392.50 (-304.30%)     6090.54 (-233.09%) =
-    3320.77 ( -81.61%)     4836.89 (-164.53%)
-                                 v                      v                  =
- VMx2                   VMx2                   VMx2                   VMx2 =
-                  VMx2                   VMx2
-                           VMx2-HT              VMx2-noHT                  =
-   HT                   noHT                 csc-HT        csc_stallfix-HT =
-            csc_tim-HT        csc_vruntime-HT
-Hmean     1    53045.85 (   0.00%)    35310.51 * -33.43%*    38949.82 * -26=
-.57%*    35500.55 * -33.08%*    49350.06 *  -6.97%*    35372.44 * -33.32%* =
-   40556.30 * -23.54%*    42238.57 * -20.37%*
-Hmean     3   124865.12 (   0.00%)     7997.67 * -93.59%*    57204.70 * -54=
-.19%*     8373.67 * -93.29%*    56781.47 * -54.53%*    38892.18 * -68.85%* =
-   51207.79 * -58.99%*    46151.33 * -63.04%*
-Hmean     5   178848.31 (   0.00%)     4984.40 * -97.21%*    31431.45 * -82=
-.43%*     5101.29 * -97.15%*    41204.02 * -76.96%*    24592.26 * -86.25%* =
-   33541.47 * -81.25%*    28762.54 * -83.92%*
-Hmean     7   187708.49 (   0.00%)    12945.53 * -93.10%*    57937.51 * -69=
-.13%*    12898.91 * -93.13%*    89180.74 * -52.49%*    48390.34 * -74.22%* =
-   54198.33 * -71.13%*    50261.68 * -73.22%*
-Hmean     8   199929.38 (   0.00%)    27516.10 * -86.24%*    77578.88 * -61=
-.20%*    27608.20 * -86.19%*   117871.45 * -41.04%*    65719.85 * -67.13%* =
-   76669.78 * -61.65%*    67983.03 * -66.00%*
-Stddev    1      404.57 (   0.00%)      708.20 ( -75.05%)      102.16 (  74=
-.75%)      258.18 (  36.19%)      132.11 (  67.35%)     1145.71 (-183.19%) =
-     740.95 ( -83.14%)       91.67 (  77.34%)
-Stddev    3     1867.11 (   0.00%)      729.15 (  60.95%)     2529.52 ( -35=
-.48%)     1212.31 (  35.07%)     1765.46 (   5.44%)     2698.45 ( -44.53%) =
-     376.23 (  79.85%)     2108.90 ( -12.95%)
-Stddev    5     1556.91 (   0.00%)      193.16 (  87.59%)     3307.78 (-112=
-.46%)      207.87 (  86.65%)     1401.20 (  10.00%)     1945.52 ( -24.96%) =
-    1821.44 ( -16.99%)     2166.87 ( -39.18%)
-Stddev    7     3622.13 (   0.00%)     1690.01 (  53.34%)     5268.81 ( -45=
-.46%)      690.12 (  80.95%)     8337.77 (-130.19%)     3737.07 (  -3.17%) =
-    1900.15 (  47.54%)     3388.45 (   6.45%)
-Stddev    8     1913.74 (   0.00%)     1460.07 (  23.71%)     2068.35 (  -8=
-.08%)     1750.51 (   8.53%)     4229.08 (-120.99%)     3477.66 ( -81.72%) =
-    3318.68 ( -73.41%)     1338.76 (  30.04%)
+The updated 5.3.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-5.3.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-Mutilate brings us back where core scheduling does bad on baremetal,
-but fine in VMs. The benchmark seems to be much more sensitive to
-HyperThreading when run inside virtual machines, and core scheduling
-guarantees better results than disabling hyperthreading, in such cases.
-Interestingly, this time the thing is more evedint in the *non*
-overcommitted scenario.
+thanks,
 
-In fact, with one 8 vCPUs VM, v-VM-noHT is -87.35% and VM-csc_vruntime-
-HT is only -1.06%, which is really good. In the overcommitted case, v-
-VMx2-noHT reaches -97.21% while VMx2-csc_vruntime-HT is -83.92%. So,
-yeah, better, but not "as better" as before.
+greg k-h
 
---=20
-Dario Faggioli, Ph.D
-http://about.me/dario.faggioli
-Virtualization Software Engineer
-SUSE Labs, SUSE https://www.suse.com/
--------------------------------------------------------------------
-<<This happens because _I_ choose it to happen!>> (Raistlin Majere)
+------------
+
+ Documentation/arm64/silicon-errata.rst                              |    2=
+=20
+ Makefile                                                            |    2=
+=20
+ arch/arm/boot/dts/am335x-icev2.dts                                  |    2=
+=20
+ arch/arm/boot/dts/am33xx-l4.dtsi                                    |    6=
+=20
+ arch/arm/boot/dts/am4372.dtsi                                       |    2=
+=20
+ arch/arm/boot/dts/dra7-l4.dtsi                                      |   48=
+ -
+ arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c             |    3=
+=20
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c                          |    5=
+=20
+ arch/arm/mach-omap2/pm.c                                            |  100=
+ ---
+ arch/arm/xen/efi.c                                                  |    2=
+=20
+ arch/arm64/Kconfig                                                  |   17=
+=20
+ arch/arm64/include/asm/cpucaps.h                                    |    4=
+=20
+ arch/arm64/kernel/cpu_errata.c                                      |   38=
+ +
+ arch/arm64/kernel/entry.S                                           |    2=
+=20
+ arch/arm64/kvm/hyp/switch.c                                         |   69=
+ ++
+ arch/mips/boot/dts/qca/ar9331.dtsi                                  |    2=
+=20
+ arch/mips/loongson64/common/serial.c                                |    2=
+=20
+ arch/mips/mm/tlbex.c                                                |   23=
+=20
+ arch/parisc/mm/ioremap.c                                            |   12=
+=20
+ arch/powerpc/kvm/book3s_xive.c                                      |   24=
+=20
+ arch/powerpc/kvm/book3s_xive.h                                      |   12=
+=20
+ arch/powerpc/kvm/book3s_xive_native.c                               |    6=
+=20
+ arch/riscv/include/asm/asm.h                                        |    1=
+=20
+ arch/riscv/kernel/entry.S                                           |   21=
+=20
+ arch/riscv/mm/init.c                                                |   12=
+=20
+ arch/s390/boot/startup.c                                            |   14=
+=20
+ arch/s390/include/asm/hugetlb.h                                     |    9=
+=20
+ arch/s390/include/asm/pgtable.h                                     |    3=
+=20
+ arch/s390/kernel/machine_kexec_reloc.c                              |    1=
+=20
+ arch/x86/hyperv/hv_apic.c                                           |   20=
+=20
+ arch/x86/include/asm/uaccess.h                                      |   23=
+=20
+ arch/x86/kernel/apic/x2apic_cluster.c                               |    3=
+=20
+ arch/x86/kernel/head64.c                                            |   22=
+=20
+ arch/x86/xen/efi.c                                                  |    2=
+=20
+ arch/xtensa/include/asm/bitops.h                                    |    2=
+=20
+ arch/xtensa/kernel/xtensa_ksyms.c                                   |    7=
+=20
+ block/blk-mq.c                                                      |    6=
+=20
+ block/blk-rq-qos.h                                                  |   13=
+=20
+ drivers/acpi/cppc_acpi.c                                            |    2=
+=20
+ drivers/acpi/nfit/core.c                                            |    2=
+=20
+ drivers/android/binder.c                                            |    7=
+=20
+ drivers/android/binder_alloc.c                                      |    6=
+=20
+ drivers/ata/ahci.c                                                  |    4=
+=20
+ drivers/base/core.c                                                 |    3=
+=20
+ drivers/base/memory.c                                               |    3=
+=20
+ drivers/block/loop.c                                                |   10=
+=20
+ drivers/block/zram/zram_drv.c                                       |    5=
+=20
+ drivers/clk/ti/clk-7xx.c                                            |    6=
+=20
+ drivers/cpufreq/cpufreq.c                                           |   10=
+=20
+ drivers/edac/ghes_edac.c                                            |    4=
+=20
+ drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c                             |   34=
+ -
+ drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c                              |    8=
+=20
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c                             |   35=
+ +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c                             |   35=
+ -
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c                             |   20=
+=20
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vce.h                             |    1=
+=20
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c                             |   35=
+ -
+ drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c                              |    2=
+=20
+ drivers/gpu/drm/amd/amdgpu/uvd_v6_0.c                               |   31=
+ -
+ drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c                               |   33=
+ -
+ drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c             |    1=
+=20
+ drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c             |    1=
+=20
+ drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c             |    1=
+=20
+ drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c             |    1=
+=20
+ drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c               |    1=
+=20
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c               |    1=
+=20
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c               |    1=
+=20
+ drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c            |    7=
+=20
+ drivers/gpu/drm/arm/malidp_mw.c                                     |    4=
+=20
+ drivers/gpu/drm/drm_atomic.c                                        |   13=
+=20
+ drivers/gpu/drm/drm_edid.c                                          |    3=
+=20
+ drivers/gpu/drm/drm_writeback.c                                     |   23=
+=20
+ drivers/gpu/drm/i915/display/intel_bios.c                           |   22=
+=20
+ drivers/gpu/drm/i915/gem/i915_gem_mman.c                            |    7=
+=20
+ drivers/gpu/drm/i915/gem/i915_gem_object.h                          |    6=
+=20
+ drivers/gpu/drm/i915/gem/i915_gem_object_types.h                    |    3=
+=20
+ drivers/gpu/drm/i915/gem/i915_gem_userptr.c                         |    1=
+=20
+ drivers/gpu/drm/i915/i915_gem.c                                     |    3=
+=20
+ drivers/gpu/drm/panfrost/panfrost_job.c                             |   16=
+=20
+ drivers/gpu/drm/radeon/radeon_drv.c                                 |    8=
+=20
+ drivers/gpu/drm/rcar-du/rcar_du_writeback.c                         |    4=
+=20
+ drivers/gpu/drm/ttm/ttm_bo_vm.c                                     |   16=
+=20
+ drivers/gpu/drm/vc4/vc4_txp.c                                       |    5=
+=20
+ drivers/infiniband/hw/cxgb4/mem.c                                   |   28=
+ -
+ drivers/input/misc/da9063_onkey.c                                   |    5=
+=20
+ drivers/input/mouse/elantech.c                                      |   55=
+ +-
+ drivers/input/rmi4/rmi_driver.c                                     |    6=
+=20
+ drivers/input/touchscreen/st1232.c                                  |    6=
+=20
+ drivers/irqchip/irq-sifive-plic.c                                   |   29=
+ -
+ drivers/md/dm-cache-target.c                                        |   28=
+ -
+ drivers/md/raid0.c                                                  |    2=
+=20
+ drivers/memstick/host/jmb38x_ms.c                                   |    2=
+=20
+ drivers/mmc/host/cqhci.c                                            |    3=
+=20
+ drivers/mmc/host/mxs-mmc.c                                          |    7=
+=20
+ drivers/mmc/host/sdhci-omap.c                                       |    2=
+=20
+ drivers/net/dsa/qca8k.c                                             |    4=
+=20
+ drivers/net/dsa/rtl8366rb.c                                         |   16=
+=20
+ drivers/net/ethernet/aquantia/atlantic/aq_main.c                    |    4=
+=20
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c                     |   32=
+ -
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.c                    |    3=
+=20
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c           |   23=
+=20
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh.c          |   17=
+=20
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh.h          |    7=
+=20
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh_internal.h |   19=
+=20
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c   |    2=
+=20
+ drivers/net/ethernet/atheros/ag71xx.c                               |    6=
+=20
+ drivers/net/ethernet/broadcom/Kconfig                               |    4=
+=20
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h                      |    1=
+=20
+ drivers/net/ethernet/broadcom/genet/bcmmii.c                        |   11=
+=20
+ drivers/net/ethernet/hisilicon/hns_mdio.c                           |    6=
+=20
+ drivers/net/ethernet/i825xx/lasi_82596.c                            |    4=
+=20
+ drivers/net/ethernet/i825xx/lib82596.c                              |    4=
+=20
+ drivers/net/ethernet/i825xx/sni_82596.c                             |    4=
+=20
+ drivers/net/ethernet/ibm/ibmvnic.c                                  |    8=
+=20
+ drivers/net/ethernet/mscc/ocelot_board.c                            |   14=
+=20
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c                   |   13=
+=20
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c                 |    2=
+=20
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c                   |   37=
+ -
+ drivers/net/ieee802154/ca8210.c                                     |    2=
+=20
+ drivers/net/netdevsim/fib.c                                         |    3=
+=20
+ drivers/net/phy/mdio_device.c                                       |    2=
+=20
+ drivers/net/phy/micrel.c                                            |   42=
+ +
+ drivers/net/phy/phy-c45.c                                           |    2=
+=20
+ drivers/net/phy/phy.c                                               |    8=
+=20
+ drivers/net/phy/phy_device.c                                        |    9=
+=20
+ drivers/net/usb/r8152.c                                             |    3=
+=20
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c                       |  274=
+ +++++-----
+ drivers/net/xen-netback/interface.c                                 |    1=
+=20
+ drivers/nvme/host/core.c                                            |  128=
+ +++-
+ drivers/nvme/host/pci.c                                             |   23=
+=20
+ drivers/nvme/host/rdma.c                                            |   19=
+=20
+ drivers/nvme/host/tcp.c                                             |    4=
+=20
+ drivers/of/of_reserved_mem.c                                        |    4=
+=20
+ drivers/opp/of.c                                                    |    2=
+=20
+ drivers/pci/pci.c                                                   |   24=
+=20
+ drivers/pinctrl/intel/pinctrl-cherryview.c                          |    4=
+=20
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c                         |   26=
+=20
+ drivers/s390/crypto/zcrypt_api.c                                    |    3=
+=20
+ drivers/s390/scsi/zfcp_fsf.c                                        |   16=
+=20
+ drivers/scsi/ch.c                                                   |    1=
+=20
+ drivers/scsi/megaraid.c                                             |    4=
+=20
+ drivers/scsi/qla2xxx/qla_def.h                                      |    3=
+=20
+ drivers/scsi/qla2xxx/qla_init.c                                     |  109=
+ ++-
+ drivers/scsi/qla2xxx/qla_mbx.c                                      |   25=
+=20
+ drivers/scsi/qla2xxx/qla_os.c                                       |   11=
+=20
+ drivers/scsi/qla2xxx/qla_target.c                                   |   25=
+=20
+ drivers/scsi/scsi_error.c                                           |    3=
+=20
+ drivers/scsi/scsi_sysfs.c                                           |   11=
+=20
+ drivers/scsi/sd.c                                                   |    3=
+=20
+ drivers/scsi/ufs/ufshcd.c                                           |    3=
+=20
+ drivers/staging/wlan-ng/cfg80211.c                                  |    6=
+=20
+ drivers/usb/class/usblp.c                                           |    4=
+=20
+ drivers/usb/gadget/udc/lpc32xx_udc.c                                |    6=
+=20
+ drivers/usb/misc/ldusb.c                                            |   23=
+=20
+ drivers/usb/misc/legousbtower.c                                     |    5=
+=20
+ drivers/usb/serial/ti_usb_3410_5052.c                               |   10=
+=20
+ fs/binfmt_elf.c                                                     |   13=
+=20
+ fs/btrfs/ctree.h                                                    |    2=
+=20
+ fs/btrfs/delalloc-space.c                                           |    1=
+=20
+ fs/btrfs/disk-io.c                                                  |    6=
+=20
+ fs/btrfs/extent-tree.c                                              |    1=
+=20
+ fs/btrfs/file.c                                                     |   36=
+ -
+ fs/btrfs/qgroup.c                                                   |    4=
+=20
+ fs/btrfs/relocation.c                                               |    2=
+=20
+ fs/ceph/mds_client.c                                                |   21=
+=20
+ fs/cifs/file.c                                                      |    6=
+=20
+ fs/cifs/inode.c                                                     |    4=
+=20
+ fs/cifs/smb1ops.c                                                   |    3=
+=20
+ fs/dax.c                                                            |    5=
+=20
+ fs/io_uring.c                                                       |  120=
+ ++--
+ fs/ocfs2/journal.c                                                  |    3=
+=20
+ fs/ocfs2/localalloc.c                                               |    3=
+=20
+ fs/proc/page.c                                                      |   28=
+ -
+ fs/readdir.c                                                        |  128=
+ +++-
+ include/linux/micrel_phy.h                                          |    2=
+=20
+ include/linux/mii.h                                                 |    9=
+=20
+ include/linux/skbuff.h                                              |    5=
+=20
+ include/linux/uaccess.h                                             |    6=
+=20
+ include/scsi/scsi_eh.h                                              |    1=
+=20
+ include/trace/events/btrfs.h                                        |    3=
+=20
+ include/uapi/linux/nvme_ioctl.h                                     |   23=
+=20
+ kernel/events/core.c                                                |    2=
+=20
+ kernel/trace/trace_event_perf.c                                     |    4=
+=20
+ lib/textsearch.c                                                    |    4=
+=20
+ lib/vdso/gettimeofday.c                                             |    9=
+=20
+ mm/compaction.c                                                     |    7=
+=20
+ mm/hugetlb.c                                                        |    5=
+=20
+ mm/memblock.c                                                       |    6=
+=20
+ mm/memory-failure.c                                                 |   36=
+ -
+ mm/memremap.c                                                       |   11=
+=20
+ mm/page_owner.c                                                     |    5=
+=20
+ mm/slab_common.c                                                    |    9=
+=20
+ mm/slub.c                                                           |   13=
+=20
+ mm/vmscan.c                                                         |    9=
+=20
+ net/core/skbuff.c                                                   |   21=
+=20
+ net/ipv4/route.c                                                    |   11=
+=20
+ net/ipv6/ip6_input.c                                                |    4=
+=20
+ net/mac80211/debugfs_netdev.c                                       |   11=
+=20
+ net/mac80211/mlme.c                                                 |    5=
+=20
+ net/netfilter/nft_connlimit.c                                       |    7=
+=20
+ net/openvswitch/actions.c                                           |    5=
+=20
+ net/rxrpc/peer_event.c                                              |   11=
+=20
+ net/sched/act_api.c                                                 |   23=
+=20
+ net/sched/act_mpls.c                                                |   12=
+=20
+ net/sched/cls_api.c                                                 |   36=
+ +
+ net/sched/sch_api.c                                                 |    3=
+=20
+ net/sched/sch_etf.c                                                 |    2=
+=20
+ net/sctp/socket.c                                                   |    4=
+=20
+ net/wireless/nl80211.c                                              |    3=
+=20
+ net/wireless/wext-sme.c                                             |    8=
+=20
+ scripts/namespace.pl                                                |   13=
+=20
+ security/safesetid/securityfs.c                                     |    3=
+=20
+ sound/pci/hda/patch_hdmi.c                                          |    2=
+=20
+ sound/pci/hda/patch_realtek.c                                       |   14=
+=20
+ sound/soc/sh/rcar/core.c                                            |    1=
+=20
+ sound/usb/pcm.c                                                     |    3=
+=20
+ tools/testing/selftests/kvm/Makefile                                |    2=
+=20
+ 217 files changed, 1903 insertions(+), 1107 deletions(-)
+
+Albert Ou (1):
+      riscv: Fix memblock reservation for device tree blob
+
+Alex Deucher (5):
+      Revert "drm/radeon: Fix EEH during kexec"
+      drm/amdgpu/vce: fix allocation size in enc ring test
+      drm/amdgpu/vcn: fix allocation size in enc ring test
+      drm/amdgpu/uvd6: fix allocation size in enc ring test (v2)
+      drm/amdgpu/uvd7: fix allocation size in enc ring test (v2)
+
+Alexander Shishkin (1):
+      perf/aux: Fix AUX output stopping
+
+Andrea Merello (1):
+      net: phy: allow for reset line to be tied to a sleepy GPIO controller
+
+Aneesh Kumar K.V (1):
+      mm/memunmap: don't access uninitialized memmap in memunmap_pages()
+
+Balbir Singh (1):
+      nvme-pci: Fix a race in controller removal
+
+Bart Van Assche (1):
+      scsi: ch: Make it possible to open a ch device multiple times again
+
+Biao Huang (1):
+      net: stmmac: disable/enable ptp_ref_clk in suspend/resume flow
+
+Chenwandun (1):
+      zram: fix race between backing_dev_show and backing_dev_store
+
+Chris Goldsworthy (1):
+      of: reserved_mem: add missing of_node_put() for proper ref-counting
+
+Chris Wilson (1):
+      drm/i915/userptr: Never allow userptr into the mappable GGTT
+
+Christophe JAILLET (2):
+      mips: Loongson: Fix the link time qualifier of 'serial_exit()'
+      memstick: jmb38x_ms: Fix an error handling path in 'jmb38x_ms_probe()'
+
+Chuhong Yuan (1):
+      cifs: Fix missed free operations
+
+Colin Ian King (1):
+      staging: wlan-ng: fix exit return when sme->key_idx >=3D NUM_WEPKEYS
+
+Cong Wang (2):
+      net_sched: fix backward compatibility for TCA_KIND
+      net_sched: fix backward compatibility for TCA_ACT_KIND
+
+C=C3=A9dric Le Goater (1):
+      net/ibmvnic: Fix EOI when running in XIVE mode.
+
+Damien Le Moal (1):
+      scsi: core: save/restore command resid for error handling
+
+Dan Carpenter (2):
+      nvme: fix an error code in nvme_init_subsystem()
+      ACPI: NFIT: Fix unlock on error in scrub_show()
+
+Dan Williams (2):
+      libata/ahci: Fix PCS quirk application
+      fs/dax: Fix pmd vs pte conflict detection
+
+Daniel Drake (1):
+      ALSA: hda/realtek - Enable headset mic on Asus MJ401TA
+
+David Hildenbrand (4):
+      drivers/base/memory.c: don't access uninitialized memmaps in soft_off=
+line_page_store()
+      fs/proc/page.c: don't access uninitialized memmaps in fs/proc/page.c
+      mm/memory-failure.c: don't access uninitialized memmaps in memory_fai=
+lure()
+      hugetlbfs: don't access uninitialized memmaps in pfn_range_valid_giga=
+ntic()
+
+David Howells (1):
+      rxrpc: Fix possible NULL pointer access in ICMP handling
+
+David Sterba (1):
+      btrfs: don't needlessly create extent-refs kernel thread
+
+Davide Caratti (2):
+      net: avoid errors when trying to pop MLPS header on non-MPLS packets
+      net/sched: fix corrupted L2 header with MPLS 'push' and 'pop' actions
+
+Dixit Parmar (1):
+      Input: st1232 - fix reporting multitouch coordinates
+
+Dmitry Bogdanov (2):
+      net: aquantia: do not pass lro session with invalid tcp checksum
+      net: aquantia: correctly handle macvlan and multicast coexistence
+
+Dmitry Torokhov (1):
+      pinctrl: cherryview: restore Strago DMI workaround for all versions
+
+Eric Dumazet (2):
+      net: avoid potential infinite loop in tc_ctl_action()
+      rxrpc: use rcu protection while reading sk->sk_user_data
+
+Evan Green (1):
+      Input: synaptics-rmi4 - avoid processing unknown IRQs
+
+Faiz Abbas (2):
+      mmc: cqhci: Commit descriptors before setting the doorbell
+      mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
+
+Filipe Manana (3):
+      Btrfs: add missing extents release on file extent cluster relocation =
+error
+      Btrfs: fix qgroup double free after failure to reserve metadata for d=
+elalloc
+      Btrfs: check for the full sync flag while holding the inode lock duri=
+ng fsync
+
+Florian Fainelli (2):
+      net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
+      net: bcmgenet: Set phydev->dev_flags only for internal PHYs
+
+Gabriel Craciunescu (1):
+      Added QUIRKs for ADATA XPG SX8200 Pro 512GB
+
+Gerald Schaefer (1):
+      s390/kaslr: add support for R_390_GLOB_DAT relocation type
+
+Greg KH (1):
+      RDMA/cxgb4: Do not dma memory off of the stack
+
+Greg Kroah-Hartman (1):
+      Linux 5.3.8
+
+Greg Kurz (1):
+      KVM: PPC: Book3S HV: XIVE: Ensure VP isn't already in use
+
+Gustavo A. R. Silva (1):
+      usb: udc: lpc32xx: fix bad bit shift operation
+
+Hans de Goede (1):
+      drm/amdgpu: Bail earlier when amdgpu.cik_/si_support is not set to 1
+
+Helge Deller (1):
+      parisc: Fix vmap memory leak in ioremap()/iounmap()
+
+Himanshu Madhani (1):
+      scsi: qla2xxx: Silence fwdump template message
+
+Honglei Wang (1):
+      mm: memcg: get number of pages on the LRU list in memcgroup base on l=
+ru_zone_size
+
+Igor Russkikh (2):
+      net: aquantia: temperature retrieval fix
+      net: aquantia: when cleaning hw cache it should be toggled
+
+Jacob Keller (1):
+      namespace: fix namespace.pl script to support relative paths
+
+James Morse (1):
+      EDAC/ghes: Fix Use after free in ghes_edac remove path
+
+Jane Chu (1):
+      mm/memory-failure: poison read receives SIGKILL instead of SIGBUS if =
+mmaped more than once
+
+Jann Horn (1):
+      binder: Don't modify VMA bounds in ->mmap handler
+
+Jeff Layton (1):
+      ceph: just skip unrecognized info in ceph_reply_info_extra
+
+Jens Axboe (2):
+      io_uring: fix bad inflight accounting for SETUP_IOPOLL|SETUP_SQTHREAD
+      io_uring: used cached copies of sq->dropped and cq->overflow
+
+Jian-Hong Pan (1):
+      nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T
+
+Johan Hovold (6):
+      USB: legousbtower: fix memleak on disconnect
+      USB: serial: ti_usb_3410_5052: fix port-close races
+      USB: ldusb: fix memleak on disconnect
+      USB: usblp: fix use-after-free on disconnect
+      USB: ldusb: fix read info leaks
+      s390/zcrypt: fix memleak at release
+
+John Garry (1):
+      ACPI: CPPC: Set pcc_data[pcc_ss_id] to NULL in acpi_cppc_processor_ex=
+it()
+
+Jose Abreu (4):
+      net: stmmac: xgmac: Not all Unicast addresses may be available
+      net: stmmac: dwmac4: Always update the MAC Hash Filter
+      net: stmmac: Correctly take timestamp for PTPv2
+      net: stmmac: Do not stop PHY if WoL is enabled
+
+Juergen Gross (1):
+      xen/netback: fix error path of xenvif_connect_data()
+
+Junya Monden (1):
+      ASoC: rsnd: Reinitialize bit clock inversion flag for every format se=
+tting
+
+Kai-Heng Feng (3):
+      r8152: Set macpassthru in reset_resume callback
+      Revert "Input: elantech - enable SMBus on new (2018+) systems"
+      drm/edid: Add 6 bpc quirk for SDC panel in Lenovo G50
+
+Kailang Yang (1):
+      ALSA: hda/realtek - Add support for ALC711
+
+Kevin Hao (1):
+      nvme-pci: Set the prp2 correctly when using more than 4k page
+
+Linus Torvalds (5):
+      Convert filldir[64]() from __put_user() to unsafe_put_user()
+      elf: don't use MAP_FIXED_NOREPLACE for elf executable mappings
+      Make filldir[64]() verify the directory entry filename is valid
+      uaccess: implement a proper unsafe_copy_to_user() and switch filldir =
+over to it
+      filldir[64]: remove WARN_ON_ONCE() for bad directory entries
+
+Lowry Li (Arm Technology China) (2):
+      drm: Free the writeback_job when it with an empty fb
+      drm: Clear the fence pointer when writeback job signaled
+
+Luca Coelho (1):
+      iwlwifi: pcie: change qu with jf devices to use qu configuration
+
+Lukas Wunner (1):
+      ALSA: hda - Force runtime PM on Nvidia HDMI codecs
+
+Marc Zyngier (5):
+      arm64: KVM: Trap VM ops when ARM64_WORKAROUND_CAVIUM_TX2_219_TVM is s=
+et
+      arm64: Avoid Cavium TX2 erratum 219 when switching TTBR
+      arm64: Enable workaround for Cavium TX2 erratum 219 when running SMT
+      arm64: Allow CAVIUM_TX2_ERRATUM_219 to be selected
+      irqchip/sifive-plic: Switch to fasteoi flow
+
+Marco Felsch (1):
+      Input: da9063 - fix capability and drop KEY_SLEEP
+
+Marek Vasut (2):
+      net: phy: micrel: Discern KSZ8051 and KSZ8795 PHYs
+      net: phy: micrel: Update KSZ87xx PHY name
+
+Mario Limonciello (1):
+      nvme-pci: Save PCI state before putting drive into deepest state
+
+Marta Rybczynska (1):
+      nvme: allow 64-bit results in passthru commands
+
+Martijn Coenen (1):
+      loop: change queue block size to match when using DIO
+
+Max Filippov (2):
+      xtensa: drop EXPORT_SYMBOL for outs*/ins*
+      xtensa: fix change_bit in exclusive access option
+
+Max Gurtovoy (1):
+      nvme-rdma: Fix max_hw_sectors calculation
+
+Miaoqing Pan (2):
+      nl80211: fix null pointer dereference
+      mac80211: fix txq null pointer dereference
+
+Micah Morton (1):
+      LSM: SafeSetID: Stop releasing uninitialized ruleset
+
+Michal Vok=C3=A1=C4=8D (1):
+      net: dsa: qca8k: Use up to 7 ports for all operations
+
+Mike Rapoport (1):
+      mm: memblock: do not enforce current limit for memblock_phys* family
+
+Mikulas Patocka (1):
+      dm cache: fix bugs when a GFP_NOWAIT allocation fails
+
+Ming Lei (1):
+      blk-mq: honor IO scheduler for multiqueue devices
+
+Navid Emamdoost (4):
+      drm/komeda: prevent memory leak in komeda_wb_connector_add
+      ieee802154: ca8210: prevent memory leak
+      drm/amdgpu: fix multiple memory leaks in acp_hw_init
+      drm/amd/display: memory leak
+
+Oleksij Rempel (2):
+      MIPS: dts: ar9331: fix interrupt-controller size
+      net: ag71xx: fix mdio subnode support
+
+Oliver Neukum (1):
+      scsi: sd: Ignore a failure to sync cache due to lack of authorization
+
+Pablo Neira Ayuso (1):
+      netfilter: nft_connlimit: disable bh on garbage collection
+
+Palmer Dabbelt (1):
+      RISC-V: Clear load reservations while restoring hart contexts
+
+Patrick Williams (2):
+      pinctrl: armada-37xx: fix control of pins 32 and up
+      pinctrl: armada-37xx: swap polarity on LED group
+
+Paul Burton (1):
+      MIPS: tlbex: Fix build_restore_pagemask KScratch restore
+
+Pavel Begunkov (3):
+      io_uring: Fix corrupted user_data
+      io_uring: Fix broken links with offloading
+      io_uring: Fix race for sqes with userspace
+
+Pavel Shilovsky (1):
+      CIFS: Fix use after free of file info structures
+
+Peter Ujfalusi (1):
+      ARM: dts: am4372: Set memory bandwidth limit for DISPC
+
+Philip Yang (1):
+      drm/amdgpu: user pages array memory leak fix
+
+Prateek Sood (1):
+      tracing: Fix race in perf_trace_buf initialization
+
+Qian Cai (3):
+      s390/mm: fix -Wunused-but-set-variable warnings
+      mm/slub: fix a deadlock in show_slab_objects()
+      mm/page_owner: don't access uninitialized memmaps when reading /proc/=
+pagetypeinfo
+
+Qu Wenruo (3):
+      btrfs: block-group: Fix a memory leak due to missing btrfs_put_block_=
+group()
+      btrfs: tracepoints: Fix wrong parameter order for qgroup events
+      btrfs: tracepoints: Fix bad entry members of qgroup events
+
+Quinn Tran (4):
+      scsi: qla2xxx: Fix unbound sleep in fcport delete path.
+      scsi: qla2xxx: Fix stale mem access on driver unload
+      scsi: qla2xxx: Fix N2N link reset
+      scsi: qla2xxx: Fix N2N link up fail
+
+Rafael J. Wysocki (2):
+      cpufreq: Avoid cpufreq_suspend() deadlock on system shutdown
+      PCI: PM: Fix pci_power_up()
+
+Randy Dunlap (2):
+      lib: textsearch: fix escapes in example code
+      net: ethernet: broadcom: have drivers select DIMLIB as needed
+
+Roberto Bergantinos Corpas (1):
+      CIFS: avoid using MID 0xFFFF
+
+Roman Gushchin (1):
+      mm: memcg/slab: fix panic in __free_slab() caused by premature memcg =
+pointer release
+
+Roman Kagan (1):
+      x86/hyperv: Make vapic support x2apic mode
+
+Ross Lagerwall (1):
+      xen/efi: Set nonblocking callbacks
+
+Russell King (1):
+      net: phy: fix write to mii-ctrl1000 register
+
+Sagi Grimberg (1):
+      nvme-rdma: fix possible use-after-free in connect timeout
+
+Sascha Hauer (1):
+      mmc: mxs: fix flags passed to dmaengine_prep_slave_sg
+
+Sean Christopherson (1):
+      x86/apic/x2apic: Fix a NULL pointer deref when handling a dying cpu
+
+Shuah Khan (1):
+      selftests: kvm: Fix libkvm build error
+
+Song Liu (1):
+      md/raid0: fix warning message for parameter default_layout
+
+Stanley Chu (1):
+      scsi: ufs: skip shutdown if hba is not powered
+
+Stefano Brivio (1):
+      ipv4: Return -ENETUNREACH if we can't create route but saddr is valid
+
+Steffen Maier (1):
+      scsi: zfcp: fix reaction on bit error threshold notification
+
+Steve Wahl (1):
+      x86/boot/64: Make level2_kernel_pgt pages invalid outside kernel area
+
+Steven Price (1):
+      drm/panfrost: Handle resetting on timeout better
+
+Szabolcs Sz=C5=91ke (1):
+      ALSA: usb-audio: Disable quirks for BOSS Katana amplifiers
+
+Tejun Heo (1):
+      blk-rq-qos: fix first node deletion of rq_qos_del()
+
+Thierry Reding (1):
+      net: stmmac: Avoid deadlock on suspend/resume
+
+Thomas Bogendoerfer (1):
+      net: i82596: fix dma_alloc_attr for sni_82596
+
+Thomas Gleixner (1):
+      lib/vdso: Make clock_getres() POSIX compliant again
+
+Thomas Hellstrom (1):
+      drm/ttm: Restore ttm prefaulting
+
+Tony Lindgren (6):
+      clk: ti: dra7: Fix mcasp8 clock bits
+      ARM: dts: Fix wrong clocks for dra7 mcasp
+      ARM: dts: Fix gpio0 flags for am335x-icev2
+      ARM: OMAP2+: Fix missing reset done flag for am3 and am43
+      ARM: OMAP2+: Add missing LCDC midlemode for am335x
+      ARM: OMAP2+: Fix warnings with broken omap2_set_init_voltage()
+
+Ville Syrj=C3=A4l=C3=A4 (1):
+      drm/i915: Favor last VBT child device with conflicting AUX ch/DDC pin
+
+Vinicius Costa Gomes (1):
+      sched: etf: Fix ordering of packets with same txtime
+
+Viresh Kumar (1):
+      opp: of: drop incorrect lockdep_assert_held()
+
+Vlastimil Babka (1):
+      mm, compaction: fix wrong pfn handling in __reset_isolation_pfn()
+
+Wei Wang (1):
+      ipv4: fix race condition between route lookup and invalidation
+
+Wen Yang (2):
+      net: mscc: ocelot: add missing of_node_put after calling of_get_child=
+_by_name
+      net: dsa: rtl8366rb: add missing of_node_put after calling of_get_chi=
+ld_by_name
+
+Will Deacon (2):
+      cfg80211: wext: avoid copying malformed SSIDs
+      mac80211: Reject malformed SSID elements
+
+Wunderlich, Mark (1):
+      nvme-tcp: fix wrong stop condition in io_work
+
+Xiang Chen (1):
+      scsi: megaraid: disable device when probe failed after enabled device
+
+Xiaojie Yuan (1):
+      drm/amdgpu/sdma5: fix mask value of POLL_REGMEM packet for pipe sync
+
+Xin Long (2):
+      net: ipv6: fix listify ip6_rcv_finish in case of forwarding
+      sctp: change sctp_prot .no_autobind with true
+
+Yi Li (1):
+      ocfs2: fix panic due to ocfs2_wq is null
+
+Yizhuo (1):
+      net: hisilicon: Fix usage of uninitialized variable in function mdio_=
+sc_cfg_reg_write()
+
+Yonglong Liu (1):
+      net: phy: Fix "link partner" information disappear issue
+
+YueHaibing (1):
+      netdevsim: Fix error handling in nsim_fib_init and nsim_fib_exit
+
+Yufen Yu (1):
+      scsi: core: try to get module before removing device
 
 
---=-QZ2Sx9AbyhnnxfJkgIdN
+--opJtzjQTFsWo+cga
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAl24BCgACgkQFkJ4iaW4
-c+6VOQ/9EgrOlgUgJuBR90ZKKHyOv1sHdw7cW5JwSgHngB9FhoZrw/cVI4bBLPgs
-K6N8Rf1ne29cuiYUUPqXRVvyJ/kewNkMa6rs0xNNt6PZC58NgsyCwxYgpC+CxsXw
-pgjSMf7azc6k2YB44T886I1W27wfSU8FGSTxb5Ihq8xkg6RRZsLj6Z6mBMoiRvg5
-tY6odOMU/qhHQyeXRCxPDX48M8R7KbHxLyZ+uyYFfwQY5N4uh3zHhvE33w6ZfATj
-9gZdGfYxu7s2D/MDNnbSaPVcws0Y9VRaZqI2E/ZLR5242NqgJd0rBnYqgPFlfqkm
-LtV0GnjscRQJKLJMhbD9DRGlil9wIG3mu2OEQOtWAh5TsK+XbXQAjdrDWR6sZtD5
-Bf97f0FACKPiPS/Vrl6hfdJxC8k9hl3IC4QRiq3lloZZsxzC+ESV/uu+VlVJW8RO
-01SO0M8gd/bYrVuk/y+AJaduTK4yOKZDp3k1dno3z3I45y+8zx0OGO1q6+A4n5j/
-K5Ku1j8qHipm4qr/hd7Cd4uPy6mjMFpiJwcZtL6uWN/L+eYV40IFV57Pl26Mj+G1
-JxlG3YaMl6advnm+SEhKvn/JEUevc+rt84psUkU13lIQu0uOtKHVCwjnz3qSOlDD
-xSn+jOthrd2C3fmC3gCYz1QyIMjEC9L4pye9ZML2bPkjhdLN+p4=
-=5pf+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl24BDIACgkQONu9yGCS
+aT7/cg/8Do6svP6DJdYyKODwoOh6DGbRXfAJYIjhYxU0rTLTmEm0vtum3tPJ5nh1
+0TW4R2Wj7nhXul0P/hatP1CFNBwaD0pmawKOBjmZ7zUW0AvFGNNmJNsvOvtHThTS
+Hgv3Z2DPh+ZQOuC1uM8Ztl6PFLy8b9MCcEBs0KxjCbXXKdInEccQmNHezDpLyLiO
+/owGK6NsIIe3nXOE4A1B4sfALNisrvPKODzp+HT91if3XMx4V2ZMF5xywvrdUK0W
+9XjUWYfyPFjyMzhpWtoW7zmpM+5EXiF/HpJB5knWubOQqOzMtTcn3VD+TGLdkkOK
+Agw6b2LOFgAfPLpmEKj+vHF2M06Hm7zXykY9C+7NX4+N7DvyHENcWHLCHW093dmU
+cb+7Qzpfarz6sjDW0P/3+oc6JJ7Mx/1fkjT9yWRpL5ynFWFZU6yjogm0yzhYAZ7F
+Rciuwuoq8mfjZ9AeMO6m0Vk+diAcKIl3lIekJuJI3aaUH7rBXFH55rXpqzCybAD/
+LiDn2zuWzY03+Yv7NN9LMRpRIendLlX+dU72i2mmHsCrLceYRUbTKRPXCdoTxTCB
+rF1vgPn8lxB7TWd14ReBs7+FNJYczkDEl4mmj3CjAZxtGsrRUpsFmOOVBos03w12
+hSQAuAn1qmrKoeg15uReKaJaEi9gfrTZsZYXASdhaD77/xsj7UU=
+=kcHG
 -----END PGP SIGNATURE-----
 
---=-QZ2Sx9AbyhnnxfJkgIdN--
-
+--opJtzjQTFsWo+cga--
