@@ -3,69 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C88C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0639DCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91082086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D03B02086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfJ2IAf (ORCPT
+        id S1728488AbfJ2ICl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:00:35 -0400
-Received: from ms.lwn.net ([45.79.88.28]:42020 "EHLO ms.lwn.net"
+        Tue, 29 Oct 2019 04:02:41 -0400
+Received: from mga01.intel.com ([192.55.52.88]:17582 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbfJ2IAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:00:34 -0400
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 30A994FA;
-        Tue, 29 Oct 2019 08:00:30 +0000 (UTC)
-Date:   Tue, 29 Oct 2019 02:00:27 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
- 'functions' to 'identifiers'
-Message-ID: <20191029020027.516a6bce@lwn.net>
-In-Reply-To: <20191029003120.llve32crfw63ovpw@mail.google.com>
-References: <20191020131717.28990-1-changbin.du@gmail.com>
-        <20191024121940.1d6a64df@lwn.net>
-        <87woctb9cj.fsf@intel.com>
-        <20191025144802.uixg2crhw6h7gghq@mail.google.com>
-        <87v9s99q9l.fsf@intel.com>
-        <20191029003120.llve32crfw63ovpw@mail.google.com>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1726233AbfJ2ICk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:02:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 01:02:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="scan'208";a="401068940"
+Received: from fyin-dev.sh.intel.com (HELO [10.239.143.122]) ([10.239.143.122])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Oct 2019 01:02:39 -0700
+Subject: Re: linux-next: manual merge of the vhost tree with the pm tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191029151928.780c8ede@canb.auug.org.au>
+From:   Yin Fengwei <fengwei.yin@intel.com>
+Message-ID: <f22614d2-3275-fd98-9382-aeff1ca814fa@intel.com>
+Date:   Tue, 29 Oct 2019 16:02:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191029151928.780c8ede@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 08:31:22 +0800
-Changbin Du <changbin.du@gmail.com> wrote:
+Hi,
 
-> Here python is different from C. Both empty string and None are False in python.
-> Note such condition is common in python.
+On 2019/10/29 下午12:19, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the vhost tree got a conflict in:
+> 
+>    drivers/acpi/processor_idle.c
+> 
+> between commit:
+> 
+>    fa583f71a99c ("ACPI: processor_idle: Skip dummy wait if kernel is in guest")
+> 
+> from the pm tree and commit:
+> 
+>    a04c0533b07c ("ACPI: disable extra P_LVLx access on KVM")
+Sorry for this. I only check the linus tree and didn't notice there is
+this patch in pm tree.
 
-Treating both as a False value is reasonably common.  Treating them
-elsewhere in the same code block as separate values is less
-so; that's the part I would prefer to avoid.
+BTW, from this patch (a04c0533b07c), it has todo to extend the
+hypervisor not only for kvm. So I suppose it's time to add one more:
+ACRN. Thanks.
 
-Thanks,
+Regards
+Yin, Fengwei
 
-jon
+> 
+> from the vhost tree.
+> 
+> I fixed it up (I just used the pm tree version) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+> 
