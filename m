@@ -2,115 +2,125 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88D9CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B18CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9182087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZjxpuAg"
+	by mail.kernel.org (Postfix) with ESMTP id A5EB520856
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388258AbfJ2NPb (ORCPT
+        id S2388276AbfJ2NP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:15:31 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44586 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732534AbfJ2NPb (ORCPT
+        Tue, 29 Oct 2019 09:15:57 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43694 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388105AbfJ2NP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:15:31 -0400
-Received: by mail-lj1-f196.google.com with SMTP id c4so15200769lja.11;
-        Tue, 29 Oct 2019 06:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rQbCwQn4OcCXCHFwwmFatk+l/n8S/B77Id3xHHz9OsQ=;
-        b=hZjxpuAgz7brG/rgG0uL289gCvd0Rg+88SXtx9mT7soxurM5WbTxvC1hQ/lW/drlyR
-         wXm8QSuoxTtFS380W5cBhc+CWa6zdNldQWI5Z7iYoXnhFcTkJJoSWA/mUpPSTN9nILM2
-         o0hdPoyUu2RlEnrDpVfatezm1YRMLbsCb2kQZx1vd6xmo/sjU9ffvr+4tGMLGX1iBbgN
-         HjA33qGO4LaEfelPQxH0Qtm8nbxY2owSG3UliwWk9PLtpSyTCg70RiaotxwE5P/tTNNL
-         4/+BJck94WL0BsUuYjAzgaFG74yvXqKueQivrG3a/z+li8SYPnjsU+XJBvnrsz7rCPPp
-         xfZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rQbCwQn4OcCXCHFwwmFatk+l/n8S/B77Id3xHHz9OsQ=;
-        b=te4TVB5WNIjt1p5mD9DUQAIapDQueXDRZeVO0wmwFIRSoX4cOCCkLXNbe6fhlfULiW
-         FBDqUFFQSidDmxT3DjI6zyxmiVrgLTr1Wp1L0Fi/s6uTumjcc476mXAdF0i7TFO8iX6e
-         +kXeds1CU2XJ8CdiYWnRB5W9Gp1W4cxpub2UoWqCAuCY4uJzxWsW65fPzuCTnVVcxbjt
-         hvJxDbSmTlxjF+/4HaQVI5FKtwIyva5yMP9XyBYcEJCgmGkubx3l6gsIRu+srmpgTLrQ
-         rp4PIjwYJWNCD3pGDEbkofcs/73J/RzabYn74/HWwLzGgRJlcebWe7jU3LrPj/pxsTTs
-         4cIw==
-X-Gm-Message-State: APjAAAUQzQ1ouEfbMs02TXOwdnd3zUfnQrct9VZSV+Otmez35kE5slQr
-        itbPTBSvMDbstwyZLGWOjUR4sV2LItN1mymI6EA=
-X-Google-Smtp-Source: APXvYqyAwsBC9wzuv9VJycNb0BcgLvYOqtu9D89Ede9Rm7uVYGbmJDn/HV4nb+IlolpfBAIr7w5KPoyDEC0kHOBnxgk=
-X-Received: by 2002:a2e:819a:: with SMTP id e26mr2713781ljg.26.1572354929138;
- Tue, 29 Oct 2019 06:15:29 -0700 (PDT)
+        Tue, 29 Oct 2019 09:15:57 -0400
+Received: from [91.217.168.176] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iPRLm-00015Z-Qa; Tue, 29 Oct 2019 13:15:54 +0000
+Received: from ben by deadeye with local (Exim 4.92.2)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iPRLm-0000r3-3e; Tue, 29 Oct 2019 14:15:54 +0100
+Message-ID: <8301f887ce091340b6662371ab2bd1628a06118e.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 58/87] cifs: add spinlock for the openFileList to
+ cifsInodeInfo
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Pavel Shilovskiy <pshilov@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steven French <Steven.French@microsoft.com>
+Date:   Tue, 29 Oct 2019 14:15:45 +0100
+In-Reply-To: <DM5PR21MB0185257853E50A73C593B891B6660@DM5PR21MB0185.namprd21.prod.outlook.com>
+References: <lsq.1570043210.379046399@decadent.org.uk>
+         <lsq.1570043211.844466427@decadent.org.uk>
+         <DM5PR21MB0185257853E50A73C593B891B6660@DM5PR21MB0185.namprd21.prod.outlook.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-aXEdqtHx4Y9xfbklpuEp"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-References: <1572343372-6303-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1572343372-6303-1-git-send-email-Anson.Huang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 29 Oct 2019 10:15:31 -0300
-Message-ID: <CAOMZO5CnBCbM2uhDpgUgRVXkVsPTDw27CxZUp3+FMZi+7DH1XQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx7ulp-evk: Use APLL_PFD1 as usdhc's clock source
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+X-SA-Exim-Connect-IP: 91.217.168.176
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
 
-On Tue, Oct 29, 2019 at 7:06 AM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> i.MX7ULP does NOT support runtime switching clock source for PCC,
-> APLL_PFD1 by default is usdhc's clock source, so just use it
-> in kernel to avoid below kernel dump during kernel boot up and
-> make sure kernel can boot up with SD root file-system.
->
-> [    3.035892] Loading compiled-in X.509 certificates
-> [    3.136301] sdhci-esdhc-imx 40370000.mmc: Got CD GPIO
-> [    3.242886] mmc0: Reset 0x1 never completed.
-> [    3.247190] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-> [    3.253751] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
-> [    3.260218] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000001
-> [    3.266775] mmc0: sdhci: Argument:  0x00009a64 | Trn mode: 0x00000000
-> [    3.273333] mmc0: sdhci: Present:   0x00088088 | Host ctl: 0x00000002
-> [    3.279794] mmc0: sdhci: Power:     0x00000000 | Blk gap:  0x00000080
-> [    3.286350] mmc0: sdhci: Wake-up:   0x00000008 | Clock:    0x0000007f
-> [    3.292901] mmc0: sdhci: Timeout:   0x0000008c | Int stat: 0x00000000
-> [    3.299364] mmc0: sdhci: Int enab:  0x007f010b | Sig enab: 0x00000000
-> [    3.305918] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00008402
-> [    3.312471] mmc0: sdhci: Caps:      0x07eb0000 | Caps_1:   0x0000b400
-> [    3.318934] mmc0: sdhci: Cmd:       0x0000113a | Max curr: 0x00ffffff
-> [    3.325488] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0039b37f
-> [    3.332040] mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
-> [    3.338501] mmc0: sdhci: Host ctl2: 0x00000000
-> [    3.343051] mmc0: sdhci: ============================================
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+--=-aXEdqtHx4Y9xfbklpuEp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, with this patch applied I can get SD card rootfs to get mounted:
+On Mon, 2019-10-28 at 22:19 +0000, Pavel Shilovskiy wrote:
+> > -----Original Message-----
+> > From: Ben Hutchings <ben@decadent.org.uk>
+> > Sent: Wednesday, October 2, 2019 12:07 PM
+> > To: linux-kernel@vger.kernel.org; stable@vger.kernel.org
+> > Cc: akpm@linux-foundation.org; Denis Kirjanov <kda@linux-powerpc.org>; =
+Ronnie Sahlberg <lsahlber@redhat.com>; Steven French <Steven.French@microso=
+ft.com>; Pavel Shilovskiy <pshilov@microsoft.com>
+> > Subject: [PATCH 3.16 58/87] cifs: add spinlock for the openFileList to =
+cifsInodeInfo
+> >=20
+> > 3.16.75-rc1 review patch.  If anyone has any objections, please let me =
+know.
+> >=20
+> > ------------------
+> >=20
+> > From: Ronnie Sahlberg <lsahlber@redhat.com>
+> >=20
+> > commit 487317c99477d00f22370625d53be3239febabbe upstream.
+[...]
+> We have recently found regressions in this patch that are addressed in th=
+e following two patches:
+>=20
+> cb248819d209d ("cifs: use cifsInodeInfo->open_file_lock while iterating t=
+o avoid a panic")
+> 1a67c41596575 ("CIFS: Fix use after free of file info structures")
+>=20
+> So, I would suggest either to apply those two patches above or to revert =
+this one.
 
-Tested-by: Fabio Estevam <festevam@gmail.com>
+Thanks for pointing thse out.  I will try to include those in a later
+update.
 
-I think this fix deserves a Fixes tag so that it can be backported to
-older kernels.
+Ben.
+
+--=20
+Ben Hutchings
+Any sufficiently advanced bug is indistinguishable from a feature.
+
+
+
+--=-aXEdqtHx4Y9xfbklpuEp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl24O4EACgkQ57/I7JWG
+EQlO+Q/9ERJdUmTM9CMXqx1b2UvtT8KH+GAuF75obVUHZCN3ysjyLINP5J+I/QjQ
+MfefJCJXd7+kFtp7kTe6w+EdxEms6QCQzHmGDGMSzW3wrdMD0ct5N0/3VED8Jqsz
+f0kchBegnpNbThc5xMnhpStkcASRlWmrhGMrMIKrN6ybR8doroJ7hD2R6EQ28RPd
+j62twwV3v0G1a3BX1DwDuLH3ZuGJhiDZE4AZdLIdZfhZXc9+QX9SOPcCV/i3Zxvp
+d/TWzbfaX9jC/K+FlbFIzTYRAIKKLnvSpHEZTnj3qzYR3iO93qvTiILUcxB6z5j5
+2cHwcKwINMh/cL+elIVGDqztqcc4vIdqybtGGXkmjRyH3B5BW/3wvpACGHW2Fghw
+2f44m4jGHk/VfKemmbBD2NSegKpzffM5g2ioTa6aZT55oMD4yA2Caj3KfGK4nuUc
+s5lYXuwXbhRH7HdvIJkK5juoEppbZVvuR/IYGNyXZpqw7ANL+t8AdUu99uyPXSMn
+OUGZD25awMkcXTTSD/IMZhrRg4HeaMbQw56QjC/fLwbiwP7BCQowodoXiX82HfKC
+GmjfAJsNdJHJzX8s9cnv0lkkGAs9SWO8h5YvHMavoZGmkRzAy4cf+8tUUy0ImR/3
+RIcr81FYQ6NLLBC2oWZ3DpbkAg5osjeF2JthnyeuP7w+QW2wVts=
+=8ShN
+-----END PGP SIGNATURE-----
+
+--=-aXEdqtHx4Y9xfbklpuEp--
