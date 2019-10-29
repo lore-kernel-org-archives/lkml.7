@@ -2,78 +2,57 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F49DCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C09CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1DD20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:47:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ncentric-com.20150623.gappssmtp.com header.i=@ncentric-com.20150623.gappssmtp.com header.b="wiEzjzXZ"
+	by mail.kernel.org (Postfix) with ESMTP id 2558620717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfJ2JrL (ORCPT
+        id S1728008AbfJ2JvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:47:11 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36396 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728483AbfJ2JrK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:47:10 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w18so12884275wrt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 02:47:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ncentric-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=89r1rNHEMVi51X8QptG2oJ8PZcM46Qw8VvMwF8b1wgo=;
-        b=wiEzjzXZjxbDnTURVXFofslvFJq1OnqyzLxdVOYTiEK4BkKtV9oSdFm/F24JGKSKqH
-         sJ3VU9bJai0Nd261G++OtTT/wZhXe9FuJ8SofZb0B8j7NngXjv6qFTH9tEImIwGHKg0/
-         opCMiE1lfo6WxkMYwfiiEsAN4QwZAW+TQuus/EtEwd5tXjEgSmRdWs4ixZtIJyktgOOt
-         zuBzBT34xzcKnKe1CK5OVdeUze3ktefiP7LhxMbKcNN4dUmRBYHYDmEcCp47ykpm4zNH
-         y7jpULJazBd3Mq6DftIH/r7aUsS3Nsx0ryO+8ttaIN5ZlnokpEE4MAjYzPuRE1NPnTKk
-         3uuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=89r1rNHEMVi51X8QptG2oJ8PZcM46Qw8VvMwF8b1wgo=;
-        b=B6dJvr6WX0qOgXDcOn7SqMUVW87+PL4j4ygu4htEFwdNIbNbOXciUHk7qBM5zUhQQE
-         byJroUCI/42baJoyuvLv1ci/0qgEWojIsVUTur4Coo4SEve+IGXg+YssqRFbYOERZIn9
-         o3qlYO7Drxsr3asRC0+lm/Zgna1UhLOHo7Ct8I7/7yUkzquvay04QqcVZunF3IzVLvnR
-         4TlFL42lqKEylDoEffTWsLaZnREfUe1J3RWya6C6WqF7ql10WhMqgJMBwZNZFQHMgewL
-         4ryAZQTUfsd8reZlLzvpUQr9qlDOEjepn+c5AgCH6CF1AmctcDjj6K3TmYPtW0Y35xE3
-         +Lhw==
-X-Gm-Message-State: APjAAAXAwhA9U4ywVTMBDB5ep9/VxpCy+ZRCswlKZnzXNc+YFME28uEp
-        yxxWMqt201hnssGIZRAGqsrDG6Zrq5k=
-X-Google-Smtp-Source: APXvYqyr6dueVY98vyKdLQa7Cf+zesIqhhu9E22W8jO6/0960zTgfomp23nR4r174U6ZncxgF8OO4g==
-X-Received: by 2002:adf:e850:: with SMTP id d16mr18218775wrn.251.1572342428276;
-        Tue, 29 Oct 2019 02:47:08 -0700 (PDT)
-Received: from [192.168.3.176] (d515300d8.static.telenet.be. [81.83.0.216])
-        by smtp.gmail.com with ESMTPSA id v6sm15209634wru.72.2019.10.29.02.47.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 02:47:07 -0700 (PDT)
-Subject: Re: [PATCH v2] 802.11n IBSS: wlan0 stops receiving packets due to
- aggregation after sender reboot
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        =?UTF-8?Q?Krzysztof_Ha=c5=82asa?= <khalasa@piap.pl>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <m34l02mh71.fsf@t19.piap.pl> <m37e4tjfbu.fsf@t19.piap.pl>
- <e5b07b4ce51f806ce79b1ae06ff3cbabbaa4873d.camel@sipsolutions.net>
- <30465e05-3465-f496-d57f-5e115551f5cb@ncentric.com>
- <dbbc8c3e898ec499f30a6ac1f262666ced6905fb.camel@sipsolutions.net>
-From:   Koen Vandeputte <koen.vandeputte@ncentric.com>
-Message-ID: <6967a862-c040-565a-3644-c804b188d13e@ncentric.com>
-Date:   Tue, 29 Oct 2019 10:47:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 29 Oct 2019 05:51:09 -0400
+Received: from mga02.intel.com ([134.134.136.20]:32413 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726154AbfJ2JvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:51:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:51:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="scan'208";a="202791380"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 02:51:07 -0700
+Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id CF3A6580472;
+        Tue, 29 Oct 2019 02:51:04 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
+ link
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com>
+ <20191021133849.GQ47056@e119886-lin.cambridge.arm.com>
+ <6a209452-f569-4f6a-8aea-5c9f84167f5a@linux.intel.com>
+ <20191025093457.GY47056@e119886-lin.cambridge.arm.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <0c680994-6d29-28a7-45de-7f76d79256d8@linux.intel.com>
+Date:   Tue, 29 Oct 2019 17:51:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <dbbc8c3e898ec499f30a6ac1f262666ced6905fb.camel@sipsolutions.net>
+In-Reply-To: <20191025093457.GY47056@e119886-lin.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -83,33 +62,73 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 29.10.19 10:03, Johannes Berg wrote:
-> On Tue, 2019-10-29 at 09:41 +0100, Koen Vandeputte wrote:
+On 10/25/2019 5:34 PM, Andrew Murray wrote:
+
+>>>> +/*
+>>>> + * Link width change on the fly is not always successful.
+>>>> + * It also depends on the partner.
+>>>> + */
+>>>> +static ssize_t pcie_width_store(struct device *dev,
+>>>> +				struct device_attribute *attr,
+>>>> +				const char *buf, size_t len)
+>>>> +{
+>>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>>>> +	unsigned long val;
+>>>> +	int ret;
+>>>> +
+>>>> +	lpp = dev_get_drvdata(dev);
+>>>> +
+>>>> +	ret = kstrtoul(buf, 10, &val);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	if (val > lpp->max_width)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	/* HW auto bandwidth negotiation must be enabled */
+>>>> +	pcie_rc_cfg_wr_mask(lpp, PCI_EXP_LNKCTL_HAWD, 0,
+>>>> +			    PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>>>> +	dw_pcie_link_width_resize(&lpp->pci, val);
+>>>> +
+>>>> +	return len;
+>>>> +}
+>>>> +static DEVICE_ATTR_WO(pcie_width);
+>>>> +
+>>>> +static struct attribute *pcie_cfg_attrs[] = {
+>>>> +	&dev_attr_pcie_link_status.attr,
+>>>> +	&dev_attr_pcie_speed.attr,
+>>>> +	&dev_attr_pcie_width.attr,
+>>>> +	NULL,
+>>>> +};
+>>> Is there a reason that these are limited only to the Intel driver and
+>>> not the wider set of DWC drivers?
+>>>
+>>> Is there anything specific here about the Intel GW driver?
+>> Yes, they need intel_pcie_max_speed_setup() and pcie_link_gen_to_str().
+>> Once intel_pcie_max_speed_setup() moved to DesignWare framework (as per
+>> Bjorn Helgaas inputs) and use pcie_link_speed[] array instead of
+>> pcie_link_gen_to_str() (as per gustavo pimentel inputs) we can move this to
+>> PCIe DesignWare framework or to pci sysfs file.
+> I think the key concern here is this: If you introduce sysfs controls that
+> represent generic PCI concepts (such as changing the link speed) - the concept
+> isn't limited to a particular host controller, it's limited to PCI. Therefore
+> the sysfs control should also apply more widely to all PCI controllers. This
+> is important as otherwise you may end up getting a slightly different user
+> interface to achieve the same consequence depending on the host-controller in
+> use.
 >
->> I can confirm the issue as I'm also seeing this sometimes in the field here.
+> If each controller driver has a different way of doing things, then it lends
+> itself to having some set of ops that they can all implement. Or perhaps there
+> is a middle-ground solution where this applies just to DWC devices and not all
+> devices.
+I see the better way is to move the implementation to PCIe DesignWare 
+framework because of
+the registers programming.
+
+Regards,
+Dilip
+> Thanks,
+>
+> Andrew Murray
+>
 >>
->> Sometimes when a devices goes out of range and then re-enters,
->> the link refuses to "come up", as in rx looks to be "stuck" without any
->> reports in system log or locking issues (lockdep enabled)
-> Right. I've recently debugged this due to issues in distributed
-> beaconing (rather than moving in/out of range), but I guess it would be
-> relatively simple to reproduce this with wmediumd, if that can be
-> controlled dynamically?
->
-> What kernel are you running? You could check if you have
->
-> 95697f9907bf ("mac80211: accept deauth frames in IBSS mode")
-> 4b08d1b6a994 ("mac80211: IBSS: send deauth when expiring inactive STAs")
->
-> which might help somewhat, but don't fully cover the case of moving out
-> of range.
->
-> johannes
->
-I'm running OpenWrt (kernel 4.14.150 with 4.19.79 mac80211)
-I noticed these fixes last week and made a build 2 days ago with them 
-backported to it.
-Running in the field on roughly 4 devices since a day.
-
-Koen
-
