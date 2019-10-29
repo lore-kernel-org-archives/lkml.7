@@ -2,68 +2,138 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1B0CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B58CCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF8620862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F566205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572337910;
+	bh=HONi7Pcz3PlqxZTsTYtCtc2YAjOMXLOoI320gcGKXNw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KrnpSuyGjT9EkYKyIcP1WzgUIlioZosTp/2bcEt2r9uONO1V5lveom/jmBrvocMXR
+	 Zns0RR238WiYDwbeOKFhLySRg1JMDCDOwYxFsP+vtB8Dn6jHmcrBKwnXRgcTy94wSF
+	 TBJFOKPlH52g0wVT2P822T/utu6tE5mliPOJs2x0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbfJ2Iap (ORCPT
+        id S1729311AbfJ2Ibt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:30:45 -0400
-Received: from smtprelay0115.hostedemail.com ([216.40.44.115]:39389 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728757AbfJ2Iap (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:30:45 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id DEBF1181D3042;
-        Tue, 29 Oct 2019 08:30:43 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: idea97_7a7d88050d930
-X-Filterd-Recvd-Size: 1582
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 29 Oct 2019 08:30:41 +0000 (UTC)
-Message-ID: <055503c8dce7546a8253de1d795ad71870eeb362.camel@perches.com>
-Subject: Re: [PATCH] b43: Fix use true/false for bool type
-From:   Joe Perches <joe@perches.com>
-To:     Simon Horman <simon.horman@netronome.com>,
-        Saurav Girepunje <saurav.girepunje@gmail.com>
-Cc:     kvalo@codeaurora.org, davem@davemloft.net, swinslow@gmail.com,
-        will@kernel.org, opensource@jilayne.com, baijiaju1990@gmail.com,
-        tglx@linutronix.de, linux-wireless@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, saurav.girepunje@hotmail.com
-Date:   Tue, 29 Oct 2019 01:30:34 -0700
-In-Reply-To: <20191029082427.GB23615@netronome.com>
-References: <20191028190204.GA27248@saurav>
-         <20191029082427.GB23615@netronome.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 29 Oct 2019 04:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728757AbfJ2Ibs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:31:48 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 918102054F;
+        Tue, 29 Oct 2019 08:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572337907;
+        bh=HONi7Pcz3PlqxZTsTYtCtc2YAjOMXLOoI320gcGKXNw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=u40G2CSxA7VQ3fCctxYuBhDJOSrm4JfVjNXrL44Rf+gNkm6c5A/1UiFuXZXpenCAc
+         Lc2Uemc+rDTdQ97x0ORk+GvHKmVSwlMcJR2SUklIiJAylk4x3hmkDraAih9S9YV0cW
+         yDYOwtOa5r/uW1s63atSqp773+vS0eKs4cT8185k=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        mingo@redhat.com, Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Francis Deslauriers <francis.deslauriers@efficios.com>
+Subject: [PATCH] tracing/kprobe: Check whether the non-suffixed symbol is notrace
+Date:   Tue, 29 Oct 2019 17:31:44 +0900
+Message-Id: <157233790394.6706.18243942030937189679.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-29 at 09:24 +0100, Simon Horman wrote:
-> I wonder why bools rather than a bitmask was chosen
-> for this field, it seems rather space intensive in its current form.
+Check whether the non-suffixed symbol is notrace, since suffixed
+symbols are generated by the compilers for optimization. Based on
+these suffixed symbols, notrace check might not work because
+some of them are just a partial code of the original function.
+(e.g. cold-cache (unlikely) code is separated from original
+ function as FUNCTION.cold.XX)
 
-4 bools is not intensive.
+For example, without this fix,
+  # echo p device_add.cold.67 > /sys/kernel/debug/tracing/kprobe_events
+  sh: write error: Invalid argument
 
-> > diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-[]
-> > @@ -3600,7 +3600,7 @@ static void b43_tx_work(struct work_struct *work)
-[]
-> > -				wl->tx_queue_stopped[queue_num] = 1;
-> > +				wl->tx_queue_stopped[queue_num] = true;
+  # cat /sys/kernel/debug/tracing/error_log
+  [  135.491035] trace_kprobe: error: Failed to register probe event
+    Command: p device_add.cold.67
+               ^
+  # dmesg | tail -n 1
+  [  135.488599] trace_kprobe: Could not probe notrace function device_add.cold.67
 
+With this,
+  # echo p device_add.cold.66 > /sys/kernel/debug/tracing/kprobe_events
+  # cat /sys/kernel/debug/kprobes/list
+  ffffffff81599de9  k  device_add.cold.66+0x0    [DISABLED]
+
+Actually, kprobe blacklist already did similar thing,
+see within_kprobe_blacklist().
+
+Fixes: 45408c4f9250 ("tracing: kprobes: Prohibit probing on notrace function")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ kernel/trace/trace_kprobe.c |   27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 1552a95c743b..7f890262c8a3 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -435,11 +435,10 @@ static int disable_trace_kprobe(struct trace_event_call *call,
+ 
+ #if defined(CONFIG_KPROBES_ON_FTRACE) && \
+ 	!defined(CONFIG_KPROBE_EVENTS_ON_NOTRACE)
+-static bool within_notrace_func(struct trace_kprobe *tk)
++static bool __within_notrace_func(unsigned long addr)
+ {
+-	unsigned long offset, size, addr;
++	unsigned long offset, size;
+ 
+-	addr = trace_kprobe_address(tk);
+ 	if (!addr || !kallsyms_lookup_size_offset(addr, &size, &offset))
+ 		return false;
+ 
+@@ -452,6 +451,28 @@ static bool within_notrace_func(struct trace_kprobe *tk)
+ 	 */
+ 	return !ftrace_location_range(addr, addr + size - 1);
+ }
++
++static bool within_notrace_func(struct trace_kprobe *tk)
++{
++	unsigned long addr = addr = trace_kprobe_address(tk);
++	char symname[KSYM_NAME_LEN], *p;
++
++	if (!__within_notrace_func(addr))
++		return false;
++
++	/* Check if the address is on a suffixed-symbol */
++	if (!lookup_symbol_name(addr, symname)) {
++		p = strchr(symname, '.');
++		if (!p)
++			return true;
++		*p = '\0';
++		addr = (unsigned long)kprobe_lookup_name(symname, 0);
++		if (addr)
++			return __within_notrace_func(addr);
++	}
++
++	return true;
++}
+ #else
+ #define within_notrace_func(tk)	(false)
+ #endif
 
