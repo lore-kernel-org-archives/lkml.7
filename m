@@ -2,162 +2,149 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8AFCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664A3CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2466D2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A3F2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:00:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFBHhaPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfJ2UA0 (ORCPT
+        id S1727920AbfJ2UAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:00:26 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32665 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfJ2UAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:00:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 13:00:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
-   d="scan'208";a="202963403"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 13:00:22 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id 0AA915804A2;
-        Tue, 29 Oct 2019 13:00:22 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v9 5/8] PCI/AER: Allow clearing Error Status Register in
- FF mode
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-References: <20191028232251.GA205542@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <be6df02f-a14f-d80e-0fa2-ff34f19cbcb9@linux.intel.com>
-Date:   Tue, 29 Oct 2019 12:58:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 29 Oct 2019 16:00:30 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36879 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727518AbfJ2UA1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:00:27 -0400
+Received: by mail-io1-f68.google.com with SMTP id 1so16202131iou.4
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 13:00:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vkXv5VjGx7+Jwkb67zh9nR2cI1MbuFERQ2WCuB8TmWI=;
+        b=kFBHhaPtVDnorWQHpbTy1n2bm14d1CnQtM7P5dkZtt43Rw9p7i5R98hdiH6ajExSed
+         nZ55/qs+A8YHDTddBwywRgwzB9I6Dn1+hAVhJmYPNh46sjmjZcV0ue1RenZc4mDLnrzc
+         h34V0V9exD8ryrKzarwhJ5kpHgGmCwHra1l1mLlnu6/PJddlwmZgZ477QNODfTdDqkBp
+         9KKEy92zD4PJihd+9juiwL2pBoKUHcd9mM47tf0PllwmC1L92r83WXhYSjnmQ3NLr7Ov
+         HeJhTyyWTcHkKu8pRzwXwc1IlXSt3e6R/0c/avFTGrfA5TztmJiI2oZyE2gXn8gLBzex
+         rIXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vkXv5VjGx7+Jwkb67zh9nR2cI1MbuFERQ2WCuB8TmWI=;
+        b=hQsKxE5YaNItX8jbBRFzIDegjzRvq3lbqUVbG0Pbc5LjXUQctTkd0dNdDXEJdx8NDu
+         vhUpodlHSs8MxEdarV7kC58yN5SnEiaOUK5SlEzvcDI6KTJCl3KuAGC532swJAAVHcvu
+         SSrgNbsRarzaCWqdsP5F7Eqkwrkc+pw71lByrsa9AISMZm75MRn47AX7xEH94fHC36Y6
+         6TE79Qe+Rq675EmbctA2RyYm+nfLoq0iPNpdgg2sSxKG2mN2s5dPhZEXierij1vlP6AH
+         ebDE4EMuJwkToXv6DVEfV/VnR8MMDwPU8jH91RnNgzwBIugx7Mim4X6XmA++DhwTx5A3
+         8RFQ==
+X-Gm-Message-State: APjAAAUFsraFlrXLuGrHKrlTC/E5qoHPwYoda9UO97Z89bbyp/e50NdV
+        a8dNR1vXszn0SSYEKsFD0ZM=
+X-Google-Smtp-Source: APXvYqzNRzWMGpotsojyLAd6S62CLCdC0hzn29ul01Y6oArn+V/86Fg2txCxSZnaOU+2ENemIxp2hA==
+X-Received: by 2002:a5d:9359:: with SMTP id i25mr5553420ioo.184.1572379226221;
+        Tue, 29 Oct 2019 13:00:26 -0700 (PDT)
+Received: from localhost.localdomain (c-24-9-77-57.hsd1.co.comcast.net. [24.9.77.57])
+        by smtp.googlemail.com with ESMTPSA id f66sm2150724ill.19.2019.10.29.13.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 13:00:25 -0700 (PDT)
+From:   Jim Cromie <jim.cromie@gmail.com>
+To:     jbaron@akamai.com, linux-kernel@vger.kernel.org
+Cc:     linux@rasmusvillemoes.dk, greg@kroah.com,
+        Jim Cromie <jim.cromie@gmail.com>
+Subject: [PATCH 03/16] dyndbg: raise verbosity needed to enable ddebug_proc_* logging
+Date:   Tue, 29 Oct 2019 14:00:22 -0600
+Message-Id: <20191029200022.9741-1-jim.cromie@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191028232251.GA205542@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The verbose/debug logging done by `cat $DBGFS/dynamic_debug/control`
+is voluminous, and clutters logging done during parsing of queries,
+which is much more useful when manipulating/enabling callsites.
 
-On 10/28/19 4:22 PM, Bjorn Helgaas wrote:
-> On Thu, Oct 03, 2019 at 04:39:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> As per PCI firmware specification r3.2 Downstream Port Containment
->> Related Enhancements ECN, sec 4.5.1, table 4-6,
-> That table adds bit 7, "DPC config control" to the _OSC control field
-> and talks about modifying registers in the DPC capability.
->
-> It doesn't say anything about firmware-first or about the OS modifying
-> registers in the AER capability.  But this patch doesn't do anything
-> related to DPC or _OSC.
+So increase the required verbosity to 8&9 for per-page and per-line
+logging; ie ddebug_proc_(start|stop) and ddebug_proc_(show|next)
+respectively.  This leaves 2-7 for any further logging tweaks to the
+query parsing process.
 
-Expectation of clearing AER registers is not explicitly mentioned in 
-above DPC ECN. But it
-has been clarified in the following update to this ECN.
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+---
+ lib/dynamic_debug.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-Please check the implementation note in page 10 of
-https://members.pcisig.com/wg/PCI-SIG/document/previewpdf/13563.
-
-It  specifies that in EDR mode, firmware expects OS to clear error 
-registers (Check for
-following string "Bring Portout of DPC, clear port error status, assign 
-bus numbers to child
-devices").
-
-I will include this ECN reference in follow up update.
-
->
->> Error Disconnect
->> Recover (EDR) support allows OS to handle error recovery and
->> clearing Error Registers even in FF mode. So remove FF mode checks in
->> pci_cleanup_aer_uncorrect_error_status(), pci_aer_clear_fatal_status()
->> and pci_cleanup_aer_error_status_regs() functions.
->>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> Acked-by: Keith Busch <keith.busch@intel.com>
->> ---
->>   drivers/pci/pcie/aer.c | 12 ++----------
->>   1 file changed, 2 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index b45bc47d04fe..e1509bb900c5 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -383,9 +383,6 @@ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
->>   	if (!pos)
->>   		return -EIO;
->>   
->> -	if (pcie_aer_get_firmware_first(dev))
->> -		return -EIO;
->> -
->>   	/* Clear status bits for ERR_NONFATAL errors only */
->>   	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
->>   	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
->> @@ -406,9 +403,6 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
->>   	if (!pos)
->>   		return;
->>   
->> -	if (pcie_aer_get_firmware_first(dev))
->> -		return;
->> -
->>   	/* Clear status bits for ERR_FATAL errors only */
->>   	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
->>   	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
->> @@ -430,9 +424,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
->>   	if (!pos)
->>   		return -EIO;
->>   
->> -	if (pcie_aer_get_firmware_first(dev))
->> -		return -EIO;
->> -
->>   	port_type = pci_pcie_type(dev);
->>   	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
->>   		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
->> @@ -455,7 +446,8 @@ void pci_aer_init(struct pci_dev *dev)
->>   	if (dev->aer_cap)
->>   		dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
->>   
->> -	pci_cleanup_aer_error_status_regs(dev);
->> +	if (!pcie_aer_get_firmware_first(dev))
->> +		pci_cleanup_aer_error_status_regs(dev);
-> This effectively moves the "if (pcie_aer_get_firmware_first())" check
-> from pci_cleanup_aer_error_status_regs() into one of the callers.  But
-> there are two other callers: pci_aer_init() and pci_restore_state().
-> Do they need the change, or do you want to cleanup the AER error
-> registers there, but not here?
-Good catch. I have added this check to pci_aer_init(). But it needs to 
-be added to
-pci_restore_state() as well. Instead of moving the checks to the caller, 
-If you agree,
-I could change the API to pci_cleanup_aer_error_status_regs(struct 
-pci_dev *dev, bool skip_ff_check) and
-let the caller decide whether they want skip the check or not.
->
->>   }
->>   
->>   void pci_aer_exit(struct pci_dev *dev)
->> -- 
->> 2.21.0
->>
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index 8fb140a55ad3..f82ec49e5916 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -94,12 +94,16 @@ static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
+ 	return buf;
+ }
+ 
+-#define vpr_info(fmt, ...)					\
++#define vnpr_info(lvl, fmt, ...)				\
+ do {								\
+-	if (verbose)						\
++	if (verbose >= lvl)					\
+ 		pr_info(fmt, ##__VA_ARGS__);			\
+ } while (0)
+ 
++#define vpr_info(fmt, ...)	vnpr_info(1, fmt, ##__VA_ARGS__)
++#define v8pr_info(fmt, ...)	vnpr_info(8, fmt, ##__VA_ARGS__)
++#define v9pr_info(fmt, ...)	vnpr_info(9, fmt, ##__VA_ARGS__)
++
+ static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
+ {
+ 	/* trim any trailing newlines */
+@@ -758,7 +762,7 @@ static void *ddebug_proc_start(struct seq_file *m, loff_t *pos)
+ 	struct _ddebug *dp;
+ 	int n = *pos;
+ 
+-	vpr_info("called m=%p *pos=%lld\n", m, (unsigned long long)*pos);
++	v8pr_info("called m=%p *pos=%lld\n", m, (unsigned long long)*pos);
+ 
+ 	mutex_lock(&ddebug_lock);
+ 
+@@ -782,7 +786,7 @@ static void *ddebug_proc_next(struct seq_file *m, void *p, loff_t *pos)
+ 	struct ddebug_iter *iter = m->private;
+ 	struct _ddebug *dp;
+ 
+-	vpr_info("called m=%p p=%p *pos=%lld\n",
++	v9pr_info("called m=%p p=%p *pos=%lld\n",
+ 		 m, p, (unsigned long long)*pos);
+ 
+ 	if (p == SEQ_START_TOKEN)
+@@ -805,7 +809,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ 	struct _ddebug *dp = p;
+ 	char flagsbuf[10];
+ 
+-	vpr_info("called m=%p p=%p\n", m, p);
++	v9pr_info("called m=%p p=%p\n", m, p);
+ 
+ 	if (p == SEQ_START_TOKEN) {
+ 		seq_puts(m,
+@@ -829,7 +833,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+  */
+ static void ddebug_proc_stop(struct seq_file *m, void *p)
+ {
+-	vpr_info("called m=%p p=%p\n", m, p);
++	v8pr_info("called m=%p p=%p\n", m, p);
+ 	mutex_unlock(&ddebug_lock);
+ }
+ 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+2.21.0
 
