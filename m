@@ -2,177 +2,104 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48999CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B25CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0D220679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B708C20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:45:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rPGbbUqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbfJ2RpA (ORCPT
+        id S1729333AbfJ2Rpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:45:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38194 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726566AbfJ2Ro7 (ORCPT
+        Tue, 29 Oct 2019 13:45:35 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:44698 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfJ2Rpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:44:59 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9THUo6i139059;
-        Tue, 29 Oct 2019 13:43:40 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vxsfm9d7d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 13:43:40 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9THW77N144344;
-        Tue, 29 Oct 2019 13:43:40 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vxsfm9d6x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 13:43:40 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9THe2jA024182;
-        Tue, 29 Oct 2019 17:43:42 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01wdc.us.ibm.com with ESMTP id 2vvds6wf2k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 17:43:42 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9THhcBX54985028
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 17:43:38 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 017A7136051;
-        Tue, 29 Oct 2019 17:43:38 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 583AA13604F;
-        Tue, 29 Oct 2019 17:43:34 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.80.203.135])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 29 Oct 2019 17:43:34 +0000 (GMT)
-Message-ID: <1572371012.4812.19.camel@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 29 Oct 2019 13:45:35 -0400
+Received: by mail-vk1-f194.google.com with SMTP id o198so3070334vko.11
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=65YP9F0KitFD9legdxyLM59RAjKBzdRGrjI3L/m7ObE=;
+        b=rPGbbUqAwVHq7Cm0rGfrw8aZKG5VrL44JQ4WF1AX8zOdwQI8rkKHDe3Opfeq0pYbYi
+         ZvPBEVky5mJq0A1utYxoVfchIrzcrJxh4cYKqeEyKqh3F5ZpGjwR7FuS+45Wd+YvZTAR
+         FCYHhGld6MAkj8PSSTu0jSSloZk6eBz34o6f90VAXFRXs/86osn7qCWlcHM8wNytg3QS
+         uJNMarnDvny6K3ClI88qEsq5+XwNmoTiSipJzzK0eD0W9Nwi+d6vcizeA7IRNM1KW01T
+         8D5hlGzbW/5Mpci+BoZWh8xm7HIZT8sr5w3L36adlm6C6pBdnby12ApWTEuM8rl7eyke
+         UlVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=65YP9F0KitFD9legdxyLM59RAjKBzdRGrjI3L/m7ObE=;
+        b=XXDYKpHc04U9KkXSAmHU2hnBqnG6/7YH3gX3AlTvAb97fiwjQpl01YNJKM2J5h5F0q
+         47LkPvTgWji0CdWfQk0zFpE3RYvUD6hJy/1SFiH6LTaW8+Ts/SbG462OrgEW4S8AbWKU
+         NzpT64lxzjW55EkNMS2gJ82OhgX8vgxnYZV6YFlzyaxq9kbH5drkPnpsUN56ov4uXtrh
+         kY73ibSrQGqSiF8FZux5jizSOU+tmsR6SOBRZAc7NrgAw5hbDUJZsMrx7YWPRqTnQOgD
+         yEBoMdr2IS3hUksvETlLEcyvg7rowpTdRXRJH34K1TFSxWnxvpOQXG3hyRhlVKDpTi95
+         jHbQ==
+X-Gm-Message-State: APjAAAWyDShHOaFysCzsRphAItz8qOV785zCFaLqHeAwDjj+Y6ADFuqT
+        ikMQn7OBroxAGQJgKImtp7KCd73W+2ypiX/8OmK7ow==
+X-Google-Smtp-Source: APXvYqyofjlHaKbwoCfizqOngvFU3/FN2jdIJr9xQCjuFQ8iVqA3V1NcHewQYwziFUY5XcE5H3ggNp7mqR1GIqnLUe8=
+X-Received: by 2002:a1f:7d88:: with SMTP id y130mr12501967vkc.71.1572371133208;
+ Tue, 29 Oct 2019 10:45:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191024225132.13410-1-samitolvanen@google.com> <20191024225132.13410-10-samitolvanen@google.com>
+ <20191025110313.GE40270@lakrids.cambridge.arm.com>
+In-Reply-To: <20191025110313.GE40270@lakrids.cambridge.arm.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Tue, 29 Oct 2019 10:45:22 -0700
+Message-ID: <CABCJKud1xYEx_GVgfBHUuwNGKMxX+uVaE5TR6DEqo7CoSJJnNA@mail.gmail.com>
+Subject: Re: [PATCH v2 09/17] arm64: disable function graph tracing with SCS
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Alan Cox <alan@linux.intel.com>
-Date:   Tue, 29 Oct 2019 10:43:32 -0700
-In-Reply-To: <CALCETrWN9kc+10tf7YoBp9ixqkO_KZ=b1E_cFBr_Uogxhu68PQ@mail.gmail.com>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
-         <2236FBA76BA1254E88B949DDB74E612BA4EEC0CE@IRSMSX102.ger.corp.intel.com>
-         <CALCETrWN9kc+10tf7YoBp9ixqkO_KZ=b1E_cFBr_Uogxhu68PQ@mail.gmail.com>
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910290156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-29 at 10:03 -0700, Andy Lutomirski wrote:
-> On Tue, Oct 29, 2019 at 4:25 AM Reshetova, Elena
-> <elena.reshetova@intel.com> wrote:
-> > 
-> > > The patch below aims to allow applications to create mappins that
-> > > have
-> > > pages visible only to the owning process. Such mappings could be
-> > > used to
-> > > store secrets so that these secrets are not visible neither to
-> > > other
-> > > processes nor to the kernel.
-> > 
-> > Hi Mike,
-> > 
-> > I have actually been looking into the closely related problem for
-> > the past
-> > couple of weeks (on and off). What is common here is the need for
-> > userspace
-> > to indicate to kernel that some pages contain secrets. And then
-> > there are
-> > actually a number of things that kernel can do to try to protect
-> > these secrets
-> > better. Unmap from direct map is one of them. Another thing is to
-> > map such
-> > pages as non-cached, which can help us to prevent or considerably
-> > restrict
-> > speculation on such pages. The initial proof of concept for marking
-> > pages as
-> > "UNCACHED" that I got from Dave Hansen was actually based on
-> > mlock2()
-> > and a new flag for it for this purpose. Since then I have been
-> > thinking on what
-> > interface suits the use case better and actually selected going
-> > with new madvise()
-> > flag instead because of all possible implications for fragmentation
-> > and performance.
-> 
-> Doing all of this with MAP_SECRET seems bad to me.  If user code
-> wants UC memory, it should ask for UC memory -- having the kernel
-> involved in the decision to use UC memory is a bad idea, because the
-> performance impact of using UC memory where user code wasn't
-> expecting it wil be so bad that the system might as well not work at
-> all.  (For kicks, I once added a sysctl to turn off caching in
-> CR0.  I enabled it in gnome-shell.  The system slowed down to such an
-> extent that I was unable to enter the three or so keystrokes to turn
-> it back off.)
-> 
-> EXCLUSIVE makes sense.  Saying "don't ptrace this" makes sense.  UC
-> makes sense.  But having one flag to rule them all does not make
-> sense to me.
+On Fri, Oct 25, 2019 at 4:03 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> I'm guessing it's difficult to always figure out the SCS slot for an
+> instrumented callsite unless we pass this explicitly from the ftrace
+> entry code, so we'd probably have to change some common infrastructure
+> for that.
+>
+> We have a similar issue with pointer authentication, and we're solving
+> that with -fpatchable-function-entry, which allows us to hook the
+> callsite before it does anything with the return address. IIUC we could
+> use the same mechanism here (and avoid introducing a third).
+>
+> Are there plans to implement -fpatchable-function-entry on the clang
+> side?
 
-So this is a usability problem.  We have a memory flag that can be used
-for "secrecy" for some userspace value of the word and we have a load
-of internal properties depending on how the hardware works, including
-potentially some hardware additions like SEV or TME, that can be used
-to implement the property.  If we expose our hardware vagaries, the
-user is really not going to know what to do ... and we have a limited
-number of flags to express this, so it stands to reason that we need to
-define "secrecy" for the user and then implement it using whatever
-flags we have.  So I think no ptrace and no direct map make sense for
-pretty much any value of "secrecy".  The UC bit seems to be an attempt
-to prevent exfiltration via L1TF or other cache side channels, so it
-looks like it should only be applied if the side channel mitigations
-aren't active ... which would tend to indicate it's a kernel decision
-as well.
+I'm not sure if there are plans at the moment, but if this feature is
+needed for PAC, adding it to clang shouldn't be a problem. Nick, did
+you have any thoughts on this?
 
-In the use case in my head, I'd like MAP_EXCLUSIVE to mean the data in
-the user memory is difficult to exfiltrate for another tenant in a
-virtual system, even if they break containment, so effectively I want
-it protected against kernel exploitation and root in the host ... and I
-suppose I need to acknowledge that "protected" means best effort
-available on the platform, not no attacker can ever extract this.
-
-James
-
-
-
+Sami
