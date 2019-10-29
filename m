@@ -2,82 +2,93 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404B4CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055FFCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0CC217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:25:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="A9YyLgNh"
+	by mail.kernel.org (Postfix) with ESMTP id D7C4021835
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbfJ2BZU (ORCPT
+        id S1728820AbfJ2BZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 28 Oct 2019 21:25:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5204 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728754AbfJ2BZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 28 Oct 2019 21:25:20 -0400
-Received: from vps.xff.cz ([195.181.215.36]:51970 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728275AbfJ2BZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:25:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572312318; bh=yZJ2tr1txca9SLDOy4OtsLu+iAa2f0cZDLnWQ7+OML8=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=A9YyLgNhvrxlUztIuCRhuPElEulYpYKTMOb3Hdyf6b5wAYii97AeXsS/rGMCkEskW
-         C0mY/yPIhHdiJKF25+6vtI21q6NsMXjfK/3/CxdTMg40ZTSycRT5LkucjHFQUkMiKD
-         jKO8p4ACl0Huenevm29Hl1sHst+Z8pOKmICnXozU=
-Date:   Tue, 29 Oct 2019 02:25:17 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        stable <stable@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [linux-sunxi] [PATCH] ARM: sunxi: Fix CPU powerdown on A83T
-Message-ID: <20191029012517.eddekmphtxyslevx@core.my.home>
-Mail-Followup-To: Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        stable <stable@vger.kernel.org>, Maxime Ripard <mripard@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191028214914.3465156-1-megous@megous.com>
- <CAGb2v67Vy=tD4dfSXD+=HS3B2tEE-bH2D++gx9Oa=P8n-012ew@mail.gmail.com>
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3800B9EF4580E136FF24;
+        Tue, 29 Oct 2019 09:25:17 +0800 (CST)
+Received: from [127.0.0.1] (10.133.219.218) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
+ 09:25:15 +0800
+Message-ID: <5DB794FB.4010203@huawei.com>
+Date:   Tue, 29 Oct 2019 09:25:15 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67Vy=tD4dfSXD+=HS3B2tEE-bH2D++gx9Oa=P8n-012ew@mail.gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: rtl8723bs: remove an redundant null check before
+ kfree()
+References: <1571211506-19005-1-git-send-email-zhongjiang@huawei.com> <20191025024216.GB331827@kroah.com> <5DB711AE.1040904@huawei.com> <20191028162434.GB321492@kroah.com>
+In-Reply-To: <20191028162434.GB321492@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.219.218]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 09:09:40AM +0800, Chen-Yu Tsai wrote:
-> On Tue, Oct 29, 2019 at 5:49 AM Ondrej Jirman <megous@megous.com> wrote:
-> >
-> > PRCM_PWROFF_GATING_REG has CPU0 at bit 4 on A83T. So without this
-> > patch, instead of gating the CPU0, the whole cluster was power gated,
-> > when shutting down first CPU in the cluster.
-> >
-> > Fixes: 6961275e72a8c1 ("ARM: sun8i: smp: Add support for A83T")
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Cc: stable@vger.kernel.org
-> 
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-> 
-> Though I distinctly remember the BSP had some code dealing with chip
-> revisions in which the two bits were reversed. :(
+On 2019/10/29 0:24, Greg KH wrote:
+> On Tue, Oct 29, 2019 at 12:05:02AM +0800, zhong jiang wrote:
+>> On 2019/10/25 10:42, Greg KH wrote:
+>>> On Wed, Oct 16, 2019 at 03:38:26PM +0800, zhong jiang wrote:
+>>>> kfree() has taken null pointer into account. hence it is safe to remove
+>>>> the unnecessary check.
+>>>>
+>>>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+>>>> ---
+>>>>  drivers/staging/rtl8723bs/core/rtw_xmit.c | 3 +--
+>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+>>>> index 7011c2a..4597f4f 100644
+>>>> --- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
+>>>> +++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+>>>> @@ -2210,8 +2210,7 @@ void rtw_free_hwxmits(struct adapter *padapter)
+>>>>  	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
+>>>>  
+>>>>  	hwxmits = pxmitpriv->hwxmits;
+>>>> -	if (hwxmits)
+>>>> -		kfree(hwxmits);
+>>>> +	kfree(hwxmits);
+>>>>  }
+>>>>  
+>>>>  void rtw_init_hwxmits(struct hw_xmit *phwxmit, sint entry)
+>>>> -- 
+>>>> 1.7.12.4
+>>>>
+>>> Patch does not apply to my tree :(
+>>>
+>>> .
+>>>
+>> Greg,  Could you apply the patch to your  tree ?
+> It did not apply, so what do you want me to do with it?
+>
+> confused,
+Could you  receive the patch ? :-)
 
-Actually, it's a bit more complicated. There's a special check in BSP
-code (grep for SUN8IW6P1_REV_A) that instead of power gating, just
-holds the core in reset for that revision.
+Thanks,
+zhong jiang
+> greg k-h
+>
+> .
+>
 
-regards,
-	o.
+
