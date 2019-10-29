@@ -2,96 +2,130 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF01ECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7742CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE2220717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C777720717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730933AbfJ2JHk (ORCPT
+        id S1730972AbfJ2JIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:07:40 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:60514 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfJ2JHk (ORCPT
+        Tue, 29 Oct 2019 05:08:20 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36453 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730518AbfJ2JIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:07:40 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iPNTP-0004OR-Op; Tue, 29 Oct 2019 10:07:31 +0100
-Message-ID: <4725dcbd6297c74bf949671e7ad48eeeb0ceb0d0.camel@sipsolutions.net>
-Subject: Re: [PATCH v2] 802.11n IBSS: wlan0 stops receiving packets due to
- aggregation after sender reboot
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Krzysztof =?UTF-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 29 Oct 2019 10:07:30 +0100
-In-Reply-To: <m37e4orkxr.fsf@t19.piap.pl>
-References: <m34l02mh71.fsf@t19.piap.pl> <m37e4tjfbu.fsf@t19.piap.pl>
-         <e5b07b4ce51f806ce79b1ae06ff3cbabbaa4873d.camel@sipsolutions.net>
-         <m37e4orkxr.fsf@t19.piap.pl>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 29 Oct 2019 05:08:20 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iPNTu-0002XP-O9; Tue, 29 Oct 2019 10:08:02 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iPNTt-0007YZ-T6; Tue, 29 Oct 2019 10:08:01 +0100
+Date:   Tue, 29 Oct 2019 10:08:01 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@bootlin.com>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] arm: dts: sun8i: a83t: a711: Add touchscreen node
+Message-ID: <20191029090801.zls2qns7rxcvmxor@pengutronix.de>
+References: <20191029005806.3577376-1-megous@megous.com>
+ <20191029005806.3577376-4-megous@megous.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029005806.3577376-4-megous@megous.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:04:51 up 164 days, 15:23, 99 users,  load average: 0.20, 0.17,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-29 at 09:54 +0100, Krzysztof HaÅ‚asa wrote:
+Hi,
 
-> The problem I can see is that the dialog_tokens are 8-bit, way too small
-> to eliminate conflicts.
-
-Well, they're also per station, we could just randomize the start and
-then we'd delete the old session and start a new one, on the receiver.
-
-So that would improve robustness somewhat (down to a 1/256 chance to hit
-this problem).
-
-> > Really what I think probably happened is that one of your stations lost
-> > the connection to the other, and didn't tell it about it in any way - so
-> > the other kept all the status alive.
+On 19-10-29 01:58, Ondrej Jirman wrote:
+> From: Mylène Josserand <mylene.josserand@bootlin.com>
 > 
-> You must have missed my previous mail - I simply rebooted that station,
-> and alternatively rmmoded/modprobed ath9k. But the problem originated in
-> a station going out of and back in range, in fact.
-
-I was on vacation, so yeah, quite possible I missed it.
-
-Sounds like we need not just
-4b08d1b6a994 ("mac80211: IBSS: send deauth when expiring inactive STAs")
-
-but also send a deauth when we disconnect. Surprising we don't do that,
-actually.
-
-> > I suspect to make all this work well we need to not only have the fixes
-> > I made recently to actually send and parse deauth frames, but also to
-> > even send an auth and reset the state when we receive that, so if we
-> > move out of range and even the deauth frame is lost, we can still reset
-> > properly.
+> Enable a FocalTech EDT-FT5x06 Polytouch touchscreen.
 > 
-> That's one thing. The other is a station trying ADDBA for the first time
-> after boot (while the local station has seen it before that reboot).
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> index 568b90ece342..19f520252dc5 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> @@ -164,6 +164,22 @@
+>  	status = "okay";
+>  };
+>  
+> +&i2c0 {
+> +	clock-frequency = <400000>;
+> +	status = "okay";
+> +
+> +	touchscreen@38 {
+> +		compatible = "edt,edt-ft5x06";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&r_pio>;
+> +		interrupts = <0 7 IRQ_TYPE_EDGE_FALLING>; /* PL7 */
+> +		reset-gpios = <&pio 3 5 GPIO_ACTIVE_LOW>; /* PD5 */
+> +		vcc-supply = <&reg_ldo_io0>;
+> +		touchscreen-size-x = <1024>;
+> +		touchscreen-size-y = <600>;
 
-That's the situation though - the local station needs to know that it
-has in fact *not* seen the same instance of the station, but that the
-station has reset and needs to be removed & re-added.
+Do you want this touchscreen as wakeup-src? If so please add the
+property here. I've send patches converting the driver from the default
+behaviour: https://patchwork.kernel.org/cover/11149039/ and all agreed
+to break backward compatibility.
 
-> I guess we need to identify "new connection" reliably. Otherwise,
-> the new connections are treated as old ones and it doesn't work.
+Regards,
+  Marco
 
-Right. But we can implement the (optional) authentication (which you
-actually already get when you implement [encrypted] IBSS with wpa_s),
-and reset the station state when we get an authentication frame.
+> +	};
+> +};
+> +
+>  &i2c1 {
+>  	clock-frequency = <400000>;
+>  	status = "okay";
+> -- 
+> 2.23.0
+> 
+> 
 
-johannes
-
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
