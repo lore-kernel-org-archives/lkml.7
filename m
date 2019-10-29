@@ -2,101 +2,117 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324DACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FC0CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067E021479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28DF020856
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fTsOHwCQ"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="rvC5HmMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390150AbfJ2Pou (ORCPT
+        id S2390136AbfJ2Pq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:44:50 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:41644 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389319AbfJ2Pou (ORCPT
+        Tue, 29 Oct 2019 11:46:59 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45218 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389836AbfJ2Pq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:44:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bLHQ9ES4uovIMte4KF6pdSi3ymLKQ1bfJF3BoDC+60k=; b=fTsOHwCQIjRAPhsfX254qq39K
-        jmouMXV3yl64qNXPS4xoGatOntk7xk1mGlfaHoKtgMkkSgonqH3SdbbAKvFQjVq7blK1ElK8fHdnz
-        on9YVhgZlr25/7ykRYjMly0W6VrxYv9PqnssxjObuB2p78hkkErd38umaCbUUq3vHAnKwXiSKyt1s
-        wq4aU5IiD3T8aXqWt1oRiU3kYkfJAzJir3TXLQ6jl1znYLvmQtu727DdGcYA1xM9iNXILS6NIcO7u
-        IFeJGggENsVIqOdUT4FXjDC+0lTLlSCJ05r/X6X4NwbpEMfbSENvKFbJLPCjIGpI67U6qGWsWeJ7+
-        nYp2MO3ew==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPTfV-0006VB-Kf; Tue, 29 Oct 2019 15:44:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9B14E30025A;
-        Tue, 29 Oct 2019 16:43:22 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 64D2F2B438360; Tue, 29 Oct 2019 16:44:23 +0100 (CET)
-Date:   Tue, 29 Oct 2019 16:44:23 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     SAURAV GIREPUNJE <saurav.girepunje@gmail.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        saurav.girepunje@hotmail.com
-Subject: Re: [PATCH] arch: x86: kvm: mmu.c: use true/false for bool type
-Message-ID: <20191029154423.GN4131@hirez.programming.kicks-ass.net>
-References: <20191029094104.GA11220@saurav>
- <20191029101300.GK4114@hirez.programming.kicks-ass.net>
- <20191029134246.GA4943@saurav>
+        Tue, 29 Oct 2019 11:46:58 -0400
+Received: by mail-qk1-f196.google.com with SMTP id q70so12668902qke.12
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 08:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jBEwENFPDiTI0Tv4ACPfDqixaIF+4KZzeWBvvR41YGk=;
+        b=rvC5HmMFf5bwMJE3zaaRWuN/o3uk+Xf9Sjy9wlzUFKA2J57CaA/HJDOQtTEJHklqGf
+         TxoDmUQOl3BAShSIht19b+SUSV8F+VZ6DArhKMDtJN5aF/otuMSa0xtQbPN1sW4de1E/
+         bn2xzKsyHDkKfPMwDNHCTu6PvHb32vdambEssrzMgw9ejfIDHxt+nHJsDsijQuu+9jIA
+         bnFWEndUd6h3PulCgdjyhHQi5oWwxSP2bw7ijkRMjXQZZSuQJXRFQOqawN/b0d0YM0B+
+         RGMxbbFtGZTAnX5vo0pVCmn+eaMrfp4kefWYskSM1OV3OPzuc4sKvSzRxzH1Hdw62l2A
+         S5og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jBEwENFPDiTI0Tv4ACPfDqixaIF+4KZzeWBvvR41YGk=;
+        b=EuUsrWR1aVDSD4Qc0wNBvq739DAZtfxFLl+xa/r8PuaxhgQfMauuGhjDfbBFv1hQnW
+         zYAM/i+l0jNWr9G7Up+vB0DaX+gHgqXGcWNOw6OKI0NLYv5GW9soS5/OUZC6wIYLIMHm
+         JZK99Ov8k8L+FM9R16nwJ+hw3lm9fRqsu/uH4CALf3momatya6RlEfTLwKyPJtaiPqfV
+         kmGSiSBTlYKQWjpCQsLeMmsag0JsMtCL9xuwuRBZYGEW6eZ6MVIX4m17zGZ4lwVqZEh9
+         sQ0yUMrPa3olKBTRM+syPej7UZPQpf7XvhqZXGvYBC6D7EExQ+ejL01+DBQK4nsXp1c0
+         GrFg==
+X-Gm-Message-State: APjAAAUX8IADhfB3zyP2ZWiBimewmqnpxxJ274OobbO4/whib2ROn5yV
+        8ZsSLsdMgcv94sP0R/FlIy6kNQ==
+X-Google-Smtp-Source: APXvYqzvfVlH6Qzt1fNDHXNsPvdxY2oSMZPG3j/+toG2nE9AepD/WBgdPrObyFNX7JaUNuh+tx2Z0Q==
+X-Received: by 2002:a37:9d12:: with SMTP id g18mr13783697qke.157.1572364016081;
+        Tue, 29 Oct 2019 08:46:56 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::7081])
+        by smtp.gmail.com with ESMTPSA id v186sm8285216qkb.42.2019.10.29.08.46.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 08:46:55 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 11:46:54 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chris Down <chris@chrisdown.name>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [RFC v2] memcg: add memcg lru for page reclaiming
+Message-ID: <20191029154654.GC33522@cmpxchg.org>
+References: <20191026110745.12956-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029134246.GA4943@saurav>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191026110745.12956-1-hdanton@sina.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 07:12:46PM +0530, SAURAV GIREPUNJE wrote:
-> On Tue, Oct 29, 2019 at 11:13:00AM +0100, Peter Zijlstra wrote:
-> > On Tue, Oct 29, 2019 at 03:11:04PM +0530, Saurav Girepunje wrote:
-> > > Use true/false for bool type "dbg" in mmu.c
-> > > 
-> > > Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
-> > > ---
-> > >  arch/x86/kvm/mmu.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-> > > index 24c23c66b226..c0b1df69ce0f 100644
-> > > --- a/arch/x86/kvm/mmu.c
-> > > +++ b/arch/x86/kvm/mmu.c
-> > > @@ -68,7 +68,7 @@ enum {
-> > >  #undef MMU_DEBUG
-> > >  
-> > >  #ifdef MMU_DEBUG
-> > > -static bool dbg = 0;
-> > > +static bool dbg = true;
-> > 
-> > You're actually changing the value from false to true. Please, if you
-> > don't know C, don't touch things.
-> Hi,
+On Sat, Oct 26, 2019 at 07:07:45PM +0800, Hillf Danton wrote:
 > 
-> Thanks for your review.
-> I accept that I have given wrong value "true" to debug variable. It's my bad my typo mistake.  
-> I will make sure that I will not touch your exclusive C code where we can assign 0/1 to a bool variable,
-> As you have given me a free advice, I also request you to please don't review such small patches from newbie to discourage them.
+> Currently soft limit reclaim is frozen, see
+> Documentation/admin-guide/cgroup-v2.rst for reasons.
+> 
+> This work adds memcg hook into kswapd's logic to bypass slr,
+> paving a brick for its cleanup later.
+> 
+> After b23afb93d317 ("memcg: punt high overage reclaim to
+> return-to-userland path"), high limit breachers are reclaimed one
+> after another spiraling up through the memcg hierarchy before
+> returning to userspace.
+> 
+> We can not add new hook yet if it is infeasible to defer that
+> reclaiming a bit further until kswapd becomes active.
+> 
+> It can be defered however because high limit breach looks benign
+> in the absence of memory pressure, or we ensure it will be
+> reclaimed soon in the presence of kswapd.
 
-I will most certainly review whatever I want, and clearly it is needed.
+I have no idea what this patch is actually trying to do. But this
+premise here, as well as the implementation, are seriously flawed.
+
+memory.high needs to be enforced synchronously. Current users expect
+workloads to be strictly contained or throttled by memory.high in
+order to ensure consistent behavior regardless of the host
+environment, as well as prevent interference with other workloads
+whose startup time could be slowed down by this lack of containment.
+
+On the implementation side, it appears you patched out reclaim but
+left in the throttling that's supposed to make up for failing
+reclaim. That means that once a cgroup tree's cache footprint grows
+past its memory.high, instead of simply picking up the cold cache
+pages, it'll get throttled heavily and see extreme memory pressure. It
+could take ages for it to grow to the point where kswapd wakes up.
+
+Nacked-by: Johannes Weiner <hannes@cmpxchg.org>
