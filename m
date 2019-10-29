@@ -2,149 +2,115 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AC1CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EDDCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB1F20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED14120578
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572355321;
-	bh=9DPgkLEkBOHW6zeW/2bHQtGIc5Bfkrw+8fTROnA4jG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KZLT5aMMPhnBeADIKN1XYLX1mlgVo96HTznZS/c6RkHDAJ9RBeP4y0F17U3IC77Hl
-	 L4Og0YSa1eEzxSgkdv/jHYrdGeQZWMKbJTj7KvTxpj4zcYxEtvtXnqh7g/uP4c1bkr
-	 9rmuwgox2aN4Pam+uoYZYjPi4p7Wb+HG7ehLsL1I=
+	s=default; t=1572355363;
+	bh=EXBcFcMOkN+228UbgWDC1sNtw3d/GFnUxxuts/SHNhc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bTlX2e10z92mB90eV3detcHCCZKk6A9BXI8koKi0CD6TMTSsjel31Vx9PtH6xF0xo
+	 faOdoiT2GILzT58DiWRDuIldpTJo5nl5oO74sqAKC55o19QyF1trS8943QDTsiIeZA
+	 dmc1D4NM06JPRcdfUGl1dQSEbLGWVh2tow+fAKeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388460AbfJ2NWA (ORCPT
+        id S2388474AbfJ2NWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:22:00 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40030 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732534AbfJ2NWA (ORCPT
+        Tue, 29 Oct 2019 09:22:41 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:50451 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728735AbfJ2NWl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:22:00 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d8so9701800otc.7;
-        Tue, 29 Oct 2019 06:21:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qm6YKg+tpScIEXrceozPkWxGdk+JQIAQFB6SK8BhUfo=;
-        b=ckxDPvWBqqgAkpZ4i+mMDypA9t065qiYQhjNb02MnEWuzyQiZfa4SK8gFti2XTwIqJ
-         HbIlI0NCwtUGCenwN4Xr/vtr4zPMqtSRJLtbl+7zN6Du+5JKyDqJUUjxG08ql06zd/v9
-         CIpjqNQ+wsRBnwwoOyhPnqTSqrxJylHE6wvRLSM+xe0Ae6QLmJIMj8TMt0EQ9hxJFTZw
-         NJ96MGCJoADw7aF/j68NioKnTATvh1jTtAaDAQatALYhuTo9ybK5owxX3xeZF8ZjTMkT
-         NSF88R3fNeiPLOCTEI3bCI0QK5y0kZJpt3hiPtkb62OQAtwenMPzdRl8u+jXzN5tHdz0
-         dpjg==
-X-Gm-Message-State: APjAAAXxt3hpoKcMr6zrgf6m0cGlF0oSR0MR2wJaxiRU53REeW0Ni0On
-        zutEhgaOTZ7r8qSGST0T1w==
-X-Google-Smtp-Source: APXvYqwERtm1vBKo153rKw19EJkDo3JTPsearfO7CzEj+WTKjFxIcVlacg9tF6oYAAIvPjtZLNbbkQ==
-X-Received: by 2002:a9d:7f8d:: with SMTP id t13mr17183455otp.27.1572355318795;
-        Tue, 29 Oct 2019 06:21:58 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l7sm1668737otf.39.2019.10.29.06.21.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 06:21:58 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 08:21:57 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch 02/19] dt-bindings: media: cal: update binding example
-Message-ID: <20191029132157.GA27757@bogus>
-References: <20191018153437.20614-1-bparrot@ti.com>
- <20191018153437.20614-3-bparrot@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018153437.20614-3-bparrot@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 29 Oct 2019 09:22:41 -0400
+Received: from [91.217.168.176] (helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iPRSC-0000w6-GP; Tue, 29 Oct 2019 14:22:32 +0100
+Date:   Tue, 29 Oct 2019 13:22:30 +0000
+Message-ID: <86k18ny9d5.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <eric.auger@redhat.com>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>
+Subject: Re: [PATCH 2/3] KVM: arm/arm64: vgic: Fix some comments typo
+In-Reply-To: <7055e836-cdad-1cfa-66f3-fba88dad5f5b@huawei.com>
+References: <20191029071919.177-1-yuzenghui@huawei.com>
+        <20191029071919.177-3-yuzenghui@huawei.com>
+        <86o8xzylb1.wl-maz@kernel.org>
+        <7055e836-cdad-1cfa-66f3-fba88dad5f5b@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 91.217.168.176
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 10:34:20AM -0500, Benoit Parrot wrote:
-> Update binding example to show proper endpoint properties and linkage.
+On Tue, 29 Oct 2019 12:45:15 +0000,
+Zenghui Yu <yuzenghui@huawei.com> wrote:
 > 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  .../devicetree/bindings/media/ti-cal.txt      | 32 ++++++++++---------
->  1 file changed, 17 insertions(+), 15 deletions(-)
+> On 2019/10/29 17:04, Marc Zyngier wrote:
+> > Hi Zenghui,
+> > 
+> > On Tue, 29 Oct 2019 07:19:18 +0000,
+> > Zenghui Yu <yuzenghui@huawei.com> wrote:
+> >> 
+> >> s/vgic_its_save_pending_tables/vgic_v3_save_pending_tables/
+> >> s/then/the/
+> >> 
+> >> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> >> ---
+> >>   include/kvm/arm_vgic.h      | 2 +-
+> >>   virt/kvm/arm/vgic/vgic-v3.c | 2 +-
+> >>   virt/kvm/arm/vgic/vgic-v4.c | 2 +-
+> >>   3 files changed, 3 insertions(+), 3 deletions(-)
+> >> 
+> >> diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
+> >> index 0fb240ec0a2a..01f8b3739a09 100644
+> >> --- a/include/kvm/arm_vgic.h
+> >> +++ b/include/kvm/arm_vgic.h
+> >> @@ -240,7 +240,7 @@ struct vgic_dist {
+> >>   	 * Contains the attributes and gpa of the LPI configuration table.
+> >>   	 * Since we report GICR_TYPER.CommonLPIAff as 0b00, we can share
+> >>   	 * one address across all redistributors.
+> >> -	 * GICv3 spec: 6.1.2 "LPI Configuration tables"
+> >> +	 * GICv3 spec "LPI Configuration tables"
 > 
-> diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
-> index 782f801b12a9..6b56fddcfc4a 100644
-> --- a/Documentation/devicetree/bindings/media/ti-cal.txt
-> +++ b/Documentation/devicetree/bindings/media/ti-cal.txt
-> @@ -27,7 +27,6 @@ Documentation/devicetree/bindings/media/video-interfaces.txt.
->  Example:
->  	cal: cal@4845b000 {
->  		compatible = "ti,dra72-cal";
-> -		ti,hwmods = "cal";
->  		reg = <0x4845B000 0x400>,
->  		      <0x4845B800 0x40>,
->  		      <0x4845B900 0x40>;
-> @@ -45,9 +44,10 @@ Example:
->  
->  			csi2_0: port@0 {
->  				reg = <0>;
-> -				endpoint {
-> -					slave-mode;
-> -					remote-endpoint = <&ar0330_1>;
-> +				csi2_phy0: endpoint@0 {
-
-Unit address without 'reg' is not correct.
-
-> +					remote-endpoint = <&csi2_cam0>;
-> +					clock-lanes = <0>;
-> +					data-lanes = <1 2>;
->  				};
->  			};
->  			csi2_1: port@1 {
-> @@ -57,19 +57,21 @@ Example:
->  	};
->  
->  	i2c5: i2c@4807c000 {
-> -		ar0330@10 {
-> -			compatible = "ti,ar0330";
-> -			reg = <0x10>;
-> +		status = "okay";
-
-Don't show status in examples.
-
-> +		clock-frequency = <400000>;
->  
-> -			port {
-> -				#address-cells = <1>;
-> -				#size-cells = <0>;
-> +		ov5640@3c {
-
-camera-sensor@3c
-
-> +			compatible = "ovti,ov5640";
-> +			reg = <0x3c>;
-> +
-> +			clocks = <&clk_ov5640_fixed>;
-> +			clock-names = "xclk";
->  
-> -				ar0330_1: endpoint {
-> -					reg = <0>;
-> -					clock-lanes = <1>;
-> -					data-lanes = <0 2 3 4>;
-> -					remote-endpoint = <&csi2_0>;
-> +			port {
-> +				csi2_cam0: endpoint {
-> +					remote-endpoint = <&csi2_phy0>;
-> +					clock-lanes = <0>;
-> +					data-lanes = <1 2>;
->  				};
->  			};
->  		};
-> -- 
-> 2.17.1
+> Ah, this part shouldn't have been in this patch, as the description in
+> the commit message.
+> (And I remember the reason is just that, it it "6.1.1" in IHI 0069E but
+> "6.1.2" in some older versions.)
 > 
+> > 
+> > Why the change here? Pointing to the chapter in the spec is pretty
+> > helpful, given that it is 800 pages long (although it should mention
+> > what revision of the spec this refers to). For example, it should say
+> > something like "IHI 0069E 6.1.1 ...".
+> 
+> Yes, I agreed with you.  Marc, please feel free to drop this part,
+> or I can resend it with your suggestion.
+
+No need, I'll fix it up locally.
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
