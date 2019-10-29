@@ -2,109 +2,168 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2A0CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AD0CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D30E21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:35:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XRKGIdWY"
+	by mail.kernel.org (Postfix) with ESMTP id DEC46208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfJ2Ufz (ORCPT
+        id S1727931AbfJ2Ug0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:35:55 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40953 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfJ2Ufz (ORCPT
+        Tue, 29 Oct 2019 16:36:26 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39348 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfJ2Ug0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:35:55 -0400
-Received: by mail-pl1-f196.google.com with SMTP id p5so3076808plr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 13:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=weRnPR6zYa479NAUpF9JwnzdoXArAq5BeasxBvL84nU=;
-        b=XRKGIdWYXO3m1hY8XbcF6besNQxUfY5HowLorvgI06Il0r949+pXWQMiusqg7NW4bL
-         n2NNmRL5tJyfSXfLwXr7irLEBpOMOdlwG+QXG7l00owKxPoCqxcVFS0Co7+QZnEhVhrx
-         8hiqpPhiSobeO+7koU+UUdkIE7/OsB5eKgyfPEVzdKPlXsOqaBn4iJSkUSLvWYoQRQxk
-         Si4ZeOrG1j0q/fl6GMEuuIYbz7P9KayVlQXJtPP+aorYT7EgrEvU87GvMYFOphF00Zmr
-         DOXx0aTrS6kWE9mtAAA1s6aRq1rObI7RobGaMi6KzHKBxk/qXKTL4MMQ3U1t5+oBZe1Y
-         +2PA==
+        Tue, 29 Oct 2019 16:36:26 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g19so387818wmh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 13:36:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=weRnPR6zYa479NAUpF9JwnzdoXArAq5BeasxBvL84nU=;
-        b=pv3pH1Wma4mUUSEsc0j8dXzJOkRCs5RwoHMAwFVR9CBXZAFuop2p4NgcFVu6xkf9ZX
-         Wzg1OZXGuZFyC00A1Bqwkwph6tiSu9423Esu2d2gplxtLMzZJjhAPkO++BC8jGePA8PL
-         rkOEszFYh87ifI08xdWdhJqs9InLXMwPT9eGrYliFbQO/mTHS+xYwW0TzcgJbxi56R51
-         EbIb3lvTBDbraVkoUCJ5WJsSV/957NxK5X/MDLtx/S3hGlfxspwCNZvQ1mKQfK6SYYHx
-         Ek9gwZ3kZ+G7eakPkjR3A7QfSKCkpHbNYx3V/ie/G8MlpN7DRP8ksmGp2bvzHqBYIx5B
-         31fw==
-X-Gm-Message-State: APjAAAUKbLGmyF1ZCl5cndAXX6oLMfT/g9hRghbXrjImZrRHqlmAOwzg
-        Xj9dCsFHD5rhn++FZGmqJKwtwS52KQg5xwpLwhe0Qw==
-X-Google-Smtp-Source: APXvYqw1QuYaZCWaZyhSYUpbUd82Cb158qMxFhGB8aJGfza75ZBKXzYxqXPG4i32Epk41OS84e6p4SgzgoHmtzZc06g=
-X-Received: by 2002:a17:902:9b83:: with SMTP id y3mr579601plp.179.1572381353386;
- Tue, 29 Oct 2019 13:35:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191024225132.13410-1-samitolvanen@google.com> <20191024225132.13410-10-samitolvanen@google.com>
- <20191025110313.GE40270@lakrids.cambridge.arm.com> <CABCJKud1xYEx_GVgfBHUuwNGKMxX+uVaE5TR6DEqo7CoSJJnNA@mail.gmail.com>
-In-Reply-To: <CABCJKud1xYEx_GVgfBHUuwNGKMxX+uVaE5TR6DEqo7CoSJJnNA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 29 Oct 2019 13:35:40 -0700
-Message-ID: <CAKwvOdkxrYB=HTmtQ6sejPmWZh-mwJ-gyWRGgtZDrUOjBMftzg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/17] arm64: disable function graph tracing with SCS
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Kristof Beyls <Kristof.Beyls@arm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6PFHESszmIfaD8AtMndsfeEaNpXA3n0k01l9itcZNwI=;
+        b=CdRd7vqNjsRGdCH3xWuo6DSq3XBMGFRQz+pj2NLJeNk8gYbaGOL1POAKVCDXCn7SZa
+         RvVahf5k0BPK0vQ36TzUU+3+PY1HIctr6czmhTiPnmAhNB9Tj9ZFpmEZmLCkY2iJC+Yd
+         psMKEd1UtdB1yREx91mqqafySpOAaGSQlNOLBIB4jhzo/OtGMKicqRKkYI+hvYFBxDZN
+         Md6v8EilRXoW9b+LGOSMhuXIMsUsREb1kxDM1bjmrzvbvp6wlwlW9sUL9hAehXG9LK9e
+         E7eS8ogR11zPqinds0UXNN7RWZS6n43/Bb6uftDe47grdGvJWgr1IzFVzUL2YhFxMZVL
+         XvQw==
+X-Gm-Message-State: APjAAAVo6cYK1/65vy2TBiolOGwrLspQctAp64rxnEGIEodHa3hYSi0h
+        1VokxbAmZuGXUE9CveW4Oic=
+X-Google-Smtp-Source: APXvYqxyDYHzaCsmairIUf2sbSYDpVPrMceQNSFXytazxnuOGPC0HnjYI6aihLl+wt/Q14wkQU6zmQ==
+X-Received: by 2002:a1c:410a:: with SMTP id o10mr5796611wma.117.1572381383493;
+        Tue, 29 Oct 2019 13:36:23 -0700 (PDT)
+Received: from darkstar ([109.70.119.5])
+        by smtp.gmail.com with ESMTPSA id x12sm4696274wmc.4.2019.10.29.13.36.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 29 Oct 2019 13:36:22 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 20:36:19 +0000
+From:   Patrick Bellasi <patrick.bellasi@matbug.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
+Message-ID: <20191029203619.GA7607@darkstar>
+References: <20191009104611.15363-1-qais.yousef@arm.com>
+ <CAKfTPtA6Fvc374oTfbHYkviAJbZebHkBg=w2O3f0oZ0m3ujVjA@mail.gmail.com>
+ <20191029110224.awoi37pdquachqtd@e107158-lin.cambridge.arm.com>
+ <CAKfTPtA=CzkTVwdCJL6ULYB628tWdGAvpD-sHfgSfL59PyYvxA@mail.gmail.com>
+ <20191029114824.2kb4fygxxx72r3in@e107158-lin.cambridge.arm.com>
+ <CAKfTPtD7e-dXhZ3mG36igArt=0f-mNc52vaJ1bb-jv5zB9bkgg@mail.gmail.com>
+ <20191029124630.ivfbpenue3fw33qt@e107158-lin.cambridge.arm.com>
+ <CAKfTPtDnt6oh7X6dGnPUn70sLJXAQoxdkn0GCwdPvA8G4Wg0fA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtDnt6oh7X6dGnPUn70sLJXAQoxdkn0GCwdPvA8G4Wg0fA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 10:45 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> On Fri, Oct 25, 2019 at 4:03 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > We have a similar issue with pointer authentication, and we're solving
-> > that with -fpatchable-function-entry, which allows us to hook the
-> > callsite before it does anything with the return address. IIUC we could
-> > use the same mechanism here (and avoid introducing a third).
+Hi Vincent, Qais,
+
+On 29-Oct 13:54, Vincent Guittot wrote:
+> On Tue, 29 Oct 2019 at 13:46, Qais Yousef <qais.yousef@arm.com> wrote:
+> > On 10/29/19 13:20, Vincent Guittot wrote:
+> > > > > Making big cores the default CPUs for all RT tasks is not a minor
+> > > > > change and IMO locality should stay the default behavior when there is
+> > > > > no uclamp constraint
+
+The default value for system-wide's uclamp.min is 1024 because by
+default _we want_ RT tasks running at MAX_OPP. This means that by
+default RT tasks are running _under constraints_.
+
+The "no uclamp constraints" case you mention requires that you set
+uclamp.min=0 for that task. In that case, this patch will do exactly
+what you ask for: locality is preserved.
+
+> > > > How this is affecting locality? The task will always go to the big core, so it
+> > > > should be local.
+> > >
+> > > local with the waker
+> > > You will force rt task to run on big cluster although waker, data and
+> > > interrupts can be on little one.
+> > > So making big core as default is far from always being the best choice
 > >
-> > Are there plans to implement -fpatchable-function-entry on the clang
-> > side?
->
-> I'm not sure if there are plans at the moment, but if this feature is
-> needed for PAC, adding it to clang shouldn't be a problem. Nick, did
-> you have any thoughts on this?
+> > This is loaded with assumptions IMO. AFAICT we don't know what's the best
+> > choice.
 
-I didn't see anything explicitly in LLVM's issue tracker.  I also
-didn't see -fpatchable-function-entry currently in -next other than
-under arch/parisc.  Are there patches I can look at?
+Agree... more on that after...
 
-Has ARM's kernel team expressed the need to ARM's LLVM team?
+> > First, the value of uclamp.min is outside of the scope of this patch. Unless
+> > what you're saying is that when uclamp.min is 1024 then we should NOT choose a
+> > big cpu then there's no disagreement about what this patch do. If that's what
+> > you're objecting to please be more specific about how do you see this working
+> > instead.
+> 
+> My point is that this patch makes the big cores the default CPUs for
+> RT tasks which is far from being a minor change and far from being
+> an obvious default good choice
+
+Some time ago we agreed that going to MAX_OPP for RT tasks was
+"mandatory". That was defenitively a big change, likely much more
+impacting than the one proposed by this patch.
+
+On many mobile devices we ended up pinning RT tasks on LITTLE cores
+(mainly) to save quite a lot of energy by avoiding the case of big
+CPUs randomly spiking to MAX_OPP just because of a small RT task
+waking up on them. We also added some heuristic in schedutil has a
+"band aid" for the effects of the aforementioned choice.
+
+By running RT on LITTLEs there could be also some wakeup latency
+improvement? Yes, maybe... would be interesting to have some real
+HW *and* SW use-case on hand to compare.
+
+However, we know that RT is all about "latency", but what is a bit
+more fuzzy is the definition of "latency":
+
+ A) wakeup-latency
+    From a scheduler standpoint it's quite often considered as the the
+    time it takes to "wakeup" a task and actually start executing its
+    instructions.
+
+ B) completion-time
+    From an app standpoint, it's quite often important the time to
+    complete the task activation and go back to sleep.
+
+Running at MAX_OPP looks much more related to the need to complete
+fast than waking up fast, especially considering that that decision
+was taken looking mainly (perhaps only) to SMP systems.
+
+On heterogeneous systems, "wakeup-latency" and "completion-time" are
+two metrics which *maybe* can be better served by different cores.
+However, it's very difficult to argument if one metric is more
+important than the other. It's even more difficult to quantify it
+because of the multitide of HW and SW combinations.
+
+Thus, what's proposed here can be far from being an "obvious good
+chooce", but it's also quite difficult to argue and proof that's
+defenitively _not_ a good choice. It's just a default which:
+
+ 1) keeps things simple for RT tasks by using the same default
+    policy for both frequency and CPUs selection
+    we always run (when possible) at the highest available capacity
+
+ 2) it's based on a per-task/system-wide tunable mechanism
+
+Is that not enought to justfy it as a default?
+
+Best,
+Patrick
+
 -- 
-Thanks,
-~Nick Desaulniers
+#include <best/regards.h>
+
+Patrick Bellasi
