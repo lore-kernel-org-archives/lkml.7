@@ -2,383 +2,225 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B30CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2004FCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45342173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D136321721
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:09:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GfIXZHaQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M72u9xP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfJ2VDi (ORCPT
+        id S1728996AbfJ2VJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:03:38 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:39165 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfJ2VDh (ORCPT
+        Tue, 29 Oct 2019 17:09:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53019 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfJ2VJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:03:37 -0400
-Received: by mail-il1-f194.google.com with SMTP id i12so169675ils.6;
-        Tue, 29 Oct 2019 14:03:37 -0700 (PDT)
+        Tue, 29 Oct 2019 17:09:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p21so4142363wmg.2;
+        Tue, 29 Oct 2019 14:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AgP8JJObFWX9H7gjypcPoICzCMw18AP0HgG9/o9Q3kA=;
-        b=GfIXZHaQQj4Txr3JKMm/Snu28Dj2GRT5N0SIStuoueixGCip9l1K8rJn4BdP89wSW0
-         dFNaf/d4V2ta0gdqTiwIG5ZqHBdTajebRClogVZlvsdcLvMskHwVFdd/zfxX/qsNzKN5
-         D+Ny7AJ5cz4Na4lOoFn2EAF1uJdeR6gRoHJtx1WqcRDc35N7TdAR6Jz34fJxieriJUKx
-         Dv2zCTfKHuim8foKXSvkVpDhS2o2dLkXBDVj08PNLc8B1YFSgF7VtU5qkWx4ek5IVUq7
-         DRUoLqYGjZ/4hqLMZE7AqwGto78bhNSgHA5ocT24PfZMmHrsAXG0LNjhhkRGicolwcWe
-         m2qw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BUoGJwSxJZnzTzRzbKG9r3Bd5xV9RD8EdFVeCglJJKM=;
+        b=M72u9xP651IDrqyAP1W9+3ztPWQmKEmEDM6woo81AXjKia2Qeazt06FsrzzkgmGm4t
+         ZjYlC7K2KRKXNaIx2Aip93P/AaSajOo79uPHvO8icn3/XNQ7sQA4JYKctwD4xiyFEs36
+         524KpAo5On1fiqLfg9tQRxWUGhOdfjkAQ2hdifcslaxWO7oLEcpjtGJc07SeETnRhTqh
+         ra+L2/GP5WuXClQPc0KxoUnaAyb3tcEm/HKdkhGpksj/h2y7uWQjfwqsRYVnbN18G+oy
+         463WQKbcLd60Q2vdyzKBLKStzIoafRICFiZnIhrXML/XoVQCx/Ea1dmbXGlBpx/tInim
+         D/tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AgP8JJObFWX9H7gjypcPoICzCMw18AP0HgG9/o9Q3kA=;
-        b=saFYhNljbAVfaSOklb/Fu0oPHDGMs6q9iMIzWDo5aC22R7ABO/962wWXeYjvqCj6xJ
-         1UIC2/Mp65kMp6So38zFREMlRmD34pmyc/ucBplylXR+oycZ+vLHFVW6vpew8LcJt4BQ
-         WEPk8si1Crzp0TASepQKGCosIbJwrX1E6eqBg6TJog48jzRtnWCisNPBvXuO0XrBXrIo
-         v9Rh2LY/mc6/IQj3sFGBnvcmhznXz40fT5WwOzvf87g7ow+RWjekJ0+vyq/KXVnoLQK2
-         E/OG3ty3GiRLLjD575poxVB3Dz3DhwF3FsP9ISHoi1NM7Pr84am/FWLPq3S3LQ/QAeK6
-         VzxQ==
-X-Gm-Message-State: APjAAAXylLYhZE9rlfldmiIPzCE9CsInHEDNldqpts6y9PkvyH5d2rRU
-        E6ulkmNMx8+1/qrYPY0DhcY=
-X-Google-Smtp-Source: APXvYqwaOrJ2SgI89sIp39l1ED2mwjasJrmUqsKwrYVqX+iW1rqx4HATtKmjfKcy/H61sDOMTnswjg==
-X-Received: by 2002:a92:5c15:: with SMTP id q21mr12179879ilb.239.1572383016477;
-        Tue, 29 Oct 2019 14:03:36 -0700 (PDT)
-Received: from dell.localdomain ([216.249.49.33])
-        by smtp.googlemail.com with ESMTPSA id z20sm11810iof.78.2019.10.29.14.03.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BUoGJwSxJZnzTzRzbKG9r3Bd5xV9RD8EdFVeCglJJKM=;
+        b=dWPmvclxipkppZko5hhn8/M+2IhqJeIZTsQw+0zpiYsye/8U9KV6+mpnHQwkjQ82Cb
+         raFJP9B4d4S8t2tzNn4ysRvWndfQfi6Qx8s+b2qEg9LZQd4Zq9fN7Nj9VNK2TsMdd5Av
+         hWDD77Y9QH0F+g5ZcWTgFQZMc3ZNpptDeqc4FiAUDSTG3wNdyB22NUklIGRyyD6+X3Lm
+         e1CTxcGzCxWzmrcITyTtWjyUshF2u9C2j3W/sYSg7FhFP+SpYHsk82Z1UM5hl/k95qGl
+         CHJKvFGBrA8TxPA+cC+CVocIB9ZPs501muc6bDgbMnyY/AYrTDa6AQ2voLYjW5h0pNu5
+         MVEA==
+X-Gm-Message-State: APjAAAU5VcpFeuOxUsH70vXgNvWS2EcNmNww1/wgwxMIAN/C0fPUnooV
+        EEeRqglMS4g4cWHSq4F5CVOBozMcX8HK73Yx
+X-Google-Smtp-Source: APXvYqyfwDMQTLJ/uCGRK0UbAbP0pNbA3toLQOfF3euQOdDemoymiSE2k0pNHSW1SSAt/JngL1jh7w==
+X-Received: by 2002:a05:600c:22d9:: with SMTP id 25mr6047627wmg.166.1572383349612;
+        Tue, 29 Oct 2019 14:09:09 -0700 (PDT)
+Received: from localhost.localdomain ([46.218.74.72])
+        by smtp.gmail.com with ESMTPSA id f8sm4044206wmb.37.2019.10.29.14.09.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 14:03:35 -0700 (PDT)
-From:   Ethan Sommer <e5ten.arch@gmail.com>
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
-        Ethan Sommer <e5ten.arch@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Tue, 29 Oct 2019 14:09:08 -0700 (PDT)
+From:   Marcus Folkesson <marcus.folkesson@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] replace timeconst bc script with an sh script
-Date:   Tue, 29 Oct 2019 17:02:44 -0400
-Message-Id: <20191029210250.17007-1-e5ten.arch@gmail.com>
+        Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Kent Gustavsson <kent@minoris.se>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: iio: adc: Migrate MCP3911 documentation to yaml
+Date:   Tue, 29 Oct 2019 22:11:42 +0100
+Message-Id: <20191029211142.14650-1-marcus.folkesson@gmail.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190620062246.2665-1-e5ten.arch@gmail.com>
-References: <20190620062246.2665-1-e5ten.arch@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-removes the bc build dependency introduced when timeconst.pl was
-replaced by timeconst.bc:
-commit 70730bca1331 ("kernel: Replace timeconst.pl with a bc script")
+Rewrite bindings to use json-schema vocabulary.
 
-the reason for this change is that this is the only use of bc in the
-actual compilation of the kernel, so by replacing it with a shell script
-compiling the kernel no longer depends on bc.
-
-Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
+Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
 ---
- Documentation/process/changes.rst |   6 --
- Kbuild                            |   4 +-
- kernel/time/timeconst.bc          | 117 ------------------------------
- kernel/time/timeconst.sh          | 111 ++++++++++++++++++++++++++++
- 4 files changed, 113 insertions(+), 125 deletions(-)
- delete mode 100644 kernel/time/timeconst.bc
- create mode 100644 kernel/time/timeconst.sh
+ .../devicetree/bindings/iio/adc/mcp3911.txt   | 30 --------
+ .../bindings/iio/adc/microchip,mcp3911.yaml   | 72 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 73 insertions(+), 31 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
 
-diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
-index 2284f2221f02..3ae168387109 100644
---- a/Documentation/process/changes.rst
-+++ b/Documentation/process/changes.rst
-@@ -105,12 +105,6 @@ Perl
- You will need perl 5 and the following modules: ``Getopt::Long``,
- ``Getopt::Std``, ``File::Basename``, and ``File::Find`` to build the kernel.
- 
--BC
----
--
--You will need bc to build kernels 3.10 and higher
--
--
- OpenSSL
- -------
- 
-diff --git a/Kbuild b/Kbuild
-index 3109ac786e76..7eba24cbdb78 100644
---- a/Kbuild
-+++ b/Kbuild
-@@ -18,9 +18,9 @@ $(bounds-file): kernel/bounds.s FORCE
- 
- timeconst-file := include/generated/timeconst.h
- 
--filechk_gentimeconst = echo $(CONFIG_HZ) | bc -q $<
-+filechk_gentimeconst = $(CONFIG_SHELL) $< $(CONFIG_HZ)
- 
--$(timeconst-file): kernel/time/timeconst.bc FORCE
-+$(timeconst-file): kernel/time/timeconst.sh FORCE
- 	$(call filechk,gentimeconst)
- 
- #####
-diff --git a/kernel/time/timeconst.bc b/kernel/time/timeconst.bc
+diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
 deleted file mode 100644
-index 7ed0e0fb5831..000000000000
---- a/kernel/time/timeconst.bc
+index 3071f48fb30b..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
 +++ /dev/null
-@@ -1,117 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
+@@ -1,30 +0,0 @@
+-* Microchip MCP3911 Dual channel analog front end (ADC)
 -
--scale=0
+-Required properties:
+- - compatible: Should be "microchip,mcp3911"
+- - reg: SPI chip select number for the device
 -
--define gcd(a,b) {
--	auto t;
--	while (b) {
--		t = b;
--		b = a % b;
--		a = t;
--	}
--	return a;
--}
+-Recommended properties:
+- - spi-max-frequency: Definition as per
+-	 Documentation/devicetree/bindings/spi/spi-bus.txt.
+-	 Max frequency for this chip is 20MHz.
 -
--/* Division by reciprocal multiplication. */
--define fmul(b,n,d) {
--       return (2^b*n+d-1)/d;
--}
+-Optional properties:
+- - clocks: Phandle and clock identifier for sampling clock
+- - interrupt-parent: Phandle to the parent interrupt controller
+- - interrupts: IRQ line for the ADC
+- - microchip,device-addr: Device address when multiple MCP3911 chips are present on the
+-	same SPI bus. Valid values are 0-3. Defaults to 0.
+- - vref-supply: Phandle to the external reference voltage supply.
 -
--/* Adjustment factor when a ceiling value is used.  Use as:
--   (imul * n) + (fmulxx * n + fadjxx) >> xx) */
--define fadj(b,n,d) {
--	auto v;
--	d = d/gcd(n,d);
--	v = 2^b*(d-1)/d;
--	return v;
--}
--
--/* Compute the appropriate mul/adj values as well as a shift count,
--   which brings the mul value into the range 2^b-1 <= x < 2^b.  Such
--   a shift value will be correct in the signed integer range and off
--   by at most one in the upper half of the unsigned range. */
--define fmuls(b,n,d) {
--	auto s, m;
--	for (s = 0; 1; s++) {
--		m = fmul(s,n,d);
--		if (m >= 2^(b-1))
--			return s;
--	}
--	return 0;
--}
--
--define timeconst(hz) {
--	print "/* Automatically generated by kernel/time/timeconst.bc */\n"
--	print "/* Time conversion constants for HZ == ", hz, " */\n"
--	print "\n"
--
--	print "#ifndef KERNEL_TIMECONST_H\n"
--	print "#define KERNEL_TIMECONST_H\n\n"
--
--	print "#include <linux/param.h>\n"
--	print "#include <linux/types.h>\n\n"
--
--	print "#if HZ != ", hz, "\n"
--	print "#error \qinclude/generated/timeconst.h has the wrong HZ value!\q\n"
--	print "#endif\n\n"
--
--	if (hz < 2) {
--		print "#error Totally bogus HZ value!\n"
--	} else {
--		s=fmuls(32,1000,hz)
--		obase=16
--		print "#define HZ_TO_MSEC_MUL32\tU64_C(0x", fmul(s,1000,hz), ")\n"
--		print "#define HZ_TO_MSEC_ADJ32\tU64_C(0x", fadj(s,1000,hz), ")\n"
--		obase=10
--		print "#define HZ_TO_MSEC_SHR32\t", s, "\n"
--
--		s=fmuls(32,hz,1000)
--		obase=16
--		print "#define MSEC_TO_HZ_MUL32\tU64_C(0x", fmul(s,hz,1000), ")\n"
--		print "#define MSEC_TO_HZ_ADJ32\tU64_C(0x", fadj(s,hz,1000), ")\n"
--		obase=10
--		print "#define MSEC_TO_HZ_SHR32\t", s, "\n"
--
--		obase=10
--		cd=gcd(hz,1000)
--		print "#define HZ_TO_MSEC_NUM\t\t", 1000/cd, "\n"
--		print "#define HZ_TO_MSEC_DEN\t\t", hz/cd, "\n"
--		print "#define MSEC_TO_HZ_NUM\t\t", hz/cd, "\n"
--		print "#define MSEC_TO_HZ_DEN\t\t", 1000/cd, "\n"
--		print "\n"
--
--		s=fmuls(32,1000000,hz)
--		obase=16
--		print "#define HZ_TO_USEC_MUL32\tU64_C(0x", fmul(s,1000000,hz), ")\n"
--		print "#define HZ_TO_USEC_ADJ32\tU64_C(0x", fadj(s,1000000,hz), ")\n"
--		obase=10
--		print "#define HZ_TO_USEC_SHR32\t", s, "\n"
--
--		s=fmuls(32,hz,1000000)
--		obase=16
--		print "#define USEC_TO_HZ_MUL32\tU64_C(0x", fmul(s,hz,1000000), ")\n"
--		print "#define USEC_TO_HZ_ADJ32\tU64_C(0x", fadj(s,hz,1000000), ")\n"
--		obase=10
--		print "#define USEC_TO_HZ_SHR32\t", s, "\n"
--
--		obase=10
--		cd=gcd(hz,1000000)
--		print "#define HZ_TO_USEC_NUM\t\t", 1000000/cd, "\n"
--		print "#define HZ_TO_USEC_DEN\t\t", hz/cd, "\n"
--		print "#define USEC_TO_HZ_NUM\t\t", hz/cd, "\n"
--		print "#define USEC_TO_HZ_DEN\t\t", 1000000/cd, "\n"
--
--		cd=gcd(hz,1000000000)
--		print "#define HZ_TO_NSEC_NUM\t\t", 1000000000/cd, "\n"
--		print "#define HZ_TO_NSEC_DEN\t\t", hz/cd, "\n"
--		print "#define NSEC_TO_HZ_NUM\t\t", hz/cd, "\n"
--		print "#define NSEC_TO_HZ_DEN\t\t", 1000000000/cd, "\n"
--		print "\n"
--
--		print "#endif /* KERNEL_TIMECONST_H */\n"
--	}
--	halt
--}
--
--hz = read();
--timeconst(hz)
-diff --git a/kernel/time/timeconst.sh b/kernel/time/timeconst.sh
+-Example:
+-adc@0 {
+-	compatible = "microchip,mcp3911";
+-	reg = <0>;
+-	interrupt-parent = <&gpio5>;
+-	interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+-	spi-max-frequency = <20000000>;
+-	microchip,device-addr = <0>;
+-	vref-supply = <&vref_reg>;
+-	clocks = <&xtal>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml b/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
 new file mode 100644
-index 000000000000..d1aa25f46be8
+index 000000000000..bfcf6a5fb44e
 --- /dev/null
-+++ b/kernel/time/timeconst.sh
-@@ -0,0 +1,111 @@
-+#!/bin/sh
++++ b/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+@@ -0,0 +1,72 @@
 +# SPDX-License-Identifier: GPL-2.0
++# Copyright 2019 Marcus Folkesson <marcus.folkesson@gmail.com>
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/bindings/iio/adc/microchip,mcp3911.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+if [ -z "$1" ]; then
-+	printf '%s <HZ>\n' "$0" >&2
-+	exit 1
-+fi
++title: Microchip MCP3911 Dual channel analog front end (ADC)
 +
-+# 2 to the power of n
-+pot() {
-+	local i=1 j=0
-+	while [ "$((j += 1))" -le "$1" ]; do
-+		: "$((i *= 2))"
-+	done
-+	printf '%u' "${i}"
-+}
++maintainers:
++  - Marcus Folkesson <marcus.folkesson@gmail.com>
++  - Kent Gustavsson <nedo80@gmail.com>
 +
-+# Greatest common denominator
-+gcd() {
-+	local i="$1" j="$2" k
-+	while [ "${j}" -ne 0 ]; do
-+		k="${j}" j="$((i % j))" i="${k}"
-+	done
-+	printf '%u' "${i}"
-+}
++description: |
++  Bindings for the Microchip MCP3911 Dual channel ADC device. Datasheet can be
++  found here: https://ww1.microchip.com/downloads/en/DeviceDoc/20002286C.pdf
 +
-+# Division by reciprocal multiplication.
-+fmul() {
-+	printf '%u' "$((($(pot "$1") * $2 + $3 - 1) / $3))"
-+}
++properties:
++  compatible:
++    enum:
++      - microchip,mcp3911
 +
-+# Adjustment factor when a ceiling value is used.
-+fadj() {
-+	local i
-+	i="$(gcd "$2" "$3")"
-+	printf '%u' "$(($(pot "$1") * ($3 / i - 1) / ($3 / i)))"
-+}
++  reg:
++    description: SPI chip select number for the device
++    maxItems: 1
 +
-+# Compute the appropriate mul/adj values as well as a shift count,
-+# which brings the mul value into the range 2^b-1 <= x < 2^b.  Such
-+# a shift value will be correct in the signed integer range and off
-+# by at most one in the upper half of the unsigned range.
-+fmuls() {
-+	local i=0 j
-+	while true; do
-+		j="$(fmul "${i}" "$2" "$3")"
-+		if [ "${j}" -ge "$(pot "$(($1 - 1))")" ]; then
-+			printf '%u' "${i}"
-+			return
-+		fi
-+		: "$((i += 1))"
-+	done
-+}
++  spi-max-frequency:
++    description: |
++      Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt.
++    maximum: 20000000
++    maxItems: 1
 +
-+printf '/* Automatically generated by kernel/time/timeconst.sh */\n'
-+printf '/* Time conversion constants for HZ == %u */\n\n' "$1"
++  clocks:
++    description: Phandle and clock identifier for sampling clock
++    maxItems: 1
 +
-+printf '#ifndef KERNEL_TIMECONST_H\n'
-+printf '#define KERNEL_TIMECONST_H\n\n'
++  interrupts:
++    description: IRQ line of the ADC
++    maxItems: 1
 +
-+printf '#include <linux/param.h>\n'
-+printf '#include <linux/types.h>\n\n'
++  microchip,device-addr:
++    description: Device address when multiple MCP3911 chips are present on the same SPI bus.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [0, 1, 2, 3]
++      - default: 0
 +
-+printf '#if HZ != %u\n' "$1"
-+printf '#error "include/generated/timeconst.h has the wrong HZ value!"\n'
-+printf '#endif\n\n'
++  vref-supply:
++    description: Phandle to the external reference voltage supply.
++    maxItems: 1
 +
-+if [ "$1" -lt 2 ]; then
-+	printf '#error Totally bogus HZ value!\n'
-+	exit 1
-+fi
++required:
++  - compatible
++  - reg
 +
-+s="$(fmuls 32 1000 "$1")"
-+printf '#define HZ_TO_MSEC_MUL32\tU64_C(0x%X)\n' "$(fmul "${s}" 1000 "$1")"
-+printf '#define HZ_TO_MSEC_ADJ32\tU64_C(0x%X)\n' "$(fadj "${s}" 1000 "$1")"
-+printf '#define HZ_TO_MSEC_SHR32\t%u\n' "${s}"
++examples:
++  - |
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
 +
-+s="$(fmuls 32 "$1" 1000)"
-+printf '#define MSEC_TO_HZ_MUL32\tU64_C(0x%X)\n' "$(fmul "${s}" "$1" 1000)"
-+printf '#define MSEC_TO_HZ_ADJ32\tU64_C(0x%X)\n' "$(fadj "${s}" "$1" 1000)"
-+printf '#define MSEC_TO_HZ_SHR32\t%u\n' "${s}"
-+
-+cd="$(gcd "$1" 1000)"
-+printf '#define HZ_TO_MSEC_NUM\t\t%u\n' "$((1000 / cd))"
-+printf '#define HZ_TO_MSEC_DEN\t\t%u\n' "$(($1 / cd))"
-+printf '#define MSEC_TO_HZ_NUM\t\t%u\n' "$(($1 / cd))"
-+printf '#define MSEC_TO_HZ_DEN\t\t%u\n\n' "$((1000 / cd))"
-+
-+s="$(fmuls 32 1000000 "$1")"
-+printf '#define HZ_TO_USEC_MUL32\tU64_C(0x%X)\n' "$(fmul "${s}" 1000000 "$1")"
-+printf '#define HZ_TO_USEC_ADJ32\tU64_C(0x%X)\n' "$(fadj "${s}" 1000000 "$1")"
-+printf '#define HZ_TO_USEC_SHR32\t%u\n' "${s}"
-+
-+s="$(fmuls 32 "$1" 1000000)"
-+printf '#define USEC_TO_HZ_MUL32\tU64_C(0x%X)\n' "$(fmul "${s}" "$1" 1000000)"
-+printf '#define USEC_TO_HZ_ADJ32\tU64_C(0x%X)\n' "$(fadj "${s}" "$1" 1000000)"
-+printf '#define USEC_TO_HZ_SHR32\t%u\n' "${s}"
-+
-+cd="$(gcd "$1" 1000000)"
-+printf '#define HZ_TO_USEC_NUM\t\t%u\n' "$((1000000 / cd))"
-+printf '#define HZ_TO_USEC_DEN\t\t%u\n' "$(($1 / cd))"
-+printf '#define USEC_TO_HZ_NUM\t\t%u\n' "$(($1 / cd))"
-+printf '#define USEC_TO_HZ_DEN\t\t%u\n' "$((1000000 / cd))"
-+
-+cd="$(gcd "$1" 1000000000)"
-+printf '#define HZ_TO_NSEC_NUM\t\t%u\n' "$((1000000000 / cd))"
-+printf '#define HZ_TO_NSEC_DEN\t\t%u\n' "$(($1 / cd))"
-+printf '#define NSEC_TO_HZ_NUM\t\t%u\n' "$(($1 / cd))"
-+printf '#define NSEC_TO_HZ_DEN\t\t%u\n' "$((1000000000 / cd))"
-+
-+printf '\n#endif /* KERNEL_TIMECONST_H */\n'
++      adc@0 {
++        compatible = "microchip,mcp3911";
++        reg = <0>;
++        interrupt-parent = <&gpio5>;
++        interrupts = <15 2>;
++        spi-max-frequency = <20000000>;
++        microchip,device-addr = <0>;
++        vref-supply = <&vref_reg>;
++        clocks = <&xtal>;
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e51a68bf8ca8..fbccc9d450ff 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10723,7 +10723,7 @@ M:	Kent Gustavsson <kent@minoris.se>
+ L:	linux-iio@vger.kernel.org
+ S:	Supported
+ F:	drivers/iio/adc/mcp3911.c
+-F:	Documentation/devicetree/bindings/iio/adc/mcp3911.txt
++F:	Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+ 
+ MICROCHIP NAND DRIVER
+ M:	Tudor Ambarus <tudor.ambarus@microchip.com>
 -- 
 2.23.0
 
