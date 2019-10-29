@@ -2,82 +2,89 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FBFCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022F5CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821E0217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572309481;
-	bh=VOgGAaaLiIO7/29MD6ZQiMJrsJpHBIYfQrkY2UI4QOo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Nny/jl6QiZl/b5+SYQWD6nXzMe1POE0bZTytLh02pOer+bzxyKtltPSdPr4VgvGcB
-	 nIBegr+6zGPo79e1XyjVWn47z3YBL+TSpgTdMqthiPmNOzuqptoDEyMvRON/5ztAk9
-	 +DJyu6YhD2pkPe00YDNuMzVBimjpfzjFIeGQ0pXU=
+	by mail.kernel.org (Postfix) with ESMTP id B935221835
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="C6DbVAC/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfJ2Ah6 (ORCPT
+        id S1727023AbfJ2AnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 20:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfJ2Ah6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 20:37:58 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        Mon, 28 Oct 2019 20:43:11 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35475 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfJ2AnL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 20:43:11 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19B6F217D6;
-        Tue, 29 Oct 2019 00:37:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572309478;
-        bh=VOgGAaaLiIO7/29MD6ZQiMJrsJpHBIYfQrkY2UI4QOo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=a6VyX7PjOyi6anNVmpixeC8ko6ZpnVhErYMGCUG0qCNCaHoG+6X02n5gCoQmHDnj7
-         l228uVDuxlx14LbS0FeOjR9Qn2jJ18qGopkfL5uzRZNNdTY9UlV4hcYNX/MTPM7x9i
-         c5RAz9mCIHpesMeLTGAwRjCYKwWfm4vgYK2EZU8E=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id EA5E33522C0D; Mon, 28 Oct 2019 17:37:57 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 17:37:57 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the rcu tree
-Message-ID: <20191029003757.GF20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191029075359.59d06466@canb.auug.org.au>
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 5508A886BF;
+        Tue, 29 Oct 2019 13:43:09 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1572309789;
+        bh=jDHnRZm14GJI/8ZawxhtbbZIWpFs2vGKs23EmX+ANjU=;
+        h=From:To:Cc:Subject:Date;
+        b=C6DbVAC/sjb2SdWjw1hWifHjWXfZv7k7QSmIVGTLMetbsZWqCpaUBAfnCrEdnmmP8
+         Z3kaiwpiOabGlQ4yMxlaOmVUHfR16399DB1iJIKdn+4pro0Rp7+qLRrBsI2Zo/2GXL
+         83uOZ+Dk1NKHA9VjLWsioxo5cMBEF4ZDC64eCeJ+Eim0zth2OLd4w/4t/hTX4ZMfvx
+         mx20O6BYUxOOrq4Sus8YpdkDNpiCCKuIQWstlUOCc7Q6yC62KiNN/Sz1AD8zAmuz9x
+         HsOsM9XfF1tUTHmRS1a44IqRZo8VS6lScn8EMFzKfmTMND+aSbbR6bhKVlwrRX8yAZ
+         n56SuKarCj7Qw==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5db78b1d0000>; Tue, 29 Oct 2019 13:43:09 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id ADC5013EE9C;
+        Tue, 29 Oct 2019 13:43:09 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id EF3D128005C; Tue, 29 Oct 2019 13:43:08 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     sre@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] power: reset: gpio-restart: don't error on deferral
+Date:   Tue, 29 Oct 2019 13:43:02 +1300
+Message-Id: <20191029004302.384-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029075359.59d06466@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 07:53:59AM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Commits
-> 
->   51db3f987f62 ("Restore docs "rcu: Restore barrier() to rcu_read_lock() and rcu_read_unlock()"")
->   a0c1ba228721 ("Restore docs "treewide: Rename rcu_dereference_raw_notrace() to _check()"")
->   8b3b77cca47f ("Revert docs from "treewide: Rename rcu_dereference_raw_notrace() to _check()"")
->   f7bf64a4ff9e ("Revert docs from "rcu: Restore barrier() to rcu_read_lock() and rcu_read_unlock()"")
-> 
-> are missing a Signed-off-by from their authors.
+Don't generate an error message when devm_gpiod_get fails with
+-EPROBE_DEFER.
 
-Again, good catch, thank you!
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/power/reset/gpio-restart.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Joel, if you have any objections to my adding your Signed-off-by, please
-let me know.  (In which case, I will defer them to the v5.6 merge window,
-which would allow us time to work out what to do instead.)
+diff --git a/drivers/power/reset/gpio-restart.c b/drivers/power/reset/gpi=
+o-restart.c
+index 308ca9d9d276..4aaa46b80ba2 100644
+--- a/drivers/power/reset/gpio-restart.c
++++ b/drivers/power/reset/gpio-restart.c
+@@ -65,7 +65,8 @@ static int gpio_restart_probe(struct platform_device *p=
+dev)
+ 	gpio_restart->reset_gpio =3D devm_gpiod_get(&pdev->dev, NULL,
+ 			open_source ? GPIOD_IN : GPIOD_OUT_LOW);
+ 	if (IS_ERR(gpio_restart->reset_gpio)) {
+-		dev_err(&pdev->dev, "Could not get reset GPIO\n");
++		if (PTR_ERR(gpio_restart->reset_gpio) !=3D -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Could not get reset GPIO\n");
+ 		return PTR_ERR(gpio_restart->reset_gpio);
+ 	}
+=20
+--=20
+2.23.0
 
-							Thanx, Paul
