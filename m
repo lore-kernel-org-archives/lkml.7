@@ -2,396 +2,99 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FEDCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F7DCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CEE214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:34:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572352471;
-	bh=u+1ITL87h6ImOthGngmYhcBAP+hlgJeYPm22xeQD6yU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IRC0rnYSTcdo0CD/o6RrXgCXDRTVtQ12lQ1yTLmHq9utbqsqVooJ7sWsLlfF7urXj
-	 JQw1GPAff4aXfA0n7+hl+L1/kfuVVhGYJeFFpB31dApDnvCoDdhtR4ynUU8341askK
-	 ehtchbBRfh/TMshjMT0NwBasIBvDp5M2UCjsrJSQ=
+	by mail.kernel.org (Postfix) with ESMTP id B8A28214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:36:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fB4dLq1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfJ2Mea (ORCPT
+        id S1727705AbfJ2MgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:34:30 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42875 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfJ2Mea (ORCPT
+        Tue, 29 Oct 2019 08:36:01 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41361 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfJ2MgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:34:30 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i185so8748378oif.9;
-        Tue, 29 Oct 2019 05:34:29 -0700 (PDT)
+        Tue, 29 Oct 2019 08:36:01 -0400
+Received: by mail-qk1-f195.google.com with SMTP id m125so8060427qkd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 05:35:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5hGoQiN8reA7dGIYQ91t9fYgfvZm6X7mudHXkHxFTbc=;
+        b=fB4dLq1s7yc0cqWr3UX3wBllXkTMDEA+8azMjeCZxyyzzVlboXjhGwEMMGoTiKhPKy
+         dcEI4NlpVcTUs9uzgbLjV2rZEGrAdTXVOIdc15xG4p6JajycEAFzCxckmpQ8hJlGgYIL
+         LOmZKdh1pITtoNZ7VsPwksUopPCUmV9BflINLdmfyie7OhR2+FT1OTAaQTjDf7PI+JrE
+         S7W5Dd5YHrm7sFDuCVa3Oyn657WXt6+9t3D+Q6Uxh1F+C9EdSzI5K8s876KWFrk8On9b
+         yFcFGINtsJMkyxrC0/DzrdGMzlAOTevuWCU28Kdj/3Orb0ybScuDqXpyob/dwIO+1qRk
+         vxGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=NuGvNr5d2i3rf51wx85q7m6lDMmKS60m3xzeENQ/V5I=;
-        b=doZ0rvRets4olFvKXpxlrrCVVS6rlQGsqLhi7kHXnuKqN2dDM1xlqxRqAQG5/H2zUK
-         8L8Dt7opLT+tNm2qCYqw1aIA1/cC5eZqURUHgOJqZEL/gIJuZv6w9w2dmYBmxyKKfGUM
-         BUHE1k5vX3lMkg2saTKSHJBRamiZCKy7l3aY+4UOX3450sD2Qs5zS+GiyWdTW0iI3Nxe
-         gXuZWB+atLLB72aeS3a63atHXApooozaw9TNVH4RgJnrZzrtzE8tEwfh/fcygJ9SxVL/
-         EI8SI6Kh2tgKE7hiiS3k4y6KRmOYFfi51Ebc9pA0KBJ1kBqCIMMm9pubmqcYSShL4bbl
-         3V1w==
-X-Gm-Message-State: APjAAAUbCH0aaViVn+BvC/G5gJW98QZodOFA6EGzzlfP9M3UVHPI8Mum
-        laiZvDaG/FVWW3DVKny3fA==
-X-Google-Smtp-Source: APXvYqyKfHHEU0+WHpt8FAZ1kGjO3iGV0VKL6cIl4PDExXqHjBfHF/9A1De9Cet/U9+IxV6W9Nx6eA==
-X-Received: by 2002:aca:f046:: with SMTP id o67mr3664860oih.155.1572352468513;
-        Tue, 29 Oct 2019 05:34:28 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q5sm2691065oih.55.2019.10.29.05.34.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 05:34:27 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 07:34:26 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?K=E9vin?= RAYMOND <k.raymond@overkiz.com>,
-        Mickael GARDET <m.gardet@overkiz.com>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: add a common kizboxmini dtsi file
-Message-ID: <20191029123426.GB8412@bogus>
-References: <20191018140304.31547-1-kamel.bouhara@bootlin.com>
- <20191018140304.31547-3-kamel.bouhara@bootlin.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5hGoQiN8reA7dGIYQ91t9fYgfvZm6X7mudHXkHxFTbc=;
+        b=hUuHw9+AdZ71LNA2+uDaM51GLG8FQoFAVDaaVKAWyWHevaPfR/Cj1mOmS25sKXDF7R
+         md2nLVaec6SgKPUT0Ib5pxoUpX2AdR2k0h/1pACuG7k1T05VMvcGfOoxXzvxzSL91pyH
+         P12q+GyiNQJgQ1ccI4lVPqI4Pp3wP/vRmH5v30P4GnWIVH8vuHAYxcpIliABU9BdCD0l
+         UEmhTofXU1A0Ze+Dcm1u+xiHnfdMZIB+HyyOkygu2etV8EIA3dQ2GXB802uykMVll8go
+         b0ZOqIkyAyGTlXuyVDSKJ2qk4tmNN8oLtF/I5S4/CJV3QlZcBLitz88C0QoBReiJ/x0C
+         kx6w==
+X-Gm-Message-State: APjAAAUpZTmKcFWWNQr/DRHKBXWWf0y+0hB5YgQoqHNb36W9FrgczKk5
+        IlEPe99aS0DurE0feACahYQzvw==
+X-Google-Smtp-Source: APXvYqz2LdmyfhNiUSxN199BU5n72r+ZeOEi+bTfhZqQeFA1tB81/aFKBbah4O2SxXzo26oZBioP5g==
+X-Received: by 2002:a37:8405:: with SMTP id g5mr8682859qkd.387.1572352558913;
+        Tue, 29 Oct 2019 05:35:58 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id 27sm3676195qtu.71.2019.10.29.05.35.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 29 Oct 2019 05:35:58 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iPQj7-0004ib-GH; Tue, 29 Oct 2019 09:35:57 -0300
+Date:   Tue, 29 Oct 2019 09:35:57 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        linux-kernel@lists.codethink.co.uk, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm: huge_pte_offset() returns pte_t *, not integer
+Message-ID: <20191029123557.GA6128@ziepe.ca>
+References: <20191016095111.29163-1-ben.dooks@codethink.co.uk>
+ <bd0ac181-7334-9970-b16a-ce7fd78d30ec@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191018140304.31547-3-kamel.bouhara@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <bd0ac181-7334-9970-b16a-ce7fd78d30ec@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 04:03:04PM +0200, Kamel Bouhara wrote:
-> Split the Kizbox Mini boards into two board configuration, the
-> Kizboxmini Mother board and the Kizboxmini RailDIN board.
-> 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
-> Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
-> ---
->  arch/arm/boot/dts/Makefile                    |   2 +
->  arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  38 ++++
->  arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  54 ++++++
->  arch/arm/boot/dts/at91-kizboxmini_common.dtsi | 166 ++++++++++++++++++
->  4 files changed, 260 insertions(+)
->  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
->  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
->  create mode 100644 arch/arm/boot/dts/at91-kizboxmini_common.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index c976b72a4c94..6b3a65f3f6f8 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -38,6 +38,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
->  	at91-ariettag25.dtb \
->  	at91-cosino_mega2560.dtb \
->  	at91-kizboxmini.dtb \
-> +	at91-kizboxmini-mb.dtb \
-> +	at91-kizboxmini-rd.dtb \
->  	at91-wb45n.dtb \
->  	at91sam9g15ek.dtb \
->  	at91sam9g25ek.dtb \
-> diff --git a/arch/arm/boot/dts/at91-kizboxmini-mb.dts b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-> new file mode 100644
-> index 000000000000..52921f547dd6
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-> @@ -0,0 +1,38 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2015-2018 Overkiz SAS
-> + *   Author: Mickael Gardet <m.gardet@overkiz.com>
-> + *           Kévin Raymond <k.raymond@overkiz.com>
-> + */
-> +/dts-v1/;
-> +#include "at91-kizboxmini_common.dtsi"
-> +
-> +/ {
-> +	model = "Overkiz Kizbox Mini Mother Board";
-> +	compatible = "overkiz,kizboxmini-mb", "atmel,at91sam9g25",
-> +		     "atmel,at91sam9x5", "atmel,at91sam9";
-> +
-> +	clocks {
-> +		slow_xtal {
+On Mon, Oct 28, 2019 at 02:55:13PM -0700, Mike Kravetz wrote:
 
-Don't use '_' in node names.
+> > diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+> > index 53fc34f930d0..e42c76aa1577 100644
+> > --- a/include/linux/hugetlb.h
+> > +++ b/include/linux/hugetlb.h
+> > @@ -185,7 +185,7 @@ static inline void hugetlb_show_meminfo(void)
+> >  #define hugetlb_free_pgd_range(tlb, addr, end, floor, ceiling) ({BUG(); 0; })
+> >  #define hugetlb_mcopy_atomic_pte(dst_mm, dst_pte, dst_vma, dst_addr, \
+> >  				src_addr, pagep)	({ BUG(); 0; })
+> > -#define huge_pte_offset(mm, address, sz)	0
+> > +#define huge_pte_offset(mm, address, sz)	(pte_t *)NULL
 
-> +			clock-frequency = <32768>;
-> +		};
-> +	};
-> +
-> +	pwm_leds {
-> +		blue {
-> +			label = "pwm:blue:user";
-> +			pwms = <&pwm0 2 10000000 0>;
-> +			max-brightness = <255>;
-> +			linux,default-trigger = "none";
-> +		};
-> +	};
-> +};
-> +
-> +&usb0 {
-> +	num-ports = <2>;
-> +};
-> +
-> +&rtc {
-> +	status = "okay";
-> +};
-> +
-> diff --git a/arch/arm/boot/dts/at91-kizboxmini-rd.dts b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-> new file mode 100644
-> index 000000000000..1d2db8e16271
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-> @@ -0,0 +1,54 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2015-2018 Overkiz SAS
-> + *   Author: Mickael Gardet <m.gardet@overkiz.com>
-> + *           Kévin Raymond <k.raymond@overkiz.com>
-> + */
-> +/dts-v1/;
-> +#include "at91-kizboxmini_common.dtsi"
-> +
-> +/ {
-> +	model = "Overkiz Kizbox Mini RailDIN";
-> +	compatible = "overkiz,kizboxmini-rd", "atmel,at91sam9g25",
-> +		     "atmel,at91sam9x5", "atmel,at91sam9";
-> +
-> +	clocks {
-> +		slow_xtal {
-> +			clock-frequency = <32768>;
-> +		};
-> +		adc_op_clk {
-> +			status = "okay";
-> +		};
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +	adc0 {
-> +		pinctrl_adc0_ad5: adc0_ad5-0 {
-> +			/* pull-up disable */
-> +			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-> +		};
-> +	};
-> +};
-> +
-> +&usart0 {
-> +	status = "disabled";
-> +};
-> +
-> +&rtc {
-> +	status = "okay";
-> +};
-> +
-> +&leds {
-> +	blue {
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&adc0 {
-> +	atmel,adc-vref = <2500>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_adc0_ad5>;
-> +	atmel,adc-channels-used = <0x0020>;
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/at91-kizboxmini_common.dtsi b/arch/arm/boot/dts/at91-kizboxmini_common.dtsi
-> new file mode 100644
-> index 000000000000..2598b776a278
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-kizboxmini_common.dtsi
-> @@ -0,0 +1,166 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * at91-kizboxmini.dts - Device Tree file for Overkiz Kizbox mini board
-> + *
-> + * Copyright (C) 2014-2018 Overkiz SAS
-> + *   Author: Antoine Aubert <a.aubert@overkiz.com>
-> + *           Gaël Portay <g.portay@overkiz.com>
-> + *           Kévin Raymond <k.raymond@overkiz.com>
-> + *           Dorian Rocipon <d.rocipon@overkiz.com>
-> + */
-> +#include "at91sam9g25.dtsi"
-> +
-> +/ {
-> +	chosen {
-> +		bootargs = "ubi.mtd=ubi";
-> +		stdout-path = &dbgu;
-> +	};
-> +
-> +	memory {
+We have recently been converting functions like this to static
+inlines, maybe that is more appropriate for this block of 'functions'
+as well?
 
-memory@20000000
-
-Build your dtb with W=12 and fix any new warnings (feel free to fix 
-existing ones too :) ).
-
-> +		reg = <0x20000000 0x8000000>;
-> +	};
-> +
-> +	clocks {
-> +		main_xtal {
-> +			clock-frequency = <12000000>;
-> +		};
-> +
-> +		adc_op_clk {
-> +			status = "disabled";
-> +		};
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		prog {
-> +			label = "PB_PROG";
-> +			gpios = <&pioC 17 GPIO_ACTIVE_LOW>;
-> +			linux,code = <0x102>;
-> +			wakeup-source;
-> +		};
-> +
-> +		reset {
-> +			label = "PB_RST";
-> +			gpios = <&pioC 16 GPIO_ACTIVE_LOW>;
-> +			linux,code = <0x100>;
-> +			wakeup-source;
-> +		};
-> +	};
-> +
-> +	leds: pwm_leds {
-> +		compatible = "pwm-leds";
-> +
-> +		blue {
-> +			label = "pwm:blue:user";
-> +			pwms = <&pwm0 2 10000000 0>;
-> +			max-brightness = <255>;
-> +			linux,default-trigger = "none";
-> +			status = "disabled";
-> +		};
-> +
-> +		green {
-> +			label = "pwm:green:user";
-> +			pwms = <&pwm0 0 10000000 0>;
-> +			max-brightness = <255>;
-> +			linux,default-trigger = "default-on";
-> +		};
-> +
-> +		red {
-> +			label = "pwm:red:user";
-> +			pwms = <&pwm0 1 10000000 0>;
-> +			max-brightness = <255>;
-> +			linux,default-trigger = "default-on";
-> +		};
-> +	};
-> +};
-> +
-> +&usart0 {
-> +	atmel,use-dma-rx;
-> +	atmel,use-dma-tx;
-> +	status = "okay";
-> +};
-> +
-> +&macb0 {
-> +	phy-mode = "rmii";
-> +	status = "okay";
-> +};
-> +
-> +&pwm0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm0_pwm0_1
-> +		     &pinctrl_pwm0_pwm1_1
-> +		     &pinctrl_pwm0_pwm2_1>;
-> +	status = "okay";
-> +};
-> +
-> +&dbgu {
-> +	status = "okay";
-> +};
-> +
-> +&watchdog {
-> +	status = "okay";
-> +};
-> +
-> +&adc0 {
-> +	status = "disabled";
-> +};
-> +
-> +&rtc {
-> +	status = "disabled";
-> +};
-> +
-> +&ebi {
-> +	pinctrl-0 = <&pinctrl_ebi_addr_nand
-> +			&pinctrl_ebi_data_0_7>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&nand_controller {
-> +	status = "okay";
-> +	pinctrl-0 = <&pinctrl_nand_oe_we
-> +		     &pinctrl_nand_cs
-> +		     &pinctrl_nand_rb>;
-> +	pinctrl-names = "default";
-> +
-> +	nand@3 {
-> +		reg = <0x3 0x0 0x800000>;
-> +		rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-> +		cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-> +		nand-bus-width = <8>;
-> +		nand-ecc-mode = "hw";
-> +		nand-ecc-strength = <4>;
-> +		nand-ecc-step-size = <512>;
-> +		nand-on-flash-bbt;
-> +		label = "atmel_nand";
-> +
-> +		partitions {
-> +			compatible = "fixed-partitions";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			bootstrap@0 {
-> +				label = "bootstrap";
-> +				reg = <0x0 0x20000>;
-> +			};
-> +
-> +			ubi@20000 {
-> +				label = "ubi";
-> +				reg = <0x20000 0x7fe0000>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&usb0 {
-> +	num-ports = <1>;
-> +	status = "okay";
-> +};
-> +
-> +&usb1 {
-> +	status = "okay";
-> +};
-> +
-> -- 
-> 2.23.0
-> 
+Jason
