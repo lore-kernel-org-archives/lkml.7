@@ -2,147 +2,121 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6205CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B41CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE9D20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:18:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1ODh14rv"
+	by mail.kernel.org (Postfix) with ESMTP id D686120862
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572376773;
+	bh=yMFBENXBzPYHJDxwTp9VyBRameOLEOvTCdOceGJIy8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NPmdpQoIpQ5NvgY7pxbTw1aPHBWPjugB7CrimIeSRRYXTYCPezDWSLUTiP33kNsMa
+	 f/K12KRDqooO581XLhAMzcZOtLMhPXALj/2mrBC+4OAjg4WZ8T/tjsnszE6g8GCb58
+	 vf3xWFcoLAWqR2Hy8kbChVECDvu/oTtEGHFGNn28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731938AbfJ2TSJ (ORCPT
+        id S1730163AbfJ2TTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:18:09 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33812 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730807AbfJ2TR5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:17:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t16so14935956wrr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=AAulUeuPoNsDEk+GpMMDiBhDeKpmWFc9M5uJieeLJLI=;
-        b=1ODh14rvo5xWA3XTcbFwAcohrgWPKKEIhrJ9qXpXyFKPUP/jEVNjCwAOeI7MlUkAvV
-         EuD5nrIYCP/1CP0Wo+DFTzlFeGybPS8ZrsGxWrj0vL63zWrGlyFIl1edd+XvQO0YPlUD
-         IY8MaOK/6FgscbFlbfFYxCsEe+UCnMvcIxIfgWGuFof6Pys2eCZN9rBtbHnn/vjcnsvt
-         pYAnp4BII3w06r9PGjgjUIkcF+YdxrBtOa0PNyqei5tYIKpUOew1zVfzPqwE5LIHkEBC
-         prkyxNSOYh3/yKufLSIEWKAjIkw+IYEeNJrI8N5tLH8sEPAEZ20hDlGu6uu53vs5rv+H
-         G/LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=AAulUeuPoNsDEk+GpMMDiBhDeKpmWFc9M5uJieeLJLI=;
-        b=sn0z+z0ciyp6/e5W6wSgxKP/puhB4A+d0/Y4BoR15l3w78lUQxPX69EBM/vlXDhC+r
-         RmsZ8chlvatcMbjdPXujSJURVPwufl/95kutqkfZv6FkONqhxtYtcVXK2zaGiScqiVsG
-         7X7gO9Dld/tYZDmzungPqmcmEjQ6I/72VXZ4pGLCHqaf8RRsqU0RnfItFQldUXdmKdQ9
-         fKgXBPxLo7BV6e7O7AA54/WIyGtuLpR4tEXw8QI0cRtt6NnhihaVLPM0CEg2oR6d47tD
-         eu+v0snOUGV3VbvC+OQ46qJyTLds14VLXnNWtad/aTerlpax6Xthsu1Ylz1/lZdpXE++
-         FQZw==
-X-Gm-Message-State: APjAAAWxrYTKjSFVaeyhWYGuegTALjD6KvHDngsjE3daf3FYXeCKbdkS
-        dfLc29Y3PgNyVa1l6K6qLvUi3g==
-X-Google-Smtp-Source: APXvYqxXvT4pPfgw5H95OQqjEpql/EvCng+c+MiGqCGq2JPf0FQULJFHd6h+PrmYIwknwF8Jqd2e+w==
-X-Received: by 2002:adf:da4a:: with SMTP id r10mr22236971wrl.356.1572376676357;
-        Tue, 29 Oct 2019 12:17:56 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id v128sm5493043wmb.14.2019.10.29.12.17.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 29 Oct 2019 12:17:55 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     mark.rutland@arm.com, maxime.ripard@bootlin.com,
-        robh+dt@kernel.org, wens@csie.org, jernej.skrabec@siol.net
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v2 2/2] ARM64: dts: allwinner: add pineh64 model A
-Date:   Tue, 29 Oct 2019 19:17:43 +0000
-Message-Id: <1572376663-22023-3-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572376663-22023-1-git-send-email-clabbe@baylibre.com>
-References: <1572376663-22023-1-git-send-email-clabbe@baylibre.com>
+        Tue, 29 Oct 2019 15:19:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfJ2TTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 15:19:32 -0400
+Received: from linux-8ccs (unknown [92.117.159.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7090220659;
+        Tue, 29 Oct 2019 19:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572376771;
+        bh=yMFBENXBzPYHJDxwTp9VyBRameOLEOvTCdOceGJIy8Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T/l34ni9ZBUJCqv9+ALck3bG73n6eZygSioJ5tSqUXR2QBr6j7VbsJOULaHjNZ0iZ
+         WM6omtRNjDPj5HR9dRpiI1/6XvTJcA7tBrMveGr0m9Ua8PxtjjlyY56z8JrHBQTkUS
+         Vgz+4h+3Q2TyYE0b2i3nHJXRBjJjQONQ9inI2+vU=
+Date:   Tue, 29 Oct 2019 20:19:25 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] module: avoid code duplication in
+ include/linux/export.h
+Message-ID: <20191029191925.GA19316@linux-8ccs>
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+ <20190927093603.9140-5-yamada.masahiro@socionext.com>
+ <f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the model A of the PineH64.
-The model A has the same size of the pine64 and has a PCIE slot.
++++ Rasmus Villemoes [27/09/19 13:07 +0200]:
+>On 27/09/2019 11.36, Masahiro Yamada wrote:
+>> include/linux/export.h has lots of code duplication between
+>> EXPORT_SYMBOL and EXPORT_SYMBOL_NS.
+>>
+>> To improve the maintainability and readability, unify the
+>> implementation.
+>>
+>> When the symbol has no namespace, pass the empty string "" to
+>> the 'ns' parameter.
+>>
+>> The drawback of this change is, it grows the code size.
+>> When the symbol has no namespace, sym->namespace was previously
+>> NULL, but it is now am empty string "". So, it increases 1 byte
+>> for every no namespace EXPORT_SYMBOL.
+>>
+>> A typical kernel configuration has 10K exported symbols, so it
+>> increases 10KB in rough estimation.
+>>
+>> I did not come up with a good idea to refactor it without increasing
+>> the code size.
+>
+>Can't we put the "aMS" flags on the __ksymtab_strings section? That
+>would make the empty strings free, and would also deduplicate the
+>USB_STORAGE string. And while almost per definition we don't have exact
+>duplicates among the names of exported symbols, we might have both a foo
+>and __foo, so that could save even more.
+>
+>I don't know if we have it already, but we'd need each arch to tell us
+>what symbol to use for @ in @progbits (e.g. % for arm). It seems most
+>are fine with @, so maybe a generic version could be
+>
+>#ifndef ARCH_SECTION_TYPE_CHAR
+>#define ARCH_SECTION_TYPE_CHAR "@"
+>#endif
+>
+>and then it would be
+>section("__ksymtab_strings,\"aMS\","ARCH_SECTION_TYPE_CHAR"progbits,1")
 
-The only devicetree difference with the pineH64 model B, is the PHY
-regulator.
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- .../devicetree/bindings/arm/sunxi.yaml        |  5 ++++
- arch/arm64/boot/dts/allwinner/Makefile        |  1 +
- .../allwinner/sun50i-h6-pine-h64-modelA.dts   | 26 +++++++++++++++++++
- 3 files changed, 32 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA.dts
+FWIW, I've just tinkered with this, and unfortunately the strings
+don't get deduplicated for kernel modules :-(
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index 9a1e4992b9e9..0059925a3395 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -594,6 +594,11 @@ properties:
-           - const: pine64,pine64-plus
-           - const: allwinner,sun50i-a64
- 
-+      - description: Pine64 PineH64 model A
-+        items:
-+          - const: pine64,pine-h64-modelA
-+          - const: allwinner,sun50i-h6
-+
-       - description: Pine64 PineH64 model B
-         items:
-           - const: pine64,pine-h64-modelB
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index d2418021768b..6bda5d9961c8 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -26,4 +26,5 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64-modelA.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-tanix-tx6.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA.dts
-new file mode 100644
-index 000000000000..fef47687c85e
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA.dts
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-+/*
-+ * Copyright (C) 2019 Corentin LABBE <clabbe@baylibre.com>
-+ */
-+
-+#include "sun50i-h6-pine-h64.dts"
-+
-+/ {
-+	model = "Pine H64 model A";
-+	compatible = "pine64,pine-h64-modelA", "allwinner,sun50i-h6";
-+
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc-gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		gpio = <&pio 2 16 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+};
-+
-+&emac {
-+	phy-supply = <&reg_gmac_3v3>;
-+};
--- 
-2.21.0
+Apparently ld does not do the deduplication for SHF_MERGE|SHF_STRINGS
+sections for relocatable files (ld -r), which kernel modules are. See:
+
+    https://sourceware.org/ml/binutils/2009-07/msg00291.html
+
+But, the strings do get deduplicated for vmlinux. Not sure if we can
+find a workaround for modules or if the benefit is significant enough
+if it only for vmlinux.
+
+Thanks,
+
+Jessica
 
