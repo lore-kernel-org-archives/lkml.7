@@ -2,395 +2,216 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AFBCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4118CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3010F20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2AA20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:36:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vuwYwZIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbfJ2Rf7 (ORCPT
+        id S1728500AbfJ2Rge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:35:59 -0400
-Received: from smtp-sh.infomaniak.ch ([128.65.195.4]:55501 "EHLO
-        smtp-sh.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbfJ2Rf5 (ORCPT
+        Tue, 29 Oct 2019 13:36:34 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34473 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727277AbfJ2Rgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:35:57 -0400
-X-Greylist: delayed 1166 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Oct 2019 13:35:48 EDT
-Received: from smtp8.infomaniak.ch (smtp8.infomaniak.ch [83.166.132.38])
-        by smtp-sh.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x9THFS6K006249
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:15:28 +0100
-Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
-        (authenticated bits=0)
-        by smtp8.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x9THFRT3168641;
-        Tue, 29 Oct 2019 18:15:27 +0100
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Drysdale <drysdale@google.com>,
-        Florent Revest <revest@chromium.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        KP Singh <kpsingh@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH bpf-next v11 4/7] landlock: Add ptrace LSM hooks
-Date:   Tue, 29 Oct 2019 18:15:02 +0100
-Message-Id: <20191029171505.6650-5-mic@digikod.net>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191029171505.6650-1-mic@digikod.net>
-References: <20191029171505.6650-1-mic@digikod.net>
+        Tue, 29 Oct 2019 13:36:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t16so14623122wrr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Nni/liqzdhkVu64Xrr57xeVzvsQgWp9LNCb4tgbLMKc=;
+        b=vuwYwZIn1L7kvgkpckncO5Fj5cKcM7xG9WcDDS97ux4CeoMOzxVQWQpJmVTyWzXCzG
+         DOGEKEDDfcn+EKIpp2kOdNAeFI3OunxkbeEjgN2VCbMk45GH9rO9vFqo5oijIVBQ6WIq
+         886pan8LKMC3WpAaXGMJ3jvlUOrxf6j21p9usPCV4UVwxNj8vsYokkfMwfwKwfjjFBQE
+         fr6RHeUB2l+qjoQWn2vDggtb1mrXTL1hBDCjtSso9aCgraArwopX2qd2lUqh+c3JpTEM
+         UG6J8U+nyB9vhOvRakqjoAxdhiR+fL9mvtNn9ekJ4ZiJtZQwvCN4xMPhiGpLKTQU1YfA
+         TswQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Nni/liqzdhkVu64Xrr57xeVzvsQgWp9LNCb4tgbLMKc=;
+        b=Zfc4eSYPuoye0Vs1pFFNUX90Vv1pjLL7ayYwzcujRZ9oB7wVbzTkj+JdrUOvCelRz6
+         F3OXKrfDd4U5HLIblTzn36LKDNy2TP6B4UstxwB368F4NptA5YpiI/AiKIsJHiff+UgQ
+         t3zbhFMDOf4QD+x0iB30oa7iSI8FTwX8x0CSXnI6apdZHcubVQHATbZVaNkqA60ZREPb
+         YMLkLM3THrJhTjJ11IvWQOnyRIpza4JpKH4QH//arYstXpvfnC5e/iDy/bU6jg6Ux6f8
+         6kXJ5oxV7Uzs4GSMfKG90gjzLC1dGxWEWiU399eu/m3byZ7Ep+vNUj5O7kFv4VuLDNF3
+         MhJg==
+X-Gm-Message-State: APjAAAWr9vhaK7DecDxbZkxkRCOtOL+ubKw3AGS0hBs1jaSW5PTYGgya
+        OZvlsMxT0o4UfDB44nlfE0o0SQ==
+X-Google-Smtp-Source: APXvYqzkHaMKmClLbsQXI1rFV5iv4EsMZvg9up3Y4GP7WbK7GcZ2h2CqwsGeY0jfD61MpkQHCENYHw==
+X-Received: by 2002:adf:f0cc:: with SMTP id x12mr10457126wro.326.1572370590048;
+        Tue, 29 Oct 2019 10:36:30 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:7037:cc11:eb05:9c6a? ([2a01:e34:ed2f:f020:7037:cc11:eb05:9c6a])
+        by smtp.googlemail.com with ESMTPSA id b196sm4433204wmd.24.2019.10.29.10.36.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 10:36:29 -0700 (PDT)
+Subject: Re: [PATCH 4/4] ARM: dts: stm32: remove thermal passive trip point on
+ stm32mp157c
+To:     Pascal Paillet <p.paillet@st.com>, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        rui.zhang@intel.com, edubezval@gmail.com,
+        amit.kucheria@verdurent.com, david.hernandezsanchez@st.com,
+        wsa+renesas@sang-engineering.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20191029164537.1561-1-p.paillet@st.com>
+ <20191029164537.1561-5-p.paillet@st.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <a690f5a6-b9ba-a190-598e-0f05e54c8511@linaro.org>
+Date:   Tue, 29 Oct 2019 18:36:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20191029164537.1561-5-p.paillet@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a first Landlock hook that can be used to enforce a security policy
-or to audit some process activities.  For a sandboxing use-case, it is
-needed to inform the kernel if a task can legitimately debug another.
-ptrace(2) can also be used by an attacker to impersonate another task
-and remain undetected while performing malicious activities.
+On 29/10/2019 17:45, Pascal Paillet wrote:
+> Remove thermal passive trip point.
 
-Using ptrace(2) and related features on a target process can lead to a
-privilege escalation.  A sandboxed task must then be able to tell the
-kernel if another task is more privileged, via ptrace_may_access().
+Why?
 
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: James Morris <jmorris@namei.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Serge E. Hallyn <serge@hallyn.com>
-Cc: Will Drewry <wad@chromium.org>
----
+> Signed-off-by: Pascal Paillet <p.paillet@st.com>
+> Change-Id: I494313cf467eea491236e73bd2fbe1803345586f
 
-Changes since v10:
-* revamp and replace the static policy with a Landlock hook which may be
-  used by the corresponding BPF_LANDLOCK_PTRACE program (attach) type
-  and a dedicated process_cmp_landlock_ptrace() BPF helper
-* check prog return value against LANDLOCK_RET_DENY (ret is a bitmask)
+Remove Change-Id
 
-Changes since v6:
-* factor out ptrace check
-* constify pointers
-* cleanup headers
-* use the new security_add_hooks()
----
- security/landlock/Makefile       |   4 +-
- security/landlock/bpf_run.c      |  62 +++++++++++++++++
- security/landlock/bpf_run.h      |  25 +++++++
- security/landlock/hooks_ptrace.c | 114 +++++++++++++++++++++++++++++++
- security/landlock/hooks_ptrace.h |  19 ++++++
- security/landlock/init.c         |   2 +
- 6 files changed, 224 insertions(+), 2 deletions(-)
- create mode 100644 security/landlock/bpf_run.c
- create mode 100644 security/landlock/bpf_run.h
- create mode 100644 security/landlock/hooks_ptrace.c
- create mode 100644 security/landlock/hooks_ptrace.h
+> ---
+>  arch/arm/boot/dts/stm32mp157c.dtsi | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index 9b11654a0a39..799b2aedd2c9 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+> @@ -91,12 +91,6 @@
+>  			thermal-sensors = <&dts>;
+>  
+>  			trips {
+> -				cpu_alert1: cpu-alert1 {
+> -					temperature = <85000>;
+> -					hysteresis = <0>;
+> -					type = "passive";
+> -				};
+> -
+>  				cpu-crit {
+>  					temperature = <120000>;
+>  					hysteresis = <0>;
+> 
 
-diff --git a/security/landlock/Makefile b/security/landlock/Makefile
-index 0b291f2c027c..93e4c2f31c8a 100644
---- a/security/landlock/Makefile
-+++ b/security/landlock/Makefile
-@@ -1,6 +1,6 @@
- obj-$(CONFIG_SECURITY_LANDLOCK) := landlock.o
- 
- landlock-y := init.o \
--	bpf_verify.o bpf_ptrace.o \
-+	bpf_verify.o bpf_run.o bpf_ptrace.o \
- 	domain_manage.o domain_syscall.o \
--	hooks_cred.o
-+	hooks_cred.o hooks_ptrace.o
-diff --git a/security/landlock/bpf_run.c b/security/landlock/bpf_run.c
-new file mode 100644
-index 000000000000..8874958bdc30
---- /dev/null
-+++ b/security/landlock/bpf_run.c
-@@ -0,0 +1,62 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Landlock LSM - eBPF program evaluation
-+ *
-+ * Copyright © 2016-2019 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2018-2019 ANSSI
-+ */
-+
-+#include <asm/current.h>
-+#include <linux/bpf.h>
-+#include <linux/errno.h>
-+#include <linux/filter.h>
-+#include <linux/rculist.h>
-+#include <uapi/linux/landlock.h>
-+
-+#include "bpf_run.h"
-+#include "common.h"
-+#include "hooks_ptrace.h"
-+
-+static const void *get_prog_ctx(struct landlock_hook_ctx *hook_ctx)
-+{
-+	switch (hook_ctx->type) {
-+	case LANDLOCK_HOOK_PTRACE:
-+		return landlock_get_ctx_ptrace(hook_ctx->ctx_ptrace);
-+	}
-+	WARN_ON(1);
-+	return NULL;
-+}
-+
-+/**
-+ * landlock_access_denied - run Landlock programs tied to a hook
-+ *
-+ * @domain: Landlock domain pointer
-+ * @hook_ctx: non-NULL valid eBPF context pointer
-+ *
-+ * Return true if at least one program return deny, false otherwise.
-+ */
-+bool landlock_access_denied(struct landlock_domain *domain,
-+		struct landlock_hook_ctx *hook_ctx)
-+{
-+	struct landlock_prog_list *prog_list;
-+	const size_t hook = get_hook_index(hook_ctx->type);
-+
-+	if (!domain)
-+		return false;
-+
-+	for (prog_list = domain->programs[hook]; prog_list;
-+			prog_list = prog_list->prev) {
-+		u32 ret;
-+		const void *prog_ctx;
-+
-+		prog_ctx = get_prog_ctx(hook_ctx);
-+		if (!prog_ctx || WARN_ON(IS_ERR(prog_ctx)))
-+			return true;
-+		rcu_read_lock();
-+		ret = BPF_PROG_RUN(prog_list->prog, prog_ctx);
-+		rcu_read_unlock();
-+		if (ret & LANDLOCK_RET_DENY)
-+			return true;
-+	}
-+	return false;
-+}
-diff --git a/security/landlock/bpf_run.h b/security/landlock/bpf_run.h
-new file mode 100644
-index 000000000000..3461cbb8ec12
---- /dev/null
-+++ b/security/landlock/bpf_run.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Landlock LSM - eBPF program evaluation headers
-+ *
-+ * Copyright © 2016-2019 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2018-2019 ANSSI
-+ */
-+
-+#ifndef _SECURITY_LANDLOCK_BPF_RUN_H
-+#define _SECURITY_LANDLOCK_BPF_RUN_H
-+
-+#include "common.h"
-+#include "hooks_ptrace.h"
-+
-+struct landlock_hook_ctx {
-+	enum landlock_hook_type type;
-+	union {
-+		struct landlock_hook_ctx_ptrace *ctx_ptrace;
-+	};
-+};
-+
-+bool landlock_access_denied(struct landlock_domain *domain,
-+		struct landlock_hook_ctx *hook_ctx);
-+
-+#endif /* _SECURITY_LANDLOCK_BPF_RUN_H */
-diff --git a/security/landlock/hooks_ptrace.c b/security/landlock/hooks_ptrace.c
-new file mode 100644
-index 000000000000..8e518a472d04
---- /dev/null
-+++ b/security/landlock/hooks_ptrace.c
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Landlock LSM - ptrace hooks
-+ *
-+ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2019 ANSSI
-+ */
-+
-+#include <asm/current.h>
-+#include <linux/cred.h>
-+#include <linux/errno.h>
-+#include <linux/kernel.h>
-+#include <linux/lsm_hooks.h>
-+#include <linux/sched.h>
-+#include <uapi/linux/landlock.h>
-+
-+#include "bpf_run.h"
-+#include "common.h"
-+#include "hooks_ptrace.h"
-+
-+struct landlock_hook_ctx_ptrace {
-+	struct landlock_context_ptrace prog_ctx;
-+};
-+
-+const struct landlock_context_ptrace *landlock_get_ctx_ptrace(
-+		const struct landlock_hook_ctx_ptrace *hook_ctx)
-+{
-+	if (WARN_ON(!hook_ctx))
-+		return NULL;
-+
-+	return &hook_ctx->prog_ctx;
-+}
-+
-+static int check_ptrace(struct landlock_domain *domain,
-+		struct task_struct *tracer, struct task_struct *tracee)
-+{
-+	struct landlock_hook_ctx_ptrace ctx_ptrace = {
-+		.prog_ctx = {
-+			.tracer = (uintptr_t)tracer,
-+			.tracee = (uintptr_t)tracee,
-+		},
-+	};
-+	struct landlock_hook_ctx hook_ctx = {
-+		.type = LANDLOCK_HOOK_PTRACE,
-+		.ctx_ptrace = &ctx_ptrace,
-+	};
-+
-+	return landlock_access_denied(domain, &hook_ctx) ? -EPERM : 0;
-+}
-+
-+/**
-+ * hook_ptrace_access_check - determine whether the current process may access
-+ *			      another
-+ *
-+ * @child: the process to be accessed
-+ * @mode: the mode of attachment
-+ *
-+ * If the current task (i.e. tracer) has one or multiple BPF_LANDLOCK_PTRACE
-+ * programs, then run them with the `struct landlock_context_ptrace` context.
-+ * If one of these programs return LANDLOCK_RET_DENY, then deny access with
-+ * -EPERM, else allow it by returning 0.
-+ */
-+static int hook_ptrace_access_check(struct task_struct *child,
-+		unsigned int mode)
-+{
-+	struct landlock_domain *dom_current;
-+	const size_t hook = get_hook_index(LANDLOCK_HOOK_PTRACE);
-+
-+	dom_current = landlock_cred(current_cred())->domain;
-+	if (!(dom_current && dom_current->programs[hook]))
-+		return 0;
-+	return check_ptrace(dom_current, current, child);
-+}
-+
-+/**
-+ * hook_ptrace_traceme - determine whether another process may trace the
-+ *			 current one
-+ *
-+ * @parent: the task proposed to be the tracer
-+ *
-+ * If the parent task (i.e. tracer) has one or multiple BPF_LANDLOCK_PTRACE
-+ * programs, then run them with the `struct landlock_context_ptrace` context.
-+ * If one of these programs return LANDLOCK_RET_DENY, then deny access with
-+ * -EPERM, else allow it by returning 0.
-+ */
-+static int hook_ptrace_traceme(struct task_struct *parent)
-+{
-+	struct landlock_domain *dom_parent;
-+	const size_t hook = get_hook_index(LANDLOCK_HOOK_PTRACE);
-+	int ret;
-+
-+	rcu_read_lock();
-+	dom_parent = landlock_cred(__task_cred(parent))->domain;
-+	if (!(dom_parent && dom_parent->programs[hook])) {
-+		ret = 0;
-+		goto put_rcu;
-+	}
-+	ret = check_ptrace(dom_parent, parent, current);
-+
-+put_rcu:
-+	rcu_read_unlock();
-+	return ret;
-+}
-+
-+static struct security_hook_list landlock_hooks[] = {
-+	LSM_HOOK_INIT(ptrace_access_check, hook_ptrace_access_check),
-+	LSM_HOOK_INIT(ptrace_traceme, hook_ptrace_traceme),
-+};
-+
-+__init void landlock_add_hooks_ptrace(void)
-+{
-+	security_add_hooks(landlock_hooks, ARRAY_SIZE(landlock_hooks),
-+			LANDLOCK_NAME);
-+}
-diff --git a/security/landlock/hooks_ptrace.h b/security/landlock/hooks_ptrace.h
-new file mode 100644
-index 000000000000..53fe651bdb3e
---- /dev/null
-+++ b/security/landlock/hooks_ptrace.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Landlock LSM - ptrace hooks headers
-+ *
-+ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2019 ANSSI
-+ */
-+
-+#ifndef _SECURITY_LANDLOCK_HOOKS_PTRACE_H
-+#define _SECURITY_LANDLOCK_HOOKS_PTRACE_H
-+
-+struct landlock_hook_ctx_ptrace;
-+
-+const struct landlock_context_ptrace *landlock_get_ctx_ptrace(
-+		const struct landlock_hook_ctx_ptrace *hook_ctx);
-+
-+__init void landlock_add_hooks_ptrace(void);
-+
-+#endif /* _SECURITY_LANDLOCK_HOOKS_PTRACE_H */
-diff --git a/security/landlock/init.c b/security/landlock/init.c
-index 8836ec4defd3..541aad17418e 100644
---- a/security/landlock/init.c
-+++ b/security/landlock/init.c
-@@ -10,11 +10,13 @@
- 
- #include "common.h"
- #include "hooks_cred.h"
-+#include "hooks_ptrace.h"
- 
- static int __init landlock_init(void)
- {
- 	pr_info(LANDLOCK_NAME ": Registering hooks\n");
- 	landlock_add_hooks_cred();
-+	landlock_add_hooks_ptrace();
- 	return 0;
- }
- 
+
 -- 
-2.23.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
