@@ -2,101 +2,110 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23356CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 05:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F12ACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 05:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C7F20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 05:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1982220679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 05:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NrkxL5DN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p86UAwzT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731829AbfJ2FHj (ORCPT
+        id S1729773AbfJ2FJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 01:07:39 -0400
-Received: from ozlabs.org ([203.11.71.1]:50809 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731547AbfJ2FHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 01:07:38 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 472KMp2YvRz9sPV;
-        Tue, 29 Oct 2019 16:07:34 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572325656;
-        bh=cjVSQ2LeMyLilTOrYL1B1Dp8AyZuyPWwP4ayARVor8M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NrkxL5DNaqn/fFPvdXlvKguLF+D5zjiI7p+g88YE9sqP78SRoWgA614JHSEjxujlo
-         mulVx26SU8rT0Ox7178eD1fsvm+WbIGLwRskp7evaKug6mtD8q0kGWkG0t7K+1NjHZ
-         Bs52PB1LHiyc9xMFgNaEfIcWRRwgStyKEQJLKehGWDr1gXUHoDsQx0J6dzW7BTLCij
-         qWBx+M5Zl292rAn3U/v5cNXMda03Q7d0ZxCmEOjbE84dp3soqBIoEd1VOadyJbGqh6
-         xUVELfHbZuA2Sgip3SFAWOVbmemTP80AsGLaGnekmHu+6KUp8FergJBQbFHWRhkOwH
-         k9gaf91CUoH8Q==
-Date:   Tue, 29 Oct 2019 16:07:33 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Boaz Harrosh <boaz@plexistor.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Please add the zuf tree to linux-next
-Message-ID: <20191029160733.298c6539@canb.auug.org.au>
-In-Reply-To: <20191024023606.GA1884@infradead.org>
-References: <1b192a85-e1da-0925-ef26-178b93d0aa45@plexistor.com>
-        <20191024023606.GA1884@infradead.org>
+        Tue, 29 Oct 2019 01:09:20 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34242 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfJ2FJU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 01:09:20 -0400
+Received: by mail-lf1-f66.google.com with SMTP id f5so9524396lfp.1;
+        Mon, 28 Oct 2019 22:09:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fu23a2LiYeTVsc9FCtPm8Q6gbyK53FnRd2mwyu6MHEA=;
+        b=p86UAwzTfWSV5qnbeDVwySXbkLwyZFQhpyCnw+CDA3b4IYxyZgIkkMgii79VmGBQ+L
+         cg0XnHnLVD7AHbKWYp48dfJNtG3x8DcJqbWTt/uH4uKFqccJPRpYxCGXiIbqE1Qvdu9j
+         xLyUC38Z0xMQ1Y9NG3zJzhSlLs9a9sq0vxgD03V4DKtut/LQK9wzwj2Wa2tBmFyKdugr
+         IiyEJ0n2sPAL7K0MRR/W5fSc8Sg9dogdkAfdHBjBgpxkX9zFBnl86qmBIYoSh+rB5LMy
+         MED1mbdV3FQzID66LwoPVLZMkkoebDAuqiOR4N9EJHBSlHV9Rn7w0JhxSnSYLw0LUyYT
+         mvOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fu23a2LiYeTVsc9FCtPm8Q6gbyK53FnRd2mwyu6MHEA=;
+        b=bDrStdp/75KHURBEHFJycSWBGI9DkybUjRw7sNeGA9niW6pLE+rGCBqFA8pxnQrAw8
+         kxt4Rsvhu7dzDc/FmcEN/Rwmn6aTsQb7EsLwcRxBwQ/yTXBeIaLAzKMTfe5mb4Y8N+2m
+         Cr6jPFQdUrrtfctaoU4gxvOV+SuluFw2ru30iQjCCNepwr4OdraXBnd0I554315fEGuU
+         8FXKhg7t5IedoUU/QphSmvxtArSoG0Ji4s04GBFpLQoDJycYSdNjmN5sEjSIGjJooTy4
+         zt78fOLiKzwzPNBJoXtPKO7PbIFtBegaE7WvZz5FzB/RZerxSso6iVPZFlXEJxd1aqtD
+         LKNw==
+X-Gm-Message-State: APjAAAXj/E4zSpz8xY/MHee9bPY4JnZHOeYGSMgNEL6hZkp1f/RXfdka
+        RQwTXNbI4CYtiU5e+o3yvDirQRkrW80Wbp6S6LQ=
+X-Google-Smtp-Source: APXvYqxKxrrM1VocolZa2pPapP0O3kvBAS6ElTmJAPv16Ov2Pd9v0w72m+FKAySdpT86pdN395XdxsAt36cBi0NJ4WE=
+X-Received: by 2002:a05:6512:146:: with SMTP id m6mr827514lfo.98.1572325758469;
+ Mon, 28 Oct 2019 22:09:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DNRAmrpHoq6Pd+umJSouVY0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <000000000000044a7f0595fbaf2c@google.com> <000000000000929f990596024a82@google.com>
+ <20191028.212449.1389218373993746531.davem@davemloft.net>
+In-Reply-To: <20191028.212449.1389218373993746531.davem@davemloft.net>
+From:   Taehee Yoo <ap420073@gmail.com>
+Date:   Tue, 29 Oct 2019 14:09:07 +0900
+Message-ID: <CAMArcTUMcWm4McPGTDK9+Cf5jUKbzSRaio4BA1vs1nhugfsQ1w@mail.gmail.com>
+Subject: Re: INFO: trying to register non-static key in bond_3ad_update_ad_actor_settings
+To:     David Miller <davem@davemloft.net>
+Cc:     syzbot+8da67f407bcba2c72e6e@syzkaller.appspotmail.com,
+        Andy Gospodarek <andy@greyhouse.net>, j.vosburgh@gmail.com,
+        linux-kernel@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com, vfalico@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DNRAmrpHoq6Pd+umJSouVY0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Christoph,
-
-On Wed, 23 Oct 2019 19:36:06 -0700 Christoph Hellwig <hch@infradead.org> wr=
-ote:
+On Tue, 29 Oct 2019 at 13:24, David Miller <davem@davemloft.net> wrote:
 >
-> On Thu, Oct 24, 2019 at 03:34:29AM +0300, Boaz Harrosh wrote:
-> > Hello Stephen
-> >=20
-> > Please add the zuf tree below to the linux-next tree.
-> > 	[https://github.com/NetApp/zufs-zuf zuf] =20
->=20
-> I don't remember us coming to the conclusion that this actually is
-> useful doesn't just badly duplicate the fuse functionality.
 
-So is that a hard Nak on inclusion in linux-next at this time?
+Hi David,
 
---=20
-Cheers,
-Stephen Rothwell
+> From: syzbot <syzbot+8da67f407bcba2c72e6e@syzkaller.appspotmail.com>
+> Date: Mon, 28 Oct 2019 18:11:08 -0700
+>
+> > syzbot has found a reproducer for the following crash on:
+> >
+> > HEAD commit:    60c1769a Add linux-next specific files for 20191028
+> > git tree:       linux-next
+> > console output:
+> > https://syzkaller.appspot.com/x/log.txt?x=154d4374e00000
+> > kernel config:
+> > https://syzkaller.appspot.com/x/.config?x=cb86688f30db053d
+> > dashboard link:
+> > https://syzkaller.appspot.com/bug?extid=8da67f407bcba2c72e6e
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro: https://syzkaller.appspot.com/x/repro.syz?x=14d43a04e00000
+> > C reproducer: https://syzkaller.appspot.com/x/repro.c?x=16be3b9ce00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the
+> > commit:
+> > Reported-by: syzbot+8da67f407bcba2c72e6e@syzkaller.appspotmail.com
+>
+> This might be because of the lockdep depth changes.
+>
+> Taehee, please take a look.
+>
 
---Sig_/DNRAmrpHoq6Pd+umJSouVY0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thank you for forwarding this,
+I will take a look at this issue.
 
------BEGIN PGP SIGNATURE-----
+Thank you
+Taehee Yoo
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl23yRUACgkQAVBC80lX
-0GwIiAgAoL3ldh/i+LtJQynaMn2qgEcke4R5IfGsrq08bxO9xczz48rlUAwwGY3i
-Xre4GQ/G4jZSiNcHHXnBtgA9habyNVb4yqmhJnQav/x6m+wQmE3lxlp6FaIWV4TJ
-eOWY3XUiNyYGPQVzVgpNvor8oIz1vTYodw2NbpoakoTYnbdz5S3mwMWAbLK/i8V5
-MZ12qTE8QrMxAGqPWZeEXW7tpPMvNvyJh3wqWF8dNETWQ9SSfMfeVA/Kc162eGYT
-t++EuUdmMcLXpjhUDjeoN0cW+Equ3E5JZ+jNbBQ/UIBBAYj7gDdns/jRSrXp++54
-RtlRL2TApKLbNKRisNddCuCOO+bF+w==
-=Jukb
------END PGP SIGNATURE-----
-
---Sig_/DNRAmrpHoq6Pd+umJSouVY0--
+> Thanks.
