@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26E5CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEE1CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749A92087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD55D2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:55:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8phSevz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nqjytfxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389718AbfJ2Ozo (ORCPT
+        id S2389751AbfJ2Ozs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:55:44 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33909 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389131AbfJ2Ozn (ORCPT
+        Tue, 29 Oct 2019 10:55:48 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42012 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389730AbfJ2Ozr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:55:43 -0400
-Received: by mail-qt1-f194.google.com with SMTP id e14so20660495qto.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 07:55:41 -0700 (PDT)
+        Tue, 29 Oct 2019 10:55:47 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z17so13978457qts.9
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 07:55:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OXHkKi/QhwruZ8D2A/Di0N1vIvUmUT5HCPHPe9Q0o9g=;
-        b=V8phSevzPXZporM9ZBf66iJVi31774Tl/mJFyAPYX+/rfffVkhsVaP7EktFU1QX1/8
-         fiY8GDogWNK1PWTSsE6TNQep+FBprGmbwkO1a1daQ1Wy0xVgSSFFV4x23rleaXZfFwas
-         5U03td2CVB91kORy2l0Y5bSXXbrhg8oOJ0ZYYCVOmU++0irDudF7/wEwt0rvwTKDWHLi
-         u+bW+w5y4aH6AFLjcrfTmZz6lALxTUFUP+HWnPZGRo6ZRyyEYp1QTpiOWAEcdMs4R3ev
-         JQt/bHRAaOMNE3RmQhoeNaK6d7fk34J6zaBXIM8DAGAA24zlFTOVn5UBHfHzdQN0znE8
-         QYOA==
+        bh=lAvEaeqENeVb/DhAt46H1R5niz9Z9sNvfAe5diIhyRY=;
+        b=Nqjytfxo50WBI6vopuCch0cZIF9IsPsdiznwtPJh2upsT2yU5o/cBcYf04skhUd055
+         GvTqocNvFeTBJ9f3Zr2g4q+CEk6El1vH0NlgAOXr4iEegmv+/R1aV1rH+AQQ/XslB4FC
+         kusVCwCuGJ+JtM1V+EVjp2GX7fj8e4WTuz8bUpi+TwHutxdqtgmlRder7f5gAqDDHgFC
+         HsY6tY+hCeRwQ9bdxWkY4pnGY2CtI6tLXPKr1W1ZjUfn/sM15xC2zmgpJnWIuL3a3NUT
+         rKl9W+VGcYEBSPaZzNVoXKupSMUse9iE+MVhx41bX/t1gjl0smAwBAJxL0eJS9oI0FlR
+         KbJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OXHkKi/QhwruZ8D2A/Di0N1vIvUmUT5HCPHPe9Q0o9g=;
-        b=RPYJfQsLRRo7rMnDn0bGG76WCww1dCf1gUgs3M32TEGZ3W9UgpKBBjT5ooxEirTw6Q
-         ElWDYlghSFIPLt+779wA7p6DFKSV9jSiHsi0v60/dGP/KQ7a1HPUz7PRC2IMUok983Xt
-         /IeCGlJ0MJDdKlv7XAurU4DvacUWoBgQOaC4kVgQ2rNWDlo9NrJx6r1F3D4i7cVUD1Ro
-         mqPjpjCSZSZzH68fSe9TYlPaTm9ImUbJbOnvMc1B7iR3SuEW+xExNu8dmBUMSupzpwR6
-         +38ECCgCLIeNFItU9jgQtT24pxK4wntLE7hzZJc7m6sRsxSWMwCZKwg8dUbEmJWxIVhc
-         SocQ==
-X-Gm-Message-State: APjAAAUN0yQADTHDEv0IpBiZwlGnWfPsg+sYG9Mdu39ISTz5Wv8/ldbj
-        6WFwh04JjdKp2iKhhbNjoKsyHTIT3aU=
-X-Google-Smtp-Source: APXvYqxjS+LTEeEXVGP2auJgR/hHHzDmraegLUz52Qu9Os9gNotaYrebxUczgeTFGyEJcejc+YCN1A==
-X-Received: by 2002:a0c:e646:: with SMTP id c6mr17753583qvn.162.1572360941068;
-        Tue, 29 Oct 2019 07:55:41 -0700 (PDT)
+        bh=lAvEaeqENeVb/DhAt46H1R5niz9Z9sNvfAe5diIhyRY=;
+        b=dY9sf0KYRITrrhrM6zmjx1qY5ETxperVhNt4QU+4hrl6AaFXJf+yijD9mRXaEEpKxP
+         LwV17LjcnrsAoSv6JZ19lvWrt1nOR6f31GtlsCga8fD4iGgloC5wDfDBREmMOYl2ZhJy
+         fW7PLve35KBxw0IrT9GGpwQY2h/MUQQZvaTD5VHjSza4Qa5lCMET9gad4IeX+3E5SRGh
+         39aa5Jt5W6I76RU+CESTNhT6EWIHrAyVRL9WaEbH1L39UjInrJuWj4uUWnT7XflvC9N8
+         LNPt0aYeNou+11+HhNcKxhvuGY+PaWHIDBDHRMpFKEVUBuKaVy7YqfGB0zDI0r1L8Lhm
+         IHxA==
+X-Gm-Message-State: APjAAAUCIwdsOmHq2qapmLfvLe8zj3hexvw5M8Q+W+71CjjmBr/LWvyt
+        WxrnMWkmrylHhItVksskE0U=
+X-Google-Smtp-Source: APXvYqw6h9hzSvN+uhYWl/U6Ddgy+lF6m6pwWFGLY7DqtzFyWC1EkPwsqXMQgjbNG0NmO9UGlNWMlg==
+X-Received: by 2002:a0c:ec0b:: with SMTP id y11mr22443155qvo.123.1572360946108;
+        Tue, 29 Oct 2019 07:55:46 -0700 (PDT)
 Received: from localhost.localdomain ([2804:14c:483:ade:87ad:69fb:5b32:cf88])
-        by smtp.gmail.com with ESMTPSA id g17sm5978069qte.89.2019.10.29.07.55.38
+        by smtp.gmail.com with ESMTPSA id g17sm5978069qte.89.2019.10.29.07.55.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 07:55:40 -0700 (PDT)
+        Tue, 29 Oct 2019 07:55:45 -0700 (PDT)
 From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
 To:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
         kim.jamie.bradley@gmail.com, nishkadg.linux@gmail.com,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         lkcamp@lists.libreplanetbr.org
 Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH v2 2/3] staging: rts5208: Eliminate the use of Camel Case in files xd
-Date:   Tue, 29 Oct 2019 11:55:16 -0300
-Message-Id: <20191029145517.630-3-gabrielabittencourt00@gmail.com>
+Subject: [PATCH v2 3/3] staging: rts5208: Eliminate the use of Camel Case in file sd.h
+Date:   Tue, 29 Oct 2019 11:55:17 -0300
+Message-Id: <20191029145517.630-4-gabrielabittencourt00@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191029145517.630-1-gabrielabittencourt00@gmail.com>
 References: <20191029145517.630-1-gabrielabittencourt00@gmail.com>
@@ -76,71 +76,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleans up checks of "Avoid CamelCase" in file xd.h and xd.c
+Cleans up checks of "Avoid CamelCase" in file sd.h
 
 Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
 ---
- drivers/staging/rts5208/xd.c | 8 ++++----
- drivers/staging/rts5208/xd.h | 6 +++---
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/staging/rts5208/sd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rts5208/xd.c b/drivers/staging/rts5208/xd.c
-index f3dc96a4c59d..0f369935fb6c 100644
---- a/drivers/staging/rts5208/xd.c
-+++ b/drivers/staging/rts5208/xd.c
-@@ -630,13 +630,13 @@ static int reset_xd(struct rtsx_chip *chip)
- 			xd_card->zone_cnt = 32;
- 			xd_card->capacity = 1024000;
- 			break;
--		case xD_1G_X8_512:
-+		case XD_1G_X8_512:
- 			XD_PAGE_512(xd_card);
- 			xd_card->addr_cycle = 4;
- 			xd_card->zone_cnt = 64;
- 			xd_card->capacity = 2048000;
- 			break;
--		case xD_2G_X8_512:
-+		case XD_2G_X8_512:
- 			XD_PAGE_512(xd_card);
- 			xd_card->addr_cycle = 4;
- 			xd_card->zone_cnt = 128;
-@@ -669,10 +669,10 @@ static int reset_xd(struct rtsx_chip *chip)
- 		return STATUS_FAIL;
- 	}
+diff --git a/drivers/staging/rts5208/sd.h b/drivers/staging/rts5208/sd.h
+index dc9e8cad7a74..f4ff62653b56 100644
+--- a/drivers/staging/rts5208/sd.h
++++ b/drivers/staging/rts5208/sd.h
+@@ -232,7 +232,7 @@
+ #define DCM_LOW_FREQUENCY_MODE   0x01
  
--	retval = xd_read_id(chip, READ_xD_ID, id_buf, 4);
-+	retval = xd_read_id(chip, READ_XD_ID, id_buf, 4);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
--	dev_dbg(rtsx_dev(chip), "READ_xD_ID: 0x%x 0x%x 0x%x 0x%x\n",
-+	dev_dbg(rtsx_dev(chip), "READ_XD_ID: 0x%x 0x%x 0x%x 0x%x\n",
- 		id_buf[0], id_buf[1], id_buf[2], id_buf[3]);
- 	if (id_buf[2] != XD_ID_CODE)
- 		return STATUS_FAIL;
-diff --git a/drivers/staging/rts5208/xd.h b/drivers/staging/rts5208/xd.h
-index 57b94129b26f..98c00f268e56 100644
---- a/drivers/staging/rts5208/xd.h
-+++ b/drivers/staging/rts5208/xd.h
-@@ -36,7 +36,7 @@
- #define	BLK_ERASE_1			0x60
- #define	BLK_ERASE_2			0xD0
- #define READ_STS			0x70
--#define READ_xD_ID			0x9A
-+#define READ_XD_ID			0x9A
- #define	COPY_BACK_512			0x8A
- #define	COPY_BACK_2K			0x85
- #define	READ1_1_2			0x30
-@@ -72,8 +72,8 @@
- #define	XD_128M_X16_2048		0xC1
- #define	XD_4M_X8_512_1			0xE3
- #define	XD_4M_X8_512_2			0xE5
--#define	xD_1G_X8_512			0xD3
--#define	xD_2G_X8_512			0xD5
-+#define	XD_1G_X8_512			0xD3
-+#define	XD_2G_X8_512			0xD5
+ #define DCM_HIGH_FREQUENCY_MODE_SET  0x0C
+-#define DCM_Low_FREQUENCY_MODE_SET   0x00
++#define DCM_LOW_FREQUENCY_MODE_SET   0x00
  
- #define	XD_ID_CODE			0xB5
- 
+ #define MULTIPLY_BY_1    0x00
+ #define MULTIPLY_BY_2    0x01
 -- 
 2.20.1
 
