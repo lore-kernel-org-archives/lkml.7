@@ -2,152 +2,117 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB328CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0756CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8308920856
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E69E208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lucina.net header.i=@lucina.net header.b="Qyttz5WO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xP/x/gcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389887AbfJ2PLb (ORCPT
+        id S2389900AbfJ2PNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:11:31 -0400
-Received: from smtp.lucina.net ([62.176.169.44]:33901 "EHLO smtp.lucina.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389623AbfJ2PLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:11:31 -0400
-X-Greylist: delayed 505 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Oct 2019 11:11:30 EDT
-Received: from nodbug.lucina.net (78-141-76-187.dynamic.orange.sk [78.141.76.187])
-        by smtp.lucina.net (Postfix) with ESMTPSA id 2D02A122804;
-        Tue, 29 Oct 2019 16:03:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucina.net;
-        s=dkim-201811; t=1572361384;
-        bh=FhHnmn5HJQmLjdUIBlMzJMkmm1HvWMYg05aykYpacL4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qyttz5WOLZlYszv1/a9wA5NoFOKYaDxLG7XCB5ZhM8glh8S6THwqoGjVXUO4u4Vum
-         Q+rF1cCqkTNy82NGfnXfI6PxtETEw6MseELKnb5282N611DX4gPfSatWxrJHUKQzt/
-         RRYq3gvOaTLUBoc3hdjUu84feyVbDxrCWlDGim3B5T10If/JV3iQlUQcrGXfVcWZfp
-         e0CsDYUJvsg1QmyzyXdOmwVXsf5aTN5JYXgiuTKGMv3tHWbe9AiA5BldXye+lGFPhK
-         7d+UpMFjdX24MV0o7Kryk0Tiwn18SdBAG1Ae7HSjXTBCl01RKHUkfW0wsND4X+1FBV
-         cDj3WMv+r9Nfw==
-Received: by nodbug.lucina.net (Postfix, from userid 1000)
-        id 0C0E22684367; Tue, 29 Oct 2019 16:03:04 +0100 (CET)
-Date:   Tue, 29 Oct 2019 16:03:04 +0100
-From:   Martin Lucina <martin@lucina.net>
-To:     Reto Buerki <reet@codelabs.ch>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/8] KVM: x86: nVMX GUEST_CR3 bug fix, and then some...
-Message-ID: <20191029150304.GA29542@nodbug.lucina.net>
-Mail-Followup-To: Reto Buerki <reet@codelabs.ch>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
- <8414d3e8-9a68-e817-de5a-3e9ca6dc85bb@codelabs.ch>
+        Tue, 29 Oct 2019 11:13:23 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41312 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389634AbfJ2PNX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 11:13:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wUNZyDj4/TJlrgXXw5bHvw6DqU7K35b88z8Tb9dvbUQ=; b=xP/x/gcBXpqOAHy735jtKrf/d
+        IQ4ODLhdqcD6OdjDbijs52+YQ5NQvB2+e1tF0vHivEXSQUwq7dHkLms9C11FftFyzQMkEoHE+TO6s
+        jyRzQYe3hEdcbaK1ucoCJA4klUDgdl/L3IKFl3P5PI7EurmbN68yTp00P69MAdcc/mSJXpSeEsfwV
+        8OwfHkyzB7+jSJb5zRgI0y7dF1v8sKxjchdbGLc1OgovNcvjyTITcrDm56jOEClnYJ5BgXOzVrjav
+        WIvcsbLZbg3Z1z6aqEmM6OzUQnhizgJyooZOeFxknrIPr6WHz2B/d6LGhDKQokE09v5fQQdQgCwqP
+        n0mWv7Ezw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPTBA-0005Oi-6F; Tue, 29 Oct 2019 15:13:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 636AF306091;
+        Tue, 29 Oct 2019 16:12:01 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2B8272B438376; Tue, 29 Oct 2019 16:13:02 +0100 (CET)
+Date:   Tue, 29 Oct 2019 16:13:02 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Luwei Kang <luwei.kang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, ak@linux.intel.com, thomas.lendacky@amd.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org
+Subject: Re: [PATCH v1 8/8] perf/x86: Add event owner check when PEBS output
+ to Intel PT
+Message-ID: <20191029151302.GO4097@hirez.programming.kicks-ass.net>
+References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
+ <1572217877-26484-9-git-send-email-luwei.kang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8414d3e8-9a68-e817-de5a-3e9ca6dc85bb@codelabs.ch>
+In-Reply-To: <1572217877-26484-9-git-send-email-luwei.kang@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Cc:s trimmed)
-
-Hi,
-
-On Monday, 30.09.2019 at 12:42, Reto Buerki wrote:
-> On 9/27/19 11:45 PM, Sean Christopherson wrote:
-> > *sigh*
-> > 
-> > v2 was shaping up to be a trivial update, until I started working on
-> > Vitaly's suggestion to add a helper to test for register availability.
-> > 
-> > The primary purpose of this series is to fix a CR3 corruption in L2
-> > reported by Reto Buerki when running with HLT interception disabled in L1.
-> > On a nested VM-Enter that puts L2 into HLT, KVM never actually enters L2
-> > and instead mimics HLT interception by canceling the nested run and
-> > pretending that VM-Enter to L2 completed and then exited on HLT (which
-> > KVM intercepted).  Because KVM never actually runs L2, KVM skips the
-> > pending MMU update for L2 and so leaves a stale value in vmcs02.GUEST_CR3.
-> > If the next wake event for L2 triggers a nested VM-Exit, KVM will refresh
-> > vmcs12->guest_cr3 from vmcs02.GUEST_CR3 and consume the stale value.
-> > 
-> > Fix the issue by unconditionally writing vmcs02.GUEST_CR3 during nested
-> > VM-Enter instead of deferring the update to vmx_set_cr3(), and skip the
-> > update of GUEST_CR3 in vmx_set_cr3() when running L2.  I.e. make the
-> > nested code fully responsible for vmcs02.GUEST_CR3.
-> > 
-> > Patch 02/08 is a minor optimization to skip the GUEST_CR3 update if
-> > vmcs01 is already up-to-date.
-> > 
-> > Patches 03 and beyond are Vitaly's fault ;-).
-> > 
-> > Patches 03 and 04 are tangentially related cleanup to vmx_set_rflags()
-> > that was discovered when working through the avail/dirty testing code.
-> > Ideally they'd be sent as a separate series, but they conflict with the
-> > avail/dirty helper changes and are themselves minor and straightforward.
-> > 
-> > Patches 05 and 06 clean up the register caching code so that there is a
-> > single enum for all registers which use avail/dirty tracking.  While not
-> > a true prerequisite for the avail/dirty helpers, the cleanup allows the
-> > new helpers to take an 'enum kvm_reg' instead of a less helpful 'int reg'.
-> > 
-> > Patch 07 is the helpers themselves, as suggested by Vitaly.
-> > 
-> > Patch 08 is a truly optional change to ditch decache_cr3() in favor of
-> > handling CR3 via cache_reg() like any other avail/dirty register.
-> > 
-> > 
-> > Note, I collected the Reviewed-by and Tested-by tags for patches 01 and 02
-> > even though I inverted the boolean from 'skip_cr3' to 'update_guest_cr3'.
-> > Please drop the tags if that constitutes a non-trivial functional change.
-> > 
-> > v2:
-> >   - Invert skip_cr3 to update_guest_cr3.  [Liran]
-> >   - Reword the changelog and comment to be more explicit in detailing
-> >     how/when KVM will process a nested VM-Enter without runnin L2.  [Liran]
-> >   - Added Reviewed-by and Tested-by tags.
-> >   - Add a comment in vmx_set_cr3() to explicitly state that nested
-> >     VM-Enter is responsible for loading vmcs02.GUEST_CR3.  [Jim]
-> >   - All of the loveliness in patches 03-08. [Vitaly]
-> > 
-> > Sean Christopherson (8):
-> >   KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter
-> >   KVM: VMX: Skip GUEST_CR3 VMREAD+VMWRITE if the VMCS is up-to-date
-> >   KVM: VMX: Consolidate to_vmx() usage in RFLAGS accessors
-> >   KVM: VMX: Optimize vmx_set_rflags() for unrestricted guest
-> >   KVM: x86: Add WARNs to detect out-of-bounds register indices
-> >   KVM: x86: Fold 'enum kvm_ex_reg' definitions into 'enum kvm_reg'
-> >   KVM: x86: Add helpers to test/mark reg availability and dirtiness
-> >   KVM: x86: Fold decache_cr3() into cache_reg()
-> > 
-> >  arch/x86/include/asm/kvm_host.h |  5 +-
-> >  arch/x86/kvm/kvm_cache_regs.h   | 67 +++++++++++++++++------
-> >  arch/x86/kvm/svm.c              |  5 --
-> >  arch/x86/kvm/vmx/nested.c       | 14 ++++-
-> >  arch/x86/kvm/vmx/vmx.c          | 94 ++++++++++++++++++---------------
-> >  arch/x86/kvm/x86.c              | 13 ++---
-> >  arch/x86/kvm/x86.h              |  6 +--
-> >  7 files changed, 123 insertions(+), 81 deletions(-)
+On Sun, Oct 27, 2019 at 07:11:17PM -0400, Luwei Kang wrote:
+> For PEBS output to Intel PT, a Intel PT event should be the group
+> leader of an PEBS counter event in host. For Intel PT
+> virtualization enabling in KVM guest, the PT facilities will be
+> passthrough to guest and do not allocate PT event from host perf
+> event framework. This is different with PMU virtualization.
 > 
-> Series:
-> Tested-by: Reto Buerki <reet@codelabs.ch>
+> Intel new hardware feature that can make PEBS enabled in KVM guest
+> by output PEBS records to Intel PT buffer. KVM need to allocate
+> a event counter for this PEBS event without Intel PT event leader.
+> 
+> This patch add event owner check for PEBS output to PT event that
+> only non-kernel event need group leader(PT).
+> 
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> ---
+>  arch/x86/events/core.c     | 3 ++-
+>  include/linux/perf_event.h | 1 +
+>  kernel/events/core.c       | 2 +-
+>  3 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 7b21455..214041a 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1014,7 +1014,8 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
+>  		 * away, the group was broken down and this singleton event
+>  		 * can't schedule any more.
+>  		 */
+> -		if (is_pebs_pt(leader) && !leader->aux_event)
+> +		if (is_pebs_pt(leader) && !leader->aux_event &&
+> +					!is_kernel_event(leader))
 
-Any chance of this series making it into 5.4? Unless I'm looking in the
-wrong place, I don't see the changes in either kvm.git or Linus' tree.
+indent fail, but also, I'm not sure I buy this.
 
-Thanks,
+Surely pt-on-kvm has a perf event to claim PT for the vCPU context?
 
-Martin
+Even if not, this is not strictly correct. Not even now is KVM the sole
+user of perf_event_create_kernel_counter(), so saying any kernel event
+is excempt from this scheduling constraint is jsut wrong.
+
+>  			return -EINVAL;
+>  
+>  		/*
