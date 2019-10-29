@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091FACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C69CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04B4217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C5021882
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:43:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i36cH2MQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QEWMcBQu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387725AbfJ2Ln4 (ORCPT
+        id S2387476AbfJ2Lnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:43:56 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37905 "EHLO
+        Tue, 29 Oct 2019 07:43:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43138 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733227AbfJ2Lnq (ORCPT
+        with ESMTP id S1732187AbfJ2Lnh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:43:46 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v9so13273332wrq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 04:43:44 -0700 (PDT)
+        Tue, 29 Oct 2019 07:43:37 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n1so5814671wra.10
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 04:43:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z9nVcHk3Q0mlF3PvM5FkU72I0eorT8jyZZzFFAHSx54=;
-        b=i36cH2MQrS2Pku+ZBZcVraaRTjCF33KGknTNMtLaGuVw9x5HNGs1TCr3sisbGQS96u
-         cP4cBHfQhioeopJuLhhvyFl68JgSP5EkdjdxJiVKXxNhZ1upA5TldrZg+6TL9raOLCDE
-         kJ9aj3irlJn7kZZEVFU3VGAZ92tAPU4cYwhxpDW954Ivxb+Rcs61VbUBwowk/CkFeFzB
-         hVTSTHSgPUpAWpeQ2+txTc8QQKPNhCIvpeiFo7VaBPr7+RST7+8vsZRdNn2+0sA2Nrdl
-         q39nDADBdvJutHWV/f7hZ9fUYIKV7uQvsPdQcan3gsC/9iS+DLHlT316JsckM0pu0eF1
-         9E6Q==
+        bh=H2CJ5u7SoLyb47H63oMSiNuFZvWZvb1TPdq7zIJAX2Q=;
+        b=QEWMcBQuQdPrxlY8iVWmlO5NK7qirG7I/rEGKCjgzqZr+2kStOAgMQOOLpcCXEdCrH
+         gLFpZGd1ABHlwBEB8BxPRzO3UHFR2gGn6DcaipPACK1S8OQYampSi+qAhdnlQdJqn32R
+         zpFruHwfyjQCCuRnjK4wEOFaXytfLlrK1r7TykgwIFj/YWfDcfXLj1IxJpP3PHUlyKkV
+         9rXRbm5rSIBRhj5TMe5a+74bJjFa8wiaqA2+3PToAwLTQGRK/Yu23dj1kHtT5D0ibiZF
+         xYHMxoAvL8qPdYVmQ6az6INdUbuPBrZvZQLD/kch8XQPWsqMAPJ2OzKPoy/OOasMvg+r
+         QOSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z9nVcHk3Q0mlF3PvM5FkU72I0eorT8jyZZzFFAHSx54=;
-        b=XVeI4+EzSZXpjCl/OBxlnho3HmeZeG4IUEvZyu1xKWvlS9tEJp+WKPaEY1ps3dOLFr
-         ixieSL2yFzVrn5yiv65G20334fkbVS7wFNyQwnlspE7f39xLbFFALdRF7UcnL3QFgR61
-         3+JVci2YzSKCqtIhTdqUWtftxPdItOtio3OF91pTX0SclCeXLDY/ZUlJg0XYrXu6s/RY
-         e2vinzcMnxd3RzPpGjcqFqSpD/11PQCG32jYzOFCmbvRX+GsBk8xXMTBj3GUbyqn1C4s
-         E4dbJ/6I5z9Xam7h8n8gFUCdpuK3w0kSI6+nFvtCjyRnjrOmkcJtBWQWmXEy4nq0osFz
-         s9Pw==
-X-Gm-Message-State: APjAAAXZxC9Ywfa4I29kbiWjtF2GTH7UNYckOfX8tuFSg2wd366qwc/m
-        lBEORy3iBBa24zSaKx2FVY77TcDV+K0=
-X-Google-Smtp-Source: APXvYqxiPH7I82nqprgDUTctqR7T/FbzjjRn0ss6emWFWYOezcwLl6U9I26OwlLPm/S0Mg0kwASagw==
-X-Received: by 2002:a5d:498a:: with SMTP id r10mr20169902wrq.129.1572349423624;
-        Tue, 29 Oct 2019 04:43:43 -0700 (PDT)
+        bh=H2CJ5u7SoLyb47H63oMSiNuFZvWZvb1TPdq7zIJAX2Q=;
+        b=s0fBhh2ULiMX7FNy3S4wXKxQOk3G/po1P39snK77m72+8IVFY6tZfhNa4w+thRf8w7
+         FhFZr1F0sa19PquIdvuqDJdt/k3XsIT9BbmHJxOutZDh7iPdVjnCtAaO0Nw+WMkDncbU
+         vno1B5OuUfqYYNexVwxS/tb5iwbax91aAwM4TxTncfLFTs/uVNN6DhS4JFJGKGyLHjKp
+         8q7EWlmkL/RAtGyL//6E73k6rSfo+sMsScbdmiA7/M5htdtqK2PUGtoC4bYLL1SkjrXQ
+         NJe2i/+RV9VT+DN9aYgkFmwfF/BLidDK1XV8fKFSWjQIXMBBkKj+W8cyI+h9Wecp0Xkc
+         1ntw==
+X-Gm-Message-State: APjAAAUAVBmlj7fPZ4AZptGkZHZK95Rb73BitqfYHPQ+dtFC988KsJiV
+        cKInREJcYh9z6LgEt2cJ4ZO7UA==
+X-Google-Smtp-Source: APXvYqxXfxvgGbwhHQ7KAWaxfMcQB/qbTX5lVDL9LdHipKZwJ+PU0EN2cUVZBjtPgqLWjIb7dzn2vw==
+X-Received: by 2002:a5d:498a:: with SMTP id r10mr20169245wrq.129.1572349413896;
+        Tue, 29 Oct 2019 04:43:33 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id q25sm26559864wra.3.2019.10.29.04.43.42
+        by smtp.gmail.com with ESMTPSA id q25sm26559864wra.3.2019.10.29.04.43.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 04:43:42 -0700 (PDT)
+        Tue, 29 Oct 2019 04:43:33 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh@kernel.org>,
+Cc:     linux-kernel@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 09/10] dt-bindings: nvmem: add binding for Rockchip OTP controller
-Date:   Tue, 29 Oct 2019 11:42:39 +0000
-Message-Id: <20191029114240.14905-10-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 02/10] nvmem: sc27xx: Change to use devm_hwspin_lock_request_specific() to request one hwlock
+Date:   Tue, 29 Oct 2019 11:42:32 +0000
+Message-Id: <20191029114240.14905-3-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191029114240.14905-1-srinivas.kandagatla@linaro.org>
 References: <20191029114240.14905-1-srinivas.kandagatla@linaro.org>
@@ -74,50 +73,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko@sntech.de>
+From: Baolin Wang <baolin.wang@linaro.org>
 
-Newer Rockchip SoCs use a different IP for accessing special one-
-time-programmable memory, so add a binding for these controllers.
+Change to use devm_hwspin_lock_request_specific() to help to simplify the
+cleanup code for drivers requesting one hwlock. Thus we can remove the
+redundant sc27xx_efuse_remove() and platform_set_drvdata().
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- .../bindings/nvmem/rockchip-otp.txt           | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
+ drivers/nvmem/sc27xx-efuse.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt b/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
-new file mode 100644
-index 000000000000..40f649f7c2e5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
-@@ -0,0 +1,25 @@
-+Rockchip internal OTP (One Time Programmable) memory device tree bindings
-+
-+Required properties:
-+- compatible: Should be one of the following.
-+  - "rockchip,px30-otp" - for PX30 SoCs.
-+  - "rockchip,rk3308-otp" - for RK3308 SoCs.
-+- reg: Should contain the registers location and size
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Should be "otp", "apb_pclk" and "phy".
-+- resets: Must contain an entry for each entry in reset-names.
-+  See ../../reset/reset.txt for details.
-+- reset-names: Should be "phy".
-+
-+See nvmem.txt for more information.
-+
-+Example:
-+	otp: otp@ff290000 {
-+		compatible = "rockchip,px30-otp";
-+		reg = <0x0 0xff290000 0x0 0x4000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		clocks = <&cru SCLK_OTP_USR>, <&cru PCLK_OTP_NS>,
-+			 <&cru PCLK_OTP_PHY>;
-+		clock-names = "otp", "apb_pclk", "phy";
-+	};
+diff --git a/drivers/nvmem/sc27xx-efuse.c b/drivers/nvmem/sc27xx-efuse.c
+index c6ee21018d80..ab5e7e0bc3d8 100644
+--- a/drivers/nvmem/sc27xx-efuse.c
++++ b/drivers/nvmem/sc27xx-efuse.c
+@@ -211,7 +211,7 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	efuse->hwlock = hwspin_lock_request_specific(ret);
++	efuse->hwlock = devm_hwspin_lock_request_specific(&pdev->dev, ret);
+ 	if (!efuse->hwlock) {
+ 		dev_err(&pdev->dev, "failed to request hwspinlock\n");
+ 		return -ENXIO;
+@@ -219,7 +219,6 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
+ 
+ 	mutex_init(&efuse->mutex);
+ 	efuse->dev = &pdev->dev;
+-	platform_set_drvdata(pdev, efuse);
+ 
+ 	econfig.stride = 1;
+ 	econfig.word_size = 1;
+@@ -232,21 +231,12 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
+ 	nvmem = devm_nvmem_register(&pdev->dev, &econfig);
+ 	if (IS_ERR(nvmem)) {
+ 		dev_err(&pdev->dev, "failed to register nvmem config\n");
+-		hwspin_lock_free(efuse->hwlock);
+ 		return PTR_ERR(nvmem);
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static int sc27xx_efuse_remove(struct platform_device *pdev)
+-{
+-	struct sc27xx_efuse *efuse = platform_get_drvdata(pdev);
+-
+-	hwspin_lock_free(efuse->hwlock);
+-	return 0;
+-}
+-
+ static const struct of_device_id sc27xx_efuse_of_match[] = {
+ 	{ .compatible = "sprd,sc2731-efuse" },
+ 	{ }
+@@ -254,7 +244,6 @@ static const struct of_device_id sc27xx_efuse_of_match[] = {
+ 
+ static struct platform_driver sc27xx_efuse_driver = {
+ 	.probe = sc27xx_efuse_probe,
+-	.remove = sc27xx_efuse_remove,
+ 	.driver = {
+ 		.name = "sc27xx-efuse",
+ 		.of_match_table = sc27xx_efuse_of_match,
 -- 
 2.21.0
 
