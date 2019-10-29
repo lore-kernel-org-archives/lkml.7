@@ -2,96 +2,190 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DCECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF0CCA9EC1
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07BB9217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:03:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SH7nEEeS"
+	by mail.kernel.org (Postfix) with ESMTP id 91156217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572314694;
+	bh=onBnYDmt5g+9g0jvlINksSIW6mBJLA+lQUcUju1Jnsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YH9d1JN3++bVaPeoSczeWAB7WuTW21mstdnqXrrrzJLo6nl6kFb93KomBRWrvFM20
+	 N7C4u5wiQ96ZKiSNhfuPjnvckJqThrCifm+1okJiy9Sy6zpRA2TNOwNcqZ5oQFmkWn
+	 tPQdNeZIRVXkj1TOLNgB0em9BwYczMu4Q2kLvFGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbfJ2CDF (ORCPT
+        id S1730436AbfJ2CEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:03:05 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41248 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728242AbfJ2CDE (ORCPT
+        Mon, 28 Oct 2019 22:04:53 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44398 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfJ2CEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:03:04 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9T1xW2A118911;
-        Tue, 29 Oct 2019 02:02:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=WLXrIzsT+ORz3zY9sJFwipI3wqa8DWsLZnI6XcJEvwM=;
- b=SH7nEEeSunLVapph2gXrh9osnfygzboBXBYhsILuQnPYAEGHKi1ku4LtupRh+lK+g1c9
- iYBLfJlr+fhBQ+2CI4aj9jJ9z/Zfz6S7fr2WsGCZ7ZD1v+gLoj7+5WITbvnloSx2KdsN
- uhguxc5dNcu5veXnFVHha4KRShF+A6pKdIbWKR3cCsUh8J9HodQOGRRKLJvjMoWxD1vc
- MCwb14NhYfAkLVdxF5O41LK8fm0p2CGr/x9w1g4Go6uCcgQpUGTM7Fp/QtkYMnDu5e7w
- aBGiEhAfBnyPt5TqMV0/4+if+Z6L9TVWFVjDbpfjbkQN5Sn7FBDJuHH0YI3rtM2xz/hm HQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vvdju5t8t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 02:02:55 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9T22jw2058075;
-        Tue, 29 Oct 2019 02:02:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vvykt092y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 02:02:54 +0000
-Received: from abhmp0021.oracle.com (abhmp0021.oracle.com [141.146.116.27])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9T22qZF028982;
-        Tue, 29 Oct 2019 02:02:52 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 28 Oct 2019 19:02:52 -0700
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <james.smart@broadcom.com>, <dick.kennedy@broadcom.com>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] scsi: lpfc: Make lpfc_debugfs_ras_log_data static
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191028132556.16272-1-yuehaibing@huawei.com>
-Date:   Mon, 28 Oct 2019 22:02:50 -0400
-In-Reply-To: <20191028132556.16272-1-yuehaibing@huawei.com>
-        (yuehaibing@huawei.com's message of "Mon, 28 Oct 2019 21:25:56 +0800")
-Message-ID: <yq1d0eg8g1h.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 28 Oct 2019 22:04:53 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n48so8416741ota.11;
+        Mon, 28 Oct 2019 19:04:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HFyv8biFiEa7dI7+8/hKQK/SKrkibEovMGYz51a6e3Q=;
+        b=PMiab0SYWy7QtcAdn43dh73BY3tnpVkIcwbDaOwCh7kPydf1wRsJuUpQlAIakxRqiX
+         kn3tOrIsY2FcXuC6/h+Rq4tgNsJFibYnsBhEFUqih2CEBzpilllXvVvjFVp4vHEvgAH2
+         RNX1kRdmMGJtUYHNHxsaqsSkkAL+3KzA3gwWYmxpNfOi+z81Uxv7NA4fbMU/w4siHZYU
+         jcqI4ofCAolAGpC4gZ/L50YMpfCFkLmSxFwoUj3ircqPd7Pe1n4RLhX7lZJ2AAWRSZSk
+         z3hTSxjFM9FzQkc7Ive5dkOpBoLjDhKXSAU5qLuZAa5NnqNaeoUwNM1+AX67K/q7zQkt
+         Lijw==
+X-Gm-Message-State: APjAAAWX9D/mIfsckQJH2rFXpc05JwoC4y1i3whItrvq8q2MNZKvY9HB
+        JWu+WJby3v1kGsJ8WBwfZQ==
+X-Google-Smtp-Source: APXvYqz/PKQhwGT0k8RL1Zb/NY7UEotlPlxCE0kRl2Ne5SNWKtblnq+z4dve81EPfyp+V4p8my/E/A==
+X-Received: by 2002:a9d:469d:: with SMTP id z29mr16109164ote.309.1572314692113;
+        Mon, 28 Oct 2019 19:04:52 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n1sm154935oij.13.2019.10.28.19.04.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 19:04:51 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 21:04:50 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ RPMHCC clock bindings
+Message-ID: <20191029020450.GA16322@bogus>
+References: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
+ <1571393364-32697-2-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=971
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910290020
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910290020
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571393364-32697-2-git-send-email-tdas@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 18, 2019 at 03:39:22PM +0530, Taniya Das wrote:
+> The RPMHCC clock provider have a bunch of generic properties that
+> are needed in a device tree. Add a YAML schemas for those.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,rpmh-clk.txt    | 27 ------------
+>  .../devicetree/bindings/clock/qcom,rpmhcc.yaml     | 49 ++++++++++++++++++++++
+>  2 files changed, 49 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> deleted file mode 100644
+> index 365bbde..0000000
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -Qualcomm Technologies, Inc. RPMh Clocks
+> --------------------------------------------------------
+> -
+> -Resource Power Manager Hardened (RPMh) manages shared resources on
+> -some Qualcomm Technologies Inc. SoCs. It accepts clock requests from
+> -other hardware subsystems via RSC to control clocks.
+> -
+> -Required properties :
+> -- compatible : must be one of:
+> -	       "qcom,sdm845-rpmh-clk"
+> -	       "qcom,sm8150-rpmh-clk"
+> -
+> -- #clock-cells : must contain 1
+> -- clocks: a list of phandles and clock-specifier pairs,
+> -	  one for each entry in clock-names.
+> -- clock-names: Parent board clock: "xo".
+> -
+> -Example :
+> -
+> -#include <dt-bindings/clock/qcom,rpmh.h>
+> -
+> -	&apps_rsc {
+> -		rpmhcc: clock-controller {
+> -			compatible = "qcom,sdm845-rpmh-clk";
+> -			#clock-cells = <1>;
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+> new file mode 100644
+> index 0000000..326bfd7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,rpmhcc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. RPMh Clocks Bindings
+> +
+> +maintainers:
+> +  - Taniya Das <tdas@codeaurora.org>
+> +
+> +description: |
+> +  Resource Power Manager Hardened (RPMh) manages shared resources on
+> +  some Qualcomm Technologies Inc. SoCs. It accepts clock requests from
+> +  other hardware subsystems via RSC to control clocks.
+> +
+> +properties:
+> +  compatible :
 
-YueHaibing,
+drop space     ^
 
-> Fix sparse warning:
->
-> drivers/scsi/lpfc/lpfc_debugfs.c:2083:1: warning:
->  symbol 'lpfc_debugfs_ras_log_data' was not declared. Should it be static?
+> +    enum:
+> +       - qcom,sdm845-rpmh-clk
+> +       - qcom,sm8150-rpmh-clk
 
-Applied to 5.5/scsi-queue, thanks!
+Wrong indent (1 char too many).
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    maxItems: 1
+
+Can drop this. Implied by items list.
+
+> +    items:
+> +      - const: xo
+> +
+> +  '#clock-cells':
+> +      const: 1
+> +
+> +required:
+> +  - compatible
+> +  - '#clock-cells'
+> +
+> +examples:
+> +  # Example for GCC for SDM845: The below node should be defined inside
+> +  # &apps_rsc node.
+> +  - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    rpmhcc: clock-controller {
+> +      compatible = "qcom,sdm845-rpmh-clk";
+> +      clocks = <&xo_board>;
+> +      clock-names = "xo";
+> +      #clock-cells = <1>;
+> +    };
+> +...
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
