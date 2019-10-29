@@ -2,140 +2,173 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F24CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8175CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D0F20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D13621479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:18:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCso8YSQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="VYUWPhKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbfJ2MRU (ORCPT
+        id S1732804AbfJ2MSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:17:20 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26750 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfJ2MRU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:17:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572351439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c5TVCYf2MyQ5m7UVpCqBCLIUTH2CBfxMSLxMHSp3UXw=;
-        b=gCso8YSQKB2mbv431nmp+frf4w9LlzMZOobkUSCWl3MDrh8dZ8jzJxlCx38AK+/WbY4K0I
-        edSxoWzpf/Ej+aGgACN58tAQ116KAEnbpXiQ0oGIZvXtOB3H2ibQTFppiyOS/mOAKek5mm
-        IAv7a/tgOu48TGpjonSmZeoABPGyF8I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-14-1I3Ni04hMhG__5_pXeNLHQ-1; Tue, 29 Oct 2019 08:17:15 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29E9C107AD28;
-        Tue, 29 Oct 2019 12:17:14 +0000 (UTC)
-Received: from [10.36.118.15] (unknown [10.36.118.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 728CC600C4;
-        Tue, 29 Oct 2019 12:17:10 +0000 (UTC)
-Subject: Re: [PATCH 3/3] KVM: arm/arm64: vgic: Don't rely on the wrong pending
- table
-To:     Zenghui Yu <yuzenghui@huawei.com>, maz@kernel.org,
-        james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com
-Cc:     wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191029071919.177-1-yuzenghui@huawei.com>
- <20191029071919.177-4-yuzenghui@huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <5e4d1a2f-7107-efe3-9dde-626662e31ac5@redhat.com>
-Date:   Tue, 29 Oct 2019 13:17:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 29 Oct 2019 08:18:15 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:33640 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728359AbfJ2MSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:18:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZZ+5u4A+qnpHl/68OvUYQcD2pzD+zlilhEVKLONYfvU=; b=VYUWPhKLnHoCNMor4xDtDak84
+        Gc/1BVOIz1agTd2AssvOHtWX1qyIRf20wQPlrnniW8E8/lXx1TpWSe0umZOi1PWcr/vMzEdA4h7aZ
+        L5s9KOne9OZruFeFIyKU0kubi9SkXw4KrOU+oV5c6JX4PoCD1njo33Wwr3XZgoc8Znvy4=;
+Received: from [2a02:790:ff:919:7ee9:d3ff:fe1f:a246] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iPQRl-0007Aq-Qi; Tue, 29 Oct 2019 13:18:02 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iPQRj-0000pw-SV; Tue, 29 Oct 2019 13:17:59 +0100
+Date:   Tue, 29 Oct 2019 13:16:26 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: backlight: lm3630a: add
+ enable_gpios
+Message-ID: <20191029131626.2a18d27e@kemnade.info>
+In-Reply-To: <CAL_Jsq+zDYifFntHMqmqU4qmsj7_nafN+W7a0Vh+HdwGvVj5TA@mail.gmail.com>
+References: <20190912213257.24147-1-andreas@kemnade.info>
+        <20190912213257.24147-2-andreas@kemnade.info>
+        <CAL_Jsq+zDYifFntHMqmqU4qmsj7_nafN+W7a0Vh+HdwGvVj5TA@mail.gmail.com>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191029071919.177-4-yuzenghui@huawei.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: 1I3Ni04hMhG__5_pXeNLHQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/DGHuyPjjOiEtDx6AE.MMu8p"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui, Marc,
+--Sig_/DGHuyPjjOiEtDx6AE.MMu8p
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 10/29/19 8:19 AM, Zenghui Yu wrote:
-> It's possible that two LPIs locate in the same "byte_offset" but target
-> two different vcpus, where their pending status are indicated by two
-> different pending tables.  In such a scenario, using last_byte_offset
-> optimization will lead KVM relying on the wrong pending table entry.
-> Let us use last_ptr instead, which can be treated as a byte index into
-> a pending table and also, can be vcpu specific.
->=20
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->=20
-> If this patch has done the right thing, we can even add the:
->=20
-> Fixes: 280771252c1b ("KVM: arm64: vgic-v3: KVM_DEV_ARM_VGIC_SAVE_PENDING_=
-TABLES")
->=20
-> But to be honest, I'm not clear about what has this patch actually fixed.
-> Pending tables should contain all zeros before we flush vgic_irq's pendin=
-g
-> status into guest's RAM (thinking that guest should never write anything
-> into it). So the pending table entry we've read from the guest memory
-> seems always be zero. And we will always do the right thing even if we
-> rely on the wrong pending table entry.
->=20
-> I think I must have some misunderstanding here... Please fix me.
->=20
->  virt/kvm/arm/vgic/vgic-v3.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
-> index 5ef93e5041e1..7cd2e2f81513 100644
-> --- a/virt/kvm/arm/vgic/vgic-v3.c
-> +++ b/virt/kvm/arm/vgic/vgic-v3.c
-> @@ -363,8 +363,8 @@ int vgic_v3_lpi_sync_pending_status(struct kvm *kvm, =
-struct vgic_irq *irq)
->  int vgic_v3_save_pending_tables(struct kvm *kvm)
->  {
->  =09struct vgic_dist *dist =3D &kvm->arch.vgic;
-> -=09int last_byte_offset =3D -1;
->  =09struct vgic_irq *irq;
-> +=09gpa_t last_ptr =3D -1;
->  =09int ret;
->  =09u8 val;
-> =20
-> @@ -384,11 +384,11 @@ int vgic_v3_save_pending_tables(struct kvm *kvm)
->  =09=09bit_nr =3D irq->intid % BITS_PER_BYTE;
->  =09=09ptr =3D pendbase + byte_offset;
-> =20
-> -=09=09if (byte_offset !=3D last_byte_offset) {
-> +=09=09if (ptr !=3D last_ptr) {
->  =09=09=09ret =3D kvm_read_guest_lock(kvm, ptr, &val, 1);
->  =09=09=09if (ret)
->  =09=09=09=09return ret;
-> -=09=09=09last_byte_offset =3D byte_offset;
-> +=09=09=09last_ptr =3D ptr;
->  =09=09}
-> =20
->  =09=09stored =3D val & (1U << bit_nr);
->=20
-Acked-by: Eric Auger <eric.auger@redhat.com>
+Hi,
 
-Thanks for fixing this.
+On Mon, 28 Oct 2019 18:25:56 -0500
+Rob Herring <robh+dt@kernel.org> wrote:
 
-Eric
+> On Thu, Sep 12, 2019 at 4:33 PM Andreas Kemnade <andreas@kemnade.info> wr=
+ote:
+> >
+> > add enable-gpios to describe HWEN pin
+> >
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > Acked-by: Daniel Thompson <daniel.thompson@linaro.org> =20
+>=20
+> This breaking linux-next now...
+>=20
+oops, sorry.=20
 
+> > ---
+> > changes in v2: added example
+> > changes in v3: added Acked-by
+> > changes in v4: moved enable-gpios to the right position
+> >   in the example
+> >  .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-b=
+acklight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-ba=
+cklight.yaml
+> > index dc129d9a329e..c8470628fe02 100644
+> > --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backligh=
+t.yaml
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backligh=
+t.yaml
+> > @@ -29,6 +29,10 @@ properties:
+> >    '#size-cells':
+> >      const: 0
+> >
+> > +  enable-gpios:
+> > +    description: GPIO to use to enable/disable the backlight (HWEN pin=
+).
+> > +    maxItems: 1
+> > +
+> >  required:
+> >    - compatible
+> >    - reg
+> > @@ -96,6 +100,7 @@ examples:
+> >          led-controller@38 {
+> >                  compatible =3D "ti,lm3630a";
+> >                  reg =3D <0x38>;
+> > +                enable-gpios =3D <&gpio2 5 GPIO_ACTIVE_HIGH>; =20
+>=20
+> Error: Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight=
+.example.dts:24.46-47
+> syntax error
+> FATAL ERROR: Unable to parse input tree
+> make[1]: *** [Documentation/devicetree/bindings/leds/backlight/lm3630a-ba=
+cklight.example.dt.yaml]
+> Error 1
+> scripts/Makefile.lib:314: recipe for target
+> 'Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.examp=
+le.dt.yaml'
+> failed
+>=20
+> You need the include for the define.
 
+gpio/gpio.h is missing.
+Yes, was not aware of that these things will be compiled and the automatic
+check did not work on my system at all. So I decided not to fix that for ju=
+st
+this simple thing which was a not so good idea.
+Will send a fixup.
+
+Regards,
+Andreas
+
+--Sig_/DGHuyPjjOiEtDx6AE.MMu8p
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl24LZoACgkQl4jFM1s/
+ye/XiA/8DVVyxxx109wsfNmna3iGryDIzfVOZVxZKmh2SUGenfnGGggrA2vM9QJx
+GRYg0Wi7kkXEW2EmYrgI0AddYBxTsuEI82ANE4BO6umA+1nCSedjttxZ2OptyZCH
+sZqcV+nKvtROpTwSWOdG4cYH+3vpL7Is9meLNlyFbiDUjznJ67K0tgXuOCE6Iq69
+xvw1xhnaomCXazrimAlht1JNDQc6Rgma7FT9AUSM9ngEW7tbfxSVhuYUCKaMlN17
+M6DhV9PePIf1SZVelYIeOT8pkBHxpcb+Pza61FpQYrXF2iRwsmfMtzNx8LOiCobp
+5qnkyz2YIRZ5CIz7gc5EkZim+pIPCAJekZz3HEWsS3ypkhw3pLabRBOekX2r57iO
+NwqStsPFM71+xZnElqULvQ5o331G3aCbJEFkCsG9sZp98qNN0yI0UYABVl+MIeqT
+euvtkNHzvntSBsqYUm7MjWW8uUiFxuS0eL+AIiXBOofvJ6nsvuQHyEDvHsMNec1R
+dokvq/TxLbKe81rZY1OBGT/UGzMKKGuwkH0BetpuJ0eOYZJ+nHCXA20JWr5fCoPS
+06G2W/MLRyTTuL7tGJ8Xa6RcKvj9pCxO+upE3eRGp02ZxyGefs68gHprOS8UiclL
+TMCcxD8d3k9LmR2e089kZwoA+9JhgUK33pCZBQwVVIBGuSxl1nY=
+=c3AX
+-----END PGP SIGNATURE-----
+
+--Sig_/DGHuyPjjOiEtDx6AE.MMu8p--
