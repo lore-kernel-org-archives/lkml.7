@@ -2,252 +2,131 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD8DCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10354CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81DD021835
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9134218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:49:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572313792;
+	bh=3lZc7nhSifx1Fqn9vDT6E/43lgXpCcDFpvwekOjoBxg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q3fwBbyU4FdYYC/ErRP4wowsKybF5py0qphvXGcUUI6YTG+AfQ9mqlU5CxUKNJaRQ
+	 kGmL+mUNofUEglDy9rLHySmcMlMEK4u80kb2Tuca1OYnNy/wbPgzMG8fopRaLA6VQf
+	 +XYwqMPFzEwP44hoKznVKmyeW0rIY9JnaVjLezh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbfJ2Bt3 (ORCPT
+        id S1728896AbfJ2Btv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:49:29 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58030 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727364AbfJ2Bt2 (ORCPT
+        Mon, 28 Oct 2019 21:49:51 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44594 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727364AbfJ2Btv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:49:28 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9T1CrwN093911
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 21:49:27 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vx5ryb3sd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 21:49:27 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Tue, 29 Oct 2019 01:49:24 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 29 Oct 2019 01:49:15 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9T1nEWE62849144
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 01:49:14 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0022852057;
-        Tue, 29 Oct 2019 01:49:13 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 589A65204E;
-        Tue, 29 Oct 2019 01:49:13 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 389C5A020A;
-        Tue, 29 Oct 2019 12:49:11 +1100 (AEDT)
-Subject: Re: [PATCH 04/10] powerpc: Map & release OpenCAPI LPC memory
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Allison Randal <allison@lohutok.net>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Greg Kurz <groug@kaod.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20191025044721.16617-1-alastair@au1.ibm.com>
- <20191025044721.16617-5-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Tue, 29 Oct 2019 12:49:11 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 21:49:51 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n48so8393208ota.11;
+        Mon, 28 Oct 2019 18:49:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OwO97DxpTpJcLYlkzMeOuj/rD0CUwDcPUCTNwf6RveY=;
+        b=Q2/i+7IGJ52a7bcTXmokmxqaVqsYTgZ0X+xh6ZVrAdyM6EGiboOBB1Vpw2fMRQPSw1
+         dju7wjM+2oUV+JugYTzWVtL3BPIih0CD6rzaoT5jLeGeFL47kqok6bXHVUalsL7Nij2V
+         6TwLchfiuXZ9WmJQplnpsBp249/7M7sErkZxVg+ExCXDSWENqjbRe8NO6Yk83kzV4avt
+         gOMCkMji9059bwPb8oDazkqnt9w4Et9YBTkThpDmi4GgSrRhKvx6cDul5N3B+w/svGgk
+         NvZYXpXJCuAjuOv6DDZ846TIjGUSgnx1jLe4OfXqkev6yYvku1gfsvAHJT4TkS5P+r3c
+         U+ow==
+X-Gm-Message-State: APjAAAXagRsdLzb2Fj0bXXuWzQ5ZnUDUCd+Z8YPben0DccwEvfycWchv
+        O6N0ZnyDVSCsRDNkiF4E5IxDIWo=
+X-Google-Smtp-Source: APXvYqxb+Q+XI/gBXpbL/OnoFUprupV1+asYGZRYItetzH0XJsjrBhjrnc7oNJmispxysnmUIHX34g==
+X-Received: by 2002:a9d:4c04:: with SMTP id l4mr8138995otf.303.1572313790495;
+        Mon, 28 Oct 2019 18:49:50 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m3sm2051438otr.5.2019.10.28.18.49.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 18:49:49 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 20:49:49 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: at91: Document Kizbox2 boards
+ binding
+Message-ID: <20191029014949.GA22009@bogus>
+References: <20191017085405.12599-1-kamel.bouhara@bootlin.com>
+ <20191017085405.12599-2-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <20191025044721.16617-5-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102901-0012-0000-0000-0000035E9649
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102901-0013-0000-0000-00002199D5DB
-Message-Id: <32caa2ef-43b2-f71d-f470-ccfed0ae094e@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910290011
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017085405.12599-2-kamel.bouhara@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/10/19 3:46 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Thu, Oct 17, 2019 at 10:54:04AM +0200, Kamel Bouhara wrote:
+> Document devicetree's bindings for the SAMA5D31 Kizbox2 boards of
+> Overkiz SAS.
 > 
-> This patch adds platform support to map & release LPC memory.
->  > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
 > ---
->   arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
->   arch/powerpc/platforms/powernv/ocxl.c | 41 +++++++++++++++++++++++++++
->   include/linux/memory_hotplug.h        |  5 ++++
->   mm/memory_hotplug.c                   |  3 +-
->   4 files changed, 50 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/arm/atmel-at91.yaml   | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 > 
-> diff --git a/arch/powerpc/include/asm/pnv-ocxl.h b/arch/powerpc/include/asm/pnv-ocxl.h
-> index 7de82647e761..f8f8ffb48aa8 100644
-> --- a/arch/powerpc/include/asm/pnv-ocxl.h
-> +++ b/arch/powerpc/include/asm/pnv-ocxl.h
-> @@ -32,5 +32,7 @@ extern int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle)
->   
->   extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
->   extern void pnv_ocxl_free_xive_irq(u32 irq);
-> +extern u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size);
-> +extern void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
->   
->   #endif /* _ASM_PNV_OCXL_H */
-> diff --git a/arch/powerpc/platforms/powernv/ocxl.c b/arch/powerpc/platforms/powernv/ocxl.c
-> index 8c65aacda9c8..c6d4234e0aba 100644
-> --- a/arch/powerpc/platforms/powernv/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/ocxl.c
-> @@ -475,6 +475,47 @@ void pnv_ocxl_spa_release(void *platform_data)
->   }
->   EXPORT_SYMBOL_GPL(pnv_ocxl_spa_release);
->   
-> +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	u32 bdfn = (pdev->bus->number << 8) | pdev->devfn;
-
-I think pci_dev_id() is the canonical way to do this? (same applies in 
-release)
-
-> +	u64 base_addr = 0;
-> +	int rc;
+> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> index c0869cb860f3..7636bf7c2382 100644
+> --- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> @@ -80,6 +80,41 @@ properties:
+>            - const: atmel,sama5d3
+>            - const: atmel,sama5
+>  
+> +      - description: Overkiz kizbox2 board without antenna
+> +        items:
+> +          - const: overkiz,kizbox2-0
+> +          - const: atmel,sama5d31
+> +          - const: atmel,sama5d3
+> +          - const: atmel,sama5
 > +
-> +	rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size, &base_addr);
-> +	if (rc) {
-> +		dev_warn(&pdev->dev,
-> +			 "OPAL could not allocate LPC memory, rc=%d\n", rc);
-> +		return 0;
-> +	}
+> +      - description: Overkiz kizbox2 board with one head
+> +        items:
+> +          - const: overkiz,kizbox2-1
+> +          - const: atmel,sama5d31
+> +          - const: atmel,sama5d3
+> +          - const: atmel,sama5
 > +
-> +	base_addr = be64_to_cpu(base_addr);
-
-sparse doesn't like this, the way it's usually done is declare a __be64 
-variable, pass that to the opal call, then store the conversion in a 
-regular u64
-
+> +      - description: Overkiz kizbox2 board with two heads
+> +        items:
+> +          - const: overkiz,kizbox2-2
+> +          - const: atmel,sama5d31
+> +          - const: atmel,sama5d3
+> +          - const: atmel,sama5
 > +
-> +	rc = check_hotplug_memory_addressable(base_addr >> PAGE_SHIFT,
-> +					      size >> PAGE_SHIFT);
-> +	if (rc)
-> +		return 0;
+> +      - description: Overkiz kizbox2 board with three heads
+> +        items:
+> +          - const: overkiz,kizbox2-3
+> +          - const: atmel,sama5d31
+> +          - const: atmel,sama5d3
+> +          - const: atmel,sama5
 > +
-> +	return base_addr;
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_setup);
-> +
-> +void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	u32 bdfn = (pdev->bus->number << 8) | pdev->devfn;
-> +	int rc;
-> +
-> +	rc = opal_npu_mem_release(phb->opal_id, bdfn);
-> +	if (rc)
-> +		dev_warn(&pdev->dev,
-> +			 "OPAL reported rc=%d when releasing LPC memory\n", rc);
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_release);
-> +
-> +
->   int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle)
->   {
->   	struct spa_data *data = (struct spa_data *) platform_data;
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index f46ea71b4ffd..3f5f1a642abe 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -339,6 +339,11 @@ static inline int remove_memory(int nid, u64 start, u64 size)
->   static inline void __remove_memory(int nid, u64 start, u64 size) {}
->   #endif /* CONFIG_MEMORY_HOTREMOVE */
->   
-> +#if CONFIG_MEMORY_HOTPLUG_SPARSE
+> +      - description: Overkiz kizbox2 board Rev2 with two heads
+> +        items:
+> +          - const: overkiz,kizbox2-rev2
+> +          - const: atmel,sama5d31
+> +          - const: atmel,sama5d3
+> +          - const: atmel,sama5
 
-This needs to be #ifdef.
+These can all be made a single items list with the 1st entry being an 
+enum of all the boards. The board description can be a comment.
 
-> +int check_hotplug_memory_addressable(unsigned long pfn,
-> +		unsigned long nr_pages);
-> +#endif /* CONFIG_MEMORY_HOTPLUG_SPARSE */
-> +
->   extern void __ref free_area_init_core_hotplug(int nid);
->   extern int __add_memory(int nid, u64 start, u64 size);
->   extern int add_memory(int nid, u64 start, u64 size);
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 2cecf07b396f..b39827dbd071 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -278,7 +278,7 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
->   	return 0;
->   }
->   
-> -static int check_hotplug_memory_addressable(unsigned long pfn,
-> +int check_hotplug_memory_addressable(unsigned long pfn,
->   					    unsigned long nr_pages)
->   {
->   	const u64 max_addr = PFN_PHYS(pfn + nr_pages) - 1;
-> @@ -294,6 +294,7 @@ static int check_hotplug_memory_addressable(unsigned long pfn,
->   
->   	return 0;
->   }
-> +EXPORT_SYMBOL_GPL(check_hotplug_memory_addressable);
-
-This export seems unnecessary, you don't seem to be using this function 
-in a module anywhere in this series AFAICT.
-
-Also it looks like a whitespace fix from removing the static ended up in 
-patch #8 rather than here.
-
->   
->   /*
->    * Reasonably generic function for adding memory.  It is
-> 
-
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
-
+Rob
