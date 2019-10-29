@@ -2,151 +2,148 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D038CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9693DCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFE321479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6025A2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:36:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="xUtlmgfT"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="HKsjqS2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfJ2Sec (ORCPT
+        id S1730514AbfJ2SgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:34:32 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37016 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfJ2Seb (ORCPT
+        Tue, 29 Oct 2019 14:36:02 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46874 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfJ2SgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:34:31 -0400
-Received: by mail-qt1-f195.google.com with SMTP id g50so21692644qtb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:34:30 -0700 (PDT)
+        Tue, 29 Oct 2019 14:36:01 -0400
+Received: by mail-lj1-f196.google.com with SMTP id w8so11894489lji.13
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:35:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uIU7OLCPQwf11UO7remUH85e2MdSUd0Df/No5kThl+Q=;
-        b=xUtlmgfTX/z8VFSs9NdfjYD2h7uC3bxMX9c2AFApAHuLU7LT6V7ubs5uXk74wKkkx/
-         PJ2uLnbqAvx+8TOq/4JkQXCvAYH/t2uV1hkfDxQQv4ceHZH7Ta/AjZmchGgfTanNnlp5
-         NtrxxujwR8dWyTNdCfJSiSCza6w//XxLj2TpNNhUvb8PYNxuf7QXmDzvi7i+ppvNcF2G
-         Y//gF7lM27cJmeZ9XiwN2vLDy0qpLyjKuI6ydePXHTokzd0Wa9uzNwMCIAebJUNtY7e4
-         mo4P1zqBlD5wVxm/X3fGz8j9J9XPnHJRFFY3NYkb+aB0UfDSVhLMAK8uAJiD1a1xHjlm
-         xwwQ==
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VVzOWaW+8WScZs4n+Dg4lETcm9GAwtrOVevdTx2yiNw=;
+        b=HKsjqS2IAM573Lz8ROLM6jfS3knA1pQ01xLeIp0aBxdvWQ3mG/tT4NDr9gfClzXGRE
+         1XbK1E6SADvZEn87iaBrrsojdnnf3XWdqvrOjzsZvhHfM1XMQgARJHMNRySqyBCF54Fw
+         uRTMQ7TxhcGdShK8QiEyXimlf+yK8At44wDag=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uIU7OLCPQwf11UO7remUH85e2MdSUd0Df/No5kThl+Q=;
-        b=jS6L3hEFgMdSQbKHlBJYm4T9KjOv9kITYHTHE9pX4UkQcyeYM8eoP26gq3L8b4UX3v
-         c1VmjEAqKBQ5I7yZ88vk5otcCDxKCUSoQV9US+F5kEYBC1/ipT25p8HPXpghppHaNLk4
-         wZ2gIM+WNO3v9VfyPjm85I/7tg6LznPw24+4x/k92j2ndR+Jz5fHaIzKYKHzZR6G1MNY
-         rWlW4AkNzanOs9ijMw64QeFoPxsqPvvPXIz2LfeseasFZ5doaXX8t4Mfsfh4llj0mn7o
-         T3/0nP8yMIm8jchxBOrXrOAASI2jBmklIKNchR3TkUPZ60MELXjaTSNt1ddsVgnJhU9/
-         dlFw==
-X-Gm-Message-State: APjAAAUEj4hfNk5EgKEPJMsDMWoIn2NDcUpjAt1wPO70WiUkUJhdta6Q
-        /ZnNb0vPo6nLB+TVDOY165N+OQ==
-X-Google-Smtp-Source: APXvYqz9kg4EYQY0RLUVbwPGIGxrPWbJ4IxQP3b9gI4g2nGc6loAjVWiGAcg76RCo1vI30uYda0BWw==
-X-Received: by 2002:a05:6214:803:: with SMTP id df3mr24777703qvb.215.1572374070331;
-        Tue, 29 Oct 2019 11:34:30 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::7081])
-        by smtp.gmail.com with ESMTPSA id g25sm9088353qtc.90.2019.10.29.11.34.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 11:34:29 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 14:34:28 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com,
-        elver@google.com
-Subject: Re: [PATCH] mm: memcontrol: fix data race in
- mem_cgroup_select_victim_node
-Message-ID: <20191029183428.GA38233@cmpxchg.org>
-References: <20191029005405.201986-1-shakeelb@google.com>
- <20191029090347.GG31513@dhcp22.suse.cz>
- <CALvZod648GRvjd_LqViFzLRwxnzSrLZzjaNBOJju4xkDQkvrXw@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VVzOWaW+8WScZs4n+Dg4lETcm9GAwtrOVevdTx2yiNw=;
+        b=DFcKU26FsEZMoWmqQ7xkvjf+LKqt2qJW86rkZkBYYymtVTPgllLLd0n2x23brGHKEW
+         SsMEEy+K+nsyKv7tEZK36Q5AcEwsuS5vYs8FvRWh2uCkiqWS9GIX6Y2E1jbUErvDjPon
+         lRWJxwgI+CPz1GHjw0Qss/XNwx75nm5G1BnE2ufqQ/EIXF8XluC2Ry0im1s9MChOb0Yl
+         YHx7aj3tMzsstW7Pm4X05Fbyl33ZddhyDnbF78TzUm19dWLe7ZbyteD0a2XD0q9nos2z
+         Zxj0gBaCY/moFIcbuOoqew/l+1iqvMr2GUqfKhk5IoZ9IhvxR1ATZI6818dF9Ftr5JVT
+         wizw==
+X-Gm-Message-State: APjAAAXnRmuEYWFZN9VyL1STLWqyMi+HzcZ81j7mFbprQv7aPJ79UiG9
+        qWUpFYxtRsiAYzHGYSklUp2iK/g4vVE=
+X-Google-Smtp-Source: APXvYqws9Kvxp5AtGZPOyHwWm0t5qtGaVHPqspQuzOKUufQe6npJGSXYa12tKIEgABu5BSjWbLnPug==
+X-Received: by 2002:a2e:9595:: with SMTP id w21mr3649227ljh.181.1572374157687;
+        Tue, 29 Oct 2019 11:35:57 -0700 (PDT)
+Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id u11sm3665585ljo.17.2019.10.29.11.35.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Oct 2019 11:35:57 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 4/4] bonding: balance ICMP echoes in layer3+4
+ mode
+To:     Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Blakey <paulb@mellanox.com>, linux-kernel@vger.kernel.org
+References: <20191029135053.10055-1-mcroce@redhat.com>
+ <20191029135053.10055-5-mcroce@redhat.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <5be14e4e-807f-486d-d11a-3113901e72fe@cumulusnetworks.com>
+Date:   Tue, 29 Oct 2019 20:35:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod648GRvjd_LqViFzLRwxnzSrLZzjaNBOJju4xkDQkvrXw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191029135053.10055-5-mcroce@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:09:29AM -0700, Shakeel Butt wrote:
-> +Marco
+On 29/10/2019 15:50, Matteo Croce wrote:
+> The bonding uses the L4 ports to balance flows between slaves. As the ICMP
+> protocol has no ports, those packets are sent all to the same device:
 > 
-> On Tue, Oct 29, 2019 at 2:03 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Mon 28-10-19 17:54:05, Shakeel Butt wrote:
-> > > Syzbot reported the following bug:
-> > >
-> > > BUG: KCSAN: data-race in mem_cgroup_select_victim_node / mem_cgroup_select_victim_node
-> > >
-> > > write to 0xffff88809fade9b0 of 4 bytes by task 8603 on cpu 0:
-> > >  mem_cgroup_select_victim_node+0xb5/0x3d0 mm/memcontrol.c:1686
-> > >  try_to_free_mem_cgroup_pages+0x175/0x4c0 mm/vmscan.c:3376
-> > >  reclaim_high.constprop.0+0xf7/0x140 mm/memcontrol.c:2349
-> > >  mem_cgroup_handle_over_high+0x96/0x180 mm/memcontrol.c:2430
-> > >  tracehook_notify_resume include/linux/tracehook.h:197 [inline]
-> > >  exit_to_usermode_loop+0x20c/0x2c0 arch/x86/entry/common.c:163
-> > >  prepare_exit_to_usermode+0x180/0x1a0 arch/x86/entry/common.c:194
-> > >  swapgs_restore_regs_and_return_to_usermode+0x0/0x40
-> > >
-> > > read to 0xffff88809fade9b0 of 4 bytes by task 7290 on cpu 1:
-> > >  mem_cgroup_select_victim_node+0x92/0x3d0 mm/memcontrol.c:1675
-> > >  try_to_free_mem_cgroup_pages+0x175/0x4c0 mm/vmscan.c:3376
-> > >  reclaim_high.constprop.0+0xf7/0x140 mm/memcontrol.c:2349
-> > >  mem_cgroup_handle_over_high+0x96/0x180 mm/memcontrol.c:2430
-> > >  tracehook_notify_resume include/linux/tracehook.h:197 [inline]
-> > >  exit_to_usermode_loop+0x20c/0x2c0 arch/x86/entry/common.c:163
-> > >  prepare_exit_to_usermode+0x180/0x1a0 arch/x86/entry/common.c:194
-> > >  swapgs_restore_regs_and_return_to_usermode+0x0/0x40
-> > >
-> > > mem_cgroup_select_victim_node() can be called concurrently which reads
-> > > and modifies memcg->last_scanned_node without any synchrnonization. So,
-> > > read and modify memcg->last_scanned_node with READ_ONCE()/WRITE_ONCE()
-> > > to stop potential reordering.
-> >
-> > I am sorry but I do not understand the problem and the fix. Why does the
-> > race happen and why does _ONCE fixes it? There is still no
-> > synchronization. Do you want to prevent from memcg->last_scanned_node
-> > reloading?
-> >
+>     # tcpdump -qltnni veth0 ip |sed 's/^/0: /' &
+>     # tcpdump -qltnni veth1 ip |sed 's/^/1: /' &
+>     # ping -qc1 192.168.0.2
+>     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 315, seq 1, length 64
+>     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 315, seq 1, length 64
+>     # ping -qc1 192.168.0.2
+>     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 316, seq 1, length 64
+>     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 316, seq 1, length 64
+>     # ping -qc1 192.168.0.2
+>     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 317, seq 1, length 64
+>     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 317, seq 1, length 64
 > 
-> The problem is memcg->last_scanned_node can read and modified
-> concurrently. Though to me it seems like a tolerable race and not
-> worth to add an explicit lock. My aim was to make KCSAN happy here to
-> look elsewhere for the concurrency bugs. However I see that it might
-> complain next on memcg->scan_nodes.
+> But some ICMP packets have an Identifier field which is
+> used to match packets within sessions, let's use this value in the hash
+> function to balance these packets between bond slaves:
 > 
-> Now taking a step back, I am questioning the whole motivation behind
-> mem_cgroup_select_victim_node(). Since we pass ZONELIST_FALLBACK
-> zonelist to the reclaimer, the shrink_node will be called for all
-> potential nodes. Also we don't short circuit the traversal of
-> shrink_node for all nodes on nr_reclaimed and we scan (size_on_node >>
-> priority) for all nodes, I don't see the reason behind having round
-> robin order of node traversal.
+>     # ping -qc1 192.168.0.2
+>     0: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 303, seq 1, length 64
+>     0: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 303, seq 1, length 64
+>     # ping -qc1 192.168.0.2
+>     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 304, seq 1, length 64
+>     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 304, seq 1, length 64
+> 
+> Aso, let's use a flow_dissector_key which defines FLOW_DISSECTOR_KEY_ICMP,
 
-It's actually only very recently that we don't bail out of the reclaim
-loop anymore - if I'm not missing anything, it was only 1ba6fc9af35b
-("mm: vmscan: do not share cgroup iteration between reclaimers") that
-removed the last bailout condition on sc->nr_reclaimed.
+Also ?
 
-> I am thinking of removing the whole mem_cgroup_select_victim_node()
-> heuristic. Please let me know if there are any objections.
+> so we can balance pings encapsulated in a tunnel when using mode encap3+4:
+> 
+>     # ping -q 192.168.1.2 -c1
+>     0: IP 192.168.0.1 > 192.168.0.2: GREv0, length 102: IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 585, seq 1, length 64
+>     0: IP 192.168.0.2 > 192.168.0.1: GREv0, length 102: IP 192.168.1.2 > 192.168.1.1: ICMP echo reply, id 585, seq 1, length 64
+>     # ping -q 192.168.1.2 -c1
+>     1: IP 192.168.0.1 > 192.168.0.2: GREv0, length 102: IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 586, seq 1, length 64
+>     1: IP 192.168.0.2 > 192.168.0.1: GREv0, length 102: IP 192.168.1.2 > 192.168.1.1: ICMP echo reply, id 586, seq 1, length 64
+> 
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> ---
+>  drivers/net/bonding/bond_main.c | 77 ++++++++++++++++++++++++++++++---
+>  1 file changed, 70 insertions(+), 7 deletions(-)
+> 
 
-In the current state, I don't see any reason to keep it, either. We
-can always just start the zonelist walk from the current node.
+Hi Matteo,
+Wouldn't it be more useful and simpler to use some field to choose the slave (override the hash
+completely) in a deterministic way from user-space ?
+For example the mark can be interpreted as a slave id in the bonding (should be
+optional, to avoid breaking existing setups). ping already supports -m and
+anything else can set it, this way it can be used to do monitoring for a specific
+slave with any protocol and would be a much simpler change.
+User-space can then implement any logic for the monitoring case and as a minor bonus
+can monitor the slaves in parallel. And the opposite as well - if people don't want
+these balanced for some reason, they wouldn't enable it.
 
-A nice cleanup, actually. Good catch!
+Or maybe I've misunderstood why this change is needed. :)
+It would actually be nice to include the use-case which brought this on
+in the commit message.
+
+Cheers,
+ Nik
+
