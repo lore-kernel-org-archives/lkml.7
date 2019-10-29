@@ -2,148 +2,95 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9693DCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B46F3CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6025A2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:36:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="HKsjqS2I"
+	by mail.kernel.org (Postfix) with ESMTP id 95B542067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbfJ2SgC (ORCPT
+        id S1731843AbfJ2SgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:36:02 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46874 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfJ2SgB (ORCPT
+        Tue, 29 Oct 2019 14:36:08 -0400
+Received: from smtprelay0165.hostedemail.com ([216.40.44.165]:34820 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725962AbfJ2SgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:36:01 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w8so11894489lji.13
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:35:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VVzOWaW+8WScZs4n+Dg4lETcm9GAwtrOVevdTx2yiNw=;
-        b=HKsjqS2IAM573Lz8ROLM6jfS3knA1pQ01xLeIp0aBxdvWQ3mG/tT4NDr9gfClzXGRE
-         1XbK1E6SADvZEn87iaBrrsojdnnf3XWdqvrOjzsZvhHfM1XMQgARJHMNRySqyBCF54Fw
-         uRTMQ7TxhcGdShK8QiEyXimlf+yK8At44wDag=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VVzOWaW+8WScZs4n+Dg4lETcm9GAwtrOVevdTx2yiNw=;
-        b=DFcKU26FsEZMoWmqQ7xkvjf+LKqt2qJW86rkZkBYYymtVTPgllLLd0n2x23brGHKEW
-         SsMEEy+K+nsyKv7tEZK36Q5AcEwsuS5vYs8FvRWh2uCkiqWS9GIX6Y2E1jbUErvDjPon
-         lRWJxwgI+CPz1GHjw0Qss/XNwx75nm5G1BnE2ufqQ/EIXF8XluC2Ry0im1s9MChOb0Yl
-         YHx7aj3tMzsstW7Pm4X05Fbyl33ZddhyDnbF78TzUm19dWLe7ZbyteD0a2XD0q9nos2z
-         Zxj0gBaCY/moFIcbuOoqew/l+1iqvMr2GUqfKhk5IoZ9IhvxR1ATZI6818dF9Ftr5JVT
-         wizw==
-X-Gm-Message-State: APjAAAXnRmuEYWFZN9VyL1STLWqyMi+HzcZ81j7mFbprQv7aPJ79UiG9
-        qWUpFYxtRsiAYzHGYSklUp2iK/g4vVE=
-X-Google-Smtp-Source: APXvYqws9Kvxp5AtGZPOyHwWm0t5qtGaVHPqspQuzOKUufQe6npJGSXYa12tKIEgABu5BSjWbLnPug==
-X-Received: by 2002:a2e:9595:: with SMTP id w21mr3649227ljh.181.1572374157687;
-        Tue, 29 Oct 2019 11:35:57 -0700 (PDT)
-Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id u11sm3665585ljo.17.2019.10.29.11.35.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Oct 2019 11:35:57 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 4/4] bonding: balance ICMP echoes in layer3+4
- mode
-To:     Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org
-Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Blakey <paulb@mellanox.com>, linux-kernel@vger.kernel.org
-References: <20191029135053.10055-1-mcroce@redhat.com>
- <20191029135053.10055-5-mcroce@redhat.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <5be14e4e-807f-486d-d11a-3113901e72fe@cumulusnetworks.com>
-Date:   Tue, 29 Oct 2019 20:35:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 29 Oct 2019 14:36:07 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id CE5E4180A5B16;
+        Tue, 29 Oct 2019 18:36:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: thing30_17c4da0fde813
+X-Filterd-Recvd-Size: 2471
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 29 Oct 2019 18:36:03 +0000 (UTC)
+Message-ID: <5a6f05cef45dbb4f77008b36d7a63b429f1519ec.camel@perches.com>
+Subject: Re: [PATCH] fbdev: potential information leak in do_fb_ioctl()
+From:   Joe Perches <joe@perches.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Andrea Righi <righi.andrea@gmail.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Peter Rosin <peda@axentia.se>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        security@kernel.org, Kees Cook <keescook@chromium.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+Date:   Tue, 29 Oct 2019 11:35:55 -0700
+In-Reply-To: <20191029182320.GA17569@mwanda>
+References: <20191029182320.GA17569@mwanda>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20191029135053.10055-5-mcroce@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/10/2019 15:50, Matteo Croce wrote:
-> The bonding uses the L4 ports to balance flows between slaves. As the ICMP
-> protocol has no ports, those packets are sent all to the same device:
-> 
->     # tcpdump -qltnni veth0 ip |sed 's/^/0: /' &
->     # tcpdump -qltnni veth1 ip |sed 's/^/1: /' &
->     # ping -qc1 192.168.0.2
->     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 315, seq 1, length 64
->     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 315, seq 1, length 64
->     # ping -qc1 192.168.0.2
->     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 316, seq 1, length 64
->     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 316, seq 1, length 64
->     # ping -qc1 192.168.0.2
->     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 317, seq 1, length 64
->     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 317, seq 1, length 64
-> 
-> But some ICMP packets have an Identifier field which is
-> used to match packets within sessions, let's use this value in the hash
-> function to balance these packets between bond slaves:
-> 
->     # ping -qc1 192.168.0.2
->     0: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 303, seq 1, length 64
->     0: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 303, seq 1, length 64
->     # ping -qc1 192.168.0.2
->     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 304, seq 1, length 64
->     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 304, seq 1, length 64
-> 
-> Aso, let's use a flow_dissector_key which defines FLOW_DISSECTOR_KEY_ICMP,
+On Tue, 2019-10-29 at 21:23 +0300, Dan Carpenter wrote:
+> The "fix" struct has a 2 byte hole after ->ywrapstep and the
+> "fix = info->fix;" assignment doesn't necessarily clear it.  It depends
+> on the compiler.
+[]
+> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+[]
+> @@ -1109,6 +1109,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+>  			ret = -EFAULT;
+>  		break;
+>  	case FBIOGET_FSCREENINFO:
+> +		memset(&fix, 0, sizeof(fix));
+>  		lock_fb_info(info);
+>  		fix = info->fix;
+>  		if (info->flags & FBINFO_HIDE_SMEM_START)
 
-Also ?
+Perhaps better to change the struct copy to a memcpy
+---
+ drivers/video/fbdev/core/fbmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> so we can balance pings encapsulated in a tunnel when using mode encap3+4:
-> 
->     # ping -q 192.168.1.2 -c1
->     0: IP 192.168.0.1 > 192.168.0.2: GREv0, length 102: IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 585, seq 1, length 64
->     0: IP 192.168.0.2 > 192.168.0.1: GREv0, length 102: IP 192.168.1.2 > 192.168.1.1: ICMP echo reply, id 585, seq 1, length 64
->     # ping -q 192.168.1.2 -c1
->     1: IP 192.168.0.1 > 192.168.0.2: GREv0, length 102: IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 586, seq 1, length 64
->     1: IP 192.168.0.2 > 192.168.0.1: GREv0, length 102: IP 192.168.1.2 > 192.168.1.1: ICMP echo reply, id 586, seq 1, length 64
-> 
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> ---
->  drivers/net/bonding/bond_main.c | 77 ++++++++++++++++++++++++++++++---
->  1 file changed, 70 insertions(+), 7 deletions(-)
-> 
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index e6a1c80..364699 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -1110,7 +1110,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 		break;
+ 	case FBIOGET_FSCREENINFO:
+ 		lock_fb_info(info);
+-		fix = info->fix;
++		memcpy(&fix, &info->fix, sizeof(fix));
+ 		if (info->flags & FBINFO_HIDE_SMEM_START)
+ 			fix.smem_start = 0;
+ 		unlock_fb_info(info);
 
-Hi Matteo,
-Wouldn't it be more useful and simpler to use some field to choose the slave (override the hash
-completely) in a deterministic way from user-space ?
-For example the mark can be interpreted as a slave id in the bonding (should be
-optional, to avoid breaking existing setups). ping already supports -m and
-anything else can set it, this way it can be used to do monitoring for a specific
-slave with any protocol and would be a much simpler change.
-User-space can then implement any logic for the monitoring case and as a minor bonus
-can monitor the slaves in parallel. And the opposite as well - if people don't want
-these balanced for some reason, they wouldn't enable it.
 
-Or maybe I've misunderstood why this change is needed. :)
-It would actually be nice to include the use-case which brought this on
-in the commit message.
-
-Cheers,
- Nik
 
