@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB067CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0436FCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2442053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB81320830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QdX7V0wI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bcl34FqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733091AbfJ2Gtb (ORCPT
+        id S2387641AbfJ2Guj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 02:49:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37754 "EHLO
+        Tue, 29 Oct 2019 02:50:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37822 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732979AbfJ2Gt1 (ORCPT
+        with ESMTP id S1732982AbfJ2Gt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 02:49:27 -0400
+        Tue, 29 Oct 2019 02:49:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hDkiVa9XfDEYoXi86SjDwlUudDUOj4qX+V5wMq0LvTM=; b=QdX7V0wI1wCk3U+IvqIUmq3iOW
-        qQo/B59j9KTfTxV3N1MOAQ0S5ZKkcn7U6tt0luoPVih7dGd1L8JIPNCNrTN6hCLuFmjPoYeViMDDY
-        mgFFh0WtbA+wv5cVIDeT3e0LdryWYc6xnWK3f16vPlo/4GEEmaaeXNfrIi7cYdOUxduvFfPBcWLk+
-        w8DmRID6giepNvI/Tpg1AV9rv9PuykgdKGh7jfNq8+KYe7f56Y9JZZb0lTCe95kIe006DUFRbenM5
-        jn8HlThD/NNXnz/8+HZJzAXkd1bOsdGvPcsy4xP+9VSR+TPkS/y+lnhzVoXCTwJ8oLJk+X9fJIRGb
-        4JBZdEgQ==;
+        bh=mUh9IJAtF893lJPSE9FNWl8JOGrC9DM2GbUNi0MOrgM=; b=Bcl34FqVmaBqqVI+du9/t1WBwh
+        CnzH8QBgZg43YRJX6SYMEy0FbuLTrJ8+3/NWvTgMupUaIuJ7P3zNGWWQ4bSlbjIwYDvIWCqNMpGof
+        uZZtftxof58J8BHmIqNYRqTaUBbNEVKZoAqXwqOjzDto9U1RdvbBJij24rkM/WXwtFX3QDXyo4Fgj
+        ncAWjftWy4PevCZOGMl30oVTtmLj1G9OghB/uVP53D05WZNSyYbLeWmjUS4gYeoJ0XHCvfX2KtDEu
+        BzYR5CBRz3VW76BOSgo/3DULK/PzlAzGELewEKvcNCXMckmOoUylJMTMwelypG2aE5icqyYG6Q/aG
+        Rkiziyag==;
 Received: from [2001:4bb8:18c:c7d:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPLJJ-0003WJ-Mb; Tue, 29 Oct 2019 06:48:58 +0000
+        id 1iPLJQ-0003jA-B4; Tue, 29 Oct 2019 06:49:04 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
         Michal Simek <monstr@monstr.eu>,
@@ -54,9 +54,9 @@ Cc:     linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
         sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
         linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 07/21] parisc: remove __ioremap
-Date:   Tue, 29 Oct 2019 07:48:20 +0100
-Message-Id: <20191029064834.23438-8-hch@lst.de>
+Subject: [PATCH 09/21] xtensa: clean up ioremap
+Date:   Tue, 29 Oct 2019 07:48:22 +0100
+Message-Id: <20191029064834.23438-10-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191029064834.23438-1-hch@lst.de>
 References: <20191029064834.23438-1-hch@lst.de>
@@ -68,80 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__ioremap is always called with the _PAGE_NO_CACHE, so fold the whole
-thing and rename it to ioremap.  This also allows to remove the special
-EISA quirk to force _PAGE_NO_CACHE.
+Use ioremap as the main implemented function, and defined
+ioremap_nocache to it as a deprecated alias.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/parisc/include/asm/io.h | 11 +----------
- arch/parisc/mm/ioremap.c     | 10 ++++------
- 2 files changed, 5 insertions(+), 16 deletions(-)
+ arch/xtensa/include/asm/io.h | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/arch/parisc/include/asm/io.h b/arch/parisc/include/asm/io.h
-index 93d37010b375..46212b52c23e 100644
---- a/arch/parisc/include/asm/io.h
-+++ b/arch/parisc/include/asm/io.h
-@@ -127,16 +127,7 @@ static inline void gsc_writeq(unsigned long long val, unsigned long addr)
+diff --git a/arch/xtensa/include/asm/io.h b/arch/xtensa/include/asm/io.h
+index 988e08530a5c..441fb56926a7 100644
+--- a/arch/xtensa/include/asm/io.h
++++ b/arch/xtensa/include/asm/io.h
+@@ -32,8 +32,7 @@ void xtensa_iounmap(volatile void __iomem *addr);
  /*
-  * The standard PCI ioremap interfaces
+  * Return the virtual address for the specified bus memory.
   */
--
--extern void __iomem * __ioremap(unsigned long offset, unsigned long size, unsigned long flags);
--
--/* Most machines react poorly to I/O-space being cacheable... Instead let's
-- * define ioremap() in terms of ioremap_nocache().
-- */
--static inline void __iomem * ioremap(unsigned long offset, unsigned long size)
--{
--	return __ioremap(offset, size, _PAGE_NO_CACHE);
--}
-+void __iomem *ioremap(unsigned long offset, unsigned long size);
- #define ioremap_nocache(off, sz)	ioremap((off), (sz))
- #define ioremap_wc			ioremap_nocache
- #define ioremap_uc			ioremap_nocache
-diff --git a/arch/parisc/mm/ioremap.c b/arch/parisc/mm/ioremap.c
-index f29f682352f0..6e7c005aa09b 100644
---- a/arch/parisc/mm/ioremap.c
-+++ b/arch/parisc/mm/ioremap.c
-@@ -25,7 +25,7 @@
-  * have to convert them into an offset in a page-aligned mapping, but the
-  * caller shouldn't need to know that small detail.
-  */
--void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned long flags)
-+void __iomem *ioremap(unsigned long phys_addr, unsigned long size)
+-static inline void __iomem *ioremap_nocache(unsigned long offset,
+-		unsigned long size)
++static inline void __iomem *ioremap(unsigned long offset, unsigned long size)
  {
- 	void __iomem *addr;
- 	struct vm_struct *area;
-@@ -36,10 +36,8 @@ void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned l
- 	unsigned long end = phys_addr + size - 1;
- 	/* Support EISA addresses */
- 	if ((phys_addr >= 0x00080000 && end < 0x000fffff) ||
--	    (phys_addr >= 0x00500000 && end < 0x03bfffff)) {
-+	    (phys_addr >= 0x00500000 && end < 0x03bfffff))
- 		phys_addr |= F_EXTEND(0xfc000000);
--		flags |= _PAGE_NO_CACHE;
--	}
- #endif
- 
- 	/* Don't allow wraparound or zero size */
-@@ -65,7 +63,7 @@ void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned l
- 	}
- 
- 	pgprot = __pgprot(_PAGE_PRESENT | _PAGE_RW | _PAGE_DIRTY |
--			  _PAGE_ACCESSED | flags);
-+			  _PAGE_ACCESSED | _PAGE_NO_CACHE);
- 
- 	/*
- 	 * Mappings have to be page-aligned
-@@ -90,7 +88,7 @@ void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned l
- 
- 	return (void __iomem *) (offset + (char __iomem *)addr);
+ 	if (offset >= XCHAL_KIO_PADDR
+ 	    && offset - XCHAL_KIO_PADDR < XCHAL_KIO_SIZE)
+@@ -52,15 +51,10 @@ static inline void __iomem *ioremap_cache(unsigned long offset,
+ 		return xtensa_ioremap_cache(offset, size);
  }
--EXPORT_SYMBOL(__ioremap);
-+EXPORT_SYMBOL(ioremap);
+ #define ioremap_cache ioremap_cache
+-#define ioremap_nocache ioremap_nocache
+-
+-#define ioremap_wc ioremap_nocache
+-#define ioremap_wt ioremap_nocache
  
- void iounmap(const volatile void __iomem *io_addr)
+-static inline void __iomem *ioremap(unsigned long offset, unsigned long size)
+-{
+-	return ioremap_nocache(offset, size);
+-}
++#define ioremap_nocache ioremap
++#define ioremap_wc ioremap
++#define ioremap_wt ioremap
+ 
+ static inline void iounmap(volatile void __iomem *addr)
  {
 -- 
 2.20.1
