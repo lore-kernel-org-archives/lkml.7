@@ -2,125 +2,76 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147A3CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B60CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF62520578
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AF620717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:33:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IVuaIgCP"
+	dkim=pass (1024-bit key) header.d=jv-coder.de header.i=@jv-coder.de header.b="J1VKZqoB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfJ2Hbv (ORCPT
+        id S1726741AbfJ2HdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:31:51 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40695 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfJ2Hbv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:31:51 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 15so8918506pgt.7
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 00:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pcHTqmnnCL/NWw1R6J/1w2hmcyaktVbA1aDRoVWc/is=;
-        b=IVuaIgCPZu9De21EzBOreBg3aTxziZOG+fuPnNADlZBgt6QVIoRuTI0aziDjm/WR0C
-         5Evep3E6sG+j/ldomU0+cof21z+nhLFjg2IhMsRTCUpmMf0kXMAzRUdMnWsQ243ImYOM
-         Mgr0uupo5clmKCVs/WwbmtD43orjyfkpw73Pk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pcHTqmnnCL/NWw1R6J/1w2hmcyaktVbA1aDRoVWc/is=;
-        b=O7kNGjBVmR+yKhWjnE2yIzDO2+LApAtEhowbf8bcV1oCHHZYKkdL46bwE9WFLz/rA2
-         zn6v3iktY2mjO+zAHlsqoVOko/fK6O40DY+2Fu+CkwqjN6nIhXViQVk40Igm52njr0Ng
-         piKllMjBa9PY3pMVrJGgZBxztHnmW7iKlCm+cyQrSEUUDB2v/lhGZPG2z4I3p2aNymRS
-         uCilyUduUxFG4MiPdDFjZwM0wicYc6MSMEYQNkXivLBSfWbJX3JE15F/r0tMCvbvuky7
-         mNrqnCudVjPSFzb4CdYhWAakShKF9vEcOZGhdgYO3ygUIf6umZitM5Jv6TcBtEkuUL7z
-         gHgQ==
-X-Gm-Message-State: APjAAAWe5nUYNT94otYWi0Q1JbanvfMLhTUCPwWMQY5/6y4DbTpOKy6S
-        3oT3SYsTF0oMczUDEIIFMHnc+g==
-X-Google-Smtp-Source: APXvYqwf35aJKp32xWbepK70jpGUJiEK0cVshmX9rYiLnqh7a1/mBOk+sLo/xDDsfylN6916/n8uqQ==
-X-Received: by 2002:a63:df11:: with SMTP id u17mr2028144pgg.27.1572334310304;
-        Tue, 29 Oct 2019 00:31:50 -0700 (PDT)
-Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
-        by smtp.gmail.com with ESMTPSA id b23sm1563020pju.16.2019.10.29.00.31.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 00:31:49 -0700 (PDT)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     linux-pm@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        "Pavel Machek )" <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH] cpuidle: undelaying cpuidle in dpm_{suspend|resume}()
-Date:   Tue, 29 Oct 2019 15:31:45 +0800
-Message-Id: <20191029073145.154869-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+        Tue, 29 Oct 2019 03:33:05 -0400
+Received: from mail.jv-coder.de ([5.9.79.73]:57316 "EHLO mail.jv-coder.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfJ2HdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 03:33:04 -0400
+Received: from [10.61.40.7] (unknown [37.156.92.209])
+        by mail.jv-coder.de (Postfix) with ESMTPSA id 8456D9F655;
+        Tue, 29 Oct 2019 07:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jv-coder.de; s=dkim;
+        t=1572334381; bh=m2LAJqvz5BHhT0hEXJpcsiP/gHskrUk9SC7/ECwsvhE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version;
+        b=J1VKZqoBtr+17CR4/Lkmq8HUDVR+ov75UtOmaUZxGm/50kl12zerVuWFr2Mq43l+3
+         OZsmsXOTDyGHeMo+JekEgdvbN4zFwUDnI8s3T8yK9MGHzFXj+WlHhd1bjq+mCP0mtG
+         p6eSgAmJAhG2hvSrvkjNuHlKu2taFx4kcNYHZ3zE=
+Subject: Re: [PATCH v2 1/1] xfrm : lock input tasklet skb queue
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Tom Rix <trix@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CACVy4SUkfn4642Vne=c1yuWhne=2cutPZQ5XeXz_QBz1g67CrA@mail.gmail.com>
+ <20191024103134.GD13225@gauss3.secunet.de>
+ <ad094bfc-ebb3-012b-275b-05fb5a8f86e5@jv-coder.de>
+ <20191025094758.pchz4wupvo3qs6hy@linutronix.de>
+ <202da67b-95c7-3355-1abc-f67a40a554e9@jv-coder.de>
+ <20191025102203.zmkqvvg5tofaqfw6@linutronix.de>
+ <5b45c8f6-1aa2-2e1e-9019-a140988bba80@jv-coder.de>
+ <20191028151447.xwtyh6hfwfvzwmmu@linutronix.de>
+From:   Joerg Vehlow <lkml@jv-coder.de>
+Message-ID: <5575bb95-b89a-727d-0587-9c462f1fddef@jv-coder.de>
+Date:   Tue, 29 Oct 2019 08:33:01 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
+In-Reply-To: <20191028151447.xwtyh6hfwfvzwmmu@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cpuidle is paused only during dpm_suspend_noirq() ~ dpm_resume_noirq().
-But some device drivers need random sized IOs in dpm_{suspend|resume}()
-stage (e.g. re-downloading firmware in resume).
-And with such a device, cpuidle's latencies could be critical to
-response time of system suspend/resume.
 
-To minimize those latencies, we could apply pm_qos to such device drivers,
-but simply undelaying cpuidle from dpm_suspend_noirq() to dpm suspend()
-seems no harm.
----
- drivers/base/power/main.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index 134a8af51511..5928dd2139e8 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -773,8 +773,6 @@ void dpm_resume_noirq(pm_message_t state)
- 
- 	resume_device_irqs();
- 	device_wakeup_disarm_wake_irqs();
--
--	cpuidle_resume();
- }
- 
- static pm_callback_t dpm_subsys_resume_early_cb(struct device *dev,
-@@ -1069,6 +1067,7 @@ void dpm_resume(pm_message_t state)
- 
- 	cpufreq_resume();
- 	devfreq_resume();
-+	cpuidle_resume();
- 	trace_suspend_resume(TPS("dpm_resume"), state.event, false);
- }
- 
-@@ -1411,8 +1410,6 @@ int dpm_suspend_noirq(pm_message_t state)
- {
- 	int ret;
- 
--	cpuidle_pause();
--
- 	device_wakeup_arm_wake_irqs();
- 	suspend_device_irqs();
- 
-@@ -1830,6 +1827,7 @@ int dpm_suspend(pm_message_t state)
- 	trace_suspend_resume(TPS("dpm_suspend"), state.event, true);
- 	might_sleep();
- 
-+	cpuidle_pause();
- 	devfreq_suspend();
- 	cpufreq_suspend();
- 
--- 
-2.24.0.rc0.303.g954a862665-goog
-
+> On 2019-10-28 11:44:57 [+0100], Joerg Vehlow wrote:
+>> I was unable to reproduce it with 5.2.21-rt13. Do you know if something
+>> changed in network scheduling code or could it be just less likely?
+> the softirq/BH handling has been rewritten in the v5.0-RT cycle,
+> v5.0.19-rt11 to be exact. So if that the cause for it (which I hope)
+> then you should be able to trigger the problem before that release and
+> not later.
+>
+I testes again with 5.0.19-rt10 and 5.0.19-rt11  and I am pretty sure
+the bug wasfixed by the changes in rt11. I was able to reproduce it with
+rt10 within secondsand unable to reproduce it at all in several minutes on
+rt11. Will 4.19 rt patches receive anymore updates? Is it possible to 
+backport
+the changes to softirq/BH habdling from 5.0.16-rt11 to 4.19?
