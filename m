@@ -2,188 +2,81 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A2BCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C321FCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED63620874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BCF20874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U2XMlrfM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+YX88go"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388085AbfJ2NEJ (ORCPT
+        id S2388163AbfJ2NFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:04:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35461 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729339AbfJ2NEJ (ORCPT
+        Tue, 29 Oct 2019 09:05:41 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38428 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfJ2NFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:04:09 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m7so15187693lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 06:04:08 -0700 (PDT)
+        Tue, 29 Oct 2019 09:05:41 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v186so8846125oie.5
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 06:05:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eolkio2X+wPF8zX1MLMOocwaEGUjLFeD4iEzYwB1UCw=;
-        b=U2XMlrfMCLq8WlZOoFdhqhVmFWkkuoRQxAXUVWd9lkwiNnLjaeUlsAwSznJ39YXv3v
-         jFBNWWWCfjpI4EmV3EsG/7OIZ8Kq7cqt80BHbh3ZfcjLBPvn2Lb0Y59hN9RPw92Lw1NP
-         +xIsRyfZ3qXC3opdzo6mxdpVjo0nkBtZax4nEVG4xYbGej+MSDmwr8xNhJ5bgpKdWwcA
-         73HjcXZR2OEmV4Tl0p9YLtzTYoYLh7rgMadM7vd4XrfHlM2KNyJp12F4DGKx5+iUeNoa
-         DkJec2oBAtGbMSfMwNsJpuBHEKhkpDhe52lrqToU4x9noCC/MvQlz0Rzc63lsChtqJml
-         fWqQ==
+         :cc;
+        bh=I1m3xu+m9D6gNt192ldAysUnXZ1pnKI/Ej70V8nnp/Q=;
+        b=Z+YX88goKKBun8hGKQzGum6fxwq27ys1g6YH8mzsIOFHjZeyo187uDWpv9vwW/WtQY
+         IhmQsiwUHlb15K2hPLJuKkupAkfHS7Onbgi/YlW90rAKiooUkKIeAzm1mdgBj3LrQibk
+         dL1h9sf9joqZ5kU6XHo3civXlReFlcQgLzizNYxvdbylsl+TMjCzZZgRGxLv0xyNqmqX
+         1roCCPyB7/4zGEUdoTCCLX+L+wHqj5ARSlp+bNRvA1ULMzPFAheyhB3fDZqo1IQVM2Rv
+         KZJ1V99zSEykVE1LQGtq+xYUEztrxqnjxSD+vJKenwf/UDB5b9cl1MYzcek5AI/MIHo9
+         LzWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eolkio2X+wPF8zX1MLMOocwaEGUjLFeD4iEzYwB1UCw=;
-        b=JI5/XlDcbU9zbwwo9VAoJ0gGuu4m8RXdTyqbycMrpWuFvMGFJXqUQubz33R4btriQJ
-         gqsr8wulzKg1jr5KdTylQr7h+n+Q+jtrEhXADXXLFQsujYqxkM5cFvoJxI8LKT3vbrgy
-         5f3nqavV582fP6QXq4LIpd9Oo5G/YH7vBEl/pzfcKnz0SVGB5W1+CwtoxAF1gCzUCfhH
-         OaxYMcDgQ1UCeRFl9A9gJcq55Vri8PrS6ww6VHupDW6cneSgkf8HLV368AciqBib83oz
-         HHFy+170xgbQYBwi9PfDN8hUZBnF3QPwi93sfbEkNEnwh5SlpZrA450z4Qxa/RNTVY5A
-         FgsA==
-X-Gm-Message-State: APjAAAV7JQEhVuoWvpTkcvC7OJo6X3++yrXfla47wk9UAHKnt9+ZFPcK
-        JRybZZarEZIfgAW6wV5W90mQu1ml028xDv8O3ZAdug==
-X-Google-Smtp-Source: APXvYqyW9zhmv297bu5tH11bxbPjFdxUwCIY8EX/Ti+kxND3sOM+BVJ85lrTWwVG5Q4bUUtPGWijr0taxJGIX1N5tsI=
-X-Received: by 2002:a2e:814b:: with SMTP id t11mr1759624ljg.20.1572354247270;
- Tue, 29 Oct 2019 06:04:07 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=I1m3xu+m9D6gNt192ldAysUnXZ1pnKI/Ej70V8nnp/Q=;
+        b=BV/UIiYL5YkuaVD4tJCfkOCiWkSdgvheX2zQqqXU2SDAwato4XBTZks0qs/VSw3X5D
+         eMwad2hR1PwyO5WcdKKskRtkslwK3NaK8BcU/hfGgGZP9o/O97z99xH3mATrEFsmwRE0
+         9HA+NlKTgpODjhcUtHRLVvEnrtE2vlSwMaRSShfm0exI2mrjz+/EXgKNMK/rvM6qPOcs
+         8XDeB9dpNTRiUdWvRXpPk4dP1AeUMVj33qUfs70vnsXrL3qJxDySysKaRTdWD4GPTn9E
+         82MH4qLSCKE7UhxjS82f7PnM+GGOm9774Foij0nBx3wIUztGo5jhi8uFzFK22c2Zn7u2
+         kZDA==
+X-Gm-Message-State: APjAAAW61pfgC7dGaZ9cbKrxltrxKKVFvIZlIriQGKbEnPx3R5s22Vwu
+        rBiQCREgUSkaGT0tiQ+t5QKaKXWRvupSVLALM1w=
+X-Google-Smtp-Source: APXvYqzcuXK39zeqZTtDeXlSdcOoUxbBCJz+mD+QEuH872R+9IM1iojFTcgFg1Pi9wN5zc2183cyT1KJYO/hUnpAdu0=
+X-Received: by 2002:aca:90f:: with SMTP id 15mr3812140oij.92.1572354340215;
+ Tue, 29 Oct 2019 06:05:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191027203351.684916567@linuxfoundation.org>
-In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 29 Oct 2019 18:33:56 +0530
-Message-ID: <CA+G9fYtmCNbq+ywLe+RSDZqVHckzyJfaOCXYRbD+5-DaYm1yKg@mail.gmail.com>
-Subject: Re: [PATCH 5.3 000/197] 5.3.8-stable review
+References: <1570515056-23589-1-git-send-email-hariprasad.kelam@gmail.com>
+ <CAGngYiX0zoAQB=SEoXfoMm9u_JzHu3eLErj4zmTYtSAoDwkp6Q@mail.gmail.com>
+ <CAGngYiXxagQMiHA-pZupTPHfyFz4kU=QOrvM28L_jSV1VGw=jQ@mail.gmail.com> <20191029080336.GA493801@kroah.com>
+In-Reply-To: <20191029080336.GA493801@kroah.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 29 Oct 2019 09:05:28 -0400
+Message-ID: <CAGngYiWDUbnLCDMM4JM-Jn3GNBvQsbrD5NfNmL59q-3DVeD3uQ@mail.gmail.com>
+Subject: Re: [PATCH] staging: fieldbus: make use of devm_platform_ioremap_resource
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+Cc:     hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019 at 02:49, Greg Kroah-Hartman
+On Tue, Oct 29, 2019 at 4:03 AM Greg Kroah-Hartman
 <gregkh@linuxfoundation.org> wrote:
 >
-> This is the start of the stable review cycle for the 5.3.8 release.
-> There are 197 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> This has been in my tree already for a while, can you verify it is all
+> ok?
 >
-> Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.3.8-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.3.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Note:
-The new test case  from LTP version upgrade syscalls sync_file_range02 is a=
-n
-intermittent failure. We are investigating this case.
-The listed fixes in the below section are due to LTP upgrade to v20190930.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.3.8-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.3.y
-git commit: 96dab4347cbe9212292cb3934e4d16cf1dab94c3
-git describe: v5.3.7-197-g96dab4347cbe
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/bui=
-ld/v5.3.7-197-g96dab4347cbe
-
-No regressions (compared to build v5.3.6-112-gcbb18cd3e478)
-
-Fixes (compared to build v5.3.6-112-gcbb18cd3e478)
-------------------------------------------------------------------------
-
-ltp-syscalls-tests:
-    * clock_getres01
-    * ioctl_ns05
-    * ioctl_ns06
-    * shmctl01
-    * ustat02
-
-
-Ran 16437 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* ssuite
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+All good. I see you took Cristiane's version, not hariprasad's or YueHaibing's.
+As long as one version lands, all is well :)
