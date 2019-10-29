@@ -2,131 +2,116 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7782CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF58CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB41020659
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572389327;
-	bh=nGkre3Sct3Yf3NySCEnp4F3IW+iStUtH8WMnuaRtciY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=GEOLUs5Xqh52P3A/KFwPYdxgoowZCkS1V9a1Q1gca2X8KOUZFAfePGBJYJlymITYM
-	 BcoA0u+KgUBaMI4Dh584MUfTwvM+dyzxstY/3x9Oai9hOevNwzKfE5jHLKKmv41e+T
-	 NC6N3OKMZXCFqR0QWb+5EH+nIjANEVCTPzn5yEXk=
+	by mail.kernel.org (Postfix) with ESMTP id 0C2522087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:50:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="IpOq05N4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfJ2Wsq (ORCPT
+        id S1726283AbfJ2Wuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:48:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfJ2Wsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:48:46 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DD5F2087E;
-        Tue, 29 Oct 2019 22:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572389324;
-        bh=nGkre3Sct3Yf3NySCEnp4F3IW+iStUtH8WMnuaRtciY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HKL3uHQ5f832mdiZWTaWDdHO0xTJAZ79UxYj7BXixyTKZRYQYBz2EhNQGpJqgv48Q
-         cxFhrHwu7pcerAOIr9vbWJz9rgxUZUGyUtZORyjFLjYF6f3uiZCdoOBtg7p/cvKdEt
-         c506rGVG1iFe4JHvyTFcZz9aEN7MSP+VqbLsBNh4=
-Date:   Tue, 29 Oct 2019 17:48:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v9 7/8] PCI/DPC: Clear AER registers in EDR mode
-Message-ID: <20191029224842.GA121219@google.com>
+        Tue, 29 Oct 2019 18:50:46 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35301 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfJ2Wuq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 18:50:46 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x5so96549wmi.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 15:50:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=btcO2kbQzjWCRPlDPp2ih4Wwes8/F4qc3tgqqhv/xx8=;
+        b=IpOq05N4KjE4zg1oC5O7H20w97yojnP1buo5WYqtlFfYFF3MNAXbfZtKUaRR23Hev5
+         MfdWZAUKaGTCTo5ws7T0XlnPU1wZZYu25+voj37P/E9iHJQjeESf9QY7McgoJIrMwVSn
+         +V5iqH6DXsiTXkyN/6pPQ5/cnKEegZm2BKZzI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=btcO2kbQzjWCRPlDPp2ih4Wwes8/F4qc3tgqqhv/xx8=;
+        b=OlJS59DMQS0XmMz49QSCGyIFhCxzrDypKqPuT+GlJJpdnzqfF8RcGGR4VTKivsLfjD
+         CuNYwYKiOAj2b6ZzUfk643Xf1EoqDV6VQzvOH0hySr+u1Gxxz8dWRBijTLALHYA8YGS+
+         ftvjTFbp455nXHERoQGb0JHktDvg2LQwgT2en81ZHIhtjcJOF53V4jArP2/d/jWoVdaJ
+         A6lFSH85AL6L/LWAjN27un9iP6DNQfM4ySfGYfA0484+8UlD/BO1W/zHrTWn1S02kC5l
+         SwMIp+4yPXbOCWkWsafbVhOZ/15VLgkUdBPM4v4zP0iaHG9XoXRAB85XYTR/PdoKo6Yx
+         uLIQ==
+X-Gm-Message-State: APjAAAWW9oI8RE7nDn4U3U69hdkEBUjQ+GCR34izJyqsvHQejPZ6eYCF
+        HE/NpqLEplSfyPiJGR/sbU/J3Q==
+X-Google-Smtp-Source: APXvYqwvFUOZBquoDvuOipQqVhVeJTxzpP1yQP9WQ69QCPwyrvLFWnlerZKyvn/QDEJrMiW4edqnQA==
+X-Received: by 2002:a05:600c:350:: with SMTP id u16mr5802601wmd.160.1572389444332;
+        Tue, 29 Oct 2019 15:50:44 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
+        by smtp.gmail.com with ESMTPSA id x7sm903106wrg.63.2019.10.29.15.50.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 15:50:43 -0700 (PDT)
+Subject: Re: [PATCH v2 20/23] serial: make SERIAL_QE depend on PPC32
+To:     Leo Li <leoyang.li@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        Valentin Longchamp <valentin.longchamp@keymile.com>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <20191025124058.22580-1-linux@rasmusvillemoes.dk>
+ <20191025124058.22580-21-linux@rasmusvillemoes.dk>
+ <VE1PR04MB6687CA599C89D46076C9B3518F610@VE1PR04MB6687.eurprd04.prod.outlook.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <42d151c0-bbf9-62a5-5930-70d62418bb84@rasmusvillemoes.dk>
+Date:   Tue, 29 Oct 2019 23:50:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <283cbbb4-78b7-7773-5613-d77341af166b@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <VE1PR04MB6687CA599C89D46076C9B3518F610@VE1PR04MB6687.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 01:04:29PM -0700, Kuppuswamy Sathyanarayanan wrote:
+On 29/10/2019 23.44, Leo Li wrote:
 > 
-> On 10/28/19 4:27 PM, Bjorn Helgaas wrote:
-> > On Thu, Oct 03, 2019 at 04:39:03PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > 
-> > > As per PCI firmware specification r3.2 Downstream Port Containment
-> > > Related Enhancements ECN,
-> > Specific reference, please, e.g., the section/table/figure of the PCI
-> > Firmware Spec being modified by the ECN.
-> Ok. I will include it.
-> > 
-> > > OS is responsible for clearing the AER
-> > > registers in EDR mode. So clear AER registers in dpc_process_error()
-> > > function.
-> > > 
-> > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > Acked-by: Keith Busch <keith.busch@intel.com>
-> > > ---
-> > >   drivers/pci/pcie/dpc.c | 4 ++++
-> > >   1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > > index fafc55c00fe0..de2d892bc7c4 100644
-> > > --- a/drivers/pci/pcie/dpc.c
-> > > +++ b/drivers/pci/pcie/dpc.c
-> > > @@ -275,6 +275,10 @@ static void dpc_process_error(struct dpc_dev *dpc)
-> > >   		pci_aer_clear_fatal_status(pdev);
-> > >   	}
-> > > +	/* In EDR mode, OS is responsible for clearing AER registers */
-> > > +	if (dpc->firmware_dpc)
-> >
-> > I guess "EDR mode" is effectively the same as "firmware-first mode"?
->
-> Yes, EDR mode is an upgrade to FF mode in which firmware allows OS
-> to share some of it job by sending ACPI notification. If you don't
-> get ACPI notification, EDR mode is effectively same as FF mode.
-
-Hmm, somehow the connection between FF and EDR needs to be clear from
-the code, so people who weren't involved in the development of EDR and
-don't even have access to the specs/ECNs can make sense out of this.
-
-> > At least, the only place we set "firmware_dpc = 1" is:
-> > 
-> >    +       if (pcie_aer_get_firmware_first(pdev))
-> >    +               dpc->firmware_dpc = 1;
-> > 
-> > If they're the same, why do we need two different names for it?
-> For better readability and performance, I tried to cache the value of
-> pcie_aer_get_firmware_first() result in DPC driver.
-
-pcie_aer_get_firmware_first() already caches the value, so I don't
-think you're gaining any useful performance here, and having two
-different names *decreases* readability.
-
-I do agree that pcie_aer_get_firmware_first() is not optimally
-implemented.  I think we should probably look up the firmware-first
-indication explicitly during enumeration so we don't have to bother
-with the dev->__aer_firmware_first_valid thing.  And if we got rid of
-all those leading underscores, it would probably run faster, too ;)
-
-> > > +		pci_cleanup_aer_error_status_regs(pdev);
-> > > +
-> > >   	/*
-> > >   	 * Irrespective of whether the DPC event is triggered by
-> > >   	 * ERR_FATAL or ERR_NONFATAL, since the link is already down,
-> > > -- 
-> > > 2.21.0
-> > > 
-> -- 
-> Sathyanarayanan Kuppuswamy
-> Linux kernel developer
 > 
+>> -----Original Message-----
+>> From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>> Sent: Friday, October 25, 2019 7:41 AM
+>> To: Qiang Zhao <qiang.zhao@nxp.com>; Leo Li <leoyang.li@nxp.com>;
+>> Christophe Leroy <christophe.leroy@c-s.fr>
+>> Cc: linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
+>> linux-kernel@vger.kernel.org; Scott Wood <oss@buserror.net>; Valentin
+>> Longchamp <valentin.longchamp@keymile.com>; Rasmus Villemoes
+>> <linux@rasmusvillemoes.dk>; linux-serial@vger.kernel.org
+>> Subject: [PATCH v2 20/23] serial: make SERIAL_QE depend on PPC32
+>>
+>> Currently SERIAL_QE depends on QUICC_ENGINE, which in turn depends on
+>> PPC32, so this doesn't add any extra dependency. However, the QUICC
+>> Engine IP block also exists on some arm boards, so this serves as preparation
+>> for removing the PPC32 dependency from QUICC_ENGINE and build the QE
+>> support in drivers/soc/fsl/qe, while preventing allmodconfig/randconfig
+>> failures due to SERIAL_QE not being supported yet.
+>>
+>> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> 
+> I think your purpose of this series is to make the QE UART not depending on PPC32.  If it does accomplish that then we don't need this change.
+
+Yeah, as I've said in private, I now have the patches to make this work,
+so this patch (and the later one removing it again) are both gone from
+my current dev branch. I'll still wait a day or two to allow the ppc
+people to respond to the inline/OOL iowrite32be issue, but after that
+I'll resend the whole series.
+
+Rasmus
