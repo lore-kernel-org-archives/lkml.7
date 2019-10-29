@@ -2,112 +2,114 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C1BCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039B4CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E192086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70E121479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aMwSkpUU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uEH8dw0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731245AbfJ2Mb7 (ORCPT
+        id S1732269AbfJ2Mco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:31:59 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38162 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbfJ2Mb7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:31:59 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 22so2214387wms.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 05:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xhbeap0zYq8ygksM/mgoVa+Q+7s8AmV30mQ95BsGCuI=;
-        b=aMwSkpUUD4qCjCpYYh/dcGfZlB4t4tBaRbhrhL5fDucT5n7u0Ynl3DtWQQwf4HlCTM
-         rKFMOHpNkXgVmOAd4mmFVOdyGb+fsnND/8mLve+obduh6/AL1DnAU4t1XILZqJOLlUjF
-         ZagYWfnBaHNPpPOPsqAGeyUk9QIBLNONLRNrARMybq/lB8q4pxNeD2tsa1kDnn5O51ag
-         sD5737K5U1pwBa7gVr0PC6xsFtc6MWUcKe0KY5U+ut9aSdCmRtcKnZnIKy/JHlhq6HUD
-         ayWw49ec8kSC4nWIapkQpGYPADXHMVfHaxhWrSOyCSQ15DoULCFPOiB6Z8BL6y2t5gVJ
-         EFXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xhbeap0zYq8ygksM/mgoVa+Q+7s8AmV30mQ95BsGCuI=;
-        b=LlswhY1/G8vbbOJ8CWx2E9/oYrmF8bkIOUfauOhbNaFvAcFemTPzY0XLBKzVArmxml
-         uMi9Pqh9awCzpZg8BtfGb7yOIxxltm0cksfg0QYpQnNsSl9s/WtFjgxvZYho0jz+Zeak
-         Inni3v2TfEWOArTgs+ioxferEOo8wm7OAoq4cJvvUzuIwLQFwQyztOvcYdfKWQn86DLm
-         nWaYInQixMmSwfOM2RAWBNSOzLCYadEZfoUviEUBsvepS4pZ3DABG8IeStAYLNe8EX1c
-         j8/jXtr1bQsdZ/nspbQ9Us/2tl/KPCAanVnyShdGrdtPD0/b07St7DrmjT9PcUiCvxts
-         ABXg==
-X-Gm-Message-State: APjAAAVs0dtmjQZLIEHI7AHs/CwSftZS38a4V+jyQBIUl91a+Rx9dFRo
-        MdfWiGakiW3yA69IUmE2Gllp3g==
-X-Google-Smtp-Source: APXvYqyHjKu+2Ja4N9z0bwSJPnfrhxCySVoKSvAPuhefGUh9brsbc6qd1X+u4ZTKMm2DxUjis/WSXQ==
-X-Received: by 2002:a1c:560b:: with SMTP id k11mr4182419wmb.153.1572352317183;
-        Tue, 29 Oct 2019 05:31:57 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id s13sm2874256wmc.28.2019.10.29.05.31.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 05:31:55 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 13:31:52 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Tue, 29 Oct 2019 08:32:44 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40182 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbfJ2Mcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:32:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=W2oXZhabkVcZy9Se0lF9CY8ZtGTSqam1VXB+wNuXojE=; b=uEH8dw0S7x9Rjq3PAn4pEarQU3
+        iNtNXtSwVVh8QwyMqo2OmHtOioMbE4vAdkC+xXTGfV+uoeh2cJ1iD9nCtHcIzAf4Jt4/DK5AZIT1i
+        PJ0HicgwlOpKcFFomgfwEGbxYFrMeVgWqjstx0NPAtKYRVyOlX1YZj1ft7UIFenE5iGU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iPQfm-00048T-Ci; Tue, 29 Oct 2019 13:32:30 +0100
+Date:   Tue, 29 Oct 2019 13:32:30 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
         "David S . Miller" <davem@davemloft.net>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-crypto@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] crypto: amlogic: ensure error variable err is set
- before returning it
-Message-ID: <20191029123152.GA18754@Red>
-References: <20191029113230.7050-1-colin.king@canonical.com>
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 net-next 06/12] net: ethernet: ti: introduce cpsw
+  switchdev based driver part 1 - dual-emac
+Message-ID: <20191029123230.GM15259@lunn.ch>
+References: <20191024100914.16840-1-grygorii.strashko@ti.com>
+ <20191024100914.16840-7-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029113230.7050-1-colin.king@canonical.com>
+In-Reply-To: <20191024100914.16840-7-grygorii.strashko@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:32:30AM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently when the call to crypto_engine_alloc_init fails the error
-> return path returns an uninitialized value in the variable err. Fix
-> this by setting err to -ENOMEM.
-> 
-> Addresses-Coverity: ("Uninitialized scalar variable")
-> Fixes: 48fe583fe541 ("crypto: amlogic - Add crypto accelerator for amlogic GXL")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/crypto/amlogic/amlogic-gxl-core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
-> index db5b421e88d8..fa05fce1c0de 100644
-> --- a/drivers/crypto/amlogic/amlogic-gxl-core.c
-> +++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
-> @@ -162,6 +162,7 @@ static int meson_allocate_chanlist(struct meson_dev *mc)
->  		if (!mc->chanlist[i].engine) {
->  			dev_err(mc->dev, "Cannot allocate engine\n");
->  			i--;
-> +			err = -ENOMEM;
->  			goto error_engine;
->  		}
->  		err = crypto_engine_start(mc->chanlist[i].engine);
-> -- 
-> 2.20.1
-> 
+> +static int cpsw_probe(struct platform_device *pdev)
+> +{
+> +	const struct soc_device_attribute *soc;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *ss_res;
+> +	struct cpsw_common *cpsw;
+> +	struct gpio_descs *mode;
+> +	void __iomem *ss_regs;
+> +	int ret = 0, ch;
+> +	struct clk *clk;
+> +	int irq;
+> +
 
-Acked-by: Corentin Labbe <clabbe@baylibre.com>
+...
 
-Thanks
+> +
+> +	/* setup netdevs */
+> +	ret = cpsw_create_ports(cpsw);
+> +	if (ret)
+> +		goto clean_unregister_netdev;
+
+At this point, the slave ports go live. If the kernel is configured
+with NFS root etc, it will start using the interfaces.
+
++
+> +	/* Grab RX and TX IRQs. Note that we also have RX_THRESHOLD and
+> +	 * MISC IRQs which are always kept disabled with this driver so
+> +	 * we will not request them.
+> +	 *
+> +	 * If anyone wants to implement support for those, make sure to
+> +	 * first request and append them to irqs_table array.
+> +	 */
+> +
+> +	ret = devm_request_irq(dev, cpsw->irqs_table[0], cpsw_rx_interrupt,
+> +			       0, dev_name(dev), cpsw);
+> +	if (ret < 0) {
+> +		dev_err(dev, "error attaching irq (%d)\n", ret);
+> +		goto clean_unregister_netdev;
+> +	}
+> +
+> +	ret = devm_request_irq(dev, cpsw->irqs_table[1], cpsw_tx_interrupt,
+> +			       0, dev_name(dev), cpsw);
+> +	if (ret < 0) {
+> +		dev_err(dev, "error attaching irq (%d)\n", ret);
+> +		goto clean_unregister_netdev;
+> +	}
+
+Are there any race conditions if the network starts using the devices
+before interrupts are requested? To be safe, maybe this should be done
+before the slaves are created?
+
+       Andrew
