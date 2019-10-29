@@ -2,110 +2,103 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6AACA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F0FCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A4920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:54:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572339262;
-	bh=mkkA0nt6hx3V0z0UwVIpSj9LslS/iQ3ZT+43Z9OvzN0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fQ1plJgLdV3xe5X37vwI+Ry5/+lNJWWCuAyXBcTasxhGuTblyp+gLn6okLlJxMqYY
-	 bwFnrJ2oHXJUp8b0rvSV/myigeRViiaFHryNR+n5DJplWXyDpIGcIlIl2x65v4B8Sc
-	 yEdEdOiQUHaI8MtWPkoyvjOwofsgGpIHnYAxW9DY=
+	by mail.kernel.org (Postfix) with ESMTP id 8EB2B20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:54:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=piap.pl header.i=@piap.pl header.b="KQJnu8OO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbfJ2IyV (ORCPT
+        id S1730091AbfJ2Iya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:54:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47566 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 04:54:30 -0400
+Received: from ni.piap.pl ([195.187.100.5]:58338 "EHLO ni.piap.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbfJ2IyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:54:21 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729992AbfJ2Iya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:54:30 -0400
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C04E20663;
-        Tue, 29 Oct 2019 08:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572339260;
-        bh=mkkA0nt6hx3V0z0UwVIpSj9LslS/iQ3ZT+43Z9OvzN0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rvOQbaioo47qLALm3l14AHXxcxc5IYfpvJjlT7KDT/WEkmyjOQKlnSyb7eRV3WHdu
-         fT9PRURUDToD06zrggmqZ8s9PCAusIcDS7FYlIzzysiQ+pR5BD6oYTZIy5palfhN14
-         W5T1c8taWx9dN6yvQ24GVdJ6SbVbEiiXmQ0VWT9s=
-Date:   Tue, 29 Oct 2019 09:54:01 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
-Message-ID: <20191029085401.gvqpwmmpyml75vis@hendrix>
-References: <20191025175625.8011-1-jagan@amarulasolutions.com>
- <20191025175625.8011-5-jagan@amarulasolutions.com>
- <20191028153427.pc3tnoz2d23filhx@hendrix>
- <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
+        by ni.piap.pl (Postfix) with ESMTPSA id 6DA7D442258;
+        Tue, 29 Oct 2019 09:54:24 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 6DA7D442258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
+        t=1572339264; bh=TU9ebFgfanQ7Z4iTqUkUU2jipaToSz+RUzToxJpmr6s=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=KQJnu8OO87rgTKcwqeO2VfIMekcbwGawgFrZFaEjV2fRRy55gzo2McuRNLzH92jr5
+         jK1sCYGsI7f3ncJ42fAuSZAdgoEeRQ7Sqm9C4xMXPSWOZ6rbEYBoSp8KVCCYz+yedZ
+         x4M+UFyvwnBQQfMDU0wgJLEMSIiTg3ruAlYb9p2g=
+From:   khalasa@piap.pl (Krzysztof =?utf-8?Q?Ha=C5=82asa?=)
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] 802.11n IBSS: wlan0 stops receiving packets due to aggregation after sender reboot
+References: <m34l02mh71.fsf@t19.piap.pl> <m37e4tjfbu.fsf@t19.piap.pl>
+        <e5b07b4ce51f806ce79b1ae06ff3cbabbaa4873d.camel@sipsolutions.net>
+Date:   Tue, 29 Oct 2019 09:54:24 +0100
+In-Reply-To: <e5b07b4ce51f806ce79b1ae06ff3cbabbaa4873d.camel@sipsolutions.net>
+        (Johannes Berg's message of "Mon, 28 Oct 2019 13:21:15 +0100")
+Message-ID: <m37e4orkxr.fsf@t19.piap.pl>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="unkpttpyvqhvobfg"
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-KLMS-Rule-ID: 4
+X-KLMS-Message-Action: skipped
+X-KLMS-AntiSpam-Status: not scanned, whitelist
+X-KLMS-AntiPhishing: not scanned, whitelist
+X-KLMS-AntiVirus: Kaspersky Security 8.0 for Linux Mail Server, version 8.0.1.721, not scanned, whitelist
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Johannes Berg <johannes@sipsolutions.net> writes:
 
---unkpttpyvqhvobfg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I think you just got very lucky (or unlucky) to have the same dialog
+> token, because we start from 0
 
-On Tue, Oct 29, 2019 at 04:03:56AM +0530, Jagan Teki wrote:
-> > > explicit handling of common clock would require since the A64
-> > > doesn't need to mention the clock-names explicitly in dts since it
-> > > support only one bus clock.
-> > >
-> > > Also pass clk_id NULL instead "bus" to regmap clock init function
-> > > since the single clock variants no need to mention clock-names
-> > > explicitly.
-> >
-> > You don't need explicit clock handling. Passing NULL as the argument
-> > in regmap_init_mmio_clk will make it use the first clock, which is the
-> > bus clock.
->
-> Indeed I tried that, since NULL clk_id wouldn't enable the bus clock
-> during regmap_mmio_gen_context code, passing NULL triggering vblank
-> timeout.
+Right, it seems to be the case.
 
-There's a bunch of users of NULL in tree, so finding out why NULL
-doesn't work is the way forward.
+> - maybe we should initialize it to a
+> random value to flush out such issues.
 
-Maxime
+The problem I can see is that the dialog_tokens are 8-bit, way too small
+to eliminate conflicts.
 
---unkpttpyvqhvobfg
-Content-Type: application/pgp-signature; name="signature.asc"
+> Really what I think probably happened is that one of your stations lost
+> the connection to the other, and didn't tell it about it in any way - so
+> the other kept all the status alive.
 
------BEGIN PGP SIGNATURE-----
+You must have missed my previous mail - I simply rebooted that station,
+and alternatively rmmoded/modprobed ath9k. But the problem originated in
+a station going out of and back in range, in fact.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbf+KQAKCRDj7w1vZxhR
-xQUaAQCp7d+DSgK2CMprYRTRP+TGzpbEjN4u+W/Tt1seOujvoQEA9cGaIr4yjPsP
-iK0Vn3o2jO7HYtqHE03IewfUWRW4OgM=
-=D4qQ
------END PGP SIGNATURE-----
+> I suspect to make all this work well we need to not only have the fixes
+> I made recently to actually send and parse deauth frames, but also to
+> even send an auth and reset the state when we receive that, so if we
+> move out of range and even the deauth frame is lost, we can still reset
+> properly.
 
---unkpttpyvqhvobfg--
+That's one thing. The other is a station trying ADDBA for the first time
+after boot (while the local station has seen it before that reboot).
+
+> In any case, this is not the right approach - we need to handle the
+> "lost connection" case better I suspect, but since you don't say what
+> really happened I don't really know that that's what you're seeing.
+
+I guess we need to identify "new connection" reliably. Otherwise,
+the new connections are treated as old ones and it doesn't work.
+
+Now how can it be fixed?
+--=20
+Krzysztof Halasa
+
+=C5=81UKASIEWICZ Research Network
+Industrial Research Institute for Automation and Measurements PIAP
+Al. Jerozolimskie 202, 02-486 Warsaw, Poland
