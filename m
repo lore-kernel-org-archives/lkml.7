@@ -2,308 +2,155 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CA3CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45981CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D06520862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1159D20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:52:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hyfI2Bbh"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="EeCNSq8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389113AbfJ2NwC (ORCPT
+        id S2389129AbfJ2Nwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:52:02 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55123 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388453AbfJ2NwC (ORCPT
+        Tue, 29 Oct 2019 09:52:41 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:46200 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388294AbfJ2Nwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:52:02 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g7so2654126wmk.4;
-        Tue, 29 Oct 2019 06:51:56 -0700 (PDT)
+        Tue, 29 Oct 2019 09:52:40 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9TDlsPq024029;
+        Tue, 29 Oct 2019 09:52:14 -0400
+Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2059.outbound.protection.outlook.com [104.47.32.59])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2vvk26f4s1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 29 Oct 2019 09:52:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bQpD3Y2Tgme/Bnx+fJWRA+Tw7LQibR6xqBdeQg6ZMfAqKvnf45ov8Nv3YjIFKWONNJ/EGqhR8fNjrjTWXev1bzD6t2iBgH+hdecZqk0nykh1PnE2bixFeP3MjckZsAze8veU12OAUGAfZptUf+kwklfdgHKBrvj/flLNMFt4ccIGlLtCNTcD41MMAevwB8jU668WgfEj+1alJFwKd0VNolYe8fIWQWBAjPCN8HCcpBFnyeCp90BwgwTX8wOIOzh3Se2mtXh5CWiN8NQu/zrMCUACC0MbcAgceJw8w9tEUZrvn21ZTwWDYPKJKj2Vm85bIJPcE7Tl+1ycSCcc+FgT7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2hDD8b0bGRPVx8DUhOmfebYAy7xhfl7NFy8y6rLjG6g=;
+ b=nS8DLo8oUAJEyD925xXxI//QYTQJlbGipxNsoQg4onEkCPFkp9fw1pgkL4K3/3i/V/0HXP7vcnMaHnSGHmED2l3VTYPjnrL54BWixHWL2FR1F3dD4n+EwOQomPIoIQj4Tluj2zIj19BUY4qCAtuGUofz+fG+NOnOAv1/PTnlJdbfcmhAjJz+J2iWAl01pmua1PVrItBBGX6HBr4uXmRXBi8CBmGqaPkMVClcUSBzXQkK4hfBCXjQhXE4mdMfY6ZzVLMHsewNhd/IbSVxweCl8ubC58GGe/Ej1EX4yAASZwr8ubX8+VziA3UpVEvWXNYNmUm5imA5e+FBtFaG/XB9sA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DZGYQwf14hKZet/V1q9ny5mdIhjZ2BWooRO8zX5IoAs=;
-        b=hyfI2BbhCltIGCnc3C05WqwgQbthE0YNyda/cizpRg3IC4zO8xcHM3pQFop6RtlhUC
-         r5JzxnVoq4XEdf65KfxoTnOkPIsIWvbvjWUDpPmy+cYGRQiwKve2oKvuMHtIHnyYAhd7
-         HLhGQURzkQYt/4eUU5SgSYp7g5sAFY0UKVx+mT8hslb5YdHeqWJBHPoW0l/Yd7gtSVwT
-         gmnunxZIoEZ4muf5QI8kaycNU4UEy6LAHXItxErbUN3Q8eu0TBucVw9Q7S5Wa+fdwEJq
-         ZpK2EaYqaZZ4tfZR4IMGQwjDDP9mNLkLFdDFaWtv7XyBpCoGcLYiY1x8jJSe9fi3wkZo
-         L9lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DZGYQwf14hKZet/V1q9ny5mdIhjZ2BWooRO8zX5IoAs=;
-        b=c7xeHyqf8v17AHe/Q9zGzQsIjSKz0uFq/silvIb1IcZzTL167EyUE1i9yhY+BsMjEs
-         i9gOVUqyroaSwVtRGCpQXj9EhH268GZvMLFGzniVoKTiw+fQ7bzwW5P+RwVZnsysbIBz
-         xZnVSfSesE3JR3+sPljfINciBiLwpC4oj5iO0LbK7bg2pRkWCNU96+hIeH3er44ZV6lT
-         rt/vtJGYFlovmprf3f49ahpCDY5C6HoR2rZA8kDrux0D/gAV7/5rfWdL9lpM/WJwLUtj
-         vDX8fIAiIsjWQNhZ6N8+a4t+oDXc4QdrNkwjJyTnrrg9p24osyE8vvwFeSmA9rc2fHM5
-         yf6w==
-X-Gm-Message-State: APjAAAUHEGE2UVzOD4GlY6ukvzuTFIRbaD3j6RMDtwc9ZnRIgqYiT1K4
-        rFoyXUT42ORL+9T6LGr7W1o=
-X-Google-Smtp-Source: APXvYqwwqob0oWcxcAV1a0Vd0fsoT8ZMQdgJlXVrrU+CJ35YiKg7XpAUbXeHfBKeszvuKk0Y7T+kHA==
-X-Received: by 2002:a1c:650b:: with SMTP id z11mr4184746wmb.149.1572357115633;
-        Tue, 29 Oct 2019 06:51:55 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id k3sm14278833wro.77.2019.10.29.06.51.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 06:51:53 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 14:51:52 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 00/15] memory: tegra: Introduce Tegra30 EMC driver
-Message-ID: <20191029135152.GJ508460@ulmo>
-References: <20190811210043.20122-1-digetx@gmail.com>
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2hDD8b0bGRPVx8DUhOmfebYAy7xhfl7NFy8y6rLjG6g=;
+ b=EeCNSq8ZAonicKPJ/VNyKWlTb8zb6LZooATrpN3pvSierSbOxeRhI3sao3Xr4mo2oxZOggcC7q+g4TOymw7et0da3+v7LaEM6gOavmnt6Ya/9LycXsDy569a1KvH7xxeRooEOc8ZoGKJMejFlFJ50tP6pSoid2nRsolpVQD6qKk=
+Received: from DM3PR03CA0015.namprd03.prod.outlook.com (2603:10b6:0:50::25) by
+ SN6PR03MB4413.namprd03.prod.outlook.com (2603:10b6:805:101::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.20; Tue, 29 Oct
+ 2019 13:52:12 +0000
+Received: from BL2NAM02FT041.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::208) by DM3PR03CA0015.outlook.office365.com
+ (2603:10b6:0:50::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.25 via Frontend
+ Transport; Tue, 29 Oct 2019 13:52:12 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ BL2NAM02FT041.mail.protection.outlook.com (10.152.77.122) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2387.20
+ via Frontend Transport; Tue, 29 Oct 2019 13:52:12 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x9TDq4Qs031817
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 29 Oct 2019 06:52:04 -0700
+Received: from ben-Latitude-E6540.ad.analog.com (10.48.65.163) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 29 Oct 2019 09:52:10 -0400
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <paulmck@linux.ibm.com>,
+        <mchehab+samsung@kernel.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <biabeniamin@outlook.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v2 4/4] MAINTAINERS: add entry for AD7091R5 driver
+Date:   Tue, 29 Oct 2019 18:52:24 +0200
+Message-ID: <20191029165224.11164-1-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191029162928.9720-1-beniamin.bia@analog.com>
+References: <20191029162928.9720-1-beniamin.bia@analog.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8tZVdKiiYitVG083"
-Content-Disposition: inline
-In-Reply-To: <20190811210043.20122-1-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(346002)(396003)(136003)(376002)(199004)(189003)(48376002)(54906003)(478600001)(8676002)(2351001)(106002)(8936002)(246002)(2906002)(47776003)(6306002)(107886003)(50226002)(86362001)(70206006)(70586007)(4326008)(6666004)(966005)(11346002)(76176011)(486006)(446003)(2616005)(6916009)(126002)(51416003)(1076003)(7416002)(26005)(7636002)(4744005)(476003)(186003)(305945005)(316002)(16586007)(50466002)(426003)(5660300002)(36756003)(336012)(356004)(7696005)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR03MB4413;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 134b07c1-e0d2-4c8e-4d52-08d75c7732e8
+X-MS-TrafficTypeDiagnostic: SN6PR03MB4413:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <SN6PR03MB441396D05D161CAE935C911AF0610@SN6PR03MB4413.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
+X-Forefront-PRVS: 0205EDCD76
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: M7XIdFSmIiu5Wgpfg+Qpq2yZXgvW3ehqdO7VzFgU0kiWfsQsu48DQ+EhZUFTrEe6r4AO6Zmj+eDMab+J3EuzpJbGl7iUZxJZkVayCHDk4Mu4bITZyHFCVuj35OmnN3cWd5lWEAm/PMCA9ACVPMbP3L3Lh0/vn9aYdl6ldkQQEdW7Muy0WnDCpIfAFTcaDlsMlBG4qRBh0qMBYGVd3smXQT6WhWWHL2tRAl8cZNyfDZ6xvnru6fFQWSbogz8G/T5+iRLfDI3vWQc+kOSIviHUD9y36cM8vUG5rT2ydj/cSzxS6WDBpE87DufRFinnIKUOPX754jsnOeqnwVG230bUqBJYVMpFhi/QsoOGkMQdK7JEiesSmAWdaFLYegh5fRBK/N7QvTepBhj8kdJi8dJl0nfmFj+qs065FKgvBf+DHBhJH+wrc12Ubkx2krxyGBZzR6k9xS0WEy7XPEqpVmtfRgT5lfgmoDw2F0tTSDT6Pfs=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2019 13:52:12.0562
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 134b07c1-e0d2-4c8e-4d52-08d75c7732e8
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR03MB4413
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-29_04:2019-10-28,2019-10-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 phishscore=0
+ suspectscore=1 clxscore=1015 mlxlogscore=999 impostorscore=0 bulkscore=0
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910290136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add Beniamin Bia as a maintainer for AD7091R5 ADC.
 
---8tZVdKiiYitVG083
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+---
+Changes in v2:
+-nothing changed
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-On Mon, Aug 12, 2019 at 12:00:28AM +0300, Dmitry Osipenko wrote:
-> Hello,
->=20
-> This series introduces driver for the External Memory Controller (EMC)
-> found on Tegra30 chips, it controls the external DRAM on the board. The
-> purpose of this driver is to program memory timing for external memory on
-> the EMC clock rate change. The driver was tested using the ACTMON devfreq
-> driver that performs memory frequency scaling based on memory-usage load.
->=20
-> Changelog:
->=20
-> v10: - Addressed review comments that were made by Rob Herring to v9 by
->        dropping unnecessary reg descriptions, specifying valid ranges and
->        using boolean type where appropriate in the device-tree patches.
->=20
-> v9: - Fixed memory corruption bug that was uncovered after introducing
->       some extra optimizations to the devfreq driver that allows CPU
->       to stay longer in the LP2 cpuidle state. The corruption is caused by
->       a very late AUTO-REFRESH re-enabling due to a possible schedule on
->       waiting for clk-change completion, the re-enabling is now a part of
->       "EMC exec-after-clkchange" hardware sequence.
->=20
->     - Added "type: object" to T124 MC YAML, that was missed in v8 by acci=
-dent.
->=20
-> v8: - Added two new patches:
->=20
->         memory: tegra20-emc: Increase handshake timeout
->         memory: tegra20-emc: wait_for_completion_timeout() doesn't return=
- error
->=20
->       Turned out that memory-clk handshake may take much more time under
->       some circumstances. The second patch is a minor cleanup. The same
->       changes are also applied to the Terga30 EMC driver addition-patch.
->=20
->       The pattern-properties of YAML bindings gained "type: object", for
->       consistency.
->=20
-> v7: - Addressed review comments that were made by Rob Herring to v6 by
->       removing old Terga30 Memory Controller binding once it's converted
->       to YAML, by using explicit patterns for the sub-nodes and specifying
->       min/max clock rates in the YAML.
->=20
->     - Two patches that were added in v6 are removed from the series:
->=20
->         clk: tegra20: emc: Add tegra20_clk_emc_on_pllp()
->         ARM: tegra30: cpuidle: Don't enter LP2 on CPU0 when EMC runs off =
-PLLP
->=20
->       Because the problem with the PLLP is resolved now, turned out it was
->       a bug in the CPU-suspend code.
->=20
->     - The "Introduce Tegra30 EMC driver" patch got a fix for the "Same Fr=
-eq"
->       bit typo, it's a bit 27 and not 16.
->=20
-> v6: - Tegra124 Memory Controller binding factored out into standalone
->       binding because it requires to specify MC_EMEM_ARB_MISC1 for EMEM
->       programming, which is not required for Tegra30. This makes the
->       upstream MC registers specification to match downstream exactly,
->       easing porting of boards memory timings configuration to upstream.
->=20
->     - Tegra30/124 Memory Controller binding converted to YAML.
->=20
->     - Tegra30 External Memory Controller binding now is in YAML format.
->=20
->     - Added workaround for hanging during LP2 when EMC runs off PLLP on
->       Tegra30 in this new patches:
->=20
->         clk: tegra20: emc: Add tegra20_clk_emc_on_pllp()
->         ARM: tegra30: cpuidle: Don't enter LP2 on CPU0 when EMC runs off =
-PLLP
->=20
->     - Added info message to the Tegra20/30 EMC drivers, telling about
->       RAM code and a number of available timings:
->=20
->         memory: tegra20-emc: Print a brief info message about the timings
->=20
-> v5: - Addressed review comments that were made by Thierry Reding to v4 by
->       adding appropriate copyrights to the source code headers and making
->       Tegra30 EMC driver to use common Tegra20 CLK API directly instead
->       of having a dummy-proxy functions specifically for Tegra30.
->=20
->     - Addressed review comments that were made by Stephen Boyd to v4 by
->       rewording commit message of the "Add custom EMC clock implementatio=
-n"
->       patch and adding clarifying comment (to that patch as well) which
->       tells why EMC is a critical clock.
->=20
->     - Added suspend-resume to Tegra30 EMC driver to error out if EMC driv=
-er
->       is in a "bad state" as it will likely cause a hang on entering susp=
-end.
->=20
->     - Dropped patch "tegra20-emc: Replace clk_get_sys with devm_clk_get"
->       because the replaced clocks are actually should be removed altogeth=
-er
->       in the "Drop setting EMC rate to max on probe" patch and that was
->       missed by an accident.
->=20
->     - Added "tegra20-emc: Pre-configure debug register" patch which ensur=
-es
->       that inappropriate HW debug features are disabled at a probe time.
->       The same change is also made in the "Introduce Tegra30 EMC driver"
->       patch.
->=20
->     - Added ACKs to the patches from Peter De Schrijver that he gave to v4
->       since all of the v5 changes are actually very minor.
->=20
-> v4: - Addressed review comments that were made by Peter De Schrijver to v3
->       by adding fence_udelay() after writes in the "Add custom EMC clock
->       implementation" patch.
->=20
->     - Added two new minor patches:
->=20
->         memory: tegra: Ensure timing control debug features are disabled
->         memory: tegra: Consolidate registers definition into one place
->=20
->       The first one is needed to ensure that EMC driver will work
->       properly regardless of hardware configuration left after boot.
->       The second patch is just a minor code cleanup.
->=20
->     - The "Introduce Tegra30 EMC driver" got also few very minor changes.
->       Now every possible error case is handled, nothing is ignored.
->       The EMC_DBG register is explicitly initialized during probe to be
->       on the safe side.
->=20
-> v3: - Addressed review comments that were made by Stephen Boyd to v2 by
->       adding explicit typing for the callback variable, by including
->       "clk-provider.h" directly in the code and by dropping __clk_lookup
->       usage where possible.
->=20
->     - Added more patches into this series:
->=20
->         memory: tegra20-emc: Drop setting EMC rate to max on probe
->         memory: tegra20-emc: Adapt for clock driver changes
->         memory: tegra20-emc: Include io.h instead of iopoll.h
->         memory: tegra20-emc: Replace clk_get_sys with devm_clk_get
->=20
->       Initially I was going to include these patches into other patchset,
->       but changed my mind after rearranging things a tad. The "Adapt for
->       clock driver changes" patch is directly related to the clock changes
->       done in the first patch of this series, the rest are minor cleanups
->       that are fine to include here as well.
->=20
->     - Added some more words to the commit message of "Add binding for NVI=
-DIA
->       Tegra30 External Memory Controller" patch, clarifying why common DDR
->       timing device-tree form isn't suitable for Tegra30.
->=20
->     - The Tegra30 EMC driver now explicitly selects the registers access
->       mode (EMC_DBG mux), not relying on the setting left from bootloader.
->=20
-> v2: - Added support for changing MC clock diver configuration based on
->       Memory Controller (MC) configuration which is part of the memory
->       timing.
->=20
->     - Merged the "Add custom EMC clock implementation" patch into this
->       series because the "Introduce Tegra30 EMC driver" patch directly
->       depends on it. Please note that Tegra20 EMC driver will need to be
->       adapted for the clock changes as well, I'll send out the Tegra20
->       patches after this series will be applied because of some other
->       dependencies (devfreq) and because the temporary breakage won't
->       be critical (driver will just error out on probe).
->=20
->     - EMC driver now performs MC configuration validation by checking
->       that the number of MC / EMC timings matches and that the timings
->       rate is the same.
->=20
->     - EMC driver now supports timings that want to change the MC clock
->       configuration.
->=20
->     - Other minor prettifying changes of the code.
->=20
-> Dmitry Osipenko (15):
->   clk: tegra20/30: Add custom EMC clock implementation
->   memory: tegra20-emc: Drop setting EMC rate to max on probe
->   memory: tegra20-emc: Adapt for clock driver changes
->   memory: tegra20-emc: Include io.h instead of iopoll.h
->   memory: tegra20-emc: Pre-configure debug register
->   memory: tegra20-emc: Print a brief info message about the timings
->   memory: tegra20-emc: Increase handshake timeout
->   memory: tegra20-emc: wait_for_completion_timeout() doesn't return
->     error
->   dt-bindings: memory: tegra30: Convert to Tegra124 YAML
->   dt-bindings: memory: Add binding for NVIDIA Tegra30 Memory Controller
->   dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory
->     Controller
->   memory: tegra: Introduce Tegra30 EMC driver
->   memory: tegra: Ensure timing control debug features are disabled
->   memory: tegra: Consolidate registers definition into common header
->   ARM: dts: tegra30: Add External Memory Controller node
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2e01d0f0b0e5..7f1e4b88688f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -893,6 +893,14 @@ S:	Supported
+ F:	drivers/iio/dac/ad5758.c
+ F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
+ 
++ANALOG DEVICES INC AD7091R5 DRIVER
++M:	Beniamin Bia <beniamin.bia@analog.com>
++L:	linux-iio@vger.kernel.org
++W:	http://ez.analog.com/community/linux-device-drivers
++S:	Supported
++F:	drivers/iio/adc/ad7091r5.c
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
++
+ ANALOG DEVICES INC AD7124 DRIVER
+ M:	Stefan Popa <stefan.popa@analog.com>
+ L:	linux-iio@vger.kernel.org
+-- 
+2.17.1
 
-Applied these to for-5.5/clk, for-5.5/dt-bindings, for-5.5/memory and
-for-5.5/arm/dt, thanks.
-
-Thierry
-
---8tZVdKiiYitVG083
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl24Q/YACgkQ3SOs138+
-s6FSng/9GvNX2ESlUyo+ZW9xuN96/Lggg7Wh/rONstjJj8PeURp4Wyg9R+m01i9S
-OKJaGKFDEcOOFC/cChD/plozuId2HBEXoVnwjExRF0MWabOWfNmFc2qp87Gq8Ucu
-KGZOhHcXluq+bffxPAlKlHb0DbuPEPLDf6KXhRa77FC+8N3SwCZ/KMMtkLVqLW4F
-X6t86MyVU35CoidXfzx+Y9tPbenuOJBEREFkFE/0AsveLJUd1Q1j287zR/wGdupZ
-WKzH2PScDnjHSS+XRv+25mij0RN4nbHjT+1oUW6XAyf2L/PzaatT5qibcFpm1KAn
-hZDQbBwt5b+wwuy7O1nSBxkAH2yv6kkq4Ll0K+potQeI7GqBtXD2wmNoXTMiklzM
-SsxJpDS9orJmdH5BZDwX+g1DUHhm3WWunYR0bafrRCvxPRjGuOQ8T9SzH9rL6vuR
-7Dty/TzBURBktNoVxdIzVWqmiIj9QVSH9Aze9ghGrHMaPVI3+P5jVRjSPJPlSHpX
-cXEqLla2Xh+BhXjc+yNVYmpQvOTv1U0XcBUSWmEZycV1v4PYj6UAPqCYAw2xAKCz
-UPeHl6MVG+cAVtWuDkPpHYccyGx99fR83okiqOGhlGkCjW4xX0YoOVMal4DqYrxx
-wMKew82EmDMHh/7J1wJ81SojwUCYB0OC941Y3FlBCsIsTCGQoV8=
-=zmek
------END PGP SIGNATURE-----
-
---8tZVdKiiYitVG083--
