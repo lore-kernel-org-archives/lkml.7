@@ -2,262 +2,135 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1C9CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE3BCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675EB20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED6920830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s2KMHoOK"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="X5HUVrO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfJ2GyR (ORCPT
+        id S1726171AbfJ2HFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 02:54:17 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38820 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfJ2GyQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 02:54:16 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9T6sDdw054449;
-        Tue, 29 Oct 2019 01:54:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572332053;
-        bh=I6O8X8x74k3IegBG74ReUODJA484xE/GFmLEdiVa7fs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=s2KMHoOK0RAs+wDvv1LkjiJL6lMravhlhW4qvQjgC65CXf323W2gKbFp/fRRPbnC5
-         1tCg9HXzi83JYliyxRl5JrQtnlR1CR+ViP/qGBP2/lMTc/lbTMXlGHXO98A0gDt+g1
-         emocb+6a5WvES+fZ0MWwRuFKQYpS8wipD2kT2MAQ=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9T6sD5S008807
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 29 Oct 2019 01:54:13 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 29
- Oct 2019 01:54:00 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 29 Oct 2019 01:54:00 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9T6s8eE001739;
-        Tue, 29 Oct 2019 01:54:10 -0500
-Subject: Re: [PATCH v2 13/14] dt-bindings: phy: Document WIZ (SERDES wrapper)
- bindings
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>,
-        Anil Varughese <aniljoy@cadence.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191023125735.4713-1-kishon@ti.com>
- <20191023125735.4713-14-kishon@ti.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <f67723d1-f778-8e9d-2476-89f7b5bae977@ti.com>
-Date:   Tue, 29 Oct 2019 12:23:35 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191023125735.4713-14-kishon@ti.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 29 Oct 2019 03:05:42 -0400
+Received: from mail-eopbgr140084.outbound.protection.outlook.com ([40.107.14.84]:59969
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725776AbfJ2HFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 03:05:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jk4149nGWqpoUBCxeyVINNgdciy5BBPeX+i9P/e59TYZHRPKpgp4PoJLGX6HF05UTBi+huxjmU35oa9sjcVtVES0RNKRAasaMQ6h6ri7oaK8bFh8s+JizgIl/DwH3BGyIRM8GScWc7nZas709nGOG4IWKUubhdq9bZ5vp1Yfg5s9ngdya4jfuJeZG99Qu99DNqPCwW3Vv+r98cGKJNmaPllPBu4jAoyCev2Pa/81D7USDtqr/8Kh3aXAeDI1KKNDbb31p8WAL7WACC+5aXHqf1zxPS2tQ30q6MHf/PPzcPsBe8rzOqmRw8QAu0gOLMJxCKUQvjwnTIe5IFLbNV2zAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a0nGv4+Jux5Ik1K2x8sChxCQw3i7x0FLTh002Vsl/zs=;
+ b=SNm9IVby8Wn5O52/zHRsb9MI5jqjn4iRKb8ZX/I88k+cfCcqxwXBso4rPP0L5uKhCMLeEJ2oICjlnThqAuvg+cotQWlT+VG32b4A/EIzaZzuskL0Fhh1TJ37yz2Hm3TXJeLfBoMWY4wXPvpqsS2W8mC5dPBKtP476WZviNFfBRw75zjE8dgSZhuPnZENlYi+FGjtF/e1+LZRicnlW7MB+0pBDEfrNJwEUEgKVH+HjH27LIJgdxwz6qTIkSoXB3yncLwMsOFT+plBnD+T3UfjjntAZtzboX3xyL1S54TJhIUEcXFVu4EbZ/xzzlgYGZmZrHShhL0ysOaIBZNW6x4OsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a0nGv4+Jux5Ik1K2x8sChxCQw3i7x0FLTh002Vsl/zs=;
+ b=X5HUVrO6ptsspd1q7tSCF+VD2r9rh76DwKsiz9CvWgo0xrWryQg9QT/nOjPbYiTyrqadX9KJnNXqw8xPk5v7DCFUaMWDTjwBUsVxwKeWQVoYTWRsJGwLHflmh/V1dqq1eI1kJNzHBQaaunNTeJOcuXTJZj/+hKzhg61APyka1pU=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
+ VI1PR04MB7118.eurprd04.prod.outlook.com (10.186.157.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.22; Tue, 29 Oct 2019 07:05:36 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::10f0:af2c:76ac:dfb]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::10f0:af2c:76ac:dfb%7]) with mapi id 15.20.2387.025; Tue, 29 Oct 2019
+ 07:05:36 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     "hch@lst.de" <hch@lst.de>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Madalin Bucur <madalin.bucur@nxp.com>
+Subject: RE: [PATCH v2 1/3] dma-mapping: introduce new dma unmap and sync api
+ variants
+Thread-Topic: [PATCH v2 1/3] dma-mapping: introduce new dma unmap and sync api
+ variants
+Thread-Index: AQHVimhiysgNu4P7eUCr9wwTZY4WUadwBEWAgAE0mtA=
+Date:   Tue, 29 Oct 2019 07:05:36 +0000
+Message-ID: <VI1PR04MB51340164BACC952498E46FFDEC610@VI1PR04MB5134.eurprd04.prod.outlook.com>
+References: <20191024124130.16871-1-laurentiu.tudor@nxp.com>
+ <20191024124130.16871-2-laurentiu.tudor@nxp.com>
+ <20191028123805.GA25160@lst.de>
+In-Reply-To: <20191028123805.GA25160@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [86.123.56.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: caffd9bc-47b8-495a-0b67-08d75c3e660b
+x-ms-traffictypediagnostic: VI1PR04MB7118:|VI1PR04MB7118:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB7118B1C5A1438512BA581A1FEC610@VI1PR04MB7118.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0205EDCD76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(136003)(366004)(346002)(199004)(189003)(13464003)(305945005)(486006)(44832011)(7736002)(55016002)(11346002)(102836004)(6916009)(6506007)(316002)(54906003)(66556008)(186003)(14454004)(26005)(66476007)(5660300002)(3846002)(99286004)(76116006)(66446008)(64756008)(7696005)(14444005)(9686003)(2351001)(76176011)(256004)(6116002)(81156014)(476003)(8676002)(66066001)(446003)(71200400001)(71190400001)(74316002)(1730700003)(478600001)(6246003)(33656002)(81166006)(229853002)(4326008)(2501003)(8936002)(52536014)(6436002)(2906002)(5640700003)(86362001)(25786009)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB7118;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /0Cc5QupfQ/1ckzXmS4Rp6/zeiFxA4Q1606vLSI9S098Qf0fbBj35ZzJz4hPiqJelPKZ20KD0EMFw5yGFePSoRv5cGQ14y5CfROnO+A/oKF16WFAPMQoxjG+XzQVLzNy1DNakAHZL/GPn8stDZcIUnbX17bUEBryNGJ6pmnF7lgG8p2YElcDm5/Bty3JUhI85HXx5hl+8ZZMYkvGoCpvxW9+um9h6WiHbWZXxU+xUJVG2RzEjSrgp7FiJVmA41XPQsrOdA8D6YB/FC44IUReeNualsbLn7AO4fQW8o4p3WYa79imNgIn7LltOvLQIGZ1YM2aU6qDuF6k3/moC+FY57ItheZYYoD51hanPO/FpXI09ze88Eyva86c7huj/ioBnfVhyTVLcf7tdyonEsLJ4RJ4d7qLfCBluxGaIGPM7eWm4bNv0l2nIhOv/N1xVcvP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: caffd9bc-47b8-495a-0b67-08d75c3e660b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 07:05:36.3983
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /aP4bRnk00Mi601WtGsCIALgf0nUPLLCvomfZv2gMlawlM7wJxNoOaayh5UlIsQsb6wg+b9AV1m8VCHQTfyZHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
 
-On 23/10/19 6:27 PM, Kishon Vijay Abraham I wrote:
-> Add DT binding documentation for WIZ (SERDES wrapper). WIZ is *NOT* a
-> PHY but a wrapper used to configure some of the input signals to the
-> SERDES. It is used with both Sierra(16G) and Torrent(10G) serdes.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> [jsarha@ti.com: Add separate compatible for Sierra(16G) and Torrent(10G)
->  SERDES]
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
 
-Since you've reviewed the other patches posted after this one, wanted to check
-if this somehow slipped out of your radar.
+> -----Original Message-----
+> From: hch@lst.de <hch@lst.de>
+> Sent: Monday, October 28, 2019 2:38 PM
+>=20
+> On Thu, Oct 24, 2019 at 12:41:41PM +0000, Laurentiu Tudor wrote:
+> > From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> >
+> > Introduce a few new dma unmap and sync variants that, on top of the
+> > original variants, return the virtual address corresponding to the
+> > input dma address.
+> > In order to implement this a new dma map op is added and used:
+> >     void *get_virt_addr(dev, dma_handle);
+> > It does the actual conversion of an input dma address to the output
+> > virtual address.
+>=20
+> We'll definitively need an implementation for dma-direct at least as
+> well.  Also as said previously we need a dma_can_unmap_by_dma_addr()
+> or similar helper that tells the driver beforehand if this works, so
+> that the driver can either use a sub-optimal workaround or fail the
+> probe if this functionality isn't implemented.
 
-Thanks
-Kishon
+Alright. On top of that I need to make this work on booke ppc as we have on=
+e driver that runs both on arm and ppc and will use these APIs.
 
-> ---
->  .../bindings/phy/ti,phy-j721e-wiz.yaml        | 159 ++++++++++++++++++
->  1 file changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-> new file mode 100644
-> index 000000000000..8a1eccee6c1d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-> @@ -0,0 +1,159 @@
-> +# SPDX-License-Identifier: (GPL-2.0)
-> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/ti,phy-j721e-wiz.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI J721E WIZ (SERDES Wrapper)
-> +
-> +maintainers:
-> +  - Kishon Vijay Abraham I <kishon@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - ti,j721e-wiz-16g
-> +              - ti,j721e-wiz-10g
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 3
-> +    description: clock-specifier to represent input to the WIZ
-> +
-> +  clock-names:
-> +    items:
-> +      - const: fck
-> +      - const: core_ref_clk
-> +      - const: ext_ref_clk
-> +
-> +  num-lanes:
-> +    maxItems: 1
-> +    minimum: 1
-> +    maximum: 4
-> +
-> +  "#address-cells":
-> +    const: 2
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  "#reset-cells":
-> +    const: 1
-> +
-> +  ranges: true
-> +
-> +  assigned-clocks:
-> +    maxItems: 2
-> +
-> +  assigned-clock-parents:
-> +    maxItems: 2
-> +
-> +patternProperties:
-> +  "^pll[0|1]_refclk$":
-> +    type: object
-> +    description: |
-> +      WIZ node should have subnodes for each of the PLLs present in
-> +      the SERDES.
-> +
-> +  "^cmn_refclk1?$":
-> +    type: object
-> +    description: |
-> +      WIZ node should have subnodes for each of the PMA common refclock
-> +      provided by the SERDES.
-> +
-> +  "^refclk_dig$":
-> +    type: object
-> +    description: |
-> +      WIZ node should have subnode for refclk_dig to select the reference
-> +      clock source for the reference clock used in the PHY and PMA digital
-> +      logic.
-> +
-> +  "^serdes@[0-9a-f]+$":
-> +    type: object
-> +    description: |
-> +      WIZ node should have '1' subnode for the SERDES. It could be either
-> +      Sierra SERDES or Torrent SERDES. Sierra SERDES should follow the
-> +      bindings specified in
-> +      Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
-> +      Torrent SERDES should follow the bindings specified in
-> +      Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
-> +
-> +required:
-> +  - compatible
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
-> +  - num-lanes
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - "#reset-cells"
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-> +
-> +    wiz@5000000 {
-> +           compatible = "ti,j721e-wiz-16g";
-> +           #address-cells = <2>;
-> +           #size-cells = <2>;
-> +           power-domains = <&k3_pds 292 TI_SCI_PD_EXCLUSIVE>;
-> +           clocks = <&k3_clks 292 5>, <&k3_clks 292 11>, <&dummy_cmn_refclk>;
-> +           clock-names = "fck", "core_ref_clk", "ext_ref_clk";
-> +           assigned-clocks = <&k3_clks 292 11>, <&k3_clks 292 0>;
-> +           assigned-clock-parents = <&k3_clks 292 15>, <&k3_clks 292 4>;
-> +           num-lanes = <2>;
-> +           #reset-cells = <1>;
-> +
-> +           pll0_refclk {
-> +                  clocks = <&k3_clks 293 13>, <&dummy_cmn_refclk>;
-> +                  clock-output-names = "wiz1_pll0_refclk";
-> +                  #clock-cells = <0>;
-> +                  assigned-clocks = <&wiz1_pll0_refclk>;
-> +                  assigned-clock-parents = <&k3_clks 293 13>;
-> +           };
-> +
-> +           pll1_refclk {
-> +                  clocks = <&k3_clks 293 0>, <&dummy_cmn_refclk1>;
-> +                  clock-output-names = "wiz1_pll1_refclk";
-> +                  #clock-cells = <0>;
-> +                  assigned-clocks = <&wiz1_pll1_refclk>;
-> +                  assigned-clock-parents = <&k3_clks 293 0>;
-> +           };
-> +
-> +           cmn_refclk {
-> +                  clocks = <&wiz1_refclk_dig>;
-> +                  clock-output-names = "wiz1_cmn_refclk";
-> +                  #clock-cells = <0>;
-> +           };
-> +
-> +           cmn_refclk1 {
-> +                  clocks = <&wiz1_pll1_refclk>;
-> +                  clock-output-names = "wiz1_cmn_refclk1";
-> +                  #clock-cells = <0>;
-> +           };
-> +
-> +           refclk_dig {
-> +                  clocks = <&k3_clks 292 11>, <&k3_clks 292 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
-> +                  clock-output-names = "wiz0_refclk_dig";
-> +                  #clock-cells = <0>;
-> +                  assigned-clocks = <&wiz0_refclk_dig>;
-> +                  assigned-clock-parents = <&k3_clks 292 11>;
-> +           };
-> +
-> +           serdes@5000000 {
-> +                  compatible = "cdns,ti,sierra-phy-t0";
-> +                  reg-names = "serdes";
-> +                  reg = <0x00 0x5000000 0x00 0x10000>;
-> +                  #address-cells = <1>;
-> +                  #size-cells = <0>;
-> +                  resets = <&serdes_wiz0 0>;
-> +                  reset-names = "sierra_reset";
-> +                  clocks = <&wiz0_cmn_refclk>, <&wiz0_cmn_refclk1>;
-> +                  clock-names = "cmn_refclk", "cmn_refclk1";
-> +           };
-> +    };
-> 
+---
+Best Regards, Laurentiu
