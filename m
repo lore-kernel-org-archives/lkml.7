@@ -2,105 +2,103 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271F6CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F445CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E37CD20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5065420717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:05:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbfJ2JEu (ORCPT
+        id S1730903AbfJ2JF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:04:50 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40277 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730831AbfJ2JEs (ORCPT
+        Tue, 29 Oct 2019 05:05:28 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34979 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfJ2JF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:04:48 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iPNQe-00023m-5q; Tue, 29 Oct 2019 10:04:40 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iPNQd-0007Qk-2y; Tue, 29 Oct 2019 10:04:39 +0100
-Date:   Tue, 29 Oct 2019 10:04:39 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Ondrej Jirman <megous@megous.com>, linux-sunxi@googlegroups.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@bootlin.com>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/3] Add touchscreen support for TBS A711 Tablet
-Message-ID: <20191029090439.ikgzrixv7wv2o6xb@pengutronix.de>
-References: <20191029005806.3577376-1-megous@megous.com>
- <20191029041516.GE57214@dtor-ws>
+        Tue, 29 Oct 2019 05:05:27 -0400
+Received: by mail-oi1-f194.google.com with SMTP id n16so6040660oig.2;
+        Tue, 29 Oct 2019 02:05:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/e/OXl/eSB3S3s8RmU98HsH5ODaBeFtkQ+8P1wGA6WU=;
+        b=uFcYWpP2jsKfGccj9mkaRQdIj7iZYSxuqlx7YGmqN5cnVYeteZ5CfHujJwTjK/NFiq
+         btBarCLJZH61NlQx4GVLQcIivC743EpeLeuOSm8R3ewEXHZCEOiB2d7euG0VwRtb+XGe
+         bAQQ/6srVR8JkCXZ7MzjW0Pf++WVMfHSUhT944a8ZlnaX5aa62YT17KlIMW/4bzz8Fv6
+         1VER0gZGjMv6FA2+8QB8pTdB53vHGkY8+V9qGJPNPZRlYVhG+p0OEom5ZNrbucXMsJxJ
+         A3LQbV98x12okCHXm87jJjl0qjYsI+9fHxJo1zQJJj6gsIp3PqI6D4AHNus1L1+VKMcK
+         eBSA==
+X-Gm-Message-State: APjAAAUzMvNHgrnuwEjgCq4Dz+3X8/Y7PCMMQzpu1fUAOibu7YzEoaoP
+        Uh3WFvCqUjBMAXk9bgMJsMQXMAjqG37YFjcFtgo=
+X-Google-Smtp-Source: APXvYqx2l2QDxxl6Pp9UmXl3j5zgDTqm4st8pBarLtb61+fstLH97WqlTYGMWHYBEUNyjw/fr1XcKOIzzUAJbA3Q4U8=
+X-Received: by 2002:aca:fc92:: with SMTP id a140mr2914747oii.153.1572339926899;
+ Tue, 29 Oct 2019 02:05:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029041516.GE57214@dtor-ws>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:03:51 up 164 days, 15:22, 99 users,  load average: 0.12, 0.15,
- 0.07
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20191022102334.67e5d3d1@canb.auug.org.au>
+In-Reply-To: <20191022102334.67e5d3d1@canb.auug.org.au>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 29 Oct 2019 10:05:15 +0100
+Message-ID: <CAMuHMdUCx31k3VJt=nYSkFXcOQdRhH7FiY8_f5RX4w4zaksP-w@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the thermal tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Oct 22, 2019 at 1:25 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> After merging the thermal tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
+>
+> In file included from drivers/thermal/qcom/tsens-common.c:13:
+> drivers/thermal/qcom/tsens-common.c: In function 'tsens_set_interrupt':
+> include/linux/regmap.h:87:2: warning: 'index' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>    87 |  regmap_field_update_bits_base(field, ~0, val, NULL, false, false)
+>       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/thermal/qcom/tsens-common.c:183:6: note: 'index' was declared here
+>   183 |  u32 index;
+>       |      ^~~~~
+> In file included from drivers/thermal/qcom/tsens-common.c:13:
+> include/linux/regmap.h:87:2: warning: 'index_clear' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>    87 |  regmap_field_update_bits_base(field, ~0, val, NULL, false, false)
+>       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/thermal/qcom/tsens-common.c:199:18: note: 'index_clear' was declared here
+>   199 |  u32 index_mask, index_clear;
+>       |                  ^~~~~~~~~~~
+> drivers/thermal/qcom/tsens-common.c:199:6: warning: 'index_mask' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   199 |  u32 index_mask, index_clear;
+>       |      ^~~~~~~~~~
+>
+> Introduced by commit
+>
+>   fbfe1a042cfd ("drivers: thermal: tsens: Add interrupt support")
 
-On 19-10-28 21:15, Dmitry Torokhov wrote:
-> On Tue, Oct 29, 2019 at 01:58:03AM +0100, Ondrej Jirman wrote:
-> > This is a resurrection of https://lkml.org/lkml/2018/7/25/143
-> > 
-> > Compared to v4 of Mylène's series I've dropped all attempts to
-> > power off the chip during suspend. This patch just enables the
-> > regulator during probe and disables it on driver rmmod.
-> > 
-> > I've tested the driver with suspend/resume and touching the
-> > panel resumes my soc.
-> 
-> OK, I guess we can revisit when someone really needs power savings in
-> suspend...
+And kisskb reported the following link failure on m68k:
 
-Please have a look on https://patchwork.kernel.org/cover/11149039/. I've
-already send patches for it.
+    ERROR: "__udivdi3" [drivers/thermal/qcom/qcom_tsens.ko] undefined!
 
-Regards,
-  Marco
+Probably caused by a plain 64-bit division in the code.
+I expect this shows up on other 32-bit platforms, too.
 
-> I folded bindings into the driver change and applied, dts changes should
-> go through respective tree.
-> 
-> Thanks.
-> 
-> -- 
-> Dmitry
-> 
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
