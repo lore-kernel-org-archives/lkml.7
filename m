@@ -2,185 +2,201 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1650CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0EDCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA9B820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ACB020679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:57:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oob0NMfW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rl/H29SA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390565AbfJ2QyJ (ORCPT
+        id S2390487AbfJ2Q5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:54:09 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:35915 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727279AbfJ2QyJ (ORCPT
+        Tue, 29 Oct 2019 12:57:53 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36160 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbfJ2Q5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 12:54:09 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 949CA5805;
-        Tue, 29 Oct 2019 12:54:07 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 29 Oct 2019 12:54:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=e8zlGTKgif5MoJT93rDm8cGTOU34R4PgtEM32L99v
-        Vo=; b=oob0NMfWdZRQbpdE/NeToouSagLInmqlAvKkKJj/URI594U+vcXJOptt4
-        iI01lrK6UH0k6D5PALQR/DW6v5+BmffGdOe15ET+IwWrzk75elt2bG/tnju/03ON
-        4RGb0NRyn6/LJ26DdmM3yYQsRqcDFZMtjoQmQ6iDL6dQpabjOqsI0sqfzI3Xkoe/
-        gYgQOQ0878nL5SzpR6KazOZc/nF5LWvJ73+gyzRzkJdqO+BcLQ4VvRSKa8JVL7YL
-        G0w/76Z+2PAEXo5xe4EKB0Z4xNtFpRbWz+FNCYZbHOipQEKTwz8oLXnf1Z0ShzQg
-        rWGQPEX4IEwWUFcb1O1eWCQYt/Jww==
-X-ME-Sender: <xms:rm64XZAzGiQ_SWdPxOTO1FsYsmmF9vuoSZQKgiZ01SmKcP57UK3HoA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddtuddgledvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepfffhvffukfhfgggtugfg
-    jggfsehtkeertddtreejnecuhfhrohhmpefkughoucfutghhihhmmhgvlhcuoehiughosh
-    gthhesihguohhstghhrdhorhhgqeenucffohhmrghinhepghhoohhglhgvrdgtohhmpdhg
-    ohhordhglhdprghpphhsphhothdrtghomhenucfkphepudelfedrgeejrdduieehrddvhe
-    dunecurfgrrhgrmhepmhgrihhlfhhrohhmpehiughoshgthhesihguohhstghhrdhorhhg
-    necuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:r264XV9lrKQXXgjtvwTDgs0ZQm9vpptZEAU8bN99ujUPmF5UPzPm8A>
-    <xmx:r264XbsKe9VHRLOtPhC7qENIMKtBvPhJFq4J6vrTK9IW8PrUn_wEYQ>
-    <xmx:r264XXVIpjGgom-dI3KK5ejQvnuPUIRUfC2ritb1XBbeL_I-xlIxrQ>
-    <xmx:r264XfQJmcXfKLprIs3jhi4SMEVukjUdSRX9AHNGwMlNnsQ6sOOunw>
-Received: from localhost (unknown [193.47.165.251])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 95BAED60066;
-        Tue, 29 Oct 2019 12:54:06 -0400 (EDT)
-Date:   Tue, 29 Oct 2019 18:54:04 +0200
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+9ed8f68ab30761f3678e@syzkaller.appspotmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: general protection fault in process_one_work
-Message-ID: <20191029165404.GA10996@splinter>
-References: <0000000000001c46d5059608892f@google.com>
- <CACT4Y+b7nkRO_Q6X3sTWbGU5Y6bGuZPmKzoPL2uoFpA4KCP2hw@mail.gmail.com>
- <20191029084517.GA24289@splinter>
+        Tue, 29 Oct 2019 12:57:52 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w18so14493507wrt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 09:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZJbi5YbmKNrHL1XknjXuRo00EQHW5Jt0yVwF2zf2Was=;
+        b=Rl/H29SAXQ1Be88q7OjRWQJE8jm9LGdrRQtZI4ah4eyrfLVD0Q4rts86sJzZG5w630
+         eIMg9OWCtnqBh/5w21FvZPe8ejb1DGIgOPY4Em8DE9qsJ/frmaJ+t8SziyG6HdQfHDLO
+         DB3DTPs+pyzZ2p3k/DAspcBJ/lmNW3MIjvqP+4lVFL8FeLkAVS9Ry97yAQqzRs2TwK+p
+         Osiclar5M784jKk6TwLe5bT6x5RcINXiAJHbmziFmoRMRn4E7lMGe8BBAX89kVVZSYOb
+         qnXpkFETLXD26VtelqCdbEJ5q83sPU+SXoDk9bSp4IJr7bnNtz6uSn+5Stv5D8KKHN59
+         VVuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZJbi5YbmKNrHL1XknjXuRo00EQHW5Jt0yVwF2zf2Was=;
+        b=q/0p3fLK2rY0DmXc2C8pAf08djNwt28quyyLzqPv0iaFA1juTz/YLQS9kwWXC1ItjK
+         szRNb3YvoCQP/ZHumuU8F8Nl6fzkfBU3sfXKRbmaXkGvRh0lc88u8RdgAEwNEB3TqqLN
+         4jMDXazsZsUDgNqO9ppV12Fi9CMkWWud0Fuvw1j5z6TVd1RIxQFxZ/WUtd1IV7y7G76H
+         Eg7ajbziOzoPVCpmY6YEZtSObn9Nz6ZQoucvhSZ5OxAd53RoEkTarhGCJlrxTrxD5UTe
+         KX7rh2Fs60ZXVnvsEQxkoI7Bv8OXJYP+bCzeqEAAIZ1MGUvGiJFsQ5721HLubbSKDcQY
+         hlCw==
+X-Gm-Message-State: APjAAAU2U1PA8RbGQJFN0Ww6aIY6yL0KxBAjHocFHDIdR1hUCakxaUI6
+        Ov2QeBvq+3RxEaopxAj4LOjEEMuUhQuoPE981cg=
+X-Google-Smtp-Source: APXvYqynKTqTinWpsq8pOCI+HpEMdVlt3HdEVanM1rsr2bTGHtMpKiS8ycPgoxJzYazMVXy4X+66ljC9sCtynky2WSk=
+X-Received: by 2002:a5d:65cf:: with SMTP id e15mr19945712wrw.391.1572368269062;
+ Tue, 29 Oct 2019 09:57:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029084517.GA24289@splinter>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
+ <20191025075335.GC32742@smile.fi.intel.com> <20191025075540.GD32742@smile.fi.intel.com>
+ <166c9855-910d-a70c-ba86-6aebe5f2346d@intel.com> <20191028124554.GF5015@sirena.co.uk>
+ <c5faf16d-892e-b36e-b448-9c59c2051b9e@redhat.com> <CAHtQpK5ocb8mqnf2dwcT7hQ9f8rQLtkHJsPppDWgfRPitJk6_Q@mail.gmail.com>
+ <75d0e22f-c3fd-245c-c91e-2e3b6134b569@redhat.com>
+In-Reply-To: <75d0e22f-c3fd-245c-c91e-2e3b6134b569@redhat.com>
+From:   Andrey Zhizhikin <andrey.z@gmail.com>
+Date:   Tue, 29 Oct 2019 17:57:45 +0100
+Message-ID: <CAHtQpK5-wK-v2fS_cVT6f4evHDafFPv49XDNGO9B+daRR_bOkg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
+ Trail Whiskey Cove PMIC
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        lgirdwood@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 10:45:19AM +0200, Ido Schimmel wrote:
-> On Tue, Oct 29, 2019 at 09:43:27AM +0100, Dmitry Vyukov wrote:
-> > On Tue, Oct 29, 2019 at 9:38 AM syzbot
-> > <syzbot+9ed8f68ab30761f3678e@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    38207291 bpf: Prepare btf_ctx_access for non raw_tp use case
-> > > git tree:       bpf-next
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=14173c0f600000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=41648156aa09be10
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=9ed8f68ab30761f3678e
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > >
-> > > Unfortunately, I don't have any reproducer for this crash yet.
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+9ed8f68ab30761f3678e@syzkaller.appspotmail.com
-> > 
-> > +Jiří Pírko, this seems to be related to netdevsim.
-> 
-> Will check it.
+Hi Hans!
 
-Didn't have a lot of time today, but I think the issue is a race
-condition (note that syzbot only triggered it twice so far).
+On Tue, Oct 29, 2019 at 1:04 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 28-10-2019 16:01, Andrey Zhizhikin wrote:
+> > Hi Hans,
+> >
+> > On Mon, Oct 28, 2019 at 2:26 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>
+> >> Hi,
+> >>
+> >> On 28-10-2019 13:45, Mark Brown wrote:
+> >>> On Mon, Oct 28, 2019 at 02:41:46PM +0200, Adrian Hunter wrote:
+> >>>> On 25/10/19 10:55 AM, Andy Shevchenko wrote:
+> >>>
+> >>>>> Since it's about UHS/SD, Cc to Adrian as well.
+> >>>
+> >>>> My only concern is that the driver might conflict with ACPI methods trying
+> >>>> to do the same thing, e.g. there is one ACPI SDHC instance from GPDWin DSDT
+> >>>> with code like this:
+> >>
+> >> Oh, right that is a very good point.
+> >>
+> >>> That's certainly what's idiomatic for ACPI (though machine specific
+> >>> quirks are too!).  The safe thing to do would be to only register the
+> >>> supply on systems where we know there's no ACPI method.
+> >>
+> >> Right, so as I mentioned before Andrey told me about the evaluation
+> >> board he is using I was aware of only 3 Cherry Trail devices using
+> >> the Whiskey Cove PMIC. The GPD win, the GPD pocket and the Lenovo
+> >> Yoga book. I've checked the DSDT of all 3 and all 3 of them offer
+> >> voltage control through the Intel _DSM method for voltage control.
+> >>
+> >> I've also actually tested this on the GPD win and 1.8V signalling
+> >> works fine there without needing Andrey's patch.
+> >
+> > Thanks a lot for checking this one out! At least this proves now that
+> > the only platform affected is in fact Intel Aero board, and the patch
+> > as it is might not be necessary to accommodate for all CHT-based
+> > products with Whiskey Cove.
+> >
+> >>
+> >> So it seems that Andrey's patch should only be active on his
+> >> dev-board, as actual production hardware ships with the _DSM method.
+> >>
+> >> I believe that the best solution is for the Whiskey Cove MFD driver:
+> >> drivers/mfd/intel_soc_pmic_chtwc.c
+> >>
+> >> To only register the new cell on Andrey's evaluation board model
+> >> (based in a DMI match I guess). Another option would be to do
+> >> the DMI check in the regulator driver, but that would mean
+> >> udev will needlessly modprobe the regulator driver on production
+> >> hardware, so doing it in the MFD driver and not registering the cell
+> >> seems best,
+> >
+> > I tend to lean to a solution to perform a DMI check in MFD rather than
+> > in the regulator driver, since this would keep the regulator
+> > more-or-less agnostic to the where it is running on.
+> >
+> > Or maybe it would even make more sense to create a board-specific hook
+> > (like it was suggested for vqmmc voltage and sdmmc ACPI d of
+> > consumer), and then only register a cell for Aero match? This would
+> > actually keep the regulator consumer and mfd cell together and would
+> > not allow the device-specific code to leak into generic driver
+> > implementation. In this case I'd go with mfd_add_cell() if I get a DMI
+> > match and register a vqmmc consumer in there.
+> >
+> > In that case, can you please tell me what you think about it and if
+> > the drivers/acpi/acpi_lpss.c would still be an appropriate location to
+> > put this code to?
+>
+> I do not think that drivers/acpi/acpi_lpss.c is a good place.
 
-Upon reload nsim_dev_port_del_all() is called and starts deleting ports
-from the ports list without holding the ports list mutex. It is possible
-that during this time nsim_dev_trap_report_work() is executing from a
-workqueue and accessing freed memory despite holding the ports list
-mutex.
+Thanks a lot for clarifying this point, I was also not sure whether I
+would need combine the platform-specific functionality with LPSS
+implementation.
 
-I'll try to reproduce and send a fix later this week.
+>
+> Thinking a bit more about this, my preferred solutions would be:
+>
+> 1. A BIOS update fixing the DSDT, as Andy suggested. Note we can
+> lso use an overlay DSDT in the initrd, but that will only help users
+> which take manual steps to add this to their initrd...
 
-> 
-> > 
-> > > kasan: CONFIG_KASAN_INLINE enabled
-> > > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > > general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> > > CPU: 1 PID: 9149 Comm: kworker/1:3 Not tainted 5.4.0-rc1+ #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > Google 01/01/2011
-> > > Workqueue: events nsim_dev_trap_report_work
-> > > RIP: 0010:nsim_dev_trap_report_work+0xc4/0xaf0
-> > > drivers/net/netdevsim/dev.c:409
-> > > Code: 89 45 d0 0f 84 8b 07 00 00 49 bc 00 00 00 00 00 fc ff df e8 3e ae ef
-> > > fc 48 8b 45 d0 48 05 68 01 00 00 48 89 45 90 48 c1 e8 03 <42> 80 3c 20 00
-> > > 0f 85 b1 09 00 00 48 8b 45 d0 48 8b 98 68 01 00 00
-> > > RSP: 0018:ffff88806c98fc90 EFLAGS: 00010a06
-> > > RAX: 1bd5a0000000004d RBX: 0000000000000000 RCX: ffffffff84836e22
-> > > RDX: 0000000000000000 RSI: ffffffff84836db2 RDI: 0000000000000001
-> > > RBP: ffff88806c98fd30 R08: ffff88806c9863c0 R09: ffffed100d75f3d9
-> > > R10: ffffed100d75f3d8 R11: ffff88806baf9ec7 R12: dffffc0000000000
-> > > R13: ffff88806baf9ec0 R14: ffff8880a9a13900 R15: ffff8880ae934500
-> > > FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 00007efdd0c9e000 CR3: 000000009cc1b000 CR4: 00000000001406e0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > Call Trace:
-> > >   process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-> > >   worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-> > >   kthread+0x361/0x430 kernel/kthread.c:255
-> > >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > > Modules linked in:
-> > > ---[ end trace ba29cd1c27f63d86 ]---
-> > > RIP: 0010:nsim_dev_trap_report_work+0xc4/0xaf0
-> > > drivers/net/netdevsim/dev.c:409
-> > > Code: 89 45 d0 0f 84 8b 07 00 00 49 bc 00 00 00 00 00 fc ff df e8 3e ae ef
-> > > fc 48 8b 45 d0 48 05 68 01 00 00 48 89 45 90 48 c1 e8 03 <42> 80 3c 20 00
-> > > 0f 85 b1 09 00 00 48 8b 45 d0 48 8b 98 68 01 00 00
-> > > RSP: 0018:ffff88806c98fc90 EFLAGS: 00010a06
-> > > RAX: 1bd5a0000000004d RBX: 0000000000000000 RCX: ffffffff84836e22
-> > > RDX: 0000000000000000 RSI: ffffffff84836db2 RDI: 0000000000000001
-> > > RBP: ffff88806c98fd30 R08: ffff88806c9863c0 R09: ffffed100d75f3d9
-> > > R10: ffffed100d75f3d8 R11: ffff88806baf9ec7 R12: dffffc0000000000
-> > > R13: ffff88806baf9ec0 R14: ffff8880a9a13900 R15: ffff8880ae934500
-> > > FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 00007efdd0c9e000 CR3: 000000009cc1b000 CR4: 00000000001406e0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > >
-> > >
-> > > ---
-> > > This bug is generated by a bot. It may contain errors.
-> > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > >
-> > > syzbot will keep track of this bug report. See:
-> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> > > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000001c46d5059608892f%40google.com.
+This I believe would not be an option since the Aero platform has been
+phased-out from Intel, and Insyde most probably would not do an update
+on the BIOS. I can go with DSDT overlay, but I was not sure whether
+this is a good way to solve this.
+
+>
+> 2. A new drivers/platform/x86 driver binding to the dmi-ids of the Areo
+> board, like e.g. drivers/platform/x86/intel_oaktrail.c is doing,
+> unlike that one you do not need to register a platform_device from
+> the module_init() function, you can just add the mfd-cell and the
+> regulator constraints from the module_init() function.
+
+This would be my preferred solution, since in this case I can contain
+all the Aero-specific modifications to it's own board file. If there
+would be further modifications needed for it - they would be nicely
+contained within that board file.
+
+>
+> Assuming 1. is not an option (I do not know if Intel still
+> supports the Aero), then 2 will nicely isolate all the Aero
+> specific code into a driver which will only auto-load on
+> the Aero.
+
+Just as I indicated above, chances that BIOS would receive an update
+are between slim and nil. If no one have any objection, I'd prefer to
+go with the approach [2] from above.
+
+>
+> Regards,
+>
+> Hans
+>
+
+
+--
+Regards,
+Andrey.
