@@ -2,109 +2,144 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFD7CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F71CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B42202087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:18:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xH+f76fF"
+	by mail.kernel.org (Postfix) with ESMTP id 7719121734
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:18:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572383933;
+	bh=zpgMRmB2+OUmfkPUJn+0sPhsYPa/nJY+387yladmnrc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PTOIJxTxUvXUwNgLPv6QGRK9T171sxn8laPri7Kzn/oXwk9Pl2SsJk/TQcCd5Zv3q
+	 FBCGL6NEKCq++IPPK3clkQLLHJxMjd+e6lhxxBTm/NGORh+Qt+6ANOllJYsVTLgTMR
+	 DBK0EsIDikO0r6608S6bGdxybUsCPey+U3IDIxkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbfJ2VSG (ORCPT
+        id S1729386AbfJ2VSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:18:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35529 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbfJ2VSG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:18:06 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z6so230914otb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k+lof7k7UQw8OWzjqMvhsPhGiM5bCAdWAJ4xCnTV+BI=;
-        b=xH+f76fFbXKqh+7qsqw9xod2NKWPThyefhfGZF2rsd/IR8EjLdVxFmsiE6rvYXb1TC
-         AKu85TtcKAHAbOAmcSe3lv82DPFNzdfXU6DLzIvAp1WV4mmL3IZEwFaDW0uZNt7jpCPl
-         RRnCHb9/5wIiEohg3Ac+JYhUD/zzfJT0X/rdUwvs6mezEF/nm7FDU7d0wQ5JdimnUayx
-         oTh9MHhXv5dL1GVsLkL42ekcYydFfgoNtOVcFgLkXw0BvN3pHpUCCX3MebY+rJ4xBWT5
-         5inauOZL/d8WALOZ1xrWtQ5rVsABAzOa+rXWJQxh2+tzUvjEYEHj6fVcGzrNC6u/i3EZ
-         Gr2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k+lof7k7UQw8OWzjqMvhsPhGiM5bCAdWAJ4xCnTV+BI=;
-        b=PeybdyNZfON1dCqmwxXzR7xjjZlVZI0DmzG+5LBlG/J5Ot3tHs5XvKUn4u53TydNKE
-         bPRsVvEE27JjeqHTv01bfT2GT/aHZizKXsTXX6P1EzkQAnABRQsMRTNEGOp8vMyzEq0R
-         otuaCpV927WayZiQgU8h1HdbiPdbfrwqjpEqBHhx6QLHFxs8yECZp3sgkA8zFrSvqFjW
-         lg0xDeuh9awskoizDfYgmk9BipbvGaBbF0HyNRxdgEu0vy+4yCdmQfiBhI1I4FM2IUuP
-         Grh3bV35XcrOtNOHsXYBSNT1OHUIfLIzIWiezD2xNpiX8KnPmgl8lGUEqpAAo0KZe/hm
-         1u9g==
-X-Gm-Message-State: APjAAAXoYEZgZJl3R3UpPxtKQm2Q4nAx/34LGu1Mt+/jqVj1DcRZPX/5
-        k5H/EkwkW7tAMOikSnCZPWnZ5qn+DBb5jiRFYUiEaA==
-X-Google-Smtp-Source: APXvYqz9bxq6SQCx5y6RV65TPgRFUQTPKSOiFVfkv4eumgw9YTu20bPWChoYFWgrbzJrNph2HvhZobqfBQU4hku3gYA=
-X-Received: by 2002:a9d:5a0b:: with SMTP id v11mr20371012oth.102.1572383883580;
- Tue, 29 Oct 2019 14:18:03 -0700 (PDT)
+        Tue, 29 Oct 2019 17:18:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727041AbfJ2VSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 17:18:52 -0400
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134B821734;
+        Tue, 29 Oct 2019 21:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572383931;
+        bh=zpgMRmB2+OUmfkPUJn+0sPhsYPa/nJY+387yladmnrc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M372WvepBD01pI9VIjsiCfpipdnqFMbpzbuthX+wVwQEqQ8XZ8lV6VZFciCZZs6fh
+         ELbBr4yJxE4+jWNbJ2Z6nweRDOhuqp0KuVCaMxqtwY36d9LeuJB6KhctgTZSpIt/Ok
+         0bSgcASRz+8ocb7i4RsnEiJtOVZ61x7G7p+s9Ito=
+Received: by mail-qt1-f176.google.com with SMTP id e14so253842qto.1;
+        Tue, 29 Oct 2019 14:18:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAXmTLb4uwxxzIseSgQCZdcHi0tiOBktOFS8d4vE1VutiKttwuqt
+        4tVEOsrFV2PEg0evjG6TZViTymlUXud5uC42Xw==
+X-Google-Smtp-Source: APXvYqxo+gATAnWKaH4+/7DfLaTaJSdXC7dT+aqj7Pm+u15wwoD9JB4JIj7f9Qiz9jWQueCpx/cWWbcYKy3Q5nqHfi8=
+X-Received: by 2002:ac8:741a:: with SMTP id p26mr1394611qtq.143.1572383930154;
+ Tue, 29 Oct 2019 14:18:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191028215919.83697-1-john.stultz@linaro.org>
- <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com>
-In-Reply-To: <87mudjj4rc.fsf@gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 29 Oct 2019 14:17:51 -0700
-Message-ID: <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by
- device controller
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20191023024348.225969-1-ikjn@chromium.org> <20191025194101.GA4734@bogus>
+ <CAATdQgDxC_1EH4cBqf7deEqRjtRU1s4o=L8vOztvVZ7NS_q9Mw@mail.gmail.com>
+In-Reply-To: <CAATdQgDxC_1EH4cBqf7deEqRjtRU1s4o=L8vOztvVZ7NS_q9Mw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 29 Oct 2019 16:18:37 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJkFND8JP1bG6jbk9E365MpoNOHn1s9=SG-mFjwBa6Gvg@mail.gmail.com>
+Message-ID: <CAL_JsqJkFND8JP1bG6jbk9E365MpoNOHn1s9=SG-mFjwBa6Gvg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: input: Add DT bindings for Whiskers switch
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     Linux Input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nicolas Boitchat <drinkcat@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 2:11 AM Felipe Balbi <balbi@kernel.org> wrote:
-> John Stultz <john.stultz@linaro.org> writes:
-> > From: Yu Chen <chenyu56@huawei.com>
-> >
-> > It needs more time for the device controller to clear the CmdAct of
-> > DEPCMD on Hisilicon Kirin Soc.
+On Tue, Oct 29, 2019 at 2:23 AM Ikjoon Jang <ikjn@chromium.org> wrote:
 >
-> Why does it need more time? Why is it so that no other platform needs
-> more time, only this one? And which command, specifically, causes
-> problem?
+> On Sat, Oct 26, 2019 at 3:41 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Wed, Oct 23, 2019 at 10:43:48AM +0800, Ikjoon Jang wrote:
+> > > Add the DT binding document for Hammer's TABLET_MODE switch.
+> >
+> > This doesn't have any properties. Why does it need to be in DT? Just
+> > have the EC driver instantiate it.
+> >
+> > >
+> > > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> > > ---
+> > >  .../devicetree/bindings/input/cros-cbas.yaml  | 22 +++++++++++++++++++
+> > >  1 file changed, 22 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/input/cros-cbas.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/input/cros-cbas.yaml b/Documentation/devicetree/bindings/input/cros-cbas.yaml
+> > > new file mode 100644
+> > > index 000000000000..3bc989c6a295
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/input/cros-cbas.yaml
+> > > @@ -0,0 +1,22 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> >
+> > (GPL-2.0-only OR BSD-2-Clause) for new bindings please.
+>
+> This will be GPL-2.0-only in next patch.
 
-Hrm. Sadly I don't have that context (again I'm picking up a
-semi-abandoned patchset here), which is unfortunate, as I'm sure
-someone spent a number of hours debugging things to come up with this.
-:)
+That's not what I said. Dual licensed please:
 
-But alas, I've dropped this for now in my stack, and things seem to be
-working ok so far. I suspect there's some edge case I'll run into, but
-hopefully I'll be able to debug and get more details when that
-happens.
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 
-I do appreciate the review and pushback here!
+>
+> >
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/input/cros-cbas.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: ChromeOS Hammer's Base Attached Switch
+> > > +
+> > > +maintainers:
+> > > +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > +
+> > > +description:
+> > > +  This device is used to signal when a detachable base is attached to a
+> > > +  Chrome OS tablet. The node for this device must be under a cros-ec node
+> > > +  like google,cros-ec-spi or google,cros-ec-i2c.
+> >
+> > This should probably just be part of an EC schema where it can be
+> > enforced that this is a child node. It could be either embedded into it
+> > or referenced. I'd lean toward the former given this is only a
+> > compatible string...
+>
+> Sorry for basic questions here but I'm a bit confused,
+> "embedding" means that cros-ec.txt should be converted
+> into json schema first and embed this child bindings into there?
 
-thanks
--john
+Right.
+
+> Many Chrome OS tablets have a switch exposed by 'cros-ec-keyb' device
+> which is directly controlled by EC. But this 'cros_cbas' switch device is for
+> other types of tablets which need additional logics on EC and HID.
+>
+> Currently it doesn't need to have other properties, but maybe it could require
+> additional properties or device links in the future, plus this device
+> is not just
+> a EC subdevice, so I'd prefer this to be a separate binding.
+
+But in the description you say it is a child device.
+
+Rob
