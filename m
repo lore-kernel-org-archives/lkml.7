@@ -2,116 +2,74 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C72CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC24CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D49821721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:40:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KnyYMMfR"
+	by mail.kernel.org (Postfix) with ESMTP id 5561D2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbfJ2MkR (ORCPT
+        id S1729290AbfJ2Mlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:40:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54094 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbfJ2MkR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:40:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sMcCsiPZroEcuV8OSVTJGo4oXf0H1fQaUisPb3xX7L8=; b=KnyYMMfRnAFyBc2hjQAOkZ1Ai
-        pITPlePXil77rCv1X/hxMOgpBLXAXV0JrtL3VwKyl9l4T1zvUg7L+kqLs91pWMH0VyxFEsbXFlHZR
-        IyHXs7ZNFAK2i2e+3Q8hBzD8AHG64LyO7H3VuTQvynBLUw4X6LWPw7jeHwPEVM8QvARYSN1YDMNi+
-        JsHg5NVOED7Oxxyh9lDXZLkJpDDn1tPrKpEJKNq3+qyS62yAgroqEzriILDOPof6ms48gX4AGdmN5
-        MGdW8Tk5qIcVrMXu4F+bcSKSjcaX3ZRJRg07oT7RtllhE7UpwUvFLN3TZNw6XZBPvNtNso4eu7KXD
-        cok5eK38A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPQmv-0000x4-1h; Tue, 29 Oct 2019 12:39:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 630913040CB;
-        Tue, 29 Oct 2019 13:38:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 26FAC20D7FF19; Tue, 29 Oct 2019 13:39:49 +0100 (CET)
-Date:   Tue, 29 Oct 2019 13:39:49 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>, thomas.lendacky@amd.com
-Subject: AMD TLB errata, (Was: [PATCH RFC] mm: add MAP_EXCLUSIVE to create
- exclusive user mappings)
-Message-ID: <20191029123949.GL4114@hirez.programming.kicks-ass.net>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
- <20191028123124.ogkk5ogjlamvwc2s@box>
- <20191028130018.GA7192@rapoport-lnx>
- <20191028131623.zwuwguhm4v4s5imh@box>
- <CAA9_cmd7f2y2AAT6646S=tco3yfyLgCAC4Qp=1iTQaJqrQcOwQ@mail.gmail.com>
- <20191029064318.s4n4gidlfjun3d47@box>
- <20191029085602.GI4114@hirez.programming.kicks-ass.net>
- <20191029110024.yjytp22lhd2vekrv@box>
+        Tue, 29 Oct 2019 08:41:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5218 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726048AbfJ2Mlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:41:44 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D39CBBDE45543FEB6506;
+        Tue, 29 Oct 2019 20:41:41 +0800 (CST)
+Received: from HGHY4Z004218071.china.huawei.com (10.133.224.57) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 29 Oct 2019 20:41:35 +0800
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>
+CC:     <james.morse@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
+Subject: [PATCH v2] arm64: print additional fault message when executing non-exec memory
+Date:   Tue, 29 Oct 2019 20:41:31 +0800
+Message-ID: <20191029124131.32028-1-zhengxiang9@huawei.com>
+X-Mailer: git-send-email 2.15.1.windows.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029110024.yjytp22lhd2vekrv@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.224.57]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 02:00:24PM +0300, Kirill A. Shutemov wrote:
-> On Tue, Oct 29, 2019 at 09:56:02AM +0100, Peter Zijlstra wrote:
-> > On Tue, Oct 29, 2019 at 09:43:18AM +0300, Kirill A. Shutemov wrote:
-> > > But some CPUs don't like to have two TLB entries for the same memory with
-> > > different sizes at the same time. See for instance AMD erratum 383.
-> > > 
-> > > Getting it right would require making the range not present, flush TLB and
-> > > only then install huge page. That's what we do for userspace.
-> > > 
-> > > It will not fly for the direct mapping. There is no reasonable way to
-> > > exclude other CPU from accessing the range while it's not present (call
-> > > stop_machine()? :P). Moreover, the range may contain the code that doing
-> > > the collapse or data required for it...
-> > > 
-> > > BTW, looks like current __split_large_page() in pageattr.c is susceptible
-> > > to the errata. Maybe we can get away with the easy way...
-> > 
-> > As you write above, there is just no way we can have a (temporary) hole
-> > in the direct map.
-> > 
-> > We are careful about that other errata, and make sure both translations
-> > are identical wrt everything else.
-> 
-> It's not clear if it is enough to avoid the issue. "under a highly specific
-> and detailed set of conditions" is not very specific set of conditions :P
+When attempting to executing non-executable memory, the fault message
+shows:
 
-Yeah, I know ... :/ Tom is there any chance you could shed a little more
-light on that errata?
+  Unable to handle kernel read from unreadable memory at virtual address
+  ffff802dac469000
+
+This may confuse someone, so add a new fault message for instruction
+abort.
+
+Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
+---
+ arch/arm64/mm/fault.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index 9fc6db0bcbad..9adec86d0f8a 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -318,6 +318,8 @@ static void __do_kernel_fault(unsigned long addr, unsigned int esr,
+ 	if (is_el1_permission_fault(addr, esr, regs)) {
+ 		if (esr & ESR_ELx_WNR)
+ 			msg = "write to read-only memory";
++		else if (is_el1_instruction_abort(esr))
++			msg = "execute from non-executable memory";
+ 		else
+ 			msg = "read from unreadable memory";
+ 	} else if (addr < PAGE_SIZE) {
+-- 
+2.19.1
+
 
