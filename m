@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79E9CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DF1CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A298D214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9CF214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:29:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gsF4cVNV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pQZpvRiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733162AbfJ2L3S (ORCPT
+        id S1733244AbfJ2L3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:29:18 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39458 "EHLO
+        Tue, 29 Oct 2019 07:29:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38874 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732794AbfJ2L3M (ORCPT
+        with ESMTP id S1732703AbfJ2L3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:29:12 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r141so1981831wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 04:29:09 -0700 (PDT)
+        Tue, 29 Oct 2019 07:29:09 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 22so1997706wms.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 04:29:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UpfkndITw/1h6ZYfXIWQrUX2mzHma7l6m7IK0V8q2nM=;
-        b=gsF4cVNVZy+lXBaV5/jAQbVHI9zOYAmgGAyiOLJrx1b4jamNVztQAa4OqrqN9RlYUb
-         EtAgPYlZnmaAi9L4NrFSSF6apFZKjsfxgnC9eoekloFvrI6UlAX1iCgm/cPg9ccCiYV0
-         zeYk7kk2HswEdcCl1Yg3BTWK7mn+uXSP6CJG+rsK7qJ+b+BtOhouxUo5IRInsmIAzIl5
-         UufBIQVTjRowTIcVXshbj5bqE/D5X6oTMFkKhLYDPBZYD4w7CBZCtFe0ta81OTm2pQr3
-         GewmtE87TBGuZr3JBPCGl/sExnlq89vhVRGMnqb+J0E8yr9ayK/+vqndYRDvQFFGt4jV
-         PNKA==
+        bh=NFhJ0Ish0UcipllWIdsD8WX5howJ70tuJMN0799CtbQ=;
+        b=pQZpvRiPx31EGQqU5buRItdrMagsWsxMcKgktVuP2yOR2OCp/jcksr5P6Kyo0prd1j
+         zluZc8Sf0imBfHr7YhRbS+LXfNspcKUDv28AHny/DTwJnRZNiYNPgFJmShpsnRJ33dT8
+         SKRseIhZJb4UMzmCQwtam1054lOmYl0VQYpSp4YWoL6aN3h4n78xtbqJTd8ueP6vUVop
+         0kmMJBLL8fGJkGWbDaAFHWOcO2+dTEzs4jvMKuRfr0IMm+pCBDCTnmjt+cA6YuWxpxc+
+         ppgVj+HFbnBn/uSI7TnfkUCHqnveFg0CBqwqiK8HQrJrg8dHuonIPZnzhOHlQvlnpyqp
+         c80A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UpfkndITw/1h6ZYfXIWQrUX2mzHma7l6m7IK0V8q2nM=;
-        b=g7hdJyp9DzWtWZHdvVLOk5BavD4utidv/7g9Q/wZAswlIyEc6MKZjCW+bHZNZ0eC4O
-         Inn6f94kOl3Kq+EasyqF1UqfC9GqXWg1OEWVH8gchQtVnE5rA26bSHf2g4wSLqrbx3IW
-         ssHpF9g2SG6J4RZUMNTU1j+gHoOOhHgr71Iqu9tRQQucabRZesxDJbKsY7l9muDolZr9
-         5JoVv71qinQcFlkb0PT4B1j4oKhb6Rm/oWH/uGJa3Kk/BQRCdnzvAL2UX89Ur/vlaFkW
-         iOvtmBYzSbHGjPEzMMmJofiFT7oxRZCUw01O2R0zXW5JAekgY9rfi9JvcWddJZWZL3m2
-         a97w==
-X-Gm-Message-State: APjAAAUAcBUrGxl05PlEAyu/o3mXe5W9lFfW/NsEYEV6RIXKAKoMTZ6e
-        4qh66OMYBi+shvJzW/3+vv9HKQ==
-X-Google-Smtp-Source: APXvYqzUZD69wEFtHSU9YipCjt+PUyG2NNSiFgLTg07f5n1brlLAEF4LMXp/US8NXXy36RNzhViK/A==
-X-Received: by 2002:a1c:7c03:: with SMTP id x3mr2566352wmc.20.1572348549204;
-        Tue, 29 Oct 2019 04:29:09 -0700 (PDT)
+        bh=NFhJ0Ish0UcipllWIdsD8WX5howJ70tuJMN0799CtbQ=;
+        b=uKmRU65dn3t3zCZjc5TY/QVDszWvfAH3D0lEtPyp+5kLW8hoZglCaGg9hdfh2EdwI/
+         Dz8bbM2XK9jsCFBly5eJQU2aZHHqjLGN8fsykdZwSbwRzCGS7uPByP0ikD2jhir853Sa
+         PaMvYIXitJE5sXV2ybWkswaRu2mT7jieT2dJTA7CsJZjMRiwdZY8xdzP9YpDMcxCJUt/
+         53bhbD0g6EuHDBjK8GzttBP8sFuRAJSD4OFBs4pCyu76Ud8+E3hGgCgrI/AV9kqEGtzb
+         Lxs9CNzhiokE0254B5b8aNohj7RR84SjagpBrrYDHV1RT5Jx85KnB4Bp17Yy1arPGpCy
+         IsMA==
+X-Gm-Message-State: APjAAAWBOS8djJNDi3pfEmtfPKfk8fM3fWOhqie9fDQRzO453rB80UA9
+        kZUJFeQmLgQUbJ1u/nIk/c6PKA==
+X-Google-Smtp-Source: APXvYqxsEhwNjXBJXv9DPbKSWOjtQ/PnNCuTLZ6il+sX4wijiIjo1u00aFWrWFidwjZGOBAOcz+1ag==
+X-Received: by 2002:a1c:a78b:: with SMTP id q133mr3600793wme.115.1572348545701;
+        Tue, 29 Oct 2019 04:29:05 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id f20sm2373247wmb.6.2019.10.29.04.29.07
+        by smtp.gmail.com with ESMTPSA id f20sm2373247wmb.6.2019.10.29.04.29.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 04:29:08 -0700 (PDT)
+        Tue, 29 Oct 2019 04:29:04 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
         linus.walleij@linaro.org
@@ -63,10 +63,11 @@ Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         spapothi@codeaurora.org, bgoswami@codeaurora.org,
         linux-gpio@vger.kernel.org,
+        Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 11/11] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
-Date:   Tue, 29 Oct 2019 11:27:00 +0000
-Message-Id: <20191029112700.14548-12-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 09/11] pinctrl: qcom-wcd934x: Add support to wcd934x pinctrl driver.
+Date:   Tue, 29 Oct 2019 11:26:58 +0000
+Message-Id: <20191029112700.14548-10-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
 References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
@@ -77,167 +78,417 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support to Lenovo Yoga c630 compatible strings
-and related setup to the sound machine driver.
+From: Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
 
+This patch adds support to wcd934x pinctrl block found in
+WCD9340/WC9341 Audio codecs.
+
+[Srini: multiple cleanups to the code]
+Signed-off-by: Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/qcom/sdm845.c | 86 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 85 insertions(+), 1 deletion(-)
+ drivers/pinctrl/qcom/Kconfig                |   7 +
+ drivers/pinctrl/qcom/Makefile               |   1 +
+ drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c | 365 ++++++++++++++++++++
+ 3 files changed, 373 insertions(+)
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
 
-diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
-index 28f3cef696e6..3b5547a27aad 100644
---- a/sound/soc/qcom/sdm845.c
-+++ b/sound/soc/qcom/sdm845.c
-@@ -24,6 +24,9 @@
- #define RIGHT_SPK_TDM_TX_MASK   0xC0
- #define SPK_TDM_RX_MASK         0x03
- #define NUM_TDM_SLOTS           8
-+#define SLIM_MAX_TX_PORTS 16
-+#define SLIM_MAX_RX_PORTS 16
-+#define WCD934X_DEFAULT_MCLK_RATE	9600000
+diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+index 32fc2458b8eb..7406df5fb89a 100644
+--- a/drivers/pinctrl/qcom/Kconfig
++++ b/drivers/pinctrl/qcom/Kconfig
+@@ -195,4 +195,11 @@ config PINCTRL_SM8150
+          Qualcomm Technologies Inc TLMM block found on the Qualcomm
+          Technologies Inc SM8150 platform.
  
- struct sdm845_snd_data {
- 	struct snd_soc_jack jack;
-@@ -36,6 +39,39 @@ struct sdm845_snd_data {
- 
- static unsigned int tdm_slot_offset[8] = {0, 4, 8, 12, 16, 20, 24, 28};
- 
-+static int sdm845_slim_snd_hw_params(struct snd_pcm_substream *substream,
-+				     struct snd_pcm_hw_params *params)
++config PINCTRL_WCD934X
++	tristate "Qualcomm Technologies Inc WCD9340/WCD9341 pin controller driver"
++	depends on GPIOLIB && OF
++	help
++         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++         Qualcomm Technologies Inc Pinctrl block found on the Qualcomm
++         Technologies Inc WCD9340/WCD9341 Audio Codec.
+ endif
+diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
+index f8bb0c265381..8c42ba1bdd69 100644
+--- a/drivers/pinctrl/qcom/Makefile
++++ b/drivers/pinctrl/qcom/Makefile
+@@ -24,3 +24,4 @@ obj-$(CONFIG_PINCTRL_SC7180)	+= pinctrl-sc7180.o
+ obj-$(CONFIG_PINCTRL_SDM660)   += pinctrl-sdm660.o
+ obj-$(CONFIG_PINCTRL_SDM845) += pinctrl-sdm845.o
+ obj-$(CONFIG_PINCTRL_SM8150) += pinctrl-sm8150.o
++obj-$(CONFIG_PINCTRL_WCD934X) += pinctrl-wcd934x-gpio.o
+diff --git a/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c b/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+new file mode 100644
+index 000000000000..1aff88d0bcb3
+--- /dev/null
++++ b/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+@@ -0,0 +1,365 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
++// Copyright (c) 2019, Linaro Limited
++
++#include <linux/module.h>
++#include <linux/gpio.h>
++#include <linux/interrupt.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
++
++#include "../core.h"
++#include "../pinctrl-utils.h"
++
++#define WCD_REG_DIR_CTL_OFFSET 0x42
++#define WCD_REG_VAL_CTL_OFFSET 0x43
++#define WCD_GPIO_PULL_UP       1
++#define WCD_GPIO_PULL_DOWN     2
++#define WCD_GPIO_BIAS_DISABLE  3
++#define WCD_GPIO_STRING_LEN    20
++#define WCD934X_NPINS		5
++
++/**
++ * struct wcd_gpio_pad - keep current GPIO settings
++ * @offset: offset of gpio.
++ * @is_valid: Set to false, when GPIO in high Z state.
++ * @value: value of a pin
++ * @output_enabled: Set to true if GPIO is output and false if it is input
++ * @pullup: Constant current which flow through GPIO output buffer.
++ * @strength: Drive strength of a pin
++ */
++struct wcd_gpio_pad {
++	u16  offset;
++	bool is_valid;
++	bool value;
++	bool output_enabled;
++	unsigned int pullup;
++	unsigned int strength;
++};
++
++struct wcd_gpio_priv {
++	struct device *dev;
++	struct regmap *map;
++	struct pinctrl_dev *ctrl;
++	struct gpio_chip chip;
++};
++
++static int wcd_gpio_read(struct wcd_gpio_priv *priv_data,
++			 struct wcd_gpio_pad *pad, unsigned int addr)
 +{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	u32 rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
-+	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
-+	int ret = 0, i;
++	unsigned int val;
++	int ret;
 +
-+	for (i = 0 ; i < dai_link->num_codecs; i++) {
-+		ret = snd_soc_dai_get_channel_map(rtd->codec_dais[i],
-+				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
++	ret = regmap_read(priv_data->map, addr, &val);
++	if (ret < 0)
++		dev_err(priv_data->dev, "%s: read 0x%x failed\n",
++			__func__, addr);
++	else
++		ret = (val >> pad->offset);
 +
-+		if (ret != 0 && ret != -ENOTSUPP) {
-+			pr_err("failed to get codec chan map, err:%d\n", ret);
-+			return ret;
-+		} else if (ret == -ENOTSUPP) {
-+			/* Ignore unsupported */
-+			continue;
-+		}
++	return ret;
++}
 +
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, 0, NULL,
-+							  rx_ch_cnt, rx_ch);
-+		else
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, tx_ch_cnt,
-+							  tx_ch, 0, NULL);
-+	}
++static int wcd_gpio_write(struct wcd_gpio_priv *priv_data,
++			  struct wcd_gpio_pad *pad, unsigned int addr,
++			  unsigned int val)
++{
++	int ret;
++
++	ret = regmap_update_bits(priv_data->map, addr, (1 << pad->offset),
++				 val << pad->offset);
++	if (ret < 0)
++		dev_err(priv_data->dev, "write 0x%x failed\n", addr);
++
++	return ret;
++}
++
++static int wcd_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	return pctldev->desc->npins;
++}
++
++static const char *wcd_get_group_name(struct pinctrl_dev *pctldev,
++				      unsigned int pin)
++{
++	return pctldev->desc->pins[pin].name;
++}
++
++static int wcd_get_group_pins(struct pinctrl_dev *pctldev, unsigned int pin,
++			      const unsigned int **pins, unsigned int *num_pins)
++{
++	*pins = &pctldev->desc->pins[pin].number;
++	*num_pins = 1;
 +
 +	return 0;
 +}
 +
- static int sdm845_tdm_snd_hw_params(struct snd_pcm_substream *substream,
- 					struct snd_pcm_hw_params *params)
- {
-@@ -151,6 +187,11 @@ static int sdm845_snd_hw_params(struct snd_pcm_substream *substream,
- 	case QUATERNARY_TDM_TX_0:
- 		ret = sdm845_tdm_snd_hw_params(substream, params);
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		ret = sdm845_slim_snd_hw_params(substream, params);
-+		break;
-+	case QUATERNARY_MI2S_RX:
-+		break;
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
- 		break;
-@@ -173,7 +214,20 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct sdm845_snd_data *pdata = snd_soc_card_get_drvdata(card);
- 	struct snd_jack *jack;
--	int rval;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	/*
-+	 * Codec SLIMBUS configuration
-+	 * RX1, RX2, RX3, RX4, RX5, RX6, RX7, RX8, RX9, RX10, RX11, RX12, RX13
-+	 * TX1, TX2, TX3, TX4, TX5, TX6, TX7, TX8, TX9, TX10, TX11, TX12, TX13
-+	 * TX14, TX15, TX16
-+	 */
-+	unsigned int rx_ch[SLIM_MAX_RX_PORTS] = {144, 145, 146, 147, 148, 149,
-+					150, 151, 152, 153, 154, 155, 156};
-+	unsigned int tx_ch[SLIM_MAX_TX_PORTS] = {128, 129, 130, 131, 132, 133,
-+					    134, 135, 136, 137, 138, 139,
-+					    140, 141, 142, 143};
-+	int rval, i;
++static const struct pinctrl_ops wcd_pinctrl_ops = {
++	.get_groups_count       = wcd_get_groups_count,
++	.get_group_name         = wcd_get_group_name,
++	.get_group_pins         = wcd_get_group_pins,
++	.dt_node_to_map         = pinconf_generic_dt_node_to_map_group,
++	.dt_free_map            = pinctrl_utils_free_map,
++};
 +
- 
- 	if (!pdata->jack_setup) {
- 		rval = snd_soc_card_jack_new(card, "Headset Jack",
-@@ -211,6 +265,21 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 			return rval;
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		for (i = 0 ; i < dai_link->num_codecs; i++) {
-+			rval = snd_soc_dai_set_channel_map(rtd->codec_dais[i],
-+							  ARRAY_SIZE(tx_ch),
-+							  tx_ch,
-+							  ARRAY_SIZE(rx_ch),
-+							  rx_ch);
-+			if (rval != 0 && rval != -ENOTSUPP)
-+				return rval;
++static int wcd_config_get(struct pinctrl_dev *pctldev,
++			  unsigned int pin, unsigned long *config)
++{
++	unsigned int param = pinconf_to_config_param(*config);
++	struct wcd_gpio_pad *pad;
++	unsigned int arg;
 +
-+			snd_soc_dai_set_sysclk(rtd->codec_dais[i], 0,
-+					       WCD934X_DEFAULT_MCLK_RATE,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
++	pad = pctldev->desc->pins[pin].drv_data;
++
++	switch (param) {
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		arg = pad->pullup == WCD_GPIO_PULL_DOWN;
++		break;
++	case PIN_CONFIG_BIAS_DISABLE:
++		arg = pad->pullup = WCD_GPIO_BIAS_DISABLE;
++		break;
++	case PIN_CONFIG_BIAS_PULL_UP:
++		arg = pad->pullup == WCD_GPIO_PULL_UP;
++		break;
++	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
++		arg = !pad->is_valid;
++		break;
++	case PIN_CONFIG_INPUT_ENABLE:
++		arg = pad->output_enabled;
++		break;
++	case PIN_CONFIG_OUTPUT:
++		arg = pad->value;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	*config = pinconf_to_config_packed(param, arg);
++	return 0;
++}
++
++static int wcd_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
++			  unsigned long *configs, unsigned int nconfs)
++{
++	struct wcd_gpio_priv *priv_data = pinctrl_dev_get_drvdata(pctldev);
++	struct wcd_gpio_pad *pad;
++	unsigned int param, arg;
++	int i, ret;
++
++	pad = pctldev->desc->pins[pin].drv_data;
++
++	for (i = 0; i < nconfs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		arg = pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_BIAS_DISABLE:
++			pad->pullup = WCD_GPIO_BIAS_DISABLE;
++			break;
++		case PIN_CONFIG_BIAS_PULL_UP:
++			pad->pullup = WCD_GPIO_PULL_UP;
++			break;
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++			pad->pullup = WCD_GPIO_PULL_DOWN;
++			break;
++		case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
++			pad->is_valid = false;
++			break;
++		case PIN_CONFIG_INPUT_ENABLE:
++			pad->output_enabled = false;
++			break;
++		case PIN_CONFIG_OUTPUT:
++			pad->output_enabled = true;
++			pad->value = arg;
++			break;
++		case PIN_CONFIG_DRIVE_STRENGTH:
++			pad->strength = arg;
++			break;
++		default:
++			return -EINVAL;
 +		}
-+		break;
- 	default:
- 		break;
- 	}
-@@ -256,6 +325,14 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
- 		}
- 		snd_soc_dai_set_fmt(cpu_dai, fmt);
- 		snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
-+		break;
-+	case QUATERNARY_MI2S_RX:
-+		snd_soc_dai_set_sysclk(cpu_dai,
-+			Q6AFE_LPASS_CLK_ID_QUAD_MI2S_IBIT,
-+			MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
-+		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
++	}
 +
++	ret = wcd_gpio_write(priv_data, pad, WCD_REG_DIR_CTL_OFFSET,
++			     pad->output_enabled);
++	if (ret < 0)
++		return ret;
 +
- 		break;
- 
- 	case QUATERNARY_TDM_RX_0:
-@@ -294,6 +371,8 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
- 			}
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		break;
- 
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-@@ -338,6 +417,9 @@ static void  sdm845_snd_shutdown(struct snd_pcm_substream *substream)
- 				0, SNDRV_PCM_STREAM_PLAYBACK);
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+	case QUATERNARY_MI2S_RX:
-+		break;
- 
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-@@ -451,6 +533,8 @@ static int sdm845_snd_platform_remove(struct platform_device *pdev)
- 
- static const struct of_device_id sdm845_snd_device_id[]  = {
- 	{ .compatible = "qcom,sdm845-sndcard" },
-+	{ .compatible = "qcom,db845c-sndcard" },
-+	{ .compatible = "lenovo,yoga-c630-sndcard" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sdm845_snd_device_id);
++	if (pad->output_enabled)
++		ret = wcd_gpio_write(priv_data, pad, WCD_REG_VAL_CTL_OFFSET,
++				     pad->value);
++
++	return ret;
++}
++
++static const struct pinconf_ops wcd_pinconf_ops = {
++	.is_generic  = true,
++	.pin_config_group_get = wcd_config_get,
++	.pin_config_group_set = wcd_config_set,
++};
++
++static int wcd_gpio_direction_input(struct gpio_chip *chip, unsigned int pin)
++{
++	struct wcd_gpio_priv *priv_data = gpiochip_get_data(chip);
++	unsigned long config;
++
++	config = pinconf_to_config_packed(PIN_CONFIG_INPUT_ENABLE, 1);
++
++	return wcd_config_set(priv_data->ctrl, pin, &config, 1);
++}
++
++static int wcd_gpio_direction_output(struct gpio_chip *chip,
++				      unsigned int pin, int val)
++{
++	struct wcd_gpio_priv *priv_data = gpiochip_get_data(chip);
++	unsigned long config;
++
++	config = pinconf_to_config_packed(PIN_CONFIG_OUTPUT, val);
++
++	return wcd_config_set(priv_data->ctrl, pin, &config, 1);
++}
++
++static int wcd_gpio_get(struct gpio_chip *chip, unsigned int pin)
++{
++	struct wcd_gpio_priv *priv_data = gpiochip_get_data(chip);
++	struct wcd_gpio_pad *pad;
++	int value;
++
++	pad = priv_data->ctrl->desc->pins[pin].drv_data;
++
++	if (!pad->is_valid)
++		return -EINVAL;
++
++	value = wcd_gpio_read(priv_data, pad, WCD_REG_VAL_CTL_OFFSET);
++
++	return value;
++}
++
++static void wcd_gpio_set(struct gpio_chip *chip, unsigned int pin, int value)
++{
++	struct wcd_gpio_priv *priv_data = gpiochip_get_data(chip);
++	unsigned long config;
++
++	config = pinconf_to_config_packed(PIN_CONFIG_OUTPUT, value);
++
++	wcd_config_set(priv_data->ctrl, pin, &config, 1);
++}
++
++static const struct gpio_chip wcd_gpio_chip = {
++	.direction_input  = wcd_gpio_direction_input,
++	.direction_output = wcd_gpio_direction_output,
++	.get = wcd_gpio_get,
++	.set = wcd_gpio_set,
++};
++
++static int wcd_pinctrl_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct pinctrl_pin_desc *pindesc;
++	struct pinctrl_desc *pctrldesc;
++	struct wcd_gpio_pad *pad, *pads;
++	struct wcd_gpio_priv *priv_data;
++	u32 npins = WCD934X_NPINS;
++	char **name;
++	int i;
++
++	priv_data = devm_kzalloc(dev, sizeof(*priv_data), GFP_KERNEL);
++	if (!priv_data)
++		return -ENOMEM;
++
++	priv_data->dev = dev;
++	priv_data->map = dev_get_regmap(dev->parent, NULL);
++	if (!priv_data->map) {
++		dev_err(dev, "%s: failed to get regmap\n", __func__);
++		return  -EINVAL;
++	}
++
++	pindesc = devm_kcalloc(dev, npins, sizeof(*pindesc), GFP_KERNEL);
++	if (!pindesc)
++		return -ENOMEM;
++
++	pads = devm_kcalloc(dev, npins, sizeof(*pads), GFP_KERNEL);
++	if (!pads)
++		return -ENOMEM;
++
++	pctrldesc = devm_kzalloc(dev, sizeof(*pctrldesc), GFP_KERNEL);
++	if (!pctrldesc)
++		return -ENOMEM;
++
++	pctrldesc->pctlops = &wcd_pinctrl_ops;
++	pctrldesc->confops = &wcd_pinconf_ops;
++	pctrldesc->owner = THIS_MODULE;
++	pctrldesc->name = dev_name(dev);
++	pctrldesc->pins = pindesc;
++	pctrldesc->npins = npins;
++
++	name = devm_kcalloc(dev, npins, sizeof(char *), GFP_KERNEL);
++	if (!name)
++		return -ENOMEM;
++
++	for (i = 0; i < npins; i++, pindesc++) {
++		name[i] = devm_kzalloc(dev, sizeof(char) * WCD_GPIO_STRING_LEN,
++				       GFP_KERNEL);
++		if (!name[i])
++			return -ENOMEM;
++
++		pad = &pads[i];
++		pindesc->drv_data = pad;
++		pindesc->number = i;
++		snprintf(name[i], (WCD_GPIO_STRING_LEN - 1), "gpio%d", (i+1));
++		pindesc->name = name[i];
++		pad->offset = i;
++		pad->is_valid  = true;
++	}
++
++	priv_data->chip = wcd_gpio_chip;
++	priv_data->chip.parent = dev;
++	priv_data->chip.base = -1;
++	priv_data->chip.ngpio = npins;
++	priv_data->chip.label = dev_name(dev);
++	priv_data->chip.of_gpio_n_cells = 2;
++	priv_data->chip.can_sleep = false;
++	platform_set_drvdata(pdev, priv_data);
++
++	priv_data->ctrl = devm_pinctrl_register(dev, pctrldesc, priv_data);
++	if (IS_ERR(priv_data->ctrl)) {
++		dev_err(dev, "%s: failed to register to pinctrl\n", __func__);
++		return PTR_ERR(priv_data->ctrl);
++	}
++
++	return gpiochip_add_data(&priv_data->chip, priv_data);
++}
++
++static int wcd_pinctrl_remove(struct platform_device *pdev)
++{
++	struct wcd_gpio_priv *priv_data = platform_get_drvdata(pdev);
++
++	gpiochip_remove(&priv_data->chip);
++
++	return 0;
++}
++
++static const struct of_device_id wcd_pinctrl_of_match[] = {
++	{ .compatible = "qcom,wcd9340-pinctrl" },
++	{ .compatible = "qcom,wcd9341-pinctrl" },
++	{ },
++};
++
++MODULE_DEVICE_TABLE(of, wcd_pinctrl_of_match);
++
++static struct platform_driver wcd_pinctrl_driver = {
++	.driver = {
++		   .name = "wcd934x-pinctrl",
++		   .of_match_table = wcd_pinctrl_of_match,
++	},
++	.probe = wcd_pinctrl_probe,
++	.remove = wcd_pinctrl_remove,
++};
++
++module_platform_driver(wcd_pinctrl_driver);
++
++MODULE_DESCRIPTION("Qualcomm Technologies, Inc WCD GPIO pin control driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.21.0
 
