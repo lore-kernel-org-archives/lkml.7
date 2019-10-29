@@ -2,188 +2,228 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C049CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C452CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F30F208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72DCC2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:18:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QabNL/6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbfJ2KRB (ORCPT
+        id S1730216AbfJ2KSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 06:17:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:33370 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbfJ2KRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 06:17:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 03:16:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="283199335"
-Received: from dpdk-virtio-tbie-2.sh.intel.com ([10.67.104.74])
-  by orsmga001.jf.intel.com with ESMTP; 29 Oct 2019 03:16:57 -0700
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     mst@redhat.com, jasowang@redhat.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        dan.daly@intel.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, lingshan.zhu@intel.com, tiwei.bie@intel.com
-Subject: [RFC] vhost_mdev: add network control vq support
-Date:   Tue, 29 Oct 2019 18:17:26 +0800
-Message-Id: <20191029101726.12699-1-tiwei.bie@intel.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 29 Oct 2019 06:18:14 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41649 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729072AbfJ2KSO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 06:18:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p4so12963041wrm.8;
+        Tue, 29 Oct 2019 03:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=rdcY2ECIRCmFNWGhaSPQ65IkYHqSS3k5QdhNJoXorB0=;
+        b=QabNL/6f25IZI1ng0rsdZtS27z7/5MueUVWzGN0nIXuIGc7XjiRdNe+CZ7rdQu0BQw
+         QYP5ODMEiiKECKM4KrTeQuKDyNfnTVx7l8x5WJt2FT85gYVdaWsCQNQlo0jT/gJPG7zE
+         l2KqVJq9/tb83oEOEnJXtE39XGB0fnHFRMhTwQlGbfWlyHDHb2VB2jdpTnuFZLk1MTrJ
+         GLWWw8Yp711qIj2LDrfJVxf+lfXgdH0QQ2KlqtPEryiIZrcvDzmLjh6hD6wog3iq4l54
+         aJGZPv05f/EwEtqOZ9BzhQ+i41OHdG8BImAHF1OCeBH3o0rDm7sASOBG4yMX7jQMPK3h
+         5o6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rdcY2ECIRCmFNWGhaSPQ65IkYHqSS3k5QdhNJoXorB0=;
+        b=pynskgT+25kZxxPqSohcgFdftxbgdfvQcf4rcZIMv+nr4C9esVk9hJr3nr+G9/bRRJ
+         gQxP800eR0EyfX1xEj5CAsg45AtVVF1HPPTZsyXjn08S2Qc2ESm+fULiYEutb8PkWCxs
+         EiENANy3n4guJ7qPj8ge8U4Lb/L7OAbd2IBzXtTSYihphhy6Hz760lG5wPlfi4aTJFDp
+         AYtlWacWjQSYxPGzkkFZlHBerPrjwl5yHaBvnzLMgatERtwVSrEN8puh9OB+/JDJ/ios
+         NnNTOi8lPMWWfeDm57v19v3YSo6M1NtAw1os8JquxkpkXV+nkWJFzHJqme2vpTWE7H7I
+         eV/Q==
+X-Gm-Message-State: APjAAAXRqsez/fkVjBfVPOitOgjYRE3aYaGTZzDPG90jVLjzsNM2Os0Q
+        ym61km5mCJ7hLB40u0y4zWo=
+X-Google-Smtp-Source: APXvYqy0rZyubHlTn40+nBhraeCSuQzoCQIiILb+7EsI9wSAEpgxKYZlLZQXE4zZaXWry8fl8nP1tA==
+X-Received: by 2002:adf:b1d1:: with SMTP id r17mr19026591wra.201.1572344290868;
+        Tue, 29 Oct 2019 03:18:10 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:cb19:16b:9900:d1e3:f193:b14:d626])
+        by smtp.gmail.com with ESMTPSA id i71sm16175411wri.68.2019.10.29.03.17.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 03:18:10 -0700 (PDT)
+From:   Joris Offouga <offougajoris@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Otavio Salvador <otavio@ossystems.com.br>,
+        Joris Offouga <offougajoris@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH V3] ARM: dts: imx7d-pico: Add LCD support
+Date:   Tue, 29 Oct 2019 11:17:41 +0100
+Message-Id: <20191029101742.9100-1-offougajoris@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the network control vq support in vhost-mdev.
-A vhost-mdev specific op is introduced to allow parent drivers
-to handle the network control commands come from userspace.
+From: Fabio Estevam <festevam@gmail.com>
 
-Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+Add support for the VXT VL050-8048NT-C01 panel connected through
+the 24 bit parallel LCDIF interface.
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+Signed-off-by: Joris Offouga <offougajoris@gmail.com>
 ---
-This patch depends on below patch:
-https://lkml.org/lkml/2019/10/29/335
+ Changes v2 -> v3 
+	rename pintcrl_backlight to pinctrl_pwm4
+	sort the nodes alphabetical
 
- drivers/vhost/mdev.c             | 37 ++++++++++++++++++++++++++++++--
- include/linux/virtio_mdev_ops.h  | 10 +++++++++
- include/uapi/linux/vhost.h       |  7 ++++++
- include/uapi/linux/vhost_types.h |  6 ++++++
- 4 files changed, 58 insertions(+), 2 deletions(-)
+ Changes v1 -> v2
+ 	change "From:" Joris Offouga to Fabio Estevam
+	set Joris Offouga signed-off to the last one
 
-diff --git a/drivers/vhost/mdev.c b/drivers/vhost/mdev.c
-index 35b2fb33e686..c9b3eaa77405 100644
---- a/drivers/vhost/mdev.c
-+++ b/drivers/vhost/mdev.c
-@@ -47,6 +47,13 @@ enum {
- 		(1ULL << VIRTIO_NET_F_HOST_UFO) |
- 		(1ULL << VIRTIO_NET_F_MRG_RXBUF) |
- 		(1ULL << VIRTIO_NET_F_STATUS) |
-+		(1ULL << VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) |
-+		(1ULL << VIRTIO_NET_F_CTRL_VQ) |
-+		(1ULL << VIRTIO_NET_F_CTRL_RX) |
-+		(1ULL << VIRTIO_NET_F_CTRL_VLAN) |
-+		(1ULL << VIRTIO_NET_F_CTRL_RX_EXTRA) |
-+		(1ULL << VIRTIO_NET_F_GUEST_ANNOUNCE) |
-+		(1ULL << VIRTIO_NET_F_CTRL_MAC_ADDR) |
- 		(1ULL << VIRTIO_NET_F_SPEED_DUPLEX),
+ arch/arm/boot/dts/imx7d-pico.dtsi | 82 +++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
+index 6f50ebf31a0a..9c7c2c45e6aa 100644
+--- a/arch/arm/boot/dts/imx7d-pico.dtsi
++++ b/arch/arm/boot/dts/imx7d-pico.dtsi
+@@ -7,12 +7,40 @@
+ #include "imx7d.dtsi"
+ 
+ / {
++        backlight: backlight {
++                compatible = "pwm-backlight";
++                pwms = <&pwm4 0 50000 0>;
++                brightness-levels = <0 36 72 108 144 180 216 255>;
++                default-brightness-level = <6>;
++        };
++
+ 	/* Will be filled by the bootloader */
+ 	memory@80000000 {
+ 		device_type = "memory";
+ 		reg = <0x80000000 0>;
+ 	};
+ 
++        panel {
++                compatible = "vxt,vl050-8048nt-c01";
++                backlight = <&backlight>;
++                power-supply = <&reg_lcd_3v3>;
++
++                port {
++                        panel_in: endpoint {
++                                remote-endpoint = <&display_out>;
++                        };
++                };
++        };
++
++	reg_lcd_3v3: regulator-lcd-3v3 {
++                compatible = "regulator-fixed";
++                regulator-name = "lcd-3v3";
++                regulator-min-microvolt = <3300000>;
++                regulator-max-microvolt = <3300000>;
++                gpio = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++                enable-active-high;
++        };
++
+ 	reg_wlreg_on: regulator-wlreg_on {
+ 		compatible = "regulator-fixed";
+ 		pinctrl-names = "default";
+@@ -230,6 +258,18 @@
+ 	};
  };
  
-@@ -362,6 +369,29 @@ static long vhost_mdev_vring_ioctl(struct vhost_mdev *m, unsigned int cmd,
- 	return r;
- }
- 
-+/*
-+ * Device specific (e.g. network) ioctls.
-+ */
-+static long vhost_mdev_dev_ioctl(struct vhost_mdev *m, unsigned int cmd,
-+				 void __user *argp)
-+{
-+	struct mdev_device *mdev = m->mdev;
-+	const struct virtio_mdev_device_ops *ops = mdev_get_vhost_ops(mdev);
++&lcdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lcdif>;
++	status = "okay";
 +
-+	switch (m->virtio_id) {
-+	case VIRTIO_ID_NET:
-+		switch (cmd) {
-+		case VHOST_MDEV_NET_CTRL:
-+			if (!ops->net.ctrl)
-+				return -ENOTSUPP;
-+			return ops->net.ctrl(mdev, argp);
-+		}
-+		break;
-+	}
-+
-+	return -ENOIOCTLCMD;
-+}
-+
- static int vhost_mdev_open(void *device_data)
- {
- 	struct vhost_mdev *m = device_data;
-@@ -460,8 +490,11 @@ static long vhost_mdev_unlocked_ioctl(void *device_data,
- 		 * VHOST_SET_LOG_FD are not used yet.
- 		 */
- 		r = vhost_dev_ioctl(&m->dev, cmd, argp);
--		if (r == -ENOIOCTLCMD)
--			r = vhost_mdev_vring_ioctl(m, cmd, argp);
-+		if (r == -ENOIOCTLCMD) {
-+			r = vhost_mdev_dev_ioctl(m, cmd, argp);
-+			if (r == -ENOIOCTLCMD)
-+				r = vhost_mdev_vring_ioctl(m, cmd, argp);
-+		}
- 	}
- 
- 	mutex_unlock(&m->mutex);
-diff --git a/include/linux/virtio_mdev_ops.h b/include/linux/virtio_mdev_ops.h
-index d417b41f2845..622861804ebd 100644
---- a/include/linux/virtio_mdev_ops.h
-+++ b/include/linux/virtio_mdev_ops.h
-@@ -20,6 +20,8 @@ struct virtio_mdev_callback {
- 	void *private;
- };
- 
-+struct vhost_mdev_net_ctrl;
-+
- /**
-  * struct vfio_mdev_device_ops - Structure to be registered for each
-  * mdev device to register the device for virtio/vhost drivers.
-@@ -151,6 +153,14 @@ struct virtio_mdev_device_ops {
- 
- 	/* Mdev device ops */
- 	u64 (*get_mdev_features)(struct mdev_device *mdev);
-+
-+	/* Vhost-mdev (MDEV_CLASS_ID_VHOST) specific ops */
-+	union {
-+		struct {
-+			int (*ctrl)(struct mdev_device *mdev,
-+				    struct vhost_mdev_net_ctrl __user *ctrl);
-+		} net;
++	port {
++		display_out: endpoint {
++			remote-endpoint = <&panel_in>;
++		};
 +	};
++};
++
+ &sai1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_sai1>;
+@@ -260,6 +300,8 @@
  };
  
- void mdev_set_virtio_ops(struct mdev_device *mdev,
-diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-index 061a2824a1b3..3693b2cba0c4 100644
---- a/include/uapi/linux/vhost.h
-+++ b/include/uapi/linux/vhost.h
-@@ -134,4 +134,11 @@
- /* Get the max ring size. */
- #define VHOST_MDEV_GET_VRING_NUM	_IOR(VHOST_VIRTIO, 0x76, __u16)
- 
-+/* VHOST_MDEV device specific defines */
-+
-+/* Send virtio-net commands. The commands follow the same definition
-+ * of the virtio-net commands defined in virtio-spec.
-+ */
-+#define VHOST_MDEV_NET_CTRL		_IOW(VHOST_VIRTIO, 0x77, struct vhost_mdev_net_ctrl *)
-+
- #endif
-diff --git a/include/uapi/linux/vhost_types.h b/include/uapi/linux/vhost_types.h
-index 7b105d0b2fb9..e76b4d8e35e5 100644
---- a/include/uapi/linux/vhost_types.h
-+++ b/include/uapi/linux/vhost_types.h
-@@ -127,6 +127,12 @@ struct vhost_mdev_config {
- 	__u8 buf[0];
+ &pwm4 { /* Backlight */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm4>;
+ 	status = "okay";
  };
  
-+struct vhost_mdev_net_ctrl {
-+	__u8 class;
-+	__u8 cmd;
-+	__u8 cmd_data[0];
-+} __attribute__((packed));
+@@ -413,6 +455,40 @@
+ 		>;
+ 	};
+ 
++	pinctrl_lcdif: lcdifgrp {
++		fsl,pins = <
++			MX7D_PAD_LCD_DATA00__LCD_DATA0		0x79
++			MX7D_PAD_LCD_DATA01__LCD_DATA1		0x79
++			MX7D_PAD_LCD_DATA02__LCD_DATA2		0x79
++			MX7D_PAD_LCD_DATA03__LCD_DATA3		0x79
++			MX7D_PAD_LCD_DATA04__LCD_DATA4		0x79
++			MX7D_PAD_LCD_DATA05__LCD_DATA5		0x79
++			MX7D_PAD_LCD_DATA06__LCD_DATA6		0x79
++			MX7D_PAD_LCD_DATA07__LCD_DATA7		0x79
++			MX7D_PAD_LCD_DATA08__LCD_DATA8		0x79
++			MX7D_PAD_LCD_DATA09__LCD_DATA9		0x79
++			MX7D_PAD_LCD_DATA10__LCD_DATA10		0x79
++			MX7D_PAD_LCD_DATA11__LCD_DATA11		0x79
++			MX7D_PAD_LCD_DATA12__LCD_DATA12		0x79
++			MX7D_PAD_LCD_DATA13__LCD_DATA13		0x79
++			MX7D_PAD_LCD_DATA14__LCD_DATA14		0x79
++			MX7D_PAD_LCD_DATA15__LCD_DATA15		0x79
++			MX7D_PAD_LCD_DATA16__LCD_DATA16		0x79
++			MX7D_PAD_LCD_DATA17__LCD_DATA17		0x79
++			MX7D_PAD_LCD_DATA18__LCD_DATA18		0x79
++			MX7D_PAD_LCD_DATA19__LCD_DATA19		0x79
++			MX7D_PAD_LCD_DATA20__LCD_DATA20		0x79
++			MX7D_PAD_LCD_DATA21__LCD_DATA21		0x79
++			MX7D_PAD_LCD_DATA22__LCD_DATA22		0x79
++			MX7D_PAD_LCD_DATA23__LCD_DATA23		0x79
++			MX7D_PAD_LCD_CLK__LCD_CLK		0x79
++			MX7D_PAD_LCD_ENABLE__LCD_ENABLE		0x78
++			MX7D_PAD_LCD_VSYNC__LCD_VSYNC		0x78
++			MX7D_PAD_LCD_HSYNC__LCD_HSYNC		0x78
++			MX7D_PAD_LCD_RESET__GPIO3_IO4		0x14
++		>;
++	};
 +
- /* Feature bits */
- /* Log all write descriptors. Can be changed while device is active. */
- #define VHOST_F_LOG_ALL 26
+ 	pinctrl_pwm1: pwm1 {
+ 		fsl,pins = <
+ 			MX7D_PAD_GPIO1_IO08__PWM1_OUT   0x7f
+@@ -431,6 +507,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_pwm4: pwm4grp{
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO11__PWM4_OUT	0x0
++		>;
++	};
++
+ 	pinctrl_reg_wlreg_on: regregongrp {
+ 		fsl,pins = <
+ 			MX7D_PAD_ECSPI1_SCLK__GPIO4_IO16	0x59
 -- 
-2.23.0
+2.17.1
 
