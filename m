@@ -2,214 +2,141 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412A5CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F6CCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080D5214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:54:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UHuCmRqE"
+	by mail.kernel.org (Postfix) with ESMTP id 44C7921479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:54:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387487AbfJ2Jx6 (ORCPT
+        id S1732686AbfJ2Jwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:53:58 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37410 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733155AbfJ2JxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:53:09 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 472RjH01pKz9tyhr;
-        Tue, 29 Oct 2019 10:53:07 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=UHuCmRqE; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id KPQphUf7OKjx; Tue, 29 Oct 2019 10:53:06 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 472RjG5sQkz9tygy;
-        Tue, 29 Oct 2019 10:53:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1572342786; bh=UIHQXP6V1jWugQMbEinSuLqC2er8Mq/UwaqIPYmrK0I=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=UHuCmRqEsK/Fpq2Ecimvp1z0Kg8MJAeoBkH0iQJHFyw6HY6ZsAbV7ZMj+nN0pSWzX
-         r6jH9EJsvX3Num7zPxCKnETT6FrzT0EYs0C9/bu39qLcpwNw2wtoXofIjnv0bHlLZX
-         cKr6uLMdj99gp6uRuJbzw+Ho4TTlxQGbK893zDF8=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D85658B84E;
-        Tue, 29 Oct 2019 10:53:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id AfAwE8OqeEvD; Tue, 29 Oct 2019 10:53:07 +0100 (CET)
-Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 950FD8B84C;
-        Tue, 29 Oct 2019 10:53:07 +0100 (CET)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id 5FC326B6FD; Tue, 29 Oct 2019 09:53:07 +0000 (UTC)
-Message-Id: <4644ccc9b4da78639ae9424db878c48711abf05a.1572342582.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1572342582.git.christophe.leroy@c-s.fr>
-References: <cover.1572342582.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 2/8] powerpc/vdso32: Add support for
- CLOCK_{REALTIME/MONOTONIC}_COARSE
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 29 Oct 2019 09:53:07 +0000 (UTC)
+        Tue, 29 Oct 2019 05:52:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47753 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730110AbfJ2Jwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:52:35 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iPOAm-0004NY-IL; Tue, 29 Oct 2019 10:52:20 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EFE6D1C047B;
+        Tue, 29 Oct 2019 10:52:19 +0100 (CET)
+Date:   Tue, 29 Oct 2019 09:52:19 -0000
+From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] context_tracking: Check static key on
+ context_tracking_enabled_*cpu()
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191016025700.31277-11-frederic@kernel.org>
+References: <20191016025700.31277-11-frederic@kernel.org>
+MIME-Version: 1.0
+Message-ID: <157234273969.29376.9417573638381911938.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is copied and adapted from commit 5c929885f1bb ("powerpc/vdso64:
-Add support for CLOCK_{REALTIME/MONOTONIC}_COARSE")
-from Santosh Sivaraj <santosh@fossix.org>
+The following commit has been merged into the sched/core branch of tip:
 
-Benchmark from vdsotest-all:
-clock-gettime-realtime: syscall: 3601 nsec/call
-clock-gettime-realtime:    libc: 1072 nsec/call
-clock-gettime-realtime:    vdso: 931 nsec/call
-clock-gettime-monotonic: syscall: 4034 nsec/call
-clock-gettime-monotonic:    libc: 1213 nsec/call
-clock-gettime-monotonic:    vdso: 1076 nsec/call
-clock-gettime-realtime-coarse: syscall: 2722 nsec/call
-clock-gettime-realtime-coarse:    libc: 805 nsec/call
-clock-gettime-realtime-coarse:    vdso: 668 nsec/call
-clock-gettime-monotonic-coarse: syscall: 2949 nsec/call
-clock-gettime-monotonic-coarse:    libc: 882 nsec/call
-clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
+Commit-ID:     023e9deb51c9e1aafacbd421e55beadcb8e87f53
+Gitweb:        https://git.kernel.org/tip/023e9deb51c9e1aafacbd421e55beadcb8e87f53
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Wed, 16 Oct 2019 04:56:56 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 29 Oct 2019 10:01:16 +01:00
 
-Additional test passed with:
-	vdsotest -d 30 clock-gettime-monotonic-coarse verify
+context_tracking: Check static key on context_tracking_enabled_*cpu()
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Santosh Sivaraj <santosh@fossix.org>
-Link: https://github.com/linuxppc/issues/issues/41
+guest_enter() doesn't call context_tracking_enabled() before calling
+context_tracking_enabled_this_cpu(). Therefore the guest code doesn't
+benefit from the static key on the fast path.
+
+Just make sure that context_tracking_enabled_*cpu() functions check
+the static key by themselves to propagate the optimization.
+
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Rafael J . Wysocki <rjw@rjwysocki.net>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Link: https://lkml.kernel.org/r/20191016025700.31277-11-frederic@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/powerpc/kernel/vdso32/gettimeofday.S | 64 +++++++++++++++++++++++++++----
- 1 file changed, 57 insertions(+), 7 deletions(-)
+ include/linux/context_tracking_state.h | 4 ++--
+ include/linux/vtime.h                  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index becd9f8767ed..decd263c16e0 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -71,7 +71,13 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	cmpli	cr0,r3,CLOCK_REALTIME
- 	cmpli	cr1,r3,CLOCK_MONOTONIC
- 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
--	bne	cr0,99f
-+
-+	cmpli	cr5,r3,CLOCK_REALTIME_COARSE
-+	cmpli	cr6,r3,CLOCK_MONOTONIC_COARSE
-+	cror	cr5*4+eq,cr5*4+eq,cr6*4+eq
-+
-+	cror	cr0*4+eq,cr0*4+eq,cr5*4+eq
-+	bne	cr0, .Lgettime_fallback
+diff --git a/include/linux/context_tracking_state.h b/include/linux/context_tracking_state.h
+index 5877177..e7fe667 100644
+--- a/include/linux/context_tracking_state.h
++++ b/include/linux/context_tracking_state.h
+@@ -33,12 +33,12 @@ static inline bool context_tracking_enabled(void)
  
- 	mflr	r12			/* r12 saves lr */
-   .cfi_register lr,r12
-@@ -80,8 +86,10 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	mr	r9,r3			/* datapage ptr in r9 */
- 	lis	r7,NSEC_PER_SEC@h	/* want nanoseconds */
- 	ori	r7,r7,NSEC_PER_SEC@l
--50:	bl	__do_get_tspec@local	/* get sec/nsec from tb & kernel */
--	bne	cr1,80f			/* not monotonic -> all done */
-+	beq	cr5, .Lcoarse_clocks
-+.Lprecise_clocks:
-+	bl	__do_get_tspec@local	/* get sec/nsec from tb & kernel */
-+	bne	cr1, .Lfinish		/* not monotonic -> all done */
+ static inline bool context_tracking_enabled_cpu(int cpu)
+ {
+-	return per_cpu(context_tracking.active, cpu);
++	return context_tracking_enabled() && per_cpu(context_tracking.active, cpu);
+ }
  
- 	/*
- 	 * CLOCK_MONOTONIC
-@@ -105,12 +113,53 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	add	r9,r9,r0
- 	lwz	r0,(CFG_TB_UPDATE_COUNT+LOPART)(r9)
-         cmpl    cr0,r8,r0		/* check if updated */
--	bne-	50b
-+	bne-	.Lprecise_clocks
-+	b	.Lfinish_monotonic
-+
-+	/*
-+	 * For coarse clocks we get data directly from the vdso data page, so
-+	 * we don't need to call __do_get_tspec, but we still need to do the
-+	 * counter trick.
-+	 */
-+.Lcoarse_clocks:
-+	lwz	r8,(CFG_TB_UPDATE_COUNT+LOPART)(r9)
-+	andi.	r0,r8,1                 /* pending update ? loop */
-+	bne-	.Lcoarse_clocks
-+	add	r9,r9,r0		/* r0 is already 0 */
-+
-+	/*
-+	 * CLOCK_REALTIME_COARSE, below values are needed for MONOTONIC_COARSE
-+	 * too
-+	 */
-+	lwz	r3,STAMP_XTIME+TSPC32_TV_SEC(r9)
-+	lwz	r4,STAMP_XTIME+TSPC32_TV_NSEC(r9)
-+	bne	cr6,1f
-+
-+	/* CLOCK_MONOTONIC_COARSE */
-+	lwz	r5,(WTOM_CLOCK_SEC+LOPART)(r9)
-+	lwz	r6,WTOM_CLOCK_NSEC(r9)
-+
-+	/* check if counter has updated */
-+	or	r0,r6,r5
-+1:	or	r0,r0,r3
-+	or	r0,r0,r4
-+	xor	r0,r0,r0
-+	add	r3,r3,r0
-+	lwz	r0,CFG_TB_UPDATE_COUNT+LOPART(r9)
-+	cmpl	cr0,r0,r8               /* check if updated */
-+	bne-	.Lcoarse_clocks
-+
-+	/* Counter has not updated, so continue calculating proper values for
-+	 * sec and nsec if monotonic coarse, or just return with the proper
-+	 * values for realtime.
-+	 */
-+	bne	cr6, .Lfinish
+ static inline bool context_tracking_enabled_this_cpu(void)
+ {
+-	return __this_cpu_read(context_tracking.active);
++	return context_tracking_enabled() && __this_cpu_read(context_tracking.active);
+ }
  
- 	/* Calculate and store result. Note that this mimics the C code,
- 	 * which may cause funny results if nsec goes negative... is that
- 	 * possible at all ?
- 	 */
-+.Lfinish_monotonic:
- 	add	r3,r3,r5
- 	add	r4,r4,r6
- 	cmpw	cr0,r4,r7
-@@ -118,11 +167,12 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	blt	1f
- 	subf	r4,r7,r4
- 	addi	r3,r3,1
--1:	bge	cr1,80f
-+1:	bge	cr1, .Lfinish
- 	addi	r3,r3,-1
- 	add	r4,r4,r7
+ static inline bool context_tracking_in_user(void)
+diff --git a/include/linux/vtime.h b/include/linux/vtime.h
+index e2733bf..2cdeca0 100644
+--- a/include/linux/vtime.h
++++ b/include/linux/vtime.h
+@@ -33,12 +33,12 @@ static inline bool vtime_accounting_enabled(void)
  
--80:	stw	r3,TSPC32_TV_SEC(r11)
-+.Lfinish:
-+	stw	r3,TSPC32_TV_SEC(r11)
- 	stw	r4,TSPC32_TV_NSEC(r11)
+ static inline bool vtime_accounting_enabled_cpu(int cpu)
+ {
+-	return (vtime_accounting_enabled() && context_tracking_enabled_cpu(cpu));
++	return context_tracking_enabled_cpu(cpu);
+ }
  
- 	mtlr	r12
-@@ -133,7 +183,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	/*
- 	 * syscall fallback
- 	 */
--99:
-+.Lgettime_fallback:
- 	li	r0,__NR_clock_gettime
-   .cfi_restore lr
- 	sc
--- 
-2.13.3
-
+ static inline bool vtime_accounting_enabled_this_cpu(void)
+ {
+-	return (vtime_accounting_enabled() && context_tracking_enabled_this_cpu());
++	return context_tracking_enabled_this_cpu();
+ }
+ 
+ extern void vtime_task_switch_generic(struct task_struct *prev);
