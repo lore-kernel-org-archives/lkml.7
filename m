@@ -2,163 +2,116 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C52CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85871CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B8120830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5245D20830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xzc0mhG4"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Xo7LHzaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731985AbfJ2Srz (ORCPT
+        id S1732049AbfJ2StA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:47:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33168 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731891AbfJ2Srz (ORCPT
+        Tue, 29 Oct 2019 14:49:00 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36819 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbfJ2Ss7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:47:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=zh4u1dcrzBGR4ZvN1uvb2zziYEDifxIIp9YgvuWCPno=; b=Xzc0mhG4IG4lbteBYs05SzxLG
-        6YFSJk7AU0FjJV6oDtz9kmkpB1UCzo4aeZFpn0tPwguldBTHRMusxf8EtO4Y7aZ1ZPf15LoLZanj6
-        Pfyg2nEgyZj97hfl/vMKd/39Onj/hgL3EU5P5ZWaptdFWEmmYhCDgtC59v4F1JQMs2UWyLhAybMD6
-        lHM8sEdN6YPn/xAYrZ0ArKiQTar8AxW+aeJrbqb6OK8iMviaOlUUmgyGSMACEln+9tWmApd70aWFl
-        KfYW25mlKanPJAlFu1vrNzK+9/23pafr0tgMx0DwuQgpJ+rWmBJqbdRuOiChD7MXMPX2RJOirXCDl
-        6PDbnlIVg==;
-Received: from [188.207.73.209] (helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPWX1-0006QP-D6; Tue, 29 Oct 2019 18:47:51 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B459F9802EA; Tue, 29 Oct 2019 19:47:39 +0100 (CET)
-Date:   Tue, 29 Oct 2019 19:47:39 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Will Deacon <will.deacon@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
-Message-ID: <20191029184739.GA3079@worktop.programming.kicks-ass.net>
-References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
- <20190806161741.GC21454@redhat.com>
- <20190806171515.GR2349@hirez.programming.kicks-ass.net>
- <20190807095657.GA24112@redhat.com>
+        Tue, 29 Oct 2019 14:48:59 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x14so11436496qtq.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:48:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mBUiIVf6q/rDqLGc4EbfJoNVg3DysopyacsfY5Sz0rU=;
+        b=Xo7LHzaW43U8o6mcJCauwekkaCS8YEhpkpkagMIwN/jZ0apzbn5nHima/pnzMZua/+
+         JStfCOUTVbXR3bIf1ilcPakL9HLApdoJEJvc4ijJDOWp+8nJ7AvwqNQrhJE9FcBqjsRd
+         ZzFHoVV5Xd1fGLtG5CueYXxz7V1nlaJHV7+6msXJH28FQMQ3Ex6w7hfPH5oiZcuvAM02
+         FK0dpSepSjOE+Qa5hCmSJ2R2PHIlqaudY+IN90GWYEVLgj5H5xlr7e+hSq9hM1QrL0O2
+         QC/ajDfQw9nSTmBwT5mF75IamIsioqf8neBaTwDvCef8SV+e/ph85Rf4XHc/+7/J+xc5
+         Iz6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mBUiIVf6q/rDqLGc4EbfJoNVg3DysopyacsfY5Sz0rU=;
+        b=g50WAOP1kygqcu1D95yRcGFx2sZb2HWj/JQ3W6sFJ015MkH6BcYT9yI8+RLH0isfg1
+         oe5FzFDZ/CftcZwEJ9hWL4UsLIw5Gw0z2ybi7GTdo0+ZzzsORrYyC1oRr4Uz9quv1dGW
+         H3yW0LG2msMIBCth+us7Ei8U8o3f9iUfk6cPrYlbqnxpsexV90GfXuW2MN+h4Kw/VxlT
+         tgxSxcUiZ6fLcP/APnvFzOTfkDfqgQH3SFVkVaAo/9ZTRk88BU8tyarDFeBXAlOiAW7z
+         jxGZuIkSBZxJRSfSvqlBRNLoTDg8q2dL5l4iE53SBBhTiYr+ruFvvt4P6vA6ZH3V+7Ec
+         426g==
+X-Gm-Message-State: APjAAAUhfkBi2zBXjR1L3daUUcBlLcAoIDndY+nKrXcBSeEubsjHrKQE
+        3fIUV9TLuSS+4T7zupJFa9aw8w==
+X-Google-Smtp-Source: APXvYqxbq8sEpBANn34j7OgqEdFYPUH4UG0c5lXSYLMQHHWzdbk20oOcrI1SuaPPaI+VL1EC8bBI5Q==
+X-Received: by 2002:ac8:524e:: with SMTP id y14mr596415qtn.172.1572374936686;
+        Tue, 29 Oct 2019 11:48:56 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id t16sm746715qkt.99.2019.10.29.11.48.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 29 Oct 2019 11:48:56 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iPWY3-0002OO-LR; Tue, 29 Oct 2019 15:48:55 -0300
+Date:   Tue, 29 Oct 2019 15:48:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+57a3b121df74c4eccbc7@syzkaller.appspotmail.com>,
+        bvanassche@acm.org, danitg@mellanox.com, dledford@redhat.com,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, mhjungk@gmail.com, parav@mellanox.com,
+        shamir.rabinovitch@oracle.com, swise@opengridcomputing.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Subject: Re: KASAN: use-after-free Read in cma_cancel_listens
+Message-ID: <20191029184855.GH6128@ziepe.ca>
+References: <20191024115700.11852-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190807095657.GA24112@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191024115700.11852-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 11:56:58AM +0200, Oleg Nesterov wrote:
+On Thu, Oct 24, 2019 at 07:57:00PM +0800, Hillf Danton wrote:
+> Detect and avoid repeated cancelation.
+> 
+> +++ b/drivers/infiniband/core/cma.c
+> @@ -1747,7 +1747,9 @@ static void cma_cancel_listens(struct rd
+>  	 * additional listen requests.
+>  	 */
+>  	mutex_lock(&lock);
+> -	list_del(&id_priv->list);
+> +	if (list_empty(&id_priv->list))
+> +		goto unlock;
+> +	list_del_init(&id_priv->list);
+>  
+>  	while (!list_empty(&id_priv->listen_list)) {
+>  		dev_id_priv = list_entry(id_priv->listen_list.next,
+> @@ -1760,6 +1762,7 @@ static void cma_cancel_listens(struct rd
+>  		rdma_destroy_id(&dev_id_priv->id);
+>  		mutex_lock(&lock);
+>  	}
+> +unlock:
+>  	mutex_unlock(&lock);
+>  }
 
-> and either way, with or without 2 queues, what do you think about the code
-> below?
+Hum, it seems like a harmless change, but the real issue here is that
+cma_cancel_listens() was called twice at all.
 
-Sorry for being so tardy with this thread.. having once again picked up
-the patch, I found your email.
+It seems pretty clear that the intent was it would be called on the
+state, and the state is transitioned away before it is called. Ie see
+how cma_cancel_operation() works with the 'state' argument.
 
-> This way the new reader does wake_up() only in the very unlikely case when
-> it races with the new writer which sets sem->block = 1 right after
-> this_cpu_inc().
+So the only way to trigger this is to race two state transitions,
+which means this is the usual syzkaller bug, the 'cma_exch'
+synchronization scheme is just totally broken.
 
-Ah, by waiting early, you avoid spurious wakeups when
-__percpu_down_read() happens after a successful percpu_down_write().
-Nice!
-
-I've made these changes. Now let me go have a play with that second
-waitqueue.
-
-> -------------------------------------------------------------------------------
-> 
-> static inline void percpu_down_read(struct percpu_rw_semaphore *sem)
-> {
-> 	might_sleep();
-> 	rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
-> 
-> 	preempt_disable();
-> 
-> 	if (likely(rcu_sync_is_idle(&sem->rss)))
-> 		__this_cpu_inc(*sem->read_count);
-> 	else
-> 		__percpu_down_read(sem, false);
-> 
-> 	preempt_enable();
-> }
-> 
-> static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
-> {
-> 	rwsem_release(&sem->dep_map, 1, _RET_IP_);
-> 
-> 	preempt_disable();
-> 
-> 	if (likely(rcu_sync_is_idle(&sem->rss)))
-> 		__this_cpu_dec(*sem->read_count);
-> 	else
-> 		__percpu_up_read(sem);
-> 
-> 	preempt_enable();
-> }
-
-I like that symmetry, but see below ...
-
-> // both called and return with preemption disabled
-> 
-> bool __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
-> {
-> 
-> 	if (atomic_read_acquire(&sem->block)) {
-> again:
-> 		preempt_enable();
-> 		__wait_event(sem->waiters, !atomic_read_acquire(&sem->block));
-> 		preempt_disable();
-> 	}
-> 
-> 	__this_cpu_inc(*sem->read_count);
-> 
-> 	smp_mb();
-> 
-> 	if (likely(!atomic_read_acquire(&sem->block)))
-> 		return true;
-> 
-> 	__percpu_up_read(sem);
-> 
-> 	if (try)
-> 		return false;
-> 
-> 	goto again;
-> }
-> 
-> void __percpu_up_read(struct percpu_rw_semaphore *sem)
-> {
-> 	smp_mb();
-> 
-> 	__this_cpu_dec(*sem->read_count);
-> 
-	preempt_enable();
-> 	wake_up(&sem->waiters);
-	preempt_disable()
-
-and this (sadly) means there's a bunch of back-to-back
-preempt_disable()+preempt_enable() calls. Leaving out the
-preempt_disable() here makes it ugly again :/
-
-Admittedly, this is PREEMPT_RT only, but given that is >< close to
-mainline we'd better get it right.
-
-> }
-> 
+Jason
