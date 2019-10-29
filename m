@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136F9CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0785CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A6821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BCB2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWPG4khJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHYClrty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbfJ2WGs (ORCPT
+        id S1729065AbfJ2WGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:06:48 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35860 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728474AbfJ2WGa (ORCPT
+        Tue, 29 Oct 2019 18:06:55 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46779 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727470AbfJ2WG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:06:30 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v24so365049ljj.3;
-        Tue, 29 Oct 2019 15:06:28 -0700 (PDT)
+        Tue, 29 Oct 2019 18:06:27 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t8so11685826lfc.13;
+        Tue, 29 Oct 2019 15:06:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OOKan3CLVuuggtEwiJ2dOdUbhegm99fdKupMkWRSejQ=;
-        b=jWPG4khJIbpbvh/BtmbDvzACurG5Z2WUYb63PX7u6SsZj5yotkQWZSo9DcLZllabRc
-         pQWwzivoCPZWjOpp2G9taWtV+HJijqD0vexMkHsIsuTY46dlcjupfGpzXav86HkCTYKo
-         4APSKpi/yesfEsk3lKOEoRdoedY+vacaQtUZagbSkZOx5UEOqcpFS2GyrYK+ei66YLbV
-         rpJZXfWP6sepmRtenxYsdo1/Hxtac1pOWnrYxIFvxvDjFPNZBiYOS0U4rXL6c+04YHev
-         5hfnc3xNfgZWK5ZprFkfiYfXpYlwcvOqzB6iAl2Oy89PPOfoFc7nWr2HiC+K/hUP/y82
-         mr5g==
+        bh=DA0uvhs8DIoBh1CWracS38Bzq8LzkULaFtY91qkNA3c=;
+        b=MHYClrtytEHvOQYdNIgd07qJKbkRDZIZjASCwTuZJsaOddiGXFXlEgHnDHLNOj4Bms
+         m4NkP4YDigXhuy06/Z7Ei6UROIWjyJ9mRTVRzrKSIuG5kgSmbsE31431tlTaKLA26y7m
+         C5x693ChZS6HEkaVg7BmJuH2sGlZAqvmuFSz+v+1dbgHUAiAoQq/H2L+1AR9mBLL1V8Z
+         rSyFPvoZvbOw6ufTMBUjKUBISGfWFxx5ZolJTGohwcFhFLctW2ThtCywdbc+4FvYN8cm
+         TvAZBtyD3MjAfpperrtIG/KbbIPXPm9upZrvKh2WvBEsb/vkN7fnRQsRVkPgRvN1xJbZ
+         Pg3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OOKan3CLVuuggtEwiJ2dOdUbhegm99fdKupMkWRSejQ=;
-        b=E4cFRrd7yP0faozfNwTgG4vaY+A8XbnrRtR5NaqlQkTJiyoAgFDt0m69fGhRjme4Fc
-         Dyw4Hbg5+K0I1QE3MMKIDB4PnwFD1lwMdyiS9jvVtefEbUJbA+I996RQW39vMSHh6yW6
-         y/Zm+PhW+yIXx3QYagqayNTwYgt49VKIBz+ThPg05gdx/Zd1Tl1lC2uWEbm03yp2EDpx
-         P1/Rv8razn5vqYPdto2i5ZFXPlIuqACL00KUMRkpuNIzYdSio8M0sKrK89FWTJh9r1+D
-         BYbcK9FzzhlsATjb0c8yWu7WaaxysA4xWvRCq2qYvmHm/Sx4kVpUfYDKaTzeotNeW+gb
-         aBIw==
-X-Gm-Message-State: APjAAAWxaBXndec9m9yoD1CHluJwonxVNqNMn1+Im2W40bNwhIcO0sgv
-        2faO5vdP5FWHcjIDSg0Bf8g=
-X-Google-Smtp-Source: APXvYqxek/dVgREG9HDGjmd0s1GV2YQBzqBUtodR9xEh8CoSPKZM/5t+5NvHVjNjcRjAFonSC4w1jw==
-X-Received: by 2002:a2e:7405:: with SMTP id p5mr4170166ljc.191.1572386787699;
-        Tue, 29 Oct 2019 15:06:27 -0700 (PDT)
+        bh=DA0uvhs8DIoBh1CWracS38Bzq8LzkULaFtY91qkNA3c=;
+        b=nCDkWwgZjcHkO2ICg/WF70OQkIi7mJmKgX7ZHtH8xl6Ng8jvlIIodOWA66Vqx++Vxc
+         mNYcYQmuqdRvJ6fMfUZJtd75XmDdc07NNTPa9OvYq/s144ER/NLhIG4nxEpQwJpwLNI1
+         xVgPCElw0NASFaljuwUhC84k/KKYZZJGCcszx0JtYCK+8sekJVAABu10xXs190KrVzwn
+         jRd+ia9+xTWU1RgEYVbtwzh7B1vqoHjsqNXeDyzp+YkR3MHrXZGjlbhIHMyXTwNvPCki
+         voeNxW0OCoUSVukEnj3tMemNm1csZ4rcVlxzEbadyhmvI85gN/E4aZtWIvUD65pChwEh
+         YHIQ==
+X-Gm-Message-State: APjAAAU0gCZGj37dNAG57tUZDGoA3Mj2riZKlWWZUHydn0afU88Etncg
+        ox0QoMgz4D/fTqeUbzZvN6k=
+X-Google-Smtp-Source: APXvYqwcmxKBCGrkkdSfTJoQ1qyaieNhFYp3EQL35Nx5Syni2sEI8zK+apWr9bY+sXxZCduVy4RjPg==
+X-Received: by 2002:a19:22d3:: with SMTP id i202mr3759207lfi.69.1572386785527;
+        Tue, 29 Oct 2019 15:06:25 -0700 (PDT)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id 12sm51536lje.92.2019.10.29.15.06.26
+        by smtp.gmail.com with ESMTPSA id 12sm51536lje.92.2019.10.29.15.06.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 15:06:27 -0700 (PDT)
+        Tue, 29 Oct 2019 15:06:25 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Peter Geis <pgwipeout@gmail.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 18/19] PM / devfreq: tegra30: Tune up MCCPU boost-down coefficient
-Date:   Wed, 30 Oct 2019 01:00:18 +0300
-Message-Id: <20191029220019.26773-19-digetx@gmail.com>
+Subject: [PATCH v7 16/19] PM / devfreq: Add new interrupt_driven flag for governors
+Date:   Wed, 30 Oct 2019 01:00:16 +0300
+Message-Id: <20191029220019.26773-17-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191029220019.26773-1-digetx@gmail.com>
 References: <20191029220019.26773-1-digetx@gmail.com>
@@ -80,32 +80,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MCCPU boosts up very aggressively by 800% and boosts down very mildly by
-10%. This doesn't work well when system is idling because the very slow
-de-boosting results in lots of consecutive-down interrupts, in result
-memory stays clocked high and CPU doesn't enter deepest idling state
-instead of keeping memory at lowest freq and having CPU cluster turned
-off. A more faster de-boosting fixes the case of idling system and doesn't
-affect the case of an active system.
+Currently interrupt-driven governors (like NVIDIA Tegra30 ACTMON governor)
+are used to set polling_ms=0 in order to avoid periodic polling of device
+status by devfreq core. This means that polling interval can't be changed
+by userspace for such governors.
+
+The new governor flag allows interrupt-driven governors to convey that
+devfreq core shouldn't perform polling of device status and thus generic
+devfreq polling interval could be supported by these governors now.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/devfreq/devfreq.c  | 14 +++++++++-----
+ drivers/devfreq/governor.h |  3 +++
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index d0dd42856e5b..9a21a29198ee 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -123,7 +123,7 @@ static const struct tegra_devfreq_device_config actmon_device_configs[] = {
- 		.offset = 0x200,
- 		.irq_mask = 1 << 25,
- 		.boost_up_coeff = 800,
--		.boost_down_coeff = 90,
-+		.boost_down_coeff = 40,
- 		.boost_up_threshold = 27,
- 		.boost_down_threshold = 10,
- 		.avg_dependency_threshold = 50000,
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index b905963cea7d..0ef972264841 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -410,7 +410,8 @@ static void devfreq_monitor(struct work_struct *work)
+ void devfreq_monitor_start(struct devfreq *devfreq)
+ {
+ 	INIT_DEFERRABLE_WORK(&devfreq->work, devfreq_monitor);
+-	if (devfreq->profile->polling_ms)
++	if (devfreq->profile->polling_ms &&
++	    !devfreq->governor->interrupt_driven)
+ 		queue_delayed_work(devfreq_wq, &devfreq->work,
+ 			msecs_to_jiffies(devfreq->profile->polling_ms));
+ }
+@@ -474,7 +475,8 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
+ 		goto out;
+ 
+ 	if (!delayed_work_pending(&devfreq->work) &&
+-			devfreq->profile->polling_ms)
++			devfreq->profile->polling_ms &&
++				!devfreq->governor->interrupt_driven)
+ 		queue_delayed_work(devfreq_wq, &devfreq->work,
+ 			msecs_to_jiffies(devfreq->profile->polling_ms));
+ 
+@@ -518,8 +520,9 @@ void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay)
+ 
+ 	/* if current delay is zero, start polling with new delay */
+ 	if (!cur_delay) {
+-		queue_delayed_work(devfreq_wq, &devfreq->work,
+-			msecs_to_jiffies(devfreq->profile->polling_ms));
++		if (!devfreq->governor->interrupt_driven)
++			queue_delayed_work(devfreq_wq, &devfreq->work,
++				msecs_to_jiffies(devfreq->profile->polling_ms));
+ 		goto out;
+ 	}
+ 
+@@ -528,7 +531,8 @@ void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay)
+ 		mutex_unlock(&devfreq->lock);
+ 		cancel_delayed_work_sync(&devfreq->work);
+ 		mutex_lock(&devfreq->lock);
+-		if (!devfreq->stop_polling)
++		if (!devfreq->stop_polling &&
++		    !devfreq->governor->interrupt_driven)
+ 			queue_delayed_work(devfreq_wq, &devfreq->work,
+ 				msecs_to_jiffies(devfreq->profile->polling_ms));
+ 	}
+diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
+index bbe5ff9fcecf..dc7533ccc3db 100644
+--- a/drivers/devfreq/governor.h
++++ b/drivers/devfreq/governor.h
+@@ -31,6 +31,8 @@
+  * @name:		Governor's name
+  * @immutable:		Immutable flag for governor. If the value is 1,
+  *			this govenror is never changeable to other governor.
++ * @interrupt_driven:	Devfreq core won't schedule polling work for this
++ *			governor if value is set to 1.
+  * @get_target_freq:	Returns desired operating frequency for the device.
+  *			Basically, get_target_freq will run
+  *			devfreq_dev_profile.get_dev_status() to get the
+@@ -49,6 +51,7 @@ struct devfreq_governor {
+ 
+ 	const char name[DEVFREQ_NAME_LEN];
+ 	const unsigned int immutable;
++	const unsigned int interrupt_driven;
+ 	int (*get_target_freq)(struct devfreq *this, unsigned long *freq);
+ 	int (*event_handler)(struct devfreq *devfreq,
+ 				unsigned int event, void *data);
 -- 
 2.23.0
 
