@@ -2,194 +2,163 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC665CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902F6CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFEF820874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 668F520874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="o6bKkRdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733242AbfJ2JxR (ORCPT
+        id S1731954AbfJ2JxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:53:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47812 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733005AbfJ2Jwr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:52:47 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iPOAs-0004O4-1P; Tue, 29 Oct 2019 10:52:26 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9E31A1C047C;
-        Tue, 29 Oct 2019 10:52:20 +0100 (CET)
-Date:   Tue, 29 Oct 2019 09:52:20 -0000
-From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/vtime: Rename vtime_accounting_cpu_enabled()
- to vtime_accounting_enabled_this_cpu()
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191016025700.31277-9-frederic@kernel.org>
-References: <20191016025700.31277-9-frederic@kernel.org>
-MIME-Version: 1.0
-Message-ID: <157234274038.29376.7255236944838511857.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 29 Oct 2019 05:53:21 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:43768 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733132AbfJ2JxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:53:08 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 472RjF6NJ7z9tyh4;
+        Tue, 29 Oct 2019 10:53:05 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=o6bKkRdW; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id YsSxrvHZJzKT; Tue, 29 Oct 2019 10:53:05 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 472RjF50Xjz9tygy;
+        Tue, 29 Oct 2019 10:53:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1572342785; bh=908ictPM0d9tdAvkWhNTctaYRgZOsXF5jkHRnAfr4Tk=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=o6bKkRdWC2f3BZfgPqKFQ72tp5AFMwo90bzpBHyN0WcUD2TZsSCelHf7bFCO5+8PR
+         5FTSU2EfX8U/sPqoCbI0twKJ0Lsg48aA9e/hfHFdSkFwuLwm41YLdDFu9zgCnXgCJK
+         VDwjAjEGscxE0O8sSnQFvdNZECNAiu/bcVfMgnXA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BD6FE8B84C;
+        Tue, 29 Oct 2019 10:53:06 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id DcDmVFPF9K4a; Tue, 29 Oct 2019 10:53:06 +0100 (CET)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 89DAB8B755;
+        Tue, 29 Oct 2019 10:53:06 +0100 (CET)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 558646B6FD; Tue, 29 Oct 2019 09:53:06 +0000 (UTC)
+Message-Id: <85cc56b1cd337e3d9673286a0b14c23ebdfbae7a.1572342582.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1572342582.git.christophe.leroy@c-s.fr>
+References: <cover.1572342582.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3 1/8] powerpc/32: Add VDSO version of getcpu on non SMP
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 29 Oct 2019 09:53:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+Commit 18ad51dd342a ("powerpc: Add VDSO version of getcpu") added
+getcpu() for PPC64 only, by making use of a user readable general
+purpose SPR.
 
-Commit-ID:     e44fcb4b7a299602fb300b82a546c0b8a50d9d90
-Gitweb:        https://git.kernel.org/tip/e44fcb4b7a299602fb300b82a546c0b8a50d9d90
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Wed, 16 Oct 2019 04:56:54 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 29 Oct 2019 10:01:14 +01:00
+PPC32 doesn't have any such SPR.
 
-sched/vtime: Rename vtime_accounting_cpu_enabled() to vtime_accounting_enabled_this_cpu()
+For non SMP, just return CPU id 0 from the VDSO directly.
+PPC32 doesn't support CONFIG_NUMA so NUMA node is always 0.
 
-Standardize the naming on top of the vtime_accounting_enabled_*() base.
-Also make it clear we are checking the vtime state of the
-*current* CPU with this function. We'll need to add an API to check that
-state on remote CPUs as well, so we must disambiguate the naming.
+Before the patch, vdsotest reported:
+getcpu: syscall: 1572 nsec/call
+getcpu:    libc: 1787 nsec/call
+getcpu:    vdso: not tested
 
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J . Wysocki <rjw@rjwysocki.net>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Link: https://lkml.kernel.org/r/20191016025700.31277-9-frederic@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Now, vdsotest reports:
+getcpu: syscall: 1582 nsec/call
+getcpu:    libc: 502 nsec/call
+getcpu:    vdso: 187 nsec/call
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
 ---
- include/linux/context_tracking.h |  4 ++--
- include/linux/vtime.h            | 10 +++++-----
- kernel/sched/cputime.c           |  2 +-
- kernel/time/tick-sched.c         |  2 +-
- 4 files changed, 9 insertions(+), 9 deletions(-)
+v2: fixed build error in getcpu.S
+v3: dropped the fast system call, only support non SMP for now.
+---
+ arch/powerpc/kernel/vdso32/Makefile     |  4 +---
+ arch/powerpc/kernel/vdso32/getcpu.S     | 17 +++++++++++++++++
+ arch/powerpc/kernel/vdso32/vdso32.lds.S |  2 +-
+ 3 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/context_tracking.h b/include/linux/context_tracking.h
-index c9065ad..64ec828 100644
---- a/include/linux/context_tracking.h
-+++ b/include/linux/context_tracking.h
-@@ -103,7 +103,7 @@ static inline void context_tracking_init(void) { }
- /* must be called with irqs disabled */
- static inline void guest_enter_irqoff(void)
- {
--	if (vtime_accounting_cpu_enabled())
-+	if (vtime_accounting_enabled_this_cpu())
- 		vtime_guest_enter(current);
- 	else
- 		current->flags |= PF_VCPU;
-@@ -127,7 +127,7 @@ static inline void guest_exit_irqoff(void)
- 	if (context_tracking_enabled())
- 		__context_tracking_exit(CONTEXT_GUEST);
+diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+index 06f54d947057..e147bbdc12cd 100644
+--- a/arch/powerpc/kernel/vdso32/Makefile
++++ b/arch/powerpc/kernel/vdso32/Makefile
+@@ -2,9 +2,7 @@
  
--	if (vtime_accounting_cpu_enabled())
-+	if (vtime_accounting_enabled_this_cpu())
- 		vtime_guest_exit(current);
- 	else
- 		current->flags &= ~PF_VCPU;
-diff --git a/include/linux/vtime.h b/include/linux/vtime.h
-index 54e9151..eb2e7a1 100644
---- a/include/linux/vtime.h
-+++ b/include/linux/vtime.h
-@@ -11,11 +11,11 @@
- struct task_struct;
+ # List of files in the vdso, has to be asm only for now
  
- /*
-- * vtime_accounting_cpu_enabled() definitions/declarations
-+ * vtime_accounting_enabled_this_cpu() definitions/declarations
+-obj-vdso32-$(CONFIG_PPC64) = getcpu.o
+-obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o \
+-		$(obj-vdso32-y)
++obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o getcpu.o
+ 
+ # Build rules
+ 
+diff --git a/arch/powerpc/kernel/vdso32/getcpu.S b/arch/powerpc/kernel/vdso32/getcpu.S
+index 63e914539e1a..90b39af14383 100644
+--- a/arch/powerpc/kernel/vdso32/getcpu.S
++++ b/arch/powerpc/kernel/vdso32/getcpu.S
+@@ -15,6 +15,7 @@
+  * int __kernel_getcpu(unsigned *cpu, unsigned *node);
+  *
   */
- #if defined(CONFIG_VIRT_CPU_ACCOUNTING_NATIVE)
- 
--static inline bool vtime_accounting_cpu_enabled(void) { return true; }
-+static inline bool vtime_accounting_enabled_this_cpu(void) { return true; }
- extern void vtime_task_switch(struct task_struct *prev);
- 
- #elif defined(CONFIG_VIRT_CPU_ACCOUNTING_GEN)
-@@ -31,7 +31,7 @@ static inline bool vtime_accounting_enabled(void)
- 	return context_tracking_enabled();
- }
- 
--static inline bool vtime_accounting_cpu_enabled(void)
-+static inline bool vtime_accounting_enabled_this_cpu(void)
- {
- 	if (vtime_accounting_enabled()) {
- 		if (context_tracking_enabled_this_cpu())
-@@ -45,13 +45,13 @@ extern void vtime_task_switch_generic(struct task_struct *prev);
- 
- static inline void vtime_task_switch(struct task_struct *prev)
- {
--	if (vtime_accounting_cpu_enabled())
-+	if (vtime_accounting_enabled_this_cpu())
- 		vtime_task_switch_generic(prev);
- }
- 
- #else /* !CONFIG_VIRT_CPU_ACCOUNTING */
- 
--static inline bool vtime_accounting_cpu_enabled(void) { return false; }
-+static inline bool vtime_accounting_enabled_this_cpu(void) { return false; }
- static inline void vtime_task_switch(struct task_struct *prev) { }
- 
++#if defined(CONFIG_PPC64)
+ V_FUNCTION_BEGIN(__kernel_getcpu)
+   .cfi_startproc
+ 	mfspr	r5,SPRN_SPRG_VDSO_READ
+@@ -31,3 +32,19 @@ V_FUNCTION_BEGIN(__kernel_getcpu)
+ 	blr
+   .cfi_endproc
+ V_FUNCTION_END(__kernel_getcpu)
++#elif !defined(CONFIG_SMP)
++V_FUNCTION_BEGIN(__kernel_getcpu)
++  .cfi_startproc
++	cmpwi	cr0, r3, 0
++	cmpwi	cr1, r4, 0
++	li	r5, 0
++	beq	cr0, 1f
++	stw	r5, 0(r3)
++1:	li	r3, 0			/* always success */
++	crclr	cr0*4+so
++	beqlr	cr1
++	stw	r5, 0(r4)
++	blr
++  .cfi_endproc
++V_FUNCTION_END(__kernel_getcpu)
++#endif
+diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+index 00c025ba4a92..5206c2eb2a1d 100644
+--- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
++++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+@@ -155,7 +155,7 @@ VERSION
+ 		__kernel_sync_dicache_p5;
+ 		__kernel_sigtramp32;
+ 		__kernel_sigtramp_rt32;
+-#ifdef CONFIG_PPC64
++#if defined(CONFIG_PPC64) || !defined(CONFIG_SMP)
+ 		__kernel_getcpu;
  #endif
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 34086af..b931a19 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -475,7 +475,7 @@ void account_process_tick(struct task_struct *p, int user_tick)
- 	u64 cputime, steal;
- 	struct rq *rq = this_rq();
  
--	if (vtime_accounting_cpu_enabled())
-+	if (vtime_accounting_enabled_this_cpu())
- 		return;
- 
- 	if (sched_clock_irqtime) {
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 9558517..c274823 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -1119,7 +1119,7 @@ static void tick_nohz_account_idle_ticks(struct tick_sched *ts)
- #ifndef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
- 	unsigned long ticks;
- 
--	if (vtime_accounting_cpu_enabled())
-+	if (vtime_accounting_enabled_this_cpu())
- 		return;
- 	/*
- 	 * We stopped the tick in idle. Update process times would miss the
+-- 
+2.13.3
+
