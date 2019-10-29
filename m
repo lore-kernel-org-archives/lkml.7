@@ -6,135 +6,81 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7271FCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97E1CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524C9208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A73E21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387861AbfJ2Mqb (ORCPT
+        id S2387876AbfJ2Mqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:46:31 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37023 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfJ2Mqb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:46:31 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v2so855045lji.4;
-        Tue, 29 Oct 2019 05:46:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=SmXBqMQnjI4Fb5pWVH79fOjCH7aXT9QQnr1eIyZGvcI=;
-        b=kPxmtU27XbTFQ7uutYG2u2XGr3StpvZt+PuJr1Dybqisjhs8IhRuoJrDGX9OpRJ1Ih
-         Zh0s0mw+8J5zVuc7yQN/1+mddx+SNjmP0Bs0Qc/hnuU47FHqnzpMbDd1TAkGxOl7IYpt
-         KyXAV4BrCYO2bi3JBGOPMoDqQkbUJYISuusZFtzBr2mD+wR5Ie2Il1E1so/NmSJKIqPC
-         tvxL9wpYv8Qmt1vzvp8A38BavkrlByksRy2QAxCkPjKnL7hYvRjZVP/Bqd2xv1uQH7/t
-         FhnADoccjucxEMt4dhZbKijUPi8l40shVSloIeQYh52YpN/Q8xRI42xv0DGtpBtzUF/I
-         guog==
-X-Gm-Message-State: APjAAAVAVv/DI9qYkGiAk6DKIDZUcBwZ1zcSR1ULBFuSFJ8evLbHzB2e
-        5iyLwuz2h19JNW3LC0O0GyA=
-X-Google-Smtp-Source: APXvYqxkVCm41zzITF3FOQIAQ/XackjtVW6az/7Nr0u8MJdACHufwvUnYj0VlJFrRh9QckkFGTGyZA==
-X-Received: by 2002:a05:651c:1023:: with SMTP id w3mr2506858ljm.79.1572353188859;
-        Tue, 29 Oct 2019 05:46:28 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id z26sm2237139lfg.94.2019.10.29.05.46.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 05:46:28 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 14:46:20 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
-Message-ID: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+        Tue, 29 Oct 2019 08:46:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:51684 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbfJ2Mqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:46:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D05221FB;
+        Tue, 29 Oct 2019 05:46:33 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 940C43F6C4;
+        Tue, 29 Oct 2019 05:46:32 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 12:46:30 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
+Message-ID: <20191029124630.ivfbpenue3fw33qt@e107158-lin.cambridge.arm.com>
+References: <20191009104611.15363-1-qais.yousef@arm.com>
+ <CAKfTPtA6Fvc374oTfbHYkviAJbZebHkBg=w2O3f0oZ0m3ujVjA@mail.gmail.com>
+ <20191029110224.awoi37pdquachqtd@e107158-lin.cambridge.arm.com>
+ <CAKfTPtA=CzkTVwdCJL6ULYB628tWdGAvpD-sHfgSfL59PyYvxA@mail.gmail.com>
+ <20191029114824.2kb4fygxxx72r3in@e107158-lin.cambridge.arm.com>
+ <CAKfTPtD7e-dXhZ3mG36igArt=0f-mNc52vaJ1bb-jv5zB9bkgg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAKfTPtD7e-dXhZ3mG36igArt=0f-mNc52vaJ1bb-jv5zB9bkgg@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RFC series improving common LED binding parsing support
+On 10/29/19 13:20, Vincent Guittot wrote:
+> > > Making big cores the default CPUs for all RT tasks is not a minor
+> > > change and IMO locality should stay the default behavior when there is
+> > > no uclamp constraint
+> >
+> > How this is affecting locality? The task will always go to the big core, so it
+> > should be local.
+> 
+> local with the waker
+> You will force rt task to run on big cluster although waker, data and
+> interrupts can be on little one.
+> So making big core as default is far from always being the best choice
 
-Qucik grep for 'for_each' or 'linux,default-trigger' says it all.
+This is loaded with assumptions IMO. AFAICT we don't know what's the best
+choice.
 
-Multiple LED controller drivers implement the very similar looping
-through the child DT nodes in order to locate the LED nodes and read
-and support the common LED dt bindings. Implementing this same
-stuff for all LED controllers gets old pretty fast.
+First, the value of uclamp.min is outside of the scope of this patch. Unless
+what you're saying is that when uclamp.min is 1024 then we should NOT choose a
+big cpu then there's no disagreement about what this patch do. If that's what
+you're objecting to please be more specific about how do you see this working
+instead.
 
-This RFC contains 3 suggestions:
+If your objection is purely based on the choice of uclamp.min then while
+I agree that on modern systems the little cores are good enough for the
+majority of RT tasks in average Android systems. But I don't feel confident to
+reach this conclusion on low end systems where the little core doesn't have
+enough grunt in many cases. So I see the current default is adequate and the
+responsibility of further tweaking lies within the hands of the system admin.
 
-Simplest is adding support for parsing the linux,default-trigger,
-and default-state DT properties in led-core.
-
-More interesting part is adding correct LED DT node lookup in
-LED core. This RFC uses LED DT node names as a 'key' in a same
-way regulator framework does for regulators. The thing is that
-this approach requires the LED controller binding to dictate allowed
-LED node names - which may or may not be doable. I need your help to
-evaluate this and suggest better options :) If we still look at the
-regulators, the regulator core did originally use "regulator-core"
-property to do driver data/DT node pairing - but has since then
-changed the approach to using the DT node names.
-
-Last and least clear point is isolating the led_classdev to be owned
-by the LED core. Controller drivers should pretty much never touch
-it after the initialization. So one approach would be that drivers
-only provided initialization data and operations to the core.
-
-The patch series contains the led-core and led-class changes which
-introduce (yet another) APIs for registering led class device to
-core. Adding new interface is probably not the best option - one
-might consider changing the (devm_)led_classdev_register_ext to do
-what this new RFC API is doing.
-
-In addition to core changes this series converted two (randomly
-selected) existing drivers to use the new API. This can give an
-overview how offloading the DT parsing to core could simplify many
-of the LED controlled drivers.
-
-Patches HAVE NOT BEEN TESTED other than for compiling. They are
-only intended to be a starting point for discussion - and if the
-ideas are seen worthy - then the patches should be further worked
-and properly tested before being applied.
-
-Matti Vaittinen (5):
-  leds: Add common LED binding parsing support to LED class/core
-  dt-bindings: an30259a: example for using fixed LED node names.
-  leds: an30259a: Offload DT node locating and parsing to core
-  dt-bindings: lm3692x: example for using fixed LED node names.
-  leds: lm3692x: Offload DT node locating and parsing to core
-
- .../bindings/leds/leds-an30259a.txt           |   9 +-
- .../devicetree/bindings/leds/leds-lm3692x.txt |   4 +-
- drivers/leds/led-class.c                      | 247 +++++++++++++++++-
- drivers/leds/led-core.c                       | 111 +++++---
- drivers/leds/leds-an30259a.c                  | 181 ++++++-------
- drivers/leds/leds-lm3692x.c                   |  75 +++---
- include/linux/leds.h                          | 144 +++++++++-
- 7 files changed, 586 insertions(+), 185 deletions(-)
-
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+--
+Qais Yousef
