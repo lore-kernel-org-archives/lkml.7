@@ -2,91 +2,125 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47185CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C800CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D4420874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:52:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572375142;
-	bh=Krc2pCr9LuPyN2uKv0HlZ/f2LrTF4Kh4UwUXzL6+wBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YM8349QY/S/LxqOtfQHbm62uby4W02C2xfxqRXc19IrejjnWJxo8grLbGSe6Lc6aJ
-	 VOJ3daF2940GuIK8nIUAkxv7XNx7eHSngxsgW1xEIL8QSTeTuicD0H4zrXfNEmAXNG
-	 fYRVVU0kFTep5dQhjCTYSMU2Llka/x8ujNruDyjA=
+	by mail.kernel.org (Postfix) with ESMTP id 4DEBC20830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:54:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=plus.com header.i=@plus.com header.b="qGlZh9wk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732065AbfJ2SwV (ORCPT
+        id S1728807AbfJ2SyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:52:21 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36161 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbfJ2SwU (ORCPT
+        Tue, 29 Oct 2019 14:54:05 -0400
+Received: from avasout03.plus.net ([84.93.230.244]:55912 "EHLO
+        avasout03.plus.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732093AbfJ2SyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:52:20 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c7so10720657otm.3;
-        Tue, 29 Oct 2019 11:52:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4jlz/kL2P1DJTOhPG8FEPuOrBDl84lxyvnWrHLEJJyA=;
-        b=pdBpsmNU/c9ahJttJp3Fgs/IQ3UnjmudJXd4/8eQ/aM/47LW24NACJ+dHKFlwa68ge
-         lpTCww4cQs7iqUbNDDbRoLl6ArzjDuijxRldzPJ3GrGDPXP00JEjgSiCicWUHB3ih8Yd
-         8tyoyilmrbZFfCTOhQSLHJj76Px8HKDa6uxyi96b7XZXccaZXrb1g6Di5iRRJOCan3yT
-         1r8d61pFI1lL2oST+rxDX2HnKFu5n8WFFqPq4h1EgN6HEJjY6LNzRj6HK77/NIerUCxC
-         CdqpA2aAX4msnO0lgnxVrIOwkxisbwJkL4r8Oih6FNdodJBSkgM3vG8oIAE9rM1UF/b5
-         x1Yw==
-X-Gm-Message-State: APjAAAVQKB+29f27y2AGVB37syAEsYNDTRD6jcju2550Q4bTSablklbI
-        9o8qDyxbUDD1q+vKEIN7qw==
-X-Google-Smtp-Source: APXvYqy2ZH7KJ1dKJ59ixaELGPG82nNz0xixf9qaXzvb8Egunou3KEQXbwvR28QVZHsCASJKK5swMQ==
-X-Received: by 2002:a05:6830:2001:: with SMTP id e1mr19040031otp.69.1572375139861;
-        Tue, 29 Oct 2019 11:52:19 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v19sm4040283oic.6.2019.10.29.11.52.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 11:52:19 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 13:52:18 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH RESEND 2] dt-bindings: max77693: fix missing curly brace
-Message-ID: <20191029185218.GA18469@bogus>
-References: <20191023093437.GA30570@localhost.localdomain>
+        Tue, 29 Oct 2019 14:54:04 -0400
+Received: from [10.0.2.15] ([146.198.133.39])
+        by smtp with ESMTPA
+        id PWcyigzCktvkXPWcziiYf9; Tue, 29 Oct 2019 18:54:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plus.com; s=042019;
+        t=1572375243; bh=I4ZZ/wVJJQ0guXrWMZRkvryKrerb1ReP5+TDi/d996w=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=qGlZh9wka1XHevwqmEXD49cMDJJfe+FkSQGHxa1snuKSk6S2cgjCPgidJzixQZACE
+         wUW2kiQI1FiTjd1ob1ZeayuihK5zg+aPVmAhvEfSBCL/Lm5zkYc5W3e3zyD5G6dnw7
+         BZQUO7icHobzrrZFqfhzrm6FI4cFgw+k/g9UpyhRC2saG+qzples5/pDdSc/FB+o3T
+         +EvtPc5/zBBu2vkEksa2KC4UqfCINtk+/N5ApeevynBL+EXTOrH7XT3lZnY0UFpRkt
+         GtNCTULhBK7GtciDczTbi4mP2kN1/FtVKCsZIh1/L/LAo06NwwMSu9Eddj0cRYOat8
+         0JzfIf7xWiPkw==
+X-Clacks-Overhead: "GNU Terry Pratchett"
+X-CM-Score: 0.00
+X-CNFS-Analysis: v=2.3 cv=ePBtc0h1 c=1 sm=1 tr=0
+ a=1Jh3712dEPwUcX5EWi7t+w==:117 a=1Jh3712dEPwUcX5EWi7t+w==:17
+ a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=491Ab-Zl-TA3clIL934A:9
+ a=QEXdDO2ut3YA:10
+X-AUTH: ramsayjones@:2500
+Subject: Re: [PATCH] compiler*.h: Add '__' prefix and suffix to all
+ __attribute__ #defines
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-sparse@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <7a15bc8ad7437dc3a044a4f9cd283500bd0b5f36.camel@perches.com>
+ <CANiq72=B6XKwfkC9L4=+OxWtjxCp-94TWRG1a=pC=y636gzckA@mail.gmail.com>
+ <19fd23e98bab65a1ee624445193bd2ed86108881.camel@perches.com>
+ <20191028221523.vlzdk6dkcglxei6v@desk.local>
+ <00c5ef125a4e62f538de7ddddc9d8fe7085794a3.camel@perches.com>
+ <20191028230349.xlhm42ripxktx43y@desk.local>
+ <61eb73ad-5c30-0005-5031-6584df72ad5f@ramsayjones.plus.com>
+ <20191029080701.qpvscbz3xptadhbd@ltop.local>
+From:   Ramsay Jones <ramsay@ramsayjones.plus.com>
+Message-ID: <ede574e5-d18d-f30c-b9f0-a39b73d57ff3@ramsayjones.plus.com>
+Date:   Tue, 29 Oct 2019 18:54:00 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023093437.GA30570@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191029080701.qpvscbz3xptadhbd@ltop.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfDVoYw7ULPJG2gXopqFyDkmgZvbcO8oQUTiYMfxlmz6Gnd4uUsch0XW/zcYouohl3jtIkJ7OQVZAnwhkyFoc8eds9yVeMsZTsXYDLiJipbGXmrCsDCtr
+ za5CAl/4tJyknl2EXIlMxmt+ZrMs1BCXQEdZJNpJgkUGb3yruOFNglrpSlbHwCzZuVqbv/oKFJb+Bw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2019 12:34:37 +0300, Matti Vaittinen wrote:
-> Add missing curly brace to charger node example.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
-> 
-> Resending once more.  Sorry again guys. This time I added also the DT folks
-> and used correct email for Bartlomiej.
-> 
->  Documentation/devicetree/bindings/mfd/max77693.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+On 29/10/2019 08:07, Luc Van Oostenryck wrote:
+> On Tue, Oct 29, 2019 at 02:38:54AM +0000, Ramsay Jones wrote:
+>> On 28/10/2019 23:03, Luc Van Oostenryck wrote:
+>>> diff --git a/parse.c b/parse.c
+>>> index 4464e2667..4b0a1566c 100644
+>>> --- a/parse.c
+>>> +++ b/parse.c
+>>> @@ -345,6 +345,7 @@ static struct symbol_op goto_op = {
+>>>  
+>>>  static struct symbol_op __context___op = {
+>>>  	.statement = parse_context_statement,
+>>> +	.attribute = attribute_context,
+>>
+>> Hmm, so why is do we have a context_op and a __context___op?
+>>
+>>>  };
+>>>  
+>>>  static struct symbol_op range_op = {
+>>> @@ -537,6 +538,7 @@ static struct init_keyword {
+>>>  	{ "while",	NS_KEYWORD, .op = &while_op },
+>>>  	{ "do",		NS_KEYWORD, .op = &do_op },
+>>>  	{ "goto",	NS_KEYWORD, .op = &goto_op },
+>>> +	{ "context",	NS_KEYWORD, .op = &context_op },
+>>>  	{ "__context__",NS_KEYWORD, .op = &__context___op },
+>>
+>> So, can '__context__' be used in a statement, as well as an
+>> attribute, while 'context' can only be used in an attribute?
+> 
+> Yes, indeed.
+
+OK, so I wasn't quite as confused as I thought! ;-)
+
+> '__context__' was only parsed as a statement and 'context'
+> only as an attribute. But now we also want to be able to use
+> '__context__' as an attribute (because 'context' is not a
+> reserved keyword and can thus be a used defined macro).
+> 
+> There is no reason, though, we should now also want to use
+> 'context' as a statement since it's a sparse extension. Hence
+> adding attribute_context to '__context___op' and keeping
+> 'context_op' as such (but moving them together).
+
+Thanks for the explanation.
+
+ATB,
+Ramsay Jones
+
