@@ -2,95 +2,85 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26168CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9B0CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 046DF2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B922086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731743AbfJ2EqE (ORCPT
+        id S1731782AbfJ2Ews (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 00:46:04 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:57316 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728238AbfJ2EqD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 00:46:03 -0400
-Received: by mail-il1-f199.google.com with SMTP id e15so11727080ilq.23
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 21:46:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=YLV8f9ZsfAXyIIZYYq3+IarNtK/1IHU/hb3TF47qpcU=;
-        b=W0FVhGlQaJjDPAcpl52Wg+Lh9rn9yF+fAhQEfuEcDO839S2vDEdx0ifaQrNd1HGsvi
-         P9UM41u0JXuDXfsJGrxAeuktZFT0vS0fADxOs9JzpbvOsHEQ1/hsIvz7UCV1JlLB0Lek
-         M9Gng+5vFSh2qVfxKiVzq1AwzduLiQedISekShIVgpFSLwiw9OThpX943rM1fiAzDbw3
-         Dz2u4TJULHHadqTUC8NwSaiOQON9uJKjj5+HRexrgQcGQkx1CfYUKvqi5SOGGq0nCczZ
-         jRv0NDjMdpxMpuzegQSIliZQgz7fjTAUC8p1nwZt3iHi5rOgpLTv72ZBeIzARwut/7qj
-         JbkQ==
-X-Gm-Message-State: APjAAAVBbExNnyKxkb66jM3yUpipDyc54ZHbFAIAIp3B3TQyuL5urJN9
-        +RcXFUNq2D9AU6GUL0b2rYvd0TsKsX5qj3QYwIFBoUxxKtQ+
-X-Google-Smtp-Source: APXvYqy8A5HcqCyEPL5dtBElWBUVccfpfDJnoTHkuyLyMyzE3tC2AL+v78u811xV2KkRr1yWR23ZU1ZAqiGqqPS8jMwtkIRFFbuv
-MIME-Version: 1.0
-X-Received: by 2002:a5e:d90c:: with SMTP id n12mr1656385iop.140.1572324361470;
- Mon, 28 Oct 2019 21:46:01 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 21:46:01 -0700
-In-Reply-To: <000000000000fc25a1059602460a@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000987900596054b0f@google.com>
-Subject: Re: INFO: trying to register non-static key in bond_3ad_update_lacp_rate
-From:   syzbot <syzbot+0d083911ab18b710da71@syzkaller.appspotmail.com>
-To:     a@unstable.cc, alex.aring@gmail.com, allison@lohutok.net,
-        andrew@lunn.ch, andy@greyhouse.net, ap420073@gmail.com,
-        aroulin@cumulusnetworks.com, ast@domdv.de,
-        b.a.t.m.a.n@lists.open-mesh.org, bridge@lists.linux-foundation.org,
-        cleech@redhat.com, daniel@iogearbox.net, davem@davemloft.net,
-        dcaratti@redhat.com, dsa@cumulusnetworks.com, edumazet@google.com,
-        f.fainelli@gmail.com, fw@strlen.de, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, gvaradar@cisco.com, haiyangz@microsoft.com,
-        idosch@mellanox.com, info@metux.net, ivan.khoronzhuk@linaro.org,
-        j.vosburgh@gmail.com, j@w1.fi, jakub.kicinski@netronome.com,
-        jhs@mojatatu.com, jiri@mellanox.com, jiri@resnulli.us,
-        johan.hedberg@gmail.com, johannes.berg@intel.com,
-        john.hurley@netronome.com, jwi@linux.ibm.com,
-        kstewart@linuxfoundation.org, kvalo@codeaurora.org,
-        kys@microsoft.com, lariel@mellanox.com, linmiaohe@huawei.com,
-        linux-bluetooth@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ppp@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-wpan@vger.kernel.org, liuhangbin@gmail.com,
-        marcel@holtmann.org, mareklindner@neomailbox.ch
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Tue, 29 Oct 2019 00:52:48 -0400
+Received: from mga04.intel.com ([192.55.52.120]:11232 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728193AbfJ2Ewr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 00:52:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 21:52:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,242,1569308400"; 
+   d="scan'208";a="224851624"
+Received: from xshen14-linux.bj.intel.com ([10.238.155.181])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 21:52:45 -0700
+From:   Xiaochen Shen <xiaochen.shen@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        tony.luck@intel.com, fenghua.yu@intel.com,
+        reinette.chatre@intel.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
+        xiaochen.shen@intel.com
+Subject: [PATCH] x86/resctrl: Prevent NULL pointer dereference when reading mondata
+Date:   Tue, 29 Oct 2019 13:25:02 +0800
+Message-Id: <1572326702-27577-1-git-send-email-xiaochen.shen@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+When a mon group is being deleted, rdtgrp->flags is set to RDT_DELETED
+in rdtgroup_rmdir_mon() firstly. The structure of rdtgrp will be freed
+until rdtgrp->waitcount is dropped to 0 in rdtgroup_kn_unlock() later.
 
-commit ab92d68fc22f9afab480153bd82a20f6e2533769
-Author: Taehee Yoo <ap420073@gmail.com>
-Date:   Mon Oct 21 18:47:51 2019 +0000
+During the window of deleting a mon group, if an application calls
+rdtgroup_mondata_show() to read mondata under this mon group,
+'rdtgrp' returned from rdtgroup_kn_lock_live() is a NULL pointer when
+rdtgrp->flags is RDT_DELETED. And then 'rdtgrp' is passed in this path:
+rdtgroup_mondata_show() --> mon_event_read() --> mon_event_count().
+Thus it results in NULL pointer dereference in mon_event_count().
 
-     net: core: add generic lockdep keys
+Add checking of 'rdtgrp' in rdtgroup_mondata_show(), and return -ENOENT
+immediately when reading mondata during the window of deleting a mon
+group.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467f674e00000
-start commit:   60c1769a Add linux-next specific files for 20191028
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667f674e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1267f674e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cb86688f30db053d
-dashboard link: https://syzkaller.appspot.com/bug?extid=0d083911ab18b710da71
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15381ee0e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11571570e00000
+Fixes: d89b7379015f ("x86/intel_rdt/cqm: Add mon_data")
+Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
+Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Reported-by: syzbot+0d083911ab18b710da71@syzkaller.appspotmail.com
-Fixes: ab92d68fc22f ("net: core: add generic lockdep keys")
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+index efbd54cc4e69..055c8613b531 100644
+--- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -522,6 +522,10 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
+ 	int ret = 0;
+ 
+ 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
++	if (!rdtgrp) {
++		ret = -ENOENT;
++		goto out;
++	}
+ 
+ 	md.priv = of->kn->priv;
+ 	resid = md.u.rid;
+-- 
+1.8.3.1
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
