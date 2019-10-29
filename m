@@ -2,204 +2,150 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16272CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37792CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF92121479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081E02086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FdDJWSub"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ozcm2IWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387819AbfJ2Mm6 (ORCPT
+        id S2387824AbfJ2Mn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:42:58 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33396 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727675AbfJ2Mm5 (ORCPT
+        Tue, 29 Oct 2019 08:43:28 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46041 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727675AbfJ2Mn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:42:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c184so9521024pfb.0;
-        Tue, 29 Oct 2019 05:42:57 -0700 (PDT)
+        Tue, 29 Oct 2019 08:43:27 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x21so2710141qto.12
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 05:43:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fOrbkU46JgKCpUazmCZLUeWttzqgH1e4jswzSy8IXQk=;
-        b=FdDJWSubMcfZ5eXxXY7SdUcs4KiO6gI9qejKGYJlBVUSNvOkMpqmJjwI8IS48SkPWb
-         XR4rWodABPRw8gkfkd0G34EXrmCaXmiH09jVLPnK22896Qj1PrY5d55cTCeIulINr3d1
-         vE6Ubx/AmZ7iHYvO6iIHNBGhRBFHZohdSsCxiLl+M3urCV15FT1pziONA7JH1I+frR3s
-         UfF2lp6Dp3vV0eo3HHVh7VQ+xPq5Uc5XoJx3tdub58VsWxBmVkre8+lq4CxTxFMmDRIi
-         Tqbq2FNdv7D6zRGDkdcl4FSW2j81kcuQF6MZFZH6OCA3KzgPkV8GkjF3GBqEAjME/wxZ
-         usOA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OMRxOWZpu1dr96++kRLkGqF4JG/vk7voGkpNSd1iKXw=;
+        b=ozcm2IWkf2kNtuYCUjt+8ArvFK/2tKRtrBxPUJbunA7rPNlc0HxCY71sOWY0wV6yle
+         VMaj+9CPSz7Yh+ObskBaZxF9CqEBImBFo4eqIbA/24KRyE8rBYcXoqKjRR4hwZ0qfPJO
+         F0EaQVN+YNPh/tNG58mPvXtcqsJZiw7ZiYHf1FBOuACg8X8xJeJDCtMf8QuKRHKPg2c0
+         uNVeP+ABNB3gsrrfXF8eQ2co4oiynkaswFhPcMWQMivdB92SNJhepyCg18vMBP7iW/DD
+         8UYO8Qt3O9X5/xm/wHCkzkG+AmSkAdPwsvYNzEjD3JbgHgEwtq8TUO94E8rJy5ospivy
+         pi+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fOrbkU46JgKCpUazmCZLUeWttzqgH1e4jswzSy8IXQk=;
-        b=Tv8kCoPReaBiH7JnxUuMzl+C013pRsXU1fDJQJGnoHombfX2knT4zyx8GBFmQmMwc9
-         MYrFYbTUxNg2yZ3/fDKbbNMmhERDfmCCrQF/704YxRhfTBy7WjNhd8C26Q9MeUcQNVGD
-         ypUha5lwFgs4Qaqb0w3HBGMk+fC/Tiew5JZFZpP71/R9SYga0XHBJ7P3EzELpACT1mhR
-         +MfgVmeBf1TdD396s/8hrhn86dh86wMdvZa8Zt3071QKUodfxomDg1/rpMIKktLcqtGV
-         wbR5qZjXvBhwSa8UHJw5ayWLIMrvqxvfTj5XNmavzu+R22H8syEMhqvGIgb45UU9w5Fa
-         z4aQ==
-X-Gm-Message-State: APjAAAVrBFTWVNikIMnKes89ZlUwkyYyWEbROTjEyWWEwgL6B3uQXogY
-        HsO9DnvHJr8RukPPw0EFK36MKrLR
-X-Google-Smtp-Source: APXvYqxdKrpJbgiqxQmwUMlhqcA77zarOIKgxEysN+oYiECsIpHChZdRZkg3/AocXszl3438nmc+jw==
-X-Received: by 2002:aa7:83c2:: with SMTP id j2mr27670525pfn.225.1572352976762;
-        Tue, 29 Oct 2019 05:42:56 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q13sm3879740pjq.0.2019.10.29.05.42.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 29 Oct 2019 05:42:56 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 05:42:55 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     rentao.bupt@gmail.com
-Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Subject: Re: [PATCH 1/3] hwmon: (pmbus) add BEL PFE1100 power supply driver
-Message-ID: <20191029124255.GA23349@roeck-us.net>
-References: <20191028234904.12441-1-rentao.bupt@gmail.com>
- <20191028234904.12441-2-rentao.bupt@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OMRxOWZpu1dr96++kRLkGqF4JG/vk7voGkpNSd1iKXw=;
+        b=SlotPGe65bXKmJzGRbe4stc+sgSEC2EXtnRBuYLVmu5zFH1sSx4f9WfamET/5ZBVnt
+         kxvn7EKkJYwrKY+CJnrPMKUjAF1/lIIZ8X0+SBnb0Aw/fja1bT7g4iYBOX5sPYSQasz/
+         9L6QZupmJ75XZAUw9Zhuq+NZMYVxL1nZ9urtPlUMTdaTlSzgQ06zGO9cYinl5zC42GDG
+         dZdBq/Gk86vQrPX5xgvsqkRTQDA+P5YYVU0d5Xce1+b1e+eEgEF6FU25evm99tydtjHA
+         wbdyoSLa9gjbbsmN62O9e0vYT+hBiRzHlnq8WZVOOPqcUMBISOu9wRJsTvS4K149L53W
+         02cQ==
+X-Gm-Message-State: APjAAAUE2QWHa2HDs1+bvFeLjjqb8fvC69quhERnSXCbax22DfiulGVh
+        uGIO8THgw0Kl0SkMU1C9FSFSRNjzc5BRWj6xibFh0A==
+X-Google-Smtp-Source: APXvYqzDWQWqlapgFtGMUJS/HwMqtmBfC0dOaSKIjA060RzLLknu6eGt8PRIEE29kq1TixIMsSkusE9tCw1vWzpaF9o=
+X-Received: by 2002:ac8:cc3:: with SMTP id o3mr4052238qti.239.1572353005620;
+ Tue, 29 Oct 2019 05:43:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028234904.12441-2-rentao.bupt@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191015084139.8510-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191015084139.8510-1-benjamin.gaignard@st.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Tue, 29 Oct 2019 13:43:14 +0100
+Message-ID: <CA+M3ks51SNOfM9YJFv8wkLDar0qvbwGQVzVwxEVP7T=bGeTcKw@mail.gmail.com>
+Subject: Re: [PATCH] arm: kernel: initialize broadcast hrtimer based clock
+ event device
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com, maz@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 04:49:02PM -0700, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
-> 
-> Add the driver to support BEL PFE1100 which is 1100 Wat AC to DC power
-> supply. The chip has only 1 page.
-> 
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+Le mar. 15 oct. 2019 =C3=A0 10:42, Benjamin Gaignard
+<benjamin.gaignard@st.com> a =C3=A9crit :
+>
+> On platforms implementing CPU power management, the CPUidle subsystem
+> can allow CPUs to enter idle states where local timers logic is lost on p=
+ower
+> down. To keep the software timers functional the kernel relies on an
+> always-on broadcast timer to be present in the platform to relay the
+> interrupt signalling the timer expiries.
+>
+> For platforms implementing CPU core gating that do not implement an alway=
+s-on
+> HW timer or implement it in a broken way, this patch adds code to initial=
+ize
+> the kernel hrtimer based clock event device upon boot (which can be chose=
+n as
+> tick broadcast device by the kernel).
+> It relies on a dynamically chosen CPU to be always powered-up. This CPU t=
+hen
+> relays the timer interrupt to CPUs in deep-idle states through its HW loc=
+al
+> timer device.
+>
+> Having a CPU always-on has implications on power management platform
+> capabilities and makes CPUidle suboptimal, since at least a CPU is kept
+> always in a shallow idle state by the kernel to relay timer interrupts,
+> but at least leaves the kernel with a functional system with some working
+> power management capabilities.
+>
+> The hrtimer based clock event device is unconditionally registered, but
+> has the lowest possible rating such that any broadcast-capable HW clock
+> event device present will be chosen in preference as the tick broadcast
+> device.
 
-Please combine with the next patch.
+Gentle ping,
 
+Thanks,
+Benjamin
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  drivers/hwmon/pmbus/Kconfig   |  9 +++++
->  drivers/hwmon/pmbus/Makefile  |  1 +
->  drivers/hwmon/pmbus/bel-pfe.c | 68 +++++++++++++++++++++++++++++++++++
->  3 files changed, 78 insertions(+)
->  create mode 100644 drivers/hwmon/pmbus/bel-pfe.c
-> 
-> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index d62d69bb7e49..59859979571d 100644
-> --- a/drivers/hwmon/pmbus/Kconfig
-> +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -36,6 +36,15 @@ config SENSORS_ADM1275
->  	  This driver can also be built as a module. If so, the module will
->  	  be called adm1275.
->  
-> +config SENSORS_BEL_PFE
-> +	tristate "Bel PFE Compatible Power Supplies"
-> +	help
-> +	  If you say yes here you get hardware monitoring support for BEL
-> +	  PFE1100 and PFE3000 Power Supplies.
-> +
-> +	  This driver can also be built as a module. If so, the module will
-> +	  be called bel-pfe.
-> +
->  config SENSORS_IBM_CFFPS
->  	tristate "IBM Common Form Factor Power Supply"
->  	depends on LEDS_CLASS
-> diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-> index 03bacfcfd660..3f8c1014938b 100644
-> --- a/drivers/hwmon/pmbus/Makefile
-> +++ b/drivers/hwmon/pmbus/Makefile
-> @@ -6,6 +6,7 @@
->  obj-$(CONFIG_PMBUS)		+= pmbus_core.o
->  obj-$(CONFIG_SENSORS_PMBUS)	+= pmbus.o
->  obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
-> +obj-$(CONFIG_SENSORS_BEL_PFE)	+= bel-pfe.o
->  obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
->  obj-$(CONFIG_SENSORS_INSPUR_IPSPS) += inspur-ipsps.o
->  obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
-> diff --git a/drivers/hwmon/pmbus/bel-pfe.c b/drivers/hwmon/pmbus/bel-pfe.c
-> new file mode 100644
-> index 000000000000..117f9af21bf3
-> --- /dev/null
-> +++ b/drivers/hwmon/pmbus/bel-pfe.c
-> @@ -0,0 +1,68 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Hardware monitoring driver for BEL PFE family power supplies.
-> + *
-> + * Copyright (c) 2019 Facebook Inc.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-
-Alphabetic include file order, please.
-
-> +#include "pmbus.h"
-> +
-> +enum chips {pfe1100};
-> +
-> +static struct pmbus_driver_info pfe_driver_info[] = {
-> +	[pfe1100] = {
-> +		.pages = 1,
-> +		.format[PSC_VOLTAGE_IN] = linear,
-> +		.format[PSC_VOLTAGE_OUT] = linear,
-> +		.format[PSC_CURRENT_IN] = linear,
-> +		.format[PSC_CURRENT_OUT] = linear,
-> +		.format[PSC_POWER] = linear,
-> +		.format[PSC_TEMPERATURE] = linear,
-> +		.format[PSC_FAN] = linear,
-> +
-> +		.func[0] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-> +			   PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
-> +			   PMBUS_HAVE_POUT |
-> +			   PMBUS_HAVE_VIN | PMBUS_HAVE_IIN |
-> +			   PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
-> +			   PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 |
-> +			   PMBUS_HAVE_STATUS_TEMP |
-> +			   PMBUS_HAVE_FAN12,
-> +	},
-> +};
-> +
-> +static int pfe_pmbus_probe(struct i2c_client *client,
-> +			   const struct i2c_device_id *id)
-> +{
-> +	int model;
-> +
-> +	model = (int)id->driver_data;
-> +	return pmbus_do_probe(client, id, &pfe_driver_info[model]);
-> +}
-> +
-> +static const struct i2c_device_id pfe_device_id[] = {
-> +	{"pfe1100", pfe1100},
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, pfe_device_id);
-> +
-> +static struct i2c_driver pfe_pmbus_driver = {
-> +	.driver = {
-> +		   .name = "bel-pfe",
-> +	},
-> +	.probe = pfe_pmbus_probe,
-> +	.remove = pmbus_do_remove,
-> +	.id_table = pfe_device_id,
-> +};
-> +
-> +module_i2c_driver(pfe_pmbus_driver);
-> +
-> +MODULE_AUTHOR("Tao Ren <rentao.bupt@gmail.com>");
-> +MODULE_DESCRIPTION("PMBus driver for BEL PFE Family Power Supplies");
-> +MODULE_LICENSE("GPL");
+> Note:
+> - The same reasons lead to same patch than for arm64 so I have copy the
+>   commit message from: 9358d755bd5c ("arm64: kernel: initialize broadcast
+>   hrtimer based clock event device")
+>  arch/arm/kernel/time.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm/kernel/time.c b/arch/arm/kernel/time.c
+> index b996b2cf0703..dddc7ebf4db4 100644
+> --- a/arch/arm/kernel/time.c
+> +++ b/arch/arm/kernel/time.c
+> @@ -9,6 +9,7 @@
+>   *  reading the RTC at bootup, etc...
+>   */
+>  #include <linux/clk-provider.h>
+> +#include <linux/clockchips.h>
+>  #include <linux/clocksource.h>
+>  #include <linux/errno.h>
+>  #include <linux/export.h>
+> @@ -107,5 +108,6 @@ void __init time_init(void)
+>                 of_clk_init(NULL);
+>  #endif
+>                 timer_probe();
+> +               tick_setup_hrtimer_broadcast();
+>         }
+>  }
+> --
+> 2.15.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
