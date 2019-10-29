@@ -2,200 +2,152 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567DACA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB328CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218B920856
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8308920856
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:11:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RFqx97Fb";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X5mnHnat"
+	dkim=pass (2048-bit key) header.d=lucina.net header.i=@lucina.net header.b="Qyttz5WO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389875AbfJ2PH6 (ORCPT
+        id S2389887AbfJ2PLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:07:58 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52256 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389855AbfJ2PH5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:07:57 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A1E5060D5A; Tue, 29 Oct 2019 15:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572361676;
-        bh=E4andH/ilmkSFOMWKBRL3FANQ6IFKogo12cpoZyySEA=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=RFqx97FbCvImMjwJHodioL8aT9CJG3k+aB9OYIPs+uMXWANCHxFHS0egEbCv8ZoSt
-         +NUkJ2YxZnEPKXuudvBL9BHE2jms+gjUKnAuVOFZnYMES0qqYvRLZT3lGchjYZoeLg
-         QEMSd5b3fJR1KDRU6znIcRHDSBFThH+uMxWRPRZ0=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1531C60BFA;
-        Tue, 29 Oct 2019 15:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572361675;
-        bh=E4andH/ilmkSFOMWKBRL3FANQ6IFKogo12cpoZyySEA=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=X5mnHnatzoWq7QPKAP3YJTAWmX5Q3aCbzNqNkKeHY5CfIe4ADO43QunOjp/ZZOVDP
-         2YBGI26avNH5iuAgDOmSNWhzQ1n2+WEVgkyy+bPHHBAWr9x7SldFc6SMvsj5gYCrG6
-         XGuUVXxmi/WntDkbItO1RmTSKdtMxwYdlzD5Z7Z4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1531C60BFA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH] arm64: cpufeature: Enable Qualcomm Falkor errata 1009 for
- Kryo
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     Will Deacon <will@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org
-References: <20191029060604.1208925-1-bjorn.andersson@linaro.org>
- <20191029115008.GD12103@willie-the-truck>
- <16ccb343-8253-0224-e957-c73f51f110a1@codeaurora.org>
-Message-ID: <d9700408-b11e-b5c8-db9d-f70ccd1bde73@codeaurora.org>
-Date:   Tue, 29 Oct 2019 09:07:53 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 11:11:31 -0400
+Received: from smtp.lucina.net ([62.176.169.44]:33901 "EHLO smtp.lucina.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389623AbfJ2PLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 11:11:31 -0400
+X-Greylist: delayed 505 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Oct 2019 11:11:30 EDT
+Received: from nodbug.lucina.net (78-141-76-187.dynamic.orange.sk [78.141.76.187])
+        by smtp.lucina.net (Postfix) with ESMTPSA id 2D02A122804;
+        Tue, 29 Oct 2019 16:03:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucina.net;
+        s=dkim-201811; t=1572361384;
+        bh=FhHnmn5HJQmLjdUIBlMzJMkmm1HvWMYg05aykYpacL4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qyttz5WOLZlYszv1/a9wA5NoFOKYaDxLG7XCB5ZhM8glh8S6THwqoGjVXUO4u4Vum
+         Q+rF1cCqkTNy82NGfnXfI6PxtETEw6MseELKnb5282N611DX4gPfSatWxrJHUKQzt/
+         RRYq3gvOaTLUBoc3hdjUu84feyVbDxrCWlDGim3B5T10If/JV3iQlUQcrGXfVcWZfp
+         e0CsDYUJvsg1QmyzyXdOmwVXsf5aTN5JYXgiuTKGMv3tHWbe9AiA5BldXye+lGFPhK
+         7d+UpMFjdX24MV0o7Kryk0Tiwn18SdBAG1Ae7HSjXTBCl01RKHUkfW0wsND4X+1FBV
+         cDj3WMv+r9Nfw==
+Received: by nodbug.lucina.net (Postfix, from userid 1000)
+        id 0C0E22684367; Tue, 29 Oct 2019 16:03:04 +0100 (CET)
+Date:   Tue, 29 Oct 2019 16:03:04 +0100
+From:   Martin Lucina <martin@lucina.net>
+To:     Reto Buerki <reet@codelabs.ch>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] KVM: x86: nVMX GUEST_CR3 bug fix, and then some...
+Message-ID: <20191029150304.GA29542@nodbug.lucina.net>
+Mail-Followup-To: Reto Buerki <reet@codelabs.ch>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
+ <8414d3e8-9a68-e817-de5a-3e9ca6dc85bb@codelabs.ch>
 MIME-Version: 1.0
-In-Reply-To: <16ccb343-8253-0224-e957-c73f51f110a1@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8414d3e8-9a68-e817-de5a-3e9ca6dc85bb@codelabs.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/29/2019 7:44 AM, Jeffrey Hugo wrote:
-> On 10/29/2019 4:50 AM, Will Deacon wrote:
->> On Mon, Oct 28, 2019 at 11:06:04PM -0700, Bjorn Andersson wrote:
->>> The Kryo cores share errata 1009 with Falkor, so add their model
->>> definitions and enable it for them as well.
->>>
->>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>> ---
->>>   arch/arm64/include/asm/cputype.h | 4 ++++
->>>   arch/arm64/kernel/cpu_errata.c   | 2 ++
->>>   2 files changed, 6 insertions(+)
->>>
->>> diff --git a/arch/arm64/include/asm/cputype.h 
->>> b/arch/arm64/include/asm/cputype.h
->>> index b1454d117cd2..8067476ea2e4 100644
->>> --- a/arch/arm64/include/asm/cputype.h
->>> +++ b/arch/arm64/include/asm/cputype.h
->>> @@ -84,6 +84,8 @@
->>>   #define QCOM_CPU_PART_FALKOR_V1        0x800
->>>   #define QCOM_CPU_PART_FALKOR        0xC00
->>>   #define QCOM_CPU_PART_KRYO        0x200
->>> +#define QCOM_CPU_PART_KRYO_GOLD        0x211
->>> +#define QCOM_CPU_PART_KRYO_SILVER    0x205
+(Cc:s trimmed)
+
+Hi,
+
+On Monday, 30.09.2019 at�12:42, Reto Buerki wrote:
+> On 9/27/19 11:45 PM, Sean Christopherson wrote:
+> > *sigh*
+> > 
+> > v2 was shaping up to be a trivial update, until I started working on
+> > Vitaly's suggestion to add a helper to test for register availability.
+> > 
+> > The primary purpose of this series is to fix a CR3 corruption in L2
+> > reported by Reto Buerki when running with HLT interception disabled in L1.
+> > On a nested VM-Enter that puts L2 into HLT, KVM never actually enters L2
+> > and instead mimics HLT interception by canceling the nested run and
+> > pretending that VM-Enter to L2 completed and then exited on HLT (which
+> > KVM intercepted).  Because KVM never actually runs L2, KVM skips the
+> > pending MMU update for L2 and so leaves a stale value in vmcs02.GUEST_CR3.
+> > If the next wake event for L2 triggers a nested VM-Exit, KVM will refresh
+> > vmcs12->guest_cr3 from vmcs02.GUEST_CR3 and consume the stale value.
+> > 
+> > Fix the issue by unconditionally writing vmcs02.GUEST_CR3 during nested
+> > VM-Enter instead of deferring the update to vmx_set_cr3(), and skip the
+> > update of GUEST_CR3 in vmx_set_cr3() when running L2.  I.e. make the
+> > nested code fully responsible for vmcs02.GUEST_CR3.
+> > 
+> > Patch 02/08 is a minor optimization to skip the GUEST_CR3 update if
+> > vmcs01 is already up-to-date.
+> > 
+> > Patches 03 and beyond are Vitaly's fault ;-).
+> > 
+> > Patches 03 and 04 are tangentially related cleanup to vmx_set_rflags()
+> > that was discovered when working through the avail/dirty testing code.
+> > Ideally they'd be sent as a separate series, but they conflict with the
+> > avail/dirty helper changes and are themselves minor and straightforward.
+> > 
+> > Patches 05 and 06 clean up the register caching code so that there is a
+> > single enum for all registers which use avail/dirty tracking.  While not
+> > a true prerequisite for the avail/dirty helpers, the cleanup allows the
+> > new helpers to take an 'enum kvm_reg' instead of a less helpful 'int reg'.
+> > 
+> > Patch 07 is the helpers themselves, as suggested by Vitaly.
+> > 
+> > Patch 08 is a truly optional change to ditch decache_cr3() in favor of
+> > handling CR3 via cache_reg() like any other avail/dirty register.
+> > 
+> > 
+> > Note, I collected the Reviewed-by and Tested-by tags for patches 01 and 02
+> > even though I inverted the boolean from 'skip_cr3' to 'update_guest_cr3'.
+> > Please drop the tags if that constitutes a non-trivial functional change.
+> > 
+> > v2:
+> >   - Invert skip_cr3 to update_guest_cr3.  [Liran]
+> >   - Reword the changelog and comment to be more explicit in detailing
+> >     how/when KVM will process a nested VM-Enter without runnin L2.  [Liran]
+> >   - Added Reviewed-by and Tested-by tags.
+> >   - Add a comment in vmx_set_cr3() to explicitly state that nested
+> >     VM-Enter is responsible for loading vmcs02.GUEST_CR3.  [Jim]
+> >   - All of the loveliness in patches 03-08. [Vitaly]
+> > 
+> > Sean Christopherson (8):
+> >   KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter
+> >   KVM: VMX: Skip GUEST_CR3 VMREAD+VMWRITE if the VMCS is up-to-date
+> >   KVM: VMX: Consolidate to_vmx() usage in RFLAGS accessors
+> >   KVM: VMX: Optimize vmx_set_rflags() for unrestricted guest
+> >   KVM: x86: Add WARNs to detect out-of-bounds register indices
+> >   KVM: x86: Fold 'enum kvm_ex_reg' definitions into 'enum kvm_reg'
+> >   KVM: x86: Add helpers to test/mark reg availability and dirtiness
+> >   KVM: x86: Fold decache_cr3() into cache_reg()
+> > 
+> >  arch/x86/include/asm/kvm_host.h |  5 +-
+> >  arch/x86/kvm/kvm_cache_regs.h   | 67 +++++++++++++++++------
+> >  arch/x86/kvm/svm.c              |  5 --
+> >  arch/x86/kvm/vmx/nested.c       | 14 ++++-
+> >  arch/x86/kvm/vmx/vmx.c          | 94 ++++++++++++++++++---------------
+> >  arch/x86/kvm/x86.c              | 13 ++---
+> >  arch/x86/kvm/x86.h              |  6 +--
+> >  7 files changed, 123 insertions(+), 81 deletions(-)
 > 
-> These are not Kryo part numbers (8998+).  They are Hydra ones.
-> 
->>
->> Can you double-check this, please? My Pixel-1 phone claims something with
->> 0x201, but I don't know if that's what you were aiming for. It would be
->> great if Qualcomm could document these register fields somewhere, 
->> especially
->> since we're trying to work around their hardware errata for them.
-> 
-> I wish I could point you to public documentation.  I don't happen to 
-> know where it is.  As far as 8996 goes, there are quite a few part 
-> numbers.  The ones I could find are:
-> 201
-> 205
-> 211
-> 241
-> 251
-> 
-> 281 happens to be QDF2432
+> Series:
+> Tested-by: Reto Buerki <reet@codelabs.ch>
 
- From asking around, I found someone in the know.  We don't have public 
-documentation, but I can follow up to try to create something - its 
-likely going to take a bit.  I was given the following information to 
-share.  This is specific to Hydra only-
+Any chance of this series making it into 5.4? Unless I'm looking in the
+wrong place, I don't see the changes in either kvm.git or Linus' tree.
 
-MIDR[15:12] = PART[11:8]
-Hydra and technology node differentiator (0x1 = Hydra 16nm; 0x2 = Hydra 
-14nm; 0x3 = Hydra 10nm)
+Thanks,
 
-MIDR[11:10] = PART[7:6]
-This corresponds to the cluster revision number
-
-MIDR[9:8] = PART[5:4]
-Technology variant within the node
-
-MIDR[7:6] = PART[3:2]
-0b00 = 512KB L2
-0b01 = 1MB L2
-0b10 = 2MB L2
-0b11 = 4MB L2
-
-MIDR[5:4] = PART[1:0]
-0b00 = uni-core
-0b01 = dual-core cluster
-0b10 = tri-core cluster
-0b11 = quad-core cluster
-
-> 
->>
->> That said...
->>
->>>   #define NVIDIA_CPU_PART_DENVER        0x003
->>>   #define NVIDIA_CPU_PART_CARMEL        0x004
->>> @@ -109,6 +111,8 @@
->>>   #define MIDR_QCOM_FALKOR_V1 MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, 
->>> QCOM_CPU_PART_FALKOR_V1)
->>>   #define MIDR_QCOM_FALKOR MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, 
->>> QCOM_CPU_PART_FALKOR)
->>>   #define MIDR_QCOM_KRYO MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, 
->>> QCOM_CPU_PART_KRYO)
->>> +#define MIDR_QCOM_KRYO_GOLD MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, 
->>> QCOM_CPU_PART_KRYO_GOLD)
->>> +#define MIDR_QCOM_KRYO_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, 
->>> QCOM_CPU_PART_KRYO_SILVER)
->>>   #define MIDR_NVIDIA_DENVER MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, 
->>> NVIDIA_CPU_PART_DENVER)
->>>   #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, 
->>> NVIDIA_CPU_PART_CARMEL)
->>>   #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, 
->>> FUJITSU_CPU_PART_A64FX)
->>> diff --git a/arch/arm64/kernel/cpu_errata.c 
->>> b/arch/arm64/kernel/cpu_errata.c
->>> index cdd8df033536..315780e7bee7 100644
->>> --- a/arch/arm64/kernel/cpu_errata.c
->>> +++ b/arch/arm64/kernel/cpu_errata.c
->>> @@ -627,6 +627,8 @@ static const struct midr_range 
->>> arm64_harden_el2_vectors[] = {
->>>   static const struct midr_range arm64_repeat_tlbi_cpus[] = {
->>>   #ifdef CONFIG_QCOM_FALKOR_ERRATUM_1009
->>>       MIDR_RANGE(MIDR_QCOM_FALKOR_V1, 0, 0, 0, 0),
->>> +    MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_GOLD),
->>> +    MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_SILVER),
->>
->> ... why aren't you following what we do for E1003 and using the
->> 'is_kryo_midr' callback to match these CPUs?
->>
->> Will
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
-> 
-> 
-
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Martin
