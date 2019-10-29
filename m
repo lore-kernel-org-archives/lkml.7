@@ -2,138 +2,120 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150CECA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAA4CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBF32173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="RYCBY6vN"
+	by mail.kernel.org (Postfix) with ESMTP id 1D526208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572347725;
+	bh=SRzW6FPQi8ILQcHxWmUOSb/ba5l1skxBzk0N9Zb67L4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JZ94cQ6cYgou14u5MlEbNRXwQ7oMqIlv8Epg0bZsLh0r1zlNIPbGE39XxY+jj0Iqc
+	 kCFk3wKY+DJxYXl/r85g097wNQbOE1tF+v/HmdIUXanC1ie5LyB0ABGUzeBESsFhmo
+	 yMGIhPEPveEgfPz3CXLNCv6ReY5srx2eankVATus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732356AbfJ2LNn (ORCPT
+        id S1731958AbfJ2LPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:13:43 -0400
-Received: from vps.xff.cz ([195.181.215.36]:59982 "EHLO vps.xff.cz"
+        Tue, 29 Oct 2019 07:15:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731826AbfJ2LNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:13:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572347620; bh=Obh7tvfkovm1tGf8wM3sGTB+Ja4afeHSPQtadzplAcc=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=RYCBY6vNV4YeeENeH3RNTeWeZG3kO3f0QWxALt4GLNgqTCg0brQtQhmuBq9x/Y49n
-         fpvK97qY0FSViYwMAY/jfp39tdfeEsIEd14Mo5FallMrTTMm9iLTviBLEwaIE+1V4r
-         n582CF6f19v/OQIz5a+UGsXA3vIgefQhMA2yzP9s=
-Date:   Tue, 29 Oct 2019 12:13:39 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] arm: dts: sun8i: a83t: a711: Add touchscreen node
-Message-ID: <20191029111339.7okiyig3tbehn5kj@core.my.home>
-Mail-Followup-To: Marco Felsch <m.felsch@pengutronix.de>,
-        linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20191029005806.3577376-1-megous@megous.com>
- <20191029005806.3577376-4-megous@megous.com>
- <20191029090801.zls2qns7rxcvmxor@pengutronix.de>
+        id S1727453AbfJ2LPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 07:15:23 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11E4020874;
+        Tue, 29 Oct 2019 11:15:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572347722;
+        bh=SRzW6FPQi8ILQcHxWmUOSb/ba5l1skxBzk0N9Zb67L4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MJdt7Qkk8k8EZ3/tmQnFyxliB71kW0Fijqg99du9tXDTYkAjb/luEfkEjNGNcaZwg
+         +HMHEyLiKIi9Eui/X2aR2rO4gQQR2I113KBb4OV19kIVsDSHx0qGFkdXJhnjZBu40T
+         587urYEACjLw9EEzNQ6voqtMd9lA5yn3AW3eFhvQ=
+Date:   Tue, 29 Oct 2019 11:15:17 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, suzuki.poulose@arm.com,
+        Dave.Martin@arm.com
+Subject: Re: [PATCH] arm64: cpufeature: Export Armv8.6 Matrix feature to
+ userspace
+Message-ID: <20191029111517.GE11590@willie-the-truck>
+References: <20191025171056.30641-1-julien.grall@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029090801.zls2qns7rxcvmxor@pengutronix.de>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20191025171056.30641-1-julien.grall@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Marco,
+On Fri, Oct 25, 2019 at 06:10:56PM +0100, Julien Grall wrote:
+> This patch provides support for reporting the presence of Armv8.6
+> Matrix and its optional features to userspace.
 
-On Tue, Oct 29, 2019 at 10:08:01AM +0100, Marco Felsch wrote:
-> Hi,
-> 
-> On 19-10-29 01:58, Ondrej Jirman wrote:
-> > From: Mylène Josserand <mylene.josserand@bootlin.com>
-> > 
-> > Enable a FocalTech EDT-FT5x06 Polytouch touchscreen.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> > ---
-> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > index 568b90ece342..19f520252dc5 100644
-> > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > @@ -164,6 +164,22 @@
-> >  	status = "okay";
-> >  };
-> >  
-> > +&i2c0 {
-> > +	clock-frequency = <400000>;
-> > +	status = "okay";
-> > +
-> > +	touchscreen@38 {
-> > +		compatible = "edt,edt-ft5x06";
-> > +		reg = <0x38>;
-> > +		interrupt-parent = <&r_pio>;
-> > +		interrupts = <0 7 IRQ_TYPE_EDGE_FALLING>; /* PL7 */
-> > +		reset-gpios = <&pio 3 5 GPIO_ACTIVE_LOW>; /* PD5 */
-> > +		vcc-supply = <&reg_ldo_io0>;
-> > +		touchscreen-size-x = <1024>;
-> > +		touchscreen-size-y = <600>;
-> 
-> Do you want this touchscreen as wakeup-src? If so please add the
-> property here. I've send patches converting the driver from the default
-> behaviour: https://patchwork.kernel.org/cover/11149039/ and all agreed
-> to break backward compatibility.
+Are you sure this is 8.6 and not earlier?
 
-Not at this moment, thank you.
-
-regards,
-	o.
-
-> Regards,
->   Marco
+> This based on [1] + commit ec52c7134b1f "arm64: cpufeature: Treat
+> ID_AA64ZFR0_EL1 as RAZ when SVE is not enabled" (taken from v5.4-rc4).
 > 
-> > +	};
-> > +};
-> > +
-> >  &i2c1 {
-> >  	clock-frequency = <400000>;
-> >  	status = "okay";
-> > -- 
-> > 2.23.0
-> > 
-> > 
+> [1]  arm64/for-next/elf-hwcap-docs
+> ---
+>  Documentation/arm64/cpu-feature-registers.rst |  8 ++++++++
+>  Documentation/arm64/elf_hwcaps.rst            | 15 +++++++++++++++
+>  arch/arm64/include/asm/hwcap.h                |  4 ++++
+>  arch/arm64/include/asm/sysreg.h               |  7 +++++++
+>  arch/arm64/include/uapi/asm/hwcap.h           |  4 ++++
+>  arch/arm64/kernel/cpufeature.c                | 11 +++++++++++
+>  arch/arm64/kernel/cpuinfo.c                   |  4 ++++
+>  7 files changed, 53 insertions(+)
 > 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
+> index ffcf4e2c71ef..d1d6d56a7b08 100644
+> --- a/Documentation/arm64/cpu-feature-registers.rst
+> +++ b/Documentation/arm64/cpu-feature-registers.rst
+> @@ -193,6 +193,8 @@ infrastructure:
+>       +------------------------------+---------+---------+
+>       | Name                         |  bits   | visible |
+>       +------------------------------+---------+---------+
+> +     | I8MM                         | [52-55] |    y    |
+> +     +------------------------------+---------+---------+
+
+Looking at:
+
+https://developer.arm.com/docs/ddi0601/latest/aarch64-system-registers/id_aa64isar1_el1
+
+Then I8MM is advertised as "Armv8.2", alongside other fields that we haven't
+listed here such as BF16 and SPECRES.
+
+So we probably want a patch bringing all of this up to speed, rather than
+randomly advertising some features and not others.
+
+>       | SB                           | [36-39] |    y    |
+>       +------------------------------+---------+---------+
+>       | FRINTTS                      | [32-35] |    y    |
+> @@ -227,6 +229,12 @@ infrastructure:
+>       +------------------------------+---------+---------+
+>       | Name                         |  bits   | visible |
+>       +------------------------------+---------+---------+
+> +     | F64MM                        | [56-59] |    y    |
+> +     +------------------------------+---------+---------+
+> +     | F32MM                        | [52-55] |    y    |
+> +     +------------------------------+---------+---------+
+> +     | I8MM                         | [44-47] |    y    |
+> +     +------------------------------+---------+---------+
+
+Urgh, we're inconsistent in our bitfields. Some are [lo-hi] whilst others
+are [hi-lo]. Please can you fix that in a preparatory patch? I prefer
+[hi-lo] and it matches the arch docs.
+
+Will
