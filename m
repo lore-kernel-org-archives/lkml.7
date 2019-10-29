@@ -2,98 +2,93 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DBECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EA3CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109CE208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:02:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572368575;
-	bh=uRow4DFq01/iQXmseqOfm0lJg6W4SSyElcj46INIcUs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=tlYdOP4DbtROAHDPhjKuAvfVD01L2WyjauO7a5X323iiXDjjTotnzLglB1SN0e1IW
-	 /esOBEEe6Rmux+cE+rEAIZC1pmUgEg48DVtVa1lwnUc81JMq/eYQEsBUA5PzLzqNZM
-	 MbL41HoyWyNkIO61cUHluygCK8/wsruC9IKS0jus=
+	by mail.kernel.org (Postfix) with ESMTP id C8AA720656
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390660AbfJ2RCx (ORCPT
+        id S2390704AbfJ2RC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:02:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbfJ2RCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:02:53 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93AD520656;
-        Tue, 29 Oct 2019 17:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572368573;
-        bh=uRow4DFq01/iQXmseqOfm0lJg6W4SSyElcj46INIcUs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JxGocHmgHuhGaFAIOYYHZP6jO38X2g9p0rDpJrEy7DLJQ+M1Cr57XwP1R9DzHgUX+
-         /QcHgkWxbWBXlYSQoR+PP7mEpKUZrKuKnZfBolIILWAUnPQHOFPPm+7zTqB+H1UiD0
-         I2DR9s4009EVXChMlP+FyzhEabrMXQtaknEFpZk8=
-Date:   Tue, 29 Oct 2019 12:02:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Michael ." <keltoiboy@gmail.com>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Jeff <bluerocksaddles@willitsonline.com>,
-        Morgan Klym <moklym@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Philip Langdale <philipl@overt.org>,
-        Pierre Ossman <pierre@ossman.eu>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        linux-mmc@vger.kernel.org
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not
- working on Panasonic Toughbook CF-29]
-Message-ID: <20191029170250.GA43972@google.com>
+        Tue, 29 Oct 2019 13:02:58 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5220 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727279AbfJ2RC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 13:02:58 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A20CA818D8ED80AEB7C5;
+        Wed, 30 Oct 2019 01:02:53 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 30 Oct 2019 01:02:43 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH] blk-mq: Make blk_mq_run_hw_queue() return void
+Date:   Wed, 30 Oct 2019 00:59:30 +0800
+Message-ID: <1572368370-139412-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFjuqNihuEb4_5Lny5X7vA258c0ogemVg8pQ5Y_ANgOsqhSXhg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Ulf, Philip, Pierre, Maxim, linux-mmc; see [1] for beginning of
-thread, [2] for problem report and the patch Michael tested]
+Since commit 97889f9ac24f ("blk-mq: remove synchronize_rcu() from
+blk_mq_del_queue_tag_set()"), the return value of blk_mq_run_hw_queue()
+is never checked, so make it return void, which very marginally simplifies
+the code.
 
-On Tue, Oct 29, 2019 at 07:58:27PM +1100, Michael . wrote:
-> Bjorn and Dominik.
-> I am happy to let you know the patch did the trick, it compiled well
-> on 5.4-rc4 and my friends in the CC list have tested the modified
-> kernel and confirmed that both slots are now working as they should.
-> As a group of dedicated Toughbook users and Linux users please accept
-> our thanks your efforts and assistance is greatly appreciated.
-> 
-> Now that we know this patch works what kernel do you think it will be
-> released in? Will it make 5.4 or will it be put into 5.5 development
-> for further testing?
+Signed-off-by: John Garry <john.garry@huawei.com>
 
-That patch was not intended to be a fix; it was just to test my guess
-that the quirk might be related.
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index ec791156e9cc..8daa9740929a 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1486,7 +1486,7 @@ void blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, unsigned long msecs)
+ }
+ EXPORT_SYMBOL(blk_mq_delay_run_hw_queue);
+ 
+-bool blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async)
++void blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async)
+ {
+ 	int srcu_idx;
+ 	bool need_run;
+@@ -1504,12 +1504,8 @@ bool blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async)
+ 		blk_mq_hctx_has_pending(hctx);
+ 	hctx_unlock(hctx, srcu_idx);
+ 
+-	if (need_run) {
++	if (need_run)
+ 		__blk_mq_delay_run_hw_queue(hctx, async, 0);
+-		return true;
+-	}
+-
+-	return false;
+ }
+ EXPORT_SYMBOL(blk_mq_run_hw_queue);
+ 
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 0bf056de5cc3..c963038dfb92 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -324,7 +324,7 @@ void blk_mq_start_stopped_hw_queues(struct request_queue *q, bool async);
+ void blk_mq_quiesce_queue(struct request_queue *q);
+ void blk_mq_unquiesce_queue(struct request_queue *q);
+ void blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, unsigned long msecs);
+-bool blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async);
++void blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async);
+ void blk_mq_run_hw_queues(struct request_queue *q, bool async);
+ void blk_mq_tagset_busy_iter(struct blk_mq_tag_set *tagset,
+ 		busy_tag_iter_fn *fn, void *priv);
+-- 
+2.17.1
 
-Removing the quirk solved the problem *you're* seeing, but the quirk
-was added in the first place to solve some other problem, and if we
-simply remove the quirk, we may reintroduce the original problem.
-
-So we have to look at the history and figure out some way to solve
-both problems.  I cc'd some people who might have insight.  Here are
-some commits that look relevant:
-
-  5ae70296c85f ("mmc: Disabler for Ricoh MMC controller")
-  03cd8f7ebe0c ("ricoh_mmc: port from driver to pci quirk")
-
-
-[1] https://lore.kernel.org/r/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
-[2] https://lore.kernel.org/r/20191021160952.GA229204@google.com/
