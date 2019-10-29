@@ -2,133 +2,80 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853B4CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93DDCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64FC620856
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759F72086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:40:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hr2DbEaH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbfJ2Xj5 (ORCPT
+        id S1726414AbfJ2Xk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 19:39:57 -0400
-Received: from mga02.intel.com ([134.134.136.20]:29831 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfJ2Xj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 19:39:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 16:39:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
-   d="scan'208";a="199064667"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Oct 2019 16:39:54 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id 55E1A5803A5;
-        Tue, 29 Oct 2019 16:39:55 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v9 7/8] PCI/DPC: Clear AER registers in EDR mode
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-References: <20191029224842.GA121219@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <c68a0725-0e31-d140-eea9-5aa43d07b861@linux.intel.com>
-Date:   Tue, 29 Oct 2019 16:37:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 29 Oct 2019 19:40:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39351 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfJ2Xk4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 19:40:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p12so174853pgn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 16:40:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5wsNgUu1/P4JIurTC4HUnxDGW+gpw5nHaixpJkFjXGE=;
+        b=hr2DbEaH9zzg7pMEkglTzruFvr/G6SucWqIpEJXNa80aYseQ/mNno7XeeptqQLsBYF
+         Cptr8nRK6nskzlZeqMhWR0QHEmgkgjvBdZS03BTk47ssitfWG379IrAPNNFf9JTtCUBK
+         7BGc7K4WEWU5F6wQ63pegpyWy3/rH2tYlL30M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5wsNgUu1/P4JIurTC4HUnxDGW+gpw5nHaixpJkFjXGE=;
+        b=sQNCwmUg+HElyJq5Dh58TDtFIQyRD+K86/gqdrnHbDCTiCgPJzpht9BIWspJU2j+84
+         v1/v8wqCBdUwEmyDWVf6WyFGN6Z4gRsRmvq6Gfmgd+D2hIa17t1eARzXMZ1kxbkwGb6B
+         V2mEGLwwEyNLOfkUU8hoSaSmyF+QAqdHYZjmgH/KPXIt1o6X0Y7sKBJ7zrhxBi3+r/8a
+         kdumpl9dDWz1sr03iAOmyhGZ4GH2RGPr2dcoWucUPUEpPYiVVY2kJVjHfLwBm9y777/2
+         sgRSK0v3HsjHbLPIi9sFRSla2T59e/0q+3Yo6y0iynD1Fhu1kd8H5fQ3lB7HE0YoF360
+         rCDA==
+X-Gm-Message-State: APjAAAWtBI67E0Q74i6Kq8qOqYvWqBY5Oi24Rnh0IWa62gOXiiiX6Hax
+        PSagej/8k/fFe6xOR6vfgX1E2Q==
+X-Google-Smtp-Source: APXvYqyyFE5hvYmcxTbNJFzt5UcOMkXj9D0L0royyGvGrN8jqfXx6OS8jgHaYQhSxud/5j9vjsDIEQ==
+X-Received: by 2002:a63:d951:: with SMTP id e17mr20748592pgj.243.1572392455225;
+        Tue, 29 Oct 2019 16:40:55 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i17sm214510pfo.106.2019.10.29.16.40.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 16:40:54 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 16:40:53 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-mm@kvack.org, luto@kernel.org, peterz@infradead.org,
+        dave.hansen@intel.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, kristen@linux.intel.com,
+        deneen.t.dock@intel.com
+Subject: Re: [RFC PATCH 00/13] XOM for KVM guest userspace
+Message-ID: <201910291639.3C2631C@keescook>
+References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191029224842.GA121219@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 03, 2019 at 02:23:47PM -0700, Rick Edgecombe wrote:
+> larger follow on to this enables setting the kernel text as XO, but this is just
 
-On 10/29/19 3:48 PM, Bjorn Helgaas wrote:
-> On Tue, Oct 29, 2019 at 01:04:29PM -0700, Kuppuswamy Sathyanarayanan wrote:
->> On 10/28/19 4:27 PM, Bjorn Helgaas wrote:
->>> On Thu, Oct 03, 2019 at 04:39:03PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>
->>>> As per PCI firmware specification r3.2 Downstream Port Containment
->>>> Related Enhancements ECN,
->>> Specific reference, please, e.g., the section/table/figure of the PCI
->>> Firmware Spec being modified by the ECN.
->> Ok. I will include it.
->>>> OS is responsible for clearing the AER
->>>> registers in EDR mode. So clear AER registers in dpc_process_error()
->>>> function.
->>>>
->>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>> Acked-by: Keith Busch <keith.busch@intel.com>
->>>> ---
->>>>    drivers/pci/pcie/dpc.c | 4 ++++
->>>>    1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
->>>> index fafc55c00fe0..de2d892bc7c4 100644
->>>> --- a/drivers/pci/pcie/dpc.c
->>>> +++ b/drivers/pci/pcie/dpc.c
->>>> @@ -275,6 +275,10 @@ static void dpc_process_error(struct dpc_dev *dpc)
->>>>    		pci_aer_clear_fatal_status(pdev);
->>>>    	}
->>>> +	/* In EDR mode, OS is responsible for clearing AER registers */
->>>> +	if (dpc->firmware_dpc)
->>> I guess "EDR mode" is effectively the same as "firmware-first mode"?
->> Yes, EDR mode is an upgrade to FF mode in which firmware allows OS
->> to share some of it job by sending ACPI notification. If you don't
->> get ACPI notification, EDR mode is effectively same as FF mode.
-May be I can add some documentation in code to explain the EDR mode better.
-> Hmm, somehow the connection between FF and EDR needs to be clear from
-> the code, so people who weren't involved in the development of EDR and
-> don't even have access to the specs/ECNs can make sense out of this.
->
->>> At least, the only place we set "firmware_dpc = 1" is:
->>>
->>>     +       if (pcie_aer_get_firmware_first(pdev))
->>>     +               dpc->firmware_dpc = 1;
->>>
->>> If they're the same, why do we need two different names for it?
->> For better readability and performance, I tried to cache the value of
->> pcie_aer_get_firmware_first() result in DPC driver.
-> pcie_aer_get_firmware_first() already caches the value, so I don't
-> think you're gaining any useful performance here, and having two
-> different names *decreases* readability.
-Ok. I can replace "firmware_dpc" with pcie_aer_get_firmware_first() calls.
->
-> I do agree that pcie_aer_get_firmware_first() is not optimally
-> implemented.  I think we should probably look up the firmware-first
-> indication explicitly during enumeration so we don't have to bother
-> with the dev->__aer_firmware_first_valid thing.  And if we got rid of
-> all those leading underscores, it would probably run faster, too ;)
-I agree that pcie_aer_get_firmware_first() can be optimized. I can submit a
-patch for it once this patch set is merged.
->
->>>> +		pci_cleanup_aer_error_status_regs(pdev);
->>>> +
->>>>    	/*
->>>>    	 * Irrespective of whether the DPC event is triggered by
->>>>    	 * ERR_FATAL or ERR_NONFATAL, since the link is already down,
->>>> -- 
->>>> 2.21.0
->>>>
->> -- 
->> Sathyanarayanan Kuppuswamy
->> Linux kernel developer
->>
+Is the kernel side series visible somewhere public yet?
+
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
+Kees Cook
