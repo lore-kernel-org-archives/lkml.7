@@ -3,102 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAD2CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88D9CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D3320856
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9182087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="reO02uSb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZjxpuAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388253AbfJ2NNW (ORCPT
+        id S2388258AbfJ2NPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:13:22 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:17799 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388235AbfJ2NNW (ORCPT
+        Tue, 29 Oct 2019 09:15:31 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44586 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732534AbfJ2NPb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:13:22 -0400
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x9TDD9H7008016
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 22:13:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x9TDD9H7008016
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572354790;
-        bh=DFJCAzizH4g10ADI9Rn27rAUxoPMKfPEwBoru1VHVxA=;
-        h=From:Date:Subject:To:Cc:From;
-        b=reO02uSbAHEiFpcpuoY5UJNhpn0kLh5Dj2QO71BSTK3k3pwXlQDuuAtgPWtz3zNIH
-         NfPDCNagWGZDJY7oPXPs/Ps/0Pe/9cNig5HWLYrnpFiCtrm8o3GvrAT0ia1hlY9INT
-         MvuDMWB4G82zqXlOGIX8Ism57sfinIjk5fYGTDVh7Fh5gosTU+HyPx4Au2c+g6lSal
-         MNL6df8Hg+gKRg/3lAoTGrRZVUjMTMHQBuYEurTE2BvV4T95XenPDXPxgUliKdu//2
-         XuCoraRjAn5byjZm3heDx9pTKoAEr5L+HIIaGnjJO8SuCAE+4mGgkxEE5OBbOS+Wua
-         hMacoe4lqPsIQ==
-X-Nifty-SrcIP: [209.85.221.174]
-Received: by mail-vk1-f174.google.com with SMTP id g14so2846820vkl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 06:13:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAVJN7WFDAZlcBail+dSFwJmgpVXv510dG+rYUnJ9ZyBjz/Ijj8Z
-        ZKbfIp6RoULmSDLi0y6YDOowzegJhzpJH+jO22U=
-X-Google-Smtp-Source: APXvYqwSk5zozYtnYOUFkJt9J/Q7e7F+pJLQ82qQ4jKDaoYaSEYkYBruilGg08QiiaIIzCBMAtQodOEwwSp+lok8Esw=
-X-Received: by 2002:a1f:4b05:: with SMTP id y5mr11132787vka.12.1572354788616;
- Tue, 29 Oct 2019 06:13:08 -0700 (PDT)
+        Tue, 29 Oct 2019 09:15:31 -0400
+Received: by mail-lj1-f196.google.com with SMTP id c4so15200769lja.11;
+        Tue, 29 Oct 2019 06:15:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rQbCwQn4OcCXCHFwwmFatk+l/n8S/B77Id3xHHz9OsQ=;
+        b=hZjxpuAgz7brG/rgG0uL289gCvd0Rg+88SXtx9mT7soxurM5WbTxvC1hQ/lW/drlyR
+         wXm8QSuoxTtFS380W5cBhc+CWa6zdNldQWI5Z7iYoXnhFcTkJJoSWA/mUpPSTN9nILM2
+         o0hdPoyUu2RlEnrDpVfatezm1YRMLbsCb2kQZx1vd6xmo/sjU9ffvr+4tGMLGX1iBbgN
+         HjA33qGO4LaEfelPQxH0Qtm8nbxY2owSG3UliwWk9PLtpSyTCg70RiaotxwE5P/tTNNL
+         4/+BJck94WL0BsUuYjAzgaFG74yvXqKueQivrG3a/z+li8SYPnjsU+XJBvnrsz7rCPPp
+         xfZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rQbCwQn4OcCXCHFwwmFatk+l/n8S/B77Id3xHHz9OsQ=;
+        b=te4TVB5WNIjt1p5mD9DUQAIapDQueXDRZeVO0wmwFIRSoX4cOCCkLXNbe6fhlfULiW
+         FBDqUFFQSidDmxT3DjI6zyxmiVrgLTr1Wp1L0Fi/s6uTumjcc476mXAdF0i7TFO8iX6e
+         +kXeds1CU2XJ8CdiYWnRB5W9Gp1W4cxpub2UoWqCAuCY4uJzxWsW65fPzuCTnVVcxbjt
+         hvJxDbSmTlxjF+/4HaQVI5FKtwIyva5yMP9XyBYcEJCgmGkubx3l6gsIRu+srmpgTLrQ
+         rp4PIjwYJWNCD3pGDEbkofcs/73J/RzabYn74/HWwLzGgRJlcebWe7jU3LrPj/pxsTTs
+         4cIw==
+X-Gm-Message-State: APjAAAUQzQ1ouEfbMs02TXOwdnd3zUfnQrct9VZSV+Otmez35kE5slQr
+        itbPTBSvMDbstwyZLGWOjUR4sV2LItN1mymI6EA=
+X-Google-Smtp-Source: APXvYqyAwsBC9wzuv9VJycNb0BcgLvYOqtu9D89Ede9Rm7uVYGbmJDn/HV4nb+IlolpfBAIr7w5KPoyDEC0kHOBnxgk=
+X-Received: by 2002:a2e:819a:: with SMTP id e26mr2713781ljg.26.1572354929138;
+ Tue, 29 Oct 2019 06:15:29 -0700 (PDT)
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 29 Oct 2019 22:12:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ8Wi1zED0rYJhk9tYi5-jgCoyeHNtofvgKet4ZTzKFcA@mail.gmail.com>
-Message-ID: <CAK7LNAQ8Wi1zED0rYJhk9tYi5-jgCoyeHNtofvgKet4ZTzKFcA@mail.gmail.com>
-Subject: Warning message from 'make nsdeps' when namespace is lower cases
-To:     Matthias Maennich <maennich@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>
-Cc:     Coccinelle <cocci@systeme.lip6.fr>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1572343372-6303-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1572343372-6303-1-git-send-email-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 29 Oct 2019 10:15:31 -0300
+Message-ID: <CAOMZO5CnBCbM2uhDpgUgRVXkVsPTDw27CxZUp3+FMZi+7DH1XQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx7ulp-evk: Use APLL_PFD1 as usdhc's clock source
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Hi Anson,
 
-When I was playing with 'make nsdeps',
-I saw a new warning.
+On Tue, Oct 29, 2019 at 7:06 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> i.MX7ULP does NOT support runtime switching clock source for PCC,
+> APLL_PFD1 by default is usdhc's clock source, so just use it
+> in kernel to avoid below kernel dump during kernel boot up and
+> make sure kernel can boot up with SD root file-system.
+>
+> [    3.035892] Loading compiled-in X.509 certificates
+> [    3.136301] sdhci-esdhc-imx 40370000.mmc: Got CD GPIO
+> [    3.242886] mmc0: Reset 0x1 never completed.
+> [    3.247190] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> [    3.253751] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
+> [    3.260218] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000001
+> [    3.266775] mmc0: sdhci: Argument:  0x00009a64 | Trn mode: 0x00000000
+> [    3.273333] mmc0: sdhci: Present:   0x00088088 | Host ctl: 0x00000002
+> [    3.279794] mmc0: sdhci: Power:     0x00000000 | Blk gap:  0x00000080
+> [    3.286350] mmc0: sdhci: Wake-up:   0x00000008 | Clock:    0x0000007f
+> [    3.292901] mmc0: sdhci: Timeout:   0x0000008c | Int stat: 0x00000000
+> [    3.299364] mmc0: sdhci: Int enab:  0x007f010b | Sig enab: 0x00000000
+> [    3.305918] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00008402
+> [    3.312471] mmc0: sdhci: Caps:      0x07eb0000 | Caps_1:   0x0000b400
+> [    3.318934] mmc0: sdhci: Cmd:       0x0000113a | Max curr: 0x00ffffff
+> [    3.325488] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0039b37f
+> [    3.332040] mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
+> [    3.338501] mmc0: sdhci: Host ctl2: 0x00000000
+> [    3.343051] mmc0: sdhci: ============================================
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-If I rename USB_STORAGE to usb_storage,
-I see 'warning: line 15: should usb_storage be a metavariable?'
-Why? I think it comes from spatch.
-It should be technically OK to use either upper or lower cases
-for the namespace name.
+Thanks, with this patch applied I can get SD card rootfs to get mounted:
 
+Tested-by: Fabio Estevam <festevam@gmail.com>
 
-Just apply the following, and try 'make nsdeps'.
-
-
-diff --git a/drivers/usb/storage/Makefile b/drivers/usb/storage/Makefile
-index 46635fa4a340..6f817d65c26b 100644
---- a/drivers/usb/storage/Makefile
-+++ b/drivers/usb/storage/Makefile
-@@ -8,7 +8,7 @@
-
- ccflags-y := -I $(srctree)/drivers/scsi
-
--ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_STORAGE
-+ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=usb_storage
-
- obj-$(CONFIG_USB_UAS)          += uas.o
- obj-$(CONFIG_USB_STORAGE)      += usb-storage.o
-
-
-
-
-
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+I think this fix deserves a Fixes tag so that it can be backported to
+older kernels.
