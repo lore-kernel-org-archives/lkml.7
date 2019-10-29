@@ -2,50 +2,51 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEC9CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C554BCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E3E2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9042087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:48:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Pss4uR2X";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fzhTJJ3B"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q5oTSZFu";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="goYxoYfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbfJ2Rsc (ORCPT
+        id S1730168AbfJ2Rsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:48:32 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58462 "EHLO
+        Tue, 29 Oct 2019 13:48:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58756 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbfJ2Rsb (ORCPT
+        with ESMTP id S1726566AbfJ2Rsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:48:31 -0400
+        Tue, 29 Oct 2019 13:48:45 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 19A3A60E20; Tue, 29 Oct 2019 17:48:31 +0000 (UTC)
+        id 32BAA60F80; Tue, 29 Oct 2019 17:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572371311;
-        bh=O1zkui5yJKuNG0ziv1PZdCM5bIolIL/i4n+wVBNcTf8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Pss4uR2XOAHi+P6+iIsbJtklIy7LEdUwnUmMasEZgrreYsfVACoMYlhHuoaANeljS
-         MGSIQwdPld8yx3uo91+EgG8gWkzzsKMQs1TJ90ynJtCGROIRQM8agdJIPd9sIUaTD6
-         7zjM7iR/au4gY7RID+wk/eoNNPi6/P33fwTjTxYM=
+        s=default; t=1572371324;
+        bh=wTW5UT9BjcV80xvLwPWNZUfHLnwR2RR0wUUoX3TDoNo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q5oTSZFue6lmCfXoUTHu03ofP2olyxUjQHeEQJ/EjSdzCEsvfCSUbf3phqm1cXgo5
+         Wpjg56dp39nHFxc6MULN/YqlWVIk1TwfUUolU9YzykkWAJVxiAow6OaCPdWQO1eBoW
+         xaOX6rJUajNCmfwhhv0Te2njKxTsOwYkafanCzuU=
 Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1EDDB60D6F;
-        Tue, 29 Oct 2019 17:48:25 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BDDBA60F7B;
+        Tue, 29 Oct 2019 17:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572371310;
-        bh=O1zkui5yJKuNG0ziv1PZdCM5bIolIL/i4n+wVBNcTf8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fzhTJJ3BfFJIqC90U723NKKkxr+T8PTAvCjzUYcm/4yFeor7SPdhKDuBpEN6VKkz4
-         b4XnpFFrK2i+VNA1YCsIKmnGsjyNdns0ktlZOBuMQTsjn9llSWi2ZfBMdqDehO6/E1
-         YTNtXU/fFRqPjB85CfA8zpFw/b0q0TXKHhuH3yFg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1EDDB60D6F
+        s=default; t=1572371322;
+        bh=wTW5UT9BjcV80xvLwPWNZUfHLnwR2RR0wUUoX3TDoNo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=goYxoYfRDg76wigGCEIXg1Lzoeoa/YpmHp06iOPmSKqwQ3Mb8/gi/krQJTPj3lha7
+         tXifbCtxq/t4ioHZY6qCoCaCKpBIEiBO0MN7RKcAzREa784xrSxzMS14fnjRIAIBJ2
+         HwbpcngL0OWz2U+VFHxJmjZZPM8poy+EzCz9xuQ8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BDDBA60F7B
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
 From:   Taniya Das <tdas@codeaurora.org>
@@ -57,35 +58,37 @@ Cc:     David Brown <david.brown@linaro.org>,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
         Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v2 0/3] Add support for RPMHCC for SC7180
-Date:   Tue, 29 Oct 2019 23:18:16 +0530
-Message-Id: <1572371299-16774-1-git-send-email-tdas@codeaurora.org>
+Subject: [PATCH v2 2/3] dt-bindings: clock: Introduce RPMHCC bindings for SC7180
+Date:   Tue, 29 Oct 2019 23:18:18 +0530
+Message-Id: <1572371299-16774-3-git-send-email-tdas@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572371299-16774-1-git-send-email-tdas@codeaurora.org>
+References: <1572371299-16774-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[v2]
- * Fix indentation issues in YAML Documentation.
+Add compatible for SC7180 RPMHCC.
 
-[v1]
- * Update the Documentation binding of RPMHCC to YAML schemas.
- * Add RPMH clocks required to be supported on SC7180.
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Taniya Das (3):
-  dt-bindings: clock: Add YAML schemas for the QCOM RPMHCC clock
-    bindings
-  dt-bindings: clock: Introduce RPMHCC bindings for SC7180
-  clk: qcom: clk-rpmh: Add support for RPMHCC for SC7180
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+index f25d76f..feed637 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+@@ -19,6 +19,7 @@ properties:
+     enum:
+       - qcom,sdm845-rpmh-clk
+       - qcom,sm8150-rpmh-clk
++      - qcom,sc7180-rpmh-clk
 
- .../devicetree/bindings/clock/qcom,rpmh-clk.txt    | 27 ------------
- .../devicetree/bindings/clock/qcom,rpmhcc.yaml     | 49 ++++++++++++++++++++++
- drivers/clk/qcom/clk-rpmh.c                        | 19 +++++++++
- 3 files changed, 68 insertions(+), 27 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-
+   clocks:
+     maxItems: 1
 --
 Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
 of the Code Aurora Forum, hosted by the  Linux Foundation.
