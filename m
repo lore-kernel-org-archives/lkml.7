@@ -2,125 +2,143 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B78ACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE98CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B902067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE762067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:09:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tH1vqV7j"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KUSJJ6Yq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390710AbfJ2RJB (ORCPT
+        id S2390761AbfJ2RJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:09:01 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41539 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727692AbfJ2RJB (ORCPT
+        Tue, 29 Oct 2019 13:09:48 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46599 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390716AbfJ2RJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:09:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id p26so5878479pfq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:08:59 -0700 (PDT)
+        Tue, 29 Oct 2019 13:09:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id w8so11607197lji.13
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=aoq6jyjkoC3LpN2Vxb6LSXbZ7+YI0W6uo+6lRedmGDE=;
-        b=tH1vqV7j2AqRq678Xfjq3gRUPwBGXd8w1sEUZwdL9SAx56yGie9zKFY8TI/UUNvK+Z
-         mHGRXsyubOzva7SVlwrAlyjrtlkvn2ryMDjR6fs01Bfv8yKZOS2KNVvYqHzcIFvW9zX0
-         CXcOWcGOhh6vbAa/xPZPvHKByOFDfTtaQxT/4+zwnOHBJ1cLjDdVBaX8sRm1fWV0nfbW
-         G63MtcQWbN44+cB/XV+w4a780UjE3Sk9Xlugk+qudl7qAVmnC6u7oP1fftT87lUMwowQ
-         6/zdg/TB0USvZlBBq5kFcN8sFgFXZDP5gt4pHBri8zevrZwDj7pfBrM3kKj9TFj89+6+
-         CZlA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K88yaieKvcCeNpugsGLmfxIwpDDi0ZtEXOdEH+qf0fA=;
+        b=KUSJJ6YqudPa6QLkK/BK60Zl842G3MRsmv2DW5kvVHh4p/kDenZrhnrEbOmPdTzvgw
+         I8q1/6MQu6/LALbcoU8JqLT1S4P2VX78KCleLVqTouQ0Yep8qgOoUplT/Aed8C3clRzT
+         m577opm7GhHFmdRVSaPLRsdevIt0u8rs4iJXrxs+edkSysqasOxDGMu/VbTZXc0Yn9+d
+         VvOSHMNffEegB9CJmgKqrdO1UX29UB+Im+zXSj771bYCexPVTJb4ZHUleCOsl/7IGvj3
+         D6Yc7zFZhHKDNA/gTRqyTeiOppfjROeADIOrgchGq06tNoigUixu7W0712Zs9nGPCrY9
+         U95w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=aoq6jyjkoC3LpN2Vxb6LSXbZ7+YI0W6uo+6lRedmGDE=;
-        b=PUSeJ5FnND1TWuwRdByDODqWeNmpN4HclnbiRYDdT7IQzm8jk1axpN/t1Z6UDogEww
-         IEh8EUR+7l/aueJMLw72qL1J7f+mhDeCLjNMm5wg/KjcL11lkhkkgZMJIiV5dlvDTadL
-         Bol9mAHlmM4e5pJJeRe2PgJUWKlUMrVt73AY5norJoO8gWxeZ4j2p0hStdwJ8DyUWBBr
-         alnDnD40VfMafCkg7LDlMjgAvc9x9o2Y4/Doxe0uj50fHs46Ff1A1ZGCcwNPG7F0Crlu
-         4jRUi3ye+3rimdUJXKq+l2oTNJbGXMzs8dUpDq4E8awtmqgqEHQiZYUQ3wWeNV/QKo5M
-         LPzQ==
-X-Gm-Message-State: APjAAAX9KECGGcAYMgjMrZVVGSR5lNkZOaAYqkITszksAZbg2+wmakQy
-        ceenBRPOmpBmOeR9PurnZlE=
-X-Google-Smtp-Source: APXvYqzTkzwJ0BXcf4IXcjo6Y78qFVRs5sX4tLnGbhmCgxWUiKRqBDt8mz1dGXIVGLdT2IDSgeSRyQ==
-X-Received: by 2002:a63:2d81:: with SMTP id t123mr28815254pgt.306.1572368939385;
-        Tue, 29 Oct 2019 10:08:59 -0700 (PDT)
-Received: from saurav ([117.232.226.35])
-        by smtp.gmail.com with ESMTPSA id o12sm13253177pgl.86.2019.10.29.10.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 10:08:57 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 22:38:49 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     joern@lazybastard.org, dwmw2@infradead.org,
-        computersforpeace@gmail.com, marek.vasut@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH v1] mtd: devices: phram.c: Fix multiple kfree statement from
- phram_setup
-Message-ID: <20191029170849.GA6279@saurav>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K88yaieKvcCeNpugsGLmfxIwpDDi0ZtEXOdEH+qf0fA=;
+        b=INUNyR83OFOL6vjTlkInXImLnl9UyZs1oJGCmkbgPlYNVfb/0eE5iAxdKe7M4TQTI4
+         A71jQicC+YHWsOAHv17A0zXs69EO6M7s93MpgxDBJ7KcFhSJJHRZqGcwgtW9ZjqtEduq
+         KEaAnS6XA7LSAgcb/qS8fUrFIYbbFoeGjYQDwCwZkv+7d0/XicgNTakrRNuffWfPO5xI
+         0F+lMREnpJ9ZKJt+CLYmyPYrdzv/ISpXXo2wN1FNiKxeOVqEwfvb3jy4rPYbmcFZ6nBy
+         DAWoDP5G+r4NuXzabfbUZt4OvsXHEKE2ovPSVgBOLg7OiVqGQXTuOrDN5gC0mNSrh/eD
+         UorQ==
+X-Gm-Message-State: APjAAAX4PtgIPvfvIf0IKB8Z+rn+ZZLmyP4c5XfiklVAnXvuZ4ghK2ew
+        ZEiP69f35PeueSd88S9vugnVKqV5taHqxqhfO+LpHA==
+X-Google-Smtp-Source: APXvYqyJcslMrIOGNYE0X47a9sPVBXQLcpeAkCnxS1526iUdAKdcOTDZhZpnoBc4H7DFjrEOMOciu/zXkA+EWlIXABY=
+X-Received: by 2002:a2e:96c1:: with SMTP id d1mr3590291ljj.87.1572368985549;
+ Tue, 29 Oct 2019 10:09:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1572018904-5234-1-git-send-email-dsmythies@telus.net>
+ <CAKfTPtDFAS3TiNaaPoEXFZbqdMt_-tfGm9ffVcQAN=Mu_KbRdQ@mail.gmail.com>
+ <000c01d58bca$f5709b30$e051d190$@net> <CAKfTPtDx6nu7YtYN=JLRAseZS3Q6Nt-QdMQuG_XoUtmtR_101A@mail.gmail.com>
+ <001201d58e68$eaa39630$bfeac290$@net> <20191029153615.GP4114@hirez.programming.kicks-ass.net>
+ <CAKfTPtD79VE+gqffpBAGd39bJKe7ao+jbmVSQ7PtS=dky0Wx6g@mail.gmail.com>
+ <20191029164955.GO4131@hirez.programming.kicks-ass.net> <CAKfTPtDByO5xZaA1zHb-0WLq3PaodByfbnH0RkJjf+jn0O81-Q@mail.gmail.com>
+In-Reply-To: <CAKfTPtDByO5xZaA1zHb-0WLq3PaodByfbnH0RkJjf+jn0O81-Q@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 29 Oct 2019 18:09:34 +0100
+Message-ID: <CAKfTPtD-MD74Je7R1eURfrusCci9xt4dPVE0YLuAN4jWXcdEog@mail.gmail.com>
+Subject: Re: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load
+ balancing path"
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Doug Smythies <dsmythies@telus.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Rik van Riel <riel@surriel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove multiple kfree statement from phram_setup() in phram.c
+On Tue, 29 Oct 2019 at 18:00, Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+>
+> On Tue, 29 Oct 2019 at 17:50, Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Tue, Oct 29, 2019 at 05:20:56PM +0100, Vincent Guittot wrote:
+> > > On Tue, 29 Oct 2019 at 16:36, Peter Zijlstra <peterz@infradead.org> wrote:
+> > > >
+> > > > On Tue, Oct 29, 2019 at 07:55:26AM -0700, Doug Smythies wrote:
+> > > >
+> > > > > I only know that the call to the intel_pstate driver doesn't
+> > > > > happen, and that it is because cfs_rq_is_decayed returns TRUE.
+> > > > > So, I am asserting that the request is not actually decayed, and
+> > > > > should not have been deleted.
+> > > >
+> > > > So what cfs_rq_is_decayed() does is allow a cgroup's cfs_rq to be
+> > > > removed from the list.
+> > > >
+> > > > Once it is removed, that cfs_rq will no longer be checked in the
+> > > > update_blocked_averages() loop. Which means done has less chance of
+> > > > getting false. Which in turn means that it's more likely
+> > > > rq->has_blocked_load becomes 0.
+> > > >
+> > > > Which all sounds good.
+> > > >
+> > > > Can you please trace what keeps the CPU awake?
+> > >
+> > > I think that the sequence below is what intel pstate driver was using
+> > >
+> > > rt/dl task wakes up and run for some times
+> > > rt/dl pelt signal is no more null so periodic decay happens.
+> > >
+> > > before optimization update_cfs_rq_load_avg() for root cfs_rq was
+> > > called even if pelt was null,
+> > > which calls cfs_rq_util_change,  which calls intel pstate
+> > >
+> > > after optimization its no more called.
+> >
+> > Not calling cfs_rq_util_change() when it doesn't change, seems like the
+> > right thing. Why would intel_pstate want it called when it doesn't
+> > change?
+>
+> Yes I agree
+>
+> My original thought was that either irq/rt ordl pelt signals was used
+> to set frequency and it needs to be called to decrease this freq while
+> pelt signals was decaying but it doesn't seem to use it but only needs
+> to be called from time to time
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
+Apart from Doug's problem, we have 2 possible problems with the
+current update_blocked_averages()
+1- irq, dl and rt are updated after cfs but it is the cfs update that
+will call schedutil for updating the frequency which means that this
+is done with old irq/rt/dl value. we should change the order and start
+with irq/rt and dl
+2- when cfs is null but not irq/rt or dl, we decay the values but we
+never call schedutil to update the freq accordingly. The impact is
+probably minimal because only irq and timer can really run without
+call schedutil to update frequency but this can happen.
 
-Change in v1:
-
-- Add change suggested by Miquel Raynal <miquel.raynal@bootlin.com>
-  "The goto statement should not describe from where it is called but the
-   action it is supposed to take. 'goto free_nam;' would be better."
-
- drivers/mtd/devices/phram.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
-index c467286ca007..38f95a1517ac 100644
---- a/drivers/mtd/devices/phram.c
-+++ b/drivers/mtd/devices/phram.c
-@@ -243,22 +243,22 @@ static int phram_setup(const char *val)
- 
- 	ret = parse_num64(&start, token[1]);
- 	if (ret) {
--		kfree(name);
- 		parse_err("illegal start address\n");
-+		goto free_nam;
- 	}
- 
- 	ret = parse_num64(&len, token[2]);
- 	if (ret) {
--		kfree(name);
- 		parse_err("illegal device length\n");
-+		goto free_nam;
- 	}
- 
- 	ret = register_device(name, start, len);
- 	if (!ret)
- 		pr_info("%s device: %#llx at %#llx\n", name, len, start);
--	else
--		kfree(name);
- 
-+free_nam:
-+	kfree(name);
- 	return ret;
- }
- 
--- 
-2.20.1
-
+I'm going to prepare some patches
