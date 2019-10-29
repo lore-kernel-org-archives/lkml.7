@@ -2,196 +2,220 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFF1CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2001ECA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1857F2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF492086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sz7tDBub"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gwt98Ew4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbfJ2R7P (ORCPT
+        id S1730180AbfJ2R7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:59:15 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36282 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfJ2R7P (ORCPT
+        Tue, 29 Oct 2019 13:59:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46354 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbfJ2R7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:59:15 -0400
-Received: by mail-ed1-f65.google.com with SMTP id bm15so11468559edb.3;
-        Tue, 29 Oct 2019 10:59:13 -0700 (PDT)
+        Tue, 29 Oct 2019 13:59:45 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b25so10091179pfi.13
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:59:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vtkybI0/lDodgOpmR/uxPbwhX9qmhMQCPdvVmWENPGs=;
-        b=Sz7tDBubw8TLcrmtEfxCBVcc47cAwfvdCYzv60vloHxiUQylDqWyhVi/IJ3doFwy5D
-         4mN2KPDxw9FX7eMzdGv3sI7ZWO17GDLFb8PvWnaTsFpzAoWP7NkdUwnr1AFHvjdP8hku
-         R1tH4fEVhLwCi3XIFOKrMbKExq/r4ZIZ/FSrUKsOYgNDq124Q756mKI84tGe+LAZ9HJ/
-         bHAdiUgUdKhmDOI25Vf1h3tQlwvDZwyLcARmaWRgvM1zYFCTTekHnIgmWMCdEKdEtcMo
-         44fgG9px15vs/5mnXoANdYfn0IWFv1PGZg9JzPu2cdj9hN4tPBiDvExN54mSvUa2KjDz
-         yoKA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AsoiGZKW+OqSEUM2BahaMp4C8ROBZZo7pbBqc7c5IoY=;
+        b=gwt98Ew45lXCW2YV2/I3bWQ4zvrHu0m+IZ7O0JEwsd9HVb1kAdSGa+x5T7K1JYImBj
+         QsMUpABd4v2TcLRFRF2K7J+DLPvjigzE+Kd1r8BgkwR9X9lFlQasXgm1UFjd4+UtbYev
+         nClhV0y6tVY3X3ye12q/ST2pm5gTtrn3c3zCk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=vtkybI0/lDodgOpmR/uxPbwhX9qmhMQCPdvVmWENPGs=;
-        b=Km3LrSbFGjg0IFio80q/vHcdA255jyJ00K1mxe7HxtizQiWpApuMyNBojoYfb78PQt
-         L5nso0U/950nt9GXWfvuNiJaC3ED7H/K4TZ/zGZEKhJHqA8+xE+0LVLJHcIdpgpUZZDc
-         ZtxuOTrvBZ+4Q2esRl4VtTxpx+AaikiFTSd1S+RIsjeI5BGkXOkBWooKEX2BnE76rqdf
-         rRvA4htlKMaF0kv6hQIr76FSaN3+p/uIqkUvrnFNq/cy3OyM7auQBChbePg65/64NzNt
-         pezvtDYfZ+HVFG1S8hDe6JXmFkuceYAwBkmoL4uRQRLAPcpvd2G7vjPy2oPmGNwZJtjK
-         Comw==
-X-Gm-Message-State: APjAAAVIMnum7fGfbhA7hMjz4FxManb8pOx3mT6hfbj5FiLgnLXeMbJ0
-        VbZOF9CGGGqo7JcEAuuwFsg=
-X-Google-Smtp-Source: APXvYqw/lROTgvOeZRiNkBEwjjN+y8ZiFN4/tDCom7Cc73977G0rScnP2kZba5tbrjvgP5VxE2zrXg==
-X-Received: by 2002:aa7:cd01:: with SMTP id b1mr27284800edw.122.1572371952820;
-        Tue, 29 Oct 2019 10:59:12 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id r2sm546024edo.0.2019.10.29.10.59.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 10:59:11 -0700 (PDT)
-Subject: Re: [PATCH 0/3] net: phy: initialize PHYs via device tree properties
-To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20191029174819.3502-1-michael@walle.cc>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <519d52d2-cd83-b544-591b-ca9d9bb16dfa@gmail.com>
-Date:   Tue, 29 Oct 2019 10:59:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AsoiGZKW+OqSEUM2BahaMp4C8ROBZZo7pbBqc7c5IoY=;
+        b=bYgLQbXvBYD7pq0A0fKdihAr2Le25ad/GWy1eG/0SDuTD++hKvVaUPRccAJ/P4HlUH
+         +S8FgPd2tV1u8OlSa6B8kaolcVa04XvYHx8w3+c96vnTsoSib6XxtIl8Q7Tvi2Kpux0o
+         g8gz/i6rHwZvzaq848+E2DoYGjjtfwnlQrvc6RoLP/3bPq+s9LnLvhDVN2UiyDw+zcLO
+         jiUo9dGRPw6zhLqfoIeVdEHhx56h3RSZQSMaCaORpBiwkc+uHHHuhyh0pr4Ju2qJJyIW
+         u/wToU2tfhu+FhIdLXeNcScBY1IalnU9/Hnh1Cl8y1Qe6nMDFNzKDVRfs9HhSaV9TXE9
+         YVOg==
+X-Gm-Message-State: APjAAAW08WBxwsAfe+2IrdiDvx6oM1TzJFPAVy+qnnuGIwHYxR+BhwvB
+        SFct8zK3eFTswvgNngpSsX7XlQ==
+X-Google-Smtp-Source: APXvYqyhd6lfJcwRB3IVS+q7cVKEl2P/kuaUowk2m+KybBeCZJsxB5Kxqnys7De0gpcM+C0S4Qy8Qg==
+X-Received: by 2002:a63:1f09:: with SMTP id f9mr17384729pgf.89.1572371984790;
+        Tue, 29 Oct 2019 10:59:44 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id h25sm2097696pfn.47.2019.10.29.10.59.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Oct 2019 10:59:43 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 10:59:41 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?utf-8?B?wqA=?= <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v4 5/5] clk: qcom: Add Global Clock controller (GCC)
+ driver for SC7180
+Message-ID: <20191029175941.GA27773@google.com>
+References: <20191014102308.27441-1-tdas@codeaurora.org>
+ <20191014102308.27441-6-tdas@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20191029174819.3502-1-michael@walle.cc>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20191014102308.27441-6-tdas@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/29/19 10:48 AM, Michael Walle wrote:
-> I was trying to configure the Atheros PHY for my board. There are fixups
-> all over the place, for example to enable the 125MHz clock output in almost
-> any i.MX architecture. Instead of adding another fixup in architecture
-> specific code, try to provide a generic way to init the PHY registers.
+Hi Taniya,
+
+On Mon, Oct 14, 2019 at 03:53:08PM +0530, Taniya Das wrote:
+> Add support for the global clock controller found on SC7180
+> based devices. This should allow most non-multimedia device
+> drivers to probe and control their clocks.
 > 
-> This patch series tries to pick up the "broadcom,reg-init" and
-> "marvell,reg-init" device tree properties idea and make it a more generic
-> "reg-init" which is handled by phy_device instead of a particular phy
-> driver.
-
-These two examples are actually quite bad and were symptomatic of a few
-things at the time:
-
-- rush to get a specific feature/device supported without thinking about
-the big picture
-- lack of appropriate review on the Device Tree bindings
-
-Fortunately, the last item is now not happening anymore.
-
-The problem with letting that approach go through is that the Device
-Tree can now hold a configuration policy which is passed through as-is
-from DT to the PHY device, this is bad on so many different levels,
-starting with abstraction.
-
-If all you need is to enable a particular clock, introduce device
-specific properties that describe the hardware, and make the necessary
-change to the local driver that needs to act on those. You can always
-define a more generic scope property if you see a recurring pattern.
-
-So just to be clear on the current approach: NACK.
-
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/clk/qcom/Kconfig      |    9 +
+>  drivers/clk/qcom/Makefile     |    1 +
+>  drivers/clk/qcom/gcc-sc7180.c | 2450 +++++++++++++++++++++++++++++++++
+>  3 files changed, 2460 insertions(+)
+>  create mode 100644 drivers/clk/qcom/gcc-sc7180.c
 > 
-> Michael Walle (3):
->   dt-bindings: net: phy: Add reg-init property
->   net: phy: export __phy_{read|write}_page
->   net: phy: Use device tree properties to initialize any PHYs
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 32dbb4f09492..91706d88eeeb 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -227,6 +227,15 @@ config QCS_GCC_404
+>  	  Say Y if you want to use multimedia devices or peripheral
+>  	  devices such as UART, SPI, I2C, USB, SD/eMMC, PCIe etc.
 > 
->  .../devicetree/bindings/net/ethernet-phy.yaml | 31 ++++++
->  MAINTAINERS                                   |  1 +
->  drivers/net/phy/phy-core.c                    | 24 ++++-
->  drivers/net/phy/phy_device.c                  | 97 ++++++++++++++++++-
->  include/dt-bindings/net/phy.h                 | 18 ++++
->  include/linux/phy.h                           |  2 +
->  6 files changed, 170 insertions(+), 3 deletions(-)
->  create mode 100644 include/dt-bindings/net/phy.h
-> 
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> 
+> +config SC_GCC_7180
+> +	tristate "SC7180 Global Clock Controller"
+> +	select QCOM_GDSC
+> +	depends on COMMON_CLK_QCOM
+> +	help
+> +	  Support for the global clock controller on SC7180 devices.
+> +	  Say Y if you want to use peripheral devices such as UART, SPI,
+> +	  I2C, USB, UFS, SDCC, etc.
+> +
+>  config SDM_CAMCC_845
+>  	tristate "SDM845 Camera Clock Controller"
+>  	select SDM_GCC_845
+> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+> index 4a813b4055d0..6fb356a0bbf5 100644
+> --- a/drivers/clk/qcom/Makefile
+> +++ b/drivers/clk/qcom/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_QCOM_CLK_RPMH) += clk-rpmh.o
+>  obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
+>  obj-$(CONFIG_QCS_GCC_404) += gcc-qcs404.o
+>  obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
+> +obj-$(CONFIG_SC_GCC_7180) += gcc-sc7180.o
+>  obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
+>  obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
+>  obj-$(CONFIG_SDM_GCC_660) += gcc-sdm660.o
+> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+> new file mode 100644
+> index 000000000000..38424e63bcae
+> --- /dev/null
+> +++ b/drivers/clk/qcom/gcc-sc7180.c
+>
+> +static struct clk_hw *gcc_sc7180_hws[] = {
+> +	[GCC_GPLL0_MAIN_DIV_CDIV] = &gcc_pll0_main_div_cdiv.hw,
+> +};
+> +
+> +static struct clk_regmap *gcc_sc7180_clocks[] = {
+> +	[GCC_AGGRE_UFS_PHY_AXI_CLK] = &gcc_aggre_ufs_phy_axi_clk.clkr,
+> +	[GCC_AGGRE_USB3_PRIM_AXI_CLK] = &gcc_aggre_usb3_prim_axi_clk.clkr,
+> +	[GCC_BOOT_ROM_AHB_CLK] = &gcc_boot_rom_ahb_clk.clkr,
+> +	[GCC_CAMERA_AHB_CLK] = &gcc_camera_ahb_clk.clkr,
+> +	[GCC_CAMERA_HF_AXI_CLK] = &gcc_camera_hf_axi_clk.clkr,
+> +	[GCC_CAMERA_THROTTLE_HF_AXI_CLK] = &gcc_camera_throttle_hf_axi_clk.clkr,
+> +	[GCC_CAMERA_XO_CLK] = &gcc_camera_xo_clk.clkr,
+> +	[GCC_CE1_AHB_CLK] = &gcc_ce1_ahb_clk.clkr,
+> +	[GCC_CE1_AXI_CLK] = &gcc_ce1_axi_clk.clkr,
+> +	[GCC_CE1_CLK] = &gcc_ce1_clk.clkr,
+> +	[GCC_CFG_NOC_USB3_PRIM_AXI_CLK] = &gcc_cfg_noc_usb3_prim_axi_clk.clkr,
+> +	[GCC_CPUSS_AHB_CLK] = &gcc_cpuss_ahb_clk.clkr,
+> +	[GCC_CPUSS_AHB_CLK_SRC] = &gcc_cpuss_ahb_clk_src.clkr,
+> +	[GCC_CPUSS_RBCPR_CLK] = &gcc_cpuss_rbcpr_clk.clkr,
+> +	[GCC_DDRSS_GPU_AXI_CLK] = &gcc_ddrss_gpu_axi_clk.clkr,
 
+v3 also had
 
--- 
-Florian
++	[GCC_DISP_AHB_CLK] = &gcc_disp_ahb_clk.clkr,
+
+Removing it makes the dpu_mdss driver unhappy:
+
+[    2.999855] dpu_mdss_enable+0x2c/0x58->msm_dss_enable_clk: 'iface' is not available
+
+because:
+
+        mdss: mdss@ae00000 {
+    	        ...
+
+ =>             clocks = <&gcc GCC_DISP_AHB_CLK>,
+                         <&gcc GCC_DISP_HF_AXI_CLK>,
+                         <&dispcc DISP_CC_MDSS_MDP_CLK>;
+                clock-names = "iface", "gcc_bus", "core";
+	};
+
+More clocks were removed in v4:
+
+-       [GCC_CPUSS_GNOC_CLK] = &gcc_cpuss_gnoc_clk.clkr,
+-       [GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
+-       [GCC_VIDEO_AHB_CLK] = &gcc_video_ahb_clk.clkr,
+
+I guess this part of "remove registering the CRITICAL clocks to clock provider
+and leave them always ON from the GCC probe." (change log entry), but are you
+sure nobody is going to reference these clocks?
+
+> +static int gcc_sc7180_probe(struct platform_device *pdev)
+> +{
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	regmap = qcom_cc_map(pdev, &gcc_sc7180_desc);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	/*
+> +	 * Disable the GPLL0 active input to MM blocks, NPU
+> +	 * and GPU via MISC registers.
+> +	 */
+> +	regmap_update_bits(regmap, 0x09ffc, 0x3, 0x3);
+> +	regmap_update_bits(regmap, 0x4d110, 0x3, 0x3);
+> +	regmap_update_bits(regmap, 0x71028, 0x3, 0x3);
+
+In v3 this was:
+
+	regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
+	regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
+	regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
+
+IMO register names seem preferable, why switch to literal addresses
+instead?
+
+> +
+> +	/*
+> +	 * Keep the clocks always-ON
+> +	 * GCC_CPUSS_GNOC_CLK, GCC_VIDEO_AHB_CLK, GCC_DISP_AHB_CLK
+> +	 * GCC_GPU_CFG_AHB_CLK
+> +	 */
+> +	regmap_update_bits(regmap, 0x48004, BIT(0), BIT(0));
+> +	regmap_update_bits(regmap, 0x0b004, BIT(0), BIT(0));
+> +	regmap_update_bits(regmap, 0x0b00c, BIT(0), BIT(0));
+> +	regmap_update_bits(regmap, 0x71004, BIT(0), BIT(0));
+
+ditto, register names seem preferable.
