@@ -2,118 +2,192 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6415CCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B512CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D23021734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF8921734
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572386973;
+	bh=hieFePDop4jUkl4zAyp0/R7xFf26jbWuq6GxxUsht2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jOC4UqQhpkWXdlJwBKamaEmct9/5snzpVOwUkosq8xePxJsGrihwAKN7EGifq8iI4
+	 eMOQqpC7gNKjF4tcWZN9EhLGxWDrsWnSmimvM06nhi3IqpYyNRQH4Num9KDhjxKC6j
+	 B6bUgyvPUh2JgTC+kgkreXinTQwESumlTyBQLabk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfJ2WJP (ORCPT
+        id S1727654AbfJ2WJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:09:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14488 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725867AbfJ2WJO (ORCPT
+        Tue, 29 Oct 2019 18:09:31 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45465 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfJ2WJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:09:14 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9TM37IZ068340;
-        Tue, 29 Oct 2019 18:09:13 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vxwnegg0p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 18:09:13 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9TM7n0b108292;
-        Tue, 29 Oct 2019 18:09:12 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vxwnegg08-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 18:09:12 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9TM8YAE009965;
-        Tue, 29 Oct 2019 22:09:11 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma05wdc.us.ibm.com with ESMTP id 2vxwh5r5vm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 22:09:11 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9TM99SQ33620394
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 22:09:09 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6CBEAE48A;
-        Tue, 29 Oct 2019 22:09:09 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6334EAE487;
-        Tue, 29 Oct 2019 22:09:09 +0000 (GMT)
-Received: from akrowiak-ThinkPad-P50.endicott.ibm.com (unknown [9.60.75.238])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Tue, 29 Oct 2019 22:09:09 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, freude@linux.ibm.com, cohuck@redhat.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        jjherne@linux.ibm.com, aekrowia <akrowiak@linux.ibm.com>
-Subject: [PATCH] s390: vfio-ap: disable IRQ in remove callback results in kernel OOPS
-Date:   Tue, 29 Oct 2019 18:09:06 -0400
-Message-Id: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910290190
+        Tue, 29 Oct 2019 18:09:31 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 41so289167oti.12;
+        Tue, 29 Oct 2019 15:09:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BNHkx8n6XgkuYXTB/UGGaZ4IcfSgm5oAYgTMsZynWPI=;
+        b=Q/5tMDOcmpBkVEaM7VdH3JYNjgZfXbjU6hYx9gv9yv/Vupw2XqxxOZtqTxkYaivF1f
+         wxd0N01OE+y5yPO3691u5fOTYLGqUxqvI5JgRCEPPexQBrT/hE7RrhZU6wDZCqNM2c2u
+         wEjmyVsn+u8wRxynzl2kAni4lnuzXU/S3tDSXWyGMUNiNAx/mssMBq5AUy080RyTRm6H
+         NgQut/J3cIU3LC0ofjppQtgP+XdD/pX83yfovIKgQXZx8iXHvGH1+0HfmZxjqpFqwaP9
+         xWO3l7HMan9m88JjXncIqJtav/z91zqFcTKE8gLgjf9V7CrRGiRZoGaZAAIVzPVa85m3
+         mQNQ==
+X-Gm-Message-State: APjAAAW+F8M57j6azzjvEvkzw7ZvC7ZlHnjJydwe6pgPOpy5nzoISMNc
+        RxDFWRZSPsIN/ltHiBvYaQ==
+X-Google-Smtp-Source: APXvYqxMzw9qF2YULgqtHqHTTivgKGofmqDJrOGVSt7uKu4vVNlqhTlrWxRSC/VX7gh5qb/B7miCDQ==
+X-Received: by 2002:a05:6830:1403:: with SMTP id v3mr20312857otp.300.1572386970124;
+        Tue, 29 Oct 2019 15:09:30 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q28sm92226otc.77.2019.10.29.15.09.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 15:09:29 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 17:09:28 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, sakari.ailus@iki.fi,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191029220928.GA17996@bogus>
+References: <20191025175908.14260-1-manivannan.sadhasivam@linaro.org>
+ <20191025175908.14260-2-manivannan.sadhasivam@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025175908.14260-2-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: aekrowia <akrowiak@linux.ibm.com>
+On Fri, Oct 25, 2019 at 11:29:07PM +0530, Manivannan Sadhasivam wrote:
+> Add YAML devicetree binding for IMX296 CMOS image sensor.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../devicetree/bindings/media/i2c/imx296.yaml | 98 +++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> new file mode 100644
+> index 000000000000..4e204fd7cf90
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> @@ -0,0 +1,98 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> +
+> +maintainers:
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +description: |-
+> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> +  features a global shutter with variable charge-integration time. It is
+> +  programmable through I2C and 4-wire interfaces. The sensor output is
+> +  available via CSI-2 serial data output (1 Lane).
+> +
+> +properties:
+> +  compatible:
+> +    const: sony,imx296
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description:
+> +      Input clock for the sensor.
+> +    items:
+> +      - const: mclk
+> +
+> +  clock-frequency:
+> +    description:
+> +      Frequency of the mclk clock in Hertz.
+> +    default: 37125000
+> +
+> +  vddo-supply:
+> +    description:
+> +      Definition of the regulator used as interface power supply.
+> +    maxItems: 1
 
-When an AP adapter card is configured off via the SE or the SCLP
-Deconfigure Adjunct Processor command and the AP bus subsequently detects
-that the adapter card is no longer in the AP configuration, the card
-device representing the adapter card as well as each of its associated
-AP queue devices will be removed by the AP bus. If one or more of the
-affected queue devices is bound to the VFIO AP device driver, its remove
-callback will be invoked for each queue to be removed. The remove callback
-resets the queue and disables IRQ processing. If interrupt processing was
-never enabled for the queue, disabling IRQ processing will fail resulting
-in a kernel OOPS.
+You don't need 'maxItems' on *-supply. It's not an array.
 
-This patch verifies IRQ processing is enabled before attempting to disable
-interrupts for the queue.
-
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-Signed-off-by: aekrowia <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-index be2520cc010b..42d8308fd3a1 100644
---- a/drivers/s390/crypto/vfio_ap_drv.c
-+++ b/drivers/s390/crypto/vfio_ap_drv.c
-@@ -79,7 +79,8 @@ static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
- 	apid = AP_QID_CARD(q->apqn);
- 	apqi = AP_QID_QUEUE(q->apqn);
- 	vfio_ap_mdev_reset_queue(apid, apqi, 1);
--	vfio_ap_irq_disable(q);
-+	if (q->saved_isc != VFIO_AP_ISC_INVALID)
-+		vfio_ap_irq_disable(q);
- 	kfree(q);
- 	mutex_unlock(&matrix_dev->lock);
- }
--- 
-2.7.4
-
+> +
+> +  vdda-supply:
+> +    description:
+> +      Definition of the regulator used as analog power supply.
+> +    maxItems: 1
+> +
+> +  vddd-supply:
+> +    description:
+> +      Definition of the regulator used as digital power supply.
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description:
+> +      The phandle and specifier for the GPIO that controls sensor reset.
+> +    maxItems: 1
+> +
+> +  # See ../video-interfaces.txt for details
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - clock-frequency
+> +  - vddo-supply
+> +  - vdda-supply
+> +  - vddd-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    imx296: camera-sensor@1a {
+> +        compatible = "sony,imx296";
+> +        reg = <0x1a>;
+> +        reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&camera_rear_default>;
+> +        clocks = <&gcc 90>;
+> +        clock-names = "mclk";
+> +        clock-frequency = <37125000>;
+> +        vddo-supply = <&camera_vddo_1v8>;
+> +        vdda-supply = <&camera_vdda_3v3>;
+> +        vddd-supply = <&camera_vddd_1v2>;
+> +
+> +        port {
+> +            imx296_ep: endpoint {
+> +                remote-endpoint = <&csiphy0_ep>;
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.17.1
+> 
