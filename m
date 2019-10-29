@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15D7CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9375FCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE2A21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680022087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfAa04wg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uDuxkMJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfJ2WGf (ORCPT
+        id S1728667AbfJ2WGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:06:35 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34535 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728444AbfJ2WG3 (ORCPT
+        Tue, 29 Oct 2019 18:06:32 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:32809 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728261AbfJ2WGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:06:29 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 139so376071ljf.1;
-        Tue, 29 Oct 2019 15:06:27 -0700 (PDT)
+        Tue, 29 Oct 2019 18:06:23 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y127so11746213lfc.0;
+        Tue, 29 Oct 2019 15:06:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=w9nv631nFuLy5OJibO3p1uW2P7i1XSSankw4lPH7rnQ=;
-        b=JfAa04wg4G8CI5e5eM72nVTogB/eZpxAQd2plw8wQ1xf9Rfzyv+VYYL8PKe/KNvPGR
-         WMT4ziDQle0g3iD6zta3MaFA6FBhGxnAh082t3DGY5Z/iZ2b+zWXD1KvdUDHFyTo3+eo
-         Urp6pw6LfL21IBvcyUxvDxhZ8UdmiNAfcBB/V65xcPcZXQ81Z/f5ajd91YIgtd5FBoRb
-         BGsmj3WK3NYqIAzIopHCrjeHtXqdSiCB2wpWPDRNgoIeMo9YUOr8qK4FC/CCW/WI//JF
-         5cua0hw+1q0X9uR6uzpH7ugjDcWZNDoilsPgtjX12UegQN+S2jB/84OvcTc9ZbUx5EWi
-         zMqw==
+        bh=5LONhI03rb2fwfUY6X7OU7Y25sYxMdC9HcXKn9+BCyQ=;
+        b=uDuxkMJEKoGGClHLxpgL5yA4z60Lv5lPzaeYSs3xAcGhttJWal3QJqTG8rkQys5I1R
+         xLLoE0quWFbJIhm/SovHBSpfo8ahIXJ991BD4bbc3VQMtrtYJ/IVWdnf8gHwUnUVkdYV
+         OfJU/dCHLm12SiHCjZPem5v7StHvRLcVi/9RWRApfqYJVuPKvHSgDQdgdlYAVZ4qLrBS
+         rT4w5sGQLqKkiPCD5N26pqzIo6kJwZyQbfn6ZTX1WDgPSlsIA39ufbzkGkME1x46nite
+         GIB8uDQIDKtvSl2mcBp8hh731XIoIV+Wed+eOr/UqUJa6eZP9Wnp2BWUqHQj4M6bM8pe
+         mZdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=w9nv631nFuLy5OJibO3p1uW2P7i1XSSankw4lPH7rnQ=;
-        b=QsgB4/vd4Koe37xvVdYM88GVv94lv53DGt+05p5yzgnQ8Lbr8kIkoFhbzQRRi6RJ8P
-         mDGESXKLbalGHFptTHWz5PvhlphwX+4NxenU7g0+UyCV5XjU0Y6dx9bURXbk1MYH5kJ3
-         T40HGZF0WxzQuzuTMqyxYXqht+K9zEJkeEFxLdG75nALdobzkBPgCdiGRyCRnuHdr0NB
-         sp7ovtTPb0/w+Bbu0a6bbmDtIf3k24uOy6FQKm8QmXRPnF8iGUU1xC+YBefZAO51Ishp
-         GaAxO/wt6rXK5dXkfiU8ia7MHuzLwxaRYRFNizlGly5S3gVI1tL2Z7QHXUH2JIK6u9gO
-         at3w==
-X-Gm-Message-State: APjAAAW905YIjEvrZB6dz3w/suabAz5SMEZtACh7zE+bW0BKm0nVemcI
-        VBJh398ku0uhMs/Ls3cQqXY=
-X-Google-Smtp-Source: APXvYqxWQ2y+0houpulghTFa8uMZXHz2Ku3ouH0/FDPZ4X7HuKeVuH1EfxK6mHFSNTY4WUCzeYoezw==
-X-Received: by 2002:a2e:91c7:: with SMTP id u7mr4057544ljg.178.1572386786709;
-        Tue, 29 Oct 2019 15:06:26 -0700 (PDT)
+        bh=5LONhI03rb2fwfUY6X7OU7Y25sYxMdC9HcXKn9+BCyQ=;
+        b=sV2xIZfc8WX1Q8ZESfL9WUpkfvIMRIrHFn9nvNgrHSPrQQerhGdGrllsM9k5ICp6f8
+         JQPDbE8Jq5S/kWX0m8Lyy/YBf1fRZEzy8Wc80ANiefdtVc677YzlEI91WAeAudvU96Z+
+         rehv/1NNzHWk16ADemA3iULtyoT7AcnCemeaM92tAXYuvgmAuO6o3Ef0deAQGwwwj+20
+         01ftPWUjRAQbp6YQR5OhFHFEZe/djjtnFHHovK7q/pAXjzk5uHKfyAEphoYb7PRombrQ
+         ocd+Wq/PFBA2nc9Ursq85PdLuOxAHQxOuRE3ek/Ky9OgJ/Z8aa8B8YEaZrw+RRPuuXQG
+         QF3w==
+X-Gm-Message-State: APjAAAWf0lh4MClAcCNd9+PFbZ8h8k2MHufQWf9lfUsprOSNnmxXqEQM
+        OAy3lbst9DmO2Y7PPw7l+mA=
+X-Google-Smtp-Source: APXvYqzapl51XY9ifplkQr/u2ykDrE0Hk/PIVVJwSSXLaMk8Ts/yv0GJXscMYBrU2W6tGh/O4PLOFQ==
+X-Received: by 2002:ac2:4d17:: with SMTP id r23mr4035546lfi.56.1572386781628;
+        Tue, 29 Oct 2019 15:06:21 -0700 (PDT)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id 12sm51536lje.92.2019.10.29.15.06.25
+        by smtp.gmail.com with ESMTPSA id 12sm51536lje.92.2019.10.29.15.06.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 15:06:26 -0700 (PDT)
+        Tue, 29 Oct 2019 15:06:21 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Peter Geis <pgwipeout@gmail.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 17/19] PM / devfreq: tegra30: Support variable polling interval
-Date:   Wed, 30 Oct 2019 01:00:17 +0300
-Message-Id: <20191029220019.26773-18-digetx@gmail.com>
+Subject: [PATCH v7 12/19] PM / devfreq: tegra30: Include appropriate header
+Date:   Wed, 30 Oct 2019 01:00:12 +0300
+Message-Id: <20191029220019.26773-13-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191029220019.26773-1-digetx@gmail.com>
 References: <20191029220019.26773-1-digetx@gmail.com>
@@ -80,133 +80,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ACTMON governor is interrupt-driven and currently hardware's polling
-interval is fixed to 16ms in the driver. Devfreq supports variable polling
-interval by the generic governors, let's re-use the generic interface for
-changing of the polling interval. Now the polling interval can be changed
-dynamically via /sys/class/devfreq/devfreq0/polling_interval.
+It's not very correct to include mod_devicetable.h for the OF device
+drivers and of_device.h should be included instead.
 
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Tested-by: Peter Geis <pgwipeout@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 35 ++++++++++++++++++++++++-------
- 1 file changed, 28 insertions(+), 7 deletions(-)
+ drivers/devfreq/tegra30-devfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index b745a973c35a..d0dd42856e5b 100644
+index f658b0b4a845..9da62f695859 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -218,7 +218,7 @@ static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
- {
- 	u32 avg = dev->avg_count;
- 	u32 avg_band_freq = tegra->max_freq * ACTMON_DEFAULT_AVG_BAND / KHZ;
--	u32 band = avg_band_freq * ACTMON_SAMPLING_PERIOD;
-+	u32 band = avg_band_freq * tegra->devfreq->profile->polling_ms;
- 
- 	device_writel(dev, avg + band, ACTMON_DEV_AVG_UPPER_WMARK);
- 
-@@ -229,7 +229,7 @@ static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
- static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
- 				       struct tegra_devfreq_device *dev)
- {
--	u32 val = tegra->cur_freq * ACTMON_SAMPLING_PERIOD;
-+	u32 val = tegra->cur_freq * tegra->devfreq->profile->polling_ms;
- 
- 	device_writel(dev, do_percent(val, dev->config->boost_up_threshold),
- 		      ACTMON_DEV_UPPER_WMARK);
-@@ -308,7 +308,7 @@ static unsigned long actmon_device_target_freq(struct tegra_devfreq *tegra,
- 	unsigned int avg_sustain_coef;
- 	unsigned long target_freq;
- 
--	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD;
-+	target_freq = dev->avg_count / tegra->devfreq->profile->polling_ms;
- 	avg_sustain_coef = 100 * 100 / dev->config->boost_up_threshold;
- 	target_freq = do_percent(target_freq, avg_sustain_coef);
- 	target_freq += dev->boost_freq;
-@@ -465,7 +465,7 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
- 
- 	dev->target_freq = tegra->cur_freq;
- 
--	dev->avg_count = tegra->cur_freq * ACTMON_SAMPLING_PERIOD;
-+	dev->avg_count = tegra->cur_freq * tegra->devfreq->profile->polling_ms;
- 	device_writel(dev, dev->avg_count, ACTMON_DEV_INIT_AVG);
- 
- 	tegra_devfreq_update_avg_wmark(tegra, dev);
-@@ -506,7 +506,11 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
- 	unsigned int i;
- 	int err;
- 
--	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
-+	if (!tegra->devfreq->profile->polling_ms ||
-+	    tegra->devfreq->stop_polling)
-+		return 0;
-+
-+	actmon_writel(tegra, tegra->devfreq->profile->polling_ms - 1,
- 		      ACTMON_GLB_PERIOD_CTRL);
- 
- 	/*
-@@ -554,6 +558,10 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
- 
- static void tegra_actmon_stop(struct tegra_devfreq *tegra)
- {
-+	if (!tegra->devfreq->profile->polling_ms ||
-+	    tegra->devfreq->stop_polling)
-+		return;
-+
- 	disable_irq(tegra->irq);
- 
- 	cpufreq_unregister_notifier(&tegra->cpu_rate_change_nb,
-@@ -623,7 +631,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
- 	stat->busy_time *= 100 / BUS_SATURATION_RATIO;
- 
- 	/* Number of cycles in a sampling period */
--	stat->total_time = ACTMON_SAMPLING_PERIOD * cur_freq;
-+	stat->total_time = tegra->devfreq->profile->polling_ms * cur_freq;
- 
- 	stat->busy_time = min(stat->busy_time, stat->total_time);
- 
-@@ -631,7 +639,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
- }
- 
- static struct devfreq_dev_profile tegra_devfreq_profile = {
--	.polling_ms	= 0,
-+	.polling_ms	= ACTMON_SAMPLING_PERIOD,
- 	.target		= tegra_devfreq_target,
- 	.get_dev_status	= tegra_devfreq_get_dev_status,
- };
-@@ -671,6 +679,7 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
- 					unsigned int event, void *data)
- {
- 	struct tegra_devfreq *tegra = dev_get_drvdata(devfreq->dev.parent);
-+	unsigned int *new_delay = data;
- 	int ret = 0;
- 
- 	/*
-@@ -690,6 +699,17 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
- 		devfreq_monitor_stop(devfreq);
- 		break;
- 
-+	case DEVFREQ_GOV_INTERVAL:
-+		if (*new_delay > 256) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		tegra_actmon_stop(tegra);
-+		devfreq_interval_update(devfreq, new_delay);
-+		ret = tegra_actmon_start(tegra);
-+		break;
-+
- 	case DEVFREQ_GOV_SUSPEND:
- 		tegra_actmon_stop(tegra);
- 		devfreq_monitor_suspend(devfreq);
-@@ -709,6 +729,7 @@ static struct devfreq_governor tegra_devfreq_governor = {
- 	.get_target_freq = tegra_governor_get_target,
- 	.event_handler = tegra_governor_event_handler,
- 	.immutable = true,
-+	.interrupt_driven = true,
- };
- 
- static int tegra_devfreq_probe(struct platform_device *pdev)
+@@ -13,7 +13,7 @@
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/module.h>
+-#include <linux/mod_devicetable.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
+ #include <linux/reset.h>
 -- 
 2.23.0
 
