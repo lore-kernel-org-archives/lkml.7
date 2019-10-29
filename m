@@ -2,100 +2,111 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F14DCA9EC1
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC291CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032F221835
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CD421721
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTKQ5eL3"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="JpS+61pb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbfJ2Bno (ORCPT
+        id S1729984AbfJ2BqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:43:44 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:32932 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbfJ2Bnk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:43:40 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y39so12421296qty.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 18:43:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lAvEaeqENeVb/DhAt46H1R5niz9Z9sNvfAe5diIhyRY=;
-        b=YTKQ5eL3jNc2ylypKneapURZFnFOC7if9/ntbG+5qwp8Rc8G83PNiMQjG2qeGkKWIE
-         WROILV8irXpeXLAzcVzVegChTLAxwfB0Rh0WWVjW2SPrq1fZ4vrNWRzt2zL0NgN8mvpp
-         FUFTBShNt+Z3UmEWhl/WVLJOBlNNV07Vv4vESyc5K0g25MA6fRQ41jPPI8H3L8Qx6Hve
-         CLkYAe+439/eKzHHDIDz1Yu7MPb3DgANyvJrpd+83ud+MPjNTP2ZRiCP1f8elguyxtTV
-         /vmO2RTy01PqhsbmG4mb5XHGS950hQIEBNWf2x7CKhvDhnFwzZclfIu3hgehAG/o6nx1
-         pEyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lAvEaeqENeVb/DhAt46H1R5niz9Z9sNvfAe5diIhyRY=;
-        b=AymRn4BjPZkG0i5JNRXJxiuZzqZafA/HXPMPKWxRgLWGuuN1pLIRWiwFchjkjCFLXO
-         k/Pnz0iUaESCzLXRj29hPyf0Gf5bq9RbcCH5e84RF4J8uO7EoAOGrvwAwhfqt3KbSvF1
-         4KixrUeRzlbj6C5ffeD/yRx3gfDF3kg2TFWy4vI+li/xXwPd8QfTZkZoDZB/szHCTxpq
-         2JSqAnVj4NHpJ3A+Jb+EOweRcezgI5sJYm9Lo6GPTBpkidz1CLmXlOKev8NjoulXGURh
-         eWhZPDfewZAmifa1sIDPFxgRA6+8e0VfpxapabKsZHJ7iu+NR2T2tz252aMwG2HCF+La
-         zbOg==
-X-Gm-Message-State: APjAAAWJhpAwdOo4k+Zbp9Vk4pb2qFuTHuKXXq+dYlkfY7OTvIpoKUny
-        6S+iRB4LTe50QcKTGoO8WLDGIYXkv7Q3GA==
-X-Google-Smtp-Source: APXvYqzZzThiov5OFoGD+8O8B/45mrFpAsO02vijv25JLzLZ5cAJ9CHt0/q3V7pq3tkhuxB7MupspQ==
-X-Received: by 2002:a0c:94d7:: with SMTP id k23mr19000528qvk.200.1572313419369;
-        Mon, 28 Oct 2019 18:43:39 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:483:ade:87ad:69fb:5b32:cf88])
-        by smtp.gmail.com with ESMTPSA id 197sm6698394qkh.80.2019.10.28.18.43.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 18:43:38 -0700 (PDT)
-From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-To:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        kim.jamie.bradley@gmail.com, nishkadg.linux@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH 5/5] staging: rts5208: Eliminate the use of Camel Case in file sd.h
-Date:   Mon, 28 Oct 2019 22:43:16 -0300
-Message-Id: <20191029014316.6452-6-gabrielabittencourt00@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191029014316.6452-1-gabrielabittencourt00@gmail.com>
-References: <20191029014316.6452-1-gabrielabittencourt00@gmail.com>
+        Mon, 28 Oct 2019 21:46:01 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52226 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727379AbfJ2BqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 21:46:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1572313559; bh=bhzP3bhLk0Yol8s//otk/IDBmGkxLhl6fpdcUqfP75w=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=JpS+61pbJDVyKblhRaIm8JKjWkdojeV3KkxIdJT7+eXBFH95J36s8aeAEdwN/SCmT
+         mbtRRj0QAxxeQABDjCt+q665021+BQa2joEzZStqmCaz6bSZi7FpMfanHh5s2LbpoA
+         qHs9wXu4OYQVXaCynhiU9hEUyQ7giGGeUGr+Ho/I=
+Date:   Tue, 29 Oct 2019 02:45:59 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:SUN4I LOW RES ADC ATTACHED TABLET KEYS DRIVER" 
+        <linux-input@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [linux-sunxi] Re: [PATCH] input: sun4i-lradc-keys: Add wakup
+ support
+Message-ID: <20191029014559.gif3ay7anq24un2i@core.my.home>
+Mail-Followup-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        "open list:SUN4I LOW RES ADC ATTACHED TABLET KEYS DRIVER" <linux-input@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191028221502.3503543-1-megous@megous.com>
+ <20191028233828.GA57214@dtor-ws>
+ <20191028235626.5afvszxtppsieywi@core.my.home>
+ <20191029001250.GB57214@dtor-ws>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029001250.GB57214@dtor-ws>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleans up checks of "Avoid CamelCase" in file sd.h
+On Mon, Oct 28, 2019 at 05:12:50PM -0700, Dmitry Torokhov wrote:
+> On Tue, Oct 29, 2019 at 12:56:26AM +0100, Ondřej Jirman wrote:
+> > On Mon, Oct 28, 2019 at 04:38:28PM -0700, Dmitry Torokhov wrote:
+> > > > +
+> > > > +	error = dev_pm_set_wake_irq(dev, irq);
+> > > > +	if (error) {
+> > > > +		dev_err(dev, "Could not set wake IRQ\n");
+> > > > +		return error;
+> > > > +	}
+> > > > +
+> > > 
+> > > I wonder if we could teach platform driver core to handle this for us.
+> > 
+> > Not sure, some drivers do enable/disable wake_irq by hand in suspend/resume
+> > callbacks, so it would probably need to be opt-in somehow. I guess calling the
+> > function like this is one way to make it opt-in.
+> > 
+> > The other way may be by passing a flag somewhere, like to
+> > request_threaded_irq. Did you have something more concrete in mind?
+> 
+> I think it is perfectly fine to continue using enable_irq_wake and
+> disable_irq_wake from the driver while marking irq as being wake irq
+> form the core.
 
-Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
----
- drivers/staging/rts5208/sd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I see, it looks like irq_set_irq_wake will track the calls via wake_depth
 
-diff --git a/drivers/staging/rts5208/sd.h b/drivers/staging/rts5208/sd.h
-index dc9e8cad7a74..f4ff62653b56 100644
---- a/drivers/staging/rts5208/sd.h
-+++ b/drivers/staging/rts5208/sd.h
-@@ -232,7 +232,7 @@
- #define DCM_LOW_FREQUENCY_MODE   0x01
- 
- #define DCM_HIGH_FREQUENCY_MODE_SET  0x0C
--#define DCM_Low_FREQUENCY_MODE_SET   0x00
-+#define DCM_LOW_FREQUENCY_MODE_SET   0x00
- 
- #define MULTIPLY_BY_1    0x00
- #define MULTIPLY_BY_2    0x01
--- 
-2.20.1
+https://elixir.bootlin.com/linux/latest/source/kernel/irq/manage.c#L714
 
+But all irqs are not necessarily wake irqs, no? So it still may need to be
+opt-in somehow.
+
+Anyway, I'm no PM expert. I started looking at PM code about two weeks ago, and
+I really don't feel like I can contribute much to these kinds of decisions with
+my current level of understanding, right now.
+
+regards,
+	o.
+
+> Thanks.
+> 
+> -- 
+> Dmitry
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191029001250.GB57214%40dtor-ws.
