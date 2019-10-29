@@ -2,124 +2,96 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A6DCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDA7CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9BC21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6F02087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="qgkV77A9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="drAUjUv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfJ2V7Q (ORCPT
+        id S1726779AbfJ2WBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:59:16 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40951 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfJ2V7P (ORCPT
+        Tue, 29 Oct 2019 18:01:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41612 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfJ2WBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:59:15 -0400
-Received: by mail-pl1-f194.google.com with SMTP id p5so3179102plr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DpN5YTXrp9hp71uxbnpmiOwzB6GTFkwG/3T4Kj5BrEM=;
-        b=qgkV77A9tGs/sOv5qzKPxPbYxXbujKalYxznr/KJcAe6aHZXkpz2sB7b0GwaCBdIk5
-         3AwShV2aLjyJtqCJZqgIrvfLUdOfsdTOAyEBfQVvUPGmwf7VXSg3zyiZ+pVn2P1rBoOm
-         6nvgQ1Bcrgd79MPUNP7FKGx5ZYxjvd7ZEWwpK6R7K2HHKzpWhgCf2T11tuSaV8QLDB7o
-         Xt2ksQZgxh1ThsQ6ZZmzq8HgpVWKu0jwtyGXC9xc+Sngf75prU0+zt7cuJgjTOpdXglL
-         Ku52vyE+ow5Vwet0EDpMTyWeX7GSlMnL8UK9bxhJR2CvrlVSy0cbXnvz+bKysuAUrCUH
-         dL7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DpN5YTXrp9hp71uxbnpmiOwzB6GTFkwG/3T4Kj5BrEM=;
-        b=fg8xyNcYOQhScpz84sWEqatXwjs1D37Mbg1WvrFvpil+nw2pMQmln9aIhYDVL04Sbr
-         zxbsmTjkXVWt8UlPXjDmeDZLKZQj4rTcP86kFhbR1+Q+szA5n6REu8iU0ADJjmQBtW+o
-         DBrsjIIvQ8IoXmrtGUX26+NMagnFSnK9Pj/RkEOW9MahQBFbIs+Iqf3IZPe+cNVzSi9A
-         84/Uk6U2LwRjCnuqQRVw4sL5IR57lTZwvFGQUTlaRXWRsO+VFb9GHVc0ax9Pw22zluII
-         AhdEJwAFz8vom8uyye2sEANGFh7ROHZnEpxSfoVb68HNB2/QpLyDUZYSjdoBE9TBajP4
-         IRbw==
-X-Gm-Message-State: APjAAAXemH/ieP+32zl2T8wtMMftft5ssnkKN91gqo2H/NHeKM5QBtHt
-        MnCAqY/7iFRw8Eq4P7yYwKt47w==
-X-Google-Smtp-Source: APXvYqwNwn6ag5YudPb6b9eKtM6k1ulB0HqZ/o7WfnbelP889IRTVFDRbkId8DAH5pLmscTc97rObA==
-X-Received: by 2002:a17:902:988d:: with SMTP id s13mr915958plp.335.1572386354831;
-        Tue, 29 Oct 2019 14:59:14 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id j10sm85753pfn.128.2019.10.29.14.59.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 14:59:14 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 14:59:05 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next, 3/4] hv_netvsc: Add XDP support
-Message-ID: <20191029145905.414f86c3@hermes.lan>
-In-Reply-To: <DM6PR21MB1337547067BE5E52DFE05E20CA610@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
-        <1572296801-4789-4-git-send-email-haiyangz@microsoft.com>
-        <20191028143322.45d81da4@cakuba.hsd1.ca.comcast.net>
-        <DM6PR21MB1337547067BE5E52DFE05E20CA610@DM6PR21MB1337.namprd21.prod.outlook.com>
+        Tue, 29 Oct 2019 18:01:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=u9Sf9FNHhYYBEBoltVzRgVFkWsIpASj//j6eW2ZSz38=; b=drAUjUv54IKyh1uKLZS+YnVCA
+        rmQ6x9LRqH35slCBccluZ+g32eU/4hlKKYw5qagqNPtl/rPHq7JRjgJqqA+eX5NWR7ZiHu4AcUoxg
+        jv0jI2R3i6keDALtgNMZZd6AVRx0EPNbDaj0Ly7tFQvv9JBhIv16ewbcvxjVTW0PnMDUR9FScVAjU
+        2QzQRYhzTfn4M3dfG72vEvyPkgPJm3qWdPnDWbmZWxULwW/kgoHn9DOByr6QE/FF/P/QmLYG9vwyG
+        8nccK6mAxENTwwQIORA2wZxNEM7c6SWyDJ4AhmvjrgCf6C+7DHSMgEMOhJfnOhYxlUddtNpBA/eLq
+        ftya7ZmhQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPZY9-0004gR-6j; Tue, 29 Oct 2019 22:01:13 +0000
+Subject: Re: [RFC PATCH] kconfig: Add option to get the full help text with
+ listnewconfig
+To:     Laura Abbott <labbott@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jcline@redhat.com, dzickus@redhat.com
+References: <20191029181702.21460-1-labbott@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <53da077f-b4d6-c123-bcbc-ae531fdcc410@infradead.org>
+Date:   Tue, 29 Oct 2019 15:01:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191029181702.21460-1-labbott@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 19:17:25 +0000
-Haiyang Zhang <haiyangz@microsoft.com> wrote:
+Hi Laura,
 
-> > -----Original Message-----
-> > From: Jakub Kicinski <jakub.kicinski@netronome.com>
-> > Sent: Monday, October 28, 2019 5:33 PM
-> > To: Haiyang Zhang <haiyangz@microsoft.com>
-> > Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org;
-> > netdev@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen
-> > Hemminger <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> > <vkuznets@redhat.com>; davem@davemloft.net; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH net-next, 3/4] hv_netvsc: Add XDP support
-> > 
-> > On Mon, 28 Oct 2019 21:07:04 +0000, Haiyang Zhang wrote:  
-> > > This patch adds support of XDP in native mode for hv_netvsc driver, and
-> > > transparently sets the XDP program on the associated VF NIC as well.
-> > >
-> > > XDP program cannot run with LRO (RSC) enabled, so you need to disable  
-> > LRO  
-> > > before running XDP:
-> > >         ethtool -K eth0 lro off
-> > >
-> > > XDP actions not yet supported:
-> > >         XDP_TX, XDP_REDIRECT  
-> > 
-> > I don't think we want to merge support without at least XDP_TX these
-> > days..  
-> Thanks for your detailed comments --
-> I'm working on the XDP_TX...
-> 
-> > 
-> > And without the ability to prepend headers this may be the least
-> > complete initial XDP implementation we've seen :(  
-> The RNDIS packet buffer received by netvsc doesn't have a head room, but I'm
-> considering copy the packets to the page buffer, with a head room space 
-> reserved for XDP.
+On 10/29/19 11:17 AM, Laura Abbott wrote:
+> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+> index ef2f2336c469..aaaf1f62300c 100644
+> --- a/scripts/kconfig/Makefile
+> +++ b/scripts/kconfig/Makefile
+> @@ -66,7 +66,9 @@ localyesconfig localmodconfig: $(obj)/conf
+>  #  syncconfig has become an internal implementation detail and is now
+>  #  deprecated for external use
+>  simple-targets := oldconfig allnoconfig allyesconfig allmodconfig \
+> -	alldefconfig randconfig listnewconfig olddefconfig syncconfig
+> +	alldefconfig randconfig listnewconfig olddefconfig syncconfig \
+> +	extendedlistnewconfig
+> +
+>  PHONY += $(simple-targets)
+>  
+>  $(simple-targets): $(obj)/conf
+> @@ -134,6 +136,7 @@ help:
+>  	@echo  '  alldefconfig    - New config with all symbols set to default'
+>  	@echo  '  randconfig	  - New config with random answer to all options'
+>  	@echo  '  listnewconfig   - List new options'
+> +	@echo  '  extendedlistnewconfig   - List new options'
 
+This text should also say " and help text" similar to what conf.c does.
 
-There is a small amount of headroom available by reusing the RNDIS
-header and packet space. Looks like 40 bytes or so.
+>  	@echo  '  olddefconfig	  - Same as oldconfig but sets new symbols to their'
+>  	@echo  '                    default value without prompting'
+>  	@echo  '  kvmconfig	  - Enable additional options for kvm guest kernel support'
+
+I can't say that I like the name, but I won't try to paint it a
+different color.
+
+-- 
+~Randy
+
