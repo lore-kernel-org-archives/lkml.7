@@ -2,117 +2,157 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0756CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE40CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E69E208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFAFF21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:13:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xP/x/gcB"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="eSOY5l0E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389900AbfJ2PNX (ORCPT
+        id S2389923AbfJ2PNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:13:23 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:41312 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389634AbfJ2PNX (ORCPT
+        Tue, 29 Oct 2019 11:13:48 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36597 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389904AbfJ2PNr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:13:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wUNZyDj4/TJlrgXXw5bHvw6DqU7K35b88z8Tb9dvbUQ=; b=xP/x/gcBXpqOAHy735jtKrf/d
-        IQ4ODLhdqcD6OdjDbijs52+YQ5NQvB2+e1tF0vHivEXSQUwq7dHkLms9C11FftFyzQMkEoHE+TO6s
-        jyRzQYe3hEdcbaK1ucoCJA4klUDgdl/L3IKFl3P5PI7EurmbN68yTp00P69MAdcc/mSJXpSeEsfwV
-        8OwfHkyzB7+jSJb5zRgI0y7dF1v8sKxjchdbGLc1OgovNcvjyTITcrDm56jOEClnYJ5BgXOzVrjav
-        WIvcsbLZbg3Z1z6aqEmM6OzUQnhizgJyooZOeFxknrIPr6WHz2B/d6LGhDKQokE09v5fQQdQgCwqP
-        n0mWv7Ezw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPTBA-0005Oi-6F; Tue, 29 Oct 2019 15:13:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 636AF306091;
-        Tue, 29 Oct 2019 16:12:01 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2B8272B438376; Tue, 29 Oct 2019 16:13:02 +0100 (CET)
-Date:   Tue, 29 Oct 2019 16:13:02 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Luwei Kang <luwei.kang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, ak@linux.intel.com, thomas.lendacky@amd.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org
-Subject: Re: [PATCH v1 8/8] perf/x86: Add event owner check when PEBS output
- to Intel PT
-Message-ID: <20191029151302.GO4097@hirez.programming.kicks-ass.net>
-References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
- <1572217877-26484-9-git-send-email-luwei.kang@intel.com>
+        Tue, 29 Oct 2019 11:13:47 -0400
+Received: by mail-io1-f65.google.com with SMTP id c16so15190314ioc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 08:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=11HABgG4cgofeXKrR7yB4qVxOwjvZW+qOCi2NPimHbk=;
+        b=eSOY5l0EBsO+rrEeDHKewSn+1rtEbKi8WrMI2sePTVXC/Ok+C0a/fr77IQmSqDLll/
+         CYzbuzmDm2+OHZbCu51GGzTwtcJlmdGqZBoB3k2WEu3E7ZfLHWuUtCNJffCM3vd4kytD
+         h75APcWTq5GfIYQdcBd+ORv7euX6JU53veJR73OudYgqb1zpmyY7HT+CEEa8lHvky3JK
+         fJexNvnmunr/Z6HMFnmRDDOSv28P2Z2y2MpCADz3aefkrY8AfuK+Xs1BHEI32rrYY59w
+         h8W0yxvIVrBz8iW81xL7o3SRufT6ZPfs4ucen2GYWR3JpJayBC5s5tF1Gtm9L0tqOZTk
+         Q9kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=11HABgG4cgofeXKrR7yB4qVxOwjvZW+qOCi2NPimHbk=;
+        b=ooFENRTEJbkCJQ3x/ODcW1ImHp7BS0v8EJcAoAvIdnGTdZrkaVQmMjIkvRqsK/4Yl7
+         va7bOlG2AaJ+CTyzetk0rn5q6yNkon2vJq8SSDIXiGNZXGDjm1yf19SL5ZbeYjCMqTXw
+         yvYfPa0PTvijnefRaPU+3dCbm/t2t8n+wvYdrzJV3x4+4qinDyg9UIWRVdgnrGzgJFTy
+         FFZr5yddyUqg02voMnIocFuc0/Tnv9ByTUgPyEutB+OYW12WMW7vIrlMMK/EGeHULLzb
+         l/fePdcYl5fnLduyw/9TqMxe0HGc2Pi00eOxFEhQofWSw8c/yxOZDX0WhBA4Mgbe1r85
+         8htw==
+X-Gm-Message-State: APjAAAV21UTcCXZDNMr1TpddxO/RadCTRGcClO6EHT8TYhb64nHkm3U6
+        RRHx7ZURMH+gI4hN+AugdXYpyA==
+X-Google-Smtp-Source: APXvYqxdgSH2LBsI1BNVKCGE4o19ADjNXKuKcQjC4hWiiauTRCCRnOEThsfn0v5Qac+1sVKsk2hU5Q==
+X-Received: by 2002:a5d:81c3:: with SMTP id t3mr4392281iol.300.1572362026220;
+        Tue, 29 Oct 2019 08:13:46 -0700 (PDT)
+Received: from cisco ([2601:282:902:b340:7405:279a:1dff:4689])
+        by smtp.gmail.com with ESMTPSA id t16sm1473529iol.12.2019.10.29.08.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 08:13:45 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 09:13:43 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alan Cox <alan@linux.intel.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+Message-ID: <20191029151343.GE32132@cisco>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <2236FBA76BA1254E88B949DDB74E612BA4EEC0CE@IRSMSX102.ger.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572217877-26484-9-git-send-email-luwei.kang@intel.com>
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4EEC0CE@IRSMSX102.ger.corp.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 07:11:17PM -0400, Luwei Kang wrote:
-> For PEBS output to Intel PT, a Intel PT event should be the group
-> leader of an PEBS counter event in host. For Intel PT
-> virtualization enabling in KVM guest, the PT facilities will be
-> passthrough to guest and do not allocate PT event from host perf
-> event framework. This is different with PMU virtualization.
-> 
-> Intel new hardware feature that can make PEBS enabled in KVM guest
-> by output PEBS records to Intel PT buffer. KVM need to allocate
-> a event counter for this PEBS event without Intel PT event leader.
-> 
-> This patch add event owner check for PEBS output to PT event that
-> only non-kernel event need group leader(PT).
-> 
-> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> ---
->  arch/x86/events/core.c     | 3 ++-
->  include/linux/perf_event.h | 1 +
->  kernel/events/core.c       | 2 +-
->  3 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 7b21455..214041a 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1014,7 +1014,8 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
->  		 * away, the group was broken down and this singleton event
->  		 * can't schedule any more.
->  		 */
-> -		if (is_pebs_pt(leader) && !leader->aux_event)
-> +		if (is_pebs_pt(leader) && !leader->aux_event &&
-> +					!is_kernel_event(leader))
+Hi Elena, Mike,
 
-indent fail, but also, I'm not sure I buy this.
+On Tue, Oct 29, 2019 at 11:25:12AM +0000, Reshetova, Elena wrote:
+> > The patch below aims to allow applications to create mappins that have
+> > pages visible only to the owning process. Such mappings could be used to
+> > store secrets so that these secrets are not visible neither to other
+> > processes nor to the kernel.
+> 
+> Hi Mike, 
+> 
+> I have actually been looking into the closely related problem for the past 
+> couple of weeks (on and off). What is common here is the need for userspace
+> to indicate to kernel that some pages contain secrets. And then there are
+> actually a number of things that kernel can do to try to protect these secrets
+> better. Unmap from direct map is one of them. Another thing is to map such
+> pages as non-cached, which can help us to prevent or considerably restrict
+> speculation on such pages. The initial proof of concept for marking pages as
+> "UNCACHED" that I got from Dave Hansen was actually based on mlock2() 
+> and a new flag for it for this purpose. Since then I have been thinking on what
+> interface suits the use case better and actually selected going with new madvise() 
+> flag instead because of all possible implications for fragmentation and performance. 
+> My logic was that we better allocate the secret data explicitly (using mmap()) 
+> to make sure that no other process data accidentally gets to suffer.
+> Imagine I would allocate a buffer to hold a secret key, signal with mlock
+>  to protect it and suddenly my other high throughput non-secret buffer 
+> (which happened to live on the same page by chance) became very slow
+>  and I don't even have an easy way (apart from mmap()ing it!) to guarantee
+>  that it won't be affected.
+> 
+> So, I ended up towards smth like:
+> 
+>   secret_buffer =  mmap(NULL, PAGE_SIZE, ...)
+>    madvise(secret_buffer, size, MADV_SECRET)
+> 
+> I have work in progress code here:
+>  https://github.com/ereshetova/linux/commits/madvise
+> 
+> I haven't sent it for review, because it is not ready yet and I am now working
+> on trying to add the page wiping functionality. Otherwise it would be useless
+> to protect the page during the time it is used in userspace, but then allow it
+> to get reused by a different process later after it has been released back and
+> userspace was stupid enough not to wipe the contents (or was crashed on 
+> purpose before it was able to wipe anything out). 
 
-Surely pt-on-kvm has a perf event to claim PT for the vCPU context?
+I was looking at this and thinking that wiping during do_exit() might
+be a nice place, but I haven't tried anything yet.
 
-Even if not, this is not strictly correct. Not even now is KVM the sole
-user of perf_event_create_kernel_counter(), so saying any kernel event
-is excempt from this scheduling constraint is jsut wrong.
+> We have also had some discussions with Tycho that XPFO can be also
+> applied selectively for such "SECRET" marked pages and I know that he has also
+> did some initial prototyping on this, so I think it would be great to decide
+> on userspace interface first and then see how we can assemble together all
+> these features. 
 
->  			return -EINVAL;
->  
->  		/*
+Yep! Here's my tree with the direct un-mapping bits ported from XPFO:
+https://github.com/tych0/linux/commits/madvise
+
+As noted in one of the commit messages I think the bit math for page
+prot flags needs a bit of work, but the test passes, so :)
+
+In any case, I'll try to look at Mike's patches later today.
+
+Cheers,
+
+Tycho
