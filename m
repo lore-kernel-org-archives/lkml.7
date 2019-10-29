@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A138ECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5B9CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74EBD208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF6C20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:05:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L9o/9d7l"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h1MeFf88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389777AbfJ2PDJ (ORCPT
+        id S2389816AbfJ2PFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:03:09 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:41228 "EHLO
+        Tue, 29 Oct 2019 11:05:52 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41264 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ2PDJ (ORCPT
+        with ESMTP id S2389520AbfJ2PFw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:03:09 -0400
+        Tue, 29 Oct 2019 11:05:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yPYBOVbzLkddXxQyoPdM/cinJsJOnw5vh/XAFVlfDHM=; b=L9o/9d7ljXJbX9mcF5Ru9ZBZG
-        g1r7VSnXDcAzdDvKHTB52IikrHsdoE/BddnxtMhK3toC53ejzx2xN3NG+fh6u3i3FcZ2DANbUw43y
-        QYFFEPqehro/BHuF3J0K9kkb5H5qDGqER81BxxXJe33XHIpcOpNaGHCayDIAmxSVr9jAYbo/BNMuU
-        emAvJakMUB+zqjrv1volXvTz3iDeYBD8nWocPZ0poGWUHhNFeO74ZMXU2L3u1xjP36Cw5NW627TSN
-        IUVGywLVQJC5uL85TI9/7bzjymznmI46x6v1Sz2DAGIuQ7YDS3sBsvkyU2xMRQLblEKc4K67gxxS8
-        s6j+HBRvg==;
+         bh=C3/5hrWsTa753nXHbDeBpwL/5p3fDxv/KfRS69GxIR0=; b=h1MeFf88lqAmEG4nDZ0T/g5pM
+        Izw1QFBM2I7r/eLGPpAmndvLMBkXVfYCD1/7QGvpK6WsR1fBb6QsM1MvTmJl3ZQMCoBbYtk8r/F/x
+        1yooJf12EHT2cKOQGNHbp8dEG/U0lW0sqFEr3gYFK3YewGVBivSyswJ0ShPneiluuHSiSzEudYGDt
+        fGCsEJ0QG3u4LVV08iaVv7firRixHI3Fs/Hftms7azTP9chorAJT7Jsy3xLHoTTA6x2FtPyYuvRTK
+        qQ6rvCDIDqyVkNF8MagqZqgQjqHPOhQeu1xzBVZy850QvvDlhWoWEFuNBv9NmXULLzqGq5GY8HI8I
+        NUpNuxwpQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPT1B-00052p-K7; Tue, 29 Oct 2019 15:02:45 +0000
+        id 1iPT3s-00058V-RG; Tue, 29 Oct 2019 15:05:33 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 54DE4300E4D;
-        Tue, 29 Oct 2019 16:01:42 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 54847300E4D;
+        Tue, 29 Oct 2019 16:04:30 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1C7AE2B43836D; Tue, 29 Oct 2019 16:02:43 +0100 (CET)
-Date:   Tue, 29 Oct 2019 16:02:43 +0100
+        id 1CB0E2B43836E; Tue, 29 Oct 2019 16:05:31 +0100 (CET)
+Date:   Tue, 29 Oct 2019 16:05:31 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Luwei Kang <luwei.kang@intel.com>
 Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -57,64 +57,138 @@ Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         acme@kernel.org, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
         namhyung@kernel.org
-Subject: Re: [PATCH v1 2/8] KVM: x86: PEBS output to Intel PT MSRs emulation
-Message-ID: <20191029150243.GM4097@hirez.programming.kicks-ass.net>
+Subject: Re: [PATCH v1 7/8] KVM: x86: Expose PEBS feature to guest
+Message-ID: <20191029150531.GN4097@hirez.programming.kicks-ass.net>
 References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
- <1572217877-26484-3-git-send-email-luwei.kang@intel.com>
+ <1572217877-26484-8-git-send-email-luwei.kang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572217877-26484-3-git-send-email-luwei.kang@intel.com>
+In-Reply-To: <1572217877-26484-8-git-send-email-luwei.kang@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 07:11:11PM -0400, Luwei Kang wrote:
-> Intel new hardware introduces a mechanism to direct PEBS records
-> output into the Intel PT buffer that can be used for enabling PEBS
-> in KVM guest. This patch implements the registers read and write
-> emulation when PEBS is supported in KVM guest.
-> 
-> KMM needs to reprogram the counters when the value of these MSRs
-> be changed that to make sure it can take effect in hardware.
-> 
+On Sun, Oct 27, 2019 at 07:11:16PM -0400, Luwei Kang wrote:
+> Expose PEBS feature to guest by IA32_MISC_ENABLE[bit12].
+> IA32_MISC_ENABLE[bit12] is Processor Event Based Sampling (PEBS)
+> Unavailable (RO) flag:
+> 1 = PEBS is not supported; 0 = PEBS is supported.
+
+Why does it make sense to expose this on SVM?
+
 > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
 > ---
->  arch/x86/include/asm/kvm_host.h  |  4 +++
->  arch/x86/include/asm/msr-index.h |  6 ++++
->  arch/x86/kvm/vmx/capabilities.h  | 15 ++++++++++
->  arch/x86/kvm/vmx/pmu_intel.c     | 63 ++++++++++++++++++++++++++++++++++++++--
->  4 files changed, 86 insertions(+), 2 deletions(-)
+>  arch/x86/include/asm/kvm_host.h |  1 +
+>  arch/x86/kvm/svm.c              |  6 ++++++
+>  arch/x86/kvm/vmx/vmx.c          |  1 +
+>  arch/x86/kvm/x86.c              | 22 +++++++++++++++++-----
+>  4 files changed, 25 insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> index 20ce682..d22f8d9 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -131,9 +131,13 @@
->  #define LBR_INFO_ABORT			BIT_ULL(61)
->  #define LBR_INFO_CYCLES			0xffff
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 24a0ab9..76f5fa5 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1127,6 +1127,7 @@ struct kvm_x86_ops {
+>  	bool (*xsaves_supported)(void);
+>  	bool (*umip_emulated)(void);
+>  	bool (*pt_supported)(void);
+> +	bool (*pebs_supported)(void);
+>  	bool (*pdcm_supported)(void);
 >  
-> +#define MSR_IA32_PEBS_PMI_AFTER_REC	BIT_ULL(60)
-> +#define MSR_IA32_PEBS_OUTPUT_PT		BIT_ULL(61)
-> +#define MSR_IA32_PEBS_OUTPUT_MASK	(3ULL << 61)
->  #define MSR_IA32_PEBS_ENABLE		0x000003f1
->  #define MSR_PEBS_DATA_CFG		0x000003f2
->  #define MSR_IA32_DS_AREA		0x00000600
-> +#define MSR_IA32_PERF_CAP_PEBS_OUTPUT_PT	BIT_ULL(16)
->  #define MSR_IA32_PERF_CAPABILITIES	0x00000345
->  #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
+>  	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 7e0a7b3..3a1bbb3 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -5975,6 +5975,11 @@ static bool svm_pt_supported(void)
+>  	return false;
+>  }
 >  
-> @@ -665,6 +669,8 @@
->  #define MSR_IA32_MISC_ENABLE_FERR			(1ULL << MSR_IA32_MISC_ENABLE_FERR_BIT)
->  #define MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX_BIT		10
->  #define MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX		(1ULL << MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX_BIT)
-> +#define MSR_IA32_MISC_ENABLE_PEBS_BIT			12
-> +#define MSR_IA32_MISC_ENABLE_PEBS			(1ULL << MSR_IA32_MISC_ENABLE_PEBS_BIT)
->  #define MSR_IA32_MISC_ENABLE_TM2_BIT			13
->  #define MSR_IA32_MISC_ENABLE_TM2			(1ULL << MSR_IA32_MISC_ENABLE_TM2_BIT)
->  #define MSR_IA32_MISC_ENABLE_ADJ_PREF_DISABLE_BIT	19
+> +static bool svm_pebs_supported(void)
+> +{
+> +	return false;
+> +}
+> +
+>  static bool svm_pdcm_supported(void)
+>  {
+>  	return false;
+> @@ -7277,6 +7282,7 @@ static bool svm_apic_init_signal_blocked(struct kvm_vcpu *vcpu)
+>  	.xsaves_supported = svm_xsaves_supported,
+>  	.umip_emulated = svm_umip_emulated,
+>  	.pt_supported = svm_pt_supported,
+> +	.pebs_supported = svm_pebs_supported,
+>  	.pdcm_supported = svm_pdcm_supported,
+>  
+>  	.set_supported_cpuid = svm_set_supported_cpuid,
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 5c4dd05..3c370a3 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7879,6 +7879,7 @@ static __exit void hardware_unsetup(void)
+>  	.xsaves_supported = vmx_xsaves_supported,
+>  	.umip_emulated = vmx_umip_emulated,
+>  	.pt_supported = vmx_pt_supported,
+> +	.pebs_supported = vmx_pebs_supported,
+>  	.pdcm_supported = vmx_pdcm_supported,
+>  
+>  	.request_immediate_exit = vmx_request_immediate_exit,
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 661e2bf..5f59073 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -2591,6 +2591,7 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
+>  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  {
+>  	bool pr = false;
+> +	bool update_cpuid = false;
+>  	u32 msr = msr_info->index;
+>  	u64 data = msr_info->data;
+>  
+> @@ -2671,11 +2672,17 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		    ((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_MWAIT)) {
+>  			if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
+>  				return 1;
+> -			vcpu->arch.ia32_misc_enable_msr = data;
+> -			kvm_update_cpuid(vcpu);
+> -		} else {
+> -			vcpu->arch.ia32_misc_enable_msr = data;
+> +			update_cpuid = true;
+>  		}
+> +
+> +		if (kvm_x86_ops->pebs_supported())
+> +			data &=  ~MSR_IA32_MISC_ENABLE_PEBS;
 
-Some of these already exist but are local to perf. Don't blindly
-introduce more without unifying.
+whitespace damage
+
+> +		else
+> +			data |= MSR_IA32_MISC_ENABLE_PEBS;
+> +
+> +		vcpu->arch.ia32_misc_enable_msr = data;
+> +		if (update_cpuid)
+> +			kvm_update_cpuid(vcpu);
+>  		break;
+>  	case MSR_IA32_SMBASE:
+>  		if (!msr_info->host_initiated)
+> @@ -2971,7 +2978,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		msr_info->data = (u64)vcpu->arch.ia32_tsc_adjust_msr;
+>  		break;
+>  	case MSR_IA32_MISC_ENABLE:
+> -		msr_info->data = vcpu->arch.ia32_misc_enable_msr;
+> +		if (kvm_x86_ops->pebs_supported())
+> +			msr_info->data = (vcpu->arch.ia32_misc_enable_msr &
+> +						~MSR_IA32_MISC_ENABLE_PEBS);
+> +		else
+> +			msr_info->data = (vcpu->arch.ia32_misc_enable_msr |
+> +						MSR_IA32_MISC_ENABLE_PEBS);
+
+Coding style violation.
+
+>  		break;
+>  	case MSR_IA32_SMBASE:
+>  		if (!msr_info->host_initiated)
+> -- 
+> 1.8.3.1
+> 
