@@ -2,121 +2,94 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B204DCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D735CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886642087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:03:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xgr0d/3K"
+	by mail.kernel.org (Postfix) with ESMTP id 7DC4D2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389012AbfJ2ODA (ORCPT
+        id S2388836AbfJ2OJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:03:00 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40259 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728306AbfJ2ODA (ORCPT
+        Tue, 29 Oct 2019 10:09:05 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:46473 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ2OJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:03:00 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r4so3986783pfl.7;
-        Tue, 29 Oct 2019 07:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KN9MskQmflVnB4L2PhN33bbW9nU67D9GmEhihR64Dow=;
-        b=Xgr0d/3KsmBYi0Vds45njbcN6sFqyATIR6A0Rp79dYlw9LqMyF8XJo5gS4UO2pGj8B
-         cAVPkjM29SI/pGVsUrhsfm4h4LHuwhHwHFhFj4wARDJe3ePM2kD61b/c79s9Wpp3osBY
-         epByIFRhKkZjIEq7YYTI1DsgVffhouIXEj6ZjIDWbZRoj3dBNK6vbVtTCWMF9lv2kFRI
-         r5wIHKOHD8ewiV0n8zQYHvOPu1w+5A0YDKyZgRcizuFQWacBf8WWjR4UDqNIxeQkfgFG
-         Rqg9qZlSVH4mSucMdHPlpubVb1ZSUHQKSBD/lT224rtUgrkksZK35JhCYXznykvSgXT4
-         ERfw==
+        Tue, 29 Oct 2019 10:09:03 -0400
+Received: by mail-io1-f72.google.com with SMTP id y25so11198047ioc.13
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 07:09:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KN9MskQmflVnB4L2PhN33bbW9nU67D9GmEhihR64Dow=;
-        b=pqfNrGNxoSKT22kFGUajQt9qEheqyBFzzc26egHS/iMfXljCrzpPCfCv/MYLzh+WQl
-         grkosTtEal0EdmSa582AYwwz78ULhc9VyheJtWYTTs7QwGtWUKSdH4RD7ZB1XQfjlI3b
-         H34HdAslTiPSXZXV5b2FZF9DgOVj6rgHPJuDBgmPv15c+tMAF57Dmkc4n9MRVy6+JXcm
-         +CNwq5YxGPlYmdiCm0/S+rcICHXyL8kYYrD6uopRwJUvuP6S9Jla38QPsujat7PSq1B+
-         0yGE4WMAgKdzI5WOmF5NZR0zd5jRY3eKaSkQ3Rtl+g4fsrjAOY9Swv5QvZdohNijt5tE
-         tcyg==
-X-Gm-Message-State: APjAAAX8H9C8EVDXkdLf3rBTdvL3qlRsl8fZkoxDvdh/XzDlnnOQwr3J
-        QIFc43qEAqT32sgYSYCdkCPYr0aa
-X-Google-Smtp-Source: APXvYqyOln2o9Ja2+yx0sK6SUz5OpkWA83Kv7lxXaoEByvKo5+Ca5UEnvQF4KFSOORIdHDvPSGRZtA==
-X-Received: by 2002:a63:1b07:: with SMTP id b7mr27500421pgb.166.1572357779088;
-        Tue, 29 Oct 2019 07:02:59 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z16sm6293023pge.55.2019.10.29.07.02.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 07:02:56 -0700 (PDT)
-Subject: Re: [PATCH] lm75: add lm75b detection
-To:     Jean Delvare <jdelvare@suse.de>, Rain Wang <Rain_Wang@Jabil.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-References: <20191026081049.GA16839@rainw-fedora28-jabil.corp.JABIL.ORG>
- <7a2ddf42-8bbe-59e0-dae8-85b184ea0da0@roeck-us.net>
- <20191028104618.5f21af38@endymion>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <82a0b331-daa0-af9a-a7d0-0f1b3246ea49@roeck-us.net>
-Date:   Tue, 29 Oct 2019 07:02:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ZXDP0wwnNkRnGcZ/hxzyUBVhVAKO5MP3N/7b/HrN89M=;
+        b=Yev3uIo9kbd0LxOSDzr2p6twbm9HGyEnK+GPCyTWvR9j3NgYo2VJLr8JajHjEJmxoX
+         kR7HrAWNUknW7TB5tS1YlweV+z8Y3xw8JXDQw8++04j2+L+obK1t98P3FbBLY5cDtAx0
+         AotxDAijj6sqYTn2JVRk8/pxkYFwzlZgsQSYmzkeFy87ruL11WscMx0slz5I+Luou26f
+         VY5vGzK4C2N/rm5uA2yKmZxW5QETg7hzgwXawpxIFOhZXHzp6MlrPLEyZ+MVXt6YyDbf
+         /31gPjy4IS7qJCNJpdue5H5DH2BoAXgeMkwqnRx8ipHdZdQzax7/6AllvUmmU4jgVwDI
+         Lhcw==
+X-Gm-Message-State: APjAAAUdZhQTCI63kcaWKcs+JMDTlFOX7cDd768lp3FY6Rfw8l7xq9sI
+        u1Eu+eSXGR17M8yoU8xnVkmKrUEl0S3L4rmXa24Dff3fJNW8
+X-Google-Smtp-Source: APXvYqyEO6WTdX2TT1MAC5wh+aMxnQAZiQ9NAP9Ue+ASML0EMHR89Lk5xJp5JZTyc5Ij4tXWW9iYcXeag4DdS0UpQCxA/Rt7L8JZ
 MIME-Version: 1.0
-In-Reply-To: <20191028104618.5f21af38@endymion>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:8394:: with SMTP id p20mr28056667ilk.73.1572358141217;
+ Tue, 29 Oct 2019 07:09:01 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 07:09:01 -0700
+In-Reply-To: <0000000000009ea5720595dc03a3@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007792ff05960d289d@google.com>
+Subject: Re: BUG: MAX_LOCKDEP_KEYS too low!
+From:   syzbot <syzbot+692f39f040c1f415567b@syzkaller.appspotmail.com>
+To:     a@unstable.cc, alex.aring@gmail.com, allison@lohutok.net,
+        andrew@lunn.ch, andy@greyhouse.net, ap420073@gmail.com,
+        aroulin@cumulusnetworks.com, ast@domdv.de,
+        b.a.t.m.a.n@lists.open-mesh.org, bridge@lists.linux-foundation.org,
+        cleech@redhat.com, daniel@iogearbox.net, davem@davemloft.net,
+        dcaratti@redhat.com, dsa@cumulusnetworks.com, edumazet@google.com,
+        f.fainelli@gmail.com, fw@strlen.de, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, gvaradar@cisco.com, haiyangz@microsoft.com,
+        idosch@mellanox.com, info@metux.net, ivan.khoronzhuk@linaro.org,
+        j.vosburgh@gmail.com, j@w1.fi, jakub.kicinski@netronome.com,
+        jhs@mojatatu.com, jiri@mellanox.com, jiri@resnulli.us,
+        johan.hedberg@gmail.com, johannes.berg@intel.com,
+        john.hurley@netronome.com, jwi@linux.ibm.com,
+        kstewart@linuxfoundation.org, kvalo@codeaurora.org,
+        kys@microsoft.com, lariel@mellanox.com, linmiaohe@huawei.com,
+        linux-bluetooth@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ppp@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-wpan@vger.kernel.org, liuhangbin@gmail.com,
+        marcel@holtmann.org, mareklindner@neomailbox.ch
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/19 2:46 AM, Jean Delvare wrote:
-> On Sun, 27 Oct 2019 16:03:39 -0700, Guenter Roeck wrote:
->> On 10/26/19 1:10 AM, Rain Wang wrote:
->>> The National Semiconductor LM75B is very similar as the
->>> LM75A, but it has no ID byte register 7, and unused registers
->>> return 0xff rather than the last read value like LM75A.
-> 
-> Please send hwmon-related patches to the linux-hwmon list.
-> 
->>> Signed-off-by: Rain Wang <rain_wang@jabil.com>
->>
->> I am quite hesitant to touch the detect function for this chip.
->> Each addition increases the risk for false positives. What is the
->> use case ?
-> 
-> I'm positively certain I don't want this. Ideally there should be no
-> detection at all for device without ID registers. The only reason there
-> are some occurrences of that is because there were no way to explicitly
-> instantiate I2C devices back then, and we have left the detection in
-> place to avoid perceived regressions. But today there are plenty of
-> ways to explicitly instantiate your I2C devices so there are no excuses
-> for more crappy detect functions. Ideally we would even get rid of
-> existing ones at some point in the future.
-> 
-> This patch is bad anyway as it only changes the device name without
-> implementing proper support for the LM75B.
-> 
-FWIW, I don't think there is anything to implement; I don't see any
-differences in functionality.
+syzbot has bisected this bug to:
 
-I am much more concerned about weakening the already weak detection even further:
-As written, each chip with register 0x07 != 0xa1 will be identified as LM75B.
-Even if that was strengthened to actually check if the register value is 0xff,
-we have no idea what other vendors might implement in those registers. it would
-most certainly mis-identify LM75C as LM75B. Not that it really matters if
-the chip _is_ a LM75C, but who knows if other chips fit that identification
-pattern.
+commit ab92d68fc22f9afab480153bd82a20f6e2533769
+Author: Taehee Yoo <ap420073@gmail.com>
+Date:   Mon Oct 21 18:47:51 2019 +0000
 
-Overall, my suggestion is to add a small startup script to affected systems
-to instantiate the chip directly, and avoid weakening the detect function.
+     net: core: add generic lockdep keys
 
-Guenter
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12e05224e00000
+start commit:   60c1769a Add linux-next specific files for 20191028
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=11e05224e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16e05224e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cb86688f30db053d
+dashboard link: https://syzkaller.appspot.com/bug?extid=692f39f040c1f415567b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10be9ed0e00000
+
+Reported-by: syzbot+692f39f040c1f415567b@syzkaller.appspotmail.com
+Fixes: ab92d68fc22f ("net: core: add generic lockdep keys")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
