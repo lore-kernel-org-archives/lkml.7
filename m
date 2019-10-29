@@ -2,97 +2,114 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997ACCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9B6CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D42921734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF4A02087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCw4jKnU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rjclqAY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbfJ2WgJ (ORCPT
+        id S1726634AbfJ2Wg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:36:09 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41745 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfJ2WgJ (ORCPT
+        Tue, 29 Oct 2019 18:36:56 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58234 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfJ2Wg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:36:09 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m125so597153qkd.8;
-        Tue, 29 Oct 2019 15:36:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bAJA1RNDhAkbm1xO3/krIWUAY9zwBPAKxHWFAJSdUMY=;
-        b=uCw4jKnURRfwfJVwzUVthW/4p4oxCjYTxVp1YNNuyOMFS6EuZtRCFiWR5BsmhPOB0u
-         qg/UrUSKGJnODRuLeHpe8qcmCNxJbuS8l+qQlZWrd47EsAc5iSV/bt3Q/348XLydOSb+
-         13rtoDBaK7MsDyzy5mI8FyTw+JKeoOHtTTUt60x27MkPgAyNHkhwVpn6Hf3BeFKUyCAP
-         reJXOHB/pkWERSpU9kRgRlZuRd7JWj36RMs2igTybqsY2cX97Bl0t3w8OkRE0+EFtQKt
-         JQhP/qO2Y9AFSHT/8yyNcOqnKOX7MXefl9DXJPZRVLyYekAN1Pkis+9JL4O++3GU7rJX
-         agCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bAJA1RNDhAkbm1xO3/krIWUAY9zwBPAKxHWFAJSdUMY=;
-        b=KTY/FRgXBWIGgFfe4sZJ0rHqOAFo3pWjzJA/7RlEkvSg5HAqoobk6xvOPPw7AXtjtN
-         Sx77cv2tpBzvh71AEX72UfJ2aoFJaMYLRfUo+iVEl63fcBKRhe9Pv9uDLDdM/zTiX7yQ
-         apH5HUwtq/Sact16amgYiBjfbLuvFafWuGmTqxDcW0TAuA4lTzT/WjfwxrVQlEFIHJkR
-         TCYhj1Jab9iKc5MCOHa0+EoKZV0NyXnEgc6OWpD0uYBccVaOwkdtTJ5JrMd/FCthzTWS
-         ZGrh6jJaVRdOJRAHX1MO1L+Y+O4ZYfvXyWPqBJp6M4K0FpBT6BWYqUjLSAQGoBBbZ6qs
-         4H5w==
-X-Gm-Message-State: APjAAAXpMwOyzugfJpcAruqPT6z/wnpuqmHBpkbrTx7saVjv71Lt1bDm
-        JXPPMvha+UcVSU7i2htR6j8=
-X-Google-Smtp-Source: APXvYqxX3/Dih9xw7OuewPjGxo+KlUk390K7jqpAmpvsdtJR0mrxqr9Lkuzl5t8fTEdk2Sl0jWDj0g==
-X-Received: by 2002:a37:d02:: with SMTP id 2mr24922492qkn.307.1572388567956;
-        Tue, 29 Oct 2019 15:36:07 -0700 (PDT)
-Received: from GBdebian.ic.unicamp.br (wifi-177-220-85-136.wifi.ic.unicamp.br. [177.220.85.136])
-        by smtp.gmail.com with ESMTPSA id c21sm72374qtg.61.2019.10.29.15.36.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 15:36:07 -0700 (PDT)
-From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-To:     outreachy-kernel@googlegroups.com, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org, trivial@kernel.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH] blk-mq: Fix typo in comment
-Date:   Tue, 29 Oct 2019 19:35:56 -0300
-Message-Id: <20191029223556.2289-1-gabrielabittencourt00@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 29 Oct 2019 18:36:56 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TMYRcK169422;
+        Tue, 29 Oct 2019 22:36:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=CGaityfoKrNJnqNc5AMbv+kCP7JuT/aV+9xFPLyunYk=;
+ b=rjclqAY7D1/NmGI/E2XRCyvwT7sTXLkS/JxzlvjfbqlCX+1fMzeMPOliyVONAVlSGoyZ
+ hJD4ZvM1U/+fDWa8H49ZGKYN1LfMXXUbX3CJLMu62pBtHe6C5Xm+W9DmA6jvJfcwmJAh
+ TS/LRmY0TWikL8IkcZ3McfqyGQQ6lTXy8L4w8/gq2ZeUHTQQqmNYGLyGfQoFRcdkD37d
+ 4gT6chpDaQ8/vrNTDm+KLx8id4UQg2TW7TCAHoFESlLhwkypJUYBb3J8TBHV/Pa2chUR
+ ZeXTcU56N+qmiYDuE8xsn5Ey+GMtCLQFh9F7dgvuvJy3+P4xifWu1gJg0qY6rDHR89Cp 3w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2vxwhfg5uf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 22:36:41 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TMXMCV054190;
+        Tue, 29 Oct 2019 22:36:40 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vxwj52e5w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 22:36:40 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9TMac7o025223;
+        Tue, 29 Oct 2019 22:36:39 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 29 Oct 2019 15:36:38 -0700
+Subject: Re: [PATCH] hugetlbfs: fix error handling in init_hugetlbfs_fs()
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     cgxu519@mykernel.net, linux-mm <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+References: <20191017103822.8610-1-cgxu519@mykernel.net>
+ <ba6cd4a4-a1cd-82c0-5ea1-5e20112f8f6b@oracle.com>
+ <16e15cd0096.1068d5c9f40168.8315245997167313680@mykernel.net>
+ <94b6244d-2c24-e269-b12c-e3ba694b242d@oracle.com>
+ <20191029152442.32bf51a13e48d9b2d83cd504@linux-foundation.org>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <befca227-cb8a-8f47-617d-e3bf9972bfec@oracle.com>
+Date:   Tue, 29 Oct 2019 15:36:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029152442.32bf51a13e48d9b2d83cd504@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910290195
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910290196
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo in words: 'vector' and 'query'.
+On 10/29/19 3:24 PM, Andrew Morton wrote:
+> On Tue, 29 Oct 2019 13:47:38 -0700 Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> 
+>> It is assumed that the hugetlbfs_vfsmount[] array will contain
+>> either a valid vfsmount pointer or NULL for each hstate after
+>> initialization.  Changes made while converting to use fs_context
+>> broke this assumption.
+>>
+>> While fixing the hugetlbfs_vfsmount issue, it was discovered that
+>> init_hugetlbfs_fs never did correctly clean up when encountering
+>> a vfs mount error.
+> 
+> What were the user-visible runtime effects of this bug?
+> 
+> (IOW: why does it warrant the cc:stable?)
 
-Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
----
- block/blk-mq-virtio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On second thought, let's not cc stable.
 
-diff --git a/block/blk-mq-virtio.c b/block/blk-mq-virtio.c
-index 488341628256..7b8a42c35102 100644
---- a/block/blk-mq-virtio.c
-+++ b/block/blk-mq-virtio.c
-@@ -16,7 +16,7 @@
-  * @first_vec:	first interrupt vectors to use for queues (usually 0)
-  *
-  * This function assumes the virtio device @vdev has at least as many available
-- * interrupt vetors as @set has queues.  It will then queuery the vector
-+ * interrupt vectors as @set has queues.  It will then query the vector
-  * corresponding to each queue for it's affinity mask and built queue mapping
-  * that maps a queue to the CPUs that have irq affinity for the corresponding
-  * vector.
+It was found during code inspection.  A small memory allocation failure
+would be the most likely cause of taking a error path with the bug.  This
+is unlikely to happen as this is early init code.
+
+Sorry about that,
 -- 
-2.20.1
-
+Mike Kravetz
