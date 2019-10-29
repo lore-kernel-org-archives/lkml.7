@@ -2,197 +2,149 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB8BCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54EDCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21330217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A68217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SaFeHVwT";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e+kZSsC9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y+v5+bk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfJ2CLI (ORCPT
+        id S1729160AbfJ2CLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:11:08 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47852 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfJ2CLI (ORCPT
+        Mon, 28 Oct 2019 22:11:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35649 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726526AbfJ2CLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:11:08 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1CF8A60D93; Tue, 29 Oct 2019 02:11:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572315067;
-        bh=Afg2ZB0Ny7/9nO5a+P8vyHoOw/fBrPUC0+z5jmTbZpg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SaFeHVwTm6hca0SBB+7L2FdB+k4dtvpXYljauLFK1nyBC8YxLgHA6tqtaS6xUkpZf
-         8hcLRsBYOt3uObIcVyugAtBQqXFz80YTDMkLhao7oqOXLJ/FHQS3e+l/WtdZ6I1UEE
-         mJ+9+71icZlYEmkvWtq/AqZ5AG9ciqG6Uh+YYsuI=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 60AF860D77;
-        Tue, 29 Oct 2019 02:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572315065;
-        bh=Afg2ZB0Ny7/9nO5a+P8vyHoOw/fBrPUC0+z5jmTbZpg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e+kZSsC95ZomIt4Ot4nGXsn7rCEwPDXMHuEFb0UH0DYBInIZjTXbofoYNkZAwZTCm
-         0xwDmRWw80q0wAzqojMfafNtkV9GPhQoOhArecDnMwwNLu/aqeZdAk8R8OrKM0KPnk
-         QbuQS5PY690J9aO+sbcAVNCOd78gSP0MMY7hdZp0=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 29 Oct 2019 10:11:05 +0800
-From:   cang@codeaurora.org
-To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] [PATCH v1 1/2] scsi: ufs: Introduce a vops for resetting
- host controller
-In-Reply-To: <BN7PR08MB568444BD52F49775D7EEB363DB6B0@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <1571804009-29787-1-git-send-email-cang@codeaurora.org>
- <1571804009-29787-2-git-send-email-cang@codeaurora.org>
- <BN7PR08MB568444BD52F49775D7EEB363DB6B0@BN7PR08MB5684.namprd08.prod.outlook.com>
-Message-ID: <ebd83f54b99a544a15fca681196bb8f3@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Mon, 28 Oct 2019 22:11:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572315082;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=dxTh2aeqRz/SGJhGd2rcrJamUtecUG5SfHtNNQiPowQ=;
+        b=Y+v5+bk6YwtI2mpkP5oyPc9wsbwiSQZBXw+MbPHb1gJUXMNBQ/+sdnqOMxagh7Spw65azf
+        bErDWsT3kcs3Mg1X4LXnInzUJxfO42votSbM7tzdFU9sk1zzdJHwEVmqH+6WuQylDHLs5e
+        TZ0hG5PiKUKKkFY8g4vnSSygheXI0iY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-189-3v9Rw4OyMQKzV50YZkpVqw-1; Mon, 28 Oct 2019 22:11:19 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 682FB2B6;
+        Tue, 29 Oct 2019 02:11:17 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-12-41.pek2.redhat.com [10.72.12.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 631911001B28;
+        Tue, 29 Oct 2019 02:11:04 +0000 (UTC)
+From:   Lianbo Jiang <lijiang@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, bhe@redhat.com, dyoung@redhat.com, jgross@suse.com,
+        dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
+        horms@verge.net.au, kexec@lists.infradead.org
+Subject: [PATCH 0/2 v7] x86/kdump: Fix 'kmem -s' reported an invalid freepointer when SME was active
+Date:   Tue, 29 Oct 2019 10:10:57 +0800
+Message-Id: <20191029021059.22070-1-lijiang@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: 3v9Rw4OyMQKzV50YZkpVqw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-23 18:39, Bean Huo (beanhuo) wrote:
-> Hi, Can Guo
-> Actually, we already have DME_RESET,  this is not enough for Qualcomm 
-> host?
-> Thanks,
-> 
-> //Bean
-> 
+In purgatory(), the main things are as below:
 
-Hi Bean,
+[1] verify sha256 hashes for various segments.
+    Lets keep these codes, and do not touch the logic.
 
-Yes, for Qualcomm hosts, we need this to fully reset the whole UFS 
-controller block
+[2] copy the first 640k content to a backup region.
+    Lets safely remove it and clean all code related to backup region.
 
-Can Guo
+This patch series will remove the backup region, because the current
+handling of copying the first 640k runs into problems when SME is
+active(https://bugzilla.kernel.org/show_bug.cgi?id=3D204793).
 
->> 
->> Some UFS host controllers need their specific implementations of 
->> resetting to
->> get them into a good state. Provide a new vops to allow the platform 
->> driver to
->> implement this own reset operation.
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> ---
->>  drivers/scsi/ufs/ufshcd.c | 16 ++++++++++++++++  
->> drivers/scsi/ufs/ufshcd.h | 10
->> ++++++++++
->>  2 files changed, 26 insertions(+)
->> 
->> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c 
->> index
->> c28c144..161e3c4 100644
->> --- a/drivers/scsi/ufs/ufshcd.c
->> +++ b/drivers/scsi/ufs/ufshcd.c
->> @@ -3859,6 +3859,14 @@ static int ufshcd_link_recovery(struct ufs_hba 
->> *hba)
->>  	ufshcd_set_eh_in_progress(hba);
->>  	spin_unlock_irqrestore(hba->host->host_lock, flags);
->> 
->> +	ret = ufshcd_vops_full_reset(hba);
->> +	if (ret)
->> +		dev_warn(hba->dev, "%s: full reset returned %d\n",
->> +				  __func__, ret);
->> +
->> +	/* Reset the attached device */
->> +	ufshcd_vops_device_reset(hba);
->> +
->>  	ret = ufshcd_host_reset_and_restore(hba);
->> 
->>  	spin_lock_irqsave(hba->host->host_lock, flags); @@ -6241,6 +6249,11
->> @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
->>  	int retries = MAX_HOST_RESET_RETRIES;
->> 
->>  	do {
->> +		err = ufshcd_vops_full_reset(hba);
->> +		if (err)
->> +			dev_warn(hba->dev, "%s: full reset returned %d\n",
->> +					__func__, err);
->> +
->>  		/* Reset the attached device */
->>  		ufshcd_vops_device_reset(hba);
->> 
->> @@ -8384,6 +8397,9 @@ int ufshcd_init(struct ufs_hba *hba, void 
->> __iomem
->> *mmio_base, unsigned int irq)
->>  		goto exit_gating;
->>  	}
->> 
->> +	/* Reset controller to power on reset (POR) state */
->> +	ufshcd_vops_full_reset(hba);
->> +
->>  	/* Reset the attached device */
->>  	ufshcd_vops_device_reset(hba);
->> 
->> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h 
->> index
->> e0fe247..253b9ea 100644
->> --- a/drivers/scsi/ufs/ufshcd.h
->> +++ b/drivers/scsi/ufs/ufshcd.h
->> @@ -296,6 +296,8 @@ struct ufs_pwr_mode_info {
->>   * @apply_dev_quirks: called to apply device specific quirks
->>   * @suspend: called during host controller PM callback
->>   * @resume: called during host controller PM callback
->> + * @full_reset: called for handling variant specific implementations 
->> of
->> + *              resetting the hci
->>   * @dbg_register_dump: used to dump controller debug information
->>   * @phy_initialization: used to initialize phys
->>   * @device_reset: called to issue a reset pulse on the UFS device @@ 
->> -325,6
->> +327,7 @@ struct ufs_hba_variant_ops {
->>  	int	(*apply_dev_quirks)(struct ufs_hba *);
->>  	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
->>  	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
->> +	int	(*full_reset)(struct ufs_hba *hba);
->>  	void	(*dbg_register_dump)(struct ufs_hba *hba);
->>  	int	(*phy_initialization)(struct ufs_hba *);
->>  	void	(*device_reset)(struct ufs_hba *hba);
->> @@ -1076,6 +1079,13 @@ static inline int ufshcd_vops_resume(struct 
->> ufs_hba
->> *hba, enum ufs_pm_op op)
->>  	return 0;
->>  }
->> 
->> +static inline int ufshcd_vops_full_reset(struct ufs_hba *hba) {
->> +	if (hba->vops && hba->vops->full_reset)
->> +		return hba->vops->full_reset(hba);
->> +	return 0;
->> +}
->> +
->>  static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba) 
->>  {
->>  	if (hba->vops && hba->vops->dbg_register_dump)
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
+The low 1MiB region will always be reserved when the crashkernel kernel
+command line option is specified. And this way makes it unnecessary to
+do anything with the low 1MiB region, because the memory allocated later
+won't fall into the low 1MiB area.
+
+This series includes two patches:
+[1] x86/kdump: always reserve the low 1MiB when the crashkernel option
+    is specified
+    The low 1MiB region will always be reserved when the crashkernel
+    kernel command line option is specified, which ensures that the
+    memory allocated later won't fall into the low 1MiB area.
+
+[2] x86/kdump: clean up all the code related to the backup region
+    Remove the backup region and clean up.
+
+Changes since v1:
+[1] Add extra checking condition: when the crashkernel option is
+    specified, reserve the low 640k area.
+
+Changes since v2:
+[1] Reserve the low 1MiB region when the crashkernel option is only
+    specified.(Suggested by Eric)
+
+[2] Remove the unused crash_copy_backup_region()
+
+[3] Remove the backup region and clean up
+
+[4] Split them into three patches
+
+Changes since v3:
+[1] Improve the first patch's log
+
+[2] Improve the third patch based on Eric's suggestions
+
+Changes since v4:
+[1] Correct some typos, and also improve the first patch's log
+
+[2] Add a new function kexec_reserve_low_1MiB() in kernel/kexec_core.c
+    and which is called by reserve_real_mode(). (Suggested by Boris)
+
+Changes since v5:
+[1] Call the cmdline_find_option() instead of strstr() to check the
+    crashkernel option. (Suggested by Hatayama)
+
+[2] Add a weak function kexec_reserve_low_1MiB() in kernel/kexec_core.c,
+    and implement the kexec_reserve_low_1MiB() in arch/x86/kernel/
+    machine_kexec_64.c so that it does not cause the compile error
+    on non-x86 kernel, and also ensures that it can work well on x86
+    kernel.
+
+Changes since v6:
+[1] Move the kexec_reserve_low_1MiB() to arch/x86/kernel/crash.c and
+    also move its declaration function to arch/x86/include/asm/crash.h
+    (Suggested by Dave Young)
+
+[2] Adjust the corresponding header files.
+
+Lianbo Jiang (2):
+  x86/kdump: always reserve the low 1MiB when the crashkernel option is
+    specified
+  x86/kdump: clean up all the code related to the backup region
+
+ arch/x86/include/asm/crash.h       |   6 ++
+ arch/x86/include/asm/kexec.h       |  10 ---
+ arch/x86/include/asm/purgatory.h   |  10 ---
+ arch/x86/kernel/crash.c            | 102 ++++++++---------------------
+ arch/x86/kernel/machine_kexec_64.c |  47 -------------
+ arch/x86/purgatory/purgatory.c     |  19 ------
+ arch/x86/realmode/init.c           |   2 +
+ 7 files changed, 34 insertions(+), 162 deletions(-)
+
+--=20
+2.17.1
+
