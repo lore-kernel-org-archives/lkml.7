@@ -2,126 +2,89 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C64CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B520ECA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3122086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7210B20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572339832;
-	bh=Z/Ec2pBe0Zo+2pw/BVat2K9TX/1RJqlsO2QhBKZghZE=;
+	s=default; t=1572339879;
+	bh=IbQkjMguEXcLEaRwhCuLeXjDzwQdVquZPVX8W/lviKg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ru6CCmSLey0QARzUKp0Gr6uIby+loh0gqaVzIlRhYVln8+EFe8hCcGlr+KYOkRiCw
-	 KpMOa4QK5zQ8WStFq7PyJJG19eJqOy/FOWXyX1zeM+aW4RNBS+lXdYGFGo8ZGaaSC+
-	 F6gX0KgPGdNgJeltZlsjNI8ykryh4GiP6CRxWDTQ=
+	b=aVaDMqPWyvUJXvddY4y1w+JRsH3G0M/o24XzQvKIQSdUdSyA7fEl2wsXvPH836eB8
+	 K0K1N9cQsE/TW+obg4AGYYANfUKa8DUnlIZ6o3xZbxzfNwp1yTKfKEPtiKpMv9L54v
+	 3mnrZd9NhHF53km7AQOzfdKSqX0fJitsarHM4aIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbfJ2JDv (ORCPT
+        id S1730769AbfJ2JEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:03:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35666 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730523AbfJ2JDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:03:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 32C57AE46;
-        Tue, 29 Oct 2019 09:03:49 +0000 (UTC)
-Date:   Tue, 29 Oct 2019 10:03:47 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Roman Gushchin <guro@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com
-Subject: Re: [PATCH] mm: memcontrol: fix data race in
- mem_cgroup_select_victim_node
-Message-ID: <20191029090347.GG31513@dhcp22.suse.cz>
-References: <20191029005405.201986-1-shakeelb@google.com>
+        Tue, 29 Oct 2019 05:04:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727525AbfJ2JEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:04:38 -0400
+Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D85220717;
+        Tue, 29 Oct 2019 09:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572339877;
+        bh=IbQkjMguEXcLEaRwhCuLeXjDzwQdVquZPVX8W/lviKg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y0mtnxGHmEXBt6yS2fKXZGQbFQrC5WwQwo06fbCZFtkj/zq6Qp7C65laj9VBFfNbL
+         iz7eUSSaCvLEFeSxSh+ja53yFpQeQb3zVnAWvPCl9pZefXXFvXUuqPGTgmSKHHwLqn
+         8yXeGePrih8sWBtQparb0MBWo+ANNibjtA/KExko=
+Date:   Tue, 29 Oct 2019 05:04:35 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 095/100] USB: usb-skeleton: fix
+ use-after-free after driver unbind
+Message-ID: <20191029090435.GJ1554@sasha-vm>
+References: <20191018220525.9042-1-sashal@kernel.org>
+ <20191018220525.9042-95-sashal@kernel.org>
+ <20191018222205.GA6978@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191029005405.201986-1-shakeelb@google.com>
+In-Reply-To: <20191018222205.GA6978@kroah.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 28-10-19 17:54:05, Shakeel Butt wrote:
-> Syzbot reported the following bug:
-> 
-> BUG: KCSAN: data-race in mem_cgroup_select_victim_node / mem_cgroup_select_victim_node
-> 
-> write to 0xffff88809fade9b0 of 4 bytes by task 8603 on cpu 0:
->  mem_cgroup_select_victim_node+0xb5/0x3d0 mm/memcontrol.c:1686
->  try_to_free_mem_cgroup_pages+0x175/0x4c0 mm/vmscan.c:3376
->  reclaim_high.constprop.0+0xf7/0x140 mm/memcontrol.c:2349
->  mem_cgroup_handle_over_high+0x96/0x180 mm/memcontrol.c:2430
->  tracehook_notify_resume include/linux/tracehook.h:197 [inline]
->  exit_to_usermode_loop+0x20c/0x2c0 arch/x86/entry/common.c:163
->  prepare_exit_to_usermode+0x180/0x1a0 arch/x86/entry/common.c:194
->  swapgs_restore_regs_and_return_to_usermode+0x0/0x40
-> 
-> read to 0xffff88809fade9b0 of 4 bytes by task 7290 on cpu 1:
->  mem_cgroup_select_victim_node+0x92/0x3d0 mm/memcontrol.c:1675
->  try_to_free_mem_cgroup_pages+0x175/0x4c0 mm/vmscan.c:3376
->  reclaim_high.constprop.0+0xf7/0x140 mm/memcontrol.c:2349
->  mem_cgroup_handle_over_high+0x96/0x180 mm/memcontrol.c:2430
->  tracehook_notify_resume include/linux/tracehook.h:197 [inline]
->  exit_to_usermode_loop+0x20c/0x2c0 arch/x86/entry/common.c:163
->  prepare_exit_to_usermode+0x180/0x1a0 arch/x86/entry/common.c:194
->  swapgs_restore_regs_and_return_to_usermode+0x0/0x40
-> 
-> mem_cgroup_select_victim_node() can be called concurrently which reads
-> and modifies memcg->last_scanned_node without any synchrnonization. So,
-> read and modify memcg->last_scanned_node with READ_ONCE()/WRITE_ONCE()
-> to stop potential reordering.
+On Fri, Oct 18, 2019 at 06:22:05PM -0400, Greg Kroah-Hartman wrote:
+>On Fri, Oct 18, 2019 at 06:05:20PM -0400, Sasha Levin wrote:
+>> From: Johan Hovold <johan@kernel.org>
+>>
+>> [ Upstream commit 6353001852776e7eeaab4da78922d4c6f2b076af ]
+>>
+>> The driver failed to stop its read URB on disconnect, something which
+>> could lead to a use-after-free in the completion handler after driver
+>> unbind in case the character device has been closed.
+>>
+>> Fixes: e7389cc9a7ff ("USB: skel_read really sucks royally")
+>> Signed-off-by: Johan Hovold <johan@kernel.org>
+>> Link: https://lore.kernel.org/r/20191009170944.30057-3-johan@kernel.org
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/usb/usb-skeleton.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>
+>This file does not even get built in the kernel tree, no need to
+>backport anything for it :)
 
-I am sorry but I do not understand the problem and the fix. Why does the
-race happen and why does _ONCE fixes it? There is still no
-synchronization. Do you want to prevent from memcg->last_scanned_node
-reloading?
-
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> Suggested-by: Eric Dumazet <edumazet@google.com>
-> Cc: Greg Thelen <gthelen@google.com>
-> Reported-by: syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com
-> ---
->  mm/memcontrol.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index c4c555055a72..5a06739dd3e4 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1667,7 +1667,7 @@ int mem_cgroup_select_victim_node(struct mem_cgroup *memcg)
->  	int node;
->  
->  	mem_cgroup_may_update_nodemask(memcg);
-> -	node = memcg->last_scanned_node;
-> +	node = READ_ONCE(memcg->last_scanned_node);
->  
->  	node = next_node_in(node, memcg->scan_nodes);
->  	/*
-> @@ -1678,7 +1678,7 @@ int mem_cgroup_select_victim_node(struct mem_cgroup *memcg)
->  	if (unlikely(node == MAX_NUMNODES))
->  		node = numa_node_id();
->  
-> -	memcg->last_scanned_node = node;
-> +	WRITE_ONCE(memcg->last_scanned_node, node);
->  	return node;
->  }
->  #else
-> -- 
-> 2.24.0.rc0.303.g954a862665-goog
+I'll drop it, but you're taking patches for this driver:
+https://lore.kernel.org/patchwork/patch/1140673/ .
 
 -- 
-Michal Hocko
-SUSE Labs
+Thanks,
+Sasha
