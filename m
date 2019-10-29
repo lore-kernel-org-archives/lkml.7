@@ -2,61 +2,61 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9375FCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D8DCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680022087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A87921734
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uDuxkMJE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkeswJ2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbfJ2WGc (ORCPT
+        id S1728881AbfJ2WGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:06:32 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:32809 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728261AbfJ2WGX (ORCPT
+        Tue, 29 Oct 2019 18:06:42 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35197 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbfJ2WGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:06:23 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y127so11746213lfc.0;
-        Tue, 29 Oct 2019 15:06:22 -0700 (PDT)
+        Tue, 29 Oct 2019 18:06:31 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y6so11721729lfj.2;
+        Tue, 29 Oct 2019 15:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5LONhI03rb2fwfUY6X7OU7Y25sYxMdC9HcXKn9+BCyQ=;
-        b=uDuxkMJEKoGGClHLxpgL5yA4z60Lv5lPzaeYSs3xAcGhttJWal3QJqTG8rkQys5I1R
-         xLLoE0quWFbJIhm/SovHBSpfo8ahIXJ991BD4bbc3VQMtrtYJ/IVWdnf8gHwUnUVkdYV
-         OfJU/dCHLm12SiHCjZPem5v7StHvRLcVi/9RWRApfqYJVuPKvHSgDQdgdlYAVZ4qLrBS
-         rT4w5sGQLqKkiPCD5N26pqzIo6kJwZyQbfn6ZTX1WDgPSlsIA39ufbzkGkME1x46nite
-         GIB8uDQIDKtvSl2mcBp8hh731XIoIV+Wed+eOr/UqUJa6eZP9Wnp2BWUqHQj4M6bM8pe
-         mZdw==
+        bh=jbUWlE4N7GHEhDeg6Rs3vg2Hd4wEPrYqqxEHl2ZIB0Q=;
+        b=DkeswJ2tL37hW10JTWqtUBukW5tFU5kBVvkPmpKLwGwrNdCIAuBpTOziB2AlxeHBBO
+         CdMkCLDjX6VBtjUqsmEXF/H/cJVryGnD86mrZH8LROg+KFAYnAnNSADG7BJ+NtDZlcOf
+         eTsCSJQHLqbRFR1pgPu+VG3fwQKInQiIVOQsacymAAZXKVit2PwnMA4u0yzpfy9uyvRs
+         UVpXOIX+n6wNxlpFDZrH0/Vz9rmcYSeKttACpNyTCjVRGAmK9bju1E22QERD1snyLtmG
+         fQdzpoY0x1KSDv6UFespLGYpmHG3jqIlFXDnQkw0WHzsmeULXdx0RyKtOKwiHetPuJWp
+         ttqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5LONhI03rb2fwfUY6X7OU7Y25sYxMdC9HcXKn9+BCyQ=;
-        b=sV2xIZfc8WX1Q8ZESfL9WUpkfvIMRIrHFn9nvNgrHSPrQQerhGdGrllsM9k5ICp6f8
-         JQPDbE8Jq5S/kWX0m8Lyy/YBf1fRZEzy8Wc80ANiefdtVc677YzlEI91WAeAudvU96Z+
-         rehv/1NNzHWk16ADemA3iULtyoT7AcnCemeaM92tAXYuvgmAuO6o3Ef0deAQGwwwj+20
-         01ftPWUjRAQbp6YQR5OhFHFEZe/djjtnFHHovK7q/pAXjzk5uHKfyAEphoYb7PRombrQ
-         ocd+Wq/PFBA2nc9Ursq85PdLuOxAHQxOuRE3ek/Ky9OgJ/Z8aa8B8YEaZrw+RRPuuXQG
-         QF3w==
-X-Gm-Message-State: APjAAAWf0lh4MClAcCNd9+PFbZ8h8k2MHufQWf9lfUsprOSNnmxXqEQM
-        OAy3lbst9DmO2Y7PPw7l+mA=
-X-Google-Smtp-Source: APXvYqzapl51XY9ifplkQr/u2ykDrE0Hk/PIVVJwSSXLaMk8Ts/yv0GJXscMYBrU2W6tGh/O4PLOFQ==
-X-Received: by 2002:ac2:4d17:: with SMTP id r23mr4035546lfi.56.1572386781628;
-        Tue, 29 Oct 2019 15:06:21 -0700 (PDT)
+        bh=jbUWlE4N7GHEhDeg6Rs3vg2Hd4wEPrYqqxEHl2ZIB0Q=;
+        b=WuFWn9qZiRAmL33r5zjw0FQBcQ1XlGAaRIo6/1qOkWMXq7LMSgwklROcAGuLxwLOLE
+         6aLcPVv92TYXazzp8r28gy70gR35kdMLZzUpYbPgls3z3RHI33aJ89w9eVBAWziRD9SQ
+         Nhv/ysGv73kxVDyP0SAurJQXbvFdbr7vg6liSlDikA/gv6IXY29rPXaT7BVdOmBxPVNj
+         RlCmQlGgJTETQ3rmBMTrLidKtSqCgZCuFHy+pNlHsONk5NkQfA1NyAus6GaJTBw977Ji
+         yw79JpTrvdA80HxzHbtdYv5m+O3Wpwy2DbuWMdFa5zQcqWKCiAE2k4yupUeV90jtbFzj
+         XvxQ==
+X-Gm-Message-State: APjAAAU34NWQfRoBAUxQ2R44RnYC2nljejUh2Y2Vzpk8/I+tmUwFfy0h
+        KIKP7NqDW/gZAhqcV+9xiS0=
+X-Google-Smtp-Source: APXvYqynfve6kSCNW//RN6HZE3BSciRBSzH+sPZi0ac52KbVktmu7Nj2VQb+LfeIo9fNRrHPKAsi9Q==
+X-Received: by 2002:ac2:4ac1:: with SMTP id m1mr3882976lfp.182.1572386788661;
+        Tue, 29 Oct 2019 15:06:28 -0700 (PDT)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id 12sm51536lje.92.2019.10.29.15.06.20
+        by smtp.gmail.com with ESMTPSA id 12sm51536lje.92.2019.10.29.15.06.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 15:06:21 -0700 (PDT)
+        Tue, 29 Oct 2019 15:06:28 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Peter Geis <pgwipeout@gmail.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 12/19] PM / devfreq: tegra30: Include appropriate header
-Date:   Wed, 30 Oct 2019 01:00:12 +0300
-Message-Id: <20191029220019.26773-13-digetx@gmail.com>
+Subject: [PATCH v7 19/19] PM / devfreq: tegra20/30: Add Dmitry as a maintainer
+Date:   Wed, 30 Oct 2019 01:00:19 +0300
+Message-Id: <20191029220019.26773-20-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191029220019.26773-1-digetx@gmail.com>
 References: <20191029220019.26773-1-digetx@gmail.com>
@@ -80,29 +80,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's not very correct to include mod_devicetable.h for the OF device
-drivers and of_device.h should be included instead.
+I was contributing to the NVIDIA Tegra20+ devfreq drivers recently and
+want to help keep them working and evolving in the future.
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Tested-by: Peter Geis <pgwipeout@gmail.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index f658b0b4a845..9da62f695859 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -13,7 +13,7 @@
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/module.h>
--#include <linux/mod_devicetable.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pm_opp.h>
- #include <linux/reset.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2cd4937356fe..a64a4aa34f2a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10595,6 +10595,15 @@ F:	include/linux/memblock.h
+ F:	mm/memblock.c
+ F:	Documentation/core-api/boot-time-mm.rst
+ 
++MEMORY FREQUENCY SCALING DRIVERS FOR NVIDIA TEGRA
++M:	Dmitry Osipenko <digetx@gmail.com>
++L:	linux-pm@vger.kernel.org
++L:	linux-tegra@vger.kernel.org
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
++S:	Maintained
++F:	drivers/devfreq/tegra20-devfreq.c
++F:	drivers/devfreq/tegra30-devfreq.c
++
+ MEMORY MANAGEMENT
+ L:	linux-mm@kvack.org
+ W:	http://www.linux-mm.org
 -- 
 2.23.0
 
