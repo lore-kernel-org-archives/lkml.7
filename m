@@ -2,153 +2,223 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B76CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5317CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B15220679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADA621835
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iWqIr28E";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XyngsHL5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fJVzoelD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730526AbfJ2COc (ORCPT
+        id S1730549AbfJ2CXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:14:32 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49012 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728497AbfJ2COc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:14:32 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3EB676032D; Tue, 29 Oct 2019 02:14:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572315271;
-        bh=mM+8iA4RCQ/3hHjKmFsx3ITFIQk6Ug1K0cEpK7e2uWE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iWqIr28Ex9TnplfbvamCnn7+4QboVgJkFcyEPJhmcxGWkpzrjwWpq/fqReUSZFP76
-         mf7HsLWrapY5HxyeItpgy2UAQwg3nEoxJKjKF2JiT2mHtJprXATqpv3E+abZCY2odo
-         ERRqU2V/UNBnHBoL/2ZDVOA4O1SDa7LAF1yamRUc=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 67C116032D;
-        Tue, 29 Oct 2019 02:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572315270;
-        bh=mM+8iA4RCQ/3hHjKmFsx3ITFIQk6Ug1K0cEpK7e2uWE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XyngsHL5oH8sUvUQBv4U21wQB4g9pOhsl3g8zuJ+QgeFuOyulOzs5bFZ+e6g6Obv0
-         mJ4KPqSlQe1SINQBFHsPviCmtawLOqlp/0CKpa21AKYghIHGIqXv64L9jXApYIF1Xr
-         2wXQCXk8NEFHev0PQ15t9pWSXRUMrFOCbTzgWjBg=
+        Mon, 28 Oct 2019 22:23:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39518 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727987AbfJ2CXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 22:23:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=weWtSFC8Dm8rRDFq7Ws7YUnkyjq/k0sSGCP9VGBKkyw=; b=fJVzoelD4VQgmU1U+f7c/xTlQ5
+        sNvBmfgwFgZ1JPMBhPUlhZdvJCN3484WQZFbgDu/hxD5WOBoL1rKBHhHw7VXRoCgqM0cln5ylX5WF
+        lnCX5riYaxwMGB21OgC97MCdQTdzWPkaGQ9c9zui7QlgA7bM7TgZ3MiOfStUM5RKTEvM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iPHA1-0001NW-4d; Tue, 29 Oct 2019 03:23:05 +0100
+Date:   Tue, 29 Oct 2019 03:23:05 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 net-next 05/12] dt-bindings: net: ti: add new cpsw
+ switch driver bindings
+Message-ID: <20191029022305.GK15259@lunn.ch>
+References: <20191024100914.16840-1-grygorii.strashko@ti.com>
+ <20191024100914.16840-6-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 29 Oct 2019 10:14:30 +0800
-From:   cang@codeaurora.org
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/5] scsi: Adjust DBD setting in mode sense for caching
- mode page per LLD
-In-Reply-To: <0ca52845-10ec-3310-83f7-81bdb635ec12@acm.org>
-References: <1572234608-32654-1-git-send-email-cang@codeaurora.org>
- <1572234608-32654-2-git-send-email-cang@codeaurora.org>
- <0ca52845-10ec-3310-83f7-81bdb635ec12@acm.org>
-Message-ID: <ecb93b31aaee952e94b31331c6025eda@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024100914.16840-6-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-28 22:58, Bart Van Assche wrote:
-> On 10/27/19 8:50 PM, Can Guo wrote:
->> Host sends MODE_SENSE_10 with caching mode page, to check if the 
->> device
->> supports the cache feature.
->> Some LLD standards requires DBD field to be set to 1.
-> 
-> Which LLD standard are you referring to? Please mention at least one
-> name of such a standard in the patch description.
-> 
+> +TI SoC Ethernet Switch Controller Device Tree Bindings (new)
+> +------------------------------------------------------
+> +
+> +The 3-port switch gigabit ethernet subsystem provides ethernet packet
+> +communication and can be configured as an ethernet switch.
 
-Hi Bart, Thank you for your review.
+Hi Grygorii
 
-The LLD standard here is UFS. I will update the commit message and 
-re-upload it later.
+Maybe referring it to a 3-port switch will cause confusion, since in
+this use case, it only has 2 ports, and you only list two ports in the
+device tree.
 
-Thanks,
+> It provides the
+> +gigabit media independent interface (GMII),reduced gigabit media
+> +independent interface (RGMII), reduced media independent interface (RMII),
+> +the management data input output (MDIO) for physical layer device (PHY)
+> +management.
+> +
+> +Required properties:
+> +- compatible : be one of the below:
+> +	  "ti,cpsw-switch" for backward compatible
+> +	  "ti,am335x-cpsw-switch" for AM335x controllers
+> +	  "ti,am4372-cpsw-switch" for AM437x controllers
+> +	  "ti,dra7-cpsw-switch" for DRA7x controllers
+> +- reg : physical base address and size of the CPSW module IO range
+> +- ranges : shall contain the CPSW module IO range available for child devices
+> +- clocks : should contain the CPSW functional clock
+> +- clock-names : should be "fck"
+> +	See bindings/clock/clock-bindings.txt
+> +- interrupts : should contain CPSW RX_THRESH, RX, TX, MISC interrupts
+> +- interrupt-names : should contain "rx_thresh", "rx", "tx", "misc"
+> +	See bindings/interrupt-controller/interrupts.txt
+> +
+> +Optional properties:
+> +- syscon : phandle to the system control device node which provides access to
+> +	efuse IO range with MAC addresses
+> +
+> +Required Sub-nodes:
+> +- ethernet-ports : contains CPSW external ports descriptions
+> +	Required properties:
+> +	- #address-cells : Must be 1
+> +	- #size-cells : Must be 0
+> +	- reg : CPSW port number. Should be 1 or 2
+> +	- phys : phandle on phy-gmii-sel PHY (see phy/ti-phy-gmii-sel.txt)
+> +	- phy-mode : See [1]
+> +	- phy-handle : See [1]
+> +
+> +	Optional properties:
+> +	- label : Describes the label associated with this port
+> +	- ti,dual-emac-pvid : Specifies default PORT VID to be used to segregate
+> +		ports. Default value - CPSW port number.
+> +	- mac-address : See [1]
+> +	- local-mac-address : See [1]
+> +
+> +- mdio : CPSW MDIO bus block description
+> +	- bus_freq : MDIO Bus frequency
+> +	See bindings/net/mdio.txt and davinci-mdio.txt
+> +
+> +- cpts : The Common Platform Time Sync (CPTS) module description
+> +	- clocks : should contain the CPTS reference clock
+> +	- clock-names : should be "cpts"
+> +	See bindings/clock/clock-bindings.txt
+> +
+> +	Optional properties - all ports:
+> +	- cpts_clock_mult : Numerator to convert input clock ticks into ns
+> +	- cpts_clock_shift : Denominator to convert input clock ticks into ns
+> +			  Mult and shift will be calculated basing on CPTS
+> +			  rftclk frequency if both cpts_clock_shift and
+> +			  cpts_clock_mult properties are not provided.
+> +
+> +[1] See Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> +
+> +Examples:
+> +
+> +mac_sw: switch@0 {
+> +	compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
+> +	reg = <0x0 0x4000>;
+> +	ranges = <0 0 0x4000>;
+> +	clocks = <&gmac_main_clk>;
+> +	clock-names = "fck";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	syscon = <&scm_conf>;
+> +	status = "disabled";
+> +
+> +	interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names = "rx_thresh", "rx", "tx", "misc"
+> +
+> +	ethernet-ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpsw_port1: port@1 {
+> +			reg = <1>;
+> +			label = "port1";
+> +			/* Filled in by U-Boot */
+> +			mac-address = [ 00 00 00 00 00 00 ];
+> +			phys = <&phy_gmii_sel 1>;
+> +		};
+> +
+> +		cpsw_port2: port@2 {
+> +			reg = <2>;
+> +			label = "wan";
+> +			/* Filled in by U-Boot */
+> +			mac-address = [ 00 00 00 00 00 00 ];
+> +			phys = <&phy_gmii_sel 2>;
+> +		};
+> +	};
+> +
+> +	davinci_mdio_sw: mdio@1000 {
+> +		compatible = "ti,cpsw-mdio","ti,davinci_mdio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		ti,hwmods = "davinci_mdio";
+> +		bus_freq = <1000000>;
+> +		reg = <0x1000 0x100>;
+> +	};
+> +
+> +	cpts {
+> +		clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 25>;
+> +		clock-names = "cpts";
+> +	};
+> +};
+> +
+> +&mac_sw {
+> +	pinctrl-names = "default", "sleep";
+> +	status = "okay";
+> +};
+> +
+> +&cpsw_port1 {
+> +	phy-handle = <&ethphy0_sw>;
+> +	phy-mode = "rgmii";
+> +	ti,dual_emac_pvid = <1>;
+> +};
+> +
+> +&cpsw_port2 {
+> +	phy-handle = <&ethphy1_sw>;
+> +	phy-mode = "rgmii";
+> +	ti,dual_emac_pvid = <2>;
+> +};
+> +
+> +&davinci_mdio_sw {
+> +	ethphy0_sw: ethernet-phy@0 {
+> +		reg = <0>;
+> +	};
+> +
+> +	ethphy1_sw: ethernet-phy@1 {
+> +		reg = <1>;
+> +	};
+> +};
 
-Can Guo
+In an example, it is unusual to split things up like this. I
+understand that parts of this will be in the dtsi file, and parts in
+the .dts file, but examples generally keep it all as one. And when you
+re-write this in YAML so it can be used to validated real DTs, you
+will have to combine it.
 
->> Change-Id: I0c8752c1888654942d6d7e6e0f6dc197033ac326
-> 
-> Change-IDs should be left out from upstream patches. Does the presence
-> of this ID mean that this patch has not been verified with checkpatch?
-> From the checkpatch source code:
-> 
-> # Check for unwanted Gerrit info
-> if ($in_commit_log && $line =~ /^\s*change-id:/i) {
-> 	ERROR("GERRIT_CHANGE_ID",
-> 	      "Remove Gerrit Change-Id's before submitting upstream.\n"\
-> 		 . $herecurr);
-> }
-> 
-
-Sorry, forgot to remove the change-id.
-
->> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
->> index aab4ed8..6d8194f 100644
->> --- a/drivers/scsi/sd.c
->> +++ b/drivers/scsi/sd.c
->> @@ -2629,6 +2629,7 @@ static int sd_try_rc16_first(struct scsi_device 
->> *sdp)
->>   {
->>   	int len = 0, res;
->>   	struct scsi_device *sdp = sdkp->device;
->> +	struct Scsi_Host *host = sdp->host;
->>     	int dbd;
->>   	int modepage;
->> @@ -2660,7 +2661,10 @@ static int sd_try_rc16_first(struct scsi_device 
->> *sdp)
->>   		dbd = 8;
->>   	} else {
->>   		modepage = 8;
->> -		dbd = 0;
->> +		if (host->set_dbd_for_caching)
->> +			dbd = 8;
->> +		else
->> +			dbd = 0;
->>   	}
->>     	/* cautiously ask */
->> diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
->> index 2c3f0c5..3900987 100644
->> --- a/include/scsi/scsi_host.h
->> +++ b/include/scsi/scsi_host.h
->> @@ -650,6 +650,12 @@ struct Scsi_Host {
->>   	unsigned no_scsi2_lun_in_cdb:1;
->>     	/*
->> +	 * Set "DBD" field in mode_sense caching mode page in case it is
->> +	 * mandatory by LLD standard.
->> +	 */
->> +	unsigned set_dbd_for_caching:1;
->> +
->> +	/*
->>   	 * Optional work queue to be utilized by the transport
->>   	 */
->>   	char work_q_name[20];
-> 
-> Since this patch by itself has no effect, please resubmit this patch
-> together with the LLD patch that sets set_dbd_for_caching.
-> 
-> Thanks,
-> 
-> Bart.
+     Andrew
