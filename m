@@ -2,110 +2,188 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60739CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A2BCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3375720874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED63620874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xgSb9VSY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U2XMlrfM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388223AbfJ2NCn (ORCPT
+        id S2388085AbfJ2NEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:02:43 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:40124 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387901AbfJ2NCm (ORCPT
+        Tue, 29 Oct 2019 09:04:09 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35461 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729339AbfJ2NEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:02:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TXp6GtZA1fnB+a0OnStAdqw3GTFynTzXAdUuYTPfr54=; b=xgSb9VSYh5Q85Nh4M/recBLR7
-        4U/fKWmRlBQOG6yrhqwqxQPlG12WuXdub/XrZZvPjEuwh0gWIA6HWGWv/oDftAWPl98mRNYRxJESM
-        zQd5XSGZIrLC7DvrFzTGHfo3xMqaoqJai6oOHLbWKqzkDfJ+OIfHC6tkCaYeLXUre1ziCukLiEHcB
-        KBB8o91Cf6iReoBUYGYVLe3yuNNFMu+INako3SUceAZw2Qrp+fu8wCmPw4vMCcDmNB1caurduO/Mg
-        NXTocc55dVJjeyX3hYd11gCjmnH2hXs0xzTzCx+rFo3+qFl4h2nTElRRPskKmOlyHxvulzBxHdf0v
-        6zB5OA0dw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPR8g-00008h-HL; Tue, 29 Oct 2019 13:02:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 960DE30025A;
-        Tue, 29 Oct 2019 14:01:18 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 345C920D7FEFA; Tue, 29 Oct 2019 14:02:19 +0100 (CET)
-Date:   Tue, 29 Oct 2019 14:02:19 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
-Message-ID: <20191029130219.GN4114@hirez.programming.kicks-ass.net>
-References: <20191009104611.15363-1-qais.yousef@arm.com>
- <CAKfTPtA6Fvc374oTfbHYkviAJbZebHkBg=w2O3f0oZ0m3ujVjA@mail.gmail.com>
- <20191029110224.awoi37pdquachqtd@e107158-lin.cambridge.arm.com>
- <CAKfTPtA=CzkTVwdCJL6ULYB628tWdGAvpD-sHfgSfL59PyYvxA@mail.gmail.com>
- <20191029114824.2kb4fygxxx72r3in@e107158-lin.cambridge.arm.com>
- <CAKfTPtD7e-dXhZ3mG36igArt=0f-mNc52vaJ1bb-jv5zB9bkgg@mail.gmail.com>
- <20191029124630.ivfbpenue3fw33qt@e107158-lin.cambridge.arm.com>
- <CAKfTPtDnt6oh7X6dGnPUn70sLJXAQoxdkn0GCwdPvA8G4Wg0fA@mail.gmail.com>
+        Tue, 29 Oct 2019 09:04:09 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m7so15187693lji.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 06:04:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=eolkio2X+wPF8zX1MLMOocwaEGUjLFeD4iEzYwB1UCw=;
+        b=U2XMlrfMCLq8WlZOoFdhqhVmFWkkuoRQxAXUVWd9lkwiNnLjaeUlsAwSznJ39YXv3v
+         jFBNWWWCfjpI4EmV3EsG/7OIZ8Kq7cqt80BHbh3ZfcjLBPvn2Lb0Y59hN9RPw92Lw1NP
+         +xIsRyfZ3qXC3opdzo6mxdpVjo0nkBtZax4nEVG4xYbGej+MSDmwr8xNhJ5bgpKdWwcA
+         73HjcXZR2OEmV4Tl0p9YLtzTYoYLh7rgMadM7vd4XrfHlM2KNyJp12F4DGKx5+iUeNoa
+         DkJec2oBAtGbMSfMwNsJpuBHEKhkpDhe52lrqToU4x9noCC/MvQlz0Rzc63lsChtqJml
+         fWqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=eolkio2X+wPF8zX1MLMOocwaEGUjLFeD4iEzYwB1UCw=;
+        b=JI5/XlDcbU9zbwwo9VAoJ0gGuu4m8RXdTyqbycMrpWuFvMGFJXqUQubz33R4btriQJ
+         gqsr8wulzKg1jr5KdTylQr7h+n+Q+jtrEhXADXXLFQsujYqxkM5cFvoJxI8LKT3vbrgy
+         5f3nqavV582fP6QXq4LIpd9Oo5G/YH7vBEl/pzfcKnz0SVGB5W1+CwtoxAF1gCzUCfhH
+         OaxYMcDgQ1UCeRFl9A9gJcq55Vri8PrS6ww6VHupDW6cneSgkf8HLV368AciqBib83oz
+         HHFy+170xgbQYBwi9PfDN8hUZBnF3QPwi93sfbEkNEnwh5SlpZrA450z4Qxa/RNTVY5A
+         FgsA==
+X-Gm-Message-State: APjAAAV7JQEhVuoWvpTkcvC7OJo6X3++yrXfla47wk9UAHKnt9+ZFPcK
+        JRybZZarEZIfgAW6wV5W90mQu1ml028xDv8O3ZAdug==
+X-Google-Smtp-Source: APXvYqyW9zhmv297bu5tH11bxbPjFdxUwCIY8EX/Ti+kxND3sOM+BVJ85lrTWwVG5Q4bUUtPGWijr0taxJGIX1N5tsI=
+X-Received: by 2002:a2e:814b:: with SMTP id t11mr1759624ljg.20.1572354247270;
+ Tue, 29 Oct 2019 06:04:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDnt6oh7X6dGnPUn70sLJXAQoxdkn0GCwdPvA8G4Wg0fA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191027203351.684916567@linuxfoundation.org>
+In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 29 Oct 2019 18:33:56 +0530
+Message-ID: <CA+G9fYtmCNbq+ywLe+RSDZqVHckzyJfaOCXYRbD+5-DaYm1yKg@mail.gmail.com>
+Subject: Re: [PATCH 5.3 000/197] 5.3.8-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 01:54:24PM +0100, Vincent Guittot wrote:
-> On Tue, 29 Oct 2019 at 13:46, Qais Yousef <qais.yousef@arm.com> wrote:
-> >
-> > On 10/29/19 13:20, Vincent Guittot wrote:
-> > > > > Making big cores the default CPUs for all RT tasks is not a minor
-> > > > > change and IMO locality should stay the default behavior when there is
-> > > > > no uclamp constraint
-> > > >
-> > > > How this is affecting locality? The task will always go to the big core, so it
-> > > > should be local.
-> > >
-> > > local with the waker
-> > > You will force rt task to run on big cluster although waker, data and
-> > > interrupts can be on little one.
-> > > So making big core as default is far from always being the best choice
-> >
-> > This is loaded with assumptions IMO. AFAICT we don't know what's the best
-> > choice.
-> >
-> > First, the value of uclamp.min is outside of the scope of this patch. Unless
-> > what you're saying is that when uclamp.min is 1024 then we should NOT choose a
-> > big cpu then there's no disagreement about what this patch do. If that's what
-> > you're objecting to please be more specific about how do you see this working
-> > instead.
-> 
-> My point is that this patch makes the big cores the default CPUs for
-> RT tasks which is far from being a minor change and far from being an
-> obvious default good choice
+On Mon, 28 Oct 2019 at 02:49, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.3.8 release.
+> There are 197 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.3.8-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.3.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-FIFO/RR tasks don't have a bandwidth specification (barring uclamp),
-therefore we must assume the worst. This is the same principle that has
-them select max_freq all the time.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-I think it is a very natural extention of that very principle to place
-(otherwise unconstrained RT tasks) on big cores.
+Note:
+The new test case  from LTP version upgrade syscalls sync_file_range02 is a=
+n
+intermittent failure. We are investigating this case.
+The listed fixes in the below section are due to LTP upgrade to v20190930.
 
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.3.8-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.3.y
+git commit: 96dab4347cbe9212292cb3934e4d16cf1dab94c3
+git describe: v5.3.7-197-g96dab4347cbe
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/bui=
+ld/v5.3.7-197-g96dab4347cbe
+
+No regressions (compared to build v5.3.6-112-gcbb18cd3e478)
+
+Fixes (compared to build v5.3.6-112-gcbb18cd3e478)
+------------------------------------------------------------------------
+
+ltp-syscalls-tests:
+    * clock_getres01
+    * ioctl_ns05
+    * ioctl_ns06
+    * shmctl01
+    * ustat02
+
+
+Ran 16437 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* ssuite
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
