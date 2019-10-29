@@ -2,285 +2,128 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743CBC47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD20CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8582054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE3D214E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:35:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N478fBlO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfJ2IeK (ORCPT
+        id S1729440AbfJ2IfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:34:10 -0400
-Received: from mga03.intel.com ([134.134.136.65]:35656 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728892AbfJ2IeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:34:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 01:34:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="202775353"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 01:34:09 -0700
-Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 4518A58049B;
-        Tue, 29 Oct 2019 01:34:04 -0700 (PDT)
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
- <20191025165352.GA30602@bogus>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <72d46086-0918-a5af-d798-7488b55a8e07@linux.intel.com>
-Date:   Tue, 29 Oct 2019 16:34:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 04:35:19 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33636 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728892AbfJ2IfT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:35:19 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u23so9040045pgo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 01:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=lf5s6Fz7leqrQMKj0V75R9m9lTLSurFPPz+2KwV5ePI=;
+        b=N478fBlO32UC62rsQLpqYQg4ISJscCpnddi7FsAoBSPy9+yzNYdJrPT7MIUkMBikZN
+         jrRS23f1wxXWb4MlnpX0rfF6wRl5UtCkmMK7O2afrn9esHONx7RaSn5GiaLYrFoCj0Zf
+         b3ZqgIoJcFsu4Fm45xrGvPC/qlQTH3hgOI+I+/FsmNhndFingDZPDSDLSQqpfTTKwoRD
+         QoJLpwdwLtj/7/nA+7XzHEp8+W3Rzl0byPBmiCmoW25t5RtxxoIwUd6LTadK4Uflbbmh
+         kdqEwvfSyYrnscOPd3dcssaCW/SoQrkRrtKb9673BtUfsGM9c1c2cnjBU85TsdpqVSov
+         BcfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=lf5s6Fz7leqrQMKj0V75R9m9lTLSurFPPz+2KwV5ePI=;
+        b=pv0nww1ooED/QZAL6gvqx+wfAwJn8oDFcz2YFPy9mM8rnaEW0koB6ue94xfTHh8XOV
+         NHAnEi/lfBlRgm44kPoBJFhRGXs50lF6Y1JuA5bl5habkM2VmsxBXb+xOipcTcO88Nc4
+         NgpYRR5YFS9gjQ2k2lLhiqRSaQHJk9NB8PtqDtZ81pLp42kSmbrd5qILW8+bPYY+6XLC
+         brE19k0JDufr/vIi0/nri51rGI2/QLhpwT6GnMXWryTAvL1D+xuGizWJ6E66flf+35+V
+         icM0A0bgJmHlgln1a9DINUMWBd4BGHrAY5UNZaS+/XBluyOeisc4vUzaysKWUGFaU5Yw
+         ZkUA==
+X-Gm-Message-State: APjAAAV8NbcytezwdMHbCwNftrhs0HyHKiRMmuQL0cNNdTVRCo6Zkoq/
+        wjf8f4c1fnY/qNBkRN27ZIk=
+X-Google-Smtp-Source: APXvYqxHvyzfdMzTQ+OctWZ3zxXIPKkxBy6EqVnmpCrpy6kXaaZ/n0qKELoChdao34GKE6IFxkMnIA==
+X-Received: by 2002:a62:3896:: with SMTP id f144mr2610163pfa.254.1572338118506;
+        Tue, 29 Oct 2019 01:35:18 -0700 (PDT)
+Received: from saurav ([27.62.167.137])
+        by smtp.gmail.com with ESMTPSA id c6sm11830289pfj.59.2019.10.29.01.35.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 01:35:17 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:05:11 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     perex@perex.cz, tiwai@suse.com, rfontana@redhat.com,
+        saurav.girepunje@gmail.com, gregkh@linuxfoundation.org,
+        allison@lohutok.net, tglx@linutronix.de,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] usb: clock.c : usb true/false for bool return type
+Message-ID: <20191029083509.GA8293@saurav>
 MIME-Version: 1.0
-In-Reply-To: <20191025165352.GA30602@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use true/false for bool type return in uac_clock_source_is_valid().
 
-On 10/26/2019 12:53 AM, Rob Herring wrote:
-> On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
->> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
->> which is Synopsys DesignWare based PCIe core.
->>
->> changes on v4:
->> 	Add "snps,dw-pcie" compatible.
->> 	Rename phy-names property value to pcie.
->> 	And maximum and minimum values to num-lanes.
->> 	Add ref for reset-assert-ms entry and update the
->> 	 description for easy understanding.
->> 	Remove pcie core interrupt entry.
->>
->> changes on v3:
->>          Add the appropriate License-Identifier
->>          Rename intel,rst-interval to 'reset-assert-us'
->>          Add additionalProperties: false
->>          Rename phy-names to 'pciephy'
->>          Remove the dtsi node split of SoC and board in the example
->>          Add #interrupt-cells = <1>; or else interrupt parsing will fail
->>          Name yaml file with compatible name
->>
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->> ---
->>   .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
->>   1 file changed, 135 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> Fails to validate:
->
-> Error: Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dts:38.27-28 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:321: recipe for target 'Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml' failed
->
-> Please run 'make -k dt_binding_check' (-k because there are some
-> unrelated failures).
->
->> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
->> new file mode 100644
->> index 000000000000..49dd87ec1e3d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
->> @@ -0,0 +1,135 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: PCIe RC controller on Intel Gateway SoCs
->> +
->> +maintainers:
->> +  - Dilip Kota <eswara.kota@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: intel,lgm-pcie
->> +      - const: snps,dw-pcie
->> +
->> +  device_type:
->> +    const: pci
->> +
->> +  "#address-cells":
->> +    const: 3
->> +
->> +  "#size-cells":
->> +    const: 2
->> +
->> +  reg:
->> +    items:
->> +      - description: Controller control and status registers.
->> +      - description: PCIe configuration registers.
->> +      - description: Controller application registers.
->> +
->> +  reg-names:
->> +    items:
->> +      - const: dbi
->> +      - const: config
->> +      - const: app
->> +
->> +  ranges:
->> +    description: Ranges for the PCI memory and I/O regions.
-> How many entries do you expect? Add a 'maxItems' to define.
-Agree will add it.
->
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    description: PCIe registers interface clock.
-> How many clocks?
-One. I will mention maxItems: 1
->
->> +
->> +  phys:
->> +    maxItems: 1
->> +
->> +  phy-names:
->> +    const: pcie
->> +
->> +  reset-gpios:
->> +    maxItems: 1
->> +
->> +  num-lanes:
->> +    minimum: 1
->> +    maximum: 2
->> +    description: Number of lanes to use for this port.
->> +
->> +  linux,pci-domain:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: PCI domain ID.
-> Just a value of 'true' is fine here.
-Ok.
->
->> +
->> +  '#interrupt-cells':
->> +    const: 1
->> +
->> +  interrupt-map-mask:
->> +    description: Standard PCI IRQ mapping properties.
->> +
->> +  interrupt-map:
->> +    description: Standard PCI IRQ mapping properties.
->> +
->> +  max-link-speed:
->> +    description: Specify PCI Gen for link capability.
-> Allowed values? Default?
-Sure, will add it.
->
->> +
->> +  bus-range:
->> +    description: Range of bus numbers associated with this controller.
->> +
->> +  reset-assert-ms:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
-> Don't need a type for standard units.
-Ok.
->
->> +    description: |
->> +      Delay after asserting reset to the PCIe device.
->> +      Some devices need an interval upto 500ms. By default it is 100ms.
-> Express as a schema:
->
-> maximum: 500
-> default: 100
-Sure i will update it.
->
->> +
->> +required:
->> +  - compatible
->> +  - device_type
->> +  - reg
->> +  - reg-names
->> +  - ranges
->> +  - resets
->> +  - clocks
->> +  - phys
->> +  - phy-names
->> +  - reset-gpios
->> +  - num-lanes
-> Shouldn't be required. It should have a default.
-Agree, will fix it.
->
->> +  - linux,pci-domain
-> Is this really required? AIUI, domains are optional and only used if
-> you have more than one host.
-Yes, not required. I will update,
->
->> +  - interrupt-map
->> +  - interrupt-map-mask
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    pcie10:pcie@d0e00000 {
-> space         ^
-Agree, i will fix it.
->
->> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
->> +      device_type = "pci";
->> +      #address-cells = <3>;
->> +      #size-cells = <2>;
->> +      reg = <0xd0e00000 0x1000>,
->> +            <0xd2000000 0x800000>,
->> +            <0xd0a41000 0x1000>;
->> +      reg-names = "dbi", "config", "app";
->> +      linux,pci-domain = <0>;
->> +      max-link-speed = <4>;
->> +      bus-range = <0x00 0x08>;
->> +      interrupt-parent = <&ioapic1>;
->> +      #interrupt-cells = <1>;
->> +      interrupt-map-mask = <0 0 0 0x7>;
->> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
->> +                      <0 0 0 2 &ioapic1 28 1>,
->> +                      <0 0 0 3 &ioapic1 29 1>,
->> +                      <0 0 0 4 &ioapic1 30 1>;
->> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
->> +      resets = <&rcu0 0x50 0>;
->> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-> You need to include any defines you use. That's why the example fails to
-> build.
-Yes, i will add it.
->
->> +      phys = <&cb0phy0>;
->> +      phy-names = "pcie";
->> +      status = "okay";
-> Don't show status in examples.
-OK, will fix it.
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+ sound/usb/clock.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thanks for reviewing it.
+diff --git a/sound/usb/clock.c b/sound/usb/clock.c
+index 6b8c14f9b5d4..8b8ab83fac0d 100644
+--- a/sound/usb/clock.c
++++ b/sound/usb/clock.c
+@@ -165,21 +165,21 @@ static bool uac_clock_source_is_valid(struct snd_usb_audio *chip,
+ 			snd_usb_find_clock_source_v3(chip->ctrl_intf, source_id);
+ 
+ 		if (!cs_desc)
+-			return 0;
++			return false;
+ 		bmControls = le32_to_cpu(cs_desc->bmControls);
+ 	} else { /* UAC_VERSION_1/2 */
+ 		struct uac_clock_source_descriptor *cs_desc =
+ 			snd_usb_find_clock_source(chip->ctrl_intf, source_id);
+ 
+ 		if (!cs_desc)
+-			return 0;
++			return false;
+ 		bmControls = cs_desc->bmControls;
+ 	}
+ 
+ 	/* If a clock source can't tell us whether it's valid, we assume it is */
+ 	if (!uac_v2v3_control_is_readable(bmControls,
+ 				      UAC2_CS_CONTROL_CLOCK_VALID))
+-		return 1;
++		return true;
+ 
+ 	err = snd_usb_ctl_msg(dev, usb_rcvctrlpipe(dev, 0), UAC2_CS_CUR,
+ 			      USB_TYPE_CLASS | USB_RECIP_INTERFACE | USB_DIR_IN,
+@@ -191,10 +191,10 @@ static bool uac_clock_source_is_valid(struct snd_usb_audio *chip,
+ 		dev_warn(&dev->dev,
+ 			 "%s(): cannot get clock validity for id %d\n",
+ 			   __func__, source_id);
+-		return 0;
++		return false;
+ 	}
+ 
+-	return !!data;
++	return !!data ? true :  false;
+ }
+ 
+ static int __uac_clock_find_source(struct snd_usb_audio *chip, int entity_id,
+-- 
+2.20.1
 
-Regards,
-Dilip
->
->> +      reset-assert-ms = <500>;
->> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
->> +      num-lanes = <2>;
->> +    };
->> -- 
->> 2.11.0
->>
