@@ -2,105 +2,91 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9F2CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A459ACA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4B52173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:31:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eeDi1R76"
+	by mail.kernel.org (Postfix) with ESMTP id 6AA2520679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:33:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572384834;
+	bh=uUPuRp21vww4JYMwj4VwNL4OIhJJzH6oL3Bf7yVJvsc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aX+00vuRcac+OZcoEtiDut4+yKnaOirMVXXG421rwxhfSAJ7p3U5l5zfNUFuTPfX4
+	 TrxmPmWvkSXnyKAgJEvkZ2o8nvKHOwNyeLlBH8F+DG3Jg4vGtXMEJ7DvNwE0CjlunN
+	 JJwREY3YEgrXScufiFRHfkaaAPONklu6VtoKaWGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfJ2Vbb (ORCPT
+        id S1729194AbfJ2Vdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:31:31 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45372 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfJ2Vbb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:31:31 -0400
-Received: by mail-ed1-f67.google.com with SMTP id y7so30524edo.12
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:31:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sG8ktVp69lBLldtD8XFYhZW6X0Mbz+fRfKIpBc3S1fE=;
-        b=eeDi1R76xYCKBaFKAK/zVVjADW1kTa1srCPF0WcJM7yU0DkoXkUiJwryjC6xTYGZyo
-         d0DNATnv8FA08H765+CI9jRvNYj3EkL7mDP3t8zyAFX536x5LRun/hUVHf0fYxeFR1Fz
-         mtwefrj5sIbiglak1f5PhwDJFrPwYzq6Seu7A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sG8ktVp69lBLldtD8XFYhZW6X0Mbz+fRfKIpBc3S1fE=;
-        b=p76ivIEX6egN6Ah/vJTv+3X1kllSncQuZQZBknd21nmSW4r8KfxBcF5Ck5nTHlKa5f
-         9z7OjYiaEgW9oA1hlyzd4V295w319RgSkL+6j/ti+mgEC+nMa47rydPKxdndhmI0v5de
-         ExPvEe3VGA0W+FrFYNy3TlsSjAmppXYZeWcc1iFGMgUYMQFF/SHdCYnBaBxGX18EMTzW
-         EIlnZaK6cIUYMhbmT9+OEYI0hXjoh+tyxz3czvhxaPUi5F+0OkXQ1DDIUeBeiOCsHSGB
-         a/bR8g7rNyKsF6k+BZhQLQH+g/xg7G47RZNzY8zKA3stY7jppDp9emLm7KE3YB7JLDQu
-         +TTg==
-X-Gm-Message-State: APjAAAWHKbQUgYJAUlQ75KYY1my4bkOa3nbzW6QsmQgUuyNsrD79Zcoq
-        v9VsIlO6xJhXVquHyxJxlrTotxYE/so=
-X-Google-Smtp-Source: APXvYqyyPSFJiG8kiBA+W/4tdVCPGLifZd3FA1nDVcP6OLrNGOyqWxbjwqD55dvKT4BJw/1dN1q4jg==
-X-Received: by 2002:a50:b63b:: with SMTP id b56mr26603533ede.165.1572384689086;
-        Tue, 29 Oct 2019 14:31:29 -0700 (PDT)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
-        by smtp.gmail.com with ESMTPSA id d3sm664ejo.74.2019.10.29.14.31.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Oct 2019 14:31:28 -0700 (PDT)
-Received: by mail-wm1-f49.google.com with SMTP id x5so3976922wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:31:27 -0700 (PDT)
-X-Received: by 2002:a1c:a9cf:: with SMTP id s198mr5907919wme.5.1572384687151;
- Tue, 29 Oct 2019 14:31:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190730191303.206365-1-thgarnie@chromium.org>
- <20190730191303.206365-12-thgarnie@chromium.org> <20190812135701.GH23772@zn.tnic>
-In-Reply-To: <20190812135701.GH23772@zn.tnic>
-From:   Thomas Garnier <thgarnie@chromium.org>
-Date:   Tue, 29 Oct 2019 14:31:15 -0700
-X-Gmail-Original-Message-ID: <CAJcbSZGVAG_ODm+R9ukSOSfmhyHn1wbUtdnD_AtEVMaM3GgS+w@mail.gmail.com>
-Message-ID: <CAJcbSZGVAG_ODm+R9ukSOSfmhyHn1wbUtdnD_AtEVMaM3GgS+w@mail.gmail.com>
-Subject: Re: [PATCH v9 11/11] x86/alternatives: Adapt assembly for PIE support
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 29 Oct 2019 17:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbfJ2Vdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 17:33:53 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7CD320659;
+        Tue, 29 Oct 2019 21:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572384832;
+        bh=uUPuRp21vww4JYMwj4VwNL4OIhJJzH6oL3Bf7yVJvsc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ig2sslsC+KKOWPf5TweLOBiWHqzEIdHcblfcpRa78d8p9GG4aMiDM+J6BCmf+GCfU
+         VCbyJiS9/RUoTppBGPF7/jWTGfV1ySfmgkDK89lYtWGuIrHojUb/R27+lZ+7hKExg/
+         ku50TDOkl6WcZDYLoluREtTZ+5pLWWNpSVmyWQ6Q=
+Date:   Tue, 29 Oct 2019 14:33:51 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote
+ hugepages
+Message-Id: <20191029143351.95f781f09a9fbf254163d728@linux-foundation.org>
+In-Reply-To: <20191029151549.GO31513@dhcp22.suse.cz>
+References: <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
+        <20190927074803.GB26848@dhcp22.suse.cz>
+        <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
+        <20190930112817.GC15942@dhcp22.suse.cz>
+        <20191001054343.GA15624@dhcp22.suse.cz>
+        <20191001083743.GC15624@dhcp22.suse.cz>
+        <20191018141550.GS5017@dhcp22.suse.cz>
+        <53c4a6ca-a4d0-0862-8744-f999b17d82d8@suse.cz>
+        <alpine.DEB.2.21.1910241156370.130350@chino.kir.corp.google.com>
+        <08a3f4dd-c3ce-0009-86c5-9ee51aba8557@suse.cz>
+        <20191029151549.GO31513@dhcp22.suse.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 6:56 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, Jul 30, 2019 at 12:12:55PM -0700, Thomas Garnier wrote:
-> > Change the assembly options to work with pointers instead of integers.
->
-> This commit message is too vague. A before/after example would make it a
-> lot more clear why the change is needed.
+On Tue, 29 Oct 2019 16:15:49 +0100 Michal Hocko <mhocko@kernel.org> wrote:
 
-Sorry for the late reply, busy couple months.
+> > 
+> > 1. local node only THP allocation with no reclaim, just compaction.
+> > 2. for madvised VMA's or when synchronous compaction is enabled always - THP
+> >    allocation from any node with effort determined by global defrag setting
+> >    and VMA madvise
+> > 3. fallback to base pages on any node
+> > 
+> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> 
+> I've given this a try and here are the results of my previous testcase
+> (memory full of page cache).
 
-I will try to do my best to explain it better in next iteration.
-
->
-> Thx.
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+Thanks, I'll queue this for some more testing.  At some point we should
+decide on a suitable set of Fixes: tags and a backporting strategy, if any?
