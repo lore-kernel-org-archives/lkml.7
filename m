@@ -2,162 +2,215 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E98CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A53CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0A620830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF1620717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572340920;
+	bh=Q/GVmUqtA+ZyrS1TnX8i1GwC/kcocJgrlO53nm3yVzc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=gyn30+SwgHKcUTkznZMXe/iZP7E7GNz0sklKxjhARTUnDyj/HVdnUWW9G8gk2r1xk
+	 bH839r3bFVedxTXRxQ1g34PZPHTXKZ+4EFI9vOENtvJAuwaw7eCSsiRM1uOEVVEmcE
+	 W/ZfBLrLxJSILf2EkRmVU/tXmvm/qDebykGOBjkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbfJ2JVv (ORCPT
+        id S1732556AbfJ2JV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:21:51 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29137 "EHLO mga17.intel.com"
+        Tue, 29 Oct 2019 05:21:58 -0400
+Received: from mga01.intel.com ([192.55.52.88]:23405 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbfJ2JVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:21:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1727257AbfJ2JV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:21:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:21:50 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:21:57 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="374491117"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
-  by orsmga005.jf.intel.com with ESMTP; 29 Oct 2019 02:21:47 -0700
-Subject: Re: [PATCH RFC 3/6] perf dso: Add dso__data_write_cache_addr()
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+   d="asc'?scan'208";a="229993798"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga002.fm.intel.com with ESMTP; 29 Oct 2019 02:21:53 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20191025130000.13032-1-adrian.hunter@intel.com>
- <20191025130000.13032-4-adrian.hunter@intel.com>
- <20191028154503.GB15449@krava>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <531e096d-2dbf-28e0-1fdc-3a121e18241a@intel.com>
-Date:   Tue, 29 Oct 2019 11:20:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v4 7/9] usb: dwc3: Registering a role switch in the DRD code.
+In-Reply-To: <20191028215919.83697-8-john.stultz@linaro.org>
+References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-8-john.stultz@linaro.org>
+Date:   Tue, 29 Oct 2019 11:21:49 +0200
+Message-ID: <87eeyvj49e.fsf@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191028154503.GB15449@krava>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/10/19 5:45 PM, Jiri Olsa wrote:
-> On Fri, Oct 25, 2019 at 03:59:57PM +0300, Adrian Hunter wrote:
-> SNIP
-> 
->>  
->> -static ssize_t data_read_offset(struct dso *dso, struct machine *machine,
->> -				u64 offset, u8 *data, ssize_t size)
->> +static ssize_t data_read_write_offset(struct dso *dso, struct machine *machine,
->> +				      u64 offset, u8 *data, ssize_t size,
->> +				      bool out)
->>  {
->>  	if (dso__data_file_size(dso, machine))
->>  		return -1;
->> @@ -1034,7 +1037,7 @@ static ssize_t data_read_offset(struct dso *dso, struct machine *machine,
->>  	if (offset + size < offset)
->>  		return -1;
->>  
->> -	return cached_read(dso, machine, offset, data, size);
->> +	return cached_io(dso, machine, offset, data, size, out);
-> 
-> you renamed the function as _read_write_ so the bool choosing
-> the opration should be named either read or write.. I had to
-> go all the way down to find out what 'out' means ;-)
-> 
-
-Arnaldo already applied it, so here is the diff:
-
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 12ab26baba44..505ba78eda3c 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -829,12 +829,12 @@ dso_cache__insert(struct dso *dso, struct dso_cache *new)
- }
- 
- static ssize_t dso_cache__memcpy(struct dso_cache *cache, u64 offset, u8 *data,
--				 u64 size, bool out)
-+				 u64 size, bool read)
- {
- 	u64 cache_offset = offset - cache->offset;
- 	u64 cache_size   = min(cache->size - cache_offset, size);
- 
--	if (out)
-+	if (read)
- 		memcpy(data, cache->data + cache_offset, cache_size);
- 	else
- 		memcpy(cache->data + cache_offset, data, cache_size);
-@@ -912,14 +912,14 @@ static struct dso_cache *dso_cache__find(struct dso *dso,
- }
- 
- static ssize_t dso_cache_io(struct dso *dso, struct machine *machine,
--			    u64 offset, u8 *data, ssize_t size, bool out)
-+			    u64 offset, u8 *data, ssize_t size, bool read)
- {
- 	struct dso_cache *cache = dso_cache__find(dso, machine, offset);
- 
- 	if (IS_ERR_OR_NULL(cache))
- 		return PTR_ERR(cache);
- 
--	return dso_cache__memcpy(cache, offset, data, size, out);
-+	return dso_cache__memcpy(cache, offset, data, size, read);
- }
- 
- /*
-@@ -928,7 +928,7 @@ static ssize_t dso_cache_io(struct dso *dso, struct machine *machine,
-  * by cached data. Writes update the cache only, not the backing file.
-  */
- static ssize_t cached_io(struct dso *dso, struct machine *machine,
--			 u64 offset, u8 *data, ssize_t size, bool out)
-+			 u64 offset, u8 *data, ssize_t size, bool read)
- {
- 	ssize_t r = 0;
- 	u8 *p = data;
-@@ -936,7 +936,7 @@ static ssize_t cached_io(struct dso *dso, struct machine *machine,
- 	do {
- 		ssize_t ret;
- 
--		ret = dso_cache_io(dso, machine, offset, p, size, out);
-+		ret = dso_cache_io(dso, machine, offset, p, size, read);
- 		if (ret < 0)
- 			return ret;
- 
-@@ -1022,7 +1022,7 @@ off_t dso__data_size(struct dso *dso, struct machine *machine)
- 
- static ssize_t data_read_write_offset(struct dso *dso, struct machine *machine,
- 				      u64 offset, u8 *data, ssize_t size,
--				      bool out)
-+				      bool read)
- {
- 	if (dso__data_file_size(dso, machine))
- 		return -1;
-@@ -1034,7 +1034,7 @@ static ssize_t data_read_write_offset(struct dso *dso, struct machine *machine,
- 	if (offset + size < offset)
- 		return -1;
- 
--	return cached_io(dso, machine, offset, data, size, out);
-+	return cached_io(dso, machine, offset, data, size, read);
- }
- 
- /**
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
+Hi,
+
+John Stultz <john.stultz@linaro.org> writes:
+> From: Yu Chen <chenyu56@huawei.com>
+>
+> The Type-C drivers use USB role switch API to inform the
+> system about the negotiated data role, so registering a role
+> switch in the DRD code in order to support platforms with
+> USB Type-C connectors.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> CC: ShuFan Lee <shufan_lee@richtek.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Jun Li <lijun.kernel@gmail.com>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Jack Pham <jackp@codeaurora.org>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> v2: Fix role_sw and role_switch_default_mode descriptions as
+>     reported by kbuild test robot <lkp@intel.com>
+>
+> v3: Split out the role-switch-default-host logic into its own
+>     patch
+> ---
+>  drivers/usb/dwc3/Kconfig |  1 +
+>  drivers/usb/dwc3/core.h  |  3 ++
+>  drivers/usb/dwc3/drd.c   | 66 +++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 69 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 89abc6078703..1104745c41a9 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -44,6 +44,7 @@ config USB_DWC3_DUAL_ROLE
+>  	bool "Dual Role mode"
+>  	depends on ((USB=3Dy || USB=3DUSB_DWC3) && (USB_GADGET=3Dy || USB_GADGE=
+T=3DUSB_DWC3))
+>  	depends on (EXTCON=3Dy || EXTCON=3DUSB_DWC3)
+> +	select USB_ROLE_SWITCH
+
+so even those using DWC3 as a peripheral-only or host-only driver will
+need role switch?
+
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 1c8b349379af..6f19e9891767 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/usb/ch9.h>
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/role.h>
+>  #include <linux/ulpi/interface.h>
+>=20=20
+>  #include <linux/phy/phy.h>
+> @@ -951,6 +952,7 @@ struct dwc3_scratchpad_array {
+>   * @hsphy_mode: UTMI phy mode, one of following:
+>   *		- USBPHY_INTERFACE_MODE_UTMI
+>   *		- USBPHY_INTERFACE_MODE_UTMIW
+> + * @role_sw: usb_role_switch handle
+>   * @usb2_phy: pointer to USB2 PHY
+>   * @usb3_phy: pointer to USB3 PHY
+>   * @usb2_generic_phy: pointer to USB2 PHY
+> @@ -1084,6 +1086,7 @@ struct dwc3 {
+>  	struct extcon_dev	*edev;
+>  	struct notifier_block	edev_nb;
+>  	enum usb_phy_interface	hsphy_mode;
+> +	struct usb_role_switch	*role_sw;
+>=20=20
+>  	u32			fladj;
+>  	u32			irq_gadget;
+> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> index c946d64142ad..61d4fd8aead4 100644
+> --- a/drivers/usb/dwc3/drd.c
+> +++ b/drivers/usb/dwc3/drd.c
+> @@ -476,6 +476,52 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc=
+3 *dwc)
+>  	return edev;
+>  }
+>=20=20
+> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role ro=
+le)
+> +{
+> +	struct dwc3 *dwc =3D dev_get_drvdata(dev);
+> +	u32 mode;
+> +
+> +	switch (role) {
+> +	case USB_ROLE_HOST:
+> +		mode =3D DWC3_GCTL_PRTCAP_HOST;
+> +		break;
+> +	case USB_ROLE_DEVICE:
+> +		mode =3D DWC3_GCTL_PRTCAP_DEVICE;
+> +		break;
+> +	default:
+> +		mode =3D DWC3_GCTL_PRTCAP_DEVICE;
+> +		break;
+> +	}
+> +
+> +	dwc3_set_mode(dwc, mode);
+> +	return 0;
+> +}
+
+role switching is starting to get way too complicated in DWC3. We now
+have a function that queues a work on the system_freezable_wq that will
+configure PHY and change PRTCAP. Is there a way we can simplify some of
+this a little?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl24BK0ACgkQzL64meEa
+mQY9/w/8Dif+Ozfqt8XOrrwyG/De+CLq3qGVGmgTDMdjdKzDVTMi3jd2IMxrVpW5
+oniCtQG26Hqn5+a+UdvAnSsxvaKpMtFrM5mWHkpbNOWRD/VQBO2c4NhjrhgJdk+G
+v+8sMCAp99sGSuoxmHds7MDWRF0TXZB+r8wCDeegsbcoKq5KHsWmYjlT/Svgosbc
++8C1GGsRM9ryFJohV90Mq8IlWRzyY+OdRhiEavPZIuoMDCZg2vv5fVkqPrKOw3e7
+vjtRwmupFK0mKAvJfeHR4ToQuJxCqsltHIe6WrLuxXPB3tCRE1gKowX50ngWrVbs
+LorqGk48ZOawe+8c5WmlzILqWuo5Kaa08cQTIJiewP2ZKnMt6YhpZvnrq3WD9vb1
+ULQNuhqdWn6fVozm7LMKjssnwZhCkJ5uYrXuX+3aKZ9IBvNLw7HH/WlLOdLhjrIp
+b1jHyTZ6jg74ONTEJX+sTdPx0lIq68OP58aC75fF4j8ehVCvK2HN0JTyt1Lu7I0z
+zOv1F0bWhg9YK2YKryWToeVZzVrpIPBvxe1crEnaXPyEAthb8b8g3/h9ARO92s9y
+OA00DY7JLuJ6Gb54ojyaNHICeq6ARTBhEXoJwAF6l/z67RmJSu6MOqaLPjHTyOds
+4xytyZRTp2GKsjzXBCH4JzanI7TASvCmWZ8+xz35WlJOC/YkMxs=
+=ReFr
+-----END PGP SIGNATURE-----
+--=-=-=--
