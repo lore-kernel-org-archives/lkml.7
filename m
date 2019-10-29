@@ -2,99 +2,124 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9BBCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88C0CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DF22054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80172173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="FwMCU2xp"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="sSiBPKoF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfJ2URe (ORCPT
+        id S1727351AbfJ2URq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:17:34 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37011 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfJ2URd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:17:33 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 8F6A88365D;
-        Wed, 30 Oct 2019 09:17:30 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1572380250;
-        bh=1NDB38j3F4cCSGI+6V0EArx27d0tCRp4xDSgyfevY+8=;
-        h=From:To:Cc:Subject:Date;
-        b=FwMCU2xprN9SGMSh14m+pL4coCpiJMApawe2YLBx+Od6K7S5Y/xI/FM00wfiiTXKR
-         3rTvK4qW5loQH9anCmTMRKs7LaS8KgrOvyQIayz4Q7giwudqDBLUnKmlr4AiqgefMq
-         bQl6RmGnT7Oqd/er3rPUS+FRJt3d6BuKVOKxsECqq/6h/TIcrgxeucVNdRxY8dEY24
-         6LQDG3YluaXNDAsbxORSNUIEM2GJ9EzxDkfA3kzEmUEfZnhUv2N0p5Ijx0UVeFQnXx
-         sX9CClS/06+JYDKYxngxg0yMO03y1a5ngtAR7Mnb5h+gNE+Cp2UIx06cPz7ZwRUEW/
-         5yh1Qp83veXUg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5db89e580000>; Wed, 30 Oct 2019 09:17:30 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id DEB2513EED4;
-        Wed, 30 Oct 2019 09:17:28 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id D0A4728005C; Wed, 30 Oct 2019 09:17:28 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     sre@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2] power: reset: gpio-restart: don't error on deferral
-Date:   Wed, 30 Oct 2019 09:17:26 +1300
-Message-Id: <20191029201726.12786-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
+        Tue, 29 Oct 2019 16:17:46 -0400
+Received: from vps.xff.cz ([195.181.215.36]:37752 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726316AbfJ2URq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:17:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1572380264; bh=ePhtkR66Peq9g6X0BIyrwjG1W5lySqs7mnK5Z77PYyY=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=sSiBPKoFw5BENHQLV0BAG/s0URjlaeWmLcJAbXbyTat2oTup/rxoUcQ3JOEiKYEMI
+         yz/5IGmxjYGWBJjOfpfjpU5lvALjkX4Z+V6qeYv/Mt0toP2OZXM6BVvC2R66gfcfur
+         WcyK9TX/J95dg//2CFs6joi+TfBBoGrbv7pvvBH4=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/4] dt-bindings: Add bindings for USB3 phy on Allwinner H6
+Date:   Tue, 29 Oct 2019 21:17:38 +0100
+Message-Id: <20191029201741.3820913-2-megous@megous.com>
+In-Reply-To: <20191029201741.3820913-1-megous@megous.com>
+References: <20191029201741.3820913-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't generate an error message when devm_gpiod_get fails with
--EPROBE_DEFER.
+The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
+external USB3 pins of the SoC.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Add a device tree binding for the PHY.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
+ .../phy/allwinner,sun50i-h6-usb3-phy.yaml     | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
 
-Notes:
-    Changes in v2:
-    - use PTR_ERR_OR_ZERO() to avoid excessive PTR_ERR()
-
- drivers/power/reset/gpio-restart.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/power/reset/gpio-restart.c b/drivers/power/reset/gpi=
-o-restart.c
-index 308ca9d9d276..5466eeea261c 100644
---- a/drivers/power/reset/gpio-restart.c
-+++ b/drivers/power/reset/gpio-restart.c
-@@ -64,9 +64,11 @@ static int gpio_restart_probe(struct platform_device *=
-pdev)
-=20
- 	gpio_restart->reset_gpio =3D devm_gpiod_get(&pdev->dev, NULL,
- 			open_source ? GPIOD_IN : GPIOD_OUT_LOW);
--	if (IS_ERR(gpio_restart->reset_gpio)) {
--		dev_err(&pdev->dev, "Could not get reset GPIO\n");
--		return PTR_ERR(gpio_restart->reset_gpio);
-+	ret =3D PTR_ERR_OR_ZERO(gpio_restart->reset_gpio);
-+	if (ret) {
-+		if (ret !=3D -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Could not get reset GPIO\n");
-+		return ret;
- 	}
-=20
- 	gpio_restart->restart_handler.notifier_call =3D gpio_restart_notify;
---=20
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
+new file mode 100644
+index 000000000000..e5922b427342
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Ondrej Jirman <megous@megous.com>
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/allwinner,sun50i-h6-usb3-phy.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Allwinner H6 USB3 PHY
++
++maintainers:
++  - Ondrej Jirman <megous@megous.com>
++
++properties:
++  compatible:
++    enum:
++      - allwinner,sun50i-h6-usb3-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  "#phy-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++  - "#phy-cells"
++
++examples:
++  - |
++    #include <dt-bindings/clock/sun50i-h6-ccu.h>
++    #include <dt-bindings/reset/sun50i-h6-ccu.h>
++    phy@5210000 {
++          compatible = "allwinner,sun50i-h6-usb3-phy";
++          reg = <0x5210000 0x10000>;
++          clocks = <&ccu CLK_USB_PHY1>;
++          resets = <&ccu RST_USB_PHY1>;
++          #phy-cells = <0>;
++    };
+-- 
 2.23.0
 
