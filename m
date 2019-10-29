@@ -2,158 +2,140 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DAACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57670CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDB020856
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231B9208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:15:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oot3PFX6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389982AbfJ2PPS (ORCPT
+        id S2390003AbfJ2PPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:15:18 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47919 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389055AbfJ2PPR (ORCPT
+        Tue, 29 Oct 2019 11:15:33 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60130 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388595AbfJ2PPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:15:17 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iPTDA-0008Nf-Fe; Tue, 29 Oct 2019 16:15:08 +0100
-Message-ID: <60b17249f57313f1dd6acdf43dbcca5640641ca1.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/3] dt-bindings: reset: Add binding constants for
- NPCM7xx reset controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Tomer Maimon <tmaimon77@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, yuenn@google.com, venture@google.com,
-        benjaminfair@google.com, avifishman70@gmail.com, joel@jms.id.au
-Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Date:   Tue, 29 Oct 2019 16:15:08 +0100
-In-Reply-To: <20191028155403.134126-3-tmaimon77@gmail.com>
-References: <20191028155403.134126-1-tmaimon77@gmail.com>
-         <20191028155403.134126-3-tmaimon77@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 29 Oct 2019 11:15:32 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9TFFIwF009724;
+        Tue, 29 Oct 2019 10:15:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572362118;
+        bh=EjyBteXlv8fFNuD+sDu3/51WIDE97L/GH2r4eM1/VIU=;
+        h=From:To:CC:Subject:Date;
+        b=oot3PFX6k2ql4kj9akf+Gf/1g4iR7nF+EYl8sI88me50D9T1lhZI2VVVoERoLPMqt
+         rga57zbqLJqLxxc81xK0rrF/dJivmucyjFYT91RKO3vNFCrtPAc03GQpgl3JAenbcX
+         2kOMkIJJie6MhoCNeuOObkX+uk3kFGMPH6W/GMug=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9TFFIZe085994
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 29 Oct 2019 10:15:18 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 29
+ Oct 2019 10:15:06 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 29 Oct 2019 10:15:05 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9TFFF3J127253;
+        Tue, 29 Oct 2019 10:15:16 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
+CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
+        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] usb: cdns3: gadget: Fix g_audio use case when connected to Super-Speed host
+Date:   Tue, 29 Oct 2019 17:15:14 +0200
+Message-ID: <20191029151514.28495-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-28 at 17:54 +0200, Tomer Maimon wrote:
-> Add device tree binding constants for Nuvoton BMC NPCM7xx
-> reset controller.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../dt-bindings/reset/nuvoton,npcm7xx-reset.h | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
-> 
-> diff --git a/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
-> new file mode 100644
-> index 000000000000..7b7e870eac35
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
-> @@ -0,0 +1,82 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +// Copyright (c) 2019 Nuvoton Technology corporation.
-> +
-> +#ifndef _DT_BINDINGS_NPCM7XX_RESET_H
-> +#define _DT_BINDINGS_NPCM7XX_RESET_H
-> +
-> +#define NPCM7XX_RESET_FIU3		1
-> +#define NPCM7XX_RESET_UDC1		5
-> +#define NPCM7XX_RESET_EMC1		6
-> +#define NPCM7XX_RESET_UART_2_3		7
-> +#define NPCM7XX_RESET_UDC2		8
-> +#define NPCM7XX_RESET_PECI		9
-> +#define NPCM7XX_RESET_AES		10
-> +#define NPCM7XX_RESET_UART_0_1		11
-> +#define NPCM7XX_RESET_MC		12
-> +#define NPCM7XX_RESET_SMB2		13
-> +#define NPCM7XX_RESET_SMB3		14
-> +#define NPCM7XX_RESET_SMB4		15
-> +#define NPCM7XX_RESET_SMB5		16
-> +#define NPCM7XX_RESET_PWM_M0		18
-> +#define NPCM7XX_RESET_TIMER_0_4		19
-> +#define NPCM7XX_RESET_TIMER_5_9		20
-> +#define NPCM7XX_RESET_EMC2		21
-> +#define NPCM7XX_RESET_UDC4		22
-> +#define NPCM7XX_RESET_UDC5		23
-> +#define NPCM7XX_RESET_UDC6		24
-> +#define NPCM7XX_RESET_UDC3		25
-> +#define NPCM7XX_RESET_ADC		27
-> +#define NPCM7XX_RESET_SMB6		28
-> +#define NPCM7XX_RESET_SMB7		29
-> +#define NPCM7XX_RESET_SMB0		30
-> +#define NPCM7XX_RESET_SMB1		31
-> +#define NPCM7XX_RESET_MFT0		32
-> +#define NPCM7XX_RESET_MFT1		33
-> +#define NPCM7XX_RESET_MFT2		34
-> +#define NPCM7XX_RESET_MFT3		35
-> +#define NPCM7XX_RESET_MFT4		36
-> +#define NPCM7XX_RESET_MFT5		37
-> +#define NPCM7XX_RESET_MFT6		38
-> +#define NPCM7XX_RESET_MFT7		39
-> +#define NPCM7XX_RESET_MMC		40
-> +#define NPCM7XX_RESET_SDHC		41
-> +#define NPCM7XX_RESET_GFX_SYS		42
-> +#define NPCM7XX_RESET_AHB_PCIBRG	43
-> +#define NPCM7XX_RESET_VDMA		44
-> +#define NPCM7XX_RESET_ECE		45
-> +#define NPCM7XX_RESET_VCD		46
-> +#define NPCM7XX_RESET_OTP		48
-> +#define NPCM7XX_RESET_SIOX1		50
-> +#define NPCM7XX_RESET_SIOX2		51
-> +#define NPCM7XX_RESET_3DES		53
-> +#define NPCM7XX_RESET_PSPI1		54
-> +#define NPCM7XX_RESET_PSPI2		55
-> +#define NPCM7XX_RESET_GMAC2		57
-> +#define NPCM7XX_RESET_USB_HOST		58
-> +#define NPCM7XX_RESET_GMAC1		60
-> +#define NPCM7XX_RESET_CP		63
+Take into account gadget driver's speed limit when programming
+controller speed.
 
-What's in the gap between IPSRST2 and IPSRST3? Are you sure you don't
-want the following IPSRST3 resets to just start at 64? That could be
-achieved with a custom of_xlate callback in the driver.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+Hi Greg,
 
-> +#define NPCM7XX_RESET_PWM_M1		160
-> +#define NPCM7XX_RESET_SMB12		161
-> +#define NPCM7XX_RESET_SPIX		162
-> +#define NPCM7XX_RESET_SMB13		163
-> +#define NPCM7XX_RESET_UDC0		164
-> +#define NPCM7XX_RESET_UDC7		165
-> +#define NPCM7XX_RESET_UDC8		166
-> +#define NPCM7XX_RESET_UDC9		167
-> +#define NPCM7XX_RESET_PCI_MAILBOX	169
-> +#define NPCM7XX_RESET_SMB14		172
-> +#define NPCM7XX_RESET_SHA		173
-> +#define NPCM7XX_RESET_SEC_ECC		174
-> +#define NPCM7XX_RESET_PCIE_RC		175
-> +#define NPCM7XX_RESET_TIMER_10_14	176
-> +#define NPCM7XX_RESET_RNG		177
-> +#define NPCM7XX_RESET_SMB15		178
-> +#define NPCM7XX_RESET_SMB8		179
-> +#define NPCM7XX_RESET_SMB9		180
-> +#define NPCM7XX_RESET_SMB10		181
-> +#define NPCM7XX_RESET_SMB11		182
-> +#define NPCM7XX_RESET_ESPI		183
-> +#define NPCM7XX_RESET_USB_PHY_1		184
-> +#define NPCM7XX_RESET_USB_PHY_2		185
-> +
-> +#endif
+Please apply this for -rc.
+Without this, g_audio is broken on cdns3 USB controller is
+connected to a Super-Speed host.
 
-regards
-Philipp
+cheers,
+-roger
+
+ drivers/usb/cdns3/gadget.c | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+index 40dad4e8d0dc..1c724c20d468 100644
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -2338,9 +2338,35 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+ {
+ 	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
+ 	unsigned long flags;
++	enum usb_device_speed max_speed = driver->max_speed;
+ 
+ 	spin_lock_irqsave(&priv_dev->lock, flags);
+ 	priv_dev->gadget_driver = driver;
++
++	/* limit speed if necessary */
++	max_speed = min(driver->max_speed, gadget->max_speed);
++
++	switch (max_speed) {
++	case USB_SPEED_FULL:
++		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
++		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
++		break;
++	case USB_SPEED_HIGH:
++		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
++		break;
++	case USB_SPEED_SUPER:
++		break;
++	default:
++		dev_err(priv_dev->dev,
++			"invalid maximum_speed parameter %d\n",
++			max_speed);
++		/* fall through */
++	case USB_SPEED_UNKNOWN:
++		/* default to superspeed */
++		max_speed = USB_SPEED_SUPER;
++		break;
++	}
++
+ 	cdns3_gadget_config(priv_dev);
+ 	spin_unlock_irqrestore(&priv_dev->lock, flags);
+ 	return 0;
+@@ -2570,12 +2596,7 @@ static int cdns3_gadget_start(struct cdns3 *cdns)
+ 	/* Check the maximum_speed parameter */
+ 	switch (max_speed) {
+ 	case USB_SPEED_FULL:
+-		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
+-		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+-		break;
+ 	case USB_SPEED_HIGH:
+-		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+-		break;
+ 	case USB_SPEED_SUPER:
+ 		break;
+ 	default:
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
