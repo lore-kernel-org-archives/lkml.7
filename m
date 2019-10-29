@@ -8,64 +8,62 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB14CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB6FCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8735B2083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58121214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:05:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uayqepFL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMcnvSdt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731423AbfJ2Dkg (ORCPT
+        id S1726255AbfJ2EFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 23:40:36 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36768 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731114AbfJ2Dkg (ORCPT
+        Tue, 29 Oct 2019 00:05:37 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37291 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfJ2EFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 23:40:36 -0400
-Received: by mail-pg1-f195.google.com with SMTP id j22so2503270pgh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 20:40:35 -0700 (PDT)
+        Tue, 29 Oct 2019 00:05:37 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u9so3821204pfn.4;
+        Mon, 28 Oct 2019 21:05:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=cTJ/5ueE8SvgUdZQJcjb9C4BjM0/MnFjXu7d16hPfEE=;
-        b=uayqepFLEbT17OItKInIgyzSaTQTIU3+znFT/Q6z1MZIPCyS7kpDuUrQDiwgsYXecG
-         OWhMrS50AGiSKNP/pVNclWclacE0R+YH/aIeDbS3T2jompGDdJVW0wHSEQ3VMgrBFZit
-         uj21rhz/iBfP7emBcKGLuoyXjimJbIbpjqt515gEowuzwqNVx1oG7sdp0kliDyaQr8Ja
-         8FnZ+O3+/IGjSFRzI3cV8PxzPiCcMUvvnCZ6Wt8R2DoE2JqtD+h/4kPN5+KdhVaQVfmA
-         GLMA9aVzLCuYh9pHSe5X0VMd54qRAR11Prf9uRq9gWq0MBSJPPRHoTeN3U8QJzTKFRhS
-         EuGg==
+        bh=6kfMSy0YgXJLyBlk1+ds2GJPOLdmrFH2Txe8Vx2BEAo=;
+        b=qMcnvSdtU0oU4QbZESXTMDIDXuhTMtdCoSPB57JMG8PEt6fskTqfW3V9WDHRC9h2Xo
+         rMVOMLKx2elTTyiFOtFxlX/QTnbr7lAxkGOBG5I84zs62pturUoRi/kaYGtdUXEwcj+7
+         Dkh6qXE2Bm9E6Fwao9zdZV8CZn9nI3YK9BADEeHYj/gttkyxvIpJ0iQ2/hpqQX4zac5X
+         iHFOe7A4liELhYdVype5HpQ3nXZudc+rgUkr9kHqT32rtYEWMCnt8wbEaYc6xC0fjRLT
+         WYjXaos6ptmwTIg2NYbLRVankZHB1dZaRUH63trWBpyAibRnZv5CEQEx9zbGDvFg9LsG
+         VniQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=cTJ/5ueE8SvgUdZQJcjb9C4BjM0/MnFjXu7d16hPfEE=;
-        b=sV6jR6oFDN/bslGTeitqxY+YSAlTB4kB5WMlQ5KqMZ85M7bDjKlkCcctelxET8q9K5
-         /OCyrJJBWKFjbysWnBtplQLicqFGdXOqJFZe2r6BjW1qsR1hYxWzIGfTwn75FwYbeBQ9
-         DzuwZENfamDsbGn2Ib1tSIELLXosMn/l1H4fJhoeZbaugArGdchsNF3216namt18q2Tm
-         WigQ9pkEbLVbw8N7rGsjk5yW7skHtZCcjczdE4teQPJSNyd5Hz8e45NHUUlNJvhJSe63
-         QYpCLtZ3A9HR26wp1Px/j/6wlkLxBV6kE7LYBn+meqx/64ZWllFnzgbTysU104mYQ4ma
-         ULEA==
-X-Gm-Message-State: APjAAAUOvoAL3c3zjn5qyKDtTWclT4yUM24v5iIiRvohkRsWGmx4Vvgl
-        o3M0yWFJXskEsfmGk1N9wO0=
-X-Google-Smtp-Source: APXvYqwnKoU9U846A1HWXHnbxkTSiV3L1FbA3LwJy2VUUEt7swz4KjWlyX6zJbeAP06Tfd4x/oM5dQ==
-X-Received: by 2002:a63:9543:: with SMTP id t3mr24798812pgn.350.1572320435280;
-        Mon, 28 Oct 2019 20:40:35 -0700 (PDT)
+        bh=6kfMSy0YgXJLyBlk1+ds2GJPOLdmrFH2Txe8Vx2BEAo=;
+        b=anQlJR7dC+wWrxX9RZNqfqxvEUalqs6KtXfSAta8ctFzt00U0nIidq+bB99KtVT8Me
+         eDsBEpok8+nrUfmp3Qg42Q6uKJF/dVXu+7jkuA6aNqucxIaK9tVyXS/DYgdvvJKRggcU
+         SeWnohl7Y4oeu2me8uHoSeNQ8htrUYTGciF+b/f8kf/hWwcY6W/MYsvbXTMyPtpRaKoB
+         5afA+nEDet2dtTa+WkYDO7pCU/AmeRMEQM1g86LpV1ZgUxyl2QZGF7umvKado/lN2HW/
+         J1Zuyi49Opw5XwAn/qf5fkdoCISSGkRmLhGm4KcifIPZIi/v0xIYFsHrzmRY6FkJlDmt
+         /lyw==
+X-Gm-Message-State: APjAAAWZM2MAnLcjWYUYyOODiE6vGniPzzcnTDPFXyJN6FE3zlBQbsbq
+        +9zAboR5qfTmhNQAe+8ergKRJQ3IQ1Q=
+X-Google-Smtp-Source: APXvYqxsjIyyj4Ra1iYRvCc5o+ssppErTK1FGHOLkdks6DLomEu0wqnIqE1NHZl7JVzVhCvp+kgCXA==
+X-Received: by 2002:a63:c40e:: with SMTP id h14mr24406732pgd.254.1572321936001;
+        Mon, 28 Oct 2019 21:05:36 -0700 (PDT)
 Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id l11sm13911499pgf.73.2019.10.28.20.40.31
+        by smtp.gmail.com with ESMTPSA id s18sm6102396pfc.120.2019.10.28.21.05.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 20:40:34 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 09:10:27 +0530
+        Mon, 28 Oct 2019 21:05:35 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 09:35:29 +0530
 From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        groug@kaod.org, clg@kaod.org, christophe.jaillet@wanadoo.fr,
-        tglx@linutronix.de, saurav.girepunje@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] powerpc: sysdev: xive: Fix use true/false for bool type
-Message-ID: <20191029034027.GA7226@saurav>
+Subject: [PATCH] fs: buffer.c: Fix use true/false for bool type
+Message-ID: <20191029040529.GA7625@saurav>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -75,27 +73,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use true/false for bool return type in xive_spapr_cleanup_queue
-function.
+Use true/false for bool return type of has_bh_in_lru().
 
 Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
 ---
- arch/powerpc/sysdev/xive/spapr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/buffer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
-index 33c10749edec..74e3ffae0be6 100644
---- a/arch/powerpc/sysdev/xive/spapr.c
-+++ b/arch/powerpc/sysdev/xive/spapr.c
-@@ -533,7 +533,7 @@ static void xive_spapr_cleanup_queue(unsigned int cpu, struct xive_cpu *xc,
- static bool xive_spapr_match(struct device_node *node)
- {
- 	/* Ignore cascaded controllers for the moment */
--	return 1;
-+	return true;
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 86a38b979323..66a9fe8310c7 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1385,10 +1385,10 @@ static bool has_bh_in_lru(int cpu, void *dummy)
+ 	
+ 	for (i = 0; i < BH_LRU_SIZE; i++) {
+ 		if (b->bhs[i])
+-			return 1;
++			return true;
+ 	}
+ 
+-	return 0;
++	return false;
  }
  
- #ifdef CONFIG_SMP
+ void invalidate_bh_lrus(void)
 -- 
 2.20.1
 
