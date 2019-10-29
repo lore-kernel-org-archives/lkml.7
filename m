@@ -2,135 +2,187 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE25ECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D22C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FBB21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:09:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GEgloQHT"
+	by mail.kernel.org (Postfix) with ESMTP id C1E4F21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572372649;
+	bh=mmqqgcnvD3Xud8Yvhd/XeHf9l9aSOrYjKCNVmej7nv0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xCBWQ4DE2meMrGfVnB50Th0IVlH3UPP9qnu9aVunSkPSVAA9SaWe+Y/daf2Zt/YvS
+	 fSWsmHMSpSFvKxDVt6+sMMuRfjSl8zPZ1UIqs6iksxKvJgNc3uRUyvtlGiFytV7Vnv
+	 5dUDo2sJdknQdf9NestTTHAguf1Frm3NX6JoRKAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbfJ2SJl (ORCPT
+        id S1730829AbfJ2SKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:09:41 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37329 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfJ2SJl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:09:41 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y194so5165635oie.4
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qjPIA2E/5Fq521b+ML0SLUvafFSbqxin1BmVqwTUyt8=;
-        b=GEgloQHTa6D4+gvI9CNAFRP6KGQEIM5wYH9xmQxYFJxfmoN/S3HWvbO9fc4WkqwO8K
-         MG7DPxKv6o190npOhAGGHq3gCmMduti7dve9KfbZB2DfW36Cuq4+A1E7qa9lGiGGpeP9
-         7c3IlpH2WU+nd0YxdB7l0cCemIePL2VcRnTvilGoBfIzq/WNuOI+XckME9mhWzF6B8SQ
-         sMHJ5zTJyG6lFU+MIp78cZLi9LgZGLJuBMm8KE6loBZqSPX+OG1Wk01Ac9awzUC9hH9s
-         GXfrdcRAhmPUrh/5C6lfXiyTDhZd3J+C3rphT1vV0JR6Zx0HuunJMzyrHMeDp8ZScoWY
-         sehw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qjPIA2E/5Fq521b+ML0SLUvafFSbqxin1BmVqwTUyt8=;
-        b=dRVt/y6u9QS/KpHVTX51p6oftUPC5/MXJygYjCLK4oOuaCkVZY+FwJ7svxW6qbDhGf
-         t9n7nLpPL27nCnhZelT/jnrvpxHhanuzVYQym7rbq00vJS+tIuruizZrYOYWez5Nyilo
-         dpshLluuxMvDjlnN7JzUQZwWRszUY9yqp02LxSbzb/mb4uAgu/KKsbmieK07LYQO+mHr
-         h9s7TzdV/tfJlq+il9LT47MYp9dfxr01ucYLO8pniOB72TUjrk0JR//P7aRkhBjLv7Jn
-         2vZb52pqEM/EAKWCmQ78O9OhsU3mvuE79ZpEnPUI3EaYxMvs8jZB/XImnigWFtTPIJZp
-         PSdQ==
-X-Gm-Message-State: APjAAAXO7R3iCMyPDH53Qgf2hwtZfMUjWIryBJQ/C3n6qsd01wuQtd1/
-        NzXZDZYsOYVKTNcxUDTN4ahsBuxeT+1icrxNzFgrfA==
-X-Google-Smtp-Source: APXvYqxf+4np1mY9GDrvb3MwI60Z5G648uXhlHqOf9rZZpiCD5i1uBsR6EE+QlrYh1JGuYcUnXUvq7Z+5wJWCE2URVE=
-X-Received: by 2002:aca:7516:: with SMTP id q22mr5083282oic.144.1572372580060;
- Tue, 29 Oct 2019 11:09:40 -0700 (PDT)
+        Tue, 29 Oct 2019 14:10:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730435AbfJ2SKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 14:10:48 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF8D1222C5
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 18:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572372647;
+        bh=mmqqgcnvD3Xud8Yvhd/XeHf9l9aSOrYjKCNVmej7nv0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=e94CpByjlElpCBSdGUw8LOUInMuzqLKgLsu2uwnO0r3HVjCV4JW7sUt1C6hs3eFmj
+         j+vn75mvMAfROWiNwnx9nN+jLqNLHL155HSgxVTUgc1MkUhMPL0Czut3zx/MmLr8Pb
+         D/TJ+hYXOpGdFFJdT8VUuj4Kba3ILPFDnGuB2pkA=
+Received: by mail-wr1-f50.google.com with SMTP id l10so14719859wrb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:10:46 -0700 (PDT)
+X-Gm-Message-State: APjAAAVY4y5+4M8Qk9fGHmfv41PTzqWr5yqMXQ1cvnfGLE72wfVFr06u
+        bub2X3m3j/8qRY5Ec8+bSxt1nN6AtbkkYO3B6c6BXw==
+X-Google-Smtp-Source: APXvYqyyGQurQRoJqssK2xQ7l0EkhvtO2ydIBS+FoKGjmrJ5tPxXAskMG/ddIaZ/DfCEvnkwuipKTQJ42JZRKo2GfSU=
+X-Received: by 2002:a5d:51c2:: with SMTP id n2mr20627016wrv.149.1572372644926;
+ Tue, 29 Oct 2019 11:10:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191029005405.201986-1-shakeelb@google.com> <20191029090347.GG31513@dhcp22.suse.cz>
-In-Reply-To: <20191029090347.GG31513@dhcp22.suse.cz>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 29 Oct 2019 11:09:29 -0700
-Message-ID: <CALvZod648GRvjd_LqViFzLRwxnzSrLZzjaNBOJju4xkDQkvrXw@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcontrol: fix data race in mem_cgroup_select_victim_node
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Roman Gushchin <guro@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <2236FBA76BA1254E88B949DDB74E612BA4EEC0CE@IRSMSX102.ger.corp.intel.com>
+ <CALCETrWN9kc+10tf7YoBp9ixqkO_KZ=b1E_cFBr_Uogxhu68PQ@mail.gmail.com> <1572371012.4812.19.camel@linux.ibm.com>
+In-Reply-To: <1572371012.4812.19.camel@linux.ibm.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 29 Oct 2019 11:10:33 -0700
+X-Gmail-Original-Message-ID: <CALCETrUhGqyEJtyBQWubh=5cUt2i-N-oZJqcBM5jBnGi1saxsQ@mail.gmail.com>
+Message-ID: <CALCETrUhGqyEJtyBQWubh=5cUt2i-N-oZJqcBM5jBnGi1saxsQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com,
-        elver@google.com
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Alan Cox <alan@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Marco
-
-On Tue, Oct 29, 2019 at 2:03 AM Michal Hocko <mhocko@kernel.org> wrote:
+On Tue, Oct 29, 2019 at 10:44 AM James Bottomley <jejb@linux.ibm.com> wrote:
 >
-> On Mon 28-10-19 17:54:05, Shakeel Butt wrote:
-> > Syzbot reported the following bug:
+> On Tue, 2019-10-29 at 10:03 -0700, Andy Lutomirski wrote:
+> > On Tue, Oct 29, 2019 at 4:25 AM Reshetova, Elena
+> > <elena.reshetova@intel.com> wrote:
+> > >
+> > > > The patch below aims to allow applications to create mappins that
+> > > > have
+> > > > pages visible only to the owning process. Such mappings could be
+> > > > used to
+> > > > store secrets so that these secrets are not visible neither to
+> > > > other
+> > > > processes nor to the kernel.
+> > >
+> > > Hi Mike,
+> > >
+> > > I have actually been looking into the closely related problem for
+> > > the past
+> > > couple of weeks (on and off). What is common here is the need for
+> > > userspace
+> > > to indicate to kernel that some pages contain secrets. And then
+> > > there are
+> > > actually a number of things that kernel can do to try to protect
+> > > these secrets
+> > > better. Unmap from direct map is one of them. Another thing is to
+> > > map such
+> > > pages as non-cached, which can help us to prevent or considerably
+> > > restrict
+> > > speculation on such pages. The initial proof of concept for marking
+> > > pages as
+> > > "UNCACHED" that I got from Dave Hansen was actually based on
+> > > mlock2()
+> > > and a new flag for it for this purpose. Since then I have been
+> > > thinking on what
+> > > interface suits the use case better and actually selected going
+> > > with new madvise()
+> > > flag instead because of all possible implications for fragmentation
+> > > and performance.
 > >
-> > BUG: KCSAN: data-race in mem_cgroup_select_victim_node / mem_cgroup_select_victim_node
+> > Doing all of this with MAP_SECRET seems bad to me.  If user code
+> > wants UC memory, it should ask for UC memory -- having the kernel
+> > involved in the decision to use UC memory is a bad idea, because the
+> > performance impact of using UC memory where user code wasn't
+> > expecting it wil be so bad that the system might as well not work at
+> > all.  (For kicks, I once added a sysctl to turn off caching in
+> > CR0.  I enabled it in gnome-shell.  The system slowed down to such an
+> > extent that I was unable to enter the three or so keystrokes to turn
+> > it back off.)
 > >
-> > write to 0xffff88809fade9b0 of 4 bytes by task 8603 on cpu 0:
-> >  mem_cgroup_select_victim_node+0xb5/0x3d0 mm/memcontrol.c:1686
-> >  try_to_free_mem_cgroup_pages+0x175/0x4c0 mm/vmscan.c:3376
-> >  reclaim_high.constprop.0+0xf7/0x140 mm/memcontrol.c:2349
-> >  mem_cgroup_handle_over_high+0x96/0x180 mm/memcontrol.c:2430
-> >  tracehook_notify_resume include/linux/tracehook.h:197 [inline]
-> >  exit_to_usermode_loop+0x20c/0x2c0 arch/x86/entry/common.c:163
-> >  prepare_exit_to_usermode+0x180/0x1a0 arch/x86/entry/common.c:194
-> >  swapgs_restore_regs_and_return_to_usermode+0x0/0x40
-> >
-> > read to 0xffff88809fade9b0 of 4 bytes by task 7290 on cpu 1:
-> >  mem_cgroup_select_victim_node+0x92/0x3d0 mm/memcontrol.c:1675
-> >  try_to_free_mem_cgroup_pages+0x175/0x4c0 mm/vmscan.c:3376
-> >  reclaim_high.constprop.0+0xf7/0x140 mm/memcontrol.c:2349
-> >  mem_cgroup_handle_over_high+0x96/0x180 mm/memcontrol.c:2430
-> >  tracehook_notify_resume include/linux/tracehook.h:197 [inline]
-> >  exit_to_usermode_loop+0x20c/0x2c0 arch/x86/entry/common.c:163
-> >  prepare_exit_to_usermode+0x180/0x1a0 arch/x86/entry/common.c:194
-> >  swapgs_restore_regs_and_return_to_usermode+0x0/0x40
-> >
-> > mem_cgroup_select_victim_node() can be called concurrently which reads
-> > and modifies memcg->last_scanned_node without any synchrnonization. So,
-> > read and modify memcg->last_scanned_node with READ_ONCE()/WRITE_ONCE()
-> > to stop potential reordering.
+> > EXCLUSIVE makes sense.  Saying "don't ptrace this" makes sense.  UC
+> > makes sense.  But having one flag to rule them all does not make
+> > sense to me.
 >
-> I am sorry but I do not understand the problem and the fix. Why does the
-> race happen and why does _ONCE fixes it? There is still no
-> synchronization. Do you want to prevent from memcg->last_scanned_node
-> reloading?
->
+> So this is a usability problem.  We have a memory flag that can be used
+> for "secrecy" for some userspace value of the word and we have a load
+> of internal properties depending on how the hardware works, including
+> potentially some hardware additions like SEV or TME, that can be used
+> to implement the property.  If we expose our hardware vagaries, the
+> user is really not going to know what to do ... and we have a limited
+> number of flags to express this, so it stands to reason that we need to
+> define "secrecy" for the user and then implement it using whatever
+> flags we have.  So I think no ptrace and no direct map make sense for
+> pretty much any value of "secrecy".  The UC bit seems to be an attempt
+> to prevent exfiltration via L1TF or other cache side channels, so it
+> looks like it should only be applied if the side channel mitigations
+> aren't active ... which would tend to indicate it's a kernel decision
+> as well.
 
-The problem is memcg->last_scanned_node can read and modified
-concurrently. Though to me it seems like a tolerable race and not
-worth to add an explicit lock. My aim was to make KCSAN happy here to
-look elsewhere for the concurrency bugs. However I see that it might
-complain next on memcg->scan_nodes.
+I just don't think this will work in practice.  Someone will say "hey,
+let's keep this giant buffer we do crypto from, or maybe even the
+entire data area of some critical service, secret".  It will work
+*fine* at first.  But then some kernel config changes and we can't do
+DMA, and now it breaks on some configs.  Someone else will say "hey, I
+don't have L1TF or whatever mitigation, let's turn on UC", and
+everything goes to hell.
 
-Now taking a step back, I am questioning the whole motivation behind
-mem_cgroup_select_victim_node(). Since we pass ZONELIST_FALLBACK
-zonelist to the reclaimer, the shrink_node will be called for all
-potential nodes. Also we don't short circuit the traversal of
-shrink_node for all nodes on nr_reclaimed and we scan (size_on_node >>
-priority) for all nodes, I don't see the reason behind having round
-robin order of node traversal.
+IMO the kernel should attempt to keep *all memory* secret.  Specific
+applications that want greater levels of secrecy should opt in to more
+expensive things.  Here's what's already on the table:
 
-I am thinking of removing the whole mem_cgroup_select_victim_node()
-heuristic. Please let me know if there are any objections.
+Exclusive / XPFO / XPO: allocation might be extremely expensive.
+Overuse might hurt performance due to huge page fragmentation  DMA may
+not work.  Otherwise it's peachy.
 
-thanks,
-Shakeel
+SEV: Works only in some contexts.  The current kernel implementation
+is, IMO, unacceptable to the extent that I wish I could go back in
+time and NAK it.
+
+TME: it's on or it's off.  There's no room for a MAP_ flag here.
+
+MKTME: of highly dubious value here.  The only useful thing here I can
+thing it would be a MAP_NOTSECRET to opt *out* of encryption for a
+specific range.  Other than that, it has all the same performance
+implications that EXCLUSIVE has.
+
+UC: Performance hit is extreme.  *Also* has the perf implications of
+exclusive.  I can't imagine this making any sense except were the user
+application is written in the expectation that UC might be used so
+that the access patterns would be reasonable.
+
+WC: Same issues as UC plus memory ordering issues such that
+unsuspecting applications will corrupt data.
+
+Trying to bundle these together with kernel- or admin-only config
+seems like a lost cause.
