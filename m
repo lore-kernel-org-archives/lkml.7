@@ -2,143 +2,234 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE98CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DF5CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE762067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:09:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KUSJJ6Yq"
+	by mail.kernel.org (Postfix) with ESMTP id CCEE82067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390761AbfJ2RJs (ORCPT
+        id S2390786AbfJ2RKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:09:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46599 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390716AbfJ2RJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:09:47 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w8so11607197lji.13
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:09:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K88yaieKvcCeNpugsGLmfxIwpDDi0ZtEXOdEH+qf0fA=;
-        b=KUSJJ6YqudPa6QLkK/BK60Zl842G3MRsmv2DW5kvVHh4p/kDenZrhnrEbOmPdTzvgw
-         I8q1/6MQu6/LALbcoU8JqLT1S4P2VX78KCleLVqTouQ0Yep8qgOoUplT/Aed8C3clRzT
-         m577opm7GhHFmdRVSaPLRsdevIt0u8rs4iJXrxs+edkSysqasOxDGMu/VbTZXc0Yn9+d
-         VvOSHMNffEegB9CJmgKqrdO1UX29UB+Im+zXSj771bYCexPVTJb4ZHUleCOsl/7IGvj3
-         D6Yc7zFZhHKDNA/gTRqyTeiOppfjROeADIOrgchGq06tNoigUixu7W0712Zs9nGPCrY9
-         U95w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K88yaieKvcCeNpugsGLmfxIwpDDi0ZtEXOdEH+qf0fA=;
-        b=INUNyR83OFOL6vjTlkInXImLnl9UyZs1oJGCmkbgPlYNVfb/0eE5iAxdKe7M4TQTI4
-         A71jQicC+YHWsOAHv17A0zXs69EO6M7s93MpgxDBJ7KcFhSJJHRZqGcwgtW9ZjqtEduq
-         KEaAnS6XA7LSAgcb/qS8fUrFIYbbFoeGjYQDwCwZkv+7d0/XicgNTakrRNuffWfPO5xI
-         0F+lMREnpJ9ZKJt+CLYmyPYrdzv/ISpXXo2wN1FNiKxeOVqEwfvb3jy4rPYbmcFZ6nBy
-         DAWoDP5G+r4NuXzabfbUZt4OvsXHEKE2ovPSVgBOLg7OiVqGQXTuOrDN5gC0mNSrh/eD
-         UorQ==
-X-Gm-Message-State: APjAAAX4PtgIPvfvIf0IKB8Z+rn+ZZLmyP4c5XfiklVAnXvuZ4ghK2ew
-        ZEiP69f35PeueSd88S9vugnVKqV5taHqxqhfO+LpHA==
-X-Google-Smtp-Source: APXvYqyJcslMrIOGNYE0X47a9sPVBXQLcpeAkCnxS1526iUdAKdcOTDZhZpnoBc4H7DFjrEOMOciu/zXkA+EWlIXABY=
-X-Received: by 2002:a2e:96c1:: with SMTP id d1mr3590291ljj.87.1572368985549;
- Tue, 29 Oct 2019 10:09:45 -0700 (PDT)
+        Tue, 29 Oct 2019 13:10:13 -0400
+Received: from mga17.intel.com ([192.55.52.151]:4152 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727763AbfJ2RKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 13:10:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 10:10:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,244,1569308400"; 
+   d="scan'208";a="351041584"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga004.jf.intel.com with ESMTP; 29 Oct 2019 10:10:12 -0700
+Date:   Tue, 29 Oct 2019 10:14:36 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v7 02/11] iommu/vt-d: Enlightened PASID allocation
+Message-ID: <20191029101436.3ca8d438@jacob-builder>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC00@SHSMSX104.ccr.corp.intel.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1571946904-86776-3-git-send-email-jacob.jun.pan@linux.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC00@SHSMSX104.ccr.corp.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1572018904-5234-1-git-send-email-dsmythies@telus.net>
- <CAKfTPtDFAS3TiNaaPoEXFZbqdMt_-tfGm9ffVcQAN=Mu_KbRdQ@mail.gmail.com>
- <000c01d58bca$f5709b30$e051d190$@net> <CAKfTPtDx6nu7YtYN=JLRAseZS3Q6Nt-QdMQuG_XoUtmtR_101A@mail.gmail.com>
- <001201d58e68$eaa39630$bfeac290$@net> <20191029153615.GP4114@hirez.programming.kicks-ass.net>
- <CAKfTPtD79VE+gqffpBAGd39bJKe7ao+jbmVSQ7PtS=dky0Wx6g@mail.gmail.com>
- <20191029164955.GO4131@hirez.programming.kicks-ass.net> <CAKfTPtDByO5xZaA1zHb-0WLq3PaodByfbnH0RkJjf+jn0O81-Q@mail.gmail.com>
-In-Reply-To: <CAKfTPtDByO5xZaA1zHb-0WLq3PaodByfbnH0RkJjf+jn0O81-Q@mail.gmail.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 29 Oct 2019 18:09:34 +0100
-Message-ID: <CAKfTPtD-MD74Je7R1eURfrusCci9xt4dPVE0YLuAN4jWXcdEog@mail.gmail.com>
-Subject: Re: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load
- balancing path"
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Doug Smythies <dsmythies@telus.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 at 18:00, Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> On Tue, 29 Oct 2019 at 17:50, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Tue, Oct 29, 2019 at 05:20:56PM +0100, Vincent Guittot wrote:
-> > > On Tue, 29 Oct 2019 at 16:36, Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >
-> > > > On Tue, Oct 29, 2019 at 07:55:26AM -0700, Doug Smythies wrote:
-> > > >
-> > > > > I only know that the call to the intel_pstate driver doesn't
-> > > > > happen, and that it is because cfs_rq_is_decayed returns TRUE.
-> > > > > So, I am asserting that the request is not actually decayed, and
-> > > > > should not have been deleted.
-> > > >
-> > > > So what cfs_rq_is_decayed() does is allow a cgroup's cfs_rq to be
-> > > > removed from the list.
-> > > >
-> > > > Once it is removed, that cfs_rq will no longer be checked in the
-> > > > update_blocked_averages() loop. Which means done has less chance of
-> > > > getting false. Which in turn means that it's more likely
-> > > > rq->has_blocked_load becomes 0.
-> > > >
-> > > > Which all sounds good.
-> > > >
-> > > > Can you please trace what keeps the CPU awake?
-> > >
-> > > I think that the sequence below is what intel pstate driver was using
-> > >
-> > > rt/dl task wakes up and run for some times
-> > > rt/dl pelt signal is no more null so periodic decay happens.
-> > >
-> > > before optimization update_cfs_rq_load_avg() for root cfs_rq was
-> > > called even if pelt was null,
-> > > which calls cfs_rq_util_change,  which calls intel pstate
-> > >
-> > > after optimization its no more called.
-> >
-> > Not calling cfs_rq_util_change() when it doesn't change, seems like the
-> > right thing. Why would intel_pstate want it called when it doesn't
-> > change?
->
-> Yes I agree
->
-> My original thought was that either irq/rt ordl pelt signals was used
-> to set frequency and it needs to be called to decrease this freq while
-> pelt signals was decaying but it doesn't seem to use it but only needs
-> to be called from time to time
+On Fri, 25 Oct 2019 06:19:29 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-Apart from Doug's problem, we have 2 possible problems with the
-current update_blocked_averages()
-1- irq, dl and rt are updated after cfs but it is the cfs update that
-will call schedutil for updating the frequency which means that this
-is done with old irq/rt/dl value. we should change the order and start
-with irq/rt and dl
-2- when cfs is null but not irq/rt or dl, we decay the values but we
-never call schedutil to update the freq accordingly. The impact is
-probably minimal because only irq and timer can really run without
-call schedutil to update frequency but this can happen.
+> > From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
+> > Sent: Friday, October 25, 2019 3:55 AM
+> > 
+> > From: Lu Baolu <baolu.lu@linux.intel.com>
+> > 
+> > Enabling IOMMU in a guest requires communication with the host
+> > driver for certain aspects. Use of PASID ID to enable Shared Virtual
+> > Addressing (SVA) requires managing PASID's in the host. VT-d 3.0
+> > spec provides a Virtual Command Register (VCMD) to facilitate this.
+> > Writes to this register in the guest are trapped by QEMU which
+> > proxies the call to the host driver.
+> > 
+> > This virtual command interface consists of a capability register,
+> > a virtual command register, and a virtual response register. Refer
+> > to section 10.4.42, 10.4.43, 10.4.44 for more information.
+> > 
+> > This patch adds the enlightened PASID allocation/free interfaces
+> > via the virtual command interface.
+> > 
+> > Cc: Ashok Raj <ashok.raj@intel.com>
+> > Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> > ---
+> >  drivers/iommu/intel-pasid.c | 56
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/iommu/intel-pasid.h | 13 ++++++++++-
+> >  include/linux/intel-iommu.h |  2 ++
+> >  3 files changed, 70 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iommu/intel-pasid.c
+> > b/drivers/iommu/intel-pasid.c index 040a445be300..d81e857d2b25
+> > 100644 --- a/drivers/iommu/intel-pasid.c
+> > +++ b/drivers/iommu/intel-pasid.c
+> > @@ -63,6 +63,62 @@ void *intel_pasid_lookup_id(int pasid)
+> >  	return p;
+> >  }
+> > 
+> > +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
+> > *pasid) +{
+> > +	unsigned long flags;
+> > +	u8 status_code;
+> > +	int ret = 0;
+> > +	u64 res;
+> > +
+> > +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
+> > +	dmar_writeq(iommu->reg + DMAR_VCMD_REG,
+> > VCMD_CMD_ALLOC);
+> > +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
+> > +		      !(res & VCMD_VRSP_IP), res);
+> > +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
+> > +  
+> 
+> should we handle VCMD_VRSP_IP here?
+VCMD_VRSP_IP is checked above, if it times out, you will get panic. Not
+sure whatelse to do?
+> 
+> > +	status_code = VCMD_VRSP_SC(res);
+> > +	switch (status_code) {
+> > +	case VCMD_VRSP_SC_SUCCESS:
+> > +		*pasid = VCMD_VRSP_RESULT(res);
+> > +		break;
+> > +	case VCMD_VRSP_SC_NO_PASID_AVAIL:
+> > +		pr_info("IOMMU: %s: No PASID available\n", iommu-  
+> > >name);  
+> > +		ret = -ENOMEM;
+> > +		break;
+> > +	default:
+> > +		ret = -ENODEV;
+> > +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
+> > +			iommu->name, status_code);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid)
+> > +{
+> > +	unsigned long flags;
+> > +	u8 status_code;
+> > +	u64 res;
+> > +
+> > +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
+> > +	dmar_writeq(iommu->reg + DMAR_VCMD_REG, (pasid << 8) |
+> > VCMD_CMD_FREE);  
+> 
+> define a macro for pasid offset.
+> 
+will do.
 
-I'm going to prepare some patches
+> > +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
+> > +		      !(res & VCMD_VRSP_IP), res);
+> > +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
+> > +
+> > +	status_code = VCMD_VRSP_SC(res);
+> > +	switch (status_code) {
+> > +	case VCMD_VRSP_SC_SUCCESS:
+> > +		break;
+> > +	case VCMD_VRSP_SC_INVALID_PASID:
+> > +		pr_info("IOMMU: %s: Invalid PASID\n", iommu->name);
+> > +		break;
+> > +	default:
+> > +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
+> > +			iommu->name, status_code);
+> > +	}
+> > +}
+> > +
+> >  /*
+> >   * Per device pasid table management:
+> >   */
+> > diff --git a/drivers/iommu/intel-pasid.h
+> > b/drivers/iommu/intel-pasid.h index fc8cd8f17de1..e413e884e685
+> > 100644 --- a/drivers/iommu/intel-pasid.h
+> > +++ b/drivers/iommu/intel-pasid.h
+> > @@ -23,6 +23,16 @@
+> >  #define is_pasid_enabled(entry)		(((entry)->lo >> 3)
+> > & 0x1) #define get_pasid_dir_size(entry)	(1 <<
+> > ((((entry)->lo >> 9) & 0x7) + 7))
+> > 
+> > +/* Virtual command interface for enlightened pasid management. */
+> > +#define VCMD_CMD_ALLOC			0x1
+> > +#define VCMD_CMD_FREE			0x2
+> > +#define VCMD_VRSP_IP			0x1
+> > +#define VCMD_VRSP_SC(e)			(((e) >> 1) & 0x3)
+> > +#define VCMD_VRSP_SC_SUCCESS		0
+> > +#define VCMD_VRSP_SC_NO_PASID_AVAIL	1
+> > +#define VCMD_VRSP_SC_INVALID_PASID	1
+> > +#define VCMD_VRSP_RESULT(e)		(((e) >> 8) & 0xfffff)
+> > +
+> >  /*
+> >   * Domain ID reserved for pasid entries programmed for first-level
+> >   * only and pass-through transfer modes.
+> > @@ -95,5 +105,6 @@ int intel_pasid_setup_pass_through(struct
+> > intel_iommu *iommu,
+> >  				   struct device *dev, int pasid);
+> >  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
+> >  				 struct device *dev, int pasid);
+> > -
+> > +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
+> > *pasid); +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned
+> > int pasid); #endif /* __INTEL_PASID_H */
+> > diff --git a/include/linux/intel-iommu.h
+> > b/include/linux/intel-iommu.h index 2e1bed9b7eef..1d4b8dcdc5d8
+> > 100644 --- a/include/linux/intel-iommu.h
+> > +++ b/include/linux/intel-iommu.h
+> > @@ -161,6 +161,7 @@
+> >  #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
+> >  #define ecap_flts(e)		(((e) >> 47) & 0x1)
+> >  #define ecap_slts(e)		(((e) >> 46) & 0x1)
+> > +#define ecap_vcs(e)		(((e) >> 44) & 0x1)
+> >  #define ecap_smts(e)		(((e) >> 43) & 0x1)
+> >  #define ecap_dit(e)		((e >> 41) & 0x1)
+> >  #define ecap_pasid(e)		((e >> 40) & 0x1)
+> > @@ -282,6 +283,7 @@
+> > 
+> >  /* PRS_REG */
+> >  #define DMA_PRS_PPR	((u32)1)
+> > +#define DMA_VCS_PAS	((u64)1)
+> > 
+> >  #define IOMMU_WAIT_OP(iommu, offset, op, cond, sts)
+> > 	\
+> >  do
+> > {
+> > \ -- 2.7.4  
+> 
+
+[Jacob Pan]
