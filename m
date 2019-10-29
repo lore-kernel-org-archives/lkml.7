@@ -2,164 +2,237 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8137DCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C0ACA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5243020862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FD821835
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:13:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dtLNUoC1"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="CRtsWYz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfJ2XIA (ORCPT
+        id S1726047AbfJ2XNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 19:08:00 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34273 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfJ2XH7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 19:07:59 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b128so182016pfa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 16:07:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EK/iR04QppfFL6hJjq1Qp4tKuC0yyvj8XT1kmd57Vc8=;
-        b=dtLNUoC1eHJFg8kN8Jl92Mm/KMo4Rv2P/Ke5YttA0vm9EMCZXYT1ihVW7e044UMAr3
-         8dejWZTNu6tNpmE10toXS+HsMsUY8loN8/tZsFYReKVrgSDC4FCwihhKTmwwbvMDYxB7
-         eH9kvuBXcG/bcdeVX7kFXgcslFNyRSVP5CdWc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EK/iR04QppfFL6hJjq1Qp4tKuC0yyvj8XT1kmd57Vc8=;
-        b=JnzqygBFiCTRSwpwXgqJ/jyiEukPkLsPrvBYNeC2U+Zc29rHTbXbHxLNgjmphx8NeJ
-         RO9LrAkdU8mgm5BtcBpLHJ20RoZWbkeF847aMuLJFsu+VQ7WCyTOiUPHo1rxQavshXjX
-         jXWZPqzhTbd5ovYO1P4efQgyjyZWm1bsmIAx+HdLHc+dipnF2QC4IiuBap1GrL92e3ju
-         BKmR4AG+yvzTOwidL+GCeJDZ/uCKdWj/ABLFgah7RLCV5giO6vMppouuYpl/snT38YWk
-         gMqYxmIze4gKy5/+ltU4IPjWtpiF0ausIa+5T9fZastG+VQRbTEZkdH0/66IcXgPyjLF
-         kGXg==
-X-Gm-Message-State: APjAAAXEpr/GZiJMzdW0csvpc6KFEh58+L/4qZpAyZhRgHK4dqYJHT6M
-        6Hb8kPLQ6B2zjBuzUTcYPva1Xg==
-X-Google-Smtp-Source: APXvYqxlpD8afJVfeJRJZqXRk4DC19b4p18OjNSVX2/RdrFGCqjrqXaMMfLfYxGsFkhlHHEsGanvkA==
-X-Received: by 2002:a63:8f5e:: with SMTP id r30mr21918430pgn.146.1572390479068;
-        Tue, 29 Oct 2019 16:07:59 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e17sm175911pfh.121.2019.10.29.16.07.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 16:07:58 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 16:07:57 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Sudakshina Das <sudi.das@arm.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 01/12] ELF: UAPI and Kconfig additions for ELF program
- properties
-Message-ID: <201910291607.F5DA2EE@keescook>
-References: <1571419545-20401-1-git-send-email-Dave.Martin@arm.com>
- <1571419545-20401-2-git-send-email-Dave.Martin@arm.com>
+        Tue, 29 Oct 2019 19:13:06 -0400
+Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:37014
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725830AbfJ2XNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 19:13:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cYLyxVDer07yot6FTR6Xi12XSPV3TnamPzHEbcCPVYNwj0ZVt937LZCZrDKIWvhNzX9t9RT5TSIpANbpzEVyQWrDB4SCWWcP9TKlIwhNykojbcsnAWUcYKyu55pIp8vrrnVzXUHCQt2V/tCJjeF48LW+wShcguOJ6pdnIh772UoEAYuMT4WpHZu4HzjRBR3nJGK7XGsaDt6SCPREfek84VFKJh4Rkst6Vq9a0REOVASBt2FbXemNZCvAZBkBd3nyOsS25/XgKZyvRNGLQux75ENGYLEERgLIPlbhLvdL8xZjXohcga58XkBYn0CuvJAhv4laVQuT3NpO3Ojp0zD8eQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Lb/NTsMePdh/dTAMcAAvYHy81Y3M9ibceRr11XqormU=;
+ b=QWQJKz+5BlvPn60eL8SNaKiytCThlTETdGYcloEozO8TUBLUnYyf+7hlKIA3YGukizrt3/ye+XFP/esSwvfrnbUVCiot9DopDTSgdlh0EzhxWRB5tnCbLEmaMz7cy+j39f55AOoKWhiGb3t5f+tXpujR+pSzMTxfD15GVKOIjOWY6nWIPp79YOccQwsPp621+HxKJtG+F+WIfHc/NjTC1dRjRRJhjJi5439lNps77OlLEkNXnvEYZolvJiQPLxdp57aLUX4twAeotpQj9wCNgd4rnX0h6YVGj+8AgU7xw+MNgUZI8tMvA158FaTu02dPoLTy07pzEA7JFoa7Z9T88w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Lb/NTsMePdh/dTAMcAAvYHy81Y3M9ibceRr11XqormU=;
+ b=CRtsWYz/nrcUV1Palwc4SnpMVfwKW0ROkRu/xY9m7nUOLV4JEOiiRm0iVrtLGMF9nVtbj3sMlMkNnvlxuhiLt4r0xh49Ys0LBcI/lH6llHrFfNzFG8z/5mxmW77v994pxe//+knJjGpDIopg517kKFotU5m+LuZ5pMGLiSD8NDU=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB3486.eurprd05.prod.outlook.com (10.170.237.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Tue, 29 Oct 2019 23:13:00 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2387.027; Tue, 29 Oct 2019
+ 23:13:00 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
+Thread-Topic: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
+Thread-Index: AQHVidvRl0DiLfVRckS4hHS5dqmJyadx8UKAgAA3LICAACCkgA==
+Date:   Tue, 29 Oct 2019 23:12:59 +0000
+Message-ID: <20191029231255.GX22766@mellanox.com>
+References: <20191023195515.13168-1-rcampbell@nvidia.com>
+ <20191023195515.13168-4-rcampbell@nvidia.com>
+ <20191029175837.GS22766@mellanox.com>
+ <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
+In-Reply-To: <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR1501CA0025.namprd15.prod.outlook.com
+ (2603:10b6:207:17::38) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.162.113.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 11a69733-7ad4-42d2-d687-08d75cc58a14
+x-ms-traffictypediagnostic: VI1PR05MB3486:
+x-microsoft-antispam-prvs: <VI1PR05MB34866EBB7B0A2B17117DCD08CF610@VI1PR05MB3486.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0205EDCD76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(199004)(189003)(386003)(3846002)(6116002)(52116002)(6436002)(66556008)(64756008)(66446008)(66946007)(478600001)(76176011)(6506007)(446003)(11346002)(476003)(229853002)(6486002)(14454004)(71200400001)(102836004)(2616005)(25786009)(6246003)(186003)(66476007)(14444005)(4326008)(26005)(86362001)(256004)(6512007)(71190400001)(54906003)(316002)(5660300002)(36756003)(305945005)(7736002)(6916009)(66066001)(8676002)(1076003)(8936002)(33656002)(99286004)(81166006)(486006)(2906002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3486;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WbBIsqYUPLDFXp1jlGg02w5X8fDbKoWRmW8RSJCweJcocxIcx04fvGZVWL/JHUNc2sX5iwALhcj2I9k+jLhoeMG7GUzZ5BNfNzyqnpUgVTjtbyP2kCRPTOn5QZC3TXsp+Bl7CkxrNOQNH1vLzw4Zwtq7X+PVmx176ewx6Lorxthf8Qqlea/GPxG/Du7FqM5mZTyvPQrpuDMHfKedM+18nES9Ug9mazrued3GzvNCrMBolabrGvJtifjhG70vCGvVwT+AWMZzUYdzrv3VYy0vzBqMUKtvuQGze0HhLwEOQy0GCmLdQ0mTdeDp2V4A6dM+ZtZWDPdqrnq/mjR15kkIS6xIx0lXCbnNDbsqxxN+FP8MpocZeVZOS9H6TYQhuHOHFN0vccfSA5omLtjgtzzOOrvW5gIAKzYaw9Yf1r49n3YYIkpmdXwS0Ro+Tx7/2kgM
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DF0B346546CBC74587B861126B28465A@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571419545-20401-2-git-send-email-Dave.Martin@arm.com>
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11a69733-7ad4-42d2-d687-08d75cc58a14
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 23:12:59.2128
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PMaHJJ00b3Uffot6NjdWrUeXiKMUJoTWrco4kzT4bR+rGkykXkm1qcdcDZv/2i7RQMssfEHn70R7NQI7bUlNnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3486
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 06:25:34PM +0100, Dave Martin wrote:
-> Pull the basic ELF definitions relating to the
-> NT_GNU_PROPERTY_TYPE_0 note from Yu-Cheng Yu's earlier x86 shstk
-> series.
-> 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+On Tue, Oct 29, 2019 at 02:16:05PM -0700, Ralph Campbell wrote:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> > Frankly, I'm not super excited about the idea of a 'test driver', it
+> > seems more logical for testing to have some way for a test harness to
+> > call hmm_range_fault() under various conditions and check the results?
+>=20
+> test_vmalloc.sh at least uses a test module(s).
 
--Kees
+Well, that is good, is it also under drivers/char? It kind feels like
+it should not be there...
+=20
+> > It seems especially over-complicated to use a full page table layout
+> > for this, wouldn't something simple like an xarray be good enough for
+> > test purposes?
+>=20
+> Possibly. A page table is really just a lookup table from virtual address
+> to pfn/page. Part of the rationale was to mimic what a real device
+> might do.
 
-> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> ---
->  fs/Kconfig.binfmt        | 3 +++
->  include/linux/elf.h      | 8 ++++++++
->  include/uapi/linux/elf.h | 1 +
->  3 files changed, 12 insertions(+)
-> 
-> diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-> index 62dc4f5..d2cfe07 100644
-> --- a/fs/Kconfig.binfmt
-> +++ b/fs/Kconfig.binfmt
-> @@ -36,6 +36,9 @@ config COMPAT_BINFMT_ELF
->  config ARCH_BINFMT_ELF_STATE
->  	bool
->  
-> +config ARCH_USE_GNU_PROPERTY
-> +	bool
-> +
->  config BINFMT_ELF_FDPIC
->  	bool "Kernel support for FDPIC ELF binaries"
->  	default y if !BINFMT_ELF
-> diff --git a/include/linux/elf.h b/include/linux/elf.h
-> index e3649b3..459cddc 100644
-> --- a/include/linux/elf.h
-> +++ b/include/linux/elf.h
-> @@ -2,6 +2,7 @@
->  #ifndef _LINUX_ELF_H
->  #define _LINUX_ELF_H
->  
-> +#include <linux/types.h>
->  #include <asm/elf.h>
->  #include <uapi/linux/elf.h>
->  
-> @@ -56,4 +57,11 @@ static inline int elf_coredump_extra_notes_write(struct coredump_params *cprm) {
->  extern int elf_coredump_extra_notes_size(void);
->  extern int elf_coredump_extra_notes_write(struct coredump_params *cprm);
->  #endif
-> +
-> +/* NT_GNU_PROPERTY_TYPE_0 header */
-> +struct gnu_property {
-> +	u32 pr_type;
-> +	u32 pr_datasz;
-> +};
-> +
->  #endif /* _LINUX_ELF_H */
-> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-> index 34c02e4..c377314 100644
-> --- a/include/uapi/linux/elf.h
-> +++ b/include/uapi/linux/elf.h
-> @@ -36,6 +36,7 @@ typedef __s64	Elf64_Sxword;
->  #define PT_LOPROC  0x70000000
->  #define PT_HIPROC  0x7fffffff
->  #define PT_GNU_EH_FRAME		0x6474e550
-> +#define PT_GNU_PROPERTY		0x6474e553
->  
->  #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
->  
-> -- 
-> 2.1.4
-> 
+Well, but the details of the page table layout don't see really
+important to this testing, IMHO.
 
--- 
-Kees Cook
+> > > +	for (addr =3D start; addr < end; ) {
+> > > +		long count;
+> > > +
+> > > +		next =3D min(addr + (ARRAY_SIZE(pfns) << PAGE_SHIFT), end);
+> > > +		range.start =3D addr;
+> > > +		range.end =3D next;
+> > > +
+> > > +		down_read(&mm->mmap_sem);
+
+Also, did we get a mmget() before doing this down_read?
+
+> > > +
+> > > +		ret =3D hmm_range_register(&range, &dmirror->mirror);
+> > > +		if (ret) {
+> > > +			up_read(&mm->mmap_sem);
+> > > +			break;
+> > > +		}
+> > > +
+> > > +		if (!hmm_range_wait_until_valid(&range,
+> > > +						DMIRROR_RANGE_FAULT_TIMEOUT)) {
+> > > +			hmm_range_unregister(&range);
+> > > +			up_read(&mm->mmap_sem);
+> > > +			continue;
+> > > +		}
+> > > +
+> > > +		count =3D hmm_range_fault(&range, 0);
+> > > +		if (count < 0) {
+> > > +			ret =3D count;
+> > > +			hmm_range_unregister(&range);
+> > > +			up_read(&mm->mmap_sem);
+> > > +			break;
+> > > +		}
+> > > +
+> > > +		if (!hmm_range_valid(&range)) {
+> >=20
+> > There is no 'driver lock' being held here, how does this work?
+> > Shouldn't it hold dmirror->mutex for this sequence?
+>=20
+> I have a modified version of this driver that's based on your series
+> removing hmm_mirror_register() which uses a mutex.
+> Otherwise, it looks similar to the changes in nouveau.
+
+Well, that locking pattern is required even for original hmm calls..
+
+
+> > > +static int dmirror_read(struct dmirror *dmirror,
+> > > +			struct hmm_dmirror_cmd *cmd)
+> > > +{
+> >=20
+> > Why not just use pread()/pwrite() for this instead of an ioctl?
+>=20
+> pread()/pwrite() could certainly be implemented.
+> I think the idea was that the read/write is actually the "device"
+> doing read/write and making that clearly different from a program
+> reading/writing the device. Also, the ioctl() allows information
+> about what faults or events happened during the operation. I only
+> have number of pages and number of page faults returned at the moment,
+> but one of Jerome's version of this driver had other counters being
+> returned.
+
+Makes sense I guess
+
+> > > +static struct platform_driver dmirror_device_driver =3D {
+> > > +	.probe		=3D dmirror_probe,
+> > > +	.remove		=3D dmirror_remove,
+> > > +	.driver		=3D {
+> > > +		.name	=3D "HMM_DMIRROR",
+> > > +	},
+> > > +};
+> >=20
+> > This presence of a platform_driver and device is very confusing. I'm
+> > sure Greg KH would object to this as a misuse of platform drivers.
+> >=20
+> > A platform device isn't needed to create a char dev, so what is this fo=
+r?
+>=20
+> The devm_request_free_mem_region() and devm_memremap_pages() calls for
+> creating the ZONE_DEVICE private pages tie into the devm* clean up framew=
+ork.
+> I thought a platform_driver was the simplest way to also be able to call
+> devm_add_action_or_reset() to clean up on module unload and be compatible
+> with the private page clean up.
+
+IIRC Christoph recently fixed things so there was a non devm version
+of these functions. Certainly we should not be making fake
+platform_devices just to call devm.
+
+There is also a struct device inside the cdev, maybe that could be
+arrange to be devm compatible if it was *really* needed.
+
+> > > diff --git a/include/Kbuild b/include/Kbuild
+> > > index ffba79483cc5..6ffb44a45957 100644
+> > > +++ b/include/Kbuild
+> > > @@ -1063,6 +1063,7 @@ header-test-			+=3D uapi/linux/coda_psdev.h
+> > >   header-test-			+=3D uapi/linux/errqueue.h
+> > >   header-test-			+=3D uapi/linux/eventpoll.h
+> > >   header-test-			+=3D uapi/linux/hdlc/ioctl.h
+> > > +header-test-			+=3D uapi/linux/hmm_dmirror.h
+> >=20
+> > Why? This list should only be updated if the header is broken in some
+> > way.
+>=20
+> Should this be in include/linux/ instead?
+> I wasn't sure where the "right" place was to put the header.
+
+No, it is right, it just shouldn't be in this makefile.
+
+Jason
