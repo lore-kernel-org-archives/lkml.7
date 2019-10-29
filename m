@@ -2,452 +2,214 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9CDCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FD4CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914F52087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572386609;
-	bh=XPd8aHHdJ+72mnYFfvOAcR+R9fKVtjIlk7v4rASiSo0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NDkNkMAz7eFeXtZB+RYq8vgmyRHOXKpefQu6gee1A97FA0EsBe/RwyArEJ2Ft/BHj
-	 gO9QDGwKPfZWcOacCk0++YL8Dh4VYYlg3ohCFGf8xSr/QhC2DvXcxU2oxdgVLRld60
-	 ljItU4D15WwmL0VBsA1YryUI6awQorZdDCL3TCvg=
+	by mail.kernel.org (Postfix) with ESMTP id 72EAC2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkTw9Hpo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfJ2WD2 (ORCPT
+        id S1727629AbfJ2WGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:03:28 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35528 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbfJ2WD1 (ORCPT
+        Tue, 29 Oct 2019 18:06:12 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43158 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbfJ2WGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:03:27 -0400
-Received: by mail-oi1-f194.google.com with SMTP id n16so241885oig.2;
-        Tue, 29 Oct 2019 15:03:27 -0700 (PDT)
+        Tue, 29 Oct 2019 18:06:11 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j5so5355778lfh.10;
+        Tue, 29 Oct 2019 15:06:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K8Utf9ayM8XYwdDyhQBxYHMwC6OY3jEY8sLyS1jTeXg=;
+        b=hkTw9HpoDR4FfDMf1gQTwliyN2W2o8IW8Xg25P/3a3PFt72OZaxJeCerSylYFz4RGe
+         7GlmRb8o44WeuNi/8kWLAtQzNpZp7ezS1K0VHgzUdVREYUn4TXuKPzrDcz+xC0yv46Br
+         XsBCR+yc9ps0AiMm24buRQKKR+ElpDzPQ9CQXL+VuYot6hM+hiY4qTE51dvs9g7jLgYj
+         512V5ZLzYSe6k/vYVHh9vvZr94uhPfT/Cjy0cauVrVWvRtg5tAewCyDuInUXftt+KsvG
+         B1S2kl4jBlAaNwG+WFRq/SBygu9u3HpaLJtMHAutmY9nfrlQu2kI6GFsnbX0OQEPGYGC
+         Qn1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cUW3qafGQZ750fGD9h9RZuScF1zWjOGQrLGHZ7tEizQ=;
-        b=W3IxkUQxoi9lWZFXDG/jVMEWtRRYe9nanrtfTuL94jAWqk9Deww/Ehp5GzT3fIYfos
-         vmilEO0+qylySTsDXtQOSlpzpiGtRVOJbI806C6x83CzaCWU7t+GLFv8Ed3u0zDmZ7ic
-         GrM4hdzmlgSLlVIT9sspBoit1UxMmvJkg7nw+k8Fkzwau9VO70nm2SbgR/Xxt6Z9bbo7
-         ECwTR/jelu9/MARrtfPepLAjTcrqJ+TBL7SGHKBJHLEIhkF2VvjMsQDPLWjQGesMwm+e
-         psr4zz264zggrOBNbtPTw7IlZYl2SpVfY8aWXR2glKLQu3IUfJuZjmO5VT7msKmC4TSQ
-         ys+w==
-X-Gm-Message-State: APjAAAWSPTz1PFkCjML8llyTPn8qP9vJTj9TcNNgshe4LSf8YCkCtBzD
-        J0v8P7IrV+77mfdv5XvgFA==
-X-Google-Smtp-Source: APXvYqx9W06LwJxwPis9UiQrq6ZSSR3fMqqMmOvoKtDpRW2hDimatvNpOcsnvx1ID8xjCRmsGSeL4w==
-X-Received: by 2002:aca:fc92:: with SMTP id a140mr5772895oii.153.1572386606526;
-        Tue, 29 Oct 2019 15:03:26 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o23sm82768otp.79.2019.10.29.15.03.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K8Utf9ayM8XYwdDyhQBxYHMwC6OY3jEY8sLyS1jTeXg=;
+        b=A0HNBfrj6/NL39FxJ6kabW6QWDaZJDmRQvW0UJ7mBFSeWdgAgmmp8nEBsO1MuC4aOp
+         n2c5TcZ+un80CwOdO2iMQpH23zVQKfnwDmccjZzz81QI/eIaPM2SP8aRN09Xn3UfC/OI
+         5TuOZBpzZvLvlg0iA0wQA71bfGA8r6AhauQ/Lf0SjgfV16xIo109p9ZgHOCgBGkARZ8q
+         yYqE/fpKZj0Mss8Y281L7xY0xbn1Sh3b8W/LZ62HHpBjKAstU7rxQ1VOSEtNEMSwMKrX
+         a9YvBbv/vqy/CM7K4IvydtCW3y6LfSpHNbDiAeJKdVaXT8OEsPeoT4rC4LvsDJZfSqsj
+         GWMA==
+X-Gm-Message-State: APjAAAW3bHA98oK9gT7L9yUxxbAOMtJgTdD1747IpJYrMy8JFk0Ys/5i
+        +wXM/oD5qYmGtfOWtStrQnQ=
+X-Google-Smtp-Source: APXvYqyJkoy6Ggrpk8jhWGjFJHAeZ+19e82wf8ZmD0+VTralXXO0hdkpacpPn6zSwDjYiWpcx4z3PA==
+X-Received: by 2002:a19:23d7:: with SMTP id j206mr3799697lfj.187.1572386769102;
+        Tue, 29 Oct 2019 15:06:09 -0700 (PDT)
+Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id 12sm51536lje.92.2019.10.29.15.06.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 15:03:25 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 17:03:25 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH 4/5] clk: sprd: Add dt-bindings include file for SC9863A
-Message-ID: <20191029220325.GA11991@bogus>
-References: <20191025111338.27324-1-chunyan.zhang@unisoc.com>
- <20191025111338.27324-5-chunyan.zhang@unisoc.com>
+        Tue, 29 Oct 2019 15:06:08 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7 00/19] More improvements for Tegra30 devfreq driver
+Date:   Wed, 30 Oct 2019 01:00:00 +0300
+Message-Id: <20191029220019.26773-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025111338.27324-5-chunyan.zhang@unisoc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 07:13:37PM +0800, Chunyan Zhang wrote:
-> 
-> This file defines all SC9863A clock indexes, it should be included in the
-> device tree in which there's device using the clocks.
-> 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
->  include/dt-bindings/clock/sprd,sc9863a-clk.h | 353 +++++++++++++++++++
->  1 file changed, 353 insertions(+)
->  create mode 100644 include/dt-bindings/clock/sprd,sc9863a-clk.h
-> 
-> diff --git a/include/dt-bindings/clock/sprd,sc9863a-clk.h b/include/dt-bindings/clock/sprd,sc9863a-clk.h
-> new file mode 100644
-> index 000000000000..bb57312441c7
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/sprd,sc9863a-clk.h
-> @@ -0,0 +1,353 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Unisoc SC9863A platform clocks
-> + *
-> + * Copyright (C) 2019, Unisoc Communications Inc.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLK_SC9860_H_
-> +#define _DT_BINDINGS_CLK_SC9860_H_
-> +
-> +#define	CLK_MPLL0_GATE		0
-> +#define	CLK_DPLL0_GATE		1
-> +#define	CLK_LPLL_GATE		2
-> +#define	CLK_GPLL_GATE		3
-> +#define	CLK_DPLL1_GATE		4
-> +#define	CLK_MPLL1_GATE		5
-> +#define	CLK_MPLL2_GATE		6
-> +#define CLK_ISPPLL_GATE		7
-> +#define	CLK_PMU_APB_NUM		(CLK_ISPPLL_GATE + 1)
-> +
-> +#define	CLK_AUDIO_GATE		0
-> +#define CLK_RPLL		1
+Hello,
 
-Inconsistent formatting. Use 1 space after #define.
+This series addresses some additional review comments that were made by
+Thierry Reding to [1], makes several important changes to the driver,
+reducing interrupts activity, and adds new features. In the end I'm
+proposing myself as a maintainer for the Tegra devfreq drivers.
 
-> +#define CLK_RPLL_390M		2
-> +#define CLK_RPLL_260M		3
-> +#define CLK_RPLL_195M		4
-> +#define CLK_RPLL_26M		5
-> +#define CLK_ANLG_PHY_G5_NUM	(CLK_RPLL_26M + 1)
-> +
-> +#define CLK_TWPLL		0
-> +#define CLK_TWPLL_768M		1
-> +#define CLK_TWPLL_384M		2
-> +#define CLK_TWPLL_192M		3
-> +#define CLK_TWPLL_96M		4
-> +#define CLK_TWPLL_48M		5
-> +#define CLK_TWPLL_24M		6
-> +#define CLK_TWPLL_12M		7
-> +#define CLK_TWPLL_512M		8
-> +#define CLK_TWPLL_256M		9
-> +#define CLK_TWPLL_128M		10
-> +#define CLK_TWPLL_64M		11
-> +#define CLK_TWPLL_307M2		12
-> +#define CLK_TWPLL_219M4		13
-> +#define CLK_TWPLL_170M6		14
-> +#define CLK_TWPLL_153M6		15
-> +#define CLK_TWPLL_76M8		16
-> +#define CLK_TWPLL_51M2		17
-> +#define CLK_TWPLL_38M4		18
-> +#define CLK_TWPLL_19M2		19
-> +#define CLK_LPLL		20
-> +#define CLK_LPLL_409M6		21
-> +#define CLK_LPLL_245M76		22
-> +#define CLK_GPLL		23
-> +#define CLK_ISPPLL		24
-> +#define CLK_ISPPLL_468M		25
-> +#define CLK_ANLG_PHY_G1_NUM	(CLK_ISPPLL_468M + 1)
-> +
-> +#define CLK_DPLL0		0
-> +#define CLK_DPLL1		1
-> +#define CLK_DPLL0_933M		2
-> +#define	CLK_DPLL0_622M3		3
-> +#define CLK_DPLL0_400M		4
-> +#define CLK_DPLL0_266M7		5
-> +#define CLK_DPLL0_123M1		6
-> +#define CLK_DPLL0_50M		7
-> +#define CLK_ANLG_PHY_G7_NUM	(CLK_DPLL0_50M + 1)
-> +
-> +#define CLK_MPLL0		0
-> +#define CLK_MPLL1		1
-> +#define CLK_MPLL2		2
-> +#define CLK_MPLL2_675M		3
-> +#define CLK_ANLG_PHY_G4_NUM	(CLK_MPLL2_675M + 1)
-> +
-> +#define CLK_AP_APB		0
-> +#define CLK_AP_CE		1
-> +#define CLK_NANDC_ECC		2
-> +#define CLK_NANDC_26M		3
-> +#define CLK_EMMC_32K		4
-> +#define CLK_SDIO0_32K		5
-> +#define CLK_SDIO1_32K		6
-> +#define CLK_SDIO2_32K		7
-> +#define CLK_OTG_UTMI		8
-> +#define CLK_AP_UART0		9
-> +#define CLK_AP_UART1		10
-> +#define CLK_AP_UART2		11
-> +#define CLK_AP_UART3		12
-> +#define CLK_AP_UART4		13
-> +#define CLK_AP_I2C0		14
-> +#define CLK_AP_I2C1		15
-> +#define CLK_AP_I2C2		16
-> +#define CLK_AP_I2C3		17
-> +#define CLK_AP_I2C4		18
-> +#define CLK_AP_I2C5		19
-> +#define CLK_AP_I2C6		20
-> +#define CLK_AP_SPI0		21
-> +#define CLK_AP_SPI1		22
-> +#define CLK_AP_SPI2		23
-> +#define CLK_AP_SPI3		24
-> +#define CLK_AP_IIS0		25
-> +#define CLK_AP_IIS1		26
-> +#define CLK_AP_IIS2		27
-> +#define CLK_SIM0		28
-> +#define CLK_SIM0_32K		29
-> +#define CLK_AP_CLK_NUM		(CLK_SIM0_32K + 1)
-> +
-> +#define CLK_13M			0
-> +#define CLK_6M5			1
-> +#define CLK_4M3			2
-> +#define CLK_2M			3
-> +#define CLK_250K		4
-> +#define CLK_RCO_25M		5
-> +#define CLK_RCO_4M		6
-> +#define CLK_RCO_2M		7
-> +#define CLK_EMC			8
-> +#define CLK_AON_APB		9
-> +#define CLK_ADI			10
-> +#define CLK_AUX0		11
-> +#define CLK_AUX1		12
-> +#define CLK_AUX2		13
-> +#define CLK_PROBE		14
-> +#define CLK_PWM0		15
-> +#define CLK_PWM1		16
-> +#define CLK_PWM2		17
-> +#define CLK_AON_THM		18
-> +#define CLK_AUDIF		19
-> +#define CLK_CPU_DAP		20
-> +#define CLK_CPU_TS		21
-> +#define CLK_DJTAG_TCK		22
-> +#define CLK_EMC_REF		23
-> +#define CLK_CSSYS		24
-> +#define CLK_AON_PMU		25
-> +#define CLK_PMU_26M		26
-> +#define CLK_AON_TMR		27
-> +#define CLK_POWER_CPU		28
-> +#define CLK_AP_AXI		29
-> +#define CLK_SDIO0_2X		30
-> +#define CLK_SDIO1_2X		31
-> +#define CLK_SDIO2_2X		32
-> +#define CLK_EMMC_2X		33
-> +#define CLK_DPU			34
-> +#define CLK_DPU_DPI		35
-> +#define CLK_OTG_REF		36
-> +#define CLK_SDPHY_APB		37
-> +#define CLK_ALG_IO_APB		38
-> +#define CLK_GPU_CORE		39
-> +#define CLK_GPU_SOC		40
-> +#define CLK_MM_EMC		41
-> +#define CLK_MM_AHB		42
-> +#define CLK_BPC			43
-> +#define CLK_DCAM_IF		44
-> +#define CLK_ISP			45
-> +#define CLK_JPG			46
-> +#define CLK_CPP			47
-> +#define CLK_SENSOR0		48
-> +#define CLK_SENSOR1		49
-> +#define CLK_SENSOR2		50
-> +#define CLK_MM_VEMC		51
-> +#define CLK_MM_VAHB		52
-> +#define CLK_VSP			53
-> +#define CLK_CORE0		54
-> +#define CLK_CORE1		55
-> +#define CLK_CORE2		56
-> +#define CLK_CORE3		57
-> +#define CLK_CORE4		58
-> +#define CLK_CORE5		59
-> +#define CLK_CORE6		60
-> +#define CLK_CORE7		61
-> +#define CLK_SCU			62
-> +#define CLK_ACE			63
-> +#define CLK_AXI_PERIPH		64
-> +#define CLK_AXI_ACP		65
-> +#define CLK_ATB			66
-> +#define CLK_DEBUG_APB		67
-> +#define CLK_GIC			68
-> +#define CLK_PERIPH		69
-> +#define CLK_AON_CLK_NUM		(CLK_VSP + 1)
-> +
-> +#define CLK_OTG_EB		0
-> +#define CLK_DMA_EB		1
-> +#define CLK_CE_EB		2
-> +#define CLK_NANDC_EB		3
-> +#define CLK_SDIO0_EB		4
-> +#define CLK_SDIO1_EB		5
-> +#define CLK_SDIO2_EB		6
-> +#define CLK_EMMC_EB		7
-> +#define CLK_EMMC_32K_EB		8
-> +#define CLK_SDIO0_32K_EB	9
-> +#define CLK_SDIO1_32K_EB	10
-> +#define CLK_SDIO2_32K_EB	11
-> +#define CLK_NANDC_26M_EB	12
-> +#define CLK_DMA_EB2		13
-> +#define CLK_CE_EB2		14
-> +#define CLK_AP_AHB_GATE_NUM	(CLK_CE_EB2 + 1)
-> +
-> +#define CLK_ADC_EB		0
-> +#define CLK_FM_EB		1
-> +#define CLK_TPC_EB		2
-> +#define CLK_GPIO_EB		3
-> +#define CLK_PWM0_EB		4
-> +#define CLK_PWM1_EB		5
-> +#define CLK_PWM2_EB		6
-> +#define CLK_PWM3_EB		7
-> +#define CLK_KPD_EB		8
-> +#define CLK_AON_SYST_EB		9
-> +#define CLK_AP_SYST_EB		10
-> +#define CLK_AON_TMR_EB		11
-> +#define CLK_AP_TMR0_EB		12
-> +#define CLK_EFUSE_EB		13
-> +#define CLK_EIC_EB		14
-> +#define CLK_INTC_EB		15
-> +#define CLK_ADI_EB		16
-> +#define CLK_AUDIF_EB		17
-> +#define CLK_AUD_EB		18
-> +#define CLK_VBC_EB		19
-> +#define CLK_PIN_EB		20
-> +#define CLK_IPI_EB		21
-> +#define CLK_SPLK_EB		22
-> +#define CLK_MSPI_EB		23
-> +#define CLK_AP_WDG_EB		24
-> +#define CLK_MM_EB		25
-> +#define CLK_AON_APB_CKG_EB	26
-> +#define CLK_CA53_TS0_EB		27
-> +#define CLK_CA53_TS1_EB		28
-> +#define CLK_CS53_DAP_EB		29
-> +#define CLK_I2C_EB		30
-> +#define CLK_PMU_EB		31
-> +#define CLK_THM_EB		32
-> +#define CLK_AUX0_EB		33
-> +#define CLK_AUX1_EB		34
-> +#define CLK_AUX2_EB		35
-> +#define CLK_PROBE_EB		36
-> +#define CLK_EMC_REF_EB		37
-> +#define CLK_CA53_WDG_EB		38
-> +#define CLK_AP_TMR1_EB		39
-> +#define CLK_AP_TMR2_EB		40
-> +#define CLK_DISP_EMC_EB		41
-> +#define CLK_ZIP_EMC_EB		42
-> +#define CLK_GSP_EMC_EB		43
-> +#define CLK_MM_VSP_EB		44
-> +#define CLK_MDAR_EB		45
-> +#define CLK_RTC4M0_CAL_EB	46
-> +#define CLK_RTC4M1_CAL_EB	47
-> +#define CLK_DJTAG_EB		48
-> +#define CLK_MBOX_EB		49
-> +#define CLK_AON_DMA_EB		50
-> +#define CLK_AON_APB_DEF_EB	51
-> +#define CLK_ORP_JTAG_EB		52
-> +#define CLK_DBG_EB		53
-> +#define CLK_DBG_EMC_EB		54
-> +#define CLK_CROSS_TRIG_EB	55
-> +#define CLK_SERDES_DPHY_EB	56
-> +#define CLK_ARCH_RTC_EB		57
-> +#define CLK_KPD_RTC_EB		58
-> +#define CLK_AON_SYST_RTC_EB	59
-> +#define CLK_AP_SYST_RTC_EB	60
-> +#define CLK_AON_TMR_RTC_EB	61
-> +#define CLK_AP_TMR0_RTC_EB	62
-> +#define CLK_EIC_RTC_EB		63
-> +#define CLK_EIC_RTCDV5_EB	64
-> +#define CLK_AP_WDG_RTC_EB	65
-> +#define CLK_CA53_WDG_RTC_EB	66
-> +#define CLK_THM_RTC_EB		67
-> +#define CLK_ATHMA_RTC_EB	68
-> +#define CLK_GTHMA_RTC_EB	69
-> +#define CLK_ATHMA_RTC_A_EB	70
-> +#define CLK_GTHMA_RTC_A_EB	71
-> +#define CLK_AP_TMR1_RTC_EB	72
-> +#define CLK_AP_TMR2_RTC_EB	73
-> +#define CLK_DXCO_LC_RTC_EB	74
-> +#define CLK_BB_CAL_RTC_EB	75
-> +#define CLK_GNU_EB		76
-> +#define CLK_DISP_EB		77
-> +#define CLK_MM_EMC_EB		78
-> +#define CLK_POWER_CPU_EB	79
-> +#define CLK_HW_I2C_EB		80
-> +#define CLK_MM_VSP_EMC_EB	81
-> +#define CLK_VSP_EB		82
-> +#define CLK_CSSYS_EB		83
-> +#define CLK_DMC_EB		84
-> +#define CLK_ROSC_EB		85
-> +#define CLK_S_D_CFG_EB		86
-> +#define CLK_S_D_REF_EB		87
-> +#define CLK_B_DMA_EB		88
-> +#define CLK_ANLG_EB		89
-> +#define CLK_ANLG_APB_EB		90
-> +#define CLK_BSMTMR_EB		91
-> +#define CLK_AP_AXI_EB		92
-> +#define CLK_AP_INTC0_EB		93
-> +#define CLK_AP_INTC1_EB		94
-> +#define CLK_AP_INTC2_EB		95
-> +#define CLK_AP_INTC3_EB		96
-> +#define CLK_AP_INTC4_EB		97
-> +#define CLK_AP_INTC5_EB		98
-> +#define CLK_SCC_EB		99
-> +#define CLK_DPHY_CFG_EB		100
-> +#define CLK_DPHY_REF_EB		101
-> +#define CLK_CPHY_CFG_EB		102
-> +#define CLK_OTG_REF_EB		103
-> +#define CLK_SERDES_EB		104
-> +#define CLK_AON_AP_EMC_EB	105
-> +#define CLK_AON_APB_GATE_NUM	(CLK_AON_AP_EMC_EB + 1)
-> +
-> +#define CLK_MAHB_CKG_EB		0
-> +#define CLK_MDCAM_EB		1
-> +#define CLK_MISP_EB		2
-> +#define CLK_MAHBCSI_EB		3
-> +#define CLK_MCSI_S_EB		4
-> +#define CLK_MCSI_T_EB		5
-> +#define CLK_DCAM_AXI_EB		6
-> +#define CLK_ISP_AXI_EB		7
-> +#define CLK_MCSI_EB		8
-> +#define CLK_MCSI_S_CKG_EB	9
-> +#define CLK_MCSI_T_CKG_EB	10
-> +#define CLK_SENSOR0_EB		11
-> +#define CLK_SENSOR1_EB		12
-> +#define CLK_SENSOR2_EB		13
-> +#define CLK_MCPHY_CFG_EB	14
-> +#define CLK_MM_GATE_NUM		(CLK_MCPHY_CFG_EB + 1)
-> +
-> +#define CLK_MIPI_CSI		0
-> +#define CLK_MIPI_CSI_S		1
-> +#define CLK_MIPI_CSI_M		2
-> +#define CLK_MM_CLK_NUM		(CLK_MIPI_CSI_M + 1)
-> +
-> +#define CLK_VCKG_EB		0
-> +#define CLK_VVSP_EB		1
-> +#define CLK_VJPG_EB		2
-> +#define CLK_VCPP_EB		3
-> +#define CLK_VSP_AHB_GATE_NUM	(CLK_VCPP_EB + 1)
-> +
-> +#define CLK_SIM0_EB		0
-> +#define CLK_IIS0_EB		1
-> +#define CLK_IIS1_EB		2
-> +#define CLK_IIS2_EB		3
-> +#define CLK_SPI0_EB		4
-> +#define CLK_SPI1_EB		5
-> +#define CLK_SPI2_EB		6
-> +#define CLK_I2C0_EB		7
-> +#define CLK_I2C1_EB		8
-> +#define CLK_I2C2_EB		9
-> +#define CLK_I2C3_EB		10
-> +#define CLK_I2C4_EB		11
-> +#define CLK_UART0_EB		12
-> +#define CLK_UART1_EB		13
-> +#define CLK_UART2_EB		14
-> +#define CLK_UART3_EB		15
-> +#define CLK_UART4_EB		16
-> +#define CLK_SIM0_32K_EB		17
-> +#define CLK_SPI3_EB		18
-> +#define CLK_I2C5_EB		19
-> +#define CLK_I2C6_EB		20
-> +#define CLK_AP_APB_GATE_NUM	(CLK_I2C6_EB + 1)
-> +
-> +#endif /* _DT_BINDINGS_CLK_SC9860_H_ */
-> -- 
-> 2.20.1
-> 
-> 
+[1] https://lore.kernel.org/lkml/0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com/T/
+
+Changelog:
+
+v7:  Addressed review comments that were made by Chanwoo Choi to v6 by:
+
+     1. Dropping patch "Ensure that target freq won't overflow".
+     2. Making "Use kHz units uniformly in the code" patch more easier
+        for review and improving its commit's message.
+     3. The "Support variable polling interval" patch is reworked, now it
+        doesn't touch things that should stay internal to devfreq core, like
+        devfreq->stop_polling and etc. In a result a new generic
+        interrupt_driven flag is available for devfreq governors (added in a
+        new patch "Add new interrupt_driven flag for governors").
+
+     Patch "Set up watermarks properly" and related to it patches are dropped
+     because I found a case where it doesn't work well. These patches need
+     some more thought and not ready for now, I'll continue working on them.
+     I extracted useful changes from the dropped patches and then tuned up
+     MCCPU boost-down coefficient to keep ACTMON silent when system is idling,
+     in a result there are these new patches:
+
+       1. Don't enable already enabled consecutive interrupts
+       2. Disable consecutive interrupts when appropriate
+       3. Tune up MCCPU boost-down coefficient
+
+v6:  Addressed review comment that was made by Chanwoo Choi to v5 by
+     squashing "Define ACTMON_DEV_CTRL_STOP" patch into the "Use CPUFreq
+     notifier" patch.
+
+v5:  Addressed review comments that were made by Chanwoo Choi to v4 by
+     squashing few patches, dropping some questionable patches, rewording
+     comments to the code, restructuring the code and etc.
+
+     These patches are now dropped from the series:
+
+       PM / devfreq: tegra30: Use tracepoints for debugging
+       PM / devfreq: tegra30: Inline all one-line functions
+
+     The interrupt-optimization patches are squashed into a single patch:
+
+       PM / devfreq: tegra30: Reduce unnecessary interrupts activity
+
+     because it's better to keep the optimizations as a separate change and
+     this also helps to reduce code churning, since the code changes depend
+     on a previous patch in order to stay cleaner.
+
+     Fixed a lockup bug that I spotted recently, which is caused by a
+     clk-notifier->cpufreq_get()->clk_set_rate() sequence. Now a non-blocking
+     variant of CPU's frequency retrieving is used, i.e. cpufreq_quick_get().
+
+     Further optimized the CPUFreq notifier by postponing the delayed
+     updating in accordance to the polling interval, this actually uncovered
+     the above lockup bug.
+
+     Implemented new minor driver feature in the new patch:
+
+       PM / devfreq: tegra30: Support variable polling interval
+
+v4:  Added two new patches to the series:
+
+       PM / devfreq: tegra30: Synchronize average count on target's update
+       PM / devfreq: tegra30: Increase sampling period to 16ms
+
+     The first patch addresses problem where governor could get stuck due
+     to outdated "average count" value which is snapshoted by ISR and there
+     are cases where manual update of the value is required.
+
+     The second patch is just a minor optimization.
+
+v3:  Added support for tracepoints, replacing the debug messages.
+     Fixed few more bugs with the help of tracepoints.
+
+     New patches in this version:
+
+       PM / devfreq: tegra30: Use tracepoints for debugging
+       PM / devfreq: tegra30: Optimize CPUFreq notifier
+       PM / devfreq: tegra30: Optimize upper consecutive watermark selection
+       PM / devfreq: tegra30: Optimize upper average watermark selection
+       PM / devfreq: tegra30: Include appropriate header
+
+     Some of older patches of this series also got some extra minor polish.
+
+v2:  Added more patches that are cleaning driver's code further and
+     squashing another kHz conversion bug.
+
+     The patch "Rework frequency management logic" of the v1 series is now
+     converted to "Set up watermarks properly" because I found some problems
+     in the original patch and then realized that there is no need to change
+     the logic much. So the logic mostly preserved and only got improvements.
+
+     The series is based on the today's linux-next (25 Jun) and takes into
+     account minor changes that MyungJoo Ham made to the already queued
+     patches from the first batch [1].
+
+Dmitry Osipenko (19):
+  PM / devfreq: tegra30: Change irq type to unsigned int
+  PM / devfreq: tegra30: Keep interrupt disabled while governor is
+    stopped
+  PM / devfreq: tegra30: Handle possible round-rate error
+  PM / devfreq: tegra30: Drop write-barrier
+  PM / devfreq: tegra30: Fix integer overflow on CPU's freq max out
+  PM / devfreq: tegra30: Use kHz units uniformly in the code
+  PM / devfreq: tegra30: Use CPUFreq notifier
+  PM / devfreq: tegra30: Move clk-notifier's registration to governor's
+    start
+  PM / devfreq: tegra30: Reset boosting on startup
+  PM / devfreq: tegra30: Don't enable consecutive-down interrupt on
+    startup
+  PM / devfreq: tegra30: Constify structs
+  PM / devfreq: tegra30: Include appropriate header
+  PM / devfreq: tegra30: Increase sampling period to 16ms
+  PM / devfreq: tegra30: Don't enable already enabled consecutive
+    interrupts
+  PM / devfreq: tegra30: Disable consecutive interrupts when appropriate
+  PM / devfreq: Add new interrupt_driven flag for governors
+  PM / devfreq: tegra30: Support variable polling interval
+  PM / devfreq: tegra30: Tune up MCCPU boost-down coefficient
+  PM / devfreq: tegra20/30: Add Dmitry as a maintainer
+
+ MAINTAINERS                       |   9 +
+ drivers/devfreq/devfreq.c         |  14 +-
+ drivers/devfreq/governor.h        |   3 +
+ drivers/devfreq/tegra30-devfreq.c | 356 +++++++++++++++++++++---------
+ 4 files changed, 276 insertions(+), 106 deletions(-)
+
+-- 
+2.23.0
+
