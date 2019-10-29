@@ -2,170 +2,110 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1016CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AF2CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 924AF2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B75272086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572339364;
+	bh=RCMUTEieUAqbdDi3UXC44oJQHvnrbU2QZQPBK7vKBHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r47yWgNvKR7rmMk+IZlWAXburQbXXPwQEsIoJ4FNFFh0/dwj2nK3zcTZFI4Js22Lj
+	 HOKB7wyTgFTX3xXn7520sNAlgHtjWH9A+mHpj0pVcdmmTIO+5A+FPyV3mpSwwKdsMP
+	 UcCZuxUP/ljBa3swncPWVK22WMdJho8XuG8W8738=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbfJ2Iz7 (ORCPT
+        id S1730211AbfJ2I4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:55:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49641 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729695AbfJ2Iz7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:55:59 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iPNI4-0000wX-1e; Tue, 29 Oct 2019 09:55:48 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iPNI1-0006qC-Cj; Tue, 29 Oct 2019 09:55:45 +0100
-Date:   Tue, 29 Oct 2019 09:55:45 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Ondrej Jirman <megous@megous.com>, linux-sunxi@googlegroups.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@bootlin.com>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] input: edt-ft5x06: Add support for regulator
-Message-ID: <20191029085545.cw5c24gi76gbfdhy@pengutronix.de>
-References: <20191029005806.3577376-1-megous@megous.com>
- <20191029005806.3577376-2-megous@megous.com>
- <20191029041233.GD57214@dtor-ws>
+        Tue, 29 Oct 2019 04:56:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729695AbfJ2I4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:56:02 -0400
+Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1031420663;
+        Tue, 29 Oct 2019 08:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572339362;
+        bh=RCMUTEieUAqbdDi3UXC44oJQHvnrbU2QZQPBK7vKBHo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bK6YBI1jHf1yer+gIAFBkdQfdkJZfxdS24Gvl3LhKuDLpEa8DWiPe8Sr+QPDFcRYj
+         4XIAV2Tn4t1Puqkg2rtTqMX+AKf6wJ6qNHzPTy7COE4QD0QxiWPoIiygzCaMPZVLSN
+         5WIqGWIJMAxMy0jB5tFSVt1yZ4+rFA618tmvoMTI=
+Date:   Tue, 29 Oct 2019 09:55:53 +0100
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, x86@kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+Message-ID: <20191029085551.GA18773@rapoport-lnx>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <1572171452-7958-2-git-send-email-rppt@kernel.org>
+ <20191028123124.ogkk5ogjlamvwc2s@box>
+ <20191028130018.GA7192@rapoport-lnx>
+ <20191028131623.zwuwguhm4v4s5imh@box>
+ <alpine.DEB.2.21.1910290706360.3769@www.lameter.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029041233.GD57214@dtor-ws>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:53:29 up 164 days, 15:11, 100 users,  load average: 0.00, 0.01,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.21.1910290706360.3769@www.lameter.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-On 19-10-28 21:12, Dmitry Torokhov wrote:
-> On Tue, Oct 29, 2019 at 01:58:04AM +0100, Ondrej Jirman wrote:
-> > From: Mylène Josserand <mylene.josserand@bootlin.com>
-> > 
-> > Add the support for enabling optional regulator that may be used as VCC
-> > source.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+On Tue, Oct 29, 2019 at 07:08:42AM +0000, Christopher Lameter wrote:
+> On Mon, 28 Oct 2019, Kirill A. Shutemov wrote:
 > 
-> Applied, thank you.
-
-What happens with my vdd patches?
-
-Regards,
-  Marco
-
+> > Setting a single 4k page non-present in the direct mapping will require
+> > splitting 2M or 1G page we usually map direct mapping with. And it's one
+> > way road. We don't have any mechanism to map the memory with huge page
+> > again after the application has freed the page.
+> >
+> > It might be okay if all these pages cluster together, but I don't think we
+> > have a way to achieve it easily.
 > 
-> > ---
-> >  drivers/input/touchscreen/edt-ft5x06.c | 30 ++++++++++++++++++++++++++
-> >  1 file changed, 30 insertions(+)
-> > 
-> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> > index 5525f1fb1526..d61731c0037d 100644
-> > --- a/drivers/input/touchscreen/edt-ft5x06.c
-> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> > @@ -28,6 +28,7 @@
-> >  #include <linux/input/mt.h>
-> >  #include <linux/input/touchscreen.h>
-> >  #include <asm/unaligned.h>
-> > +#include <linux/regulator/consumer.h>
-> >  
-> >  #define WORK_REGISTER_THRESHOLD		0x00
-> >  #define WORK_REGISTER_REPORT_RATE	0x08
-> > @@ -88,6 +89,7 @@ struct edt_ft5x06_ts_data {
-> >  	struct touchscreen_properties prop;
-> >  	u16 num_x;
-> >  	u16 num_y;
-> > +	struct regulator *vcc;
-> >  
-> >  	struct gpio_desc *reset_gpio;
-> >  	struct gpio_desc *wake_gpio;
-> > @@ -1036,6 +1038,13 @@ edt_ft5x06_ts_set_regs(struct edt_ft5x06_ts_data *tsdata)
-> >  	}
-> >  }
-> >  
-> > +static void edt_ft5x06_disable_regulator(void *arg)
-> > +{
-> > +	struct edt_ft5x06_ts_data *data = arg;
-> > +
-> > +	regulator_disable(data->vcc);
-> > +}
-> > +
-> >  static int edt_ft5x06_ts_probe(struct i2c_client *client,
-> >  					 const struct i2c_device_id *id)
-> >  {
-> > @@ -1064,6 +1073,27 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
-> >  
-> >  	tsdata->max_support_points = chip_data->max_support_points;
-> >  
-> > +	tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
-> > +	if (IS_ERR(tsdata->vcc)) {
-> > +		error = PTR_ERR(tsdata->vcc);
-> > +		if (error != -EPROBE_DEFER)
-> > +			dev_err(&client->dev,
-> > +				"failed to request regulator: %d\n", error);
-> > +		return error;
-> > +	}
-> > +
-> > +	error = regulator_enable(tsdata->vcc);
-> > +	if (error < 0) {
-> > +		dev_err(&client->dev, "failed to enable vcc: %d\n", error);
-> > +		return error;
-> > +	}
-> > +
-> > +	error = devm_add_action_or_reset(&client->dev,
-> > +					 edt_ft5x06_disable_regulator,
-> > +					 tsdata);
-> > +	if (error)
-> > +		return error;
-> > +
-> >  	tsdata->reset_gpio = devm_gpiod_get_optional(&client->dev,
-> >  						     "reset", GPIOD_OUT_HIGH);
-> >  	if (IS_ERR(tsdata->reset_gpio)) {
-> > -- 
-> > 2.23.0
-> > 
-> 
-> -- 
-> Dmitry
+> Set aside a special physical memory range for this and migrate the
+> page to that physical memory range when MAP_EXCLUSIVE is specified?
+
+I've talked with Thomas yesterday and he suggested something similar:
+
+When the MAP_EXCLUSIVE request comes for the first time, we allocate a huge
+page for it and then use this page as a pool of 4K pages for subsequent
+requests. Once this huge page is full we allocate a new one and append it
+to the pool. When all the 4K pages that comprise the huge page are freed
+the huge page is collapsed.
+
+And then on top of this we can look into compaction of the direct map.
+
+Of course, this would work if the easy way of collapsing direct map pages
+Kirill mentioned on other mail will work.
+ 
+> Maybe some processors also have hardware ranges that offer additional
+> protection for stuff like that?
 > 
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Sincerely yours,
+Mike.
