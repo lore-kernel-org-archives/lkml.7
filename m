@@ -2,135 +2,400 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B5DCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53368CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FE82087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7B420578
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c1KSpUVm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYOxL2v0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388454AbfJ2N0q (ORCPT
+        id S2388458AbfJ2N2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:26:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57838 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726858AbfJ2N0q (ORCPT
+        Tue, 29 Oct 2019 09:28:35 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45683 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ2N2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:26:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572355605;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4ZnfhT7+7jRkPyL+7J38NPLykuSAFsrZtZChreOrEfg=;
-        b=c1KSpUVmhiQfnmyPNUZAM0NihCm+EfpVFXcsKbOXQpEJOwMMSW4Fx1Vk9QZfht001MiV6+
-        QqQqWkqa/t4KXJZB+kPd/nN390ala9UeRZN5hAYl9ASf77XfmBCuSQ3Y2rqeH6qrRwhKZi
-        IxuL9/9r/mjjOnUm42OzeaIJ/is8Uy8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-133-pCW1U5pPO5aWK09p80hpHQ-1; Tue, 29 Oct 2019 09:26:42 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B38B476;
-        Tue, 29 Oct 2019 13:26:40 +0000 (UTC)
-Received: from [10.36.118.30] (unknown [10.36.118.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A6C9600C4;
-        Tue, 29 Oct 2019 13:26:37 +0000 (UTC)
-Subject: Re: [RFC v2] mm: add page preemption
-To:     Hillf Danton <hdanton@sina.com>, Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jan Kara <jack@suse.cz>
-References: <20191029123058.19060-1-hdanton@sina.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <2586aa78-9120-cd33-7f02-2542b74a64a4@redhat.com>
-Date:   Tue, 29 Oct 2019 14:26:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 29 Oct 2019 09:28:34 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c7so8414266pfo.12;
+        Tue, 29 Oct 2019 06:28:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GCDhOdMxr85O3msuI3+nUJ2Ne0BfGf3lpETXl1wRKd8=;
+        b=QYOxL2v0VMygFhR/HLTRU3MnC+8DXDu1fjLfH54tV9yv3lL/KN0hsdkYpbVdS/BA8Y
+         N/ysk5cMk6NDPS1BICIaThvzu2kThlHmczTqiQ+G3MVEAwEY3rbtoajAROxqI6LMGG+v
+         1+rel+ABU+ePaZQN5otOQW+0GGkOf1gTRMf9ydaGSjFbp/2QsV+uO1pB9IG/vY+r3RUf
+         /PTI7v0HsR8iOXwiGgkwibsLiWQJ51QMRgKtv/WD9x1ezpGKCsASWsKlzQjwrOpAgxdO
+         rZOiQHQDMnoqVZzAec6bhFJaGK0q0cDveUeMkZygwGNoKPpmg6npnKgU939J+20ZRvLS
+         flMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GCDhOdMxr85O3msuI3+nUJ2Ne0BfGf3lpETXl1wRKd8=;
+        b=LNyZyVUkFUWi+UQeaCuEzw4JlCZ+IKjZBBcosP3XEu8bHZIlAKetNQ9Y3fXAlYUAsb
+         3768h/L9lFbf9nOV/9Qb2FxfaSNaBU/zxddKXcGHOIlGZY+8CJDDMfIJC4cYMnULafw/
+         Hn92Br8ENwO9VSW62UCWm2I0gm4XZeGBOQCH+5BR/YhnI6BTcgbnQlcr3NdKShH1ecl7
+         O7w3AMpIycRaI949MhzFIA4psioOlcRnrBxLOkwopx18aQQh/SMMm7+Vfbz3msj93ptD
+         Xw/KmbdqxklYUzCt8sF1w7I02K0/M4Cu0aMsVcU5TD41PVU18rLbbiRuT7Il5GAwqiQL
+         fZUw==
+X-Gm-Message-State: APjAAAUEKKi+Kx/L6IKeXdW+qApx7YDaRF+wss6lSEQH90DqGPb2cjor
+        ebR3EAJuP5VxybKNG5bxLhf3NTw8
+X-Google-Smtp-Source: APXvYqyk8I6qxU2Btly1TSSuxsSM3y5AhmxmLdm20bpbOYhrBqAUnqL89P+lZLpMjMY9W3SfbAJcrw==
+X-Received: by 2002:a63:fe06:: with SMTP id p6mr8181830pgh.245.1572355713775;
+        Tue, 29 Oct 2019 06:28:33 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b17sm15429891pfr.17.2019.10.29.06.28.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 29 Oct 2019 06:28:33 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 06:28:32 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eugen.Hristev@microchip.com
+Cc:     wim@linux-watchdog.org, robh+dt@kernel.org,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] watchdog: sama5d4_wdt: addition of sam9x60
+ compatible watchdog
+Message-ID: <20191029132831.GA5643@roeck-us.net>
+References: <1571648890-15140-1-git-send-email-eugen.hristev@microchip.com>
+ <1571648890-15140-2-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20191029123058.19060-1-hdanton@sina.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: pCW1U5pPO5aWK09p80hpHQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571648890-15140-2-git-send-email-eugen.hristev@microchip.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.10.19 13:30, Hillf Danton wrote:
->=20
-> Date: Tue, 29 Oct 2019 09:41:53 +0100 Michal Hocko wrote:
->>
->> As already raised in the review of v1. There is no real life usecase
->> described in the changelog.
->=20
-> No feature, no user; no user, no workloads.
-> No linux-6.x released, no 6.x users.
-> Are you going to be one of the users of linux-6.0?
->=20
-> Even though, I see a use case over there at
-> https://lore.kernel.org/lkml/20191023120452.GN754@dhcp22.suse.cz/
->=20
-> That thread terminated because of preemption, showing us how useful
-> preemption might be in real life.
->=20
->> I have also expressed concerns about how
->> such a reclaim would work in the first place
->=20
-> Based on what?
->=20
->> (priority inversion,
->=20
-> No prio inversion will happen after introducing prio to global reclaim.
->=20
->> expensive reclaim etc.).
->=20
-> No cost, no earn.
->=20
->=20
+On Mon, Oct 21, 2019 at 09:14:09AM +0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> Add support for SAM9X60 WDT into sama5d4_wdt.
+> This means that this driver will have a platform data that will
+> hold differences.
+> Added definitions of different bits.
+> The ops functions will differentiate between the two hardware blocks.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> ---
+> 
+> Hello,
+> 
+> This is a rework of the separate sam9x60 watchdog driver into a single driver
+> that supports both hardware blocks (sam9x60 and sama5d4)
+> This was done as suggested on the original patches on the mailing list.
+> 
+> Thanks,
+> Eugen
+> 
+>  drivers/watchdog/at91sam9_wdt.h |  14 +++++
+>  drivers/watchdog/sama5d4_wdt.c  | 127 +++++++++++++++++++++++++++++++---------
+>  2 files changed, 112 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wdt.h
+> index 390941c..7a053fd 100644
+> --- a/drivers/watchdog/at91sam9_wdt.h
+> +++ b/drivers/watchdog/at91sam9_wdt.h
+> @@ -20,7 +20,10 @@
+>  #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
+>  #define		AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
+>  #define			AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+> +#define		AT91_SAM9X60_PERIODRST	BIT(4)		/* Period Reset */
+> +#define		AT91_SAM9X60_RPTHRST	BIT(5)		/* Minimum Restart Period */
+>  #define		AT91_WDT_WDFIEN		(1     << 12)		/* Fault Interrupt Enable */
+> +#define		AT91_SAM9X60_WDDIS		BIT(12)		/* Disable */
+>  #define		AT91_WDT_WDRSTEN	(1     << 13)		/* Reset Processor */
+>  #define		AT91_WDT_WDRPROC	(1     << 14)		/* Timer Restart */
+>  #define		AT91_WDT_WDDIS		(1     << 15)		/* Watchdog Disable */
+> @@ -33,4 +36,15 @@
+>  #define		AT91_WDT_WDUNF		(1 << 0)		/* Watchdog Underflow */
+>  #define		AT91_WDT_WDERR		(1 << 1)		/* Watchdog Error */
+>  
+> +#define AT91_SAM9X60_VR		0x08			/* Watchdog Timer Value Register */
+> +
+> +#define AT91_SAM9X60_WLR		0x0c
+> +#define		AT91_SAM9X60_COUNTER	(0xfff << 0)		/* Watchdog Period Value */
+> +#define		AT91_SAM9X60_SET_COUNTER(x)	((x) & AT91_SAM9X60_COUNTER)
+> +
+> +#define AT91_SAM9X60_IER		0x14			/* Interrupt Enable Register */
+> +#define		AT91_SAM9X60_PERINT		BIT(0)		/* Period Interrupt Enable */
+> +#define AT91_SAM9X60_IDR		0x18			/* Interrupt Disable Register */
+> +#define AT91_SAM9X60_ISR		0x1c			/* Interrupt Status Register */
+> +
 
-Side note: You should really have a look what your mail client is=20
-messing up here. E.g., the reply from Michal correctly had
+Those tabs are getting messy, and the mix of BIT() and shift is messy too.
+Mind cleaning it up a bit ? Especially, two tabs after #define doesn't really
+add value (use two spaces), and use BIT() throughout or not at all.
 
-Message-ID: <20191029084153.GD31513@dhcp22.suse.cz>
-References: <20191026112808.14268-1-hdanton@sina.com>
-In-Reply-To: <20191026112808.14268-1-hdanton@sina.com>
+>  #endif
+> diff --git a/drivers/watchdog/sama5d4_wdt.c b/drivers/watchdog/sama5d4_wdt.c
+> index d193a60..b92afd7 100644
+> --- a/drivers/watchdog/sama5d4_wdt.c
+> +++ b/drivers/watchdog/sama5d4_wdt.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Driver for Atmel SAMA5D4 Watchdog Timer
+>   *
+> - * Copyright (C) 2015 Atmel Corporation
+> + * Copyright (C) 2015-2019 Microchip Technology Inc. and its subsidiaries
+>   */
+>  
+>  #include <linux/delay.h>
+> @@ -11,6 +11,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/reboot.h>
+> @@ -25,11 +26,18 @@
+>  
+>  #define WDT_SEC2TICKS(s)	((s) ? (((s) << 8) - 1) : 0)
+>  
+> +struct sama5d4_wdt_data {
+> +	const unsigned int		sam9x60_support;
+> +};
+> +
+>  struct sama5d4_wdt {
+> -	struct watchdog_device	wdd;
+> -	void __iomem		*reg_base;
+> -	u32			mr;
+> -	unsigned long		last_ping;
+> +	struct watchdog_device		wdd;
+> +	const struct sama5d4_wdt_data	*data;
+> +	void __iomem			*reg_base;
+> +	u32				mr;
+> +	u32				ir;
+> +	unsigned long			last_ping;
+> +	unsigned int			need_irq:1;
 
-Once you reply to that, you have
+This can be a bool. Making it a bit just adds complexity to the code.
 
-Message-Id: <20191029123058.19060-1-hdanton@sina.com>
-In-Reply-To: <20191026112808.14268-1-hdanton@sina.com>
-References:
+>  };
+>  
+>  static int wdt_timeout;
+> @@ -78,7 +86,12 @@ static int sama5d4_wdt_start(struct watchdog_device *wdd)
+>  {
+>  	struct sama5d4_wdt *wdt = watchdog_get_drvdata(wdd);
+>  
+> -	wdt->mr &= ~AT91_WDT_WDDIS;
+> +	if (wdt->data->sam9x60_support) {
+> +		writel_relaxed(wdt->ir, wdt->reg_base + AT91_SAM9X60_IER);
+> +		wdt->mr &= ~AT91_SAM9X60_WDDIS;
+> +	} else {
+> +		wdt->mr &= ~AT91_WDT_WDDIS;
+> +	}
+>  	wdt_write(wdt, AT91_WDT_MR, wdt->mr);
+>  
+>  	return 0;
+> @@ -88,7 +101,12 @@ static int sama5d4_wdt_stop(struct watchdog_device *wdd)
+>  {
+>  	struct sama5d4_wdt *wdt = watchdog_get_drvdata(wdd);
+>  
+> -	wdt->mr |= AT91_WDT_WDDIS;
+> +	if (wdt->data->sam9x60_support) {
+> +		writel_relaxed(wdt->ir, wdt->reg_base + AT91_SAM9X60_IDR);
+> +		wdt->mr |= AT91_SAM9X60_WDDIS;
+> +	} else {
+> +		wdt->mr |= AT91_WDT_WDDIS;
+> +	}
+>  	wdt_write(wdt, AT91_WDT_MR, wdt->mr);
+>  
+>  	return 0;
+> @@ -109,6 +127,14 @@ static int sama5d4_wdt_set_timeout(struct watchdog_device *wdd,
+>  	struct sama5d4_wdt *wdt = watchdog_get_drvdata(wdd);
+>  	u32 value = WDT_SEC2TICKS(timeout);
+>  
+> +	if (wdt->data->sam9x60_support) {
+> +		wdt_write(wdt, AT91_SAM9X60_WLR,
+> +			  AT91_SAM9X60_SET_COUNTER(value));
+> +
+> +		wdd->timeout = timeout;
+> +		return 0;
+> +	}
+> +
+>  	wdt->mr &= ~AT91_WDT_WDV;
+>  	wdt->mr |= AT91_WDT_SET_WDV(value);
+>  
+> @@ -143,8 +169,14 @@ static const struct watchdog_ops sama5d4_wdt_ops = {
+>  static irqreturn_t sama5d4_wdt_irq_handler(int irq, void *dev_id)
+>  {
+>  	struct sama5d4_wdt *wdt = platform_get_drvdata(dev_id);
+> +	u32 reg;
+>  
+> -	if (wdt_read(wdt, AT91_WDT_SR)) {
+> +	if (wdt->data->sam9x60_support)
+> +		reg = wdt_read(wdt, AT91_SAM9X60_ISR);
+> +	else
+> +		reg = wdt_read(wdt, AT91_WDT_SR);
+> +
+> +	if (reg) {
+>  		pr_crit("Atmel Watchdog Software Reset\n");
+>  		emergency_restart();
+>  		pr_crit("Reboot didn't succeed\n");
+> @@ -157,13 +189,14 @@ static int of_sama5d4_wdt_init(struct device_node *np, struct sama5d4_wdt *wdt)
+>  {
+>  	const char *tmp;
+>  
+> -	wdt->mr = AT91_WDT_WDDIS;
+> +	if (wdt->data->sam9x60_support)
+> +		wdt->mr = AT91_SAM9X60_WDDIS;
+> +	else
+> +		wdt->mr = AT91_WDT_WDDIS;
+>  
+>  	if (!of_property_read_string(np, "atmel,watchdog-type", &tmp) &&
+>  	    !strcmp(tmp, "software"))
+> -		wdt->mr |= AT91_WDT_WDFIEN;
+> -	else
+> -		wdt->mr |= AT91_WDT_WDRSTEN;
+> +		wdt->need_irq = 1;
+>  
+>  	if (of_property_read_bool(np, "atmel,idle-halt"))
+>  		wdt->mr |= AT91_WDT_WDIDLEHLT;
+> @@ -176,21 +209,46 @@ static int of_sama5d4_wdt_init(struct device_node *np, struct sama5d4_wdt *wdt)
+>  
+>  static int sama5d4_wdt_init(struct sama5d4_wdt *wdt)
+>  {
+> -	u32 reg;
+> +	u32 reg, val;
+> +
+> +	val = WDT_SEC2TICKS(WDT_DEFAULT_TIMEOUT);
+>  	/*
+>  	 * When booting and resuming, the bootloader may have changed the
+>  	 * watchdog configuration.
+>  	 * If the watchdog is already running, we can safely update it.
+>  	 * Else, we have to disable it properly.
+>  	 */
+> -	if (wdt_enabled) {
+> -		wdt_write_nosleep(wdt, AT91_WDT_MR, wdt->mr);
+> -	} else {
+> +	if (!wdt_enabled) {
+>  		reg = wdt_read(wdt, AT91_WDT_MR);
+> -		if (!(reg & AT91_WDT_WDDIS))
+> +		if (wdt->data->sam9x60_support && (!(reg & AT91_SAM9X60_WDDIS)))
+> +			wdt_write_nosleep(wdt, AT91_WDT_MR,
+> +					  reg | AT91_SAM9X60_WDDIS);
+> +		else if (!wdt->data->sam9x60_support &&
+> +			 (!(reg & AT91_WDT_WDDIS)))
+>  			wdt_write_nosleep(wdt, AT91_WDT_MR,
+>  					  reg | AT91_WDT_WDDIS);
+>  	}
+> +
+> +	if (wdt->data->sam9x60_support) {
+> +		if (wdt->need_irq)
+> +			wdt->ir = AT91_SAM9X60_PERINT;
+> +		else
+> +			wdt->mr |= AT91_SAM9X60_PERIODRST;
+> +
+> +		wdt_write(wdt, AT91_SAM9X60_IER, wdt->ir);
+> +		wdt_write(wdt, AT91_SAM9X60_WLR, AT91_SAM9X60_SET_COUNTER(val));
+> +	} else {
+> +		wdt->mr |= AT91_WDT_SET_WDD(WDT_SEC2TICKS(MAX_WDT_TIMEOUT));
+> +		wdt->mr |= AT91_WDT_SET_WDV(val);
+> +
+> +		if (wdt->need_irq)
+> +			wdt->mr |= AT91_WDT_WDFIEN;
+> +		else
+> +			wdt->mr |= AT91_WDT_WDRSTEN;
+> +	}
+> +
+> +	wdt_write_nosleep(wdt, AT91_WDT_MR, wdt->mr);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -201,13 +259,14 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
+>  	struct sama5d4_wdt *wdt;
+>  	void __iomem *regs;
+>  	u32 irq = 0;
+> -	u32 timeout;
+>  	int ret;
+>  
+>  	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
+>  	if (!wdt)
+>  		return -ENOMEM;
+>  
+> +	wdt->data = of_device_get_match_data(&pdev->dev);
+> +
+>  	wdd = &wdt->wdd;
+>  	wdd->timeout = WDT_DEFAULT_TIMEOUT;
+>  	wdd->info = &sama5d4_wdt_info;
+> @@ -224,15 +283,17 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
+>  
+>  	wdt->reg_base = regs;
+>  
+> -	irq = irq_of_parse_and_map(dev->of_node, 0);
+> -	if (!irq)
+> -		dev_warn(dev, "failed to get IRQ from DT\n");
+> -
+>  	ret = of_sama5d4_wdt_init(dev->of_node, wdt);
+>  	if (ret)
+>  		return ret;
+>  
+> -	if ((wdt->mr & AT91_WDT_WDFIEN) && irq) {
+> +	irq = irq_of_parse_and_map(dev->of_node, 0);
+> +	if (!irq) {
+> +		dev_warn(dev, "failed to get IRQ from DT\n");
+> +		wdt->need_irq = 0;
 
-Instead of
+Does it make sense to ignore that ?
 
-Message-Id: <20191029123058.19060-1-hdanton@sina.com>
-In-Reply-To: <20191029084153.GD31513@dhcp22.suse.cz>
-References: <20191029084153.GD31513@dhcp22.suse.cz>
+> +	}
+> +
+> +	if (wdt->need_irq) {
+>  		ret = devm_request_irq(dev, irq, sama5d4_wdt_irq_handler,
+>  				       IRQF_SHARED | IRQF_IRQPOLL |
+>  				       IRQF_NO_SUSPEND, pdev->name, pdev);
+> @@ -244,11 +305,6 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
+>  
+>  	watchdog_init_timeout(wdd, wdt_timeout, dev);
+>  
+> -	timeout = WDT_SEC2TICKS(wdd->timeout);
+> -
+> -	wdt->mr |= AT91_WDT_SET_WDD(WDT_SEC2TICKS(MAX_WDT_TIMEOUT));
+> -	wdt->mr |= AT91_WDT_SET_WDV(timeout);
+> -
+>  	ret = sama5d4_wdt_init(wdt);
+>  	if (ret)
+>  		return ret;
+> @@ -268,8 +324,21 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static struct sama5d4_wdt_data sama5d4_config;
+> +
+> +static struct sama5d4_wdt_data sam9x60_config = {
+> +	.sam9x60_support = 1,
+> +};
 
-Which flattens the whole thread hierarchy. Nasty. Please fix that.
+Unless there is reason to believe that there will be other
+configuration data, please just assign the flag value directly
+to .data and add a variable to struct sama5d4_wdt to access it.
+Please make that variable a bool.
 
---=20
-
-Thanks,
-
-David / dhildenb
-
+> +
+>  static const struct of_device_id sama5d4_wdt_of_match[] = {
+> -	{ .compatible = "atmel,sama5d4-wdt", },
+> +	{
+> +		.compatible = "atmel,sama5d4-wdt",
+> +		.data = &sama5d4_config,
+> +	},
+> +	{
+> +		.compatible = "microchip,sam9x60-wdt",
+> +		.data = &sam9x60_config,
+> +	},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, sama5d4_wdt_of_match);
