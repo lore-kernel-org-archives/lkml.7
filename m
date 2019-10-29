@@ -2,96 +2,155 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04B2CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE076CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BB1208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B656208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pdfvkdU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389493AbfJ2OjS (ORCPT
+        id S2389467AbfJ2Ol3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:39:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54584 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388885AbfJ2OjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:39:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7CB12B29A;
-        Tue, 29 Oct 2019 14:39:06 +0000 (UTC)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, jpoimboe@redhat.com,
-        joe.lawrence@redhat.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jikos@kernel.org, pmladek@suse.com, nstange@suse.de,
-        live-patching@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
-Subject: [PATCH v2 0/3] s390/livepatch: Implement reliable stack tracing for the consistency model
-Date:   Tue, 29 Oct 2019 15:39:01 +0100
-Message-Id: <20191029143904.24051-1-mbenes@suse.cz>
-X-Mailer: git-send-email 2.23.0
+        Tue, 29 Oct 2019 10:41:29 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43643 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388712AbfJ2Ol2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 10:41:28 -0400
+Received: by mail-lj1-f196.google.com with SMTP id s4so14669842ljj.10;
+        Tue, 29 Oct 2019 07:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Mq0rcck4YENtZgkBoH2X5LqHkGf3xXbIuvoCt8jLIbs=;
+        b=pdfvkdU03R2UCabpac0Z9HYX/Lrlc+6UwP8tVqkXXQdh3l15LiQM652yORNcqIC8LQ
+         MU6WTI/00Ys2RVA2iuo6Bz/kYShtftbxNO62WNrWXoVegTDPOJS+0lpJmXkHMMnoZhPb
+         N2zhAVtj5JEMr3Szbu25Usgysbb746vJo2WVvXcpfVdxBNzzO4OeWsx6dSSoSmzm2rjA
+         KWU+x97k6QYkkuFQyBXERxOv8Q3sQ3RhfiwmwF3sAyVJGfa1AwiTMFw776O7OnMMipXR
+         4tQ2Wpg+9MP0MmLOx2sUhgih5EZ7YOd13d34BMnDoXtBU0QC3wf2tf52YQ1ctAeh/15W
+         G17w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Mq0rcck4YENtZgkBoH2X5LqHkGf3xXbIuvoCt8jLIbs=;
+        b=R935XsEY0XWodX7pRCE9Fs5Y9LqQFyIM2a//5qOMPho3mmE/wV3PyEK9ka6cWN92OW
+         Zxh14QTqftufacVtbfaiUXVuIdRWpMrs0BKUEd4DFb/c0me4VScyPwAKLFQgpTJkyvdS
+         ydNa6o0S+e+W1DP5F+idmp0NYmkT9nmQ3tAybDpPqLoolr7uGz+B+ar9eoMq89mBye1d
+         vsoz98r5nIbgMiP/3Je1DXPKro9XKtOaBmTML8ilzm7+tsszp6izilw7V9PFEIQN2Rze
+         tKxKbzVrXdDmRDNVX11E61J7iK0D+Hp9X4ZxfZlwl1kAs/UTYW+oiv1Y1QQKdO2cbQ6s
+         q+PA==
+X-Gm-Message-State: APjAAAVaDoZ3lnvsNyEcLtH9P6FUQlMCaGatyiKOjW98n03+XHbmHYQE
+        tzF5MLHrcrcigxBQP2WQ8DgTMPkP
+X-Google-Smtp-Source: APXvYqzq3B/MhcDmK3EWG9bARkLKloL5JDnxFGy/C6uKmIvGY6mrnKiQQ3Gl9ED5nEcGmUWKWlGxhw==
+X-Received: by 2002:a2e:9b9a:: with SMTP id z26mr2981322lji.59.1572360085051;
+        Tue, 29 Oct 2019 07:41:25 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id q14sm7223768ljc.7.2019.10.29.07.41.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Oct 2019 07:41:24 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] NVIDIA Tegra20 CPUFreq driver major update
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191024221416.14197-1-digetx@gmail.com>
+ <20191029140959.GL508460@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <374c3916-7c25-d684-0506-4c3992fa5241@gmail.com>
+Date:   Tue, 29 Oct 2019 17:41:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191029140959.GL508460@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The livepatch consistency model requires reliable stack tracing
-architecture support in order to work properly. In order to achieve
-this, two main issues have to be solved. First, reliable and consistent
-call chain backtracing has to be ensured. Second, the unwinder needs to
-be able to detect stack corruptions and return errors.
+29.10.2019 17:09, Thierry Reding пишет:
+> On Fri, Oct 25, 2019 at 01:13:59AM +0300, Dmitry Osipenko wrote:
+>> Hello,
+>>
+>> This series moves intermediate-clk handling from tegra20-cpufreq into
+>> tegra-clk driver, this allows us to switch to generic cpufreq-dt driver
+>> which brings voltage scaling, per-hardware OPPs and Tegra30 support out
+>> of the box. All boards need to adopt CPU OPPs in their device-trees in
+>> order to get cpufreq support. This series adds OPPs only to selective
+>> boards because there is assumption in a current device-trees that CPU
+>> voltage is set for 1GHz freq and this won't work for those CPUs that
+>> can go over 1GHz and thus require voltage regulators to be set up for
+>> voltage scaling support (CC'ed Marcel for Toradex boards). We could
+>> probably add delete-node for OPPs over 1GHz if there are not actively
+>> maintained boards.
+>>
+>> NOTE(!): the voltage scaling functionality depends on a reviewed and yet
+>> unapplied series [0], thus [0] needs to be applied first.
+>>
+>> [0] https://lkml.org/lkml/2019/7/25/892
+>>
+>> Changelog:
+>>
+>> v2: - Kept modularity of the tegra20-cpufreq as was requested by Viresh Kumar
+>>       in a review comment to v1.
+>>
+>>     - Added acks from Viresh Kumar.
+>>
+>>     - Added tested-by from Nicolas Chauvet to the "trimslice" patch.
+>>       Nicolas told me on IRC that it works fine.
+>>
+>>     - Fixed compilation of the "Add custom CCLK implementation" patch. The
+>>       error happened because v1 was based on top of yet unreviewed/unapplied
+>>       patch "clk: tegra: divider: Support enable-bit for Super clocks". Thanks
+>>       to Peter Geis for reporting the problem.
+>>
+>>     - Replaced Tegra30 "beaver" board with "cardhu-a04" because turned out
+>>       that's what NVIDIA uses in the testing farm.
+>>
+>> Dmitry Osipenko (17):
+>>   clk: tegra: Add custom CCLK implementation
+>>   clk: tegra: pll: Add pre/post rate-change hooks
+>>   clk: tegra: cclk: Add helpers for handling PLLX rate changes
+>>   clk: tegra20: Support custom CCLK implementation
+>>   clk: tegra30: Support custom CCLK implementation
+>>   dt-bindings: cpufreq: Add binding for NVIDIA Tegra20/30
+>>   cpufreq: tegra20: Use generic cpufreq-dt driver (Tegra30 supported
+>>     now)
+>>   ARM: tegra: Create tegra20-cpufreq platform device on Tegra30
+>>   ARM: dts: tegra20: Add CPU clock
+>>   ARM: dts: tegra30: Add CPU clock
+>>   ARM: dts: tegra20: Add CPU Operating Performance Points
+>>   ARM: dts: tegra30: Add CPU Operating Performance Points
+>>   ARM: dts: tegra20: paz00: Set up voltage regulators for DVFS
+>>   ARM: dts: tegra20: paz00: Add CPU Operating Performance Points
+>>   ARM: dts: tegra20: trimslice: Add CPU Operating Performance Points
+>>   ARM: dts: tegra30: cardhu-a04: Set up voltage regulators for DVFS
+>>   ARM: dts: tegra30: cardhu-a04: Add CPU Operating Performance Points
+> 
+> I've applied patches 9-17 (the DT bits) to for-5.5/arm/dt. I'll hold
+> back on applying the others until Peter is happy with them.
 
-The former should be guaranteed (see 3/3 for details), the latter is
-implemented by the patch set (mainly 3/3).
-
-It passes livepatch kselftests (with timeout disabled, see
-https://lore.kernel.org/live-patching/20191025115041.23186-1-mbenes@suse.cz/)
-and tests from https://github.com/lpechacek/qa_test_klp.
-
-Changes since v1 and questions follow:
-- rebased on top of v5.4-rc5. It also meant rebasing on top of
-  ARCH_STACKWALK, which made the outcome nicer and addressed some of
-  Joe's remarks.
-- sp alignment is checked in both _start and _next_frame cases
-- ftrace_graph_ret_addr() calling cleanup
-
-- I tried to use the existing infrastructure as much as possible with
-  one exception. I kept unwind_next_frame_reliable() next to the
-  ordinary unwind_next_frame(). I did not come up with a nice solution
-  how to integrate it. The reliable unwinding is executed on a task
-  stack only, which leads to a nice simplification. My integration
-  attempts only obfuscated the existing unwind_next_frame() which is
-  already not easy to read. Ideas are definitely welcome.
-
-- although not nice (Josh mentioned it in his review), I kept checking
-  for kretprobe_trampoline in the main loop. It could go into _start and
-  _next_frame callbacks, but more changes would be required (changing a
-  function return type, ordinary unwinding does not need it). So I did
-  not think it was worth it. I could change it in v3, of course.
-
-Miroslav Benes (3):
-  s390/unwind: drop unnecessary code around calling
-    ftrace_graph_ret_addr()
-  s390/unwind: prepare the unwinding interface for reliable stack traces
-  s390/livepatch: Implement reliable stack tracing for the consistency
-    model
-
- arch/s390/Kconfig                  |  1 +
- arch/s390/include/asm/stacktrace.h |  3 +-
- arch/s390/include/asm/unwind.h     | 15 +++---
- arch/s390/kernel/dumpstack.c       | 16 +++++-
- arch/s390/kernel/perf_event.c      |  2 +-
- arch/s390/kernel/stacktrace.c      | 48 +++++++++++++++++-
- arch/s390/kernel/unwind_bc.c       | 79 ++++++++++++++++++++++++------
- arch/s390/oprofile/init.c          |  2 +-
- 8 files changed, 139 insertions(+), 27 deletions(-)
-
--- 
-2.23.0
-
+Thanks, I'll update the patches and re-add OPPs for the Beaver board
+since you have it.
