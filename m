@@ -2,258 +2,200 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00604CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA013CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0444214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:29:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PU3WiNMq"
+	by mail.kernel.org (Postfix) with ESMTP id A994A20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387595AbfJ2L3w (ORCPT
+        id S1729710AbfJ2LaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:29:52 -0400
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:37261 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731719AbfJ2L2x (ORCPT
+        Tue, 29 Oct 2019 07:30:12 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54137 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbfJ2LaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:28:53 -0400
-Received: by mail-wr1-f45.google.com with SMTP id e11so13226115wrv.4
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 04:28:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=180LRLtVibZuNEGVjJ0cua0pIuWoyx489HZ44l4xhjA=;
-        b=PU3WiNMq4xmp4SOp6Nym7RsV7fF+pmSZrVhFa9Gghmlmjgf+AD0zD45oHeA/l0A9hd
-         dncbpaNvA995dWoQzYXMncMDHWjUz2K8lA2llvlp3SUG9GF9KX/AILx286Giop9GPLYs
-         VrQ+D1Ck9AbEKVZy+EqhtjTLkXLu+6cCvfD+j6dJmaOCgZUmJYTPoIsVO1cpLRDb4kDt
-         x8PvNumAgLUgcSLWhwLYtWnM5OlbC0DjZcxsOx4jUxNRlPNFTJe2gkVRvCD4YXaplNvJ
-         I983YTh9IAr2CrcP1nYaUEkvSTknzLXbW9/CkHu3DuIT6+tJi4jmB/nZeuZG6IqvZbHV
-         LWGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=180LRLtVibZuNEGVjJ0cua0pIuWoyx489HZ44l4xhjA=;
-        b=NkksRnx3ujq95FwuBTrBq+2wJ0JA7Axa+oZ5GwjdTeXegS/tuWnrKkurU3nxck1X/k
-         CZATH4g0vecCBBQKubhvi5wW39DmuVCO8FNyO4RcsuYeGlp5cKf/pN1I39RaseSq2z1V
-         IXvlLfrZ7MD7hccaJuf6P2uM3VSBdwkPqCLGGn0rKP93XnkuuecrzdUtluF4SzfjiLhj
-         dDMcrJ81/6akZy4iAqwGHShoOfgJXUVEMKbDkgtOjihzKrbEc2SJShzWYZrjK/4xANZu
-         tXdKvY1iQtFerD2JFHYeS9gWGrmDc/np7xfWInVO+pne4QDE9CxDmrD9QT6t/5VfLsLt
-         KIrA==
-X-Gm-Message-State: APjAAAVPoqNkdw0Kv8S0BamqfD38KSi8Nib9sKhcx1zMFuzFu2Y0kKQO
-        uZqPA+zPal4QfTzkWSfdNYTZYQ==
-X-Google-Smtp-Source: APXvYqz/VlwMWdr1F9+5qfi54fdp3VoiqQnl4Rgoi5UDLE6O6zU2YfnT5c/Y4aEp2jbXV2z6+j0JDQ==
-X-Received: by 2002:a5d:4b42:: with SMTP id w2mr18948240wrs.360.1572348532034;
-        Tue, 29 Oct 2019 04:28:52 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id f20sm2373247wmb.6.2019.10.29.04.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 04:28:51 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
-        linus.walleij@linaro.org
-Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        Tue, 29 Oct 2019 07:30:12 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iPPhI-0001hB-9f; Tue, 29 Oct 2019 12:30:00 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iPPhH-0003aC-0J; Tue, 29 Oct 2019 12:29:59 +0100
+Date:   Tue, 29 Oct 2019 12:29:58 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@bootlin.com>, linux-input@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 01/11] ASoC: dt-bindings: add dt bindings for WCD9340/WCD9341 audio codec
-Date:   Tue, 29 Oct 2019 11:26:50 +0000
-Message-Id: <20191029112700.14548-2-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
-References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] input: edt-ft5x06: Add support for regulator
+Message-ID: <20191029112958.gd3vbbcjxuw6n3m5@pengutronix.de>
+References: <20191029005806.3577376-1-megous@megous.com>
+ <20191029005806.3577376-2-megous@megous.com>
+ <20191029041233.GD57214@dtor-ws>
+ <20191029085545.cw5c24gi76gbfdhy@pengutronix.de>
+ <20191029112129.t4mxqyybltjbuyhj@core.my.home>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029112129.t4mxqyybltjbuyhj@core.my.home>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 12:26:01 up 164 days, 17:44, 99 users,  load average: 0.11, 0.04,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds bindings for wcd9340/wcd9341 audio codec which can
-support both SLIMbus and I2S/I2C interface.
+Hi Ondřej,
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../bindings/sound/qcom,wcd934x.yaml          | 162 ++++++++++++++++++
- 1 file changed, 162 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+On 19-10-29 12:21, Ondřej Jirman wrote:
+> Hi Marco,
+> 
+> On Tue, Oct 29, 2019 at 09:55:45AM +0100, Marco Felsch wrote:
+> > Hi Dmitry,
+> > 
+> > On 19-10-28 21:12, Dmitry Torokhov wrote:
+> > > On Tue, Oct 29, 2019 at 01:58:04AM +0100, Ondrej Jirman wrote:
+> > > > From: Mylène Josserand <mylene.josserand@bootlin.com>
+> > > > 
+> > > > Add the support for enabling optional regulator that may be used as VCC
+> > > > source.
+> > > > 
+> > > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > > > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> > > 
+> > > Applied, thank you.
+> > 
+> > What happens with my vdd patches?
+> 
+> Sorry for not noticing your patches, I was only aware of Mylène's older series.
+> It looks like you can just skip regulator enable support from your series, and
+> re-send the deep-sleep mechanism and wakeup source patches only.
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-new file mode 100644
-index 000000000000..d6cfde6597db
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-@@ -0,0 +1,162 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/qcom,wcd934x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Qualcomm WCD9340/WCD9341 Audio Codec
-+
-+maintainers:
-+  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-+
-+description: |
-+  Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
-+  It has in-built Soundwire controller, pin controller, interrupt mux and
-+  supports both I2S/I2C and SLIMbus audio interfaces.
-+
-+properties:
-+  compatible:
-+    const: slim217,250
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    description: GPIO spec for reset line to use
-+    maxItems: 1
-+
-+  slim-ifc-dev:
-+    description: SLIMBus Interface device phandle
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: extclk
-+
-+  vdd-buck-supply:
-+    description: A reference to the 1.8V buck supply
-+
-+  vdd-buck-sido-supply:
-+    description: A reference to the 1.8V SIDO buck supply
-+
-+  vdd-rx-supply:
-+    description: A reference to the 1.8V rx supply
-+
-+  vdd-tx-supply:
-+    description: A reference to the 1.8V tx supply
-+
-+  vdd-vbat-supply:
-+    description: A reference to the vbat supply
-+
-+  vdd-io-supply:
-+    description: A reference to the 1.8V I/O supply
-+
-+  vdd-micbias-supply:
-+    description: A reference to the micbias supply
-+
-+  qcom,micbias1-microvolts:
-+    description: micbias1 voltage between 1800000 - 2850000 microvolts
-+
-+  qcom,micbias2-microvolts:
-+    description: micbias2 voltage between 1800000 - 2850000 microvolts
-+
-+  qcom,micbias3-microvolts:
-+    description: micbias3 voltage between 1800000 - 2850000 microvolts
-+
-+  qcom,micbias4-microvolts:
-+    description: micbias4 voltage between 1800000 - 2850000 microvolts
-+
-+  clock-output-names:
-+    const: mclk
-+
-+  clock-frequency:
-+    description: Clock frequency of output clk in Hz
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 1
-+
-+  '#clock-cells':
-+    const: 0
-+
-+  '#sound-dai-cells':
-+    const: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+    description: |
-+      WCD934x subnode for each slave devices. Bindings of each subnodes
-+      depends on the specific driver providing the functionality and
-+      documented in their respective bindings.
-+
-+    properties:
-+      reg:
-+        maxItems: 1
-+
-+    required:
-+      - reg
-+
-+required:
-+  - compatible
-+  - reg
-+  - reset-gpios
-+  - slim-ifc-dev
-+  - interrupts
-+  - interrupt-controller
-+  - clock-frequency
-+  - clock-output-names
-+  - qcom,micbias1-microvolts
-+  - qcom,micbias2-microvolts
-+  - qcom,micbias3-microvolts
-+  - qcom,micbias4-microvolts
-+  - "#interrupt-cells"
-+  - "#clock-cells"
-+  - "#sound-dai-cells"
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    codec@1,0{
-+        compatible = "slim217,250";
-+        reg  = <1 0>;
-+        reset-gpios = <&tlmm 64 0>;
-+        slim-ifc-dev  = <&wcd9340_ifd>;
-+        #sound-dai-cells = <1>;
-+        interrupt-parent = <&tlmm>;
-+        interrupts = <54 4>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+        #clock-cells = <0>;
-+        clock-frequency = <9600000>;
-+        clock-output-names = "mclk";
-+        qcom,micbias1-microvolts = <1800000>;
-+        qcom,micbias2-microvolts = <1800000>;
-+        qcom,micbias3-microvolts = <1800000>;
-+        qcom,micbias4-microvolts = <1800000>;
-+        clock-names = "extclk";
-+        clocks = <&rpmhcc 2>;
-+
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        pinctrl@42 {
-+            reg = <0x42 0x2>;
-+        };
-+    };
-+
-+...
+No problems just wondered myself. Now I need to adapt the patches ^^
+
+> I'll test it with my board, and give you a tested-by.
+
+Thanks.
+
+Regards,
+  Marco
+
+> thank you and regards,
+> 	o.
+> 
+> > Regards,
+> >   Marco
+> > 
+> > > 
+> > > > ---
+> > > >  drivers/input/touchscreen/edt-ft5x06.c | 30 ++++++++++++++++++++++++++
+> > > >  1 file changed, 30 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> > > > index 5525f1fb1526..d61731c0037d 100644
+> > > > --- a/drivers/input/touchscreen/edt-ft5x06.c
+> > > > +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> > > > @@ -28,6 +28,7 @@
+> > > >  #include <linux/input/mt.h>
+> > > >  #include <linux/input/touchscreen.h>
+> > > >  #include <asm/unaligned.h>
+> > > > +#include <linux/regulator/consumer.h>
+> > > >  
+> > > >  #define WORK_REGISTER_THRESHOLD		0x00
+> > > >  #define WORK_REGISTER_REPORT_RATE	0x08
+> > > > @@ -88,6 +89,7 @@ struct edt_ft5x06_ts_data {
+> > > >  	struct touchscreen_properties prop;
+> > > >  	u16 num_x;
+> > > >  	u16 num_y;
+> > > > +	struct regulator *vcc;
+> > > >  
+> > > >  	struct gpio_desc *reset_gpio;
+> > > >  	struct gpio_desc *wake_gpio;
+> > > > @@ -1036,6 +1038,13 @@ edt_ft5x06_ts_set_regs(struct edt_ft5x06_ts_data *tsdata)
+> > > >  	}
+> > > >  }
+> > > >  
+> > > > +static void edt_ft5x06_disable_regulator(void *arg)
+> > > > +{
+> > > > +	struct edt_ft5x06_ts_data *data = arg;
+> > > > +
+> > > > +	regulator_disable(data->vcc);
+> > > > +}
+> > > > +
+> > > >  static int edt_ft5x06_ts_probe(struct i2c_client *client,
+> > > >  					 const struct i2c_device_id *id)
+> > > >  {
+> > > > @@ -1064,6 +1073,27 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+> > > >  
+> > > >  	tsdata->max_support_points = chip_data->max_support_points;
+> > > >  
+> > > > +	tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
+> > > > +	if (IS_ERR(tsdata->vcc)) {
+> > > > +		error = PTR_ERR(tsdata->vcc);
+> > > > +		if (error != -EPROBE_DEFER)
+> > > > +			dev_err(&client->dev,
+> > > > +				"failed to request regulator: %d\n", error);
+> > > > +		return error;
+> > > > +	}
+> > > > +
+> > > > +	error = regulator_enable(tsdata->vcc);
+> > > > +	if (error < 0) {
+> > > > +		dev_err(&client->dev, "failed to enable vcc: %d\n", error);
+> > > > +		return error;
+> > > > +	}
+> > > > +
+> > > > +	error = devm_add_action_or_reset(&client->dev,
+> > > > +					 edt_ft5x06_disable_regulator,
+> > > > +					 tsdata);
+> > > > +	if (error)
+> > > > +		return error;
+> > > > +
+> > > >  	tsdata->reset_gpio = devm_gpiod_get_optional(&client->dev,
+> > > >  						     "reset", GPIOD_OUT_HIGH);
+> > > >  	if (IS_ERR(tsdata->reset_gpio)) {
+> > > > -- 
+> > > > 2.23.0
+> > > > 
+> > > 
+> > > -- 
+> > > Dmitry
+> > > 
+> > 
+> > -- 
+> > Pengutronix e.K.                           |                             |
+> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+
 -- 
-2.21.0
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
