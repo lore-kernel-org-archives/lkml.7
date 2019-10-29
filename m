@@ -3,99 +3,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C0CCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5885CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B72C20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BC020717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:24:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sjkBTnV7"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="znJoO/4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbfJ2IWl (ORCPT
+        id S1729192AbfJ2IYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:22:41 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34933 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728550AbfJ2IWk (ORCPT
+        Tue, 29 Oct 2019 04:24:31 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35600 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728892AbfJ2IYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:22:40 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x6so3153418pln.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 01:22:40 -0700 (PDT)
+        Tue, 29 Oct 2019 04:24:31 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x5so1395660wmi.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 01:24:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=zXO/8cyF+ovBR8syYWZ7NPcga9VHQrumYWTLb4MSqY0=;
-        b=sjkBTnV7Guvfs+Z8OZf0gV7sHV3mo4ataXjg0YyLe1icOgl0DkniiSCNJ9V3IUcH7K
-         fDFkRuE1KtzGNnXClFSVBF+ZRLIRakPwsg9U6BDigR98Z+IWEPxZk/AliCJA3zZtnTol
-         8kBjbRKHAxRFUYThH6CB6iJooVE91bUhtoeXrlmF1XyBALfxMxtySwM58KldQDvWGmsq
-         bz/fUqKhQCATsh7d23i3aPV79mnPqfTb8UJSVsiLWAqaXj0iip5f0KrKzFQvGFZALHGd
-         D9o7WzTGcm0xcaoIsnnXIbJd/yVllqBCrCxhEid+ITY+3y9Lwrk2eXVYGyDhgwP9rh6V
-         xI4w==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mlvWUHz6b/I7z2o6G925iPKfRblwtc3ymYLiU24jl8Y=;
+        b=znJoO/4IcDqIxbCVMPW+19bVBXc9sqwbd7aZWWqNPGo3LmGX2CLxOoCeZeP0nLObqa
+         u06zZhdIVgYt/u9fE7Pkq+FDbWGt50hkMi2TDCNCORd3PbP65XA91VNNkPbGOj0ikZsn
+         GNN37Kh92uMv8OLqpIBnEvbYuwP2nwQWx2bRbZqAJ/0vvxY7Yjq6JgcqOjOkJJJVcwwp
+         JJS8wD97kwyOzxa0glC5AMUiRsyfFOYUkA3o5QzEhp/rWxlv7P+uOFP2Lnxe+7oCcv9p
+         I6q9un3AtibUNcLt/LGVA/DCuybUP6j1NJQnJ9t51hMRUcgU/MIFCYiEDgpMHgslO9Ul
+         /HNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=zXO/8cyF+ovBR8syYWZ7NPcga9VHQrumYWTLb4MSqY0=;
-        b=gX8JEttJPfgYpJkqMBr9HIXoK867SEby6A3XVVMtaQP2RYTUGC2w+Q+ChwNtfJkK+5
-         OCpwStlfZBgFvLX/EIyt/scuVaeSBmWHcobBcJoJPauU6Ip4sBWb4mca8Ai3DsN+iUfV
-         ANR6GLglU1JeZQw/DsIUNd2X8jHlOf+/+gj7bY6fkfXfbldhSu3t0qPEi8oAfH9Duqwd
-         JfA0n+ziYSh2DBXOpC291xmfPUiY2MMsLjlFm3vdsKVOI0SIrKRqPENYnB+iqljBDYrW
-         vohVb4siLtOSb3bRBuZ5INvS3VcGlz/CYcPgejT6768GICxQABP3EDBA4iDV3hofOvWJ
-         oBsQ==
-X-Gm-Message-State: APjAAAXNesT0QsmFALh3eoTYN+WI9m/JWgju1DD29ivCV4fkmqRFblvg
-        eXZ11oPmP8p9EihWR5x1tfg=
-X-Google-Smtp-Source: APXvYqyx4LMCvmSv6QXJ6Ogdrxw4bFy8T8q1hPnjUl3fZmaGvH4aDCo3IRGLQ5KdvFJiL6INIU9xCA==
-X-Received: by 2002:a17:902:7c07:: with SMTP id x7mr2717230pll.210.1572337359983;
-        Tue, 29 Oct 2019 01:22:39 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id c69sm11848071pga.69.2019.10.29.01.22.35
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mlvWUHz6b/I7z2o6G925iPKfRblwtc3ymYLiU24jl8Y=;
+        b=OUi+M5syfNtHIzQVur1HWADlREnmGhAEwmZeZfBWOCgzSKo6p8TXyOqfbLq63noi82
+         VtupqT0EX06brfHCqVFsJ+295tBdTXpoNrLq/ug3OGVzVJpfZX75F5xdRmeXCK+qr/7o
+         dkq3KBP/NYJsfQKhzq1kQ8/nw9qZYGunzZMYxu0BBQnZLlNvttPIvqpqQyrJTWiHxnwp
+         SyvL6InDWJE4S6JDfQPxIzy02hmZGpXl/JDo5VS//JVEPRNmiSBVbARjiBaeNg4ibkhN
+         u2B/KokbDooj5BFFMCk6ZhnUZAw7keWb4O5/MDcotFlNHp8+XG5jGd/D4Srx6fRrGH/u
+         6TKw==
+X-Gm-Message-State: APjAAAW8uZkTGjgyLb9sLhjeZHiZH4HhYbF13v5ByFwA3iduIhfcRur4
+        kLtI3JvdaaQk8tSqS0d6tTnHwA==
+X-Google-Smtp-Source: APXvYqyaUuIZzfuyser7xEw58tuvIXgnZdKtOozf/OE2exXkKYqPqXT6Z0Ey71mdOmuLPrwcvaQymA==
+X-Received: by 2002:a7b:caa9:: with SMTP id r9mr2699781wml.47.1572337469034;
+        Tue, 29 Oct 2019 01:24:29 -0700 (PDT)
+Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
+        by smtp.gmail.com with ESMTPSA id y5sm2001272wmi.10.2019.10.29.01.24.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 01:22:39 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 13:52:16 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        groug@kaod.org, clg@kaod.org, christophe.jaillet@wanadoo.fr,
-        saurav.girepunje@gmail.com, tglx@linutronix.de,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] powerpc: sysdev: xive: Use true/false for bool type
-Message-ID: <20191029082215.GA7160@saurav>
+        Tue, 29 Oct 2019 01:24:28 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 09:24:27 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net, swinslow@gmail.com,
+        will@kernel.org, opensource@jilayne.com, baijiaju1990@gmail.com,
+        tglx@linutronix.de, linux-wireless@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, saurav.girepunje@hotmail.com
+Subject: Re: [PATCH] b43: Fix use true/false for bool type
+Message-ID: <20191029082427.GB23615@netronome.com>
+References: <20191028190204.GA27248@saurav>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191028190204.GA27248@saurav>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use true/false for bool return type in xive_spapr_cleanup_queue
-function. issue found using coccicheck .
+Hi Saurav,
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
- arch/powerpc/sysdev/xive/spapr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks for your patch.
 
-diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
-index 33c10749edec..74e3ffae0be6 100644
---- a/arch/powerpc/sysdev/xive/spapr.c
-+++ b/arch/powerpc/sysdev/xive/spapr.c
-@@ -533,7 +533,7 @@ static void xive_spapr_cleanup_queue(unsigned int cpu, struct xive_cpu *xc,
- static bool xive_spapr_match(struct device_node *node)
- {
- 	/* Ignore cascaded controllers for the moment */
--	return 1;
-+	return true;
- }
- 
- #ifdef CONFIG_SMP
--- 
-2.20.1
+On Tue, Oct 29, 2019 at 12:32:04AM +0530, Saurav Girepunje wrote:
+> use true/false on bool type variable assignment.
+> 
+> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
 
+This does not seem to cover the case in dma.c,
+which seems to want fixing for the sake of consistency.
+
+Also, I wonder why bools rather than a bitmask was chosen
+for this field, it seems rather space intensive in its current form.
+
+> ---
+>  drivers/net/wireless/broadcom/b43/main.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
+> index b85603e91c7a..39da1a4c30ac 100644
+> --- a/drivers/net/wireless/broadcom/b43/main.c
+> +++ b/drivers/net/wireless/broadcom/b43/main.c
+> @@ -3600,7 +3600,7 @@ static void b43_tx_work(struct work_struct *work)
+>  			else
+>  				err = b43_dma_tx(dev, skb);
+>  			if (err == -ENOSPC) {
+> -				wl->tx_queue_stopped[queue_num] = 1;
+> +				wl->tx_queue_stopped[queue_num] = true;
+>  				ieee80211_stop_queue(wl->hw, queue_num);
+>  				skb_queue_head(&wl->tx_queue[queue_num], skb);
+>  				break;
+> @@ -3611,7 +3611,7 @@ static void b43_tx_work(struct work_struct *work)
+>  		}
+>  
+>  		if (!err)
+> -			wl->tx_queue_stopped[queue_num] = 0;
+> +			wl->tx_queue_stopped[queue_num] = false;
+>  	}
+>  
+>  #if B43_DEBUG
+> @@ -5603,7 +5603,7 @@ static struct b43_wl *b43_wireless_init(struct b43_bus_dev *dev)
+>  	/* Initialize queues and flags. */
+>  	for (queue_num = 0; queue_num < B43_QOS_QUEUE_NUM; queue_num++) {
+>  		skb_queue_head_init(&wl->tx_queue[queue_num]);
+> -		wl->tx_queue_stopped[queue_num] = 0;
+> +		wl->tx_queue_stopped[queue_num] = false;
+>  	}
+>  
+>  	snprintf(chip_name, ARRAY_SIZE(chip_name),
+> -- 
+> 2.20.1
+> 
