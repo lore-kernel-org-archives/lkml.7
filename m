@@ -2,119 +2,99 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA14C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF6ACA9EC1
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5338B20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4733B20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYXgJtgo"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ez2ximaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730925AbfJ2Cs0 (ORCPT
+        id S1730999AbfJ2CtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:48:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43364 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbfJ2Cs0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:48:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n1so4492901wra.10;
-        Mon, 28 Oct 2019 19:48:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gteraG87XCdj5xSgInB/PvpzdZKgoT7TtTZ9+9ieQnY=;
-        b=KYXgJtgop4xEAbJ5U1sDVAAOoFj+g+2/3RxYykRDsFMlUNtjtSnnULpJApifFpS1F/
-         nRmou4871/MmQQ9ysAKm5FqNeQGG8kX1/mzKsX21kaeZw9C89wrnk8wx5XG3GsbIe3em
-         So/+8DdijXhe5gsZcmF2xO7NFlcTVLj7mdV1FgGXSkI+FEk37Ce8NzQyXdnp99ofWgj1
-         X054yld+7l2G57BpTVXp6ikjfZyJ1Q5+/8Yj/mXLXuAydorFc4jr+aXoAGthRP2GGESh
-         ri8fDPLvfL5WJLkWEjBVVAkZhgWvNUTt11IUyGRnsHFsQrssOkFksFEOYG79rrGoZ11w
-         ojlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gteraG87XCdj5xSgInB/PvpzdZKgoT7TtTZ9+9ieQnY=;
-        b=LD5EQ7zjKSLXjYBMSjVWK9u60yjti6LQLXlVS5S939va0MVyWGSaFhLSyIlk4njyiC
-         AHzr37EQLl9e0Lhmn2O5P4pNJUnSBaM5605lO17nl3UN0+ynP7CYp62Fv7il6HglM3N6
-         BkVxGn7D9kyMDR4R/AkmrSIUpUewYrd3PzWlX/lmhPQqqh56Av/TaR9zdbpzR9UTyLdu
-         shTW2hVLwKwkR208U9Ij8/kM/SuYncUB0wVWeEYLNMPJxTKyezbTEJ8Vq6YApega5Eqv
-         l0jLJebKaJ8YRWZuu5VIsVuMU1ZFyDs/Oia/mTRsQbjavptZ30bxA6AnMs8q/hFnnZLC
-         E9WA==
-X-Gm-Message-State: APjAAAVhQ1tt2FO/HkYXFXyoNeAOA7z6BJvNhe//CzEAGU23Xfo748tQ
-        4Bt0tVP2o7jHPmuBvBw5HJOdVORp0toC2ryE8JU=
-X-Google-Smtp-Source: APXvYqyCnGBv7rgt4wt2fvjFkhPMhg3/hSA/t9Nk3hOEOwreIo3dDyDVdayfbU1xUEfSkz5mRqAK9ayZBItouzgdpyk=
-X-Received: by 2002:a5d:6281:: with SMTP id k1mr17999142wru.69.1572317304467;
- Mon, 28 Oct 2019 19:48:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191025102915.23677-1-chunyan.zhang@unisoc.com>
- <20191025102915.23677-2-chunyan.zhang@unisoc.com> <CA+H2tpHkYwQLEO7ftLebErsEXBQnRS37gFOoKoG+_jnt5+0r-A@mail.gmail.com>
-In-Reply-To: <CA+H2tpHkYwQLEO7ftLebErsEXBQnRS37gFOoKoG+_jnt5+0r-A@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Tue, 29 Oct 2019 10:47:48 +0800
-Message-ID: <CAAfSe-uz396tvOSa6g-BJpwzARDi2uaPrCsP01f3A-Jww_c7BA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: serial: Add a new compatible string for SC9863A
-To:     Orson Zhai <orsonzhai@gmail.com>
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        DTML <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org,
+        Mon, 28 Oct 2019 22:49:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:49659 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730932AbfJ2CtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 22:49:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 472GJ64gv9z9sCJ;
+        Tue, 29 Oct 2019 13:49:10 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572317351;
+        bh=z9iDoqE3rAEy8yLXrglEULStcqpS4OmiGIB4A5Rf5Lk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ez2ximaZcuQAKwH3wsDnmqF6QAIQJtmLCOdXAjNNBKdV9s/yN6KkGdDQ/kFsMcf5i
+         l3FRjgVM/1QGL6W2sNaZeiluh3nFWh4i0uc2lkSq6LbtLTfoPjDMk94n0lwQ4rS7wq
+         0QXCl/F2c8wdTSTb7iNl4be9O+eHdUGUnc4Pj8lPDAxTtEgN/qBC5rHfLF7SBfoycP
+         xEbbBGPJ5s4Ww0rQ6GfZ58A2mxLrS9wqCyOajaow6k5CiY80EWNPlSReUW4/R5Tv2+
+         WaEysBrMztvmAlU6az5TI2gUGVr9xh+rdaovu/X+3NLodk/w4LtZIxFZhUzIYMbP52
+         ZWlwPwTEE+vNw==
+Date:   Tue, 29 Oct 2019 13:48:56 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Baolin Wang <baolin.wang7@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        James Smart <jsmart2021@gmail.com>
+Subject: Re: linux-next: build failure after merge of the scsi-mkp tree
+Message-ID: <20191029134856.616b2cd6@canb.auug.org.au>
+In-Reply-To: <yq14kzs8evg.fsf@oracle.com>
+References: <20191025140736.0c9e9d64@canb.auug.org.au>
+        <20191028164924.232e32e5@canb.auug.org.au>
+        <yq14kzs8evg.fsf@oracle.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/nM/2khBk4F2CI1g2k7mpd8.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 26 Oct 2019 at 10:11, Orson Zhai <orsonzhai@gmail.com> wrote:
->
-> Hi Chunyan,
->
-> On Fri, Oct 25, 2019 at 6:30 PM Chunyan Zhang <chunyan.zhang@unisoc.com> wrote:
-> >
-> >
-> > SC9863A use the same serial device which SC9836 uses.
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
-> >  Documentation/devicetree/bindings/serial/sprd-uart.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> > index 9607dc616205..0a9f8a7809e1 100644
-> > --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> > +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> > @@ -4,6 +4,7 @@ Required properties:
-> >  - compatible: must be one of:
-> >    * "sprd,sc9836-uart"
-> >    * "sprd,sc9860-uart", "sprd,sc9836-uart"
-> > +  * "sprd,sc9863-uart", "sprd,sc9836-uart"
->
-> Duplicated 9836 with above line?
+--Sig_/nM/2khBk4F2CI1g2k7mpd8.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-We can just use "sprd,sc9836-uart" for SC9860 and SC9863 SoCs though,
-added a new compatible string in case we'll have some difference for
-serial on SC9863A in the furture.
+Hi Martin,
 
-Thanks,
-Chunyan
+On Mon, 28 Oct 2019 22:28:03 -0400 "Martin K. Petersen" <martin.petersen@or=
+acle.com> wrote:
+>
+> >> I have used the scsi-mkp tree from next-20191024 for today. =20
+> >
+> > This build failure now appears in the scsi tree build.  I have applied
+> > the fix from James Smart for today. =20
+>=20
+> Should be fixed in my for-next now.
 
->
-> -Orson
->
-> >
-> >  - reg: offset and length of the register set for the device
-> >  - interrupts: exactly one interrupt specifier
-> > --
-> > 2.20.1
-> >
-> >
+Thanks.  I also see that James B has merged your tree, so its all good
+now.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/nM/2khBk4F2CI1g2k7mpd8.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl23qJgACgkQAVBC80lX
+0GxtLwf8CyKWb2OHdAuKE0f8NTgrZ2rrU2sw5vrrBlat5lh1xvBjXrHwmO0X5LN0
+xkIGJ/TG0U5OfM5b5NZyT1u9AjKxXuaLtKWLUzxahNyNeAV/aZ/Lx+2sHZac0EHw
+kUrjLW+79smfx3A5E2BRY22JY8Hl+5gfrBl5sMkd0ZDTHwZw5J+spu0vb6Jgkwha
+xDKgeeOOCm1EERfH3Odxvv5lQWTHbERsFcoK2tXtKvs1ThEQWwCVjiiyIgOvSRXs
+OYZRfkQneOetPABzVPz5W9tUNoLaaj9M5TA4jmcl0CN4izLUvlWS79FQBxAiwSUs
+Rdl3O2tuyH9pVYjBJysqnZblMmMwhA==
+=6xXZ
+-----END PGP SIGNATURE-----
+
+--Sig_/nM/2khBk4F2CI1g2k7mpd8.--
