@@ -2,116 +2,65 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0384ACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C90CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB49420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F153220679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:25:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GayfmIV9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Es5p6ZnB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbfJ2SZO (ORCPT
+        id S1731279AbfJ2SZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:25:14 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48686 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfJ2SZN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:25:13 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TI5FDj175951;
-        Tue, 29 Oct 2019 18:23:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=pvaGyOZDLlNqbGIv4aiDa+8jV2u8TRmd0Sg/3CdaYfQ=;
- b=GayfmIV97A/7KomJSAsydyBuszzE+3RDo1LCbszbUU03PKeOPpUsle4oX8Bz1eM7+QTg
- w17fUSx26ItlguIpsL8eUG0ZQzM19hMSpsyOjpclWpMjsMwnIU1OJ0G/0HZ9jt9TcWPu
- nc2WRwGPQVL9Ox2RSIbuHMSbPWSSss3mVfWN2ZOT14JMBpQIsvN3gB/FH1OC1i7XgMgI
- pKVgT+27FvJ6I9IkQhR7tVJmBVx3R9ZIPK8kaaHl/VEpXSNaajWQENUJs13sEKJacAWV
- fQuop4wCqvSb1Q1wLkFTAlw40mAmIgY55WNYNdaRCm4j8RVgdThKmUpTxLYJCbEjnlRz Jw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2vvdjub9ee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:23:39 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TI8BBK179764;
-        Tue, 29 Oct 2019 18:23:39 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2vxpfdgt2e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:23:39 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TINU14011472;
-        Tue, 29 Oct 2019 18:23:30 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Oct 2019 11:23:30 -0700
-Date:   Tue, 29 Oct 2019 21:23:20 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Andrea Righi <righi.andrea@gmail.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Peter Rosin <peda@axentia.se>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        security@kernel.org, Kees Cook <keescook@chromium.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: [PATCH] fbdev: potential information leak in do_fb_ioctl()
-Message-ID: <20191029182320.GA17569@mwanda>
+        Tue, 29 Oct 2019 14:25:57 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40780 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726923AbfJ2SZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 14:25:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=RrTFIroBu9lPNwntdMkG+w1XY6/n6kgTXNLIm3VXF9A=; b=Es5p6ZnBD/axwzYIUw7jbZ5t32
+        TzpQpVBtm8utmfFVKawYMpRZahyx+hhsBMteniZ/W4BPu33B4hmb6LghNCD5RG775oyLJA8zN579m
+        cu2pAw9Lt6eMghSzy+hDAPvBLENqVfmS3yQJb+HeO/O0Pb8nJezNLWAHX4x1YFUVb6kI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iPWBk-0006ly-Ds; Tue, 29 Oct 2019 19:25:52 +0100
+Date:   Tue, 29 Oct 2019 19:25:52 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 0/3] net: phy: initialize PHYs via device tree properties
+Message-ID: <20191029182552.GB19662@lunn.ch>
+References: <20191029174819.3502-1-michael@walle.cc>
+ <519d52d2-cd83-b544-591b-ca9d9bb16dfa@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+In-Reply-To: <519d52d2-cd83-b544-591b-ca9d9bb16dfa@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910290160
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910290160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "fix" struct has a 2 byte hole after ->ywrapstep and the
-"fix = info->fix;" assignment doesn't necessarily clear it.  It depends
-on the compiler.
+> So just to be clear on the current approach: NACK.
 
-Fixes: 1f5e31d7e55a ("fbmem: don't call copy_from/to_user() with mutex held")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-I have 13 more similar places to patch...  I'm not totally sure I
-understand all the issues involved.
+Agreed.
 
- drivers/video/fbdev/core/fbmem.c | 1 +
- 1 file changed, 1 insertion(+)
+And the Marvell one has only been used to set LEDs, as far as i
+know. I would definitely push back on using it for anything else.
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index 6f6fc785b545..b4ce6a28aed9 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -1109,6 +1109,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
- 			ret = -EFAULT;
- 		break;
- 	case FBIOGET_FSCREENINFO:
-+		memset(&fix, 0, sizeof(fix));
- 		lock_fb_info(info);
- 		fix = info->fix;
- 		if (info->flags & FBINFO_HIDE_SMEM_START)
--- 
-2.20.1
-
+      Andrew
