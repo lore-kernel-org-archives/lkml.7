@@ -2,161 +2,124 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B005ACA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2225CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E322086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572355139;
-	bh=AAVZ8CIpA5vNSS3f62j0AuzOR8/fYXcUCXJ/1zgoTI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XmsVvPp9R6SpZvBY/ztmwGbc352QTn/S857p9RXDatRfJC811v7KpziPx9jbDwYn9
-	 3LWCJ8QQnQjoZH3n8opxZ7mVlVs62yil+JuO/9CfyukoYLQoRFPoFllP6n+wtSyfsp
-	 SO2lWcTZnDmoRCkA+RNs+y4XTZwQlQf3LhtaxzrE=
+	by mail.kernel.org (Postfix) with ESMTP id 9711A2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3wSn23Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388380AbfJ2NS6 (ORCPT
+        id S2388392AbfJ2NTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:18:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33441 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388166AbfJ2NS6 (ORCPT
+        Tue, 29 Oct 2019 09:19:20 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34685 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388119AbfJ2NTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:18:58 -0400
-Received: by mail-ot1-f66.google.com with SMTP id u13so9724582ote.0;
-        Tue, 29 Oct 2019 06:18:57 -0700 (PDT)
+        Tue, 29 Oct 2019 09:19:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v3so1979497wmh.1;
+        Tue, 29 Oct 2019 06:19:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kdxUMNyvrqmNDL+Yjr/LEjpSdNLrL+LPXt7veHoTwW4=;
+        b=b3wSn23Z4i+0IrRlbFOcNoWAIP/x9vHeXOi8LxwEGCEA/ONEmNtnfL7pRIn2SkrKvr
+         7mg2RR9IVPf7mxxXUsz27+YUEs/jiL9mroJN2miG+VYnEzEr/5nlO32gkKu1+r+okF7w
+         nWJpkzZtTHi+K768tIS1ObSpSTU7Okmcp7/J3JoryOgg/degccm9PWwWlWBtmL9Blhsg
+         8ZT6E1GF1Zpp4XNLDjD8rnJqlr6a068cnIhw8iAZfTeeWNaISiJs/voLdFBpZZtd56cR
+         Pju3LuYMwo3XqjoaBus4UgTyaVadHgUU69C/zYsjwiZ8Cr1az95HK4N8AuPS2Lr3GCwo
+         JIHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KgGwGRvW59wo170wBmWQwSOb4wH65WjoenOVt8nMGdo=;
-        b=qDyMuWMVJXXXIrgz0KnXFwOhttSXH6mvk75FrzSuq9ENp63Vn8Uuhx102QsHJdS6Kq
-         in/6dGYELHrqk/EEVQPmGtHhBV0SthfDAaSIshta+QWjvBLdf4t7nkIEAwuJVIXAoZHN
-         C4v6tQueeUO7/zeW3srIykSXjfca95PDlcQabE0NQvb8QVOcVKV6YOf4dU52TJ7MyPq9
-         kzVjjmpVUNbp3YkKnEZpHSBveT6rbivwBIPM/F5ohPdQWoBmy+sK/CmoSDHXcz7tWdTJ
-         F1H9baveOZj72ncuc+fjetZSVFi0fZtx+ZRwM1x7vunXomIgIJ5X0x04tjb4+Mg47WP6
-         gRjg==
-X-Gm-Message-State: APjAAAU54JfKJ1m9knrVIlmakjsYR/N2pmHHF8wJ78QEaUEr1kJc0y4M
-        sD/g4Bfc056WYyIaGCrfjg==
-X-Google-Smtp-Source: APXvYqw4wN7kGouxDpyefGMQr86JcQUC3wwIXeuWO1EbgTtORg18+oSv2PhgVLjeG4DUS4g/gwDAjw==
-X-Received: by 2002:a05:6830:ca:: with SMTP id x10mr17158606oto.221.1572355137088;
-        Tue, 29 Oct 2019 06:18:57 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 88sm4797322otb.63.2019.10.29.06.18.56
+        bh=kdxUMNyvrqmNDL+Yjr/LEjpSdNLrL+LPXt7veHoTwW4=;
+        b=uR06uwASJruwRdivIeREkQnDq/NH8lu8K3sp+BpuIr9NPqp9H5sxzPrxJGIlpAMucZ
+         f9vIKJZOkeWD/fjkyQ0krHwvepq8HBMBgAbSGLbGkcir/rJ9YLysU7tuY49W2xK3T4Jg
+         MLszml8xECSw70SsAXsQXszncs+qStFd25Iys0uNzkDxpuvlknhLYT3yJStLyLm+hRdC
+         crDKR9nBJqHvbuLcDQ7fNbl4GQLdowxRxmExLDxTROizfUuTGPWzrnxGYRniUOI90BFy
+         CZPvHceN8Hrnukldt52CxITlPBnjaHksqAdsdwqHEokRfQKbRnboqtEikk8oRvYSuCfD
+         SLIA==
+X-Gm-Message-State: APjAAAVbKwYq1aEVfT8RrqcRdSZ2SoKVOLfn11sj8RCdDjUMk9hn8Nox
+        zsaNnc9yhyB/kptxhttYB4btGX5A
+X-Google-Smtp-Source: APXvYqxZTORaJEUXE+fRevzkoDHJ0mmVXxjMng546tuGAb05XITEMi0ysWfNJUsxW/dkz4mBlx57Iw==
+X-Received: by 2002:a1c:a90f:: with SMTP id s15mr4115278wme.100.1572355157476;
+        Tue, 29 Oct 2019 06:19:17 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id 200sm3330915wme.32.2019.10.29.06.19.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 06:18:56 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 08:18:55 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch 03/19] media: ti-vpe: cal: Add per platform data support
-Message-ID: <20191029131855.GA27597@bogus>
-References: <20191018153437.20614-1-bparrot@ti.com>
- <20191018153437.20614-4-bparrot@ti.com>
+        Tue, 29 Oct 2019 06:19:16 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:19:15 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 09/18] clk: tegra: Add missing stubs for the case of
+ !CONFIG_PM_SLEEP
+Message-ID: <20191029131915.GE508460@ulmo>
+References: <20191015170015.1135-1-digetx@gmail.com>
+ <20191015170015.1135-10-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Rgf3q3z9SdmXC6oT"
 Content-Disposition: inline
-In-Reply-To: <20191018153437.20614-4-bparrot@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191015170015.1135-10-digetx@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 10:34:21AM -0500, Benoit Parrot wrote:
-> First this patch adds a method to access the CTRL_CORE_CAMERRX_CONTROL
-> register to use the syscon mechanism. For backward compatibility we also
-> handle using the existing camerrx_control "reg" entry if a syscon node
-> is not found.
-> 
-> In addition the register bit layout for the CTRL_CORE_CAMERRX_CONTROL
-> changes depending on the device. In order to support this we need to use
-> a register access scheme based on data configuration instead of using
-> static macro.
-> 
-> In this case we make use of the regmap facility and create data set
-> based on the various device and phy available.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+
+--Rgf3q3z9SdmXC6oT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Oct 15, 2019 at 08:00:06PM +0300, Dmitry Osipenko wrote:
+> The new CPUIDLE driver uses the Tegra's CLK API and that driver won't
+> strictly depend on CONFIG_PM_SLEEP, hence add the required stubs in
+> order to allow compiling of the new driver with the CONFIG_PM_SLEEP=3Dn.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/media/platform/ti-vpe/cal.c | 281 +++++++++++++++++++++-------
->  1 file changed, 212 insertions(+), 69 deletions(-)
+>  include/linux/clk/tegra.h | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 
+Applied to for-5.5/clk, thanks.
 
-> @@ -1816,6 +1911,18 @@ static int cal_probe(struct platform_device *pdev)
->  	if (!dev)
->  		return -ENOMEM;
->  
-> +	match = of_match_device(of_match_ptr(cal_of_match), &pdev->dev);
+Thierry
 
-Use of_device_get_match_data() instead.
+--Rgf3q3z9SdmXC6oT
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	if (!match)
-> +		return -ENODEV;
-> +
-> +	if (match->data) {
-> +		dev->data = (struct cal_data *)match->data;
-> +		dev->flags = dev->data->flags;
-> +	} else {
-> +		dev_err(&pdev->dev, "Could not get feature data based on compatible version\n");
-> +		return -ENODEV;
-> +	}
-> +
->  	/* set pseudo v4l2 device name so we can use v4l2_printk */
->  	strscpy(dev->v4l2_dev.name, CAL_MODULE_NAME,
->  		sizeof(dev->v4l2_dev.name));
-> @@ -1823,6 +1930,43 @@ static int cal_probe(struct platform_device *pdev)
->  	/* save pdev pointer */
->  	dev->pdev = pdev;
->  
-> +	if (parent && of_property_read_bool(parent, "syscon-camerrx")) {
-> +		syscon_camerrx =
-> +			syscon_regmap_lookup_by_phandle(parent,
-> +							"syscon-camerrx");
-> +		if (IS_ERR(syscon_camerrx)) {
-> +			dev_err(&pdev->dev, "failed to get syscon-camerrx regmap\n");
-> +			return PTR_ERR(syscon_camerrx);
-> +		}
-> +
-> +		if (of_property_read_u32_index(parent, "syscon-camerrx", 1,
-> +					       &syscon_camerrx_offset)) {
+-----BEGIN PGP SIGNATURE-----
 
-Kind of odd to read the property twice and using functions that don't 
-match the type. We have functions to retrieve phandle and args.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl24PFIACgkQ3SOs138+
+s6GpQA/+ObhDGFKfUw2kmzmVofglBZKfac9iUKEOtJRjpACY1HQzbddmh7XDV0kz
+x3ZpXS/64v2SYFT1MEDg+P0HIE9VEMhn0gTuht4eH6koVffOmKQW0mMcnmNXA0vT
+Xz4DSqpdEa+1povmLaifTj6FAGsuT2FQXuK+eWA0UFkW3407KhhazMuwuJvlQ77J
+0bq78zIdwRH33kP6MgZvTF94dggX02TsRt8x3FQxGjo6lxan5qe18h06/sTUGW4j
+QvshCliwMiCaSskcQCULJYuRX9f54Iu6HkcmqURzP1LohAM4o7NnFboxKorGQAbY
+76j6WB6i7O5isg5Ng0wV3YH/xHTuptMzX12iniF3BqwYWXab2J2qyNQ7ipnFlDvY
+Y9m2caM4cPfILsUozrjvQqGWOkg8EujGzDhEOkqwGI1zj2rE0QzSTZbYFLYNp2ka
+jHVMR+TN2Q4pwBTOPmJ4r2hPoy9KvTTEfLMU6T931lPPjNSKONvlr0oNz7fxVE2H
+1adqcQRShR6hM1UzuFA3J9mjP8bqYFPYRIMVazpM6nQMwHTDSq9j/IIHp7LpFuVr
+uDxLZYmA+mP7Sbo2eBAK3qwrR2Hgnyv4+tyLquKGuns+1mdP2B3+Nkw8Xrpf8b5c
+RRWen5QU639f+YV7G6qxSxhljZri59qMYqGoQojtUZxIvMdNtyo=
+=lnmo
+-----END PGP SIGNATURE-----
 
-> +			dev_err(&pdev->dev, "failed to get syscon-camerrx offset\n");
-> +			return -EINVAL;
-> +		}
-> +	} else {
-> +		/*
-> +		 * Backward DTS compatibility.
-> +		 * If syscon entry is not present then check if the
-> +		 * camerrx_control resource is present.
-> +		 */
-> +		syscon_camerrx = cal_get_camerarx_regmap(dev);
-> +		if (IS_ERR(syscon_camerrx)) {
-> +			dev_err(&pdev->dev, "failed to get camerrx_control regmap\n");
-> +			return PTR_ERR(syscon_camerrx);
-> +		}
-> +		/* In this case the base already point to the direct
-> +		 * CM register so no need for an offset
-> +		 */
-> +		syscon_camerrx_offset = 0;
-> +	}
-> +
-> +	dev->syscon_camerrx = syscon_camerrx;
-> +	dev->syscon_camerrx_offset = syscon_camerrx_offset;
-> +	ret = cal_camerarx_regmap_init(dev);
-> +	if (ret)
-> +		return ret;
-> +
->  	dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->  						"cal_top");
->  	dev->base = devm_ioremap_resource(&pdev->dev, dev->res);
-
+--Rgf3q3z9SdmXC6oT--
