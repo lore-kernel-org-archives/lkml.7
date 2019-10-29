@@ -2,89 +2,99 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7258CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D58CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7D421479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:58:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="j2jzhrSz"
+	by mail.kernel.org (Postfix) with ESMTP id 024FC20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfJ2A63 (ORCPT
+        id S1727704AbfJ2BCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 20:58:29 -0400
-Received: from vps.xff.cz ([195.181.215.36]:51592 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727336AbfJ2A6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 20:58:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572310692; bh=LdBB96lc5mOW3OGGRyo4GacYhMj29ptosU6PsgU7yus=;
-        h=From:To:Cc:Subject:Date:From;
-        b=j2jzhrSzyU+pwMB0jX47G/MPKaOl6Voi3i8XBUHZ7Q+R1QbwaF+De5qjyixRYigTg
-         eNbcUvP0sO2piUoEHf7ijARp8d+GDmgGieTHRoZAUV9lAwc80qfdQ0OUaTe7GVJX8r
-         cO4r00n5JGL7YMXtvqnhtkClmvFUs7Z9sw1/DBBI=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 0/3] Add touchscreen support for TBS A711 Tablet
-Date:   Tue, 29 Oct 2019 01:58:03 +0100
-Message-Id: <20191029005806.3577376-1-megous@megous.com>
+        Mon, 28 Oct 2019 21:02:50 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47294 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726365AbfJ2BCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 21:02:49 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CCEF221C64DBA44192B8;
+        Tue, 29 Oct 2019 09:02:46 +0800 (CST)
+Received: from [127.0.0.1] (10.133.224.57) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
+ 09:02:38 +0800
+Subject: Re: [PATCH] arm64: print additional fault message when executing
+ non-exec memory
+To:     Will Deacon <will@kernel.org>
+CC:     <catalin.marinas@arm.com>, <james.morse@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
+References: <20191028090837.39652-1-zhengxiang9@huawei.com>
+ <20191028164150.GG5576@willie-the-truck>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <922ff695-62c4-5142-5efa-daeebd73459e@huawei.com>
+Date:   Tue, 29 Oct 2019 09:02:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191028164150.GG5576@willie-the-truck>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.224.57]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a resurrection of https://lkml.org/lkml/2018/7/25/143
-
-Compared to v4 of Mylène's series I've dropped all attempts to
-power off the chip during suspend. This patch just enables the
-regulator during probe and disables it on driver rmmod.
-
-I've tested the driver with suspend/resume and touching the
-panel resumes my soc.
-
-Please take a look.
-
-thank you and regards,
-  Ondrej Jirman
 
 
-Changes since v4 of Mylène's series:
-- slight whitespace improvements
-- drop all modifications of suspend/resume hooks
-- drop useless header include
-- split the dt-bindings into a separate patch
+On 2019/10/29 0:41, Will Deacon wrote:
+> On Mon, Oct 28, 2019 at 05:08:37PM +0800, Xiang Zheng wrote:
+>> When attempting to executing non-executable memory, the fault message
+>> shows:
+>>
+>>   Unable to handle kernel read from unreadable memory at virtual address
+>>   ffff802dac469000
+>>
+>> This may confuse someone, so add a new fault message for instruction
+>> abort.
+>>
+>> Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
+>> ---
+>>  arch/arm64/mm/fault.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+>> index 9fc6db0bcbad..68bf4ec376d0 100644
+>> --- a/arch/arm64/mm/fault.c
+>> +++ b/arch/arm64/mm/fault.c
+>> @@ -318,6 +318,8 @@ static void __do_kernel_fault(unsigned long addr, unsigned int esr,
+>>  	if (is_el1_permission_fault(addr, esr, regs)) {
+>>  		if (esr & ESR_ELx_WNR)
+>>  			msg = "write to read-only memory";
+>> +		else if (is_el1_instruction_abort(esr))
+>> +			msg = "execute non-executable memory";
+> 
+> nit, please make this "execute from non-executable memory".
 
-Mylène Josserand (2):
-  input: edt-ft5x06: Add support for regulator
-  arm: dts: sun8i: a83t: a711: Add touchscreen node
+Thanks, I will make this in the next version of patch.
 
-Ondrej Jirman (1):
-  dt-bindings: input: edt-ft5x06: Add regulator support
-
- .../bindings/input/touchscreen/edt-ft5x06.txt |  1 +
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     | 16 ++++++++++
- drivers/input/touchscreen/edt-ft5x06.c        | 30 +++++++++++++++++++
- 3 files changed, 47 insertions(+)
+> 
+> With that:
+> 
+> Acked-by: Will Deacon <will@kernel.org>
+> 
+> Will
+> 
+> .
+> 
 
 -- 
-2.23.0
+
+Thanks,
+Xiang
 
