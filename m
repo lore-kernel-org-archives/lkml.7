@@ -2,246 +2,285 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F503CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743CBC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716A5205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8582054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbfJ2Idn (ORCPT
+        id S1729654AbfJ2IeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:33:43 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:36108 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729255AbfJ2Idm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:33:42 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 91BC5391D03CB94728A5;
-        Tue, 29 Oct 2019 16:33:38 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 29 Oct
- 2019 16:33:37 +0800
-Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: support data compression
-To:     Eric Biggers <ebiggers@kernel.org>
-References: <20191022171602.93637-1-jaegeuk@kernel.org>
- <20191022171602.93637-2-jaegeuk@kernel.org>
- <20191027225006.GA321938@sol.localdomain>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <da214cdc-0074-b7bf-7761-d4c4ad3d4f6a@huawei.com>
-Date:   Tue, 29 Oct 2019 16:33:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 29 Oct 2019 04:34:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:35656 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728892AbfJ2IeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:34:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 01:34:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="scan'208";a="202775353"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 01:34:09 -0700
+Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id 4518A58049B;
+        Tue, 29 Oct 2019 01:34:04 -0700 (PDT)
+Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
+ <20191025165352.GA30602@bogus>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <72d46086-0918-a5af-d798-7488b55a8e07@linux.intel.com>
+Date:   Tue, 29 Oct 2019 16:34:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191027225006.GA321938@sol.localdomain>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+In-Reply-To: <20191025165352.GA30602@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/28 6:50, Eric Biggers wrote:
->> +bool f2fs_is_compressed_page(struct page *page)
->> +{
->> +	if (!page_private(page))
->> +		return false;
->> +	if (IS_ATOMIC_WRITTEN_PAGE(page) || IS_DUMMY_WRITTEN_PAGE(page))
->> +		return false;
->> +	return *((u32 *)page_private(page)) == F2FS_COMPRESSED_PAGE_MAGIC;
->> +}
-> 
-> This code implies that there can be multiple page private structures each of
-> which has a different magic number.  But I only see F2FS_COMPRESSED_PAGE_MAGIC.
-> Where in the code is the other one(s)?
 
-I'm not sure I understood you correctly, did you mean it needs to introduce
-f2fs_is_atomic_written_page() and f2fs_is_dummy_written_page() like
-f2fs_is_compressed_page()?
-
-> 
+On 10/26/2019 12:53 AM, Rob Herring wrote:
+> On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
+>> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
+>> which is Synopsys DesignWare based PCIe core.
+>>
+>> changes on v4:
+>> 	Add "snps,dw-pcie" compatible.
+>> 	Rename phy-names property value to pcie.
+>> 	And maximum and minimum values to num-lanes.
+>> 	Add ref for reset-assert-ms entry and update the
+>> 	 description for easy understanding.
+>> 	Remove pcie core interrupt entry.
+>>
+>> changes on v3:
+>>          Add the appropriate License-Identifier
+>>          Rename intel,rst-interval to 'reset-assert-us'
+>>          Add additionalProperties: false
+>>          Rename phy-names to 'pciephy'
+>>          Remove the dtsi node split of SoC and board in the example
+>>          Add #interrupt-cells = <1>; or else interrupt parsing will fail
+>>          Name yaml file with compatible name
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
+>>   1 file changed, 135 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> Fails to validate:
+>
+> Error: Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dts:38.27-28 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:321: recipe for target 'Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml' failed
+>
+> Please run 'make -k dt_binding_check' (-k because there are some
+> unrelated failures).
+>
+>> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>> new file mode 100644
+>> index 000000000000..49dd87ec1e3d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>> @@ -0,0 +1,135 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 >> +
->> +static void f2fs_set_compressed_page(struct page *page,
->> +		struct inode *inode, pgoff_t index, void *data, refcount_t *r)
->> +{
->> +	SetPagePrivate(page);
->> +	set_page_private(page, (unsigned long)data);
+>> +title: PCIe RC controller on Intel Gateway SoCs
 >> +
->> +	/* i_crypto_info and iv index */
->> +	page->index = index;
->> +	page->mapping = inode->i_mapping;
->> +	if (r)
->> +		refcount_inc(r);
->> +}
-> 
-> It isn't really appropriate to create fake pagecache pages like this.  Did you
-> consider changing f2fs to use fscrypt_decrypt_block_inplace() instead?
-
-We need to store i_crypto_info and iv index somewhere, in order to pass them to
-fscrypt_decrypt_block_inplace(), where did you suggest to store them?
-
+>> +maintainers:
+>> +  - Dilip Kota <eswara.kota@linux.intel.com>
 >> +
->> +void f2fs_destroy_compress_ctx(struct compress_ctx *cc)
->> +{
->> +	kvfree(cc->rpages);
->> +}
-> 
-> The memory is allocated with kzalloc(), so why is it freed with kvfree() and not
-> just kfree()?
-
-It was allocated by f2fs_*alloc() which will fallback to kvmalloc() once
-kmalloc() failed.
-
->> +static int lzo_compress_pages(struct compress_ctx *cc)
->> +{
->> +	int ret;
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - const: intel,lgm-pcie
+>> +      - const: snps,dw-pcie
 >> +
->> +	ret = lzo1x_1_compress(cc->rbuf, cc->rlen, cc->cbuf->cdata,
->> +					&cc->clen, cc->private);
->> +	if (ret != LZO_E_OK) {
->> +		printk_ratelimited("%sF2FS-fs: lzo compress failed, ret:%d\n",
->> +								KERN_ERR, ret);
->> +		return -EIO;
->> +	}
->> +	return 0;
->> +}
-> 
-> Why not using f2fs_err()?  Same in lots of other places.
-
-We use printk_ratelimited at some points where we can afford to lose logs,
-otherwise we use f2fs_{err,warn...} to record info as much as possible for
-troubleshoot.
-
+>> +  device_type:
+>> +    const: pci
 >> +
->> +	ret = cops->compress_pages(cc);
->> +	if (ret)
->> +		goto out_vunmap_cbuf;
+>> +  "#address-cells":
+>> +    const: 3
 >> +
->> +	max_len = PAGE_SIZE * (cc->cluster_size - 1) - COMPRESS_HEADER_SIZE;
+>> +  "#size-cells":
+>> +    const: 2
 >> +
->> +	if (cc->clen > max_len) {
->> +		ret = -EAGAIN;
->> +		goto out_vunmap_cbuf;
->> +	}
-> 
-> Since we already know the max length we're willing to compress to (the max
-> length for any space to be saved), why is more space than that being allocated?
-> LZ4_compress_default() will return an error if there isn't enough space, so that
-> error could just be used as the indication to store the data uncompressed.
-
-AFAIK, there is no such common error code returned from all compression
-algorithms indicating there is no room for limited target size, however we need
-that information to fallback to write raw pages. Any better idea?
-
-> 
+>> +  reg:
+>> +    items:
+>> +      - description: Controller control and status registers.
+>> +      - description: PCIe configuration registers.
+>> +      - description: Controller application registers.
 >> +
->> +	cc->cbuf->clen = cpu_to_le32(cc->clen);
->> +	cc->cbuf->chksum = 0;
-> 
-> What is the point of the chksum field?  It's always set to 0 and never checked.
-
-When I written initial codes, I doubt that I may lose to check some SPO corner
-cases, in where we missed to write whole cluster, so I added that to help to
-recall that case, however I didn't have time to cover those cases, resulting
-leaving unfinished code there... :(, I'm okay to delete it in a formal version.
-
-BTW, for data checksum feature, I guess we need to reconstruct dnode layout to
-cover both compressed/non-compressed data.
-
-> 
+>> +  reg-names:
+>> +    items:
+>> +      - const: dbi
+>> +      - const: config
+>> +      - const: app
 >> +
->> +static bool __cluster_may_compress(struct compress_ctx *cc)
->> +{
->> +	struct f2fs_sb_info *sbi = F2FS_I_SB(cc->inode);
->> +	loff_t i_size = i_size_read(cc->inode);
->> +	const pgoff_t end_index = ((unsigned long long)i_size)
->> +					>> PAGE_SHIFT;
->> +	unsigned offset;
->> +	int i;
+>> +  ranges:
+>> +    description: Ranges for the PCI memory and I/O regions.
+> How many entries do you expect? Add a 'maxItems' to define.
+Agree will add it.
+>
 >> +
->> +	for (i = 0; i < cc->cluster_size; i++) {
->> +		struct page *page = cc->rpages[i];
+>> +  resets:
+>> +    maxItems: 1
 >> +
->> +		f2fs_bug_on(sbi, !page);
+>> +  clocks:
+>> +    description: PCIe registers interface clock.
+> How many clocks?
+One. I will mention maxItems: 1
+>
 >> +
->> +		if (unlikely(f2fs_cp_error(sbi)))
->> +			return false;
->> +		if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
->> +			return false;
->> +		if (f2fs_is_drop_cache(cc->inode))
->> +			return false;
->> +		if (f2fs_is_volatile_file(cc->inode))
->> +			return false;
+>> +  phys:
+>> +    maxItems: 1
 >> +
->> +		offset = i_size & (PAGE_SIZE - 1);
->> +		if ((page->index > end_index) ||
->> +			(page->index == end_index && !offset))
->> +			return false;
-> 
-> No need to have a special case for when i_size is a multiple of the page size.
-> Just replace end_index with 'nr_pages = DIV_ROUND_UP(i_size, PAGE_SIZE)' and
-> check for page->index >= nr_pages.
-
-That is copied from f2fs_write_data_page(), let's clean up in a separated patch.
-
-> 
->> +out_fail:
->> +	/* TODO: revoke partially updated block addresses */
->> +	for (i += 1; i < cc->cluster_size; i++) {
->> +		if (!cc->rpages[i])
->> +			continue;
->> +		redirty_page_for_writepage(wbc, cc->rpages[i]);
->> +		unlock_page(cc->rpages[i]);
->> +	}
->> +	return err;
-> 
-> Un-addressed TODO.
-
-Will fix a little later.
-
->>  static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
->>  {
->> -	/*
->> -	 * We use different work queues for decryption and for verity because
->> -	 * verity may require reading metadata pages that need decryption, and
->> -	 * we shouldn't recurse to the same workqueue.
->> -	 */
-> 
-> Why is it okay (i.e., no deadlocks) to no longer use different work queues for
-> decryption and for verity?  See the comment above which is being deleted.
-
-Could you explain more about how deadlock happen? or share me a link address if
-you have described that case somewhere?
-
-> 
->> +	/* TODO: cluster can be compressed due to race with .writepage */
+>> +  phy-names:
+>> +    const: pcie
 >> +
-> 
-> Another un-addressed TODO.
-
-Will fix a little later.
-
-> 
->> +int f2fs_init_post_read_wq(struct f2fs_sb_info *sbi)
->> +{
->> +	if (!f2fs_sb_has_encrypt(sbi) &&
->> +		!f2fs_sb_has_compression(sbi))
->> +		return 0;
+>> +  reset-gpios:
+>> +    maxItems: 1
 >> +
->> +	sbi->post_read_wq = alloc_workqueue("f2fs_post_read_wq",
->> +						 WQ_UNBOUND | WQ_HIGHPRI,
->> +						 num_online_cpus());
-> 
-> post_read_wq is also needed if verity is enabled.
+>> +  num-lanes:
+>> +    minimum: 1
+>> +    maximum: 2
+>> +    description: Number of lanes to use for this port.
+>> +
+>> +  linux,pci-domain:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: PCI domain ID.
+> Just a value of 'true' is fine here.
+Ok.
+>
+>> +
+>> +  '#interrupt-cells':
+>> +    const: 1
+>> +
+>> +  interrupt-map-mask:
+>> +    description: Standard PCI IRQ mapping properties.
+>> +
+>> +  interrupt-map:
+>> +    description: Standard PCI IRQ mapping properties.
+>> +
+>> +  max-link-speed:
+>> +    description: Specify PCI Gen for link capability.
+> Allowed values? Default?
+Sure, will add it.
+>
+>> +
+>> +  bus-range:
+>> +    description: Range of bus numbers associated with this controller.
+>> +
+>> +  reset-assert-ms:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> Don't need a type for standard units.
+Ok.
+>
+>> +    description: |
+>> +      Delay after asserting reset to the PCIe device.
+>> +      Some devices need an interval upto 500ms. By default it is 100ms.
+> Express as a schema:
+>
+> maximum: 500
+> default: 100
+Sure i will update it.
+>
+>> +
+>> +required:
+>> +  - compatible
+>> +  - device_type
+>> +  - reg
+>> +  - reg-names
+>> +  - ranges
+>> +  - resets
+>> +  - clocks
+>> +  - phys
+>> +  - phy-names
+>> +  - reset-gpios
+>> +  - num-lanes
+> Shouldn't be required. It should have a default.
+Agree, will fix it.
+>
+>> +  - linux,pci-domain
+> Is this really required? AIUI, domains are optional and only used if
+> you have more than one host.
+Yes, not required. I will update,
+>
+>> +  - interrupt-map
+>> +  - interrupt-map-mask
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    pcie10:pcie@d0e00000 {
+> space         ^
+Agree, i will fix it.
+>
+>> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
+>> +      device_type = "pci";
+>> +      #address-cells = <3>;
+>> +      #size-cells = <2>;
+>> +      reg = <0xd0e00000 0x1000>,
+>> +            <0xd2000000 0x800000>,
+>> +            <0xd0a41000 0x1000>;
+>> +      reg-names = "dbi", "config", "app";
+>> +      linux,pci-domain = <0>;
+>> +      max-link-speed = <4>;
+>> +      bus-range = <0x00 0x08>;
+>> +      interrupt-parent = <&ioapic1>;
+>> +      #interrupt-cells = <1>;
+>> +      interrupt-map-mask = <0 0 0 0x7>;
+>> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+>> +                      <0 0 0 2 &ioapic1 28 1>,
+>> +                      <0 0 0 3 &ioapic1 29 1>,
+>> +                      <0 0 0 4 &ioapic1 30 1>;
+>> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+>> +      resets = <&rcu0 0x50 0>;
+>> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+> You need to include any defines you use. That's why the example fails to
+> build.
+Yes, i will add it.
+>
+>> +      phys = <&cb0phy0>;
+>> +      phy-names = "pcie";
+>> +      status = "okay";
+> Don't show status in examples.
+OK, will fix it.
 
-Yes, we missed this as verity was not merged when implementing this....
+Thanks for reviewing it.
 
-Thanks,
+Regards,
+Dilip
+>
+>> +      reset-assert-ms = <500>;
+>> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+>> +      num-lanes = <2>;
+>> +    };
+>> -- 
+>> 2.11.0
+>>
