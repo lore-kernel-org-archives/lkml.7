@@ -2,77 +2,104 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED560CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2196BCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C28CC208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B7F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbfJ2LWW (ORCPT
+        id S1728370AbfJ2LWt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:22:22 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59061 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727672AbfJ2LWW (ORCPT
+        Tue, 29 Oct 2019 07:22:49 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49171 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfJ2LWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:22:22 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iPPZn-0008OA-06; Tue, 29 Oct 2019 12:22:15 +0100
-Message-ID: <c8fe949268670586e6786eab633c389bbb6c1ed3.camel@pengutronix.de>
-Subject: Re: [PATCH v2 3/3] media: hantro: Do not reorder H264 scaling list
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Tue, 29 Oct 2019 12:22:14 +0100
-In-Reply-To: <HE1PR06MB4011B2DED416807CD9C9B90EAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB4011D3B8C200D13829648D86AC660@HE1PR06MB4011.eurprd06.prod.outlook.com>
-         <20191029000033.13540-1-jonas@kwiboo.se>
-         <HE1PR06MB4011B2DED416807CD9C9B90EAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 29 Oct 2019 07:22:49 -0400
+X-Originating-IP: 91.217.168.176
+Received: from xps13 (unknown [91.217.168.176])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 943B840008;
+        Tue, 29 Oct 2019 11:22:46 +0000 (UTC)
+Date:   Tue, 29 Oct 2019 12:22:47 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>
+Cc:     joern@lazybastard.org, dwmw2@infradead.org,
+        computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at,
+        vigneshr@ti.com, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, saurav.girepunje@hotmail.com
+Subject: Re: [PATCH] mtd: devices: phram.c: Fix multiple kfree statement
+ from phram_setup
+Message-ID: <20191029122247.73e1c573@xps13>
+In-Reply-To: <20191028181300.GA26250@saurav>
+References: <20191028181300.GA26250@saurav>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-29 at 00:00 +0000, Jonas Karlman wrote:
-> Scaling list supplied from userspace should be in matrix order
-> and can be used without applying the inverse scanning process.
-> 
-> The HW also only support 8x8 scaling list for the Y component, indices 0
-> and 1 in the scaling list supplied from userspace.
-> 
-> Remove reordering and write the scaling matrix in an order expected by
-> the VPU, also only allocate memory for the two 8x8 lists supported.
-> 
-> Fixes: a9471e25629b ("media: hantro: Add core bits to support H264 decoding")
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Hi Saurav,
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Saurav Girepunje <saurav.girepunje@gmail.com> wrote on Mon, 28 Oct 2019
+23:43:01 +0530:
 
-regards
-Philipp
+> Remove multiple kfree statement from phram_setup() in phram.c
+> 
+> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+> ---
 
+Here you should add a changelog with the changes you have done since
+the last version.
+
+Also when formatting the patch use -v <x> to add a version prefix
+into the title, like [PATCH v<x>].
+
+>  drivers/mtd/devices/phram.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
+> index c467286ca007..38f95a1517ac 100644
+> --- a/drivers/mtd/devices/phram.c
+> +++ b/drivers/mtd/devices/phram.c
+> @@ -243,22 +243,22 @@ static int phram_setup(const char *val)
+>  
+>  	ret = parse_num64(&start, token[1]);
+>  	if (ret) {
+> -		kfree(name);
+>  		parse_err("illegal start address\n");
+> +		goto free_nam;
+
+s/nam/name
+
+>  	}
+>  
+>  	ret = parse_num64(&len, token[2]);
+>  	if (ret) {
+> -		kfree(name);
+>  		parse_err("illegal device length\n");
+> +		goto free_nam;
+>  	}
+>  
+>  	ret = register_device(name, start, len);
+>  	if (!ret)
+>  		pr_info("%s device: %#llx at %#llx\n", name, len, start);
+> -	else
+> -		kfree(name);
+>  
+> +free_nam:
+> +	kfree(name);
+>  	return ret;
+>  }
+>  
+
+Thanks,
+Miquèl
