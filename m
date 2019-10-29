@@ -2,110 +2,128 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A259CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7258CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C4A21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572354616;
-	bh=Z4nt9AgzF6Xut8DoxIHw3oYYKPwQnKcdpMCaKKFH34M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RJ+O2qUcmehhkFJaIYwwtczq1DBsRyAt7ciMX/vZ2XDzlFFCtz4IYfBB7fSk5WtiB
-	 OJL+bgZ6P+AWSx37SowEnHIhWnS0iGSz095lzOFi4kKZXbzUNmbLoIvYMaSK92Atuq
-	 /1GfaNpj9jPK2BF+CZ+bnlZTLIy/+R+LcGQx9gA0=
+	by mail.kernel.org (Postfix) with ESMTP id 7C8DE20874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:11:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N273QaeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388142AbfJ2NKP (ORCPT
+        id S2388187AbfJ2NLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:10:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50350 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfJ2NKP (ORCPT
+        Tue, 29 Oct 2019 09:11:19 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34863 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfJ2NLT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:10:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=b96Hgh9Bd/Vy2G8CXvhuxvxQ6kIj7r6GOtFsPFFUW+8=; b=cJFPRsfXUSMyr9M1w3e5y4y63
-        YcKhrJWRetefxiN1ARvraFKrPNnwVBtiKkeeuhPycWtPxuZt3O///M531BOeO2zL1pCM+VPYLrfSd
-        Z3q1SG8Nfuji47jkCzf5A60N81azDjsyMxy1LmtcemQi/kxjyMUVXtLbbka+FJF+64gbo=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iPRG2-0002HP-B2; Tue, 29 Oct 2019 13:09:58 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 9ADA12742157; Tue, 29 Oct 2019 13:09:57 +0000 (GMT)
-Date:   Tue, 29 Oct 2019 13:09:57 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     bardliao@realtek.com, oder_chiou@realtek.com, lgirdwood@gmail.com,
-        perex@perex.cz, tiwai@suse.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: rt5677: Make rt5677_spi_pcm_page static
-Message-ID: <20191029130957.GE5253@sirena.co.uk>
-References: <1571919319-4205-1-git-send-email-zhongjiang@huawei.com>
- <5DB7AD30.60007@huawei.com>
- <20191029122435.GD5253@sirena.co.uk>
- <5DB8383C.7040601@huawei.com>
+        Tue, 29 Oct 2019 09:11:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l10so13600688wrb.2;
+        Tue, 29 Oct 2019 06:11:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lOy+50HbhiDNUSRNP6Tk+R9ATVXD2Ivrcf+miXw/+zk=;
+        b=N273QaeUMMg5/G7NhFeQNSiwOOm2NJBSomTG1nIIHXPioLXEx2op1tPUErCjPwYZ1y
+         lrzlnR6XYK7EW444yxCynlyROimb3W6aXDiychkEVA9e/C4nF6w2tRBBYwCAo/+eHEdC
+         Lx9jSZyDH1G52tXBKqHExRSG0hUndVFxo41SQFRcO1ODRax5kdkkS5EzyxQCSjvlxvyQ
+         A4jXVN38LJqN135VvOy6hnz01yODyXZNzySyyQNCRqBFS8nPuuJo9pfguk082+34w+zo
+         LWP5a5ZwGA1dOcfbSJw2eEoeBZK82oY8EMptmZjPAav08aLbyMy41ypBzbZ7fqqZOC8T
+         Vbaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lOy+50HbhiDNUSRNP6Tk+R9ATVXD2Ivrcf+miXw/+zk=;
+        b=SjMKVwyZI/PhZuvhZAhF9/al0yXSvklEnQlPTgtp7YenveORKQYfLRr7ca/tiGFY9D
+         84ClqwpgFsrYqQ1ACJlEAAlF5vm0b88Y+2Blaes/Igx1baxrhSNFZGyC/t6C5REC3lvQ
+         dnTFL+DYkCUoLxMuEvOY/RTzjHW6sn+1xyx/+oTu0HEsBshKjTS5DimDXuvUm+pt2WD3
+         UV6LZDfGfLwBhHjJUHRDKoivQmu3DB8lmUu8ADcxIhZWkL9e4joflBalik3SHabynEWi
+         k0DVWF8oRQ06w+MOtGaPqpULmiRZI8R3CKebEl5b8UQvn1gW96P0MlVI5HJagX7AkmpT
+         agHw==
+X-Gm-Message-State: APjAAAVEfWQXUB5nAO5NJ91P/Zo2XA2dPJNxSosAj59x8NmVgZ1wT8vN
+        56RGWh48b6kZZhWfxvkUHhU=
+X-Google-Smtp-Source: APXvYqyGLTPwTw/sl2EL5ud0q8caMRZ8kJJQ1zVzYeUZVvi9Q7KJq+ugRmwdlYUx3TzuBscH4EOmjw==
+X-Received: by 2002:a5d:4b51:: with SMTP id w17mr7392462wrs.357.1572354676692;
+        Tue, 29 Oct 2019 06:11:16 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id j14sm17830079wrj.35.2019.10.29.06.11.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 06:11:15 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:11:13 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ARM: tegra: Enable Tegra VDE driver in tegra_defconfig
+Message-ID: <20191029131113.GB508460@ulmo>
+References: <20190623170730.5095-1-digetx@gmail.com>
+ <20190623170730.5095-3-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="19uQFt6ulqmgNgg1"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
 Content-Disposition: inline
-In-Reply-To: <5DB8383C.7040601@huawei.com>
-X-Cookie: When does later become never?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190623170730.5095-3-digetx@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---19uQFt6ulqmgNgg1
+--rS8CxjVDS/+yyDmU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 29, 2019 at 09:01:48PM +0800, zhong jiang wrote:
-> On 2019/10/29 20:24, Mark Brown wrote:
+On Sun, Jun 23, 2019 at 08:07:25PM +0300, Dmitry Osipenko wrote:
+> The video decoder driver was tested by time and works absolutely fine.
+> The reason why it is in staging is because it doesn't provide common V4L
+> interface yet, this shouldn't stop driver enabling in the defconfig since
+> our userspace (libvdpau-tegra) provides combined acceleration of decoding
+> and displaying without use of V4L.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>=20
+> No changes since v1.
+>=20
+>  arch/arm/configs/tegra_defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
 
-> I send the patch, but alway receive the following responses.
+Applied to for-5.5/arm/defconfig, thanks.
 
-> This message is from the Forcepoint email protection system, Forcepoint Email Security at host huawei.com.
+Thierry
 
-> The attached email could not be delivered to one or more recipients.
-
-> For assistance, please contact your email system administrator and include the following problem report:
-
-> <bardliao@realtek.com>: host rtits1.realtek.com[211.75.126.71] said: 553 5.7.1
-> <oder_chiou@realtek.com>: host rtits1.realtek.com[211.75.126.71] said: 553
-
-> Do the mails fails to send the receivers ? The mails is empty content. I have no ideas about that.
-
-Bard left Realtek and I think Oder did too though I'm not 100% sure
-which is why mail to them is bouncing - but looking back I didn't get
-your original patch either though so you had some problem it seems (also
-you've not sent it to alsa-devel).  As I said in the mail you're
-replying to probably best to resend.
-
---19uQFt6ulqmgNgg1
+--rS8CxjVDS/+yyDmU
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl24OiQACgkQJNaLcl1U
-h9AV7wf+IicQjLXJJBCrJwAOIUcw6M+evtaSF6Kz5XMGAyDnXDGVRpfTSDfn1Zkg
-G8IMn8Ts021CE4p3MsGKRq9M6/buSRhPiG9r8Kum1faVDRdID7BrnbLR1tPViZh6
-tXhN5ZxOR7jKApP38M02vuHZUY6Sa978jEoH9Y9AIJ3ztFNVJcNp1TOk7ThWHzUw
-YNAyW4adI8q9r1ffPczau5E6bN2LTYZx1h12mvI63IPbuQVaTVKCEjBnGtGmvRHJ
-64CJIz7JTG0tAGNdmIEIY3D5vBU+cD4I627iAEsqoRdgwd8dJx0j25CmMsF1RwbE
-Yj2Z2Q0AQGNQoIPmdeKH5Lg4JZn94w==
-=LE0m
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl24OnEACgkQ3SOs138+
+s6Hsug/8D9ZjFD1Ul/3scNpLRp1IPnTWhhx+W0DZAVdANmT+CS6SbGdGwL2DeHGm
+sTknFJzDEf7x1IOgajb5NcJioElqnPjE4fCQaCUSruNk1mKQjoef3nWlvGWrJxv6
+CkLeOFt42etHWRUm47LlBEBhqMZzJ3yFudszWQK1Qm1rtJrfT31IQY14COZAQZQJ
+cV98i/HGAmcmrWwPRTm2Kj3HzoZ+qtmFF5Cfk2HqIs7UPz8K4KaNGpbBalAo/6NC
+rTVa0nkxIq/hIFKzJ2w8Wq8dJi+fqeaLGKzmzWt0Y9yKCkLRcGW3/jVo+3mSNKf2
+a0Mvs1dWpVgiYvAcWuANX3sWDipX0qhyq4jvZ81mdsB0tFA25n3sC9gY3aVMphZO
+iZTMA69bo0CIJZLceuTMB6KbMK5VQHgyDrDVJyOc45ZT8jZ4KYkXXmB+oBGJqRPA
+/Jw14esu2ojr0Rv54QHzr9ttSypo6TpB70Hy5k0Co8lye3uziOQxcbPhcyWNt3au
+Wqa1bczkQoOLaRrjQ/YHzsfAImkBRb3r1uhEhSuAhbhtKU0qXsbT4izhqCHKrjpS
+b6NAOAYbA2kX0RPNjVBhGzR5tRS3vafubRYrtOud08HPmW5EFMmzqktn4FOeBVb9
+07FZAlIhmhmnvremuifeN+1g4o1XGyloWEzgpA+0uXQitd090v8=
+=q4xx
 -----END PGP SIGNATURE-----
 
---19uQFt6ulqmgNgg1--
+--rS8CxjVDS/+yyDmU--
