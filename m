@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D76CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975EFCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B8A20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7662F20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbfJ2DIo (ORCPT
+        id S1731240AbfJ2DJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 23:08:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5214 "EHLO huawei.com"
+        Mon, 28 Oct 2019 23:09:12 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58184 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730831AbfJ2DIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 23:08:44 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DBB8282521340221D7FA;
-        Tue, 29 Oct 2019 11:08:40 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.218) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
- 11:08:32 +0800
-Message-ID: <5DB7AD30.60007@huawei.com>
-Date:   Tue, 29 Oct 2019 11:08:32 +0800
+        id S1730831AbfJ2DJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 23:09:11 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BFB39DF489B2BDBFAD2F;
+        Tue, 29 Oct 2019 11:09:08 +0800 (CST)
+Received: from [127.0.0.1] (10.133.219.218) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
+ 11:09:07 +0800
+Message-ID: <5DB7AD52.7090104@huawei.com>
+Date:   Tue, 29 Oct 2019 11:09:06 +0800
 From:   zhong jiang <zhongjiang@huawei.com>
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-To:     zhong jiang <zhongjiang@huawei.com>
-CC:     <bardliao@realtek.com>, <oder_chiou@realtek.com>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: rt5677: Make rt5677_spi_pcm_page static
-References: <1571919319-4205-1-git-send-email-zhongjiang@huawei.com>
-In-Reply-To: <1571919319-4205-1-git-send-email-zhongjiang@huawei.com>
+To:     Sebastian Reichel <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] power: supply: cpcap-charger: Make cpcap_charger_voltage_to_regval
+ static
+References: <1571672407-58950-1-git-send-email-zhongjiang@huawei.com> <5DB71465.6050203@huawei.com> <20191028215615.3efezzsc5gji722q@earth.universe>
+In-Reply-To: <20191028215615.3efezzsc5gji722q@earth.universe>
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.133.219.218]
@@ -46,29 +46,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping.
-On 2019/10/24 20:15, zhong jiang wrote:
-> The GCC complains the following warning.
+Sorry,  I forget that.
+
+Thanks,
+zhogn jiang
+On 2019/10/29 5:56, Sebastian Reichel wrote:
+> Hi,
 >
-> sound/soc/codecs/rt5677-spi.c:365:13: warning: symbol 'rt5677_spi_pcm_page' was not declared. Should it be static?
+> https://lkml.org/lkml/2019/10/21/1018
 >
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  sound/soc/codecs/rt5677-spi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> That's e3da2ce04e12 to be specific.
 >
-> diff --git a/sound/soc/codecs/rt5677-spi.c b/sound/soc/codecs/rt5677-spi.c
-> index 36c02d2..b412371 100644
-> --- a/sound/soc/codecs/rt5677-spi.c
-> +++ b/sound/soc/codecs/rt5677-spi.c
-> @@ -362,7 +362,7 @@ static void rt5677_spi_copy_work(struct work_struct *work)
->  	mutex_unlock(&rt5677_dsp->dma_lock);
->  }
->  
-> -struct page *rt5677_spi_pcm_page(
-> +static struct page *rt5677_spi_pcm_page(
->  		struct snd_soc_component *component,
->  		struct snd_pcm_substream *substream,
->  		unsigned long offset)
+> -- Sebastian
+>
+> On Tue, Oct 29, 2019 at 12:16:37AM +0800, zhong jiang wrote:
+>> ping.
+>>
+>> On 2019/10/21 23:40, zhong jiang wrote:
+>>> The GCC complains the following case when compiling kernel.
+>>>
+>>> drivers/power/supply/cpcap-charger.c:563:5: warning: symbol 'cpcap_charger_voltage_to_regval' was not declared. Should it be static?
+>>>
+>>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+>>> ---
+>>>  drivers/power/supply/cpcap-charger.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/power/supply/cpcap-charger.c b/drivers/power/supply/cpcap-charger.c
+>>> index 40d96b8..c0d452e 100644
+>>> --- a/drivers/power/supply/cpcap-charger.c
+>>> +++ b/drivers/power/supply/cpcap-charger.c
+>>> @@ -560,7 +560,7 @@ static void cpcap_charger_update_state(struct cpcap_charger_ddata *ddata,
+>>>  	dev_dbg(ddata->dev, "state: %s\n", status);
+>>>  }
+>>>  
+>>> -int cpcap_charger_voltage_to_regval(int voltage)
+>>> +static int cpcap_charger_voltage_to_regval(int voltage)
+>>>  {
+>>>  	int offset;
+>>>  
+>>
 
 
