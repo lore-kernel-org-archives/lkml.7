@@ -8,151 +8,135 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289CCCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08474CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1822087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3CB2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:00:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gi6vvKlZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZHc3abwN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388843AbfJ2OAM (ORCPT
+        id S2388903AbfJ2OA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:00:12 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40988 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ2OAM (ORCPT
+        Tue, 29 Oct 2019 10:00:56 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:32844 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbfJ2OA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:00:12 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l3so9641480pgr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 07:00:11 -0700 (PDT)
+        Tue, 29 Oct 2019 10:00:56 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y39so14953605qty.0;
+        Tue, 29 Oct 2019 07:00:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=3RWz9l3/B7SltQRtqxThazj72fG6HLPCrRBSHamwG2Y=;
-        b=gi6vvKlZNFvT2TfBgGbjsE0fNq7TOPfVljNx5UiQBpHr53URR+V1J4LJgv3Zh00tUR
-         2VJgWOGXtIhFvYiDZB0bCUTNEMfbclaL7v/Ca/Rl7FOH34LPgAU7BBL6fuxAnGAEwavE
-         n7O1KSsQufR0DXWwEpfFZMF/yq4pIWE5iwz5gFtm8EdiCRQmRXIN+eyl24ufo4o8VPqW
-         ZZEl2C2Sr3fOXS4AChtJ7SwEI+J6RK8qizGITJ9dPNlzX3fMOSrKIBIz5PUUlFkrp3Wz
-         NEjjVVfEe+EfNvi0utyx+i6B4rTFVAJ+eEFT0VPASxlZTciv62Exr7hAViUAvAjoQvr4
-         eulg==
+        bh=rTascIDkhsRKyjbJRI9Qw1x1aWYBVRF+G+MqIT5POPs=;
+        b=ZHc3abwNaK++Dko3PvPts93TVzUV3oubJdTfCEVwWK9owhBuh9xJMHmhF42CbLnl1T
+         T536CeKakQQq4vJDI5jX0PW6Tdt+L07ZWrigvIW9xrao7PEjDwG9r5TEWIRi28RM2TrK
+         jh8fGkKtJSNbN9nuJa+aIxxFEOLkvsL2mSAVY84Y6s8Y2kMBD2TETVQm/f4tXTwkZBQc
+         oOmDa20AJsgnI3CbJh04OxeoBQPVodWKrbDp6XrJZ5uqj5CnBU87EEhhNAUS/396ePkd
+         +b7rnVlzRRAvPOEfkqs7FFdS+GGiT2KHnAAh9BHbofsOOc2iq1v3OMM3TulhK0so1haB
+         Ed/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3RWz9l3/B7SltQRtqxThazj72fG6HLPCrRBSHamwG2Y=;
-        b=EIq9Knrx6uigjN6W8UTpRwiyouzWM1YRI+QaiV9MH36yifm14K4uP4zfHIyYSMKUX/
-         OQU3r3KXpIOrRYqRXWgdWGh230h2RR3PCtd+GuBIO54ScRqVeC8WTgyEW07M79Q5Hglt
-         joJx4vCkCR6/fsHyE2/KghK2OuH/VuCosMcXr47RDsvNhRbisK+KdhoUEkTSdrQu76MD
-         xZu+zevS99f5Ikr5a22fibNqU0C680NJUmuezEy1k13p0TsPvUYUgNxdlIBk95wKGldR
-         eRxhuOP3YMH71vApS53MOm/WWWJzp6SiiJgaaDANNi+MyA+TkGidA7UUl0/JggkeADfJ
-         EdKw==
-X-Gm-Message-State: APjAAAVZ5+UkqJLUchOi4Nnd9SHi/LnLVtfZlYb0VjALoow2h+3TX5WT
-        IVT+HFLt5tgO0e9M6pw+h+4=
-X-Google-Smtp-Source: APXvYqzMgIYYjOPJnIWQ0ODCJG9vYNsNP7C4LA+We6RWcFKY4ibzXz4QdblaFYdr8tYTJSlg5hrLIw==
-X-Received: by 2002:a65:4247:: with SMTP id d7mr27474764pgq.107.1572357611059;
-        Tue, 29 Oct 2019 07:00:11 -0700 (PDT)
-Received: from saurav ([117.232.226.35])
-        by smtp.gmail.com with ESMTPSA id y129sm15557518pgb.28.2019.10.29.07.00.05
+        bh=rTascIDkhsRKyjbJRI9Qw1x1aWYBVRF+G+MqIT5POPs=;
+        b=q+xbzr+vWUzO2vuY9n2RQfHAlwG128En4AXynd0+4V6e+L2YPF3092Xur2+Gsoruyq
+         vrXXECcOe4q8snKVtiVq8cztT0rVq9fJjKyjr15+GlnoLDakOQDz4YOtl5QpDbpwIVjb
+         5T/89o7KorqcWDU14qFlBDjjS9BwKqVpsLkspNp858VF9dEowt3+1M+3Ibnrn1KPnvfC
+         jtVQ3DVWyshnDxxHBsHKins30zVIw59gZEyRt40BZtu5o2PmkCeyI5RFLCXRtA3j2eHS
+         Jp5NBslY4PDGfyHz8G6gifRFH158aKusD+A9rTibGL7LzE1v3Re6wuuYBdfNOofzCxYM
+         dO7g==
+X-Gm-Message-State: APjAAAWmNvvzu1x65ZNFKNjvkRTXLeOUNf8FRru0LGY9AKVG2+rIWmBR
+        qdsesnWCUCOa4SwRK0nFp1M=
+X-Google-Smtp-Source: APXvYqxNLUDgaMCOSR9d6bxbT2x57hmz/rT4Sg4RvgfmDv4dGLRKXZSh8tg0VzRr/zldQ1vEeNuA5Q==
+X-Received: by 2002:a05:6214:1812:: with SMTP id o18mr23804244qvw.33.1572357655321;
+        Tue, 29 Oct 2019 07:00:55 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id j4sm7215922qkf.116.2019.10.29.07.00.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 07:00:10 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 19:30:02 +0530
-From:   SAURAV GIREPUNJE <saurav.girepunje@gmail.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     joern@lazybastard.org, dwmw2@infradead.org,
-        computersforpeace@gmail.com, marek.vasut@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, saurav.girepunje@hotmail.com
-Subject: Re: [PATCH] mtd: devices: phram.c: Fix use true/false for bool type
-Message-ID: <20191029140002.GB4943@saurav>
-References: <20191029032142.GA6758@saurav>
- <20191029091433.GG25745@shell.armlinux.org.uk>
+        Tue, 29 Oct 2019 07:00:54 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9D8E340D5C; Tue, 29 Oct 2019 11:00:52 -0300 (-03)
+Date:   Tue, 29 Oct 2019 11:00:52 -0300
+To:     James Clark <James.Clark@arm.com>
+Cc:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>, "acme@redhat.com" <acme@redhat.com>,
+        "irogers@google.com" <irogers@google.com>
+Subject: Re: [PATCH] Fixes issue when debugging debug builds of Perf.
+Message-ID: <20191029140052.GB4922@kernel.org>
+References: <20191028113340.4282-1-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029091433.GG25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191028113340.4282-1-james.clark@arm.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 09:14:33AM +0000, Russell King - ARM Linux admin wrote:
-> On Tue, Oct 29, 2019 at 08:51:42AM +0530, Saurav Girepunje wrote:
-> > Return type for security_extensions_enabled() is bool
-> > so use true/false.
+Em Mon, Oct 28, 2019 at 11:34:01AM +0000, James Clark escreveu:
+> When a 'make DEBUG=1' build is done, the command parser
+> is still built with -O6 and is hard to step through.
 > 
-> This doesn't seem to bear any resemblence to the subject line.
+> This change also moves EXTRA_WARNINGS and EXTRA_FLAGS to
+> the end of the compilation line, otherwise they cannot be
+> used to override the default values.
+
+The patch came mangled, so I'm applying by hand, and separating it into
+two patches, the first for the first paragraph and the other for the
+second, ok?
+
+- Arnaldo
+ 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/lib/subcmd/Makefile | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> > Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
-> > ---
-> >  arch/arm/mm/nommu.c         |  2 +-
-> >  drivers/mtd/devices/phram.c | 11 +++++------
-> >  2 files changed, 6 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/arch/arm/mm/nommu.c b/arch/arm/mm/nommu.c
-> > index 24ecf8d30a1e..1fed74f93c66 100644
-> > --- a/arch/arm/mm/nommu.c
-> > +++ b/arch/arm/mm/nommu.c
-> > @@ -56,7 +56,7 @@ static inline bool security_extensions_enabled(void)
-> >  	if ((read_cpuid_id() & 0x000f0000) == 0x000f0000)
-> >  		return cpuid_feature_extract(CPUID_EXT_PFR1, 4) ||
-> >  			cpuid_feature_extract(CPUID_EXT_PFR1, 20);
-> > -	return 0;
-> > +	return true;
-> 
-> This isn't explained in the commit.  You explain why it should return
-> true or false, but you don't explain why converting this from returning
-> 0, aka false, to returning true is necessary.
-> 
-> >  }
-> >  
-> >  unsigned long setup_vectors_base(void)
-> > diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
-> > index 86ae13b756b5..931e5c2481b5 100644
-> > --- a/drivers/mtd/devices/phram.c
-> > +++ b/drivers/mtd/devices/phram.c
-> > @@ -239,27 +239,26 @@ static int phram_setup(const char *val)
-> >  
-> >  	ret = parse_name(&name, token[0]);
-> >  	if (ret)
-> > -		goto exit;
-> > +		return ret;
-> >  
-> >  	ret = parse_num64(&start, token[1]);
-> >  	if (ret) {
-> > +		kfree(name);
-> >  		parse_err("illegal start address\n");
-> > -		goto parse_err;
-> >  	}
-> >  
-> >  	ret = parse_num64(&len, token[2]);
-> >  	if (ret) {
-> > +		kfree(name);
-> >  		parse_err("illegal device length\n");
-> > -		goto parse_err;
-> >  	}
-> >  
-> >  	ret = register_device(name, start, len);
-> >  	if (!ret)
-> >  		pr_info("%s device: %#llx at %#llx\n", name, len, start);
-> > +	else
-> > +		kfree(name);
-> >  
-> > -parse_err:
-> > -	kfree(name);
-> > -exit:
-> >  	return ret;
-> >  }
-> 
-> At least this partially matches the subject line but it looks unrelated
-> to the other changes.
-> 
+> diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+> index 5b2cd5e58df0..1c777a72bb39 100644
+> --- a/tools/lib/subcmd/Makefile
+> +++ b/tools/lib/subcmd/Makefile
+> @@ -19,8 +19,7 @@ MAKEFLAGS += --no-print-directory
+>  
+>  LIBFILE = $(OUTPUT)libsubcmd.a
+>  
+> -CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+> -CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
+> +CFLAGS := -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
+>  
+>  ifeq ($(DEBUG),0)
+>    ifeq ($(feature-fortify-source), 1)
+> @@ -28,7 +27,9 @@ ifeq ($(DEBUG),0)
+>    endif
+>  endif
+>  
+> -ifeq ($(CC_NO_CLANG), 0)
+> +ifeq ($(DEBUG),1)
+> +  CFLAGS += -O0
+> +else ifeq ($(CC_NO_CLANG), 0)
+>    CFLAGS += -O3
+>  else
+>    CFLAGS += -O6
+> @@ -43,6 +44,8 @@ CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
+>  
+>  CFLAGS += -I$(srctree)/tools/include/
+>  
+> +CFLAGS += $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+> +
+>  SUBCMD_IN := $(OUTPUT)libsubcmd-in.o
+>  
+>  all:
 > -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
-Please igonre this patch. Suppose to send for only one file nommu.c. I have seperated and submitted the patch for chnages in file phram.c and nommu.c. Thanks for review ... :-)
+> 2.23.0
+
+-- 
+
+- Arnaldo
