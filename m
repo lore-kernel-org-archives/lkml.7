@@ -3,86 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9F4CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEDACA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DFC2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EAE020874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388703AbfJ2Ng1 (ORCPT
+        id S2388717AbfJ2Ngl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:36:27 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40051 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbfJ2Ng1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:36:27 -0400
-Received: from mail-yw1-f69.google.com ([209.85.161.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <seth.forshee@canonical.com>)
-        id 1iPRfd-0004jR-4Q
-        for linux-kernel@vger.kernel.org; Tue, 29 Oct 2019 13:36:25 +0000
-Received: by mail-yw1-f69.google.com with SMTP id o130so9797320ywo.17
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 06:36:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rwtNqWivpFIQgbUVsKN05tdEedk/c2ICmFFDz7gAHHg=;
-        b=qzpxkmC7InOE3YiM5zc+JDzcAOdAro9n7gSDsi6b7nQaTU1SikSokVUJZJS3xoHNeq
-         5IwNxsIdxLDQDqDCKQoF0uwr6qWiNHCn5/hNHBa4prcHKfcaTkcPBmS45tMV6K4H9dPH
-         3SLKo487sQWSH342zrsQ6fGnW2B3C77QOx/S0vAgcJZarXUBmekcYde2SQDmpZm+I7oA
-         gz2ruguimmEXfSEgX6G8YNYIDyLQbZrAyXLSbvOknc4SdrivizcHvjcTd9mD+XfERY6f
-         ie+CwEm5dEMGklR8bcn1By24qV7vSVA+DabFNnjfQRDN42bK+CMjqp3TY2aQYU3Uup8s
-         /X0Q==
-X-Gm-Message-State: APjAAAUKHTLfSDvcHi/+9rr9QeK8QfF8E/ovwzhwgPDEf68z5CdZ/jGG
-        A6ndBk2PTdmfmXfLr+Y1PzFDH/6IaCUzjKPCKMoWFHcup+d8L8jMaJQ0tCJlualulka4ZS/7UqQ
-        ybCgqwqRHAV5/wxBa8wPCkYuo7axSJYdn7m29WfeMIQ==
-X-Received: by 2002:a81:500a:: with SMTP id e10mr17707255ywb.58.1572356184087;
-        Tue, 29 Oct 2019 06:36:24 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzWRUgkWNbdDnzVotQDun7zMckaFR1TaoB4O5PCly4//oAwUlzOU76kcVYnSSfbVTEjaG0pKg==
-X-Received: by 2002:a81:500a:: with SMTP id e10mr17707210ywb.58.1572356183528;
-        Tue, 29 Oct 2019 06:36:23 -0700 (PDT)
-Received: from localhost ([2605:a601:ac3:9720:f461:b9b9:429:65bd])
-        by smtp.gmail.com with ESMTPSA id x201sm17900019ywx.34.2019.10.29.06.36.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 06:36:22 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 08:36:21 -0500
-From:   Seth Forshee <seth.forshee@canonical.com>
-To:     Dmitry Tunin <hanipouspilot@gmail.com>
-Cc:     wireless-regdb@lists.infradead.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] Russian entry is incorrect. According to the last
- regulations document of Feb 29, 2016, 160 MHz channels and 802.11ad are
- allowed.
-Message-ID: <20191029133621.GP30813@ubuntu-xps13>
-References: <1566636490-3438-1-git-send-email-hanipouspilot@gmail.com>
+        Tue, 29 Oct 2019 09:36:41 -0400
+Received: from mga09.intel.com ([134.134.136.24]:58801 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388602AbfJ2Ngl (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 09:36:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 06:36:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,244,1569308400"; 
+   d="scan'208";a="211751713"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.210.130]) ([10.254.210.130])
+  by orsmga002.jf.intel.com with ESMTP; 29 Oct 2019 06:36:38 -0700
+Subject: Re: [PATCH v4 5/7] perf report: Sort by sampled cycles percent per
+ block for stdio
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191028013330.18319-1-yao.jin@linux.intel.com>
+ <20191028013330.18319-6-yao.jin@linux.intel.com>
+ <20191029092747.GH28772@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <08921142-6e65-62e3-2a1c-9a78c7bc7d2e@linux.intel.com>
+Date:   Tue, 29 Oct 2019 21:36:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566636490-3438-1-git-send-email-hanipouspilot@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191029092747.GH28772@krava>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 11:48:10AM +0300, Dmitry Tunin wrote:
-> http://rfs-rf.ru/upload/medialibrary/c1a/prilozhenie-1-k-resheniyu-gkrch-_-16_36_03.pdf
-> 
-> Note that there was never a DFS requirement in Russia, but always was
-> NO-OUTDOOR on 5GHz.
-> Maximum power is 200mW that is ~23dBm on all 5GHz channels.
-> Also Russia has never been regulated by ETSI.
-> 
-> EIRP has been reduced by 4dBm because of TPC requirement.
-> 
-> Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
 
-Sorry for the delay. Applied, with some slight adjustments to the commit
-message. Thanks!
+
+On 10/29/2019 5:27 PM, Jiri Olsa wrote:
+> On Mon, Oct 28, 2019 at 09:33:28AM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+>> index 0e27d6830011..7cf137b0451b 100644
+>> --- a/tools/perf/util/hist.c
+>> +++ b/tools/perf/util/hist.c
+>> @@ -758,6 +758,10 @@ struct hist_entry *hists__add_entry_block(struct hists *hists,
+>>   	struct hist_entry entry = {
+>>   		.block_info = block_info,
+>>   		.hists = hists,
+>> +		.ms = {
+>> +			.map = al->map,
+>> +			.sym = al->sym,
+>> +		},
+> 
+> this looks like separated fix, if thats the case
+> please explain the change and move it to separate patch
+> 
+> thanks,
+> jirka
+> 
+
+Sorry, that should be the obsolete code. Thanks so much for pointing 
+this out.
+
+Thanks
+Jin Yao
+
