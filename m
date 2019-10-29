@@ -2,172 +2,163 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04873CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E855CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C575F20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B12621479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eh3Y9Xro"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ryNYsmDL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbfJ2IvR (ORCPT
+        id S1729462AbfJ2Ixg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:51:17 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:33367 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726566AbfJ2IvR (ORCPT
+        Tue, 29 Oct 2019 04:53:36 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59186 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfJ2Ixf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:51:17 -0400
-X-Greylist: delayed 356 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Oct 2019 04:51:16 EDT
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6A1985E7F;
-        Tue, 29 Oct 2019 04:45:20 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 29 Oct 2019 04:45:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=wZYWFgqPL1c2WRcnaF/3gKe5yAeygMaGZr20SfJtc
-        Ro=; b=eh3Y9XroeRVhyb8GKs22A2wm2MHnwDboaZuCNYo9WwerBLWCh6awkkIJV
-        5i8zj+tuks2JA/9lgRaOcTvdxEHKC3aoamv26oepcpVaNNS5UYjvsts3aWggXzPP
-        RF9SRA024hnnMDzXzHsc3UK/OURGvhdb8jSqxeKFKGW0/dj1kagb2/qfpX8PPzdY
-        n9b+oyv5pxy54/iedHny17kFtbSgZw64Mc74tI5TgAeT7MZWwRPgNnhu9FxvOm79
-        F6KaCCtM8l6F93VoOoCkbE3zM4N0L7k4nXT6j1CVsPBlkBIlLOfbgmgkg+KAPpwh
-        PnGBtWaMWoPC0/+T2BKAknHfFdzSQ==
-X-ME-Sender: <xms:H_y3XXen5NUrHCcIwFyo78OpHy6S7XDvbD9mrBSxjvpoqqOrMkmtzA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddttddguddvhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenucfjughrpeffhffvuffkfhggtggu
-    gfgjfgesthekredttderjeenucfhrhhomhepkfguohcuufgthhhimhhmvghluceoihguoh
-    hstghhsehiughoshgthhdrohhrgheqnecuffhomhgrihhnpehgohhoghhlvgdrtghomhdp
-    ghhoohdrghhlpdgrphhpshhpohhtrdgtohhmnecukfhppeduleefrdegjedrudeihedrvd
-    ehudenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhr
-    ghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:H_y3XVZI9tbtbuVLpe1yOas1py-8ulzpCzshT-Pg0-OxeFhVDaHxZQ>
-    <xmx:H_y3XcHSnJizpOU0vUPyIohe9PLUJ0ij7sucjZC8nhtXtY0hJjvYZg>
-    <xmx:H_y3XTmog-pql_WADySoqllekjutCHzV4hPAPjdnYvErG-iTh6QYqA>
-    <xmx:IPy3XZVWfAvMC2KowKjIDNX0Tby_qzPZ96vvH_jfMWp13aQnWUds9g>
-Received: from localhost (unknown [193.47.165.251])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 26A5A8005A;
-        Tue, 29 Oct 2019 04:45:19 -0400 (EDT)
-Date:   Tue, 29 Oct 2019 10:45:17 +0200
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+9ed8f68ab30761f3678e@syzkaller.appspotmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: general protection fault in process_one_work
-Message-ID: <20191029084517.GA24289@splinter>
-References: <0000000000001c46d5059608892f@google.com>
- <CACT4Y+b7nkRO_Q6X3sTWbGU5Y6bGuZPmKzoPL2uoFpA4KCP2hw@mail.gmail.com>
+        Tue, 29 Oct 2019 04:53:35 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9T8rMdP075590;
+        Tue, 29 Oct 2019 03:53:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572339202;
+        bh=GENQOkaFvVatZv1GMFR3zbGCbH5x94AbSDwlQyYRy4k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ryNYsmDLJEX96Q+mU0OivEDViSqNSb3nMrcJpZ1CwikrLprdf3c1ZFwFLFEGyr7Z4
+         bjY4DGY2VwoPy0uOWRd4JCMwAgwubYxlHYWPTXUntK8Ky3GoXdkre/Nmar9eZ/SrHJ
+         sZVM/v/z2jsQ1peboThHmeA9SGFCGu6tzGoGz8ds=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9T8rMG2086926
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 29 Oct 2019 03:53:22 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 29
+ Oct 2019 03:53:10 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 29 Oct 2019 03:53:10 -0500
+Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9T8rIvA090581;
+        Tue, 29 Oct 2019 03:53:18 -0500
+Subject: Re: [PATCH v3 02/14] soc: ti: k3: add navss ringacc driver
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
+        <j-keerthy@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <20191001061704.2399-3-peter.ujfalusi@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <b5f47303-b6d2-190b-d38c-d3557a93b111@ti.com>
+Date:   Tue, 29 Oct 2019 14:22:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACT4Y+b7nkRO_Q6X3sTWbGU5Y6bGuZPmKzoPL2uoFpA4KCP2hw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191001061704.2399-3-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 09:43:27AM +0100, Dmitry Vyukov wrote:
-> On Tue, Oct 29, 2019 at 9:38 AM syzbot
-> <syzbot+9ed8f68ab30761f3678e@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    38207291 bpf: Prepare btf_ctx_access for non raw_tp use case
-> > git tree:       bpf-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=14173c0f600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=41648156aa09be10
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=9ed8f68ab30761f3678e
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+9ed8f68ab30761f3678e@syzkaller.appspotmail.com
-> 
-> +Jiří Pírko, this seems to be related to netdevsim.
+Hi Grygorii,
 
-Will check it.
+[...snip..]
 
-> 
-> > kasan: CONFIG_KASAN_INLINE enabled
-> > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 1 PID: 9149 Comm: kworker/1:3 Not tainted 5.4.0-rc1+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: events nsim_dev_trap_report_work
-> > RIP: 0010:nsim_dev_trap_report_work+0xc4/0xaf0
-> > drivers/net/netdevsim/dev.c:409
-> > Code: 89 45 d0 0f 84 8b 07 00 00 49 bc 00 00 00 00 00 fc ff df e8 3e ae ef
-> > fc 48 8b 45 d0 48 05 68 01 00 00 48 89 45 90 48 c1 e8 03 <42> 80 3c 20 00
-> > 0f 85 b1 09 00 00 48 8b 45 d0 48 8b 98 68 01 00 00
-> > RSP: 0018:ffff88806c98fc90 EFLAGS: 00010a06
-> > RAX: 1bd5a0000000004d RBX: 0000000000000000 RCX: ffffffff84836e22
-> > RDX: 0000000000000000 RSI: ffffffff84836db2 RDI: 0000000000000001
-> > RBP: ffff88806c98fd30 R08: ffff88806c9863c0 R09: ffffed100d75f3d9
-> > R10: ffffed100d75f3d8 R11: ffff88806baf9ec7 R12: dffffc0000000000
-> > R13: ffff88806baf9ec0 R14: ffff8880a9a13900 R15: ffff8880ae934500
-> > FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 00007efdd0c9e000 CR3: 000000009cc1b000 CR4: 00000000001406e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >   process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-> >   worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-> >   kthread+0x361/0x430 kernel/kthread.c:255
-> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > Modules linked in:
-> > ---[ end trace ba29cd1c27f63d86 ]---
-> > RIP: 0010:nsim_dev_trap_report_work+0xc4/0xaf0
-> > drivers/net/netdevsim/dev.c:409
-> > Code: 89 45 d0 0f 84 8b 07 00 00 49 bc 00 00 00 00 00 fc ff df e8 3e ae ef
-> > fc 48 8b 45 d0 48 05 68 01 00 00 48 89 45 90 48 c1 e8 03 <42> 80 3c 20 00
-> > 0f 85 b1 09 00 00 48 8b 45 d0 48 8b 98 68 01 00 00
-> > RSP: 0018:ffff88806c98fc90 EFLAGS: 00010a06
-> > RAX: 1bd5a0000000004d RBX: 0000000000000000 RCX: ffffffff84836e22
-> > RDX: 0000000000000000 RSI: ffffffff84836db2 RDI: 0000000000000001
-> > RBP: ffff88806c98fd30 R08: ffff88806c9863c0 R09: ffffed100d75f3d9
-> > R10: ffffed100d75f3d8 R11: ffff88806baf9ec7 R12: dffffc0000000000
-> > R13: ffff88806baf9ec0 R14: ffff8880a9a13900 R15: ffff8880ae934500
-> > FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 00007efdd0c9e000 CR3: 000000009cc1b000 CR4: 00000000001406e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000001c46d5059608892f%40google.com.
+> +
+> +static int k3_ringacc_ring_access_io(struct k3_ring *ring, void *elem,
+> +				     enum k3_ringacc_access_mode access_mode)
+> +{
+> +	void __iomem *ptr;
+> +
+> +	switch (access_mode) {
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
+> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
+> +		ptr = (void __iomem *)&ring->fifos->head_data;
+> +		break;
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
+> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
+> +		ptr = (void __iomem *)&ring->fifos->tail_data;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	ptr += k3_ringacc_ring_get_fifo_pos(ring);
+> +
+> +	switch (access_mode) {
+> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
+> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
+> +		dev_dbg(ring->parent->dev,
+> +			"memcpy_fromio(x): --> ptr(%p), mode:%d\n", ptr,
+> +			access_mode);
+> +		memcpy_fromio(elem, ptr, (4 << ring->elm_size));
+
+Does this work for any elem_size < 64 or any element size not aligned with 64?
+
+IIUC, in message mode, ring element should be inserted in a single burst write
+and there is no doorbell facility. If the above conditions are not met, we are
+supposed to use proxy.
+
+In this driver, I don't see any restrictions on the ring element size for
+message mode and directly written to io. Am I missing something?
+
+Thanks and regards,
+Lokesh
+
+> +		ring->occ--;
+> +		break;
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
+> +		dev_dbg(ring->parent->dev,
+> +			"memcpy_toio(x): --> ptr(%p), mode:%d\n", ptr,
+> +			access_mode);
+> +		memcpy_toio(ptr, elem, (4 << ring->elm_size));
+> +		ring->free--;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	dev_dbg(ring->parent->dev, "free%d index%d occ%d index%d\n", ring->free,
+> +		ring->windex, ring->occ, ring->rindex);
+> +	return 0;
+> +}
+> +
+> +static int k3_ringacc_ring_push_head_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_PUSH_HEAD);
+> +}
+> +
+> +static int k3_ringacc_ring_push_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_PUSH_TAIL);
+> +}
+> +
+> +static int k3_ringacc_ring_pop_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_POP_HEAD);
+> +}
+> +
+> +static int k3_ringacc_ring_pop_tail_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_POP_HEAD);
+> +}
+> +
