@@ -2,204 +2,175 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF05CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42CFCA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B738208C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A639208C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:13:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iasc2Z6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbfJ2ABC convert rfc822-to-8bit (ORCPT
+        id S1726332AbfJ2AM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 20:01:02 -0400
-Received: from mail-oln040092065065.outbound.protection.outlook.com ([40.92.65.65]:7758
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726834AbfJ2ABB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 20:01:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ju1Bz5JzX5mxicGnxLmWsFEiFzuU2IrMqDqXp1v29V6PSC2yIiWptLijh9w4iJaPr172XTMGb51WaWIZHSL6wkDq5sWxqgXQNS7APJA1d8Kvb4cOxodEMYdnxQ7LLcHGGZWamkyYQRLhykH26Me+2vdJ/b/TbJuiVPM+2Jp6GhA1jwpW0njyVSxoKt6G+3O5otYTo48VhyY9E0QKS8hqzYQVdzpNtOmyCgD2aPIgsloVVjR8zFpwFY3VeTpYbQ16oC+74eTcBnE/71DsWS4uQV/4MhJWWoDXvyvLm9zQiDP43ZbP+cY/jE1KyS+zC27QZqBKHa17d0m4omgGDDoj4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BMl2D0+OlthSlgFyvfZCK08LnPRn19RFu0oI3f0BSQo=;
- b=UfAovlTV7xnhgIhc3KRbngwL/evspBkiLjKv1Sbq233Vc9XfFHNUz8fYr9t2asGp2I9Cwn61oZ6Oo3fnvEDfQCTIQa7YYgQKI5peqBJZ4Y+WQgzx+tTTcM9LHh8cvnftQ4/m5zJpr3D6yVaNXycSjCf44Q7S5IbzgrMrXmUGdW2NnhuAxWOz9FcmnZcCTk87O4xzGiRA1xNSyj6tGvS9ulmPuTVJhLq2AM9HSERaEclgtfs5NGYLbGmq286jL1opSl/u9ero8QAUV6jcLHfQbhtWjFwtYKdlMocp6C69aT7IGRx1qEpSmYBj3t2eOusiUumIbjOwNPW86YQuwrKDdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from VE1EUR01FT033.eop-EUR01.prod.protection.outlook.com
- (10.152.2.57) by VE1EUR01HT219.eop-EUR01.prod.protection.outlook.com
- (10.152.3.237) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Tue, 29 Oct
- 2019 00:00:54 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.2.51) by
- VE1EUR01FT033.mail.protection.outlook.com (10.152.2.230) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20 via Frontend Transport; Tue, 29 Oct 2019 00:00:54 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b1cf:db6f:95fc:84cc]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b1cf:db6f:95fc:84cc%7]) with mapi id 15.20.2387.025; Tue, 29 Oct 2019
- 00:00:53 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mon, 28 Oct 2019 20:12:56 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41866 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfJ2AM4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 20:12:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p26so4014155pfq.8;
+        Mon, 28 Oct 2019 17:12:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=A5yaNWv/seSl0C8AghK+VDA/9mfH1ZBe7Dx7Tv/glfs=;
+        b=Iasc2Z6T19iMWg44i7udDoIG+WipYhIzrHUEMTfbXZzB6OmNtDS+/BoCJ6NRSYpx+r
+         YuJ2L9Gk5ELKHCYyEgX23prPM8HURNK4bXD8seGpd3uXji+JDjhtWffOMixxw79aMIz6
+         qrmy3Sq7gE3cpPV/LQO6slKe+axxu3zCIn9KBrNegcEfFe/zMgOa3GW4kgfn1r3SI29a
+         T6DYoXsuyEG3rWRF0nSKf89Z09zd3PtuvANpCLkH2IvLTgpfzCq/XLekWTm8IwJlw/A3
+         WhIgGB1cQ2DlACH8j4CANJ9MeEzwjnpZJWU+GeKxz1OhWN2WSeGOGFn/2RX+HKP8rCuJ
+         Kdng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=A5yaNWv/seSl0C8AghK+VDA/9mfH1ZBe7Dx7Tv/glfs=;
+        b=NksV4zKaeLkCI7GBuNiWm4buPrzO3nMUAEmD/JNQQpuWhiloB43vYlWZp6WVrh0KtD
+         QatkSnOJEC5Ln65qEJ+eh0rtAM5hQrnxuPAi4umIWJmwGEW9rsI0sdspMmUjZ1hXjEIL
+         MJ3xUz149tsDhbf/8lxzYxSePjXMG4UwkIf+sbeDu03tF6XASE/OVnKMH3nOSoHvk/JL
+         d9Fczd/8gSrX3Lp/ATvW3Uwxm5Aq4Y2Myf0Z+LfRZR6YmuaFTWirL7TqwUjn49ONQKU/
+         rJP/1rA9JoogtcweIRJLqZ9eeojG2vm+vjKSzm8QbufLekTQMqAU2RqK+UW0wTppZ4SG
+         4BkQ==
+X-Gm-Message-State: APjAAAX1PovHt7kOxLiKYjE53PwuYJ9OeehXz/z41FGh0g10ZZ8OkjM5
+        4ecnp/0pABQbyffm57DVqQJ8MHqe
+X-Google-Smtp-Source: APXvYqxxDw4ncyQIZPOiJf5E3XENtqZsrbt+OFXIeyq46XTgCttk1fe12p28+YLNCsYlI7hzlyIQfQ==
+X-Received: by 2002:a17:90a:8a0d:: with SMTP id w13mr2412350pjn.137.1572307974732;
+        Mon, 28 Oct 2019 17:12:54 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id c12sm7702901pfp.67.2019.10.28.17.12.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 17:12:53 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 17:12:50 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
         Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-CC:     Jonas Karlman <jonas@kwiboo.se>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/3] media: hantro: Do not reorder H264 scaling list
-Thread-Topic: [PATCH v2 3/3] media: hantro: Do not reorder H264 scaling list
-Thread-Index: AQHVjevu/7KXRpoZcUGJOmzIePYDDA==
-Date:   Tue, 29 Oct 2019 00:00:53 +0000
-Message-ID: <HE1PR06MB4011B2DED416807CD9C9B90EAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB4011D3B8C200D13829648D86AC660@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20191029000033.13540-1-jonas@kwiboo.se>
-In-Reply-To: <20191029000033.13540-1-jonas@kwiboo.se>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM3PR07CA0087.eurprd07.prod.outlook.com
- (2603:10a6:207:6::21) To HE1PR06MB4011.eurprd06.prod.outlook.com
- (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:D4576FFCA123D6ACDC123D0D4F4AA908FB62F07E8F9E1E044ED8CE59DC327AC7;UpperCasedChecksum:9321E4B87097A97855E24D9EEAEF9A58004E6A509A6C46CAA57E76B84A880125;SizeAsReceived:7846;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [lQPhitlyDiiwles6/EAoJAOFU+MEIIJI]
-x-microsoft-original-message-id: <20191029000033.13540-3-jonas@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: VE1EUR01HT219:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mkFKYekyxEJjdR23pdCsNs05hUHn/NVG8Cqy2WTenWai9poVgPpC2mxO80xXxmQPiVo/egFeIUpuclHlDpb1OgYRXLsBloB74NPwvfr2W8tBmr0KB8EyU7uTnvdDpfPa32FS9H2xBT1Os5aaMBxg8S/LA0RNv0TeqB93CT2XmvJGDSf7Ps1rhht62cHMaq2K
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:SUN4I LOW RES ADC ATTACHED TABLET KEYS DRIVER" 
+        <linux-input@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] input: sun4i-lradc-keys: Add wakup support
+Message-ID: <20191029001250.GB57214@dtor-ws>
+References: <20191028221502.3503543-1-megous@megous.com>
+ <20191028233828.GA57214@dtor-ws>
+ <20191028235626.5afvszxtppsieywi@core.my.home>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb563c42-bbeb-450c-d0e2-08d75c0310f4
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 00:00:53.9259
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT219
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191028235626.5afvszxtppsieywi@core.my.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Scaling list supplied from userspace should be in matrix order
-and can be used without applying the inverse scanning process.
+On Tue, Oct 29, 2019 at 12:56:26AM +0100, Ondřej Jirman wrote:
+> Hello Dmitry,
+> 
+> On Mon, Oct 28, 2019 at 04:38:28PM -0700, Dmitry Torokhov wrote:
+> > Hi Ondrej,
+> > 
+> > On Mon, Oct 28, 2019 at 11:15:02PM +0100, Ondrej Jirman wrote:
+> > > Allow the driver to wakeup the system on key press.
+> > > 
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > > ---
+> > >  drivers/input/keyboard/sun4i-lradc-keys.c | 22 ++++++++++++++++++----
+> > >  1 file changed, 18 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/input/keyboard/sun4i-lradc-keys.c b/drivers/input/keyboard/sun4i-lradc-keys.c
+> > > index 4a796bed48ac..bba679d7b54b 100644
+> > > --- a/drivers/input/keyboard/sun4i-lradc-keys.c
+> > > +++ b/drivers/input/keyboard/sun4i-lradc-keys.c
+> > > @@ -22,6 +22,8 @@
+> > >  #include <linux/module.h>
+> > >  #include <linux/of_platform.h>
+> > >  #include <linux/platform_device.h>
+> > > +#include <linux/pm_wakeirq.h>
+> > > +#include <linux/pm_wakeup.h>
+> > >  #include <linux/regulator/consumer.h>
+> > >  #include <linux/slab.h>
+> > >  
+> > > @@ -226,8 +228,7 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
+> > >  {
+> > >  	struct sun4i_lradc_data *lradc;
+> > >  	struct device *dev = &pdev->dev;
+> > > -	int i;
+> > > -	int error;
+> > > +	int i, error, irq;
+> > >  
+> > >  	lradc = devm_kzalloc(dev, sizeof(struct sun4i_lradc_data), GFP_KERNEL);
+> > >  	if (!lradc)
+> > > @@ -272,8 +273,13 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
+> > >  	if (IS_ERR(lradc->base))
+> > >  		return PTR_ERR(lradc->base);
+> > >  
+> > > -	error = devm_request_irq(dev, platform_get_irq(pdev, 0),
+> > > -				 sun4i_lradc_irq, 0,
+> > > +	irq = platform_get_irq(pdev, 0);
+> > > +	if (irq < 0) {
+> > > +		dev_err(&pdev->dev, "Failed to get IRQ\n");
+> > > +		return irq;
+> > > +	}
+> > > +
+> > > +	error = devm_request_irq(dev, irq, sun4i_lradc_irq, 0,
+> > >  				 "sun4i-a10-lradc-keys", lradc);
+> > >  	if (error)
+> > >  		return error;
+> > > @@ -282,6 +288,14 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
+> > >  	if (error)
+> > >  		return error;
+> > >  
+> > > +	device_init_wakeup(dev, true);
+> > 
+> > I do not think we want to do this unconditionally. Can we maybe key off
+> > "wakeup-source" device property.
+> 
+> Sure thing.
+> 
+> > > +
+> > > +	error = dev_pm_set_wake_irq(dev, irq);
+> > > +	if (error) {
+> > > +		dev_err(dev, "Could not set wake IRQ\n");
+> > > +		return error;
+> > > +	}
+> > > +
+> > 
+> > I wonder if we could teach platform driver core to handle this for us.
+> 
+> Not sure, some drivers do enable/disable wake_irq by hand in suspend/resume
+> callbacks, so it would probably need to be opt-in somehow. I guess calling the
+> function like this is one way to make it opt-in.
+> 
+> The other way may be by passing a flag somewhere, like to
+> request_threaded_irq. Did you have something more concrete in mind?
 
-The HW also only support 8x8 scaling list for the Y component, indices 0
-and 1 in the scaling list supplied from userspace.
+I think it is perfectly fine to continue using enable_irq_wake and
+disable_irq_wake from the driver while marking irq as being wake irq
+form the core.
 
-Remove reordering and write the scaling matrix in an order expected by
-the VPU, also only allocate memory for the two 8x8 lists supported.
+Thanks.
 
-Fixes: a9471e25629b ("media: hantro: Add core bits to support H264 decoding")
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
-Changes in v2:
-  - use swab32() (Philipp)
----
- drivers/staging/media/hantro/hantro_h264.c | 51 +++++-----------------
- 1 file changed, 12 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
-index 02cbe7761769..694a330f508e 100644
---- a/drivers/staging/media/hantro/hantro_h264.c
-+++ b/drivers/staging/media/hantro/hantro_h264.c
-@@ -20,7 +20,7 @@
- /* Size with u32 units. */
- #define CABAC_INIT_BUFFER_SIZE		(460 * 2)
- #define POC_BUFFER_SIZE			34
--#define SCALING_LIST_SIZE		(6 * 16 + 6 * 64)
-+#define SCALING_LIST_SIZE		(6 * 16 + 2 * 64)
- 
- #define HANTRO_CMP(a, b) ((a) < (b) ? -1 : 1)
- 
-@@ -194,23 +194,6 @@ static const u32 h264_cabac_table[] = {
- 	0x1f0c2517, 0x1f261440
- };
- 
--/*
-- * NOTE: The scaling lists are in zig-zag order, apply inverse scanning process
-- * to get the values in matrix order. In addition, the hardware requires bytes
-- * swapped within each subsequent 4 bytes. Both arrays below include both
-- * transformations.
-- */
--static const u32 zig_zag_4x4[] = {
--	3, 2, 7, 11, 6, 1, 0, 5, 10, 15, 14, 9, 4, 8, 13, 12
--};
--
--static const u32 zig_zag_8x8[] = {
--	3, 2, 11, 19, 10, 1, 0, 9, 18, 27, 35, 26, 17, 8, 7, 6,
--	15, 16, 25, 34, 43, 51, 42, 33, 24, 23, 14, 5, 4, 13, 22, 31,
--	32, 41, 50, 59, 58, 49, 40, 39, 30, 21, 12, 20, 29, 38, 47, 48,
--	57, 56, 55, 46, 37, 28, 36, 45, 54, 63, 62, 53, 44, 52, 61, 60
--};
--
- static void
- reorder_scaling_list(struct hantro_ctx *ctx)
- {
-@@ -218,33 +201,23 @@ reorder_scaling_list(struct hantro_ctx *ctx)
- 	const struct v4l2_ctrl_h264_scaling_matrix *scaling = ctrls->scaling;
- 	const size_t num_list_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4);
- 	const size_t list_len_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4[0]);
--	const size_t num_list_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8);
- 	const size_t list_len_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8[0]);
- 	struct hantro_h264_dec_priv_tbl *tbl = ctx->h264_dec.priv.cpu;
--	u8 *dst = tbl->scaling_list;
--	const u8 *src;
-+	u32 *dst = (u32 *)tbl->scaling_list;
-+	const u32 *src;
- 	int i, j;
- 
--	BUILD_BUG_ON(ARRAY_SIZE(zig_zag_4x4) != list_len_4x4);
--	BUILD_BUG_ON(ARRAY_SIZE(zig_zag_8x8) != list_len_8x8);
--	BUILD_BUG_ON(ARRAY_SIZE(tbl->scaling_list) !=
--		     num_list_4x4 * list_len_4x4 +
--		     num_list_8x8 * list_len_8x8);
--
--	src = &scaling->scaling_list_4x4[0][0];
--	for (i = 0; i < num_list_4x4; ++i) {
--		for (j = 0; j < list_len_4x4; ++j)
--			dst[zig_zag_4x4[j]] = src[j];
--		src += list_len_4x4;
--		dst += list_len_4x4;
-+	for (i = 0; i < num_list_4x4; i++) {
-+		src = (u32 *)&scaling->scaling_list_4x4[i];
-+		for (j = 0; j < list_len_4x4 / 4; j++)
-+			*dst++ = swab32(src[j]);
- 	}
- 
--	src = &scaling->scaling_list_8x8[0][0];
--	for (i = 0; i < num_list_8x8; ++i) {
--		for (j = 0; j < list_len_8x8; ++j)
--			dst[zig_zag_8x8[j]] = src[j];
--		src += list_len_8x8;
--		dst += list_len_8x8;
-+	/* Only Intra/Inter Y lists */
-+	for (i = 0; i < 2; i++) {
-+		src = (u32 *)&scaling->scaling_list_8x8[i];
-+		for (j = 0; j < list_len_8x8 / 4; j++)
-+			*dst++ = swab32(src[j]);
- 	}
- }
- 
 -- 
-2.17.1
-
+Dmitry
