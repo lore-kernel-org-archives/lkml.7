@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73384CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C956ECA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5AC20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16A520679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390637AbfJ2Q6q (ORCPT
+        id S2390661AbfJ2Q6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:58:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:54558 "EHLO foss.arm.com"
+        Tue, 29 Oct 2019 12:58:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:54582 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbfJ2Q6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 12:58:45 -0400
+        id S1727279AbfJ2Q6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 12:58:51 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F44C337;
-        Tue, 29 Oct 2019 09:58:45 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A35A4AC;
+        Tue, 29 Oct 2019 09:58:50 -0700 (PDT)
 Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C11D13F71F;
-        Tue, 29 Oct 2019 09:58:42 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0D7133F71F;
+        Tue, 29 Oct 2019 09:58:47 -0700 (PDT)
 From:   Mark Rutland <mark.rutland@arm.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        Steven Rostedt <rostedt@goodmis.org>
+To:     linux-arm-kernel@lists.infradead.org, Jessica Yu <jeyu@kernel.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
 Cc:     linux-kernel@vger.kernel.org, amit.kachhap@arm.com,
-        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
-        James.Bottomley@HansenPartnership.com, james.morse@arm.com,
-        jeyu@kernel.org, jpoimboe@redhat.com, jthierry@redhat.com,
+        catalin.marinas@arm.com, duwe@suse.de, james.morse@arm.com,
+        jpoimboe@redhat.com, jthierry@redhat.com,
         linux-parisc@vger.kernel.org, mark.rutland@arm.com,
-        mingo@redhat.com, peterz@infradead.org, svens@stackframe.org,
-        takahiro.akashi@linaro.org, will@kernel.org
-Subject: [PATCHv2 1/8] ftrace: add ftrace_init_nop()
-Date:   Tue, 29 Oct 2019 16:58:25 +0000
-Message-Id: <20191029165832.33606-2-mark.rutland@arm.com>
+        mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
+        svens@stackframe.org, takahiro.akashi@linaro.org, will@kernel.org
+Subject: [PATCHv2 2/8] module/ftrace: handle patchable-function-entry
+Date:   Tue, 29 Oct 2019 16:58:26 +0000
+Message-Id: <20191029165832.33606-3-mark.rutland@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20191029165832.33606-1-mark.rutland@arm.com>
 References: <20191029165832.33606-1-mark.rutland@arm.com>
@@ -47,130 +47,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Architectures may need to perform special initialization of ftrace
-callsites, and today they do so by special-casing ftrace_make_nop() when
-the expected branch address is MCOUNT_ADDR. In some cases (e.g. for
-patchable-function-entry), we don't have an mcount-like symbol and don't
-want a synthetic MCOUNT_ADDR, but we may need to perform some
-initialization of callsites.
+When using patchable-function-entry, the compiler will record the
+callsites into a section named "__patchable_function_entries" rather
+than "__mcount_loc". Let's abstract this difference behind a new
+FTRACE_CALLSITE_SECTION, so that architectures don't have to handle this
+explicitly (e.g. with custom module linker scripts).
 
-To make it possible to separate initialization from runtime
-modification, and to handle cases without an mcount-like symbol, this
-patch adds an optional ftrace_init_nop() function that architectures can
-implement, which does not pass a branch address.
+As parisc currently handles this explicitly, it is fixed up accordingly,
+with its custom linker script removed. Since FTRACE_CALLSITE_SECTION is
+only defined when DYNAMIC_FTRACE is selected, the parisc module loading
+code is updated to only use the definition in that case. When
+DYNAMIC_FTRACE is not selected, modules shouldn't have this section, so
+this removes some redundant work in that case.
 
-Where an architecture does not provide ftrace_init_nop(), we will fall
-back to the existing behaviour of calling ftrace_make_nop() with
-MCOUNT_ADDR.
-
-At the same time, ftrace_code_disable() is renamed to
-ftrace_nop_initialize() to make it clearer that it is intended to
-intialize a callsite into a disabled state, and is not for disabling a
-callsite that has been runtime enabled. The kerneldoc description of rec
-arguments is updated to cover non-mcount callsites.
+I built parisc generic-{32,64}bit_defconfig with DYNAMIC_FTRACE enabled,
+and verified that the section made it into the .ko files for modules.
 
 Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Helge Deller <deller@gmx.de>
 Cc: Ingo Molnar <mingo@redhat.com>
+Cc: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Jessica Yu <jeyu@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Torsten Duwe <duwe@suse.de>
+Cc: Sven Schnelle <svens@stackframe.org>
+Cc: linux-parisc@vger.kernel.org
 ---
- include/linux/ftrace.h | 35 ++++++++++++++++++++++++++++++++---
- kernel/trace/ftrace.c  |  6 +++---
- 2 files changed, 35 insertions(+), 6 deletions(-)
+ arch/parisc/Makefile          |  1 -
+ arch/parisc/kernel/module.c   | 10 +++++++---
+ arch/parisc/kernel/module.lds |  7 -------
+ include/linux/ftrace.h        |  5 +++++
+ kernel/module.c               |  2 +-
+ 5 files changed, 13 insertions(+), 12 deletions(-)
+ delete mode 100644 arch/parisc/kernel/module.lds
 
+diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
+index 36b834f1c933..dca8f2de8cf5 100644
+--- a/arch/parisc/Makefile
++++ b/arch/parisc/Makefile
+@@ -60,7 +60,6 @@ KBUILD_CFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY=1 \
+ 		 -DFTRACE_PATCHABLE_FUNCTION_SIZE=$(NOP_COUNT)
+ 
+ CC_FLAGS_FTRACE := -fpatchable-function-entry=$(NOP_COUNT),$(shell echo $$(($(NOP_COUNT)-1)))
+-KBUILD_LDS_MODULE += $(srctree)/arch/parisc/kernel/module.lds
+ endif
+ 
+ OBJCOPY_FLAGS =-O binary -R .note -R .comment -S
+diff --git a/arch/parisc/kernel/module.c b/arch/parisc/kernel/module.c
+index ac5f34993b53..1c50093e2ebe 100644
+--- a/arch/parisc/kernel/module.c
++++ b/arch/parisc/kernel/module.c
+@@ -43,6 +43,7 @@
+ #include <linux/elf.h>
+ #include <linux/vmalloc.h>
+ #include <linux/fs.h>
++#include <linux/ftrace.h>
+ #include <linux/string.h>
+ #include <linux/kernel.h>
+ #include <linux/bug.h>
+@@ -862,7 +863,7 @@ int module_finalize(const Elf_Ehdr *hdr,
+ 	const char *strtab = NULL;
+ 	const Elf_Shdr *s;
+ 	char *secstrings;
+-	int err, symindex = -1;
++	int symindex = -1;
+ 	Elf_Sym *newptr, *oldptr;
+ 	Elf_Shdr *symhdr = NULL;
+ #ifdef DEBUG
+@@ -946,11 +947,13 @@ int module_finalize(const Elf_Ehdr *hdr,
+ 			/* patch .altinstructions */
+ 			apply_alternatives(aseg, aseg + s->sh_size, me->name);
+ 
++#ifdef CONFIG_DYNAMIC_FTRACE
+ 		/* For 32 bit kernels we're compiling modules with
+ 		 * -ffunction-sections so we must relocate the addresses in the
+-		 *__mcount_loc section.
++		 *  ftrace callsite section.
+ 		 */
+-		if (symindex != -1 && !strcmp(secname, "__mcount_loc")) {
++		if (symindex != -1 && !strcmp(secname, FTRACE_CALLSITE_SECTION)) {
++			int err;
+ 			if (s->sh_type == SHT_REL)
+ 				err = apply_relocate((Elf_Shdr *)sechdrs,
+ 							strtab, symindex,
+@@ -962,6 +965,7 @@ int module_finalize(const Elf_Ehdr *hdr,
+ 			if (err)
+ 				return err;
+ 		}
++#endif
+ 	}
+ 	return 0;
+ }
+diff --git a/arch/parisc/kernel/module.lds b/arch/parisc/kernel/module.lds
+deleted file mode 100644
+index 1a9a92aca5c8..000000000000
+--- a/arch/parisc/kernel/module.lds
++++ /dev/null
+@@ -1,7 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-
+-SECTIONS {
+-	__mcount_loc : {
+-		*(__patchable_function_entries)
+-	}
+-}
 diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 8a8cb3c401b2..9867d90d635e 100644
+index 9867d90d635e..9141f2263286 100644
 --- a/include/linux/ftrace.h
 +++ b/include/linux/ftrace.h
-@@ -499,7 +499,7 @@ static inline int ftrace_disable_ftrace_graph_caller(void) { return 0; }
- /**
-  * ftrace_make_nop - convert code into nop
-  * @mod: module structure if called by module load initialization
-- * @rec: the mcount call site record
-+ * @rec: the call site record (e.g. mcount/fentry)
-  * @addr: the address that the call site should be calling
-  *
-  * This is a very sensitive operation and great care needs
-@@ -520,9 +520,38 @@ static inline int ftrace_disable_ftrace_graph_caller(void) { return 0; }
- extern int ftrace_make_nop(struct module *mod,
- 			   struct dyn_ftrace *rec, unsigned long addr);
+@@ -738,6 +738,11 @@ static inline unsigned long get_lock_parent_ip(void)
  
-+
-+/**
-+ * ftrace_init_nop - initialize a nop call site
-+ * @mod: module structure if called by module load initialization
-+ * @rec: the call site record (e.g. mcount/fentry)
-+ *
-+ * This is a very sensitive operation and great care needs
-+ * to be taken by the arch.  The operation should carefully
-+ * read the location, check to see if what is read is indeed
-+ * what we expect it to be, and then on success of the compare,
-+ * it should write to the location.
-+ *
-+ * The code segment at @rec->ip should contain the contents created by
-+ * the compiler
-+ *
-+ * Return must be:
-+ *  0 on success
-+ *  -EFAULT on error reading the location
-+ *  -EINVAL on a failed compare of the contents
-+ *  -EPERM  on error writing to the location
-+ * Any other value will be considered a failure.
-+ */
-+#ifndef ftrace_init_nop
-+static inline int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
-+{
-+	return ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-+}
+ #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+ extern void ftrace_init(void);
++#ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
++#define FTRACE_CALLSITE_SECTION	"__patchable_function_entries"
++#else
++#define FTRACE_CALLSITE_SECTION	"__mcount_loc"
 +#endif
-+
- /**
-  * ftrace_make_call - convert a nop call site into a call to addr
-- * @rec: the mcount call site record
-+ * @rec: the call site record (e.g. mcount/fentry)
-  * @addr: the address that the call site should call
-  *
-  * This is a very sensitive operation and great care needs
-@@ -545,7 +574,7 @@ extern int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr);
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
- /**
-  * ftrace_modify_call - convert from one addr to another (no nop)
-- * @rec: the mcount call site record
-+ * @rec: the call site record (e.g. mcount/fentry)
-  * @old_addr: the address expected to be currently called to
-  * @addr: the address to change to
-  *
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f296d89be757..5259d4dea675 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -2494,14 +2494,14 @@ struct dyn_ftrace *ftrace_rec_iter_record(struct ftrace_rec_iter *iter)
- }
- 
- static int
--ftrace_code_disable(struct module *mod, struct dyn_ftrace *rec)
-+ftrace_nop_initialize(struct module *mod, struct dyn_ftrace *rec)
- {
- 	int ret;
- 
- 	if (unlikely(ftrace_disabled))
- 		return 0;
- 
--	ret = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-+	ret = ftrace_init_nop(mod, rec);
- 	if (ret) {
- 		ftrace_bug_type = FTRACE_BUG_INIT;
- 		ftrace_bug(ret, rec);
-@@ -2943,7 +2943,7 @@ static int ftrace_update_code(struct module *mod, struct ftrace_page *new_pgs)
- 			 * to the NOP instructions.
- 			 */
- 			if (!__is_defined(CC_USING_NOP_MCOUNT) &&
--			    !ftrace_code_disable(mod, p))
-+			    !ftrace_nop_initialize(mod, p))
- 				break;
- 
- 			update_cnt++;
+ #else
+ static inline void ftrace_init(void) { }
+ #endif
+diff --git a/kernel/module.c b/kernel/module.c
+index ff2d7359a418..acf7962936c4 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3222,7 +3222,7 @@ static int find_module_sections(struct module *mod, struct load_info *info)
+ #endif
+ #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+ 	/* sechdrs[0].sh_size is always zero */
+-	mod->ftrace_callsites = section_objs(info, "__mcount_loc",
++	mod->ftrace_callsites = section_objs(info, FTRACE_CALLSITE_SECTION,
+ 					     sizeof(*mod->ftrace_callsites),
+ 					     &mod->num_ftrace_callsites);
+ #endif
 -- 
 2.11.0
 
