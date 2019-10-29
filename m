@@ -2,121 +2,105 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93376CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FBCCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7051E20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AEE820717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:29:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzNlAfDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390406AbfJ2Q1Y (ORCPT
+        id S2390419AbfJ2Q3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:27:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36918 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390320AbfJ2Q1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 12:27:23 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7A71B81F0E
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 16:27:23 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id s17so8726519wrp.17
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 09:27:23 -0700 (PDT)
+        Tue, 29 Oct 2019 12:29:42 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33196 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728902AbfJ2Q3l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 12:29:41 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c184so9966592pfb.0;
+        Tue, 29 Oct 2019 09:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xcQIFhsCdgVLUN4chM/avgVmRT0noW2+1LKiFI0840Y=;
+        b=HzNlAfDOJEMBmRd2dz4GOmKkwC1qWRfUq1GuD0BTJDUBhVbE2nqwT5qzmAQbVhXWrS
+         QhjJx/py+dd0bKbwmJ7O6/1Ws9Ph8mSHScMI/QnzGCs/OEeoE8dIB4t0b9wDaxCaZ9Sf
+         DZ4Z0GtIeCLvcF9uaIc0CY5KaJHfz9iNUuuYThhAuV/2ftXl+nPvJFETNqWYS5awMFCx
+         9MCr3do6Mo/AEJ5GS0waECIdWb+aPC7ufepbBY98r6BgSLJCDGstsllVuwn8d2bQXDot
+         inFXBFvv82gKhYLJQDOOH0z4o6mEgAi6yiC1EVVq2IaFWFs03QqD3KoWvRCeHjQPZafi
+         llnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C6bDuPajdG9JVS65/nNfvWestag5Xwy94+uZABzDGas=;
-        b=nNIfJevx+JpxngVXP2SCnIKALVnfW3mKpRPXB42VVXUNcWaKjIb3tFCScqPMLDEZ3U
-         U/mD6iN+9Ww0dU0mCVf8YxoodRJm9aTTpEcFbDNytSsh7u955CDmASZsOf1XxtVVuW0H
-         DsvSFaGqNFdRenIz2OhQhPLNYCI24bliJLBpRnd3fCHafqqLGc3yYiAgMb6YaWSgOzQJ
-         1qh8Qk/in4wz1Vpxiq6sadtGi8RqZmc/ZOiZdjCdjf75EzKy2L/9AoL+6q4HE3Vgc8iU
-         Y6otZ6S7lFnBdh8UlJtghI2cTkT7ujsT/mdw+4y/pxiNJNmZ2Muwglpi+1qkmtEp2uds
-         u8WQ==
-X-Gm-Message-State: APjAAAWgKAnVpnBqm/OnylcnyfyOtuQ1ebiaETDk7nUJo20KEbP+Rpzo
-        3gQ+JR+SjGyQMwtIu8rcDaBYKIyIHX469BkbvBF4ieF2AQ/lUUEKdg5OpO/CvYBH3xEucc0d570
-        xabk7lHviJtMwWfIJ4li6nAk/
-X-Received: by 2002:a7b:c924:: with SMTP id h4mr5203714wml.143.1572366442237;
-        Tue, 29 Oct 2019 09:27:22 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwqcoHXB/eGlbAvP8/zQv1DhxCc9oHsJCpQ0Me1i12d1jrxIWteVIy4TZqjG4WQmNpAjkkq4g==
-X-Received: by 2002:a7b:c924:: with SMTP id h4mr5203696wml.143.1572366441980;
-        Tue, 29 Oct 2019 09:27:21 -0700 (PDT)
-Received: from steredhat (94.222.26.109.rev.sfr.net. [109.26.222.94])
-        by smtp.gmail.com with ESMTPSA id v10sm4015055wmg.48.2019.10.29.09.27.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xcQIFhsCdgVLUN4chM/avgVmRT0noW2+1LKiFI0840Y=;
+        b=tBnAlmLw8AcnVWCJziTGNpfS+FMoI6irq7/Uct1TWQ3Ah7bnhEE1HrQFEh8Q6tgRgm
+         Ztvit62XUL5UxP/4HFG0Kxv1b9+B+IvicYY/wVJDUCc/pzoIKIcrcehwAfCfDFCilsJ8
+         WU0nUWS7kZcOh2TNRbPJL9XoJO2opsnSVdXgIFXzrD7H4VtPj43TcITmbozqoaCYXzOS
+         BgBoGQ1tljYr2knH3Z/cviyB+GSW6mkRKrmHZ3LpMnbMjXkvketxEzSYlsbJmRHTsJVV
+         3lV0X+xj8P2g3GCYbyGlBG9zxG+DtVJzNj0aEERslSk9z3kZR9C+X4wepnjJZ4FuYtyr
+         ag7g==
+X-Gm-Message-State: APjAAAVMaH8RCkrrHZVc3X25ylkNCEKytsakEE/W2eq6h1UqSg2McZ7t
+        xP/zKLZVh6pLRbLwmHlM0XI9Dlso
+X-Google-Smtp-Source: APXvYqwryc+DhxwJ4psvAfXQBjxFEOLzf0g2xVaXGAc5ou+6tejNAl4eCJs8tbQcWgqgxhiOT/dyug==
+X-Received: by 2002:a62:d44b:: with SMTP id u11mr20637837pfl.259.1572366578670;
+        Tue, 29 Oct 2019 09:29:38 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id q184sm15438830pfc.111.2019.10.29.09.29.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 09:27:21 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 17:27:12 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>, Andy king <acking@vmware.com>,
-        Aditya Sarwade <asarwade@vmware.com>,
-        George Zhang <georgezhang@vmware.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>, kvm@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 00/14] vsock: add multi-transports support
-Message-ID: <20191029162712.fn5rgxrwdrbxuehw@steredhat>
-References: <20191023095554.11340-1-sgarzare@redhat.com>
- <20191027080146.GA4472@stefanha-x1.localdomain>
+        Tue, 29 Oct 2019 09:29:37 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] enable CAAM's HWRNG as default
+Date:   Tue, 29 Oct 2019 09:29:13 -0700
+Message-Id: <20191029162916.26579-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191027080146.GA4472@stefanha-x1.localdomain>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 09:01:46AM +0100, Stefan Hajnoczi wrote:
-> On Wed, Oct 23, 2019 at 11:55:40AM +0200, Stefano Garzarella wrote:
-> > This series adds the multi-transports support to vsock, following
-> > this proposal: https://www.spinics.net/lists/netdev/msg575792.html
-> > 
-> > With the multi-transports support, we can use VSOCK with nested VMs
-> > (using also different hypervisors) loading both guest->host and
-> > host->guest transports at the same time.
-> > Before this series, vmci-transport supported this behavior but only
-> > using VMware hypervisor on L0, L1, etc.
-> > 
-> > RFC: https://patchwork.ozlabs.org/cover/1168442/
-> > RFC -> v1:
-> > - Added R-b/A-b from Dexuan and Stefan
-> > - Fixed comments and typos in several patches (Stefan)
-> > - Patch 7: changed .notify_buffer_size return to void (Stefan)
-> > - Added patch 8 to simplify the API exposed to the transports (Stefan)
-> > - Patch 11:
-> >   + documented VSOCK_TRANSPORT_F_* flags (Stefan)
-> >   + fixed vsock_assign_transport() when the socket is already assigned
-> >   + moved features outside of struct vsock_transport, and used as
-> >     parameter of vsock_core_register() as a preparation of Patch 12
-> > - Removed "vsock: add 'transport_hg' to handle g2h\h2g transports" patch
-> > - Added patch 12 to register vmci_transport only when VMCI guest/host
-> >   are active
-> 
-> Has there been feedback from Jorgen or someone else from VMware?  A
-> Reviewed-by or Acked-by would be nice since this patch series affects
-> VMCI AF_VSOCK.
-> 
+Everyone:
 
-Unfortunately not for now, I'm adding to this thread some VMware guys that
-reviewed latest vmci patches.
+This series is a continuation of original [discussion]. I don't know
+if what's in the series is enough to use CAAMs HWRNG system wide, but
+I am hoping that with enough iterations and feedback it will be.
 
-Would be nice to have your feedback for these changes.
+Feedback is welcome!
 
-Thanks in advance,
-Stefano
+Thanks,
+Andrey Smirnov
+
+[discussion] https://patchwork.kernel.org/patch/9850669/
+
+Andrey Smirnov (3):
+  crypto: caam - RNG4 TRNG errata
+  crypto: caam - enable prediction resistance in HRWNG
+  crypto: caam - set hwrng quality level
+
+ drivers/crypto/caam/caamrng.c |  4 +++-
+ drivers/crypto/caam/ctrl.c    | 19 +++++++++++++------
+ drivers/crypto/caam/desc.h    |  2 ++
+ drivers/crypto/caam/regs.h    |  7 +++++--
+ 4 files changed, 23 insertions(+), 9 deletions(-)
+
+-- 
+2.21.0
+
