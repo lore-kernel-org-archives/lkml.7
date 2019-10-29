@@ -2,237 +2,406 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C0ACA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250E7CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62FD821835
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69DD20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="CRtsWYz/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ENdVO8YL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbfJ2XNG (ORCPT
+        id S1726097AbfJ2XOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 19:13:06 -0400
-Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:37014
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725830AbfJ2XNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 19:13:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cYLyxVDer07yot6FTR6Xi12XSPV3TnamPzHEbcCPVYNwj0ZVt937LZCZrDKIWvhNzX9t9RT5TSIpANbpzEVyQWrDB4SCWWcP9TKlIwhNykojbcsnAWUcYKyu55pIp8vrrnVzXUHCQt2V/tCJjeF48LW+wShcguOJ6pdnIh772UoEAYuMT4WpHZu4HzjRBR3nJGK7XGsaDt6SCPREfek84VFKJh4Rkst6Vq9a0REOVASBt2FbXemNZCvAZBkBd3nyOsS25/XgKZyvRNGLQux75ENGYLEERgLIPlbhLvdL8xZjXohcga58XkBYn0CuvJAhv4laVQuT3NpO3Ojp0zD8eQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Lb/NTsMePdh/dTAMcAAvYHy81Y3M9ibceRr11XqormU=;
- b=QWQJKz+5BlvPn60eL8SNaKiytCThlTETdGYcloEozO8TUBLUnYyf+7hlKIA3YGukizrt3/ye+XFP/esSwvfrnbUVCiot9DopDTSgdlh0EzhxWRB5tnCbLEmaMz7cy+j39f55AOoKWhiGb3t5f+tXpujR+pSzMTxfD15GVKOIjOWY6nWIPp79YOccQwsPp621+HxKJtG+F+WIfHc/NjTC1dRjRRJhjJi5439lNps77OlLEkNXnvEYZolvJiQPLxdp57aLUX4twAeotpQj9wCNgd4rnX0h6YVGj+8AgU7xw+MNgUZI8tMvA158FaTu02dPoLTy07pzEA7JFoa7Z9T88w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Lb/NTsMePdh/dTAMcAAvYHy81Y3M9ibceRr11XqormU=;
- b=CRtsWYz/nrcUV1Palwc4SnpMVfwKW0ROkRu/xY9m7nUOLV4JEOiiRm0iVrtLGMF9nVtbj3sMlMkNnvlxuhiLt4r0xh49Ys0LBcI/lH6llHrFfNzFG8z/5mxmW77v994pxe//+knJjGpDIopg517kKFotU5m+LuZ5pMGLiSD8NDU=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB3486.eurprd05.prod.outlook.com (10.170.237.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Tue, 29 Oct 2019 23:13:00 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2387.027; Tue, 29 Oct 2019
- 23:13:00 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
-Thread-Topic: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
-Thread-Index: AQHVidvRl0DiLfVRckS4hHS5dqmJyadx8UKAgAA3LICAACCkgA==
-Date:   Tue, 29 Oct 2019 23:12:59 +0000
-Message-ID: <20191029231255.GX22766@mellanox.com>
-References: <20191023195515.13168-1-rcampbell@nvidia.com>
- <20191023195515.13168-4-rcampbell@nvidia.com>
- <20191029175837.GS22766@mellanox.com>
- <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
-In-Reply-To: <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BL0PR1501CA0025.namprd15.prod.outlook.com
- (2603:10b6:207:17::38) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.162.113.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 11a69733-7ad4-42d2-d687-08d75cc58a14
-x-ms-traffictypediagnostic: VI1PR05MB3486:
-x-microsoft-antispam-prvs: <VI1PR05MB34866EBB7B0A2B17117DCD08CF610@VI1PR05MB3486.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0205EDCD76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(199004)(189003)(386003)(3846002)(6116002)(52116002)(6436002)(66556008)(64756008)(66446008)(66946007)(478600001)(76176011)(6506007)(446003)(11346002)(476003)(229853002)(6486002)(14454004)(71200400001)(102836004)(2616005)(25786009)(6246003)(186003)(66476007)(14444005)(4326008)(26005)(86362001)(256004)(6512007)(71190400001)(54906003)(316002)(5660300002)(36756003)(305945005)(7736002)(6916009)(66066001)(8676002)(1076003)(8936002)(33656002)(99286004)(81166006)(486006)(2906002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3486;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WbBIsqYUPLDFXp1jlGg02w5X8fDbKoWRmW8RSJCweJcocxIcx04fvGZVWL/JHUNc2sX5iwALhcj2I9k+jLhoeMG7GUzZ5BNfNzyqnpUgVTjtbyP2kCRPTOn5QZC3TXsp+Bl7CkxrNOQNH1vLzw4Zwtq7X+PVmx176ewx6Lorxthf8Qqlea/GPxG/Du7FqM5mZTyvPQrpuDMHfKedM+18nES9Ug9mazrued3GzvNCrMBolabrGvJtifjhG70vCGvVwT+AWMZzUYdzrv3VYy0vzBqMUKtvuQGze0HhLwEOQy0GCmLdQ0mTdeDp2V4A6dM+ZtZWDPdqrnq/mjR15kkIS6xIx0lXCbnNDbsqxxN+FP8MpocZeVZOS9H6TYQhuHOHFN0vccfSA5omLtjgtzzOOrvW5gIAKzYaw9Yf1r49n3YYIkpmdXwS0Ro+Tx7/2kgM
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DF0B346546CBC74587B861126B28465A@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 29 Oct 2019 19:14:50 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40082 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfJ2XOu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 19:14:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 15so137156pgt.7
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 16:14:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=blzKPfJsj08pn8y5CKKrfP3hzSkBAdUw7LAfyBqzSls=;
+        b=ENdVO8YLWgaO+k/gq4qWHzk5ECjs5ybbr69zT5SuWHzz2t+a4mAPh9cwF3xzv85IzY
+         MS48iBFf0R1dACZ/J1siW9A0m74xC8iUHVH+HFB7srSkrtkeZsjrOuHveDkWpSmYf12d
+         dGfjwnr0sQRdMAGcODKBnbJuPTu6oaOF/ZAB4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=blzKPfJsj08pn8y5CKKrfP3hzSkBAdUw7LAfyBqzSls=;
+        b=pYV5KUYKbJJpcQTlIeQSaPy9a3Cw4EjKXcs9CHwrakbrcffXblAs7XrghF83cW2Ryw
+         nb8+rOwNkShxvNzN3DFQAZDGj7ULhWCrRezqCPO8o41AubBsr+wBq/Hi8WdgtVQCIrC1
+         3zQbnCBgiX2jTeMSpjWPxIlfaQYGcXh++W5co/XZXkQIjb1iTeHCxZHnXLGYj5gu4RFK
+         Hh9eXmIt3vI5LWAtK3404Uq+0v3b+ck/tvMal6kjPYnEikZkDOeyaZfN2y+0HR1U0yAK
+         7nA1aSUZLBZZawPg87gMU//1J0BkO8xNWG4GDTeyrmqiTgkbupPa5CjoYnhfLc8gM/en
+         cnLQ==
+X-Gm-Message-State: APjAAAUMiZJ7ugQKHRE0+tpmQMFJ0cKvjn2kcAmpJB7g8MRwdcR9qwd4
+        iHCKujnG7a4Y+5HRQOsRa3iPlw==
+X-Google-Smtp-Source: APXvYqxzImCT2wVzVZ0ShVzA2oLapvp6+6gUD5kwpxcRQurPpUyzNLhB+pQKeENZgsKIcDDRJqflGQ==
+X-Received: by 2002:a62:7dd2:: with SMTP id y201mr21539580pfc.164.1572390889377;
+        Tue, 29 Oct 2019 16:14:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k32sm174951pje.10.2019.10.29.16.14.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 16:14:48 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 16:14:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Sudakshina Das <sudi.das@arm.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 02/12] ELF: Add ELF program property parsing support
+Message-ID: <201910291611.69822D5E04@keescook>
+References: <1571419545-20401-1-git-send-email-Dave.Martin@arm.com>
+ <1571419545-20401-3-git-send-email-Dave.Martin@arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11a69733-7ad4-42d2-d687-08d75cc58a14
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 23:12:59.2128
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PMaHJJ00b3Uffot6NjdWrUeXiKMUJoTWrco4kzT4bR+rGkykXkm1qcdcDZv/2i7RQMssfEHn70R7NQI7bUlNnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3486
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571419545-20401-3-git-send-email-Dave.Martin@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 02:16:05PM -0700, Ralph Campbell wrote:
+On Fri, Oct 18, 2019 at 06:25:35PM +0100, Dave Martin wrote:
+> ELF program properties will be needed for detecting whether to
+> enable optional architecture or ABI features for a new ELF process.
+> 
+> For now, there are no generic properties that we care about, so do
+> nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
+> 
+> Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
+> phdrs entry (if any), and notify each property to the arch code.
+> 
+> For now, the added code is not used.
+> 
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> ---
+>  fs/binfmt_elf.c          | 127 +++++++++++++++++++++++++++++++++++++++++++++++
+>  fs/compat_binfmt_elf.c   |   4 ++
+>  include/linux/elf.h      |  19 +++++++
+>  include/uapi/linux/elf.h |   4 ++
+>  4 files changed, 154 insertions(+)
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index c5642bc..ae345f6 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -39,12 +39,18 @@
+>  #include <linux/sched/coredump.h>
+>  #include <linux/sched/task_stack.h>
+>  #include <linux/sched/cputime.h>
+> +#include <linux/sizes.h>
+> +#include <linux/types.h>
+>  #include <linux/cred.h>
+>  #include <linux/dax.h>
+>  #include <linux/uaccess.h>
+>  #include <asm/param.h>
+>  #include <asm/page.h>
+>  
+> +#ifndef ELF_COMPAT
+> +#define ELF_COMPAT 0
+> +#endif
 
-> > Frankly, I'm not super excited about the idea of a 'test driver', it
-> > seems more logical for testing to have some way for a test harness to
-> > call hmm_range_fault() under various conditions and check the results?
->=20
-> test_vmalloc.sh at least uses a test module(s).
+Why is "compat" interesting for the arch_ callback? Shouldn't just the
+unsigned long size be needed?
 
-Well, that is good, is it also under drivers/char? It kind feels like
-it should not be there...
-=20
-> > It seems especially over-complicated to use a full page table layout
-> > for this, wouldn't something simple like an xarray be good enough for
-> > test purposes?
->=20
-> Possibly. A page table is really just a lookup table from virtual address
-> to pfn/page. Part of the rationale was to mimic what a real device
-> might do.
+> +
+>  #ifndef user_long_t
+>  #define user_long_t long
+>  #endif
+> @@ -670,6 +676,111 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+>   * libraries.  There is no binary dependent code anywhere else.
+>   */
+>  
+> +static int parse_elf_property(const char *data, size_t *off, size_t datasz,
+> +			      struct arch_elf_state *arch,
+> +			      bool have_prev_type, u32 *prev_type)
+> +{
+> +	size_t o, step;
+> +	const struct gnu_property *pr;
+> +	int ret;
+> +
+> +	if (*off == datasz)
+> +		return -ENOENT;
+> +
+> +	if (WARN_ON(*off > datasz || *off % ELF_GNU_PROPERTY_ALIGN))
 
-Well, but the details of the page table layout don't see really
-important to this testing, IMHO.
+I think here and all other places using WARN_ON() in the execve() path
+should be using WARN_ON_ONCE() to avoid allowing a user to potentially
+flood the system logs with insane binary exec attempts.
 
-> > > +	for (addr =3D start; addr < end; ) {
-> > > +		long count;
-> > > +
-> > > +		next =3D min(addr + (ARRAY_SIZE(pfns) << PAGE_SHIFT), end);
-> > > +		range.start =3D addr;
-> > > +		range.end =3D next;
-> > > +
-> > > +		down_read(&mm->mmap_sem);
+-Kees
 
-Also, did we get a mmget() before doing this down_read?
+> +		return -EIO;
+> +	o = *off;
+> +	datasz -= *off;
+> +
+> +	if (datasz < sizeof(*pr))
+> +		return -EIO;
+> +	pr = (const struct gnu_property *)(data + o);
+> +	o += sizeof(*pr);
+> +	datasz -= sizeof(*pr);
+> +
+> +	if (pr->pr_datasz > datasz)
+> +		return -EIO;
+> +
+> +	WARN_ON(o % ELF_GNU_PROPERTY_ALIGN);
+> +	step = round_up(pr->pr_datasz, ELF_GNU_PROPERTY_ALIGN);
+> +	if (step > datasz)
+> +		return -EIO;
+> +
+> +	/* Properties are supposed to be unique and sorted on pr_type: */
+> +	if (have_prev_type && pr->pr_type <= *prev_type)
+> +		return -EIO;
+> +	*prev_type = pr->pr_type;
+> +
+> +	ret = arch_parse_elf_property(pr->pr_type, data + o,
+> +				      pr->pr_datasz, ELF_COMPAT, arch);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*off = o + step;
+> +	return 0;
+> +}
+> +
+> +#define NOTE_DATA_SZ SZ_1K
+> +#define GNU_PROPERTY_TYPE_0_NAME "GNU"
+> +#define NOTE_NAME_SZ (sizeof(GNU_PROPERTY_TYPE_0_NAME))
+> +
+> +static int parse_elf_properties(struct file *f, const struct elf_phdr *phdr,
+> +				struct arch_elf_state *arch)
+> +{
+> +	union {
+> +		struct elf_note nhdr;
+> +		char data[NOTE_DATA_SZ];
+> +	} note;
+> +	loff_t pos;
+> +	ssize_t n;
+> +	size_t off, datasz;
+> +	int ret;
+> +	bool have_prev_type;
+> +	u32 prev_type;
+> +
+> +	if (!IS_ENABLED(CONFIG_ARCH_USE_GNU_PROPERTY) || !phdr)
+> +		return 0;
+> +
+> +	/* load_elf_binary() shouldn't call us unless this is true... */
+> +	if (WARN_ON(phdr->p_type != PT_GNU_PROPERTY))
+> +		return -EIO;
+> +
+> +	/* If the properties are crazy large, that's too bad (for now): */
+> +	if (phdr->p_filesz > sizeof(note))
+> +		return -ENOEXEC;
+> +
+> +	pos = phdr->p_offset;
+> +	n = kernel_read(f, &note, phdr->p_filesz, &pos);
+> +
+> +	BUILD_BUG_ON(sizeof(note) < sizeof(note.nhdr) + NOTE_NAME_SZ);
+> +	if (n < 0 || n < sizeof(note.nhdr) + NOTE_NAME_SZ)
+> +		return -EIO;
+> +
+> +	if (note.nhdr.n_type != NT_GNU_PROPERTY_TYPE_0 ||
+> +	    note.nhdr.n_namesz != NOTE_NAME_SZ ||
+> +	    strncmp(note.data + sizeof(note.nhdr),
+> +		    GNU_PROPERTY_TYPE_0_NAME, n - sizeof(note.nhdr)))
+> +		return -EIO;
+> +
+> +	off = round_up(sizeof(note.nhdr) + NOTE_NAME_SZ,
+> +		       ELF_GNU_PROPERTY_ALIGN);
+> +	if (off > n)
+> +		return -EIO;
+> +
+> +	if (note.nhdr.n_descsz > n - off)
+> +		return -EIO;
+> +	datasz = off + note.nhdr.n_descsz;
+> +
+> +	have_prev_type = false;
+> +	do {
+> +		ret = parse_elf_property(note.data, &off, datasz, arch,
+> +					 have_prev_type, &prev_type);
+> +		have_prev_type = true;
+> +	} while (!ret);
+> +
+> +	return ret == -ENOENT ? 0 : ret;
+> +}
+> +
+>  static int load_elf_binary(struct linux_binprm *bprm)
+>  {
+>  	struct file *interpreter = NULL; /* to shut gcc up */
+> @@ -677,6 +788,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  	int load_addr_set = 0;
+>  	unsigned long error;
+>  	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
+> +	struct elf_phdr *elf_property_phdata = NULL;
+>  	unsigned long elf_bss, elf_brk;
+>  	int bss_prot = 0;
+>  	int retval, i;
+> @@ -724,6 +836,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  		char *elf_interpreter;
+>  		loff_t pos;
+>  
+> +		if (elf_ppnt->p_type == PT_GNU_PROPERTY) {
+> +			elf_property_phdata = elf_ppnt;
+> +			continue;
+> +		}
+> +
+>  		if (elf_ppnt->p_type != PT_INTERP)
+>  			continue;
+>  
+> @@ -819,9 +936,14 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  			goto out_free_dentry;
+>  
+>  		/* Pass PT_LOPROC..PT_HIPROC headers to arch code */
+> +		elf_property_phdata = NULL;
+>  		elf_ppnt = interp_elf_phdata;
+>  		for (i = 0; i < loc->interp_elf_ex.e_phnum; i++, elf_ppnt++)
+>  			switch (elf_ppnt->p_type) {
+> +			case PT_GNU_PROPERTY:
+> +				elf_property_phdata = elf_ppnt;
+> +				break;
+> +
+>  			case PT_LOPROC ... PT_HIPROC:
+>  				retval = arch_elf_pt_proc(&loc->interp_elf_ex,
+>  							  elf_ppnt, interpreter,
+> @@ -832,6 +954,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  			}
+>  	}
+>  
+> +	retval = parse_elf_properties(interpreter ?: bprm->file,
+> +				      elf_property_phdata, &arch_state);
+> +	if (retval)
+> +		goto out_free_dentry;
+> +
+>  	/*
+>  	 * Allow arch code to reject the ELF at this point, whilst it's
+>  	 * still possible to return an error to the code that invoked
+> diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
+> index b7f9ffa..67896e0 100644
+> --- a/fs/compat_binfmt_elf.c
+> +++ b/fs/compat_binfmt_elf.c
+> @@ -17,6 +17,8 @@
+>  #include <linux/elfcore-compat.h>
+>  #include <linux/time.h>
+>  
+> +#define ELF_COMPAT	1
+> +
+>  /*
+>   * Rename the basic ELF layout types to refer to the 32-bit class of files.
+>   */
+> @@ -28,11 +30,13 @@
+>  #undef	elf_shdr
+>  #undef	elf_note
+>  #undef	elf_addr_t
+> +#undef	ELF_GNU_PROPERTY_ALIGN
+>  #define elfhdr		elf32_hdr
+>  #define elf_phdr	elf32_phdr
+>  #define elf_shdr	elf32_shdr
+>  #define elf_note	elf32_note
+>  #define elf_addr_t	Elf32_Addr
+> +#define ELF_GNU_PROPERTY_ALIGN	ELF32_GNU_PROPERTY_ALIGN
+>  
+>  /*
+>   * Some data types as stored in coredump.
+> diff --git a/include/linux/elf.h b/include/linux/elf.h
+> index 459cddc..7bdc6da 100644
+> --- a/include/linux/elf.h
+> +++ b/include/linux/elf.h
+> @@ -22,6 +22,9 @@
+>  	SET_PERSONALITY(ex)
+>  #endif
+>  
+> +#define ELF32_GNU_PROPERTY_ALIGN	4
+> +#define ELF64_GNU_PROPERTY_ALIGN	8
+> +
+>  #if ELF_CLASS == ELFCLASS32
+>  
+>  extern Elf32_Dyn _DYNAMIC [];
+> @@ -32,6 +35,7 @@ extern Elf32_Dyn _DYNAMIC [];
+>  #define elf_addr_t	Elf32_Off
+>  #define Elf_Half	Elf32_Half
+>  #define Elf_Word	Elf32_Word
+> +#define ELF_GNU_PROPERTY_ALIGN	ELF32_GNU_PROPERTY_ALIGN
+>  
+>  #else
+>  
+> @@ -43,6 +47,7 @@ extern Elf64_Dyn _DYNAMIC [];
+>  #define elf_addr_t	Elf64_Off
+>  #define Elf_Half	Elf64_Half
+>  #define Elf_Word	Elf64_Word
+> +#define ELF_GNU_PROPERTY_ALIGN	ELF64_GNU_PROPERTY_ALIGN
+>  
+>  #endif
+>  
+> @@ -64,4 +69,18 @@ struct gnu_property {
+>  	u32 pr_datasz;
+>  };
+>  
+> +struct arch_elf_state;
+> +
+> +#ifndef CONFIG_ARCH_USE_GNU_PROPERTY
+> +static inline int arch_parse_elf_property(u32 type, const void *data,
+> +					  size_t datasz, bool compat,
+> +					  struct arch_elf_state *arch)
+> +{
+> +	return 0;
+> +}
+> +#else
+> +extern int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
+> +				   bool compat, struct arch_elf_state *arch);
+> +#endif
+> +
+>  #endif /* _LINUX_ELF_H */
+> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+> index c377314..20900f4 100644
+> --- a/include/uapi/linux/elf.h
+> +++ b/include/uapi/linux/elf.h
+> @@ -368,6 +368,7 @@ typedef struct elf64_shdr {
+>   * Notes used in ET_CORE. Architectures export some of the arch register sets
+>   * using the corresponding note types via the PTRACE_GETREGSET and
+>   * PTRACE_SETREGSET requests.
+> + * The note name for all these is "LINUX".
+>   */
+>  #define NT_PRSTATUS	1
+>  #define NT_PRFPREG	2
+> @@ -430,6 +431,9 @@ typedef struct elf64_shdr {
+>  #define NT_MIPS_FP_MODE	0x801		/* MIPS floating-point mode */
+>  #define NT_MIPS_MSA	0x802		/* MIPS SIMD registers */
+>  
+> +/* Note types with note name "GNU" */
+> +#define NT_GNU_PROPERTY_TYPE_0	5
+> +
+>  /* Note header in a PT_NOTE section */
+>  typedef struct elf32_note {
+>    Elf32_Word	n_namesz;	/* Name size */
+> -- 
+> 2.1.4
+> 
 
-> > > +
-> > > +		ret =3D hmm_range_register(&range, &dmirror->mirror);
-> > > +		if (ret) {
-> > > +			up_read(&mm->mmap_sem);
-> > > +			break;
-> > > +		}
-> > > +
-> > > +		if (!hmm_range_wait_until_valid(&range,
-> > > +						DMIRROR_RANGE_FAULT_TIMEOUT)) {
-> > > +			hmm_range_unregister(&range);
-> > > +			up_read(&mm->mmap_sem);
-> > > +			continue;
-> > > +		}
-> > > +
-> > > +		count =3D hmm_range_fault(&range, 0);
-> > > +		if (count < 0) {
-> > > +			ret =3D count;
-> > > +			hmm_range_unregister(&range);
-> > > +			up_read(&mm->mmap_sem);
-> > > +			break;
-> > > +		}
-> > > +
-> > > +		if (!hmm_range_valid(&range)) {
-> >=20
-> > There is no 'driver lock' being held here, how does this work?
-> > Shouldn't it hold dmirror->mutex for this sequence?
->=20
-> I have a modified version of this driver that's based on your series
-> removing hmm_mirror_register() which uses a mutex.
-> Otherwise, it looks similar to the changes in nouveau.
-
-Well, that locking pattern is required even for original hmm calls..
-
-
-> > > +static int dmirror_read(struct dmirror *dmirror,
-> > > +			struct hmm_dmirror_cmd *cmd)
-> > > +{
-> >=20
-> > Why not just use pread()/pwrite() for this instead of an ioctl?
->=20
-> pread()/pwrite() could certainly be implemented.
-> I think the idea was that the read/write is actually the "device"
-> doing read/write and making that clearly different from a program
-> reading/writing the device. Also, the ioctl() allows information
-> about what faults or events happened during the operation. I only
-> have number of pages and number of page faults returned at the moment,
-> but one of Jerome's version of this driver had other counters being
-> returned.
-
-Makes sense I guess
-
-> > > +static struct platform_driver dmirror_device_driver =3D {
-> > > +	.probe		=3D dmirror_probe,
-> > > +	.remove		=3D dmirror_remove,
-> > > +	.driver		=3D {
-> > > +		.name	=3D "HMM_DMIRROR",
-> > > +	},
-> > > +};
-> >=20
-> > This presence of a platform_driver and device is very confusing. I'm
-> > sure Greg KH would object to this as a misuse of platform drivers.
-> >=20
-> > A platform device isn't needed to create a char dev, so what is this fo=
-r?
->=20
-> The devm_request_free_mem_region() and devm_memremap_pages() calls for
-> creating the ZONE_DEVICE private pages tie into the devm* clean up framew=
-ork.
-> I thought a platform_driver was the simplest way to also be able to call
-> devm_add_action_or_reset() to clean up on module unload and be compatible
-> with the private page clean up.
-
-IIRC Christoph recently fixed things so there was a non devm version
-of these functions. Certainly we should not be making fake
-platform_devices just to call devm.
-
-There is also a struct device inside the cdev, maybe that could be
-arrange to be devm compatible if it was *really* needed.
-
-> > > diff --git a/include/Kbuild b/include/Kbuild
-> > > index ffba79483cc5..6ffb44a45957 100644
-> > > +++ b/include/Kbuild
-> > > @@ -1063,6 +1063,7 @@ header-test-			+=3D uapi/linux/coda_psdev.h
-> > >   header-test-			+=3D uapi/linux/errqueue.h
-> > >   header-test-			+=3D uapi/linux/eventpoll.h
-> > >   header-test-			+=3D uapi/linux/hdlc/ioctl.h
-> > > +header-test-			+=3D uapi/linux/hmm_dmirror.h
-> >=20
-> > Why? This list should only be updated if the header is broken in some
-> > way.
->=20
-> Should this be in include/linux/ instead?
-> I wasn't sure where the "right" place was to put the header.
-
-No, it is right, it just shouldn't be in this makefile.
-
-Jason
+-- 
+Kees Cook
