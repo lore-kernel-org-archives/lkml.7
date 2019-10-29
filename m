@@ -2,137 +2,111 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7CCCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C18C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6258214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D47214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gsOhsPnn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arB2RctS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfJ2EId (ORCPT
+        id S1726948AbfJ2EJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 00:08:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39009 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726461AbfJ2EId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 00:08:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 472J3c5Y6Xz9sPT;
-        Tue, 29 Oct 2019 15:08:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572322109;
-        bh=KXfbFOGwmssKGP67FRt/LHhxOrkahUw0qIOXiT7ycAo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gsOhsPnn+RYUUqLKwX36HoJNITa8zV2D0IIUihi0lDTXovwnt/pOnn4artfMi5dHR
-         DniHT89H4GB/mZuP7L07QnKXmXqgkibtKZP1CqGUzOM1KgdLAnbURxakhK9KArDo1q
-         bOT/Panld6H/uOxbAft0VpBBjvMa378XL/7jhOUoWvJDyCweffgR1wY/06zrMXxMDZ
-         aaGl3k2D1FkUunRIcWDAC7NdEGJ/AuecBYYCCOh6rLZArBsJvsSVA9qX0TTk5fO8vB
-         nsrt26PSimQb/aVum2SplOQhNQFnMezuleabNgI4iGBufKfAaR/vj5QwfPWUBCl7C1
-         +SsZ+d8Lj8wPw==
-Date:   Tue, 29 Oct 2019 15:08:26 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ryan Attard <ryanattard@ryanattard.info>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: linux-next: manual merge of the scsi tree with the rcu tree
-Message-ID: <20191029150826.38c26ef8@canb.auug.org.au>
+        Tue, 29 Oct 2019 00:09:40 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33283 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfJ2EJk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 00:09:40 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c184so8573904pfb.0;
+        Mon, 28 Oct 2019 21:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=IvoM2eWpiqYm1TPcjOfOHitp5xuEj0gkRugCi8K3Djg=;
+        b=arB2RctSY1mxcFWm+0FTKr97oFW87d+WaW+fHurjvRY0TL7FCFMtGwpI/SmgkW2QsR
+         K8F0dJ8x2lLjl/zRJhQuNLfoHklh5vPZfsWOgo8752DUc5gok5aUFSIGEqHdDWGn6Uqr
+         8GaeGfbAAn1QII0JFtS+EzfbPajDfgFO/syQdIr4ZUWWzMhDVAMjcUXVNWdkGBPOLK5N
+         Gt6MFaZdD1foSe3hFdytQm5JiCIlTGyZEArsKi1oePRwGNv98dDcJSALdC/3P8b0fPG8
+         6nQhB75o3Dc3NflvcIAk6YqZuLABlFaKED7f5VfmLfZ8Gu8/5VOS3dusg0QLHfxexLag
+         3eaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=IvoM2eWpiqYm1TPcjOfOHitp5xuEj0gkRugCi8K3Djg=;
+        b=Ydv/CrgujMjE9vhy6ul7LUN14Jonozkm3FBTu+dHahpEHmZLLK2Uw29JMXc3c+4414
+         fGwVK7kyh7+ekIcCZhpI9OkVsJk3v5d0/XyEPSE0fvSC/t5hl92jYB2zLzi4P2mxMVu4
+         3BsKZZCYKkqfW22xRnP83Gvp83J1m2dE5BypVTi9Xr4AdQI9V92whT92VOGocihRpKCO
+         K4aWKWuxjeCRMpw/HTA5Am3MJjY9kYf7XDXLuJ3pg9PtC5Rne84F6LAatV0TD1XNhmUi
+         G7cqPUNcsId2p7qx8eRAFueBnx87tm7/HBQg4X/ZVM2eBjW2QzXn8M1lsv6Wp3mHkvZX
+         awJg==
+X-Gm-Message-State: APjAAAWwzsBv8EGh8d9BybAjCdGSfv1uZNwg8Oo3fVtXwwN16c0gwNAD
+        2PNd7xrSKBnaLIbeni0o0pl/K2Qx
+X-Google-Smtp-Source: APXvYqw1bAKAzjKX7DWOZEPp2c0sjnuqtnYHBAHUUyRYVp/dgdTGHZMLZdlfwNujm4e4y5uvz3UDXA==
+X-Received: by 2002:a62:4d04:: with SMTP id a4mr24610260pfb.71.1572322177975;
+        Mon, 28 Oct 2019 21:09:37 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id i123sm14373079pfe.145.2019.10.28.21.09.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 21:09:36 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 21:09:33 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Matthias Fend <Matthias.Fend@wolfvision.net>
+Cc:     Martin Kepplinger <martink@posteo.de>,
+        Dixit Parmar <dixitparmar19@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/8] Face lift for st1232 touchscreen driver
+Message-ID: <20191029040933.GC57214@dtor-ws>
+References: <20191022195622.66976-1-dmitry.torokhov@gmail.com>
+ <VI1PR08MB37588375F08EA4F692AE475D85660@VI1PR08MB3758.eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3/LUDeEVzvu/HGwO5iTth3Q";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR08MB37588375F08EA4F692AE475D85660@VI1PR08MB3758.eurprd08.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3/LUDeEVzvu/HGwO5iTth3Q
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Oct 28, 2019 at 07:28:51AM +0000, Matthias Fend wrote:
+> Hi Dmitry,
+> 
+> > -----Ursprüngliche Nachricht-----
+> > Von: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Gesendet: Dienstag, 22. Oktober 2019 21:56
+> > An: Martin Kepplinger <martink@posteo.de>
+> > Cc: Dixit Parmar <dixitparmar19@gmail.com>; Henrik Rydberg
+> > <rydberg@bitmath.org>; Kuninori Morimoto
+> > <kuninori.morimoto.gx@renesas.com>; Matthias Fend
+> > <Matthias.Fend@wolfvision.net>; linux-input@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Betreff: [PATCH 0/8] Face lift for st1232 touchscreen driver
+> > 
+> > This series cleans up the driver and switches it over to the slotted
+> > multi-touch protocol (MT-B) that should reduce the traffic between kernel
+> > and userspace.
+> > 
+> > Note that I do not have hardware, so I would appreciate if you could try
+> > running it and tell me if it is broken or not.
+> 
+> Looks good. I tested the series from your st1232 branch [1] and could not see any regressions.
+> Note that I my 'real' application only supports ONE finger. So, the other fingers are just tested with debug output.
 
-Hi all,
+Thank you for testing. I committed the patches.
 
-Today's linux-next merge of the scsi tree got a conflict in:
-
-  drivers/scsi/scsi_sysfs.c
-
-between commit:
-
-  81db81f82993 ("drivers/scsi: Replace rcu_swap_protected() with rcu_replac=
-e()")
-
-from the rcu tree and commit:
-
-  d188b0675b21 ("scsi: core: Add sysfs attributes for VPD pages 0h and 89h")
-
-from the scsi tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/scsi/scsi_sysfs.c
-index cc51f4756077,0fa2ed343c7f..000000000000
---- a/drivers/scsi/scsi_sysfs.c
-+++ b/drivers/scsi/scsi_sysfs.c
-@@@ -466,12 -467,18 +467,18 @@@ static void scsi_device_dev_release_use
-  	sdev->request_queue =3D NULL;
- =20
-  	mutex_lock(&sdev->inquiry_mutex);
- -	rcu_swap_protected(sdev->vpd_pg0, vpd_pg0,
- -			   lockdep_is_held(&sdev->inquiry_mutex));
- -	rcu_swap_protected(sdev->vpd_pg80, vpd_pg80,
- -			   lockdep_is_held(&sdev->inquiry_mutex));
- -	rcu_swap_protected(sdev->vpd_pg83, vpd_pg83,
- -			   lockdep_is_held(&sdev->inquiry_mutex));
- -	rcu_swap_protected(sdev->vpd_pg89, vpd_pg89,
- -			   lockdep_is_held(&sdev->inquiry_mutex));
-++	vpd_pg0 =3D rcu_replace_pointer(sdev->vpd_pg0, vpd_pg0,
-++				      lockdep_is_held(&sdev->inquiry_mutex));
- +	vpd_pg80 =3D rcu_replace_pointer(sdev->vpd_pg80, vpd_pg80,
- +				       lockdep_is_held(&sdev->inquiry_mutex));
- +	vpd_pg83 =3D rcu_replace_pointer(sdev->vpd_pg83, vpd_pg83,
- +				       lockdep_is_held(&sdev->inquiry_mutex));
-++	vpd_pg89 =3D rcu_replace_pointer(sdev->vpd_pg89, vpd_pg89,
-++				       lockdep_is_held(&sdev->inquiry_mutex));
-  	mutex_unlock(&sdev->inquiry_mutex);
- =20
-+ 	if (vpd_pg0)
-+ 		kfree_rcu(vpd_pg0, rcu);
-  	if (vpd_pg83)
-  		kfree_rcu(vpd_pg83, rcu);
-  	if (vpd_pg80)
-
---Sig_/3/LUDeEVzvu/HGwO5iTth3Q
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl23uzoACgkQAVBC80lX
-0GzSjwf/af8SLJfJAiwlwJH/ragj+9k/wLoJ1oXpD7tq0Gxy0xnJNj1YvdzuG5wt
-8N5aIfOGDeHZADV5ni789nbEXde8zAM/wku8Rp7mWTNF1lpBsFMmXsUnEyYZ6/xS
-niCfiIyKOopn2iE+t9+TUZtj6+XDUvNHlwtJNEIWW54dTY/Z5rFEkZRNosaLUi6e
-g/BhE1euSBEr410Yf4+oZnzpTbjjjA8kw7wA/ZArKGlBPWFXh6OBBOd9GmNgkDA1
-QLrKdlq1SaoHfxyCISBKDrDggKaosGO+Sl+nJ/4cRPaEoPfVcPKTtCt+by+XB8Zg
-RPml6DbLm3n8S8AGbowaYg+sJNQM6g==
-=Z9yI
------END PGP SIGNATURE-----
-
---Sig_/3/LUDeEVzvu/HGwO5iTth3Q--
+-- 
+Dmitry
