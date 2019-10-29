@@ -2,137 +2,126 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724B4CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A324CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC78208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD13B21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572382323;
-	bh=v0+2wjHOV3TPOZBmkD3JlMqMySjlcS3TjLyd/H3+Vb0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HNryG4NumRvFKDiMljL0BSRdAvs0jD7B9cO1mucLfu4VR+6OPDNTpEjf0WUVXv87c
-	 WP+DDzRSSdxnSySo5AovWK6iU8AGXjv20oTNgdz4azbmTz5w6AAFO2kIiAvCS38d18
-	 E1UpK+YBrfQaZVkZ00vhnxghbOGjR962FLYsKVRM=
+	s=default; t=1572382500;
+	bh=fRWKdzlU8j22o6ENaferL47IJRTpabXJT7Vi/Zm4l18=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=uKN1egRUK9Zxnjb6F7C5CvH0W2kYuOWw0AUSxGJcoNzMX1C///4lwE1HkHaHLPblr
+	 MSZ2n4W/NIiHIAS892+bsBJtS3rTcJ/Jl9GajZAmtuHm4qISWqeILTL5C9gS5uJ7/9
+	 jcfVkvxFVV2GwAnyFh/SuyMgYnmoemVz43ysv7kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfJ2UwC (ORCPT
+        id S1728441AbfJ2Uy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:52:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35872 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 16:54:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726401AbfJ2UwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:52:02 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726711AbfJ2Uy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:54:59 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BE8C21721;
-        Tue, 29 Oct 2019 20:52:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8023208E3;
+        Tue, 29 Oct 2019 20:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572382320;
-        bh=v0+2wjHOV3TPOZBmkD3JlMqMySjlcS3TjLyd/H3+Vb0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jeoJsxjjNE6CGSF/eDsifXtRv6MFoyej58BzCWJ9dtainNbQLHgEBmBOdDbzmlzS3
-         8mPLRij1NWGeikAECXh3rin5I3GSDRdDiraYmtN5V48K62fm2+iR+6UYtVtQYbGsuK
-         QXNe/3IhAVfAR2fVXlHywPQiAUit8DyD+WOu+YwM=
-Received: by mail-qt1-f173.google.com with SMTP id c26so68604qtj.10;
-        Tue, 29 Oct 2019 13:52:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAW71O0biyQDk6Rxw/SfdSOV27hTey0JxQDJc7B49U1pyJVgrEju
-        XlaCfBvYqeH1IyUYEmoHxFzHkkJrYTJ8wboW/w==
-X-Google-Smtp-Source: APXvYqyeg1I39tq2DqoXkraIzTHFUcqmrXNzXXgnb3VS9R2ReFwbWaEL1h/jcRIEbWALZ20wYKpj3bIc8bfKSrVHldc=
-X-Received: by 2002:ac8:65d5:: with SMTP id t21mr1315081qto.300.1572382319631;
- Tue, 29 Oct 2019 13:51:59 -0700 (PDT)
+        s=default; t=1572382498;
+        bh=fRWKdzlU8j22o6ENaferL47IJRTpabXJT7Vi/Zm4l18=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rRmkEDjO0yLpFVt5jxGAENCOvzR5c9Dy49qE0aW2lx6ZWFh8vjxFd9o/6el3tOvdl
+         BidOizYA7LQtqklw8WId8awtY5O4U7TI3FnHRZf8tJ3uVOoq929ua7Vx7p+tXi4foZ
+         tIPme/KPz+gAUMFbNhABnvcQVYd70dfNi8gh1kbU=
+Date:   Tue, 29 Oct 2019 15:54:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Matthias Andree <matthias.andree@gmx.de>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
+ spec
+Message-ID: <20191029205456.GA100782@google.com>
 MIME-Version: 1.0
-References: <1571983984-11771-1-git-send-email-xingyu.chen@amlogic.com>
- <1571983984-11771-3-git-send-email-xingyu.chen@amlogic.com>
- <20191025203030.GA28391@bogus> <1914e315-3cb7-9251-f871-0024e0e4f68b@amlogic.com>
-In-Reply-To: <1914e315-3cb7-9251-f871-0024e0e4f68b@amlogic.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 29 Oct 2019 15:51:47 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLr-Cgu4yZFGTfO=qpFPLBZ1gb-1+DZ35eQX3dUsadm4g@mail.gmail.com>
-Message-ID: <CAL_JsqLr-Cgu4yZFGTfO=qpFPLBZ1gb-1+DZ35eQX3dUsadm4g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: watchdog: add new binding for meson
- secure watchdog
-To:     Xingyu Chen <xingyu.chen@amlogic.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004123947.11087-3-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 3:35 AM Xingyu Chen <xingyu.chen@amlogic.com> wrote=
-:
->
-> Hi, Rob
->
-> On 2019/10/26 4:30, Rob Herring wrote:
-> > On Fri, Oct 25, 2019 at 02:13:02PM +0800, Xingyu Chen wrote:
-> >> The binding targets the Meson-A/C series compatible SoCs, in which the
-> >> watchdog registers are in secure world.
-> >>
-> >> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> >> ---
-> >>   .../bindings/watchdog/amlogic,meson-sec-wdt.yaml   | 34 ++++++++++++=
-++++++++++
-> >>   1 file changed, 34 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/watchdog/amlogi=
-c,meson-sec-wdt.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/watchdog/amlogic,meson-=
-sec-wdt.yaml b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec=
--wdt.yaml
-> >> new file mode 100644
-> >> index 00000000..0bbc807
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt=
-.yaml
-> >> @@ -0,0 +1,34 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >> +# Copyright (c) 2019 Amlogic, Inc
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-wdt.yaml#=
-"
-> >> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> >> +
-> >> +title: Amlogic Meson Secure Watchdog Timer
-> >> +
-> >> +maintainers:
-> >> +  - Xingyu Chen <xingyu.chen@amlogic.com>
-> >> +
-> >> +description: |+
-> >> +  Secure Watchdog Timer used in Meson-A/C series Compatible SoCs
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - amlogic,meson-sec-wdt
-> >
-> > If there are no other properties, then you don't need this. Just have
-> > the secure firmware driver instantiate the watchdog.
-> I'am very sorry i don't understand how to initialize the watchdog driver
-> if the compatible property is removed, Could you give me more
-> suggestions or examples =EF=BC=9F Thank you very much.
+On Fri, Oct 04, 2019 at 03:39:47PM +0300, Mika Westerberg wrote:
+> Currently Linux does not follow PCIe spec regarding the required delays
+> after reset. A concrete example is a Thunderbolt add-in-card that
+> consists of a PCIe switch and two PCIe endpoints:
+> ...
 
-platform_device_register_simple() from the secure firmware driver.
+> @@ -1025,15 +1025,11 @@ static void __pci_start_power_transition(struct pci_dev *dev, pci_power_t state)
+>  	if (state == PCI_D0) {
+>  		pci_platform_power_transition(dev, PCI_D0);
+>  		/*
+> -		 * Mandatory power management transition delays, see
+> -		 * PCI Express Base Specification Revision 2.0 Section
+> -		 * 6.6.1: Conventional Reset.  Do not delay for
+> -		 * devices powered on/off by corresponding bridge,
+> -		 * because have already delayed for the bridge.
+> +		 * Mandatory power management transition delays are handled
+> +		 * in pci_pm_runtime_resume() of the corresponding
+> +		 * downstream/root port.
+>  		 */
+>  		if (dev->runtime_d3cold) {
+> -			if (dev->d3cold_delay && !dev->imm_ready)
+> -				msleep(dev->d3cold_delay);
 
-Rob
+This removes the only use of d3cold_delay.  I assume that's
+intentional?  If we no longer need it, we might as well remove it from
+the pci_dev and remove the places that set it.  It'd be nice if that
+could be a separate patch, even if we waited a little longer than
+necessary at that one bisection point.
+
+It also removes one of the three uses of imm_ready, leaving only the
+two in FLR.  I suspect there are other places we should use imm_ready,
+e.g., transitions to/from D1 and D2, but that would be beyond the
+scope of this patch.
+
+> +	/*
+> +	 * For PCIe downstream and root ports that do not support speeds
+> +	 * greater than 5 GT/s need to wait minimum 100 ms. For higher
+> +	 * speeds (gen3) we need to wait first for the data link layer to
+> +	 * become active.
+> +	 *
+> +	 * However, 100 ms is the minimum and the PCIe spec says the
+> +	 * software must allow at least 1s before it can determine that the
+> +	 * device that did not respond is a broken device. There is
+> +	 * evidence that 100 ms is not always enough, for example certain
+> +	 * Titan Ridge xHCI controller does not always respond to
+> +	 * configuration requests if we only wait for 100 ms (see
+> +	 * https://bugzilla.kernel.org/show_bug.cgi?id=203885).
+> +	 *
+> +	 * Therefore we wait for 100 ms and check for the device presence.
+> +	 * If it is still not present give it an additional 100 ms.
+> +	 */
+> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
+> +	    pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
+> +		return;
+
+Shouldn't this be:
+
+  if (!pcie_downstream_port(dev))
+    return
+
+so we include PCI/PCI-X to PCIe bridges?
