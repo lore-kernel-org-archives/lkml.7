@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDEECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB95CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA96208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF8A208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733077AbfJ2Jw6 (ORCPT
+        id S1732976AbfJ2Jwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:52:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47825 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730437AbfJ2Jwz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 29 Oct 2019 05:52:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47815 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733014AbfJ2Jwt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:52:49 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iPOAu-0004Sp-W6; Tue, 29 Oct 2019 10:52:29 +0100
+        id 1iPOAm-0004Nb-Lk; Tue, 29 Oct 2019 10:52:20 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C157F1C04D7;
-        Tue, 29 Oct 2019 10:52:22 +0100 (CET)
-Date:   Tue, 29 Oct 2019 09:52:22 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4D48D1C0073;
+        Tue, 29 Oct 2019 10:52:20 +0100 (CET)
+Date:   Tue, 29 Oct 2019 09:52:20 -0000
 From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/cputime: Add vtime idle task state
+Subject: [tip: sched/core] sched/vtime: Introduce vtime_accounting_enabled_cpu()
 Cc:     Frederic Weisbecker <frederic@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>,
@@ -47,10 +47,10 @@ Cc:     Frederic Weisbecker <frederic@kernel.org>,
         Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191016025700.31277-3-frederic@kernel.org>
-References: <20191016025700.31277-3-frederic@kernel.org>
+In-Reply-To: <20191016025700.31277-10-frederic@kernel.org>
+References: <20191016025700.31277-10-frederic@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157234274247.29376.2147408859881531348.tip-bot2@tip-bot2>
+Message-ID: <157234274004.29376.3323221394697861825.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,19 +66,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     14faf6fcac4ba33f8fd8d9b2d0278010a9eb1742
-Gitweb:        https://git.kernel.org/tip/14faf6fcac4ba33f8fd8d9b2d0278010a9eb1742
+Commit-ID:     9adbb9dd4c4eb45e1129fc73d8de69ca72350f81
+Gitweb:        https://git.kernel.org/tip/9adbb9dd4c4eb45e1129fc73d8de69ca72350f81
 Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Wed, 16 Oct 2019 04:56:48 +02:00
+AuthorDate:    Wed, 16 Oct 2019 04:56:55 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 29 Oct 2019 10:01:10 +01:00
+CommitterDate: Tue, 29 Oct 2019 10:01:15 +01:00
 
-sched/cputime: Add vtime idle task state
+sched/vtime: Introduce vtime_accounting_enabled_cpu()
 
-Record idle as a VTIME state instead of guessing it from VTIME_SYS and
-is_idle_task(). This is going to simplify the cputime read side
-especially as its state machine is going to further expand in order to
-fully support kcpustat on nohz_full.
+This allows us to check if a remote CPU runs vtime accounting
+(ie: is nohz_full). We'll need that to reliably support reading kcpustat
+on nohz_full CPUs.
+
+Also simplify a bit the condition in the local flavoured function while
+at it.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -92,74 +94,42 @@ Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Viresh Kumar <viresh.kumar@linaro.org>
 Cc: Wanpeng Li <wanpengli@tencent.com>
 Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Link: https://lkml.kernel.org/r/20191016025700.31277-3-frederic@kernel.org
+Link: https://lkml.kernel.org/r/20191016025700.31277-10-frederic@kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/sched.h  |  6 ++++--
- kernel/sched/cputime.c | 13 ++++++++-----
- 2 files changed, 12 insertions(+), 7 deletions(-)
+ include/linux/vtime.h | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index d5d0733..4ae19be 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -249,10 +249,12 @@ struct prev_cputime {
- enum vtime_state {
- 	/* Task is sleeping or running in a CPU with VTIME inactive: */
- 	VTIME_INACTIVE = 0,
--	/* Task runs in userspace in a CPU with VTIME active: */
--	VTIME_USER,
-+	/* Task is idle */
-+	VTIME_IDLE,
- 	/* Task runs in kernelspace in a CPU with VTIME active: */
- 	VTIME_SYS,
-+	/* Task runs in userspace in a CPU with VTIME active: */
-+	VTIME_USER,
- };
+diff --git a/include/linux/vtime.h b/include/linux/vtime.h
+index eb2e7a1..e2733bf 100644
+--- a/include/linux/vtime.h
++++ b/include/linux/vtime.h
+@@ -31,14 +31,14 @@ static inline bool vtime_accounting_enabled(void)
+ 	return context_tracking_enabled();
+ }
  
- struct vtime {
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 40f5816..2e885e8 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -813,7 +813,7 @@ void vtime_task_switch_generic(struct task_struct *prev)
- 	struct vtime *vtime = &prev->vtime;
+-static inline bool vtime_accounting_enabled_this_cpu(void)
++static inline bool vtime_accounting_enabled_cpu(int cpu)
+ {
+-	if (vtime_accounting_enabled()) {
+-		if (context_tracking_enabled_this_cpu())
+-			return true;
+-	}
++	return (vtime_accounting_enabled() && context_tracking_enabled_cpu(cpu));
++}
  
- 	write_seqcount_begin(&vtime->seqcount);
--	if (is_idle_task(prev))
-+	if (vtime->state == VTIME_IDLE)
- 		vtime_account_idle(prev);
- 	else
- 		__vtime_account_kernel(prev, vtime);
-@@ -824,7 +824,10 @@ void vtime_task_switch_generic(struct task_struct *prev)
- 	vtime = &current->vtime;
+-	return false;
++static inline bool vtime_accounting_enabled_this_cpu(void)
++{
++	return (vtime_accounting_enabled() && context_tracking_enabled_this_cpu());
+ }
  
- 	write_seqcount_begin(&vtime->seqcount);
--	vtime->state = VTIME_SYS;
-+	if (is_idle_task(current))
-+		vtime->state = VTIME_IDLE;
-+	else
-+		vtime->state = VTIME_SYS;
- 	vtime->starttime = sched_clock();
- 	vtime->cpu = smp_processor_id();
- 	write_seqcount_end(&vtime->seqcount);
-@@ -837,7 +840,7 @@ void vtime_init_idle(struct task_struct *t, int cpu)
+ extern void vtime_task_switch_generic(struct task_struct *prev);
+@@ -51,6 +51,7 @@ static inline void vtime_task_switch(struct task_struct *prev)
  
- 	local_irq_save(flags);
- 	write_seqcount_begin(&vtime->seqcount);
--	vtime->state = VTIME_SYS;
-+	vtime->state = VTIME_IDLE;
- 	vtime->starttime = sched_clock();
- 	vtime->cpu = cpu;
- 	write_seqcount_end(&vtime->seqcount);
-@@ -888,8 +891,8 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
- 		*utime = t->utime;
- 		*stime = t->stime;
+ #else /* !CONFIG_VIRT_CPU_ACCOUNTING */
  
--		/* Task is sleeping, nothing to add */
--		if (vtime->state == VTIME_INACTIVE || is_idle_task(t))
-+		/* Task is sleeping or idle, nothing to add */
-+		if (vtime->state < VTIME_SYS)
- 			continue;
++static inline bool vtime_accounting_enabled_cpu(int cpu) {return false; }
+ static inline bool vtime_accounting_enabled_this_cpu(void) { return false; }
+ static inline void vtime_task_switch(struct task_struct *prev) { }
  
- 		delta = vtime_delta(vtime);
