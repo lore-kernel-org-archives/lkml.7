@@ -2,151 +2,136 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E80C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BC1CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351FD21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA95421920
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:07:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KR3dPGQo"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="jyz7BkXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbfJ2DBD (ORCPT
+        id S1731166AbfJ2DHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 23:01:03 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44557 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbfJ2DBC (ORCPT
+        Mon, 28 Oct 2019 23:07:11 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37975 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730417AbfJ2DHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 23:01:02 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e10so8435594pgd.11;
-        Mon, 28 Oct 2019 20:01:02 -0700 (PDT)
+        Mon, 28 Oct 2019 23:07:10 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r14so3776691otn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 20:07:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BZLMvhv7tKSSJDMxnidSZGekxZVeFH3sCSLj6UYa6wM=;
-        b=KR3dPGQoi5grst4QKJAlm+TtB1j6tTnvrumVy1IEh8/PYO2KF8qMPohUz44dqLDJ45
-         QZE5beoyvxLAWJ7o6BhvIr/Mbc5uEWVOrjo7Binm8V8I/92WUNoQhRV7v9s8lsAzCVlv
-         tgaasRCin+SgUSa1l5+ROANAo9PH6UtTL3xXR71brK4LDaFE6vQ0o7tnSSx6gkxjfarm
-         VoJfs9jQ725XKVRlbBEgq7LvR0U95rAN9bP1BzTI2em3pLE8Ys1OV91xMhwVs/6EdkyU
-         hau6VddqW8nceFpc+J0HN6tUxzmWr63anKQ4FTSIeUQADHU1g1+EN3ILBZDWxQGXXSLF
-         tNOg==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0qnT1ZP3CJMcSq6L0LWTa2iyPLJWEkUMtmJ85EPCi4g=;
+        b=jyz7BkXWDwIX8GIPgfsfU1Pk6DOEgI+jy3ge8ri0/tATonbTF5qMMpBr8OzN84eXdp
+         PPt89jzMeUxP8VByrdcY6vy+QfDNxLaz5t3bfOpjE3qK/z0Y6sVf/67nxVjzgDMT6LwA
+         CoHFbgv1Yxc/p9ZwMpRlaW4qe3M/lf+xa+L1uePYN9n4O6BRpFkzmZ0Y6YA7+lcE00C9
+         BA5GAq+HwCw+Luc/VgNTBdTfTjFIZ0ciIfSzHseq3VqwQyL/ch+xTZG9+AotHo9RWzRO
+         14xtUdOKCD/RezUjBH09AEwDzLaEs0vk4d1wEu36ShlQheSwdhpQNHw2QyktRxd5VdNH
+         boZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BZLMvhv7tKSSJDMxnidSZGekxZVeFH3sCSLj6UYa6wM=;
-        b=nWOarintAxMGMNpSEwOzR08WDDBvchKLTEbadksbc8D+k83mD7DIwXJE5e7zCQU5b0
-         5hw+lzoIHX9df175VZAIN6cGPorU7Lxc8fyhZ6N7iDre0zMkhOT5K8h+QTNo+QkwfB5F
-         WQYPmoPeYJHJfIuiKpz3GwTR79HXe9dsoTA4iJGuIAh+ynGt3vlzvYUEgChEOcrNlBJA
-         Izd3hGPo3IDbbUySKYQTWjlhvlUN5g82ONssBis3LJAl18xUHBzgJdgd5/LIoXLAwK0f
-         sW1dqs5Gsg+MwCH3LwfkDc9TV++kxyTVj49rU4AboI7L2KJ0mX0cUouQH7ykTnlY7I5F
-         oozg==
-X-Gm-Message-State: APjAAAVDJBbBUa36c4lmFkzrGuvB1Cn6p3nxgQ2NkZdsJjvRIDIzVfbG
-        WTD51Qzn/AS89eSINmxGP8o=
-X-Google-Smtp-Source: APXvYqyiLo57314Q6lNpMx+Xhvoay8T9dgZTy35jdfhTOHpCI8vHD/SlqMr/NAyLBicfMLX2GA0xyA==
-X-Received: by 2002:a63:801:: with SMTP id 1mr13350746pgi.58.1572318061971;
-        Mon, 28 Oct 2019 20:01:01 -0700 (PDT)
-Received: from Gentoo.localdomain ([103.231.91.67])
-        by smtp.gmail.com with ESMTPSA id u68sm12436603pfu.39.2019.10.28.20.00.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 20:01:01 -0700 (PDT)
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     rdunlap@infradead.org, bfields@fieldses.org
-Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH] scripts:prune-kernel:prune kernel and modules dir from the system
-Date:   Tue, 29 Oct 2019 08:30:30 +0530
-Message-Id: <20191029030030.31659-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0qnT1ZP3CJMcSq6L0LWTa2iyPLJWEkUMtmJ85EPCi4g=;
+        b=iwrUO0VMbGMxUTCVBZMIeNSx4nWm9A76PdKIFRW+ZSsyRBd3XtTboIFHX/A5BDEVAd
+         agsnOfECdY1WEBpecJOClFHxfx3d1Kl/+dj7y7UBminuJuF2nKH/5MhTWmNxaXEA7X5Z
+         pphlGYN7tHplE86qLbYpYYtNE89t3FiBOs5AM1QYANurzQYRTacZoqIPGANTb76Ygaaj
+         KaKmCNbTO+laxwF1T78wKv3+OFPgd3ApSA5g5GPSGVjC21FHmh44IAmWomIlnoAyaCrR
+         VxUqHrqxyEyTB2Ks7vJbbtN9k34KBON7003ZuB7whu5cO+w7Mu9DmG4prdoJKpSV/PDP
+         GquA==
+X-Gm-Message-State: APjAAAUIlclEMhchM/Imn9BLhtmFQ2Pi0gHlvz8pDy2V/6aFtb3RMNVs
+        DmxBv0Np68NtRX7g5ZTz7K4bNSkBJgytebB2TJyvkg==
+X-Google-Smtp-Source: APXvYqy4FOA2jwEsa1Q9F6uRXTEMb/1i6qDZEx0Kz8n+9VLiVD9T6IqpNu6c/DSljpUoRARs+eP4jGbnneNiRziV86M=
+X-Received: by 2002:a05:6830:18d1:: with SMTP id v17mr2212366ote.71.1572318429791;
+ Mon, 28 Oct 2019 20:07:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <157118756627.2063440.9878062995925617180.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAJZ5v0j_-iSqiysZiW=J8Y5FCAjnPC7ZvevrLsYhngWr6mT6GQ@mail.gmail.com>
+ <CAPcyv4js1XqSe1kNeWob=ftscYFKQF+04PrKj7XDiEWUWvnMvQ@mail.gmail.com> <1666116.19LcctqB44@kreacher>
+In-Reply-To: <1666116.19LcctqB44@kreacher>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 28 Oct 2019 20:06:58 -0700
+Message-ID: <CAPcyv4i2gxocbT9nB5k9+Qea5WftJLSoArXjymkwyZ=+8GBFcQ@mail.gmail.com>
+Subject: Re: [PATCH v7 01/12] acpi/numa: Establish a new drivers/acpi/numa/ directory
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
+        Keith Busch <kbusch@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch will remove old kernel and modules directory from 
-the system interactive way and also at once ,provied the parameter
-given to the invoking script.
+On Mon, Oct 28, 2019 at 8:13 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Tuesday, October 22, 2019 6:48:12 PM CET Dan Williams wrote:
+> > On Tue, Oct 22, 2019 at 3:02 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Fri, Oct 18, 2019 at 11:25 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > >  On Wed, Oct 16, 2019 at 3:13 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > >
+> > > > > Currently hmat.c lives under an "hmat" directory which does not enhance
+> > > > > the description of the file. The initial motivation for giving hmat.c
+> > > > > its own directory was to delineate it as mm functionality in contrast to
+> > > > > ACPI device driver functionality.
+> > > > >
+> > > > > As ACPI continues to play an increasing role in conveying
+> > > > > memory location and performance topology information to the OS take the
+> > > > > opportunity to co-locate these NUMA relevant tables in a combined
+> > > > > directory.
+> > > > >
+> > > > > numa.c is renamed to srat.c and moved to drivers/acpi/numa/ along with
+> > > > > hmat.c.
+> > > > >
+> > > > > Cc: Len Brown <lenb@kernel.org>
+> > > > > Cc: Keith Busch <kbusch@kernel.org>
+> > > > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > >
+> > > > Please note that https://patchwork.kernel.org/patch/11078171/ is being
+> > > > pushed to Linus (it is overdue anyway), so if it is pulled, there will
+> > > > be a merge conflict with this patch.
+> > > >
+> > > > Respin maybe?
+> > >
+> > > Actually, would you mind it if I took this one into the ACPI tree right away?
+> > >
+> > > There's https://patchwork.kernel.org/patch/11198373/ queued up that,
+> > > again, will clash with it.
+> > >
+> > > Also, there is the generic Initiator proximity domains series from
+> > > Jonathan depending on it and I would like to move forward with that
+> > > one if there are no objections.
+> >
+> > Given Ard has acked all the EFI core and ARM changes can we proceed
+> > with merging the EFI Specific Purpose Memory series through Rafael's
+> > tree? It would need acks from x86 maintainers.
+>
+> In the face of the lack of responses here, I think I will apply this patch
+> alone and expose a stable branch containing it in case somebody else wants
+> to pull it in.
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- scripts/prune-kernel | 58 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+Ok.
 
-diff --git a/scripts/prune-kernel b/scripts/prune-kernel
-index 58a7650ce592..a6c990450ddc 100755
---- a/scripts/prune-kernel
-+++ b/scripts/prune-kernel
-@@ -1,2 +1,60 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
-+#This script will delete old kernels and modules directory related to it,both
-+#automated and interactive way, if you choose -i or --interactive as parameter.
-+#For normal operation you have to invoke this script like below
-+#prune-kernel -r kernel_ver modules_dir_name
-+flag=$1
-+kernel_ver=$2
-+modules_dir_name=$3
-+boot_dir=/boot
-+modules_dir=/lib/modules
-+
-+remove_old_kernel() {
-+	cd $boot_dir
-+	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
-+	return 0
-+}
-+
-+remove_old_modules_dir() {
-+	cd $modules_dir
-+	rm -rf $modules_version
-+	return 0
-+}
-+
-+usage() {
-+	printf "Usage: $(basename $0) [-ri] \n"
-+	printf "\n -r | --remove kernel_ver modules_dir_name \n"
-+	printf "\n -i | --interactive use as interactive way \n"
-+}
-+
-+while getopts :hir opt;do
-+	case "$flag" in
-+		-i | --interactive)
-+			printf "\nEnter kernel version to remove or blank/empty to exit:%s"
-+			read kernel_version
-+			if [[ $kernel_version != "" ]]; then
-+				remove_old_kernel
-+				printf "Please give the full modules directory name to remove:%s"
-+				read modules_version
-+				remove_old_modules_dir
-+				printf "\n\n\n Removed kernel version:$kernel_version and associated modules directory:$modules_version ..Done.\n"
-+			else
-+				exit 1
-+			fi
-+			;;
-+		-h | --help)
-+			usage
-+			exit 1
-+			;;
-+		-r | --remove)
-+			shift $(( OPTIND -1 ))
-+			cd $boot_dir
-+			rm -f $kernel_ver
-+			cd $modules_dir
-+			rm -rf $modules_dir_name
-+			printf "Removed kernel version:$kernel_ver and modules directory:$modules_dir_name from the system. \n\n"
-+			exit 0
-+			;;
-+	esac
-+done
---
-2.23.0
-
+x86 folks, any concerns about Rafael taking the whole lot?
