@@ -2,271 +2,214 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE8ECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 412A5CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4697421479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080D5214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:54:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="um8gmOZv"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UHuCmRqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbfJ2Jxy (ORCPT
+        id S2387487AbfJ2Jx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:53:54 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:21947 "EHLO pegase1.c-s.fr"
+        Tue, 29 Oct 2019 05:53:58 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:37410 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733170AbfJ2JxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:53:11 -0400
+        id S1733155AbfJ2JxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:53:09 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 472RjK09wqz9tynh;
-        Tue, 29 Oct 2019 10:53:09 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 472RjH01pKz9tyhr;
+        Tue, 29 Oct 2019 10:53:07 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=um8gmOZv; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=UHuCmRqE; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id LM_92Agcvcx0; Tue, 29 Oct 2019 10:53:08 +0100 (CET)
+        with ESMTP id KPQphUf7OKjx; Tue, 29 Oct 2019 10:53:06 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 472RjJ6Bvpz9tygy;
-        Tue, 29 Oct 2019 10:53:08 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 472RjG5sQkz9tygy;
+        Tue, 29 Oct 2019 10:53:06 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1572342788; bh=N+uhF8c4ECNo6xEQ72XQwCRncDBpG6xv4rvsvbrtlfM=;
+        t=1572342786; bh=UIHQXP6V1jWugQMbEinSuLqC2er8Mq/UwaqIPYmrK0I=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=um8gmOZv5mQkPHoKCAI+xAPEr1IhuEzkGaBYlAIIQq1Y/Xtm4OonORB3BK6YtKDZu
-         IFSdy1akc10UjocqfIsVUUoQ4z6CMq0BfYF5V/tupA0Ak8J0rRnPqewlQovIf11tdc
-         PdNMVVdQa4THCUcizfQnSbhMMK1xIRSLqErAGPOE=
+        b=UHuCmRqEsK/Fpq2Ecimvp1z0Kg8MJAeoBkH0iQJHFyw6HY6ZsAbV7ZMj+nN0pSWzX
+         r6jH9EJsvX3Num7zPxCKnETT6FrzT0EYs0C9/bu39qLcpwNw2wtoXofIjnv0bHlLZX
+         cKr6uLMdj99gp6uRuJbzw+Ho4TTlxQGbK893zDF8=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id ECD1A8B755;
-        Tue, 29 Oct 2019 10:53:09 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D85658B84E;
+        Tue, 29 Oct 2019 10:53:07 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xQ2iBKZhFQh4; Tue, 29 Oct 2019 10:53:09 +0100 (CET)
+        with ESMTP id AfAwE8OqeEvD; Tue, 29 Oct 2019 10:53:07 +0100 (CET)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A00A38B84E;
-        Tue, 29 Oct 2019 10:53:09 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 950FD8B84C;
+        Tue, 29 Oct 2019 10:53:07 +0100 (CET)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 6BE376B6FD; Tue, 29 Oct 2019 09:53:09 +0000 (UTC)
-Message-Id: <9c9fe32df8633e6ba8e670274dc3eef82a1b5a65.1572342582.git.christophe.leroy@c-s.fr>
+        id 5FC326B6FD; Tue, 29 Oct 2019 09:53:07 +0000 (UTC)
+Message-Id: <4644ccc9b4da78639ae9424db878c48711abf05a.1572342582.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1572342582.git.christophe.leroy@c-s.fr>
 References: <cover.1572342582.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 4/8] powerpc/vdso32: inline __get_datapage()
+Subject: [PATCH v3 2/8] powerpc/vdso32: Add support for
+ CLOCK_{REALTIME/MONOTONIC}_COARSE
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 29 Oct 2019 09:53:09 +0000 (UTC)
+Date:   Tue, 29 Oct 2019 09:53:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__get_datapage() is only a few instructions to retrieve the
-address of the page where the kernel stores data to the VDSO.
+This is copied and adapted from commit 5c929885f1bb ("powerpc/vdso64:
+Add support for CLOCK_{REALTIME/MONOTONIC}_COARSE")
+from Santosh Sivaraj <santosh@fossix.org>
 
-By inlining this function into its users, a bl/blr pair and
-a mflr/mtlr pair is avoided, plus a few reg moves.
-
-The improvement is noticeable (about 55 nsec/call on an 8xx)
-
-vdsotest before the patch:
-gettimeofday:    vdso: 731 nsec/call
+Benchmark from vdsotest-all:
+clock-gettime-realtime: syscall: 3601 nsec/call
+clock-gettime-realtime:    libc: 1072 nsec/call
+clock-gettime-realtime:    vdso: 931 nsec/call
+clock-gettime-monotonic: syscall: 4034 nsec/call
+clock-gettime-monotonic:    libc: 1213 nsec/call
+clock-gettime-monotonic:    vdso: 1076 nsec/call
+clock-gettime-realtime-coarse: syscall: 2722 nsec/call
+clock-gettime-realtime-coarse:    libc: 805 nsec/call
 clock-gettime-realtime-coarse:    vdso: 668 nsec/call
+clock-gettime-monotonic-coarse: syscall: 2949 nsec/call
+clock-gettime-monotonic-coarse:    libc: 882 nsec/call
 clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
 
-vdsotest after the patch:
-gettimeofday:    vdso: 677 nsec/call
-clock-gettime-realtime-coarse:    vdso: 613 nsec/call
-clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
+Additional test passed with:
+	vdsotest -d 30 clock-gettime-monotonic-coarse verify
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Santosh Sivaraj <santosh@fossix.org>
+Link: https://github.com/linuxppc/issues/issues/41
 ---
-v3: define get_datapage macro in asm/vdso_datapage.h
----
- arch/powerpc/include/asm/vdso_datapage.h  | 10 ++++++++++
- arch/powerpc/kernel/vdso32/cacheflush.S   |  9 ++++-----
- arch/powerpc/kernel/vdso32/datapage.S     | 28 +++-------------------------
- arch/powerpc/kernel/vdso32/gettimeofday.S | 12 +++++-------
- 4 files changed, 22 insertions(+), 37 deletions(-)
+ arch/powerpc/kernel/vdso32/gettimeofday.S | 64 +++++++++++++++++++++++++++----
+ 1 file changed, 57 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
-index 2ccb938d8544..da3d2de817f6 100644
---- a/arch/powerpc/include/asm/vdso_datapage.h
-+++ b/arch/powerpc/include/asm/vdso_datapage.h
-@@ -116,6 +116,16 @@ struct vdso_data {
- 
- extern struct vdso_data *vdso_data;
- 
-+#else /* __ASSEMBLY__ */
-+
-+.macro get_datapage ptr, tmp
-+	bcl	20, 31, .+4
-+	mflr	\ptr
-+	addi	\ptr, \ptr, __kernel_datapage_offset - (.-4)
-+	lwz	\tmp, 0(\ptr)
-+	add	\ptr, \tmp, \ptr
-+.endm
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* __KERNEL__ */
-diff --git a/arch/powerpc/kernel/vdso32/cacheflush.S b/arch/powerpc/kernel/vdso32/cacheflush.S
-index 7f882e7b9f43..d178ec8c279d 100644
---- a/arch/powerpc/kernel/vdso32/cacheflush.S
-+++ b/arch/powerpc/kernel/vdso32/cacheflush.S
-@@ -8,6 +8,7 @@
- #include <asm/processor.h>
- #include <asm/ppc_asm.h>
- #include <asm/vdso.h>
-+#include <asm/vdso_datapage.h>
- #include <asm/asm-offsets.h>
- 
- 	.text
-@@ -24,14 +25,12 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
-   .cfi_startproc
- 	mflr	r12
-   .cfi_register lr,r12
--	mr	r11,r3
--	bl	__get_datapage@local
-+	get_datapage	r10, r0
- 	mtlr	r12
--	mr	r10,r3
- 
- 	lwz	r7,CFG_DCACHE_BLOCKSZ(r10)
- 	addi	r5,r7,-1
--	andc	r6,r11,r5		/* round low to line bdy */
-+	andc	r6,r3,r5		/* round low to line bdy */
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5		/* ensure we get enough */
- 	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
-@@ -48,7 +47,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
- 
- 	lwz	r7,CFG_ICACHE_BLOCKSZ(r10)
- 	addi	r5,r7,-1
--	andc	r6,r11,r5		/* round low to line bdy */
-+	andc	r6,r3,r5		/* round low to line bdy */
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5
- 	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
-diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-index 6c7401bd284e..1095d818f94a 100644
---- a/arch/powerpc/kernel/vdso32/datapage.S
-+++ b/arch/powerpc/kernel/vdso32/datapage.S
-@@ -10,35 +10,13 @@
- #include <asm/asm-offsets.h>
- #include <asm/unistd.h>
- #include <asm/vdso.h>
-+#include <asm/vdso_datapage.h>
- 
- 	.text
- 	.global	__kernel_datapage_offset;
- __kernel_datapage_offset:
- 	.long	0
- 
--V_FUNCTION_BEGIN(__get_datapage)
--  .cfi_startproc
--	/* We don't want that exposed or overridable as we want other objects
--	 * to be able to bl directly to here
--	 */
--	.protected __get_datapage
--	.hidden __get_datapage
--
--	mflr	r0
--  .cfi_register lr,r0
--
--	bcl	20,31,data_page_branch
--data_page_branch:
--	mflr	r3
--	mtlr	r0
--	addi	r3, r3, __kernel_datapage_offset-data_page_branch
--	lwz	r0,0(r3)
--  .cfi_restore lr
--	add	r3,r0,r3
--	blr
--  .cfi_endproc
--V_FUNCTION_END(__get_datapage)
--
- /*
-  * void *__kernel_get_syscall_map(unsigned int *syscall_count) ;
-  *
-@@ -53,7 +31,7 @@ V_FUNCTION_BEGIN(__kernel_get_syscall_map)
- 	mflr	r12
-   .cfi_register lr,r12
- 	mr	r4,r3
--	bl	__get_datapage@local
-+	get_datapage	r3, r0
- 	mtlr	r12
- 	addi	r3,r3,CFG_SYSCALL_MAP32
- 	cmpli	cr0,r4,0
-@@ -75,7 +53,7 @@ V_FUNCTION_BEGIN(__kernel_get_tbfreq)
-   .cfi_startproc
- 	mflr	r12
-   .cfi_register lr,r12
--	bl	__get_datapage@local
-+	get_datapage	r3, r0
- 	lwz	r4,(CFG_TB_TICKS_PER_SEC + 4)(r3)
- 	lwz	r3,CFG_TB_TICKS_PER_SEC(r3)
- 	mtlr	r12
 diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index 355b537d327a..9867c7b9a25a 100644
+index becd9f8767ed..decd263c16e0 100644
 --- a/arch/powerpc/kernel/vdso32/gettimeofday.S
 +++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -9,6 +9,7 @@
- #include <asm/processor.h>
- #include <asm/ppc_asm.h>
- #include <asm/vdso.h>
-+#include <asm/vdso_datapage.h>
- #include <asm/asm-offsets.h>
- #include <asm/unistd.h>
+@@ -71,7 +71,13 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	cmpli	cr0,r3,CLOCK_REALTIME
+ 	cmpli	cr1,r3,CLOCK_MONOTONIC
+ 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
+-	bne	cr0,99f
++
++	cmpli	cr5,r3,CLOCK_REALTIME_COARSE
++	cmpli	cr6,r3,CLOCK_MONOTONIC_COARSE
++	cror	cr5*4+eq,cr5*4+eq,cr6*4+eq
++
++	cror	cr0*4+eq,cr0*4+eq,cr5*4+eq
++	bne	cr0, .Lgettime_fallback
  
-@@ -35,8 +36,7 @@ V_FUNCTION_BEGIN(__kernel_gettimeofday)
- 
- 	mr	r10,r3			/* r10 saves tv */
- 	mr	r11,r4			/* r11 saves tz */
--	bl	__get_datapage@local	/* get data page */
--	mr	r9, r3			/* datapage ptr in r9 */
-+	get_datapage	r9, r0
- 	cmplwi	r10,0			/* check if tv is NULL */
- 	beq	3f
- 	lis	r7,1000000@ha		/* load up USEC_PER_SEC */
-@@ -82,8 +82,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
  	mflr	r12			/* r12 saves lr */
    .cfi_register lr,r12
- 	mr	r11,r4			/* r11 saves tp */
--	bl	__get_datapage@local	/* get data page */
--	mr	r9,r3			/* datapage ptr in r9 */
-+	get_datapage	r9, r0
+@@ -80,8 +86,10 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	mr	r9,r3			/* datapage ptr in r9 */
  	lis	r7,NSEC_PER_SEC@h	/* want nanoseconds */
  	ori	r7,r7,NSEC_PER_SEC@l
- 	beq	cr5, .Lcoarse_clocks
-@@ -208,7 +207,7 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
+-50:	bl	__do_get_tspec@local	/* get sec/nsec from tb & kernel */
+-	bne	cr1,80f			/* not monotonic -> all done */
++	beq	cr5, .Lcoarse_clocks
++.Lprecise_clocks:
++	bl	__do_get_tspec@local	/* get sec/nsec from tb & kernel */
++	bne	cr1, .Lfinish		/* not monotonic -> all done */
  
- 	mflr	r12
-   .cfi_register lr,r12
--	bl	__get_datapage@local	/* get data page */
-+	get_datapage	r3, r0
- 	lwz	r5, CLOCK_HRTIMER_RES(r3)
+ 	/*
+ 	 * CLOCK_MONOTONIC
+@@ -105,12 +113,53 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	add	r9,r9,r0
+ 	lwz	r0,(CFG_TB_UPDATE_COUNT+LOPART)(r9)
+         cmpl    cr0,r8,r0		/* check if updated */
+-	bne-	50b
++	bne-	.Lprecise_clocks
++	b	.Lfinish_monotonic
++
++	/*
++	 * For coarse clocks we get data directly from the vdso data page, so
++	 * we don't need to call __do_get_tspec, but we still need to do the
++	 * counter trick.
++	 */
++.Lcoarse_clocks:
++	lwz	r8,(CFG_TB_UPDATE_COUNT+LOPART)(r9)
++	andi.	r0,r8,1                 /* pending update ? loop */
++	bne-	.Lcoarse_clocks
++	add	r9,r9,r0		/* r0 is already 0 */
++
++	/*
++	 * CLOCK_REALTIME_COARSE, below values are needed for MONOTONIC_COARSE
++	 * too
++	 */
++	lwz	r3,STAMP_XTIME+TSPC32_TV_SEC(r9)
++	lwz	r4,STAMP_XTIME+TSPC32_TV_NSEC(r9)
++	bne	cr6,1f
++
++	/* CLOCK_MONOTONIC_COARSE */
++	lwz	r5,(WTOM_CLOCK_SEC+LOPART)(r9)
++	lwz	r6,WTOM_CLOCK_NSEC(r9)
++
++	/* check if counter has updated */
++	or	r0,r6,r5
++1:	or	r0,r0,r3
++	or	r0,r0,r4
++	xor	r0,r0,r0
++	add	r3,r3,r0
++	lwz	r0,CFG_TB_UPDATE_COUNT+LOPART(r9)
++	cmpl	cr0,r0,r8               /* check if updated */
++	bne-	.Lcoarse_clocks
++
++	/* Counter has not updated, so continue calculating proper values for
++	 * sec and nsec if monotonic coarse, or just return with the proper
++	 * values for realtime.
++	 */
++	bne	cr6, .Lfinish
+ 
+ 	/* Calculate and store result. Note that this mimics the C code,
+ 	 * which may cause funny results if nsec goes negative... is that
+ 	 * possible at all ?
+ 	 */
++.Lfinish_monotonic:
+ 	add	r3,r3,r5
+ 	add	r4,r4,r6
+ 	cmpw	cr0,r4,r7
+@@ -118,11 +167,12 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	blt	1f
+ 	subf	r4,r7,r4
+ 	addi	r3,r3,1
+-1:	bge	cr1,80f
++1:	bge	cr1, .Lfinish
+ 	addi	r3,r3,-1
+ 	add	r4,r4,r7
+ 
+-80:	stw	r3,TSPC32_TV_SEC(r11)
++.Lfinish:
++	stw	r3,TSPC32_TV_SEC(r11)
+ 	stw	r4,TSPC32_TV_NSEC(r11)
+ 
  	mtlr	r12
- 	li	r3,0
-@@ -242,8 +241,7 @@ V_FUNCTION_BEGIN(__kernel_time)
-   .cfi_register lr,r12
- 
- 	mr	r11,r3			/* r11 holds t */
--	bl	__get_datapage@local
--	mr	r9, r3			/* datapage ptr in r9 */
-+	get_datapage	r9, r0
- 
- 	lwz	r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
- 
+@@ -133,7 +183,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	/*
+ 	 * syscall fallback
+ 	 */
+-99:
++.Lgettime_fallback:
+ 	li	r0,__NR_clock_gettime
+   .cfi_restore lr
+ 	sc
 -- 
 2.13.3
 
