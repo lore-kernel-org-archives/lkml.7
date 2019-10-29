@@ -2,145 +2,128 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF25C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7603FCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2475520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513A1208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfJ2LZT convert rfc822-to-8bit (ORCPT
+        id S1728039AbfJ2L0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:25:19 -0400
-Received: from mga14.intel.com ([192.55.52.115]:54309 "EHLO mga14.intel.com"
+        Tue, 29 Oct 2019 07:26:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:50680 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725927AbfJ2LZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:25:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 04:25:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="203537076"
-Received: from irsmsx151.ger.corp.intel.com ([163.33.192.59])
-  by orsmga006.jf.intel.com with ESMTP; 29 Oct 2019 04:25:14 -0700
-Received: from irsmsx112.ger.corp.intel.com (10.108.20.5) by
- IRSMSX151.ger.corp.intel.com (163.33.192.59) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 29 Oct 2019 11:25:13 +0000
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.40]) by
- irsmsx112.ger.corp.intel.com ([169.254.1.60]) with mapi id 14.03.0439.000;
- Tue, 29 Oct 2019 11:25:13 +0000
-From:   "Reshetova, Elena" <elena.reshetova@intel.com>
-To:     Mike Rapoport <rppt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Alan Cox <alan@linux.intel.com>
-Subject: RE: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Thread-Topic: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Thread-Index: AQHVjK/LKXzttSiV6ES+HuOmjQLbFqdxS3bQ
-Date:   Tue, 29 Oct 2019 11:25:12 +0000
-Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4EEC0CE@IRSMSX102.ger.corp.intel.com>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
-In-Reply-To: <1572171452-7958-1-git-send-email-rppt@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [163.33.239.181]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1725839AbfJ2L0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 07:26:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02E131F1;
+        Tue, 29 Oct 2019 04:26:44 -0700 (PDT)
+Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B61E3F71E;
+        Tue, 29 Oct 2019 04:26:42 -0700 (PDT)
+Subject: Re: [PATCH] arm64: cpufeature: Export Armv8.6 Matrix feature to
+ userspace
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, suzuki.poulose@arm.com,
+        Dave.Martin@arm.com
+References: <20191025171056.30641-1-julien.grall@arm.com>
+ <20191029111517.GE11590@willie-the-truck>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <f58cb01f-4543-6041-df2d-7ca7ba887bc9@arm.com>
+Date:   Tue, 29 Oct 2019 11:26:41 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191029111517.GE11590@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The patch below aims to allow applications to create mappins that have
-> pages visible only to the owning process. Such mappings could be used to
-> store secrets so that these secrets are not visible neither to other
-> processes nor to the kernel.
+Hi Will,
 
-Hi Mike, 
+On 29/10/2019 11:15, Will Deacon wrote:
+> On Fri, Oct 25, 2019 at 06:10:56PM +0100, Julien Grall wrote:
+>> This patch provides support for reporting the presence of Armv8.6
+>> Matrix and its optional features to userspace.
+> 
+> Are you sure this is 8.6 and not earlier?
 
-I have actually been looking into the closely related problem for the past 
-couple of weeks (on and off). What is common here is the need for userspace
-to indicate to kernel that some pages contain secrets. And then there are
-actually a number of things that kernel can do to try to protect these secrets
-better. Unmap from direct map is one of them. Another thing is to map such
-pages as non-cached, which can help us to prevent or considerably restrict
-speculation on such pages. The initial proof of concept for marking pages as
-"UNCACHED" that I got from Dave Hansen was actually based on mlock2() 
-and a new flag for it for this purpose. Since then I have been thinking on what
-interface suits the use case better and actually selected going with new madvise() 
-flag instead because of all possible implications for fragmentation and performance. 
-My logic was that we better allocate the secret data explicitly (using mmap()) 
-to make sure that no other process data accidentally gets to suffer.
-Imagine I would allocate a buffer to hold a secret key, signal with mlock
- to protect it and suddenly my other high throughput non-secret buffer 
-(which happened to live on the same page by chance) became very slow
- and I don't even have an easy way (apart from mmap()ing it!) to guarantee
- that it won't be affected.
+This was introduced by Armv8.6 see [1] but allowed to be used by Armv8.2 and 
+onwards.
 
-So, I ended up towards smth like:
+> 
+>> This based on [1] + commit ec52c7134b1f "arm64: cpufeature: Treat
+>> ID_AA64ZFR0_EL1 as RAZ when SVE is not enabled" (taken from v5.4-rc4).
+>>
+>> [1]  arm64/for-next/elf-hwcap-docs
+>> ---
+>>   Documentation/arm64/cpu-feature-registers.rst |  8 ++++++++
+>>   Documentation/arm64/elf_hwcaps.rst            | 15 +++++++++++++++
+>>   arch/arm64/include/asm/hwcap.h                |  4 ++++
+>>   arch/arm64/include/asm/sysreg.h               |  7 +++++++
+>>   arch/arm64/include/uapi/asm/hwcap.h           |  4 ++++
+>>   arch/arm64/kernel/cpufeature.c                | 11 +++++++++++
+>>   arch/arm64/kernel/cpuinfo.c                   |  4 ++++
+>>   7 files changed, 53 insertions(+)
+>>
+>> diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
+>> index ffcf4e2c71ef..d1d6d56a7b08 100644
+>> --- a/Documentation/arm64/cpu-feature-registers.rst
+>> +++ b/Documentation/arm64/cpu-feature-registers.rst
+>> @@ -193,6 +193,8 @@ infrastructure:
+>>        +------------------------------+---------+---------+
+>>        | Name                         |  bits   | visible |
+>>        +------------------------------+---------+---------+
+>> +     | I8MM                         | [52-55] |    y    |
+>> +     +------------------------------+---------+---------+
+> 
+> Looking at:
+> 
+> https://developer.arm.com/docs/ddi0601/latest/aarch64-system-registers/id_aa64isar1_el1
+> 
+> Then I8MM is advertised as "Armv8.2", alongside other fields that we haven't
+> listed here such as BF16 and SPECRES.
+> 
+> So we probably want a patch bringing all of this up to speed, rather than
+> randomly advertising some features and not others.
+> 
+>>        | SB                           | [36-39] |    y    |
+>>        +------------------------------+---------+---------+
+>>        | FRINTTS                      | [32-35] |    y    |
+>> @@ -227,6 +229,12 @@ infrastructure:
+>>        +------------------------------+---------+---------+
+>>        | Name                         |  bits   | visible |
+>>        +------------------------------+---------+---------+
+>> +     | F64MM                        | [56-59] |    y    |
+>> +     +------------------------------+---------+---------+
+>> +     | F32MM                        | [52-55] |    y    |
+>> +     +------------------------------+---------+---------+
+>> +     | I8MM                         | [44-47] |    y    |
+>> +     +------------------------------+---------+---------+
+> 
+> Urgh, we're inconsistent in our bitfields. Some are [lo-hi] whilst others
+> are [hi-lo]. Please can you fix that in a preparatory patch? I prefer
+> [hi-lo] and it matches the arch docs.
 
-  secret_buffer =  mmap(NULL, PAGE_SIZE, ...)
-   madvise(secret_buffer, size, MADV_SECRET)
+Sure.
 
-I have work in progress code here:
- https://github.com/ereshetova/linux/commits/madvise
+Cheers,
 
-I haven't sent it for review, because it is not ready yet and I am now working
-on trying to add the page wiping functionality. Otherwise it would be useless
-to protect the page during the time it is used in userspace, but then allow it
-to get reused by a different process later after it has been released back and
-userspace was stupid enough not to wipe the contents (or was crashed on 
-purpose before it was able to wipe anything out). 
+[1] 
+https://community.arm.com/developer/ip-products/processors/b/processors-ip-blog/posts/arm-architecture-developments-armv8-6-a
 
-We have also had some discussions with Tycho that XPFO can be also
-applied selectively for such "SECRET" marked pages and I know that he has also
-did some initial prototyping on this, so I think it would be great to decide
-on userspace interface first and then see how we can assemble together all
-these features. 
+> 
+> Will
+> 
 
-The *very* far fetching goal for all of this would be something that Alan Cox
-suggested when I started looking into this - actually have a new libc function to 
-allocate memory in a secure way, which can hide all the dancing with mmap()/madvise()
-(or/and potentially interaction with a chardev that Andy was suggesting also) and
-implement an efficient allocator for such secret pages. Openssl has its
-own version of  "secure heap", which is essentially mmap area with additional 
-MLOCK_ONFAULT and MADV_DONTDUMP flags for protection. Some other 
-apps or libs must use smth similar if they want additional protection, which
-makes them to reimplement the same concept again and again. Sadly or surprisingly 
-other major libs like boringssl, mbedTLS or client like openssh do not user any mlock()/
-madvise() flags for any additional protection of secrets that they hold in memory. 
-Maybe if all of it would be behind a single secure API situation would start to 
-change in userspace towards better. 
-
-Best Regards,
-Elena.
- 
-. 
+-- 
+Julien Grall
