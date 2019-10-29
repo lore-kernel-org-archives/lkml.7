@@ -2,86 +2,124 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995C8CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BC3C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D20020659
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488DD20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572384938;
-	bh=Soy9bjUk7mkvk3zL/tkSsew3q5dBMfxrz3akOMoEyhI=;
+	s=default; t=1572385081;
+	bh=rbmUINasJZJd0GwJsXJu9ipOl8vcXmbvjndpiAJJQxk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wHE6c5XQeu5zOS+P5YYQsh4G7C31bhgggJ/XrkoThwMiXTYdSlxVEIBaknC9KUCmF
-	 oK2S3s5uGLqC73Y+sBwUfxIGirvdSp1EnhsU4sP6gB/AOVZVbAQTw8Vdov+5/mwvkg
-	 mzlb6f+CME+9o7YPBvh5ks6fQOZOtq86ITYEPjvc=
+	b=jNpUPYTZxRixFDQPkORs0TSVi06l8W2FqNVHh72sCkupdUz1wFj4CXMEyyjp21lUu
+	 zs0x36Nf4k7ZIGHanUAsnhZiD95AxjZxmQv8fkGwXsllUHk0BAdZC+3VEBp977+C9D
+	 XQZCZM+VoRruEGIvjkHhGdXPSHKPQPoq4LtgdEnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbfJ2Vfh (ORCPT
+        id S1729155AbfJ2ViA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:35:37 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46402 "EHLO
+        Tue, 29 Oct 2019 17:38:00 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36359 "EHLO
         mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728437AbfJ2Vfg (ORCPT
+        with ESMTP id S1727706AbfJ2ViA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:35:36 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 89so209683oth.13;
-        Tue, 29 Oct 2019 14:35:35 -0700 (PDT)
+        Tue, 29 Oct 2019 17:38:00 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c7so269535otm.3;
+        Tue, 29 Oct 2019 14:37:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uitwfAkLbCLnEl4obZmwBP7OPXyIb+02Vzy0XuAro1c=;
-        b=oXAFGW4MJUyrv+WN3bQEY4H6fnAq/oQpNm+RYfNLS4+aplx2/KqLXQNjWNAsowhxms
-         96RYFZiduTN06iJeDECXRVOsUGJ+Kqio5oGnzb0xbR8Ry8RC8xEV3gUaCNeb1+6B28Nh
-         AHnl9gd8rvRHn9Kmv3BMvYCOb8mSF8QYTtz4ILVW0uoqinkl9nQYFuBNfO1qtFRAAf9y
-         UkwU5OmStowFcepdRMNZLlXOaf2lPw6zPLtt0ANYcjA3wW8+UsnfHYSVEwOXFaoj0S6x
-         ytkcWDOg1+GLMNsGcYMRYHSlgbgAvNJDsRlhDESC5a13r/66Y5fFRUfz2fZbHmvk2J1O
-         C7mQ==
-X-Gm-Message-State: APjAAAU5SzBleie/Cov1A8Kx6LRyEYHkWsj68S0FfMRge6yLRvZsXshi
-        Wj9JjlknYG5NPaiio9ckSQ==
-X-Google-Smtp-Source: APXvYqx8H0GIKskqmdZ3mYCF6FghPBywADezj85hdLx2P/pNi9HefI09N6elZzA1fx+IpvomXxgMcg==
-X-Received: by 2002:a05:6830:1003:: with SMTP id a3mr20140587otp.166.1572384935460;
-        Tue, 29 Oct 2019 14:35:35 -0700 (PDT)
+        bh=HPk/5F3b4dwjuAgfQmnttu0kTaOON9LgkQM/V749G3U=;
+        b=ldPZRMNoOEsvxQSLrVsZsB2vaAyJMN9JWGghaVvDXtP4u5ecCVsnf9cPa9MCHgY3BD
+         RCVqiSfQJBvo8gHGyuSjeI4SNGjY7AMEvUyW10N2dveXWgnmuFdNr33NMsI7ZbKug887
+         Zc18rEx44urVurPllxdsBjOghfg4v4VyCauNZ41bGId/hgY6zXznaqk8t61vAmWFqNYR
+         CYyaSEDel0TJa+yntGZeQjxuC4HT/vJcTMdNsEEHVI5fdKXh1w8WjYXUgXY+JZu+Sio4
+         fgzFJX/l3obqAL2l+bR8+zC/4Vl6T+WnaMBdDERRjmA/N3k7phxdnDNQAW8u27cYAudt
+         Sn4g==
+X-Gm-Message-State: APjAAAVRR4xeZRZ+w8Cwf+Jyi/hgYlWXPEY4UW07hIekiVGg/kNpAto2
+        6u5Uv3FPgJ/FCIYU+ULOSw==
+X-Google-Smtp-Source: APXvYqy7vhLoX8SU0VKqi+P/9oYgBPX9zkqE7WV/iDYFf8wu0E5QI6Ui9HTTqSZxoCU6ChBhHps5bQ==
+X-Received: by 2002:a9d:6655:: with SMTP id q21mr16322722otm.47.1572385079003;
+        Tue, 29 Oct 2019 14:37:59 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c19sm77613otl.6.2019.10.29.14.35.34
+        by smtp.gmail.com with ESMTPSA id k10sm4175oig.25.2019.10.29.14.37.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 14:35:34 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 16:35:33 -0500
+        Tue, 29 Oct 2019 14:37:58 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 16:37:57 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, vkoul@kernel.org,
-        paul@crapouillou.net, mark.rutland@arm.com,
-        Zubair.Kakakhel@imgtec.com, dan.j.williams@intel.com
-Subject: Re: [PATCH 1/2 v2] dt-bindings: dmaengine: Add X1000 bindings.
-Message-ID: <20191029213533.GA8640@bogus>
-References: <1571799903-44561-1-git-send-email-zhouyanjie@zoho.com>
- <1571937670-30828-1-git-send-email-zhouyanjie@zoho.com>
- <1571937670-30828-2-git-send-email-zhouyanjie@zoho.com>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        ludovic.desroches@microchip.com, linus.walleij@linaro.org,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        claudiu.beznea@microchip.com
+Subject: Re: [PATCH] pinctrl: at91: Enable slewrate by default on SAM9X60
+Message-ID: <20191029213757.GA8829@bogus>
+References: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571937670-30828-2-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 25 Oct 2019 01:21:09 +0800, Zhou Yanjie wrote:
-> Add the dmaengine bindings for the X1000 Soc from Ingenic.
+On Thu, Oct 24, 2019 at 08:22:34PM +0300, Codrin Ciubotariu wrote:
+> On SAM9X60, slewrate should be enabled on pins with a switching frequency
+> below 50Mhz. Since most of our pins do not exceed this value, we enable
+> slewrate by default. Pins with a switching value that exceeds 50Mhz will
+> have to explicitly disable slewrate.
 > 
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 > ---
->  .../devicetree/bindings/dma/jz4780-dma.txt         |  3 +-
->  include/dt-bindings/dma/x1000-dma.h                | 40 ++++++++++++++++++++++
->  2 files changed, 42 insertions(+), 1 deletion(-)
->  create mode 100644 include/dt-bindings/dma/x1000-dma.h
+>  drivers/pinctrl/pinctrl-at91.c     | 4 ++--
+>  include/dt-bindings/pinctrl/at91.h | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 > 
+> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> index 117075b5798f..c135149e84e9 100644
+> --- a/drivers/pinctrl/pinctrl-at91.c
+> +++ b/drivers/pinctrl/pinctrl-at91.c
+> @@ -85,8 +85,8 @@ enum drive_strength_bit {
+>  					 DRIVE_STRENGTH_SHIFT)
+>  
+>  enum slewrate_bit {
+> -	SLEWRATE_BIT_DIS,
+>  	SLEWRATE_BIT_ENA,
+> +	SLEWRATE_BIT_DIS,
+>  };
+>  
+>  #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
+> @@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
+>  {
+>  	unsigned int tmp;
+>  
+> -	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
+> +	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
+>  		return;
+>  
+>  	tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
+> diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
+> index 3831f91fb3ba..e8e117306b1b 100644
+> --- a/include/dt-bindings/pinctrl/at91.h
+> +++ b/include/dt-bindings/pinctrl/at91.h
+> @@ -27,8 +27,8 @@
+>  #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
+>  #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
+>  
+> -#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
+> -#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
+> +#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
+> +#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is an ABI. You can't just change the definition.
+
+Rob
