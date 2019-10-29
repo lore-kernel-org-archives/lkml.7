@@ -2,94 +2,125 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC18CCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4A3C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2D6C20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1290C20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:20:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="csZSXMal"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZJqLNtPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726045AbfJ2WU0 (ORCPT
+        id S1726225AbfJ2WU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:20:26 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33111 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfJ2WU0 (ORCPT
+        Tue, 29 Oct 2019 18:20:27 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23215 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725880AbfJ2WU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:20:26 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 6so2959065wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 15:20:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=razW+Flqe0osf5dKak/H2XuFxr228C/l2kIAAwUTuGk=;
-        b=csZSXMalom5E5HgQVJhg4cX8a87qqS9Xo9MfkzoMevMI1ZQIOw8PfH5I9pM4vIBaVi
-         /8kXDbH0jx+HV/G3F4AMdzZ6sEwEjolgZUxXOsnRT7/a4nipe+arkXjyBtlcia6C3ryY
-         jCT4M+oVg3U2c0zUF8QAMdMHVbri9rsjSdpMI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=razW+Flqe0osf5dKak/H2XuFxr228C/l2kIAAwUTuGk=;
-        b=s/7gwmpftBimZe7okM3ugcEwzul0DLfskaqwiul7c8+5239An23dW3HrhJn9n4Q5wa
-         zZaXl26UCHMuYH/0Yv/nwriEJeY9f86A0lV1EeZ42/24d0/JjoZ/cHhQK4B6ZfTZdcsA
-         b9E28JbYOmEzSFnj5oueH912WoctHocCBKCB+iQ1sZ8oJ7IBMoSsVIXhR52Z5PP8FWA3
-         zOLsXAJNYQ641L2u2GDH/bRukmu2xf8vDUz57yQQBxdQ+ilNexFDJoJ+yngk8hqt1NLN
-         wAyPEuK6Al0EC025qWMINZlBCg9hkXda9yK4yTk/hSC1kNILfhaNmpH/GVrUCfAddag/
-         5WfQ==
-X-Gm-Message-State: APjAAAWC3ABWRtbREmVuh2tzKqIE/DFnBiG0kE1xGCR0ZACuJ7ctZUUE
-        /2yNZivD73NodJ8pTTI/VvzjTMdl+5sYr/Ww
-X-Google-Smtp-Source: APXvYqwp+t/1Tr3f8FhaYd6lfEekG3CNML5zp1y+zNpsVeTjQFAZa2t7Nptm1VRwDBMlHFBkEpnDkQ==
-X-Received: by 2002:a7b:c05a:: with SMTP id u26mr6142666wmc.128.1572387624169;
-        Tue, 29 Oct 2019 15:20:24 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id i3sm263717wrw.69.2019.10.29.15.20.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 15:20:23 -0700 (PDT)
-Subject: Re: [PATCH] clk: mark clk_disable_unused() as __init
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191004094826.8320-1-linux@rasmusvillemoes.dk>
- <CAMuHMdXSb0mgsqJgNFWqJXywQJLsqvasj7P_bUj4MBvyrAUgVw@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <97cb0b95-72e9-7aff-28de-637310d66caa@rasmusvillemoes.dk>
-Date:   Tue, 29 Oct 2019 23:20:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 18:20:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572387625;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5eWT9nPy+R5O4U/dHhPn5efOlyKUPzVBsOetLDlPYDU=;
+        b=ZJqLNtPx8t6Dsd2vNGTSkF0rZnjWsErulJaYS8hyITSvEvUl2zIS5Q0PAIBeEkteUhzfZI
+        Nyo+OumAxmssXG7f4hk4AXoZ8Q/Tw/tKvGMkd8hqvYl2uIjNlj6xc52uq3WV9e8BMv9H/Y
+        flyBgsRGRWuNMyDjy42HVnwl/kFfTXg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-dv88SZ0uMyG58oCKmZGY9g-1; Tue, 29 Oct 2019 18:20:22 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 835A45E6;
+        Tue, 29 Oct 2019 22:20:20 +0000 (UTC)
+Received: from gondolin (ovpn-116-60.ams2.redhat.com [10.36.116.60])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E1D7919D70;
+        Tue, 29 Oct 2019 22:20:13 +0000 (UTC)
+Date:   Tue, 29 Oct 2019 23:19:17 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, freude@linux.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        jjherne@linux.ibm.com
+Subject: Re: [PATCH] s390: vfio-ap: disable IRQ in remove callback results
+ in kernel OOPS
+Message-ID: <20191029231917.0e6a62b9.cohuck@redhat.com>
+In-Reply-To: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
+References: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXSb0mgsqJgNFWqJXywQJLsqvasj7P_bUj4MBvyrAUgVw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: dv88SZ0uMyG58oCKmZGY9g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/10/2019 14.02, Geert Uytterhoeven wrote:
-> On Fri, Oct 4, 2019 at 12:30 PM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
->> clk_disable_unused is only called once, as a late_initcall, so reclaim
->> a bit of memory by marking it (and the functions and data it is the
->> sole user of) as __init/__initdata. This moves ~1900 bytes from .text
->> to .init.text for a imx_v6_v7_defconfig.
->>
->> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, 29 Oct 2019 18:09:06 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Friendly ping. Will this be picked up?
+> From: aekrowia <akrowiak@linux.ibm.com>
 
-Thanks,
-Rasmus
+Some accident seems to have happened to your git config.
+
+>=20
+> When an AP adapter card is configured off via the SE or the SCLP
+> Deconfigure Adjunct Processor command and the AP bus subsequently detects
+> that the adapter card is no longer in the AP configuration, the card
+> device representing the adapter card as well as each of its associated
+> AP queue devices will be removed by the AP bus. If one or more of the
+> affected queue devices is bound to the VFIO AP device driver, its remove
+> callback will be invoked for each queue to be removed. The remove callbac=
+k
+> resets the queue and disables IRQ processing. If interrupt processing was
+> never enabled for the queue, disabling IRQ processing will fail resulting
+> in a kernel OOPS.
+>=20
+> This patch verifies IRQ processing is enabled before attempting to disabl=
+e
+> interrupts for the queue.
+>=20
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Signed-off-by: aekrowia <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_drv.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio=
+_ap_drv.c
+> index be2520cc010b..42d8308fd3a1 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -79,7 +79,8 @@ static void vfio_ap_queue_dev_remove(struct ap_device *=
+apdev)
+>  =09apid =3D AP_QID_CARD(q->apqn);
+>  =09apqi =3D AP_QID_QUEUE(q->apqn);
+>  =09vfio_ap_mdev_reset_queue(apid, apqi, 1);
+> -=09vfio_ap_irq_disable(q);
+> +=09if (q->saved_isc !=3D VFIO_AP_ISC_INVALID)
+> +=09=09vfio_ap_irq_disable(q);
+
+Hm... would it make sense to move that check into vfio_ap_irq_disable()
+instead? Or are we sure that in all other cases the irq processing had
+been enabled before?
+
+Also, if that oops is reasonably easy to trigger, it would probably
+make sense to cc:stable. (Or is this a new problem?)
+
+>  =09kfree(q);
+>  =09mutex_unlock(&matrix_dev->lock);
+>  }
+
