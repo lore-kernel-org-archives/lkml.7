@@ -2,118 +2,145 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925E2CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EEBCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69DCC208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADB32087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:22:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JYrOuGv/"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MjLxo0CQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389848AbfJ2PVK (ORCPT
+        id S2389906AbfJ2PWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:21:10 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44699 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389299AbfJ2PVJ (ORCPT
+        Tue, 29 Oct 2019 11:22:15 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34784 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728879AbfJ2PWP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:21:09 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n48so10046053ota.11
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 08:21:08 -0700 (PDT)
+        Tue, 29 Oct 2019 11:22:15 -0400
+Received: by mail-qt1-f195.google.com with SMTP id e14so20799844qto.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 08:22:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kpw6kIhG5qk5+SF1ocs8o7hmvdHB1eO67/DCJ4bRv80=;
-        b=JYrOuGv/xDIu8OSupe0HmWiAxv5wEi1FCYbEN6SGbriWdCAI5idijo6yXIRBECTqhc
-         vmtyxGKEG7XOo+BcLtqKLDYo6aFo/3btITf8S7qh/JsubrFaR487MDGa2/u61mXZGTIX
-         4WnHc6OUZqe/4s0b1hAjVf4D6kB2fjyGr/xK1E/XTk7mefU1Sw23dv0zN+q7DARlL/no
-         0D3IGwmbLnOi89eB4K4OipKyvnS18TM7a8CSYvb+68Upa3Xaimkzax2bPS9/o/2BTGYW
-         kxT2p831P07PIW37IYxE2hXuRV16RvHwKWLPZPUkMdM/X+Af/QQsmb5wnC/B6a1/VRLs
-         JJTw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KJ2tUGVkciILzBBgFhdC61JtF6ibtgppsm1fyVjOFLQ=;
+        b=MjLxo0CQi64Bmh/eGY+poTwa1hrB2LqoX1NA3eWPKQ+L4Hmh81yIpXJid9IlfSAyUq
+         KSIUG7abrSMrkwnEDPbL+MoHpCuisAGc4+EpNLifawyRxS5wiNKtDTLt/9h+Rtz0e/FU
+         Jf9WjriqDc7rkrv6WWXLemtgoU7jzUxdDfWuAHtp5K8CY+9M6C8nzmPNQIEIRMr8Nvco
+         POiT9OzFzSNaarWqAH9e+BSFTMi9HijpfcvJ9bBnNVl976cqdk7/CaaB49xHysXdsbnp
+         DKYtVURgO2ZHzxv5ztyoWSrdeLOXKSoVeTIYG9BGKO3VsptyfqtcZDxtH8LvJhPEo3QA
+         VtQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kpw6kIhG5qk5+SF1ocs8o7hmvdHB1eO67/DCJ4bRv80=;
-        b=W+y0KYeCxvRtXS7JovrXSog8cLOOmobfiqd1BGT5tmvh16it6sJSp14UaBr4IN3PZR
-         o/1t+IjAnowKIl+8tnvRwsd4Ess/S9edFCGvjJogOGGfE9N5r6Lq3GeraFWptr7Q+boz
-         YRisgxCctEPn22eTqnd2KUebO3Sqg8Pme/utpqwdg9/hbQR5VQRz16a8xKbjKFkqOHRM
-         VsLt/+W1VhguX3vnk7V9k02BbJKPqm4/WOPSMyuumifLXQkpKwwqrBuIDTleoNNQi4rg
-         QVhJKtgU0vfC6Y7J1EqHxTBe/s7wv7GHxAVFUHiLDS06pV3V9FNgXqkDxeQxckl1POhO
-         gEqQ==
-X-Gm-Message-State: APjAAAWonq0xJ3Cv1nVo6dDjnMCLpk1bFOxQLLqawUe5TtE+k0UJgjW+
-        QhiOHwb1KuuvRIY/PuFiC+KQ8qAWitu4g4g86wkWBw==
-X-Google-Smtp-Source: APXvYqzkSZazuhPDk5ny3gLrUl+AS++zX+xcHitd9HhsB7kkFpJrE0QiMk4fGIii4YKCcUGZYaG6+XzxBGQ9CHBwLiI=
-X-Received: by 2002:a9d:3a75:: with SMTP id j108mr10442372otc.110.1572362464482;
- Tue, 29 Oct 2019 08:21:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KJ2tUGVkciILzBBgFhdC61JtF6ibtgppsm1fyVjOFLQ=;
+        b=lO8SqbKYJhZFmG8GNX2oMTR2DA4RlFuxqRUKmE/5sd3Q75zufKEWBr2CqQH2Y2npuA
+         l+8W8FQEyGpXqLJCwSS+nog9cVbwZ8VeUEFqOKlxUTD7SRkVi0Nu2JKf6TrAsxN9FcoQ
+         JeVZdVJ6jvpG18rW35tYu2GSecQS+cOEZctm0OddV7mQjkBUyPIwow6WJpLlev4t8io6
+         ylVa+2lOz/IG1KQy85k+smPH7ET4PD4OPBOh2xECCCERQFAVve8fIarsUR/BfZKPXGQC
+         gMr1CEQyJmrVHHGPuzzS7eW7EvUdWam43Rbir7WNQy2seqwr1/46gwSZmpvlo1f/m8Z4
+         53xQ==
+X-Gm-Message-State: APjAAAU8oXbNY6sd9SK9nupk0OkGB++aGf3D2L3MrlFncaHKpRJPyMws
+        LRHAYpumJHpFUzgaXrXcwHgUXA==
+X-Google-Smtp-Source: APXvYqxLKxy3JJn7ORUklx23t0TpBC6oGDD370s9Bi4F9R2B95vfrG1lX1sLGNq2rZIM4/lkW9AIrQ==
+X-Received: by 2002:ac8:28c7:: with SMTP id j7mr4246821qtj.4.1572362532708;
+        Tue, 29 Oct 2019 08:22:12 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id p59sm6906193qtd.2.2019.10.29.08.22.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 29 Oct 2019 08:22:12 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iPTJz-00073b-DL; Tue, 29 Oct 2019 12:22:11 -0300
+Date:   Tue, 29 Oct 2019 12:22:11 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v2] tpm: Add major_version sysfs file
+Message-ID: <20191029152211.GE6128@ziepe.ca>
+References: <20191025193103.30226-1-jsnitsel@redhat.com>
+ <20191028205313.GH8279@linux.intel.com>
+ <20191028210507.7i6d6b5olw72shm3@cantor>
+ <20191029091731.GC9896@linux.intel.com>
+ <20191029124342.GB6128@ziepe.ca>
+ <20191029142225.GC7415@linux.intel.com>
+ <1572361008.4812.2.camel@HansenPartnership.com>
 MIME-Version: 1.0
-References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
- <CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com>
- <20191028172143.4vnnjpdljfnexaq5@wittgenstein> <CAG48ez20hn8vToY+=C62nA-rbUfxh=JD6N-f7XVS3_GZOoPjxw@mail.gmail.com>
- <20191029112706.p5dd5yzpcgouo6n5@wittgenstein> <20191029142622.jxmssu4s4ndui7bw@wittgenstein>
-In-Reply-To: <20191029142622.jxmssu4s4ndui7bw@wittgenstein>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 29 Oct 2019 16:20:37 +0100
-Message-ID: <CAG48ez1pH9fGacQF6m7=R39bDMRqNR_ML7d2v-e=-kVLJhBuPA@mail.gmail.com>
-Subject: Re: For review: documentation of clone3() system call
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572361008.4812.2.camel@HansenPartnership.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 3:26 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
-> On Tue, Oct 29, 2019 at 12:27:07PM +0100, Christian Brauner wrote:
-> > On Mon, Oct 28, 2019 at 08:09:13PM +0100, Jann Horn wrote:
-> > > On Mon, Oct 28, 2019 at 6:21 PM Christian Brauner
-> > > <christian.brauner@ubuntu.com> wrote:
-> > > > where stack + stack_size is addition on a void pointer which usually
-> > > > clang and gcc are not very happy about.
-> > > > I wanted to bring this up on the mailing list soon: If possible, I don't
-> > > > want userspace to need to know about stack direction and just have stack
-> > > > point to the beginning and then have the kernel do the + stack_size
-> > > > after the copy_clone_args_from_user() if the arch needs it. For example,
-> > > > by having a dumb helder similar to copy_thread_tls()/coyp_thread() that
-> > > > either does the + stack_size or not. Right now, clone3() is supported on
-> > > > parisc and afaict, the stack grows upwards for it. I'm not sure if there
-> > > > are obvious reasons why that won't work or it would be a bad idea...
-> > >
-> > > That would mean adding a new clone flag that redefines how those
-> > > parameters work and describing the current behavior in the manpage as
-> > > the behavior without the flag (which doesn't exist on 5.3), right?
-> >
-> > I would break API and if someone reports breakage we'll revert and go
-> > the more complicated route you outlined (see [1]).
->
-> @Jann, I think the following patch might even be enough?...
-[...]
-> +static inline void clone3_prepare_stack(struct kernel_clone_args *kargs)
-> +{
-> +#if !defined(CONFIG_STACK_GROWSUP) && !defined(CONFIG_IA64)
-> +       kargs->stack += kargs->stack_size;
-> +#endif
-> +}
+On Tue, Oct 29, 2019 at 07:56:48AM -0700, James Bottomley wrote:
+> On Tue, 2019-10-29 at 16:22 +0200, Jarkko Sakkinen wrote:
+> > On Tue, Oct 29, 2019 at 09:43:42AM -0300, Jason Gunthorpe wrote:
+> > > On Tue, Oct 29, 2019 at 11:17:31AM +0200, Jarkko Sakkinen wrote:
+> > > > On Mon, Oct 28, 2019 at 02:05:07PM -0700, Jerry Snitselaar wrote:
+> > > > > On Mon Oct 28 19, Jarkko Sakkinen wrote:
+> > > > > > On Fri, Oct 25, 2019 at 12:31:03PM -0700, Jerry Snitselaar
+> > > > > > wrote:
+> > > > > > > +	return sprintf(buf, "%s\n", chip->flags &
+> > > > > > > TPM_CHIP_FLAG_TPM2
+> > > > > > > +		       ? "2.0" : "1.2");
+> > > > > > 
+> > > > > > This is not right. Should be either "1" or "2".
+> > > > > > 
+> > > > > > /Jarkko
+> > > > > 
+> > > > > Okay I will fix that up. Do we have a final decision on the
+> > > > > file name,
+> > > > > major_version versus version_major?
+> > > > 
+> > > > Well, I don't see how major_version would make any sense. It is
+> > > > not as future proof as version_major. Still waiting for Jason's
+> > > > feedback for this.
+> > > 
+> > > $ find /sys/ -name  "*version*"
+> > > /sys/devices/pci0000:00/0000:00:17.0/ata1/host0/scsi_host/host0/ahc
+> > > i_host_version
+> > > /sys/devices/virtual/net/docker0/bridge/multicast_mld_version
+> > > /sys/devices/virtual/net/docker0/bridge/multicast_igmp_version
+> > > /sys/firmware/efi/esrt/entries/entry0/lowest_supported_fw_version
+> > > /sys/firmware/efi/esrt/entries/entry0/last_attempt_version
+> > > /sys/firmware/efi/esrt/entries/entry0/fw_version
+> > > /sys/module/acpi/parameters/acpica_version
+> > > 
+> > > etc..
+> > > 
+> > > Not a single example of the backward version.
+> > > 
+> > > Most likely it should be called 'tpm_version'
+> > 
+> > The postfix gives tells the part of the version number that the file
+> > reports. If you really want to add the prefix, then the appropriate
+> > name would be tpm_version_major.
+> > 
+> > I'd still go with just version_major as tpm_ prefix is somewhat
+> > redundant.
+> 
+> You have to be careful with overly generic names in sysfs ... this is
+> what happened to us in SCSI:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=42caa0edabd6a0a392ec36a5f0943924e4954311
+> 
+> That's not to say version_major is wrong ... plenty of sysfs files have
+> generic names like this, it's just that tpm_version_major might be more
+> future proof.
 
-I guess it might work as long as nobody is actually using clone3 yet
-and you can get this patch into the 5.3 stable tree and any distro
-kernels on 5.3 before people do start using clone3?
+Indeed, it is a bit a global namespace, so nothing wrong with adding
+tpm_
+
+Jason
