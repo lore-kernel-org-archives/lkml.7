@@ -2,286 +2,264 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C971CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AF1CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5368D20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572340726;
-	bh=0ADrIIP882RKq8K41RtWyBoNG6H7WLJ5VGS3iVnNEa4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=VJpFw9sW43VrnZWyPf9wbZWOm1cng+iBlQO7EVmHD1xSE209LFaJ7j8z8E0ClwaZz
-	 FrG52eDAcDLeqALSSgxZjinOIu4MODC777ykaSWBQD4mNdcYSPpYJ68iOR5bdd9QPJ
-	 2/irVgdIl42DOqFVWv99/gb87SdS5gGiQ3RWbOnM=
+	by mail.kernel.org (Postfix) with ESMTP id 6D21320830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731978AbfJ2JSp (ORCPT
+        id S1732008AbfJ2JSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:18:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727347AbfJ2JSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:18:45 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0050A20717;
-        Tue, 29 Oct 2019 09:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572340723;
-        bh=0ADrIIP882RKq8K41RtWyBoNG6H7WLJ5VGS3iVnNEa4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=yUXEocNdIQ7F3yfqiz8sVnTvuNKc+KbnFqKfD0eDcdWAC42aK76umwqEiNeTKiR4Z
-         VCeANM+Plr9hkFw24pNYYyaG+n8h7UhYe5yGgBDG3ANhuxEKAi6klTGwGxwO01C9rD
-         puxDmmxhDjXqvIihAcsuQDfGVg7fNl0t9PBlOEfQ=
-Date:   Tue, 29 Oct 2019 10:18:40 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.9.198
-Message-ID: <20191029091840.GA581750@kroah.com>
+        Tue, 29 Oct 2019 05:18:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40764 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726803AbfJ2JSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:18:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5003BB283;
+        Tue, 29 Oct 2019 09:18:50 +0000 (UTC)
+Message-ID: <615958c46c850d284de76ffcf9f0dc35ad262066.camel@suse.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+From:   Dario Faggioli <dfaggioli@suse.com>
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?ISO-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Date:   Tue, 29 Oct 2019 10:18:48 +0100
+In-Reply-To: <277737d6034b3da072d3b0b808d2fa6e110038b0.camel@suse.com>
+References: <20190726152101.GA27884@sinkpad>
+         <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+         <20190802153715.GA18075@sinkpad>
+         <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
+         <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
+         <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
+         <20190911140204.GA52872@aaronlu>
+         <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
+         <20190912120400.GA16200@aaronlu>
+         <CAERHkrsrszO4hJqVy=g7P74h9d_YJzW7GY4ptPKykTX-mc9Mdg@mail.gmail.com>
+         <20190915141402.GA1349@aaronlu>
+         <277737d6034b3da072d3b0b808d2fa6e110038b0.camel@suse.com>
+Organization: SUSE
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-vUJAtHRWv6ovXvFt0x+s"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-vUJAtHRWv6ovXvFt0x+s
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-I'm announcing the release of the 4.9.198 kernel.
+On Tue, 2019-10-29 at 10:11 +0100, Dario Faggioli wrote:
+> On Sun, 2019-09-15 at 22:14 +0800, Aaron Lu wrote:
+> > I'm using the following branch as base which is v5.1.5 based:
+> > https://github.com/digitalocean/linux-coresched coresched-v3-
+> > v5.1.5-
+> > test
+> >=20
+> > And I have pushed Tim's branch to:
+> > https://github.com/aaronlu/linux coresched-v3-v5.1.5-test-tim
+> >=20
+> > Mine:
+> > https://github.com/aaronlu/linux coresched-v3-v5.1.5-test-
+> > core_vruntime
+> >=20
+> Hello,
+>=20
+> As anticipated, I've been trying to follow the development of this
+> feature and, in the meantime, I have done some benchmarks.
+>=20
+> I actually have a lot of data (and am planning for more), so I am
+> sending a few emails, each one with a subset of the numbers in it,
+> instead than just one which would be beyond giant! :-)
+>=20
+SYSBENCH
+=3D=3D=3D=3D=3D=3D=3D=3D
 
-All users of the 4.9 kernel series must upgrade.
+http://xenbits.xen.org/people/dariof/benchmarks/results/linux/core-sched/mm=
+tests/boxes/wayrath/coresched-email-6_sysbench.txt
 
-The updated 4.9.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-4.9.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
-ummary
+                                 v                      v                  =
+   BM                     BM                     BM                     BM =
+                    BM                     BM
+                             BM-HT                BM-noHT                  =
+   HT                   noHT                 csc-HT        csc_stallfix-HT =
+            csc_tim-HT        csc_vruntime-HT
+Hmean     1      235.81 (   0.00%)      221.49 (  -6.07%)      245.28 (   4=
+.01%)      230.53 (  -2.24%)      241.40 (   2.37%)      225.00 (  -4.58%) =
+     225.50 (  -4.37%)      202.38 ( -14.18%)
+Hmean     4      273.77 (   0.00%)      290.01 (   5.93%)      292.47 (   6=
+.83%)      261.76 (  -4.39%)      287.58 (   5.04%)      281.30 (   2.75%) =
+     274.21 (   0.16%)      271.91 (  -0.68%)
+Hmean     7      346.60 (   0.00%)      315.58 (  -8.95%)      345.38 (  -0=
+.35%)      349.29 (   0.78%)      363.76 (   4.95%)      349.09 (   0.72%) =
+     355.69 (   2.62%)      336.69 (  -2.86%)
+Hmean     8      343.17 (   0.00%)      353.73 (   3.08%)      409.04 (  19=
+.19%)      411.31 (  19.86%)      406.77 (  18.53%)      306.33 ( -10.74%) =
+     393.70 (  14.72%)      342.73 (  -0.13%)
+Stddev    1       44.93 (   0.00%)       50.07 ( -11.44%)       25.05 (  44=
+.24%)       39.22 (  12.71%)       26.27 (  41.54%)       42.77 (   4.81%) =
+      43.63 (   2.90%)       62.88 ( -39.95%)
+Stddev    4       16.03 (   0.00%)       23.37 ( -45.76%)       23.77 ( -48=
+.25%)       22.40 ( -39.69%)       18.63 ( -16.19%)       14.37 (  10.35%) =
+       9.34 (  41.72%)       25.21 ( -57.23%)
+Stddev    7       22.88 (   0.00%)       37.54 ( -64.07%)       26.57 ( -16=
+.16%)       38.50 ( -68.26%)       59.14 (-158.51%)       26.73 ( -16.83%) =
+      24.58 (  -7.43%)       32.93 ( -43.94%)
+Stddev    8       36.74 (   0.00%)       36.60 (   0.39%)      102.82 (-179=
+.86%)       93.56 (-154.65%)       77.33 (-110.47%)       36.16 (   1.58%) =
+      44.27 ( -20.50%)       35.15 (   4.33%)
+                                 v                      v                  =
+   VM                     VM                     VM                     VM =
+                    VM                     VM
+                             VM-HT                VM-noHT                  =
+   HT                   noHT                 csc-HT        csc_stallfix-HT =
+            csc_tim-HT        csc_vruntime-HT
+Hmean     1      215.16 (   0.00%)      225.80 *   4.95%*      205.74 (  -4=
+.38%)      200.61 (  -6.76%)      169.70 ( -21.13%)      168.84 ( -21.53%) =
+     157.27 ( -26.91%)      162.94 ( -24.27%)
+Hmean     4      163.44 (   0.00%)      189.82 *  16.14%*      164.54 (   0=
+.67%)      148.47 (  -9.16%)       40.62 * -75.15%*       53.14 * -67.49%* =
+     129.51 * -20.76%*      158.99 (  -2.72%)
+Hmean     7      162.74 (   0.00%)      185.79 (  14.17%)      211.79 (  30=
+.14%)      186.92 (  14.86%)       28.02 * -82.78%*       34.32 * -78.91%* =
+     130.01 ( -20.11%)      145.47 ( -10.61%)
+Hmean     8      240.19 (   0.00%)      192.24 ( -19.96%)      192.87 * -19=
+.70%*      194.01 ( -19.23%)       16.92 * -92.95%*       30.55 * -87.28%* =
+     150.51 * -37.34%*      147.67 * -38.52%*
+Stddev    1        1.80 (   0.00%)        4.14 (-129.80%)        6.04 (-234=
+.90%)       24.54 (-1261.18%)       61.54 (-3313.19%)       62.92 (-3389.48=
+%)       55.91 (-3000.67%)       58.29 (-3132.75%)
+Stddev    4        6.33 (   0.00%)       14.22 (-124.51%)        7.04 ( -11=
+.07%)       13.77 (-117.30%)       13.23 (-108.83%)        5.07 (  19.92%) =
+      15.73 (-148.38%)       14.04 (-121.61%)
+Stddev    7       24.70 (   0.00%)       37.50 ( -51.78%)       35.59 ( -44=
+.07%)       29.96 ( -21.26%)       20.07 (  18.77%)       21.06 (  14.74%) =
+      24.97 (  -1.07%)       30.52 ( -23.52%)
+Stddev    8       23.23 (   0.00%)       41.13 ( -77.03%)       27.30 ( -17=
+.49%)       41.67 ( -79.35%)        3.75 (  83.88%)       12.62 (  45.68%) =
+      55.87 (-140.49%)       37.12 ( -59.76%)
+                                 v                      v                  =
+   VM                     VM                     VM                     VM =
+                    VM                     VM
+                          VM-v4-HT             VM-v4-noHT                  =
+v4-HT                v4-noHT              v4-csc-HT     v4-csc_stallfix-HT =
+         v4-csc_tim-HT     v4-csc_vruntime-HT
+Hmean     1      216.12 (   0.00%)      310.43 (  43.63%)      168.80 ( -21=
+.90%)      196.04 (  -9.29%)      168.27 ( -22.14%)      188.53 ( -12.77%) =
+     176.57 ( -18.30%)      180.12 ( -16.66%)
+Hmean     3      161.91 (   0.00%)      160.80 (  -0.69%)      160.33 (  -0=
+.97%)      175.36 (   8.31%)       51.27 * -68.34%*       52.18 * -67.77%* =
+     137.95 ( -14.80%)      166.12 (   2.60%)
+Hmean     4      156.44 (   0.00%)      196.25 *  25.45%*      165.19 (   5=
+.60%)      199.78 *  27.71%*       50.67 * -67.61%*       40.42 * -74.16%* =
+     175.03 (  11.88%)      172.66 *  10.37%*
+Stddev    1        4.67 (   0.00%)      100.18 (-2043.42%)       50.61 (-98=
+2.87%)      141.33 (-2923.68%)       69.08 (-1377.96%)       70.09 (-1399.5=
+1%)       47.32 (-912.42%)       42.67 (-813.02%)
+Stddev    3       12.62 (   0.00%)        8.76 (  30.60%)       13.18 (  -4=
+.38%)        9.42 (  25.41%)        3.57 (  71.72%)       28.47 (-125.51%) =
+      21.08 ( -67.00%)       19.37 ( -53.48%)
+Stddev    4        8.52 (   0.00%)        8.54 (  -0.17%)        3.09 (  63=
+.70%)       13.84 ( -62.42%)       24.33 (-185.50%)        9.30 (  -9.10%) =
+      16.60 ( -94.73%)        9.64 ( -13.07%)
+                                 v                      v                  =
+ VMx2                   VMx2                   VMx2                   VMx2 =
+                  VMx2                   VMx2
+                           VMx2-HT              VMx2-noHT                  =
+   HT                   noHT                 csc-HT        csc_stallfix-HT =
+            csc_tim-HT        csc_vruntime-HT
+Hmean     1      168.87 (   0.00%)      154.79 (  -8.34%)      190.28 (  12=
+.68%)      151.18 ( -10.48%)      136.73 ( -19.03%)       36.63 * -78.31%* =
+      83.21 ( -50.73%)      124.42 ( -26.32%)
+Hmean     4      163.65 (   0.00%)       87.90 * -46.29%*      119.37 * -27=
+.06%*       87.94 * -46.26%*       26.96 * -83.53%*       24.08 * -85.29%* =
+      54.15 * -66.91%*       63.80 * -61.01%*
+Hmean     7      181.60 (   0.00%)       89.10 * -50.93%*      148.16 ( -18=
+.41%)       75.71 * -58.31%*       16.98 * -90.65%*       23.92 * -86.83%* =
+      57.28 * -68.46%*       66.10 * -63.60%*
+Hmean     8      198.98 (   0.00%)       94.24 * -52.64%*      141.96 ( -28=
+.65%)       96.62 * -51.44%*       23.22 * -88.33%*       29.24 * -85.30%* =
+      80.10 * -59.74%*       80.36 * -59.61%*
+Stddev    1       61.59 (   0.00%)       44.71 (  27.41%)       52.14 (  15=
+.33%)       44.61 (  27.56%)       90.12 ( -46.32%)       42.53 (  30.94%) =
+      38.32 (  37.79%)       43.03 (  30.12%)
+Stddev    4        8.65 (   0.00%)       21.74 (-151.41%)       21.18 (-144=
+.98%)       22.51 (-160.27%)       19.72 (-128.07%)        4.38 (  49.38%) =
+       2.68 (  68.95%)       14.40 ( -66.55%)
+Stddev    7       17.94 (   0.00%)       15.14 (  15.62%)       29.94 ( -66=
+.88%)       17.30 (   3.54%)       26.23 ( -46.20%)        5.17 (  71.17%) =
+      15.98 (  10.95%)       18.43 (  -2.72%)
+Stddev    8       38.45 (   0.00%)       19.68 (  48.82%)       44.14 ( -14=
+.78%)       28.84 (  25.00%)       10.64 (  72.33%)       11.65 (  69.71%) =
+      22.63 (  41.15%)       16.00 (  58.39%)
 
-thanks,
+Core scheduling does not seem to be able to handle sysbench well, yet.
+In this case, things are not to bad on baremtal (and the best
+performing coresched variant is again the one with Tim's patches).
 
-greg k-h
+But things go bad when running the banchmark in VMs, where core
+scheduling almost always loses against no HyperThreading, even in the
+overcommitted case. For virt. cases, it's also not straightforward to
+tell which set of patches are best, as some runs are in favours of
+Tim's, some others of vruntime's.
 
-------------
-
- Makefile                                                |    2 -
- arch/arm/boot/dts/am4372.dtsi                           |    2 +
- arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c |    3 +
- arch/mips/boot/dts/qca/ar9331.dtsi                      |    2 -
- arch/mips/loongson64/common/serial.c                    |    2 -
- arch/mips/mm/tlbex.c                                    |   23 ++++++++---=
---
- arch/parisc/mm/ioremap.c                                |   12 ++++--
- arch/xtensa/kernel/xtensa_ksyms.c                       |    7 ----
- drivers/base/core.c                                     |    3 +
- drivers/block/loop.c                                    |    1=20
- drivers/cpufreq/cpufreq.c                               |   10 -----
- drivers/gpu/drm/drm_edid.c                              |    3 +
- drivers/gpu/drm/radeon/radeon_drv.c                     |    8 ----
- drivers/infiniband/hw/cxgb4/mem.c                       |   28 +++++++++--=
------
- drivers/input/misc/da9063_onkey.c                       |    5 --
- drivers/memstick/host/jmb38x_ms.c                       |    2 -
- drivers/net/ethernet/broadcom/genet/bcmgenet.h          |    1=20
- drivers/net/ethernet/broadcom/genet/bcmmii.c            |   11 ++++--
- drivers/net/ethernet/hisilicon/hns_mdio.c               |    6 ++-
- drivers/net/xen-netback/interface.c                     |    1=20
- drivers/pci/pci.c                                       |   24 ++++++-----=
---
- drivers/s390/scsi/zfcp_fsf.c                            |   16 +++++++--
- drivers/scsi/megaraid.c                                 |    4 +-
- drivers/scsi/qla2xxx/qla_target.c                       |    4 ++
- drivers/scsi/scsi_sysfs.c                               |   11 +++++-
- drivers/scsi/ufs/ufshcd.c                               |    3 +
- drivers/staging/wlan-ng/cfg80211.c                      |    6 +--
- drivers/usb/class/usblp.c                               |    4 +-
- drivers/usb/gadget/udc/lpc32xx_udc.c                    |    6 +--
- drivers/usb/misc/ldusb.c                                |   20 ++++++-----
- drivers/usb/misc/legousbtower.c                         |    5 --
- drivers/usb/serial/ti_usb_3410_5052.c                   |   10 +----
- fs/btrfs/extent-tree.c                                  |    1=20
- fs/cifs/smb1ops.c                                       |    3 +
- fs/ocfs2/journal.c                                      |    3 +
- fs/ocfs2/localalloc.c                                   |    3 +
- mm/shmem.c                                              |   18 +++++-----
- mm/slub.c                                               |   13 ++++++-
- net/ipv4/route.c                                        |    9 +++--
- net/ipv6/sit.c                                          |    1=20
- net/mac80211/debugfs_netdev.c                           |   11 +++++-
- net/mac80211/mlme.c                                     |    5 +-
- net/sched/act_api.c                                     |   12 ++++--
- net/sctp/socket.c                                       |    4 +-
- net/wireless/nl80211.c                                  |    3 +
- net/wireless/wext-sme.c                                 |    8 +++-
- scripts/namespace.pl                                    |   13 ++++---
- sound/pci/hda/patch_realtek.c                           |    3 +
- sound/soc/sh/rcar/core.c                                |    1=20
- 49 files changed, 212 insertions(+), 144 deletions(-)
-
-Ajay Kaher (1):
-      Revert "net: sit: fix memory leak in sit_init_net()"
-
-Alessio Balsini (1):
-      loop: Add LOOP_SET_DIRECT_IO to compat ioctl
-
-Alex Deucher (1):
-      Revert "drm/radeon: Fix EEH during kexec"
-
-Christophe JAILLET (2):
-      mips: Loongson: Fix the link time qualifier of 'serial_exit()'
-      memstick: jmb38x_ms: Fix an error handling path in 'jmb38x_ms_probe()'
-
-Colin Ian King (1):
-      staging: wlan-ng: fix exit return when sme->key_idx >=3D NUM_WEPKEYS
-
-Eric Dumazet (1):
-      net: avoid potential infinite loop in tc_ctl_action()
-
-Florian Fainelli (2):
-      net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
-      net: bcmgenet: Set phydev->dev_flags only for internal PHYs
-
-Greg KH (1):
-      RDMA/cxgb4: Do not dma memory off of the stack
-
-Greg Kroah-Hartman (1):
-      Linux 4.9.198
-
-Gustavo A. R. Silva (1):
-      usb: udc: lpc32xx: fix bad bit shift operation
-
-Helge Deller (1):
-      parisc: Fix vmap memory leak in ioremap()/iounmap()
-
-Jacob Keller (1):
-      namespace: fix namespace.pl script to support relative paths
-
-Johan Hovold (5):
-      USB: legousbtower: fix memleak on disconnect
-      USB: serial: ti_usb_3410_5052: fix port-close races
-      USB: ldusb: fix memleak on disconnect
-      USB: usblp: fix use-after-free on disconnect
-      USB: ldusb: fix read info leaks
-
-Juergen Gross (1):
-      xen/netback: fix error path of xenvif_connect_data()
-
-Junya Monden (1):
-      ASoC: rsnd: Reinitialize bit clock inversion flag for every format se=
-tting
-
-Kai-Heng Feng (1):
-      drm/edid: Add 6 bpc quirk for SDC panel in Lenovo G50
-
-Kailang Yang (1):
-      ALSA: hda/realtek - Add support for ALC711
-
-Marco Felsch (1):
-      Input: da9063 - fix capability and drop KEY_SLEEP
-
-Matthew Wilcox (Oracle) (1):
-      memfd: Fix locking when tagging pins
-
-Max Filippov (1):
-      xtensa: drop EXPORT_SYMBOL for outs*/ins*
-
-Miaoqing Pan (2):
-      nl80211: fix null pointer dereference
-      mac80211: fix txq null pointer dereference
-
-Oleksij Rempel (1):
-      MIPS: dts: ar9331: fix interrupt-controller size
-
-Paul Burton (1):
-      MIPS: tlbex: Fix build_restore_pagemask KScratch restore
-
-Peter Ujfalusi (1):
-      ARM: dts: am4372: Set memory bandwidth limit for DISPC
-
-Qian Cai (1):
-      mm/slub: fix a deadlock in show_slab_objects()
-
-Qu Wenruo (1):
-      btrfs: block-group: Fix a memory leak due to missing btrfs_put_block_=
-group()
-
-Quinn Tran (1):
-      scsi: qla2xxx: Fix unbound sleep in fcport delete path.
-
-Rafael J. Wysocki (2):
-      cpufreq: Avoid cpufreq_suspend() deadlock on system shutdown
-      PCI: PM: Fix pci_power_up()
-
-Roberto Bergantinos Corpas (1):
-      CIFS: avoid using MID 0xFFFF
-
-Stanley Chu (1):
-      scsi: ufs: skip shutdown if hba is not powered
-
-Stefano Brivio (1):
-      ipv4: Return -ENETUNREACH if we can't create route but saddr is valid
-
-Steffen Maier (1):
-      scsi: zfcp: fix reaction on bit error threshold notification
-
-Tony Lindgren (1):
-      ARM: OMAP2+: Fix missing reset done flag for am3 and am43
-
-Will Deacon (2):
-      cfg80211: wext: avoid copying malformed SSIDs
-      mac80211: Reject malformed SSID elements
-
-Xiang Chen (1):
-      scsi: megaraid: disable device when probe failed after enabled device
-
-Xin Long (1):
-      sctp: change sctp_prot .no_autobind with true
-
-Yi Li (1):
-      ocfs2: fix panic due to ocfs2_wq is null
-
-Yizhuo (1):
-      net: hisilicon: Fix usage of uninitialized variable in function mdio_=
-sc_cfg_reg_write()
-
-Yufen Yu (1):
-      scsi: core: try to get module before removing device
+--=20
+Dario Faggioli, Ph.D
+http://about.me/dario.faggioli
+Virtualization Software Engineer
+SUSE Labs, SUSE https://www.suse.com/
+-------------------------------------------------------------------
+<<This happens because _I_ choose it to happen!>> (Raistlin Majere)
 
 
---u3/rZRmxL6MmkK24
+--=-vUJAtHRWv6ovXvFt0x+s
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl24A+0ACgkQONu9yGCS
-aT6uvw/9GJxpwJBjJwvXV1LJ1CPI/CF4h5LNG2UZVOgGLPkDb5FPLkSetqRii5Yt
-qgzyeUFk58FBJsRRBmsroGSIMKkTZFUTbpcLQxOn3y5dfhP24WSg1ceJbqYBMjv3
-Sqjz04j51Ln1t3d0qiTXCI9byDjlDMdzZeuhdEW99PaAY9ph7Qw2Tj5W09zM9olm
-Qh5QiKAHNwTlwYhf/ClLR27PMFABb6rZkFQHmA/MFBH1kjuVq2Au5vysfYzuisxQ
-N9mtjupSLUj8t9UVvuUO5xlQHPpTcSS/22TShmKTGtFwsYU9Ye17lkO5SLNGzRBo
-+QEml3dySvXdYAD1uN9j29sRWJZoDwY2Q0hBNUeV7Vazs+2Ieqn+gWTDDVD/OpeO
-7oMZpEqXqWSjyNWdgwodRmc0a8lgmujtSuM90XC9oi3gQo52OpVE2herDlSDk4gI
-+xITUYFimDFDxGHTTFhasXroVYDBF8BWr0UBVxfuwmY0H4IQ3+mOY4yk3ri9iNiU
-JHft0vfz/40UAczyt0O6mFXKsKa9aU6/WtYv8WJPrzqcD03Q3CQB5qwzNCenF7It
-agd1D8zlgCrmRXkDmdmz6u5QYY6DmML8jF6EJkPSlYR7x6CrIp6pa5AouodcPK1U
-C2XGTTZ+yWFTnIfKoOLqFiPVQp9lRDHIKE8FUKSkZULhTqWYocE=
-=aKVX
+iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAl24A/gACgkQFkJ4iaW4
+c+7bshAAyPnbrjHmeXxO5catKxzdwPUwXYeG4Vsu/EbJG8Ze3X/0ES5tPYrGCyfK
+Zx9e5QY3cpCn/fCAebjwoMGtXK3l4FrSl3XlHokY+lGvTbZbKu/qHqkM4Ds0Ep99
+729r+CPdAPQZve+2hcRSaHC7QinFu/9xLObaJiMpmWwDfx18nyGMwbxv0VaIknY4
+gYK12V0+fpwkwE7as7BQbRX0fxzQPzC8OK32iNJfeQX6UZEODntr3SUxYiiqZ5vd
+IsGVCOAtJyVJtCxU0dhcju04rf6gEXV+PtWkfR1Kb3Aq8J0V+G0kY56bwWcqydPd
+7QnUYBuxt4hCGYM0WbqBXIrhjq8hUrVLsctp3m5DX7M1e5aZubmBeBsFwf4Tjrga
+TmW7oNYG2NOm+MklBlnwKfLe7Y/q+0CCV74MH/jaVETNibD3lCMUEOxfw8ykqdem
+x6qNg/iDXpYu8mAdSixPcTWhm2sQXhiqosdzmJoCyE4B5wR6N29Yre3WtydWSE3V
+gfWVs6ILR1nGQZKhHDZRILbkwjwjIahHl6p0FXfKoLzr3SDJNV/KkUOoZkzXPUZi
+xIo9FOak7As7mDCYeUg2Aj3bne6prPEH9ZB8G3YftQp8MpucMXP9y0kkf2br2hLw
+7MRWDuXPHWwuaf7uHB+hHvJSC3W/IBoILTu9WodrKVAPK0z1Uk4=
+=Z/4b
 -----END PGP SIGNATURE-----
 
---u3/rZRmxL6MmkK24--
+--=-vUJAtHRWv6ovXvFt0x+s--
+
