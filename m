@@ -2,116 +2,164 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7C0CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C6DCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6121420862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:50:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bth9SGMv"
+	by mail.kernel.org (Postfix) with ESMTP id 145562087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388869AbfJ2Nup (ORCPT
+        id S2388919AbfJ2Nuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:50:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21271 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388802AbfJ2Nuo (ORCPT
+        Tue, 29 Oct 2019 09:50:52 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39625 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388773AbfJ2Nuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:50:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572357043;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JexFLIXNziOY/Hp82j+M6Mi54TFENjbZDKoY1+D14r4=;
-        b=bth9SGMvqXdA/vWKZSyU4IpVWDYVSQP92k7waestwNnXl5OBHxxAMFCwjkmKnoDAiLy5tf
-        GzHWkvp1AIVluZhDMmaiBHbOSfb//XH5rXWwCwugB0JfKTn2x8VvJSAEKuJ2zdSEh9yXLK
-        suGKoagl2IriKTJZFB/h+3cSzrRrPqQ=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-223-aEpLgleFMjm2j_OX6W--IA-1; Tue, 29 Oct 2019 09:50:38 -0400
-Received: by mail-lj1-f200.google.com with SMTP id q185so1868299ljq.21
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 06:50:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I7ErEh4B9TcCeKpNzW2UWWVl8b/qcD3YHSeB/vQRjds=;
-        b=CQveCdI7YWVMZAlJvBBg21KEdDspJrhNx3zPLXG5FgxhkocSP4HZcWJx4XQBQIQyu0
-         3EAUAP9N9qW9YbYNQ09/QNOk6kAlq6bL1QTBRgn9jfpEYwmBFE9SSn8EzQRTPi5b/uYs
-         E9DW+nRdrB/CxFo8Kbjs5uVR7eTwIuQIDeTHqr5NV1ApJL35OfyKsUcBZQf/ud7aawWg
-         pTb823BYJaN5b05/TCWSxIjMIsST+h0xhn7rhqFV9Xs4BuxZTPBBFZ6dW95gzSY9zw/C
-         8cmxv+YSewjT5a10Oe/rXcDR1t5Jd9EXnwqqSXOB/QljEkJ13PKKYlGWniSOOAD7ntWk
-         5D8w==
-X-Gm-Message-State: APjAAAW9Fvt2w0DJ1hMIK7hIs7sDR6nhKOiSb1qPa4nVZWI7bp9OODg7
-        Buhfoenx+23ad0DiYJpDXcNgovp/w7nFHsOGkK35bpEc1Kkxrs8Q0zC65Pxa5DrYbDms8JOW5M8
-        zaJwFagOkJg34Bw+VDglNBuJV5CnENepZOJch8Z8Q
-X-Received: by 2002:a19:f811:: with SMTP id a17mr2560871lff.132.1572357037147;
-        Tue, 29 Oct 2019 06:50:37 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyS0UuN7bz4jqf2X5flMLGKB+vIexXwx20Tv6+rGjAW/vVA7aL+e9LoFg4VwxLEI2u8dP1p9NiIJwVVaZmFIpg=
-X-Received: by 2002:a19:f811:: with SMTP id a17mr2560865lff.132.1572357036976;
- Tue, 29 Oct 2019 06:50:36 -0700 (PDT)
+        Tue, 29 Oct 2019 09:50:51 -0400
+X-Originating-IP: 92.184.102.232
+Received: from localhost (unknown [92.184.102.232])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 734B0FF811;
+        Tue, 29 Oct 2019 13:50:32 +0000 (UTC)
+Date:   Tue, 29 Oct 2019 14:50:21 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+Subject: Re: [RFC PATCH 09/13] mfd: rtc: support RTC on ROHM BD71828 with
+ BD70528 driver
+Message-ID: <20191029135021.GC11234@piout.net>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <9ccc83f3dfd0fd0dc8178adf41b52115f960c45a.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191017101225.GB3125@piout.net>
+ <a1aa91f74b41033fed4a7106247f48f9b9f78bd9.camel@fi.rohmeurope.com>
+ <20191017104859.GC3125@piout.net>
+ <bf7a8ce661277aca3c4dede5fb17ef4163a56027.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <20191029134732.67664-1-mcroce@redhat.com>
-In-Reply-To: <20191029134732.67664-1-mcroce@redhat.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Tue, 29 Oct 2019 14:50:01 +0100
-Message-ID: <CAGnkfhzzjxeS8mTXEf_f=JyH1u0tY2HQn1Hyub+1BVo5_J4DOg@mail.gmail.com>
-Subject: Re: [PATCH DRAFT 0/3] mvpp2: page_pool and XDP support
-To:     netdev <netdev@vger.kernel.org>
-Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Blakey <paulb@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>
-X-MC-Unique: aEpLgleFMjm2j_OX6W--IA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bf7a8ce661277aca3c4dede5fb17ef4163a56027.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 2:47 PM Matteo Croce <mcroce@redhat.com> wrote:
->
-> Hi all,
->
-> Last patch series for mvpp2. First patch is just a param to disable percp=
-u allocation,
-> second one is the page_pool port, and the last one XDP support.
->
-> As usual, reviews are welcome.
->
-> TODO: disable XDP when the shared buffers are in use.
->
-> Matteo Croce (3):
->   mvpp2: module param to force shared buffers
->   mvpp2: use page_pool allocator
->   mvpp2: add XDP support
->
->  drivers/net/ethernet/marvell/Kconfig          |   1 +
->  drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  11 +
->  .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 232 ++++++++++++++++--
->  3 files changed, 220 insertions(+), 24 deletions(-)
->
-> --
-> 2.21.0
->
+On 23/10/2019 10:27:43+0000, Vaittinen, Matti wrote:
+> Hello again Alexandre,
+> 
+> On Thu, 2019-10-17 at 12:48 +0200, Alexandre Belloni wrote:
+> > On 17/10/2019 10:36:44+0000, Vaittinen, Matti wrote:
+> > > Hello Alexandre,
+> > > 
+> > > Thanks for quick check! I'll be off for the rest of the week but I
+> > > will
+> > > re-work this patch at next week :) I agree with you regarding most
+> > > of
+> > > the comments.
+> > > 
+> > > > > +
+> > > > > +
+> > > > > +/*
+> > > > > + * RTC definitions shared between
+> > > > > + *
+> > > > > + * BD70528
+> > > > > + * and BD71828
+> > > > > + */
+> > > > > +
+> > > > > +#define ROHM_BD1_MASK_RTC_SEC		0x7f
+> > > > > +#define ROHM_BD1_MASK_RTC_MINUTE	0x7f
+> > > > > +#define ROHM_BD1_MASK_RTC_HOUR_24H	0x80
+> > > > > +#define ROHM_BD1_MASK_RTC_HOUR_PM	0x20
+> > > > > +#define ROHM_BD1_MASK_RTC_HOUR		0x3f
+> > > > > +#define ROHM_BD1_MASK_RTC_DAY		0x3f
+> > > > > +#define ROHM_BD1_MASK_RTC_WEEK		0x07
+> > > > > +#define ROHM_BD1_MASK_RTC_MONTH		0x1f
+> > > > > +#define ROHM_BD1_MASK_RTC_YEAR		0xff
+> > > > > +#define ROHM_BD1_MASK_ALM_EN		0x7
+> > > > > +
+> > > > 
+> > > > All that renaming is distracting and useless. Please resubmit
+> > > > without
+> > > > renaming defines, structs and functions to make it easier to
+> > > > review.
+> > > 
+> > > I would prefer renaming because it makes it clearly visible which
+> > > defines/structs/functions are common for both PMICs and which are
+> > > PMIC
+> > > specific. But I really understand the problem of spotting real
+> > > changes.
+> > > Would it be Ok if I did renaming in separate patch which does not
+> > > bring
+> > > in any other changes - and then the functional changes in separate
+> > > patch?
+> > > 
+> > 
+> > No, unless you can guarantee that all future PMICs from rohm matching
+> > the wildcard will use this driver.
+> > 
+> I started re-working this patch and remembered my original idea
+> regarding the naming :) I should have commented it as I had already
+> forgotten it. You are correct what comes to the difficulty of using
+> correct wild-cards. And I agree with you what comes to function and
+> struct names like bd7xx28 - those are somewhat fragile as next PMIC
+> which we want to support with this driver may be BD12345 - yielding our
+> wild-card useless.
+> 
+> But if we take a look of common definitions in header rohm-shared.h
+> which I added - those are prefixed as ROHM_BD1. My idea was introducing
+> this common RTC define group 1 - which would be common define group for
+> all devices which belong to BD1 group. Currently that would be BD71828
+> and BD70528. What was missing is the comment explaining this (and lack
+> of comment made this useless as even I forgot it already).
+> 
+> I already reverted this naming change and all BD70528 specific and
+> common defines/functions/enums are prefixed with the good old BD70528.
+> Only new definitions which I added for BD71828 are prefixed with
+> BD71828. But how do you see the grouping the common defines to format
+> ROHM_BD<group number>_FOO_BAR in the rohm-shared.h - with comment that
+> group BD1 consists of definitions which are common for BD70528 and
+> BD71828?
+> 
+> My only fear when using prefix BD70528 for common defines is that
+> someone changes some defines to match the BD70528 data-sheet without
+> evaluating if this impacts to other PMICs. It may be useless paranoia
+> though - hence I am asking for your opinion at this phase. I can do
+> this grouping in own patch - or just leave it as it is now in my local
+> repo - with the old BD70528 being common prefix.
+> 
 
-Sorry, discard this, it just slipped out, bad copy paste :/
+I don't think those masks will ever change, all the BCD RTCs are using
+the same.
 
---=20
-Matteo Croce
-per aspera ad upstream
+Note that ROHM_BD1_MASK_RTC_HOUR_24H, ROHM_BD1_MASK_RTC_HOUR_PM and
+ROHM_BD1_MASK_ALM_EN are bits and should use BIT() to make that clear.
+Those may change later but I don't see how someone looking at the
+BD70528 datasheet would get those wrong.
 
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
