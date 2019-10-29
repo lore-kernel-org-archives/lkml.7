@@ -6,67 +6,74 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFE0C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD1CCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF1DD21835
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E753A21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbfJ2Bzz (ORCPT
+        id S1730149AbfJ2B4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:55:55 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43598 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728432AbfJ2Bzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:55:54 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5B94AC70F17D91E33609;
-        Tue, 29 Oct 2019 09:55:49 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 29 Oct 2019 09:55:41 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Corentin Labbe <clabbe@baylibre.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] crypto: amlogic - Use kmemdup in meson_aes_setkey()
-Date:   Tue, 29 Oct 2019 01:55:23 +0000
-Message-ID: <20191029015523.126987-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Mon, 28 Oct 2019 21:56:37 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:60602 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729440AbfJ2B4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 21:56:37 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2AF452000DC;
+        Tue, 29 Oct 2019 02:56:35 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 92E73200355;
+        Tue, 29 Oct 2019 02:56:32 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 12E8D402A2;
+        Tue, 29 Oct 2019 09:56:29 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     fugang.duan@nxp.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH RESEND 1/2] net: fec_main: Use platform_get_irq_byname_optional() to avoid error message
+Date:   Tue, 29 Oct 2019 09:53:18 +0800
+Message-Id: <1572313999-23317-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kmemdup rather than duplicating its implementation
+Failed to get irq using name is NOT fatal as driver will use index
+to get irq instead, use platform_get_irq_byname_optional() instead
+of platform_get_irq_byname() to avoid below error message during
+probe:
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+[    0.819312] fec 30be0000.ethernet: IRQ int0 not found
+[    0.824433] fec 30be0000.ethernet: IRQ int1 not found
+[    0.829539] fec 30be0000.ethernet: IRQ int2 not found
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Acked-by: Fugang Duan <fugang.duan@nxp.com>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- drivers/crypto/amlogic/amlogic-gxl-cipher.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+	- The patch f1da567f1dc1 ("driver core: platform: Add platform_get_irq_byname_optional()")
+	  already landed on network/master, resend this patch set.
+---
+ drivers/net/ethernet/freescale/fec_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-index e9283ffdbd23..78e776c58705 100644
---- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-+++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-@@ -372,10 +372,9 @@ int meson_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 		kfree(op->key);
- 	}
- 	op->keylen = keylen;
--	op->key = kmalloc(keylen, GFP_KERNEL | GFP_DMA);
-+	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
- 	if (!op->key)
- 		return -ENOMEM;
--	memcpy(op->key, key, keylen);
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index d4d4c72..22c01b2 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -3558,7 +3558,7 @@ fec_probe(struct platform_device *pdev)
  
- 	return crypto_sync_skcipher_setkey(op->fallback_tfm, key, keylen);
- }
-
-
+ 	for (i = 0; i < irq_cnt; i++) {
+ 		snprintf(irq_name, sizeof(irq_name), "int%d", i);
+-		irq = platform_get_irq_byname(pdev, irq_name);
++		irq = platform_get_irq_byname_optional(pdev, irq_name);
+ 		if (irq < 0)
+ 			irq = platform_get_irq(pdev, i);
+ 		if (irq < 0) {
+-- 
+2.7.4
 
