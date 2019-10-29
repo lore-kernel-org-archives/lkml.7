@@ -1,197 +1,129 @@
-Return-Path: <SRS0=HHJ+=YV=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E048CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B99CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345A720880
-	for <linux-kernel@archiver.kernel.org>; Mon, 28 Oct 2019 23:59:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYAW/Y0L"
+	by mail.kernel.org (Postfix) with ESMTP id 1118E208C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbfJ1X7q (ORCPT
+        id S1729972AbfJ2AA5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 19:59:46 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40566 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfJ1X7p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 19:59:45 -0400
-Received: by mail-pl1-f193.google.com with SMTP id p5so1389144plr.7;
-        Mon, 28 Oct 2019 16:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=6PbNC9ZYBewrGx4YYy/4pVIAWb+IMk+47XVy1Sx5zzI=;
-        b=HYAW/Y0L2chXTWqpU2iL0mEYEyFN8O5JV3K7uT5zi5MVAHM10rAzOumCdJH84zYxS+
-         6KQq51xBpAp+0GQjRvOibReUcU59U3AUuy1kQUQ5CcdwbzgoBwp0KdeN6itX3xSo5UQt
-         /mMMuxzxj/B7EGZayugehJU3wbrFEknjC+t+/sf5/LUs5Mr0rkWMLHvjdv6ao6IUbVCf
-         mS/H6anHtrzQWKZmdnph7Hx4LDFc1h3T5W1gxadaykgczBZakktCleeu5MV+gy2d37/d
-         ebNnz9/PmR6LKowLihYoAiAvHmgj3N+3IbUVfnIaVRrnL8N4c6OjMLxR/1QN5mTnFtKz
-         15Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=6PbNC9ZYBewrGx4YYy/4pVIAWb+IMk+47XVy1Sx5zzI=;
-        b=nzVcVyl5WJ9KjEHBs6JYoHAlCHcWk51sKAlew5lxYTUou5tIE9aVnEPO+r/fjyjuYM
-         X2RUBriw6muwmQvaviBod0WQAhfUwRr2rOrqE95sI+oq2v4BueuhoZopBaPIYmA/YDcZ
-         yYK6RlxOQkJU+jX8NGE+tiIf+sHN3S878XixHj760CqgbqFGHolioazrSYx2zC0xOFUS
-         f/KfT79YR/HhbxxFZt/duAcs7EOKpA8aTuUZnnesB2rq70RpqVrjHers2T9VtrMSTunM
-         L8s64pnmTwFSn8CekXc+yiWVn4XC9Q2s0CqUgVNUWDPLuHaBN4buyvcZJ0/Z+jHxJcYc
-         /Lpw==
-X-Gm-Message-State: APjAAAU3Dr/zQ4g8kFLPAuTgfEmm/eVsRuzLycqp+2OeGKohHvHh0QOL
-        ZkN4Bo1dc4W7OvSElFluZH8=
-X-Google-Smtp-Source: APXvYqxHQOFG5/pQ1j8cv44WDxjt9j7KSDG8Izwx7Veg0LydX0N9MI97H/fzaTvx1p1mbLvx6KdoyA==
-X-Received: by 2002:a17:902:7089:: with SMTP id z9mr751398plk.51.1572307184139;
-        Mon, 28 Oct 2019 16:59:44 -0700 (PDT)
-Received: from [172.30.89.111] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
-        by smtp.gmail.com with ESMTPSA id r33sm579115pjb.5.2019.10.28.16.59.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 16:59:43 -0700 (PDT)
-Subject: Re: [PATCH 2/2] dt-bindings: timer: imx: gpt: Add pin group bindings
- for input capture
-To:     Rob Herring <robh@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:CLOCKSOURCE, CLOCKEVENT DRIVERS" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191016010544.14561-1-slongerbeam@gmail.com>
- <20191016010544.14561-3-slongerbeam@gmail.com> <20191027212121.GA3049@bogus>
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-Message-ID: <2daa37a6-83a7-ec08-b89c-a07268b3ea4a@gmail.com>
-Date:   Mon, 28 Oct 2019 16:59:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191027212121.GA3049@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Mon, 28 Oct 2019 20:00:57 -0400
+Received: from mail-oln040092064091.outbound.protection.outlook.com ([40.92.64.91]:54624
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726510AbfJ2AA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 20:00:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YItapuOlhIfFvDcO98xL3Tm1S0sfgYTT1Vvahufk5pQX1ePH5C2174+7ua9dHMzDxw68TKfU/rXHrMTyhGiG1F2T9Ho4RBEjZqjz5AqxQDhCv1kuWzCm0TuqlOVW6Av2+YkWg+A5GeoCxZEVr8DCieOH45OYm0+86aYF3Q6mFkz7YuHwByzgzqpMWPnLApF6pZq4wZRELQNh8sR70Dym1M+aB8F8zoCKepY98yGZFU/NgAlXod4QQLDeBw1BDvnDxDhdjAWdc9tZXcjccCy72j8BFOedf+O4nNlZmdXgEtZyRGeUyYmbLAuhAkyrynalVToekqsUAVUD+yoGS1tasw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qhY84JGQL+LsClwI5c+VltZa9XncY2TaTLjtP/tdtNM=;
+ b=Lh9Lw3cXia10tK8ZaXl+mZgVJzg1n8NkPOMtsaYBFuq53g/XqS22KEFx4I9jg5Rc0tBBuQbz19km3dirFUCkOlmsJskzHisqr0LxIuuwO+B2tTsYhe0NBkN45INFY/pGaqkx4BWXdjCJCflwl4rwtAJ8EBciBY5Ljwv+TUGnaxNKEp4U1HU71miZNVTwG68btzT57K4SidVsKxbP8ex5aE3qHGFE3YrSfpcQOgakvcNcInynZkn6jFXuBQM3LBkibUVaIPLDmLkLP5+hOJvz7CAE6l/RHZCtCe7bDmmIuOv8X1KX4Pph7gxFu1NsRympi9WW6rsGO+P37nnOCF0p5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from VE1EUR01FT033.eop-EUR01.prod.protection.outlook.com
+ (10.152.2.51) by VE1EUR01HT116.eop-EUR01.prod.protection.outlook.com
+ (10.152.2.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Tue, 29 Oct
+ 2019 00:00:52 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.2.51) by
+ VE1EUR01FT033.mail.protection.outlook.com (10.152.2.230) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20 via Frontend Transport; Tue, 29 Oct 2019 00:00:52 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::b1cf:db6f:95fc:84cc]) by HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::b1cf:db6f:95fc:84cc%7]) with mapi id 15.20.2387.025; Tue, 29 Oct 2019
+ 00:00:52 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+CC:     Jonas Karlman <jonas@kwiboo.se>, Hans Verkuil <hverkuil@xs4all.nl>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/3] media: cedrus: Use correct H264 8x8 scaling list
+Thread-Topic: [PATCH 2/3] media: cedrus: Use correct H264 8x8 scaling list
+Thread-Index: AQHVjevtToLePUba9keRVf8adq/S/Q==
+Date:   Tue, 29 Oct 2019 00:00:52 +0000
+Message-ID: <HE1PR06MB4011189B5455E402FACE08C2AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB4011D3B8C200D13829648D86AC660@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <20191029000033.13540-1-jonas@kwiboo.se>
+In-Reply-To: <20191029000033.13540-1-jonas@kwiboo.se>
+Accept-Language: sv-SE, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM3PR07CA0087.eurprd07.prod.outlook.com
+ (2603:10a6:207:6::21) To HE1PR06MB4011.eurprd06.prod.outlook.com
+ (2603:10a6:7:9c::32)
+x-incomingtopheadermarker: OriginalChecksum:A97F9B700A7DF12A4E0FA950D5AA1F37E1C92B71B8885AB55572D16CF0391841;UpperCasedChecksum:D198B57F43084CE59C2A08EED393459EF892AE0E9894D2D87BE0D011E5B3A808;SizeAsReceived:7826;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-tmn:  [1QdvK4xjjAOf5d0vmcj4nqmyh4tfbhvo]
+x-microsoft-original-message-id: <20191029000033.13540-2-jonas@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: VE1EUR01HT116:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sX6go5H26QBPuRSnISoAcJbG0rnLP3Wlpczt1JEo0nEtsNj8rAEz2fG9Cz2Qazh2UqnRXpkNQS1JQ885Hzkf7F8HACAAOPIZxlS+3npGFw9P4AciI6hnViK1+kHN4vpxSD8gnPg1TuRgIMFNR7zhr5wh0jfwyz+tgjKBK+9KKB7r16biHGHWw33BiqkKNrhs
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9364eb9a-68fb-4ab3-6474-08d75c031030
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 00:00:52.6606
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Documentation now define the expected order of scaling lists,
+change to use correct indices.
 
-Thanks for reviewing.
+Fixes: 6eb9b758e307 ("media: cedrus: Add H264 decoding support")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ drivers/staging/media/sunxi/cedrus/cedrus_h264.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 10/27/19 2:21 PM, Rob Herring wrote:
-> On Tue, Oct 15, 2019 at 06:05:44PM -0700, Steve Longerbeam wrote:
->> Add pin group bindings to support input capture function of the i.MX
->> GPT.
->>
->> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
->> ---
->>   .../devicetree/bindings/timer/fsl,imxgpt.txt  | 28 +++++++++++++++++++
->>   1 file changed, 28 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
->> index 5d8fd5b52598..32797b7b0d02 100644
->> --- a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
->> +++ b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
->> @@ -33,6 +33,13 @@ Required properties:
->>              an entry for each entry in clock-names.
->>   - clock-names : must include "ipg" entry first, then "per" entry.
->>   
->> +Optional properties:
->> +
->> +- pinctrl-0: For the i.MX GPT to support the Input Capture function,
->> +  	     the input capture channel pin groups must be listed here.
->> +- pinctrl-names: must be "default".
->> +
->> +
->>   Example:
->>   
->>   gpt1: timer@10003000 {
->> @@ -43,3 +50,24 @@ gpt1: timer@10003000 {
->>   		 <&clks IMX27_CLK_PER1_GATE>;
->>   	clock-names = "ipg", "per";
->>   };
->> +
->> +
->> +Example with input capture channel 0 support:
->> +
->> +pinctrl_gpt_input_capture0: gptinputcapture0grp {
->> +	fsl,pins = <
->> +		MX6QDL_PAD_SD1_DAT0__GPT_CAPTURE1 0x1b0b0
->> +	>;
->> +};
->> +
->> +gpt: gpt@2098000 {
-> timer@...
-
-Ok.
-
->
-> I don't really think this merits another example though.
-
-Ok.
-
-But for version 2 of this patch-set I'd like to run some ideas by you.
-
-Because in this version I did not make any attempt to create a generic 
-timer capture framework. I just exported a couple imx-specific functions 
-to request and free a timer input capture channel in the imx-gpt driver.
-
-So for version 2 I am thinking about a simple framework that other SoC 
-timers with timer input capture support can make use of.
-
-To begin with I don't see that timer input capture warrants the 
-definition of a new device. At least for imx, timer input capture is 
-just one function of the imx GPT, where the other is Output Compare 
-which is used for the system timer. I think that is likely the case for 
-most all SoC timers, that is, input capture and output compare are 
-tightly interwoven functions of general purpose timers.
-
-So I'm thinking there needs to be an additional #input-capture-cells 
-property that defines how many input capture channels the timer 
-contains, where a channel refers to a single input signal edge that can 
-capture the timer counter. The imx GPT has two input capture channels (2 
-separate input signals).
-
-For example, on imx:
-
-gpt: timer@2098000 {
-	compatible = "fsl,imx6q-gpt", "fsl,imx31-gpt";
-	/* ... */
-	#input-capture-cells = <1>;
-	pinctrl-names = "default", "icap1";
-	pinctrl-0 = <&pinctrl_gpt_input_capture0>;
-	pinctrl-1 = <&pinctrl_gpt_input_capture1>;
-};
-
-
-A device that is a listener/consumer of an timer capture event would then refer to a timer capture channel:
-
-some-device {
-	/* ... */
-	timer-input-capture = <&gpt 0>;
-};
-
-
-Is this a sound approach? Let me know what you think.
-
-Thanks,
-Steve
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+index cd85668f9c80..f08cc0d4079e 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+@@ -240,8 +240,8 @@ static void cedrus_write_scaling_lists(struct cedrus_ctx *ctx,
+ 			       sizeof(scaling->scaling_list_8x8[0]));
+ 
+ 	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_8x8_1,
+-			       scaling->scaling_list_8x8[3],
+-			       sizeof(scaling->scaling_list_8x8[3]));
++			       scaling->scaling_list_8x8[1],
++			       sizeof(scaling->scaling_list_8x8[1]));
+ 
+ 	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_4x4,
+ 			       scaling->scaling_list_4x4,
+-- 
+2.17.1
 
