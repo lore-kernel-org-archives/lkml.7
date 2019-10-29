@@ -2,140 +2,118 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A454FCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F131CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74AEF20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVACzUz6"
+	by mail.kernel.org (Postfix) with ESMTP id 2B0F920873
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbfJ2DVx (ORCPT
+        id S1731275AbfJ2Des (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 23:21:53 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41171 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfJ2DVw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 23:21:52 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p26so4338432pfq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 20:21:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=LR/aUnBa1iOG11/R57xuvDj2bw8xBBwQLIyehox+hYQ=;
-        b=fVACzUz62yAgAZzCMpuE+qtQ6Z0iCAc0Y7g+Nnqh5pg83Kh9rzxW8l2GI7qN2LiUWO
-         3Gr8YM+gVikDS/RVHO9gaEx3czDXHRuO8qV91Bh4CG3jJNFxave6xYRfYnVZf94T6geh
-         FYwaVkkHTYbkZaWDYW0eeMvB8l5IDJR4BrxLLFrR3A+swfiD8NJnvOhH4Mt9P4huHHoJ
-         h1Fu4pFIWAE3jcGUEro6fhXOkEjFuAWKDoU7tTXSnU6kS4NMjGOt7X0nKS+t/+kj/qLx
-         H5fkojw/KDrTM3VpfB6Wl57SuifZoGqv1/7YsBzrehxW1eLzM1QBWtYaXicDFa2XI9fI
-         lRmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=LR/aUnBa1iOG11/R57xuvDj2bw8xBBwQLIyehox+hYQ=;
-        b=d9cWUMDZ1tMmlgvYjRD1tUfWZPDbFcQhpvxAOCKs/vJdhH+Ay1L704mEgJFJTupGIP
-         fwCZr0bcgUn/7KGbEnTARV05Vur881RkFQ3WfBDkDqXmARICkhbEK5s1EbzXz27GNDNI
-         NyGRpQMoj1E0f4HA7CiJGMmm+A6CdPyWNNvhsBVAVtTNXYXn6MltjsYsXBe2/qy8jflu
-         3UESverItzMwg0ew3eX/++Hg3OyDTZ+9uHw8P+iUC+OOGmeQ7xqNFMCXBycy24SISG9W
-         xkojMYrdMTRqNdSNLSBJkhc3KzaXSrLQI65t46GNhrkIDIa0tsmFldlTBXul7Y4qhcOV
-         hXgQ==
-X-Gm-Message-State: APjAAAVZTekGrtWKzsXMKwsuRZ/h/clAp2LXF+VhPlzGymeHb8iQaAGW
-        NIbPd0C8UfzBYq2V5F6A/3Q=
-X-Google-Smtp-Source: APXvYqyIAsC+K9MsUK+66FRnvbVhq/0Ce7vcczJhLyl13Eg7tdplx+xI5xpMotaKwEsxbbXZBCamkw==
-X-Received: by 2002:a17:90a:a598:: with SMTP id b24mr3409701pjq.46.1572319311860;
-        Mon, 28 Oct 2019 20:21:51 -0700 (PDT)
-Received: from saurav ([27.62.167.137])
-        by smtp.gmail.com with ESMTPSA id j126sm13359276pfb.186.2019.10.28.20.21.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 20:21:51 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 08:51:42 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     linux@armlinux.org.uk, joern@lazybastard.org, dwmw2@infradead.org,
-        computersforpeace@gmail.com, marek.vasut@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        saurav.girepunje@gmail.com, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] mtd: devices: phram.c: Fix use true/false for bool type
-Message-ID: <20191029032142.GA6758@saurav>
+        Mon, 28 Oct 2019 23:34:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5216 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726025AbfJ2Der (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 23:34:47 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 875B859B04CB6891E704;
+        Tue, 29 Oct 2019 11:34:42 +0800 (CST)
+Received: from [127.0.0.1] (10.133.224.57) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
+ 11:34:34 +0800
+Subject: Re: [PATCH] pci: lock the pci_cfg_wait queue for the consistency of
+ data
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <bhelgaas@google.com>, <wangxiongfeng2@huawei.com>,
+        <wanghaibin.wang@huawei.com>, <guoheyi@huawei.com>,
+        <yebiaoxiang@huawei.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <tglx@linutronix.de>, <guohanjun@huawei.com>,
+        <yangyingliang@huawei.com>
+References: <20191028091809.35212-1-zhengxiang9@huawei.com>
+ <20191028163041.GA8257@bombadil.infradead.org>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <14e7d02e-215d-30dc-548c-e605f3ffdf1e@huawei.com>
+Date:   Tue, 29 Oct 2019 11:34:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191028163041.GA8257@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.224.57]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return type for security_extensions_enabled() is bool
-so use true/false.
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
- arch/arm/mm/nommu.c         |  2 +-
- drivers/mtd/devices/phram.c | 11 +++++------
- 2 files changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/mm/nommu.c b/arch/arm/mm/nommu.c
-index 24ecf8d30a1e..1fed74f93c66 100644
---- a/arch/arm/mm/nommu.c
-+++ b/arch/arm/mm/nommu.c
-@@ -56,7 +56,7 @@ static inline bool security_extensions_enabled(void)
- 	if ((read_cpuid_id() & 0x000f0000) == 0x000f0000)
- 		return cpuid_feature_extract(CPUID_EXT_PFR1, 4) ||
- 			cpuid_feature_extract(CPUID_EXT_PFR1, 20);
--	return 0;
-+	return true;
+On 2019/10/29 0:30, Matthew Wilcox wrote:
+> On Mon, Oct 28, 2019 at 05:18:09PM +0800, Xiang Zheng wrote:
+>> Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
+>> and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
+>>
+>> However, since the commit "cdcb33f98244" merged, the accesses to
+>> the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
+>> insufficient and we need to hold an additional queue lock while
+>> read/write the wait queue.
+>>
+>> So let's use the add_wait_queue()/remove_wait_queue() instead of
+>> __add_wait_queue()/__remove_wait_queue().
+> 
+> As I said earlier, this reintroduces the deadlock addressed by
+> cdcb33f9824429a926b971bf041a6cec238f91ff
+> 
+
+Thanks Matthew, sorry for that I did not understand the way to reintroduce
+the deadlock and sent this patch. If what I think is right, the possible
+deadlock may be caused by the condition in which there are three processes:
+
+   *Process*                          *Acquired*         *Wait For*
+   wake_up_all()                      wq_head->lock      pi_lock
+   snbep_uncore_pci_read_counter()    pi_lock            pci_lock
+   pci_wait_cfg()                     pci_lock           wq_head->lock
+
+These processes suffer from the nested locks.:)
+
+But for this problem, what do you think about the solution below:
+
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 2fccb5762c76..09342a74e5ea 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+ {
+        DECLARE_WAITQUEUE(wait, current);
+
+-       __add_wait_queue(&pci_cfg_wait, &wait);
+        do {
+                set_current_state(TASK_UNINTERRUPTIBLE);
+                raw_spin_unlock_irq(&pci_lock);
++               add_wait_queue(&pci_cfg_wait, &wait);
+                schedule();
++               remove_wait_queue(&pci_cfg_wait, &wait);
+                raw_spin_lock_irq(&pci_lock);
+        } while (dev->block_cfg_access);
+-       __remove_wait_queue(&pci_cfg_wait, &wait);
  }
- 
- unsigned long setup_vectors_base(void)
-diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
-index 86ae13b756b5..931e5c2481b5 100644
---- a/drivers/mtd/devices/phram.c
-+++ b/drivers/mtd/devices/phram.c
-@@ -239,27 +239,26 @@ static int phram_setup(const char *val)
- 
- 	ret = parse_name(&name, token[0]);
- 	if (ret)
--		goto exit;
-+		return ret;
- 
- 	ret = parse_num64(&start, token[1]);
- 	if (ret) {
-+		kfree(name);
- 		parse_err("illegal start address\n");
--		goto parse_err;
- 	}
- 
- 	ret = parse_num64(&len, token[2]);
- 	if (ret) {
-+		kfree(name);
- 		parse_err("illegal device length\n");
--		goto parse_err;
- 	}
- 
- 	ret = register_device(name, start, len);
- 	if (!ret)
- 		pr_info("%s device: %#llx at %#llx\n", name, len, start);
-+	else
-+		kfree(name);
- 
--parse_err:
--	kfree(name);
--exit:
- 	return ret;
- }
- 
+
+ /* Returns 0 on success, negative values indicate error. */
+
+
+
+> .
+> 
+
 -- 
-2.20.1
+
+Thanks,
+Xiang
 
