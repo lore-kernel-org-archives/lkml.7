@@ -2,126 +2,105 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC349CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE42CCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD55920874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572338517;
-	bh=bXZjxbDfWVsi7gYy+OIZqwOKhSlveIi4MtNJa0ljAXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m8fernxZOcpa67PV92/1fgJ8cWjhzOqc5aLab75qwZlng+lLEK4BB9wES0xC4pY3D
-	 M1xgzhdD86MCv5VVzOxo5PslGqzUBs7xIJQ4AZIxnN7dtqybHMVDuABi+SYPNFDyr5
-	 mwtQLPEGCkcZsmYjz0zYot1Ej8lmiJfR7z9PbDVw=
+	by mail.kernel.org (Postfix) with ESMTP id CE6B52067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbfJ2Il4 (ORCPT
+        id S1728951AbfJ2InE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:41:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55120 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbfJ2Il4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:41:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 46353B039;
-        Tue, 29 Oct 2019 08:41:54 +0000 (UTC)
-Date:   Tue, 29 Oct 2019 09:41:53 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [RFC v2] mm: add page preemption
-Message-ID: <20191029084153.GD31513@dhcp22.suse.cz>
-References: <20191026112808.14268-1-hdanton@sina.com>
+        Tue, 29 Oct 2019 04:43:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:55781 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbfJ2InD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:43:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 01:43:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="scan'208";a="224901941"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.122])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Oct 2019 01:42:59 -0700
+Date:   Tue, 29 Oct 2019 10:42:58 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
+        Ken Goldman <kgold@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191029084258.GA5649@linux.intel.com>
+References: <20191008235339.GB13926@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
+ <20191014190033.GA15552@linux.intel.com>
+ <1571081397.3728.9.camel@HansenPartnership.com>
+ <20191016110031.GE10184@linux.intel.com>
+ <1571229252.3477.7.camel@HansenPartnership.com>
+ <20191016162543.GB6279@linux.intel.com>
+ <1571253029.17520.5.camel@HansenPartnership.com>
+ <20191017180440.GG6667@linux.intel.com>
+ <20191021113939.GA11649@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191026112808.14268-1-hdanton@sina.com>
+In-Reply-To: <20191021113939.GA11649@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 26-10-19 19:28:08, Hillf Danton wrote:
+On Mon, Oct 21, 2019 at 02:39:39PM +0300, Jarkko Sakkinen wrote:
+> On Thu, Oct 17, 2019 at 09:04:40PM +0300, Jarkko Sakkinen wrote:
+> > On Wed, Oct 16, 2019 at 03:10:29PM -0400, James Bottomley wrote:
+> > > On Wed, 2019-10-16 at 19:25 +0300, Jarkko Sakkinen wrote:
+> > > > On Wed, Oct 16, 2019 at 08:34:12AM -0400, James Bottomley wrote:
+> > > > > reversible ciphers are generally frowned upon in random number
+> > > > > generation, that's why the krng uses chacha20.  In general I think
+> > > > > we shouldn't try to code our own mixing and instead should get the
+> > > > > krng to do it for us using whatever the algorithm du jour that the
+> > > > > crypto guys have blessed is.  That's why I proposed adding the TPM
+> > > > > output to the krng as entropy input and then taking the output of
+> > > > > the krng.
+> > > > 
+> > > > It is already registered as hwrng. What else?
+> > > 
+> > > It only contributes entropy once at start of OS.
+> > 
+> > Ok.
+> > 
+> > > >  Was the issue that it is only used as seed when the rng is init'd
+> > > > first? I haven't at this point gone to the internals of krng.
+> > > 
+> > > Basically it was similar to your xor patch except I got the kernel rng
+> > > to do the mixing, so it would use the chacha20 cipher at the moment
+> > > until they decide that's unsafe and change it to something else:
+> > > 
+> > > https://lore.kernel.org/linux-crypto/1570227068.17537.4.camel@HansenPartnership.com/
+> > > 
+> > > It uses add_hwgenerator_randomness() to do the mixing.  It also has an
+> > > unmixed source so that read of the TPM hwrng device works as expected.
+> > 
+> > Thinking that could this potentially racy? I.e. between the calls
+> > something else could eat the entropy added?
 > 
-> The cpu preemption feature makes a task able to preempt other tasks
-> of lower priorities for cpu. It has been around for a while.
-> 
-> This work introduces task prio into page reclaiming in order to add
-> the page preemption feature that makes a task able to preempt other
-> tasks of lower priorities for page.
-> 
-> No page will be reclaimed on behalf of tasks of lower priorities
-> under pp, a two-edge feature that functions only under memory
-> pressure, laying a barrier to pages flowing to lower prio, and the
-> nice syscall is what users need to fiddle with it for instance as
-> no task will be preempted without prio shades, if they have a couple
-> of workloads that are sensitive to jitters in lru pages, and some
-> difficulty predicting their working set sizes.
-> 
-> Currently lru pages are reclaimed under memory pressure without prio
-> taken into account; pages can be reclaimed from tasks of lower
-> priorities on behalf of higher-prio tasks and vice versa.
-> 
-> s/and vice versa/only/ is what we need to make pp by definition, but
-> it could not make a sense without prio introduced in reclaiming,
-> otherwise we can simply skip deactivating the lru pages based on prio
-> comprison, and work is done.
-> 
-> The introduction consists of two parts. On the page side, we have to
-> store the page owner task's prio in page, which needs an extra room the
-> size of the int type in the page struct.
-> 
-> That room sounds impossible without inflating the page struct size, and
-> it is not solved but walked around by sharing room with the 32-bit numa
-> balancing, see 75980e97dacc ("mm: fold page->_last_nid into page->flags
-> where possible").
-> 
-> On the reclaimer side, kswapd's prio is set with the prio of its waker,
-> and updated in the same manner as kswapd_order.
-> 
-> V2 is based on next-20191018.
-> 
-> Changes since v1
-> - page->prio shares room with _last_cpupid as per Matthew Wilcox
-> 
-> Changes since v0
-> - s/page->nice/page->prio/
-> - drop the role of kswapd's reclaiming prioirty in prio comparison
-> - add pgdat->kswapd_prio
-> 
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> Also, what is wrong just taking one value from krng and mixing
+> it with a value from TPM RNG where needed? That would be non-racy
+> too.
 
-As already raised in the review of v1. There is no real life usecase
-described in the changelog. I have also expressed concerns about how
-such a reclaim would work in the first place (priority inversion,
-expensive reclaim etc.). Until that is provided/clarified
+I guess we can move forward with this?
 
-Nacked-by: Michal Hocko <mhocko@suse.com>
-
-Please do not ignore review feedback in the future.
--- 
-Michal Hocko
-SUSE Labs
+/Jarkko
