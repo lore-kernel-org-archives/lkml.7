@@ -6,97 +6,124 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D83CCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85836CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4262086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6366C21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfJ2HUa (ORCPT
+        id S1728476AbfJ2HUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 29 Oct 2019 03:20:31 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:7763 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728222AbfJ2HUa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 29 Oct 2019 03:20:30 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60322 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727927AbfJ2HUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:20:25 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3C181374D1B2EC7E14A6;
-        Tue, 29 Oct 2019 15:20:22 +0800 (CST)
-Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 29 Oct 2019 15:20:16 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <maz@kernel.org>, <eric.auger@redhat.com>, <james.morse@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <wanghaibin.wang@huawei.com>, Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH 2/3] KVM: arm/arm64: vgic: Fix some comments typo
-Date:   Tue, 29 Oct 2019 15:19:18 +0800
-Message-ID: <20191029071919.177-3-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
-In-Reply-To: <20191029071919.177-1-yuzenghui@huawei.com>
-References: <20191029071919.177-1-yuzenghui@huawei.com>
+IronPort-SDR: qxyD4DmvzXZVaiH/ItmYxEWjEdifCqjo0JckqSw833Yor+UdvzC7OhQ+ofVm7JZihN6OSamuDI
+ op75LG5zZeyBIKT4aQYrkgDqigl85cva+03RfqMOJhGC/qLOgd8g1hCF1fJNIIcvXj+gnzV5Om
+ aJrticp7LpRSAwnlH6vsnRUb6Kqj6mSbGFfwvFKZ61o3QIitIMzhVBBsH89yPFvEjs7mDZ2A/P
+ NX+Z6Wz0jHTbsPdbHV7yZJt3ttS2w52bP5iOCoIh6FJKCJFQtPOua21hjdgpibRmpnfhCDO7rj
+ wuI=
+X-IronPort-AV: E=Sophos;i="5.68,243,1569312000"; 
+   d="scan'208";a="44509365"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 28 Oct 2019 23:20:29 -0800
+IronPort-SDR: 9BUv8Sir7H9vXmkfVpYJW54pGi3BVWsk+WOt2hB2vZV34g5mU6WBBeQWClZcK3/euGZ2taujav
+ 47utvDV7AIL3TZDZQOw45xPJ9MJ9gUucdRVhj5mjBjee3vXd2AtIudpUQq7aZUDiT5Du2jmk5y
+ GGEqpr9xMB3AJcJYUegNx600C09f0E9iImbf7DziFPAZEH0DoEaa9YzyJ+iHKlIr8Weetrlk62
+ SPM2+32tVKkRSZ59hfWzJFOsE53UFq9elIaZZ+pUBUjZevmaX8muNqjS8OUGgZBh8iapPJt2IO
+ bDY=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
+        <Andrew_Gabbasov@mentor.com>
+Subject: [PATCH v4 04/48] Input: atmel_mxt_ts - split large i2c transfers into blocks
+Date:   Tue, 29 Oct 2019 16:19:26 +0900
+Message-ID: <20191029072010.8492-5-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191029072010.8492-1-jiada_wang@mentor.com>
+References: <20191029072010.8492-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-s/vgic_its_save_pending_tables/vgic_v3_save_pending_tables/
-s/then/the/
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+On some firmware variants, the size of the info block exceeds what can
+be read in a single transfer.
+
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+(cherry picked from ndyer/linux/for-upstream commit 74c4f5277cfa403d43fafc404119dc57a08677db)
+[gdavis: Forward port and fix conflicts due to v4.14.51 commit
+	 960fe000b1d3 ("Input: atmel_mxt_ts - fix the firmware
+	 update").]
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+[jiada: Change mxt_read_blks() to __mxt_read_reg(), original __mxt_read_reg() to
+	__mxt_read_chunk()]
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- include/kvm/arm_vgic.h      | 2 +-
- virt/kvm/arm/vgic/vgic-v3.c | 2 +-
- virt/kvm/arm/vgic/vgic-v4.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 28 +++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
-index 0fb240ec0a2a..01f8b3739a09 100644
---- a/include/kvm/arm_vgic.h
-+++ b/include/kvm/arm_vgic.h
-@@ -240,7 +240,7 @@ struct vgic_dist {
- 	 * Contains the attributes and gpa of the LPI configuration table.
- 	 * Since we report GICR_TYPER.CommonLPIAff as 0b00, we can share
- 	 * one address across all redistributors.
--	 * GICv3 spec: 6.1.2 "LPI Configuration tables"
-+	 * GICv3 spec "LPI Configuration tables"
- 	 */
- 	u64			propbaser;
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index ce5a069b62d4..9088b2d3266b 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -40,7 +40,7 @@
+ #define MXT_OBJECT_START	0x07
+ #define MXT_OBJECT_SIZE		6
+ #define MXT_INFO_CHECKSUM_SIZE	3
+-#define MXT_MAX_BLOCK_WRITE	256
++#define MXT_MAX_BLOCK_WRITE	255
  
-diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
-index 8d69f007dd0c..5ef93e5041e1 100644
---- a/virt/kvm/arm/vgic/vgic-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-v3.c
-@@ -357,7 +357,7 @@ int vgic_v3_lpi_sync_pending_status(struct kvm *kvm, struct vgic_irq *irq)
+ /* Object types */
+ #define MXT_DEBUG_DIAGNOSTIC_T37	37
+@@ -624,8 +624,8 @@ static int mxt_send_bootloader_cmd(struct mxt_data *data, bool unlock)
+ 	return 0;
  }
  
- /**
-- * vgic_its_save_pending_tables - Save the pending tables into guest RAM
-+ * vgic_v3_save_pending_tables - Save the pending tables into guest RAM
-  * kvm lock and all vcpu lock must be held
-  */
- int vgic_v3_save_pending_tables(struct kvm *kvm)
-diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
-index 477af6aebb97..d864cf8dd212 100644
---- a/virt/kvm/arm/vgic/vgic-v4.c
-+++ b/virt/kvm/arm/vgic/vgic-v4.c
-@@ -266,7 +266,7 @@ int kvm_vgic_v4_set_forwarding(struct kvm *kvm, int virq,
+-static int __mxt_read_reg(struct i2c_client *client,
+-			       u16 reg, u16 len, void *val)
++static int __mxt_read_chunk(struct i2c_client *client,
++			    u16 reg, u16 len, void *val)
+ {
+ 	struct i2c_msg xfer[2];
+ 	u8 buf[2];
+@@ -659,6 +659,28 @@ static int __mxt_read_reg(struct i2c_client *client,
+ 	return ret;
+ }
  
- 	mutex_lock(&its->its_lock);
- 
--	/* Perform then actual DevID/EventID -> LPI translation. */
-+	/* Perform the actual DevID/EventID -> LPI translation. */
- 	ret = vgic_its_resolve_lpi(kvm, its, irq_entry->msi.devid,
- 				   irq_entry->msi.data, &irq);
- 	if (ret)
++static int __mxt_read_reg(struct i2c_client *client,
++			  u16 reg, u16 len, void *buf)
++{
++	u16 offset = 0;
++	int error;
++	u16 size;
++
++	while (offset < len) {
++		size = min(MXT_MAX_BLOCK_WRITE, len - offset);
++
++		error = __mxt_read_chunk(client,
++					 reg + offset,
++					 size, buf + offset);
++		if (error)
++			return error;
++
++		offset += size;
++	}
++
++	return 0;
++}
++
+ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
+ 			   const void *val)
+ {
 -- 
-2.19.1
-
+2.17.1
 
