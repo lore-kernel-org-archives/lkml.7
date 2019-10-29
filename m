@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAA4CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B437CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF3C2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A932087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730984AbfJ2HVZ (ORCPT
+        id S1731224AbfJ2HV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:21:25 -0400
+        Tue, 29 Oct 2019 03:21:29 -0400
 Received: from esa3.mentor.iphmx.com ([68.232.137.180]:41262 "EHLO
         esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730690AbfJ2HVT (ORCPT
+        with ESMTP id S1731044AbfJ2HV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:21:19 -0400
-IronPort-SDR: fF03ikvs7G7vH8yOVK/nMeK6zExKKTGwSSuZJusyHsF6XaW5rWuupxrAdhy0vsjUNIlpCrut3J
- RKS9U5xbcmjBxByXC4mr5PU6MnQ0jxtXHtUHs0A/D8AVWCJ/nk/fwzirvNM+A0ajmInIQ+7Ncn
- sOUhAvHAU7erJBKNMWm3eCVKRMlqibh3g2ckE7GfjkXu+Mh8S9A02gILrfe3fPNVSSEqlN/BrU
- JEea2R8ss9eC3d5h8CiHf+L5Q7jx6DxEUO4bFRDIOYfeTkdkX+Lkzh7IYJ76AM2w8Ju9hOt/Te
- hKg=
+        Tue, 29 Oct 2019 03:21:27 -0400
+IronPort-SDR: GZBqbnvhxOuhGx4NGRfoylJZ/f1Gdwfzz4KzoK6kUjWSsIBisx+j3UTzn30xMXy44YO/7AXLLC
+ tmausUvwhvPXAoiUpQ0qpWUoe5QiSTMtpF4Pw+fEh1wkkYIpl/kLg4aSR+OD6R9NvmMfihDNiL
+ 0GO1I+gb0u4euGmdGAHLFzgJjPmCpfsNMZeSO/vVzn8y/ddIVI3PF/LGCGdZogjqeWQEJOpat1
+ I4zs69hgEE9P1qviot4bCcD8HMoOkZTq2d2gkdWQW6uk0e99aA5aO3vzNom8Nt/KL+A5VGJGL4
+ 4lE=
 X-IronPort-AV: E=Sophos;i="5.68,243,1569312000"; 
-   d="scan'208";a="42663242"
+   d="scan'208";a="42663255"
 Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 28 Oct 2019 23:21:19 -0800
-IronPort-SDR: Ou3TL1AxzQn6Rl82/L/hFlUy4lK5ZaoX77m1bzHjKNi4rOjH5OyLL+mxrbZIdyc/sYuiVqoR2V
- 35XcjJxLod2BUSVS1CjDBoDeZAKffnoDMA2sKIUabY1HANnPXb6yDm502lGOajwU3xraTrVEdX
- rsgLpWFT8SmENgg2ZetR+1G3wwKNwz79sgDf8cpa0h7exI0y3SZ4bUvMg9YJpudGH5X4MZvMdH
- sMA+3mUEbquoFM+Z56s0c9inWjsiSr1fZDP0SREy/mbmJuV7ngEABuf05Ss5PrmIeU/hM9wXqy
- H/E=
+  by esa3.mentor.iphmx.com with ESMTP; 28 Oct 2019 23:21:27 -0800
+IronPort-SDR: LoWoxrpRrMW2jv9LUGiIe5sVF5Tdvc2JSrjzg5fTISPN5MOP3gVsGM/Nt5h7A50FEYsZr7Smqi
+ YZbxP3notGWFNyQuTo/5SPnZaVzjQtdO8Fo0lXVY9/0U9ykhbzEiYVYga2gS9ha426IgkdcZJP
+ JegtlVnx23OHTbgPULaSTMg3GEyyvQ0wUoo3K/2y5kXWTJqFjnKIvivHL4dPgs0veTVDTxJZeJ
+ 3dTdPU6RUxNkVSco7UVVnfh/xAzjwMOokphqMg7SULdnW6bvhgGwNn85uzh/4sQgHAoq7LNBwJ
+ AgY=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
         <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
         <Andrew_Gabbasov@mentor.com>
-Subject: [PATCH v4 18/48] Input: atmel_mxt_ts - add config checksum attribute to sysfs
-Date:   Tue, 29 Oct 2019 16:19:40 +0900
-Message-ID: <20191029072010.8492-19-jiada_wang@mentor.com>
+Subject: [PATCH v4 20/48] Input: atmel_mxt_ts - refactor code to enter bootloader into separate func
+Date:   Tue, 29 Oct 2019 16:19:42 +0900
+Message-ID: <20191029072010.8492-21-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191029072010.8492-1-jiada_wang@mentor.com>
 References: <20191029072010.8492-1-jiada_wang@mentor.com>
@@ -53,52 +53,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: karl tsou <karl.funlab@gmail.com>
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
 Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 03477477ddbe5dcad42853ab3f84166a8f807acf)
-[gdavis: Forward port and fix conflicts.]
+(cherry picked from ndyer/linux/for-upstream commit bedd706a32522b946467e15f4f4f24de86a1b4d7)
+[gdavis: Resolve forward port conflicts due to applying upstream
+	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
+	 data support").]
 Signed-off-by: George G. Davis <george_davis@mentor.com>
+[jiada: Squash change from ndyer/linux/for-upstream commit d691d3ee6c6de84b38464a42
+3207b3e23cb9dc3a
+	- Input: atmel_mxt_ts - check firmware format before entering bootloader]
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 43 +++++++++++++++---------
+ 1 file changed, 27 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 43f71a4a44dd..f55d1f719f18 100644
+index 855c36e7903d..49ec37149118 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3128,6 +3128,15 @@ static int mxt_configure_objects(struct mxt_data *data,
- 	return error;
+@@ -3257,23 +3257,10 @@ static int mxt_check_firmware_format(struct device *dev,
+ 	return -EINVAL;
  }
  
-+/* Configuration crc check sum is returned as hex xxxxxx */
-+static ssize_t mxt_config_crc_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct mxt_data *data = dev_get_drvdata(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%06x\n", data->config_crc);
+-static int mxt_load_fw(struct device *dev)
++static int mxt_enter_bootloader(struct mxt_data *data)
+ {
+-	struct mxt_data *data = dev_get_drvdata(dev);
+-	struct mxt_flash f = { 0, };
+ 	int ret;
+ 
+-	ret = request_firmware(&f.fw, data->fw_name, dev);
+-	if (ret) {
+-		dev_err(dev, "Unable to open firmware %s\n", data->fw_name);
+-		return ret;
+-	}
+-
+-	/* Check for incorrect enc file */
+-	ret = mxt_check_firmware_format(dev, f.fw);
+-	if (ret)
+-		goto release_firmware;
+-
+ 	if (data->suspended) {
+ 		if (data->suspend_mode == MXT_SUSPEND_REGULATOR)
+ 			mxt_regulator_enable(data);
+@@ -3291,14 +3278,14 @@ static int mxt_load_fw(struct device *dev)
+ 		ret = mxt_t6_command(data, MXT_COMMAND_RESET,
+ 				     MXT_BOOT_VALUE, false);
+ 		if (ret)
+-			goto release_firmware;
++			return ret;
+ 
+ 		msleep(MXT_RESET_TIME);
+ 
+ 		/* Do not need to scan since we know family ID */
+ 		ret = mxt_lookup_bootloader_address(data, 0);
+ 		if (ret)
+-			goto release_firmware;
++			return ret;
+ 
+ 		mxt_sysfs_remove(data);
+ 		mxt_free_input_device(data);
+@@ -3309,6 +3296,30 @@ static int mxt_load_fw(struct device *dev)
+ 
+ 	reinit_completion(&data->bl_completion);
+ 
++	return 0;
 +}
 +
- /* Firmware Version is returned as Major.Minor.Build */
- static ssize_t mxt_fw_version_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
-@@ -3481,12 +3490,14 @@ static DEVICE_ATTR(fw_version, S_IRUGO, mxt_fw_version_show, NULL);
- static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
- static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
- static DEVICE_ATTR(update_cfg, S_IWUSR, NULL, mxt_update_cfg_store);
-+static DEVICE_ATTR(config_crc, S_IRUGO, mxt_config_crc_show, NULL);
- 
- static struct attribute *mxt_attrs[] = {
- 	&dev_attr_fw_version.attr,
- 	&dev_attr_hw_version.attr,
- 	&dev_attr_object.attr,
- 	&dev_attr_update_cfg.attr,
-+	&dev_attr_config_crc.attr,
- 	NULL
- };
- 
++static int mxt_load_fw(struct device *dev)
++{
++	struct mxt_data *data = dev_get_drvdata(dev);
++	struct mxt_flash f = { 0, };
++	int ret;
++
++	ret = request_firmware(&f.fw, data->fw_name, dev);
++	if (ret) {
++		dev_err(dev, "Unable to open firmware %s\n", data->fw_name);
++		return ret;
++	}
++
++	/* Check for incorrect enc file */
++	ret = mxt_check_firmware_format(dev, f.fw);
++	if (ret)
++		goto release_firmware;
++
++	ret = mxt_enter_bootloader(data);
++	if (ret)
++		goto release_firmware;
++
+ 	ret = mxt_check_bootloader(data, MXT_WAITING_BOOTLOAD_CMD, false);
+ 	if (ret) {
+ 		/* Bootloader may still be unlocked from previous attempt */
 -- 
 2.17.1
 
