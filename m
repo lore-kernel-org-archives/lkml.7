@@ -2,120 +2,91 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EFACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 05:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F774C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 05:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1D020862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 05:46:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jg9q/Es/"
+	by mail.kernel.org (Postfix) with ESMTP id DA4DF2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 05:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732214AbfJ2Fq1 (ORCPT
+        id S1732099AbfJ2FxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 01:46:27 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35194 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727227AbfJ2Fq0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 01:46:26 -0400
-Received: by mail-pl1-f194.google.com with SMTP id x6so2963511pln.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 22:46:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BGNnUOeOALjeswlQdNmg6H9C3q6EXqw3JZNkQRr1llQ=;
-        b=jg9q/Es/BqriYOEAkxSEE33zkdwq115DyrEh0wvD3uy32lPbaiuOj2csLoIzevlL/r
-         E/12mffycTgJCADXDoCpEOcJQ5N4b5hxQAx7qOgpmzLu61JycIz+8mfdaZo9G+8MQ7Am
-         Vuhr0kE/FLTYqA321y7ShfNIzdWWPWTevpyG0WeuvYo0cQqJPSYH7yullEx722ZqFi1R
-         8ZtondxROzQdSdqrSN8Bb3UVCnno4n8q9ksYgMMj1Cvij/9GsE35ZlHHxIbbEniuU91a
-         wzyjFI3QyxKjyhFgtmoBy0FKTg9NUD7OKS+46Z6OyhcFWXPN9rQyG+ZNpVNJolCoo/jj
-         /3Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BGNnUOeOALjeswlQdNmg6H9C3q6EXqw3JZNkQRr1llQ=;
-        b=SbZZhOy/S687ILcpyM61KC36pvt+ruSu/qa441uaAdJXPjpcfAiJfenYx86B/3EC3o
-         +CGGfzkPk4TLJE2RJkj6G2naawKubc522lNLfLSjnFvFAHmVQo9ZxtKhyXIOtgz2Fnp1
-         HqPzd2hlG9h122Chshp8NM46qqwDW8C7QLgqiqwFGlLhm4fRfZQimtaU0sKjJtmSeEto
-         Vrj+bpfBU/pHB7dfTrbLx/DvptND5yCG+CuaE923c6LY4ZEWgkZXc9uyhDxmyUgUeZ7N
-         I6/ee0dJg2mYHWe9IBd6tcogZ343nbdNbcMvJ0r8oh+4lw3dfTm+qmU/PahUVz+M72Oy
-         F84g==
-X-Gm-Message-State: APjAAAURmyW+nsBsYUy2BKzJ9yYe9MidW1mS4VfeVFflSrnRhuh71TBA
-        HIAdaalr0fg/Adn3JzTnuExfKQ==
-X-Google-Smtp-Source: APXvYqyE5mvnRddgHXGsZTDyiF3MennLWBuBLEfVle86PMhMeHbJJHz1zf8sDXGq6hU0pJqMCcXeZA==
-X-Received: by 2002:a17:902:bd91:: with SMTP id q17mr1988190pls.43.1572327984016;
-        Mon, 28 Oct 2019 22:46:24 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i16sm12546753pfa.184.2019.10.28.22.46.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 22:46:23 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 22:46:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     cang@codeaurora.org
-Cc:     Avri Altman <Avri.Altman@wdc.com>,
-        "Winkler, Tomas" <tomas.winkler@intel.com>,
-        asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Janek Kotas <jank@cadence.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/1] scsi: ufs: Add command logging infrastructure
-Message-ID: <20191029054620.GG1929@tuxbook-pro>
-References: <1571808560-3965-1-git-send-email-cang@codeaurora.org>
- <5B8DA87D05A7694D9FA63FD143655C1B9DCF0AFE@hasmsx108.ger.corp.intel.com>
- <MN2PR04MB6991C2AF4DDEDD84C7887258FC6B0@MN2PR04MB6991.namprd04.prod.outlook.com>
- <01eb3c55e35738f2853fbc7175a12eaa@codeaurora.org>
+        Tue, 29 Oct 2019 01:53:23 -0400
+Received: from smtp3-1.goneo.de ([85.220.129.38]:49373 "EHLO smtp3-1.goneo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbfJ2FxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 01:53:23 -0400
+X-Greylist: delayed 629 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Oct 2019 01:53:20 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by smtp3.goneo.de (Postfix) with ESMTP id 1EC9B24007F;
+        Tue, 29 Oct 2019 06:42:49 +0100 (CET)
+X-Virus-Scanned: by goneo
+Received: from smtp3.goneo.de ([127.0.0.1])
+        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qZjqyjNzm7GN; Tue, 29 Oct 2019 06:42:47 +0100 (CET)
+Received: from [192.168.1.103] (dyndsl-037-138-239-146.ewe-ip-backbone.de [37.138.239.146])
+        by smtp3.goneo.de (Postfix) with ESMTPSA id 024AA23F854;
+        Tue, 29 Oct 2019 06:42:46 +0100 (CET)
+Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
+ 'functions' to 'identifiers'
+To:     Changbin Du <changbin.du@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+References: <20191020131717.28990-1-changbin.du@gmail.com>
+ <20191024121940.1d6a64df@lwn.net> <87woctb9cj.fsf@intel.com>
+ <20191025144802.uixg2crhw6h7gghq@mail.google.com> <87v9s99q9l.fsf@intel.com>
+ <20191029003120.llve32crfw63ovpw@mail.google.com>
+From:   Markus Heiser <markus.heiser@darmarit.de>
+Message-ID: <36c4dcfb-5425-b4bc-a5e9-4fd1458c8385@darmarit.de>
+Date:   Tue, 29 Oct 2019 06:42:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01eb3c55e35738f2853fbc7175a12eaa@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191029003120.llve32crfw63ovpw@mail.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 28 Oct 19:37 PDT 2019, cang@codeaurora.org wrote:
+Am 29.10.19 um 01:31 schrieb Changbin Du:
+>> But is it, really? I agree with Jon about the distinction between None
+>> and '' being confusing.
+>>
+> Here python is different from C. Both empty string and None are False in python.
+> Note such condition is common in python.
 
-> On 2019-10-23 18:33, Avri Altman wrote:
-> > > 
-> > > > Add the necessary infrastructure to keep timestamp history of
-> > > > commands, events and other useful info for debugging complex issues.
-> > > > This helps in diagnosing events leading upto failure.
-> > > 
-> > > Why not use tracepoints, for that?
-> > Ack on Tomas's comment.
-> > Are there any pieces of information that you need not provided by the
-> > upiu tracer?
-> > 
-> > Thanks,
-> > Avri
-> 
-> In extreme cases, when the UFS runs into bad state, system may crash. There
-> may not be a chance to collect trace. If trace is not collected and failure
-> is hard to be reproduced, some command logs prints would be very helpful to
-> help understand what was going on before we run into failure.
-> 
+The one is a empty string str(''), its bool('') value is False.
 
-This is a common problem shared among many/all subsystems, so it's
-better to rely on a generic solution for this; such as using tracepoints
-dumped into pstore/ramoops.
+| >>> type(''), bool('')
+| (<class 'str'>, False)
 
-Regards,
-Bjorn
+The other is a NoneType, its bool(None) value is False.
+
+| >>> type(None), bool(None)
+| (<class 'NoneType'>, False)
+
+None often used like NULL (pointer). E.g if a function does not give an explicit 
+return value, the returned value is None.
+
+| >>> def foo():
+| ...     pass
+| ...
+| >>> print(foo())
+| None
+
+
+-- Markus --
+
