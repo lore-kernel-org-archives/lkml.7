@@ -2,44 +2,45 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C959CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC470CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4135421479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E912086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="iNG18Otb"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="FKzhh9Xf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389282AbfJ2OPa (ORCPT
+        id S2389164AbfJ2OPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:15:30 -0400
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:53394 "EHLO
+        Tue, 29 Oct 2019 10:15:18 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:53296 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389207AbfJ2OPU (ORCPT
+        by vger.kernel.org with ESMTP id S1728994AbfJ2OPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:15:20 -0400
+        Tue, 29 Oct 2019 10:15:17 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3731FC04BB;
-        Tue, 29 Oct 2019 14:15:15 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 78CE1C0C32;
+        Tue, 29 Oct 2019 14:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1572358520; bh=nGvMdw6v8QDeKK9JnNRRIrf2w9HChn1Wdr+DNEOBHYA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iNG18OtbHULWKiWvg4ptyuJZJ/uwepsJ4ZxfBLvqzEPhb6abo/kHUWLbhYAev+oYm
-         mAsJiltcGBwyFA0hqWlhQ9D7f1WoSnonrGO1w604iQQEH9JFOrkj2SAveDuU6AVn+m
-         a07foVBen1Qu8Ie+fjtuv0utJN9SvCUbfryp5dlPfOg4p+8gl37g3WYUY++x8FDpWc
-         wuGaWTo7OO1LzTcG+M0TA6XBfnZ0TZDOWq9dY6zKG6w4BXhkekfjCgJLD5KyPb/IJH
-         a4MRmhkwRsbWhKktXJ1/X4g5m3B0MFTyn50B91Gf5oqfL+2YrLcTZlR9WMdf7+bCMZ
-         LSqW4UXNqJx1A==
+        t=1572358517; bh=DPNAHIwdStIvNykZvPNI9Q22maKuz31rS0G+68nojiE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=FKzhh9XfLyFRKMTJwGSBUowf69G38pWGCD2i6vzV5yyKVyMCJkX27S/7ajlK3dj0M
+         1tococe0i9vDGtb6xTp8JHL5ensVzZD1dxRo5UXR05LOssiT0b5iU4iFIWO2/sb92b
+         a1G3HmQe4z/pYolCfO6YjFW9RVc5OpLwDbpSFq85GINQD2DUUAtxYjcu7JoHT01dw+
+         I1L4WEutKThC2oRwCYrTq77tlpI68Dt0xN9+EX0Gmw6WiJ3OMsvP/XxDOWzv71Bd/f
+         ONiDqYPIxXM/HPsJN7T4vPMBTQL/PpAO9BJSf1+fS4DhkVyy6/Rd23PBScOSEnK1QL
+         RyX76SXfE00EQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id BA0ECA0057;
-        Tue, 29 Oct 2019 14:15:08 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 048CAA0075;
+        Tue, 29 Oct 2019 14:15:15 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -51,33 +52,25 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 0/9] net: stmmac: Fixes for -net
-Date:   Tue, 29 Oct 2019 15:14:44 +0100
-Message-Id: <cover.1572355609.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 6/9] net: stmmac: xgmac: Fix TSA selection
+Date:   Tue, 29 Oct 2019 15:14:50 +0100
+Message-Id: <ff7bb91bee499cd8cd3ac5ae6f363da3ff42d2c2.1572355609.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1572355609.git.Jose.Abreu@synopsys.com>
+References: <cover.1572355609.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1572355609.git.Jose.Abreu@synopsys.com>
+References: <cover.1572355609.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Misc fixes for stmmac.
+When we change between Transmission Scheduling Algorithms, we need to
+clear previous values so that the new chosen algorithm is correctly
+selected.
 
-Patch 1/9, corrects a sparse warning reported by kbuild.
-
-Patch 2/9 and 3/9, use the correct variable type for bitrev32() calls.
-
-Patch 4/9, fixes the random failures the we were seing when running selftests.
-
-Patch 5/9, prevents a crash that can occur when receiving AVB packets and with
-SPH feature enabled on XGMAC.
-
-Patch 6/9, fixes the correct settings for CBS on XGMAC.
-
-Patch 7/9, corrects the interpretation of AVB feature on XGMAC.
-
-Patch 8/9, disables Flow Control for AVB enabled queues on XGMAC.
-
-Patch 9/9, disables MMC interrupts on XGMAC, preventing a storm of interrupts.
+Fixes: ec6ea8e3eee9 ("net: stmmac: Add CBS support in XGMAC2")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -90,30 +83,21 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Jose Abreu (9):
-  net: stmmac: Fix sparse warning
-  net: stmmac: gmac4: bitrev32 returns u32
-  net: stmmac: xgmac: bitrev32 returns u32
-  net: stmmac: selftests: Must remove UC/MC addresses to prevent false
-    positives
-  net: stmmac: xgmac: Only get SPH header len if available
-  net: stmmac: xgmac: Fix TSA selection
-  net: stmmac: xgmac: Fix AV Feature detection
-  net: stmmac: xgmac: Disable Flow Control when 1 or more queues are in
-    AV
-  net: stmmac: xgmac: Disable MMC interrupts by default
-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |   4 +-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |   5 +-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |   3 +-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   4 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |   2 +-
- drivers/net/ethernet/stmicro/stmmac/mmc_core.c     |   6 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   5 +-
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 104 +++++++++++++++------
- 8 files changed, 94 insertions(+), 39 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index b58522b8f782..082f5ee9e525 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -224,6 +224,7 @@ static void dwxgmac2_config_cbs(struct mac_device_info *hw,
+ 	writel(low_credit, ioaddr + XGMAC_MTL_TCx_LOCREDIT(queue));
+ 
+ 	value = readl(ioaddr + XGMAC_MTL_TCx_ETS_CONTROL(queue));
++	value &= ~XGMAC_TSA;
+ 	value |= XGMAC_CC | XGMAC_CBS;
+ 	writel(value, ioaddr + XGMAC_MTL_TCx_ETS_CONTROL(queue));
+ }
 -- 
 2.7.4
 
