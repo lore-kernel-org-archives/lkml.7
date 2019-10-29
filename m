@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DE4CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC40C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA2E20874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B7C217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:31:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="UZ/sEe/E"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="a6QQhsu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730884AbfJ2KbL (ORCPT
+        id S1731009AbfJ2KbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 06:31:11 -0400
-Received: from mail-eopbgr760078.outbound.protection.outlook.com ([40.107.76.78]:45134
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        Tue, 29 Oct 2019 06:31:14 -0400
+Received: from mail-eopbgr740078.outbound.protection.outlook.com ([40.107.74.78]:41116
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727749AbfJ2KbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730593AbfJ2KbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 29 Oct 2019 06:31:08 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RNIMjMvxDv3pVw0++MBLZ4S+qAGFToS3PQNvbNB0Y6ZS7bsOHK28Pzi0JUgQJUcuU/pjTbn2/jUeW0APKPFR/0itiZFFii0P7R4wo7HHMISPoNlf/Lvg0lhEkiWeoQkfZup/s7YEf45cjHQ4CBU5NdMY5RnBV+O3di/YUrIQs6krZLmyEKbbw4nmaYMV43+qQMTrYPrAuNvhCohI4bbpzQvlKpZsYglzRYAO2iRp3E/yAXN7sNsUpnmrHOADzvKmJfCSWWgqi6pTPKzAkEam5o6VAljTsQZdPXVVcbNd1pXH2qR/lE4sTSyLHjMd11SF5Alj0uu+vsnOT1IE5eUevw==
+ b=ftK7Rsr9FfbDm847vpTY1r/8F/N9R1eYXxWB8Ok47kxpYX5Mko7uZkcfUfq0ONBf3g2LJfRoeTGP3q9mNbL9Elimyw4bYsBKZu6cDFPT5PoQmXzJqdN4+S+zuiKagLubtS2G9VgPrxlSXhF1bApf34x64L58n/1qWS7KF4nLF6Y4ffrjR+/85jFiKj808ykxbOY+K07uXaKEqUs/PytBRNyM+JJRvi2ytXIPvRuxZMk5zjnTa11sXhg2XDVK1qa/AlWDkr22cGlFK0uKDh7dpaZ6TaNIQyKZ+b8ngQHVMySACSyE6W6X5CVX9Stb83AvSn1LUCwDRx/Xdye4Qzc1fA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BXoPYeaz6IJVGbGlZ6HkOSNYtTLoVxVYczxjp4u62TI=;
- b=LYEduMlQfm6GPArvrY55H5rRZ/f8LMOU609eUyZGO09wvzRjCwno9yotbOcY/SLnoZ7YyfL9uXiHVaALNyz7q9UjDaVxxLs94OA1oSGE3/AtsYZ3rBcztnmH4Casb9SfHqVk0uuzJ5uf3WMr+Zw9USwkdLqTv7qJIWscyWmjeia1Oe4bpzh53gxoJE0xZAVUV2bUeId/2dH1ww2bqHPuDSzLej841VTjpeBo4npwSxoH1bmpfR1O0BznPXrIjsSO/H6BaJ5jvtQAjx/flIGDE8hN1f4axqDYmBzRlt9ul4OLBXIPey1KL6TioAV75y1MBpYn+TOgUzPo8nhqU9j1aw==
+ bh=4Jpv8x0Gj1iN24hL3z141clTVaNWOvhUUIFpm6OnhNI=;
+ b=Y+RmZ+4Dd5G9vesN9kKAXohFe9cixUFSbjzce2QShZO90kHA8ttN9iv1RibffQELCiN97CbgfD75lP66hQBw8vJH5djzcbte9/enWLzexs1NIQG4KhQ32f4VRZU6YQ1avOXXenuMoRSziCd89OXS/ehS82azI0FuClRtXaV5JezanRx9zLo2dJDIFW/jt03tGCM+yIhhHvWtmD2mTt60vGzTF3Cwfya5doWijdp6oURtW4Xej9dTXSWDQ3Jubr3DCmLi63ouyprpXedNwA0arSFLawaUiDajL/Shdb2kk/5N3HlM77oZlE31PHpnyMGdQwyFu9Vb3d8v+d8i4lmxXA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=arm.com smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BXoPYeaz6IJVGbGlZ6HkOSNYtTLoVxVYczxjp4u62TI=;
- b=UZ/sEe/EznKKGOEONI5/SDz12uhZObAMP+WTfEW8adowO8nzaK/yvQize4GVkrWzUyawIfUtG1+l8+yIH0ebHGy0TPwHiZQrq+3EYNOGSnx8ZNjTZiEp/yr0eH9OZvYspMEJAntiFtPVaxmIGJ8yHe1WSPWGctdW7O/ix+JXgU8=
-Received: from MWHPR0201CA0020.namprd02.prod.outlook.com
- (2603:10b6:301:74::33) by BYAPR02MB4535.namprd02.prod.outlook.com
- (2603:10b6:a03:14::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.24; Tue, 29 Oct
- 2019 10:30:52 +0000
-Received: from BL2NAM02FT027.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::209) by MWHPR0201CA0020.outlook.office365.com
- (2603:10b6:301:74::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2408.17 via Frontend
- Transport; Tue, 29 Oct 2019 10:30:52 +0000
+ bh=4Jpv8x0Gj1iN24hL3z141clTVaNWOvhUUIFpm6OnhNI=;
+ b=a6QQhsu5Y+YHgyJ00uEAclnDQNqNhCbvhiUGCsn1PTr2xVDLM2e1mwPkDrh1Gx255zWXL8dc/zvvIf79rRwSdY9JfIKiXIKbqkkTl4m01Eo1PiIxNYUpWvF80jmPO/bmcEGqdLrLF/hDjxkUAktYtRwnTf1PrmySemrKnyJ062g=
+Received: from CY4PR02CA0003.namprd02.prod.outlook.com (2603:10b6:903:18::13)
+ by MWHPR02MB2622.namprd02.prod.outlook.com (2603:10b6:300:46::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.23; Tue, 29 Oct
+ 2019 10:31:03 +0000
+Received: from SN1NAM02FT063.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::206) by CY4PR02CA0003.outlook.office365.com
+ (2603:10b6:903:18::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.22 via Frontend
+ Transport; Tue, 29 Oct 2019 10:31:03 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; arm.com; dkim=none (message not signed)
  header.d=none;arm.com; dmarc=bestguesspass action=none
@@ -57,23 +57,23 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT027.mail.protection.outlook.com (10.152.77.160) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2387.20
- via Frontend Transport; Tue, 29 Oct 2019 10:30:51 +0000
+ SN1NAM02FT063.mail.protection.outlook.com (10.152.72.213) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
+ via Frontend Transport; Tue, 29 Oct 2019 10:31:02 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <manish.narani@xilinx.com>)
-        id 1iPOm3-0002t8-7S; Tue, 29 Oct 2019 03:30:51 -0700
+        id 1iPOmD-0002u2-TS; Tue, 29 Oct 2019 03:31:01 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <manish.narani@xilinx.com>)
-        id 1iPOly-0005lF-2a; Tue, 29 Oct 2019 03:30:46 -0700
+        id 1iPOm8-0005qH-O0; Tue, 29 Oct 2019 03:30:56 -0700
 Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <mnarani@xilinx.com>)
-        id 1iPOlx-0005kX-3W; Tue, 29 Oct 2019 03:30:45 -0700
+        id 1iPOlx-0005kc-5e; Tue, 29 Oct 2019 03:30:45 -0700
 Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
-        id 61EB412172C; Tue, 29 Oct 2019 16:00:44 +0530 (IST)
+        id 73EC71217EB; Tue, 29 Oct 2019 16:00:44 +0530 (IST)
 From:   Manish Narani <manish.narani@xilinx.com>
 To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         adrian.hunter@intel.com, michal.simek@xilinx.com,
@@ -82,9 +82,9 @@ To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
 Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         git@xilinx.com
-Subject: [PATCH v4 2/8] dt-bindings: mmc: arasan: Update Documentation for the input clock
-Date:   Tue, 29 Oct 2019 16:00:36 +0530
-Message-Id: <1572345042-101207-2-git-send-email-manish.narani@xilinx.com>
+Subject: [PATCH v4 5/8] mmc: sdhci-of-arasan: Add support to set clock phase delays for SD
+Date:   Tue, 29 Oct 2019 16:00:39 +0530
+Message-Id: <1572345042-101207-5-git-send-email-manish.narani@xilinx.com>
 X-Mailer: git-send-email 2.1.1
 In-Reply-To: <1572345042-101207-1-git-send-email-manish.narani@xilinx.com>
 References: <1572345042-101207-1-git-send-email-manish.narani@xilinx.com>
@@ -92,57 +92,179 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(376002)(346002)(199004)(189003)(8676002)(42186006)(51416003)(316002)(70206006)(6666004)(16586007)(44832011)(486006)(107886003)(26005)(476003)(2906002)(8936002)(446003)(478600001)(103686004)(70586007)(76176011)(47776003)(2616005)(36386004)(5660300002)(11346002)(50466002)(126002)(4326008)(6266002)(36756003)(426003)(186003)(81166006)(356004)(106002)(336012)(305945005)(50226002)(48376002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4535;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(396003)(136003)(199004)(189003)(356004)(70586007)(476003)(76176011)(48376002)(51416003)(50226002)(50466002)(36756003)(486006)(2616005)(336012)(11346002)(126002)(26005)(6666004)(107886003)(70206006)(186003)(5660300002)(446003)(14444005)(305945005)(36386004)(44832011)(2906002)(81156014)(316002)(8936002)(81166006)(16586007)(4326008)(8676002)(42186006)(6266002)(47776003)(103686004)(426003)(106002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2622;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 40ee7ac4-c5da-45ec-0205-08d75c5b1294
-X-MS-TrafficTypeDiagnostic: BYAPR02MB4535:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB45353EDDA21872490F2A79C3C1610@BYAPR02MB4535.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 801ee0b6-2f14-4fcc-0644-08d75c5b18da
+X-MS-TrafficTypeDiagnostic: MWHPR02MB2622:
+X-Microsoft-Antispam-PRVS: <MWHPR02MB2622A2B715A9624E8A03DD09C1610@MWHPR02MB2622.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-Forefront-PRVS: 0205EDCD76
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8+p3gC7pGngZR03pNds3uYg/SLdlV1WJ2hQ31YEnSB9kXW6LmAsW5712nyylVHVsnKTLax2M0GiyVFY4aJ3Fgk1hUnOgZHZqIaCkclIfzYt7f8zyqY8J4CECigWToEOCLMxrTepRoTRb9eODoyjBtVdC7N92bApGQ/WNJymWQVrz7/xn9m6WvGVYkKrJIv5NF9P5G2KCpKUShclT/FprX4CeR1Fa1HocjrcxI8Vwye6aE2YGGSWn1BOKIxXWVWWOHa1ZE/qXOVCkDmzvUTT3+VkfQIIrnfC7Qwlisvivpa5UncAzxV+L/KtQbi680kqfRJsT0WAYVj0vKMVnTHviOFPNuFRXVc1V7DvOSq7Y12oQ70YMqPTOAOqiyfSgqfGygz5V+69kK4M08CAFcQnsonBSIYeK+MBJEvdR6MoveLk0+rWihjjOhIAU6QPEfuCu
+X-Microsoft-Antispam-Message-Info: yowUzrDYA/Vie5hcwmweBMK3kpZlj/+tOuk+7Eh6qcBiw426VPqua/rAebMlVhDXjZMmxr3ht/605IJYKdQRuQr8XCxMW59JZROwXQX1a2IK+r3ArDC7sjjQa3nfU/gwvfHiT9WYB8t/PSm5aASk80nHNEnGBzsFgQBKqxEr/HT5goxLJGNnWJTsU5X8+d0Yl3s74TJ1pdYRVNfRqErwmYWp4io9yFvHuFPV7qSvXsiZCKgnt/72M6mfQovUe9sxqm6lRS/4D6BgWN1zq0s4wQn4/hmJCkjJ0HzW1fET0xVdVVvZDgV7nJacvI1M7/iuC8+p2zIz70NAxDobA1PrSWPHIVaOVklmcLRJYp2dapl1kckm6gdjXzEaD0cI0HeQX4SOw6RYKqqDkUIDsU5+BCWE9i7AGa9rNA79b2IATVKq4u3gEpRcmQOfx2xBiyip
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2019 10:30:51.7942
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2019 10:31:02.3434
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40ee7ac4-c5da-45ec-0205-08d75c5b1294
+X-MS-Exchange-CrossTenant-Network-Message-Id: 801ee0b6-2f14-4fcc-0644-08d75c5b18da
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4535
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2622
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for an optional input clock which is essentially used
-in sampling the input data coming from the card.
+Add support to read Clock Phase Delays from the DT and set it via
+clk_set_phase() API from clock framework. Some of the controllers might
+have their own handling of setting clock delays, for this keep the
+set_clk_delays as function pointer which can be assigned controller
+specific handling of the same.
 
 Signed-off-by: Manish Narani <manish.narani@xilinx.com>
 ---
- Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-of-arasan.c | 91 ++++++++++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-index 7ca0aa7ccc0b..b51e40b2e0c5 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-@@ -38,9 +38,9 @@ Optional Properties:
-   - clock-output-names: If specified, this will be the name of the card clock
-     which will be exposed by this device.  Required if #clock-cells is
-     specified.
--  - #clock-cells: If specified this should be the value <0>.  With this property
--    in place we will export a clock representing the Card Clock.  This clock
--    is expected to be consumed by our PHY.  You must also specify
-+  - #clock-cells: If specified this should be the value <0> or <1>. With this
-+    property in place we will export one or two clocks representing the Card
-+    Clock. These clocks are expected to be consumed by our PHY.
-   - xlnx,fails-without-test-cd: when present, the controller doesn't work when
-     the CD line is not connected properly, and the line is not connected
-     properly. Test mode can be used to force the controller to function.
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index b75ba780f902..18eb6cffd269 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -77,12 +77,18 @@ struct sdhci_arasan_soc_ctl_map {
+  * @sdcardclk:		Pointer to normal 'struct clock' for sdcardclk_hw.
+  * @sampleclk_hw:	Struct for the clock we might provide to a PHY.
+  * @sampleclk:		Pointer to normal 'struct clock' for sampleclk_hw.
++ * @clk_phase_in:	Array of Input Clock Phase Delays for all speed modes
++ * @clk_phase_out:	Array of Output Clock Phase Delays for all speed modes
++ * @set_clk_delays:	Function pointer for setting Clock Delays
+  */
+ struct sdhci_arasan_clk_data {
+ 	struct clk_hw	sdcardclk_hw;
+ 	struct clk      *sdcardclk;
+ 	struct clk_hw	sampleclk_hw;
+ 	struct clk      *sampleclk;
++	int		clk_phase_in[MMC_TIMING_MMC_HS400 + 1];
++	int		clk_phase_out[MMC_TIMING_MMC_HS400 + 1];
++	void		(*set_clk_delays)(struct sdhci_host *host);
+ };
+ 
+ /**
+@@ -186,6 +192,7 @@ static void sdhci_arasan_set_clock(struct sdhci_host *host, unsigned int clock)
+ {
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+ 	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
++	struct sdhci_arasan_clk_data *clk_data = &sdhci_arasan->clk_data;
+ 	bool ctrl_phy = false;
+ 
+ 	if (!IS_ERR(sdhci_arasan->phy)) {
+@@ -227,6 +234,10 @@ static void sdhci_arasan_set_clock(struct sdhci_host *host, unsigned int clock)
+ 		sdhci_arasan->is_phy_on = false;
+ 	}
+ 
++	/* Set the Input and Output Clock Phase Delays */
++	if (clk_data->set_clk_delays)
++		clk_data->set_clk_delays(host);
++
+ 	sdhci_set_clock(host, clock);
+ 
+ 	if (sdhci_arasan->quirks & SDHCI_ARASAN_QUIRK_CLOCK_UNSTABLE)
+@@ -650,6 +661,84 @@ static void sdhci_arasan_update_baseclkfreq(struct sdhci_host *host)
+ 	sdhci_arasan_syscon_write(host, &soc_ctl_map->baseclkfreq, mhz);
+ }
+ 
++static void sdhci_arasan_set_clk_delays(struct sdhci_host *host)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
++	struct sdhci_arasan_clk_data *clk_data = &sdhci_arasan->clk_data;
++
++	clk_set_phase(clk_data->sampleclk,
++		      clk_data->clk_phase_in[host->timing]);
++	clk_set_phase(clk_data->sdcardclk,
++		      clk_data->clk_phase_out[host->timing]);
++}
++
++static void arasan_dt_read_clk_phase(struct device *dev,
++				     struct sdhci_arasan_clk_data *clk_data,
++				     unsigned int timing, const char *prop)
++{
++	struct device_node *np = dev->of_node;
++
++	int clk_phase[2] = {0};
++
++	/*
++	 * Read Tap Delay values from DT, if the DT does not contain the
++	 * Tap Values then use the pre-defined values.
++	 */
++	if (of_property_read_variable_u32_array(np, prop, &clk_phase[0],
++						2, 0)) {
++		dev_dbg(dev, "Using predefined clock phase for %s = %d %d\n",
++			prop, clk_data->clk_phase_in[timing],
++			clk_data->clk_phase_out[timing]);
++		return;
++	}
++
++	/* The values read are Input and Output Clock Delays in order */
++	clk_data->clk_phase_in[timing] = clk_phase[0];
++	clk_data->clk_phase_out[timing] = clk_phase[1];
++}
++
++/**
++ * arasan_dt_parse_clk_phases - Read Clock Delay values from DT
++ *
++ * Called at initialization to parse the values of Clock Delays.
++ *
++ * @dev:		Pointer to our struct device.
++ */
++static void arasan_dt_parse_clk_phases(struct device *dev,
++				       struct sdhci_arasan_clk_data *clk_data)
++{
++	/*
++	 * This has been kept as a pointer and is assigned a function here.
++	 * So that different controller variants can assign their own handling
++	 * function.
++	 */
++	clk_data->set_clk_delays = sdhci_arasan_set_clk_delays;
++
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_LEGACY,
++				 "arasan-clk-phase-legacy");
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_MMC_HS,
++				 "arasan-clk-phase-mmc-hs");
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_SD_HS,
++				 "arasan-clk-phase-sd-hs");
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_UHS_SDR12,
++				 "arasan-clk-phase-uhs-sdr12");
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_UHS_SDR25,
++				 "arasan-clk-phase-uhs-sdr25");
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_UHS_SDR50,
++				 "arasan-clk-phase-uhs-sdr50");
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_UHS_SDR104,
++				 "arasan-clk-phase-uhs-sdr104");
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_UHS_DDR50,
++				 "arasan-clk-phase-uhs-ddr50");
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_MMC_DDR52,
++				 "arasan-clk-phase-mmc-ddr52");
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_MMC_HS200,
++				 "arasan-clk-phase-mmc-hs200");
++	arasan_dt_read_clk_phase(dev, clk_data, MMC_TIMING_MMC_HS400,
++				 "arasan-clk-phase-mmc-hs400");
++}
++
+ /**
+  * sdhci_arasan_register_sdcardclk - Register the sdcardclk for a PHY to use
+  *
+@@ -942,6 +1031,8 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto clk_disable_all;
+ 
++	arasan_dt_parse_clk_phases(&pdev->dev, &sdhci_arasan->clk_data);
++
+ 	ret = mmc_of_parse(host->mmc);
+ 	if (ret) {
+ 		if (ret != -EPROBE_DEFER)
 -- 
 2.17.1
 
