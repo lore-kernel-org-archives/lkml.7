@@ -7,62 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C69CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB1DCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C5021882
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62795218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:44:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QEWMcBQu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="va5cB1Zk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387476AbfJ2Lnp (ORCPT
+        id S2387777AbfJ2LoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:43:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43138 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732187AbfJ2Lnh (ORCPT
+        Tue, 29 Oct 2019 07:44:04 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34403 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732753AbfJ2Lnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:43:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n1so5814671wra.10
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 04:43:34 -0700 (PDT)
+        Tue, 29 Oct 2019 07:43:41 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v3so1797180wmh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 04:43:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=H2CJ5u7SoLyb47H63oMSiNuFZvWZvb1TPdq7zIJAX2Q=;
-        b=QEWMcBQuQdPrxlY8iVWmlO5NK7qirG7I/rEGKCjgzqZr+2kStOAgMQOOLpcCXEdCrH
-         gLFpZGd1ABHlwBEB8BxPRzO3UHFR2gGn6DcaipPACK1S8OQYampSi+qAhdnlQdJqn32R
-         zpFruHwfyjQCCuRnjK4wEOFaXytfLlrK1r7TykgwIFj/YWfDcfXLj1IxJpP3PHUlyKkV
-         9rXRbm5rSIBRhj5TMe5a+74bJjFa8wiaqA2+3PToAwLTQGRK/Yu23dj1kHtT5D0ibiZF
-         xYHMxoAvL8qPdYVmQ6az6INdUbuPBrZvZQLD/kch8XQPWsqMAPJ2OzKPoy/OOasMvg+r
-         QOSw==
+        bh=Va6MSqjXMXOuH0/T0+D19S3ciaF7zVif/RgFuA01Sso=;
+        b=va5cB1ZklVNGl3C12ght31B13O5YkcCeJWs0i9v0xC8laA4F4Og/WthKoO00k8ZqKO
+         qC+/nx2544Jb1mkZL7x7o8T7RucpNp0IQDxN0PSeXqEoYAAb2KxZF+Y4Oide8h2v4oim
+         +33SAaifLx8lgHs27Uqd3d0fpBEZ5hjgQWT/vsK2tpec5Re4TgmUfp9XgEGKOf7w39jT
+         Io8nWOkZh1LFfQN7fbjJ8TDCLhRK7ogOAL88orEZEjZxf38nXupEd3hh2IbwVc9C8YzD
+         FRZmPrNCZWY8BzpLQIEVnSBnp9j4QF71Q02uVptbORMyP/N/sAfIoTN/69ux1KS29gMS
+         RGOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=H2CJ5u7SoLyb47H63oMSiNuFZvWZvb1TPdq7zIJAX2Q=;
-        b=s0fBhh2ULiMX7FNy3S4wXKxQOk3G/po1P39snK77m72+8IVFY6tZfhNa4w+thRf8w7
-         FhFZr1F0sa19PquIdvuqDJdt/k3XsIT9BbmHJxOutZDh7iPdVjnCtAaO0Nw+WMkDncbU
-         vno1B5OuUfqYYNexVwxS/tb5iwbax91aAwM4TxTncfLFTs/uVNN6DhS4JFJGKGyLHjKp
-         8q7EWlmkL/RAtGyL//6E73k6rSfo+sMsScbdmiA7/M5htdtqK2PUGtoC4bYLL1SkjrXQ
-         NJe2i/+RV9VT+DN9aYgkFmwfF/BLidDK1XV8fKFSWjQIXMBBkKj+W8cyI+h9Wecp0Xkc
-         1ntw==
-X-Gm-Message-State: APjAAAUAVBmlj7fPZ4AZptGkZHZK95Rb73BitqfYHPQ+dtFC988KsJiV
-        cKInREJcYh9z6LgEt2cJ4ZO7UA==
-X-Google-Smtp-Source: APXvYqxXfxvgGbwhHQ7KAWaxfMcQB/qbTX5lVDL9LdHipKZwJ+PU0EN2cUVZBjtPgqLWjIb7dzn2vw==
-X-Received: by 2002:a5d:498a:: with SMTP id r10mr20169245wrq.129.1572349413896;
-        Tue, 29 Oct 2019 04:43:33 -0700 (PDT)
+        bh=Va6MSqjXMXOuH0/T0+D19S3ciaF7zVif/RgFuA01Sso=;
+        b=S36SfIU2Dyb8f2uPtPzKMsTg8zMj08ETlRM2Mq8AcFcaGl+DzioVQ/e9CCLDCvxXFe
+         Akqx4+Ny7Myr0ezeuUlzjeW4CdlGxXJ1ReHwHV++45yM/ep1jMuztJZxqhD5hA2Rr1eq
+         /NEJptMTTCxm6VNgDv+tor2p4JI4o+7E+hJ00i8BWYNkYlFRL+LjKNtyuq71prZkBhB0
+         KyubAGJ+DrIi7ZHGYt8h4T2i49DuF6rcFF4XYpjXSsXwAd8W4lomkGB2v5pNRyz8lEjc
+         DLSJZEobjC82/Gg87xne0O+NoGOrYIli/sOFKzCxBuWv3Qulwhww9d0w+I7IB6/bZHTp
+         bkaw==
+X-Gm-Message-State: APjAAAVTjy9XKcldQplJzMLG+nes1rvhsY7hawJD3Mmosyb9fA1Yppqq
+        gezV46FZGkrcQskten8bFbVbsQ==
+X-Google-Smtp-Source: APXvYqz3aYxKbkVC72uUTOH9Kqm0ueWCz5iTwmcIVoh0eGR3udTgjIv7o1poPw7PYY5lzKv230Uw6w==
+X-Received: by 2002:a1c:7911:: with SMTP id l17mr3658550wme.21.1572349419351;
+        Tue, 29 Oct 2019 04:43:39 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id q25sm26559864wra.3.2019.10.29.04.43.32
+        by smtp.gmail.com with ESMTPSA id q25sm26559864wra.3.2019.10.29.04.43.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 04:43:33 -0700 (PDT)
+        Tue, 29 Oct 2019 04:43:38 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
+Cc:     linux-kernel@vger.kernel.org, Freeman Liu <freeman.liu@unisoc.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Rob Herring <robh@kernel.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 02/10] nvmem: sc27xx: Change to use devm_hwspin_lock_request_specific() to request one hwlock
-Date:   Tue, 29 Oct 2019 11:42:32 +0000
-Message-Id: <20191029114240.14905-3-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 06/10] dt-bindings: nvmem: Add Spreadtrum eFuse controller documentation
+Date:   Tue, 29 Oct 2019 11:42:36 +0000
+Message-Id: <20191029114240.14905-7-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191029114240.14905-1-srinivas.kandagatla@linaro.org>
 References: <20191029114240.14905-1-srinivas.kandagatla@linaro.org>
@@ -73,69 +75,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baolin Wang <baolin.wang@linaro.org>
+From: Freeman Liu <freeman.liu@unisoc.com>
 
-Change to use devm_hwspin_lock_request_specific() to help to simplify the
-cleanup code for drivers requesting one hwlock. Thus we can remove the
-redundant sc27xx_efuse_remove() and platform_set_drvdata().
+This patch adds the binding documentation for Spreadtrum eFuse controller.
 
+Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/sc27xx-efuse.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ .../devicetree/bindings/nvmem/sprd-efuse.txt  | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
 
-diff --git a/drivers/nvmem/sc27xx-efuse.c b/drivers/nvmem/sc27xx-efuse.c
-index c6ee21018d80..ab5e7e0bc3d8 100644
---- a/drivers/nvmem/sc27xx-efuse.c
-+++ b/drivers/nvmem/sc27xx-efuse.c
-@@ -211,7 +211,7 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	efuse->hwlock = hwspin_lock_request_specific(ret);
-+	efuse->hwlock = devm_hwspin_lock_request_specific(&pdev->dev, ret);
- 	if (!efuse->hwlock) {
- 		dev_err(&pdev->dev, "failed to request hwspinlock\n");
- 		return -ENXIO;
-@@ -219,7 +219,6 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
- 
- 	mutex_init(&efuse->mutex);
- 	efuse->dev = &pdev->dev;
--	platform_set_drvdata(pdev, efuse);
- 
- 	econfig.stride = 1;
- 	econfig.word_size = 1;
-@@ -232,21 +231,12 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
- 	nvmem = devm_nvmem_register(&pdev->dev, &econfig);
- 	if (IS_ERR(nvmem)) {
- 		dev_err(&pdev->dev, "failed to register nvmem config\n");
--		hwspin_lock_free(efuse->hwlock);
- 		return PTR_ERR(nvmem);
- 	}
- 
- 	return 0;
- }
- 
--static int sc27xx_efuse_remove(struct platform_device *pdev)
--{
--	struct sc27xx_efuse *efuse = platform_get_drvdata(pdev);
--
--	hwspin_lock_free(efuse->hwlock);
--	return 0;
--}
--
- static const struct of_device_id sc27xx_efuse_of_match[] = {
- 	{ .compatible = "sprd,sc2731-efuse" },
- 	{ }
-@@ -254,7 +244,6 @@ static const struct of_device_id sc27xx_efuse_of_match[] = {
- 
- static struct platform_driver sc27xx_efuse_driver = {
- 	.probe = sc27xx_efuse_probe,
--	.remove = sc27xx_efuse_remove,
- 	.driver = {
- 		.name = "sc27xx-efuse",
- 		.of_match_table = sc27xx_efuse_of_match,
+diff --git a/Documentation/devicetree/bindings/nvmem/sprd-efuse.txt b/Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
+new file mode 100644
+index 000000000000..96b6feec27f0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
+@@ -0,0 +1,39 @@
++= Spreadtrum eFuse device tree bindings =
++
++Required properties:
++- compatible: Should be "sprd,ums312-efuse".
++- reg: Specify the address offset of efuse controller.
++- clock-names: Should be "enable".
++- clocks: The phandle and specifier referencing the controller's clock.
++- hwlocks: Reference to a phandle of a hwlock provider node.
++
++= Data cells =
++Are child nodes of eFuse, bindings of which as described in
++bindings/nvmem/nvmem.txt
++
++Example:
++
++	ap_efuse: efuse@32240000 {
++		compatible = "sprd,ums312-efuse";
++		reg = <0 0x32240000 0 0x10000>;
++		clock-names = "enable";
++		hwlocks = <&hwlock 8>;
++		clocks = <&aonapb_gate CLK_EFUSE_EB>;
++
++		/* Data cells */
++		thermal_calib: calib@10 {
++			reg = <0x10 0x2>;
++		};
++	};
++
++= Data consumers =
++Are device nodes which consume nvmem data cells.
++
++Example:
++
++	thermal {
++		...
++
++		nvmem-cells = <&thermal_calib>;
++		nvmem-cell-names = "calibration";
++	};
 -- 
 2.21.0
 
