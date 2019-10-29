@@ -2,123 +2,159 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8AECA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05670CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B5A214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:36:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572352572;
-	bh=QMnsZceNxEcrN9tSFrRt4Xg3wuFc/x194NzA1aT85TE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=tsMP1vCjzNlsflsO/RDx7OXDq/t5r+j3LmdkvyCm2SUDRPmBeALuu5gYpmSLcLaZn
-	 KF+AP6HXhmcfG0s/QGL5LI/NXKcI7cRf5DbPJr0JgsqZSCc2TJNkdHFH+EUb7iXn51
-	 80nEUaJhVdqgfs5zEHzm9it4qZHeJQBi6K6bxnN8=
+	by mail.kernel.org (Postfix) with ESMTP id C9BE721721
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:38:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="f4Uv4e6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbfJ2MgL (ORCPT
+        id S1729002AbfJ2Mip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:36:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728004AbfJ2MgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:36:11 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67FEF214B2;
-        Tue, 29 Oct 2019 12:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572352569;
-        bh=QMnsZceNxEcrN9tSFrRt4Xg3wuFc/x194NzA1aT85TE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=w7aeQo1gk4oNam6lA+XYvRDr51NU3KISOEbXw/o1Y528ZLW/pEAeRNptnu8aIvH1G
-         otckF6bUBfLsqHmH199BEfwPJjrc89B5U1NQn+IyzSuB7qZbiEJYH8CXhhg3qirGZp
-         oYq1n4+lXs/VPTKhwqYV1MmY8eX2gxxyUAq313o4=
-Date:   Tue, 29 Oct 2019 07:36:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        gustavo.pimentel@synopsys.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        martin.blumenstingl@googlemail.com,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
- pcie link
-Message-ID: <20191029123607.GA33916@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jdxR4roEUC_Hs3puCzGY4ThdLsi_XcxfBUUxqruP4z7A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 29 Oct 2019 08:38:45 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:33927 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfJ2Min (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:38:43 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x9TCcFU6026616;
+        Tue, 29 Oct 2019 21:38:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x9TCcFU6026616
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572352698;
+        bh=AnYr/CYeWxJigHV9r38jB5sc5adlxzzRhOfW/8/opVI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=f4Uv4e6cv3GEt9iPrdZ7pwVhwECCWFmRJ43gDsvju47hGXhtEAms9Q2BcSZRNm5G3
+         Ov+oQROmlpVf8kTf+s9HM1UXVOK7eiImx9LJB5AyHeDWu5fyy2ZP8Q191G2KucbLgH
+         CUJq+SEfiPiVz9zzeWhtg4ZfCTTMnUZy2A3aeOjnfjKqWfso3R7IITaM5sHecxSGH/
+         u3D1fgwPpuN76vv3bG9ublD0nGvEpzbs1fGOU6lG0hldidHp0go3ohs107v93Sw46w
+         aoPomsolZaD9G5/3t6tWWxQCCA9E+rzchF5akbOjaH/KsRtmjI/3/C4tgRKJYfmnB9
+         9I9NKUVxXuYCg==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Jessica Yu <jeyu@kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] modpost: do not invoke extra modpost for nsdeps
+Date:   Tue, 29 Oct 2019 21:38:06 +0900
+Message-Id: <20191029123809.29301-2-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191029123809.29301-1-yamada.masahiro@socionext.com>
+References: <20191029123809.29301-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Heiner for ASPM conversation]
+'make nsdeps' invokes the modpost three times at most; before linking
+vmlinux, before building modules, and finally for generating .ns_deps
+files. Running the modpost again and again is annoying.
 
-On Tue, Oct 29, 2019 at 11:42:53AM +0100, Rafael J. Wysocki wrote:
-> On Tue, Oct 22, 2019 at 2:59 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Rafael, linux-pm, beginning of discussion at
-> > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
-> >
-> > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
-> > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
-> > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
-> > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
-> > > > > > of changing link width and speed on the fly.
-> > > > Please add more details about why this is needed.  Since you're adding
-> > > > sysfs files, it sounds like it's not actually the *driver* that needs
-> > > > this; it's something in userspace?
-> >
-> > > We have use cases to change the link speed and width on the fly.
-> > > One is EMI check and other is power saving.  Some battery backed
-> > > applications have to switch PCIe link from higher GEN to GEN1 and
-> > > width to x1. During the cases like external power supply got
-> > > disconnected or broken. Once external power supply is connected then
-> > > switch PCIe link to higher GEN and width.
-> >
-> > That sounds plausible, but of course nothing there is specific to the
-> > Intel Gateway, so we should implement this generically so it would
-> > work on all hardware.
-> >
-> > I'm not sure what the interface should look like -- should it be a
-> > low-level interface as you propose where userspace would have to
-> > identify each link of interest, or is there some system-wide
-> > power/performance knob that could tune all links?  Cc'd Rafael and
-> > linux-pm in case they have ideas.
-> 
-> Frankly, I need some time to think about this and, in case you are
-> wondering about whether or not it has been discussed with me already,
-> it hasn't.
-> 
-> At this point I can only say that since we have an ASPM interface,
-> which IMO is not fantastic, it may be good to come up with a common
-> link management interface.
+The last two can be unified. When the -d option is given, the modpost
+still does the usual job, and in addition, generates .ns_deps files.
 
-The ASPM interface hasn't been merged yet, so if you have better
-ideas, now is the time.  That one is definitely very low-level, partly
-because the first use case is working around defects in a specific
-device.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Some sort of unification of link management does sound like a good
-idea.
+ Makefile                 | 5 ++---
+ scripts/Makefile.modpost | 8 +++-----
+ scripts/mod/modpost.c    | 9 ++-------
+ 3 files changed, 7 insertions(+), 15 deletions(-)
 
-Bjorn
+diff --git a/Makefile b/Makefile
+index 4f4d8979bfce..0ef897fd9cfd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1682,10 +1682,9 @@ tags TAGS cscope gtags: FORCE
+ # ---------------------------------------------------------------------------
+ 
+ PHONY += nsdeps
+-
++nsdeps: export KBUILD_NSDEPS=1
+ nsdeps: modules
+-	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost nsdeps
+-	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/$@
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/nsdeps
+ 
+ # Scripts to check various things for consistency
+ # ---------------------------------------------------------------------------
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 01c0a992d293..c9757b20b048 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -53,8 +53,7 @@ MODPOST = scripts/mod/modpost						\
+ 	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
+ 	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
+ 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
+-	$(if $(KBUILD_MODPOST_WARN),-w)					\
+-	$(if $(filter nsdeps,$(MAKECMDGOALS)),-d)
++	$(if $(KBUILD_MODPOST_WARN),-w)
+ 
+ ifdef MODPOST_VMLINUX
+ 
+@@ -66,7 +65,8 @@ __modpost:
+ 
+ else
+ 
+-MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s -T -
++MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s -T - \
++	$(if $(KBUILD_NSDEPS),-d)
+ 
+ ifeq ($(KBUILD_EXTMOD),)
+ MODPOST += $(wildcard vmlinux)
+@@ -97,8 +97,6 @@ ifneq ($(KBUILD_MODPOST_NOFINAL),1)
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modfinal
+ endif
+ 
+-nsdeps: __modpost
+-
+ endif
+ 
+ .PHONY: $(PHONY)
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index 26ba97245576..dcd90d563ce8 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -2221,8 +2221,7 @@ static int check_exports(struct module *mod)
+ 			add_namespace(&mod->required_namespaces,
+ 				      exp->namespace);
+ 
+-			if (!write_namespace_deps &&
+-			    !module_imports_namespace(mod, exp->namespace)) {
++			if (!module_imports_namespace(mod, exp->namespace)) {
+ 				warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
+ 				     basename, exp->name, exp->namespace);
+ 			}
+@@ -2641,8 +2640,6 @@ int main(int argc, char **argv)
+ 
+ 		err |= check_modname_len(mod);
+ 		err |= check_exports(mod);
+-		if (write_namespace_deps)
+-			continue;
+ 
+ 		add_header(&buf, mod);
+ 		add_intree_flag(&buf, !external_module);
+@@ -2657,10 +2654,8 @@ int main(int argc, char **argv)
+ 		write_if_changed(&buf, fname);
+ 	}
+ 
+-	if (write_namespace_deps) {
++	if (write_namespace_deps)
+ 		write_namespace_deps_files();
+-		return 0;
+-	}
+ 
+ 	if (dump_write)
+ 		write_dump(dump_write);
+-- 
+2.17.1
+
