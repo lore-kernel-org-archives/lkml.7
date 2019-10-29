@@ -2,212 +2,711 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A83CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE294CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EDC2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572380833;
-	bh=Rfr/YDkbZCOBS716poVW8CX96iFpyW3wXlvdADnE1S0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=dr8rxmOqiW4tM9AaNGxUkAgAY69hlE1u02iTllwZUepbKlpsPzfBzEerbozmRky5L
-	 8FCv1azK2sQqhymj/YJ2ch+oKxkCUkWl3LE0Kb0TNkwFkTonoOnuvg6oEo07kJHgJ3
-	 JBYpRSSe6v4tKJ+nGsE26Y4LBnbVe4+YLgp7fGS8=
+	by mail.kernel.org (Postfix) with ESMTP id 8FD7C2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfJ2U1M (ORCPT
+        id S1727430AbfJ2UaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:27:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbfJ2U1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:27:11 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CD642086A;
-        Tue, 29 Oct 2019 20:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572380830;
-        bh=Rfr/YDkbZCOBS716poVW8CX96iFpyW3wXlvdADnE1S0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kdqNFfvp0mv4767Ab/4Mvqpwrpx+Oe7F80ZXbDqs8o0owqHY/uQJMKKDZtw6k3Xg7
-         7MbmMi0f2uBKKSK5lyhXh44/jEizkkjy0wKhh/XVWPe0jiSxRgln8wVbOBP2SbyTHw
-         CVeKyE6d0JW4zp8vttpk13eILu0yOmCGqAOTAzIc=
-Date:   Tue, 29 Oct 2019 15:27:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Matthias Andree <matthias.andree@gmx.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191029202708.GA38926@google.com>
+        Tue, 29 Oct 2019 16:30:06 -0400
+Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:49289 "EHLO
+        smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfJ2UaF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:30:05 -0400
+Received: from smtp8.infomaniak.ch (smtp8.infomaniak.ch [83.166.132.38])
+        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x9THFUnj119194
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 18:15:31 +0100
+Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
+        (authenticated bits=0)
+        by smtp8.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x9THFU5P168850;
+        Tue, 29 Oct 2019 18:15:30 +0100
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Drysdale <drysdale@google.com>,
+        Florent Revest <revest@chromium.org>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        KP Singh <kpsingh@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH bpf-next v11 6/7] bpf,landlock: Add tests for the Landlock ptrace program type
+Date:   Tue, 29 Oct 2019 18:15:04 +0100
+Message-Id: <20191029171505.6650-7-mic@digikod.net>
+X-Mailer: git-send-email 2.24.0.rc1
+In-Reply-To: <20191029171505.6650-1-mic@digikod.net>
+References: <20191029171505.6650-1-mic@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029111520.GE2593@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 01:15:20PM +0200, Mika Westerberg wrote:
-> On Mon, Oct 28, 2019 at 03:16:53PM -0500, Bjorn Helgaas wrote:
-> > > The related hardware event is resume in this case. Can you point
-> > > me to the actual point where you want me to put this?
-> > 
-> > "Resume" is a Linux software concept, so of course the PCIe spec
-> > doesn't say anything about it.  The spec talks about delays
-> > related to resets and device power and link state transitions, so
-> > somehow we have to connect the Linux delay with those hardware
-> > events.
-> > 
-> > Since we're talking about a transition from D3cold, this has to be
-> > done via something external to the device such as power
-> > regulators.  For ACPI systems that's probably hidden inside _PS0
-> > or something similar.  That's opaque, but at least it's a hook
-> > that says "here's where we put the device into D0".  I suggested
-> > acpi_pci_set_power_state() as a possibility since I think that's
-> > the lowest-level point where we have the pci_dev so we know the
-> > current state and the new state.
-> 
-> I looked at how we could use acpi_pci_set_power_state() but I don't
-> think it is possible because it is likely that only the root port
-> has the power resource that is used to bring the link to L2 or L3.
-> However, we would need to repeat the delay for each downstream/root
-> port if there are multiple PCIe switches in the topology.
+Test eBPF program context access and ptrace hooks semantic.
 
-OK, I think I understand why that's a problem (correct me if I'm
-wrong):
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: James Morris <jmorris@namei.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Serge E. Hallyn <serge@hallyn.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Will Drewry <wad@chromium.org>
+---
 
-  We call pci_pm_resume_noirq() for every device, but it only calls
-  acpi_pci_set_power_state() for devices that have _PS0 or _PR0
-  methods.  So if the delay is in acpi_pci_set_power_state() and we
-  have A -> B -> C where only A has _PS0, we would delay for the link
-  to B to come up, but not for the link to C.
+Changes since v10:
+* rework tests with new Landlock ptrace programs which restrict ptrace
+  thanks to the task_landlock_ptrace_ancestor() helper
+* simplify ptrace tests (make expect_ptrace implicit)
+* add tests:
+  * check a child process tracing its parent
+  * check Landlock domain without ptrace enforcement (e.g. useful for
+    audit/signaling purpose)
+  * check inherited-only domains
+  * check task pointer arithmetic
+* fix flaky test for multi-core
+* increase log size
+* cosmetic renames
+* update and improve the Makefile
 
-I do see that we do need both delays.  In acpi_pci_set_power_state()
-when we transition A from D3cold->D0, I assume that single _PS0
-evaluation on A causes B to transition from D3cold->D3hot, which in
-turn causes C to transition from D3cold->D3hot.  Is that your
-understanding, too?
+Changes since v9:
+* replace subtype with expected_attach_type and expected_attach_triggers
+* rename inode_map_lookup() into inode_map_lookup_elem()
+* check for inode map entry without value (which is now possible thanks
+  to the pointer null check)
+* use read-only inode map for Landlock programs
 
-We do know that topology in acpi_pci_set_power_state(), since we have
-the pci_dev for A, so it seems conceivable that we could descend the
-hierarchy and delay for each level.
+Changes since v8:
+* update eBPF include path for macros
+* use TEST_GEN_PROGS and use the generic "clean" target
+* add more verbose errors
+* update the bpf/verifier files
+* remove chain tests (from landlock and bpf/verifier)
+* replace the whitelist tests with blacklist tests (because of stateless
+  Landlock programs): remove "dotdot" tests and other depth tests
+* sync the landlock Makefile with its bpf sibling directory and use
+  bpf_load_program_xattr()
 
-If the delay is in pci_pm_resume_noirq() (as in your patch), what
-happens with a switch with several Downstream Ports?  I assume that
-all the Downstream Ports start their transition out of D3cold
-basically simultaneously, so we probably don't need N delays, do we?
-It seems a little messy to optimize this in pci_pm_resume_noirq().
+Changes since v7:
+* update tests and add new ones for filesystem hierarchy and Landlock
+  chains.
 
-The outline of the pci_pm_resume_noirq() part of this patch is:
+Changes since v6:
+* use the new kselftest_harness.h
+* use const variables
+* replace ASSERT_STEP with ASSERT_*
+* rename BPF_PROG_TYPE_LANDLOCK to BPF_PROG_TYPE_LANDLOCK_RULE
+* force sample library rebuild
+* fix install target
 
-  pci_pm_resume_noirq
-    if (!dev->skip_bus_pm ...)   # <-- condition 1
-      pci_pm_default_resume_early
-        pci_power_up
-          if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
-            platform_pci_set_power_state
-              pci_platform_pm->set_state
-                acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
-                  acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
-+   if (d3cold)                  # <-- condition 2
-+     pci_bridge_wait_for_secondary_bus
+Changes since v5:
+* add subtype test
+* add ptrace tests
+* split and rename files
+* cleanup and rebase
+---
+ scripts/bpf_helpers_doc.py                    |   1 +
+ tools/include/uapi/linux/bpf.h                |  23 +-
+ tools/include/uapi/linux/landlock.h           |  22 ++
+ tools/lib/bpf/libbpf_probes.c                 |   3 +
+ tools/testing/selftests/bpf/config            |   3 +
+ tools/testing/selftests/bpf/test_verifier.c   |   1 +
+ .../testing/selftests/bpf/verifier/landlock.c |  56 +++++
+ tools/testing/selftests/landlock/.gitignore   |   5 +
+ tools/testing/selftests/landlock/Makefile     |  27 +++
+ tools/testing/selftests/landlock/config       |   5 +
+ tools/testing/selftests/landlock/test.h       |  48 ++++
+ tools/testing/selftests/landlock/test_base.c  |  24 ++
+ .../testing/selftests/landlock/test_ptrace.c  | 210 ++++++++++++++++++
+ 13 files changed, 427 insertions(+), 1 deletion(-)
+ create mode 100644 tools/include/uapi/linux/landlock.h
+ create mode 100644 tools/testing/selftests/bpf/verifier/landlock.c
+ create mode 100644 tools/testing/selftests/landlock/.gitignore
+ create mode 100644 tools/testing/selftests/landlock/Makefile
+ create mode 100644 tools/testing/selftests/landlock/config
+ create mode 100644 tools/testing/selftests/landlock/test.h
+ create mode 100644 tools/testing/selftests/landlock/test_base.c
+ create mode 100644 tools/testing/selftests/landlock/test_ptrace.c
 
-Another thing that niggles at me here is that the condition for
-calling pci_bridge_wait_for_secondary_bus() is completely different
-than the condition for changing the power state.  If we didn't change
-the power state, there's no reason to wait, is there?
+diff --git a/scripts/bpf_helpers_doc.py b/scripts/bpf_helpers_doc.py
+index 7548569e8076..8e4c0fe75663 100755
+--- a/scripts/bpf_helpers_doc.py
++++ b/scripts/bpf_helpers_doc.py
+@@ -466,6 +466,7 @@ class PrinterHelpers(Printer):
+             'const struct sk_buff': 'const struct __sk_buff',
+             'struct sk_msg_buff': 'struct sk_msg_md',
+             'struct xdp_buff': 'struct xdp_md',
++            'struct task_struct': 'void',
+     }
+ 
+     def print_header(self):
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 4af8b0819a32..c88436b97163 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -173,6 +173,7 @@ enum bpf_prog_type {
+ 	BPF_PROG_TYPE_CGROUP_SYSCTL,
+ 	BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE,
+ 	BPF_PROG_TYPE_CGROUP_SOCKOPT,
++	BPF_PROG_TYPE_LANDLOCK_HOOK,
+ };
+ 
+ enum bpf_attach_type {
+@@ -199,6 +200,7 @@ enum bpf_attach_type {
+ 	BPF_CGROUP_UDP6_RECVMSG,
+ 	BPF_CGROUP_GETSOCKOPT,
+ 	BPF_CGROUP_SETSOCKOPT,
++	BPF_LANDLOCK_PTRACE,
+ 	__MAX_BPF_ATTACH_TYPE
+ };
+ 
+@@ -2775,6 +2777,24 @@ union bpf_attr {
+  * 		restricted to raw_tracepoint bpf programs.
+  * 	Return
+  * 		0 on success, or a negative error in case of failure.
++ *
++ * int bpf_task_landlock_ptrace_ancestor(struct task_struct *parent, struct task_struct *child)
++ *	Description
++ *		Check the relation of a potentially parent task with a child
++ *		one, according to their Landlock ptrace hook programs.
++ *	Return
++ *		**-EINVAL** if the child's ptrace programs are not comparable
++ *		to the parent ones, i.e. one of them is an empty set.
++ *
++ *		**-ENOENT** if the parent's ptrace programs are either in a
++ *		separate hierarchy of the child ones, or if the parent's ptrace
++ *		programs are a superset of the child ones.
++ *
++ *		0 if the parent's ptrace programs are the same as the child
++ *		ones.
++ *
++ *		1 if the parent's ptrace programs are indeed a subset of the
++ *		child ones.
+  */
+ #define __BPF_FUNC_MAPPER(FN)		\
+ 	FN(unspec),			\
+@@ -2888,7 +2908,8 @@ union bpf_attr {
+ 	FN(sk_storage_delete),		\
+ 	FN(send_signal),		\
+ 	FN(tcp_gen_syncookie),		\
+-	FN(skb_output),
++	FN(skb_output),			\
++	FN(task_landlock_ptrace_ancestor),
+ 
+ /* integer value in 'imm' field of BPF_CALL instruction selects which helper
+  * function eBPF program intends to call
+diff --git a/tools/include/uapi/linux/landlock.h b/tools/include/uapi/linux/landlock.h
+new file mode 100644
+index 000000000000..3db2d190c4e7
+--- /dev/null
++++ b/tools/include/uapi/linux/landlock.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Landlock - UAPI headers
++ *
++ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2018-2019 ANSSI
++ */
++
++#ifndef _UAPI__LINUX_LANDLOCK_H__
++#define _UAPI__LINUX_LANDLOCK_H__
++
++#include <linux/types.h>
++
++#define LANDLOCK_RET_ALLOW	0
++#define LANDLOCK_RET_DENY	1
++
++struct landlock_context_ptrace {
++	__u64 tracer;
++	__u64 tracee;
++};
++
++#endif /* _UAPI__LINUX_LANDLOCK_H__ */
+diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+index 4b0b0364f5fc..1e0d6346a7c7 100644
+--- a/tools/lib/bpf/libbpf_probes.c
++++ b/tools/lib/bpf/libbpf_probes.c
+@@ -78,6 +78,9 @@ probe_load(enum bpf_prog_type prog_type, const struct bpf_insn *insns,
+ 	case BPF_PROG_TYPE_KPROBE:
+ 		xattr.kern_version = get_kernel_version();
+ 		break;
++	case BPF_PROG_TYPE_LANDLOCK_HOOK:
++		xattr.expected_attach_type = BPF_LANDLOCK_PTRACE;
++		break;
+ 	case BPF_PROG_TYPE_UNSPEC:
+ 	case BPF_PROG_TYPE_SOCKET_FILTER:
+ 	case BPF_PROG_TYPE_SCHED_CLS:
+diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
+index 5dc109f4c097..3161a88a6059 100644
+--- a/tools/testing/selftests/bpf/config
++++ b/tools/testing/selftests/bpf/config
+@@ -35,3 +35,6 @@ CONFIG_MPLS_ROUTING=m
+ CONFIG_MPLS_IPTUNNEL=m
+ CONFIG_IPV6_SIT=m
+ CONFIG_BPF_JIT=y
++CONFIG_SECCOMP_FILTER=y
++CONFIG_SECURITY=y
++CONFIG_SECURITY_LANDLOCK=y
+diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
+index d27fd929abb9..74f249dafc0b 100644
+--- a/tools/testing/selftests/bpf/test_verifier.c
++++ b/tools/testing/selftests/bpf/test_verifier.c
+@@ -30,6 +30,7 @@
+ #include <linux/bpf.h>
+ #include <linux/if_ether.h>
+ #include <linux/btf.h>
++#include <linux/landlock.h>
+ 
+ #include <bpf/bpf.h>
+ #include <bpf/libbpf.h>
+diff --git a/tools/testing/selftests/bpf/verifier/landlock.c b/tools/testing/selftests/bpf/verifier/landlock.c
+new file mode 100644
+index 000000000000..59cd333745dc
+--- /dev/null
++++ b/tools/testing/selftests/bpf/verifier/landlock.c
+@@ -0,0 +1,56 @@
++{
++	"landlock/ptrace: always accept",
++	.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK,
++	.expected_attach_type = BPF_LANDLOCK_PTRACE,
++	.insns = {
++		BPF_MOV32_IMM(BPF_REG_0, 0),
++		BPF_EXIT_INSN(),
++	},
++	.result = ACCEPT,
++},
++{
++	"landlock/ptrace: forbid arbitrary return value",
++	.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK,
++	.expected_attach_type = BPF_LANDLOCK_PTRACE,
++	.insns = {
++		BPF_MOV32_IMM(BPF_REG_0, 2),
++		BPF_EXIT_INSN(),
++	},
++	.result = REJECT,
++	.errstr = "At program exit the register R0 has value (0x2; 0x0) should have been in (0x0; 0x1)",
++},
++{
++	"landlock/ptrace: read context and call dedicated helper",
++	.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK,
++	.expected_attach_type = BPF_LANDLOCK_PTRACE,
++	.insns = {
++		BPF_MOV64_REG(BPF_REG_6, BPF_REG_1),
++		BPF_LDX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6,
++			offsetof(struct landlock_context_ptrace, tracer)),
++		BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_6,
++			offsetof(struct landlock_context_ptrace, tracer)),
++		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
++				BPF_FUNC_task_landlock_ptrace_ancestor),
++		BPF_MOV32_IMM(BPF_REG_0, 0),
++		BPF_EXIT_INSN(),
++	},
++	.result = ACCEPT,
++},
++{
++	"landlock/ptrace: forbid pointer arithmetic",
++	.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK,
++	.expected_attach_type = BPF_LANDLOCK_PTRACE,
++	.insns = {
++		BPF_MOV64_REG(BPF_REG_6, BPF_REG_1),
++		BPF_LDX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6,
++			offsetof(struct landlock_context_ptrace, tracer)),
++		BPF_ALU64_IMM(BPF_ADD, BPF_REG_1, 1),
++		BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_6,
++			offsetof(struct landlock_context_ptrace, tracee)),
++		BPF_ALU64_IMM(BPF_ADD, BPF_REG_2, 1),
++		BPF_MOV32_IMM(BPF_REG_0, 0),
++		BPF_EXIT_INSN(),
++	},
++	.result = REJECT,
++	.errstr = "R1 pointer arithmetic on task prohibited",
++},
+diff --git a/tools/testing/selftests/landlock/.gitignore b/tools/testing/selftests/landlock/.gitignore
+new file mode 100644
+index 000000000000..4c5c01d23fe0
+--- /dev/null
++++ b/tools/testing/selftests/landlock/.gitignore
+@@ -0,0 +1,5 @@
++/feature
++/fixdep
++/*libbpf*
++/test_base
++/test_ptrace
+diff --git a/tools/testing/selftests/landlock/Makefile b/tools/testing/selftests/landlock/Makefile
+new file mode 100644
+index 000000000000..2da77c30e77f
+--- /dev/null
++++ b/tools/testing/selftests/landlock/Makefile
+@@ -0,0 +1,27 @@
++# SPDX-License-Identifier: GPL-2.0
++
++LIBDIR := $(abspath ../../../lib)
++BPFDIR := $(LIBDIR)/bpf
++TOOLSDIR := $(abspath ../../../include)
++APIDIR := $(TOOLSDIR)/uapi
++
++CFLAGS += -g -Wall -O2 -I$(APIDIR) -I$(LIBDIR) -I$(TOOLSDIR)
++LDLIBS += -lelf
++
++test_src = $(wildcard test_*.c)
++
++TEST_GEN_PROGS := $(test_src:.c=)
++
++include ../lib.mk
++
++BPFOBJ := $(OUTPUT)/libbpf.a
++
++$(TEST_GEN_PROGS): $(BPFOBJ) ../kselftest_harness.h
++
++.PHONY: force
++
++# force a rebuild of BPFOBJ when its dependencies are updated
++force:
++
++$(BPFOBJ): force
++	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/
+diff --git a/tools/testing/selftests/landlock/config b/tools/testing/selftests/landlock/config
+new file mode 100644
+index 000000000000..fa5081b840ad
+--- /dev/null
++++ b/tools/testing/selftests/landlock/config
+@@ -0,0 +1,5 @@
++CONFIG_BPF=y
++CONFIG_BPF_SYSCALL=y
++CONFIG_SECCOMP_FILTER=y
++CONFIG_SECURITY=y
++CONFIG_SECURITY_LANDLOCK=y
+diff --git a/tools/testing/selftests/landlock/test.h b/tools/testing/selftests/landlock/test.h
+new file mode 100644
+index 000000000000..836df68b6bb8
+--- /dev/null
++++ b/tools/testing/selftests/landlock/test.h
+@@ -0,0 +1,48 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Landlock helpers
++ *
++ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2019 ANSSI
++ */
++
++#include <bpf/bpf.h>
++#include <errno.h>
++#include <linux/filter.h>
++#include <linux/landlock.h>
++#include <linux/seccomp.h>
++#include <sys/prctl.h>
++#include <sys/syscall.h>
++
++#include "../kselftest_harness.h"
++#include "../../../../samples/bpf/bpf_load.h"
++
++#ifndef SECCOMP_PREPEND_LANDLOCK_PROG
++#define SECCOMP_PREPEND_LANDLOCK_PROG	4
++#endif
++
++#ifndef seccomp
++static int __attribute__((unused)) seccomp(unsigned int op, unsigned int flags,
++		void *args)
++{
++	errno = 0;
++	return syscall(__NR_seccomp, op, flags, args);
++}
++#endif
++
++static int __attribute__((unused)) ll_bpf_load_program(
++		const struct bpf_insn *bpf_insns, size_t insns_len,
++		char *log_buf, size_t log_buf_sz,
++		const enum bpf_attach_type attach_type)
++{
++	struct bpf_load_program_attr load_attr;
++
++	memset(&load_attr, 0, sizeof(struct bpf_load_program_attr));
++	load_attr.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK;
++	load_attr.expected_attach_type = attach_type;
++	load_attr.insns = bpf_insns;
++	load_attr.insns_cnt = insns_len / sizeof(struct bpf_insn);
++	load_attr.license = "GPL";
++
++	return bpf_load_program_xattr(&load_attr, log_buf, log_buf_sz);
++}
+diff --git a/tools/testing/selftests/landlock/test_base.c b/tools/testing/selftests/landlock/test_base.c
+new file mode 100644
+index 000000000000..db46f39048cb
+--- /dev/null
++++ b/tools/testing/selftests/landlock/test_base.c
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Landlock tests - base
++ *
++ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
++ */
++
++#define _GNU_SOURCE
++#include <errno.h>
++
++#include "test.h"
++
++TEST(seccomp_landlock)
++{
++	int ret;
++
++	ret = seccomp(SECCOMP_PREPEND_LANDLOCK_PROG, 0, NULL);
++	EXPECT_EQ(-1, ret);
++	EXPECT_EQ(EFAULT, errno) {
++		TH_LOG("Kernel does not support CONFIG_SECURITY_LANDLOCK");
++	}
++}
++
++TEST_HARNESS_MAIN
+diff --git a/tools/testing/selftests/landlock/test_ptrace.c b/tools/testing/selftests/landlock/test_ptrace.c
+new file mode 100644
+index 000000000000..f4ee67126394
+--- /dev/null
++++ b/tools/testing/selftests/landlock/test_ptrace.c
+@@ -0,0 +1,210 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Landlock tests - ptrace
++ *
++ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2019 ANSSI
++ */
++
++#define _GNU_SOURCE
++#include <signal.h> /* raise */
++#include <sys/ptrace.h>
++#include <sys/types.h> /* waitpid */
++#include <sys/wait.h> /* waitpid */
++#include <unistd.h> /* fork, pipe */
++
++#include "test.h"
++
++#define LOG_SIZE 512
++
++static void create_domain(struct __test_metadata *_metadata,
++		bool scoped_ptrace, bool inherited_only)
++{
++	const struct bpf_insn prog_void[] = {
++		BPF_MOV32_IMM(BPF_REG_0, LANDLOCK_RET_ALLOW),
++		BPF_EXIT_INSN(),
++	};
++	const struct bpf_insn prog_check[] = {
++		BPF_ALU64_REG(BPF_MOV, BPF_REG_6, BPF_REG_1),
++		BPF_LDX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6,
++			offsetof(struct landlock_context_ptrace, tracer)),
++		BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_6,
++			offsetof(struct landlock_context_ptrace, tracee)),
++		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
++				BPF_FUNC_task_landlock_ptrace_ancestor),
++		/* if @tracee is an ancestor or at the same level of @tracer,
++		 * then allow ptrace (warning: do not use BPF_JGE 0) */
++		BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, inherited_only ? 0 : 1, 2),
++		BPF_MOV32_IMM(BPF_REG_0, LANDLOCK_RET_DENY),
++		BPF_EXIT_INSN(),
++		BPF_MOV32_IMM(BPF_REG_0, LANDLOCK_RET_ALLOW),
++		BPF_EXIT_INSN(),
++	};
++	int prog;
++	char log[LOG_SIZE] = "";
++
++	if (scoped_ptrace)
++		prog = ll_bpf_load_program(prog_check, sizeof(prog_check),
++				log, sizeof(log), BPF_LANDLOCK_PTRACE);
++	else
++		prog = ll_bpf_load_program(prog_void, sizeof(prog_void),
++				log, sizeof(log), BPF_LANDLOCK_PTRACE);
++	ASSERT_NE(-1, prog) {
++		TH_LOG("Failed to load the %s program: %s\n%s",
++				scoped_ptrace ? "check" : "void",
++				strerror(errno), log);
++	}
++	ASSERT_EQ(0, seccomp(SECCOMP_PREPEND_LANDLOCK_PROG, 0, &prog)) {
++		TH_LOG("Failed to create a Landlock domain: %s", strerror(errno));
++	}
++	EXPECT_EQ(0, close(prog));
++}
++
++/* test PTRACE_TRACEME and PTRACE_ATTACH for parent and child */
++static void _check_ptrace(struct __test_metadata *_metadata,
++		bool scoped_ptrace, bool domain_both,
++		bool domain_parent, bool domain_child)
++{
++	pid_t child, parent;
++	int status;
++	int pipe_child[2], pipe_parent[2];
++	char buf_parent;
++	const bool inherited_only = domain_both && !domain_parent && !domain_child;
++
++	parent = getpid();
++
++	ASSERT_EQ(0, pipe(pipe_child));
++	ASSERT_EQ(0, pipe(pipe_parent));
++	if (domain_both)
++		create_domain(_metadata, scoped_ptrace, inherited_only);
++
++	child = fork();
++	ASSERT_LE(0, child);
++	if (child == 0) {
++		char buf_child;
++
++		EXPECT_EQ(0, close(pipe_parent[1]));
++		EXPECT_EQ(0, close(pipe_child[0]));
++		if (domain_child)
++			create_domain(_metadata, scoped_ptrace, inherited_only);
++
++		/* sync #1 */
++		ASSERT_EQ(1, read(pipe_parent[0], &buf_child, 1)) {
++			TH_LOG("Failed to read() sync #1 from parent");
++		}
++		ASSERT_EQ('.', buf_child);
++
++		/* test the parent protection */
++		ASSERT_EQ((domain_child && scoped_ptrace) ? -1 : 0,
++				ptrace(PTRACE_ATTACH, parent, NULL, 0));
++		if (domain_child && scoped_ptrace) {
++			ASSERT_EQ(EPERM, errno);
++		} else {
++			ASSERT_EQ(parent, waitpid(parent, &status, 0));
++			ASSERT_EQ(1, WIFSTOPPED(status));
++			ASSERT_EQ(0, ptrace(PTRACE_DETACH, parent, NULL, 0));
++		}
++
++		/* sync #2 */
++		ASSERT_EQ(1, write(pipe_child[1], ".", 1)) {
++			TH_LOG("Failed to write() sync #2 to parent");
++		}
++
++		/* test traceme */
++		ASSERT_EQ((domain_parent && scoped_ptrace) ? -1 : 0,
++				ptrace(PTRACE_TRACEME));
++		if (domain_parent && scoped_ptrace) {
++			ASSERT_EQ(EPERM, errno);
++		} else {
++			ASSERT_EQ(0, raise(SIGSTOP));
++		}
++
++		/* sync #3 */
++		ASSERT_EQ(1, read(pipe_parent[0], &buf_child, 1)) {
++			TH_LOG("Failed to read() sync #3 from parent");
++		}
++		ASSERT_EQ('.', buf_child);
++		_exit(_metadata->passed ? EXIT_SUCCESS : EXIT_FAILURE);
++	}
++
++	EXPECT_EQ(0, close(pipe_child[1]));
++	EXPECT_EQ(0, close(pipe_parent[0]));
++	if (domain_parent)
++		create_domain(_metadata, scoped_ptrace, inherited_only);
++
++	/* sync #1 */
++	ASSERT_EQ(1, write(pipe_parent[1], ".", 1)) {
++		TH_LOG("Failed to write() sync #1 to child");
++	}
++
++	/* test the parent protection */
++	/* sync #2 */
++	ASSERT_EQ(1, read(pipe_child[0], &buf_parent, 1)) {
++		TH_LOG("Failed to read() sync #2 from child");
++	}
++	ASSERT_EQ('.', buf_parent);
++
++	/* test traceme */
++	if (!(domain_parent && scoped_ptrace)) {
++		ASSERT_EQ(child, waitpid(child, &status, 0));
++		ASSERT_EQ(1, WIFSTOPPED(status));
++		ASSERT_EQ(0, ptrace(PTRACE_DETACH, child, NULL, 0));
++	}
++	/* test attach */
++	ASSERT_EQ((domain_parent && scoped_ptrace) ? -1 : 0,
++			ptrace(PTRACE_ATTACH, child, NULL, 0));
++	if (domain_parent && scoped_ptrace) {
++		ASSERT_EQ(EPERM, errno);
++	} else {
++		ASSERT_EQ(child, waitpid(child, &status, 0));
++		ASSERT_EQ(1, WIFSTOPPED(status));
++		ASSERT_EQ(0, ptrace(PTRACE_DETACH, child, NULL, 0));
++	}
++
++	/* sync #3 */
++	ASSERT_EQ(1, write(pipe_parent[1], ".", 1)) {
++		TH_LOG("Failed to write() sync #3 to child");
++	}
++	ASSERT_EQ(child, waitpid(child, &status, 0));
++	if (WIFSIGNALED(status) || WEXITSTATUS(status))
++		_metadata->passed = 0;
++}
++
++/* keep the *_scoped order to check program inheritance */
++#define CHECK_PTRACE(name, domain_both, domain_parent, domain_child) \
++	TEST(name ## _unscoped) { \
++		_check_ptrace(_metadata, false, domain_both, domain_parent, \
++				domain_child); \
++	} \
++	TEST(name ## _scoped) { \
++		_check_ptrace(_metadata, false, domain_both, domain_parent, \
++				domain_child); \
++		_check_ptrace(_metadata, true, domain_both, domain_parent, \
++				domain_child); \
++	}
++
++/* no domain */
++CHECK_PTRACE(allow_without_domain, false, false, false);
++
++/* child domain */
++CHECK_PTRACE(allow_with_one_domain, false, false, true);
++
++/* parent domain */
++CHECK_PTRACE(deny_with_parent_domain, false, true, false);
++
++/* parent and child domain */
++CHECK_PTRACE(deny_with_sibling_domain, false, true, true);
++
++/* inherited domain */
++CHECK_PTRACE(allow_sibling_domain, true, false, false);
++
++/* inherited and child domain */
++CHECK_PTRACE(allow_with_nested_domain, true, false, true);
++
++/* inherited and parent domain */
++CHECK_PTRACE(deny_with_nested_and_parent_domain, true, true, false);
++
++/* inherited, parent and child domain */
++CHECK_PTRACE(deny_with_forked_domain, true, true, true);
++
++TEST_HARNESS_MAIN
+-- 
+2.23.0
 
-The outline of the pci_pm_runtime_resume() part of this patch is:
-
-  pci_pm_runtime_resume
-    pci_restore_standard_config
-      if (dev->current_state != PCI_D0)
-        pci_set_power_state(PCI_D0)
-          __pci_start_power_transition
-            pci_platform_power_transition
-              if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
-                platform_pci_set_power_state
-                  pci_platform_pm->set_state
-                    acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
-                      acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
-              pci_raw_set_power_state
-          __pci_complete_power_transition
-+   if (d3cold)
-+     pci_bridge_wait_for_secondary_bus
-
-In this part, the power state change is inside
-pci_restore_standard_config(), which calls pci_set_power_state().
-There are many other callers of pci_set_power_state(); can we be sure
-that none of them need a delay?
-
-> > But it seems that at least some ACPI firmware doesn't do those
-> > delays, so I guess our only alternatives are to always do it in
-> > the OS or have some sort of blacklist.  And it doesn't really seem
-> > practical to maintain a blacklist.
-> 
-> I really think this is crystal clear:
-
-I am agreeing with you that the OS needs to do the delays.
-
-> The OS is always responsible for the delays described in the PCIe
-> spec.
-
-If the ACPI spec contained this statement, it would be useful, but I
-haven't seen it.  It's certainly true that some combination of
-firmware and the OS is responsible for the delays :)
-
-> However, if the platform implements some of them say in _ON or _PS0
-> methods then it can notify the OS about this by using the _DSM so
-> the OS does not need to duplicate all of them.
-
-That makes good sense, but there are other reasons for using that
-_DSM, e.g., firmware may know that MID or similar devices are not
-really PCI devices and don't need delays anywhere.  So the existence
-of the _DSM by itself doesn't convince me that the OS is responsible
-for the delays.
-
-> > > > In pci_pm_reset(), we're doing the D0->D3hot->D0 transitions
-> > > > specifically to do a reset, so No_Soft_Reset is false.
-> > > > Doesn't 6.6.1 say we need at least 100ms here?
-> > > 
-> > > No since it does not go into D3cold. It just "reset" the thing
-> > > if it happens to do internal reset after D3hot -> D0.
-> > 
-> > Sec 5.8, Figure 5-18 says D3hot->D0uninitialized is a "Soft
-> > Reset", which unfortunately is not defined.
-> > 
-> > My guess is that in sec 5.9, Table 5-13, the 10ms delay is for the
-> > D3hot->D0active (i.e., No_Soft_Reset=1) transition, and the
-> > D3hot->D0uninitialized (i.e., No_Soft_Reset=0) that does a "soft
-> > reset" (whatever that is) probably requires more and we should
-> > handle it like a conventional reset to be safe.
-> 
-> I think it simply means the device functional context is lost (there
-> is more in section 5.3.1.4). Linux handles this properly already
-> (well at least according the minimum timings required by the spec)
-> and restores the context accordingly after it has waited for the
-> 10ms.
-> 
-> It is the D3cold (where links go to L2 or L3) where we really need
-> the delays so that the link gets properly trained before we start
-> poking the downstream device.
-
-I'm already speculating above, so I don't think I can contribute
-anything useful here.
