@@ -2,109 +2,171 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAC4CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9748CC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565822067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C1B2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572380186;
+	bh=mzrl9420Ovx3lQJ1vhZxCQsXwonFelXckxIqNI5fnYU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FmvtBTlysH0Zw/iKY4jXqDjPA82gGq8LkEtNVQMLWEPkBZM5o5lUNvyHBTlBOfWVZ
+	 3df3mxCAD3qppbEMjv4Z30SqXTHal1l5MvYVkU1O7yrHYDGElSU5vVxoknn+ag5aiO
+	 oGJx3X6drva1BJKNw6cHNtwUZnYWt+jaDkNeoDo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfJ2UP1 (ORCPT
+        id S1726833AbfJ2UQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:15:27 -0400
-Received: from mga18.intel.com ([134.134.136.126]:4073 "EHLO mga18.intel.com"
+        Tue, 29 Oct 2019 16:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbfJ2UP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:15:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 13:15:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
-   d="scan'208";a="283348320"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga001.jf.intel.com with SMTP; 29 Oct 2019 13:15:14 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 29 Oct 2019 22:15:13 +0200
-Date:   Tue, 29 Oct 2019 22:15:13 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-mm@kvack.org
-Subject: khugepaged might_sleep() warn due to CONFIG_HIGHPTE=y
-Message-ID: <20191029201513.GG1208@intel.com>
+        id S1725840AbfJ2UQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:16:25 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF96C21721;
+        Tue, 29 Oct 2019 20:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572380183;
+        bh=mzrl9420Ovx3lQJ1vhZxCQsXwonFelXckxIqNI5fnYU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Bzs0JsLJXxLNGTSfA3dRdgUWooXO3sHsJpKlHKkRlMTj+DU4za3swy8FwTd63nH1z
+         jsd9x+mUuzHXUv1o3wCebCtqHdnF3TdZ/fDF0CM+U5Rs1eaAApmFcCRl7K5eZgUl+y
+         rQpDDkwkkAcchWbuljHc9iSYc4QMzr13Adf6Vj7s=
+Received: by mail-qt1-f169.google.com with SMTP id x21so4981511qto.12;
+        Tue, 29 Oct 2019 13:16:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAXciRC8z1znzvw+ESjsoiFgvNJl81T3c2+OS07yuqiJh2vasOvg
+        QpcknAZj4aVAyAb6tun/T8Jhd98lN+PiJGpRWA==
+X-Google-Smtp-Source: APXvYqw2bPo/mXUkmXIpei4kFmXMxOacUC63F3raNseUkPz2342X9y6B6fHT0p2dhZ4pVJPYLGheLckku0HHO05Qz90=
+X-Received: by 2002:ac8:741a:: with SMTP id p26mr1062486qtq.143.1572380182705;
+ Tue, 29 Oct 2019 13:16:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
+ <1571254641-13626-7-git-send-email-thara.gopinath@linaro.org>
+ <CAPDyKFqcKfmnNJ7j4Jb+JH739FBcHg5NBD6aR4H_N=zWGwm1ww@mail.gmail.com>
+ <5DA88892.5000408@linaro.org> <CAPDyKFpYG7YADb6Xmm=8ug5=5X3d1y+JdkRvrnvtroeV3Yj62Q@mail.gmail.com>
+ <5DA89267.30806@linaro.org> <20191029013648.GB27045@bogus> <CAPDyKFpiyvGg0+bXDVCbfr+yW0SOH6DhVgAiav8ZnE8TSF6EHQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFpiyvGg0+bXDVCbfr+yW0SOH6DhVgAiav8ZnE8TSF6EHQ@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 29 Oct 2019 15:16:11 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
+Message-ID: <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] dt-bindings: soc: qcom: Extend RPMh power
+ controller binding to describe thermal warming device
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Oct 29, 2019 at 5:07 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Tue, 29 Oct 2019 at 02:36, Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Thu, Oct 17, 2019 at 12:10:15PM -0400, Thara Gopinath wrote:
+> > > On 10/17/2019 11:43 AM, Ulf Hansson wrote:
+> > > > On Thu, 17 Oct 2019 at 17:28, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+> > > >>
+> > > >> Hello Ulf,
+> > > >> Thanks for the review!
+> > > >>
+> > > >> On 10/17/2019 05:04 AM, Ulf Hansson wrote:
+> > > >>> On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+> > > >>>>
+> > > >>>> RPMh power controller hosts mx domain that can be used as thermal
+> > > >>>> warming device. Add a sub-node to specify this.
+> > > >>>>
+> > > >>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> > > >>>> ---
+> > > >>>>  Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 10 ++++++++++
+> > > >>>>  1 file changed, 10 insertions(+)
+> > > >>>>
+> > > >>>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> > > >>>> index eb35b22..fff695d 100644
+> > > >>>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> > > >>>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> > > >>>> @@ -18,6 +18,16 @@ Required Properties:
+> > > >>>>  Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
+> > > >>>>  various OPPs for different platforms as well as Power domain indexes
+> > > >>>>
+> > > >>>> += SUBNODES
+> > > >>>> +RPMh alsp hosts power domains that can behave as thermal warming device.
+> > > >>>> +These are expressed as subnodes of the RPMh. The name of the node is used
+> > > >>>> +to identify the power domain and must therefor be "mx".
+> > > >>>> +
+> > > >>>> +- #cooling-cells:
+> > > >>>> +       Usage: optional
+> > > >>>> +       Value type: <u32>
+> > > >>>> +       Definition: must be 2
+> > > >>>> +
+> > > >>>
+> > > >>> Just wanted to express a minor thought about this. In general we use
+> > > >>> subnodes of PM domain providers to represent the topology of PM
+> > > >>> domains (subdomains), this is something different, which I guess is
+> > > >>> fine.
+> > > >>>
+> > > >>> I assume the #cooling-cells is here tells us this is not a PM domain
+> > > >>> provider, but a "cooling device provider"?
+> > > >> Yep.
+> > > >>>
+> > > >>> Also, I wonder if it would be fine to specify "power-domains" here,
+> > > >>> rather than using "name" as I think that is kind of awkward!?
+> > > >> Do you mean "power-domain-names" ? I am using this to match against the
+> > > >> genpd names defined in the provider driver.
+> > > >
+> > > > No. If you are using "power-domains" it means that you allow to
+> > > > describe the specifier for the provider.
+> > > Yep. But won't this look funny in DT ? The provider node will have a sub
+> > > node with a power domain referencing to itself Like below: Is this ok ?
+> > >
+> > > rpmhpd: power-controller {
+> > >                                 compatible = "qcom,sdm845-rpmhpd";
+> > >                                 #power-domain-cells = <1>;
+> > >
+> > >                       ...
+> > >                       ...
+> > >                               mx_cdev: mx {
+> > >                                         #cooling-cells = <2>;
+> > >                                         power-domains = <&rpmhpd      SDM845_MX>;
+> > >                                 };
+> > >
+> >
+> > The whole concept here seems all wrong to me. Isn't it what's in the
+> > power domain that's the cooling device. A CPU power domain is not a
+> > cooling device, the CPU is. Or we wouldn't make a clock a cooling
+> > device, but what the clock drives.
+>
+> Well, I don't think that's entirely correct description either.
+>
+> As I see it, it's really the actual PM domain (that manages voltages
+> for a power island), that needs to stay in full power state and
+> increase its voltage level, as to warm up some of the silicon. It's
+> not a regular device, but more a characteristics of how the PM domain
+> can be used.
 
-I got some khugepaged spew on a 32bit x86:
+First I've heard of Si needing warming...
 
-[  217.490026] BUG: sleeping function called from invalid context at include/linux/mmu_notifier.h:346
-[  217.492826] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 25, name: khugepaged
-[  217.495589] INFO: lockdep is turned off.
-[  217.498371] CPU: 1 PID: 25 Comm: khugepaged Not tainted 5.4.0-rc5-elk+ #206
-[  217.501233] Hardware name: System manufacturer P5Q-EM/P5Q-EM, BIOS 2203    07/08/2009
-[  217.501697] Call Trace:
-[  217.501697]  dump_stack+0x66/0x8e
-[  217.501697]  ___might_sleep.cold.96+0x95/0xa6
-[  217.501697]  __might_sleep+0x2e/0x80
-[  217.501697]  collapse_huge_page.isra.51+0x5ac/0x1360
-[  217.501697]  ? __alloc_pages_nodemask+0xec/0xf80
-[  217.501697]  ? __alloc_pages_nodemask+0x191/0xf80
-[  217.501697]  ? trace_hardirqs_on+0x4a/0xf0
-[  217.501697]  khugepaged+0x9a9/0x20f0
-[  217.501697]  ? _raw_spin_unlock+0x21/0x30
-[  217.501697]  ? trace_hardirqs_on+0x4a/0xf0
-[  217.501697]  ? wait_woken+0xa0/0xa0
-[  217.501697]  kthread+0xf5/0x110
-[  217.501697]  ? collapse_pte_mapped_thp+0x3b0/0x3b0
-[  217.501697]  ? kthread_create_worker_on_cpu+0x20/0x20
-[  217.501697]  ret_from_fork+0x2e/0x38
+I think I'd just expect the power domain provider to know which
+domains to power on then.
 
-Looks like it's due to CONFIG_HIGHPTE=y pte_offset_map()->kmap_atomic() vs.
-mmu_notifier_invalidate_range_start().
-
-My naive idea would be to just reorder those things, but not sure
-if there's some magic ordering constraint here. At least the machine
-still boots when I do it :)
-
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 0a1b4b484ac5..f05d27b7183d 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1028,12 +1028,13 @@ static void collapse_huge_page(struct mm_struct *mm,
- 
- 	anon_vma_lock_write(vma->anon_vma);
- 
--	pte = pte_offset_map(pmd, address);
--	pte_ptl = pte_lockptr(mm, pmd);
--
- 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, NULL, mm,
- 				address, address + HPAGE_PMD_SIZE);
- 	mmu_notifier_invalidate_range_start(&range);
-+
-+	pte = pte_offset_map(pmd, address);
-+	pte_ptl = pte_lockptr(mm, pmd);
-+
- 	pmd_ptl = pmd_lock(mm, pmd); /* probably unnecessary */
- 	/*
- 	 * After this gup_fast can't run anymore. This also removes
-
--- 
-Ville Syrjälä
-Intel
+Rob
