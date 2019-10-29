@@ -2,223 +2,104 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5317CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90C2CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADA621835
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:23:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fJVzoelD"
+	by mail.kernel.org (Postfix) with ESMTP id C88AF21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730549AbfJ2CXW (ORCPT
+        id S1730597AbfJ2CZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:23:22 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:39518 "EHLO vps0.lunn.ch"
+        Mon, 28 Oct 2019 22:25:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:16789 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727987AbfJ2CXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:23:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=weWtSFC8Dm8rRDFq7Ws7YUnkyjq/k0sSGCP9VGBKkyw=; b=fJVzoelD4VQgmU1U+f7c/xTlQ5
-        sNvBmfgwFgZ1JPMBhPUlhZdvJCN3484WQZFbgDu/hxD5WOBoL1rKBHhHw7VXRoCgqM0cln5ylX5WF
-        lnCX5riYaxwMGB21OgC97MCdQTdzWPkaGQ9c9zui7QlgA7bM7TgZ3MiOfStUM5RKTEvM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iPHA1-0001NW-4d; Tue, 29 Oct 2019 03:23:05 +0100
-Date:   Tue, 29 Oct 2019 03:23:05 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 net-next 05/12] dt-bindings: net: ti: add new cpsw
- switch driver bindings
-Message-ID: <20191029022305.GK15259@lunn.ch>
-References: <20191024100914.16840-1-grygorii.strashko@ti.com>
- <20191024100914.16840-6-grygorii.strashko@ti.com>
+        id S1727987AbfJ2CZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 22:25:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 19:25:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,242,1569308400"; 
+   d="scan'208";a="224826095"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Oct 2019 19:25:15 -0700
+Cc:     baolu.lu@linux.intel.com,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH v7 03/11] iommu/vt-d: Add custom allocator for IOASID
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1571946904-86776-4-git-send-email-jacob.jun.pan@linux.intel.com>
+ <ae437be4-e633-e670-0e1f-d07b4364f651@linux.intel.com>
+ <20191024214311.43d76a5c@jacob-builder>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC60@SHSMSX104.ccr.corp.intel.com>
+ <e950cde8-8cd9-6089-c833-23d2ffb539d1@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D5D0FF0@SHSMSX104.ccr.corp.intel.com>
+ <20191028154900.0be0a48f@jacob-builder>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <0d8bd9c3-4e01-ab12-8671-ff25a4821ed7@linux.intel.com>
+Date:   Tue, 29 Oct 2019 10:22:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024100914.16840-6-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191028154900.0be0a48f@jacob-builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +TI SoC Ethernet Switch Controller Device Tree Bindings (new)
-> +------------------------------------------------------
-> +
-> +The 3-port switch gigabit ethernet subsystem provides ethernet packet
-> +communication and can be configured as an ethernet switch.
+Hi,
 
-Hi Grygorii
+On 10/29/19 6:49 AM, Jacob Pan wrote:
+>>>> I'm not sure whether tying above logic to SVA is the right
+>>>> approach. If vcmd interface doesn't work, the whole SM mode
+>>>> doesn't make sense which is based on PASID-granular protection
+>>>> (SVA is only one usage atop). If the only remaining usage of SM
+>>>> is to map gIOVA using reserved PASID#0, then why not disabling SM
+>>>> and just fallback to legacy mode?
+>>>>
+>>>> Based on that I prefer to disabling the SM mode completely (better
+>>>> through an interface), and move the logic out of CONFIG_INTEL_
+>>>> IOMMU_SVM
+>>>>   
+>>> Unfortunately, it is dangerous to disable SM after boot. SM uses
+>>> different root/device contexts and pasid table formats. Disabling SM
+>>> after boot requires changing above from SM format into legacy
+>>> format.
+>> You are correct.
+>>
+>>> Since ioasid registration failure is a rare case. How about moving
+>>> this part of code up to the early stage of intel_iommu_init() and
+>>> returning error if hardware present vcmd capability but software
+>>> fails to register a custom ioasid allocator?
+>>>    
+>> It makes sense to me.
+>>
+> sounds good to me too, the earlier the less to clean up.
 
-Maybe referring it to a 3-port switch will cause confusion, since in
-this use case, it only has 2 ports, and you only list two ports in the
-device tree.
+Actually, we even could return error directly and abort the iommu
+initialization. The registration of custom ioasid allocator fails only
+when memory runs out or software is buggy. In either cases, we should
+abort iommu initialization.
 
-> It provides the
-> +gigabit media independent interface (GMII),reduced gigabit media
-> +independent interface (RGMII), reduced media independent interface (RMII),
-> +the management data input output (MDIO) for physical layer device (PHY)
-> +management.
-> +
-> +Required properties:
-> +- compatible : be one of the below:
-> +	  "ti,cpsw-switch" for backward compatible
-> +	  "ti,am335x-cpsw-switch" for AM335x controllers
-> +	  "ti,am4372-cpsw-switch" for AM437x controllers
-> +	  "ti,dra7-cpsw-switch" for DRA7x controllers
-> +- reg : physical base address and size of the CPSW module IO range
-> +- ranges : shall contain the CPSW module IO range available for child devices
-> +- clocks : should contain the CPSW functional clock
-> +- clock-names : should be "fck"
-> +	See bindings/clock/clock-bindings.txt
-> +- interrupts : should contain CPSW RX_THRESH, RX, TX, MISC interrupts
-> +- interrupt-names : should contain "rx_thresh", "rx", "tx", "misc"
-> +	See bindings/interrupt-controller/interrupts.txt
-> +
-> +Optional properties:
-> +- syscon : phandle to the system control device node which provides access to
-> +	efuse IO range with MAC addresses
-> +
-> +Required Sub-nodes:
-> +- ethernet-ports : contains CPSW external ports descriptions
-> +	Required properties:
-> +	- #address-cells : Must be 1
-> +	- #size-cells : Must be 0
-> +	- reg : CPSW port number. Should be 1 or 2
-> +	- phys : phandle on phy-gmii-sel PHY (see phy/ti-phy-gmii-sel.txt)
-> +	- phy-mode : See [1]
-> +	- phy-handle : See [1]
-> +
-> +	Optional properties:
-> +	- label : Describes the label associated with this port
-> +	- ti,dual-emac-pvid : Specifies default PORT VID to be used to segregate
-> +		ports. Default value - CPSW port number.
-> +	- mac-address : See [1]
-> +	- local-mac-address : See [1]
-> +
-> +- mdio : CPSW MDIO bus block description
-> +	- bus_freq : MDIO Bus frequency
-> +	See bindings/net/mdio.txt and davinci-mdio.txt
-> +
-> +- cpts : The Common Platform Time Sync (CPTS) module description
-> +	- clocks : should contain the CPTS reference clock
-> +	- clock-names : should be "cpts"
-> +	See bindings/clock/clock-bindings.txt
-> +
-> +	Optional properties - all ports:
-> +	- cpts_clock_mult : Numerator to convert input clock ticks into ns
-> +	- cpts_clock_shift : Denominator to convert input clock ticks into ns
-> +			  Mult and shift will be calculated basing on CPTS
-> +			  rftclk frequency if both cpts_clock_shift and
-> +			  cpts_clock_mult properties are not provided.
-> +
-> +[1] See Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> +
-> +Examples:
-> +
-> +mac_sw: switch@0 {
-> +	compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
-> +	reg = <0x0 0x4000>;
-> +	ranges = <0 0 0x4000>;
-> +	clocks = <&gmac_main_clk>;
-> +	clock-names = "fck";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	syscon = <&scm_conf>;
-> +	status = "disabled";
-> +
-> +	interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "rx_thresh", "rx", "tx", "misc"
-> +
-> +	ethernet-ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpsw_port1: port@1 {
-> +			reg = <1>;
-> +			label = "port1";
-> +			/* Filled in by U-Boot */
-> +			mac-address = [ 00 00 00 00 00 00 ];
-> +			phys = <&phy_gmii_sel 1>;
-> +		};
-> +
-> +		cpsw_port2: port@2 {
-> +			reg = <2>;
-> +			label = "wan";
-> +			/* Filled in by U-Boot */
-> +			mac-address = [ 00 00 00 00 00 00 ];
-> +			phys = <&phy_gmii_sel 2>;
-> +		};
-> +	};
-> +
-> +	davinci_mdio_sw: mdio@1000 {
-> +		compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		ti,hwmods = "davinci_mdio";
-> +		bus_freq = <1000000>;
-> +		reg = <0x1000 0x100>;
-> +	};
-> +
-> +	cpts {
-> +		clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 25>;
-> +		clock-names = "cpts";
-> +	};
-> +};
-> +
-> +&mac_sw {
-> +	pinctrl-names = "default", "sleep";
-> +	status = "okay";
-> +};
-> +
-> +&cpsw_port1 {
-> +	phy-handle = <&ethphy0_sw>;
-> +	phy-mode = "rgmii";
-> +	ti,dual_emac_pvid = <1>;
-> +};
-> +
-> +&cpsw_port2 {
-> +	phy-handle = <&ethphy1_sw>;
-> +	phy-mode = "rgmii";
-> +	ti,dual_emac_pvid = <2>;
-> +};
-> +
-> +&davinci_mdio_sw {
-> +	ethphy0_sw: ethernet-phy@0 {
-> +		reg = <0>;
-> +	};
-> +
-> +	ethphy1_sw: ethernet-phy@1 {
-> +		reg = <1>;
-> +	};
-> +};
+Best regards,
+baolu
 
-In an example, it is unusual to split things up like this. I
-understand that parts of this will be in the dtsi file, and parts in
-the .dts file, but examples generally keep it all as one. And when you
-re-write this in YAML so it can be used to validated real DTs, you
-will have to combine it.
-
-     Andrew
