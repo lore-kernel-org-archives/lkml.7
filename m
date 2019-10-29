@@ -2,110 +2,91 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192B4CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0ADFCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBF621721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:02:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d/XsJyzt"
+	by mail.kernel.org (Postfix) with ESMTP id 8C39C20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731944AbfJ2LCp (ORCPT
+        id S1731955AbfJ2LFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:02:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56595 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726357AbfJ2LCp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:02:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572346964;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s7sbbHmvNFaJzygr4NJBUlYrQ4azqMBo1OOsjTf8okk=;
-        b=d/XsJyztV0/rs+6igdnuuZDfxcNimrykhwPdBMMHME0J/ntl07uHEdxbQIdPSxi5+ItZ7E
-        EknoK+JRtDnj+5ubz/rD2b0vHecvM3bFotRh9b96+HdY9czHGI26g3MNZKYV5FF/NpS7Ud
-        8HUwhnUm+qERPFWO0AYe3mlwa85BN4Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-QvSRTwhiPeOIPJAKsYgcDw-1; Tue, 29 Oct 2019 07:02:40 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 29 Oct 2019 07:05:19 -0400
+Received: from trent.utfs.org ([94.185.90.103]:59884 "EHLO trent.utfs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbfJ2LFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 07:05:19 -0400
+Received: from localhost (localhost [IPv6:::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61D031800D67;
-        Tue, 29 Oct 2019 11:02:38 +0000 (UTC)
-Received: from [10.36.117.183] (ovpn-117-183.ams2.redhat.com [10.36.117.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D59DD600F4;
-        Tue, 29 Oct 2019 11:02:34 +0000 (UTC)
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-To:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <085ed07e-e646-f7a4-0370-06f33a2a4e4a@redhat.com>
-Date:   Tue, 29 Oct 2019 12:02:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        by trent.utfs.org (Postfix) with ESMTPS id DB8076012D;
+        Tue, 29 Oct 2019 12:05:16 +0100 (CET)
+Date:   Tue, 29 Oct 2019 04:05:16 -0700 (PDT)
+From:   Christian Kujau <lists@nerdbynature.de>
+To:     Kees Cook <keescook@chromium.org>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        zhanglin <zhang.lin16@zte.com.cn>, dan.j.williams@intel.com,
+        jgg@ziepe.ca, mingo@kernel.org, dave.hansen@linux.intel.com,
+        namit@vmware.com, bp@suse.de, christophe.leroy@c-s.fr,
+        rdunlap@infradead.org, osalvador@suse.de,
+        richardw.yang@linux.intel.com, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        jiang.xuexin@zte.com.cn
+Subject: Re: [PATCH] kernel: Restrict permissions of /proc/iomem.
+In-Reply-To: <201910281213.720C0DB89@keescook>
+Message-ID: <alpine.DEB.2.21.99999.352.1910290359280.2844@trent.utfs.org>
+References: <1571993801-12665-1-git-send-email-zhang.lin16@zte.com.cn> <20191025143220.cb15a90fe95a4ebdda70f89c@linux-foundation.org> <201910281213.720C0DB89@keescook>
+User-Agent: Alpine 2.21.99999 (DEB 352 2019-06-22)
 MIME-Version: 1.0
-In-Reply-To: <1572171452-7958-2-git-send-email-rppt@kernel.org>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: QvSRTwhiPeOIPJAKsYgcDw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.10.19 11:17, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
->=20
-> The mappings created with MAP_EXCLUSIVE are visible only in the context o=
-f
-> the owning process and can be used by applications to store secret
-> information that will not be visible not only to other processes but to t=
-he
-> kernel as well.
->=20
-> The pages in these mappings are removed from the kernel direct map and
-> marked with PG_user_exclusive flag. When the exclusive area is unmapped,
-> the pages are mapped back into the direct map.
->=20
+On Mon, 28 Oct 2019, Kees Cook wrote:
+> > It's risky to change things like this - heaven knows which userspace
+> > applications might break.
+> > 
+> > Possibly we could obfuscate the information if that is considered
+> > desirable.  Why is this a problem anyway?  What are the possible
+> > exploit scenarios?
+> 
+> This is already done: kptr_restrict sysctl already zeros these values
+> if it is set. e.g.:
+> 
+> 00000000-00000000 : System RAM
+>   00000000-00000000 : Kernel code
+>   00000000-00000000 : Kernel data
+>   00000000-00000000 : Kernel bss
+> 
+> > Can't the same info be obtained by running dmesg and looking at the
+> > startup info?
+> 
+> Both virtual and physical address dumps in dmesg are considered "bad
+> form" these days and most have been removed.
+> 
+> > Can't the user who is concerned about this run chmod 0400 /proc/iomem
+> > at boot?
+> 
+> That is also possible.
 
-Just a thought, the kernel is still able to indirectly read the contents=20
-of these pages by doing a kdump from kexec environment, right?. Also, I=20
-wonder what would happen if you map such pages via /dev/mem into another=20
-user space application and e.g., use them along with kvm [1].
+As a user, I still like this patch, or some variation of it. On various 
+(server and desktop) systems I do this during boot for some time now and 
+never had a problem:
 
-[1] https://lwn.net/Articles/778240/
+find /proc -xdev -mindepth 1 -maxdepth 1 ! \( -name "[0-9]*" \
+  -o -name cpuinfo -o -name modules -o -name loadavg -o -name meminfo \ 
+  -o -name mounts -o -name net -o -name self -o -name diskstats \
+  -o -name stat -o -name sys -o -name swaps -o -name thread-self \
+  -o -name vmstat -o -name uptime \) -exec chmod -c go-rwx '{}' +
 
---=20
+C.
+-- 
+BOFH excuse #436:
 
-Thanks,
-
-David / dhildenb
-
+Daemon escaped from pentagram
