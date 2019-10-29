@@ -2,145 +2,205 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48C4CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A265CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7404320856
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3339921479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6BnbfJ+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REsfzx49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390187AbfJ2P6M (ORCPT
+        id S2390249AbfJ2P6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:58:12 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46736 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389319AbfJ2P6M (ORCPT
+        Tue, 29 Oct 2019 11:58:54 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36955 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390192AbfJ2P6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:58:12 -0400
-Received: by mail-qk1-f195.google.com with SMTP id e66so12715002qkf.13
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 08:58:11 -0700 (PDT)
+        Tue, 29 Oct 2019 11:58:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q130so2988800wme.2;
+        Tue, 29 Oct 2019 08:58:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DM3O9N7/77ihd4L+w4LGNt2vkA69HpxTL+DxOwueRJA=;
-        b=b6BnbfJ+LstWB3B2qxirYa9kEcyXhpRBPyALY88QBrlZNUCGlaws1nvgAEUIrgIY/C
-         LP0k+/CEbT7pYXip6EoZ6qLf/Qb03UpnXcyOgbjKZPC9tALl+VU0NVAEJHcaXVtgyxD+
-         LE+AZHifsnSXuk0bdlkrnhXtvOPnf8b7cGVhibJC6tcttvPKBYC0JZO32bhlWouFIDH8
-         smsvbZFgkzwV4H5WIK67VtuKp9VgMm18lVuZRqe6lpFxTa3mpPlRUK+tIBSSyMVDHJTB
-         ObvyAviTEnuTCHLVqpLQ8Y6/72dPBYyG1aT9Z+84gsmQgxfZNOG1menHWqyoYCaBO/Qi
-         husw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=i0TUmJ18ZcyUKsXykls8PPcjqgJJsmsjfFdpRETWj3g=;
+        b=REsfzx49IQKDe7LLT85vOXOTGHzt4JVWjq10YOQiyqqNLe9f1YEbVJWsx6JpnYmLIG
+         mijUoxvAe4KCF6WNy1zGVD5IV+HKaQAKTlqoXFxqT/tCI3q7QBzGkchngGzzqMH6mwhV
+         44g2wTN2J6cOVWe/dEvyVt5Jq4zl/iM/a56mlOCWAqOhvD6s8AlJXLoj/5SNBVvjh3iK
+         9Y8Y4LJBA6rjWrvhCALVk5KUOLQPzU2a9G7ms3eD+WXOqfdabIy6lr/r4L+0bAYC/GYZ
+         VOFtHTQMurlnROgtFGXhfHEpL2zBzBoFccIGFAIGxfkprNkqt7h54vtUFZljIFZi92MU
+         C/uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DM3O9N7/77ihd4L+w4LGNt2vkA69HpxTL+DxOwueRJA=;
-        b=eraEeNETSu0B82Qc39YpBKmVVYq7RTRAp/7KK8p4yrbZAwYnG9xZgFKNxWqJXmiwuf
-         3NMmVUimoeAsqnnxzCcYSrDHaJTPFq1TeeZSXmxOfdDuyoeQqar/9TOKWlKdPDds9iJ9
-         WGf60W8EtWfxRHoroZVLSbe3jDG/Y3SHs5FRGKGLQns3mcms/PdJ1SPJnYotHEXmVu65
-         U58GVgFJQaF52jkiY2ZjKArUN1hUJJi4VJdjEWoNqKcEmphblDIJuE0JzdEvdGTliHCN
-         u+YMScm9eA6jCU2jaDymGPBiAdQhx+8fM/p4vnlnrjZfcRE3VY4vskwEVl09Iwox1EHk
-         xIIw==
-X-Gm-Message-State: APjAAAVZtbefHaHfgSmA5TK1xNZqkHiIzOVy4IONigWOEcOzlhoAHL9L
-        yDop2eDwCj6VtvwhHykesQ==
-X-Google-Smtp-Source: APXvYqwk3hOM2W9vhvb+1Oui3nfDrFiyIQB5o9Yfsefz+wb/YUr5n85NBz2VrYyFYXt/THh+rdVBQQ==
-X-Received: by 2002:a37:9442:: with SMTP id w63mr21600482qkd.138.1572364691121;
-        Tue, 29 Oct 2019 08:58:11 -0700 (PDT)
-Received: from gabell (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id x38sm9991789qtc.64.2019.10.29.08.58.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 29 Oct 2019 08:58:10 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 11:58:07 -0400
-From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] Adjust the padding size for KASLR
-Message-ID: <20191029155806.gryhjwentwpyqmt4@gabell>
-References: <20190830214707.1201-1-msys.mizuma@gmail.com>
- <20191029025920.GO8527@MiWiFi-R3L-srv>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=i0TUmJ18ZcyUKsXykls8PPcjqgJJsmsjfFdpRETWj3g=;
+        b=EiyyYNilLC5eU7q8f2zSPtZ4p8W0GZPvAGjH37IXG1CAQkXqTth9lSteDO990sUzTx
+         6bWkF+pfMSra6W6EvV3bFBWS67adgRzUkd15CKCHLMKgem0ll4VYy2/54Tp/br9acD7a
+         t8RXCC6xLXxgx5rtuZGK+hZ2lV3lLRhPxgG1FeT+jMn3aK6e8f/nv5k5nGbUr1BR8a8X
+         HQ0hvJs/JKksaZjban8uCZLD1ZrRQ7Qtjnu2SXDchHroYtbSpEDw5/FVOBZsasXkP8ix
+         f95Kaii1KNy8KxssNBVxkW+gUsBuMtg49y9mjKLdQ19A5kKGVq3wc2PzADs6gqn2p/D6
+         F6kQ==
+X-Gm-Message-State: APjAAAVN8N/lVJbXniyQvggxQVInPNg2VovHUhTRzUW4r3ZzS+h4znLA
+        6DQSh8+eeU4GJCRHwbrfL7Q=
+X-Google-Smtp-Source: APXvYqwyZRhqa7Xzvm9LHS7ZHK+2KPi1arRJ8di0YaQGwNLNa7NPaxQrJ/SariJDIgjOWjG2f1Dlkw==
+X-Received: by 2002:a7b:c0ca:: with SMTP id s10mr4696016wmh.166.1572364729523;
+        Tue, 29 Oct 2019 08:58:49 -0700 (PDT)
+Received: from [172.20.38.115] ([91.217.168.176])
+        by smtp.gmail.com with ESMTPSA id m3sm3155307wrb.67.2019.10.29.08.58.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 08:58:49 -0700 (PDT)
+Subject: Re: [PATCH v2] kbuild: support byacc as alternative YACC to bison
+To:     Ethan Sommer <e5ten.arch@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
+ <20191029150119.19823-1-e5ten.arch@gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <760b5b4f-caa6-67e1-aa7f-ddd694a84b4a@gmail.com>
+Date:   Tue, 29 Oct 2019 10:58:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029025920.GO8527@MiWiFi-R3L-srv>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191029150119.19823-1-e5ten.arch@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baoquan,
+Hi Ethan,
 
-On Tue, Oct 29, 2019 at 10:59:20AM +0800, Baoquan He wrote:
-> Hi Masa,
+On 10/29/19 10:01 AM, Ethan Sommer wrote:
+> Switches to a more portable set of flags for generating the same file
+> names instead of the bison-specific --defines, uses the more portable -V
+> instead of --version, and explicitly defines YYSTYPE in lex.l, which
+> bison implicitly defines if not present but byacc does not.
 > 
-> On 08/30/19 at 05:47pm, Masayoshi Mizuma wrote:
-> > From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> Add %locations to dtc-parser.y to explicitly enable location tracking
+> for byacc, and define YYERROR_CALL explicitly to prevent the locations
+> directive from causing it to be defined to a 2-parameter call to
+> yyerror, which dtc-parser.y defines to accept one parameter.
 > 
-> Any plan about this patchset?
+> Requires byacc to be built with --enable-btyacc.
+> 
+> Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
+> ---
+>  scripts/Makefile.host     | 2 +-
+>  scripts/dtc/dtc-parser.y  | 4 ++++
+>  scripts/genksyms/Makefile | 2 +-
+>  scripts/genksyms/lex.l    | 2 ++
+>  4 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+> index 4c51c95d40f4..64e98e1d4825 100644
+> --- a/scripts/Makefile.host
+> +++ b/scripts/Makefile.host
+> @@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
+>  # YACC
+>  # ---------------------------------------------------------------------------
+>  quiet_cmd_bison = YACC    $(basename $@).[ch]
+> -      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
+> +      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
+>  
+>  $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
+>  	$(call if_changed,bison)
+> diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
+> index 2ed4dc1f07fd..40dcf4f149da 100644
+> --- a/scripts/dtc/dtc-parser.y
+> +++ b/scripts/dtc/dtc-parser.y
 
-Thank you for pinging me and so sorry for the delay.
-I'll post the v4 in this week.
+For file scripts/dtc/dtc-parser.y:
 
-Thanks,
-Masa
+This file is maintained in the upstream dtc project.  We pull changes
+from that project into the Linux kernel source tree.
 
+The file is located at the root level of the upstream project.
+
+Info on submitting patches is in the upstream file "Documentation/manual.txt":
+
+   1) Sources
+
+   Source code for the Device Tree Compiler can be found at git.kernel.org.
+
+   The upstream repository is here:
+
+       git://git.kernel.org/pub/scm/utils/dtc/dtc.git
+       https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+
+   The gitweb interface for the upstream respository is:
+
+       https://git.kernel.org/cgit/utils/dtc/dtc.git/
+
+   1.1) Submitting Patches
+
+   Patches should be sent to the maintainers:
+           David Gibson <david@gibson.dropbear.id.au>
+           Jon Loeliger <jdl@jdl.com>
+   and CCed to <devicetree-compiler@vger.kernel.org>.
+
+-Frank
+
+
+> @@ -2,6 +2,8 @@
+>  /*
+>   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
+>   */
+> +%locations
+> +
+>  %{
+>  #include <stdio.h>
+>  #include <inttypes.h>
+> @@ -17,6 +19,8 @@ extern void yyerror(char const *s);
+>  		treesource_error = true; \
+>  	} while (0)
+>  
+> +#define YYERROR_CALL(msg) yyerror(msg)
+> +
+>  extern struct dt_info *parser_output;
+>  extern bool treesource_error;
+>  %}
+> diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
+> index 78629f515e78..397c2dc8182b 100644
+> --- a/scripts/genksyms/Makefile
+> +++ b/scripts/genksyms/Makefile
+> @@ -15,7 +15,7 @@ genksyms-objs	:= genksyms.o parse.tab.o lex.lex.o
+>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+>  
+>  quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
+> -      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
+> +      cmd_bison_no_warn = $(YACC) -V >/dev/null; \
+>  			  $(cmd_bison) 2>/dev/null
+>  
+>  $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
+> diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
+> index e265c5d96861..0580c088527f 100644
+> --- a/scripts/genksyms/lex.l
+> +++ b/scripts/genksyms/lex.l
+> @@ -19,6 +19,8 @@
+>  #include "genksyms.h"
+>  #include "parse.tab.h"
+>  
+> +extern YYSTYPE yylval;
+> +
+>  /* We've got a two-level lexer here.  We let flex do basic tokenization
+>     and then we categorize those basic tokens in the second stage.  */
+>  #define YY_DECL		static int yylex1(void)
 > 
-> Thanks
-> Baoquan
-> 
-> > 
-> > The system sometimes crashes while memory hot-adding on KASLR
-> > enabled system. The crash happens because the regions pointed by
-> > kaslr_regions[].base are overwritten by the hot-added memory.
-> > 
-> > It happens because of the padding size for kaslr_regions[].base isn't
-> > enough for the system whose physical memory layout has huge space for
-> > memory hotplug. kaslr_regions[].base points "actual installed
-> > memory size + padding" or higher address. So, if the "actual + padding"
-> > is lower address than the maximum memory address, which means the memory
-> > address reachable by memory hot-add, kaslr_regions[].base is destroyed by
-> > the overwritten.
-> > 
-> >   address
-> >     ^
-> >     |------- maximum memory address (Hotplug)
-> >     |                                    ^
-> >     |------- kaslr_regions[0].base       | Hotadd-able region
-> >     |     ^                              |
-> >     |     | padding                      |
-> >     |     V                              V
-> >     |------- actual memory address (Installed on boot)
-> >     |
-> > 
-> > Fix it by getting the maximum memory address from SRAT and store
-> > the value in boot_param, then set the padding size while KASLR
-> > initializing if the default padding size isn't enough.
-> > 
-> > Masayoshi Mizuma (5):
-> >   x86/boot: Wrap up the SRAT traversing code into subtable_parse()
-> >   x86/boot: Add max_addr field in struct boot_params
-> >   x86/boot: Get the max address from SRAT
-> >   x86/mm/KASLR: Cleanup calculation for direct mapping size
-> >   x86/mm/KASLR: Adjust the padding size for the direct mapping.
-> > 
-> >  Documentation/x86/zero-page.rst       |  4 ++
-> >  arch/x86/boot/compressed/acpi.c       | 33 +++++++++---
-> >  arch/x86/include/uapi/asm/bootparam.h |  2 +-
-> >  arch/x86/mm/kaslr.c                   | 77 +++++++++++++++++++++------
-> >  4 files changed, 93 insertions(+), 23 deletions(-)
-> > 
-> > -- 
-> > 2.18.1
-> > 
-> 
+
