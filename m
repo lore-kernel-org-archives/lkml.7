@@ -2,137 +2,141 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06D7CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9619CCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7663820874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689D72087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:09:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NEqX9Fpn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eMhNukff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732218AbfJ2LIy (ORCPT
+        id S1732251AbfJ2LJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:08:54 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52636 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbfJ2LIx (ORCPT
+        Tue, 29 Oct 2019 07:09:32 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40995 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727791AbfJ2LJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:08:53 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9TB8pch043834;
-        Tue, 29 Oct 2019 06:08:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572347331;
-        bh=QzQe5kMCGczzhiNNF19B3lB3MNU4kTEvNCBCj+c52Cw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NEqX9FpnIMUF3554gQ0qCXtODGq6pVzBi9C+aytmEjm4c1nLXrlpepmBeMtapXOpl
-         6Mq1W/gDejo3zoLTGaTR9i060L9IMU+TbrYP2BtLsGBz5M2qxtUeX+zO5xsrJLvQMj
-         RgoMp4XIecys4hGAMDfucjXX4ZXtH0MZ/jCr953A=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9TB8pcv055386
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 29 Oct 2019 06:08:51 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 29
- Oct 2019 06:08:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 29 Oct 2019 06:08:38 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9TB8kn5074904;
-        Tue, 29 Oct 2019 06:08:48 -0500
-Subject: Re: [PATCH v2] clk: Fix memory leak in clk_unregister()
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-CC:     <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-References: <20191022185150.9B09B20B7C@mail.kernel.org>
- <20191029110618.7451-1-kishon@ti.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <62547be1-18e0-90e5-f3bd-1bbd33d5172f@ti.com>
-Date:   Tue, 29 Oct 2019 16:38:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 07:09:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572347370;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gxjLgsc8qA8QS5AMJrptlvxMj6UiaLdFsNtqMQqPbhA=;
+        b=eMhNukffaBa+E9VaO7hLzAuFanke9kC2WbeFX8Tky+0LqdEModNPZwfujJilS2A1K0/UCG
+        +53KxxN4pZNOCV68RCDaaOLLBwY2fvy5p9rQ+mhvyV0RxOlHxnjxNAeZLMNUMGvwxy2VtS
+        exroBFwZ1uhrPYzAqyee3wUkrvoIn3k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-135-_kvQpE-QM9W83HYDPmpjEA-1; Tue, 29 Oct 2019 07:09:27 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B375800C80;
+        Tue, 29 Oct 2019 11:09:26 +0000 (UTC)
+Received: from [10.36.117.183] (ovpn-117-183.ams2.redhat.com [10.36.117.183])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D3DFC5D6C3;
+        Tue, 29 Oct 2019 11:09:24 +0000 (UTC)
+Subject: Re: [PATCH] mm/sparse.c: mark populate_section_memmap as __meminit
+To:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20191028165549.14478-1-iii@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <6e845b02-9601-5c9d-3f99-c8a439df07ae@redhat.com>
+Date:   Tue, 29 Oct 2019 12:09:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191029110618.7451-1-kishon@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191028165549.14478-1-iii@linux.ibm.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: _kvQpE-QM9W83HYDPmpjEA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
-
-On 29/10/19 4:36 PM, Kishon Vijay Abraham I wrote:
-> Memory allocated in alloc_clk() for 'struct clk' and
-> 'const char *con_id' while invoking clk_register() is never freed
-> in clk_unregister(), resulting in kmemleak showing the following
-> backtrace.
-> 
->   backtrace:
->     [<00000000546f5dd0>] kmem_cache_alloc+0x18c/0x270
->     [<0000000073a32862>] alloc_clk+0x30/0x70
->     [<0000000082942480>] __clk_register+0xc8/0x760
->     [<000000005c859fca>] devm_clk_register+0x54/0xb0
->     [<00000000868834a8>] 0xffff800008c60950
->     [<00000000d5a80534>] platform_drv_probe+0x50/0xa0
->     [<000000001b3889fc>] really_probe+0x108/0x348
->     [<00000000953fa60a>] driver_probe_device+0x58/0x100
->     [<0000000008acc17c>] device_driver_attach+0x6c/0x90
->     [<0000000022813df3>] __driver_attach+0x84/0xc8
->     [<00000000448d5443>] bus_for_each_dev+0x74/0xc8
->     [<00000000294aa93f>] driver_attach+0x20/0x28
->     [<00000000e5e52626>] bus_add_driver+0x148/0x1f0
->     [<000000001de21efc>] driver_register+0x60/0x110
->     [<00000000af07c068>] __platform_driver_register+0x40/0x48
->     [<0000000060fa80ee>] 0xffff800008c66020
-> 
-> Fix it here.
-> 
-> Fixes: fcb0ee6a3d331fb ("clk: Implement clk_unregister")
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-
-Ignore the v2 of this patch. Sent this patch a bit early. Sorry for the noise.
-
-Thanks
-Kishon
+On 28.10.19 17:55, Ilya Leoshkevich wrote:
+> Building the kernel on s390 with -Og produces the following warning:
+>=20
+> WARNING: vmlinux.o(.text+0x28dabe): Section mismatch in reference from th=
+e function populate_section_memmap() to the function .meminit.text:__popula=
+te_section_memmap()
+> The function populate_section_memmap() references
+> the function __meminit __populate_section_memmap().
+> This is often because populate_section_memmap lacks a __meminit
+> annotation or the annotation of __populate_section_memmap is wrong.
+>=20
+> While -Og is not supported, in theory this might still happen with
+> another compiler or on another architecture. So fix this by using the
+> correct section annotations.
+>=20
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 > ---
->  drivers/clk/clk.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 1c677d7f7f53..ecd647258c8f 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -3835,6 +3835,7 @@ static void clk_core_evict_parent_cache(struct clk_core *core)
->  void clk_unregister(struct clk *clk)
->  {
->  	unsigned long flags;
-> +	struct clk_hw *hw;
->  
->  	if (!clk || WARN_ON_ONCE(IS_ERR(clk)))
->  		return;
-> @@ -3879,6 +3880,9 @@ void clk_unregister(struct clk *clk)
->  					__func__, clk->core->name);
->  
->  	kref_put(&clk->core->ref, __clk_release);
-> +	hw = clk->core->hw;
-> +	free_clk(clk);
-> +	hw->clk = NULL;
->  unlock:
->  	clk_prepare_unlock();
->  }
-> 
+>   mm/sparse.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index f6891c1992b1..0f1f36443a96 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -448,7 +448,7 @@ static unsigned long __init section_map_size(void)
+>   =09return PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION);
+>   }
+>  =20
+> -struct page __init *__populate_section_memmap(unsigned long pfn,
+> +struct page __meminit *__populate_section_memmap(unsigned long pfn,
+>   =09=09unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+>   {
+>   =09unsigned long size =3D section_map_size();
+> @@ -647,7 +647,7 @@ void offline_mem_sections(unsigned long start_pfn, un=
+signed long end_pfn)
+>   #endif
+>  =20
+>   #ifdef CONFIG_SPARSEMEM_VMEMMAP
+> -static struct page *populate_section_memmap(unsigned long pfn,
+> +static struct page * __meminit populate_section_memmap(unsigned long pfn=
+,
+>   =09=09unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+>   {
+>   =09return __populate_section_memmap(pfn, nr_pages, nid, altmap);
+> @@ -669,7 +669,7 @@ static void free_map_bootmem(struct page *memmap)
+>   =09vmemmap_free(start, end, NULL);
+>   }
+>   #else
+> -struct page *populate_section_memmap(unsigned long pfn,
+> +struct page * __meminit populate_section_memmap(unsigned long pfn,
+>   =09=09unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+>   {
+>   =09struct page *page, *ret;
+>=20
+
+So mm/sparse-vmemmap.c:__populate_section_memmap() already has this=20
+annotation. I guess it's the right thing to do as=20
+populate_section_memmap() is called from
+
+static struct page * __meminit section_activate()
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+--=20
+
+Thanks,
+
+David / dhildenb
+
