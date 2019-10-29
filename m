@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465FBCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C01CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07FBE208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3CB208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:17:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="OmnA+o7c"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ueOaUdSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732538AbfJ2LQ6 (ORCPT
+        id S1732655AbfJ2LRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:16:58 -0400
+        Tue, 29 Oct 2019 07:17:03 -0400
 Received: from esa5.microchip.iphmx.com ([216.71.150.166]:36056 "EHLO
         esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730712AbfJ2LQ5 (ORCPT
+        with ESMTP id S1730712AbfJ2LRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:16:57 -0400
+        Tue, 29 Oct 2019 07:17:01 -0400
 Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
   Tudor.Ambarus@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
@@ -42,30 +42,30 @@ Received-SPF: None (esa5.microchip.iphmx.com: no sender
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
 Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: MWEPrm/UqFhzEqbp6J2az+JrEQ46Mmv1mi+QrEbD9Vspt93I6Ivn+DP2ZIooJ8c/7VZ1Viu3Jx
- ENwhSz83z1ofY2VxHQ0YcoldbAq2+kCzFu0VdX1xtJMUtssArzNCk7OG6TOyoec5q1VcAIsWa8
- iwClIAa74i//Rhx3FlDfVB0stCXxv+t1Ia5aTMDdT7dZ8DuVd28ZNL4/RU/LLAFSYVazLG/2dO
- /zGea7SdsLHFUkgH5vtOsNy7o4JsFllZzzLUVMuNrtMErSr33P/lajUAZFNk/AIu/ABH1HAkjM
- vRc=
+IronPort-SDR: vVkiiLLHSRaxMpfpK3Ke7rSlW9pnI3n6e7sLdSFdw+FajeKC6T/E9Kc+8a3ZOl3rDmVQwSIlrj
+ tFM6WNynvCRzNsb1nyEogf3QsFQ7gP2vWHD0GsK4IgB7ToE6Om+d9jp+OjATqkc6Rrezgh8sZ4
+ u+UC+fjkuJQ8bcvVgHtJp+avAY7P19VlAUX47TACbb/g0qJP+z87kwtD6Xr+63XbBIsaI22RTq
+ 5hIx+0maZaxaPL1SsfeN7Gutw4aBuKV7iRRSe/9fZwNCddFvlIcDdbl44ufx9zttu3Dzu1u2Yq
+ +t8=
 X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="53291993"
+   d="scan'208";a="53292001"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Oct 2019 04:16:56 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Oct 2019 04:17:01 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 29 Oct 2019 04:16:55 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ 15.1.1713.5; Tue, 29 Oct 2019 04:17:00 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
  email.microchip.com (10.10.87.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 29 Oct 2019 04:16:55 -0700
+ via Frontend Transport; Tue, 29 Oct 2019 04:17:00 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LpVyE7R5bogMY3RC6HfYz4SzDoNoIhSRaaQpPlcue8otj8D1xytXs3VKwR0KBFZYDtPUA38lVxfDRqS6EwMyM4aO5x3aDPNytjhl0X7r9Tf6l36+rSw2g6YzvumExDTaPCaBMauMqKCpT9hsmy69QNXXSN5Mk7mYYsdXNg+9rakOj8TlFFEwJzv2qmc8fh+/gdktDuUlXi5ZnFEdO+nOkpZmLFPnt2RyBipMMzTFgw2uBLtV7o0dUGiGigiUoXaz9dcT+8lFSKO7/RGHzG6jLKGqBIRYr4N5tw8LboI4zsfd1QAhxgZAS3qzP0+hyRZmm+CBEsNg7JSVzqbUYwzqHA==
+ b=EYpY4eyNX5ibytc0fWhd8S7Tm3iVU0/HXbgCiXZ9QVyaZRM8Q93zjxysw2OSG/T9AHBDCeW7wxo5BgVQPtMqJWMZKWljNdtLnmVJrLVthN5mHR0DBC9GZfVsd92ESNQIb8IoXicGbGR0jxZ04ecc5TjJmQYdbg0OJy0CjMls6sX5Q/plQ+pb1t6nQhyKA6qLO03zyVqAgoNBqrcLI1+EYX5/W/WUs2kajv80bmR3fb2O9MQ1fo51xvYP9Cj5wrN38csyZ90QCDhshKH1rqLghH6iXdRSaNjCOA2qlj6c4JWiiO0t0gV9MyG0ahL535WvRFKfUOMENH4PF5Y3NunErA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dLo2uMbn6tXoPfBhuy/2TkOh1Ab9RDEoAl4+EI29vCg=;
- b=TbVQEiKj+9cpkUixVE/ZY22Wvzj9IeEomi8VvVkeEu+vxGSQIo5k3VFUrgC5VAGBrVF4/ZzmlwdhBBx345zYGAG+NCgqAYtckx9V+f04KhetwyiX6vSUMzVJqDIHM/NFao0nqdHbiL8LWSs6bcS0mOFcI7+ujQudouBKzF981nKh7++hQ+1jynSR3F0jRezrqHCROuqSOOWVKNO6GV+OvI5CrxvlcMbAf7DWFehlUVhmTgBYhnTGeXy6klFGsCjPHvtc7iV7SxVsiIyifyJnXI7K4Dq9cwkdObQqYw83TJVFw2JCxGIa1gVoQpMGpszmF24Jo7JeG5wS3Pfn87iB4A==
+ bh=jJfm5jh4Oz8X4fs+TaeWisQS8JOPbKaUWsgDfhGp8fo=;
+ b=VyJYyav6gHAtL66JYhM3NObCMSemsoA6z2vhjtEP8n/l00D0WIeskltNkwT2D6EPPo6OfMU9I+Bxx9YGcfMghhFB8A0g9TQ8qVZErCHcon2r/rw82mqlzsGx8ghlv+kxnmEN4u0d2LWuy4epFOHWMpiLa7eMRvkDowWhhKhe3WtVQtTTFq48VfcjP3pTFnBPibCN+ng+SOTXw76P3yvFIf3Xx9iNniRrzgVW24KpKXtMehcIMo/OFVKTf1gHEH/s1O/cXVH8LWdp+G/XYl3mFhLmX3Y7rjJOCI2nO5op26Ht0vXNvg1EsP8qC7ILk9FF7C6bSxVNRdURcOezor5DvA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -73,28 +73,27 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dLo2uMbn6tXoPfBhuy/2TkOh1Ab9RDEoAl4+EI29vCg=;
- b=OmnA+o7cAzPDugWbP/ziForO91voVAnR3Cylh6bnnyu4pNl0YnaBkUKcRrhCbEuqA7EKDc34jnUYFrpCp6aMGKCiQdPDZuRqVlwZVaB+vjY0dacImEXwj/5zKHJ8+jX971nMQUQQyThTaQVBpuLWGIA84kegE0oNw4GOOU8ho60=
+ bh=jJfm5jh4Oz8X4fs+TaeWisQS8JOPbKaUWsgDfhGp8fo=;
+ b=ueOaUdSNF2m+RIdpJEyvsU29NQ/ifnAcf0P8XTGZGD+DeyLhZbX2g+XjPT4LzoDIjkT4vyeuWrkybUcDahR8ztW2IsZTTQV1ZK/7ldi+8UVa9mp4p8MVCflQss3yCef6uivGLGe4NynOSB3kKPrRiZ4YvwzZV9qeMHdv5Txevsw=
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
  MN2PR11MB3823.namprd11.prod.outlook.com (20.178.254.86) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Tue, 29 Oct 2019 11:16:54 +0000
+ 15.20.2387.20; Tue, 29 Oct 2019 11:16:59 +0000
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::c09c:36c8:3301:4457]) by MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::c09c:36c8:3301:4457%5]) with mapi id 15.20.2387.027; Tue, 29 Oct 2019
- 11:16:54 +0000
+ 11:16:59 +0000
 From:   <Tudor.Ambarus@microchip.com>
 To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
         <boris.brezillon@collabora.com>
 CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <Tudor.Ambarus@microchip.com>
-Subject: [PATCH v3 04/32] mtd: spi-nor: Stop compare with negative in Reg Ops
- methods
-Thread-Topic: [PATCH v3 04/32] mtd: spi-nor: Stop compare with negative in Reg
- Ops methods
-Thread-Index: AQHVjkpe3Aj10gNnVU2+wx1petwKoQ==
-Date:   Tue, 29 Oct 2019 11:16:54 +0000
-Message-ID: <20191029111615.3706-5-tudor.ambarus@microchip.com>
+Subject: [PATCH v3 07/32] mtd: spi-nor: Don't overwrite errno from Reg Ops
+Thread-Topic: [PATCH v3 07/32] mtd: spi-nor: Don't overwrite errno from Reg
+ Ops
+Thread-Index: AQHVjkphLyVSrUAb9kyKn0dz1sgAkQ==
+Date:   Tue, 29 Oct 2019 11:16:59 +0000
+Message-ID: <20191029111615.3706-8-tudor.ambarus@microchip.com>
 References: <20191029111615.3706-1-tudor.ambarus@microchip.com>
 In-Reply-To: <20191029111615.3706-1-tudor.ambarus@microchip.com>
 Accept-Language: en-US
@@ -108,28 +107,28 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.9.5
 x-originating-ip: [83.166.207.93]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 78aa4825-a8f5-4721-d616-08d75c6180f6
+x-ms-office365-filtering-correlation-id: 6a11ebe0-6295-4857-9289-08d75c6183f0
 x-ms-traffictypediagnostic: MN2PR11MB3823:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB3823A1F591FA9F5468C9A6FCF0610@MN2PR11MB3823.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:751;
+x-microsoft-antispam-prvs: <MN2PR11MB38232920B4676AFE17C75A80F0610@MN2PR11MB3823.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1360;
 x-forefront-prvs: 0205EDCD76
 x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(346002)(136003)(376002)(396003)(189003)(199004)(478600001)(8676002)(4326008)(8936002)(66066001)(14454004)(36756003)(6512007)(107886003)(86362001)(11346002)(2616005)(476003)(486006)(6436002)(1076003)(2201001)(71200400001)(71190400001)(446003)(81156014)(81166006)(6486002)(50226002)(99286004)(66946007)(386003)(316002)(52116002)(6506007)(102836004)(76176011)(26005)(2501003)(305945005)(186003)(6116002)(110136005)(25786009)(2906002)(256004)(54906003)(3846002)(64756008)(66446008)(66556008)(66476007)(5660300002)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3823;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FCwhXOxOd9KJA7fdHvl8jwapUxgjOpKTG4zwGeb+VcxYAAR6t3zsDxZnftU7AYeSAinEAfUdLUWFQ7aPNg+nvgYqq14RxCLUDwsSaGXV2N7mnnLa9huc/9uVFAy1pk6QHo37GVkujZop5GMMuFsZHJ/yY0VcTd9pQcTFmjtvqP1OYWl7KeJHByczi6cy/MAsTDSm0J4JELJHwaHu7Iy0A8DsNFWNyg7cSMa0G/NuL7gtqiLQbIiFpmTcTw8NAjgdPoPlTgMWTsBRA/3RTl2VT+eEGjtn92N4afRO4PpVOYwPJFUpysTVabZaKIuhwkK0E0Z6QRvtB1Og0yKVyY4dQJpPoQ6BkwNVaT2yYzHfe3KT6gEvoQ42rRGIDp1EYbJA71XbrkiGyftq9bIoY4FgkeIlJaNwFTEMpmaRHU/h6JvaV/hAXfMH5d+vCc4zh7FU
+x-microsoft-antispam-message-info: lK+J0aQ+J7hmuyYns5kCzshQatVHTPy+eIB/Jqm4JzC64kSLytZjoUP2ATwKTmSa8JS7H4DB4FFCX+93Ymc9bQvw8b2aPhSCwnpx+9elz2AM3huGCFK79wd93Vn5YBD14gJZ3S4JRBQlFUNkLS3OvtCidJFvUBQzDO21k+ysrPGE8C1FDrH0QjxMf9RPGnsKuXkB2TTDpE5dF2DLwqEaF9UO5G1LTJEJSXeal2hcOA0yYLcQNd1AbjnFtrZzMPZEK35O7dy95ZtUFbQ+SyT0hbiU/5lj35Pk3jJgMyBr9q3xM87FxD9VlW8fQRQ2qFhsAyybtQyBK4z7vyZPqT2m5jKtrMwVPO8fapH2RJA3rhS5bwGxwNu4cRh0YsWS5hZki7e2p9KQvAM7q6eO5NaW1xZssoAVl/3GGXbMAUvoVVqfIH0Y4nnjml6rSBoXjSU4
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78aa4825-a8f5-4721-d616-08d75c6180f6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 11:16:54.3216
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a11ebe0-6295-4857-9289-08d75c6183f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 11:16:59.3257
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IMrAPDHRxYCbRNdJy3258SQuIb928hFtyRNW1q7a9kk7IJz33PvFkZmZzHuuNtWvV1/2nFMEEC/lJ+010hoKceWvYsW7QQ/Yyk/2G8rd2WE=
+X-MS-Exchange-CrossTenant-userprincipalname: pu9f9vkJGFXBr0HhXMfAna8/rRDsqwSHvuIxEQJVnJ8obcx/ooYfN4xIY03ghjKV5xr1CS1PFxxPforGz89U188UrsploGjFvbuVxDIcbOM=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3823
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -138,117 +137,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-spi_mem_exec_op()
-nor->controller_ops->write_reg()
-nor->controller_ops->read_reg()
-spi_nor_wait_till_ready()
-Return 0 on success, -errno otherwise.
-
-Stop compare with negative and compare with zero in all the register
-operations methods.
+Do not overwrite the error numbers received the Register Operations
+methods.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- drivers/mtd/spi-nor/spi-nor.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ drivers/mtd/spi-nor/spi-nor.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 24378d65fa2e..4d3c37658ea5 100644
+index c794eff69fe9..1a00438fd061 100644
 --- a/drivers/mtd/spi-nor/spi-nor.c
 +++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -447,7 +447,7 @@ static int spi_nor_read_sr(struct spi_nor *nor)
- 						    nor->bouncebuf, 1);
+@@ -1364,10 +1364,9 @@ static int spi_nor_erase(struct mtd_info *mtd, struc=
+t erase_info *instr)
+=20
+ 		spi_nor_write_enable(nor);
+=20
+-		if (spi_nor_erase_chip(nor)) {
+-			ret =3D -EIO;
++		ret =3D spi_nor_erase_chip(nor);
++		if (ret)
+ 			goto erase_err;
+-		}
+=20
+ 		/*
+ 		 * Scale the timeout linearly with the size of the flash, with
+@@ -1839,7 +1838,7 @@ static int spansion_no_read_cr_quad_enable(struct spi=
+_nor *nor)
+ 	ret =3D spi_nor_read_sr(nor);
+ 	if (ret < 0) {
+ 		dev_err(nor->dev, "error while reading status register\n");
+-		return -EINVAL;
++		return ret;
+ 	}
+ 	sr_cr[0] =3D ret;
+ 	sr_cr[1] =3D CR_QUAD_EN_SPAN;
+@@ -1870,7 +1869,7 @@ static int spansion_read_cr_quad_enable(struct spi_no=
+r *nor)
+ 	ret =3D spi_nor_read_cr(nor);
+ 	if (ret < 0) {
+ 		dev_err(dev, "error while reading configuration register\n");
+-		return -EINVAL;
++		return ret;
  	}
 =20
--	if (ret < 0) {
-+	if (ret) {
- 		pr_err("error %d reading SR\n", (int) ret);
- 		return ret;
+ 	if (ret & CR_QUAD_EN_SPAN)
+@@ -1882,7 +1881,7 @@ static int spansion_read_cr_quad_enable(struct spi_no=
+r *nor)
+ 	ret =3D spi_nor_read_sr(nor);
+ 	if (ret < 0) {
+ 		dev_err(dev, "error while reading status register\n");
+-		return -EINVAL;
++		return ret;
  	}
-@@ -477,7 +477,7 @@ static int spi_nor_read_fsr(struct spi_nor *nor)
- 						    nor->bouncebuf, 1);
- 	}
+ 	sr_cr[0] =3D ret;
 =20
--	if (ret < 0) {
-+	if (ret) {
- 		pr_err("error %d reading FSR\n", ret);
- 		return ret;
- 	}
-@@ -507,7 +507,7 @@ static int spi_nor_read_cr(struct spi_nor *nor)
- 						    nor->bouncebuf, 1);
- 	}
-=20
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(nor->dev, "error %d reading CR\n", ret);
- 		return ret;
- 	}
-@@ -643,7 +643,7 @@ static int s3an_sr_ready(struct spi_nor *nor)
- 	int ret;
-=20
- 	ret =3D spi_nor_xread_sr(nor, nor->bouncebuf);
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(nor->dev, "error %d reading XRDSR\n", (int) ret);
- 		return ret;
- 	}
-@@ -800,7 +800,7 @@ static int spi_nor_write_sr_cr(struct spi_nor *nor, u8 =
-*sr_cr)
- 						     sr_cr, 2);
- 	}
-=20
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(nor->dev,
- 			"error while writing configuration register\n");
- 		return -EINVAL;
-@@ -1930,20 +1930,23 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor=
-)
- 	spi_nor_write_enable(nor);
-=20
+@@ -1932,7 +1931,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
  	ret =3D spi_nor_write_sr2(nor, sr2);
--	if (ret < 0) {
-+	if (ret) {
+ 	if (ret) {
  		dev_err(nor->dev, "error while writing status register 2\n");
- 		return -EINVAL;
+-		return -EINVAL;
++		return ret;
  	}
 =20
  	ret =3D spi_nor_wait_till_ready(nor);
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(nor->dev, "timeout while writing status register 2\n");
- 		return ret;
- 	}
-=20
- 	/* Read back and check it. */
- 	ret =3D spi_nor_read_sr2(nor, sr2);
--	if (!(ret > 0 && (*sr2 & SR2_QUAD_EN_BIT7))) {
-+	if (ret)
-+		return ret;
-+
-+	if (!(*sr2 & SR2_QUAD_EN_BIT7)) {
- 		dev_err(nor->dev, "SR2 Quad bit not set\n");
- 		return -EINVAL;
- 	}
-@@ -2534,7 +2537,7 @@ static const struct flash_info *spi_nor_read_id(struc=
-t spi_nor *nor)
- 		tmp =3D nor->controller_ops->read_reg(nor, SPINOR_OP_RDID, id,
- 						    SPI_NOR_MAX_ID_LEN);
- 	}
--	if (tmp < 0) {
-+	if (tmp) {
- 		dev_err(nor->dev, "error %d reading JEDEC ID\n", tmp);
- 		return ERR_PTR(tmp);
- 	}
-@@ -2751,7 +2754,7 @@ static int s3an_nor_setup(struct spi_nor *nor,
- 	int ret;
-=20
- 	ret =3D spi_nor_xread_sr(nor, nor->bouncebuf);
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(nor->dev, "error %d reading XRDSR\n", (int) ret);
- 		return ret;
- 	}
 --=20
 2.9.5
 
