@@ -2,85 +2,200 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BBECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567DACA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A473B21835
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218B920856
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:08:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="G4v6Q6M6";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V2NRj/uu"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RFqx97Fb";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X5mnHnat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389852AbfJ2PHx (ORCPT
+        id S2389875AbfJ2PH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:07:53 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52158 "EHLO
+        Tue, 29 Oct 2019 11:07:58 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52256 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389520AbfJ2PHx (ORCPT
+        with ESMTP id S2389855AbfJ2PH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:07:53 -0400
+        Tue, 29 Oct 2019 11:07:57 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4F6D56079D; Tue, 29 Oct 2019 15:07:52 +0000 (UTC)
+        id A1E5060D5A; Tue, 29 Oct 2019 15:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572361672;
-        bh=PUi0TnV0ZUkx5WjneOzdJHo4q0wVk5Vjn1TlfRNP7xY=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=G4v6Q6M6pvohiM+NtPkxsIGBmW8SdQK+nPdbMxQgAWDeBG8tqD4xjjhaQGqPlnQrL
-         1sWccxuqVKD57kF/TmEs/M/tZt/7Z00XmF7SJmpONnziyitHLGhKhBvGE3W+d7tUO/
-         Lt1NiwS4MtWHRBhKolKQ8EK0li8Eqyl2H5r6evy4=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        s=default; t=1572361676;
+        bh=E4andH/ilmkSFOMWKBRL3FANQ6IFKogo12cpoZyySEA=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=RFqx97FbCvImMjwJHodioL8aT9CJG3k+aB9OYIPs+uMXWANCHxFHS0egEbCv8ZoSt
+         +NUkJ2YxZnEPKXuudvBL9BHE2jms+gjUKnAuVOFZnYMES0qqYvRLZT3lGchjYZoeLg
+         QEMSd5b3fJR1KDRU6znIcRHDSBFThH+uMxWRPRZ0=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id ABD376079D;
-        Tue, 29 Oct 2019 15:07:49 +0000 (UTC)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1531C60BFA;
+        Tue, 29 Oct 2019 15:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572361671;
-        bh=PUi0TnV0ZUkx5WjneOzdJHo4q0wVk5Vjn1TlfRNP7xY=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=V2NRj/uuLkM2g2ITLisZUZafcQj6Z+43LrN1bFwopuqy/VEoY4HQPSkCxIznzFFbZ
-         5JHdQ0B6EaKlZFvD5FSPAm8/Ggzm2Ulaj5hPGR2IEIYMD60KxKubO+7KMcmafFKhaE
-         Ywd1T/uvS8iNfD+AD7f+V84kqxfjbr00dZLAekM0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ABD376079D
+        s=default; t=1572361675;
+        bh=E4andH/ilmkSFOMWKBRL3FANQ6IFKogo12cpoZyySEA=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=X5mnHnatzoWq7QPKAP3YJTAWmX5Q3aCbzNqNkKeHY5CfIe4ADO43QunOjp/ZZOVDP
+         2YBGI26avNH5iuAgDOmSNWhzQ1n2+WEVgkyy+bPHHBAWr9x7SldFc6SMvsj5gYCrG6
+         XGuUVXxmi/WntDkbItO1RmTSKdtMxwYdlzD5Z7Z4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1531C60BFA
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>
-Cc:     pkshih@realtek.com, davem@davemloft.net, Larry.Finger@lwfinger.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, saurav.girepunje@hotmail.com
-Subject: Re: [PATCH] net: wireless: rtlwifi: rtl8192c:Drop condition with no effect
-References: <20191028184654.GA26755@saurav>
-Date:   Tue, 29 Oct 2019 17:07:46 +0200
-In-Reply-To: <20191028184654.GA26755@saurav> (Saurav Girepunje's message of
-        "Tue, 29 Oct 2019 00:16:54 +0530")
-Message-ID: <874kzr4mkd.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH] arm64: cpufeature: Enable Qualcomm Falkor errata 1009 for
+ Kryo
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     Will Deacon <will@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org
+References: <20191029060604.1208925-1-bjorn.andersson@linaro.org>
+ <20191029115008.GD12103@willie-the-truck>
+ <16ccb343-8253-0224-e957-c73f51f110a1@codeaurora.org>
+Message-ID: <d9700408-b11e-b5c8-db9d-f70ccd1bde73@codeaurora.org>
+Date:   Tue, 29 Oct 2019 09:07:53 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <16ccb343-8253-0224-e957-c73f51f110a1@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Saurav Girepunje <saurav.girepunje@gmail.com> writes:
+On 10/29/2019 7:44 AM, Jeffrey Hugo wrote:
+> On 10/29/2019 4:50 AM, Will Deacon wrote:
+>> On Mon, Oct 28, 2019 at 11:06:04PM -0700, Bjorn Andersson wrote:
+>>> The Kryo cores share errata 1009 with Falkor, so add their model
+>>> definitions and enable it for them as well.
+>>>
+>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>> ---
+>>>   arch/arm64/include/asm/cputype.h | 4 ++++
+>>>   arch/arm64/kernel/cpu_errata.c   | 2 ++
+>>>   2 files changed, 6 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/include/asm/cputype.h 
+>>> b/arch/arm64/include/asm/cputype.h
+>>> index b1454d117cd2..8067476ea2e4 100644
+>>> --- a/arch/arm64/include/asm/cputype.h
+>>> +++ b/arch/arm64/include/asm/cputype.h
+>>> @@ -84,6 +84,8 @@
+>>>   #define QCOM_CPU_PART_FALKOR_V1        0x800
+>>>   #define QCOM_CPU_PART_FALKOR        0xC00
+>>>   #define QCOM_CPU_PART_KRYO        0x200
+>>> +#define QCOM_CPU_PART_KRYO_GOLD        0x211
+>>> +#define QCOM_CPU_PART_KRYO_SILVER    0x205
+> 
+> These are not Kryo part numbers (8998+).  They are Hydra ones.
+> 
+>>
+>> Can you double-check this, please? My Pixel-1 phone claims something with
+>> 0x201, but I don't know if that's what you were aiming for. It would be
+>> great if Qualcomm could document these register fields somewhere, 
+>> especially
+>> since we're trying to work around their hardware errata for them.
+> 
+> I wish I could point you to public documentation.  I don't happen to 
+> know where it is.  As far as 8996 goes, there are quite a few part 
+> numbers.  The ones I could find are:
+> 201
+> 205
+> 211
+> 241
+> 251
+> 
+> 281 happens to be QDF2432
 
-> As the "else if" and "else" branch body are identical the condition
-> has no effect. So drop the "else if" condition.
->
-> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+ From asking around, I found someone in the know.  We don't have public 
+documentation, but I can follow up to try to create something - its 
+likely going to take a bit.  I was given the following information to 
+share.  This is specific to Hydra only-
 
-Thanks, I see these patches in patchwork now.
+MIDR[15:12] = PART[11:8]
+Hydra and technology node differentiator (0x1 = Hydra 16nm; 0x2 = Hydra 
+14nm; 0x3 = Hydra 10nm)
 
-But then you submit a new version of a patch, please mark it as "[PATCH v2]":
+MIDR[11:10] = PART[7:6]
+This corresponds to the cluster revision number
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#patch_version_missing
+MIDR[9:8] = PART[5:4]
+Technology variant within the node
 
-This is for future submissions, no need to resend because of this.
+MIDR[7:6] = PART[3:2]
+0b00 = 512KB L2
+0b01 = 1MB L2
+0b10 = 2MB L2
+0b11 = 4MB L2
+
+MIDR[5:4] = PART[1:0]
+0b00 = uni-core
+0b01 = dual-core cluster
+0b10 = tri-core cluster
+0b11 = quad-core cluster
+
+> 
+>>
+>> That said...
+>>
+>>>   #define NVIDIA_CPU_PART_DENVER        0x003
+>>>   #define NVIDIA_CPU_PART_CARMEL        0x004
+>>> @@ -109,6 +111,8 @@
+>>>   #define MIDR_QCOM_FALKOR_V1 MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, 
+>>> QCOM_CPU_PART_FALKOR_V1)
+>>>   #define MIDR_QCOM_FALKOR MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, 
+>>> QCOM_CPU_PART_FALKOR)
+>>>   #define MIDR_QCOM_KRYO MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, 
+>>> QCOM_CPU_PART_KRYO)
+>>> +#define MIDR_QCOM_KRYO_GOLD MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, 
+>>> QCOM_CPU_PART_KRYO_GOLD)
+>>> +#define MIDR_QCOM_KRYO_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, 
+>>> QCOM_CPU_PART_KRYO_SILVER)
+>>>   #define MIDR_NVIDIA_DENVER MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, 
+>>> NVIDIA_CPU_PART_DENVER)
+>>>   #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, 
+>>> NVIDIA_CPU_PART_CARMEL)
+>>>   #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, 
+>>> FUJITSU_CPU_PART_A64FX)
+>>> diff --git a/arch/arm64/kernel/cpu_errata.c 
+>>> b/arch/arm64/kernel/cpu_errata.c
+>>> index cdd8df033536..315780e7bee7 100644
+>>> --- a/arch/arm64/kernel/cpu_errata.c
+>>> +++ b/arch/arm64/kernel/cpu_errata.c
+>>> @@ -627,6 +627,8 @@ static const struct midr_range 
+>>> arm64_harden_el2_vectors[] = {
+>>>   static const struct midr_range arm64_repeat_tlbi_cpus[] = {
+>>>   #ifdef CONFIG_QCOM_FALKOR_ERRATUM_1009
+>>>       MIDR_RANGE(MIDR_QCOM_FALKOR_V1, 0, 0, 0, 0),
+>>> +    MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_GOLD),
+>>> +    MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_SILVER),
+>>
+>> ... why aren't you following what we do for E1003 and using the
+>> 'is_kryo_midr' callback to match these CPUs?
+>>
+>> Will
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+> 
+> 
+
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
