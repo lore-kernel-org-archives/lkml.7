@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69809CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF05CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3964E208C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B738208C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbfJ2AA4 convert rfc822-to-8bit (ORCPT
+        id S1730225AbfJ2ABC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 20:00:56 -0400
-Received: from mail-oln040092065064.outbound.protection.outlook.com ([40.92.65.64]:50946
+        Mon, 28 Oct 2019 20:01:02 -0400
+Received: from mail-oln040092065065.outbound.protection.outlook.com ([40.92.65.65]:7758
         "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725951AbfJ2AA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 20:00:56 -0400
+        id S1726834AbfJ2ABB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 20:01:01 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DtdO1Zht61E72udO30h9oq59X5JvtlvTpX4Vb0194VFQx50yDcpNehrIHxuCEcPc+6/qwCevRSMw1shPzhkmN+C5GJAgslK/EF0gobWRiW7AWDvU7EagHGk9ifyxck0QDaLjTQSzPDT8Ciwuk9hWKqDLEHPPrd3itmDxT1zQUjL7GwLcttAg48mYdumjtEm0yUOqKpmrQ75acV+XjM+BStQMP2r/Z/oL2pbI1kmF2R+O186UJYCztZYHH2N6cW2DJt5z5riutoFWlCxWA1oEd+Bgv7zYsw0DFLIi4Gz6AiiVG5BTVUlSKC6bb+ZBav00TMjW5KlAKYv33uiep8LZnA==
+ b=Ju1Bz5JzX5mxicGnxLmWsFEiFzuU2IrMqDqXp1v29V6PSC2yIiWptLijh9w4iJaPr172XTMGb51WaWIZHSL6wkDq5sWxqgXQNS7APJA1d8Kvb4cOxodEMYdnxQ7LLcHGGZWamkyYQRLhykH26Me+2vdJ/b/TbJuiVPM+2Jp6GhA1jwpW0njyVSxoKt6G+3O5otYTo48VhyY9E0QKS8hqzYQVdzpNtOmyCgD2aPIgsloVVjR8zFpwFY3VeTpYbQ16oC+74eTcBnE/71DsWS4uQV/4MhJWWoDXvyvLm9zQiDP43ZbP+cY/jE1KyS+zC27QZqBKHa17d0m4omgGDDoj4w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QXtVI7VP240TSK9n8Q1V7bsae2yNe1cSHVzcwTCjbKM=;
- b=Lq7UeB+A40qRRtjZNrxL8EuQ8UDCD1d4zJ5FCt1285vwmQp/gopOnEG9L0dEXGBcdSlupdYnQOO6BMQhhrkuVbD9SzWsbJDZhpsxe0NmliuUxR0vPW9k/XT1om2Y525TnKuqRyIgHI5Z4fY9hYO/tcyEfiJTYE9hmGYcAiWD4OCjc80fiVSK261tpIY+7T/hPZStQLaKGrvIX1k0Ww4PhxTzYOIYCTqAv49/I81PzGSl8NCvqecT4KNUChP1yI51fa/1jTrPqXY5vTRgvwUaXXqno+MdSJb/ycaRknIlF1ufwLabdaPqnU2eQ1oWN4aYLSpkb//Uk2eqvv7poNcvpw==
+ bh=BMl2D0+OlthSlgFyvfZCK08LnPRn19RFu0oI3f0BSQo=;
+ b=UfAovlTV7xnhgIhc3KRbngwL/evspBkiLjKv1Sbq233Vc9XfFHNUz8fYr9t2asGp2I9Cwn61oZ6Oo3fnvEDfQCTIQa7YYgQKI5peqBJZ4Y+WQgzx+tTTcM9LHh8cvnftQ4/m5zJpr3D6yVaNXycSjCf44Q7S5IbzgrMrXmUGdW2NnhuAxWOz9FcmnZcCTk87O4xzGiRA1xNSyj6tGvS9ulmPuTVJhLq2AM9HSERaEclgtfs5NGYLbGmq286jL1opSl/u9ero8QAUV6jcLHfQbhtWjFwtYKdlMocp6C69aT7IGRx1qEpSmYBj3t2eOusiUumIbjOwNPW86YQuwrKDdg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from VE1EUR01FT033.eop-EUR01.prod.protection.outlook.com
- (10.152.2.57) by VE1EUR01HT086.eop-EUR01.prod.protection.outlook.com
- (10.152.3.1) with Microsoft SMTP Server (version=TLS1_2,
+ (10.152.2.57) by VE1EUR01HT219.eop-EUR01.prod.protection.outlook.com
+ (10.152.3.237) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Tue, 29 Oct
- 2019 00:00:51 +0000
+ 2019 00:00:54 +0000
 Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.2.51) by
  VE1EUR01FT033.mail.protection.outlook.com (10.152.2.230) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20 via Frontend Transport; Tue, 29 Oct 2019 00:00:51 +0000
+ 15.20.2387.20 via Frontend Transport; Tue, 29 Oct 2019 00:00:54 +0000
 Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
  ([fe80::b1cf:db6f:95fc:84cc]) by HE1PR06MB4011.eurprd06.prod.outlook.com
  ([fe80::b1cf:db6f:95fc:84cc%7]) with mapi id 15.20.2387.025; Tue, 29 Oct 2019
- 00:00:51 +0000
+ 00:00:53 +0000
 From:   Jonas Karlman <jonas@kwiboo.se>
 To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Ezequiel Garcia <ezequiel@collabora.com>,
@@ -56,15 +56,14 @@ CC:     Jonas Karlman <jonas@kwiboo.se>, Hans Verkuil <hverkuil@xs4all.nl>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/3] media: uapi: h264: clarify expected scaling_list_4x4/8x8
- order
-Thread-Topic: [PATCH 1/3] media: uapi: h264: clarify expected
- scaling_list_4x4/8x8 order
-Thread-Index: AQHVjevtJ+L50WvpIk+wlVAYjSNOrQ==
-Date:   Tue, 29 Oct 2019 00:00:51 +0000
-Message-ID: <HE1PR06MB4011E174FC8A19141A3ABE95AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Subject: [PATCH v2 3/3] media: hantro: Do not reorder H264 scaling list
+Thread-Topic: [PATCH v2 3/3] media: hantro: Do not reorder H264 scaling list
+Thread-Index: AQHVjevu/7KXRpoZcUGJOmzIePYDDA==
+Date:   Tue, 29 Oct 2019 00:00:53 +0000
+Message-ID: <HE1PR06MB4011B2DED416807CD9C9B90EAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
 References: <HE1PR06MB4011D3B8C200D13829648D86AC660@HE1PR06MB4011.eurprd06.prod.outlook.com>
-In-Reply-To: <HE1PR06MB4011D3B8C200D13829648D86AC660@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <20191029000033.13540-1-jonas@kwiboo.se>
+In-Reply-To: <20191029000033.13540-1-jonas@kwiboo.se>
 Accept-Language: sv-SE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -72,71 +71,135 @@ X-MS-TNEF-Correlator:
 x-clientproxiedby: AM3PR07CA0087.eurprd07.prod.outlook.com
  (2603:10a6:207:6::21) To HE1PR06MB4011.eurprd06.prod.outlook.com
  (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:5D63E8D52D94AE0F32F63CEDBEAEABB9312346FCE2E99E48E88A41E96D84CE47;UpperCasedChecksum:DFEB48380540C9B25A0039388BC59437720F5665B65A410302968041236B42A0;SizeAsReceived:7857;Count:49
+x-incomingtopheadermarker: OriginalChecksum:D4576FFCA123D6ACDC123D0D4F4AA908FB62F07E8F9E1E044ED8CE59DC327AC7;UpperCasedChecksum:9321E4B87097A97855E24D9EEAEF9A58004E6A509A6C46CAA57E76B84A880125;SizeAsReceived:7846;Count:49
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
-x-tmn:  [nLVzJ5VF1BY77PkmAJZY0nPsOlUPiZDp]
-x-microsoft-original-message-id: <20191029000033.13540-1-jonas@kwiboo.se>
+x-tmn:  [lQPhitlyDiiwles6/EAoJAOFU+MEIIJI]
+x-microsoft-original-message-id: <20191029000033.13540-3-jonas@kwiboo.se>
 x-ms-publictraffictype: Email
 x-incomingheadercount: 49
 x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: VE1EUR01HT086:
+x-ms-traffictypediagnostic: VE1EUR01HT219:
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 84zX2eniEQfw2pfV32RshKPtacn4kWrUr8XfHHIJxiAYHW+ttq6rZc9nkIIjV3whfu06p6g1p3RPDrej6kF0f2zddyXzRPewWd0vq96RUxnOVujM0KWkY3DvjV9COtLS2xdCBbE/e09YU8jowg3omJ8douQ0b43ze/ZYkRRISro6g6ObPbBNFG1RBD5Bf165
+x-microsoft-antispam-message-info: mkFKYekyxEJjdR23pdCsNs05hUHn/NVG8Cqy2WTenWai9poVgPpC2mxO80xXxmQPiVo/egFeIUpuclHlDpb1OgYRXLsBloB74NPwvfr2W8tBmr0KB8EyU7uTnvdDpfPa32FS9H2xBT1Os5aaMBxg8S/LA0RNv0TeqB93CT2XmvJGDSf7Ps1rhht62cHMaq2K
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2497b034-9a76-4cc4-19fa-08d75c030f77
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb563c42-bbeb-450c-d0e2-08d75c0310f4
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 00:00:51.3583
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 00:00:53.9259
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Internet
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT086
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT219
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clarify that the expected order of scaling lists should follow the order
-they are listed in the H264 standard.
+Scaling list supplied from userspace should be in matrix order
+and can be used without applying the inverse scanning process.
 
-The expected scaling list order,
-for 4x4: Intra Y, Intra Cb, Intra Cr, Inter Y, Inter Cb, Inter Cr,
-for 8x8: Intra Y, Inter Y, Intra Cb, Inter Cb, Intra Cr, Inter Cr.
+The HW also only support 8x8 scaling list for the Y component, indices 0
+and 1 in the scaling list supplied from userspace.
 
-Also clarify that the values in a scaling list should be in matrix order,
-the same value order that vaapi, vdpau and nvdec use.
+Remove reordering and write the scaling matrix in an order expected by
+the VPU, also only allocate memory for the two 8x8 lists supported.
 
+Fixes: a9471e25629b ("media: hantro: Add core bits to support H264 decoding")
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Changes in v2:
+  - use swab32() (Philipp)
+---
+ drivers/staging/media/hantro/hantro_h264.c | 51 +++++-----------------
+ 1 file changed, 12 insertions(+), 39 deletions(-)
 
-diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-index a1209f68c5e8..28313c0f4e7c 100644
---- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-@@ -1713,10 +1713,14 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
+index 02cbe7761769..694a330f508e 100644
+--- a/drivers/staging/media/hantro/hantro_h264.c
++++ b/drivers/staging/media/hantro/hantro_h264.c
+@@ -20,7 +20,7 @@
+ /* Size with u32 units. */
+ #define CABAC_INIT_BUFFER_SIZE		(460 * 2)
+ #define POC_BUFFER_SIZE			34
+-#define SCALING_LIST_SIZE		(6 * 16 + 6 * 64)
++#define SCALING_LIST_SIZE		(6 * 16 + 2 * 64)
  
-     * - __u8
-       - ``scaling_list_4x4[6][16]``
--      -
-+      - Scaling matrix after applying the inverse scanning process.
-+        Expected list order is Intra Y, Intra Cb, Intra Cr, Inter Y,
-+        Inter Cb, Inter Cr.
-     * - __u8
-       - ``scaling_list_8x8[6][64]``
--      -
-+      - Scaling matrix after applying the inverse scanning process.
-+        Expected list order is Intra Y, Inter Y, Intra Cb, Inter Cb,
-+        Intra Cr, Inter Cr.
+ #define HANTRO_CMP(a, b) ((a) < (b) ? -1 : 1)
  
- ``V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS (struct)``
-     Specifies the slice parameters (as extracted from the bitstream)
+@@ -194,23 +194,6 @@ static const u32 h264_cabac_table[] = {
+ 	0x1f0c2517, 0x1f261440
+ };
+ 
+-/*
+- * NOTE: The scaling lists are in zig-zag order, apply inverse scanning process
+- * to get the values in matrix order. In addition, the hardware requires bytes
+- * swapped within each subsequent 4 bytes. Both arrays below include both
+- * transformations.
+- */
+-static const u32 zig_zag_4x4[] = {
+-	3, 2, 7, 11, 6, 1, 0, 5, 10, 15, 14, 9, 4, 8, 13, 12
+-};
+-
+-static const u32 zig_zag_8x8[] = {
+-	3, 2, 11, 19, 10, 1, 0, 9, 18, 27, 35, 26, 17, 8, 7, 6,
+-	15, 16, 25, 34, 43, 51, 42, 33, 24, 23, 14, 5, 4, 13, 22, 31,
+-	32, 41, 50, 59, 58, 49, 40, 39, 30, 21, 12, 20, 29, 38, 47, 48,
+-	57, 56, 55, 46, 37, 28, 36, 45, 54, 63, 62, 53, 44, 52, 61, 60
+-};
+-
+ static void
+ reorder_scaling_list(struct hantro_ctx *ctx)
+ {
+@@ -218,33 +201,23 @@ reorder_scaling_list(struct hantro_ctx *ctx)
+ 	const struct v4l2_ctrl_h264_scaling_matrix *scaling = ctrls->scaling;
+ 	const size_t num_list_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4);
+ 	const size_t list_len_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4[0]);
+-	const size_t num_list_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8);
+ 	const size_t list_len_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8[0]);
+ 	struct hantro_h264_dec_priv_tbl *tbl = ctx->h264_dec.priv.cpu;
+-	u8 *dst = tbl->scaling_list;
+-	const u8 *src;
++	u32 *dst = (u32 *)tbl->scaling_list;
++	const u32 *src;
+ 	int i, j;
+ 
+-	BUILD_BUG_ON(ARRAY_SIZE(zig_zag_4x4) != list_len_4x4);
+-	BUILD_BUG_ON(ARRAY_SIZE(zig_zag_8x8) != list_len_8x8);
+-	BUILD_BUG_ON(ARRAY_SIZE(tbl->scaling_list) !=
+-		     num_list_4x4 * list_len_4x4 +
+-		     num_list_8x8 * list_len_8x8);
+-
+-	src = &scaling->scaling_list_4x4[0][0];
+-	for (i = 0; i < num_list_4x4; ++i) {
+-		for (j = 0; j < list_len_4x4; ++j)
+-			dst[zig_zag_4x4[j]] = src[j];
+-		src += list_len_4x4;
+-		dst += list_len_4x4;
++	for (i = 0; i < num_list_4x4; i++) {
++		src = (u32 *)&scaling->scaling_list_4x4[i];
++		for (j = 0; j < list_len_4x4 / 4; j++)
++			*dst++ = swab32(src[j]);
+ 	}
+ 
+-	src = &scaling->scaling_list_8x8[0][0];
+-	for (i = 0; i < num_list_8x8; ++i) {
+-		for (j = 0; j < list_len_8x8; ++j)
+-			dst[zig_zag_8x8[j]] = src[j];
+-		src += list_len_8x8;
+-		dst += list_len_8x8;
++	/* Only Intra/Inter Y lists */
++	for (i = 0; i < 2; i++) {
++		src = (u32 *)&scaling->scaling_list_8x8[i];
++		for (j = 0; j < list_len_8x8 / 4; j++)
++			*dst++ = swab32(src[j]);
+ 	}
+ }
+ 
 -- 
 2.17.1
 
