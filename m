@@ -2,80 +2,59 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93DDCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D661CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759F72086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:40:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hr2DbEaH"
+	by mail.kernel.org (Postfix) with ESMTP id 068D220856
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfJ2Xk4 (ORCPT
+        id S1726510AbfJ2Xmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 19:40:56 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39351 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfJ2Xk4 (ORCPT
+        Tue, 29 Oct 2019 19:42:50 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:33018 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfJ2Xmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 19:40:56 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p12so174853pgn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 16:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5wsNgUu1/P4JIurTC4HUnxDGW+gpw5nHaixpJkFjXGE=;
-        b=hr2DbEaH9zzg7pMEkglTzruFvr/G6SucWqIpEJXNa80aYseQ/mNno7XeeptqQLsBYF
-         Cptr8nRK6nskzlZeqMhWR0QHEmgkgjvBdZS03BTk47ssitfWG379IrAPNNFf9JTtCUBK
-         7BGc7K4WEWU5F6wQ63pegpyWy3/rH2tYlL30M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5wsNgUu1/P4JIurTC4HUnxDGW+gpw5nHaixpJkFjXGE=;
-        b=sQNCwmUg+HElyJq5Dh58TDtFIQyRD+K86/gqdrnHbDCTiCgPJzpht9BIWspJU2j+84
-         v1/v8wqCBdUwEmyDWVf6WyFGN6Z4gRsRmvq6Gfmgd+D2hIa17t1eARzXMZ1kxbkwGb6B
-         V2mEGLwwEyNLOfkUU8hoSaSmyF+QAqdHYZjmgH/KPXIt1o6X0Y7sKBJ7zrhxBi3+r/8a
-         kdumpl9dDWz1sr03iAOmyhGZ4GH2RGPr2dcoWucUPUEpPYiVVY2kJVjHfLwBm9y777/2
-         sgRSK0v3HsjHbLPIi9sFRSla2T59e/0q+3Yo6y0iynD1Fhu1kd8H5fQ3lB7HE0YoF360
-         rCDA==
-X-Gm-Message-State: APjAAAWtBI67E0Q74i6Kq8qOqYvWqBY5Oi24Rnh0IWa62gOXiiiX6Hax
-        PSagej/8k/fFe6xOR6vfgX1E2Q==
-X-Google-Smtp-Source: APXvYqyyFE5hvYmcxTbNJFzt5UcOMkXj9D0L0royyGvGrN8jqfXx6OS8jgHaYQhSxud/5j9vjsDIEQ==
-X-Received: by 2002:a63:d951:: with SMTP id e17mr20748592pgj.243.1572392455225;
-        Tue, 29 Oct 2019 16:40:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i17sm214510pfo.106.2019.10.29.16.40.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 16:40:54 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 16:40:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-mm@kvack.org, luto@kernel.org, peterz@infradead.org,
-        dave.hansen@intel.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, kristen@linux.intel.com,
-        deneen.t.dock@intel.com
-Subject: Re: [RFC PATCH 00/13] XOM for KVM guest userspace
-Message-ID: <201910291639.3C2631C@keescook>
-References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
+        Tue, 29 Oct 2019 19:42:50 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BECA514EBE2D4;
+        Tue, 29 Oct 2019 16:42:49 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 16:42:49 -0700 (PDT)
+Message-Id: <20191029.164249.1707480773387143512.davem@davemloft.net>
+To:     gustavo@embeddedor.com
+Cc:     epomozov@marvell.com, igor.russkikh@aquantia.com,
+        sergey.samoilenko@aquantia.com, dmitry.bezrukov@aquantia.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: aquantia: fix error handling in
+ aq_ptp_poll
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191028070447.GA3659@embeddedor>
+References: <20191028070447.GA3659@embeddedor>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 29 Oct 2019 16:42:50 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 02:23:47PM -0700, Rick Edgecombe wrote:
-> larger follow on to this enables setting the kernel text as XO, but this is just
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date: Mon, 28 Oct 2019 02:04:47 -0500
 
-Is the kernel side series visible somewhere public yet?
+> Fix currenty ignored returned error by properly checking *err* after
+> calling aq_nic->aq_hw_ops->hw_ring_hwts_rx_fill().
+> 
+> Addresses-Coverity-ID: 1487357 ("Unused value")
+> Fixes: 04a1839950d9 ("net: aquantia: implement data PTP datapath")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
--- 
-Kees Cook
+Applied.
