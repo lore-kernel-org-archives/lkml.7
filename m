@@ -2,107 +2,164 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE12C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC56CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC2DD21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572312675;
-	bh=1MBCYqIIedyLF/SXs2Foh5JO+bm0E0uc0cdI/xwllPM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f8ubMRajv/Vwhqv1hrDs6mcErzCEECb23p43R3VkDBN2IDoin7pVab8kM97aJu0JX
-	 AZb1VrKt6wT8zCOvbcvMqN31aQ8rNJjEf/SqTyBDgwazdgIlm0wNcBzuG3hZaS9ptx
-	 MipK6uENaaKn0uo2/hcS20mrGeX8ScjA5TysH8W0=
+	by mail.kernel.org (Postfix) with ESMTP id 9F59E21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:35:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UBvcWjJ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfJ2BbO (ORCPT
+        id S1729363AbfJ2Bfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:31:14 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33210 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfJ2BbO (ORCPT
+        Mon, 28 Oct 2019 21:35:41 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48888 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfJ2Bfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:31:14 -0400
-Received: by mail-oi1-f194.google.com with SMTP id m193so3143623oig.0;
-        Mon, 28 Oct 2019 18:31:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JIhmNRVJTaXbOFIrBLr2GZKqCE/QdwK4kQjskhXdiPg=;
-        b=nNxvfP50ssqg9nvn2gwAM71VAI1Z/GkDuzqjeyt1Kq8lx/goPSKeTWnYFUCwtMDkqF
-         nfHdj2GqAeOoJ+NSlnCXYfQeZE3hD6c/kFeQwJcxeoGtCB8PlJYZpAib9wWHRelMpg+W
-         7QaaRGEDu4U+DEldSZHIPYQWTRZESyxlUfejBtCt4+NDt0MhILG4Zv6DGyZK+0PLLarP
-         NkQpTMsXJYCPGyH8fI2JQAohZ2aJMrRq1C/Og1Qa6IgNtkRrvd2qoRz5x7GzXA9+Vv8V
-         aXacLIoeFfwWljnv+6C0WJ9GwPEJy/LozR0K4KWnoxuE3Au9zWx4jdviOusBnYdcgmjh
-         aJ6Q==
-X-Gm-Message-State: APjAAAUUFOOQkz+yYvJuXpzRjpLFQpv4iM24OQNsG7LN+TQaLu3Ye++/
-        TSTMFErrAmuU4+TO6PpB0A==
-X-Google-Smtp-Source: APXvYqyEytvCCmj53skL7qS7iUpONUrq3Umjo5tCrbSGsIW/La9f1V+4pCg0xrvDI1SBUoqMb225DA==
-X-Received: by 2002:aca:55c1:: with SMTP id j184mr1918381oib.105.1572312673339;
-        Mon, 28 Oct 2019 18:31:13 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y18sm4097127oto.2.2019.10.28.18.31.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 18:31:12 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 20:31:12 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, amit.kucheria@verdurent.com,
-        mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: Add mx power domain as thermal
- warming device.
-Message-ID: <20191029013111.GA27045@bogus>
-References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
- <1571254641-13626-8-git-send-email-thara.gopinath@linaro.org>
+        Mon, 28 Oct 2019 21:35:40 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9T1T2BK097401;
+        Tue, 29 Oct 2019 01:33:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=1QUjjGC1YE4Daj4tnRMfZjU7tGJjeHUbiYia35CGU+Q=;
+ b=UBvcWjJ3wVrUaDWOvolEun+19hgc7V8LByC07kM/vYaktqYS/3+UmORWTEqm2qJzTcoW
+ 0pJfBgHzHvDJIA6R5EPyUkUioJ23CqK8qTe2uZ9Fah4gYPY62hNcG/npbS3lX5r7pju1
+ zMzJuSX/nKfmZZdMXEZ6j6UseD9pkvYnXRRQ2yZmGmJiC9qvf8eNqsUwv6uz64ULs8jh
+ o+h+09miusUXunjwcs0PMB9a5hHi1moPHd9sEHIgXt+g373DUkvxOD5tjooJz/mkV7S4
+ 4EMgzlTJLJwKFP4zf/rZFT+TsN8S4tHs7SQnOv3bRpxQSLrToDJrJNnPmoPEZvwpSJYd 1A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2vvdju5qek-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 01:33:43 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9T1X4og086957;
+        Tue, 29 Oct 2019 01:33:43 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2vw09gtewe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 01:33:43 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9T1XYfg008271;
+        Tue, 29 Oct 2019 01:33:37 GMT
+Received: from [10.191.21.100] (/10.191.21.100)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 28 Oct 2019 18:33:34 -0700
+Subject: Re: [PATCH v8 0/5] Add a unified parameter "nopvspin"
+To:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        pbonzini@redhat.com
+Cc:     mingo@redhat.com, bp@alien8.de, x86@kernel.org, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com, peterz@infradead.org,
+        will@kernel.org, linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+References: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <86263ee3-f94f-8a6b-3842-f15fb0316798@oracle.com>
+Date:   Tue, 29 Oct 2019 09:33:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571254641-13626-8-git-send-email-thara.gopinath@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910290015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910290014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:37:21PM -0400, Thara Gopinath wrote:
-> RPMh hosts mx power domain that can be used to warm up the SoC.
-> Add sub-node to rpmhpd node for mx to be recognized
-> as thermal warming device on sdm845.
-> 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 0222f48..0671c8a 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -3788,6 +3788,11 @@
->  						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
->  					};
->  				};
-> +
-> +				mx_cdev: mx {
-> +					#cooling-cells = <2>;
-> +					.name = "mx";
+Hi Baolo, Thomas
 
-Copy this from C code?
+This patchset is reviewed pass and keep silent for a while, will anyone 
+of you
 
-> +				};
->  			};
->  
->  			rsc_hlos: interconnect {
-> -- 
-> 2.1.4
-> 
+consider to pick it up? Thanks
+
+Zhenzhong
+
+On 2019/10/23 19:16, Zhenzhong Duan wrote:
+> There are cases folks want to disable spinlock optimization for
+> debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
+> and "hv_nopvspin" to support that, but kvm doesn't.
+>
+> The first patch adds that feature to KVM guest with "nopvspin".
+>
+> For compatibility reason original parameters "xen_nopvspin" and
+> "hv_nopvspin" are retained and marked obsolete.
+>
+> v8:
+> PATCH2: use 'kvm-guest' instead of 'kvm_guest'        [Sean Christopherson]
+> PATCH3: add a comment to explain missed 'return'      [Sean Christopherson]
+>
+> v7:
+> PATCH3: update comment and use goto, add RB              [Vitaly Kuznetsov]
+>
+> v6:
+> PATCH1: add Reviewed-by                                  [Vitaly Kuznetsov]
+> PATCH2: change 'pv' to 'PV', add Reviewed-by             [Vitaly Kuznetsov]
+> PATCH3: refactor 'if' branch in kvm_spinlock_init()      [Vitaly Kuznetsov]
+>
+> v5:
+> PATCH1: new patch to revert a currently unnecessory commit,
+>          code is simpler a bit after that change.         [Boris Ostrovsky]
+> PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
+>          reorder with PATCH2 to better reflect dependency
+> PATCH4: fold 'if' statement, add Reviewed-by             [Boris Ostrovsky]
+> PATCH5: add Reviewed-by                                  [Michael Kelley]
+>
+> v4:
+> PATCH1: use variable name nopvspin instead of pvspin and
+>          defined it as __initdata, changed print message,
+>          updated patch description                     [Sean Christopherson]
+> PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean Christopherson]
+> PATCH3: make variable nopvsin and xen_pvspin coexist
+>          remove Reviewed-by due to code change         [Sean Christopherson]
+> PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean Christopherson]
+>
+> v3:
+> PATCH2: Fix indentation
+>
+> v2:
+> PATCH1: pick the print code change into separate PATCH2,
+>          updated patch description             [Vitaly Kuznetsov]
+> PATCH2: new patch with print code change      [Vitaly Kuznetsov]
+> PATCH3: add Reviewed-by                       [Juergen Gross]
+>
+> Zhenzhong Duan (5):
+>    Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
+>      get initialized"
+>    x86/kvm: Change print code to use pr_*() format
+>    x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
+>    xen: Mark "xen_nopvspin" parameter obsolete
+>    x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+>
+>   Documentation/admin-guide/kernel-parameters.txt | 14 ++++-
+>   arch/x86/hyperv/hv_spinlock.c                   |  4 ++
+>   arch/x86/include/asm/qspinlock.h                |  1 +
+>   arch/x86/kernel/kvm.c                           | 79 ++++++++++++++++---------
+>   arch/x86/xen/spinlock.c                         |  4 +-
+>   kernel/locking/qspinlock.c                      |  7 +++
+>   6 files changed, 76 insertions(+), 33 deletions(-)
+>
