@@ -2,169 +2,168 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FEBCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8183DCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2462720830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572367714;
-	bh=qYhdmj6LOa85tTd/M8gUeBMklDOwq6QpZ7eRNZvgmDk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2S+sNZozXLbqUu05XlSnZP3PJZgoGz8okUo+iZKZKB4RY1ecKgr/EYsXZV0PUhTFs
-	 qz6vVcAJGhI/7ypjOy8Z1dC1f6uS0mqjKV+9J7yATfwzidYtgpgBLmRki6ZI9Oj7Os
-	 FqfoEnE70zP+hDmYTrtYc89rRAanHVOswfcbJ2Z0=
+	by mail.kernel.org (Postfix) with ESMTP id 4D21E20830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jkMeu05K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390364AbfJ2Qsd (ORCPT
+        id S2390510AbfJ2QtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:48:33 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39761 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbfJ2Qsd (ORCPT
+        Tue, 29 Oct 2019 12:49:20 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46965 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbfJ2QtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 12:48:33 -0400
-Received: by mail-ot1-f65.google.com with SMTP id t8so4231763otl.6;
-        Tue, 29 Oct 2019 09:48:32 -0700 (PDT)
+        Tue, 29 Oct 2019 12:49:19 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b25so9965226pfi.13
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 09:49:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:subject:to:cc:user-agent:date;
+        bh=kul6aeK0Z9JpaaEloiN+6LBHmMqPXsKAW0f0LSVkgFI=;
+        b=jkMeu05KchoLwigQwKyP/KgA9aQvBIMx9YUFYIvimkWdQaXuNdXPnXfiRBcIGD5GcY
+         Ih9w2x9beBbwo18j8rJv5zau3pXLDz3DKTbNZykYtMNvSaOd9cZzleocvW1w5MB8UtOg
+         RNQxzWp7tTZnJv6w1CpP5NR5V6RICy+zJWkOs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RI8zG1ufEnYzuTEZN0YEn2eCjXsRH9KIe+0owaMHLI8=;
-        b=Jp+EDBQ03Oi1hXUFxgucFPFvYyqIEQ7kTSRuJQLY6R4AggAZBPDLHaEusBN0PbrXGO
-         NN4H6GPyNDHwCU+JF+hj3H3xo4ajTs8cFGlIdp7dUW04vDsUbGnr/hLF6HYd8DNXhHUU
-         q5I+tk6ZO2QDs8XHsoBoqCLBXQkBSV5ctm03R4EuUHZCDeTryL/3T7PHgBOA2nMzzHHj
-         tPEnVzB+LDotsaXlSOVukIk2mQRonRqNzJ5Nc8Uv/jpdayRMTmMa3u6rQ0QX1szUjPv6
-         6arjpE5S19GWexPqr40daXmfSF2vQiH6MtYj6PH6AQAJnveHc99FGjPLhwYLDKGPwLeX
-         5fQA==
-X-Gm-Message-State: APjAAAVqdkjfMbutJM5Mn3oUB/Zkeukr692mi/ojPLDZrGg18cz18W9J
-        LSWB7c2Ow/oQ0dpFG8woOA==
-X-Google-Smtp-Source: APXvYqx+s5uJ0NhlC8JcM6u6lCZ7knvuS4ijj/TCsIhKf8B7RMJaGqDUPbcv5jvl2mAHW5AjZ8bxqg==
-X-Received: by 2002:a9d:7756:: with SMTP id t22mr11833715otl.43.1572367711861;
-        Tue, 29 Oct 2019 09:48:31 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d27sm2365348ote.11.2019.10.29.09.48.31
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:subject:to:cc
+         :user-agent:date;
+        bh=kul6aeK0Z9JpaaEloiN+6LBHmMqPXsKAW0f0LSVkgFI=;
+        b=oMq5axx+7N+rVMpewL2iGw6GTxLnPy5kHFAhsMeyL31e+qg5wcwD10IUAo7eAQ9x1h
+         z8J2qyYN2UPY/HRgzdCKuLOO3luC4dNI+v4vOns0I9u+KxhXqc9C82VKjxcx6IKbltgr
+         UDJ1FtFieEaxp9xD4jnH6hk4MdMIv2LQf44qjXAlQfQqj7PZDef6IMd4ijPxKCKVRU+g
+         ej4rJmYytsRa4vpxz+yV5n//SGo1ck6vtFkABgYeqn8oNb/xyk9S/S/Bhub7trPFR0bC
+         uczRGfYUfq1Ys3Q8JzSCoEK9QVdkp83T9E97BwxfK2e/9oamisD50qWL79f6+oCDswHP
+         mq7w==
+X-Gm-Message-State: APjAAAVp0OUPUwWmab5lhPAouOjkP0ME4+i6Ioh5LiIKUGI+g9v0vvkH
+        qh2AUcP88UOQSSwqHcA2VyOXTRxnoPYrpjFZ
+X-Google-Smtp-Source: APXvYqx57HqfZpu0z/lUgMsWUtfKtZcr4fRpHEkTX5ewBYX7Npv2CDDJr6pv6qg7foRPJqSEG5ynOQ==
+X-Received: by 2002:a65:6456:: with SMTP id s22mr27825078pgv.287.1572367757387;
+        Tue, 29 Oct 2019 09:49:17 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s7sm3805723pgv.61.2019.10.29.09.49.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 09:48:31 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 11:48:30 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-        knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, paulmck@linux.ibm.com,
-        mchehab+samsung@kernel.org, linus.walleij@linaro.org,
-        nicolas.ferre@microchip.com, biabeniamin@outlook.com
-Subject: Re: [PATCH 3/4] dt-binding: iio: Add documentation for AD7091R5
-Message-ID: <20191029164830.GA21417@bogus>
-References: <20191021170608.26412-1-beniamin.bia@analog.com>
- <20191021170608.26412-3-beniamin.bia@analog.com>
+        Tue, 29 Oct 2019 09:49:16 -0700 (PDT)
+Message-ID: <5db86d8c.1c69fb81.7b0b8.e331@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021170608.26412-3-beniamin.bia@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191023090219.15603-3-rnayak@codeaurora.org>
+References: <20191023090219.15603-1-rnayak@codeaurora.org> <20191023090219.15603-3-rnayak@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v3 02/11] arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc
+To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 29 Oct 2019 09:49:15 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 08:06:07PM +0300, Beniamin Bia wrote:
-> Documentation for AD7091R5 ADC was added.
-> 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> ---
->  .../bindings/iio/adc/adi,ad7091r5.yaml        | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
+Quoting Rajendra Nayak (2019-10-23 02:02:10)
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
+com/sc7180.dtsi
 > new file mode 100644
-> index 000000000000..d041cd76804e
+> index 000000000000..084854341ddd
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-(GPL-2.0-only OR BSD-2-Clause) for new bindings please.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7091r5.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -0,0 +1,300 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * SC7180 SoC device tree source
+> + *
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
 > +
-> +title: Analog Devices AD7091R5 4-Channel 12-Bit ADC
+> +#include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
 > +
-> +maintainers:
-> +  - Beniamin Bia <beniamin.bia@analog.com>
+> +/ {
+> +       interrupt-parent =3D <&intc>;
 > +
-> +description: |
-> +  Analog Devices AD7091R5 4-Channel 12-Bit ADC
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7091r-5.pdf
+> +       #address-cells =3D <2>;
+> +       #size-cells =3D <2>;
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7091R5
-
-lowercase 'r' or be consistent with the filename.
-
+> +       chosen { };
 > +
-> +  reg:
-> +    maxItems: 1
+> +       clocks {
+> +               xo_board: xo-board {
+> +                       compatible =3D "fixed-clock";
+> +                       clock-frequency =3D <38400000>;
+> +                       clock-output-names =3D "xo_board";
+
+Can you drop the output names property? I think we don't care that the
+name is "xo-board" instead of "xo_board" now.
+
+> +                       #clock-cells =3D <0>;
+> +               };
 > +
-> +  avcc-supply:
-> +    description:
-> +      Phandle to the Avcc power supply
-> +    maxItems: 1
-
-Not an array, so you can drop this.
-
+> +               sleep_clk: sleep-clk {
+> +                       compatible =3D "fixed-clock";
+> +                       clock-frequency =3D <32764>;
+> +                       clock-output-names =3D "sleep_clk";
+> +                       #clock-cells =3D <0>;
+> +               };
+> +       };
 > +
-> +  interrupts:
-> +    maxItems: 1
+[...]
 > +
+> +       soc: soc {
+> +               #address-cells =3D <2>;
+> +               #size-cells =3D <2>;
+> +               ranges =3D <0 0 0 0 0x10 0>;
+> +               dma-ranges =3D <0 0 0 0  0x10 0>;
+
+Why the extra space here               ^ ?
+
+> +               compatible =3D "simple-bus";
 > +
-> +required:
-> +  - compatible
-> +  - reg
-
-Add:
-
-additionalProperties: false
-
+> +               gcc: clock-controller@100000 {
+> +                       compatible =3D "qcom,gcc-sc7180";
+> +                       reg =3D <0 0x00100000 0 0x1f0000>;
+> +                       #clock-cells =3D <1>;
+> +                       #reset-cells =3D <1>;
+> +                       #power-domain-cells =3D <1>;
+> +               };
 > +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
+> +               qupv3_id_1: geniqup@ac0000 {
+> +                       compatible =3D "qcom,geni-se-qup";
+> +                       reg =3D <0 0x00ac0000 0 0x6000>;
+> +                       clock-names =3D "m-ahb", "s-ahb";
+> +                       clocks =3D <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
+> +                                <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
+> +                       #address-cells =3D <2>;
+> +                       #size-cells =3D <2>;
+> +                       ranges;
+> +                       status =3D "disabled";
 > +
-> +        adc@0 {
+> +                       uart10: serial@a88000 {
+> +                               compatible =3D "qcom,geni-debug-uart";
+> +                               reg =3D <0 0x00a88000 0 0x4000>;
+> +                               clock-names =3D "se";
+> +                               clocks =3D <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
+> +                               pinctrl-names =3D "default";
+> +                               pinctrl-0 =3D <&qup_uart10_default>;
+> +                               interrupts =3D <GIC_SPI 355 IRQ_TYPE_LEVE=
+L_HIGH>;
+> +                               status =3D "disabled";
+> +                       };
 
-adc@2f
+Can we not add all the i2c/spi/uart cores here?
 
-> +                compatible = "adi,ad7091r5";
-
-Doesn't match the schema.
-
-> +                reg = <0x2F>;
-
-Lowercase hex.
-
-> +
-> +                interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +                interrupt-parent = <&gpio>;
-> +        };
-> +    };
-> +...
-> -- 
-> 2.17.1
-> 
+> +               };
