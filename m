@@ -2,75 +2,57 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A978CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA86CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7124C20874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1678920874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390603AbfJ2Qnf (ORCPT
+        id S2390617AbfJ2QoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:43:35 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58013 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390258AbfJ2Qne (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 12:43:34 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1iPUah-0000AM-I8; Tue, 29 Oct 2019 17:43:31 +0100
-Message-ID: <226f5a669c2199408abcdec0ccddc9ff05672631.camel@pengutronix.de>
-Subject: Re: [PATCH 0/3] enable CAAM's HWRNG as default
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-crypto@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Horia =?UTF-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 29 Oct 2019 17:43:30 +0100
-In-Reply-To: <20191029162916.26579-1-andrew.smirnov@gmail.com>
-References: <20191029162916.26579-1-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 29 Oct 2019 12:44:18 -0400
+Received: from relay.sw.ru ([185.231.240.75]:56230 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390364AbfJ2QoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 12:44:18 -0400
+Received: from [172.16.25.5]
+        by relay.sw.ru with esmtp (Exim 4.92.2)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1iPUbL-0006X9-ST; Tue, 29 Oct 2019 19:44:11 +0300
+Subject: Re: [PATCH v10 2/5] kasan: add test for vmalloc
+To:     Daniel Axtens <dja@axtens.net>, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, x86@kernel.org, glider@google.com,
+        luto@kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, dvyukov@google.com, christophe.leroy@c-s.fr
+Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com
+References: <20191029042059.28541-1-dja@axtens.net>
+ <20191029042059.28541-3-dja@axtens.net>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <780d2085-5bfd-e206-b760-ea528844b68e@virtuozzo.com>
+Date:   Tue, 29 Oct 2019 19:43:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191029042059.28541-3-dja@axtens.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Di, 2019-10-29 at 09:29 -0700, Andrey Smirnov wrote:
-> Everyone:
+
+
+On 10/29/19 7:20 AM, Daniel Axtens wrote:
+> Test kasan vmalloc support by adding a new test to the module.
 > 
-> This series is a continuation of original [discussion]. I don't know
-> if what's in the series is enough to use CAAMs HWRNG system wide, but
-> I am hoping that with enough iterations and feedback it will be.
+> Signed-off-by: Daniel Axtens <dja@axtens.net>
 > 
-> Feedback is welcome!
 
-I'm not sure if we can ever use the job based RNG interface to hook it
-up to the Linux HWRNG interface. After all the job based RNG interface
-is always a DRNG, which only gets seeded by the TRNG. The reseed
-interval is given in number of clock cycles, so there is no clear
-correlation between really true random input bits and the number of
-DRNG output bits.
-
-I've hacked up some proof of concept code which uses the TRNG access in
-the control interface to get the raw TRNG random bits. This seems to
-yield about 6400 bit/s of true entropy. It may be better to use this
-interface to hook up to the Linux HWRNG framework.
-
-Regards,
-Lucas
+Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
 
