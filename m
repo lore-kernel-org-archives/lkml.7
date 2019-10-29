@@ -2,126 +2,145 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9584CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8815CCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C053420656
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:00:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hV5mvHy9"
+	by mail.kernel.org (Postfix) with ESMTP id 5E47C21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572368473;
+	bh=CEfNBOwII3kRKjNTV1QnlKd06oaG8CbrkIl/0qlzYVo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nGJeQ92wdpt8y9jWFgD+DnAhDWiXBNu4U9cRUpNRoH1Nx+do71aQkwqft3LfXa9md
+	 DwsTaDjRLQZHJL124l4ECtwVOJ9cG6m9GfQ63Oc250t8K/fv2YYNzshaxiAIQWlSou
+	 0I92BYlwbD6JGkXttCsUW4swCG99Xpl+X240XdsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390830AbfJ2RAi (ORCPT
+        id S2390860AbfJ2RBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:00:38 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40287 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728524AbfJ2RAi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:00:38 -0400
-Received: by mail-lj1-f196.google.com with SMTP id u22so16094616lji.7
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/FxpLHlDzv8M6ObvTdSa66rmeXf+xPk+EZI1zfuUIzs=;
-        b=hV5mvHy9FmQvKLIZ/KgLfWNeJhv7lQtUl/+gBNqCdrQdmsyoKWWYcKnkdVhhnGieTx
-         gdvHJZdsBeL/l9y2QlnsBrJbD5O/3R9jaLVuW+sernlNZkAznmPRnjw/Iqv8DnYHvrEA
-         e/HLHMTYYNz5eoV2INetYd1x96lVkR+kwq25spK4r5HR4Ns/7oB2NLZ/l2DFFuSSC0z1
-         U0gM8vjUWrkNOWDsuJrzLAHOlo7juGToRd8FSHyL/Xfz6vXv9FVYNfRMXZoLp5Qlzz04
-         Lbp8boh+3rL3K25KVX6d6xjLdfDW/7IrBHo7QBe1QYRH1DB+jLTIcntu5a6e522+OmPi
-         6uNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/FxpLHlDzv8M6ObvTdSa66rmeXf+xPk+EZI1zfuUIzs=;
-        b=NTCfJ2Ws5mPEAu2pqp4UXChlt6gInUPjx6qdGsoX4dzIZKDhtX8RnEDJo93D7mWfgf
-         bq7Pb1CKReyf80ZnhtdcJqtR9Mm4VeULR2KmPJD2xPBiYbSAR7ElzXUTaxr6DhEOAObc
-         GHen0nOgQifmGecOVYBl7zfd/YbkuObb9BcXNQJwNNPju65+X9MK+vrOsNZyboxVPu1I
-         gkFewABnezfKHlo/4p76wjNPS8E4ANuD4aj1kFcrylgZlpYtlqA4lE7KqlkaIAdUX2hm
-         RCpuU0vx/T4Xnhu0gDYaYnGw+xq9Tpkm/GJnxWqAyx41szhZTe5aTtfscPjz3P1+Xm1D
-         g30A==
-X-Gm-Message-State: APjAAAV8L8pRaHTIa+xVyyet3VnzXZ0rFtoKd8CEipR1ff/xl14pi6WS
-        EHu6YzeHcTmhUIn+v3uRNpqb4Ju8TDUmQBl0GYyA/Q==
-X-Google-Smtp-Source: APXvYqxQIBIX6xYztYQ7HhEDUrTMEXPxnhZukfX5NCbh3AkQKGiao83yymjgFYBSbDc0KnbFjtMG7foFEJdr77C+BYQ=
-X-Received: by 2002:a2e:a16d:: with SMTP id u13mr3560452ljl.214.1572368435760;
- Tue, 29 Oct 2019 10:00:35 -0700 (PDT)
+        Tue, 29 Oct 2019 13:01:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390518AbfJ2RBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 13:01:11 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6584E21D7C
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 17:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572368469;
+        bh=CEfNBOwII3kRKjNTV1QnlKd06oaG8CbrkIl/0qlzYVo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=q3ICBVGcY42CD77N0qTsXJMlZjKwCidRWPAxH82TYrbs7YAGB3c7j/9/y7vR/rPZR
+         eDzCjhVK7kXCC1J3TLXjgEAjKbyUIb+2Sw6OzQcEHDflnMgQERH7a35eeLBeGOOIQO
+         H7iDIO3lp7G8rFWGFzKfkz3edX4IblThKLG68/UA=
+Received: by mail-wr1-f52.google.com with SMTP id q13so14443952wrs.12
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:01:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAX5jAkdn8PSLv0ZaybVmL/ROPnf20B6etjwDNTLpMd5TJznS37B
+        0YseMihruPAwb0EKK4mMTRo6s1ZxMpNrWP3sPzlRyQ==
+X-Google-Smtp-Source: APXvYqxXiNG2A88b6n9p+z8Zlwh9YkfuUsw66nu2TCU6joSFqbJXpVXXmh37z2G7Eps4xr3l8sMAkLs+7YfDYfVvLGo=
+X-Received: by 2002:adf:f04e:: with SMTP id t14mr21415495wro.106.1572368466787;
+ Tue, 29 Oct 2019 10:01:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <1572018904-5234-1-git-send-email-dsmythies@telus.net>
- <CAKfTPtDFAS3TiNaaPoEXFZbqdMt_-tfGm9ffVcQAN=Mu_KbRdQ@mail.gmail.com>
- <000c01d58bca$f5709b30$e051d190$@net> <CAKfTPtDx6nu7YtYN=JLRAseZS3Q6Nt-QdMQuG_XoUtmtR_101A@mail.gmail.com>
- <001201d58e68$eaa39630$bfeac290$@net> <20191029153615.GP4114@hirez.programming.kicks-ass.net>
- <CAKfTPtD79VE+gqffpBAGd39bJKe7ao+jbmVSQ7PtS=dky0Wx6g@mail.gmail.com> <20191029164955.GO4131@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191029164955.GO4131@hirez.programming.kicks-ass.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 29 Oct 2019 18:00:24 +0100
-Message-ID: <CAKfTPtDByO5xZaA1zHb-0WLq3PaodByfbnH0RkJjf+jn0O81-Q@mail.gmail.com>
-Subject: Re: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load
- balancing path"
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Doug Smythies <dsmythies@telus.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net> <20191029093254.GE18773@rapoport-lnx>
+In-Reply-To: <20191029093254.GE18773@rapoport-lnx>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 29 Oct 2019 10:00:55 -0700
+X-Gmail-Original-Message-ID: <CALCETrUuuc4DS0cdMBtS550Wkp0x9ND3M3SgtaMgyRROnDR5Kg@mail.gmail.com>
+Message-ID: <CALCETrUuuc4DS0cdMBtS550Wkp0x9ND3M3SgtaMgyRROnDR5Kg@mail.gmail.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, X86 ML <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 at 17:50, Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, Oct 29, 2019 at 2:33 AM Mike Rapoport <rppt@kernel.org> wrote:
 >
-> On Tue, Oct 29, 2019 at 05:20:56PM +0100, Vincent Guittot wrote:
-> > On Tue, 29 Oct 2019 at 16:36, Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Tue, Oct 29, 2019 at 07:55:26AM -0700, Doug Smythies wrote:
-> > >
-> > > > I only know that the call to the intel_pstate driver doesn't
-> > > > happen, and that it is because cfs_rq_is_decayed returns TRUE.
-> > > > So, I am asserting that the request is not actually decayed, and
-> > > > should not have been deleted.
-> > >
-> > > So what cfs_rq_is_decayed() does is allow a cgroup's cfs_rq to be
-> > > removed from the list.
-> > >
-> > > Once it is removed, that cfs_rq will no longer be checked in the
-> > > update_blocked_averages() loop. Which means done has less chance of
-> > > getting false. Which in turn means that it's more likely
-> > > rq->has_blocked_load becomes 0.
-> > >
-> > > Which all sounds good.
-> > >
-> > > Can you please trace what keeps the CPU awake?
+> On Mon, Oct 28, 2019 at 02:44:23PM -0600, Andy Lutomirski wrote:
 > >
-> > I think that the sequence below is what intel pstate driver was using
+> > > On Oct 27, 2019, at 4:17 AM, Mike Rapoport <rppt@kernel.org> wrote:
+> > >
+> > > =EF=BB=BFFrom: Mike Rapoport <rppt@linux.ibm.com>
+> > >
+> > > Hi,
+> > >
+> > > The patch below aims to allow applications to create mappins that hav=
+e
+> > > pages visible only to the owning process. Such mappings could be used=
+ to
+> > > store secrets so that these secrets are not visible neither to other
+> > > processes nor to the kernel.
+> > >
+> > > I've only tested the basic functionality, the changes should be verif=
+ied
+> > > against THP/migration/compaction. Yet, I'd appreciate early feedback.
 > >
-> > rt/dl task wakes up and run for some times
-> > rt/dl pelt signal is no more null so periodic decay happens.
-> >
-> > before optimization update_cfs_rq_load_avg() for root cfs_rq was
-> > called even if pelt was null,
-> > which calls cfs_rq_util_change,  which calls intel pstate
-> >
-> > after optimization its no more called.
+> > I=E2=80=99ve contemplated the concept a fair amount, and I think you sh=
+ould
+> > consider a change to the API. In particular, rather than having it be a
+> > MAP_ flag, make it a chardev.  You can, at least at first, allow only
+> > MAP_SHARED, and admins can decide who gets to use it.  It might also pl=
+ay
+> > better with the VM overall, and you won=E2=80=99t need a VM_ flag for i=
+t =E2=80=94 you
+> > can just wire up .fault to do the right thing.
 >
-> Not calling cfs_rq_util_change() when it doesn't change, seems like the
-> right thing. Why would intel_pstate want it called when it doesn't
-> change?
+> I think mmap()/mprotect()/madvise() are the natural APIs for such
+> interface.
 
-Yes I agree
+Then you have a whole bunch of questions to answer.  For example:
 
-My original thought was that either irq/rt ordl pelt signals was used
-to set frequency and it needs to be called to decrease this freq while
-pelt signals was decaying but it doesn't seem to use it but only needs
-to be called from time to time
+What happens if you mprotect() or similar when the mapping is already
+in use in a way that's incompatible with MAP_EXCLUSIVE?
+
+Is it actually reasonable to malloc() some memory and then make it exclusiv=
+e?
+
+Are you permitted to map a file MAP_EXCLUSIVE?  What does it mean?
+
+What does MAP_PRIVATE | MAP_EXCLUSIVE do?
+
+How does one pass exclusive memory via SCM_RIGHTS?  (If it's a
+memfd-like or chardev interface, it's trivial.  mmap(), not so much.)
+
+And finally, there's my personal giant pet peeve: a major use of this
+will be for virtualization.  I suspect that a lot of people would like
+the majority of KVM guest memory to be unmapped from the host
+pagetables.  But people might also like for guest memory to be
+unmapped in *QEMU's* pagetables, and mmap() is a basically worthless
+interface for this.  Getting fd-backed memory into a guest will take
+some possibly major work in the kernel, but getting vma-backed memory
+into a guest without mapping it in the host user address space seems
+much, much worse.
+
+> Switching to a chardev doesn't solve the major problem of direct
+> map fragmentation and defeats the ability to use exclusive memory mapping=
+s
+> with the existing allocators, while mprotect() and madvise() do not.
+>
+
+Will people really want to do malloc() and then remap it exclusive?
+This sounds dubiously useful at best.
