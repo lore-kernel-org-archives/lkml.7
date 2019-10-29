@@ -2,120 +2,108 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4E6CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A111CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF9B12083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572341344;
-	bh=rd5XRgLhghBx1DA/0IIWdYW9FTH+bTzevOPMMdv912k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hfO67ogr9gE+J0bQKt2Hh3LTfqkRk2tWo6IthrNI9mBd22BQKDe9eu/9v+4UW3g8T
-	 VNl1G1pEG4jiF9TPVguaxiGIo/tUxZjk0kz26VKAvch1jXyTTs2LBO4aNyznFLynvM
-	 nvoNtfxaECeE3WEFQ70zId7sb7KR3gHYCqaWfCd8=
+	by mail.kernel.org (Postfix) with ESMTP id 25F522086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732746AbfJ2J3C (ORCPT
+        id S1732785AbfJ2J33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:29:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36542 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 05:29:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29616 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfJ2J3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:29:02 -0400
-Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E8A720717;
-        Tue, 29 Oct 2019 09:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572341341;
-        bh=rd5XRgLhghBx1DA/0IIWdYW9FTH+bTzevOPMMdv912k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JKgpw0ntEHHZ4HT/ZDySA9OrNTk1psA6bonWPTGjVnybbuJ2QiFiXDXAyb6TCx4QY
-         bn7Eylclfd5UxQxW+R/+tUxgi/2g2YvsAoYLKFeTYKmAj9dB8Fe4BluWHfeK1EqDlj
-         h29PNydkzT3l7Zc6n3kkHms3xHDJEbMML4v9RIpY=
-Date:   Tue, 29 Oct 2019 10:28:53 +0100
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191029092852.GD18773@rapoport-lnx>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
- <d6ac08fe-23f3-c2d5-24c4-88e68f3fd4d0@intel.com>
- <20191028180808.GA17669@bombadil.infradead.org>
+        id S1726025AbfJ2J33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:29:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:29:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="scan'208";a="211694582"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.122])
+  by orsmga002.jf.intel.com with ESMTP; 29 Oct 2019 02:29:20 -0700
+Date:   Tue, 29 Oct 2019 11:29:20 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>
+Subject: Re: [PATCH v23 12/24] x86/sgx: Linux Enclave Driver
+Message-ID: <20191029092920.GA14494@linux.intel.com>
+References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+ <20191028210324.12475-13-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028180808.GA17669@bombadil.infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191028210324.12475-13-jarkko.sakkinen@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 11:08:08AM -0700, Matthew Wilcox wrote:
-> On Mon, Oct 28, 2019 at 10:12:44AM -0700, Dave Hansen wrote:
-> > Some other random thoughts:
-> > 
-> >  * The page flag is probably not a good idea.  It would be probably
-> >    better to set _PAGE_SPECIAL on the PTE and force get_user_pages()
-> >    into the slow path.
-> >  * This really stops being "normal" memory.  You can't do futexes on it,
-> >    cant splice it.  Probably need a more fleshed-out list of
-> >    incompatible features.
-> >  * As Kirill noted, each 4k page ends up with a potential 1GB "blast
-> >    radius" of demoted pages in the direct map.  Not cool.  This is
-> >    probably a non-starter as it stands.
-> >  * The global TLB flushes are going to eat you alive.  They probably
-> >    border on a DoS on larger systems.
-> >  * Do we really want this user interface to dictate the kernel
-> >    implementation?  In other words, do we really want MAP_EXCLUSIVE,
-> >    or do we want MAP_SECRET?  One tells the kernel what do *do*, the
-> >    other tells the kernel what the memory *IS*.
-> >  * There's a lot of other stuff going on in this area: XPFO, SEV, MKTME,
-> >    Persistent Memory, where the kernel direct map is a liability in some
-> >    way.  We probably need some kind of overall, architected solution
-> >    rather than five or ten things all poking at the direct map.
-> 
-> Another random set of thoughts:
-> 
->  - Should devices be permitted to DMA to/from MAP_SECRET pages?
+On Mon, Oct 28, 2019 at 11:03:12PM +0200, Jarkko Sakkinen wrote:
+> +/**
+> + * sgx_ioc_enclave_add_pages() - The handler for %SGX_IOC_ENCLAVE_ADD_PAGES
+> + * @encl:       pointer to an enclave instance (via ioctl() file pointer)
+> + * @arg:	a user pointer to a struct sgx_enclave_add_pages instance
+> + *
+> + * Add (EADD) one or more pages to an uninitialized enclave, and optionally
+> + * extend (EEXTEND) the measurement with the contents of the page. The range of
+> + * pages must be virtually contiguous. The SECINFO and measurement mask are
+> + * applied to all pages, i.e. pages with different properties must be added in
+> + * separate calls.
+> + *
+> + * A SECINFO for a TCS is required to always contain zero permissions because
+> + * CPU silently zeros them. Allowing anything else would cause a mismatch in
+> + * the measurement.
+> + *
+> + * mmap()'s protection bits are capped by the page permissions. For each page
+> + * address, the maximum protection bits are computed with the following
+> + * heuristics:
+> + *
+> + * 1. A regular page: PROT_R, PROT_W and PROT_X match the SECINFO permissions.
+> + * 2. A TCS page: PROT_R | PROT_W.
+> + * 3. No page: PROT_NONE.
+> + *
+> + * mmap() is not allowed to surpass the minimum of the maximum protection bits
+> + * within the given address range.
+> + *
+> + * As stated above, a non-existent page is interpreted as a page with no
+> + * permissions. In effect, this allows mmap() with PROT_NONE to be used to seek
+> + * an address range for the enclave that can be then populated into SECS.
+> + *
+> + * @arg->addr, @arg->src and @arg->length are adjusted to reflect the
+> + * remaining pages that need to be added to the enclave, e.g. userspace can
+> + * re-invoke SGX_IOC_ENCLAVE_ADD_PAGES using the same struct in response to an
+> + * ERESTARTSYS error.
+> + *
+> + * Return:
+> + *   0 on success,
+> + *   -EINVAL if any input param or the SECINFO contains invalid data,
+> + *   -EACCES if an executable source page is located in a noexec partition,
+> + *   -ENOMEM if any memory allocation, including EPC, fails,
+> + *   -ERESTARTSYS if a pending signal is recognized
+> + */
+> +static long sgx_ioc_enclave_add_pages(struct sgx_encl *encl, void __user *arg)
 
-I can't say I have a clear cut yes or no here. One possible use case for
-such pages is to read a secrets from storage directly into them. On the
-other side, DMA to/from a device can be used to exploit those secrets...
+This should return the number of pages processed instead of zero on
+success. Kernel needs to be able to cap the amount it will process.
 
->  - How about GUP?
-
-Do you mean GUP for "remote" memory? I'd say no.
-
->  - Can I ptrace my way into another process's secret pages?
-
-No.
-
->  - What if I splice() the page into a pipe?
-
-I think it should fail.
-
--- 
-Sincerely yours,
-Mike.
+/Jarkko
