@@ -2,128 +2,104 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2388ACA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B312CA9EC1
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E592087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5105F2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:19:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1vRPXC7"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EDtZaf3+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730465AbfJ2ESJ (ORCPT
+        id S1731060AbfJ2ETd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 00:18:09 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34330 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfJ2ESJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 00:18:09 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b128so8592106pfa.1;
-        Mon, 28 Oct 2019 21:18:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=8w3+F/NRSYuWbxpxqVHy506WX7nChC3gJ2i3v/zu854=;
-        b=G1vRPXC7mR/Hj3dOxKE0LnRjqCjOasSMLljE/JM3jCD1T+ALipbaQynyQs/p98r9WA
-         RqeXtRuN3icbtDgKVriE585SkM8cwktgDfVMKt1WfURjxYPONABim6t/JLtyuscTIL+m
-         yHTz5xJJrAxUWhdzfR8Kr2AwNgXPzT6aXxLff+Nz4CLFv6VGh0dFjTcZDg1aTI5Qvxax
-         79HMixohdwwOXdf5ajRdU7zaRFRxup8Y7twrnKPYjGuD9lidXEMJdPcgQOejYTvJULsJ
-         afsFo0dOnkGbPvSOKXoigUHzybOe8IjEisgQgV6ifxbbRlNoVl5Umzs17pgtPrlvg8rS
-         KHQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=8w3+F/NRSYuWbxpxqVHy506WX7nChC3gJ2i3v/zu854=;
-        b=nH2c6iKhczcE8xocT8VFkzBntAIBGvxI8/TzkAUmPPPWYrZasoJC5fEEbT08avmbou
-         yvrhC1HTPwPprHXd4BRgggbw/ZWI4WGo33Ls46CTZ01cwOoIdsG7soWNMCweRAnBoRD4
-         kSvQzAT7G/+nxmpx5+yYdYs52n4WkTh9Z4OfRhac6uA+Q1rxbRs5uO9bEaZS7saf5Do9
-         pFIxUj6/xmND/tmrWuMJBLalVV70KtZ4iIXJAYhRZGxsbLTJrDj3JzHSOHc1Q/s8ipO+
-         tbb418qoVo349Y0xLShXD/01JLTrx18zep3VvuCbXt+dKJ25CoigpJlBSTnVxbtnj6SP
-         UC3Q==
-X-Gm-Message-State: APjAAAUpR5eyNB+wih4Had+leTs6Z4eK/tNq1+ilj4Il5d9MbMcUzi5N
-        735NyIfjQu/4mH8KUVIAyA0=
-X-Google-Smtp-Source: APXvYqzyOsDVc2pYvZW8V97U+norsDRTXZ2KH2nEwtSVP2VMGY8ysMCwrrssH8+4jkYcPx9rv8iuvA==
-X-Received: by 2002:a63:4d0d:: with SMTP id a13mr20138350pgb.451.1572322688343;
-        Mon, 28 Oct 2019 21:18:08 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id f17sm14072917pgd.8.2019.10.28.21.18.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 21:18:06 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 21:18:04 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:SUN4I LOW RES ADC ATTACHED TABLET KEYS DRIVER" 
-        <linux-input@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [linux-sunxi] Re: [PATCH] input: sun4i-lradc-keys: Add wakup
- support
-Message-ID: <20191029041804.GF57214@dtor-ws>
-References: <20191028221502.3503543-1-megous@megous.com>
- <20191028233828.GA57214@dtor-ws>
- <20191028235626.5afvszxtppsieywi@core.my.home>
- <20191029001250.GB57214@dtor-ws>
- <20191029014559.gif3ay7anq24un2i@core.my.home>
+        Tue, 29 Oct 2019 00:19:33 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42847 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727608AbfJ2ETd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 00:19:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 472JJK36xjz9sPT;
+        Tue, 29 Oct 2019 15:19:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572322770;
+        bh=N30H+2ZFOSen+pDJx8e/CIs4ajwdKakKy3o6oQQ64Bw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=EDtZaf3+NllBHvEpVbzF6iTnH/SR2utszr9hyNVjt+FDVeabGG3d13OCokDZ6if08
+         ytIG2G9aC8In1b8db2Aok/4rEpxgeZxDADZX/Qv0CCUE/kxKOqqGVG3lXLZORg9Cct
+         qNKAA3xkG1C1pWKxcAXiDMSe8OAfcYwENRJ+P2ZDAd+fzyKE++TKgVGGlFOQFx4q5r
+         G+LNL40z7EJrXOTmGSYl/P4Z4u6S7Y+T6ZfnVa6ov5SQRe1svuR67uHhSXFrfp75ni
+         9HmmOhtrOT7rWvpowdT41ZYKO1Iumg5nUBWbg6+m1q3MUn78W8bRh8lEc96Cah3CPP
+         7AECSvg82iNRA==
+Date:   Tue, 29 Oct 2019 15:19:28 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yin Fengwei <fengwei.yin@intel.com>
+Subject: linux-next: manual merge of the vhost tree with the pm tree
+Message-ID: <20191029151928.780c8ede@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029014559.gif3ay7anq24un2i@core.my.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/8/pO3iz7Jzmo1jr.hT+nBWe";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 02:45:59AM +0100, Ondřej Jirman wrote:
-> On Mon, Oct 28, 2019 at 05:12:50PM -0700, Dmitry Torokhov wrote:
-> > On Tue, Oct 29, 2019 at 12:56:26AM +0100, Ondřej Jirman wrote:
-> > > On Mon, Oct 28, 2019 at 04:38:28PM -0700, Dmitry Torokhov wrote:
-> > > > > +
-> > > > > +	error = dev_pm_set_wake_irq(dev, irq);
-> > > > > +	if (error) {
-> > > > > +		dev_err(dev, "Could not set wake IRQ\n");
-> > > > > +		return error;
-> > > > > +	}
-> > > > > +
-> > > > 
-> > > > I wonder if we could teach platform driver core to handle this for us.
-> > > 
-> > > Not sure, some drivers do enable/disable wake_irq by hand in suspend/resume
-> > > callbacks, so it would probably need to be opt-in somehow. I guess calling the
-> > > function like this is one way to make it opt-in.
-> > > 
-> > > The other way may be by passing a flag somewhere, like to
-> > > request_threaded_irq. Did you have something more concrete in mind?
-> > 
-> > I think it is perfectly fine to continue using enable_irq_wake and
-> > disable_irq_wake from the driver while marking irq as being wake irq
-> > form the core.
-> 
-> I see, it looks like irq_set_irq_wake will track the calls via wake_depth
-> 
-> https://elixir.bootlin.com/linux/latest/source/kernel/irq/manage.c#L714
-> 
-> But all irqs are not necessarily wake irqs, no? So it still may need to be
-> opt-in somehow.
+--Sig_/8/pO3iz7Jzmo1jr.hT+nBWe
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I thought we'd do that for IRQ named "wakeirq" or the very first IRQ if
-there is no named IRQ, and when we have the "wakeup-source" property,
-similarly to what we do in I2C bus.
+Hi all,
 
-Thanks.
+Today's linux-next merge of the vhost tree got a conflict in:
 
--- 
-Dmitry
+  drivers/acpi/processor_idle.c
+
+between commit:
+
+  fa583f71a99c ("ACPI: processor_idle: Skip dummy wait if kernel is in gues=
+t")
+
+from the pm tree and commit:
+
+  a04c0533b07c ("ACPI: disable extra P_LVLx access on KVM")
+
+from the vhost tree.
+
+I fixed it up (I just used the pm tree version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/8/pO3iz7Jzmo1jr.hT+nBWe
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl23vdAACgkQAVBC80lX
+0GwB7Af/bIMWCfmlAWbK1bcyj7T0fC3Akqzp9SKgR6ff98TmFY7LKDmRmnfE4Cvv
+9TK6E8IZbXT5Fm5k0LTE9zsZxWWYlJvPr7wSfrMWg8YMZ64LXdL5SGr+HwS8u58G
+P68ajYRLY6xmbyYPjQxCJ7ZcOPJK5wIrnBiZEHgKjIo7BRl5c3CRwe/C1Xef+FCM
+uRkrn32jaWehpIaEak/rihhO++z/kvcPUYiAW+cIQKqVo6IgRtx0OGnI8MpllBSL
+gvzAla2ApKLoRmuMEDwQYxRXcO43/ZwuPgdy7h5ce7xM59ERfwjLJsIRHZO8XZuC
+KTII8JFVnlP7Bg7UNZ/KUWHW4ZrIRg==
+=C/QN
+-----END PGP SIGNATURE-----
+
+--Sig_/8/pO3iz7Jzmo1jr.hT+nBWe--
