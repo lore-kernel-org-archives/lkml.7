@@ -2,400 +2,158 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53368CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2308BCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7B420578
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYOxL2v0"
+	by mail.kernel.org (Postfix) with ESMTP id EB1C120578
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388458AbfJ2N2f (ORCPT
+        id S2388524AbfJ2N3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:28:35 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45683 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ2N2e (ORCPT
+        Tue, 29 Oct 2019 09:29:23 -0400
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:63942 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfJ2N3W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:28:34 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c7so8414266pfo.12;
-        Tue, 29 Oct 2019 06:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GCDhOdMxr85O3msuI3+nUJ2Ne0BfGf3lpETXl1wRKd8=;
-        b=QYOxL2v0VMygFhR/HLTRU3MnC+8DXDu1fjLfH54tV9yv3lL/KN0hsdkYpbVdS/BA8Y
-         N/ysk5cMk6NDPS1BICIaThvzu2kThlHmczTqiQ+G3MVEAwEY3rbtoajAROxqI6LMGG+v
-         1+rel+ABU+ePaZQN5otOQW+0GGkOf1gTRMf9ydaGSjFbp/2QsV+uO1pB9IG/vY+r3RUf
-         /PTI7v0HsR8iOXwiGgkwibsLiWQJ51QMRgKtv/WD9x1ezpGKCsASWsKlzQjwrOpAgxdO
-         rZOiQHQDMnoqVZzAec6bhFJaGK0q0cDveUeMkZygwGNoKPpmg6npnKgU939J+20ZRvLS
-         flMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GCDhOdMxr85O3msuI3+nUJ2Ne0BfGf3lpETXl1wRKd8=;
-        b=LNyZyVUkFUWi+UQeaCuEzw4JlCZ+IKjZBBcosP3XEu8bHZIlAKetNQ9Y3fXAlYUAsb
-         3768h/L9lFbf9nOV/9Qb2FxfaSNaBU/zxddKXcGHOIlGZY+8CJDDMfIJC4cYMnULafw/
-         Hn92Br8ENwO9VSW62UCWm2I0gm4XZeGBOQCH+5BR/YhnI6BTcgbnQlcr3NdKShH1ecl7
-         O7w3AMpIycRaI949MhzFIA4psioOlcRnrBxLOkwopx18aQQh/SMMm7+Vfbz3msj93ptD
-         Xw/KmbdqxklYUzCt8sF1w7I02K0/M4Cu0aMsVcU5TD41PVU18rLbbiRuT7Il5GAwqiQL
-         fZUw==
-X-Gm-Message-State: APjAAAUEKKi+Kx/L6IKeXdW+qApx7YDaRF+wss6lSEQH90DqGPb2cjor
-        ebR3EAJuP5VxybKNG5bxLhf3NTw8
-X-Google-Smtp-Source: APXvYqyk8I6qxU2Btly1TSSuxsSM3y5AhmxmLdm20bpbOYhrBqAUnqL89P+lZLpMjMY9W3SfbAJcrw==
-X-Received: by 2002:a63:fe06:: with SMTP id p6mr8181830pgh.245.1572355713775;
-        Tue, 29 Oct 2019 06:28:33 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b17sm15429891pfr.17.2019.10.29.06.28.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 29 Oct 2019 06:28:33 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 06:28:32 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eugen.Hristev@microchip.com
-Cc:     wim@linux-watchdog.org, robh+dt@kernel.org,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] watchdog: sama5d4_wdt: addition of sam9x60
- compatible watchdog
-Message-ID: <20191029132831.GA5643@roeck-us.net>
-References: <1571648890-15140-1-git-send-email-eugen.hristev@microchip.com>
- <1571648890-15140-2-git-send-email-eugen.hristev@microchip.com>
+        Tue, 29 Oct 2019 09:29:22 -0400
+X-AuditID: c0a8fbf4-199ff70000001fa6-b7-5db83eafca71
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id C5.1D.08102.FAE38BD5; Tue, 29 Oct 2019 14:29:19 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Tue, 29 Oct 2019 14:29:13 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "broonie@kernel.org" <broonie@kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Subject: Re: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM
+ BD71828 PMIC
+Thread-Topic: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM
+ BD71828 PMIC
+Thread-Index: AQHVhNDGb/Fi3H2tI0CugiKcGY+PyKdevIMAgAXjkICAALrQAIABJcIAgABTx4CAAPqlgIAA3/yAgACsP4CAAOdsAIAAl9oAgABpOACAABSIgIAAE6mAgAYzUwA=
+Date:   Tue, 29 Oct 2019 13:29:13 +0000
+Message-ID: <81291f685a52002352b68bfc3749e2ed09c03ca0.camel@fi.rohmeurope.com>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+         <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+         <c1e41315-42ad-fb9b-c9db-8b07d4293166@ti.com>
+         <fbd4960b219099b7a48ef24019ba829f866edb3b.camel@fi.rohmeurope.com>
+         <4570db9c-7bc8-f131-269a-248b87e25e38@gmail.com>
+         <201df0f7319b94eb581a040a2b1b07dbfed12e94.camel@fi.rohmeurope.com>
+         <c5761d78-3334-adaa-b871-cb6da356483b@gmail.com>
+         <8974a3974377d0623ed968563b035e701191440e.camel@fi.rohmeurope.com>
+         <e9d1c529-90ef-34bf-d893-02a109ba19ba@gmail.com>
+         <c35a2bca83c711bd7b19c8a99798374388705bfc.camel@fi.rohmeurope.com>
+         <06b3909a-b3ff-2c0e-d1df-a475a69951ed@gmail.com>
+         <d43d06dbaa0df204fff0194be57d6cd3b832addd.camel@fi.rohmeurope.com>
+         <CAL_JsqK7fYYdobOrgxFaMOy+uONCV-i0aOiBQ9oOc4OOPLR8cw@mail.gmail.com>
+         <4fcea7213ae9b3c0de775d1854f8e160ea0b178a.camel@fi.rohmeurope.com>
+         <CAL_Jsq+_4SaVHqZFXhF_J+yqqcjuzEZpxFvxJfzsNpL1xBQijw@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+_4SaVHqZFXhF_J+yqqcjuzEZpxFvxJfzsNpL1xBQijw@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B85D79C2B076E5449EBF988F361BF65A@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571648890-15140-2-git-send-email-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TW0xTWRTNuc8DevVaYXqoiHATY9QBNOHjaMDHh3pNUDFqNCZNvciFEukj
+        t2Wi8iHzYRyqMWAwaoFiFJgGGYH6AAn4QEDoGJXIo4poGhknOIwEAQkzDE4vReHrrLPXWnvt
+        k+wDSY2f0cFMs11WzFKWwIRSD93/1sZWb6rXr/syiHBZZzeLz3yqYPFYiZfCF/0DDC5teUbj
+        s7/fpnHfnRoKvxtvBfhL1y8ELpz6lcAj597S+FbpFMAvG4oZfGfoJsBtN7oYXN7bSeDi8nYK
+        d3q34X5vK4NPN7WweLqnltoSLla5qoA47DvNiq6qHPGes58VPZV5jPimp5ERn/jqCPGSa5IQ
+        3TcmWHHUE5USenhBYqpk/2lfZoY5ftORBUb3byOMtTLmeFPRQzoXNEY7AISIT0BFdYkOEAo1
+        fDdAHXnDZPDSDtD9fBehihg+ETlesQ4QAsP4WPTg8QChYpJ3Q+QpilDxUv4gGnUOz2oOobaa
+        8zN9wngHQOMdPTMGil+Jelt9lIo5fjdqKviDCYb5WFT8+sWMKITfi26OTTMqBvxylJf7aTZN
+        izwfJmgVI55HZY3PySAOR4Pvp2frAmqa9FPq0CS/GlU3xAetW1DJeDsVxDGo8KyfDc6wBHVc
+        GaDywQ/OeQnOObdznts5z+2c574K6EqATFJmVoZkl9fHKXJ2nGIxmgLHUYvJA4IrM1YPvjbv
+        bAYEBM0gAhJCODfVVqfXLEq1pJ0wSjajQcnOkm3NAEFSCOM6n97Va7g06cRJWbF8o5ZBStBy
+        q/wFeg2vZh2TZausfGMjIRQQ9zWpXq9ZosgZ8vH0zCz7HE3AELV5qC7MJpvTZEXKthsN6n4Y
+        bIEFUamFgdynqp2zWSVToBq0esFamD9Yco2ELSXl10gNZbaYZZ2Wq1alvCo1Zpu/B30EWgiE
+        pdw/Krsw8G++9/kYiCACET9Oqk+z2aU5SpcLNvw52d9euHvFOY35SsPfdPT+1BxjdfIE7nC9
+        j5StPRUJ9FH6r6hT735eB5MKkt1TOZ/TbxeduXiqK8R7feNIa69hFesuHbPu8wkR6ckflg1G
+        nIzuM21OitRHOXZt3zsydECX8nhP7AXt4svRo+XaNxkJKff/2/HIsDVm6+eygpQhi0DZjNL6
+        NaRik/4HP72LO/QDAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 09:14:09AM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Add support for SAM9X60 WDT into sama5d4_wdt.
-> This means that this driver will have a platform data that will
-> hold differences.
-> Added definitions of different bits.
-> The ops functions will differentiate between the two hardware blocks.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
-> 
-> Hello,
-> 
-> This is a rework of the separate sam9x60 watchdog driver into a single driver
-> that supports both hardware blocks (sam9x60 and sama5d4)
-> This was done as suggested on the original patches on the mailing list.
-> 
-> Thanks,
-> Eugen
-> 
->  drivers/watchdog/at91sam9_wdt.h |  14 +++++
->  drivers/watchdog/sama5d4_wdt.c  | 127 +++++++++++++++++++++++++++++++---------
->  2 files changed, 112 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wdt.h
-> index 390941c..7a053fd 100644
-> --- a/drivers/watchdog/at91sam9_wdt.h
-> +++ b/drivers/watchdog/at91sam9_wdt.h
-> @@ -20,7 +20,10 @@
->  #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
->  #define		AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
->  #define			AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
-> +#define		AT91_SAM9X60_PERIODRST	BIT(4)		/* Period Reset */
-> +#define		AT91_SAM9X60_RPTHRST	BIT(5)		/* Minimum Restart Period */
->  #define		AT91_WDT_WDFIEN		(1     << 12)		/* Fault Interrupt Enable */
-> +#define		AT91_SAM9X60_WDDIS		BIT(12)		/* Disable */
->  #define		AT91_WDT_WDRSTEN	(1     << 13)		/* Reset Processor */
->  #define		AT91_WDT_WDRPROC	(1     << 14)		/* Timer Restart */
->  #define		AT91_WDT_WDDIS		(1     << 15)		/* Watchdog Disable */
-> @@ -33,4 +36,15 @@
->  #define		AT91_WDT_WDUNF		(1 << 0)		/* Watchdog Underflow */
->  #define		AT91_WDT_WDERR		(1 << 1)		/* Watchdog Error */
->  
-> +#define AT91_SAM9X60_VR		0x08			/* Watchdog Timer Value Register */
-> +
-> +#define AT91_SAM9X60_WLR		0x0c
-> +#define		AT91_SAM9X60_COUNTER	(0xfff << 0)		/* Watchdog Period Value */
-> +#define		AT91_SAM9X60_SET_COUNTER(x)	((x) & AT91_SAM9X60_COUNTER)
-> +
-> +#define AT91_SAM9X60_IER		0x14			/* Interrupt Enable Register */
-> +#define		AT91_SAM9X60_PERINT		BIT(0)		/* Period Interrupt Enable */
-> +#define AT91_SAM9X60_IDR		0x18			/* Interrupt Disable Register */
-> +#define AT91_SAM9X60_ISR		0x1c			/* Interrupt Status Register */
-> +
-
-Those tabs are getting messy, and the mix of BIT() and shift is messy too.
-Mind cleaning it up a bit ? Especially, two tabs after #define doesn't really
-add value (use two spaces), and use BIT() throughout or not at all.
-
->  #endif
-> diff --git a/drivers/watchdog/sama5d4_wdt.c b/drivers/watchdog/sama5d4_wdt.c
-> index d193a60..b92afd7 100644
-> --- a/drivers/watchdog/sama5d4_wdt.c
-> +++ b/drivers/watchdog/sama5d4_wdt.c
-> @@ -2,7 +2,7 @@
->  /*
->   * Driver for Atmel SAMA5D4 Watchdog Timer
->   *
-> - * Copyright (C) 2015 Atmel Corporation
-> + * Copyright (C) 2015-2019 Microchip Technology Inc. and its subsidiaries
->   */
->  
->  #include <linux/delay.h>
-> @@ -11,6 +11,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/platform_device.h>
->  #include <linux/reboot.h>
-> @@ -25,11 +26,18 @@
->  
->  #define WDT_SEC2TICKS(s)	((s) ? (((s) << 8) - 1) : 0)
->  
-> +struct sama5d4_wdt_data {
-> +	const unsigned int		sam9x60_support;
-> +};
-> +
->  struct sama5d4_wdt {
-> -	struct watchdog_device	wdd;
-> -	void __iomem		*reg_base;
-> -	u32			mr;
-> -	unsigned long		last_ping;
-> +	struct watchdog_device		wdd;
-> +	const struct sama5d4_wdt_data	*data;
-> +	void __iomem			*reg_base;
-> +	u32				mr;
-> +	u32				ir;
-> +	unsigned long			last_ping;
-> +	unsigned int			need_irq:1;
-
-This can be a bool. Making it a bit just adds complexity to the code.
-
->  };
->  
->  static int wdt_timeout;
-> @@ -78,7 +86,12 @@ static int sama5d4_wdt_start(struct watchdog_device *wdd)
->  {
->  	struct sama5d4_wdt *wdt = watchdog_get_drvdata(wdd);
->  
-> -	wdt->mr &= ~AT91_WDT_WDDIS;
-> +	if (wdt->data->sam9x60_support) {
-> +		writel_relaxed(wdt->ir, wdt->reg_base + AT91_SAM9X60_IER);
-> +		wdt->mr &= ~AT91_SAM9X60_WDDIS;
-> +	} else {
-> +		wdt->mr &= ~AT91_WDT_WDDIS;
-> +	}
->  	wdt_write(wdt, AT91_WDT_MR, wdt->mr);
->  
->  	return 0;
-> @@ -88,7 +101,12 @@ static int sama5d4_wdt_stop(struct watchdog_device *wdd)
->  {
->  	struct sama5d4_wdt *wdt = watchdog_get_drvdata(wdd);
->  
-> -	wdt->mr |= AT91_WDT_WDDIS;
-> +	if (wdt->data->sam9x60_support) {
-> +		writel_relaxed(wdt->ir, wdt->reg_base + AT91_SAM9X60_IDR);
-> +		wdt->mr |= AT91_SAM9X60_WDDIS;
-> +	} else {
-> +		wdt->mr |= AT91_WDT_WDDIS;
-> +	}
->  	wdt_write(wdt, AT91_WDT_MR, wdt->mr);
->  
->  	return 0;
-> @@ -109,6 +127,14 @@ static int sama5d4_wdt_set_timeout(struct watchdog_device *wdd,
->  	struct sama5d4_wdt *wdt = watchdog_get_drvdata(wdd);
->  	u32 value = WDT_SEC2TICKS(timeout);
->  
-> +	if (wdt->data->sam9x60_support) {
-> +		wdt_write(wdt, AT91_SAM9X60_WLR,
-> +			  AT91_SAM9X60_SET_COUNTER(value));
-> +
-> +		wdd->timeout = timeout;
-> +		return 0;
-> +	}
-> +
->  	wdt->mr &= ~AT91_WDT_WDV;
->  	wdt->mr |= AT91_WDT_SET_WDV(value);
->  
-> @@ -143,8 +169,14 @@ static const struct watchdog_ops sama5d4_wdt_ops = {
->  static irqreturn_t sama5d4_wdt_irq_handler(int irq, void *dev_id)
->  {
->  	struct sama5d4_wdt *wdt = platform_get_drvdata(dev_id);
-> +	u32 reg;
->  
-> -	if (wdt_read(wdt, AT91_WDT_SR)) {
-> +	if (wdt->data->sam9x60_support)
-> +		reg = wdt_read(wdt, AT91_SAM9X60_ISR);
-> +	else
-> +		reg = wdt_read(wdt, AT91_WDT_SR);
-> +
-> +	if (reg) {
->  		pr_crit("Atmel Watchdog Software Reset\n");
->  		emergency_restart();
->  		pr_crit("Reboot didn't succeed\n");
-> @@ -157,13 +189,14 @@ static int of_sama5d4_wdt_init(struct device_node *np, struct sama5d4_wdt *wdt)
->  {
->  	const char *tmp;
->  
-> -	wdt->mr = AT91_WDT_WDDIS;
-> +	if (wdt->data->sam9x60_support)
-> +		wdt->mr = AT91_SAM9X60_WDDIS;
-> +	else
-> +		wdt->mr = AT91_WDT_WDDIS;
->  
->  	if (!of_property_read_string(np, "atmel,watchdog-type", &tmp) &&
->  	    !strcmp(tmp, "software"))
-> -		wdt->mr |= AT91_WDT_WDFIEN;
-> -	else
-> -		wdt->mr |= AT91_WDT_WDRSTEN;
-> +		wdt->need_irq = 1;
->  
->  	if (of_property_read_bool(np, "atmel,idle-halt"))
->  		wdt->mr |= AT91_WDT_WDIDLEHLT;
-> @@ -176,21 +209,46 @@ static int of_sama5d4_wdt_init(struct device_node *np, struct sama5d4_wdt *wdt)
->  
->  static int sama5d4_wdt_init(struct sama5d4_wdt *wdt)
->  {
-> -	u32 reg;
-> +	u32 reg, val;
-> +
-> +	val = WDT_SEC2TICKS(WDT_DEFAULT_TIMEOUT);
->  	/*
->  	 * When booting and resuming, the bootloader may have changed the
->  	 * watchdog configuration.
->  	 * If the watchdog is already running, we can safely update it.
->  	 * Else, we have to disable it properly.
->  	 */
-> -	if (wdt_enabled) {
-> -		wdt_write_nosleep(wdt, AT91_WDT_MR, wdt->mr);
-> -	} else {
-> +	if (!wdt_enabled) {
->  		reg = wdt_read(wdt, AT91_WDT_MR);
-> -		if (!(reg & AT91_WDT_WDDIS))
-> +		if (wdt->data->sam9x60_support && (!(reg & AT91_SAM9X60_WDDIS)))
-> +			wdt_write_nosleep(wdt, AT91_WDT_MR,
-> +					  reg | AT91_SAM9X60_WDDIS);
-> +		else if (!wdt->data->sam9x60_support &&
-> +			 (!(reg & AT91_WDT_WDDIS)))
->  			wdt_write_nosleep(wdt, AT91_WDT_MR,
->  					  reg | AT91_WDT_WDDIS);
->  	}
-> +
-> +	if (wdt->data->sam9x60_support) {
-> +		if (wdt->need_irq)
-> +			wdt->ir = AT91_SAM9X60_PERINT;
-> +		else
-> +			wdt->mr |= AT91_SAM9X60_PERIODRST;
-> +
-> +		wdt_write(wdt, AT91_SAM9X60_IER, wdt->ir);
-> +		wdt_write(wdt, AT91_SAM9X60_WLR, AT91_SAM9X60_SET_COUNTER(val));
-> +	} else {
-> +		wdt->mr |= AT91_WDT_SET_WDD(WDT_SEC2TICKS(MAX_WDT_TIMEOUT));
-> +		wdt->mr |= AT91_WDT_SET_WDV(val);
-> +
-> +		if (wdt->need_irq)
-> +			wdt->mr |= AT91_WDT_WDFIEN;
-> +		else
-> +			wdt->mr |= AT91_WDT_WDRSTEN;
-> +	}
-> +
-> +	wdt_write_nosleep(wdt, AT91_WDT_MR, wdt->mr);
-> +
->  	return 0;
->  }
->  
-> @@ -201,13 +259,14 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
->  	struct sama5d4_wdt *wdt;
->  	void __iomem *regs;
->  	u32 irq = 0;
-> -	u32 timeout;
->  	int ret;
->  
->  	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
->  	if (!wdt)
->  		return -ENOMEM;
->  
-> +	wdt->data = of_device_get_match_data(&pdev->dev);
-> +
->  	wdd = &wdt->wdd;
->  	wdd->timeout = WDT_DEFAULT_TIMEOUT;
->  	wdd->info = &sama5d4_wdt_info;
-> @@ -224,15 +283,17 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
->  
->  	wdt->reg_base = regs;
->  
-> -	irq = irq_of_parse_and_map(dev->of_node, 0);
-> -	if (!irq)
-> -		dev_warn(dev, "failed to get IRQ from DT\n");
-> -
->  	ret = of_sama5d4_wdt_init(dev->of_node, wdt);
->  	if (ret)
->  		return ret;
->  
-> -	if ((wdt->mr & AT91_WDT_WDFIEN) && irq) {
-> +	irq = irq_of_parse_and_map(dev->of_node, 0);
-> +	if (!irq) {
-> +		dev_warn(dev, "failed to get IRQ from DT\n");
-> +		wdt->need_irq = 0;
-
-Does it make sense to ignore that ?
-
-> +	}
-> +
-> +	if (wdt->need_irq) {
->  		ret = devm_request_irq(dev, irq, sama5d4_wdt_irq_handler,
->  				       IRQF_SHARED | IRQF_IRQPOLL |
->  				       IRQF_NO_SUSPEND, pdev->name, pdev);
-> @@ -244,11 +305,6 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
->  
->  	watchdog_init_timeout(wdd, wdt_timeout, dev);
->  
-> -	timeout = WDT_SEC2TICKS(wdd->timeout);
-> -
-> -	wdt->mr |= AT91_WDT_SET_WDD(WDT_SEC2TICKS(MAX_WDT_TIMEOUT));
-> -	wdt->mr |= AT91_WDT_SET_WDV(timeout);
-> -
->  	ret = sama5d4_wdt_init(wdt);
->  	if (ret)
->  		return ret;
-> @@ -268,8 +324,21 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static struct sama5d4_wdt_data sama5d4_config;
-> +
-> +static struct sama5d4_wdt_data sam9x60_config = {
-> +	.sam9x60_support = 1,
-> +};
-
-Unless there is reason to believe that there will be other
-configuration data, please just assign the flag value directly
-to .data and add a variable to struct sama5d4_wdt to access it.
-Please make that variable a bool.
-
-> +
->  static const struct of_device_id sama5d4_wdt_of_match[] = {
-> -	{ .compatible = "atmel,sama5d4-wdt", },
-> +	{
-> +		.compatible = "atmel,sama5d4-wdt",
-> +		.data = &sama5d4_config,
-> +	},
-> +	{
-> +		.compatible = "microchip,sam9x60-wdt",
-> +		.data = &sam9x60_config,
-> +	},
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, sama5d4_wdt_of_match);
+SGVsbG8gUm9iLA0KT24gRnJpLCAyMDE5LTEwLTI1IGF0IDEwOjQ3IC0wNTAwLCBSb2IgSGVycmlu
+ZyB3cm90ZToNCj4gT24gRnJpLCBPY3QgMjUsIDIwMTkgYXQgOTozNyBBTSBWYWl0dGluZW4sIE1h
+dHRpDQo+IDxNYXR0aS5WYWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+IHdyb3RlOg0KPiA+IEhl
+bGxvIFBlZXBzLA0KPiA+IA0KPiA+IE9uIEZyaSwgMjAxOS0xMC0yNSBhdCAwODoyNCAtMDUwMCwg
+Um9iIEhlcnJpbmcgd3JvdGU6DQo+ID4gPiBPbiBGcmksIE9jdCAyNSwgMjAxOSBhdCAyOjA3IEFN
+IFZhaXR0aW5lbiwgTWF0dGkNCj4gPiA+IDxNYXR0aS5WYWl0dGluZW5AZmkucm9obWV1cm9wZS5j
+b20+IHdyb3RlOg0KPiA+ID4gVGhlIGNhc2VzIGZvciBub3QgaGF2aW5nIGNoaWxkIG5vZGVzIGFy
+ZSB3aGVuIHlvdSBoYXZlIGNoaWxkDQo+ID4gPiBub2Rlcw0KPiA+ID4gd2l0aCBub3RoaW5nIG1v
+cmUgdGhhbiBhIGNvbXBhdGlibGUgYW5kIHBvc3NpYmx5IHByb3ZpZGVyDQo+ID4gPiBwcm9wZXJ0
+aWVzDQo+ID4gPiAoZS5nLiAjZ3Bpby1jZWxscyBmb3IgZ3BpbyBwcm92aWRlcnMpLiBJZiB5b3Ug
+aGF2ZSBvdGhlciByZXNvdXJjZQ0KPiA+ID4gZGVwZW5kZW5jaWVzIChlLmcuIGNsb2Nrcykgb3Ig
+ZGF0YSB0byBkZWZpbmUgKGUuZy4gdm9sdGFnZXMgZm9yDQo+ID4gPiByZWd1bGF0b3JzKSwgdGhl
+biBjaGlsZCBub2RlcyBhYnNvbHV0ZWx5IG1ha2Ugc2Vuc2UuDQo+ID4gDQo+ID4gVGhhbmtzIGZv
+ciB0ZWxsaW5nIHRoZSByZWFzb25pbmcgYmVoaW5kLiBNYWtlcyBzZW5zZS4NCj4gPiANCj4gPiA+
+IE9uY2Ugd2UgaGF2ZQ0KPiA+ID4gY2hpbGQgbm9kZXMsIHRoZW4gZ2VuZXJhbGx5IGl0IGlzIGVh
+c2llciBmb3IgZXZlcnkgZnVuY3Rpb24gdG8gYmUNCj4gPiA+IGENCj4gPiA+IGNoaWxkIG5vZGUg
+YW5kIG5vdCBtaXggdGhlIHR3by4gSSdtIHN1cmUgSSBoYXZlIHRvbGQgcGVvcGxlDQo+ID4gPiBp
+bmNvcnJlY3RseSB0byBub3QgZG8gY2hpbGQgbm9kZXMgYmVjYXVzZSB0aGV5IGRlZmluZSBpbmNv
+bXBsZXRlDQo+ID4gPiBiaW5kaW5ncy4NCj4gPiANCj4gPiBEb2VzIHRoaXMgbWVhbiB0aGF0IGlm
+IEkgYWRkIExFRCBjb250cm9sbGVkIG5vZGUgd2l0aCBMRUQgbm9kZXMNCj4gPiBpbnNpZGUNCj4g
+PiAtIHRoZW4gSSBzaG91bGQgYWN0dWFsbHkgYWRkIHN1YiBub2RlcyBmb3IgY2xrIGFuZCBHUElP
+IHRvbz8gSQ0KPiA+IHdvdWxkDQo+ID4gcHJlZmVyIHN0aWxsIGhhdmluZyB0aGUgY2xrIHByb3Zp
+ZGVyIGluZm9ybWF0aW9uIGluIE1GRCBub2RlIGFzDQo+ID4gYWRkaW5nDQo+ID4gYSBzdWItbm9k
+ZSBmb3IgY2xrIHdvdWxkIHByb2JhYmx5IHJlcXVpcmUgY2hhbmdlcyBpbiB0aGUNCj4gPiBiZDcx
+OHg3X2Nsaw0KPiA+IGRyaXZlci4gKE5vdCBiaWcgb25lcyBidXQgYXZvaWRhYmxlIGlmIGNsayBw
+cm92aWRlciBpbmZvcm1hdGlvbiBjYW4NCj4gPiBzdGlsbCBkd2VsbCBpbiBNRkQgbm9kZSkuDQo+
+IA0KPiBQcm9iYWJseSBub3QsIGlmIHRoZXJlJ3MgYW4gZXhpc3Rpbmcgc3RydWN0dXJlIHRvIGZv
+bGxvdywgdGhlbg0KPiBjb250aW51ZSBkb2luZyB0aGF0Lg0KDQpPaywgdGhhbmtzLg0KDQo+IA0K
+PiA+ID4gSSB3b3VsZCBncm91cCB0aGUgbGVkIG5vZGVzIHVuZGVyIGFuIGxlZC1jb250cm9sbGVy
+IG5vZGUgKHdpdGggYQ0KPiA+ID4gY29tcGF0aWJsZSkuIFRoZSBzaW1wbGUgcmVhc29uIGlzIGVh
+Y2ggbGV2ZWwgb25seSBoYXMgb25lDQo+ID4gPiBudW1iZXIvYWRkcmVzcyBzcGFjZSBhbmQgeW91
+IGNhbid0IG1peCBkaWZmZXJlbnQgb25lcy4gWW91J3JlIG5vdA0KPiA+ID4gbnVtYmVyaW5nIHRo
+ZSBsZWRzIGhlcmUsIGJ1dCBjb3VsZCB5b3UgKHdpdGggbnVtYmVycyB0aGF0DQo+ID4gPiBjb3Jy
+ZXNwb25kDQo+ID4gPiB0byBzb21ldGhpbmcgaW4gdGhlIGgvdywgbm90IGp1c3QgMC4uTik/DQo+
+ID4gDQo+ID4gSSBkb24ndCBrbm93IHdoYXQgdGhhdCB3b3VsZCBiZS4gVGhlIExFRCBjb250cm9s
+bGVyIHJlc2lkZXMgaW4gTUZEDQo+ID4gZGV2aWNlIGluIEkyQyBidXMgYW5kIGhhcyBubyBtZWFu
+aW5nZnVsIG51bWJlcnMgSSBjYW4gdGhpbmsgb2YuIFRoZQ0KPiA+IGFjdHVhbCBMRURzIChvbiBt
+eSBib2FyZCkgYXJlIGR1bW15IGRldmljZXMgYW5kIEkgcmVhbGx5IGRvbid0IGtub3cNCj4gPiBo
+b3cNCj4gPiB0byBpbnZlbnQgbWVhbmluZ2Z1bGwgbnVtYmVycyBmb3IgdGhlbSBlaXRoZXIuDQo+
+IA0KPiBJZiB5b3UgaGF2ZSBzb21ldGhpbmcgbGlrZSAibGVkIGNvbnRyb2wgcmVnaXN0ZXJzIDEs
+IDIsIDMiIHdoZXJlDQo+IDEsMiwzDQo+IGlzIGVhY2ggTEVEIGNoYW5uZWwsIHRoZW4gdXNlIHRo
+YXQuDQoNClVuZm9ydHVuYXRlbHksIG5vLiBMRUQgY29udHJvbHMgYXJlIGluIHNhbWUgcmVnaXN0
+ZXIuDQoNCj4gIE9yIGlmIHRoZSBMRUQgc3VwcGxpZXMgKG9yIHN1cHBseQ0KPiBwaW5zKSBoYXZl
+IHNvbWUgbnVtYmVyaW5nLCB1c2UgdGhhdC4NCg0KSSBkb24ndCBrbm93IGhvdyB0byBmb3JtYXQg
+dGhlIG51bWJlcmluZyBlaXRoZXIuIEN1cnJlbnRseSBwbGFubmVkIFBNSUMNCnBhY2thZ2UgaXMg
+c28gY2FsbGVkICJVQ1NQNTVNM0MiIG1lYW5pbmcgdGhlIHBpbnMgYXJlIGluIGEgbWF0cml4IC0N
+CmNvbHVtbnMgaGF2aW5nIG51bWJlcnMgZnJvbSAxIHRvIDggYW5kIHJvd3MgaGF2aW5nIGxldHRl
+cnMgZnJvbSBBIHRvIEouDQpJbiB0aGlzIGNhc2UgdGhlIExFRCBvdXRwdXRzIGFyZSBGNiBhbmQg
+SDYuIEkgZG9uJ3Qga25vdyBpZiBkaWZmZXJlbnQNCnBhY2thZ2luZyBpcyBwbGFubmVkLiBPbmx5
+ICdjb25zdGFudCcgSSBjYW4gZmluZCBpcyB0aGUgb3V0cHV0IHBpbg0KbmFtaW5nICdHUk5MRUQn
+IGFuZCAnQU1CTEVEJyA6Lw0KDQo+IElmIHRoZXJlJ3Mgbm9uZSBvZiB0aGF0LCB0aGVuDQo+IGZv
+bGxvd2luZyBzdGFuZGFyZCBub2RlIG5hbWVzIGtpbmQgb2YgZmFsbHMgYXBhcnQuICc8Z2VuZXJp
+YyBuYW1lPi1OJw0KPiBpcyB3aGF0IEkndmUgYmVlbiBkZWZpbmluZyBmb3Igc29tZSBzY2hlbWEu
+DQoNClNvIEkgY291bGQgdXNlIG5vZGUgbmFtZXMgbGVkLTEgYW5kIGxlZC0yIGluIHRoZSBleGFt
+cGxlLCByaWdodD8NCg0KQnIsDQoJTWF0dGkgVmFpdHRpbmVuDQo=
