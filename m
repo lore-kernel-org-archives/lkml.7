@@ -2,127 +2,293 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AC0CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DB4CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EADA21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E21121835
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfJ2BK7 (ORCPT
+        id S1727999AbfJ2BLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:10:59 -0400
-Received: from smtp.infotech.no ([82.134.31.41]:47528 "EHLO smtp.infotech.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbfJ2BK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:10:58 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp.infotech.no (Postfix) with ESMTP id 83444204197;
-        Tue, 29 Oct 2019 02:10:55 +0100 (CET)
-X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
-Received: from smtp.infotech.no ([127.0.0.1])
-        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Src4PM4I7rHq; Tue, 29 Oct 2019 02:10:48 +0100 (CET)
-Received: from [192.168.48.23] (host-23-251-188-50.dyn.295.ca [23.251.188.50])
-        by smtp.infotech.no (Postfix) with ESMTPA id 62310204163;
-        Tue, 29 Oct 2019 02:10:47 +0100 (CET)
-Reply-To: dgilbert@interlog.com
-Subject: Re: [PATCH 0/9] Consolidate {get,put}_unaligned_[bl]e24() definitions
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20191028200700.213753-1-bvanassche@acm.org>
-From:   Douglas Gilbert <dgilbert@interlog.com>
-Message-ID: <21a9443a-b52c-d028-d0a5-2bbc0b4c281a@interlog.com>
-Date:   Mon, 28 Oct 2019 21:10:44 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 21:11:10 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:39503 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727904AbfJ2BLJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 21:11:09 -0400
+Received: by mail-il1-f198.google.com with SMTP id o11so11435585ilc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 18:11:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=/mBS0wCcF5M4PMDKVhNmnoIn15kcMF3m1nUEU3l1yZc=;
+        b=NvmdTA/GUBADhg5QfOLVX9Mg8M2TwXNcw2ZAY2xatRBPJIHT4CxmgOFlmD8w3uTC5C
+         wiXEtA/3rJJJC8rkTFAexEyGIa1fh+Vq7B6XuwnWAfvrKEa0a7DPqqxfqO3nS5TvqZji
+         o+PXcy7Yxp42RwAGYI8E7kHUgXr9xLkw9TSQ2kfw+CkuqebW4gzldMpL4TozOGzNA8zP
+         k2yflxOj6NYgmtkoKa+eH59ayTjhH/b96POhpSb2Dn/uTAqkOcHsvP8N8CD5zsOYLaF/
+         ueELoIRWDfcJdjZ6uhqre72lU2VQpMUO44e1B6Mp6t9HFHjhMjTu7YI/b9/5RR4zIzyg
+         ihcQ==
+X-Gm-Message-State: APjAAAVCmo8og12p6d1TNQGPW3vJ+aNLqvTFbC5Dl6z+BFYzMvKC3xde
+        cHSU4jtRClrHZ0H7rN8HdpuNo9ZZZiQUp/MU2/B++xIwHdE8
+X-Google-Smtp-Source: APXvYqx68h1h2OQ2OvVV6xsc7ULvZp8MUEcMXHfomj09XKrZNG/wYG51tiq3Sa06OFNmxyqe60aBSGyRO+7jsPWYnh6LwVvgkzZL
 MIME-Version: 1.0
-In-Reply-To: <20191028200700.213753-1-bvanassche@acm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a02:a584:: with SMTP id b4mr5189655jam.67.1572311468774;
+ Mon, 28 Oct 2019 18:11:08 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 18:11:08 -0700
+In-Reply-To: <000000000000044a7f0595fbaf2c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000929f990596024a82@google.com>
+Subject: Re: INFO: trying to register non-static key in bond_3ad_update_ad_actor_settings
+From:   syzbot <syzbot+8da67f407bcba2c72e6e@syzkaller.appspotmail.com>
+To:     andy@greyhouse.net, davem@davemloft.net, j.vosburgh@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vfalico@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-28 4:06 p.m., Bart Van Assche wrote:
-> Hi Peter,
-> 
-> This patch series moves the existing {get,put}_unaligned_[bl]e24() definitions
-> into include/linux/unaligned/generic.h. This patch series also introduces a function
-> for sign-extending 24-bit into 32-bit integers and introduces users for all new
-> functions and macros. Please consider this patch series for kernel version v5.5.
+syzbot has found a reproducer for the following crash on:
 
-And while you are at it, the sg3_utils user space copy of
-include/linux/unaligned/*.h (called sg_unaligned.h) has bindings
-for 48 bit operations.
+HEAD commit:    60c1769a Add linux-next specific files for 20191028
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=154d4374e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cb86688f30db053d
+dashboard link: https://syzkaller.appspot.com/bug?extid=8da67f407bcba2c72e6e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14d43a04e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16be3b9ce00000
 
-Checking my sg3_utils code, in VPD page 0x83 (mandatory device
-identification page) the EUI-64 based 16-byte designator has a
-6 byte field (the "vendor specific extension identifier").
-Also the SET TIMESTAMP and REPORT TIMESTAMP commands have a 6 byte
-timestamp field. There are also some attribute pages associated with
-the READ ATTRIBUTE command that have 6 byte fields.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8da67f407bcba2c72e6e@syzkaller.appspotmail.com
 
-
-A recent trend with the pages returned by the SCSI LOG SENSE command
-is to have (big endian) fields whose length (in bytes) is encoded
-in the response. I have this function for those:
-
-/* Returns 0 if 'num_bytes' is less than or equal to 0 or greater than
-  * 8 (i.e. sizeof(uint64_t)). Else returns result in uint64_t which is
-  * an 8 byte unsigned integer. */
-static inline uint64_t sg_get_unaligned_be(int num_bytes, const void *p)
-
-And I can see NVMe code in smartmontools using that one:
-
-nvmeprint.cpp:   jrns["eui64"]["ext_id"] =
-                                 sg_get_unaligned_be(5, id_ns.eui64 + 3);
-
-
-Doug Gilbert
-
-
-> Thanks,
-> 
-> Bart.
-> 
-> Bart Van Assche (9):
->    linux/unaligned/byteshift.h: Remove superfluous casts
->    c6x: Include <linux/unaligned/generic.h> instead of duplicating it
->    treewide: Consolidate {get,put}_unaligned_[bl]e24() definitions
->    drivers/iio: Sign extend without triggering implementation-defined
->      behavior
->    scsi/st: Use get_unaligned_signed_be24()
->    scsi/trace: Use get_unaligned_be*()
->    arm/ecard: Use get_unaligned_le{16,24}()
->    IB/qib: Sign extend without triggering implementation-defined behavior
->    ASoC/fsl_spdif: Use put_unaligned_be24() instead of open-coding it
-> 
->   arch/arm/mach-rpc/ecard.c                     |  18 +--
->   arch/c6x/include/asm/unaligned.h              |  65 +--------
->   .../iio/common/st_sensors/st_sensors_core.c   |   7 +-
->   drivers/infiniband/hw/qib/qib_rc.c            |   2 +-
->   drivers/nvme/host/rdma.c                      |   8 --
->   drivers/nvme/target/rdma.c                    |   6 -
->   drivers/scsi/scsi_trace.c                     | 128 ++++++------------
->   drivers/scsi/st.c                             |   4 +-
->   drivers/usb/gadget/function/f_mass_storage.c  |   1 +
->   drivers/usb/gadget/function/storage_common.h  |   5 -
->   include/linux/unaligned/be_byteshift.h        |   6 +-
->   include/linux/unaligned/generic.h             |  44 ++++++
->   include/linux/unaligned/le_byteshift.h        |   6 +-
->   include/target/target_core_backend.h          |   6 -
->   sound/soc/fsl/fsl_spdif.c                     |   5 +-
->   15 files changed, 103 insertions(+), 208 deletions(-)
-> 
+netlink: 'syz-executor411': attribute type 24 has an invalid length.
+netlink: 'syz-executor411': attribute type 1 has an invalid length.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 1 PID: 8702 Comm: syz-executor411 Not tainted 5.4.0-rc5-next-20191028  
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  assign_lock_key kernel/locking/lockdep.c:881 [inline]
+  register_lock_class+0x179e/0x1850 kernel/locking/lockdep.c:1190
+  __lock_acquire+0xf4/0x4a00 kernel/locking/lockdep.c:3837
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  bond_3ad_update_ad_actor_settings+0x37b/0x7b0  
+drivers/net/bonding/bond_3ad.c:2260
+  bond_option_ad_actor_sys_prio_set+0x67/0x80  
+drivers/net/bonding/bond_options.c:1434
+  __bond_opt_set+0x2a1/0x540 drivers/net/bonding/bond_options.c:677
+  bond_changelink+0x14ed/0x1bd0 drivers/net/bonding/bond_netlink.c:413
+  bond_newlink+0x2d/0x90 drivers/net/bonding/bond_netlink.c:454
+  __rtnl_newlink+0x10a1/0x16e0 net/core/rtnetlink.c:3268
+  rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3326
+  rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5387
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5405
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x8cf/0xda0 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:638 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:658
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2312
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2357
+  __do_sys_sendmsg net/socket.c:2366 [inline]
+  __se_sys_sendmsg net/socket.c:2364 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2364
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4402b9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc45a3b478 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402b9
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000001 R09: 00000000004002c8
+R10: 000000000000000c R11: 0000000000000246 R12: 0000000000401b40
+R13: 0000000000401bd0 R14: 0000000000000000 R15: 0000000000000000
+kobject: 'bond1' (000000004c2e596c): kobject_add_internal: parent: 'net',  
+set: 'devices'
+kobject: 'bond1' (000000004c2e596c): kobject_uevent_env
+kobject: 'bond1' (000000004c2e596c): fill_kobj_path: path  
+= '/devices/virtual/net/bond1'
+kobject: 'queues' (00000000dfeb0249): kobject_add_internal:  
+parent: 'bond1', set: '<NULL>'
+kobject: 'queues' (00000000dfeb0249): kobject_uevent_env
+kobject: 'queues' (00000000dfeb0249): kobject_uevent_env: filter function  
+caused the event to drop!
+kobject: 'rx-0' (000000006cc022b5): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-0' (000000006cc022b5): kobject_uevent_env
+kobject: 'rx-0' (000000006cc022b5): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-0'
+kobject: 'rx-1' (00000000f41ae229): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-1' (00000000f41ae229): kobject_uevent_env
+kobject: 'rx-1' (00000000f41ae229): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-1'
+kobject: 'rx-2' (00000000f65859db): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-2' (00000000f65859db): kobject_uevent_env
+kobject: 'rx-2' (00000000f65859db): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-2'
+kobject: 'rx-3' (000000002efb6c90): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-3' (000000002efb6c90): kobject_uevent_env
+kobject: 'rx-3' (000000002efb6c90): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-3'
+kobject: 'rx-4' (00000000a4015138): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-4' (00000000a4015138): kobject_uevent_env
+kobject: 'rx-4' (00000000a4015138): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-4'
+kobject: 'rx-5' (00000000a9a2c066): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-5' (00000000a9a2c066): kobject_uevent_env
+kobject: 'rx-5' (00000000a9a2c066): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-5'
+kobject: 'rx-6' (00000000f0181667): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-6' (00000000f0181667): kobject_uevent_env
+kobject: 'rx-6' (00000000f0181667): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-6'
+kobject: 'rx-7' (00000000ac83f7a2): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-7' (00000000ac83f7a2): kobject_uevent_env
+kobject: 'rx-7' (00000000ac83f7a2): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-7'
+kobject: 'rx-8' (000000000447065e): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-8' (000000000447065e): kobject_uevent_env
+kobject: 'rx-8' (000000000447065e): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-8'
+kobject: 'rx-9' (000000000e65150a): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'rx-9' (000000000e65150a): kobject_uevent_env
+kobject: 'rx-9' (000000000e65150a): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-9'
+kobject: 'rx-10' (00000000a13a2fdc): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-10' (00000000a13a2fdc): kobject_uevent_env
+kobject: 'rx-10' (00000000a13a2fdc): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-10'
+kobject: 'rx-11' (000000000d4499bc): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-11' (000000000d4499bc): kobject_uevent_env
+kobject: 'rx-11' (000000000d4499bc): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-11'
+kobject: 'rx-12' (00000000c04a7df7): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-12' (00000000c04a7df7): kobject_uevent_env
+kobject: 'rx-12' (00000000c04a7df7): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-12'
+kobject: 'rx-13' (00000000383d5fab): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-13' (00000000383d5fab): kobject_uevent_env
+kobject: 'rx-13' (00000000383d5fab): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-13'
+kobject: 'rx-14' (00000000675d2762): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-14' (00000000675d2762): kobject_uevent_env
+kobject: 'rx-14' (00000000675d2762): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-14'
+kobject: 'rx-15' (0000000077408fd4): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'rx-15' (0000000077408fd4): kobject_uevent_env
+kobject: 'rx-15' (0000000077408fd4): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/rx-15'
+kobject: 'tx-0' (00000000fc5e1be9): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-0' (00000000fc5e1be9): kobject_uevent_env
+kobject: 'tx-0' (00000000fc5e1be9): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-0'
+kobject: 'tx-1' (000000003d036af0): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-1' (000000003d036af0): kobject_uevent_env
+kobject: 'tx-1' (000000003d036af0): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-1'
+kobject: 'tx-2' (000000002b1aed3d): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-2' (000000002b1aed3d): kobject_uevent_env
+kobject: 'tx-2' (000000002b1aed3d): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-2'
+kobject: 'tx-3' (0000000074d7b4aa): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-3' (0000000074d7b4aa): kobject_uevent_env
+kobject: 'tx-3' (0000000074d7b4aa): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-3'
+kobject: 'tx-4' (000000006ccd3c3a): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-4' (000000006ccd3c3a): kobject_uevent_env
+kobject: 'tx-4' (000000006ccd3c3a): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-4'
+kobject: 'tx-5' (000000000e0f31c9): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-5' (000000000e0f31c9): kobject_uevent_env
+kobject: 'tx-5' (000000000e0f31c9): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-5'
+kobject: 'tx-6' (00000000eafd25e6): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-6' (00000000eafd25e6): kobject_uevent_env
+kobject: 'tx-6' (00000000eafd25e6): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-6'
+kobject: 'tx-7' (000000009448502b): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-7' (000000009448502b): kobject_uevent_env
+kobject: 'tx-7' (000000009448502b): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-7'
+kobject: 'tx-8' (000000006f9cb59a): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-8' (000000006f9cb59a): kobject_uevent_env
+kobject: 'tx-8' (000000006f9cb59a): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-8'
+kobject: 'tx-9' (000000006374c1d3): kobject_add_internal: parent: 'queues',  
+set: 'queues'
+kobject: 'tx-9' (000000006374c1d3): kobject_uevent_env
+kobject: 'tx-9' (000000006374c1d3): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-9'
+kobject: 'tx-10' (000000008478cb5e): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-10' (000000008478cb5e): kobject_uevent_env
+kobject: 'tx-10' (000000008478cb5e): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-10'
+kobject: 'tx-11' (00000000bc80336d): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-11' (00000000bc80336d): kobject_uevent_env
+kobject: 'tx-11' (00000000bc80336d): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-11'
+kobject: 'tx-12' (00000000ec425f4e): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-12' (00000000ec425f4e): kobject_uevent_env
+kobject: 'tx-12' (00000000ec425f4e): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-12'
+kobject: 'tx-13' (000000006d9d3bb6): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-13' (000000006d9d3bb6): kobject_uevent_env
+kobject: 'tx-13' (000000006d9d3bb6): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-13'
+kobject: 'tx-14' (000000008ad7b3a4): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-14' (000000008ad7b3a4): kobject_uevent_env
+kobject: 'tx-14' (000000008ad7b3a4): fill_kobj_path: path  
+= '/devices/virtual/net/bond1/queues/tx-14'
+kobject: 'tx-15' (00000000da467199): kobject_add_internal:  
+parent: 'queues', set: 'queues'
+kobject: 'tx-15' (00000000da467199): kobject_uevent_env
+kobject: 'tx-15' (00000000da467199): fill_kobj_path: path = '/devi
 
