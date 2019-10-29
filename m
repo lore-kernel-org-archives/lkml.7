@@ -2,228 +2,103 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4566CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CDDC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8D32087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:19:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ljpbXbSC"
+	by mail.kernel.org (Postfix) with ESMTP id ED2BB217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfJ2XTy (ORCPT
+        id S1726536AbfJ2XUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 19:19:54 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33177 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfJ2XTx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 19:19:53 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y8so66975plk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 16:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YaJtgLYKb0l4FyZ4jUBHCczpuWveP563IeeZfWc0m7k=;
-        b=ljpbXbSCQr3faVn4lcJ2hNpbtNEtMXu99g0vus9AnDxFazy8h/FibLkL2N5dPTndSO
-         Svau97KKRz8S4/mdymps+zi6jIgxLv+30soShO3eyIJszJ2mOkKx2q0gPesRu3Gadt6M
-         J4Ghoo5SGJFENRAHtiAV7eKJVlA3ieoqc3EUc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YaJtgLYKb0l4FyZ4jUBHCczpuWveP563IeeZfWc0m7k=;
-        b=coqz4MVanScs7ub6HJyRUqfnkDyK0eCOwfleo6qRgtlMwE/iaI/d43uQ4aHhzJPoZ7
-         w/5/j0vHgC7oc2FMLl/3Nu335w0P/G2J8slc59N1R+ANns9/qSGIvFszRvSwv/keQvqU
-         wjyq4F3dVuRtYOMZ/+uOxlEcaCixqFO9fYroREYnzFW0OyBfkAbZneVQMHn/+itJVg7Z
-         5IhWxCqYMyw+pqzE4AuSPGc9k3+M0sB6qkWi3sjOIqiXHIXuFF9TVitlav0+oqZnNvwa
-         Ohr8Bv8YRipJuI4NYJSCr3gBmC989y6V9aR/E6hsxue7r14Kl9OZpW034u8//4DxVYJ0
-         YUIA==
-X-Gm-Message-State: APjAAAUsIsiabAf/tFgj5NFtKHnSJH7MaWeMweMPOeiLRnJJ8iUDpqvd
-        frsS4ycAD3bOrOfBtgRZb9ZR4Sd/jlU=
-X-Google-Smtp-Source: APXvYqzWIvlFIF+G6hAYMTtuyrvwFzMMaImF7+nXc9spFzUJ/+qexBUliEgWpaVwDQLWqyzr2bSMqA==
-X-Received: by 2002:a17:902:b7c2:: with SMTP id v2mr1270214plz.202.1572391192503;
-        Tue, 29 Oct 2019 16:19:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f185sm177613pfb.183.2019.10.29.16.19.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 16:19:51 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 16:19:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Sudakshina Das <sudi.das@arm.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 06/12] elf: Allow arch to tweak initial mmap prot flags
-Message-ID: <201910291618.C28E737@keescook>
-References: <1571419545-20401-1-git-send-email-Dave.Martin@arm.com>
- <1571419545-20401-7-git-send-email-Dave.Martin@arm.com>
+        Tue, 29 Oct 2019 19:20:08 -0400
+Received: from mga03.intel.com ([134.134.136.65]:35939 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726331AbfJ2XUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 19:20:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 16:20:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
+   d="scan'208";a="401318178"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Oct 2019 16:20:06 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id A68AF580517;
+        Tue, 29 Oct 2019 16:20:05 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v9 5/8] PCI/AER: Allow clearing Error Status Register in
+ FF mode
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+References: <20191029230346.GA123765@google.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <4edd3d32-7f7e-fc25-b67b-40c202b7af3d@linux.intel.com>
+Date:   Tue, 29 Oct 2019 16:17:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571419545-20401-7-git-send-email-Dave.Martin@arm.com>
+In-Reply-To: <20191029230346.GA123765@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 06:25:39PM +0100, Dave Martin wrote:
-> An arch may want to tweak the mmap prot flags for an
-> ELFexecutable's initial mappings.  For example, arm64 is going to
-> need to add PROT_BTI for executable pages in an ELF process whose
-> executable is marked as using Branch Target Identification (an
-> ARMv8.5-A control flow integrity feature).
-> 
-> So that this can be done in a generic way, add a hook
-> arch_elf_adjust_prot() to modify the prot flags as desired: arches
-> can select CONFIG_HAVE_ELF_PROT and implement their own backend
-> where necessary.
-> 
-> By default, leave the prot flags unchanged.
-> 
-> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> ---
->  fs/Kconfig.binfmt   |  3 +++
->  fs/binfmt_elf.c     | 18 ++++++++++++------
->  include/linux/elf.h | 12 ++++++++++++
->  3 files changed, 27 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-> index d2cfe07..2358368 100644
-> --- a/fs/Kconfig.binfmt
-> +++ b/fs/Kconfig.binfmt
-> @@ -36,6 +36,9 @@ config COMPAT_BINFMT_ELF
->  config ARCH_BINFMT_ELF_STATE
->  	bool
->  
-> +config ARCH_HAVE_ELF_PROT
-> +	bool
-> +
->  config ARCH_USE_GNU_PROPERTY
->  	bool
->  
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index ae345f6..dbfab2e 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -531,7 +531,8 @@ static inline int arch_check_elf(struct elfhdr *ehdr, bool has_interp,
->  
->  #endif /* !CONFIG_ARCH_BINFMT_ELF_STATE */
->  
-> -static inline int make_prot(u32 p_flags)
-> +static inline int make_prot(u32 p_flags, struct arch_elf_state *arch_state,
-> +			    bool has_interp, bool is_interp)
->  {
->  	int prot = 0;
->  
-> @@ -541,7 +542,8 @@ static inline int make_prot(u32 p_flags)
->  		prot |= PROT_WRITE;
->  	if (p_flags & PF_X)
->  		prot |= PROT_EXEC;
-> -	return prot;
-> +
-> +	return arch_elf_adjust_prot(prot, arch_state, has_interp, is_interp);
->  }
 
-Random thought: there is already an 'exec-state' structure: bprm. I
-wonder if arch_state should be attached there instead of passed around
-here? It'd require almost the same amount of changes, though, so my idea
-might not gain much in the diffstat, but maybe it's better
-organizationally? I'm not sure.
+On 10/29/19 4:03 PM, Bjorn Helgaas wrote:
+> On Tue, Oct 29, 2019 at 12:58:14PM -0700, Kuppuswamy Sathyanarayanan wrote:
+>> On 10/28/19 4:22 PM, Bjorn Helgaas wrote:
+>>> On Thu, Oct 03, 2019 at 04:39:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>> @@ -430,9 +424,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+>>>>    	if (!pos)
+>>>>    		return -EIO;
+>>>> -	if (pcie_aer_get_firmware_first(dev))
+>>>> -		return -EIO;
+>>>> -
+>>>>    	port_type = pci_pcie_type(dev);
+>>>>    	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+>>>>    		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
+>>>> @@ -455,7 +446,8 @@ void pci_aer_init(struct pci_dev *dev)
+>>>>    	if (dev->aer_cap)
+>>>>    		dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
+>>>> -	pci_cleanup_aer_error_status_regs(dev);
+>>>> +	if (!pcie_aer_get_firmware_first(dev))
+>>>> +		pci_cleanup_aer_error_status_regs(dev);
+>>> This effectively moves the "if (pcie_aer_get_firmware_first())" check
+>>> from pci_cleanup_aer_error_status_regs() into one of the callers.  But
+>>> there are two other callers: pci_aer_init() and pci_restore_state().
+>>> Do they need the change, or do you want to cleanup the AER error
+>>> registers there, but not here?
+>> Good catch. I have added this check to pci_aer_init(). But it needs
+>> to be added to pci_restore_state() as well. Instead of moving the
+>> checks to the caller, If you agree, I could change the API to
+>> pci_cleanup_aer_error_status_regs(struct pci_dev *dev, bool
+>> skip_ff_check) and let the caller decide whether they want skip the
+>> check or not.
+> If all callers of pci_cleanup_aer_error_status_regs() would have to
+> check pcie_aer_get_firmware_first(), I don't understand why you're
+> moving the check at all.
 
-Otherwise, this all looks fine to me.
+We need exception for the call made from DPC driver. If 
+pcie_aer_get_firmware_first()
+call is made from DPC driver during EDR mode execution, then FF mode 
+check needs
+to be skipped.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
->  
->  /* This is much more generalized than the library routine read function,
-> @@ -551,7 +553,8 @@ static inline int make_prot(u32 p_flags)
->  
->  static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
->  		struct file *interpreter, unsigned long *interp_map_addr,
-> -		unsigned long no_base, struct elf_phdr *interp_elf_phdata)
-> +		unsigned long no_base, struct elf_phdr *interp_elf_phdata,
-> +		struct arch_elf_state *arch_state)
->  {
->  	struct elf_phdr *eppnt;
->  	unsigned long load_addr = 0;
-> @@ -583,7 +586,8 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
->  	for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
->  		if (eppnt->p_type == PT_LOAD) {
->  			int elf_type = MAP_PRIVATE | MAP_DENYWRITE;
-> -			int elf_prot = make_prot(eppnt->p_flags);
-> +			int elf_prot = make_prot(eppnt->p_flags, arch_state,
-> +						 true, true);
->  			unsigned long vaddr = 0;
->  			unsigned long k, map_addr;
->  
-> @@ -1040,7 +1044,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
->  			}
->  		}
->  
-> -		elf_prot = make_prot(elf_ppnt->p_flags);
-> +		elf_prot = make_prot(elf_ppnt->p_flags, &arch_state,
-> +				     !!interpreter, false);
->  
->  		elf_flags = MAP_PRIVATE | MAP_DENYWRITE | MAP_EXECUTABLE;
->  
-> @@ -1186,7 +1191,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
->  		elf_entry = load_elf_interp(&loc->interp_elf_ex,
->  					    interpreter,
->  					    &interp_map_addr,
-> -					    load_bias, interp_elf_phdata);
-> +					    load_bias, interp_elf_phdata,
-> +					    &arch_state);
->  		if (!IS_ERR((void *)elf_entry)) {
->  			/*
->  			 * load_elf_interp() returns relocation
-> diff --git a/include/linux/elf.h b/include/linux/elf.h
-> index 7bdc6da..1b6e895 100644
-> --- a/include/linux/elf.h
-> +++ b/include/linux/elf.h
-> @@ -83,4 +83,16 @@ extern int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
->  				   bool compat, struct arch_elf_state *arch);
->  #endif
->  
-> +#ifdef CONFIG_ARCH_HAVE_ELF_PROT
-> +int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
-> +			 bool has_interp, bool is_interp);
-> +#else
-> +static inline int arch_elf_adjust_prot(int prot,
-> +				       const struct arch_elf_state *state,
-> +				       bool has_interp, bool is_interp)
-> +{
-> +	return prot;
-> +}
-> +#endif
-> +
->  #endif /* _LINUX_ELF_H */
-> -- 
-> 2.1.4
-> 
-
+>
 -- 
-Kees Cook
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
+
