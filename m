@@ -2,128 +2,206 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAE8C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB25CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D503E21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06862217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 00:31:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N549/5ei"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WnOJ3SqY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfJ2A1Y (ORCPT
+        id S1726883AbfJ2Abk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 20:27:24 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36790 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfJ2A1Y (ORCPT
+        Mon, 28 Oct 2019 20:31:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50299 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbfJ2Abj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 20:27:24 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c7so8300645otm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 17:27:23 -0700 (PDT)
+        Mon, 28 Oct 2019 20:31:39 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 11so797533wmk.0;
+        Mon, 28 Oct 2019 17:31:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EFG/NUMsi6FfdyRZ+1e8lH7DWnn/2sbhoHTkW1LTspQ=;
-        b=N549/5eirfYiMcEkpgmhVSSpEyVRHSOgPEz645xTJulyOKXBFmbS+kttzA1bI4775t
-         KEB4cnQ8CSDgEaf3xORF5wcjxQN4e+EJo3f0Vm0GOg/j+Ahj2Dk1sSIozG/tGExY4mmZ
-         KhHByJXLiNKUABr8oFs+9R4n4hLJs7TWoSpR0lCSSWO8XFfPKqYjYdevQPekSBIPqxA3
-         HvsjCa7jokmArh/ClM6pBzyipGOeaECa9E50bk2n6MCgYC8hn9dVW/OmmX25MFTC7gjG
-         xTo47H1OBR74DUU0lbosTDLdnRM84NtxVrWeadlk+AwZH22SaGHJUA/R32VBcK01dqt0
-         VAJQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+D8dAg6wyuTSrA9lr5DiGJ+HgUlg76x4EWdaVB31KHg=;
+        b=WnOJ3SqYw4EzB4LsY+VdHC/M5C2fdfATlBfV/U9GORaFAbMt0xRnkkYxgM55NA5EWM
+         BFZjAoG6fIhPatBfQPD24sg3OspaMNPT4jec8U4Ndsz1KNPeF4vCoGgg1wY1RgBQPDMk
+         n7CT/80tjNOvVtNSFzAQ2Atxa01teqDqh4f00F5vCjQZHeXTK4r6zL5b/geM8uassQFW
+         heyCsLayoyBCEi5ZZbLqD7+0IBoV+wg1k7FBe/fuqBADy3vQ4li1Mb872dVSJmDPYlI0
+         PMfgRv2RJG6/aoWc7FTKZ4q1ENUNLSc2qGNBYvODVNXrh0zxtgF+09suG812OJH0H0uW
+         i5Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EFG/NUMsi6FfdyRZ+1e8lH7DWnn/2sbhoHTkW1LTspQ=;
-        b=IIMuinP32IDZjw5+dxN/WBEwHnosvG6VgRgAWm+tOBHU8JYAdx+2FCNx+wVuswJSlN
-         sC1IrOeeXI2MdPukipzuDLoLeSFKZ/VbTNeUz3edxA9aHv7fnzCAPW0GlFteBaFfN1PZ
-         xr0tgxRURO+6n9f4MruTta6OW1pjfJvioeb4zUsfsHFfV9wVBQ7gQw4HXhZnYn6yLYxn
-         KumWHFERmZHH+ZbbmjYIvV3bch7dLq8dXGYuwoMT+GkQH/Ra4pX59FRRibAl/5BOVWC4
-         HTIJl1083hZj5xEGLC6kGH+S38yoNt0ktOjdLOvSD1c+zOHPTLFHnW1xpqw2t6ky6kxJ
-         2UAA==
-X-Gm-Message-State: APjAAAWHZeaYRRvRv04ZJ2wkw22J5VqeAxNw92VHzW7GGyoRXoCGS5kt
-        YzZyYOZVpD7hPOJvRWKYz5WcZaHTvx/2WSEUJNUtJA==
-X-Google-Smtp-Source: APXvYqyyMmC6akibUD0ctyx6cZAI+MIQu4fGSJOdVD9ulOLlox6OONUlRS6Dqd0X3Ff0CgmITcC9+WmmkjuDol9LmWE=
-X-Received: by 2002:a05:6830:1bea:: with SMTP id k10mr11448680otb.190.1572308842618;
- Mon, 28 Oct 2019 17:27:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+D8dAg6wyuTSrA9lr5DiGJ+HgUlg76x4EWdaVB31KHg=;
+        b=euAF0TdbC5TjtRW2nV/JVcm/XS86HRLqQIijwEFprk4C1eI4rc2CpCXF+P+OBrefXw
+         MmDV7G/BIr3SClXDhCgkdSrDklkM6X9DLHbnyUlJXN4tNAxQ3OazwsVsOeZ8fsTxhCJa
+         qUepCwWy+H5JJK50mcNUyXxISadHaR1zKIBhcsxBouyuVlqLVpas//b8GgoHQkYr8uFd
+         jE4exgYKxMLMdqUwSNU940WC7RHN+xsqFLNd8PB/NHFCyEo5s87s7lafu/A9ZjFaZInd
+         hK5jcMiavlW6f1nmLRZIc9pysHZc//IpAG7N8u0RlL141SrA6uakA+lxVi3sru+jNJ59
+         5jlg==
+X-Gm-Message-State: APjAAAW3mSRpWAkBHgSA82sOHa5AQJR9IRXajbsSjdlA4nYLuYMWLU1K
+        88rCUTzqP9Cl+KKeiIUDhME=
+X-Google-Smtp-Source: APXvYqyynmRqmdd3kL5UW/yq8tfwkLVzOUvEW0e21C3/Pe9ufZJ43RT/NMWvApoj/D5Cryll4ll8xQ==
+X-Received: by 2002:a1c:998f:: with SMTP id b137mr1687363wme.104.1572309095171;
+        Mon, 28 Oct 2019 17:31:35 -0700 (PDT)
+Received: from mail.google.com ([104.238.174.53])
+        by smtp.gmail.com with ESMTPSA id s21sm17840387wrb.31.2019.10.28.17.31.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 17:31:34 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 08:31:22 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
+ 'functions' to 'identifiers'
+Message-ID: <20191029003120.llve32crfw63ovpw@mail.google.com>
+References: <20191020131717.28990-1-changbin.du@gmail.com>
+ <20191024121940.1d6a64df@lwn.net>
+ <87woctb9cj.fsf@intel.com>
+ <20191025144802.uixg2crhw6h7gghq@mail.google.com>
+ <87v9s99q9l.fsf@intel.com>
 MIME-Version: 1.0
-References: <20191023214821.107615-1-hridya@google.com> <20191023214821.107615-2-hridya@google.com>
- <e61510b8-c8d7-349f-b297-9df367c26a9f@huawei.com> <CA+wgaPNas7ixNtepJE_6e7b6Dcutb9a1Who4WrUfKSw1ZnQhTA@mail.gmail.com>
- <96f89e7c-d91e-e263-99f7-16998cc443a7@huawei.com> <20191025182229.GB24183@jaegeuk-macbookpro.roam.corp.google.com>
- <eb08716f-2f56-30bb-d71d-28125b3b0608@huawei.com>
-In-Reply-To: <eb08716f-2f56-30bb-d71d-28125b3b0608@huawei.com>
-From:   Hridya Valsaraju <hridya@google.com>
-Date:   Mon, 28 Oct 2019 17:26:46 -0700
-Message-ID: <CA+wgaPMcJWqwiQwt9z0+C5AFMbAB7wSuNeE9wvp3PDOYF_6kew@mail.gmail.com>
-Subject: Re: [PATCH 2/2] f2fs: Add f2fs stats to sysfs
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9s99q9l.fsf@intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 6:38 PM Chao Yu <yuchao0@huawei.com> wrote:
+On Mon, Oct 28, 2019 at 11:24:22AM +0200, Jani Nikula wrote:
+> On Fri, 25 Oct 2019, Changbin Du <changbin.du@gmail.com> wrote:
+> > On Fri, Oct 25, 2019 at 09:57:48AM +0300, Jani Nikula wrote:
+> >> On Thu, 24 Oct 2019, Jonathan Corbet <corbet@lwn.net> wrote:
+> >> > On Sun, 20 Oct 2019 21:17:17 +0800
+> >> > Changbin Du <changbin.du@gmail.com> wrote:
+> >> >
+> >> >> The 'functions' directive is not only for functions, but also works for
+> >> >> structs/unions. So the name is misleading. This patch renames it to
+> >> >> 'identifiers', which specific the functions/types to be included in
+> >> >> documentation. We keep the old name as an alias of the new one before
+> >> >> all documentation are updated.
+> >> >> 
+> >> >> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> >> >
+> >> > So I think this is basically OK, but I have one more request...
+> >> >
+> >> > [...]
+> >> >
+> >> >> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+> >> >> index 1159405cb920..0689f9c37f1e 100644
+> >> >> --- a/Documentation/sphinx/kerneldoc.py
+> >> >> +++ b/Documentation/sphinx/kerneldoc.py
+> >> >> @@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
+> >> >>      optional_arguments = 4
+> >> >>      option_spec = {
+> >> >>          'doc': directives.unchanged_required,
+> >> >> -        'functions': directives.unchanged,
+> >> >>          'export': directives.unchanged,
+> >> >>          'internal': directives.unchanged,
+> >> >> +        'identifiers': directives.unchanged,
+> >> >> +        'functions': directives.unchanged,  # alias of 'identifiers'
+> >> >>      }
+> >> >>      has_content = False
+> >> >>  
+> >> >> @@ -71,6 +72,7 @@ class KernelDocDirective(Directive):
+> >> >>  
+> >> >>          filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
+> >> >>          export_file_patterns = []
+> >> >> +        identifiers = None
+> >> >>  
+> >> >>          # Tell sphinx of the dependency
+> >> >>          env.note_dependency(os.path.abspath(filename))
+> >> >> @@ -86,19 +88,22 @@ class KernelDocDirective(Directive):
+> >> >>              export_file_patterns = str(self.options.get('internal')).split()
+> >> >>          elif 'doc' in self.options:
+> >> >>              cmd += ['-function', str(self.options.get('doc'))]
+> >> >> +        elif 'identifiers' in self.options:
+> >> >> +            identifiers = self.options.get('identifiers').split()
+> >> >>          elif 'functions' in self.options:
+> >> >> -            functions = self.options.get('functions').split()
+> >> >> -            if functions:
+> >> >> -                for f in functions:
+> >> >> -                    cmd += ['-function', f]
+> >> >> -            else:
+> >> >> -                cmd += ['-no-doc-sections']
+> >> >> +            identifiers = self.options.get('functions').split()
+> >> >
+> >> > Rather than do this, can you just change the elif line to read:
+> >> >
+> >> >     elif ('identifiers' in self.options) or ('functions' in self.options):
+> >> >
+> >> > ...then leave the rest of the code intact?  It keeps the logic together,
+> >> > and avoids the confusing distinction between identifiers=='' and
+> >> > identifiers==None .
+> >> 
+> >> I think the problem is you still need to distinguish between the two for
+> >> the get('functions') part.
+> >> 
+> >> One option is to rename 'functions' to 'identifiers' in the above block,
+> >> and put something like this above the whole if ladder (untested):
+> >> 
+> >>         # backward compat
+> >>         if 'functions' in self.options:
+> >>             if 'identifiers' in self.options:
+> >>                 kernellog.warn(env.app, "fail")
+> > This will miss the content of 'functions' directive if both exist in
+> > same doc.
+> 
+> Did you not notice your patch does the same, except silently, while this
+> would produce a warning? Which one is less surprising?
 >
-> On 2019/10/26 2:22, Jaegeuk Kim wrote:
-> > On 10/25, Chao Yu wrote:
-> >> On 2019/10/25 11:51, Hridya Valsaraju wrote:
-> >>> On Thu, Oct 24, 2019 at 2:26 AM Chao Yu <yuchao0@huawei.com> wrote:
-> >>>>
-> >>>> On 2019/10/24 5:48, Hridya Valsaraju wrote:
-> >>>>> Currently f2fs stats are only available from /d/f2fs/status. This patch
-> >>>>> adds some of the f2fs stats to sysfs so that they are accessible even
-> >>>>> when debugfs is not mounted.
-> >>>>
-> >>>> Why don't we mount debugfs first?
-> >>>
-> >>> Thank you for taking a look at the patch Chao. We will not be mounting
-> >>> debugfs for security reasons.
-> >>
-> >> Hi, Hridya,
-> >>
-> >> May I ask is there any use case for those new entries?
-> >>
-> >> So many sysfs entries exist, if there is real use case, how about backuping
-> >> entire /d/f2fs/status entry into /proc/fs/f2fs/<dev>/ directory rather than
-> >> adding some of stats as a single entry in sysfs directory?
-> >
-> > These will be useful to keep a track on f2fs health status by one value
-> > per entry, which doesn't require user-land parsing stuff. Of course, Android
-> > can exploit them by IdleMaint, rollback feature, and so on.
->
-> Alright, I suggest to add a sub-directory for those statistic entries, we can
-> manage them more easily isolated from those existed switch entries.
+yes, my mistake. Mine does the same thing.
 
-Thank you Chao and Jaegeuk. I will make this change and send out a new version.
-
-Regards,
-Hridya
-
->
-> Thanks,
->
 > >
+> >>             else:
+> >>                 self.options.set('identifiers', self.options.get('functions'))
+> >> 
+> >> BR,
+> >> Jani.
 > >>
-> >> Thanks,
-> >>
-> >>>
-> >>> Regards,
-> >>> Hridya
-> >>>
-> >>>>
-> >>>> Thanks,
-> >>> .
-> >>>
-> > .
+> > After comparing, I still perfer my original code which is simpler. :)
+> 
+> But is it, really? I agree with Jon about the distinction between None
+> and '' being confusing.
+>
+Here python is different from C. Both empty string and None are False in python.
+Note such condition is common in python.
+
+Again, I am ok with both.
+
+> 
+> BR,
+> Jani.
+> 
+> 
+> 
 > >
+> >> 
+> >> -- 
+> >> Jani Nikula, Intel Open Source Graphics Center
+> 
+> -- 
+> Jani Nikula, Intel Open Source Graphics Center
+
+-- 
+Cheers,
+Changbin Du
