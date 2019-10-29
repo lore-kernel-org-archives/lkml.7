@@ -2,205 +2,329 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A265CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3864CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3339921479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:58:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REsfzx49"
+	by mail.kernel.org (Postfix) with ESMTP id B16DD20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572364843;
+	bh=i+SzkfIVTCACRFr5/XsN9sbwvg7+vhB817BGoXY+yHE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ry5ha18bez/ZIu2nu+7o269rOk7p8JrK3w+467WhrqMtmBhCW+I9Mrvxn+lnkv8qF
+	 xf81lR1x7yx0uY3+Ze+dM2D2NpVTXIp9LMjmvqN+obOfOfeY4HH++No2n+0/qz2wbl
+	 5AEEuxf+RolKQOaqy+nxCD+O/T8c1mMCXIWqFV/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390249AbfJ2P6y (ORCPT
+        id S2390265AbfJ2QAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:58:54 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36955 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390192AbfJ2P6x (ORCPT
+        Tue, 29 Oct 2019 12:00:42 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:32882 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389902AbfJ2QAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:58:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q130so2988800wme.2;
-        Tue, 29 Oct 2019 08:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=i0TUmJ18ZcyUKsXykls8PPcjqgJJsmsjfFdpRETWj3g=;
-        b=REsfzx49IQKDe7LLT85vOXOTGHzt4JVWjq10YOQiyqqNLe9f1YEbVJWsx6JpnYmLIG
-         mijUoxvAe4KCF6WNy1zGVD5IV+HKaQAKTlqoXFxqT/tCI3q7QBzGkchngGzzqMH6mwhV
-         44g2wTN2J6cOVWe/dEvyVt5Jq4zl/iM/a56mlOCWAqOhvD6s8AlJXLoj/5SNBVvjh3iK
-         9Y8Y4LJBA6rjWrvhCALVk5KUOLQPzU2a9G7ms3eD+WXOqfdabIy6lr/r4L+0bAYC/GYZ
-         VOFtHTQMurlnROgtFGXhfHEpL2zBzBoFccIGFAIGxfkprNkqt7h54vtUFZljIFZi92MU
-         C/uA==
+        Tue, 29 Oct 2019 12:00:42 -0400
+Received: by mail-ot1-f66.google.com with SMTP id u13so10223402ote.0;
+        Tue, 29 Oct 2019 09:00:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=i0TUmJ18ZcyUKsXykls8PPcjqgJJsmsjfFdpRETWj3g=;
-        b=EiyyYNilLC5eU7q8f2zSPtZ4p8W0GZPvAGjH37IXG1CAQkXqTth9lSteDO990sUzTx
-         6bWkF+pfMSra6W6EvV3bFBWS67adgRzUkd15CKCHLMKgem0ll4VYy2/54Tp/br9acD7a
-         t8RXCC6xLXxgx5rtuZGK+hZ2lV3lLRhPxgG1FeT+jMn3aK6e8f/nv5k5nGbUr1BR8a8X
-         HQ0hvJs/JKksaZjban8uCZLD1ZrRQ7Qtjnu2SXDchHroYtbSpEDw5/FVOBZsasXkP8ix
-         f95Kaii1KNy8KxssNBVxkW+gUsBuMtg49y9mjKLdQ19A5kKGVq3wc2PzADs6gqn2p/D6
-         F6kQ==
-X-Gm-Message-State: APjAAAVN8N/lVJbXniyQvggxQVInPNg2VovHUhTRzUW4r3ZzS+h4znLA
-        6DQSh8+eeU4GJCRHwbrfL7Q=
-X-Google-Smtp-Source: APXvYqwyZRhqa7Xzvm9LHS7ZHK+2KPi1arRJ8di0YaQGwNLNa7NPaxQrJ/SariJDIgjOWjG2f1Dlkw==
-X-Received: by 2002:a7b:c0ca:: with SMTP id s10mr4696016wmh.166.1572364729523;
-        Tue, 29 Oct 2019 08:58:49 -0700 (PDT)
-Received: from [172.20.38.115] ([91.217.168.176])
-        by smtp.gmail.com with ESMTPSA id m3sm3155307wrb.67.2019.10.29.08.58.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 08:58:49 -0700 (PDT)
-Subject: Re: [PATCH v2] kbuild: support byacc as alternative YACC to bison
-To:     Ethan Sommer <e5ten.arch@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
- <20191029150119.19823-1-e5ten.arch@gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <760b5b4f-caa6-67e1-aa7f-ddd694a84b4a@gmail.com>
-Date:   Tue, 29 Oct 2019 10:58:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R//ybbMO3XH827fdF6Ly2Nl4C2iYjhABLiSuwPKBh2c=;
+        b=fXYmbrK0fA1O8JxsKWz2i5t0Y00XmACKCEFpuoTFjdw+kcdfLAIdfyUtCbbrjx2jt4
+         gOlnq+dFaovdxhUNuAv+U5Lw3KnD56J/7a7JPIFccXS8W1LZfKZ0qTzdAscKjpzPgVkW
+         ymKE6jRnlPdVTJ9EiIFyAasgQHRATilJvP1qfyRl6QHSh1bBYJD6KD56i6Zs1/SBRZmO
+         9iRBOcJnu86d5tn0s2F0iogz5LH0YotdR7p9mIZHDrRqHgrRWY93DOqUzqrS/SiSFTOG
+         XvcU5DjIDkTux75ncbEOemU7Cfu13o6xwBj4gydIbXFlErjbr93aF0kSoE008BU+V3Qc
+         Ys3g==
+X-Gm-Message-State: APjAAAVS93VwU95zxKQ+0E2jHKQxypC7Ekr8cY0oPbcMIUqtMfD+k8Qn
+        BB9g/oIQDdsMpZP0Mqd0Lg==
+X-Google-Smtp-Source: APXvYqzlpNP/dgXzM+zC+lYUoBJviYrZV9XUAHPzWT5OtZXvoNRGsS9jmwJi02xfJpb+wb1XerDqmg==
+X-Received: by 2002:a9d:620c:: with SMTP id g12mr9098638otj.11.1572364840953;
+        Tue, 29 Oct 2019 09:00:40 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 100sm4753202otl.48.2019.10.29.09.00.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 09:00:39 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 11:00:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: usb: dwc3: Move Amlogic G12A DWC3 Glue
+ Bindings to YAML schemas
+Message-ID: <20191029160038.GA22675@bogus>
+References: <20191021132322.25256-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20191029150119.19823-1-e5ten.arch@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021132322.25256-1-narmstrong@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ethan,
-
-On 10/29/19 10:01 AM, Ethan Sommer wrote:
-> Switches to a more portable set of flags for generating the same file
-> names instead of the bison-specific --defines, uses the more portable -V
-> instead of --version, and explicitly defines YYSTYPE in lex.l, which
-> bison implicitly defines if not present but byacc does not.
+On Mon, Oct 21, 2019 at 03:23:22PM +0200, Neil Armstrong wrote:
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Amlogic G12A DWC3 Glue Bindings over to a YAML schemas,
+> the AXG and GXL glue bindings will be converted later.
 > 
-> Add %locations to dtc-parser.y to explicitly enable location tracking
-> for byacc, and define YYERROR_CALL explicitly to prevent the locations
-> directive from causing it to be defined to a 2-parameter call to
-> yyerror, which dtc-parser.y defines to accept one parameter.
-> 
-> Requires byacc to be built with --enable-btyacc.
-> 
-> Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  scripts/Makefile.host     | 2 +-
->  scripts/dtc/dtc-parser.y  | 4 ++++
->  scripts/genksyms/Makefile | 2 +-
->  scripts/genksyms/lex.l    | 2 ++
->  4 files changed, 8 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/usb/amlogic,dwc3.txt  |  88 ------------
+>  .../usb/amlogic,meson-g12a-usb-ctrl.yaml      | 132 ++++++++++++++++++
+>  2 files changed, 132 insertions(+), 88 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
 > 
-> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-> index 4c51c95d40f4..64e98e1d4825 100644
-> --- a/scripts/Makefile.host
-> +++ b/scripts/Makefile.host
-> @@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
->  # YACC
->  # ---------------------------------------------------------------------------
->  quiet_cmd_bison = YACC    $(basename $@).[ch]
-> -      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
-> +      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
->  
->  $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
->  	$(call if_changed,bison)
-> diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
-> index 2ed4dc1f07fd..40dcf4f149da 100644
-> --- a/scripts/dtc/dtc-parser.y
-> +++ b/scripts/dtc/dtc-parser.y
-
-For file scripts/dtc/dtc-parser.y:
-
-This file is maintained in the upstream dtc project.  We pull changes
-from that project into the Linux kernel source tree.
-
-The file is located at the root level of the upstream project.
-
-Info on submitting patches is in the upstream file "Documentation/manual.txt":
-
-   1) Sources
-
-   Source code for the Device Tree Compiler can be found at git.kernel.org.
-
-   The upstream repository is here:
-
-       git://git.kernel.org/pub/scm/utils/dtc/dtc.git
-       https://git.kernel.org/pub/scm/utils/dtc/dtc.git
-
-   The gitweb interface for the upstream respository is:
-
-       https://git.kernel.org/cgit/utils/dtc/dtc.git/
-
-   1.1) Submitting Patches
-
-   Patches should be sent to the maintainers:
-           David Gibson <david@gibson.dropbear.id.au>
-           Jon Loeliger <jdl@jdl.com>
-   and CCed to <devicetree-compiler@vger.kernel.org>.
-
--Frank
-
-
-> @@ -2,6 +2,8 @@
->  /*
->   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
->   */
-> +%locations
+> diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+> index b9f04e617eb7..9a8b631904fd 100644
+> --- a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+> @@ -40,91 +40,3 @@ Example device nodes:
+>  				phy-names = "usb2-phy", "usb3-phy";
+>  			};
+>  		};
+> -
+> -Amlogic Meson G12A DWC3 USB SoC Controller Glue
+> -
+> -The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
+> -in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
+> -only.
+> -
+> -A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
+> -
+> -One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
+> -
+> -The DWC3 Glue controls the PHY routing and power, an interrupt line is
+> -connected to the Glue to serve as OTG ID change detection.
+> -
+> -Required properties:
+> -- compatible:	Should be "amlogic,meson-g12a-usb-ctrl"
+> -- clocks:	a handle for the "USB" clock
+> -- resets:	a handle for the shared "USB" reset line
+> -- reg:		The base address and length of the registers
+> -- interrupts:	the interrupt specifier for the OTG detection
+> -- phys: 	handle to used PHYs on the system
+> -	- a <0> phandle can be used if a PHY is not used
+> -- phy-names:	names of the used PHYs on the system :
+> -	- "usb2-phy0" for USB2 PHY0 if USBHOST_A port is used
+> -	- "usb2-phy1" for USB2 PHY1 if USBOTG_B port is used
+> -	- "usb3-phy0" for USB3 PHY if USB3_0 is used
+> -- dr_mode:	should be "host", "peripheral", or "otg" depending on
+> -	the usage and configuration of the OTG Capable port.
+> -	- "host" and "peripheral" means a fixed Host or Device only connection
+> -	- "otg" means the port can be used as both Host or Device and
+> -	  be switched automatically using the OTG ID pin.
+> -
+> -Optional properties:
+> -- vbus-supply:	should be a phandle to the regulator controlling the VBUS
+> -		power supply when used in OTG switchable mode
+> -
+> -Required child nodes:
+> -
+> -A child node must exist to represent the core DWC3 IP block. The name of
+> -the node is not important. The content of the node is defined in dwc3.txt.
+> -
+> -A child node must exist to represent the core DWC2 IP block. The name of
+> -the node is not important. The content of the node is defined in dwc2.txt.
+> -
+> -PHY documentation is provided in the following places:
+> -- Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+> -- Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+> -
+> -Example device nodes:
+> -	usb: usb@ffe09000 {
+> -			compatible = "amlogic,meson-g12a-usb-ctrl";
+> -			reg = <0x0 0xffe09000 0x0 0xa0>;
+> -			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+> -			#address-cells = <2>;
+> -			#size-cells = <2>;
+> -			ranges;
+> -
+> -			clocks = <&clkc CLKID_USB>;
+> -			resets = <&reset RESET_USB>;
+> -
+> -			dr_mode = "otg";
+> -
+> -			phys = <&usb2_phy0>, <&usb2_phy1>,
+> -			       <&usb3_pcie_phy PHY_TYPE_USB3>;
+> -			phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
+> -
+> -			dwc2: usb@ff400000 {
+> -				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
+> -				reg = <0x0 0xff400000 0x0 0x40000>;
+> -				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
+> -				clock-names = "ddr";
+> -				phys = <&usb2_phy1>;
+> -				dr_mode = "peripheral";
+> -				g-rx-fifo-size = <192>;
+> -				g-np-tx-fifo-size = <128>;
+> -				g-tx-fifo-size = <128 128 16 16 16>;
+> -			};
+> -
+> -			dwc3: usb@ff500000 {
+> -				compatible = "snps,dwc3";
+> -				reg = <0x0 0xff500000 0x0 0x100000>;
+> -				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> -				dr_mode = "host";
+> -				snps,dis_u2_susphy_quirk;
+> -				snps,quirk-frame-length-adjustment;
+> -			};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+> new file mode 100644
+> index 000000000000..45bcc98ee9a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+> @@ -0,0 +1,132 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/usb/amlogic,meson-g12a-usb-ctrl.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
->  %{
->  #include <stdio.h>
->  #include <inttypes.h>
-> @@ -17,6 +19,8 @@ extern void yyerror(char const *s);
->  		treesource_error = true; \
->  	} while (0)
->  
-> +#define YYERROR_CALL(msg) yyerror(msg)
+> +title: Amlogic Meson G12A DWC3 USB SoC Controller Glue
 > +
->  extern struct dt_info *parser_output;
->  extern bool treesource_error;
->  %}
-> diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
-> index 78629f515e78..397c2dc8182b 100644
-> --- a/scripts/genksyms/Makefile
-> +++ b/scripts/genksyms/Makefile
-> @@ -15,7 +15,7 @@ genksyms-objs	:= genksyms.o parse.tab.o lex.lex.o
->  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
->  
->  quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
-> -      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
-> +      cmd_bison_no_warn = $(YACC) -V >/dev/null; \
->  			  $(cmd_bison) 2>/dev/null
->  
->  $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
-> diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
-> index e265c5d96861..0580c088527f 100644
-> --- a/scripts/genksyms/lex.l
-> +++ b/scripts/genksyms/lex.l
-> @@ -19,6 +19,8 @@
->  #include "genksyms.h"
->  #include "parse.tab.h"
->  
-> +extern YYSTYPE yylval;
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
 > +
->  /* We've got a two-level lexer here.  We let flex do basic tokenization
->     and then we categorize those basic tokens in the second stage.  */
->  #define YY_DECL		static int yylex1(void)
+> +description: |
+> +  The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
+> +  in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
+> +  only.
+> +
+> +  A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
+> +
+> +  One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
+> +
+> +  The DWC3 Glue controls the PHY routing and power, an interrupt line is
+> +  connected to the Glue to serve as OTG ID change detection.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,meson-g12a-usb-ctrl
+> +
+> +  ranges: true
+> +
+> +  "#address-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  "#size-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  clocks:
+> +    minItems: 1
+> +
+> +  resets:
+> +    minItems: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    items:
+> +      - const: usb2-phy0 # USB2 PHY0 if USBHOST_A port is used
+> +      - const: usb2-phy1 # USB2 PHY1 if USBOTG_B port is used
+> +      - const: usb3-phy0 # USB3 PHY if USB3_0 is used
+> +
+> +  phys:
+> +    minItems: 1
+> +    maxItems: 3
+> +
+> +  dr_mode:
+> +    enum:
+> +      - host # fixed Host connection
+> +      - peripheral # fixed Device connection
+> +      - otg # Host or Device and switched automatically using the OTG ID pin
+
+This should have a common definition. You can assume it does, so you 
+just need 'true'.
+
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  vbus-supply:
+> +    description: VBUS power supply when used in OTG switchable mode
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  "^usb@[0-9a-f]+$":
+> +    type: object
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - ranges
+> +  - clocks
+> +  - resets
+> +  - reg
+> +  - interrupts
+> +  - phy-names
+> +  - phys
+> +  - dr_mode
+> +
+> +examples:
+> +  - |
+> +    usb: usb@ffe09000 {
+> +          compatible = "amlogic,meson-g12a-usb-ctrl";
+> +          reg = <0x0 0xffe09000 0x0 0xa0>;
+> +          interrupts = <16>;
+> +          #address-cells = <1>;
+> +          #size-cells = <1>;
+> +          ranges;
+> +
+> +          clocks = <&clkc_usb>;
+> +          resets = <&reset_usb>;
+> +
+> +          dr_mode = "otg";
+> +
+> +          phys = <&usb2_phy0>, <&usb2_phy1>, <&usb3_phy0>;
+> +          phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
+> +
+> +          dwc2: usb@ff400000 {
+> +              compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
+> +              reg = <0xff400000 0x40000>;
+> +              interrupts = <31>;
+> +              clocks = <&clkc_usb1>;
+> +              clock-names = "ddr";
+> +              phys = <&usb2_phy1>;
+> +              dr_mode = "peripheral";
+
+However, it seems folks just put 'dr_mode' where ever they please. I saw 
+one in usb phy yesterday. Just a comment, not really anything for you to 
+change here...
+
+> +              g-rx-fifo-size = <192>;
+> +              g-np-tx-fifo-size = <128>;
+> +              g-tx-fifo-size = <128 128 16 16 16>;
+> +          };
+> +
+> +          dwc3: usb@ff500000 {
+> +              compatible = "snps,dwc3";
+> +              reg = <0xff500000 0x100000>;
+> +              interrupts = <30>;
+> +              dr_mode = "host";
+> +              snps,dis_u2_susphy_quirk;
+> +              snps,quirk-frame-length-adjustment;
+> +          };
+> +    };
+> +
+> -- 
+> 2.22.0
 > 
-
