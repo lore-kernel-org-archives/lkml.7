@@ -2,96 +2,94 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDA7CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58ECCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6F02087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886C32087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="drAUjUv5"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="RfvI6IJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfJ2WBN (ORCPT
+        id S1727054AbfJ2WBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:01:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41612 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfJ2WBN (ORCPT
+        Tue, 29 Oct 2019 18:01:35 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39588 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfJ2WBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:01:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=u9Sf9FNHhYYBEBoltVzRgVFkWsIpASj//j6eW2ZSz38=; b=drAUjUv54IKyh1uKLZS+YnVCA
-        rmQ6x9LRqH35slCBccluZ+g32eU/4hlKKYw5qagqNPtl/rPHq7JRjgJqqA+eX5NWR7ZiHu4AcUoxg
-        jv0jI2R3i6keDALtgNMZZd6AVRx0EPNbDaj0Ly7tFQvv9JBhIv16ewbcvxjVTW0PnMDUR9FScVAjU
-        2QzQRYhzTfn4M3dfG72vEvyPkgPJm3qWdPnDWbmZWxULwW/kgoHn9DOByr6QE/FF/P/QmLYG9vwyG
-        8nccK6mAxENTwwQIORA2wZxNEM7c6SWyDJ4AhmvjrgCf6C+7DHSMgEMOhJfnOhYxlUddtNpBA/eLq
-        ftya7ZmhQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPZY9-0004gR-6j; Tue, 29 Oct 2019 22:01:13 +0000
-Subject: Re: [RFC PATCH] kconfig: Add option to get the full help text with
- listnewconfig
-To:     Laura Abbott <labbott@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jcline@redhat.com, dzickus@redhat.com
-References: <20191029181702.21460-1-labbott@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <53da077f-b4d6-c123-bcbc-ae531fdcc410@infradead.org>
-Date:   Tue, 29 Oct 2019 15:01:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191029181702.21460-1-labbott@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 29 Oct 2019 18:01:35 -0400
+Received: by mail-qt1-f195.google.com with SMTP id t8so377034qtc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 15:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=IkV7pzdHzeP4W9uWbTsQ7etbx4DSYi39wSa2PvGrX6c=;
+        b=RfvI6IJX3Jf/JhX4q/KwdEzN4UF0kChI0DDMFYEYqA+F9Mmy8ug1DbpQvquaIkh9+i
+         DvC2bPiyTBMjQnjtE3XdjvaktrG24Ku8RyVky9le/cZDwcJXlOOxD23pjxA/jdm51GDD
+         RGF1jXeDj+alZw/xoU72AmDNt2pvUZYS6T+g4AQaZxlYtmWCKbJZH6s2GHEhXX2JpiG5
+         BxSR0fkB2gxylEY9WQNt4BtPh9mdmC/dIaF49bzj9Q1C3K0Wi8Kz7FyHu8dt+CPEZhvo
+         tmIGP+gwiQw1CnKpEGoCrURJkOuwgXNoiEzAMHvoGPJL6TCfe0vuYxqEpgzsSceg8Nh6
+         9gww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=IkV7pzdHzeP4W9uWbTsQ7etbx4DSYi39wSa2PvGrX6c=;
+        b=MGlemp656Qe4Yeau38zyv56exIl3MUBrKEZf21VGU9NGS9tQgYWynXX5fkH4t3rPf8
+         KguxiZlTuriUxYylNiiXQJXqK2+0SFKiaL0OUPs018nIdWolo1ZceyZMjWSADMPc+fM7
+         CTS/qbgRSeSPzwzfh6Q5WixqkuldQUkvaOwK/41+XZDazQm4JV9whudfdJ/+thgkJkiW
+         IU4mmeXUTB5P+fGjUzVUs2GXJiP3bY4yCYjvlBJev2VDr9Q4eKilMC6JiLSRswgXZXF+
+         QtEDi4yO+A/NV9J17sSBxfNUsbDfA8gdsJ5bia70kXCzPg9HXPyYnIT99tpCwThQ5bMT
+         rDRA==
+X-Gm-Message-State: APjAAAW9aDyDddlqhF15LoNpsCEBhTPU+SCt0F3y5E9sF7J/VW5XjM39
+        R6As/4S/cgTHM7gryNTPKzDumQ==
+X-Google-Smtp-Source: APXvYqzRDJnyT0AvItDzx453y4BLjC9jf3D+/3b3ob/WwGM7SPp0dlo5AEIDPRWfSp/v5PbLannDWQ==
+X-Received: by 2002:a0c:c3c5:: with SMTP id p5mr25907593qvi.34.1572386492432;
+        Tue, 29 Oct 2019 15:01:32 -0700 (PDT)
+Received: from ?IPv6:2600:1000:b063:e143:e15a:1807:6e04:c401? ([2600:1000:b063:e143:e15a:1807:6e04:c401])
+        by smtp.gmail.com with ESMTPSA id u18sm89248qth.20.2019.10.29.15.01.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Oct 2019 15:01:31 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: "Force HWP min perf before offline" triggers unchecked MSR access errors
+Date:   Tue, 29 Oct 2019 18:01:30 -0400
+Message-Id: <A94C23C3-E6B9-4390-B380-C49D87731D81@lca.pw>
+References: <CAJZ5v0g6_-HBEKfHtfe8LFG9PKosGeUW3-gwTBW6F32OwFwO3g@mail.gmail.com>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Chen Yu <yu.c.chen@intel.com>, Len Brown <lenb@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAJZ5v0g6_-HBEKfHtfe8LFG9PKosGeUW3-gwTBW6F32OwFwO3g@mail.gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laura,
 
-On 10/29/19 11:17 AM, Laura Abbott wrote:
-> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-> index ef2f2336c469..aaaf1f62300c 100644
-> --- a/scripts/kconfig/Makefile
-> +++ b/scripts/kconfig/Makefile
-> @@ -66,7 +66,9 @@ localyesconfig localmodconfig: $(obj)/conf
->  #  syncconfig has become an internal implementation detail and is now
->  #  deprecated for external use
->  simple-targets := oldconfig allnoconfig allyesconfig allmodconfig \
-> -	alldefconfig randconfig listnewconfig olddefconfig syncconfig
-> +	alldefconfig randconfig listnewconfig olddefconfig syncconfig \
-> +	extendedlistnewconfig
-> +
->  PHONY += $(simple-targets)
->  
->  $(simple-targets): $(obj)/conf
-> @@ -134,6 +136,7 @@ help:
->  	@echo  '  alldefconfig    - New config with all symbols set to default'
->  	@echo  '  randconfig	  - New config with random answer to all options'
->  	@echo  '  listnewconfig   - List new options'
-> +	@echo  '  extendedlistnewconfig   - List new options'
 
-This text should also say " and help text" similar to what conf.c does.
+> On Oct 29, 2019, at 5:47 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>=20
+> The MSR_IA32_ENERGY_PERF_BIAS MSR appears to be not present, which
+> should be caught by the X86_FEATURE_EPB check in
+> intel_pstate_set_epb().
+>=20
+> Do you run this in a guest perchance?
 
->  	@echo  '  olddefconfig	  - Same as oldconfig but sets new symbols to their'
->  	@echo  '                    default value without prompting'
->  	@echo  '  kvmconfig	  - Enable additional options for kvm guest kernel support'
-
-I can't say that I like the name, but I won't try to paint it a
-different color.
-
--- 
-~Randy
-
+No, it is a baremetal HPE server. The dmesg does say something like energy p=
+erf bias changed from performance to normal, and the cpuflag contains epb wh=
+ich I thought that would pass the feature check? I could upload the whole dm=
+esg a bit later if that helps.=
