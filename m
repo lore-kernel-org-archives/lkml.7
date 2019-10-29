@@ -2,118 +2,103 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47900CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1C8CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CCF20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6334A20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KJFXwM5J"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="UTgrs2sE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733278AbfJ2Tp6 (ORCPT
+        id S1726462AbfJ2TvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:45:58 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39205 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728686AbfJ2Tp5 (ORCPT
+        Tue, 29 Oct 2019 15:51:04 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43417 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfJ2TvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:45:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572378356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H7Ti3+3tmv66owZ7qBKTGP/26K30M0oQKayUEbDIa+Y=;
-        b=KJFXwM5JwAOn6np+DvwZHauSVNqZTi/WJ/89N60s7C1axG7ydquLTcK+GC0RjKBnuR0nn8
-        HNlpjVYHprOdjqZ/4yQ0I9U4fi3AYt93rswOpzy41/CbI1MUfjC1plCA7ZtDkMsZnZuKmC
-        2CTNItSQH7CjFGs8Argk819nVamZPOg=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-oKvREsjXOR6byGRQFufPIA-1; Tue, 29 Oct 2019 15:45:55 -0400
-Received: by mail-lj1-f197.google.com with SMTP id g28so3469196ljl.10
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:45:54 -0700 (PDT)
+        Tue, 29 Oct 2019 15:51:03 -0400
+Received: by mail-qk1-f195.google.com with SMTP id a194so78605qkg.10
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:51:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=cQkD4MvS0kKW1/ul+xB5LN/x1F0/sjmZ3GaEB4sIcXA=;
+        b=UTgrs2sEctwlidoemzTmSe3mg08J8lodDl8CYJjVTOFTT+YNjsbAdL/GBeqMFfnB0l
+         URtqgGALgtypK14/rZfHTviUq1QdHn+pD6y+O+SbVT+Ri9fp0oVJLCL30ZyW+ZV7GF/2
+         YAKog5d4ob6JulurRIoW80FwREVYBbDEKVeKM/c/hCMBHh5QTy1doYCBSUG3M1H7uidE
+         RU8VpQQPZm49g02i6f/9IgGaAP8yJsA5GqT/hGq96XsPzJuGWbltrYTTe/ncqPqIyBGe
+         uxfsHVTkc181cbNhqYo7YcmffiBnz+Te8Kb9Nq3MsuE90VUkKzHADyLLt2yWtaWlz3aN
+         IFqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D+ECcjymISpeDMuJTnhQofeU33ZNJr8YyX1nUeLIK0Y=;
-        b=AcR1gZGcFU3OwCH1JLFeXjDx8V/sOWT7pgy2YGBByHgMPY0sLTfFB6W76r+XW61n8a
-         XYBmTLtxSdEAZxiY5xwkhVrYz2lG90mLqFRu6eGxrOftrfZYFSZBy8PO3a1DMtsE1TLf
-         5KGqDnhmyYYiTMavnZ60K0QqcsznhUE+k7oU1JWgePj/AUgGojsgQRFPuOiwv8Qvuh70
-         rYD8NXJDJgIt51COalCQ0oYByPpiDMRO9+kXnHRxgcpzAQfBazgeaj6G6nCCopoZdCy7
-         QN5jEocu8ja+T8+PV90NquPdMoYUyvjY2+NJ18cNg7po1jebiEP+Fu13XE5n0ZfWTJOh
-         FS4Q==
-X-Gm-Message-State: APjAAAXkKiguX4Rtre9hAMo1/CvcOZz8LHmam3ddFxHc4tT3gkmpxDW1
-        0Zt5yhIUvblpD9BHm8OwpzCF4rKW+Rt9srxmePiqeiXpdIDfGl73j29mNkMuGEo5trdUo892+Lu
-        hazzqIxfF3/ubjjOsCkMv1T/1NOOHggsBPGrO6tSj
-X-Received: by 2002:a2e:481:: with SMTP id a1mr3892365ljf.209.1572378352478;
-        Tue, 29 Oct 2019 12:45:52 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz0vA9DfJ4UoIS98gFY0o8jyjcdNbcKPd8o0vVtUvZDPBVcqW0aVI4B6nUf/A4G5JzO82y+msUUiOXZaG2Tfgw=
-X-Received: by 2002:a2e:481:: with SMTP id a1mr3892351ljf.209.1572378352307;
- Tue, 29 Oct 2019 12:45:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=cQkD4MvS0kKW1/ul+xB5LN/x1F0/sjmZ3GaEB4sIcXA=;
+        b=dlY0eUkioh+oug4AEbpAelLxo4KrY4gD9orEsfQAakaEv9XnU2xvuvZxGWdJ96DarM
+         2Hfs0xITZp18+GHLm+1dIeV9JmXthhqA8EC/8QWHRSShIptkFYUrfjK38Th2Y4ay2Oov
+         6inuA49UiCdw7wt2SFiLPCcHwFthvmi35FuAUz8Z78jqiS/B2/ap3UH2/zuHMhIvJN+l
+         8F19DaFU0uWIh+ky/FFQ0F2Rx0OVfpznENovUvQduSozp8wzSDTVXLmPpSoybjlfNABU
+         LbXKGJDF9WROW6wALKw0UjDugXNPmRcq+Ztzam5t5HcRor1BdRJM6mdf1tscgSnmZgjF
+         lKqA==
+X-Gm-Message-State: APjAAAWastKWG5UVKBMtyzKLiSHvYYMoz7WafvwRkKadjRU095O3Y0Xc
+        bgGAmpV3DcH1zRYocx3RT/syEg==
+X-Google-Smtp-Source: APXvYqwbJHyN8T+1UJD2wSYLRC6t1gVRWzQx3yuUuIdBzMtowjw0Nf3NT4k6ar6ntJVDgExf62sS1w==
+X-Received: by 2002:a37:8046:: with SMTP id b67mr24024593qkd.437.1572378662716;
+        Tue, 29 Oct 2019 12:51:02 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id g45sm4240565qtb.48.2019.10.29.12.51.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 29 Oct 2019 12:51:02 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iPXW9-0000Rd-PJ; Tue, 29 Oct 2019 16:51:01 -0300
+Date:   Tue, 29 Oct 2019 16:51:01 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dag Moxnes <dag.moxnes@oracle.com>
+Cc:     dledford@redhat.com, leon@kernel.org, parav@mellanox.com,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH rdma-next] RDMA/cma: Use ACK timeout for RoCE
+ packetLifeTime
+Message-ID: <20191029195101.GA1654@ziepe.ca>
+References: <1572003721-26368-1-git-send-email-dag.moxnes@oracle.com>
 MIME-Version: 1.0
-References: <20191029135053.10055-1-mcroce@redhat.com> <20191029135053.10055-5-mcroce@redhat.com>
- <5be14e4e-807f-486d-d11a-3113901e72fe@cumulusnetworks.com> <a7ef0f1b-e7f5-229c-3087-6eaed9652185@cumulusnetworks.com>
-In-Reply-To: <a7ef0f1b-e7f5-229c-3087-6eaed9652185@cumulusnetworks.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Tue, 29 Oct 2019 20:45:16 +0100
-Message-ID: <CAGnkfhwmPxFhhEawxgTp9qt_Uw=HiN3kDVk9f33mr7wEJyp1NA@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 4/4] bonding: balance ICMP echoes in layer3+4 mode
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Blakey <paulb@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>
-X-MC-Unique: oKvREsjXOR6byGRQFufPIA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1572003721-26368-1-git-send-email-dag.moxnes@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 7:41 PM Nikolay Aleksandrov
-<nikolay@cumulusnetworks.com> wrote:
->
-> On 29/10/2019 20:35, Nikolay Aleksandrov wrote:
-> > Hi Matteo,
-> > Wouldn't it be more useful and simpler to use some field to choose the =
-slave (override the hash
-> > completely) in a deterministic way from user-space ?
-> > For example the mark can be interpreted as a slave id in the bonding (s=
-hould be
-> > optional, to avoid breaking existing setups). ping already supports -m =
-and
-> > anything else can set it, this way it can be used to do monitoring for =
-a specific
-> > slave with any protocol and would be a much simpler change.
-> > User-space can then implement any logic for the monitoring case and as =
-a minor bonus
-> > can monitor the slaves in parallel. And the opposite as well - if peopl=
-e don't want
-> > these balanced for some reason, they wouldn't enable it.
-> >
->
-> Ooh I just noticed you'd like to balance replies as well. Nevermind
->
+On Fri, Oct 25, 2019 at 01:42:01PM +0200, Dag Moxnes wrote:
+> The cma is currently using a hard-coded value, CMA_IBOE_PACKET_LIFETIME,
+> for the PacketLifeTime, as it can not be determined from the network.
+> This value might not be optimal for all networks.
+> 
+> The cma module supports the function rdma_set_ack_timeout to set the
+> ACK timeout for a QP associated with a connection. As per IBTA 12.7.34
+> local ACK timeout = (2 * PacketLifeTime + Local CA’s ACK delay).
+> Assuming a negligible local ACK delay, we can use
+> PacketLifeTime = local ACK timeout/2
+> as a reasonable approximation for RoCE networks.
+> 
+> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
+> Change-Id: I200eda9d54829184e556c3c55d6a8869558d76b2
 
-Also, the bonding could be in a router in the middle so no way to read the =
-mark.
+Please don't send Change-Id to the public lists. Run checkpatch before
+sending.
 
---=20
-Matteo Croce
-per aspera ad upstream
+Otherwise this seems reasonable to me..
 
+Jason
