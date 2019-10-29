@@ -2,134 +2,91 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08488CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB56CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D21BD217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572314489;
-	bh=u3OORNaoycoorqSFbe3Gbn/CXhUmwJcjqYkH4Fo2Ryk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hEzpHpPrWq8MUuuvPdii5jA5MAPeMZcEqO8TCnCgfRgiOflO8cAHMWTpOxK3rHMPy
-	 PupiDCKUeM//TUkYTSvPNcHGNy/GIw2z6PIem/4+tk6QzK5uOWPfpt5J5QHtnpSjnP
-	 xS6bAxZD5yhj9UoKiZydZzhk+RnLAVHtTsj0+Yec=
+	by mail.kernel.org (Postfix) with ESMTP id 32AE0217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730041AbfJ2CB3 (ORCPT
+        id S1730201AbfJ2CCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:01:29 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33447 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbfJ2CB2 (ORCPT
+        Mon, 28 Oct 2019 22:02:41 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:51077 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728242AbfJ2CCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:01:28 -0400
-Received: by mail-ot1-f66.google.com with SMTP id u13so8470280ote.0;
-        Mon, 28 Oct 2019 19:01:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9BL3Z1A/tEWwa5UAepvAQv367j/DZhoKZ8WMU7Awauw=;
-        b=FMo/udJcoTk0koZYwYsmVgGNItWh8z0WloKRvpMwU5KFk4L4iPkw3Qc0HNe9lpJaSu
-         BMjvVmJftHpWpRJfB5j5LG5sqqaVZmsFTQBIiHULUvnHQYPMFMM4KxsqXV2lWrxePXYz
-         fX2kmpJNUqiBjr/+k0FfEyQhR5tiejdter/ZORVWZDjanxVwqFENknL1mynh4YoZ7K/c
-         l49KSl/WqrrIKWbmaItuykfg0gD0P6iL26Kn6q8JCFA6Jip3bPA74v64LufYJ46BrRCa
-         09c2MuzaUcGqs0jiMhJ5rlx0MvvYTYSW4Ck1s0ix4GCRSTaaAflZosIsiZpGc1euLgXb
-         TMPw==
-X-Gm-Message-State: APjAAAUZLtYBtTmd9WQB9qwSR9VYGUxhKu2va6g+Rzx5eGIInGbyB09n
-        0+Da3203XYbcI0gFZVBeHQ==
-X-Google-Smtp-Source: APXvYqxTMdckI8FQ4OvetDPaspVzeYA6kfan5ggpGK9XdwPtUCWnW0VVdmXnlKq6EvrM8Js1EYCC2Q==
-X-Received: by 2002:a9d:538d:: with SMTP id w13mr15641639otg.184.1572314486742;
-        Mon, 28 Oct 2019 19:01:26 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h17sm2203144otr.53.2019.10.28.19.01.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 19:01:26 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 21:01:25 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: power: add Amlogic secure power
- domains bindings
-Message-ID: <20191029020125.GA11182@bogus>
-References: <1571391167-79679-1-git-send-email-jianxin.pan@amlogic.com>
- <1571391167-79679-2-git-send-email-jianxin.pan@amlogic.com>
+        Mon, 28 Oct 2019 22:02:40 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TgaVt6a_1572314557;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TgaVt6a_1572314557)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 29 Oct 2019 10:02:38 +0800
+Subject: Re: [PATCH] sched/numa: advanced per-cgroup numa statistic
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+References: <46b0fd25-7b73-aa80-372a-9fcd025154cb@linux.alibaba.com>
+ <20191028130222.GM4131@hirez.programming.kicks-ass.net>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <2b692012-50b5-20f1-b656-fd72a12c1d1a@linux.alibaba.com>
+Date:   Tue, 29 Oct 2019 10:02:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571391167-79679-2-git-send-email-jianxin.pan@amlogic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191028130222.GM4131@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 05:32:44PM +0800, Jianxin Pan wrote:
-> Add the bindings for the Amlogic Secure power domains, controlling the
-> secure power domains.
-> 
-> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
-> power domain registers are in secure world.
-> 
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 ++++++++++++++++++++++
->  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++
->  2 files changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->  create mode 100644 include/dt-bindings/power/meson-a1-power.h
-> 
-> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> new file mode 100644
-> index 00000000..88d8261
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +# Copyright (c) 2019 Amlogic, Inc
-> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson Secure Power Domains
-> +
-> +maintainers:
-> +  - Jianxin Pan <jianxin.pan@amlogic.com>
-> +
-> +description: |+
-> +  Meson Secure Power Domains used in A1/C1 SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-a1-pwrc
-> +
-> +  "#power-domain-cells":
-> +    const: 1
-> +
-> +  secure-monitor:
-> +    description: phandle to the secure-monitor node
-> +    $ref: /schemas/types.yaml#/definitions/phandle
 
-Like the watchdog, make this a child or the secure firmware node. Or 
-just add '#power-domain-cells' to it. You don't really need a child node 
-here if there's not other resources in DT for this.
 
-Rob
+On 2019/10/28 下午9:02, Peter Zijlstra wrote:
+[snip]
+>> +	tg = task_group(p);
+>> +	while (tg) {
+>> +		/* skip account when there are no faults records */
+>> +		if (idx != -1)
+>> +			this_cpu_inc(tg->numa_stat->locality[idx]);
+>> +
+>> +		this_cpu_inc(tg->numa_stat->jiffies);
+>> +
+>> +		tg = tg->parent;
+>> +	}
+>> +
+>> +	rcu_read_unlock();
+>> +}
+> 
+> Thing is, we already have a cgroup hierarchy walk in the tick; see
+> task_tick_fair().
+> 
+> On top of that, you're walking an entirely different set of pointers,
+> instead of cfs_rq, you're walking tg->parent, which pretty much
+> guarantees you're adding even more cache misses.
+> 
+> How about you stick those numa_stats in cfs_rq (with cacheline
+> alignment) and see if you can frob your update loop into the cgroup walk
+> we already do.
+
+Thanks for the reply :-)
+
+The hierarchy walk here you mean is the loop of entity_tick(), correct?
+
+Should working if we introduce the per-cfs_rq numa_stat accounting and
+do update there, I'll try to reform the implementation in next version.
+
+Regards,
+Michael Wang
+
+> 
