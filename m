@@ -2,370 +2,192 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8EACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156BDCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E23B20874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8A420874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:30:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UmqeY8jO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfJ2W3G (ORCPT
+        id S1726706AbfJ2WaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:29:06 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55440 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfJ2W3F (ORCPT
+        Tue, 29 Oct 2019 18:30:21 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40866 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfJ2WaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:29:05 -0400
-Received: from [IPv6:2a01:e34:ec18:2940:6552:ae8c:989f:4277] (unknown [IPv6:2a01:e34:ec18:2940:6552:ae8c:989f:4277])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4B49728A103;
-        Tue, 29 Oct 2019 22:29:03 +0000 (GMT)
-Subject: Re: [PATCH v2] media: vimc: Make capture devices and subdevices use
- different link_validates
-To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
-        <nfraprado@protonmail.com>, linux-media@vger.kernel.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-References: <20191009001854.2253748-1-nfraprado@protonmail.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- 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
-Message-ID: <bcecab76-3c9f-e9bf-86fb-6ae4494b8d23@collabora.com>
-Date:   Tue, 29 Oct 2019 23:29:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 29 Oct 2019 18:30:21 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r4so102824pfl.7
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 15:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4huLalvhOWDbWG3Nf3mcBjBlVwTLOfhCdDsGci1DaaA=;
+        b=UmqeY8jODMF8xNAX6XfvouYj3ruqZPeOZMuGUYcnGVc2Zo8C1qdiery8eoeD+bx3be
+         KxS1D4ohHw3rAhK5FB9iwxKm1DkoU1G6+fLpZgbktTY3DKw1VMQQhAYKQe/XNxzPrIcF
+         R0bI6QaUKVTR5VBxiy/9Q66uba4qjHu+FDyic=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4huLalvhOWDbWG3Nf3mcBjBlVwTLOfhCdDsGci1DaaA=;
+        b=rUe4xqRCknqQc3nwVr8AxfiuFfqKGfqX8hB/HTO89jIdxwm71p68InbzPAmfmMXgR7
+         C1OX3DfvhCGOqfccFw2nC0HkEO4fDpaXA0pvygfv7UUxvu/TDur8XqoNYtzajlbaz7bB
+         zasZi2cgK0upDq6s3UJPTGkt9lVoaCNhXVGfk8OOd7iAX+mKEK53Q1iQ8tqgHXjWb4yd
+         3SePo3E8eX5yxdwbffR+M/sOGjzeRpU1aga4lB+r4EbksQxk7Nn0EQbB1mLBABCoJ2mg
+         iKWHp+HpzidW2pz2lCncPIsEWxfEdA9EOb3eFvGkojLKWTCaKsqmRimSISjUNetrvmwN
+         Fx1A==
+X-Gm-Message-State: APjAAAV8xMwLD+7FGq2v0e0aCUFEmLew/MvbtsFy6wwlOoM/5gE7l7u/
+        hLhRW6psEFFkE56tErzIpnxGlg==
+X-Google-Smtp-Source: APXvYqyDGaeuMVJibuQEGGPk4C3IMj3UK901bqnfRpViSdOK3zl/eMdR/sOGUpiYAYGCLxL3rafotg==
+X-Received: by 2002:a63:1904:: with SMTP id z4mr30463579pgl.413.1572388220234;
+        Tue, 29 Oct 2019 15:30:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c21sm136005pfo.51.2019.10.29.15.30.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 15:30:19 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 15:30:18 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        netdev@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] treewide: Use sizeof_member() macro
+Message-ID: <201910291527.ED0E642@keescook>
+References: <20191010232345.26594-1-keescook@chromium.org>
+ <20191010232345.26594-4-keescook@chromium.org>
+ <2231d5f0a82f880e6706e2d0f070328a029c9b21.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20191009001854.2253748-1-nfraprado@protonmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2231d5f0a82f880e6706e2d0f070328a029c9b21.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nícolas,
-
-Thanks for the patch, please see my comments below.
-
-On 10/9/19 2:19 AM, Nícolas F. R. A. Prado wrote:
-> Instead of validating the links to capture devices and subdevices with
-> the same function, use the default v4l function for links between
-> subdevices and only use a different function for validating between
-> capture device and subdevice.
-> This change should also ease future work to associate multiple mbus
-> codes for the same pixelformat in vimc_pix_map.
+On Thu, Oct 10, 2019 at 04:50:27PM -0700, Joe Perches wrote:
+> On Thu, 2019-10-10 at 16:23 -0700, Kees Cook wrote:
+> > From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+> > 
+> > Replace all the occurrences of FIELD_SIZEOF() and sizeof_field() with
+> > sizeof_member() except at places where these are defined. Later patches
+> > will remove the unused definitions.
+> > 
+> > This patch is generated using following script:
+> > 
+> > EXCLUDE_FILES="include/linux/stddef.h|include/linux/kernel.h"
+> > 
+> > git grep -l -e "\bFIELD_SIZEOF\b" -e "\bsizeof_field\b" | while read file;
+> > do
+> > 
+> > 	if [[ "$file" =~ $EXCLUDE_FILES ]]; then
+> > 		continue
+> > 	fi
+> > 	sed -i  -e 's/\bFIELD_SIZEOF\b/sizeof_member/g' \
+> > 		-e 's/\bsizeof_field\b/sizeof_member/g' \
+> > 		$file;
+> > done
 > 
-> These changes were tested with
-> v4l2-compliance SHA: 3f806630e2ecbcebe31872b865c5c4b42f111a99, 64 bits
-> and passed all tests:
-> Grand Total for vimc device /dev/media0: 451, Succeeded: 451, Failed: 0, Warnings: 0
+> While the sed works, a cocci script would perhaps
+> be better as multi line argument realignment would
+> also occur.
 > 
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
-
-Your patch doesn't apply anymore on top of media/master, there are some small conflicts,
-could you send a v3 with those solved please?
-
-> ---
-> Changes in v2:
-> - Remove blank lines
-> - Rename vimc_cap_link_validate to vimc_vdev_link_validate and move it back to
->   vimc-common.c
-> - Fix style issue on vimc_get_pix_format header
-> - Remove vimc_get_pix_format declaration from vimc-common.h
+> $ cat sizeof_member.cocci
+> @@
+> @@
 > 
->  drivers/media/platform/vimc/vimc-capture.c |  2 +-
->  drivers/media/platform/vimc/vimc-common.c  | 86 +++++++++++-----------
->  drivers/media/platform/vimc/vimc-common.h  |  4 +-
->  3 files changed, 46 insertions(+), 46 deletions(-)
+> -	FIELD_SIZEOF
+> +	sizeof_member
 > 
-> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-> index 602f80323031..75daebd625a8 100644
-> --- a/drivers/media/platform/vimc/vimc-capture.c
-> +++ b/drivers/media/platform/vimc/vimc-capture.c
-> @@ -322,7 +322,7 @@ static const struct vb2_ops vimc_cap_qops = {
->  };
->  
->  static const struct media_entity_operations vimc_cap_mops = {
-> -	.link_validate		= vimc_link_validate,
-> +	.link_validate		= vimc_vdev_link_validate,
->  };
->  
->  static void vimc_cap_release(struct video_device *vdev)
-> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
-> index a3120f4f7a90..a67813e750d9 100644
-> --- a/drivers/media/platform/vimc/vimc-common.c
-> +++ b/drivers/media/platform/vimc/vimc-common.c
-> @@ -247,35 +247,35 @@ int vimc_pipeline_s_stream(struct media_entity *ent, int enable)
->  }
->  EXPORT_SYMBOL_GPL(vimc_pipeline_s_stream);
->  
-> -static int vimc_get_mbus_format(struct media_pad *pad,
-> -				struct v4l2_subdev_format *fmt)
-> +int vimc_get_pix_format(struct media_pad *pad, struct v4l2_pix_format *fmt)
-
-static int vimc_get_pix_format()
-
->  {
->  	if (is_media_entity_v4l2_subdev(pad->entity)) {
->  		struct v4l2_subdev *sd =
->  			media_entity_to_v4l2_subdev(pad->entity);
-> +		struct v4l2_subdev_format sd_fmt;
-> +		const struct vimc_pix_map *pix_map;
->  		int ret;
->  
-> -		fmt->which = V4L2_SUBDEV_FORMAT_ACTIVE;
-> -		fmt->pad = pad->index;
-> +		sd_fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-> +		sd_fmt.pad = pad->index;
->  
-> -		ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, fmt);
-> +		ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &sd_fmt);
->  		if (ret)
->  			return ret;
->  
-> +		v4l2_fill_pix_format(fmt, &sd_fmt.format);
-> +		pix_map = vimc_pix_map_by_code(sd_fmt.format.code);
-> +		fmt->pixelformat = pix_map->pixelformat;
->  	} else if (is_media_entity_v4l2_video_device(pad->entity)) {
->  		struct video_device *vdev = container_of(pad->entity,
->  							 struct video_device,
->  							 entity);
->  		struct vimc_ent_device *ved = video_get_drvdata(vdev);
-> -		const struct vimc_pix_map *vpix;
-> -		struct v4l2_pix_format vdev_fmt;
->  
->  		if (!ved->vdev_get_format)
->  			return -ENOIOCTLCMD;
->  
-> -		ved->vdev_get_format(ved, &vdev_fmt);
-> -		vpix = vimc_pix_map_by_pixelformat(vdev_fmt.pixelformat);
-> -		v4l2_fill_mbus_format(&fmt->format, &vdev_fmt, vpix->code);
-> +		ved->vdev_get_format(ved, fmt);
->  	} else {
->  		return -EINVAL;
->  	}
-> @@ -283,16 +283,16 @@ static int vimc_get_mbus_format(struct media_pad *pad,
->  	return 0;
->  }
->  
-> -int vimc_link_validate(struct media_link *link)
-> +int vimc_vdev_link_validate(struct media_link *link)
->  {
-> -	struct v4l2_subdev_format source_fmt, sink_fmt;
-> +	struct v4l2_pix_format source_fmt, sink_fmt;
->  	int ret;
->  
-> -	ret = vimc_get_mbus_format(link->source, &source_fmt);
-> +	ret = vimc_get_pix_format(link->source, &source_fmt);
->  	if (ret)
->  		return ret;
->  
-> -	ret = vimc_get_mbus_format(link->sink, &sink_fmt);
-> +	ret = vimc_get_pix_format(link->sink, &sink_fmt);
->  	if (ret)
->  		return ret;
->  
-> @@ -301,21 +301,21 @@ int vimc_link_validate(struct media_link *link)
->  		"%s:snk:%dx%d (0x%x, %d, %d, %d, %d)\n",
->  		/* src */
->  		link->source->entity->name,
-> -		source_fmt.format.width, source_fmt.format.height,
-> -		source_fmt.format.code, source_fmt.format.colorspace,
-> -		source_fmt.format.quantization, source_fmt.format.xfer_func,
-> -		source_fmt.format.ycbcr_enc,
-> +		source_fmt.width, source_fmt.height,
-> +		source_fmt.pixelformat, source_fmt.colorspace,
-> +		source_fmt.quantization, source_fmt.xfer_func,
-> +		source_fmt.ycbcr_enc,
->  		/* sink */
->  		link->sink->entity->name,
-> -		sink_fmt.format.width, sink_fmt.format.height,
-> -		sink_fmt.format.code, sink_fmt.format.colorspace,
-> -		sink_fmt.format.quantization, sink_fmt.format.xfer_func,
-> -		sink_fmt.format.ycbcr_enc);
-> -
-> -	/* The width, height and code must match. */
-> -	if (source_fmt.format.width != sink_fmt.format.width
-> -	    || source_fmt.format.height != sink_fmt.format.height
-> -	    || source_fmt.format.code != sink_fmt.format.code)
-> +		sink_fmt.width, sink_fmt.height,
-> +		sink_fmt.pixelformat, sink_fmt.colorspace,
-> +		sink_fmt.quantization, sink_fmt.xfer_func,
-> +		sink_fmt.ycbcr_enc);
-> +
-> +	/* The width, height and pixelformat must match. */
-> +	if (source_fmt.width != sink_fmt.width
-> +	    || source_fmt.height != sink_fmt.height
-> +	    || source_fmt.pixelformat != sink_fmt.pixelformat)
->  		return -EPIPE;
->  
->  	/*
-> @@ -323,44 +323,44 @@ int vimc_link_validate(struct media_link *link)
->  	 * to support interlaced hardware connected to bridges that support
->  	 * progressive formats only.
->  	 */
-> -	if (source_fmt.format.field != sink_fmt.format.field &&
-> -	    sink_fmt.format.field != V4L2_FIELD_NONE)
-> +	if (source_fmt.field != sink_fmt.field &&
-> +	    sink_fmt.field != V4L2_FIELD_NONE)
->  		return -EPIPE;
->  
->  	/*
->  	 * If colorspace is DEFAULT, then assume all the colorimetry is also
->  	 * DEFAULT, return 0 to skip comparing the other colorimetry parameters
->  	 */
-> -	if (source_fmt.format.colorspace == V4L2_COLORSPACE_DEFAULT
-> -	    || sink_fmt.format.colorspace == V4L2_COLORSPACE_DEFAULT)
-> +	if (source_fmt.colorspace == V4L2_COLORSPACE_DEFAULT
-> +	    || sink_fmt.colorspace == V4L2_COLORSPACE_DEFAULT)
->  		return 0;
->  
->  	/* Colorspace must match. */
-> -	if (source_fmt.format.colorspace != sink_fmt.format.colorspace)
-> +	if (source_fmt.colorspace != sink_fmt.colorspace)
->  		return -EPIPE;
->  
->  	/* Colorimetry must match if they are not set to DEFAULT */
-> -	if (source_fmt.format.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
-> -	    && sink_fmt.format.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
-> -	    && source_fmt.format.ycbcr_enc != sink_fmt.format.ycbcr_enc)
-> +	if (source_fmt.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
-> +	    && sink_fmt.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
-> +	    && source_fmt.ycbcr_enc != sink_fmt.ycbcr_enc)
->  		return -EPIPE;
->  
-> -	if (source_fmt.format.quantization != V4L2_QUANTIZATION_DEFAULT
-> -	    && sink_fmt.format.quantization != V4L2_QUANTIZATION_DEFAULT
-> -	    && source_fmt.format.quantization != sink_fmt.format.quantization)
-> +	if (source_fmt.quantization != V4L2_QUANTIZATION_DEFAULT
-> +	    && sink_fmt.quantization != V4L2_QUANTIZATION_DEFAULT
-> +	    && source_fmt.quantization != sink_fmt.quantization)
->  		return -EPIPE;
->  
-> -	if (source_fmt.format.xfer_func != V4L2_XFER_FUNC_DEFAULT
-> -	    && sink_fmt.format.xfer_func != V4L2_XFER_FUNC_DEFAULT
-> -	    && source_fmt.format.xfer_func != sink_fmt.format.xfer_func)
-> +	if (source_fmt.xfer_func != V4L2_XFER_FUNC_DEFAULT
-> +	    && sink_fmt.xfer_func != V4L2_XFER_FUNC_DEFAULT
-> +	    && source_fmt.xfer_func != sink_fmt.xfer_func)
->  		return -EPIPE;
->  
->  	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(vimc_link_validate);
-> +EXPORT_SYMBOL_GPL(vimc_vdev_link_validate);
-
-This is not required anymore as Vimc is a monolithic driver now, these EXPORTs macros got removed.
-
-Thanks
-Helen
-
->  
->  static const struct media_entity_operations vimc_ent_sd_mops = {
-> -	.link_validate = vimc_link_validate,
-> +	.link_validate = v4l2_subdev_link_validate,
->  };
->  
->  int vimc_ent_sd_register(struct vimc_ent_device *ved,
-> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
-> index 698db7c07645..145cee076bd7 100644
-> --- a/drivers/media/platform/vimc/vimc-common.h
-> +++ b/drivers/media/platform/vimc/vimc-common.h
-> @@ -264,12 +264,12 @@ void vimc_ent_sd_unregister(struct vimc_ent_device *ved,
->  			    struct v4l2_subdev *sd);
->  
->  /**
-> - * vimc_link_validate - validates a media link
-> + * vimc_vdev_link_validate - validates a media link
->   *
->   * @link: pointer to &struct media_link
->   *
->   * This function calls validates if a media link is valid for streaming.
->   */
-> -int vimc_link_validate(struct media_link *link);
-> +int vimc_vdev_link_validate(struct media_link *link);
->  
->  #endif
+> @@
+> @@
 > 
+> -	sizeof_field
+> +	sizeof_member
+> $
+> 
+> For instance, this sed produces:
+> 
+> diff --git a/crypto/adiantum.c b/crypto/adiantum.c
+> @@ -435,10 +435,10 @@ static int adiantum_init_tfm(struct crypto_skcipher *tfm)
+>  
+>  	BUILD_BUG_ON(offsetofend(struct adiantum_request_ctx, u) !=
+>  		     sizeof(struct adiantum_request_ctx));
+> -	subreq_size = max(FIELD_SIZEOF(struct adiantum_request_ctx,
+> +	subreq_size = max(sizeof_member(struct adiantum_request_ctx,
+>  				       u.hash_desc) +
+>  			  crypto_shash_descsize(hash),
+> -			  FIELD_SIZEOF(struct adiantum_request_ctx,
+> +			  sizeof_member(struct adiantum_request_ctx,
+>  				       u.streamcipher_req) +
+>  			  crypto_skcipher_reqsize(streamcipher));
+>  
+> 
+> where the cocci script produces:
+> 
+> --- crypto/adiantum.c
+> +++ /tmp/cocci-output-22881-d8186c-adiantum.c
+> @@ -435,11 +435,11 @@ static int adiantum_init_tfm(struct cryp
+>  
+>  	BUILD_BUG_ON(offsetofend(struct adiantum_request_ctx, u) !=
+>  		     sizeof(struct adiantum_request_ctx));
+> -	subreq_size = max(FIELD_SIZEOF(struct adiantum_request_ctx,
+> -				       u.hash_desc) +
+> +	subreq_size = max(sizeof_member(struct adiantum_request_ctx,
+> +					u.hash_desc) +
+>  			  crypto_shash_descsize(hash),
+> -			  FIELD_SIZEOF(struct adiantum_request_ctx,
+> -				       u.streamcipher_req) +
+> +			  sizeof_member(struct adiantum_request_ctx,
+> +					u.streamcipher_req) +
+>  			  crypto_skcipher_reqsize(streamcipher));
+>  
+>  	crypto_skcipher_set_reqsize(tfm,
+
+I played with this a bit, and it seems Coccinelle can get this very very
+wrong:
+
+diff -u -p a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
+@@ -87,13 +87,13 @@ static const struct rhashtable_params rh
+ 	 * value is not constant during the lifetime
+ 	 * of the key object.
+ 	 */
+-	.key_len = FIELD_SIZEOF(struct mlx5_fpga_ipsec_sa_ctx, hw_sa) -
+-		   FIELD_SIZEOF(struct mlx5_ifc_fpga_ipsec_sa_v1, cmd),
++	.key_len = sizeof_member(struct mlx5_fpga_ipsec_sa_ctx, hw_sa) -
++	sizeof_member(struct mlx5_ifc_fpga_ipsec_sa_v1, cmd),
+ 	.key_offset = offsetof(struct mlx5_fpga_ipsec_sa_ctx, hw_sa) +
+-		      FIELD_SIZEOF(struct mlx5_ifc_fpga_ipsec_sa_v1, cmd),
+-	.head_offset = offsetof(struct mlx5_fpga_ipsec_sa_ctx, hash),
+-	.automatic_shrinking = true,
+-	.min_size = 1,
++		      sizeof_member(struct mlx5_ifc_fpga_ipsec_sa_v1, cmd),
++		      .head_offset = offsetof(struct mlx5_fpga_ipsec_sa_ctx, hash),
++		      .automatic_shrinking = true,
++		      .min_size = 1,
+ };
+ 
+ struct mlx5_fpga_ipsec {
+
+
+So, since the sed is faster and causes fewer problems, I'll keep it
+as-is.
+
+-- 
+Kees Cook
