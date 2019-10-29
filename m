@@ -2,102 +2,88 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659C8CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3957ACA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6472086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 053CD2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572336613;
+	bh=C85TGFeZCrGhOL2LSvwdwkyUtb0eIGs8u6rXwHu3r98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R/VR0YVQQbkwfeBVP+Ov4evVqTTWWrxaleBz/YMgYmRsyWWHg6shwak7yzrgV+MVp
+	 ABW+dbonzWazjvMdZYP04yxUdoe1OdSulblrcANn7CW+V/30yN36y1ft+PleyJgV5Z
+	 UNuoEmyZ96drHtMWk9wTrjtqEvTnrox72sYKQ2WQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfJ2IID (ORCPT
+        id S1728330AbfJ2IKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:08:03 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2442 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727331AbfJ2IIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:08:02 -0400
-Received: from DGGEML402-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 25E316BDF6AE21D87397;
-        Tue, 29 Oct 2019 16:07:59 +0800 (CST)
-Received: from DGGEML421-HUB.china.huawei.com (10.1.199.38) by
- DGGEML402-HUB.china.huawei.com (10.3.17.38) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 29 Oct 2019 16:07:57 +0800
-Received: from DGGEML505-MBS.china.huawei.com ([169.254.11.138]) by
- dggeml421-hub.china.huawei.com ([10.1.199.38]) with mapi id 14.03.0439.000;
- Tue, 29 Oct 2019 16:07:51 +0800
-From:   "wubo (T)" <wubo40@huawei.com>
-To:     Lee Duncan <LDuncan@suse.com>,
-        "cleech@redhat.com" <cleech@redhat.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>,
-        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIHNjc2k6IGF2b2lkIHBvdGVudGlhbCBkZWFkbG9v?=
- =?utf-8?B?cCBpbiBpc2NzaV9pZl9yeCBmdW5j?=
-Thread-Topic: [PATCH] scsi: avoid potential deadloop in iscsi_if_rx func
-Thread-Index: AdWL2reJ1uh470cQT+idNsWy+95OAQB3236AAByqm6A=
-Date:   Tue, 29 Oct 2019 08:07:49 +0000
-Message-ID: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DF66B3@dggeml505-mbs.china.huawei.com>
-References: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DE9E71@DGGEML525-MBS.china.huawei.com>
- <92b221da-18a8-8b7b-0436-ca59088fd45b@suse.com>
-In-Reply-To: <92b221da-18a8-8b7b-0436-ca59088fd45b@suse.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.252]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 29 Oct 2019 04:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727331AbfJ2IKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:10:11 -0400
+Received: from localhost (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5817720663;
+        Tue, 29 Oct 2019 08:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572336611;
+        bh=C85TGFeZCrGhOL2LSvwdwkyUtb0eIGs8u6rXwHu3r98=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S7XWlfdDSAlv3/uYXRZvk4A1wIhOPLofg4bVvODYpmmX6GbFCtoIWF9uPFB1ALy29
+         rybgZME5qU6TosYnR9W1rsrvwxEP0QgO3ZTcwIhMv1brnykO+JrIj+sGKBHmH7tGCO
+         EASLpW79fQ3SwYIzI+DMOPusJhZxE3EWssqJ3dOQ=
+Date:   Tue, 29 Oct 2019 09:10:07 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Samuil Ivanov <samuil.ivanovbg@gmail.com>
+Cc:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] Staging: gasket: implement apex_get_status() to
+ check driver status
+Message-ID: <20191029081007.GA520581@kroah.com>
+References: <20191028225926.8951-1-samuil.ivanovbg@gmail.com>
+ <20191028225926.8951-2-samuil.ivanovbg@gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028225926.8951-2-samuil.ivanovbg@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS8xMC8yOSAyOjA0LCBMZWUgRHVuY2FuIHdyb3RlOg0KPiBPbiAxMC8yNi8xOSAxOjU1
-IEFNLCB3dWJvIChUKSB3cm90ZToNCj4+IEZyb206IEJvIFd1IDx3dWJvNDBAaHVhd2VpLmNvbT4N
-Cj4+DQo+PiBJbiBpc2NzaV9pZl9yeCBmdW5jLCBhZnRlciByZWNlaXZpbmcgb25lIHJlcXVlc3Qg
-dGhyb3VnaCANCj4+IGlzY3NpX2lmX3JlY3ZfbXNnIGZ1bmMsaXNjc2lfaWZfc2VuZF9yZXBseSB3
-aWxsIGJlIGNhbGxlZCB0byB0cnkgdG8gDQo+PiByZXBseSB0aGUgcmVxdWVzdCBpbiBkby1sb29w
-LiBJZiB0aGUgcmV0dXJuIG9mIGlzY3NpX2lmX3NlbmRfcmVwbHkgDQo+PiBmdW5jIGZhaWxzIGFs
-bCB0aGUgdGltZSwgb25lIGRlYWRsb29wIHdpbGwgb2NjdXIuDQo+Pg0KPj4gU2lnbmVkLW9mZi1i
-eTogQm8gV3UgPHd1Ym80MEBodWF3ZWkuY29tPg0KPj4gUmV2aWV3ZWQtYnk6IFpoaXFpYW5nIExp
-dSA8bGl1emhpcWlhbmcyNkBodWF3ZWkuY29tPg0KPj4gLS0tDQo+PiAgZHJpdmVycy9zY3NpL3Nj
-c2lfdHJhbnNwb3J0X2lzY3NpLmMgfCA2ICsrKysrKw0KPj4gIDEgZmlsZSBjaGFuZ2VkLCA2IGlu
-c2VydGlvbnMoKykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Njc2lfdHJhbnNw
-b3J0X2lzY3NpLmMgDQo+PiBiL2RyaXZlcnMvc2NzaS9zY3NpX3RyYW5zcG9ydF9pc2NzaS5jDQo+
-PiBpbmRleCA0MTdiODY4ZDg3MzUuLmYzNzdiZmVkNmIwYyAxMDA2NDQNCj4+IC0tLSBhL2RyaXZl
-cnMvc2NzaS9zY3NpX3RyYW5zcG9ydF9pc2NzaS5jDQo+PiArKysgYi9kcml2ZXJzL3Njc2kvc2Nz
-aV90cmFuc3BvcnRfaXNjc2kuYw0KPj4gQEAgLTI0LDYgKzI0LDggQEANCj4+ICANCj4+ICAjZGVm
-aW5lIElTQ1NJX1RSQU5TUE9SVF9WRVJTSU9OICIyLjAtODcwIg0KPj4gIA0KPj4gKyNkZWZpbmUg
-SVNDU0lfU0VORF9NQVhfQUxMT1dFRCAgICAgMTANCj4+ICsNCj4+ICAjZGVmaW5lIENSRUFURV9U
-UkFDRV9QT0lOVFMNCj4+ICAjaW5jbHVkZSA8dHJhY2UvZXZlbnRzL2lzY3NpLmg+DQo+PiAgDQo+
-PiBAQCAtMzY4Miw2ICszNjg0LDcgQEAgaXNjc2lfaWZfcngoc3RydWN0IHNrX2J1ZmYgKnNrYikN
-Cj4+ICAJCXN0cnVjdCBubG1zZ2hkcgkqbmxoOw0KPj4gIAkJc3RydWN0IGlzY3NpX3VldmVudCAq
-ZXY7DQo+PiAgCQl1aW50MzJfdCBncm91cDsNCj4+ICsJCWludCByZXRyaWVzID0gSVNDU0lfU0VO
-RF9NQVhfQUxMT1dFRDsNCj4+ICANCj4+ICAJCW5saCA9IG5sbXNnX2hkcihza2IpOw0KPj4gIAkJ
-aWYgKG5saC0+bmxtc2dfbGVuIDwgc2l6ZW9mKCpubGgpICsgc2l6ZW9mKCpldikgfHwgQEAgLTM3
-MTAsOCANCj4+ICszNzEzLDExIEBAIGlzY3NpX2lmX3J4KHN0cnVjdCBza19idWZmICpza2IpDQo+
-PiAgCQkJCWJyZWFrOw0KPj4gIAkJCWlmIChldi0+dHlwZSA9PSBJU0NTSV9VRVZFTlRfR0VUX0NI
-QVAgJiYgIWVycikNCj4+ICAJCQkJYnJlYWs7DQo+PiArCQkJaWYgKHJldHJpZXMgPD0gMCkNCj4+
-ICsJCQkJYnJlYWs7DQo+PiAgCQkJZXJyID0gaXNjc2lfaWZfc2VuZF9yZXBseShwb3J0aWQsIG5s
-aC0+bmxtc2dfdHlwZSwNCj4+ICAJCQkJCQkgIGV2LCBzaXplb2YoKmV2KSk7DQo+PiArCQkJcmV0
-cmllcy0tOw0KPj4gIAkJfSB3aGlsZSAoZXJyIDwgMCAmJiBlcnIgIT0gLUVDT05OUkVGVVNFRCAm
-JiBlcnIgIT0gLUVTUkNIKTsNCj4+ICAJCXNrYl9wdWxsKHNrYiwgcmxlbik7DQo+PiAgCX0NCj4+
-DQo+IA0KPiBZb3UgY291bGQgaGF2ZSB1c2VkICJpZiAoLS1yZXRyaWVzIDwgMCkiIChvciBzb21l
-IHZhcmlhdGlvbiB0aGVyZW9mKSANCj4gYnV0IHRoYXQgbWF5IG5vdCBiZSBhcyBjbGVhciwgYW5k
-IGNlcnRhaW5seSBpcyBvbmx5IGEgbml0LiBTbyBJJ20gZmluZSANCj4gd2l0aCB0aGF0Lg0KPiAN
-Cg0KVGhhbmtzIGZvciB5b3VyIHN1Z2dlc3Rpb24sIEkgd2lsbCBtb2RpZnkgaXQgaW4gdjIgcGF0
-Y2guDQoNCj4gQnV0IEkgd291bGQgbGlrZSB0byBzZWUgc29tZSBzb3J0IG9mIGVycm9yIG9yIGV2
-ZW4gZGVidWcga2VybmVsIA0KPiBtZXNzYWdlIGlmIHdlIHRpbWUgb3V0IHdhaXRpbmcgdG8gcmVj
-ZWl2ZSBhIHJlc3BvbnNlLiBPdGhlcndpc2UsIGhvdyANCj4gd2lsbCBzb21lIGh1bWFuIGRpYWdu
-b3NlIHRoaXMgcHJvYmxlbT8NCj4NCg0KWW91IGFyZSByaWdodCwgSSB3aWxsIGFkZCBzb21lIHNv
-cnQgb2YgZXJyb3Igb3IgZGVidWcga2VybmVsIG1lc3NhZ2UgaW4gdGhlIHYyIHBhdGNoLg0KDQpU
-aGFua3MsDQpCbyBXdQ0K
+On Tue, Oct 29, 2019 at 12:59:25AM +0200, Samuil Ivanov wrote:
+> >From the TODO:
+> - apex_get_status() should actually check status
+> 
+> The function now checkes the status of the driver
+> 
+> Signed-off-by: Samuil Ivanov <samuil.ivanovbg@gmail.com>
+> ---
+>  drivers/staging/gasket/apex_driver.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/staging/gasket/apex_driver.c b/drivers/staging/gasket/apex_driver.c
+> index 46199c8ca441..a5dd6f3c367d 100644
+> --- a/drivers/staging/gasket/apex_driver.c
+> +++ b/drivers/staging/gasket/apex_driver.c
+> @@ -247,6 +247,9 @@ module_param(bypass_top_level, int, 0644);
+>  static int apex_get_status(struct gasket_dev *gasket_dev)
+>  {
+>  	/* TODO: Check device status. */
+> +	if (gasket_dev->status == GASKET_STATUS_DEAD)
+> +		return GASKET_STATUS_DEAD;
+> +
+
+Have you tested this to verify that this is what is needed here?
+
+thanks,
+
+greg k-h
