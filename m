@@ -2,169 +2,129 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF3FCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58168CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24AC320830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QfHmrtbt"
+	by mail.kernel.org (Postfix) with ESMTP id 2E61B208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572343727;
+	bh=ZANRd+WQW3JT8mVuvajQ37u5wGVAQvgdGCj3+V1EpA0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=fZ6gw8qe55pDYInWyPLiWnLcD2JX49KJ+mQju+UBuNcgXI4ZmBD2MulSlFP6x8JL1
+	 5h2YVczoCo0YrRASTjKFRTEUJAfnVT8mxK0oNB2YPOfVa8e+aICCJ0RJuTlPVwRQSb
+	 RDxpwyF2v+UjjnBKmQkQoB74avoaachS/26080VQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbfJ2KHj (ORCPT
+        id S1728730AbfJ2KIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 06:07:39 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:40010 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbfJ2KHi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 06:07:38 -0400
-Received: by mail-vs1-f68.google.com with SMTP id v10so8350972vsc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 03:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bFgI6PCYnFtMrrrLH686v9chJ+VqCMQ+IJTSsyF5Jso=;
-        b=QfHmrtbtvSZb2PU9QiP2EXdWTD9a0Z8oWob6XqKZ2DRKNUXAOUY1MpXwqIOfgqKK1m
-         lahvF0MffJkHVpvmWjp1b1/2fqPhp630BEvlCScMNYQZPMCucMThEOk/2e5m8heewsK+
-         zBUpVohpCP71dwpQxjWmdNnNuLSQQnvaxfeKq1Knc+Di5ZZcnbdyxjBMhIfNTyXgYXdX
-         2UtVR7vWuRVIB1n4zVsRuS6mEXihTLK8KpSqzDLS0z30+HA0F5aCnPYJq3WPPPfNE4VW
-         x3+03LhvX2rrxeyV2hWG3kvj8VnWMmhNArN7KZjQelBRMshEF2vqzNr4NVm6OqH3xYoF
-         2wGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bFgI6PCYnFtMrrrLH686v9chJ+VqCMQ+IJTSsyF5Jso=;
-        b=NVEGMXDdTephtoCuU9mfa29QGj9zKkpUgI4pCD6MjgGEhgE7xDb8WeSvmrUri6/Xl2
-         8/Y77jmfhGyctHl9b82cd+8aEG8CTPxUDV/ZhTBQiQJR5RncRDPqnaFob5pGheAi+k49
-         cKIWE4G/b0LfJWa2NFRW/DB/d8aWrDyKXWFOhCpyV1WDlU4mbFBTcw0D/6OE3s/ADoPY
-         F3z0IE36fZjZw1H+KrA8dawZG+n3m3Z6eGdQj09OACRoSkdz0WFjBkuxDQTQL9krwW/3
-         +owYypRWYHFI9omFh8sCCP7diTmt06FHQMStdC6DvJkYdF5SUHnk/GU0d8yxVFq+crDV
-         NMmQ==
-X-Gm-Message-State: APjAAAWOWpoWbUhaN5kN0fFKhvLBXLTnENcXMbagA7omRcSJd99KKH4Z
-        m+LYHfio1MJDwWB9+41ohoS9/7kRMz8FJ98khAzTag==
-X-Google-Smtp-Source: APXvYqwuC7YtDrqAyMP0Dt++et0LL6Jt6fm10tlwW3a00UwUR4bRNzW8Sycwk/sNjACd1n8vo6GUxAJhn9lKZobrjXI=
-X-Received: by 2002:a05:6102:36d:: with SMTP id f13mr1235978vsa.34.1572343656910;
- Tue, 29 Oct 2019 03:07:36 -0700 (PDT)
+        Tue, 29 Oct 2019 06:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfJ2KIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 06:08:46 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2957E20830;
+        Tue, 29 Oct 2019 10:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572343725;
+        bh=ZANRd+WQW3JT8mVuvajQ37u5wGVAQvgdGCj3+V1EpA0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=uj0QeNso2Sj8RsEHDZh6RtZvohVQsmgYcJD7ng6ur1eqIxUFuK8nMMuWiRICpawc5
+         HXE0zf41GeAwhOSn/jOWu8GQRgj6Va9V8Xdzh+RfMe+DuDWmz3xaWTCkz58k76+R+G
+         gLWkco3GElfCPhEUI6Ds9x8F76mgBq215og8xGhU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 032BD3521071; Tue, 29 Oct 2019 03:08:45 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 03:08:44 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ryan Attard <ryanattard@ryanattard.info>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: linux-next: manual merge of the scsi tree with the rcu tree
+Message-ID: <20191029100844.GJ20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191029150826.38c26ef8@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
- <1571254641-13626-7-git-send-email-thara.gopinath@linaro.org>
- <CAPDyKFqcKfmnNJ7j4Jb+JH739FBcHg5NBD6aR4H_N=zWGwm1ww@mail.gmail.com>
- <5DA88892.5000408@linaro.org> <CAPDyKFpYG7YADb6Xmm=8ug5=5X3d1y+JdkRvrnvtroeV3Yj62Q@mail.gmail.com>
- <5DA89267.30806@linaro.org> <20191029013648.GB27045@bogus>
-In-Reply-To: <20191029013648.GB27045@bogus>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 29 Oct 2019 11:06:59 +0100
-Message-ID: <CAPDyKFpiyvGg0+bXDVCbfr+yW0SOH6DhVgAiav8ZnE8TSF6EHQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] dt-bindings: soc: qcom: Extend RPMh power
- controller binding to describe thermal warming device
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, amit.kucheria@verdurent.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029150826.38c26ef8@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 at 02:36, Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Oct 17, 2019 at 12:10:15PM -0400, Thara Gopinath wrote:
-> > On 10/17/2019 11:43 AM, Ulf Hansson wrote:
-> > > On Thu, 17 Oct 2019 at 17:28, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> > >>
-> > >> Hello Ulf,
-> > >> Thanks for the review!
-> > >>
-> > >> On 10/17/2019 05:04 AM, Ulf Hansson wrote:
-> > >>> On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> > >>>>
-> > >>>> RPMh power controller hosts mx domain that can be used as thermal
-> > >>>> warming device. Add a sub-node to specify this.
-> > >>>>
-> > >>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> > >>>> ---
-> > >>>>  Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 10 ++++++++++
-> > >>>>  1 file changed, 10 insertions(+)
-> > >>>>
-> > >>>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > >>>> index eb35b22..fff695d 100644
-> > >>>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > >>>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > >>>> @@ -18,6 +18,16 @@ Required Properties:
-> > >>>>  Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
-> > >>>>  various OPPs for different platforms as well as Power domain indexes
-> > >>>>
-> > >>>> += SUBNODES
-> > >>>> +RPMh alsp hosts power domains that can behave as thermal warming device.
-> > >>>> +These are expressed as subnodes of the RPMh. The name of the node is used
-> > >>>> +to identify the power domain and must therefor be "mx".
-> > >>>> +
-> > >>>> +- #cooling-cells:
-> > >>>> +       Usage: optional
-> > >>>> +       Value type: <u32>
-> > >>>> +       Definition: must be 2
-> > >>>> +
-> > >>>
-> > >>> Just wanted to express a minor thought about this. In general we use
-> > >>> subnodes of PM domain providers to represent the topology of PM
-> > >>> domains (subdomains), this is something different, which I guess is
-> > >>> fine.
-> > >>>
-> > >>> I assume the #cooling-cells is here tells us this is not a PM domain
-> > >>> provider, but a "cooling device provider"?
-> > >> Yep.
-> > >>>
-> > >>> Also, I wonder if it would be fine to specify "power-domains" here,
-> > >>> rather than using "name" as I think that is kind of awkward!?
-> > >> Do you mean "power-domain-names" ? I am using this to match against the
-> > >> genpd names defined in the provider driver.
-> > >
-> > > No. If you are using "power-domains" it means that you allow to
-> > > describe the specifier for the provider.
-> > Yep. But won't this look funny in DT ? The provider node will have a sub
-> > node with a power domain referencing to itself Like below: Is this ok ?
-> >
-> > rpmhpd: power-controller {
-> >                                 compatible = "qcom,sdm845-rpmhpd";
-> >                                 #power-domain-cells = <1>;
-> >
-> >                       ...
-> >                       ...
-> >                               mx_cdev: mx {
-> >                                         #cooling-cells = <2>;
-> >                                         power-domains = <&rpmhpd      SDM845_MX>;
-> >                                 };
-> >
->
-> The whole concept here seems all wrong to me. Isn't it what's in the
-> power domain that's the cooling device. A CPU power domain is not a
-> cooling device, the CPU is. Or we wouldn't make a clock a cooling
-> device, but what the clock drives.
+On Tue, Oct 29, 2019 at 03:08:26PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the scsi tree got a conflict in:
+> 
+>   drivers/scsi/scsi_sysfs.c
+> 
+> between commit:
+> 
+>   81db81f82993 ("drivers/scsi: Replace rcu_swap_protected() with rcu_replace()")
+> 
+> from the rcu tree and commit:
+> 
+>   d188b0675b21 ("scsi: core: Add sysfs attributes for VPD pages 0h and 89h")
+> 
+> from the scsi tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-Well, I don't think that's entirely correct description either.
+Looks good to me, thank you very much!
 
-As I see it, it's really the actual PM domain (that manages voltages
-for a power island), that needs to stay in full power state and
-increase its voltage level, as to warm up some of the silicon. It's
-not a regular device, but more a characteristics of how the PM domain
-can be used.
+							Thanx, Paul
 
-Kind regards
-Uffe
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc drivers/scsi/scsi_sysfs.c
+> index cc51f4756077,0fa2ed343c7f..000000000000
+> --- a/drivers/scsi/scsi_sysfs.c
+> +++ b/drivers/scsi/scsi_sysfs.c
+> @@@ -466,12 -467,18 +467,18 @@@ static void scsi_device_dev_release_use
+>   	sdev->request_queue = NULL;
+>   
+>   	mutex_lock(&sdev->inquiry_mutex);
+>  -	rcu_swap_protected(sdev->vpd_pg0, vpd_pg0,
+>  -			   lockdep_is_held(&sdev->inquiry_mutex));
+>  -	rcu_swap_protected(sdev->vpd_pg80, vpd_pg80,
+>  -			   lockdep_is_held(&sdev->inquiry_mutex));
+>  -	rcu_swap_protected(sdev->vpd_pg83, vpd_pg83,
+>  -			   lockdep_is_held(&sdev->inquiry_mutex));
+>  -	rcu_swap_protected(sdev->vpd_pg89, vpd_pg89,
+>  -			   lockdep_is_held(&sdev->inquiry_mutex));
+> ++	vpd_pg0 = rcu_replace_pointer(sdev->vpd_pg0, vpd_pg0,
+> ++				      lockdep_is_held(&sdev->inquiry_mutex));
+>  +	vpd_pg80 = rcu_replace_pointer(sdev->vpd_pg80, vpd_pg80,
+>  +				       lockdep_is_held(&sdev->inquiry_mutex));
+>  +	vpd_pg83 = rcu_replace_pointer(sdev->vpd_pg83, vpd_pg83,
+>  +				       lockdep_is_held(&sdev->inquiry_mutex));
+> ++	vpd_pg89 = rcu_replace_pointer(sdev->vpd_pg89, vpd_pg89,
+> ++				       lockdep_is_held(&sdev->inquiry_mutex));
+>   	mutex_unlock(&sdev->inquiry_mutex);
+>   
+> + 	if (vpd_pg0)
+> + 		kfree_rcu(vpd_pg0, rcu);
+>   	if (vpd_pg83)
+>   		kfree_rcu(vpd_pg83, rcu);
+>   	if (vpd_pg80)
+
+
