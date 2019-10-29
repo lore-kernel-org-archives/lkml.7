@@ -2,474 +2,127 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E75CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E683CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0654C20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68DB420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:40:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XGvC7h/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbfJ2RkZ (ORCPT
+        id S1729570AbfJ2Rko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:40:25 -0400
-Received: from smtp-sh.infomaniak.ch ([128.65.195.4]:55764 "EHLO
-        smtp-sh.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfJ2RkY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:40:24 -0400
-Received: from smtp8.infomaniak.ch (smtp8.infomaniak.ch [83.166.132.38])
-        by smtp-sh.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x9THFO07006023
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:15:24 +0100
-Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
-        (authenticated bits=0)
-        by smtp8.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x9THFNGc168214;
-        Tue, 29 Oct 2019 18:15:23 +0100
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Drysdale <drysdale@google.com>,
-        Florent Revest <revest@chromium.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        KP Singh <kpsingh@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH bpf-next v11 2/7] landlock: Add the management of domains
-Date:   Tue, 29 Oct 2019 18:15:00 +0100
-Message-Id: <20191029171505.6650-3-mic@digikod.net>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191029171505.6650-1-mic@digikod.net>
-References: <20191029171505.6650-1-mic@digikod.net>
+        Tue, 29 Oct 2019 13:40:44 -0400
+Received: from mail-eopbgr00046.outbound.protection.outlook.com ([40.107.0.46]:3814
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727518AbfJ2Rkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 13:40:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WUPH9F32xG8Q4grHq3ln92WrKKyNuFdL3jFPDp//7ZkWb/yOGg45+t0lTIS/D/qvAhHNLfNI2E4w5vSSzzLDawvIZwIiMOtp68eHAaphNqMlKlC5KJ6/d6H2df0kQBh27n4IHLyC/UfyWl71V4NeJhlzSlVFV3xQ285xI9ECjX8EfHVM9hPRzm6+zQKh9GWrGawP1JVmJXuzZoZvToz6mpmDkktXZg30AdOXSQxrJzGRKu/mho6lgT4cwoh7KwF95HtgA+B2+cKCZotHdKYcc+HNBchbW7ZbblWR48M4ev3TYajlL1zwWobtFK6TiaHOkpbBV+Xtc2Kcp7ktbmCqHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T5G5m7LpgytKX3nmEc3O9CVDwVeKycrTz9gPuQSFOfQ=;
+ b=dDZW6rYBXPLi/p3HNozECazmS5I26mi0HpWi2TRLFLKbVIqZlx/LuM8scs65jgaRrfS9zlyru5LdTyuT38jiAP2hn2A0xKaHFmicrAFmD489Yy2roY65MaLWpW4VQZFcZa5pM+Yk5lBuguvKaF++YG3qXa8UP6H/qr2ut9nbBZLFuPYS8UfuElMbZnjMdxxmLMPCQKqzyoxJ6T0QkaVPA9xETzmmp0yYs4fJtfUcBClyp/bnVF8JMo2SzbkocGoo2Q/9pKzSclBTf9CFl/jlb/0qqiWnH5YpmrPNaysk70FhgADBhU4R8Y3auflWqiF1BZhk0kezhEMos2VKXWMHrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T5G5m7LpgytKX3nmEc3O9CVDwVeKycrTz9gPuQSFOfQ=;
+ b=XGvC7h/UDq33Hlf+6rsbWxlmEXiPCRJY1Lwqh0TErziavI+C/TU0PbbMad3rSfn2CYMw2WJghcIXqCAcBGkEdkdLrI+HUAdpxZxOiAxbWo7WqsVmrSy+jH4khzOmPhmhu6ABXAhgIefCITKyfdTbZC5y0THr5NI+hQDPkK3vr7g=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5183.eurprd05.prod.outlook.com (20.178.9.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.22; Tue, 29 Oct 2019 17:40:39 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2387.027; Tue, 29 Oct 2019
+ 17:40:39 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+CC:     John Hubbard <jhubbard@nvidia.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/3] mm/hmm: make full use of walk_page_range()
+Thread-Topic: [PATCH v3 1/3] mm/hmm: make full use of walk_page_range()
+Thread-Index: AQHVidvQNc+e+9eo5ka32bzGBwuw3qdx7DkA
+Date:   Tue, 29 Oct 2019 17:40:39 +0000
+Message-ID: <20191029174036.GR22766@mellanox.com>
+References: <20191023195515.13168-1-rcampbell@nvidia.com>
+ <20191023195515.13168-2-rcampbell@nvidia.com>
+In-Reply-To: <20191023195515.13168-2-rcampbell@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR02CA0003.namprd02.prod.outlook.com
+ (2603:10b6:208:fc::16) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.162.113.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bcb05ac0-f770-494a-82b4-08d75c971d03
+x-ms-traffictypediagnostic: VI1PR05MB5183:
+x-microsoft-antispam-prvs: <VI1PR05MB5183A7F8AD19BC473DB03EDACF610@VI1PR05MB5183.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0205EDCD76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(189003)(199004)(486006)(66476007)(5660300002)(11346002)(2616005)(446003)(476003)(2906002)(66946007)(14444005)(64756008)(66556008)(3846002)(6116002)(86362001)(6506007)(26005)(186003)(102836004)(386003)(71190400001)(8936002)(66446008)(33656002)(71200400001)(54906003)(6436002)(305945005)(110136005)(99286004)(316002)(7736002)(76176011)(6246003)(81156014)(52116002)(14454004)(256004)(6512007)(478600001)(1076003)(66574012)(6486002)(4326008)(25786009)(36756003)(81166006)(66066001)(8676002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5183;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5uqbelTWpl2zlSSi/IT+IR6sBGou0Acv7BXFRndT6XZGZ/IzU16X49grdtZKqsMbr4VXstZpvZq79X3my4whlzNvNcLaNHyxwYwktOr4N/3/6Bo5MWe4QMRQKdGE8A3ft23XRMB4JuKRhdzEKgVjjjADFrkbhjaeqL4Fj8OFjrGHKyhBTbNjxkNEw6acP6KzXfp0e74KkFeGNdNGlj++PDs+cp0cisTuUDW5fJU0QsbKOxgfLqKMzfW62An6XziHY0OAFlToZ2pp8Ie6QypzqG1UT9wnmDzHB7T1DUaSQtIDQBRfq8w5WZNMv2kezhus+WGpadLxBQ3F8wWnnsKwLlWb0ubqvpfVsUO0Skfpnz8b4YZeccLf5PxrDQXazAjLUA5ef7kxbLjkTG7UgyHS1rZIMxXhRkLgxlzXy5eH0gZvfcOgzXQ+YR1A/b/GoQUY
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8F71407F39E42F409A92850DDBE5B983@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bcb05ac0-f770-494a-82b4-08d75c971d03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 17:40:39.4360
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ve4A1od5xs+cR1YlLaMi8WFRoMA2xRrTr8p4w4uPqHAem+tvIblyG8Bc8V7mL2VLbeavhxmTyVqX6mM4+Ea2vA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A Landlock domain is a set of eBPF programs.  There is a list for each
-different program types that can be run on a specific Landlock hook
-(e.g. ptrace).  A domain is tied to a set of subjects (i.e. tasks).  A
-Landlock program should not try (nor be able) to infer which subject is
-currently enforced, but to have a unique security policy for all
-subjects tied to the same domain.  This make the reasoning much easier
-and help avoid pitfalls.
-
-The next commits tie a domain to a task's credentials thanks to
-seccomp(2), but we could use cgroups or a security file-system to
-enforce a sysadmin-defined policy .
-
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: James Morris <jmorris@namei.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Serge E. Hallyn <serge@hallyn.com>
-Cc: Will Drewry <wad@chromium.org>
----
-
-Changes since v10:
-* rename files and names to clearly define a domain
-* create a standalone patch to ease review
----
- security/landlock/Makefile        |   3 +-
- security/landlock/common.h        |  38 +++++
- security/landlock/domain_manage.c | 265 ++++++++++++++++++++++++++++++
- security/landlock/domain_manage.h |  23 +++
- 4 files changed, 328 insertions(+), 1 deletion(-)
- create mode 100644 security/landlock/domain_manage.c
- create mode 100644 security/landlock/domain_manage.h
-
-diff --git a/security/landlock/Makefile b/security/landlock/Makefile
-index 682b798c6b76..dd5f70185778 100644
---- a/security/landlock/Makefile
-+++ b/security/landlock/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_SECURITY_LANDLOCK) := landlock.o
- 
- landlock-y := \
--	bpf_verify.o bpf_ptrace.o
-+	bpf_verify.o bpf_ptrace.o \
-+	domain_manage.o
-diff --git a/security/landlock/common.h b/security/landlock/common.h
-index 0234c4bc4acd..fb2990eb5fb4 100644
---- a/security/landlock/common.h
-+++ b/security/landlock/common.h
-@@ -11,11 +11,49 @@
- 
- #include <linux/bpf.h>
- #include <linux/filter.h>
-+#include <linux/refcount.h>
- 
- enum landlock_hook_type {
- 	LANDLOCK_HOOK_PTRACE = 1,
- };
- 
-+#define _LANDLOCK_HOOK_LAST LANDLOCK_HOOK_PTRACE
-+
-+struct landlock_prog_list {
-+	struct landlock_prog_list *prev;
-+	struct bpf_prog *prog;
-+	refcount_t usage;
-+};
-+
-+/**
-+ * struct landlock_domain - Landlock programs enforced on a set of tasks
-+ *
-+ * When prepending a new program, if &struct landlock_domain is shared with
-+ * other tasks, then duplicate it and prepend the program to this new &struct
-+ * landlock_domain.
-+ *
-+ * @usage: reference count to manage the object lifetime. When a task needs to
-+ *	   add Landlock programs and if @usage is greater than 1, then the
-+ *	   task must duplicate &struct landlock_domain to not change the
-+ *	   children's programs as well.
-+ * @programs: array of non-NULL &struct landlock_prog_list pointers
-+ */
-+struct landlock_domain {
-+	struct landlock_prog_list *programs[_LANDLOCK_HOOK_LAST];
-+	refcount_t usage;
-+};
-+
-+/**
-+ * get_hook_index - get an index for the programs of struct landlock_prog_set
-+ *
-+ * @type: a Landlock hook type
-+ */
-+static inline size_t get_hook_index(enum landlock_hook_type type)
-+{
-+	/* type ID > 0 for loaded programs */
-+	return type - 1;
-+}
-+
- static inline enum landlock_hook_type get_hook_type(const struct bpf_prog *prog)
- {
- 	switch (prog->expected_attach_type) {
-diff --git a/security/landlock/domain_manage.c b/security/landlock/domain_manage.c
-new file mode 100644
-index 000000000000..c955b9c95c84
---- /dev/null
-+++ b/security/landlock/domain_manage.c
-@@ -0,0 +1,265 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Landlock LSM - domain management
-+ *
-+ * Copyright © 2016-2019 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2018-2019 ANSSI
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/refcount.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+#include "common.h"
-+#include "domain_manage.h"
-+
-+void landlock_get_domain(struct landlock_domain *dom)
-+{
-+	if (!dom)
-+		return;
-+	refcount_inc(&dom->usage);
-+}
-+
-+static void put_landlock_prog_list(struct landlock_prog_list *prog_list)
-+{
-+	struct landlock_prog_list *orig = prog_list;
-+
-+	/* clean up single-reference branches iteratively */
-+	while (orig && refcount_dec_and_test(&orig->usage)) {
-+		struct landlock_prog_list *freeme = orig;
-+
-+		if (orig->prog)
-+			bpf_prog_put(orig->prog);
-+		orig = orig->prev;
-+		kfree(freeme);
-+	}
-+}
-+
-+void landlock_put_domain(struct landlock_domain *domain)
-+{
-+	if (domain && refcount_dec_and_test(&domain->usage)) {
-+		size_t i;
-+
-+		for (i = 0; i < ARRAY_SIZE(domain->programs); i++)
-+			put_landlock_prog_list(domain->programs[i]);
-+		kfree(domain);
-+	}
-+}
-+
-+static struct landlock_domain *new_landlock_domain(void)
-+{
-+	struct landlock_domain *domain;
-+
-+	/* array filled with NULL values */
-+	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
-+	if (!domain)
-+		return ERR_PTR(-ENOMEM);
-+	refcount_set(&domain->usage, 1);
-+	return domain;
-+}
-+
-+/**
-+ * store_landlock_prog - prepend and deduplicate a Landlock prog_list
-+ *
-+ * Prepend @prog to @init_domain while ignoring @prog if they are already in
-+ * @ref_domain.  Whatever is the result of this function call, you can call
-+ * bpf_prog_put(@prog) after.
-+ *
-+ * @init_domain: empty domain to prepend to
-+ * @ref_domain: domain to check for duplicate programs
-+ * @prog: program to prepend
-+ *
-+ * Return -errno on error or 0 if @prog was successfully stored.
-+ */
-+static int store_landlock_prog(struct landlock_domain *init_domain,
-+		const struct landlock_domain *ref_domain,
-+		struct bpf_prog *prog)
-+{
-+	struct landlock_prog_list *tmp_list = NULL;
-+	int err;
-+	size_t hook;
-+	enum landlock_hook_type last_type;
-+	struct bpf_prog *new = prog;
-+
-+	/* allocate all the memory we need */
-+	struct landlock_prog_list *new_list;
-+
-+	last_type = get_hook_type(new);
-+
-+	/* ignore duplicate programs */
-+	if (ref_domain) {
-+		struct landlock_prog_list *ref;
-+
-+		hook = get_hook_index(get_hook_type(new));
-+		for (ref = ref_domain->programs[hook]; ref;
-+				ref = ref->prev) {
-+			if (ref->prog == new)
-+				return -EINVAL;
-+		}
-+	}
-+
-+	new = bpf_prog_inc(new);
-+	if (IS_ERR(new)) {
-+		err = PTR_ERR(new);
-+		goto put_tmp_list;
-+	}
-+	new_list = kzalloc(sizeof(*new_list), GFP_KERNEL);
-+	if (!new_list) {
-+		bpf_prog_put(new);
-+		err = -ENOMEM;
-+		goto put_tmp_list;
-+	}
-+	/* ignore Landlock types in this tmp_list */
-+	new_list->prog = new;
-+	new_list->prev = tmp_list;
-+	refcount_set(&new_list->usage, 1);
-+	tmp_list = new_list;
-+
-+	if (!tmp_list)
-+		/* inform user space that this program was already added */
-+		return -EEXIST;
-+
-+	/* properly store the list (without error cases) */
-+	while (tmp_list) {
-+		struct landlock_prog_list *new_list;
-+
-+		new_list = tmp_list;
-+		tmp_list = tmp_list->prev;
-+		/* do not increment the previous prog list usage */
-+		hook = get_hook_index(get_hook_type(new_list->prog));
-+		new_list->prev = init_domain->programs[hook];
-+		/* no need to add from the last program to the first because
-+		 * each of them are a different Landlock type */
-+		smp_store_release(&init_domain->programs[hook], new_list);
-+	}
-+	return 0;
-+
-+put_tmp_list:
-+	put_landlock_prog_list(tmp_list);
-+	return err;
-+}
-+
-+/* limit Landlock programs set to 256KB */
-+#define LANDLOCK_PROGRAMS_MAX_PAGES (1 << 6)
-+
-+/**
-+ * landlock_prepend_prog - attach a Landlock prog_list to @current_domain
-+ *
-+ * Whatever is the result of this function call, you can call
-+ * bpf_prog_put(@prog) after.
-+ *
-+ * @current_domain: landlock_domain pointer, must be (RCU-)locked (if needed)
-+ *                  to prevent a concurrent put/free. This pointer must not be
-+ *                  freed after the call.
-+ * @prog: non-NULL Landlock prog_list to prepend to @current_domain. @prog will
-+ *        be owned by landlock_prepend_prog() and freed if an error happened.
-+ *
-+ * Return @current_domain or a new pointer when OK. Return a pointer error
-+ * otherwise.
-+ */
-+struct landlock_domain *landlock_prepend_prog(
-+		struct landlock_domain *current_domain,
-+		struct bpf_prog *prog)
-+{
-+	struct landlock_domain *new_domain = current_domain;
-+	unsigned long pages;
-+	int err;
-+	size_t i;
-+	struct landlock_domain tmp_domain = {};
-+
-+	if (prog->type != BPF_PROG_TYPE_LANDLOCK_HOOK)
-+		return ERR_PTR(-EINVAL);
-+
-+	/* validate memory size allocation */
-+	pages = prog->pages;
-+	if (current_domain) {
-+		size_t i;
-+
-+		for (i = 0; i < ARRAY_SIZE(current_domain->programs); i++) {
-+			struct landlock_prog_list *walker_p;
-+
-+			for (walker_p = current_domain->programs[i];
-+					walker_p; walker_p = walker_p->prev)
-+				pages += walker_p->prog->pages;
-+		}
-+		/* count a struct landlock_domain if we need to allocate one */
-+		if (refcount_read(&current_domain->usage) != 1)
-+			pages += round_up(sizeof(*current_domain), PAGE_SIZE)
-+				/ PAGE_SIZE;
-+	}
-+	if (pages > LANDLOCK_PROGRAMS_MAX_PAGES)
-+		return ERR_PTR(-E2BIG);
-+
-+	/* ensure early that we can allocate enough memory for the new
-+	 * prog_lists */
-+	err = store_landlock_prog(&tmp_domain, current_domain, prog);
-+	if (err)
-+		return ERR_PTR(err);
-+
-+	/*
-+	 * Each task_struct points to an array of prog list pointers.  These
-+	 * tables are duplicated when additions are made (which means each
-+	 * table needs to be refcounted for the processes using it). When a new
-+	 * table is created, all the refcounters on the prog_list are bumped
-+	 * (to track each table that references the prog). When a new prog is
-+	 * added, it's just prepended to the list for the new table to point
-+	 * at.
-+	 *
-+	 * Manage all the possible errors before this step to not uselessly
-+	 * duplicate current_domain and avoid a rollback.
-+	 */
-+	if (!new_domain) {
-+		/*
-+		 * If there is no Landlock domain used by the current task,
-+		 * then create a new one.
-+		 */
-+		new_domain = new_landlock_domain();
-+		if (IS_ERR(new_domain))
-+			goto put_tmp_lists;
-+	} else if (refcount_read(&current_domain->usage) > 1) {
-+		/*
-+		 * If the current task is not the sole user of its Landlock
-+		 * domain, then duplicate it.
-+		 */
-+		new_domain = new_landlock_domain();
-+		if (IS_ERR(new_domain))
-+			goto put_tmp_lists;
-+		for (i = 0; i < ARRAY_SIZE(new_domain->programs); i++) {
-+			new_domain->programs[i] =
-+				READ_ONCE(current_domain->programs[i]);
-+			if (new_domain->programs[i])
-+				refcount_inc(&new_domain->programs[i]->usage);
-+		}
-+
-+		/*
-+		 * Landlock domain from the current task will not be freed here
-+		 * because the usage is strictly greater than 1. It is only
-+		 * prevented to be freed by another task thanks to the caller
-+		 * of landlock_prepend_prog() which should be locked if needed.
-+		 */
-+		landlock_put_domain(current_domain);
-+	}
-+
-+	/* prepend tmp_domain to new_domain */
-+	for (i = 0; i < ARRAY_SIZE(tmp_domain.programs); i++) {
-+		/* get the last new list */
-+		struct landlock_prog_list *last_list =
-+			tmp_domain.programs[i];
-+
-+		if (last_list) {
-+			while (last_list->prev)
-+				last_list = last_list->prev;
-+			/* no need to increment usage (pointer replacement) */
-+			last_list->prev = new_domain->programs[i];
-+			new_domain->programs[i] = tmp_domain.programs[i];
-+		}
-+	}
-+	return new_domain;
-+
-+put_tmp_lists:
-+	for (i = 0; i < ARRAY_SIZE(tmp_domain.programs); i++)
-+		put_landlock_prog_list(tmp_domain.programs[i]);
-+	return new_domain;
-+}
-diff --git a/security/landlock/domain_manage.h b/security/landlock/domain_manage.h
-new file mode 100644
-index 000000000000..5b5b49f6e3e8
---- /dev/null
-+++ b/security/landlock/domain_manage.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Landlock LSM - domain management headers
-+ *
-+ * Copyright © 2016-2019 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2018-2019 ANSSI
-+ */
-+
-+#ifndef _SECURITY_LANDLOCK_DOMAIN_MANAGE_H
-+#define _SECURITY_LANDLOCK_DOMAIN_MANAGE_H
-+
-+#include <linux/filter.h>
-+
-+#include "common.h"
-+
-+void landlock_get_domain(struct landlock_domain *dom);
-+void landlock_put_domain(struct landlock_domain *dom);
-+
-+struct landlock_domain *landlock_prepend_prog(
-+		struct landlock_domain *current_domain,
-+		struct bpf_prog *prog);
-+
-+#endif /* _SECURITY_LANDLOCK_DOMAIN_MANAGE_H */
--- 
-2.23.0
-
+T24gV2VkLCBPY3QgMjMsIDIwMTkgYXQgMTI6NTU6MTNQTSAtMDcwMCwgUmFscGggQ2FtcGJlbGwg
+d3JvdGU6DQo+IGhtbV9yYW5nZV9mYXVsdCgpIGNhbGxzIGZpbmRfdm1hKCkgYW5kIHdhbGtfcGFn
+ZV9yYW5nZSgpIGluIGEgbG9vcC4NCj4gVGhpcyBpcyB1bm5lY2Vzc2FyeSBkdXBsaWNhdGlvbiBz
+aW5jZSB3YWxrX3BhZ2VfcmFuZ2UoKSBjYWxscyBmaW5kX3ZtYSgpDQo+IGluIGEgbG9vcCBhbHJl
+YWR5Lg0KPiBTaW1wbGlmeSBobW1fcmFuZ2VfZmF1bHQoKSBieSBkZWZpbmluZyBhIHdhbGtfdGVz
+dCgpIGNhbGxiYWNrIGZ1bmN0aW9uDQo+IHRvIGZpbHRlciB1bmhhbmRsZWQgdm1hcy4NCj4gVGhp
+cyBhbHNvIGZpeGVzIGEgYnVnIHdoZXJlIGhtbV9yYW5nZV9mYXVsdCgpIHdhcyBub3QgY2hlY2tp
+bmcNCj4gc3RhcnQgPj0gdm1hLT52bV9zdGFydCBiZWZvcmUgY2hlY2tpbmcgdm1hLT52bV9mbGFn
+cyBzbyBobW1fcmFuZ2VfZmF1bHQoKQ0KPiBjb3VsZCByZXR1cm4gYW4gZXJyb3IgYmFzZWQgb24g
+dGhlIHdyb25nIHZtYSBmb3IgdGhlIHJlcXVlc3RlZCByYW5nZS4NCj4gSXQgYWxzbyBmaXhlcyBh
+IGJ1ZyB3aGVuIHRoZSB2bWEgaGFzIG5vIHJlYWQgYWNjZXNzIGFuZCB0aGUgY2FsbGVyIGRpZA0K
+PiBub3QgcmVxdWVzdCBhIGZhdWx0LCB0aGVyZSBzaG91bGRuJ3QgYmUgYW55IGVycm9yIHJldHVy
+biBjb2RlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUmFscGggQ2FtcGJlbGwgPHJjYW1wYmVsbEBu
+dmlkaWEuY29tPg0KPiBDYzogIkrDqXLDtG1lIEdsaXNzZSIgPGpnbGlzc2VAcmVkaGF0LmNvbT4N
+Cj4gQ2M6IEphc29uIEd1bnRob3JwZSA8amdnQG1lbGxhbm94LmNvbT4NCj4gQ2M6IENocmlzdG9w
+aCBIZWxsd2lnIDxoY2hAbHN0LmRlPg0KPiAgbW0vaG1tLmMgfCAxMjYgKysrKysrKysrKysrKysr
+KysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDYzIGluc2VydGlvbnMoKyksIDYzIGRlbGV0aW9ucygtKQ0KDQpUaGlzIGlzIGxvb2tpbmcg
+T0ssIGNhbiB3ZSBnZXQgYW4gYWNrIGZyb20gSmVyb21lPyBDaHJpc3RvcGg/DQoNCkkgcmVjYWxs
+IG15IGZpcnN0IHdvcnJ5IHdhcyB0aGF0IHdhbGstPnZtYSBjb3VsZCBub3cgYmUgbnVsbCwgYXMN
+Cm9wcy0+cHRlX2hvbGUgaXMgc2V0LiBCdXQgaXQgbG9va3MgbGlrZSB0aGF0IGlzIGFsbCBoYW5k
+bGVkIG5vdz8NCg0KVGhhbmtzLA0KSmFzb24NCg==
