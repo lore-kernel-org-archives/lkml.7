@@ -2,77 +2,113 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5850BCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A73CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA6C20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA0E20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:24:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ba68fn1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfJ2SWl (ORCPT
+        id S1728501AbfJ2SYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:22:41 -0400
-Received: from utopia.booyaka.com ([74.50.51.50]:45992 "EHLO
-        utopia.booyaka.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfJ2SWk (ORCPT
+        Tue, 29 Oct 2019 14:24:12 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60752 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfJ2SYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:22:40 -0400
-Received: (qmail 19504 invoked by uid 1019); 29 Oct 2019 18:22:39 -0000
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 29 Oct 2019 18:22:39 -0000
-Date:   Tue, 29 Oct 2019 18:22:39 +0000 (UTC)
-From:   Paul Walmsley <paul@pwsan.com>
-To:     Yash Shah <yash.shah@sifive.com>
-cc:     "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "logang@deltatee.com" <logang@deltatee.com>,
-        "sorear2@gmail.com" <sorear2@gmail.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "alex@ghiti.fr" <alex@ghiti.fr>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "Palmer Dabbelt \\( Sifive\\)" <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "allison@lohutok.net" <allison@lohutok.net>
-Subject: RE: [PATCH v2] RISC-V: Add PCIe I/O BAR memory mapping
-In-Reply-To: <CH2PR13MB3368A6E99DAB164A52D2954A8C610@CH2PR13MB3368.namprd13.prod.outlook.com>
-Message-ID: <alpine.DEB.2.21.999.1910291822280.15841@utopia.booyaka.com>
-References: <1571992163-6811-1-git-send-email-yash.shah@sifive.com> <alpine.DEB.2.21.9999.1910250852420.28076@viisi.sifive.com> <CH2PR13MB3368A6E99DAB164A52D2954A8C610@CH2PR13MB3368.namprd13.prod.outlook.com>
-User-Agent: Alpine 2.21.999 (DEB 260 2018-02-26)
+        Tue, 29 Oct 2019 14:24:12 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TI5UUe155040;
+        Tue, 29 Oct 2019 18:24:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=CBucKVszmtDkvTv5jp3bH4K3Bhl/s5iJ0btzBQYUPTw=;
+ b=Ba68fn1ARkOxtVaBzMD7fr/JplX/xSOKPF/C8n19nSMHdoAJBri7TREZRrhMlXdyjMSj
+ ibEuYrI9UHQ+WevL07YZNrk7ypp1QYw9AhWP6pPUNxaaOoEvmHKVuNhwG291qG31SO91
+ wViQ2OqL5UEZi533lG9U4TXW/kuj2/yYhYZObZYy0B7V+TyGwldlGYTVOcC51peRSpJ5
+ qJMQ4u0Num+8VmIXSU3oKsbkl1cYQZc1cXoS1CZj9kYD1D4fQV4OJ/UVLcJU8dVioWjk
+ Ha2pk3q2pjOegvuPhbO0+LDQ+Lbr9eg8t/NsdM03dvIB6KNog49EtKdLFlANjoHBUU71 Fw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2vve3qb2wc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 18:24:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TI8RBT052331;
+        Tue, 29 Oct 2019 18:24:07 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2vxj8gqc81-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 18:24:07 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TIO64U007303;
+        Tue, 29 Oct 2019 18:24:06 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 29 Oct 2019 11:24:06 -0700
+Date:   Tue, 29 Oct 2019 21:24:01 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] media: smiapp: unlock on error in smiapp_start_streaming()
+Message-ID: <20191029182401.GB17569@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910290160
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910290160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019, Yash Shah wrote:
+We added two new error paths to smiapp_start_streaming(), but we can't
+return directly without dropping the "sensor->mutex" lock.
 
-> > On Fri, 25 Oct 2019, Yash Shah wrote:
-> > 
-> > > For legacy I/O BARs (non-MMIO BARs) to work correctly on RISC-V Linux,
-> > > we need to establish a reserved memory region for them, so that
-> > > drivers that wish to use the legacy I/O BARs can issue reads and
-> > > writes against a memory region that is mapped to the host PCIe
-> > > controller's I/O BAR mapping.
-> > >
-> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> > 
-> > Thanks.  And just to confirm: this is a fix, right?  Without this 
-> > patch, legacy PCIe I/O resources won't be accessible on RISC-V?
-> 
-> Yes, this is a fix.
+Fixes: f8c4352c1bef ("media: smiapp: Move binning configuration to streaming start")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/media/i2c/smiapp/smiapp-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks, queued for v5.4-rc.
+diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+index 77dfce7c3be9..84f9771b5fed 100644
+--- a/drivers/media/i2c/smiapp/smiapp-core.c
++++ b/drivers/media/i2c/smiapp/smiapp-core.c
+@@ -1362,13 +1362,13 @@ static int smiapp_start_streaming(struct smiapp_sensor *sensor)
+ 		rval = smiapp_write(
+ 			sensor, SMIAPP_REG_U8_BINNING_TYPE, binning_type);
+ 		if (rval < 0)
+-			return rval;
++			goto out;
+ 
+ 		binning_mode = 1;
+ 	}
+ 	rval = smiapp_write(sensor, SMIAPP_REG_U8_BINNING_MODE, binning_mode);
+ 	if (rval < 0)
+-		return rval;
++		goto out;
+ 
+ 	/* Set up PLL */
+ 	rval = smiapp_pll_configure(sensor);
+-- 
+2.20.1
 
-
-- Paul
