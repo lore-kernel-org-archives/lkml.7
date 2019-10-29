@@ -2,87 +2,92 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEDACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A410CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EAE020874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C8F20874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:36:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572356204;
+	bh=hqFAc7xsziLWsBPWZq0srOVOjk5w2lCAS39jmUgm6gA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aic8pLpD4pRd+xxAJbkqg6ISqUqu63e6QC6uo9g/Nl7cdlf5fBb+f9H7To931j4d1
+	 Ek9qEk35LR5/8FYQf+GAm3SKI+aHnc4/VrUgm2Z8HSVs6Nb/jqfxU8y4o8XEjNjgT+
+	 BcaQ2sUxKZuHaCFJjCUCCcS8hszzFzcVZ57slmWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388717AbfJ2Ngl (ORCPT
+        id S2388736AbfJ2Ngm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:36:41 -0400
-Received: from mga09.intel.com ([134.134.136.24]:58801 "EHLO mga09.intel.com"
+        Tue, 29 Oct 2019 09:36:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388602AbfJ2Ngl (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        id S2388602AbfJ2Ngl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 29 Oct 2019 09:36:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 06:36:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,244,1569308400"; 
-   d="scan'208";a="211751713"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.210.130]) ([10.254.210.130])
-  by orsmga002.jf.intel.com with ESMTP; 29 Oct 2019 06:36:38 -0700
-Subject: Re: [PATCH v4 5/7] perf report: Sort by sampled cycles percent per
- block for stdio
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191028013330.18319-1-yao.jin@linux.intel.com>
- <20191028013330.18319-6-yao.jin@linux.intel.com>
- <20191029092747.GH28772@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <08921142-6e65-62e3-2a1c-9a78c7bc7d2e@linux.intel.com>
-Date:   Tue, 29 Oct 2019 21:36:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B2EC2086A;
+        Tue, 29 Oct 2019 13:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572356201;
+        bh=hqFAc7xsziLWsBPWZq0srOVOjk5w2lCAS39jmUgm6gA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y9476nuo8bL5TAGLC1+v92LCKfTum9lzcCJ0X92LJuxjup0fFTLFO7wB0Bhntyo6J
+         lJGsUV1gi36/3Xq8xAArCCWPjXmpbVXjjfro7Emn4fZWKX1aHQioTrmWa44hJUOJhu
+         24Z4tAxVgNRAoyf+ND9k9NbTBj7XRuBb4VsRh5do=
+Date:   Tue, 29 Oct 2019 13:36:36 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Xiang Zheng <zhengxiang9@huawei.com>
+Cc:     catalin.marinas@arm.com, james.morse@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        wanghaibin.wang@huawei.com
+Subject: Re: [PATCH v2] arm64: print additional fault message when executing
+ non-exec memory
+Message-ID: <20191029133635.GA12800@willie-the-truck>
+References: <20191029124131.32028-1-zhengxiang9@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191029092747.GH28772@krava>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029124131.32028-1-zhengxiang9@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/29/2019 5:27 PM, Jiri Olsa wrote:
-> On Mon, Oct 28, 2019 at 09:33:28AM +0800, Jin Yao wrote:
+On Tue, Oct 29, 2019 at 08:41:31PM +0800, Xiang Zheng wrote:
+> When attempting to executing non-executable memory, the fault message
+> shows:
 > 
-> SNIP
+>   Unable to handle kernel read from unreadable memory at virtual address
+>   ffff802dac469000
 > 
->> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
->> index 0e27d6830011..7cf137b0451b 100644
->> --- a/tools/perf/util/hist.c
->> +++ b/tools/perf/util/hist.c
->> @@ -758,6 +758,10 @@ struct hist_entry *hists__add_entry_block(struct hists *hists,
->>   	struct hist_entry entry = {
->>   		.block_info = block_info,
->>   		.hists = hists,
->> +		.ms = {
->> +			.map = al->map,
->> +			.sym = al->sym,
->> +		},
+> This may confuse someone, so add a new fault message for instruction
+> abort.
 > 
-> this looks like separated fix, if thats the case
-> please explain the change and move it to separate patch
+> Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
+> ---
+>  arch/arm64/mm/fault.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> thanks,
-> jirka
-> 
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index 9fc6db0bcbad..9adec86d0f8a 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -318,6 +318,8 @@ static void __do_kernel_fault(unsigned long addr, unsigned int esr,
+>  	if (is_el1_permission_fault(addr, esr, regs)) {
+>  		if (esr & ESR_ELx_WNR)
+>  			msg = "write to read-only memory";
+> +		else if (is_el1_instruction_abort(esr))
+> +			msg = "execute from non-executable memory";
+>  		else
+>  			msg = "read from unreadable memory";
+>  	} else if (addr < PAGE_SIZE) {
 
-Sorry, that should be the obsolete code. Thanks so much for pointing 
-this out.
+Acked-by: Will Deacon <will@kernel.org>
 
-Thanks
-Jin Yao
-
+Will
