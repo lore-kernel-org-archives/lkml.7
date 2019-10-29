@@ -2,161 +2,151 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A62CA9EC1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E80C47E49
 	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0975920862
+	by mail.kernel.org (Postfix) with ESMTP id 351FD21479
 	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:01:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CGuSk+Rr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KR3dPGQo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731106AbfJ2C74 (ORCPT
+        id S1731145AbfJ2DBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:59:56 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:51495 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730875AbfJ2C7z (ORCPT
+        Mon, 28 Oct 2019 23:01:03 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44557 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbfJ2DBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:59:55 -0400
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x9T2xTqj016926;
-        Tue, 29 Oct 2019 11:59:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x9T2xTqj016926
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572317970;
-        bh=KpON6jENOa78faqVFtQXeF/x8eRnLcnMvYpsLe7gtRw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CGuSk+RrGXsd6J11mq5ZrwjADHBaJZvsVn59C82fYYpR482hK2PyTRr81P3Kx7lUk
-         UhJtVotXaOdjmzKK553POUJVvKly/FeFCFk+AoPDRM/hOLVEnzXe72QLrVrB4J8PTg
-         YMxq21bXABz1tdXgNfVO4edowruo4yW2z0Oszld0MdolcE9ibT6vKR1ZKGLO445xw1
-         7aW5GZMpMe2lyg0GtzmMadtdpJkQpudIAseGGjaJgzLGdTlshpKMLBSYrNEoC90V8d
-         7lqPBFEmYLFFxdGU1bmUhQqfQ/DtY9VeZ0Kobq6nlng0hc4H7LwvezeL54tfE17KZH
-         1GsgPOSFw0Pdg==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id q16so3381236uao.1;
-        Mon, 28 Oct 2019 19:59:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAXqj9GGjXPkP2nJ5xGyO6JBP+d2x+NMacLtSq8MJLe/9Wzs9HNv
-        +WXRFiOc4J37wKhQLkmhvOwQKXHav7/YuVHAaAc=
-X-Google-Smtp-Source: APXvYqwlJlglJ2Tv5HFU5kMK6Futpi8Woza9I04Q0G6tTL+3kQyGTP068uTVZlTQ4bTSvxrQbrx/KcHFxtxvU5bkaNk=
-X-Received: by 2002:ab0:658d:: with SMTP id v13mr3781878uam.40.1572317968542;
- Mon, 28 Oct 2019 19:59:28 -0700 (PDT)
+        Mon, 28 Oct 2019 23:01:02 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e10so8435594pgd.11;
+        Mon, 28 Oct 2019 20:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BZLMvhv7tKSSJDMxnidSZGekxZVeFH3sCSLj6UYa6wM=;
+        b=KR3dPGQoi5grst4QKJAlm+TtB1j6tTnvrumVy1IEh8/PYO2KF8qMPohUz44dqLDJ45
+         QZE5beoyvxLAWJ7o6BhvIr/Mbc5uEWVOrjo7Binm8V8I/92WUNoQhRV7v9s8lsAzCVlv
+         tgaasRCin+SgUSa1l5+ROANAo9PH6UtTL3xXR71brK4LDaFE6vQ0o7tnSSx6gkxjfarm
+         VoJfs9jQ725XKVRlbBEgq7LvR0U95rAN9bP1BzTI2em3pLE8Ys1OV91xMhwVs/6EdkyU
+         hau6VddqW8nceFpc+J0HN6tUxzmWr63anKQ4FTSIeUQADHU1g1+EN3ILBZDWxQGXXSLF
+         tNOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BZLMvhv7tKSSJDMxnidSZGekxZVeFH3sCSLj6UYa6wM=;
+        b=nWOarintAxMGMNpSEwOzR08WDDBvchKLTEbadksbc8D+k83mD7DIwXJE5e7zCQU5b0
+         5hw+lzoIHX9df175VZAIN6cGPorU7Lxc8fyhZ6N7iDre0zMkhOT5K8h+QTNo+QkwfB5F
+         WQYPmoPeYJHJfIuiKpz3GwTR79HXe9dsoTA4iJGuIAh+ynGt3vlzvYUEgChEOcrNlBJA
+         Izd3hGPo3IDbbUySKYQTWjlhvlUN5g82ONssBis3LJAl18xUHBzgJdgd5/LIoXLAwK0f
+         sW1dqs5Gsg+MwCH3LwfkDc9TV++kxyTVj49rU4AboI7L2KJ0mX0cUouQH7ykTnlY7I5F
+         oozg==
+X-Gm-Message-State: APjAAAVDJBbBUa36c4lmFkzrGuvB1Cn6p3nxgQ2NkZdsJjvRIDIzVfbG
+        WTD51Qzn/AS89eSINmxGP8o=
+X-Google-Smtp-Source: APXvYqyiLo57314Q6lNpMx+Xhvoay8T9dgZTy35jdfhTOHpCI8vHD/SlqMr/NAyLBicfMLX2GA0xyA==
+X-Received: by 2002:a63:801:: with SMTP id 1mr13350746pgi.58.1572318061971;
+        Mon, 28 Oct 2019 20:01:01 -0700 (PDT)
+Received: from Gentoo.localdomain ([103.231.91.67])
+        by smtp.gmail.com with ESMTPSA id u68sm12436603pfu.39.2019.10.28.20.00.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 28 Oct 2019 20:01:01 -0700 (PDT)
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     rdunlap@infradead.org, bfields@fieldses.org
+Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Subject: [PATCH] scripts:prune-kernel:prune kernel and modules dir from the system
+Date:   Tue, 29 Oct 2019 08:30:30 +0530
+Message-Id: <20191029030030.31659-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <e895d04ef5a282b5b48fcb21cbc175d2@www.loen.fr> <693a3b68-a0f1-81fe-40ce-2b6ba189450c@web.de>
- <868spgzcti.wl-maz@kernel.org> <c8816d85b696cb96318e17b7010b84f09bc67bf7.camel@perches.com>
- <CAK7LNAQqSThGRM_wRGR2ou3B+Oqpr0nF9Fg4rhSR4Hvnxwnj3g@mail.gmail.com>
- <20191025080843.GG32742@smile.fi.intel.com> <alpine.DEB.2.21.1910251028260.2787@hadrien>
-In-Reply-To: <alpine.DEB.2.21.1910251028260.2787@hadrien>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 29 Oct 2019 11:58:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATkXYNMbquhn=SV=Hj1kqbPke8x4_a7aZYhceRAam8MHQ@mail.gmail.com>
-Message-ID: <CAK7LNATkXYNMbquhn=SV=Hj1kqbPke8x4_a7aZYhceRAam8MHQ@mail.gmail.com>
-Subject: Re: coccinelle: api/devm_platform_ioremap_resource: remove useless script
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Joe Perches <joe@perches.com>, Marc Zyngier <maz@kernel.org>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Himanshu Jha <himanshujha199640@gmail.com>,
-        kernel-janitors@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Julia
+This patch will remove old kernel and modules directory from 
+the system interactive way and also at once ,provied the parameter
+given to the invoking script.
 
-On Fri, Oct 25, 2019 at 5:38 PM Julia Lawall <julia.lawall@lip6.fr> wrote:
->
->
->
-> On Fri, 25 Oct 2019, Andy Shevchenko wrote:
->
-> > On Fri, Oct 25, 2019 at 12:40:52AM +0900, Masahiro Yamada wrote:
-> > > On Sun, Oct 20, 2019 at 7:13 AM Joe Perches <joe@perches.com> wrote:
-> > > > On Sat, 2019-10-19 at 21:43 +0100, Marc Zyngier wrote:
-> >
-> > > Alexandre Belloni used
-> > > https://lore.kernel.org/lkml/9bbcce19c777583815c92ce3c2ff2586@www.loen.fr/
-> > > as a reference, but this is not the output from coccicheck.
-> > > The patch author just created a wrong patch by hand.
-> >
-> > Exactly. Removal of the script is a mistake. Like I said before is a healing
-> > (incorrect by the way!) by symptoms.
-> >
-> > > The deleted semantic patch supports MODE=patch,
-> > > which creates a correct patch, and is useful.
-> >
-> > Right!
->
-> I ran it on the version of Linux that still has the script:
->
-> fe7d2c23d748e4206f4bef9330d0dff9abed7411
->
-> and managed to compile 341 of the generated files in the time I had
-> available, and all compiled successfully.
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+---
+ scripts/prune-kernel | 58 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-Yeah, this semantic patch did the correct conversion
-as its header part showed the confidence.
+diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+index 58a7650ce592..a6c990450ddc 100755
+--- a/scripts/prune-kernel
++++ b/scripts/prune-kernel
+@@ -1,2 +1,60 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
++#This script will delete old kernels and modules directory related to it,both
++#automated and interactive way, if you choose -i or --interactive as parameter.
++#For normal operation you have to invoke this script like below
++#prune-kernel -r kernel_ver modules_dir_name
++flag=$1
++kernel_ver=$2
++modules_dir_name=$3
++boot_dir=/boot
++modules_dir=/lib/modules
++
++remove_old_kernel() {
++	cd $boot_dir
++	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
++	return 0
++}
++
++remove_old_modules_dir() {
++	cd $modules_dir
++	rm -rf $modules_version
++	return 0
++}
++
++usage() {
++	printf "Usage: $(basename $0) [-ri] \n"
++	printf "\n -r | --remove kernel_ver modules_dir_name \n"
++	printf "\n -i | --interactive use as interactive way \n"
++}
++
++while getopts :hir opt;do
++	case "$flag" in
++		-i | --interactive)
++			printf "\nEnter kernel version to remove or blank/empty to exit:%s"
++			read kernel_version
++			if [[ $kernel_version != "" ]]; then
++				remove_old_kernel
++				printf "Please give the full modules directory name to remove:%s"
++				read modules_version
++				remove_old_modules_dir
++				printf "\n\n\n Removed kernel version:$kernel_version and associated modules directory:$modules_version ..Done.\n"
++			else
++				exit 1
++			fi
++			;;
++		-h | --help)
++			usage
++			exit 1
++			;;
++		-r | --remove)
++			shift $(( OPTIND -1 ))
++			cd $boot_dir
++			rm -f $kernel_ver
++			cd $modules_dir
++			rm -rf $modules_dir_name
++			printf "Removed kernel version:$kernel_ver and modules directory:$modules_dir_name from the system. \n\n"
++			exit 0
++			;;
++	esac
++done
+--
+2.23.0
 
-// Confidence: High
-
-
-
->  I can let it run again, and see
-> how it goes for the rest.  Perhaps it would be acceptable if there was no
-> report, and people would be forced to use the generated patch?
-
-I do not think this is the right thing.
-MODE=report is the default, and it is fine.
-
->
-> If someone is writing lots of patches on this issue by hand, then perhaps
-> they don't have make coccicheck to produce patches, and then would
-> overlook this case completely.
->
-> If it would be helpful, I could group the generated patches by maintainer
-> or by subdirectory and send them out, if it would be easier to review them
-> all at once.
-
-Yes, please.
-
-Subsystem maintainers trust you,
-so I think it will make things move smoothly.
-
-After converting most of files,
-I want 283ea345934d277e30c841c577e0e2142b4bfcae reverted.
-
-
->
-> Anyway, the rule is not in the kernel at the moment.  For it's future, I'm
-> open to whatever people find best.  Personally, I prefer when same things
-> are done in the same way - it makes the code easier to understand and
-> makes it simpler to address other issues when they arise.
-
-
-We always did the same things in the same way
-except commit 283ea345934d277e30c841c577e0e2142b4bfcae
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
