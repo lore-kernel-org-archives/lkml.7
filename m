@@ -2,118 +2,110 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57554C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88422CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA1220874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572373571;
-	bh=0KTYYh/jhIbkXAxzdXFRSuGrcd7MS3TmgKMN3V8tevQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wfmESgfiNuQ9Cy+AcPsAuEdziPSyz0H4pIicWOFw+bBNS7FA/hoHf/8ln1uS/phZG
-	 fpshzVbAjLxSfKin8xjPPBoPk7Rwax0dx6MVnDhtac+dSvsx/5i5NuD+ACxmS+tATo
-	 n8SQiA7WO9HFPe9JIgPM3DSCd6g9K+uiKlqp2BT4=
+	by mail.kernel.org (Postfix) with ESMTP id 5E5F520679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:26:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lKvQS0hH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731364AbfJ2S0K (ORCPT
+        id S1731417AbfJ2S0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731329AbfJ2S0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:26:09 -0400
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 721D8217F9
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 18:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572373568;
-        bh=0KTYYh/jhIbkXAxzdXFRSuGrcd7MS3TmgKMN3V8tevQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=miCvECNShxOUEFwBQ5hmMk2oasl0FiQCUEArwKtWxsW4UifClVjdmIEgYIgZ8mLl4
-         QABvnlyl+jkl1CrBilXkuqdh1G1yjS7xJw00a9CfFTgcqpVeiPx4G5MuycyQcq+Mg8
-         oe/a1ctmd5Gh4BtmckE4VntCT0cp+jUaEXVroOh8=
-Received: by mail-yb1-f178.google.com with SMTP id m1so5757645ybm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:26:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAVVf5WJ2TidGW6lmYXQRdFn72SWiJJxNCV2tCr19YBAtbCl6O3n
-        /9WZeZB9KVcELOAC2CBcMhQHaW150zCVUiBztw==
-X-Google-Smtp-Source: APXvYqwFNWuzIjHFIw4D1DrdoBULCXJ8PyRfbcXJhzZThgQrb2mqofhnB0oQTAt2TqFMwYk9GkYYmUHEYUt6vWHFEtA=
-X-Received: by 2002:a25:3ce:: with SMTP id 197mr19217412ybd.255.1572373567370;
- Tue, 29 Oct 2019 11:26:07 -0700 (PDT)
+        Tue, 29 Oct 2019 14:26:15 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39444 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731329AbfJ2S0O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 14:26:14 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t8so4522512otl.6
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F0/jbrX4IDouWf5n0Ojei70Kw+dN6xE0YN1q94WIUzA=;
+        b=lKvQS0hHD4pj59HlV6oR0/djUnPuGpWekyavljQi7ntMzsbNBbY5kRUKP+N9n4IUtd
+         maRk/snxO5ptQrmheK+AFhcB0qusQUQU9uqxU+S4Dp7WHJe3cw9tF8YosUx3hoRuYI9r
+         nVedD3689ILaB3NAEDt95fwjMDA4JMq+1bEgKiaTqmc7r9enukmH6wTRiyL/ijQEmkDp
+         0sJWD7FDkSoJ6OaZxsmOw678g00dsavQbZN+uy+jhW6kx0F+GAXZRW8+pIWB/7adGLKJ
+         5GSo+Xo7uAoDCvHllODyrCQKxRPr0HLhXP4igjRfuz9Xb5Z+Q3BpsxOxg+izWGYDwufy
+         SoAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F0/jbrX4IDouWf5n0Ojei70Kw+dN6xE0YN1q94WIUzA=;
+        b=twlvrEqS4yKWBICOR4XibBUTPejmnsJihOaVT92Az2cnnytPBjpUXVOLYWQJOEPeGm
+         hWEmqCamUsX/iGYqL1G/5vFkMSvQ6X6gs/Uk6ipp5A0OH7rrsoOXDkp5SdoYN1xZeZ6C
+         N578Hj2BCxdSqjlZshO8vSFPwXcjgm52JmDW+nWvYeCBr87JbRqXb50nSqDh0I3U5qg6
+         sdKAygC8137fMtkMr0r5YZMDdN9sbiEEh1pnl9HyeQeLEB++2/iHhnYdko8uq1i6bDGr
+         sCY1lQIBpDij2kFPivGSBoy2/ANDL6eYWO3lOHSB5xjjYZGvgdPgX38FmMbAEgH41LW6
+         5X+w==
+X-Gm-Message-State: APjAAAXOa9xUbp2Sv2BI1Xit9Ug09HoQhCL90uKpqR9xIRf+BBPHTa2i
+        BAkwGm1fEQYhqFJC9kEHURSoc1ko/3ptSi5NMgVYDw==
+X-Google-Smtp-Source: APXvYqxMuKgV9hIGV28BZLBjcSzYuevoUIQsOkCa/3osxr8otj1CMRnSYhoMgINxrs/ynaGGsktybzxiSTkQJHs2gQk=
+X-Received: by 2002:a05:6830:ca:: with SMTP id x10mr18348228oto.221.1572373573201;
+ Tue, 29 Oct 2019 11:26:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <1572314250-6463-1-git-send-email-wang.yi59@zte.com.cn>
-In-Reply-To: <1572314250-6463-1-git-send-email-wang.yi59@zte.com.cn>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 29 Oct 2019 13:25:55 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJiT5t1xsOR6LkCHQgQu=jSo_KCKxf78dhnzcNsxRj3=g@mail.gmail.com>
-Message-ID: <CAL_JsqJiT5t1xsOR6LkCHQgQu=jSo_KCKxf78dhnzcNsxRj3=g@mail.gmail.com>
-Subject: Re: [PATCH v4] drm/panfrost: fix -Wmissing-prototypes warnings
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     Steven Price <steven.price@arm.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        xue.zhihong@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
+References: <20191028215919.83697-1-john.stultz@linaro.org>
+ <20191028215919.83697-9-john.stultz@linaro.org> <87bltzj47a.fsf@gmail.com>
+In-Reply-To: <87bltzj47a.fsf@gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 29 Oct 2019 11:26:01 -0700
+Message-ID: <CALAqxLUcvJ6K-ysOLJj0ddiGyoHGkaJBBiw6RShmWRD8h+wWrQ@mail.gmail.com>
+Subject: Re: [PATCH v4 8/9] dt-bindings: usb: generic: Add role-switch-default-host
+ binding
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 8:55 PM Yi Wang <wang.yi59@zte.com.cn> wrote:
+On Tue, Oct 29, 2019 at 2:23 AM Felipe Balbi <balbi@kernel.org> wrote:
+> John Stultz <john.stultz@linaro.org> writes:
 >
-> We get these warnings when build kernel W=3D1:
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:35:6: warning: no previous pr=
-ototype for =E2=80=98panfrost_perfcnt_clean_cache_done=E2=80=99 [-Wmissing-=
-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:40:6: warning: no previous pr=
-ototype for =E2=80=98panfrost_perfcnt_sample_done=E2=80=99 [-Wmissing-proto=
-types]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:190:5: warning: no previous p=
-rototype for =E2=80=98panfrost_ioctl_perfcnt_enable=E2=80=99 [-Wmissing-pro=
-totypes]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:218:5: warning: no previous p=
-rototype for =E2=80=98panfrost_ioctl_perfcnt_dump=E2=80=99 [-Wmissing-proto=
-types]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:250:6: warning: no previous p=
-rototype for =E2=80=98panfrost_perfcnt_close=E2=80=99 [-Wmissing-prototypes=
-]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:264:5: warning: no previous p=
-rototype for =E2=80=98panfrost_perfcnt_init=E2=80=99 [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:320:6: warning: no previous p=
-rototype for =E2=80=98panfrost_perfcnt_fini=E2=80=99 [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_mmu.c:227:6: warning: no previous proto=
-type for =E2=80=98panfrost_mmu_flush_range=E2=80=99 [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_mmu.c:435:5: warning: no previous proto=
-type for =E2=80=98panfrost_mmu_map_fault_addr=E2=80=99 [-Wmissing-prototype=
-s]
+> > Add binding to configure the default role the controller
+> > assumes is host mode when the usb role is USB_ROLE_NONE.
+> >
+...
+> > + - role-switch-default-host: boolean, indicating if usb-role-switch is enabled
+> > +                     the device default operation mode of controller while
+> > +                     usb role is USB_ROLE_NONE is host mode. If this is not
+> > +                     set or false, it will be assumed the default is device
+> > +                     mode.
 >
-> For file panfrost_mmu.c, make functions static to fix this.
-> For file panfrost_perfcnt.c, include header file can fix this.
->
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-> Reviewed-by: Steven Price <steven.price@arm.com>
-> ---
->
-> v4: make the parameters aligned.
->
-> v3: using tab size of 8 other than 4.
->
-> v2: align parameter line and modify comment. Thanks to Steve.
-> ---
->  drivers/gpu/drm/panfrost/panfrost_mmu.c     | 9 +++++----
->  drivers/gpu/drm/panfrost/panfrost_perfcnt.c | 1 +
->  2 files changed, 6 insertions(+), 4 deletions(-)
+> Do we also need a role-switch-default-peripheral? Would it be better to
+> have a single role-switch-default property which accepts "host" or
+> "peripheral" arguments?
 
-v4 didn't seem to make it to the list yet (non-subscribers get
-moderated) and I missed this. I applied v3 and fixed up the alignment.
+I guess the standard default is peripheral, so this differentiated
+from that, but I agree it might be more forward thinking to let it
+specify a type argument in case there is another option in the future.
 
-Rob
+I'll rework this.
+
+Thanks again for the review and feedback!
+-john
