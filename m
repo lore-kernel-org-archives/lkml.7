@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC11BCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C361ECA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822CD20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9629520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfJ2HWz (ORCPT
+        id S1729588AbfJ2HX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:22:55 -0400
+        Tue, 29 Oct 2019 03:23:26 -0400
 Received: from esa1.mentor.iphmx.com ([68.232.129.153]:7825 "EHLO
         esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727636AbfJ2HWq (ORCPT
+        with ESMTP id S2387600AbfJ2HWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:22:46 -0400
-IronPort-SDR: YQAHsy5Bd9LZOxlVewDqKKn247Mw9mW3kGrZOnPa0NRNcjV9pVBGLQFnwIUATb/APu412cMBsj
- Jkxi9uSENAlnCzKlaxn7kPPOxRHwtYjdmygPzf9m2SGrOnYEBAD+c4tG+q2WpWJMtDQuix5oCh
- uXB0ZkeRnGpZhv4BJJDwsANG81K9OKU6HXaa9Sr47VsFF4o3Ot5RRDJxS+9ikh8CXkI+XQzCRj
- dXrdVaAHlbNy2FSUirk6n+T3RoMvGo0d2d56p+86eHl+EQhEq5PErvpRtbaaIrRhoQaUHmlqs8
- q8w=
+        Tue, 29 Oct 2019 03:22:53 -0400
+IronPort-SDR: ZxkrBrWm1gC0umXcqx4mAZz3xJYcyOlONcUGLSiqspjLzVA1TV+ZVr7j1UbmJb8j+dJKrz9hV8
+ M4W6gMWjDjs2woapDv9E4N+VTOsDiUvzaTkLLfrpEs9NgpwS8E/GF0907yA81WcJ3U+mQjI4QU
+ hreX+xslx0kUWgHRfXDrPF6IOCnXRrq9l+4V1ubUUkc9HlNrDsWPInS2RJ7gswEJATPDTbHm/7
+ 1cJnsJ8Z3M6G61qEYcz0/3VXKobMEGpmKHTKkXe3yIqqW1std/kkVpDadTvh/WoXi50xLY+e/E
+ Nuk=
 X-IronPort-AV: E=Sophos;i="5.68,243,1569312000"; 
-   d="scan'208";a="44509452"
+   d="scan'208";a="44509456"
 Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 28 Oct 2019 23:22:45 -0800
-IronPort-SDR: KCB17F0OT/OX3BfbxSF7LSVRiIRoCRkawe+MTXfaGaFn38Rl5WqBWbQNRXNgJ4W4qdbYO7ej0z
- Qc1+EtAcW8OR2O/h7jNRooywdjevnjA4P2J3Q7RQn8FazooQ905xC4HXt0Iwytk2bifk7EkYMa
- H/PhBP6fayqtSukiOI+In/hvZC4srgHgZX/w+l2DXmXv2Qp5u3KWXC0e+Zt+RbAeUbxGmp51cC
- 6Dbg3FQSkaywxpJe2EoG1AXM/UQfmZGPfp635dXhVuAaljGoTWxuMphBcUh3HaawVGzjwa7n4f
- Nxk=
+  by esa1.mentor.iphmx.com with ESMTP; 28 Oct 2019 23:22:52 -0800
+IronPort-SDR: wj0hNOI75eibM0FWtToOqSDP4G412jtwsX6W4OBMvyzI2Q9C6z4CJLV9uxCOjiwwySltYenJ0x
+ T+0sER/CGZtfBn6iGITjIc7UxNCEes8k8okfUilX/9fEzcppFthYQR6fH077xv22GnMHlFzWdr
+ gN9X5v6R/FE/sTjMcNUeczAixHcsMRAsdkZ38WOJQY6AskTEDUHYtHssPfWbUsiXAC8Dvh1Lc7
+ zcA3gcqpOW12nsBLsTm9DH1ljIonI1lG9eI6Lu3ihwnSnubyPuLx2Jo7xTcipGRTUSOm/uH40z
+ TBQ=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
         <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
         <Andrew_Gabbasov@mentor.com>
-Subject: [PATCH v4 42/48] Input: Atmel: handle ReportID "0x00" while processing T5 messages
-Date:   Tue, 29 Oct 2019 16:20:04 +0900
-Message-ID: <20191029072010.8492-43-jiada_wang@mentor.com>
+Subject: [PATCH v4 44/48] Input: atmel_mxt_ts: use gpiod_set_value_cansleep for reset pin
+Date:   Tue, 29 Oct 2019 16:20:06 +0900
+Message-ID: <20191029072010.8492-45-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191029072010.8492-1-jiada_wang@mentor.com>
 References: <20191029072010.8492-1-jiada_wang@mentor.com>
@@ -54,58 +54,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deepak Das <deepak_das@mentor.com>
+From: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
 
-ReportID "0x00" is reserved by Atmel and should not be used by any
-Atmel touch controller.
+In case of remote display, touch controller will be also remote.
+In such cases, the reset pin of the touch controller will be
+controlled through bridging ICs like Deserilizer and Serializer.
+Therefore accessing the gpio pins require transactions with the
+external IC. Using the function gpiod_set_value will print a
+warning like below
 
-reportID is the first byte retrieved from T5 message payload.
-Currently Atmel driver continues to process the T5 messages even if
-the reportID "0x00" is returned by Touch Controller.
+WARNING: CPU: 0 PID: 576 at drivers/gpio/gpiolib.c:1441 gpiod_set_value+0x34/0x60()
+CPU: 0 PID: 576 Comm: modprobe Not tainted 3.14.79-08377-g84ea22f-dirty #4
+Backtrace:
+[<80011c58>] (dump_backtrace) from [<80011e60>] (show_stack+0x18/0x1c)
+[<80011e48>] (show_stack) from [<8052d7ac>] (dump_stack+0x7c/0x9c)
+[<8052d730>] (dump_stack) from [<800241bc>] (warn_slowpath_common+0x74/0x9c)
+[<80024148>] (warn_slowpath_common) from [<80024288>] (warn_slowpath_null+0x24/0x2c)
+[<80024264>] (warn_slowpath_null) from [<8029e070>] (gpiod_set_value+0x34/0x60)
+[<8029e03c>] (gpiod_set_value) from [<7f492e98>] (mxt_probe+0x1e0/0x718 [atmel_mxt_ts])
+[<7f492cb8>] (mxt_probe [atmel_mxt_ts]) from [<803c4d34>] (i2c_device_probe+0xcc/0xec)
+[<803c4c68>] (i2c_device_probe) from [<803252a0>] (driver_probe_device+0xc0/0x200)
 
-This commit modifies Atmel touch driver to return -EINVAL if ReportID
-"0x00" is received while processing T5 messages.
-
-Signed-off-by: Deepak Das <deepak_das@mentor.com>
+Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Signed-off-by: Sanjeev Chugh <sanjeev_chugh@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index e02097193229..7a5b0bd4b82e 100644
+index 700b7228e133..3e81e5d9175b 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -76,6 +76,7 @@
- #define MXT_PROCI_TOUCHSEQUENCELOGGER	93
- #define MXT_TOUCH_MULTITOUCHSCREEN_T100 100
- #define MXT_PROCI_ACTIVESTYLUS_T107	107
-+#define MXT_RPTID_RESERVED		0
+@@ -2490,7 +2490,7 @@ static void mxt_regulator_enable(struct mxt_data *data)
+ 	if (!data->reg_vdd || !data->reg_avdd)
+ 		return;
  
- /* MXT_GEN_MESSAGE_T5 object */
- #define MXT_RPTID_NOMSG		0xff
-@@ -1384,6 +1385,11 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
- 	u8 report_id = message[0];
- 	bool dump = data->debug_enabled;
+-	gpiod_set_value(data->reset_gpio, 0);
++	gpiod_set_value_cansleep(data->reset_gpio, 0);
  
-+	if (report_id == MXT_RPTID_RESERVED) {
-+		dev_err(&data->client->dev,
-+			"Received Reserved ReportID 0x00\n");
-+		return -EINVAL;
-+	}
- 	if (report_id == MXT_RPTID_NOMSG)
- 		return 0;
+ 	error = regulator_enable(data->reg_vdd);
+ 	if (error)
+@@ -2508,7 +2508,7 @@ static void mxt_regulator_enable(struct mxt_data *data)
+ 	 * voltage
+ 	 */
+ 	msleep(MXT_REGULATOR_DELAY);
+-	gpiod_set_value(data->reset_gpio, 1);
++	gpiod_set_value_cansleep(data->reset_gpio, 1);
+ 	msleep(MXT_CHG_DELAY);
  
-@@ -1454,6 +1460,8 @@ static int mxt_read_and_process_messages(struct mxt_data *data, u8 count)
- 		ret = mxt_proc_message(data,
- 			data->msg_buf + data->T5_msg_size * i);
- 
-+		if (ret < 0)
-+			return ret;
- 		if (ret == 1)
- 			num_valid++;
- 	}
+ retry_wait:
+@@ -4313,7 +4313,7 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		disable_irq(data->irq);
+ 	} else if (data->reset_gpio) {
+ 		msleep(MXT_RESET_GPIO_TIME);
+-		gpiod_set_value(data->reset_gpio, 1);
++		gpiod_set_value_cansleep(data->reset_gpio, 1);
+ 		msleep(MXT_RESET_INVALID_CHG);
+ 	} else {
+ 		dev_dbg(&client->dev,
 -- 
 2.17.1
 
