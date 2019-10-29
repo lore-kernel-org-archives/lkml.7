@@ -2,141 +2,97 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF95CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A32C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD922087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:14:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DO1hZp2r"
+	by mail.kernel.org (Postfix) with ESMTP id 52C45204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572376624;
+	bh=YVQtC3fWmeOhtQ9Yd/ktldpRbbvX++mMGOBzCrGOrl4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f77a54VWtJ4X1Q9nnCbuafv/EAANRTJKncingr2D/oWPCW8RABvhSj1h1ZjxeJy9f
+	 8LgnxxE1tao4oJMkckTGZUteONRQuDSSAmaPM1atKkRwgulDlbuEMFAIcLC9ICG0RX
+	 CRlWYBDzA0s0WV0zF+gUtt3SCIsqPghUWLJNVkf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732491AbfJ2TOd (ORCPT
+        id S1728095AbfJ2TRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:14:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20103 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729263AbfJ2TOc (ORCPT
+        Tue, 29 Oct 2019 15:17:03 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37742 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfJ2TRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:14:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572376471;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nxayejYSVXr47U447mSkKDwpy7jX9q8NIi6Fc4NbQBc=;
-        b=DO1hZp2rjjvGs0jb/saN3Upvu+3I57KcitSChkmaHYFCzWvmrMpmhjglL/wfI7B2FF/bwh
-        Q4ADd1EqsE0IKPHgmeZeqLippB+3uN9FjtnbxzKVKIyGhOHTIkEP8P17C2IyL+pycV2Csn
-        HmYA+tCZgpoeOFwz+723SuMVnUzaipA=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-hexKA29EONG8U60qkByC_Q-1; Tue, 29 Oct 2019 15:14:29 -0400
-Received: by mail-lf1-f71.google.com with SMTP id o140so1990181lff.18
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:14:29 -0700 (PDT)
+        Tue, 29 Oct 2019 15:17:03 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 53so10783985otv.4;
+        Tue, 29 Oct 2019 12:17:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pwzekU6FTVb4WJ1KYylvE2Fm3CGIkd3DwRcFLlZGbuw=;
-        b=BXGNJZhfM4WOIZZJ++SeR9hcEpXhNABTW3A4xqg5d1uCzBytjBHbeSLAdu3jTLHP6+
-         CoK3E4LcHh2Ag711N+d1V7WTjXLdEbv7f90gAc6gtjqLrr/6Qqqh6FpcKKgRPd8LhaDU
-         DgVnIaXRvTvUnPqM5SB8wBStmxUxU1HLc+1fCH8BAs7bPTBLKD+Va1XcFPHr8mPIOP30
-         WHgT9gIgQWPccOXz3ZWiekzJPiBo/Ea2b/Bnq3ghhZ79Bc9y1lxq5ABR31hrD8MH+kD4
-         m6ozw9PcU2OEDPwx1nMuy4jQnYSdJdbB3QF9m3ptq+xxKz30wAjIbGEltaHmU0AUHbBO
-         mn4A==
-X-Gm-Message-State: APjAAAW0l35Ar+CYOA9yrcyfB05vtOLd68ZBcwkc6P92Dxy84U+oVoCE
-        HBu5Vu20zUGZ/PyVH+By/mmbxo6fFqWte5uYpMKkKpRtQna93itWEyTQFYr4SuYmKgT/ToxJBCy
-        a0rADXNG7ImWDfSq6WnO9EBhtdkygzTdf0Rd/rbuO
-X-Received: by 2002:a19:ac04:: with SMTP id g4mr3546581lfc.63.1572376467662;
-        Tue, 29 Oct 2019 12:14:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyB0C3Ii5OEJM05OMOUAAZ49o0SiI0p8Oyn3T8k9fDZCZX9ZMdZD7rNOLGdjhWiT4TOIpbqxNY+7kioHW7fcD4=
-X-Received: by 2002:a19:ac04:: with SMTP id g4mr3546566lfc.63.1572376467423;
- Tue, 29 Oct 2019 12:14:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XpBCgi1acvYl0k5WNhVR7nXqVxi3RiMKOtGaD33sKEc=;
+        b=rjuNEvLfPFPOAbd9TvVxJj4iyxyvZAe9m1g4Wz3NN33XFl7ZURx+Ik8u0I4+7CIUhj
+         bt6ItQEczVipbMXqaK9jGTF0oVICf8yc5RkTO6vDgQXHv0CGqnqZcrR2YxJmXABIGjPD
+         2xL+X4FLi6BXneeZ9H59sNKbRa3d+nInLIKKtnQd7+Nai9CbQdt43uVxHAPlCKmptEl4
+         izCalgKkGwOWQ7kNU2HE0yv7u23JalnpcRUf7KB5xmwP+yL2EQnTU9+LGJgXz+DXTq+l
+         54xRpyPB1IrXEzT2amHgBHLAw8FI+TD97nshBDFWxFn2ZbkP2+IPhS0Rswh1RAvRUnKc
+         UFig==
+X-Gm-Message-State: APjAAAXIqMk1LDcuS0xFrSJP/irzEcJ8nOj0IUxUKJA7xnQJCKPsbBKX
+        fUePItiseIJXezNf4RMZYQ==
+X-Google-Smtp-Source: APXvYqx/H3E5BHR/NyYmMy7qY+w/1yrITBdBvLYN/pDzX4Yrcd2QcMYM0p1KpSR9OqGRKzKomab6ZQ==
+X-Received: by 2002:a9d:6e91:: with SMTP id a17mr5163289otr.31.1572376622117;
+        Tue, 29 Oct 2019 12:17:02 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 38sm498129otr.7.2019.10.29.12.16.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 12:16:59 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:16:58 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     kishon@ti.com, mark.rutland@arm.com, bivvy.bi@rock-chips.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH 2/3] dt-bindings: phy: add yaml binding for
+ rockchip,px30-dsi-dphy
+Message-ID: <20191029191658.GA9628@bogus>
+References: <20191023223851.3030-1-heiko@sntech.de>
+ <20191023223851.3030-2-heiko@sntech.de>
 MIME-Version: 1.0
-References: <20191029173755.27149-1-ardb@kernel.org> <20191029173755.27149-4-ardb@kernel.org>
-In-Reply-To: <20191029173755.27149-4-ardb@kernel.org>
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-Date:   Wed, 30 Oct 2019 00:44:14 +0530
-Message-ID: <CACi5LpMAagnn_yEmqRBGfxJFZcAUzohU30NACeGvdXaHFZwAMA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] efi/random: treat EFI_RNG_PROTOCOL output as
- bootloader randomness
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-X-MC-Unique: hexKA29EONG8U60qkByC_Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023223851.3030-2-heiko@sntech.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ard,
-
-On Tue, Oct 29, 2019 at 11:10 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> From: Dominik Brodowski <linux@dominikbrodowski.net>
->
-> Commit 428826f5358c ("fdt: add support for rng-seed") introduced
-> add_bootloader_randomness(), permitting randomness provided by the
-> bootloader or firmware to be credited as entropy. However, the fact
-> that the UEFI support code was already wired into the RNG subsystem
-> via a call to add_device_randomness() was overlooked, and so it was
-> not converted at the same time.
->
-> Note that this UEFI (v2.4 or newer) feature is currently only
-> implemented for EFI stub booting on ARM, and further note that
-> CONFIG_RANDOM_TRUST_BOOTLOADER must be enabled, and this should be
-> done only if there indeed is sufficient trust in the bootloader
-> _and_ its source of randomness.
->
-> Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
-> [ardb: update commit log]
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-
-Seems my Tested-by was dropped which I provide for the RFC version of
-this patch.
-See <https://www.mail-archive.com/linux-efi@vger.kernel.org/msg12281.html>
-for details.
-
-I can provide a similar Tested-by for this version as well.
-
-Thanks,
-Bhupesh
-
-
+On Thu, Oct 24, 2019 at 12:38:50AM +0200, Heiko Stuebner wrote:
+> This adds a yaml binding for the external dsi phy found on Rockchip
+> socs of the px30, rk3128 and rk3368 variants.
+> 
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 > ---
->  drivers/firmware/efi/efi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 69f00f7453a3..e98bbf8e56d9 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -554,7 +554,7 @@ int __init efi_config_parse_tables(void *config_table=
-s, int count, int sz,
->                                               sizeof(*seed) + size);
->                         if (seed !=3D NULL) {
->                                 pr_notice("seeding entropy pool\n");
-> -                               add_device_randomness(seed->bits, seed->s=
-ize);
-> +                               add_bootloader_randomness(seed->bits, see=
-d->size);
->                                 early_memunmap(seed, sizeof(*seed) + size=
-);
->                         } else {
->                                 pr_err("Could not map UEFI random seed!\n=
-");
-> --
-> 2.17.1
->
+>  .../bindings/phy/rockchip,px30-dsi-dphy.yaml  | 75 +++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml b/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+> new file mode 100644
+> index 000000000000..c2e1a998a766
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+> @@ -0,0 +1,75 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
+(GPL-2.0-only OR BSD-2-Clause) for new bindings.
+
+Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
