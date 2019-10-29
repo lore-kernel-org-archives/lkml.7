@@ -2,91 +2,102 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB47CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95427CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F2E21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572348508;
-	bh=gUKSWXcfLp8N08IRMS8CZHuXSpvN/MYddgCzXmwoF9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GPdtYFoaL5geY3jjs3iqGBrqgJct1sCWhIX9/NrGuTgU7xsLG4PKJcCG9+NCOG/zq
-	 TtpBek40TfojqRo2JtXQ+qQJ6GGZeq/8b4BOaRDg+PfIwhfiUjJsNtyU11NSdGQFs6
-	 ZNG3Ht4u1LUO/8rOZzkJCNHq6PBwRoeVzOUW0RoU=
+	by mail.kernel.org (Postfix) with ESMTP id 4581120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="rCaxpPR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbfJ2L2Q (ORCPT
+        id S1731694AbfJ2L2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:28:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34546 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 07:28:52 -0400
+Received: from vps.xff.cz ([195.181.215.36]:60276 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730928AbfJ2L2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:28:13 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8125720663;
-        Tue, 29 Oct 2019 11:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572348492;
-        bh=gUKSWXcfLp8N08IRMS8CZHuXSpvN/MYddgCzXmwoF9M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bxj8AS+8cI/vcQNfxyl1kIVwj3qJo1XrsnWZH/ctVDmfFv3wClysaq7Qv16Ahnqbn
-         BE9/4th5Hmp6Zh3JuiO+lah/XUd9501j1WSLEhIfkHn9tJ4okP+yaDh2ET0jvhJkrG
-         wBSCsuH9JzWJbcapYM0Yaci8LSvaKrU1P/KePTMw=
-Date:   Tue, 29 Oct 2019 11:28:07 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [patch V2 00/17] entry: Provide generic implementation for host
- and guest entry/exit work
-Message-ID: <20191029112806.GA12103@willie-the-truck>
-References: <20191023122705.198339581@linutronix.de>
+        id S1725927AbfJ2L2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 07:28:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1572348530; bh=7CvZFllA5Lo3ke7W4E4r8AmPqCtcdtZ72Xnw6OysY14=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rCaxpPR2UhHDsQQ7Z4TX360K5iP0YBo4qKopDd7yNu0zAFiRBG39FmQ9J+Htaednr
+         +MeXaB5cGXQf1+HuM+Q9pUW0qPMz1zRzTeXAWk/vQpOEVEh39u8M7s7xZvekDuPRK7
+         JItx9M4N6QwfjCvlpk8RdiZC3Ybj8/1oWHZE2rkc=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR ALLWINNER
+        A10),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] drm: sun4i: Add support for suspending the display driver
+Date:   Tue, 29 Oct 2019 12:28:46 +0100
+Message-Id: <20191029112846.3604925-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023122705.198339581@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Shut down the display engine during suspend.
 
-On Wed, Oct 23, 2019 at 02:27:05PM +0200, Thomas Gleixner wrote:
-> When working on a way to move out the posix cpu timer expiry out of the
-> timer interrupt context, I noticed that KVM is not handling pending task
-> work before entering a guest. A quick hack was to add that to the x86 KVM
-> handling loop. The discussion ended with a request to make this a generic
-> infrastructure possible with also moving the per arch implementations of
-> the enter from and return to user space handling generic.
-> 
->   https://lore.kernel.org/r/89E42BCC-47A8-458B-B06A-D6A20D20512C@amacapital.net
-> 
-> The series implements the syscall enter/exit and the general exit to
-> userspace work handling along with the pre guest enter functionality.
-> 
-> Changes vs. RFC version:
-> 
->   - Dropped ARM64 conversion as requested by ARM64 folks
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+Changes in v2:
+- spaces -> tabs
 
-If you fancy another crack at arm64 on your way back from Lyon, we've now
-got more of the asm->C conversion queued up here:
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/entry-s-to-c
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index a5757b11b730..c519d7cfcf43 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -346,6 +346,27 @@ static int sun4i_drv_add_endpoints(struct device *dev,
+ 	return count;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static int sun4i_drv_drm_sys_suspend(struct device *dev)
++{
++	struct drm_device *drm = dev_get_drvdata(dev);
++
++	return drm_mode_config_helper_suspend(drm);
++}
++
++static int sun4i_drv_drm_sys_resume(struct device *dev)
++{
++	struct drm_device *drm = dev_get_drvdata(dev);
++
++	return drm_mode_config_helper_resume(drm);
++}
++#endif
++
++static const struct dev_pm_ops sun4i_drv_drm_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(sun4i_drv_drm_sys_suspend,
++				sun4i_drv_drm_sys_resume)
++};
++
+ static int sun4i_drv_probe(struct platform_device *pdev)
+ {
+ 	struct component_match *match = NULL;
+@@ -418,6 +439,7 @@ static struct platform_driver sun4i_drv_platform_driver = {
+ 	.driver		= {
+ 		.name		= "sun4i-drm",
+ 		.of_match_table	= sun4i_drv_of_table,
++		.pm = &sun4i_drv_drm_pm_ops,
+ 	},
+ };
+ module_platform_driver(sun4i_drv_platform_driver);
+-- 
+2.23.0
 
-No worries if not, but figured it was worth letting you know anyway.
-
-Will
