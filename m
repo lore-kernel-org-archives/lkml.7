@@ -2,170 +2,97 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19263CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01166CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9AFC218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB35D20830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:48:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="jVcPIrlt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t6NZJy/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732688AbfJ2GnU (ORCPT
+        id S1732632AbfJ2Gsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 02:43:20 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45471 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732319AbfJ2GnU (ORCPT
+        Tue, 29 Oct 2019 02:48:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35112 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfJ2Gsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 02:43:20 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q64so13931084ljb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 23:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bM2b33Z0Vnc9Ac9V0Lv2X8J2KpK569Z9KH1KOZ+JzRw=;
-        b=jVcPIrlteiZGWJDhmwSW8gN61bfxRh0c3p5CvrRq2Uutn/M/Z4KjQtngvA3VJcyYc5
-         YXZ9sIef7OrN7ZOqEY4PMinCMzv+/ZDzvjtyOunO2yJ5AiiX+n/5ZFCaJ13cizxGSPAK
-         nXC/meNTCcJFEJQOWHU8I1gVfLdsF8M08zfxHQWTtmctMMFqDokZ7BKnkxJPhvEBuuCv
-         XXvB7bzp1bHcvIo9d0gtPPU0xGWCmyzCfU8v96zVJRwhw34nxB1G0aEUG0jF9PeYa3Pu
-         q/N+8F1BettsLYEHvpxfm/OKi6ulaYQn4orrNthYfuDedlZNaJNsf5PeQDZzEkjNhynU
-         +pXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bM2b33Z0Vnc9Ac9V0Lv2X8J2KpK569Z9KH1KOZ+JzRw=;
-        b=PyeLUmIXyWrBWo1DG3PlZ9xm9sxm7bAfl6Wy+rx03PpI429Prn8lH8BTQRziJDcsj7
-         ygFBUi8l5+amSD06Q+AxCQShQfWLjFGipwSlWSXZAwAKWalliF2zbADJksrZ1r62m0HI
-         qZDEcOlPhqEWe/Qyr7a8En2ksehj/MpaoHo/1KCoFFEfhCHJXiu+F2vEzTOXqD60jlB2
-         xksDahqlTd7DjKhZudlFMj9b0dWhgUPdw2VYonBmGhYcEtAoTeom9YGm1yAoz2O1+RAv
-         V1JNvL1sz6NSDizp5mZJI0XcAW9cldBoPHB3ZzNnsxLjg2xZGg9GkTwlgomcdT8oxvQL
-         HKGg==
-X-Gm-Message-State: APjAAAVAvnGm9a0B3Ao99OzXtnxk5p67YcKoaxFQSyDLC1UW6kZT7bQi
-        cWV77ybFctDzHQODcFAExzJa4Q==
-X-Google-Smtp-Source: APXvYqwKHj+2KaZDa+IJmFG2XN6Sn+iey7LdWii3xyIneSuZVP1c5fnFP+Blz2pSi0VQXRfu6gnkUQ==
-X-Received: by 2002:a05:651c:1ae:: with SMTP id c14mr1087381ljn.135.1572331396587;
-        Mon, 28 Oct 2019 23:43:16 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id q14sm6700067ljc.7.2019.10.28.23.43.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 23:43:15 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 2E0A9100402; Tue, 29 Oct 2019 09:43:18 +0300 (+03)
-Date:   Tue, 29 Oct 2019 09:43:18 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191029064318.s4n4gidlfjun3d47@box>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
- <20191028123124.ogkk5ogjlamvwc2s@box>
- <20191028130018.GA7192@rapoport-lnx>
- <20191028131623.zwuwguhm4v4s5imh@box>
- <CAA9_cmd7f2y2AAT6646S=tco3yfyLgCAC4Qp=1iTQaJqrQcOwQ@mail.gmail.com>
+        Tue, 29 Oct 2019 02:48:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kvC81MLJ/qmd5AYuvebxpfEasbMc4g+6Jnsgdy2EELA=; b=t6NZJy/IMV5UPsFQNtfhwUj8F
+        8Q4nhTVw4pCbXJchYaUZbNMx/7XoXiFNcH3MfSe37YfdiS7CV3nVelwKOyhyBpGP/G7VPMfnUJ/Yu
+        M07Gr4NAg/tt8UJEX+wUXB4PfEjTcMpNpfGunJA/FmdfiA83RYCAXeKi1isD1X/c2fFB3L/M8Awfo
+        +b4OWtqfeh9MJBwpCROvrTh2onnJKDk+ErnD8Q8KIh3IQMRVEpkBCvEo1Bru+W05+tCttQ9DxH5Dq
+        q/irlXlhdaNYgTMeBhtFkthBc7UTXMdD1fYSwUdtTxpSe1p954StmN62lCC8Dfc5teOMVvx5dtJfH
+        NB62onpNA==;
+Received: from [2001:4bb8:18c:c7d:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPLIz-0003J0-DZ; Tue, 29 Oct 2019 06:48:37 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org
+Cc:     linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: generic ioremap (and lots of cleanups) v3
+Date:   Tue, 29 Oct 2019 07:48:13 +0100
+Message-Id: <20191029064834.23438-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA9_cmd7f2y2AAT6646S=tco3yfyLgCAC4Qp=1iTQaJqrQcOwQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 10:43:51PM -0700, Dan Williams wrote:
-> On Mon, Oct 28, 2019 at 6:16 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
-> >
-> > On Mon, Oct 28, 2019 at 02:00:19PM +0100, Mike Rapoport wrote:
-> > > On Mon, Oct 28, 2019 at 03:31:24PM +0300, Kirill A. Shutemov wrote:
-> > > > On Sun, Oct 27, 2019 at 12:17:32PM +0200, Mike Rapoport wrote:
-> > > > > From: Mike Rapoport <rppt@linux.ibm.com>
-> > > > >
-> > > > > The mappings created with MAP_EXCLUSIVE are visible only in the context of
-> > > > > the owning process and can be used by applications to store secret
-> > > > > information that will not be visible not only to other processes but to the
-> > > > > kernel as well.
-> > > > >
-> > > > > The pages in these mappings are removed from the kernel direct map and
-> > > > > marked with PG_user_exclusive flag. When the exclusive area is unmapped,
-> > > > > the pages are mapped back into the direct map.
-> > > >
-> > > > I probably blind, but I don't see where you manipulate direct map...
-> > >
-> > > __get_user_pages() calls __set_page_user_exclusive() which in turn calls
-> > > set_direct_map_invalid_noflush() that makes the page not present.
-> >
-> > Ah. okay.
-> >
-> > I think active use of this feature will lead to performance degradation of
-> > the system with time.
-> >
-> > Setting a single 4k page non-present in the direct mapping will require
-> > splitting 2M or 1G page we usually map direct mapping with. And it's one
-> > way road. We don't have any mechanism to map the memory with huge page
-> > again after the application has freed the page.
-> >
-> > It might be okay if all these pages cluster together, but I don't think we
-> > have a way to achieve it easily.
-> 
-> Still, it would be worth exploring what that would look like if not
-> for MAP_EXCLUSIVE then set_mce_nospec() that wants to punch out poison
-> pages from the direct map. In the case of pmem, where those pages are
-> able to be repaired, it would be nice to also repair the mapping
-> granularity of the direct map.
+Hi all,
 
-The solution has to consist of two parts: finding a range to collapse and
-actually collapsing the range into a huge page.
+the last patches in this series add a generic ioremap implementation,
+and switch our 3 most recent and thus most tidy architeture ports over
+to use it.  With a little work and an additional arch hook or two the
+implementation should be able to eventually cover more than half of
+our ports.
 
-Finding the collapsible range will likely require background scanning of
-the direct mapping as we do for THP with khugepaged. It should not too
-hard, but likely require long and tedious tuning to be effective, but not
-too disturbing for the system.
+The patches before that clean up various lose ends in the ioremap
+and iounmap implementations.
 
-Alternatively, after any changes to the direct mapping, we can initiate
-checking if the range is collapsible. Up to 1G around the changed 4k.
-It might be more taxing than scanning if direct mapping changes often.
+Note that there is no good tree this would fit, which means I'd set up
+a tree to it to Linus unless someone has a better idea.
 
-Collapsing itself appears to be simple: re-check if the range is
-collapsible under the lock, replace the page table with the huge page and
-flush the TLB.
+A git tree is also available here:
 
-But some CPUs don't like to have two TLB entries for the same memory with
-different sizes at the same time. See for instance AMD erratum 383.
+    git://git.infradead.org/users/hch/misc.git generic-ioremap
 
-Getting it right would require making the range not present, flush TLB and
-only then install huge page. That's what we do for userspace.
+Gitweb:
 
-It will not fly for the direct mapping. There is no reasonable way to
-exclude other CPU from accessing the range while it's not present (call
-stop_machine()? :P). Moreover, the range may contain the code that doing
-the collapse or data required for it...
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/generic-ioremap
 
-BTW, looks like current __split_large_page() in pageattr.c is susceptible
-to the errata. Maybe we can get away with the easy way...
+Changes since v2:
+ - fix various typos
+ - move the m68k __free_io_area around instead of introducing a forward
+   declaration
 
--- 
- Kirill A. Shutemov
+Changes since v1:
+ - dropped various patches already merged
+ - keep the parts of the parisc EISA hack that are still needed
