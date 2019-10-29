@@ -2,154 +2,170 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E75CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1016CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C781F20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924AF2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730131AbfJ2IzH (ORCPT
+        id S1730160AbfJ2Iz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:55:07 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:43265 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729695AbfJ2IzH (ORCPT
+        Tue, 29 Oct 2019 04:55:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49641 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729695AbfJ2Iz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:55:07 -0400
-X-IronPort-AV: E=Sophos;i="5.68,243,1569276000"; 
-   d="scan'208";a="409212435"
-Received: from unknown (HELO hadrien) ([91.217.168.176])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 09:55:03 +0100
-Date:   Tue, 29 Oct 2019 09:55:02 +0100 (CET)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Tue, 29 Oct 2019 04:55:59 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iPNI4-0000wX-1e; Tue, 29 Oct 2019 09:55:48 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iPNI1-0006qC-Cj; Tue, 29 Oct 2019 09:55:45 +0100
+Date:   Tue, 29 Oct 2019 09:55:45 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Ondrej Jirman <megous@megous.com>, linux-sunxi@googlegroups.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Joe Perches <joe@perches.com>, Marc Zyngier <maz@kernel.org>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Himanshu Jha <himanshujha199640@gmail.com>,
-        kernel-janitors@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: Re: coccinelle: api/devm_platform_ioremap_resource: remove useless
- script
-In-Reply-To: <CAK7LNATkXYNMbquhn=SV=Hj1kqbPke8x4_a7aZYhceRAam8MHQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1910290953060.2183@hadrien>
-References: <e895d04ef5a282b5b48fcb21cbc175d2@www.loen.fr> <693a3b68-a0f1-81fe-40ce-2b6ba189450c@web.de> <868spgzcti.wl-maz@kernel.org> <c8816d85b696cb96318e17b7010b84f09bc67bf7.camel@perches.com> <CAK7LNAQqSThGRM_wRGR2ou3B+Oqpr0nF9Fg4rhSR4Hvnxwnj3g@mail.gmail.com>
- <20191025080843.GG32742@smile.fi.intel.com> <alpine.DEB.2.21.1910251028260.2787@hadrien> <CAK7LNATkXYNMbquhn=SV=Hj1kqbPke8x4_a7aZYhceRAam8MHQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@bootlin.com>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] input: edt-ft5x06: Add support for regulator
+Message-ID: <20191029085545.cw5c24gi76gbfdhy@pengutronix.de>
+References: <20191029005806.3577376-1-megous@megous.com>
+ <20191029005806.3577376-2-megous@megous.com>
+ <20191029041233.GD57214@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029041233.GD57214@dtor-ws>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:53:29 up 164 days, 15:11, 100 users,  load average: 0.00, 0.01,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dmitry,
 
+On 19-10-28 21:12, Dmitry Torokhov wrote:
+> On Tue, Oct 29, 2019 at 01:58:04AM +0100, Ondrej Jirman wrote:
+> > From: Mylène Josserand <mylene.josserand@bootlin.com>
+> > 
+> > Add the support for enabling optional regulator that may be used as VCC
+> > source.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> 
+> Applied, thank you.
 
-On Tue, 29 Oct 2019, Masahiro Yamada wrote:
+What happens with my vdd patches?
 
-> Hi Julia
->
-> On Fri, Oct 25, 2019 at 5:38 PM Julia Lawall <julia.lawall@lip6.fr> wrote:
-> >
-> >
-> >
-> > On Fri, 25 Oct 2019, Andy Shevchenko wrote:
-> >
-> > > On Fri, Oct 25, 2019 at 12:40:52AM +0900, Masahiro Yamada wrote:
-> > > > On Sun, Oct 20, 2019 at 7:13 AM Joe Perches <joe@perches.com> wrote:
-> > > > > On Sat, 2019-10-19 at 21:43 +0100, Marc Zyngier wrote:
-> > >
-> > > > Alexandre Belloni used
-> > > > https://lore.kernel.org/lkml/9bbcce19c777583815c92ce3c2ff2586@www.loen.fr/
-> > > > as a reference, but this is not the output from coccicheck.
-> > > > The patch author just created a wrong patch by hand.
-> > >
-> > > Exactly. Removal of the script is a mistake. Like I said before is a healing
-> > > (incorrect by the way!) by symptoms.
-> > >
-> > > > The deleted semantic patch supports MODE=patch,
-> > > > which creates a correct patch, and is useful.
-> > >
-> > > Right!
-> >
-> > I ran it on the version of Linux that still has the script:
-> >
-> > fe7d2c23d748e4206f4bef9330d0dff9abed7411
-> >
-> > and managed to compile 341 of the generated files in the time I had
-> > available, and all compiled successfully.
->
-> Yeah, this semantic patch did the correct conversion
-> as its header part showed the confidence.
->
-> // Confidence: High
->
->
->
-> >  I can let it run again, and see
-> > how it goes for the rest.  Perhaps it would be acceptable if there was no
-> > report, and people would be forced to use the generated patch?
->
-> I do not think this is the right thing.
-> MODE=report is the default, and it is fine.
->
-> >
-> > If someone is writing lots of patches on this issue by hand, then perhaps
-> > they don't have make coccicheck to produce patches, and then would
-> > overlook this case completely.
-> >
-> > If it would be helpful, I could group the generated patches by maintainer
-> > or by subdirectory and send them out, if it would be easier to review them
-> > all at once.
->
-> Yes, please.
->
-> Subsystem maintainers trust you,
-> so I think it will make things move smoothly.
->
-> After converting most of files,
-> I want 283ea345934d277e30c841c577e0e2142b4bfcae reverted.
+Regards,
+  Marco
 
-OK.  I got 477 of the files to compile directly.  I can send patches on
-them, and then look into the issues on the remaining ones (probably
-configuration issues).
+> 
+> > ---
+> >  drivers/input/touchscreen/edt-ft5x06.c | 30 ++++++++++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> > 
+> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> > index 5525f1fb1526..d61731c0037d 100644
+> > --- a/drivers/input/touchscreen/edt-ft5x06.c
+> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> > @@ -28,6 +28,7 @@
+> >  #include <linux/input/mt.h>
+> >  #include <linux/input/touchscreen.h>
+> >  #include <asm/unaligned.h>
+> > +#include <linux/regulator/consumer.h>
+> >  
+> >  #define WORK_REGISTER_THRESHOLD		0x00
+> >  #define WORK_REGISTER_REPORT_RATE	0x08
+> > @@ -88,6 +89,7 @@ struct edt_ft5x06_ts_data {
+> >  	struct touchscreen_properties prop;
+> >  	u16 num_x;
+> >  	u16 num_y;
+> > +	struct regulator *vcc;
+> >  
+> >  	struct gpio_desc *reset_gpio;
+> >  	struct gpio_desc *wake_gpio;
+> > @@ -1036,6 +1038,13 @@ edt_ft5x06_ts_set_regs(struct edt_ft5x06_ts_data *tsdata)
+> >  	}
+> >  }
+> >  
+> > +static void edt_ft5x06_disable_regulator(void *arg)
+> > +{
+> > +	struct edt_ft5x06_ts_data *data = arg;
+> > +
+> > +	regulator_disable(data->vcc);
+> > +}
+> > +
+> >  static int edt_ft5x06_ts_probe(struct i2c_client *client,
+> >  					 const struct i2c_device_id *id)
+> >  {
+> > @@ -1064,6 +1073,27 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+> >  
+> >  	tsdata->max_support_points = chip_data->max_support_points;
+> >  
+> > +	tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
+> > +	if (IS_ERR(tsdata->vcc)) {
+> > +		error = PTR_ERR(tsdata->vcc);
+> > +		if (error != -EPROBE_DEFER)
+> > +			dev_err(&client->dev,
+> > +				"failed to request regulator: %d\n", error);
+> > +		return error;
+> > +	}
+> > +
+> > +	error = regulator_enable(tsdata->vcc);
+> > +	if (error < 0) {
+> > +		dev_err(&client->dev, "failed to enable vcc: %d\n", error);
+> > +		return error;
+> > +	}
+> > +
+> > +	error = devm_add_action_or_reset(&client->dev,
+> > +					 edt_ft5x06_disable_regulator,
+> > +					 tsdata);
+> > +	if (error)
+> > +		return error;
+> > +
+> >  	tsdata->reset_gpio = devm_gpiod_get_optional(&client->dev,
+> >  						     "reset", GPIOD_OUT_HIGH);
+> >  	if (IS_ERR(tsdata->reset_gpio)) {
+> > -- 
+> > 2.23.0
+> > 
+> 
+> -- 
+> Dmitry
+> 
 
-julia
-
->
->
-> >
-> > Anyway, the rule is not in the kernel at the moment.  For it's future, I'm
-> > open to whatever people find best.  Personally, I prefer when same things
-> > are done in the same way - it makes the code easier to understand and
-> > makes it simpler to address other issues when they arise.
->
->
-> We always did the same things in the same way
-> except commit 283ea345934d277e30c841c577e0e2142b4bfcae
->
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
->
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
