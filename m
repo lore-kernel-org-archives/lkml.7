@@ -2,116 +2,131 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35E3CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56DECA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E9820874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572345786;
-	bh=ip6EK3DNIh/PbYHqQOqjYKyBD0BDFRXxuD/21er3J9g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fWUEVNYifJWY10RaYD5zzUdD+00FQaZgS0gnnDTNNaLDFU+yHyJAdSS75sIRC8k6Q
-	 RbjWK8grpzYgC2tgOZ0Aeit06SvQM7yAxtr3wckwnaSZQnk+H1W2FNPVTl5HBc/ewX
-	 rrzaTHgbBpCjm853LYF3wuU8sUbDYOH+kPSgdCFQ=
+	by mail.kernel.org (Postfix) with ESMTP id A9B6520874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:43:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tt+d8fz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbfJ2KnF (ORCPT
+        id S1730125AbfJ2Knt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 06:43:05 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39711 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfJ2KnF (ORCPT
+        Tue, 29 Oct 2019 06:43:49 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22045 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726965AbfJ2Knt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 06:43:05 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v138so8507207oif.6;
-        Tue, 29 Oct 2019 03:43:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WSjPNv90mxoa4Qm6nfEtDVRJH8OLwkZxWcgMkuqr8yo=;
-        b=bGxNvv0I7soLyaU5RO3amJ8UY4P89c8UoLbIQFC8q965tXolSK1ftj4zirr/CGRlA1
-         5MS6HF+1hByzBdb/Y3u99ivirCq+WerZVFPSbV7YX0YFzXVbAyGIhUbTuJvzX8vD2pJn
-         Q68h8y6hLKU2TLp9tDbc++GyNOS9xbtxsjqSswA/bKYLjm1HNgPvZqHJbqD0ye1fRV45
-         MWViArvUau9meYlU+AUAWlbHQeVT8xLGvE3D7FuMLDXpCmIpotcta3l0Vm3u0ZWi00k3
-         ihq3gc0uys5yl+gckypOnvF26QKTuqL6rnYWqroJNNKkBL88jXtqwa25nexyecyGuq3W
-         Kgbg==
-X-Gm-Message-State: APjAAAVBV/xCMJ738VF2TNJ75iauPibhbPUHLJ5/0zqI4VezmGHJJoMt
-        fsSiMfmsiZ1wR/rvhLbcw674JhKZdtAdC1f9DDg=
-X-Google-Smtp-Source: APXvYqzEI7Zev2Tj6Q3I2HWITMkXefnJLlyQjGXMoQC961y0B0n88iefi/CLfKVtZiYMOV/Mt2ZrHOzKRLY7NZFaPAw=
-X-Received: by 2002:aca:d4c6:: with SMTP id l189mr3312579oig.68.1572345784471;
- Tue, 29 Oct 2019 03:43:04 -0700 (PDT)
+        Tue, 29 Oct 2019 06:43:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572345827;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8QKaEOxWqH0XbEXmeRTfx0XwaFmBJ9rzCJkgjIkFVeU=;
+        b=Tt+d8fz9rBLzEKRtR2jEWVJHoh/7v2uHuNhB644495Cp9YRg71PX4FOwIyi9ufLDFcaHQP
+        QpRb9aqbbLnz0e4iLRNMXTuxUirp7L2rgm5ZOVZSC5NwZaryLYOytLKZGw1DagJczBz15/
+        U5tdiNyMiwqjUDDfuxlLFtw7re22sZY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-280-f_q__00gOjOwW2LVCQTfjw-1; Tue, 29 Oct 2019 06:43:43 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B317E1005500;
+        Tue, 29 Oct 2019 10:43:39 +0000 (UTC)
+Received: from [10.72.12.223] (ovpn-12-223.pek2.redhat.com [10.72.12.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 902D960BF1;
+        Tue, 29 Oct 2019 10:42:12 +0000 (UTC)
+Subject: Re: [PATCH V5 4/6] mdev: introduce virtio device and its device ops
+To:     Zhu Lingshan <lingshan.zhu@linux.intel.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191023130752.18980-1-jasowang@redhat.com>
+ <20191023130752.18980-5-jasowang@redhat.com>
+ <df1eb77c-d159-da11-bb8f-df2c19089ac6@linux.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <14410ac9-cc01-185a-5dcf-7f6c78aefd65@redhat.com>
+Date:   Tue, 29 Oct 2019 18:42:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <187a1a7d-80bd-a0e9-a0d9-7fc53bff8907@linux.intel.com> <20191022125950.GA133170@google.com>
-In-Reply-To: <20191022125950.GA133170@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 29 Oct 2019 11:42:53 +0100
-Message-ID: <CAJZ5v0jdxR4roEUC_Hs3puCzGY4ThdLsi_XcxfBUUxqruP4z7A@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie link
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        gustavo.pimentel@synopsys.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        martin.blumenstingl@googlemail.com,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <df1eb77c-d159-da11-bb8f-df2c19089ac6@linux.intel.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: f_q__00gOjOwW2LVCQTfjw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 2:59 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Rafael, linux-pm, beginning of discussion at
-> https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
->
-> On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
-> > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
-> > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
-> > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
-> > > > > of changing link width and speed on the fly.
-> > > Please add more details about why this is needed.  Since you're adding
-> > > sysfs files, it sounds like it's not actually the *driver* that needs
-> > > this; it's something in userspace?
->
-> > We have use cases to change the link speed and width on the fly.
-> > One is EMI check and other is power saving.  Some battery backed
-> > applications have to switch PCIe link from higher GEN to GEN1 and
-> > width to x1. During the cases like external power supply got
-> > disconnected or broken. Once external power supply is connected then
-> > switch PCIe link to higher GEN and width.
->
-> That sounds plausible, but of course nothing there is specific to the
-> Intel Gateway, so we should implement this generically so it would
-> work on all hardware.
->
-> I'm not sure what the interface should look like -- should it be a
-> low-level interface as you propose where userspace would have to
-> identify each link of interest, or is there some system-wide
-> power/performance knob that could tune all links?  Cc'd Rafael and
-> linux-pm in case they have ideas.
 
-Frankly, I need some time to think about this and, in case you are
-wondering about whether or not it has been discussed with me already,
-it hasn't.
+On 2019/10/29 =E4=B8=8B=E5=8D=883:42, Zhu Lingshan wrote:
+>>
+>> +=C2=A0=C2=A0=C2=A0 void (*set_status)(struct mdev_device *mdev, u8 stat=
+us);
+>
+> Hi Jason
+>
+> Is it possible to make set_status() return an u8 or bool, because this
+> may fail in real hardware. Without a returned code, I am not sure=C2=A0
+> whether it is a good idea to set the status | NEED_RESET when fail.
+>
+> Thanks,
+> BR
+> Zhu Lingshan=20
 
-At this point I can only say that since we have an ASPM interface,
-which IMO is not fantastic, it may be good to come up with a common
-link management interface.
 
-Cheers!
+Hi:
+
+
+It's possible but I'm not sure whether any user will care about it. E.g
+see virtio_add_status():
+
+void virtio_add_status(struct virtio_device *dev, unsigned int status)
+{
+=C2=A0=C2=A0=C2=A0 might_sleep();
+=C2=A0=C2=A0=C2=A0 dev->config->set_status(dev, dev->config->get_status(dev=
+) | status);
+}
+EXPORT_SYMBOL_GPL(virtio_add_status);
+
+And I believe how it work should be:
+
+virtio_add_status(xyz);
+
+status =3D virtio_get_status();
+
+if (!(status & xyz))
+
+=C2=A0=C2=A0=C2=A0 error;
+
+Thanks
+
+
+
