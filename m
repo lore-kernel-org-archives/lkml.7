@@ -2,98 +2,107 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C652CCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82ABCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B392086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADABB21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:42:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sA56HEYh"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oLxdOYd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387801AbfJ2MmY (ORCPT
+        id S1733120AbfJ2MmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 29 Oct 2019 08:42:24 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:42057 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfJ2MmX (ORCPT
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46912 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbfJ2MmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 29 Oct 2019 08:42:23 -0400
-Received: by mail-yb1-f193.google.com with SMTP id 4so5283153ybq.9;
-        Tue, 29 Oct 2019 05:42:23 -0700 (PDT)
+Received: by mail-wr1-f67.google.com with SMTP id n15so13445099wrw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 05:42:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=K1pJ+AjYi047ZlopREyC5YFV3eC0jvS9A97jFIdkYBI=;
-        b=sA56HEYh9uI0fwGa75BOovdBOBk1F9GUVb+Cm9YI8MnpzOrYGtPzM87c8fFImew+1R
-         pNDzJX/tr9sRYhl4kL65ZVW1m3zIzfkDdQwKI2b9zmtbofFSdn+iOLyltFgxe7KEJiN2
-         9Q/IOo+enZxrtTAmf5cxws8fT9dJ7xCm9Ljg8Nan1UkQoJ9ijQYcTueUInoWB0NCYG2d
-         ipV/IsH8rYgy4cdC3Q3TmhPJ4NcZcdz1PZgTm6Zl7ausBJU8LEsBjihnA21zKZCAGIbU
-         bCdCArwOjrUQiH8fUwMEZfTf+Os+81Gm3bE5qeF8fveBfQZq/Tvzj9aQmq34i8C8TbE5
-         UQWQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BPXp7xNo1ijPMANZMC0OJQTiJUBGfJGREatgOxfICDA=;
+        b=oLxdOYd2VPtLQZ8doEBWg3jJLtOOjZP0nu8AK0107eeu0xUi1HabO38UPUHtrxB2vJ
+         r2mpnITzdzYIIqJ/W3iu+aEU8bgU4W0LncSrHb+UQAu7yhrjvZI4vKFMOCu2U9pFXqvi
+         +5xbARGaMsnVr6r9l4LLzbw7OBSPNHSspPiIO0ZVlEYHkjpEBRj6pbDsjuIcyXnBmLTr
+         LladgHavdxtVP4r13zbSlUYLXfn2vMjbA7T9FSdKXeaQbQXd+XiBUhQOrQ9IEcwF2azi
+         q3OobcCUiDAGnX66Oc5MQpSpIzVfs2BYD9l8AoBtaj1Ri+QnV0jQr/Zi2OM9ICYyL8H5
+         mh2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=K1pJ+AjYi047ZlopREyC5YFV3eC0jvS9A97jFIdkYBI=;
-        b=GfHXuXA2v2+p4V245SRZAphh9ud7XbnjYeQt76cSHPPrsktu9D22xuU+iVi/y2xWS1
-         5cQ17YIRVmfKwxd97hDMpEpLAMbqUWLFUZMaeazzKHhNpz++5ARWjeO4sxYZfQAYY14Y
-         /8FpHaGmsJ/PStk125rjjaZigfbiiXIN2ytz2nbc8QBe8jREcQsPBBQjVzXQdMd730EZ
-         rQm1pugjJbJdLyEYS8six+pD1SgKmSKDyS1IsDm6boichyvlMvIGZ59RsD0ZgdvwxhjW
-         TvlYkxgrcpzvUZiqHmpQsODXcErSfYC3XzXp3ugBsWY3wQmCGyPEQhvwKX7N8Lk3slbd
-         7pAg==
-X-Gm-Message-State: APjAAAXvoqFyiZuF7welxRr8INcIG9fJBpw5njBbT1sVBm/wZpyr+yzD
-        vruoU4bBHmd9R93XKDaltruWtrgg
-X-Google-Smtp-Source: APXvYqxcmj0/7NQzyVO/SO4K8JGG87BSdh2uo2MLIaIGWoKqFHQ1reDHKNSOsVHvYIcjtqqZmvh2dA==
-X-Received: by 2002:a25:bd88:: with SMTP id f8mr18153315ybh.135.1572352941934;
-        Tue, 29 Oct 2019 05:42:21 -0700 (PDT)
-Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
-        by smtp.gmail.com with ESMTPSA id q131sm8174926ywg.60.2019.10.29.05.42.20
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BPXp7xNo1ijPMANZMC0OJQTiJUBGfJGREatgOxfICDA=;
+        b=qJcv5E2Q43xKCFscxFoJMLGvEB2BSr+DaYJpRGUfLNWgIvxzragNlPqcmmbD0jDC1M
+         eu9fGX7oBdJH1AN4soes4FTCxXIHBDgsLoUPwH4pWDQuEu+aYgv7uYTS0JXO7vmsAR/A
+         z1ZjPeEJ88LIjTzDY9VY8crlYiWvr8tbPnWypOZ3aMsd5S2ACCDSPyMdZ4AkTN879UW6
+         BYcsHip/fYy7c1qHdBm3IHwBVOvd5Wbze7wQes8Np6o0jl3gnShrIru14TEfxuINsvdv
+         UPduU/PAYWV4Cp/rWZnB3nTFvfAHNcz1/Q0wq3WWY4DoIVg/ilo+VA3hdm8YER58F4NP
+         1cYA==
+X-Gm-Message-State: APjAAAWJlNnEYAPmUWGaVmm8gKoEYAh1DpgqmVF8S3rquUX3zi4d9E0I
+        RKeZ6sy+LgUGccAhro/rOIRu0X6autpiiw==
+X-Google-Smtp-Source: APXvYqwqHf4wuK2I5AO9f/kEeooVPfRaL4aX5EEIOq9YjaTwHJCt7yKNkRGNPtbE0yZCGA/QU/7aIQ==
+X-Received: by 2002:adf:fbc4:: with SMTP id d4mr1318049wrs.265.1572352940992;
+        Tue, 29 Oct 2019 05:42:20 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id f143sm3375496wme.40.2019.10.29.05.42.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 29 Oct 2019 05:42:20 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, slongerbeam@gmail.com,
-        maxime.ripard@bootlin.com, adam.ford@logicpd.com,
-        linux-kernel@vger.kernel.org, Adam Ford <aford173@gmail.com>
-Subject: [PATCH] media: ov5640: Fix check for PLL1 exceeding max allowed rate
-Date:   Tue, 29 Oct 2019 07:42:11 -0500
-Message-Id: <20191029124211.15052-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Date:   Tue, 29 Oct 2019 13:42:03 +0100
+From:   LABBE Corentin <clabbe@baylibre.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] crypto: amlogic - Use kmemdup in meson_aes_setkey()
+Message-ID: <20191029124203.GB18754@Red>
+References: <20191029015523.126987-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029015523.126987-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable _rate is by ov5640_compute_sys_clk() which returns
-zero if the PLL exceeds 1GHz.  Unfortunately, the check to see
-if the max PLL1 output is checking 'rate' and not '_rate' and
-'rate' does not ever appear to be 0.
+On Tue, Oct 29, 2019 at 01:55:23AM +0000, YueHaibing wrote:
+> Use kmemdup rather than duplicating its implementation
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/crypto/amlogic/amlogic-gxl-cipher.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+> index e9283ffdbd23..78e776c58705 100644
+> --- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+> +++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+> @@ -372,10 +372,9 @@ int meson_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+>  		kfree(op->key);
+>  	}
+>  	op->keylen = keylen;
+> -	op->key = kmalloc(keylen, GFP_KERNEL | GFP_DMA);
+> +	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+>  	if (!op->key)
+>  		return -ENOMEM;
+> -	memcpy(op->key, key, keylen);
+>  
+>  	return crypto_sync_skcipher_setkey(op->fallback_tfm, key, keylen);
+>  }
+> 
+> 
+> 
 
-This patch changes the check against the returned value of
-'_rate' to determine if the PLL1 output exceeds 1GHz.
+Acked-by: Corentin Labbe <clabbe@baylibre.com>
 
-Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 5e495c833d32..bb968e764f31 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
- 			 * We have reached the maximum allowed PLL1 output,
- 			 * increase sysdiv.
- 			 */
--			if (!rate)
-+			if (!_rate)
- 				break;
- 
- 			/*
--- 
-2.17.1
-
+Thanks
