@@ -2,103 +2,115 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E7ECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6668CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A851D2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572341585;
-	bh=ESgihE2mJ4D11bv8ffgzhtfjRAPEzR6CfHa6NOhpS28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c8F1HjGG1TYiKu05yvJ6wQfQD3mEXq2OdVtLvlC+n1YvoRM3IRUrElUv4nopXkrB9
-	 GlSsMvb04jfNz30XSFGGHUiALq7XWxMF5ikZ8wjHorWfklLUH8RRO54jgXYPRZIoGy
-	 gZIbX8FZFGvnWp0vH68MCMrOhF0TDGLXrB5pDdOA=
+	by mail.kernel.org (Postfix) with ESMTP id 812082087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732754AbfJ2JdE (ORCPT
+        id S1727669AbfJ2JfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:33:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729916AbfJ2JdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:33:04 -0400
-Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B280420659;
-        Tue, 29 Oct 2019 09:32:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572341583;
-        bh=ESgihE2mJ4D11bv8ffgzhtfjRAPEzR6CfHa6NOhpS28=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b76gBopGQtasuYSgygtwkzaQ/4y91+5mDJkP7lN2pFY2n6fz9mc9YFalNKWYcRl2C
-         WFKNMuLjHFlOk1UesDi1bFfh6LiIOp+zEI/cwbSJOHuCVbiEaKTjUfTLO2jMo+HXwn
-         0gx/OPrRM6GrjhsxjLqLrlCKVB4dW71GENjTlkYs=
-Date:   Tue, 29 Oct 2019 10:32:55 +0100
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Tue, 29 Oct 2019 05:35:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48532 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726096AbfJ2JfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:35:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 11C1EB325;
+        Tue, 29 Oct 2019 09:35:13 +0000 (UTC)
+To:     the arch/x86 maintainers <x86@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191029093254.GE18773@rapoport-lnx>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net>
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>, bsd@redhat.com
+From:   Jan Beulich <jbeulich@suse.com>
+Subject: [PATCH] x86/apic/32: avoid bogus LDR warnings
+Message-ID: <666d8f91-b5a8-1afd-7add-821e72a35f03@suse.com>
+Date:   Tue, 29 Oct 2019 10:34:19 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 02:44:23PM -0600, Andy Lutomirski wrote:
-> 
-> > On Oct 27, 2019, at 4:17 AM, Mike Rapoport <rppt@kernel.org> wrote:
-> > 
-> > ﻿From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > Hi,
-> > 
-> > The patch below aims to allow applications to create mappins that have
-> > pages visible only to the owning process. Such mappings could be used to
-> > store secrets so that these secrets are not visible neither to other
-> > processes nor to the kernel.
-> > 
-> > I've only tested the basic functionality, the changes should be verified
-> > against THP/migration/compaction. Yet, I'd appreciate early feedback.
-> 
-> I’ve contemplated the concept a fair amount, and I think you should
-> consider a change to the API. In particular, rather than having it be a
-> MAP_ flag, make it a chardev.  You can, at least at first, allow only
-> MAP_SHARED, and admins can decide who gets to use it.  It might also play
-> better with the VM overall, and you won’t need a VM_ flag for it — you
-> can just wire up .fault to do the right thing.
+The removal of the LDR initialization for bigsmp has surfaced a warning per AP:
 
-I think mmap()/mprotect()/madvise() are the natural APIs for such
-interface. Switching to a chardev doesn't solve the major problem of direct
-map fragmentation and defeats the ability to use exclusive memory mappings
-with the existing allocators, while mprotect() and madvise() do not.
+WARNING: CPU: 1 PID: 0 at arch/x86/kernel/apic/apic.c:1626 setup_local_APIC.cold+0x26/0x8c
+Modules linked in:
+Supported: No, Unreleased kernel
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.3.4-2019-10-04-jb32 #3 SLE0 (unreleased)
+Hardware name: Dell Inc. Precision Tower 7810/0GWHMW, BIOS A27 06/25/2018
+EIP: setup_local_APIC.cold+0x5b/0xc5
+Code: ...
+EAX: 00000024 EBX: 00000000 ECX: c15947f8 EDX: 00200082
+ESI: 00000002 EDI: 00000001 EBP: 00000000 ESP: e9887f38
+DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210096
+CR0: 80050033 CR2: 00000000 CR3: 0164f000 CR4: 001406b0
+Call Trace:
+ ? vprintk_default+0xf/0x20
+ ? fpu__init_cpu_generic+0x5c/0x60
+ ? cpu_init+0x174/0x330
+ ? apic_ap_setup+0x5/0x10
+ ? start_secondary+0x4d/0x180
+ ? startup_32_smp+0x164/0x168
 
--- 
-Sincerely yours,
-Mike.
+Only do the check and override when the APIC is actually run in a setup
+using logical destination mode.
+
+Fixes: bae3a8d3308 ("x86/apic: Do not initialize LDR and DFR for bigsmp")
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1586,9 +1586,6 @@ static void setup_local_APIC(void)
+ {
+ 	int cpu = smp_processor_id();
+ 	unsigned int value;
+-#ifdef CONFIG_X86_32
+-	int logical_apicid, ldr_apicid;
+-#endif
+ 
+ 	if (disable_apic) {
+ 		disable_ioapic_support();
+@@ -1626,16 +1623,21 @@ static void setup_local_APIC(void)
+ 	apic->init_apic_ldr();
+ 
+ #ifdef CONFIG_X86_32
+-	/*
+-	 * APIC LDR is initialized.  If logical_apicid mapping was
+-	 * initialized during get_smp_config(), make sure it matches the
+-	 * actual value.
+-	 */
+-	logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
+-	ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
+-	WARN_ON(logical_apicid != BAD_APICID && logical_apicid != ldr_apicid);
+-	/* always use the value from LDR */
+-	early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
++	if (apic->dest_logical) {
++		int logical_apicid, ldr_apicid;
++
++		/*
++		 * APIC LDR is initialized.  If logical_apicid mapping was
++		 * initialized during get_smp_config(), make sure it matches
++		 * the actual value.
++		 */
++		logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
++		ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
++		if (logical_apicid != BAD_APICID)
++			WARN_ON(logical_apicid != ldr_apicid);
++		/* Always use the value from LDR. */
++		early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
++	}
+ #endif
+ 
+ 	/*
