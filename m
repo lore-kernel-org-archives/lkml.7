@@ -2,119 +2,230 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49FCCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C92CC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7326F21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572375562;
-	bh=DnrJj9nOzaA6P29ZDDVBM/Y/2X8RqJms5ZY2E1b67XQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vms+5wSdF1YIBKEvRlgVzxr7rYv2Nx+i7HMxhwX/JefkightyzILtxWtSHfetqcTW
-	 zmY9qR8pxcxjAE2lMGwmp5NxbUtyw7C6dtSVJi+FcQIs1+ZvsWP2wzTnyD+epe9DE/
-	 tj0mmYJU6hsqKf3wG+NBh3L6WxfT0k/Li4Rs/z2w=
+	by mail.kernel.org (Postfix) with ESMTP id 50FA320830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:00:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IK4qb1TT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731945AbfJ2S7V (ORCPT
+        id S1732147AbfJ2TAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:59:21 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44532 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfJ2S7U (ORCPT
+        Tue, 29 Oct 2019 15:00:20 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58626 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbfJ2TAU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:59:20 -0400
-Received: by mail-oi1-f195.google.com with SMTP id s71so9865824oih.11;
-        Tue, 29 Oct 2019 11:59:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sbW0B9s33za8M6w/VE4RAdJj372wopfiVHvYx/5lzV8=;
-        b=OHm+5fM9o46PGGHqSTnofx5NYwp8HSQ8PwFc/4coq3G07AR+8I/O1Da+Q/QwM3B1pl
-         T9n4LlUx7NKrV6zDJVRJeEPtzIw5HoEF297rhGkA1hsMzqgX3lGwAage2g0/pFMevCG1
-         Jnu1CzX23zT7s9gvckgn3C1wU7cV0oAh6qsUMI/hK3t/I0WvG9Cl9swdu9pke68P2HAk
-         Mtm8wJs6SbZfzAS54a/Uz7yh7E/EWG9Z5ksY5hHoWCRlhPUqaNsTasN5HJq8WfFGPa6K
-         JPioXWp3mEGMM97Yl1dxINWhbfZgjBoGWXN9n+iljrJyti2NVDW6ZHWSejf34cCRFycM
-         /jvA==
-X-Gm-Message-State: APjAAAXfN+QEMOM/wTvAP0Y80SYOwb+EvHgvKyjDgyXdD3xwcegwMqHs
-        wePRv7/E9BrdMNaqi5xWhg==
-X-Google-Smtp-Source: APXvYqzCYq3KtcJTg/u8ba3wAtt300fBoCT87IEubd8faZr8MJMw32nqZ9gqVS7HHtglOZo8yKOmfQ==
-X-Received: by 2002:aca:1309:: with SMTP id e9mr5606883oii.72.1572375559336;
-        Tue, 29 Oct 2019 11:59:19 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a88sm5149017otb.0.2019.10.29.11.59.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 11:59:18 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 13:59:17 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>,
-        Anil Varughese <aniljoy@cadence.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 01/14] dt-bindings: phy: Sierra: Add bindings for
- Sierra in TI's J721E
-Message-ID: <20191029185916.GA19313@bogus>
-References: <20191023125735.4713-1-kishon@ti.com>
- <20191023125735.4713-2-kishon@ti.com>
+        Tue, 29 Oct 2019 15:00:20 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TIrnje021732;
+        Tue, 29 Oct 2019 18:59:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=tGwA6mxDu+wj8nb3JlA1NbM4cZ+dWsihJQgOglQIpp4=;
+ b=IK4qb1TTWYgAwqKIUn5wT1oiV2FhATXzu9eBp0FY6faNA8GalkJHnx270OUPN1EO2Yc9
+ 9h5hoSbn47hgNTw1kWYZZkX7c/tcNk9Fo6JDS+VpBlw8Sk14MpDUi6sQh2l8nFpb2hjD
+ REzYpxMjAlCBw2Q6G03i3Kxw07clHkN9bAqeZUDfvdf2Ao8XwI/uBSPLiL3xrLNbHgj1
+ 5MNnbUnJTxTiaXKdDQxbY+L0nhohoiCpMeLppVj96QfhQT5+bJthda/msACHvnPzrhJW
+ Qjrfe3IaoCifk+hOrgx4REQ/XNMf4hdqCWHzg6a2sbcf6/kiFBTlt58oXCpww0KEOrAn mw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2vvdjubg65-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 18:59:48 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TIrwmH178549;
+        Tue, 29 Oct 2019 18:59:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2vxj8gs6fb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 18:59:47 +0000
+Received: from abhmp0021.oracle.com (abhmp0021.oracle.com [141.146.116.27])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TIxe3G031111;
+        Tue, 29 Oct 2019 18:59:40 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 29 Oct 2019 11:59:40 -0700
+Date:   Tue, 29 Oct 2019 21:59:30 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     jic23@kernel.org, devel@driverdev.osuosl.org, mark.rutland@arm.com,
+        lars@metafoo.de, biabeniamin@outlook.com,
+        Michael.Hennerich@analog.com, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, gregkh@linuxfoundation.org,
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        nicolas.ferre@microchip.com, robh+dt@kernel.org, pmeerw@pmeerw.net,
+        knaack.h@gmx.de, mchehab+samsung@kernel.org, paulmck@linux.ibm.com,
+        Paul Cercueil <paul.cercueil@analog.com>
+Subject: Re: [PATCH v2 1/4] iio: adc: Add support for AD7091R5 ADC
+Message-ID: <20191029185930.GB1705@kadam>
+References: <20191029162928.9720-1-beniamin.bia@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023125735.4713-2-kishon@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191029162928.9720-1-beniamin.bia@analog.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910290163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910290163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 06:27:22PM +0530, Kishon Vijay Abraham I wrote:
-> Add DT binding documentation for Sierra PHY IP used in TI's J721E
-> SoC.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../devicetree/bindings/phy/phy-cadence-sierra.txt  | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt b/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
-> index 6e1b47bfce43..bf90ef7e005e 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
-> @@ -2,21 +2,24 @@ Cadence Sierra PHY
->  -----------------------
->  
->  Required properties:
-> -- compatible:	cdns,sierra-phy-t0
-> -- clocks:	Must contain an entry in clock-names.
-> -		See ../clocks/clock-bindings.txt for details.
-> -- clock-names:	Must be "phy_clk"
-> +- compatible:	Must be "cdns,sierra-phy-t0" for Sierra in Cadence platform
-> +		Must be "ti,sierra-phy-t0" for Sierra in TI's J721E SoC.
->  - resets:	Must contain an entry for each in reset-names.
->  		See ../reset/reset.txt for details.
->  - reset-names:	Must include "sierra_reset" and "sierra_apb".
->  		"sierra_reset" must control the reset line to the PHY.
->  		"sierra_apb" must control the reset line to the APB PHY
-> -		interface.
-> +		interface ("sierra_apb" is optional).
->  - reg:		register range for the PHY.
->  - #address-cells: Must be 1
->  - #size-cells:	Must be 0
->  
->  Optional properties:
-> +- clocks:		Must contain an entry in clock-names.
-> +			See ../clocks/clock-bindings.txt for details.
-> +- clock-names:		Must be "phy_clk". Must contain "cmn_refclk" and
-> +			"cmn_refclk1" for configuring the frequency of the
-> +			clock to the lanes.
+It looks like you're going to have to respin the patchset so I'm adding
+my nits even though it's a bit late.
 
-I don't understand how the same block can have completely different 
-clocks. Did the original binding forget some? 
 
-TI needs 0, 1 or 3 clocks? Reads like it could be any.
+> +static int ad7091r_set_mode(struct ad7091r_state *st, enum ad7091r_mode mode)
+> +{
+> +	int ret;
+> +
+> +	switch (mode) {
+> +	case AD7091R_MODE_SAMPLE:
+> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
+> +					 AD7091R_REG_CONF_MODE_MASK, 0);
+> +		break;
+> +	case AD7091R_MODE_COMMAND:
+> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
+> +					 AD7091R_REG_CONF_MODE_MASK,
+> +					 AD7091R_REG_CONF_CMD);
+> +		break;
+> +	case AD7091R_MODE_AUTOCYCLE:
+> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
+> +					 AD7091R_REG_CONF_MODE_MASK,
+> +					 AD7091R_REG_CONF_AUTO);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
 
-Rob
+This would look even better as:
+
+	switch (mode) {
+	case AD7091R_MODE_SAMPLE:
+		conf = 0;
+		break;
+	case AD7091R_MODE_COMMAND:
+		conf = AD7091R_REG_CONF_CMD;
+		break;
+	case AD7091R_MODE_AUTOCYCLE:
+		conf = AD7091R_REG_CONF_AUTO;
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
+				 AD7091R_REG_CONF_MODE_MASK, conf);
+	if (ret)
+		return ret;
+
+	st->mode = mode;
+
+	return 0;
+
+> +int ad7091r_probe(struct device *dev, const char *name,
+> +		const struct ad7091r_chip_info *chip_info,
+> +		struct regmap *map, int irq)
+> +{
+> +	struct iio_dev *iio_dev;
+> +	struct ad7091r_state *st;
+> +	int ret;
+> +
+> +	iio_dev = devm_iio_device_alloc(dev, sizeof(*st));
+> +	if (!iio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(iio_dev);
+> +	st->dev = dev;
+> +	st->chip_info = chip_info;
+> +	st->map = map;
+> +
+> +	iio_dev->dev.parent = dev;
+> +	iio_dev->name = name;
+> +	iio_dev->info = &ad7091r_info;
+> +	iio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	iio_dev->num_channels = chip_info->num_channels;
+> +	iio_dev->channels = chip_info->channels;
+> +
+> +	if (irq) {
+> +		ret = devm_request_threaded_irq(dev, irq, NULL,
+> +				ad7091r_event_handler,
+> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT, name, st);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	/* Use command mode by default to convert only desired channels*/
+> +	ret = ad7091r_set_mode(st, AD7091R_MODE_COMMAND);
+> +	if (ret < 0)
+
+if (ret) {
+
+> +		return ret;
+> +
+> +	return iio_device_register(iio_dev);
+> +}
+> +EXPORT_SYMBOL_GPL(ad7091r_probe);
+
+[ snip ]
+
+> +#include <linux/i2c.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +
+> +#include "ad7091r-base.h"
+> +
+> +static const struct iio_event_spec ad7091r5_events[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_ENABLE),
+
+This would be more clear if it were aligned like so:
+
+		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+				 BIT(IIO_EV_INFO_ENABLE),
+
+
+> +	},
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_ENABLE),
+
+		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+				 BIT(IIO_EV_INFO_ENABLE),
+
+> +	},
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_EITHER,
+> +		.mask_separate = BIT(IIO_EV_INFO_HYSTERESIS),
+> +	},
+> +};
+> +
+
+regards,
+dan carpenter
+
