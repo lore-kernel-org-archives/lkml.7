@@ -2,50 +2,115 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FE6CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A59CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752F621479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36EF421734
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:58:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hAfBZOy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbfJ2U6H (ORCPT
+        id S1728729AbfJ2U6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:58:07 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54922 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727545AbfJ2U6H (ORCPT
+        Tue, 29 Oct 2019 16:58:24 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50760 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727545AbfJ2U6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:58:07 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 2157828DE5D
-Subject: Re: [PATCH] blk-mq: Document functions for sending request
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, kernel@collabora.com, krisman@collabora.com
-References: <20191028125537.9047-1-andrealmeid@collabora.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <56ca440b-617c-ff63-0e7f-cd606af38ebb@collabora.com>
-Date:   Tue, 29 Oct 2019 17:56:38 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Tue, 29 Oct 2019 16:58:23 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TKs8mn096191;
+        Tue, 29 Oct 2019 20:58:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=+uvSwq9SA2egPotnUwozc3qtAJKZQGfqSvE+bOmm3MA=;
+ b=hAfBZOy3J8qyHEnSjd9xpISBTMkPkgGVZaOMh93uCZpN0PM5KFR5qV7CQV7iXX9jOArE
+ fYFRG4/j0DGgsuh3zX25rALutltma6x6c+iH1PSyBXJhb8wm42sc5hpfBDCedL2KYZFh
+ sRqWdtBBzWWWfrfc1l9nGXOmcJ7OmaQKeR1oGEyGuE9Tpm8TODo9xf8dMunVNAiTq9+P
+ JJTLzpGvyKIPylIysu/XuAwPJCQ1Nj2jPWaAtr7xbd09G+PS8fdQtDv1RpyQxKAPz9l2
+ oblsP7Un4HboSgAwoBxo0fporzvXe8lJYfmF2A5HNZ6Pf7ZUld77AFBy7hSXoG7dDl5D zA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2vvumfgs8s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 20:58:09 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TKrQka007560;
+        Tue, 29 Oct 2019 20:58:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2vxpfdrmrm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 20:58:08 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TKw7in009847;
+        Tue, 29 Oct 2019 20:58:07 GMT
+Received: from [192.168.1.2] (/109.189.94.39)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 29 Oct 2019 13:58:07 -0700
+Subject: Re: [PATCH rdma-next] RDMA/cma: Use ACK timeout for RoCE
+ packetLifeTime
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     dledford@redhat.com, leon@kernel.org, parav@mellanox.com,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1572003721-26368-1-git-send-email-dag.moxnes@oracle.com>
+ <20191029195101.GA1654@ziepe.ca>
+From:   Dag Moxnes <dag.moxnes@oracle.com>
+Message-ID: <3ce751b9-7f74-e197-f15c-cf76ffd1dd71@oracle.com>
+Date:   Tue, 29 Oct 2019 21:58:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20191028125537.9047-1-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20191029195101.GA1654@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910290183
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910290183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/19 9:55 AM, André Almeida wrote:
-> Add or improve documentation for function regarding creating and sending
-> IO requests to the hardware.
-> 
+Hi Jason,
 
-Just realized I forget to add a function I had documented. A v2 is on
-the way, please ignore this v1.
+Den 29.10.2019 20:51, skrev Jason Gunthorpe:
+> On Fri, Oct 25, 2019 at 01:42:01PM +0200, Dag Moxnes wrote:
+>> The cma is currently using a hard-coded value, CMA_IBOE_PACKET_LIFETIME,
+>> for the PacketLifeTime, as it can not be determined from the network.
+>> This value might not be optimal for all networks.
+>>
+>> The cma module supports the function rdma_set_ack_timeout to set the
+>> ACK timeout for a QP associated with a connection. As per IBTA 12.7.34
+>> local ACK timeout = (2 * PacketLifeTime + Local CA’s ACK delay).
+>> Assuming a negligible local ACK delay, we can use
+>> PacketLifeTime = local ACK timeout/2
+>> as a reasonable approximation for RoCE networks.
+>>
+>> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
+>> Change-Id: I200eda9d54829184e556c3c55d6a8869558d76b2
+> Please don't send Change-Id to the public lists. Run checkpatch before
+> sending.
+>
+> Otherwise this seems reasonable to me..
+Thanks for the review. Sorry about the Change-Id. I will send a v2 patch 
+without it.
+
+Regards,
+-Dag
+>
+> Jason
+
