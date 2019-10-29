@@ -2,135 +2,109 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26477CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89549CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFCC21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YCyJN6qQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5F63B21882
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572349203;
+	bh=b0Yx/pOD5w63B522OXKc4nLFXgNhCQem4ZHf05cCJ/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kUrjTCAESwJDKMn7MV//9R5hWHBsH4lur4a9uHqjhn4lOEcvIzll07gmh6bAeNTLM
+	 LLV/d1GG15v2kgLfkeKBLK5l5h2YO7J2RxVkFZSVjwrgqVRiRNx5CzANXx/Y4ZoDRt
+	 JHYcjRIG+WS0g/VWVfTHAC1fKy0H9Tj+aN/C+YHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731401AbfJ2Lh1 (ORCPT
+        id S1730313AbfJ2LkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:37:27 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:33831 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727681AbfJ2Lh1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:37:27 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191029113725euoutp0167e80b54dfe82fe6af9e2eb5187cf261~SGyBZP35Z3227432274euoutp01d
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:37:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191029113725euoutp0167e80b54dfe82fe6af9e2eb5187cf261~SGyBZP35Z3227432274euoutp01d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572349045;
-        bh=MV9FXID7nThRVDKuFUHFACJIlbCzkHrjaJu5Zhz/fsY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=YCyJN6qQEllQY1S8GqZsldUqkJIBv3clfupk3Ug2kvQVpQUi8UBE/50zejCjMc4o8
-         8L44j9Sw5WBiNRLpJQiyQSDlf0KsmTyXtNUqlIEm9v8hCXCCGtyjo7/Hfv73N1sRe8
-         EUinASYPq77FHo5zOAcxuVgtM1DbymYCtVWKDLPA=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191029113725eucas1p26abe0e7d7dda56b3e7bbdfdce3434288~SGyBJlTFm2560525605eucas1p25;
-        Tue, 29 Oct 2019 11:37:25 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id BC.28.04309.57428BD5; Tue, 29
-        Oct 2019 11:37:25 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191029113725eucas1p1a6e7ba2329ed3d4fdd16cf39fdb286b7~SGyA4Ow142425024250eucas1p1c;
-        Tue, 29 Oct 2019 11:37:25 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191029113725eusmtrp23541ca0c5609b89b6c685a7655433515~SGyA3jjIp2216522165eusmtrp2N;
-        Tue, 29 Oct 2019 11:37:25 +0000 (GMT)
-X-AuditID: cbfec7f4-afbff700000010d5-f7-5db824752e33
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id CE.37.04117.47428BD5; Tue, 29
-        Oct 2019 11:37:25 +0000 (GMT)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191029113724eusmtip28f08b0bb87ec7ba1856511b3ee5baead~SGyAU99Wh1898918989eusmtip2K;
-        Tue, 29 Oct 2019 11:37:24 +0000 (GMT)
-Subject: Re: [PATCH] clk: samsung: exynos5433: Add missing slab.h header for
- kfree()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        Tue, 29 Oct 2019 07:40:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725880AbfJ2LkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 07:40:02 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39E53217D9;
+        Tue, 29 Oct 2019 11:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572349201;
+        bh=b0Yx/pOD5w63B522OXKc4nLFXgNhCQem4ZHf05cCJ/g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZmaImj/3fhMnxq2LJucsm59PXeqHQgfZdnKGWM3z08zi1lSOJM6NqcZfdRb0MtxXa
+         U+z49SFHLkVTLSkePIR15C+hnvOLdZa9MwpR8XToJkzrtTEdsNdz5EguB9DH9PLqOQ
+         p4aS4h+HcZc4G4k6QhPXz1ZwG3PmNOigtBkTEXNY=
+Date:   Tue, 29 Oct 2019 11:39:57 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <448c0770-24a2-6227-24e8-9bd5ad926f5e@samsung.com>
-Date:   Tue, 29 Oct 2019 12:37:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        linux-arm-msm@vger.kernel.org, stable@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] arm64: cpufeature: Enable Qualcomm erratas
+Message-ID: <20191029113956.GC12103@willie-the-truck>
+References: <20191029060432.1208859-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191023160000.409-1-krzk@kernel.org>
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUhUURjtvmXmqY1cR80P22AwzEAnrR+vBclImD9BEJQUYk99qOTGPJdM
-        Sk3N3BcCc1RSDM0RXCY190CrsdyQKRWlMhVMw9QcEfd0npL/zjnfOdxz4DKkvJu2Z4JCI3h1
-        KBeskJhTjR9X+50jHZq8zzZ32bLDxmmazZ78TbIDA7VSVjc5RLOLGd9p1tBSJGFfDHQQ7Gzi
-        hIQd/OzJbg3VUay2ZQNdsVDNjyRLVc2ab1JVWdsModJpUyWqN6/iVFn1WqRa0p24Ib1jftmf
-        Dw6K4tVK93vmgcXlP6XhufSD3MoUFI8qqDRkxgA+DwvjSWQaMmfk+DWC9j4jEokRQcNsPCGS
-        JQQ1a8VoP9LeUU2JhwoEjfljtEjmEKS+LSd2Xdb4FvQu9JsSNtgJhjdXTCYSzxDwV59O7x4k
-        2BUyP2SZTDLsDoWzXaYwhU/B+1rDjs4wttgLepY50WIFnwqmTMXN8DlYn04wRUlsB0+MlbSI
-        T0JiQ6FpEOBRKbSlLe/VvgbPSzdoEVvDrL5eKuJjsN38khADiQgyWsekIslB8ENfspe+BF36
-        QXq3Ebkzp6ZFKcoesJC5KNmVAVvCyJyVWMIS8hrzSVGWwbOnctHtAOvafELE9pA+tU3lIIXm
-        wDTNgTmaA3M0/98tQZQW2fGRQkgAL7iF8tEuAhciRIYGuPiFhejQzv/q2dIbm1DLhm8nwgxS
-        HJb9+troLae5KCEmpBMBQypsZIO9O5LMn4t5yKvDfNSRwbzQiY4ylMJOFnto/K4cB3AR/H2e
-        D+fV+1eCMbOPR48cLYr63AxXi/Nmln09ozkLbx+v4LRkXNVvkHnQpQldf7xWlF+q1zq3PJM2
-        312vDntMR6Tks91xZUom1a+ntfLiba95/WnDSGrmEb/kuOPCBYJpK2hQdrzKscyrumnXVmfM
-        K/TOxoRjTEPQcmu5p9Oom2+uYiJWt004O67SCkoI5FzPkGqB+wdPjvHIWwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFIsWRmVeSWpSXmKPExsVy+t/xe7qlKjtiDR4vY7K4/uU5q0X/49fM
-        FufPb2C32PT4GqvFx557rBaXd81hs5hxfh+TxavmR2wWF0+5Wvy7tpHFYtWuP4wO3B7vb7Sy
-        e+ycdZfdY/Gel0wem1Z1snlsXlLv0bdlFaPH501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaW
-        FnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehlzlz1kL5jIWjFxZTtjA+Nyli5GTg4JAROJ
-        vfvWAdlcHEICSxklvmw4ydTFyAGUkJKY36IEUSMs8edaFxtEzWtGiYvr5oE1CwuESZz5cI4R
-        xBYR0JS4/vc7K0gRs8BLJomPe85DdbQxStzrmMIEUsUmYCjRe7QPrINXwE5i9qvDYHEWAVWJ
-        Ixsug8VFBSIknm+/AVUjKHFy5hOwbZwCxhK/nzeCxZkF1CX+zLvEDGGLSzR9WckKYctLNG+d
-        zTyBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi3PTcYiO94sTc4tK8dL3k/NxNjMB43Xbs55Yd
-        jF3vgg8xCnAwKvHwvri6LVaINbGsuDL3EKMEB7OSCO/FM0Ah3pTEyqrUovz4otKc1OJDjKZA
-        z01klhJNzgemkrySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYwm
-        JxJDN8z953N2ppSt0FaGZ+uzGe8873geZHvvroTouuu/r0481uF4R+PB//M3Zyid1b8umLZH
-        slTEa2vXOqV/VsHPBLmPzlaZriEYfWErN1s00175+cd0368TEA8sNeSpqtw5e39npsz0CUnl
-        nAcWTPtx1Tdzx9faI/vu7bD89/Nvqc0Hxcz9SizFGYmGWsxFxYkApz0MaO0CAAA=
-X-CMS-MailID: 20191029113725eucas1p1a6e7ba2329ed3d4fdd16cf39fdb286b7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191023160027epcas4p15be9c72d575fa4c3b022551c32cfc59a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191023160027epcas4p15be9c72d575fa4c3b022551c32cfc59a
-References: <CGME20191023160027epcas4p15be9c72d575fa4c3b022551c32cfc59a@epcas4p1.samsung.com>
-        <20191023160000.409-1-krzk@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029060432.1208859-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 18:00, Krzysztof Kozlowski wrote:
-> Usage of kfree() requires slab.h header.  Otherwise building on x86_64
-> with COMPILE_TEST fails with:
+On Mon, Oct 28, 2019 at 11:04:32PM -0700, Bjorn Andersson wrote:
+> With the introduction of 'cce360b54ce6 ("arm64: capabilities: Filter the
+> entries based on a given mask")' the Qualcomm erratas are no long
+> applied.
 > 
->     drivers/clk/samsung/clk-exynos5433.c: In function ‘exynos5433_cmu_probe’:
->     drivers/clk/samsung/clk-exynos5433.c:5598:4: error: implicit declaration 
-> of function ‘kfree’; did you mean ‘vfree’? [-Werror=implicit-function-declaration]
+> The result of not applying errata 1003 is that MSM8996 runs into various
+> RCU stalls and fails to boot most of the times.
 > 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Give both 1003 and 1009 a "type" to ensure they are not filtered out in
+> update_cpu_capabilities().
 
-Thanks, I applied it and squashed with the fix patch from Marek that
-introduced the above issue.
+Oh nasty. Thanks for debugging and fixing this.
 
--- 
-Regards,
-Sylwester
+> Fixes: cce360b54ce6 ("arm64: capabilities: Filter the entries based on a given mask")
+> Cc: stable@vger.kernel.org
+> Reported-by: Mark Brown <broonie@kernel.org>
+> Suggested-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/kernel/cpu_errata.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> index df9465120e2f..cdd8df033536 100644
+> --- a/arch/arm64/kernel/cpu_errata.c
+> +++ b/arch/arm64/kernel/cpu_errata.c
+> @@ -780,6 +780,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+>  	{
+>  		.desc = "Qualcomm Technologies Falkor/Kryo erratum 1003",
+>  		.capability = ARM64_WORKAROUND_QCOM_FALKOR_E1003,
+> +		.type = ARM64_CPUCAP_SCOPE_LOCAL_CPU,
+>  		.matches = cpucap_multi_entry_cap_matches,
+
+This should probably be ARM64_CPUCAP_LOCAL_CPU_ERRATUM instead, but I'll
+want Suzuki's ack before I take the change.
+
+>  		.match_list = qcom_erratum_1003_list,
+>  	},
+> @@ -788,6 +789,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+>  	{
+>  		.desc = "Qualcomm erratum 1009, ARM erratum 1286807",
+>  		.capability = ARM64_WORKAROUND_REPEAT_TLBI,
+> +		.type = ARM64_CPUCAP_SCOPE_LOCAL_CPU,
+>  		ERRATA_MIDR_RANGE_LIST(arm64_repeat_tlbi_cpus),
+
+ERRATA_MIDR_RANGE_LIST sets the type already, so I think this is redundant.
+
+Will
