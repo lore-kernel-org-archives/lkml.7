@@ -2,148 +2,163 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78EECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C52CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A1920830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B8120830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:47:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r87nwfKh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xzc0mhG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731933AbfJ2Srq (ORCPT
+        id S1731985AbfJ2Srz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:47:46 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41434 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbfJ2Srp (ORCPT
+        Tue, 29 Oct 2019 14:47:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33168 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731891AbfJ2Srz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:47:45 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 94so10674823oty.8
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:47:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8iGjeZAGX1vwWCY7RD/pFhK70PaPvjQNMWEcOJ4f58k=;
-        b=r87nwfKhRmusQ2AI4jfCx2coti/fu4ZQEHQ3FD0iPQABes7vumfaAmDTeItgrzkWgf
-         zPzBAwkyKboPREsnkiS7JZwOYYhkXpnmwGAi6kqPONQ3+47CISJJjViFhmgOBLi/QQ6/
-         heF7AbCxS9TTGYlvWzyMN3Xtmw1rnRvj9IabE8GQcqvkO0FVaof9+VGeSOvAsOYZqZyR
-         hM9RZMjycn3F9mtgj/By6XxuTO6gbzocaENO765b5d/XApcOB5KOEUKIphu1Ui+8d8JN
-         d4CAXFq5fx03GitosTDM7SM/AqpG01mRM38Nj0NRz0DjHH3q32eb5ke17m7SmLXe5rvm
-         ZsuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8iGjeZAGX1vwWCY7RD/pFhK70PaPvjQNMWEcOJ4f58k=;
-        b=UZdvLU3hWuXgd86yOhjnlBuQaomO0+K6QVOmoWSnND4tOt5N3h+dns6kkr+h9sxwzR
-         rH1NFJU5hHLAHPtc8gNLj3XdoJBx9LuvpKNq4zwzS5tO/Ew1MiJG+H7a03B1H7dFbxyZ
-         cCXomcMIN/W3o2VcFKeRZTbIOQ+8+XbGb8J1NAnOUXhojFucRZRS/ToIes9pdZxKaU/V
-         KJVzJJ7+VIF00ZgK5AXMAgL+iXT0GbZ1zCLM3IEsU/S9smVeK/FJs4rFlUDgxNVU878E
-         jFnuHk6YK1LUsNuKuMODrPcshY0/LTdDDAGzTU9m7xfJpomIlLtm9C/HRvOBk3Vgme8g
-         Ui4g==
-X-Gm-Message-State: APjAAAXGz66HPD9dV3ZyV9Itca33WqrsIXl3AI+qDH6DeSHiOESDuV+A
-        UGm5jkt+3Dq1aQixM9nSGPkfSopwEUixuDXcrMeBnw==
-X-Google-Smtp-Source: APXvYqxQm5uHFCWI33sMMjsd6j1hNQuGfWAFpKsDd478m9r7cbp5gNJOcZJB7olXWnLZqhrKZ5sp543en770ifApaNM=
-X-Received: by 2002:a9d:5e10:: with SMTP id d16mr17724258oti.191.1572374863908;
- Tue, 29 Oct 2019 11:47:43 -0700 (PDT)
+        Tue, 29 Oct 2019 14:47:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zh4u1dcrzBGR4ZvN1uvb2zziYEDifxIIp9YgvuWCPno=; b=Xzc0mhG4IG4lbteBYs05SzxLG
+        6YFSJk7AU0FjJV6oDtz9kmkpB1UCzo4aeZFpn0tPwguldBTHRMusxf8EtO4Y7aZ1ZPf15LoLZanj6
+        Pfyg2nEgyZj97hfl/vMKd/39Onj/hgL3EU5P5ZWaptdFWEmmYhCDgtC59v4F1JQMs2UWyLhAybMD6
+        lHM8sEdN6YPn/xAYrZ0ArKiQTar8AxW+aeJrbqb6OK8iMviaOlUUmgyGSMACEln+9tWmApd70aWFl
+        KfYW25mlKanPJAlFu1vrNzK+9/23pafr0tgMx0DwuQgpJ+rWmBJqbdRuOiChD7MXMPX2RJOirXCDl
+        6PDbnlIVg==;
+Received: from [188.207.73.209] (helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPWX1-0006QP-D6; Tue, 29 Oct 2019 18:47:51 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B459F9802EA; Tue, 29 Oct 2019 19:47:39 +0100 (CET)
+Date:   Tue, 29 Oct 2019 19:47:39 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Will Deacon <will.deacon@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
+        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
+        longman@redhat.com, dave@stgolabs.net, jack@suse.com
+Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
+Message-ID: <20191029184739.GA3079@worktop.programming.kicks-ass.net>
+References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
+ <20190806161741.GC21454@redhat.com>
+ <20190806171515.GR2349@hirez.programming.kicks-ass.net>
+ <20190807095657.GA24112@redhat.com>
 MIME-Version: 1.0
-References: <20191029005405.201986-1-shakeelb@google.com> <20191029090347.GG31513@dhcp22.suse.cz>
- <CALvZod648GRvjd_LqViFzLRwxnzSrLZzjaNBOJju4xkDQkvrXw@mail.gmail.com> <20191029183428.GA38233@cmpxchg.org>
-In-Reply-To: <20191029183428.GA38233@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 29 Oct 2019 11:47:32 -0700
-Message-ID: <CALvZod4HXGqa_obMTT_UGWnYTvaGutmF3_Xcg79URS1A5gR+xw@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcontrol: fix data race in mem_cgroup_select_victim_node
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com,
-        elver@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807095657.GA24112@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:34 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Tue, Oct 29, 2019 at 11:09:29AM -0700, Shakeel Butt wrote:
-> > +Marco
-> >
-> > On Tue, Oct 29, 2019 at 2:03 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Mon 28-10-19 17:54:05, Shakeel Butt wrote:
-> > > > Syzbot reported the following bug:
-> > > >
-> > > > BUG: KCSAN: data-race in mem_cgroup_select_victim_node / mem_cgroup_select_victim_node
-> > > >
-> > > > write to 0xffff88809fade9b0 of 4 bytes by task 8603 on cpu 0:
-> > > >  mem_cgroup_select_victim_node+0xb5/0x3d0 mm/memcontrol.c:1686
-> > > >  try_to_free_mem_cgroup_pages+0x175/0x4c0 mm/vmscan.c:3376
-> > > >  reclaim_high.constprop.0+0xf7/0x140 mm/memcontrol.c:2349
-> > > >  mem_cgroup_handle_over_high+0x96/0x180 mm/memcontrol.c:2430
-> > > >  tracehook_notify_resume include/linux/tracehook.h:197 [inline]
-> > > >  exit_to_usermode_loop+0x20c/0x2c0 arch/x86/entry/common.c:163
-> > > >  prepare_exit_to_usermode+0x180/0x1a0 arch/x86/entry/common.c:194
-> > > >  swapgs_restore_regs_and_return_to_usermode+0x0/0x40
-> > > >
-> > > > read to 0xffff88809fade9b0 of 4 bytes by task 7290 on cpu 1:
-> > > >  mem_cgroup_select_victim_node+0x92/0x3d0 mm/memcontrol.c:1675
-> > > >  try_to_free_mem_cgroup_pages+0x175/0x4c0 mm/vmscan.c:3376
-> > > >  reclaim_high.constprop.0+0xf7/0x140 mm/memcontrol.c:2349
-> > > >  mem_cgroup_handle_over_high+0x96/0x180 mm/memcontrol.c:2430
-> > > >  tracehook_notify_resume include/linux/tracehook.h:197 [inline]
-> > > >  exit_to_usermode_loop+0x20c/0x2c0 arch/x86/entry/common.c:163
-> > > >  prepare_exit_to_usermode+0x180/0x1a0 arch/x86/entry/common.c:194
-> > > >  swapgs_restore_regs_and_return_to_usermode+0x0/0x40
-> > > >
-> > > > mem_cgroup_select_victim_node() can be called concurrently which reads
-> > > > and modifies memcg->last_scanned_node without any synchrnonization. So,
-> > > > read and modify memcg->last_scanned_node with READ_ONCE()/WRITE_ONCE()
-> > > > to stop potential reordering.
-> > >
-> > > I am sorry but I do not understand the problem and the fix. Why does the
-> > > race happen and why does _ONCE fixes it? There is still no
-> > > synchronization. Do you want to prevent from memcg->last_scanned_node
-> > > reloading?
-> > >
-> >
-> > The problem is memcg->last_scanned_node can read and modified
-> > concurrently. Though to me it seems like a tolerable race and not
-> > worth to add an explicit lock. My aim was to make KCSAN happy here to
-> > look elsewhere for the concurrency bugs. However I see that it might
-> > complain next on memcg->scan_nodes.
-> >
-> > Now taking a step back, I am questioning the whole motivation behind
-> > mem_cgroup_select_victim_node(). Since we pass ZONELIST_FALLBACK
-> > zonelist to the reclaimer, the shrink_node will be called for all
-> > potential nodes. Also we don't short circuit the traversal of
-> > shrink_node for all nodes on nr_reclaimed and we scan (size_on_node >>
-> > priority) for all nodes, I don't see the reason behind having round
-> > robin order of node traversal.
->
-> It's actually only very recently that we don't bail out of the reclaim
-> loop anymore - if I'm not missing anything, it was only 1ba6fc9af35b
-> ("mm: vmscan: do not share cgroup iteration between reclaimers") that
-> removed the last bailout condition on sc->nr_reclaimed.
->
-> > I am thinking of removing the whole mem_cgroup_select_victim_node()
-> > heuristic. Please let me know if there are any objections.
->
-> In the current state, I don't see any reason to keep it, either. We
-> can always just start the zonelist walk from the current node.
->
-> A nice cleanup, actually. Good catch!
+On Wed, Aug 07, 2019 at 11:56:58AM +0200, Oleg Nesterov wrote:
 
-Thanks, I will follow up with the removal of this heuristic.
+> and either way, with or without 2 queues, what do you think about the code
+> below?
+
+Sorry for being so tardy with this thread.. having once again picked up
+the patch, I found your email.
+
+> This way the new reader does wake_up() only in the very unlikely case when
+> it races with the new writer which sets sem->block = 1 right after
+> this_cpu_inc().
+
+Ah, by waiting early, you avoid spurious wakeups when
+__percpu_down_read() happens after a successful percpu_down_write().
+Nice!
+
+I've made these changes. Now let me go have a play with that second
+waitqueue.
+
+> -------------------------------------------------------------------------------
+> 
+> static inline void percpu_down_read(struct percpu_rw_semaphore *sem)
+> {
+> 	might_sleep();
+> 	rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
+> 
+> 	preempt_disable();
+> 
+> 	if (likely(rcu_sync_is_idle(&sem->rss)))
+> 		__this_cpu_inc(*sem->read_count);
+> 	else
+> 		__percpu_down_read(sem, false);
+> 
+> 	preempt_enable();
+> }
+> 
+> static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
+> {
+> 	rwsem_release(&sem->dep_map, 1, _RET_IP_);
+> 
+> 	preempt_disable();
+> 
+> 	if (likely(rcu_sync_is_idle(&sem->rss)))
+> 		__this_cpu_dec(*sem->read_count);
+> 	else
+> 		__percpu_up_read(sem);
+> 
+> 	preempt_enable();
+> }
+
+I like that symmetry, but see below ...
+
+> // both called and return with preemption disabled
+> 
+> bool __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
+> {
+> 
+> 	if (atomic_read_acquire(&sem->block)) {
+> again:
+> 		preempt_enable();
+> 		__wait_event(sem->waiters, !atomic_read_acquire(&sem->block));
+> 		preempt_disable();
+> 	}
+> 
+> 	__this_cpu_inc(*sem->read_count);
+> 
+> 	smp_mb();
+> 
+> 	if (likely(!atomic_read_acquire(&sem->block)))
+> 		return true;
+> 
+> 	__percpu_up_read(sem);
+> 
+> 	if (try)
+> 		return false;
+> 
+> 	goto again;
+> }
+> 
+> void __percpu_up_read(struct percpu_rw_semaphore *sem)
+> {
+> 	smp_mb();
+> 
+> 	__this_cpu_dec(*sem->read_count);
+> 
+	preempt_enable();
+> 	wake_up(&sem->waiters);
+	preempt_disable()
+
+and this (sadly) means there's a bunch of back-to-back
+preempt_disable()+preempt_enable() calls. Leaving out the
+preempt_disable() here makes it ugly again :/
+
+Admittedly, this is PREEMPT_RT only, but given that is >< close to
+mainline we'd better get it right.
+
+> }
+> 
