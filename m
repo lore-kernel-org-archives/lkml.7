@@ -2,217 +2,114 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BB7CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F34CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3707C208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577FB21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:48:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="YAUcy1Z7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388035AbfJ2Msw (ORCPT
+        id S2388046AbfJ2Msz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:48:52 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42816 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729126AbfJ2Msv (ORCPT
+        Tue, 29 Oct 2019 08:48:55 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:29211 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbfJ2Msw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:48:51 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a21so15105804ljh.9;
-        Tue, 29 Oct 2019 05:48:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xBVZsEwVtK814JHViicc5SAg5rQLuwblDReqpeiyxfs=;
-        b=B2PmQggIVtkAFdYjftHoHQdw9coBaA6wdTtStdaa7pS56m6mdMptPHBk7QtlX0rnR9
-         Bdrm0CGr8J5uRJjR1kw57vxQ9fLAc4kvd69gIudgYdhF7cR9YuB6GLs6bIxazJx2GfTy
-         TKiSIDV0Tjw9NzYGa3o5hfvREdozR6+asaOn6f7aFnWdmjEbJmALx37uiFryM6I2Papo
-         imFH51lutcrs24Ud5aKIVE7yS54E7K6OExM+Hhd/7ZbNwoVu9KWOUmqLtH2BH6Epg38W
-         dDcMqytDX3vandhC7eJnJFLO71nFTTd3Eiiv0q1FMHyqfI/QjClvusFzur8je5pppOWN
-         mkmQ==
-X-Gm-Message-State: APjAAAXWOapjk5Tx8FZiC7Swow/v7hsHRO2UWIiT90xeBysjv1DG19HA
-        aN2E1fF0ulMOuiCJul89/FU=
-X-Google-Smtp-Source: APXvYqxChfIwjj7Wc/TmT1HL5bfeXc+1lnmhRvhgbjX2jyrjgKWXLOryfSfpaWPWWzgrUD7+wtYY9Q==
-X-Received: by 2002:a2e:91c7:: with SMTP id u7mr2504548ljg.178.1572353328687;
-        Tue, 29 Oct 2019 05:48:48 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 12sm11264224lje.92.2019.10.29.05.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 05:48:48 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 14:48:36 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 5/5] leds: lm3692x: Offload DT node locating and parsing
- to core
-Message-ID: <f6420ede481afc4e0a360d937049555400f4417e.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+        Tue, 29 Oct 2019 08:48:52 -0400
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x9TCmfFx027174
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 21:48:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x9TCmfFx027174
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572353322;
+        bh=ycMbZtUGC8hAeSAW/0e73NsiRHYVtXuSSSSislazCQo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YAUcy1Z7BHMXba9aS3kuTWqBizqxh2nsY6KKf8NqU/9TG693QjR5ULDjRjcvElSX5
+         9hT3mLy2Rw33xULiDMG3PH6KeK4EfjHmaK+0AkkCezyfRCuup6N5dny5jlhrIhTn6X
+         bI65yK1I+qo82aZPAE593wmgQCG4+fM+2JaHN8FqINCunqwHK2+SwKHQPPmzw3pYZl
+         iWCCTbt74GJkAoJPcE/qHpiDL+MISObsQyKctJ7kO0vFGuLwBlFk+C86fmr59KV9uk
+         KdZ4EeqdKNng2wgNTbaTjgGkG+UPa7Iull+7lZf1bQsUFYBL1ep34iFskJNzPeafG/
+         Iw4Xh3aI/RF8A==
+X-Nifty-SrcIP: [209.85.222.52]
+Received: by mail-ua1-f52.google.com with SMTP id o3so1995846ual.12
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 05:48:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAVzDgSWsmOFIQldRxz0hoMpBU4JMeXgb/p8oUbxnCIYviiAn5Sw
+        e03feQJBV8D924cb8m70pF/Ahj0xRli1E1tUd+w=
+X-Google-Smtp-Source: APXvYqwr5SQI/7GdRsDbwEwuTxIFeXAUGqui3bP5McMb++nicmAXwWPWoN0k7BAhA8CV+C1CSgivkmADZo9q3Yux+C4=
+X-Received: by 2002:a9f:3e81:: with SMTP id x1mr11462917uai.121.1572353320421;
+ Tue, 29 Oct 2019 05:48:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191028151427.31612-1-jeyu@kernel.org>
+In-Reply-To: <20191028151427.31612-1-jeyu@kernel.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 29 Oct 2019 21:48:03 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASzJEFw7Qo1e7qfNj0prZGrvN-DZs1wLkykaH=J03wXgw@mail.gmail.com>
+Message-ID: <CAK7LNASzJEFw7Qo1e7qfNj0prZGrvN-DZs1wLkykaH=J03wXgw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] scripts/nsdeps: use $MODORDER to obtain correct
+ modules.order path
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This comment serves as an example how led controller drivers
-could be simplified if led-class/led-core would handle DT node
-locating and parsing. leds-lm3692x was randomly selected from
-drivers using 'devm_led_classdev_register_ext' API. No further
-study was done :)
+On Tue, Oct 29, 2019 at 12:14 AM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> The nsdeps script calls generate_deps() for every module in the
+> modules.order file. It prepends $objtree to obtain the full path of the
+> top-level modules.order file. This produces incorrect results when
+> calling nsdeps for an external module, as only the ns dependencies for
+> in-tree modules listed in $objtree/modules.order are generated rather
+> than the ns dependencies for the external module. To fix this, just use
+> the MODORDER variable provided by kbuild - it uses the correct path for
+> the relevant modules.order file (either in-tree or the one produced by
+> the external module build).
+>
+> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+> ---
+>
+> So, not being too familiar with kbuild, I am not sure if MODORDER was the
+> appropriate kbuild variable to use, but I could not find anything else that
+> gives us the modules.order path. Masahiro, please let me know if this is
+> appropriate usage.
 
-This commit HAS NOT BEEN TESTED at all. Only compile tested.
-This is only RFC - Eg, request for comments. If people see some
-of the ideas as useful then properly tested patch should be
-provided.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/leds/leds-lm3692x.c | 75 ++++++++++++++++++++-----------------
- 1 file changed, 41 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-index 3d381f2f73d0..abe2b1113049 100644
---- a/drivers/leds/leds-lm3692x.c
-+++ b/drivers/leds/leds-lm3692x.c
-@@ -108,7 +108,7 @@
- struct lm3692x_led {
- 	struct mutex lock;
- 	struct i2c_client *client;
--	struct led_classdev led_dev;
-+	struct led_init_data init_data;
- 	struct regmap *regmap;
- 	struct gpio_desc *enable_gpio;
- 	struct regulator *regulator;
-@@ -166,7 +166,8 @@ static int lm3692x_brightness_set(struct led_classdev *led_cdev,
- 				enum led_brightness brt_val)
- {
- 	struct lm3692x_led *led =
--			container_of(led_cdev, struct lm3692x_led, led_dev);
-+			container_of(led_cdev->init_data, struct lm3692x_led,
-+				     init_data);
- 	int ret;
- 	int led_brightness_lsb = (brt_val >> 5);
- 
-@@ -319,49 +320,56 @@ static int lm3692x_init(struct lm3692x_led *led)
- 
- 	return ret;
- }
--static int lm3692x_probe_dt(struct lm3692x_led *led)
-+
-+static int lm3692x_of_parse_cb(struct led_classdev *ld, struct fwnode_handle *fw,
-+			       struct led_properties *props)
- {
--	struct fwnode_handle *child = NULL;
--	struct led_init_data init_data = {};
- 	int ret;
-+	struct lm3692x_led *led = container_of(ld->init_data,
-+					       struct lm3692x_led, init_data);
-+
-+	ret = fwnode_property_read_u32(fw, "reg", &led->led_enable);
-+	if (ret)
-+		dev_err(&led->client->dev, "reg DT property missing\n");
-+
-+	return ret;
-+}
-+
-+static const struct led_ops lm3692x_ops = {
-+	.brightness_set_blocking = lm3692x_brightness_set,
-+};
-+
-+static int lm3692x_probe_dt(struct lm3692x_led *led)
-+{
-+	void *ret;
- 
- 	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
- 						   "enable", GPIOD_OUT_LOW);
- 	if (IS_ERR(led->enable_gpio)) {
--		ret = PTR_ERR(led->enable_gpio);
--		dev_err(&led->client->dev, "Failed to get enable gpio: %d\n",
--			ret);
--		return ret;
-+		dev_err(&led->client->dev, "Failed to get enable gpio: %ld\n",
-+			PTR_ERR(led->enable_gpio));
-+		return PTR_ERR(led->enable_gpio);
- 	}
- 
- 	led->regulator = devm_regulator_get(&led->client->dev, "vled");
- 	if (IS_ERR(led->regulator))
- 		led->regulator = NULL;
- 
--	child = device_get_next_child_node(&led->client->dev, child);
--	if (!child) {
--		dev_err(&led->client->dev, "No LED Child node\n");
--		return -ENODEV;
--	}
--
--	fwnode_property_read_string(child, "linux,default-trigger",
--				    &led->led_dev.default_trigger);
--
--	ret = fwnode_property_read_u32(child, "reg", &led->led_enable);
--	if (ret) {
--		dev_err(&led->client->dev, "reg DT property missing\n");
--		return ret;
--	}
--
--	init_data.fwnode = child;
--	init_data.devicename = led->client->name;
--	init_data.default_label = ":";
--
--	ret = devm_led_classdev_register_ext(&led->client->dev, &led->led_dev,
--					     &init_data);
--	if (ret) {
--		dev_err(&led->client->dev, "led register err: %d\n", ret);
--		return ret;
-+	/*
-+	 * RFC_NOTE: Do we have fixed node name here or do we need another way to
-+	 * do 'match'?
-+	 */
-+	led->init_data.of_match = of_match_ptr("led_node_name_here");
-+	led->init_data.of_parse_cb = lm3692x_of_parse_cb;
-+	led->init_data.devicename = led->client->name;
-+	led->init_data.default_label = ":";
-+
-+	ret = devm_led_classdev_register_dt(&led->client->dev, &lm3692x_ops,
-+					    &led->init_data);
-+	if (IS_ERR(ret)) {
-+		dev_err(&led->client->dev, "led register err: %ld\n",
-+			PTR_ERR(ret));
-+		return PTR_ERR(ret);
- 	}
- 
- 	return 0;
-@@ -379,7 +387,6 @@ static int lm3692x_probe(struct i2c_client *client,
- 
- 	mutex_init(&led->lock);
- 	led->client = client;
--	led->led_dev.brightness_set_blocking = lm3692x_brightness_set;
- 	led->model_id = id->driver_data;
- 	i2c_set_clientdata(client, led);
- 
--- 
-2.21.0
+Right, MODORDER allows you to get access to
+the right modules.order depending on what you are building
+although this patch alone is not useful since nsdeps does not work with
+external modules.
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+>  scripts/nsdeps | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/nsdeps b/scripts/nsdeps
+> index dda6fbac016e..54d2ab8f9e5c 100644
+> --- a/scripts/nsdeps
+> +++ b/scripts/nsdeps
+> @@ -52,7 +52,7 @@ generate_deps() {
+>         done
+>  }
+>
+> -for f in `cat $objtree/modules.order`; do
+> +for f in `cat $MODORDER`; do
+>         generate_deps $f
+>  done
+>
+> --
+> 2.16.4
+>
+
+
+--
+Best Regards
+Masahiro Yamada
