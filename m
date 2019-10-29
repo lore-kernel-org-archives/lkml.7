@@ -2,125 +2,107 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B18CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFADCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5EB520856
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1568E208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFGkqYc9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388276AbfJ2NP5 (ORCPT
+        id S2388295AbfJ2NQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:15:57 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43694 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388105AbfJ2NP5 (ORCPT
+        Tue, 29 Oct 2019 09:16:05 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34737 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732534AbfJ2NQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:15:57 -0400
-Received: from [91.217.168.176] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iPRLm-00015Z-Qa; Tue, 29 Oct 2019 13:15:54 +0000
-Received: from ben by deadeye with local (Exim 4.92.2)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iPRLm-0000r3-3e; Tue, 29 Oct 2019 14:15:54 +0100
-Message-ID: <8301f887ce091340b6662371ab2bd1628a06118e.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 58/87] cifs: add spinlock for the openFileList to
- cifsInodeInfo
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Pavel Shilovskiy <pshilov@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steven French <Steven.French@microsoft.com>
-Date:   Tue, 29 Oct 2019 14:15:45 +0100
-In-Reply-To: <DM5PR21MB0185257853E50A73C593B891B6660@DM5PR21MB0185.namprd21.prod.outlook.com>
-References: <lsq.1570043210.379046399@decadent.org.uk>
-         <lsq.1570043211.844466427@decadent.org.uk>
-         <DM5PR21MB0185257853E50A73C593B891B6660@DM5PR21MB0185.namprd21.prod.outlook.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-aXEdqtHx4Y9xfbklpuEp"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 29 Oct 2019 09:16:04 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b128so9584953pfa.1;
+        Tue, 29 Oct 2019 06:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rDAR1qdS022RvDkmF/JnXqxkZXLKSYyvZ7xcekyeQEQ=;
+        b=eFGkqYc9CHYLgbmA3fBDUR1b/S/CZSuonfyOXIMsqiMhbvkZHuIooxlXyn0gs9U7VL
+         R+F0FX1Onv2Lp04JJ+tfAH4Oe1iwhW2HIyHFzIQTjhfK+Ual3E5OKVEwDpIN4ZllRZT4
+         valJ+V1d+e3oYEm+Le38OCeDKuPzD5w3j01+dfPvRltNESEOodVpZz9GJ/ouQjOEzrJ7
+         fqzkKjZgN6849koIqlr5cODaGYOa2NUipVjGP1B6mx2i64HP9bjAx63zUTjDTsaFlFWb
+         p637UTy1OKl9fFRCOvHOYrB/x9N23wr/ZMNH42opv72gVaBXqwlYpfYBVeyVIyE5+1dY
+         8GRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rDAR1qdS022RvDkmF/JnXqxkZXLKSYyvZ7xcekyeQEQ=;
+        b=BSWAuYofDcGW5ittNNrVmjS3uldIou/25RNswg1t5Yr62cK6W1qQxhL5bXzvRrWBg4
+         Eoo2qOgpy3jkv3+oiDMmmI6YDY0VV/bzANfBIoPmkFyOUT+w0TJbUQz3Qg2rjogmhFQd
+         KE41DKjpqTfz5SuxSV6AONwLyTt1+L3ZYehohZdJZlV2A/ErxTMDkckziGHYRyR4Tfe6
+         wgVAPutFO/vErDiymRmNAD4fU/jm+mHNIeZdNsNwvlqMca1Ux7Nv42ta2c9OJWY+b+nU
+         lqBwFuFtDtdAYg5boERpn2r/dBWeGHGtEYMmlfX1bXAGdg0n6nayJbLqwx2P5Z0ptVgB
+         dGEA==
+X-Gm-Message-State: APjAAAUcCQMx87le8uZfefbyF+8BKIaql0Ja590HLR1NPB9pdD4POkMR
+        qkzZzjnuJNdzycIuJyekxruv+WqU
+X-Google-Smtp-Source: APXvYqwk+TvBib/ARH05rzylFT0CcwN0b5rW/UeVrjgST/fD4Hn45Ia/UxXDOz4CLpn9Rqlnwb2VZA==
+X-Received: by 2002:a63:234c:: with SMTP id u12mr10783800pgm.384.1572354964074;
+        Tue, 29 Oct 2019 06:16:04 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 16sm10728832pfc.21.2019.10.29.06.16.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 29 Oct 2019 06:16:03 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 06:16:02 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eugen.Hristev@microchip.com
+Cc:     wim@linux-watchdog.org, robh+dt@kernel.org,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: sama5d4_wdt: add
+ microchip,sam9x60-wdt compatible
+Message-ID: <20191029131602.GA8372@roeck-us.net>
+References: <1571648890-15140-1-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 91.217.168.176
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571648890-15140-1-git-send-email-eugen.hristev@microchip.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 21, 2019 at 09:14:05AM +0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> The Atmel sama5d4_wdt needs to be compatible with microchip,sam9x60-wdt
+> The sama5d4_wdt driver is updated to work with both hardware blocks
+> (sama5d4/sama5d2 and sam9x60 based blocks)
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
---=-aXEdqtHx4Y9xfbklpuEp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-On Mon, 2019-10-28 at 22:19 +0000, Pavel Shilovskiy wrote:
-> > -----Original Message-----
-> > From: Ben Hutchings <ben@decadent.org.uk>
-> > Sent: Wednesday, October 2, 2019 12:07 PM
-> > To: linux-kernel@vger.kernel.org; stable@vger.kernel.org
-> > Cc: akpm@linux-foundation.org; Denis Kirjanov <kda@linux-powerpc.org>; =
-Ronnie Sahlberg <lsahlber@redhat.com>; Steven French <Steven.French@microso=
-ft.com>; Pavel Shilovskiy <pshilov@microsoft.com>
-> > Subject: [PATCH 3.16 58/87] cifs: add spinlock for the openFileList to =
-cifsInodeInfo
-> >=20
-> > 3.16.75-rc1 review patch.  If anyone has any objections, please let me =
-know.
-> >=20
-> > ------------------
-> >=20
-> > From: Ronnie Sahlberg <lsahlber@redhat.com>
-> >=20
-> > commit 487317c99477d00f22370625d53be3239febabbe upstream.
-[...]
-> We have recently found regressions in this patch that are addressed in th=
-e following two patches:
->=20
-> cb248819d209d ("cifs: use cifsInodeInfo->open_file_lock while iterating t=
-o avoid a panic")
-> 1a67c41596575 ("CIFS: Fix use after free of file info structures")
->=20
-> So, I would suggest either to apply those two patches above or to revert =
-this one.
-
-Thanks for pointing thse out.  I will try to include those in a later
-update.
-
-Ben.
-
---=20
-Ben Hutchings
-Any sufficiently advanced bug is indistinguishable from a feature.
-
-
-
---=-aXEdqtHx4Y9xfbklpuEp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl24O4EACgkQ57/I7JWG
-EQlO+Q/9ERJdUmTM9CMXqx1b2UvtT8KH+GAuF75obVUHZCN3ysjyLINP5J+I/QjQ
-MfefJCJXd7+kFtp7kTe6w+EdxEms6QCQzHmGDGMSzW3wrdMD0ct5N0/3VED8Jqsz
-f0kchBegnpNbThc5xMnhpStkcASRlWmrhGMrMIKrN6ybR8doroJ7hD2R6EQ28RPd
-j62twwV3v0G1a3BX1DwDuLH3ZuGJhiDZE4AZdLIdZfhZXc9+QX9SOPcCV/i3Zxvp
-d/TWzbfaX9jC/K+FlbFIzTYRAIKKLnvSpHEZTnj3qzYR3iO93qvTiILUcxB6z5j5
-2cHwcKwINMh/cL+elIVGDqztqcc4vIdqybtGGXkmjRyH3B5BW/3wvpACGHW2Fghw
-2f44m4jGHk/VfKemmbBD2NSegKpzffM5g2ioTa6aZT55oMD4yA2Caj3KfGK4nuUc
-s5lYXuwXbhRH7HdvIJkK5juoEppbZVvuR/IYGNyXZpqw7ANL+t8AdUu99uyPXSMn
-OUGZD25awMkcXTTSD/IMZhrRg4HeaMbQw56QjC/fLwbiwP7BCQowodoXiX82HfKC
-GmjfAJsNdJHJzX8s9cnv0lkkGAs9SWO8h5YvHMavoZGmkRzAy4cf+8tUUy0ImR/3
-RIcr81FYQ6NLLBC2oWZ3DpbkAg5osjeF2JthnyeuP7w+QW2wVts=
-=8ShN
------END PGP SIGNATURE-----
-
---=-aXEdqtHx4Y9xfbklpuEp--
+> ---
+>  Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+> index 4fec1e3..44727fc 100644
+> --- a/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+> @@ -1,7 +1,7 @@
+>  * Atmel SAMA5D4 Watchdog Timer (WDT) Controller
+>  
+>  Required properties:
+> -- compatible: "atmel,sama5d4-wdt"
+> +- compatible: "atmel,sama5d4-wdt" or "microchip,sam9x60-wdt"
+>  - reg: base physical address and length of memory mapped region.
+>  
+>  Optional properties:
