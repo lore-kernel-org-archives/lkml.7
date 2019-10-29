@@ -2,140 +2,212 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C9ACA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A83CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7BD2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2EDC2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572380406;
-	bh=Clnomsacv7T6a/ubml3afB3fbMamN9cVGn6ssr4l9qY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tkPcT1F7tJKxcYfyHbE7JW37UMqSXniwtODQU606Mhx05PyC8J1JuxCFtn7Ubjte6
-	 DZzYkN0SyboefSBD3AddAKFETVqk2s4nNLrtSBMWRHXLXzeDqXmUlgfM+tElHVLdRL
-	 5cF/2yXxpNIT4mneV61sEBH+xk9eQqJhC+pYHFCM=
+	s=default; t=1572380833;
+	bh=Rfr/YDkbZCOBS716poVW8CX96iFpyW3wXlvdADnE1S0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=dr8rxmOqiW4tM9AaNGxUkAgAY69hlE1u02iTllwZUepbKlpsPzfBzEerbozmRky5L
+	 8FCv1azK2sQqhymj/YJ2ch+oKxkCUkWl3LE0Kb0TNkwFkTonoOnuvg6oEo07kJHgJ3
+	 JBYpRSSe6v4tKJ+nGsE26Y4LBnbVe4+YLgp7fGS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfJ2UUF (ORCPT
+        id S1726735AbfJ2U1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:20:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60510 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 16:27:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfJ2UUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:20:05 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725840AbfJ2U1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:27:11 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E3DF2086A;
-        Tue, 29 Oct 2019 20:20:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CD642086A;
+        Tue, 29 Oct 2019 20:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572380404;
-        bh=Clnomsacv7T6a/ubml3afB3fbMamN9cVGn6ssr4l9qY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=S/8rYQezY07m5/GuMp+eUDHBLwmHpdOZheShfDHSS0hS/0TCprkl6ldKq5gKVDIyW
-         P1t9wBcIP2MPDRDtsHKYMWNwZe8Nblj6cSyyGnQpVgsTCSR/+lYKFuFbfcjLqXdhMP
-         lCrKFEYbyLKtfKqPEYsSY+I+THwku5JITalxHVS4=
-Received: by mail-qt1-f174.google.com with SMTP id l3so896qtp.2;
-        Tue, 29 Oct 2019 13:20:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAXaYPfVSYvJiP4EUh8kgUy5mjz288IKjy8VleAyYt/qLUnmZvs/
-        bTKdSfsfAWCoLTvy4xnW+5w1pGtLYBrTE1xWKA==
-X-Google-Smtp-Source: APXvYqxabGX/POiNRA0N56A14M3a7t/UWULx2rYZa74WIi4+N6DZNC2UX/jDPYkIQG5TuAM8HOsEpCdBSi3MN/Svr1k=
-X-Received: by 2002:ac8:70c4:: with SMTP id g4mr1134179qtp.136.1572380403327;
- Tue, 29 Oct 2019 13:20:03 -0700 (PDT)
+        s=default; t=1572380830;
+        bh=Rfr/YDkbZCOBS716poVW8CX96iFpyW3wXlvdADnE1S0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=kdqNFfvp0mv4767Ab/4Mvqpwrpx+Oe7F80ZXbDqs8o0owqHY/uQJMKKDZtw6k3Xg7
+         7MbmMi0f2uBKKSK5lyhXh44/jEizkkjy0wKhh/XVWPe0jiSxRgln8wVbOBP2SbyTHw
+         CVeKyE6d0JW4zp8vttpk13eILu0yOmCGqAOTAzIc=
+Date:   Tue, 29 Oct 2019 15:27:09 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Matthias Andree <matthias.andree@gmx.de>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
+ spec
+Message-ID: <20191029202708.GA38926@google.com>
 MIME-Version: 1.0
-References: <1571387933-23397-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20191029015708.GA29561@bogus> <TYAPR01MB4544FD4F09FAA09F7AF79EF0D8610@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB4544FD4F09FAA09F7AF79EF0D8610@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 29 Oct 2019 15:19:52 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+H-4V=v0GTUgTXAiwOtn_BoMtcMpinb1v51V_Jy9mBXA@mail.gmail.com>
-Message-ID: <CAL_Jsq+H-4V=v0GTUgTXAiwOtn_BoMtcMpinb1v51V_Jy9mBXA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: phy: renesas: usb2-phy: convert bindings to json-schema
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     "kishon@ti.com" <kishon@ti.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029111520.GE2593@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 11:14 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
->
-> Hi Rob,
->
-> Thank you for your review!
->
-> > From: Rob Herring, Sent: Tuesday, October 29, 2019 10:57 AM
-> >
-> > On Fri, Oct 18, 2019 at 05:38:53PM +0900, Yoshihiro Shimoda wrote:
-> > > Convert Renesas R-Car generation 3 USB 2.0 PHY bindings documentation
-> > > to json-schema.
-> > >
-> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > ---
-> > >  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 --------------
-> > >  .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 106 +++++++++++++++++++++
-> > >  2 files changed, 106 insertions(+), 70 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-> >
-> >
-> > > diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-> > b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-> > > new file mode 100644
-> > > index 00000000..0f109c2
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-> > > @@ -0,0 +1,106 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/phy/renesas,usb2-phy.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Renesas R-Car generation 3 USB 2.0 PHY
-> > > +
-> > > +maintainers:
-> > > +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    oneOf:
-> >
-> > This:
->
-> What does the "This:" mean?
+On Tue, Oct 29, 2019 at 01:15:20PM +0200, Mika Westerberg wrote:
+> On Mon, Oct 28, 2019 at 03:16:53PM -0500, Bjorn Helgaas wrote:
+> > > The related hardware event is resume in this case. Can you point
+> > > me to the actual point where you want me to put this?
+> > 
+> > "Resume" is a Linux software concept, so of course the PCIe spec
+> > doesn't say anything about it.  The spec talks about delays
+> > related to resets and device power and link state transitions, so
+> > somehow we have to connect the Linux delay with those hardware
+> > events.
+> > 
+> > Since we're talking about a transition from D3cold, this has to be
+> > done via something external to the device such as power
+> > regulators.  For ACPI systems that's probably hidden inside _PS0
+> > or something similar.  That's opaque, but at least it's a hook
+> > that says "here's where we put the device into D0".  I suggested
+> > acpi_pci_set_power_state() as a possibility since I think that's
+> > the lowest-level point where we have the pci_dev so we know the
+> > current state and the new state.
+> 
+> I looked at how we could use acpi_pci_set_power_state() but I don't
+> think it is possible because it is likely that only the root port
+> has the power resource that is used to bring the link to L2 or L3.
+> However, we would need to repeat the delay for each downstream/root
+> port if there are multiple PCIe switches in the topology.
 
-I was referring to the 3 lines below. I was trying to be clear which
-lines to replace with just 'const'.
+OK, I think I understand why that's a problem (correct me if I'm
+wrong):
 
-> If I replaced the "oneOf:" with "This:",
-> the following error happens when "make dt_binding_check":
->
->   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-> warning: no schema found in file: Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-> [snip]/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml: ignoring, error in schema 'compatible'
-> Documentation/devicetree/bindings/Makefile:33: recipe for target 'Documentation/devicetree/bindings/processed-schema.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/processed-schema.yaml] Error 255
-> Makefile:1263: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->
-> > > +      - items:
-> > > +          - enum:
-> > > +              - renesas,usb2-phy-r8a77470 # RZ/G1C
-> >
-> > You can simplify to just:
-> >
-> >          - const: renesas,usb2-phy-r8a77470 # RZ/G1C
->
-> I'll fix it.
+  We call pci_pm_resume_noirq() for every device, but it only calls
+  acpi_pci_set_power_state() for devices that have _PS0 or _PR0
+  methods.  So if the delay is in acpi_pci_set_power_state() and we
+  have A -> B -> C where only A has _PS0, we would delay for the link
+  to B to come up, but not for the link to C.
+
+I do see that we do need both delays.  In acpi_pci_set_power_state()
+when we transition A from D3cold->D0, I assume that single _PS0
+evaluation on A causes B to transition from D3cold->D3hot, which in
+turn causes C to transition from D3cold->D3hot.  Is that your
+understanding, too?
+
+We do know that topology in acpi_pci_set_power_state(), since we have
+the pci_dev for A, so it seems conceivable that we could descend the
+hierarchy and delay for each level.
+
+If the delay is in pci_pm_resume_noirq() (as in your patch), what
+happens with a switch with several Downstream Ports?  I assume that
+all the Downstream Ports start their transition out of D3cold
+basically simultaneously, so we probably don't need N delays, do we?
+It seems a little messy to optimize this in pci_pm_resume_noirq().
+
+The outline of the pci_pm_resume_noirq() part of this patch is:
+
+  pci_pm_resume_noirq
+    if (!dev->skip_bus_pm ...)   # <-- condition 1
+      pci_pm_default_resume_early
+        pci_power_up
+          if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
+            platform_pci_set_power_state
+              pci_platform_pm->set_state
+                acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
+                  acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
++   if (d3cold)                  # <-- condition 2
++     pci_bridge_wait_for_secondary_bus
+
+Another thing that niggles at me here is that the condition for
+calling pci_bridge_wait_for_secondary_bus() is completely different
+than the condition for changing the power state.  If we didn't change
+the power state, there's no reason to wait, is there?
+
+The outline of the pci_pm_runtime_resume() part of this patch is:
+
+  pci_pm_runtime_resume
+    pci_restore_standard_config
+      if (dev->current_state != PCI_D0)
+        pci_set_power_state(PCI_D0)
+          __pci_start_power_transition
+            pci_platform_power_transition
+              if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
+                platform_pci_set_power_state
+                  pci_platform_pm->set_state
+                    acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
+                      acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
+              pci_raw_set_power_state
+          __pci_complete_power_transition
++   if (d3cold)
++     pci_bridge_wait_for_secondary_bus
+
+In this part, the power state change is inside
+pci_restore_standard_config(), which calls pci_set_power_state().
+There are many other callers of pci_set_power_state(); can we be sure
+that none of them need a delay?
+
+> > But it seems that at least some ACPI firmware doesn't do those
+> > delays, so I guess our only alternatives are to always do it in
+> > the OS or have some sort of blacklist.  And it doesn't really seem
+> > practical to maintain a blacklist.
+> 
+> I really think this is crystal clear:
+
+I am agreeing with you that the OS needs to do the delays.
+
+> The OS is always responsible for the delays described in the PCIe
+> spec.
+
+If the ACPI spec contained this statement, it would be useful, but I
+haven't seen it.  It's certainly true that some combination of
+firmware and the OS is responsible for the delays :)
+
+> However, if the platform implements some of them say in _ON or _PS0
+> methods then it can notify the OS about this by using the _DSM so
+> the OS does not need to duplicate all of them.
+
+That makes good sense, but there are other reasons for using that
+_DSM, e.g., firmware may know that MID or similar devices are not
+really PCI devices and don't need delays anywhere.  So the existence
+of the _DSM by itself doesn't convince me that the OS is responsible
+for the delays.
+
+> > > > In pci_pm_reset(), we're doing the D0->D3hot->D0 transitions
+> > > > specifically to do a reset, so No_Soft_Reset is false.
+> > > > Doesn't 6.6.1 say we need at least 100ms here?
+> > > 
+> > > No since it does not go into D3cold. It just "reset" the thing
+> > > if it happens to do internal reset after D3hot -> D0.
+> > 
+> > Sec 5.8, Figure 5-18 says D3hot->D0uninitialized is a "Soft
+> > Reset", which unfortunately is not defined.
+> > 
+> > My guess is that in sec 5.9, Table 5-13, the 10ms delay is for the
+> > D3hot->D0active (i.e., No_Soft_Reset=1) transition, and the
+> > D3hot->D0uninitialized (i.e., No_Soft_Reset=0) that does a "soft
+> > reset" (whatever that is) probably requires more and we should
+> > handle it like a conventional reset to be safe.
+> 
+> I think it simply means the device functional context is lost (there
+> is more in section 5.3.1.4). Linux handles this properly already
+> (well at least according the minimum timings required by the spec)
+> and restores the context accordingly after it has waited for the
+> 10ms.
+> 
+> It is the D3cold (where links go to L2 or L3) where we really need
+> the delays so that the link gets properly trained before we start
+> poking the downstream device.
+
+I'm already speculating above, so I don't think I can contribute
+anything useful here.
