@@ -2,77 +2,92 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70223CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE39CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473FA2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F0320874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:35:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WkF84yvG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388658AbfJ2Neu (ORCPT
+        id S2388694AbfJ2Nfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:34:50 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:64122 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387890AbfJ2Neu (ORCPT
+        Tue, 29 Oct 2019 09:35:33 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43871 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388667AbfJ2Nfc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:34:50 -0400
-X-AuditID: c0a8fbf4-199ff70000001fa6-09-5db83ff87284
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 7F.1D.08102.8FF38BD5; Tue, 29 Oct 2019 14:34:48 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Tue, 29 Oct 2019 14:34:43 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: bd70528: Add MODULE ALIAS to autoload module
-Thread-Topic: [PATCH] gpio: bd70528: Add MODULE ALIAS to autoload module
-Thread-Index: AQHViZx3BBbcd3pOS0G3M8VDNrhq+adoLVAAgAlp9wA=
-Date:   Tue, 29 Oct 2019 13:34:42 +0000
-Message-ID: <181cd407bf95ba38b7edae21df94bf950210ae4e.camel@fi.rohmeurope.com>
-References: <20191023122150.GA2524@localhost.localdomain>
-         <CAMpxmJUhwLOey+NtLrkvvj4apfyZyqLM_P87et+jHvGtBETspA@mail.gmail.com>
-In-Reply-To: <CAMpxmJUhwLOey+NtLrkvvj4apfyZyqLM_P87et+jHvGtBETspA@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <77C472C4743C5C49B8A684AD6218304E@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Tue, 29 Oct 2019 09:35:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572356131;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Giq8Yqxk7smLdQbVdrNtJ7/JmLLVzAyYYDX0cuxJ2Ug=;
+        b=WkF84yvGv2VMyq43DEM8Y/OEbFp912Zylzr22Kt8gkWM8F+kAoNVsU/V2md0ufSf8kSwZr
+        ybmeMZbMAxFbcLgAqF2KDz7jAezw5zw/KsaT9Ape8g3jy5zdLYJn8VEzCxQABRzWLpzwfA
+        CT4l/G0PPpZb3EKH/pSpUisqR+wqQ5o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-345-l-2D2QCPMQi-34ti9oYutA-1; Tue, 29 Oct 2019 09:35:30 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4026E107AD28;
+        Tue, 29 Oct 2019 13:35:29 +0000 (UTC)
+Received: from treble (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AFE2060C4E;
+        Tue, 29 Oct 2019 13:35:28 +0000 (UTC)
+Date:   Tue, 29 Oct 2019 08:35:26 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] stacktrace: don't skip first entry on noncurrent tasks
+Message-ID: <20191029133526.tqzo4axnuyozaqzc@treble>
+References: <20191025142110.jgz5jy4nuryhawv5@treble>
+ <20191029071944.17123-1-jslaby@suse.cz>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGKsWRmVeSWpSXmKPExsVyYMXvjbo/7HfEGrQ/s7L4MvcUi8WUP8uZ
-        LDbP/8NocXnXHDaLOUtPsDiwery/0crusXPWXXaPO9f2sHl83iQXwBLFbZOUWFIWnJmep2+X
-        wJ3x8/db1oJbzBXnfz9lb2A8w9zFyMkhIWAicfJuE2MXIxeHkMBVRonlNxYwQTgnGCXWbHjL
-        1sXIwcEmYCPRdZMdpEFEwFri7fUzYDXMAh8YJTbc/AM2SVjAXaJ3TTNUkYfEtQVvWSFsK4n3
-        X16xgdgsAqoStycvYQGxeQX8JH7snsIGsayRUWLq1fVggzgFAiXO7F4H1swoICvR2fCOCcRm
-        FhCX2PTsOyvE2QISS/ach3pBVOLl439QcSWJvT8fsoAczSygKbF+lz5Eq4PEghPLGCFsRYkp
-        3Q/ZIW4QlDg58wnLBEaxWUg2zELonoWkexaS7llIuhcwsq5ilMhNzMxJTyxJNdQrSi3VK8rP
-        yAVSyfm5mxgh8fhlB+P/Q56HGJk4GA8xSnIwKYny/jm2PVaILyk/pTIjsTgjvqg0J7X4EKME
-        B7OSCO/FM9tihXhTEiurUovyYVLSHCxK4rzqDyfGCgmA7MpOTS1ILYLJynBwKEnw/rfdESsk
-        WJSanlqRlplTgpBm4uAEGc4lJVKcmpeSWpRYWpIRD0og8cXAFAKS4gHaqwhMbEK8xQWJuUBR
-        iNZTjNocE17OXcTMcWTu0kXMQix5+XmpUuK8v+yASgVASjNK8+AWvWIU52BUEuZlARnEA0zM
-        cHNeAa1gAlqh8xPkteKSRISUVANj3mxRv4lftm85uejHNpFGkzs6h64/Ep5WeUtYTHLLjSCt
-        DdbPb01WmfF6jkrX9iU/3VrnL3SrftKwQT3USEYxnefi9GqTg8bnI//XSOyy2mn2uNXgQfQ+
-        gZmRblub7zTrJ3eV3NMr3lenaXPAPIGn3YJ3tWRUYc/J/vLnwf0tbwrnV2hU9DYrsRRnJBpq
-        MRcVJwIAzPXfPIkDAAA=
+In-Reply-To: <20191029071944.17123-1-jslaby@suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: l-2D2QCPMQi-34ti9oYutA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBXZWQsIDIwMTktMTAtMjMgYXQgMTY6NDkgKzAyMDAsIEJhcnRvc3ogR29sYXN6ZXdza2kg
-d3JvdGU6DQo+IMWbci4sIDIzIHBhxbogMjAxOSBvIDE0OjIyIE1hdHRpIFZhaXR0aW5lbg0KPiAN
-Cj4gPiBJJ20gbm90IHJlYWxseSBzdXJlIGlmIHRoaXMgaXMgYSBidWctZml4IG9yIGZlYXR1cmUg
-YnV0IEkgZ3Vlc3MgdGhlDQo+ID4gRml4ZXMgdGFnIHdvbid0IGhhcm0sIHJpZ2h0Pw0KPiANCj4g
-SXQncyBkZWZpbml0ZWx5IGEgZmVhdHVyZSwgbm90IGEgYnVnLWZpeC4gSSBhcHBsaWVkIGl0IHRv
-IGZvci1uZXh0DQo+IGJ1dA0KPiBkcm9wcGVkIHRoZSB0YWcuDQoNClRoYW5rcyENCg0KLS1NYXR0
-aQ0K
+On Tue, Oct 29, 2019 at 08:19:44AM +0100, Jiri Slaby wrote:
+> When doing cat /proc/<PID>/stack, the output is missing the first entry.
+> When the current code walks the stack starting in stack_trace_save_tsk,
+> it skips all scheduler functions (that's OK) plus one more function. But
+> this one function should be skipped only for the 'current' task as it is
+> stack_trace_save_tsk proper.
+>=20
+> The original code (before the common infrastructure) skipped one
+> function only for the 'current' task -- see save_stack_trace_tsk before
+> 3599fe12a125. So do so also in the new infrastructure now.
+>=20
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Fixes: 214d8ca6ee85 ("stacktrace: Provide common infrastructure")
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>=20
+> Notes:
+>     [v2] add the same for the !CONFIG_ARCH_STACKWALK case
+
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+
+--=20
+Josh
+
