@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA76CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D385CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F7B2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57B921734
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ol7lmEfc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6cl9sYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbfJ2WHF (ORCPT
+        id S1729286AbfJ2WHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:07:05 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44381 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728319AbfJ2WGY (ORCPT
+        Tue, 29 Oct 2019 18:07:10 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45991 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728142AbfJ2WGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:06:24 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v4so8292003lfd.11;
-        Tue, 29 Oct 2019 15:06:23 -0700 (PDT)
+        Tue, 29 Oct 2019 18:06:23 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q64so308124ljb.12;
+        Tue, 29 Oct 2019 15:06:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5qAiDuX2tr8Je8Vo0BM4vOmpULUVfESd21buoKSOXDQ=;
-        b=Ol7lmEfcLPW59ep9bb3Oq2znELvwbgViUyz/FAgHdp9AHFltLwSXrUN7XlWNuZcwkw
-         sKnEJj2DhsYQJjMXNBIK0ZpwQLhB1n+/01XEW0uKAPN/1j6yMKntsnLMee9dQSppDER1
-         9wihrn8Fs6UQP3yEVKEoMGrbQgK1jgaA0Y2WOU686G0du63pD1JyfeRktIoKrF9ajnss
-         iJcmlnl+Qiqc1gdoqziAp7CYkT4a3OaotNLaka/8HUG2KX03hudLDHFF08IEoHt7R26P
-         +6smiW+Pm4ur3bPF+QtVgciwSYJsQDUQgPaneH+vWyxGcOeYpzs6xxpvRIelzYN+3shO
-         g9jQ==
+        bh=4QxuLfslnQVbhl7LuXHRiC4Oo60NDLS8lYD8jZwDVcg=;
+        b=S6cl9sYA1SKb+LaK/ogF7GxQODFPMfEMmPUn6pJxxu6s1Vm5KmeDzw+ZVsfSg36su9
+         wtnh3xApwk2PvgRF6kwj81Y9M/bEx33rnSk81CXFVe3MUtjVhYzGbQyEtDandaH0gVVF
+         eNnsGXT2ocGDgLQAzX6G550j0YuORc5BeBGlhNXvhDXCOzIT6RwaOou7zLcIHGttjcCm
+         PKhQDDm7RBTyeU8wGcBtpE/VyLyWq7OgBKjdwgr3jrmtaxNvVEM0vkjyE59CqF9q3jw1
+         P2k8bl4IOFad3dgd5xe+W58VzOdo8D+sdEqMMK2IgjhdMniyRxH7nF76qu5rr3KimzMC
+         DKRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5qAiDuX2tr8Je8Vo0BM4vOmpULUVfESd21buoKSOXDQ=;
-        b=gKngIwM9Aa2VjtVxyiO3dPzMkcqoQ+f5023TGa4MhpVwvCAogh4VVYptzmztIOunJj
-         UfseD0HI9QmE1bH+etoApcOX5OjRFGKGST+PLjVeA0YycTl3CIVC8gvbAj8m19wc+luK
-         ULuR9NUwnlR0bbBmMIK9BjlEpyHRd5x4T4Hdjuml5QO5MlXI35wBrns7zmpf21eZarj7
-         hwwreiOtRFdfdkKjShlqwIVafBkFIFbYJGcv87IOKHNkZ3oO8px9luTvRpOwTjLq9CXL
-         v58WHVH+WQtL0f75t3sp1fKr2I34F1fDk+H7AICq6czCmGP5Ed1HXIgTBt67AI9NYN0n
-         xBqQ==
-X-Gm-Message-State: APjAAAVEJUdOmPTa8w4vzlIhiGNkomxeGboAj3dxggUH7N5CS+o/iv6+
-        X2zsEWuNjod8PvFRJLd/NUs=
-X-Google-Smtp-Source: APXvYqxkJCdL+P1WvBWJ5HU7cH4v8GOUnak3AKeag1L6SH34bgoN7jzTGQooONnXlvZMICPvFfBkzw==
-X-Received: by 2002:a19:651b:: with SMTP id z27mr3781047lfb.117.1572386782566;
-        Tue, 29 Oct 2019 15:06:22 -0700 (PDT)
+        bh=4QxuLfslnQVbhl7LuXHRiC4Oo60NDLS8lYD8jZwDVcg=;
+        b=t91iIGemRc932/OWfZUxEazjYwdtOlLmxu0mlZBqaEQh8FLpjei8mHSsTFy/+UY666
+         Hub2/mfcR3W3f/3uIEmlTODGOeWfvLAfMLx9HQcB25jhW0Ki+j4+59EBXp5kMBZTbZlW
+         2WwGwlZazCOxqksDb7HQ+Mkd7d2BeyedZGRBUiN8Uks0GIe7j03U5utDzyYfCAzqk66M
+         Am5ykm3uJz5Q1rym7mSMirq1AzP2nkm9PI1TRQ1m3wV89LtpOyG20VgFwncdNuXPivuh
+         ZYqRFF4byYpo4pR5HtCqL/gZEjKiCuG65KUKMGXdyrMahFr+Q4mGfjIGDD07KHt0hWsB
+         4HDQ==
+X-Gm-Message-State: APjAAAV1tFZgFrzb23DFIiYXd4fbOI87FC+Qn9ZzprwgHTFRZZdrV154
+        4kJOT8/D8t/XfepAzmAjp2g=
+X-Google-Smtp-Source: APXvYqx/R17UiSJhNZYKK9r6h/2iU1U8YVOjai5/Ad28izdN4gsI2oF+Gti86xLnhgL7haZkWvxSDA==
+X-Received: by 2002:a05:651c:105:: with SMTP id a5mr4190210ljb.45.1572386780516;
+        Tue, 29 Oct 2019 15:06:20 -0700 (PDT)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id 12sm51536lje.92.2019.10.29.15.06.21
+        by smtp.gmail.com with ESMTPSA id 12sm51536lje.92.2019.10.29.15.06.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 15:06:22 -0700 (PDT)
+        Tue, 29 Oct 2019 15:06:19 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Peter Geis <pgwipeout@gmail.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 13/19] PM / devfreq: tegra30: Increase sampling period to 16ms
-Date:   Wed, 30 Oct 2019 01:00:13 +0300
-Message-Id: <20191029220019.26773-14-digetx@gmail.com>
+Subject: [PATCH v7 11/19] PM / devfreq: tegra30: Constify structs
+Date:   Wed, 30 Oct 2019 01:00:11 +0300
+Message-Id: <20191029220019.26773-12-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191029220019.26773-1-digetx@gmail.com>
 References: <20191029220019.26773-1-digetx@gmail.com>
@@ -80,32 +80,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Increase sampling period by 4ms to get a nicer pow2 value, converting
-diving into shifts in the code. That's more preferable for Tegra30 that
-doesn't have hardware divider instructions because of older Cortex-A9 CPU.
-In a result boosting events are delayed by 4ms, which is not sensible in
-practice at all.
+Constify unmodifiable structs, for consistency.
 
 Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Tested-by: Peter Geis <pgwipeout@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/devfreq/tegra30-devfreq.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 9da62f695859..9cbee82880ff 100644
+index e9cb0ea54ee7..f658b0b4a845 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -67,7 +67,7 @@
-  * translates to 2 ^ (K_VAL + 1). ex: 2 ^ (6 + 1) = 128
-  */
- #define ACTMON_AVERAGE_WINDOW_LOG2			6
--#define ACTMON_SAMPLING_PERIOD				12 /* ms */
-+#define ACTMON_SAMPLING_PERIOD				16 /* ms */
- #define ACTMON_DEFAULT_AVG_BAND				6  /* 1/10 of % */
+@@ -108,7 +108,7 @@ enum tegra_actmon_device {
+ 	MCCPU,
+ };
  
- #define KHZ							1000
+-static struct tegra_devfreq_device_config actmon_device_configs[] = {
++static const struct tegra_devfreq_device_config actmon_device_configs[] = {
+ 	{
+ 		/* MCALL: All memory accesses (including from the CPUs) */
+ 		.offset = 0x1c0,
+@@ -177,7 +177,7 @@ struct tegra_actmon_emc_ratio {
+ 	unsigned long emc_freq;
+ };
+ 
+-static struct tegra_actmon_emc_ratio actmon_emc_ratios[] = {
++static const struct tegra_actmon_emc_ratio actmon_emc_ratios[] = {
+ 	{ 1400000,    KHZ_MAX },
+ 	{ 1200000,    750000 },
+ 	{ 1100000,    600000 },
+@@ -295,7 +295,7 @@ static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
+ 					    unsigned long cpu_freq)
+ {
+ 	unsigned int i;
+-	struct tegra_actmon_emc_ratio *ratio = actmon_emc_ratios;
++	const struct tegra_actmon_emc_ratio *ratio = actmon_emc_ratios;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(actmon_emc_ratios); i++, ratio++) {
+ 		if (cpu_freq >= ratio->cpu_freq) {
 -- 
 2.23.0
 
