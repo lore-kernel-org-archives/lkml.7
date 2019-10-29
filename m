@@ -2,92 +2,87 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE39CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9F4CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F0320874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WkF84yvG"
+	by mail.kernel.org (Postfix) with ESMTP id B7DFC2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388694AbfJ2Nfd (ORCPT
+        id S2388703AbfJ2Ng1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:35:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43871 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388667AbfJ2Nfc (ORCPT
+        Tue, 29 Oct 2019 09:36:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40051 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbfJ2Ng1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:35:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572356131;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Giq8Yqxk7smLdQbVdrNtJ7/JmLLVzAyYYDX0cuxJ2Ug=;
-        b=WkF84yvGv2VMyq43DEM8Y/OEbFp912Zylzr22Kt8gkWM8F+kAoNVsU/V2md0ufSf8kSwZr
-        ybmeMZbMAxFbcLgAqF2KDz7jAezw5zw/KsaT9Ape8g3jy5zdLYJn8VEzCxQABRzWLpzwfA
-        CT4l/G0PPpZb3EKH/pSpUisqR+wqQ5o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-345-l-2D2QCPMQi-34ti9oYutA-1; Tue, 29 Oct 2019 09:35:30 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4026E107AD28;
-        Tue, 29 Oct 2019 13:35:29 +0000 (UTC)
-Received: from treble (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AFE2060C4E;
-        Tue, 29 Oct 2019 13:35:28 +0000 (UTC)
-Date:   Tue, 29 Oct 2019 08:35:26 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] stacktrace: don't skip first entry on noncurrent tasks
-Message-ID: <20191029133526.tqzo4axnuyozaqzc@treble>
-References: <20191025142110.jgz5jy4nuryhawv5@treble>
- <20191029071944.17123-1-jslaby@suse.cz>
+        Tue, 29 Oct 2019 09:36:27 -0400
+Received: from mail-yw1-f69.google.com ([209.85.161.69])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <seth.forshee@canonical.com>)
+        id 1iPRfd-0004jR-4Q
+        for linux-kernel@vger.kernel.org; Tue, 29 Oct 2019 13:36:25 +0000
+Received: by mail-yw1-f69.google.com with SMTP id o130so9797320ywo.17
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 06:36:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rwtNqWivpFIQgbUVsKN05tdEedk/c2ICmFFDz7gAHHg=;
+        b=qzpxkmC7InOE3YiM5zc+JDzcAOdAro9n7gSDsi6b7nQaTU1SikSokVUJZJS3xoHNeq
+         5IwNxsIdxLDQDqDCKQoF0uwr6qWiNHCn5/hNHBa4prcHKfcaTkcPBmS45tMV6K4H9dPH
+         3SLKo487sQWSH342zrsQ6fGnW2B3C77QOx/S0vAgcJZarXUBmekcYde2SQDmpZm+I7oA
+         gz2ruguimmEXfSEgX6G8YNYIDyLQbZrAyXLSbvOknc4SdrivizcHvjcTd9mD+XfERY6f
+         ie+CwEm5dEMGklR8bcn1By24qV7vSVA+DabFNnjfQRDN42bK+CMjqp3TY2aQYU3Uup8s
+         /X0Q==
+X-Gm-Message-State: APjAAAUKHTLfSDvcHi/+9rr9QeK8QfF8E/ovwzhwgPDEf68z5CdZ/jGG
+        A6ndBk2PTdmfmXfLr+Y1PzFDH/6IaCUzjKPCKMoWFHcup+d8L8jMaJQ0tCJlualulka4ZS/7UqQ
+        ybCgqwqRHAV5/wxBa8wPCkYuo7axSJYdn7m29WfeMIQ==
+X-Received: by 2002:a81:500a:: with SMTP id e10mr17707255ywb.58.1572356184087;
+        Tue, 29 Oct 2019 06:36:24 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzWRUgkWNbdDnzVotQDun7zMckaFR1TaoB4O5PCly4//oAwUlzOU76kcVYnSSfbVTEjaG0pKg==
+X-Received: by 2002:a81:500a:: with SMTP id e10mr17707210ywb.58.1572356183528;
+        Tue, 29 Oct 2019 06:36:23 -0700 (PDT)
+Received: from localhost ([2605:a601:ac3:9720:f461:b9b9:429:65bd])
+        by smtp.gmail.com with ESMTPSA id x201sm17900019ywx.34.2019.10.29.06.36.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 06:36:22 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 08:36:21 -0500
+From:   Seth Forshee <seth.forshee@canonical.com>
+To:     Dmitry Tunin <hanipouspilot@gmail.com>
+Cc:     wireless-regdb@lists.infradead.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] Russian entry is incorrect. According to the last
+ regulations document of Feb 29, 2016, 160 MHz channels and 802.11ad are
+ allowed.
+Message-ID: <20191029133621.GP30813@ubuntu-xps13>
+References: <1566636490-3438-1-git-send-email-hanipouspilot@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191029071944.17123-1-jslaby@suse.cz>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: l-2D2QCPMQi-34ti9oYutA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1566636490-3438-1-git-send-email-hanipouspilot@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 08:19:44AM +0100, Jiri Slaby wrote:
-> When doing cat /proc/<PID>/stack, the output is missing the first entry.
-> When the current code walks the stack starting in stack_trace_save_tsk,
-> it skips all scheduler functions (that's OK) plus one more function. But
-> this one function should be skipped only for the 'current' task as it is
-> stack_trace_save_tsk proper.
->=20
-> The original code (before the common infrastructure) skipped one
-> function only for the 'current' task -- see save_stack_trace_tsk before
-> 3599fe12a125. So do so also in the new infrastructure now.
->=20
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Fixes: 214d8ca6ee85 ("stacktrace: Provide common infrastructure")
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> ---
->=20
-> Notes:
->     [v2] add the same for the !CONFIG_ARCH_STACKWALK case
+On Sat, Aug 24, 2019 at 11:48:10AM +0300, Dmitry Tunin wrote:
+> http://rfs-rf.ru/upload/medialibrary/c1a/prilozhenie-1-k-resheniyu-gkrch-_-16_36_03.pdf
+> 
+> Note that there was never a DFS requirement in Russia, but always was
+> NO-OUTDOOR on 5GHz.
+> Maximum power is 200mW that is ~23dBm on all 5GHz channels.
+> Also Russia has never been regulated by ETSI.
+> 
+> EIRP has been reduced by 4dBm because of TPC requirement.
+> 
+> Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
 
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-
---=20
-Josh
-
+Sorry for the delay. Applied, with some slight adjustments to the commit
+message. Thanks!
