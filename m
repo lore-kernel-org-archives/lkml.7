@@ -2,176 +2,164 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04C0CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8137DCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA0420862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5243020862
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 23:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/AlGELV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dtLNUoC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfJ2XEs (ORCPT
+        id S1726246AbfJ2XIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 19:04:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45788 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfJ2XEs (ORCPT
+        Tue, 29 Oct 2019 19:08:00 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34273 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfJ2XH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 19:04:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y24so26161plr.12;
-        Tue, 29 Oct 2019 16:04:45 -0700 (PDT)
+        Tue, 29 Oct 2019 19:07:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b128so182016pfa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 16:07:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=z94quiijBmOlndVrWv7kp6lTcJTttQzC4W5Rz0hgJvU=;
-        b=F/AlGELVGzAVCG9R0R+fH4wqJwzS30vt9rJwtrAinD/2lOLue2OOJntNXCvO9nY1+B
-         gi4GrTJCPdsdrxEk0eW0AwJZnJcoaaQj2xdWmq52kF8wtKpA8IwHKWGr13sepL88Ay3t
-         bExuPBlb7b74UauiUigvQ9+EFrDQgGeDs554JSvFqw5tLpwcvTAqEu8t/7spQ3P8BdUs
-         OfxBjlNxby2uPQ1drm8chNpqf8JE/kHFnosFji5hXGDrwkFwBndNslumLxkxyHtJ45rd
-         qIh8w27yJ1VxATkzQJz3z75/IrM6z1+AItY4LfVCddd50HGnZx/JgxyNptHm+nVKkSAu
-         8C3Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EK/iR04QppfFL6hJjq1Qp4tKuC0yyvj8XT1kmd57Vc8=;
+        b=dtLNUoC1eHJFg8kN8Jl92Mm/KMo4Rv2P/Ke5YttA0vm9EMCZXYT1ihVW7e044UMAr3
+         8dejWZTNu6tNpmE10toXS+HsMsUY8loN8/tZsFYReKVrgSDC4FCwihhKTmwwbvMDYxB7
+         eH9kvuBXcG/bcdeVX7kFXgcslFNyRSVP5CdWc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z94quiijBmOlndVrWv7kp6lTcJTttQzC4W5Rz0hgJvU=;
-        b=GrW9E+V2btJmrPACDz0EoJ1FcK+wo5lare/PXpxh7L8UM/lQvCk1fERGjP6LwBSLAz
-         uEli02GjDji6cp8WO4u7sOQA+8Z/qxUgOKaE3O9ES8q0sXQP89DBZNVZKoPR8skgcNkv
-         kfzKefMhyXoS3zGwVcESVkuTF3iTS4Y9guamGsbj6OrNta1tx7dYhxjNZzcRWBUXaVeR
-         SXfTLamvaCZdv55nFQmkp5UeVYV+jKH6zWVfc1F7d4ifXnKM2KMeFUUbu6kdbtgHXm0O
-         lxNJpslln7U/n+D2w55pGrwwCcKWTy+JRL5SfyG2P7T1nmdBRA8kgmq+8pIttBbIBBCn
-         VW4w==
-X-Gm-Message-State: APjAAAXdBGNLBQAsrs7o6OAzLptSc9Mv1LeBcRgErarkuAC0KDO9M0r3
-        uJdzi5J8ZDEVGn4/sZLss5U08YmS
-X-Google-Smtp-Source: APXvYqzRSRQOcjk4lZcZOzu/Fx8cgyFTYK/7ClJRnQW/kmP29wnKmxW+jJbL2tlXMhFCe7U5vYkuEQ==
-X-Received: by 2002:a17:902:9042:: with SMTP id w2mr1198605plz.323.1572390285086;
-        Tue, 29 Oct 2019 16:04:45 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id e1sm249355pgv.82.2019.10.29.16.04.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Oct 2019 16:04:44 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 4/4] bonding: balance ICMP echoes in layer3+4
- mode
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org
-Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Blakey <paulb@mellanox.com>, linux-kernel@vger.kernel.org
-References: <20191029135053.10055-1-mcroce@redhat.com>
- <20191029135053.10055-5-mcroce@redhat.com>
- <5be14e4e-807f-486d-d11a-3113901e72fe@cumulusnetworks.com>
- <576a4a96-861b-6a86-b059-6621a22d191c@gmail.com>
- <afdfd237-124d-0050-606f-cb5516c9e4d8@cumulusnetworks.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <294b9604-8d43-4a31-9324-6368c584fd63@gmail.com>
-Date:   Tue, 29 Oct 2019 16:04:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EK/iR04QppfFL6hJjq1Qp4tKuC0yyvj8XT1kmd57Vc8=;
+        b=JnzqygBFiCTRSwpwXgqJ/jyiEukPkLsPrvBYNeC2U+Zc29rHTbXbHxLNgjmphx8NeJ
+         RO9LrAkdU8mgm5BtcBpLHJ20RoZWbkeF847aMuLJFsu+VQ7WCyTOiUPHo1rxQavshXjX
+         jXWZPqzhTbd5ovYO1P4efQgyjyZWm1bsmIAx+HdLHc+dipnF2QC4IiuBap1GrL92e3ju
+         BKmR4AG+yvzTOwidL+GCeJDZ/uCKdWj/ABLFgah7RLCV5giO6vMppouuYpl/snT38YWk
+         gMqYxmIze4gKy5/+ltU4IPjWtpiF0ausIa+5T9fZastG+VQRbTEZkdH0/66IcXgPyjLF
+         kGXg==
+X-Gm-Message-State: APjAAAXEpr/GZiJMzdW0csvpc6KFEh58+L/4qZpAyZhRgHK4dqYJHT6M
+        6Hb8kPLQ6B2zjBuzUTcYPva1Xg==
+X-Google-Smtp-Source: APXvYqxlpD8afJVfeJRJZqXRk4DC19b4p18OjNSVX2/RdrFGCqjrqXaMMfLfYxGsFkhlHHEsGanvkA==
+X-Received: by 2002:a63:8f5e:: with SMTP id r30mr21918430pgn.146.1572390479068;
+        Tue, 29 Oct 2019 16:07:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e17sm175911pfh.121.2019.10.29.16.07.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 16:07:58 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 16:07:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Sudakshina Das <sudi.das@arm.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 01/12] ELF: UAPI and Kconfig additions for ELF program
+ properties
+Message-ID: <201910291607.F5DA2EE@keescook>
+References: <1571419545-20401-1-git-send-email-Dave.Martin@arm.com>
+ <1571419545-20401-2-git-send-email-Dave.Martin@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <afdfd237-124d-0050-606f-cb5516c9e4d8@cumulusnetworks.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571419545-20401-2-git-send-email-Dave.Martin@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/29/19 2:50 PM, Nikolay Aleksandrov wrote:
-
-> Right, I was just giving it as an example. Your suggestion sounds much better and
-> wouldn't interfere with other layers, plus we already use skb->hash in bond_xmit_hash()
-> and skb_set_owner_w() sets l4_hash if txhash is present which is perfect.
+On Fri, Oct 18, 2019 at 06:25:34PM +0100, Dave Martin wrote:
+> Pull the basic ELF definitions relating to the
+> NT_GNU_PROPERTY_TYPE_0 note from Yu-Cheng Yu's earlier x86 shstk
+> series.
 > 
-> One thing - how do we deal with sk_rethink_txhash() ? I guess we'll need some way to
-> signal that the user specified the txhash and it is not to be recomputed ?
-> That can also be used to avoid the connect txhash set as well if SO_TXHASH was set prior
-> to the connect. It's quite late here, I'll look into it more tomorrow. :)
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 
-I guess that we have something similar with SO_RCVBUF/SO_SNDBUF
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-autotuning is disabled when/if they are used :
+-Kees
 
- SOCK_RCVBUF_LOCK & SOCK_SNDBUF_LOCK
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> ---
+>  fs/Kconfig.binfmt        | 3 +++
+>  include/linux/elf.h      | 8 ++++++++
+>  include/uapi/linux/elf.h | 1 +
+>  3 files changed, 12 insertions(+)
+> 
+> diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+> index 62dc4f5..d2cfe07 100644
+> --- a/fs/Kconfig.binfmt
+> +++ b/fs/Kconfig.binfmt
+> @@ -36,6 +36,9 @@ config COMPAT_BINFMT_ELF
+>  config ARCH_BINFMT_ELF_STATE
+>  	bool
+>  
+> +config ARCH_USE_GNU_PROPERTY
+> +	bool
+> +
+>  config BINFMT_ELF_FDPIC
+>  	bool "Kernel support for FDPIC ELF binaries"
+>  	default y if !BINFMT_ELF
+> diff --git a/include/linux/elf.h b/include/linux/elf.h
+> index e3649b3..459cddc 100644
+> --- a/include/linux/elf.h
+> +++ b/include/linux/elf.h
+> @@ -2,6 +2,7 @@
+>  #ifndef _LINUX_ELF_H
+>  #define _LINUX_ELF_H
+>  
+> +#include <linux/types.h>
+>  #include <asm/elf.h>
+>  #include <uapi/linux/elf.h>
+>  
+> @@ -56,4 +57,11 @@ static inline int elf_coredump_extra_notes_write(struct coredump_params *cprm) {
+>  extern int elf_coredump_extra_notes_size(void);
+>  extern int elf_coredump_extra_notes_write(struct coredump_params *cprm);
+>  #endif
+> +
+> +/* NT_GNU_PROPERTY_TYPE_0 header */
+> +struct gnu_property {
+> +	u32 pr_type;
+> +	u32 pr_datasz;
+> +};
+> +
+>  #endif /* _LINUX_ELF_H */
+> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+> index 34c02e4..c377314 100644
+> --- a/include/uapi/linux/elf.h
+> +++ b/include/uapi/linux/elf.h
+> @@ -36,6 +36,7 @@ typedef __s64	Elf64_Sxword;
+>  #define PT_LOPROC  0x70000000
+>  #define PT_HIPROC  0x7fffffff
+>  #define PT_GNU_EH_FRAME		0x6474e550
+> +#define PT_GNU_PROPERTY		0x6474e553
+>  
+>  #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
+>  
+> -- 
+> 2.1.4
+> 
 
-We could add a SOCK_TXHASH_LOCK so that sk_rethink_txhash() does nothing if
-user forced a TXHASH value.
-
-Something like the following (probably not complete) patch.
-
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 380312cc67a9d9ee8720eb2db82b1f7f8a5615ab..a8882738710eaa9d9d629e1207837a798401a594 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -1354,6 +1354,7 @@ static inline int __sk_prot_rehash(struct sock *sk)
- #define SOCK_RCVBUF_LOCK       2
- #define SOCK_BINDADDR_LOCK     4
- #define SOCK_BINDPORT_LOCK     8
-+#define SOCK_TXHASH_LOCK       16
- 
- struct socket_alloc {
-        struct socket socket;
-@@ -1852,7 +1853,8 @@ static inline u32 net_tx_rndhash(void)
- 
- static inline void sk_set_txhash(struct sock *sk)
- {
--       sk->sk_txhash = net_tx_rndhash();
-+       if (!(sk->sk_userlocks & SOCK_TXHASH_LOCK))
-+               sk->sk_txhash = net_tx_rndhash();
- }
- 
- static inline void sk_rethink_txhash(struct sock *sk)
-diff --git a/include/uapi/asm-generic/socket.h b/include/uapi/asm-generic/socket.h
-index 77f7c1638eb1ce7d3e143bbffd60056e472b1122..998be6ee7991de3a76d4ad33df3a38dbe791eae8 100644
---- a/include/uapi/asm-generic/socket.h
-+++ b/include/uapi/asm-generic/socket.h
-@@ -118,6 +118,7 @@
- #define SO_SNDTIMEO_NEW         67
- 
- #define SO_DETACH_REUSEPORT_BPF 68
-+#define SO_TXHASH              69
- 
- #if !defined(__KERNEL__)
- 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 997b352c2a72ee39f00b102a553ac1191202b74f..85b85dffd462bc3b497e0432100ff24b759832e0 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -770,6 +770,10 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
-        case SO_BROADCAST:
-                sock_valbool_flag(sk, SOCK_BROADCAST, valbool);
-                break;
-+       case SO_TXHASH:
-+               sk->sk_txhash = val;
-+               sk->sk_userlocks |= SOCK_TXHASH_LOCK;
-+               break;
-        case SO_SNDBUF:
-                /* Don't error on this BSD doesn't and if you think
-                 * about it this is right. Otherwise apps have to
-@@ -1249,6 +1253,10 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
-                v.val = sock_flag(sk, SOCK_BROADCAST);
-                break;
- 
-+       case SO_TXHASH:
-+               v.val = sk->sk_txhash;
-+               break;
-+
-        case SO_SNDBUF:
-                v.val = sk->sk_sndbuf;
-                break;
+-- 
+Kees Cook
