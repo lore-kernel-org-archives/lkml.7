@@ -7,72 +7,72 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1252FCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746E4CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCAFD20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D23C2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572355447;
-	bh=ciqYBHFniSc3YyjGh872i1F2iY/HHgNNoC3wxI4YCwg=;
+	s=default; t=1572355470;
+	bh=sjypF8iE069oqwn1EtCQL00T53a58rO7BOIThgB1hic=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=011AboC1KAChVMmB5C1rV+F+lzITALiv0Fg00nE7pJOVLYFOxbiXx/qMlWB3dSC92
-	 DEdxZ37AgQzFEa1PjC9lLX6Isc/J1FKKCGAo5caWC/zPcamDJEbsW94oBmEGGTUYro
-	 e/cIwxdmMuf2Hun8leN3us5cA/QUivfPAUp2uSeU=
+	b=EXdviduTcyqGRoBuEx1aRyfcGadJOKvu19i/S/WXXOhPnEGKfYJ/DfTkpgGsqNc6+
+	 oskhhRm44gymNo8gEf76/Qsmq66VC92nvyOFrjFKGatf+gslmKcgEG7DCZ3g43rvoT
+	 v4iUGXqdfwP+KFuSi+Re/08Xt+KdbMRTkdTf9EoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388497AbfJ2NYG (ORCPT
+        id S2388509AbfJ2NY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:24:06 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34640 "EHLO
+        Tue, 29 Oct 2019 09:24:29 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35073 "EHLO
         mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfJ2NYG (ORCPT
+        with ESMTP id S1725776AbfJ2NY3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:24:06 -0400
-Received: by mail-oi1-f193.google.com with SMTP id l202so891193oig.1;
-        Tue, 29 Oct 2019 06:24:06 -0700 (PDT)
+        Tue, 29 Oct 2019 09:24:29 -0400
+Received: by mail-oi1-f193.google.com with SMTP id n16so6619319oig.2;
+        Tue, 29 Oct 2019 06:24:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8k1ghw94can+JRahpIGNrRyQL8DkL1oaO4K6wnzJKSc=;
-        b=okjOd+OfNBR8GEeoPyigY5OuJO81j0Y91GSD+ulRXKPBRe3lb37gNa/3ab8CPZ4GoS
-         6cOME2v1zlti3YzjmjMoZPKWVd05tCsbEa1lZfgQzP372VJ19XwuysmamUgB1/5X2KSX
-         ssQTlbSLaFYreOMJIfaeG/OlvUNkU/Tkhwf55fynkD862eHT2JbXRbU5hM6VBPs71rF1
-         2lNFp3nce7Yunp3+RyteiA4hzsdAOAKKnBybaWUQm7+uHNkRHOHIrXfGSZ3Td4nEF17d
-         qBphfk9y6yOvirDGo7ydrH3c0wim5jX8kP31SnxhKy2ekuo35+vAtbTZlrOfJ0oJxbD/
-         Bpqg==
-X-Gm-Message-State: APjAAAVDW4I1LtaFYCmwTe+5A95ffTYPOKik2HLVYqlLkEK9aLI35/zu
-        vne+PChgcTG5zDtNcO7Jew==
-X-Google-Smtp-Source: APXvYqzU9LafiE3gAKzI2zQvKzgrh9l7F+NyRnfl9n32h6yAgchNT8oMdLpPAt59OI7tb8c30DbvQg==
-X-Received: by 2002:aca:55d3:: with SMTP id j202mr1947356oib.152.1572355445556;
-        Tue, 29 Oct 2019 06:24:05 -0700 (PDT)
+        bh=Ao9RspYHEzBQ9eN4f1DjCqGPRN20nTdehZQvHqh9bXY=;
+        b=EI/MksEUk/e9K7O4TtviyjSxQ3rDJSi1ZDKJMFrA4rCRfgHtSrT6l2RNAWZY9E86CJ
+         ZkWW78wXlShbnjiqO/E/UM+ICTCjaT8kPQxYFwhHbyRNEJU0HuZA034opQ9f/6oWpCOd
+         5saPP5PKuUNqdtEX4X/vGZW50DbkHOGP7UKytW770pNacEKal83eDykHSCgjLhFg5gBZ
+         2M/EA3WfYNY5hNub4pk7qkAgFd/MYDq9fU9+XgvW2WdQAveaDCBblSZIalerR6j2KikR
+         3vAo9jblXyqo84kK0Qs1YHF4tDFAuSkdw/vjyLIuFG3QQj49lUASQpDYlEkK/vouHMdV
+         jUeQ==
+X-Gm-Message-State: APjAAAUMwT90JqtI79I+hVSWIyGTvsqFKt8Bem1bbTypKf9TYnZMy/lz
+        D/2ktL+P2wuMR65PvUsHjw==
+X-Google-Smtp-Source: APXvYqwT8QqCfgaJHi78p4pBMJKQHgb2LpLE6tQ6Ddk7jT28VhCVGBQQxFLqNJcKFyiolPKeRazxoA==
+X-Received: by 2002:a05:6808:a05:: with SMTP id n5mr3795641oij.104.1572355466554;
+        Tue, 29 Oct 2019 06:24:26 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u130sm3934151oib.56.2019.10.29.06.24.03
+        by smtp.gmail.com with ESMTPSA id h8sm1360790otk.9.2019.10.29.06.24.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 06:24:03 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 08:24:02 -0500
+        Tue, 29 Oct 2019 06:24:25 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 08:24:24 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Benoit Parrot <bparrot@ti.com>
 Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch 11/19] dt-bindings: media: cal: update binding to add
- DRA76x support
-Message-ID: <20191029132402.GA1527@bogus>
+Subject: Re: [Patch 13/19] dt-bindings: media: cal: update binding to add
+ AM654 support
+Message-ID: <20191029132424.GA2242@bogus>
 References: <20191018153437.20614-1-bparrot@ti.com>
- <20191018153437.20614-12-bparrot@ti.com>
+ <20191018153437.20614-14-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191018153437.20614-12-bparrot@ti.com>
+In-Reply-To: <20191018153437.20614-14-bparrot@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 10:34:29 -0500, Benoit Parrot wrote:
-> Update Device Tree bindings for the CAL driver to add DRA76x support.
+On Fri, 18 Oct 2019 10:34:31 -0500, Benoit Parrot wrote:
+> Update Device Tree bindings for the CAL driver to add AM654 support.
 > 
 > Signed-off-by: Benoit Parrot <bparrot@ti.com>
 > ---
