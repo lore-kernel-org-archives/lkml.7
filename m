@@ -2,100 +2,84 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEE1CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50423CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD55D2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2356D20874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:56:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nqjytfxo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2NV5ZpXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389751AbfJ2Ozs (ORCPT
+        id S2389767AbfJ2O43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:55:48 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42012 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389730AbfJ2Ozr (ORCPT
+        Tue, 29 Oct 2019 10:56:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41156 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ2O42 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:55:47 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z17so13978457qts.9
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 07:55:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lAvEaeqENeVb/DhAt46H1R5niz9Z9sNvfAe5diIhyRY=;
-        b=Nqjytfxo50WBI6vopuCch0cZIF9IsPsdiznwtPJh2upsT2yU5o/cBcYf04skhUd055
-         GvTqocNvFeTBJ9f3Zr2g4q+CEk6El1vH0NlgAOXr4iEegmv+/R1aV1rH+AQQ/XslB4FC
-         kusVCwCuGJ+JtM1V+EVjp2GX7fj8e4WTuz8bUpi+TwHutxdqtgmlRder7f5gAqDDHgFC
-         HsY6tY+hCeRwQ9bdxWkY4pnGY2CtI6tLXPKr1W1ZjUfn/sM15xC2zmgpJnWIuL3a3NUT
-         rKl9W+VGcYEBSPaZzNVoXKupSMUse9iE+MVhx41bX/t1gjl0smAwBAJxL0eJS9oI0FlR
-         KbJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lAvEaeqENeVb/DhAt46H1R5niz9Z9sNvfAe5diIhyRY=;
-        b=dY9sf0KYRITrrhrM6zmjx1qY5ETxperVhNt4QU+4hrl6AaFXJf+yijD9mRXaEEpKxP
-         LwV17LjcnrsAoSv6JZ19lvWrt1nOR6f31GtlsCga8fD4iGgloC5wDfDBREmMOYl2ZhJy
-         fW7PLve35KBxw0IrT9GGpwQY2h/MUQQZvaTD5VHjSza4Qa5lCMET9gad4IeX+3E5SRGh
-         39aa5Jt5W6I76RU+CESTNhT6EWIHrAyVRL9WaEbH1L39UjInrJuWj4uUWnT7XflvC9N8
-         LNPt0aYeNou+11+HhNcKxhvuGY+PaWHIDBDHRMpFKEVUBuKaVy7YqfGB0zDI0r1L8Lhm
-         IHxA==
-X-Gm-Message-State: APjAAAUCIwdsOmHq2qapmLfvLe8zj3hexvw5M8Q+W+71CjjmBr/LWvyt
-        WxrnMWkmrylHhItVksskE0U=
-X-Google-Smtp-Source: APXvYqw6h9hzSvN+uhYWl/U6Ddgy+lF6m6pwWFGLY7DqtzFyWC1EkPwsqXMQgjbNG0NmO9UGlNWMlg==
-X-Received: by 2002:a0c:ec0b:: with SMTP id y11mr22443155qvo.123.1572360946108;
-        Tue, 29 Oct 2019 07:55:46 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:483:ade:87ad:69fb:5b32:cf88])
-        by smtp.gmail.com with ESMTPSA id g17sm5978069qte.89.2019.10.29.07.55.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 07:55:45 -0700 (PDT)
-From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-To:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        kim.jamie.bradley@gmail.com, nishkadg.linux@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH v2 3/3] staging: rts5208: Eliminate the use of Camel Case in file sd.h
-Date:   Tue, 29 Oct 2019 11:55:17 -0300
-Message-Id: <20191029145517.630-4-gabrielabittencourt00@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191029145517.630-1-gabrielabittencourt00@gmail.com>
-References: <20191029145517.630-1-gabrielabittencourt00@gmail.com>
+        Tue, 29 Oct 2019 10:56:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=itujIrcjgeHcRCRmt2i/Dn9p5NDbz46nO37Gz+uhz+w=; b=2NV5ZpXwawqB+4I1yuLgiH+lq
+        a+OLyTYIdqCnGK5rjFSfgccN0T8UoE9rorE6fX8ga6YFFcYa34I83UY3LJGLAXyKxK9QtYrTkI55Y
+        FfZ6PEBqaHRCpX96Mp7s+H7SpP/yQp+v9DoG+3mtguky7SdErIgf39p0BJyLM6KSWGtr+EfUc09Hg
+        GdDwc05VJ3+roqDlMkhNApINBBRUxpzzd35VH6WCS2k3OsHpPzFH39EE613sYpyB4J6vvU1dBir5o
+        +4xDOAgetYl3oxj8KdVVDOgrXhUFTKC3YWf8zKBWXn7TUGmOA1kGLau1lyLFFzlsnTfvWj/KEqQEC
+        fECWx8ZZg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPSuZ-0004kf-Mo; Tue, 29 Oct 2019 14:55:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CCF73306B4A;
+        Tue, 29 Oct 2019 15:54:52 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9487C2B43836E; Tue, 29 Oct 2019 15:55:53 +0100 (CET)
+Date:   Tue, 29 Oct 2019 15:55:53 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Luwei Kang <luwei.kang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, ak@linux.intel.com, thomas.lendacky@amd.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org
+Subject: Re: [PATCH v1 4/8] KVM: x86: Aviod clear the PEBS counter when PEBS
+ enabled in guest
+Message-ID: <20191029145553.GL4097@hirez.programming.kicks-ass.net>
+References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
+ <1572217877-26484-5-git-send-email-luwei.kang@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572217877-26484-5-git-send-email-luwei.kang@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleans up checks of "Avoid CamelCase" in file sd.h
+On Sun, Oct 27, 2019 at 07:11:13PM -0400, Luwei Kang wrote:
+> This patch introduce a parameter that avoid clear the PEBS event
+> counter while running in the guest. The performance counter which
+> use for PEBS event can be enabled through VM-entry when PEBS is
+> enabled in guest by PEBS output to Intel PT.
 
-Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
----
- drivers/staging/rts5208/sd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please write coherent Changelogs. I have no clue what you're trying to
+say.
 
-diff --git a/drivers/staging/rts5208/sd.h b/drivers/staging/rts5208/sd.h
-index dc9e8cad7a74..f4ff62653b56 100644
---- a/drivers/staging/rts5208/sd.h
-+++ b/drivers/staging/rts5208/sd.h
-@@ -232,7 +232,7 @@
- #define DCM_LOW_FREQUENCY_MODE   0x01
- 
- #define DCM_HIGH_FREQUENCY_MODE_SET  0x0C
--#define DCM_Low_FREQUENCY_MODE_SET   0x00
-+#define DCM_LOW_FREQUENCY_MODE_SET   0x00
- 
- #define MULTIPLY_BY_1    0x00
- #define MULTIPLY_BY_2    0x01
--- 
-2.20.1
-
+Also, maybe this attrocious coding style is accepted in KVM, but I'm not
+having it. Pretty much all your linebreaks and subsequent indenting is
+against style.
