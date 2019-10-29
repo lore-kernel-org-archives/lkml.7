@@ -2,100 +2,111 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB14ECA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6EECA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADADB2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D462086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:19:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572337187;
+	bh=WTMCDWuBd0HoXwhiTMmnCFeYVEV1/y4kOWa/VmSc6CU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XyjyamzgXdpm9QB3NB895YbaBaTe4idAVxFVkzVLBE1C3gSL6qAs0pdZ54Wx0cj21
+	 5Drj0KWfkaJCGxZUNlKtsAvM9t1g89iW8wOCiJKr4dOyAnPeesF+qOTxoBGA5tS0Ap
+	 MA0lSvECV1DVXEzAJbVRyH/u4DWT4rD551c3uIGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbfJ2ITK (ORCPT
+        id S1728947AbfJ2ITq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:19:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5206 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727331AbfJ2ITK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:19:10 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C8FF459913E018BC1F5C;
-        Tue, 29 Oct 2019 16:19:06 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.218) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
- 16:19:02 +0800
-Message-ID: <5DB7F5F5.9050109@huawei.com>
-Date:   Tue, 29 Oct 2019 16:19:01 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        Tue, 29 Oct 2019 04:19:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728869AbfJ2ITq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:19:46 -0400
+Received: from localhost (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B10720717;
+        Tue, 29 Oct 2019 08:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572337184;
+        bh=WTMCDWuBd0HoXwhiTMmnCFeYVEV1/y4kOWa/VmSc6CU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NLwgyCV1DLwzmrXD2E6Ntl6GQiJ4rtiFfHA6rdbnb372j5aebM0yvTJHOoSCl3d7/
+         bT1Os4qlYD4tdFJJFG2K8JsPxRQWSGmXWxdw5U2joAXQQ7iFtgWS2RiQxBv1aGQ+D3
+         myi3vkmVRiyfJJtK8T1+BcQl6Ul2/nonVJzXHbu8=
+Date:   Tue, 29 Oct 2019 09:19:41 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/41] 4.4.198-stable review
+Message-ID: <20191029081941.GA553246@kroah.com>
+References: <20191027203056.220821342@linuxfoundation.org>
+ <3961082b-17bc-cef7-f0e5-7bf029b2de2a@roeck-us.net>
+ <20191028134905.GA53500@kroah.com>
+ <20191028135756.GA97772@kroah.com>
+ <20191028181259.GA875@roeck-us.net>
 MIME-Version: 1.0
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: rtl8723bs: remove an redundant null check before
- kfree()
-References: <1571211506-19005-1-git-send-email-zhongjiang@huawei.com> <20191025024216.GB331827@kroah.com> <5DB711AE.1040904@huawei.com> <20191028162434.GB321492@kroah.com> <5DB794FB.4010203@huawei.com> <20191029080634.GB506924@kroah.com>
-In-Reply-To: <20191029080634.GB506924@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.218]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028181259.GA875@roeck-us.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/29 16:06, Greg KH wrote:
-> On Tue, Oct 29, 2019 at 09:25:15AM +0800, zhong jiang wrote:
->> On 2019/10/29 0:24, Greg KH wrote:
->>> On Tue, Oct 29, 2019 at 12:05:02AM +0800, zhong jiang wrote:
->>>> On 2019/10/25 10:42, Greg KH wrote:
->>>>> On Wed, Oct 16, 2019 at 03:38:26PM +0800, zhong jiang wrote:
->>>>>> kfree() has taken null pointer into account. hence it is safe to remove
->>>>>> the unnecessary check.
->>>>>>
->>>>>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->>>>>> ---
->>>>>>  drivers/staging/rtl8723bs/core/rtw_xmit.c | 3 +--
->>>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
->>>>>> index 7011c2a..4597f4f 100644
->>>>>> --- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
->>>>>> +++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
->>>>>> @@ -2210,8 +2210,7 @@ void rtw_free_hwxmits(struct adapter *padapter)
->>>>>>  	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
->>>>>>  
->>>>>>  	hwxmits = pxmitpriv->hwxmits;
->>>>>> -	if (hwxmits)
->>>>>> -		kfree(hwxmits);
->>>>>> +	kfree(hwxmits);
->>>>>>  }
->>>>>>  
->>>>>>  void rtw_init_hwxmits(struct hw_xmit *phwxmit, sint entry)
->>>>>> -- 
->>>>>> 1.7.12.4
->>>>>>
->>>>> Patch does not apply to my tree :(
->>>>>
->>>>> .
->>>>>
->>>> Greg,  Could you apply the patch to your  tree ?
->>> It did not apply, so what do you want me to do with it?
->>>
->>> confused,
->> Could you  receive the patch ? :-)
-> The patch did not apply properly to my tree, there is no way I can apply
-> it.  Please fix it up and resend it so that I can apply it.
-I will  repost it in v2,   Thanks
+On Mon, Oct 28, 2019 at 11:12:59AM -0700, Guenter Roeck wrote:
+> On Mon, Oct 28, 2019 at 02:57:56PM +0100, Greg Kroah-Hartman wrote:
+> > On Mon, Oct 28, 2019 at 02:49:05PM +0100, Greg Kroah-Hartman wrote:
+> > > On Mon, Oct 28, 2019 at 06:32:14AM -0700, Guenter Roeck wrote:
+> > > > On 10/27/19 2:00 PM, Greg Kroah-Hartman wrote:
+> > > > > This is the start of the stable review cycle for the 4.4.198 release.
+> > > > > There are 41 patches in this series, all will be posted as a response
+> > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > let me know.
+> > > > > 
+> > > > > Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
+> > > > > Anything received after that time might be too late.
+> > > > > 
+> > > > 
+> > > > 
+> > > > Building mips:defconfig ... failed
+> > > > --------------
+> > > > Error log:
+> > > > In file included from /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/include/asm/bitops.h:21,
+> > > >                  from /opt/buildbot/slave/stable-queue-4.9/build/include/linux/bitops.h:17,
+> > > >                  from /opt/buildbot/slave/stable-queue-4.9/build/include/linux/kernel.h:10,
+> > > >                  from /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:15:
+> > > > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c: In function 'cpu_probe':
+> > > > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/include/asm/cpu-features.h:349:31: error: implicit declaration of function '__ase' [-Werror=implicit-function-declaration]
+> > > >   349 | #define cpu_has_loongson_mmi  __ase(MIPS_ASE_LOONGSON_MMI)
+> > > >       |                               ^~~~~
+> > > > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:2079:6: note: in expansion of macro 'cpu_has_loongson_mmi'
+> > > >  2079 |  if (cpu_has_loongson_mmi)
+> > > >       |      ^~~~~~~~~~~~~~~~~~~~
+> > > > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:2083:16: error: 'HWCAP_LOONGSON_CAM' undeclared (first use in this function); did you mean 'HWCAP_LOONGSON_EXT'?
+> > > >  2083 |   elf_hwcap |= HWCAP_LOONGSON_CAM;
+> > > >       |                ^~~~~~~~~~~~~~~~~~
+> > > >       |                HWCAP_LOONGSON_EXT
+> > > > /opt/buildbot/slave/stable-queue-4.9/build/arch/mips/kernel/cpu-probe.c:2083:16: note: each undeclared identifier is reported only once for each function it appears in
+> > > > 
+> > > > 
+> > > > Affects all mips builds in v{4.4, 4.9, 4.14}.
+> > > 
+> > > Ugh, let me see what happened...
+> > 
+> > Ok, two MIPS patches dropped from 4.4, 4.9, and 4.14 queues, and -rc2
+> > are now pushed out for all 3 of those trees.  It "should" be clean now.
+> > 
+> Confirmed.
 
-Sincerely,
-zhong jiang
-> thanks,
->
-> greg k-h
->
-> .
->
+Wonderful.  Thanks for testing all of these and letting me know.
 
-
+greg k-h
