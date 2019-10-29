@@ -3,195 +3,635 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 159F7CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C50CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C4621721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6E321734
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="fNU5WJ9K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KhIqrnrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732934AbfJ2L3K (ORCPT
+        id S1733021AbfJ2L3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:29:10 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:63738 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727525AbfJ2L3B (ORCPT
+        Tue, 29 Oct 2019 07:29:12 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55553 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732228AbfJ2L3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:29:01 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9TBSE15029205;
-        Tue, 29 Oct 2019 07:28:47 -0400
-Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2051.outbound.protection.outlook.com [104.47.41.51])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2vvjs67cw2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 07:28:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dcb7AzgyXh9UcklJnQxygGbg33Z1xDSTzQ1hsPgds0BZNyWPDJf1udo3AozF6El+/MHYx5N85kpBzIiEC06u6fyKLKQ55I9p+IR3rPcv+/hW08AAVDP+ncehDZhfsViKW4e8B3uBhkDSfEPLbnvwyPuXbOnNei43hnw0VLujALEM/vRGI/ohR4UkBwecx94RYH1AXAgEwvOD1h4gGe0TQkM3+kSwK1RtLUKfRF1Kz15duDt82GTup0JLOldR22zYLJYdqgOW4/7BKkfLvdWeGbXuZDHhJlFoHK5a5in7O+by7SYwWFO0r4DsN7Inrc5w+39WYZGhB8HRvFUpdemiVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sOgbSYpm6Le6HnZ0aWOyTzIYP3soth8tc44fOOwJXW8=;
- b=kAPhHqHGZPN5IyvyU2KohjlkIY65eP6jN/GjKEyRwHeYndraj5gITWxX7IQ98CmCMFiy77/Xx/yj8vi/cBVviAc5Fwmbc5Xcm4PufE/9jO3l1SqSUtg6j25iAu/lgnV0epaQLLzTuu+tnubK6ehBQv+pIc9FPlB6otEA+G+S4ytiLLfDXOgKwFtbuMmwffyZDoXMoFEvOxSQqFP7hv3/RiYUoee664MKE4HM1LgzcgF14BbiMPagIddOAE9HK8yUmkE+vcAmAMGsi1IUqzayxDA+1krirN8IZorqXaEydniU3CxppSdnqrYOPYQyaVqgSy6zGobkrbRQj41FPMxbWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
+        Tue, 29 Oct 2019 07:29:02 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g24so2141812wmh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 04:28:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sOgbSYpm6Le6HnZ0aWOyTzIYP3soth8tc44fOOwJXW8=;
- b=fNU5WJ9KsnZoqeiEZ9Mbgb56EWC60belJbKUFMCq0jjHZVoX3o1+xONA/OCnwHckDDOrpItcHlV+WK7PfGmShKguPTPnShk5KGS8rrEDUvsGhztI2jLxinszpXU8BzojsGPLISjXy4ozETk5OXt9dfwIJxUZMnkqBEqxENUDmeE=
-Received: from BN6PR03CA0102.namprd03.prod.outlook.com (2603:10b6:404:10::16)
- by BN7PR03MB3540.namprd03.prod.outlook.com (2603:10b6:406:ce::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.23; Tue, 29 Oct
- 2019 11:28:45 +0000
-Received: from CY1NAM02FT049.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::203) by BN6PR03CA0102.outlook.office365.com
- (2603:10b6:404:10::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.22 via Frontend
- Transport; Tue, 29 Oct 2019 11:28:45 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- CY1NAM02FT049.mail.protection.outlook.com (10.152.75.83) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2387.20
- via Frontend Transport; Tue, 29 Oct 2019 11:28:44 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x9TBSh2j016179
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 29 Oct 2019 04:28:43 -0700
-Received: from saturn.ad.analog.com (10.48.65.116) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 29 Oct 2019 07:28:43 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <dmitry.torokhov@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 2/2] input: adp5589: Add basic devicetree support
-Date:   Tue, 29 Oct 2019 13:28:36 +0200
-Message-ID: <20191029112836.9188-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191029112836.9188-1-alexandru.ardelean@analog.com>
-References: <20191029112836.9188-1-alexandru.ardelean@analog.com>
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pAhFFYD3jztoubqJs9jjUmmiCr2ucOfOUfFs3JvgBSw=;
+        b=KhIqrnrh425MAJsiI9sebm7HMneUWlcqB+L3Dh2h0Nuj9/uRcGEB65EBjJ56RnwB4X
+         lLZG2N9FgInUShoKA0Cn+7LieItn2/2xwRze5U8ungryysaAXgKEzaXJBq9y12jNRk2X
+         HAeUOfg+NH13Gs/H8N6poRHrN6BYWwGUY+/rTzItIO+RnPjPu/J4vlLPrv+lFDo4yRTj
+         BAO1o9ZZN0OyC0onGm80odkRZphkZb64ga4GunjN7jL2OeCds8XwuS+TJZMz3rnYP/qx
+         aehVjMOK4+Bn5cWh5MFqzJgoEh5JPuUfmCnc2Roq/5gafo/ZqmAGK0tOSCgRHgA2mXev
+         CfaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pAhFFYD3jztoubqJs9jjUmmiCr2ucOfOUfFs3JvgBSw=;
+        b=uSXbFjhUXULFVwdWq0QOAXKZ64xqkricOZSxdN6r9hMzzQuQKs0OhJoYJQ4Rbdtklc
+         aMcFhbeMvKi8oGwG4d0NawWu1Xos3Lucl+yYkuipQF5gNH6qwdnUaD2rQD/Awrw6kvkg
+         CUJYFQcZenIptC0gtwgwZxs6/lIav3Mf8aVvbZ4Xxyy9qXhS+b5vc8JiiO0OrXRKsWvp
+         cewhhog6KomI/IVeqwLD7NJucWfazihXRIdmmbQVq5lz2WzQy1W9h53rkR8yFkuBJU4U
+         QvEWhH0fA+dizHKMpIOu5GzpBypXcv4ZrTY5z2CHo9pGuZc6PvSYe3fHYbZC+Dr2TXF9
+         3i+A==
+X-Gm-Message-State: APjAAAVdTxUf9l+XebTlNaE5rum0Fg/mrwCgc6bdhczj0b2Z1BSlDivU
+        ECZk7PwhTOJKcXuMAUgkMvqDIA==
+X-Google-Smtp-Source: APXvYqwtS8Pxmf4bGsTEa+DGYXJIiSMbdT+vB2l7XI0l3a/6T4SyKyO8nLoc5ijsKtpjqQLMeHvJaQ==
+X-Received: by 2002:a1c:1a95:: with SMTP id a143mr3406891wma.85.1572348538123;
+        Tue, 29 Oct 2019 04:28:58 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id f20sm2373247wmb.6.2019.10.29.04.28.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 04:28:55 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
+        linus.walleij@linaro.org
+Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 04/11] ASoC: wcd934x: add basic controls
+Date:   Tue, 29 Oct 2019 11:26:53 +0000
+Message-Id: <20191029112700.14548-5-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
+References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(39860400002)(136003)(376002)(396003)(199004)(189003)(356004)(5660300002)(6666004)(106002)(4326008)(316002)(70206006)(70586007)(336012)(26005)(36756003)(86362001)(50466002)(76176011)(486006)(54906003)(110136005)(44832011)(14444005)(186003)(107886003)(48376002)(50226002)(47776003)(478600001)(2906002)(305945005)(51416003)(7696005)(426003)(2870700001)(11346002)(1076003)(476003)(126002)(2616005)(81156014)(81166006)(8936002)(8676002)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR03MB3540;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:ErrorRetry;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 79e3ffa0-ca1e-4f6f-b3c7-08d75c632829
-X-MS-TrafficTypeDiagnostic: BN7PR03MB3540:
-X-Microsoft-Antispam-PRVS: <BN7PR03MB3540810C93CA243AD7601088F9610@BN7PR03MB3540.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1923;
-X-Forefront-PRVS: 0205EDCD76
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IPeUSxEUdc2YWK9jc1QqMJN7vNptxzxVGjaVJaPS2Tu9I7oWedEpwyWEgTa3iOH/Lr4LIKOFt5AjHs5KHKtFWXorZ4wBzaaE/8eSnDZKnKyW/TNVnFW0YDQN3+6xgBuAI20XVDkUpO0s4QstsxwxIplkAomXe49DLSD7ba0Cvs9UASZh3+B1OcUEwHzoZ/kHTqJM00tSK3jrif1TWj0eOXh8XhWegOCr/RW9AV+R1febnIBCWkbwkrz6EexHYThKNGhwGEUBqN7wzJcF9Kt6Emyn5pMMa6QGA3H4rlAGOsaoKkL93mSNABvr+7RphVY0XHA56aAutEm+yZMhPGzxekDjcLfxooN/GAH/JaIglPOcCaUw0/0Yo9qlbpUDZUOdIdfTsqKSwvVxHLes1K6hL0Cq9oVSPMtlligz9eKjvHz5u13fyinumENRnTeMW5Pr
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2019 11:28:44.0362
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79e3ffa0-ca1e-4f6f-b3c7-08d75c632829
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR03MB3540
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-29_03:2019-10-28,2019-10-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- malwarescore=0 mlxlogscore=999 impostorscore=0 clxscore=1015 adultscore=0
- priorityscore=1501 spamscore=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910290118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+This patch adds basic controls found in wcd934x codec.
 
-Add very basic devicetree suppport to the adp5589 allowing the device to be
-registered from devicetree.
-
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/input/keyboard/adp5589-keys.c | 33 ++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ sound/soc/codecs/wcd934x.c | 506 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 506 insertions(+)
 
-diff --git a/drivers/input/keyboard/adp5589-keys.c b/drivers/input/keyboard/adp5589-keys.c
-index ed2c13bef1b7..61d1e2f748f3 100644
---- a/drivers/input/keyboard/adp5589-keys.c
-+++ b/drivers/input/keyboard/adp5589-keys.c
-@@ -987,6 +987,25 @@ static void adp5589_keypad_remove(struct adp5589_kpad *kpad)
- 	}
- }
+diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
+index 70fb83772555..8efc8668d8e7 100644
+--- a/sound/soc/codecs/wcd934x.c
++++ b/sound/soc/codecs/wcd934x.c
+@@ -120,6 +120,21 @@
+ #define WCD934X_DEF_MICBIAS_MV	1800
+ #define WCD934X_MAX_MICBIAS_MV	2850
  
-+static int adp5589_i2c_get_driver_data(struct i2c_client *i2c,
-+				       const struct i2c_device_id *id)
-+{
-+	const struct of_device_id *match;
++#define WCD_IIR_FILTER_SIZE	(sizeof(u32) * BAND_MAX)
 +
-+	if (id)
-+		return id->driver_data;
-+
-+	if (!IS_ENABLED(CONFIG_OF) || !i2c->dev.of_node)
-+		return -ENODEV;
-+
-+	match = of_match_node(i2c->dev.driver->of_match_table,
-+			      i2c->dev.of_node);
-+	if (match)
-+		return (int)match->data;
-+
-+	return -ENODEV;
++#define WCD_IIR_FILTER_CTL(xname, iidx, bidx) \
++{ \
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
++	.info = wcd934x_iir_filter_info, \
++	.get = wcd934x_get_iir_band_audio_mixer, \
++	.put = wcd934x_put_iir_band_audio_mixer, \
++	.private_value = (unsigned long)&(struct wcd_iir_filter_ctl) { \
++		.iir_idx = iidx, \
++		.band_idx = bidx, \
++		.bytes_ext = {.max = WCD_IIR_FILTER_SIZE, }, \
++	} \
 +}
 +
- static const struct adp5589_gpio_platform_data adp5589_default_gpio_pdata = {
- 	.gpio_start = -1,
+ enum {
+ 	SIDO_SOURCE_INTERNAL,
+ 	SIDO_SOURCE_RCO_BG,
+@@ -217,6 +232,35 @@ static const struct wcd934x_slim_ch wcd934x_rx_chs[WCD934X_RX_MAX] = {
+ 	WCD934X_SLIM_RX_CH(12),
  };
-@@ -1019,7 +1038,11 @@ static int adp5589_probe(struct i2c_client *client,
  
- 	kpad->client = client;
- 
--	switch (id->driver_data) {
-+	ret = adp5589_i2c_get_driver_data(client, id);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (ret) {
- 	case ADP5585_02:
- 		kpad->support_row5 = true;
- 		/* fall through */
-@@ -1119,6 +1142,13 @@ static int adp5589_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(adp5589_dev_pm_ops, adp5589_suspend, adp5589_resume);
- 
-+static const struct of_device_id adp5589_of_match[] = {
-+	{ .compatible = "adi,adp5585", .data = (void *)ADP5585_01 },
-+	{ .compatible = "adi,adp5585-02", .data = (void *)ADP5585_02 },
-+	{ .compatible = "adi,adp5589", .data = (void *)ADP5589 },
-+	{}
++/* Codec supports 2 IIR filters */
++enum {
++	IIR0 = 0,
++	IIR1,
++	IIR_MAX,
 +};
 +
- static const struct i2c_device_id adp5589_id[] = {
- 	{"adp5589-keys", ADP5589},
- 	{"adp5585-keys", ADP5585_01},
-@@ -1132,6 +1162,7 @@ static struct i2c_driver adp5589_driver = {
- 	.driver = {
- 		.name = KBUILD_MODNAME,
- 		.pm = &adp5589_dev_pm_ops,
-+		.of_match_table = adp5589_of_match,
- 	},
- 	.probe = adp5589_probe,
- 	.remove = adp5589_remove,
++/* Each IIR has 5 Filter Stages */
++enum {
++	BAND1 = 0,
++	BAND2,
++	BAND3,
++	BAND4,
++	BAND5,
++	BAND_MAX,
++};
++
++enum {
++	COMPANDER_1, /* HPH_L */
++	COMPANDER_2, /* HPH_R */
++	COMPANDER_3, /* LO1_DIFF */
++	COMPANDER_4, /* LO2_DIFF */
++	COMPANDER_5, /* LO3_SE - not used in Tavil */
++	COMPANDER_6, /* LO4_SE - not used in Tavil */
++	COMPANDER_7, /* SWR SPK CH1 */
++	COMPANDER_8, /* SWR SPK CH2 */
++	COMPANDER_MAX,
++};
++
+ enum {
+ 	AIF1_PB = 0,
+ 	AIF1_CAP,
+@@ -335,12 +379,112 @@ struct wcd934x_codec {
+ 	int dmic_2_3_clk_cnt;
+ 	int dmic_4_5_clk_cnt;
+ 	int dmic_sample_rate;
++	int comp_enabled[COMPANDER_MAX];
+ 	int sysclk_users;
+ 	struct mutex sysclk_mutex;
+ };
+ 
+ #define to_wcd934x_codec(_hw) container_of(_hw, struct wcd934x_codec, hw)
+ 
++struct wcd_iir_filter_ctl {
++	unsigned int iir_idx;
++	unsigned int band_idx;
++	struct soc_bytes_ext bytes_ext;
++};
++
++static const DECLARE_TLV_DB_SCALE(digital_gain, 0, 1, 0);
++static const DECLARE_TLV_DB_SCALE(line_gain, 0, 7, 1);
++static const DECLARE_TLV_DB_SCALE(analog_gain, 0, 25, 1);
++static const DECLARE_TLV_DB_SCALE(ear_pa_gain, 0, 150, 0);
++
++/* Cutoff frequency for high pass filter */
++static const char * const cf_text[] = {
++	"CF_NEG_3DB_4HZ", "CF_NEG_3DB_75HZ", "CF_NEG_3DB_150HZ"
++};
++
++static const char * const rx_cf_text[] = {
++	"CF_NEG_3DB_4HZ", "CF_NEG_3DB_75HZ", "CF_NEG_3DB_150HZ",
++	"CF_NEG_3DB_0P48HZ"
++};
++
++static const char * const rx_hph_mode_mux_text[] = {
++	"Class H Invalid", "Class-H Hi-Fi", "Class-H Low Power", "Class-AB",
++	"Class-H Hi-Fi Low Power"
++};
++
++static const struct soc_enum cf_dec0_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_TX0_TX_PATH_CFG0, 5, 3, cf_text);
++
++static const struct soc_enum cf_dec1_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_TX1_TX_PATH_CFG0, 5, 3, cf_text);
++
++static const struct soc_enum cf_dec2_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_TX2_TX_PATH_CFG0, 5, 3, cf_text);
++
++static const struct soc_enum cf_dec3_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_TX3_TX_PATH_CFG0, 5, 3, cf_text);
++
++static const struct soc_enum cf_dec4_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_TX4_TX_PATH_CFG0, 5, 3, cf_text);
++
++static const struct soc_enum cf_dec5_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_TX5_TX_PATH_CFG0, 5, 3, cf_text);
++
++static const struct soc_enum cf_dec6_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_TX6_TX_PATH_CFG0, 5, 3, cf_text);
++
++static const struct soc_enum cf_dec7_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_TX7_TX_PATH_CFG0, 5, 3, cf_text);
++
++static const struct soc_enum cf_dec8_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_TX8_TX_PATH_CFG0, 5, 3, cf_text);
++
++static const struct soc_enum cf_int0_1_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_RX0_RX_PATH_CFG2, 0, 4, rx_cf_text);
++
++static SOC_ENUM_SINGLE_DECL(cf_int0_2_enum, WCD934X_CDC_RX0_RX_PATH_MIX_CFG, 2,
++		     rx_cf_text);
++
++static const struct soc_enum cf_int1_1_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_RX1_RX_PATH_CFG2, 0, 4, rx_cf_text);
++
++static SOC_ENUM_SINGLE_DECL(cf_int1_2_enum, WCD934X_CDC_RX1_RX_PATH_MIX_CFG, 2,
++		     rx_cf_text);
++
++static const struct soc_enum cf_int2_1_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_RX2_RX_PATH_CFG2, 0, 4, rx_cf_text);
++
++static SOC_ENUM_SINGLE_DECL(cf_int2_2_enum, WCD934X_CDC_RX2_RX_PATH_MIX_CFG, 2,
++		     rx_cf_text);
++
++static const struct soc_enum cf_int3_1_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_RX3_RX_PATH_CFG2, 0, 4, rx_cf_text);
++
++static SOC_ENUM_SINGLE_DECL(cf_int3_2_enum, WCD934X_CDC_RX3_RX_PATH_MIX_CFG, 2,
++			    rx_cf_text);
++
++static const struct soc_enum cf_int4_1_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_RX4_RX_PATH_CFG2, 0, 4, rx_cf_text);
++
++static SOC_ENUM_SINGLE_DECL(cf_int4_2_enum, WCD934X_CDC_RX4_RX_PATH_MIX_CFG, 2,
++			    rx_cf_text);
++
++static const struct soc_enum cf_int7_1_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_RX7_RX_PATH_CFG2, 0, 4, rx_cf_text);
++
++static SOC_ENUM_SINGLE_DECL(cf_int7_2_enum, WCD934X_CDC_RX7_RX_PATH_MIX_CFG, 2,
++			    rx_cf_text);
++
++static const struct soc_enum cf_int8_1_enum =
++	SOC_ENUM_SINGLE(WCD934X_CDC_RX8_RX_PATH_CFG2, 0, 4, rx_cf_text);
++
++static SOC_ENUM_SINGLE_DECL(cf_int8_2_enum, WCD934X_CDC_RX8_RX_PATH_MIX_CFG, 2,
++			    rx_cf_text);
++
++static const struct soc_enum rx_hph_mode_mux_enum =
++	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(rx_hph_mode_mux_text),
++			    rx_hph_mode_mux_text);
++
+ static int wcd934x_set_sido_input_src(struct wcd934x_codec *wcd,
+ 				      int sido_src)
+ {
+@@ -1479,10 +1623,372 @@ static int wcd934x_comp_set_sysclk(struct snd_soc_component *comp,
+ 	return clk_set_rate(wcd->extclk, freq);
+ }
+ 
++static uint32_t get_iir_band_coeff(struct snd_soc_component *component,
++				   int iir_idx, int band_idx, int coeff_idx)
++{
++	u32 value = 0;
++	int reg, b2_reg;
++
++	/* Address does not automatically update if reading */
++	reg = WCD934X_CDC_SIDETONE_IIR0_IIR_COEF_B1_CTL + 16 * iir_idx;
++	b2_reg = WCD934X_CDC_SIDETONE_IIR0_IIR_COEF_B2_CTL + 16 * iir_idx;
++
++	snd_soc_component_write(component, reg,
++				((band_idx * BAND_MAX + coeff_idx) *
++				 sizeof(uint32_t)) & 0x7F);
++
++	value |= snd_soc_component_read32(component, b2_reg);
++	snd_soc_component_write(component, reg,
++				((band_idx * BAND_MAX + coeff_idx)
++				 * sizeof(uint32_t) + 1) & 0x7F);
++
++	value |= (snd_soc_component_read32(component, b2_reg) << 8);
++	snd_soc_component_write(component, reg,
++				((band_idx * BAND_MAX + coeff_idx)
++				 * sizeof(uint32_t) + 2) & 0x7F);
++
++	value |= (snd_soc_component_read32(component, b2_reg) << 16);
++	snd_soc_component_write(component, reg,
++		((band_idx * BAND_MAX + coeff_idx)
++		* sizeof(uint32_t) + 3) & 0x7F);
++
++	/* Mask bits top 2 bits since they are reserved */
++	value |= (snd_soc_component_read32(component, b2_reg) << 24);
++	return value;
++}
++
++static void set_iir_band_coeff(struct snd_soc_component *component,
++			       int iir_idx, int band_idx, uint32_t value)
++{
++	int reg = WCD934X_CDC_SIDETONE_IIR0_IIR_COEF_B2_CTL + 16 * iir_idx;
++
++	snd_soc_component_write(component, reg, (value & 0xFF));
++	snd_soc_component_write(component, reg, (value >> 8) & 0xFF);
++	snd_soc_component_write(component, reg, (value >> 16) & 0xFF);
++	/* Mask top 2 bits, 7-8 are reserved */
++	snd_soc_component_write(component, reg, (value >> 24) & 0x3F);
++}
++
++static int wcd934x_put_iir_band_audio_mixer(
++					struct snd_kcontrol *kcontrol,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++			snd_soc_kcontrol_component(kcontrol);
++	struct wcd_iir_filter_ctl *ctl =
++			(struct wcd_iir_filter_ctl *)kcontrol->private_value;
++	struct soc_bytes_ext *params = &ctl->bytes_ext;
++	int iir_idx = ctl->iir_idx;
++	int band_idx = ctl->band_idx;
++	u32 coeff[BAND_MAX];
++	int reg = WCD934X_CDC_SIDETONE_IIR0_IIR_COEF_B1_CTL + 16 * iir_idx;
++
++	memcpy(&coeff[0], ucontrol->value.bytes.data, params->max);
++
++	/* Mask top bit it is reserved */
++	/* Updates addr automatically for each B2 write */
++	snd_soc_component_write(component, reg, (band_idx * BAND_MAX *
++						 sizeof(uint32_t)) & 0x7F);
++
++	set_iir_band_coeff(component, iir_idx, band_idx, coeff[0]);
++	set_iir_band_coeff(component, iir_idx, band_idx, coeff[1]);
++	set_iir_band_coeff(component, iir_idx, band_idx, coeff[2]);
++	set_iir_band_coeff(component, iir_idx, band_idx, coeff[3]);
++	set_iir_band_coeff(component, iir_idx, band_idx, coeff[4]);
++
++	return 0;
++}
++
++static int wcd934x_get_iir_band_audio_mixer(struct snd_kcontrol *kcontrol,
++				    struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++			snd_soc_kcontrol_component(kcontrol);
++	struct wcd_iir_filter_ctl *ctl =
++			(struct wcd_iir_filter_ctl *)kcontrol->private_value;
++	struct soc_bytes_ext *params = &ctl->bytes_ext;
++	int iir_idx = ctl->iir_idx;
++	int band_idx = ctl->band_idx;
++	u32 coeff[BAND_MAX];
++
++	coeff[0] = get_iir_band_coeff(component, iir_idx, band_idx, 0);
++	coeff[1] = get_iir_band_coeff(component, iir_idx, band_idx, 1);
++	coeff[2] = get_iir_band_coeff(component, iir_idx, band_idx, 2);
++	coeff[3] = get_iir_band_coeff(component, iir_idx, band_idx, 3);
++	coeff[4] = get_iir_band_coeff(component, iir_idx, band_idx, 4);
++
++	memcpy(ucontrol->value.bytes.data, &coeff[0], params->max);
++
++	return 0;
++}
++
++static int wcd934x_iir_filter_info(struct snd_kcontrol *kcontrol,
++				   struct snd_ctl_elem_info *ucontrol)
++{
++	struct wcd_iir_filter_ctl *ctl =
++		(struct wcd_iir_filter_ctl *)kcontrol->private_value;
++	struct soc_bytes_ext *params = &ctl->bytes_ext;
++
++	ucontrol->type = SNDRV_CTL_ELEM_TYPE_BYTES;
++	ucontrol->count = params->max;
++
++	return 0;
++}
++
++static int wcd934x_compander_get(struct snd_kcontrol *kc,
++				 struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component = snd_soc_kcontrol_component(kc);
++	int comp = ((struct soc_mixer_control *)kc->private_value)->shift;
++	struct wcd934x_codec *wcd = dev_get_drvdata(component->dev);
++
++	ucontrol->value.integer.value[0] = wcd->comp_enabled[comp];
++
++	return 0;
++}
++
++static int wcd934x_compander_set(struct snd_kcontrol *kc,
++				 struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component = snd_soc_kcontrol_component(kc);
++	struct wcd934x_codec *wcd = dev_get_drvdata(component->dev);
++	int comp = ((struct soc_mixer_control *)kc->private_value)->shift;
++	int value = ucontrol->value.integer.value[0];
++	int sel;
++
++	wcd->comp_enabled[comp] = value;
++	sel = value ? WCD934X_HPH_GAIN_SRC_SEL_COMPANDER :
++		WCD934X_HPH_GAIN_SRC_SEL_REGISTER;
++
++	/* Any specific register configuration for compander */
++	switch (comp) {
++	case COMPANDER_1:
++		/* Set Gain Source Select based on compander enable/disable */
++		snd_soc_component_update_bits(component, WCD934X_HPH_L_EN,
++					      WCD934X_HPH_GAIN_SRC_SEL_MASK,
++					      sel);
++		break;
++	case COMPANDER_2:
++		snd_soc_component_update_bits(component, WCD934X_HPH_R_EN,
++					      WCD934X_HPH_GAIN_SRC_SEL_MASK,
++					      sel);
++		break;
++	case COMPANDER_3:
++	case COMPANDER_4:
++	case COMPANDER_7:
++	case COMPANDER_8:
++		break;
++	default:
++		break;
++	};
++
++	return 0;
++}
++
++static int wcd934x_rx_hph_mode_get(struct snd_kcontrol *kc,
++				   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component = snd_soc_kcontrol_component(kc);
++	struct wcd934x_codec *wcd = dev_get_drvdata(component->dev);
++
++	ucontrol->value.enumerated.item[0] = wcd->hph_mode;
++
++	return 0;
++}
++
++static int wcd934x_rx_hph_mode_put(struct snd_kcontrol *kc,
++				   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component = snd_soc_kcontrol_component(kc);
++	struct wcd934x_codec *wcd = dev_get_drvdata(component->dev);
++	u32 mode_val;
++
++	mode_val = ucontrol->value.enumerated.item[0];
++
++	if (mode_val == 0) {
++		dev_err(wcd->dev, "Invalid HPH Mode, default to ClSH HiFi\n");
++		mode_val = CLS_H_LOHIFI;
++	}
++	wcd->hph_mode = mode_val;
++
++	return 0;
++}
++
++static const struct snd_kcontrol_new wcd934x_snd_controls[] = {
++	/* Gain Controls */
++	SOC_SINGLE_TLV("EAR PA Volume", WCD934X_ANA_EAR, 4, 4, 1, ear_pa_gain),
++	SOC_SINGLE_TLV("HPHL Volume", WCD934X_HPH_L_EN, 0, 24, 1, line_gain),
++	SOC_SINGLE_TLV("HPHR Volume", WCD934X_HPH_R_EN, 0, 24, 1, line_gain),
++	SOC_SINGLE_TLV("LINEOUT1 Volume", WCD934X_DIFF_LO_LO1_COMPANDER,
++		       3, 16, 1, line_gain),
++	SOC_SINGLE_TLV("LINEOUT2 Volume", WCD934X_DIFF_LO_LO2_COMPANDER,
++		       3, 16, 1, line_gain),
++
++	SOC_SINGLE_TLV("ADC1 Volume", WCD934X_ANA_AMIC1, 0, 20, 0, analog_gain),
++	SOC_SINGLE_TLV("ADC2 Volume", WCD934X_ANA_AMIC2, 0, 20, 0, analog_gain),
++	SOC_SINGLE_TLV("ADC3 Volume", WCD934X_ANA_AMIC3, 0, 20, 0, analog_gain),
++	SOC_SINGLE_TLV("ADC4 Volume", WCD934X_ANA_AMIC4, 0, 20, 0, analog_gain),
++
++	SOC_SINGLE_S8_TLV("RX0 Digital Volume", WCD934X_CDC_RX0_RX_VOL_CTL,
++			  -84, 40, digital_gain), /* -84dB min - 40dB max */
++	SOC_SINGLE_S8_TLV("RX1 Digital Volume", WCD934X_CDC_RX1_RX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX2 Digital Volume", WCD934X_CDC_RX2_RX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX3 Digital Volume", WCD934X_CDC_RX3_RX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX4 Digital Volume", WCD934X_CDC_RX4_RX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX7 Digital Volume", WCD934X_CDC_RX7_RX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX8 Digital Volume", WCD934X_CDC_RX8_RX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX0 Mix Digital Volume",
++			  WCD934X_CDC_RX0_RX_VOL_MIX_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX1 Mix Digital Volume",
++			  WCD934X_CDC_RX1_RX_VOL_MIX_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX2 Mix Digital Volume",
++			  WCD934X_CDC_RX2_RX_VOL_MIX_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX3 Mix Digital Volume",
++			  WCD934X_CDC_RX3_RX_VOL_MIX_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX4 Mix Digital Volume",
++			  WCD934X_CDC_RX4_RX_VOL_MIX_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX7 Mix Digital Volume",
++			  WCD934X_CDC_RX7_RX_VOL_MIX_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("RX8 Mix Digital Volume",
++			  WCD934X_CDC_RX8_RX_VOL_MIX_CTL,
++			  -84, 40, digital_gain),
++
++	SOC_SINGLE_S8_TLV("DEC0 Volume", WCD934X_CDC_TX0_TX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("DEC1 Volume", WCD934X_CDC_TX1_TX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("DEC2 Volume", WCD934X_CDC_TX2_TX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("DEC3 Volume", WCD934X_CDC_TX3_TX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("DEC4 Volume", WCD934X_CDC_TX4_TX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("DEC5 Volume", WCD934X_CDC_TX5_TX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("DEC6 Volume", WCD934X_CDC_TX6_TX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("DEC7 Volume", WCD934X_CDC_TX7_TX_VOL_CTL,
++			  -84, 40, digital_gain),
++	SOC_SINGLE_S8_TLV("DEC8 Volume", WCD934X_CDC_TX8_TX_VOL_CTL,
++			  -84, 40, digital_gain),
++
++	SOC_SINGLE_S8_TLV("IIR0 INP0 Volume",
++			  WCD934X_CDC_SIDETONE_IIR0_IIR_GAIN_B1_CTL, -84, 40,
++			  digital_gain),
++	SOC_SINGLE_S8_TLV("IIR0 INP1 Volume",
++			  WCD934X_CDC_SIDETONE_IIR0_IIR_GAIN_B2_CTL, -84, 40,
++			  digital_gain),
++	SOC_SINGLE_S8_TLV("IIR0 INP2 Volume",
++			  WCD934X_CDC_SIDETONE_IIR0_IIR_GAIN_B3_CTL, -84, 40,
++			  digital_gain),
++	SOC_SINGLE_S8_TLV("IIR0 INP3 Volume",
++			  WCD934X_CDC_SIDETONE_IIR0_IIR_GAIN_B4_CTL, -84, 40,
++			  digital_gain),
++	SOC_SINGLE_S8_TLV("IIR1 INP0 Volume",
++			  WCD934X_CDC_SIDETONE_IIR1_IIR_GAIN_B1_CTL, -84, 40,
++			  digital_gain),
++	SOC_SINGLE_S8_TLV("IIR1 INP1 Volume",
++			  WCD934X_CDC_SIDETONE_IIR1_IIR_GAIN_B2_CTL, -84, 40,
++			  digital_gain),
++	SOC_SINGLE_S8_TLV("IIR1 INP2 Volume",
++			  WCD934X_CDC_SIDETONE_IIR1_IIR_GAIN_B3_CTL, -84, 40,
++			  digital_gain),
++	SOC_SINGLE_S8_TLV("IIR1 INP3 Volume",
++			  WCD934X_CDC_SIDETONE_IIR1_IIR_GAIN_B4_CTL, -84, 40,
++			  digital_gain),
++
++	SOC_ENUM("TX0 HPF cut off", cf_dec0_enum),
++	SOC_ENUM("TX1 HPF cut off", cf_dec1_enum),
++	SOC_ENUM("TX2 HPF cut off", cf_dec2_enum),
++	SOC_ENUM("TX3 HPF cut off", cf_dec3_enum),
++	SOC_ENUM("TX4 HPF cut off", cf_dec4_enum),
++	SOC_ENUM("TX5 HPF cut off", cf_dec5_enum),
++	SOC_ENUM("TX6 HPF cut off", cf_dec6_enum),
++	SOC_ENUM("TX7 HPF cut off", cf_dec7_enum),
++	SOC_ENUM("TX8 HPF cut off", cf_dec8_enum),
++
++	SOC_ENUM("RX INT0_1 HPF cut off", cf_int0_1_enum),
++	SOC_ENUM("RX INT0_2 HPF cut off", cf_int0_2_enum),
++	SOC_ENUM("RX INT1_1 HPF cut off", cf_int1_1_enum),
++	SOC_ENUM("RX INT1_2 HPF cut off", cf_int1_2_enum),
++	SOC_ENUM("RX INT2_1 HPF cut off", cf_int2_1_enum),
++	SOC_ENUM("RX INT2_2 HPF cut off", cf_int2_2_enum),
++	SOC_ENUM("RX INT3_1 HPF cut off", cf_int3_1_enum),
++	SOC_ENUM("RX INT3_2 HPF cut off", cf_int3_2_enum),
++	SOC_ENUM("RX INT4_1 HPF cut off", cf_int4_1_enum),
++	SOC_ENUM("RX INT4_2 HPF cut off", cf_int4_2_enum),
++	SOC_ENUM("RX INT7_1 HPF cut off", cf_int7_1_enum),
++	SOC_ENUM("RX INT7_2 HPF cut off", cf_int7_2_enum),
++	SOC_ENUM("RX INT8_1 HPF cut off", cf_int8_1_enum),
++	SOC_ENUM("RX INT8_2 HPF cut off", cf_int8_2_enum),
++
++	SOC_ENUM_EXT("RX HPH Mode", rx_hph_mode_mux_enum,
++		     wcd934x_rx_hph_mode_get, wcd934x_rx_hph_mode_put),
++
++	SOC_SINGLE("IIR1 Band1 Switch", WCD934X_CDC_SIDETONE_IIR0_IIR_CTL,
++		   0, 1, 0),
++	SOC_SINGLE("IIR1 Band2 Switch", WCD934X_CDC_SIDETONE_IIR0_IIR_CTL,
++		   1, 1, 0),
++	SOC_SINGLE("IIR1 Band3 Switch", WCD934X_CDC_SIDETONE_IIR0_IIR_CTL,
++		   2, 1, 0),
++	SOC_SINGLE("IIR1 Band4 Switch", WCD934X_CDC_SIDETONE_IIR0_IIR_CTL,
++		   3, 1, 0),
++	SOC_SINGLE("IIR1 Band5 Switch", WCD934X_CDC_SIDETONE_IIR0_IIR_CTL,
++		   4, 1, 0),
++	SOC_SINGLE("IIR2 Band1 Switch", WCD934X_CDC_SIDETONE_IIR1_IIR_CTL,
++		   0, 1, 0),
++	SOC_SINGLE("IIR2 Band2 Switch", WCD934X_CDC_SIDETONE_IIR1_IIR_CTL,
++		   1, 1, 0),
++	SOC_SINGLE("IIR2 Band3 Switch", WCD934X_CDC_SIDETONE_IIR1_IIR_CTL,
++		   2, 1, 0),
++	SOC_SINGLE("IIR2 Band4 Switch", WCD934X_CDC_SIDETONE_IIR1_IIR_CTL,
++		   3, 1, 0),
++	SOC_SINGLE("IIR2 Band5 Switch", WCD934X_CDC_SIDETONE_IIR1_IIR_CTL,
++		   4, 1, 0),
++	WCD_IIR_FILTER_CTL("IIR0 Band1", IIR0, BAND1),
++	WCD_IIR_FILTER_CTL("IIR0 Band2", IIR0, BAND2),
++	WCD_IIR_FILTER_CTL("IIR0 Band3", IIR0, BAND3),
++	WCD_IIR_FILTER_CTL("IIR0 Band4", IIR0, BAND4),
++	WCD_IIR_FILTER_CTL("IIR0 Band5", IIR0, BAND5),
++
++	WCD_IIR_FILTER_CTL("IIR1 Band1", IIR1, BAND1),
++	WCD_IIR_FILTER_CTL("IIR1 Band2", IIR1, BAND2),
++	WCD_IIR_FILTER_CTL("IIR1 Band3", IIR1, BAND3),
++	WCD_IIR_FILTER_CTL("IIR1 Band4", IIR1, BAND4),
++	WCD_IIR_FILTER_CTL("IIR1 Band5", IIR1, BAND5),
++
++	SOC_SINGLE_EXT("COMP1 Switch", SND_SOC_NOPM, COMPANDER_1, 1, 0,
++		       wcd934x_compander_get, wcd934x_compander_set),
++	SOC_SINGLE_EXT("COMP2 Switch", SND_SOC_NOPM, COMPANDER_2, 1, 0,
++		       wcd934x_compander_get, wcd934x_compander_set),
++	SOC_SINGLE_EXT("COMP3 Switch", SND_SOC_NOPM, COMPANDER_3, 1, 0,
++		       wcd934x_compander_get, wcd934x_compander_set),
++	SOC_SINGLE_EXT("COMP4 Switch", SND_SOC_NOPM, COMPANDER_4, 1, 0,
++		       wcd934x_compander_get, wcd934x_compander_set),
++	SOC_SINGLE_EXT("COMP7 Switch", SND_SOC_NOPM, COMPANDER_7, 1, 0,
++		       wcd934x_compander_get, wcd934x_compander_set),
++	SOC_SINGLE_EXT("COMP8 Switch", SND_SOC_NOPM, COMPANDER_8, 1, 0,
++		       wcd934x_compander_get, wcd934x_compander_set),
++};
++
+ static const struct snd_soc_component_driver wcd934x_component_drv = {
+ 	.probe = wcd934x_comp_probe,
+ 	.remove = wcd934x_comp_remove,
+ 	.set_sysclk = wcd934x_comp_set_sysclk,
++	.controls = wcd934x_snd_controls,
++	.num_controls = ARRAY_SIZE(wcd934x_snd_controls),
+ };
+ 
+ static int wcd934x_codec_parse_data(struct wcd934x_codec *wcd)
 -- 
-2.20.1
+2.21.0
 
