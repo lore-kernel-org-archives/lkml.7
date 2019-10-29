@@ -2,116 +2,139 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228F6CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64180CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B638221734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="CfxPPaDe"
+	by mail.kernel.org (Postfix) with ESMTP id 43F7E208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387976AbfJ2Mr1 (ORCPT
+        id S2387985AbfJ2Mrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:47:27 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36240 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbfJ2Mr0 (ORCPT
+        Tue, 29 Oct 2019 08:47:37 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35202 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733206AbfJ2Mrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:47:26 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w18so13526732wrt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 05:47:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=6VqIj3BTfFgV4L15YGzzwv6yyFmVnbm7JQmLRtMKsic=;
-        b=CfxPPaDekZp7Q3u2GYPK2Du+jE1BNYcTQSKcDF5cLZnsRZZwbwlKGn0v6Lag4uMheH
-         pr6at2+zXWlfkIVglgv3gVRED3ewZjIBNRcJdFSK/UMybQo2xr7hrahVXBrn3ff9P6wZ
-         bFNSTFOjxn/qUDPxzBiLa0a/JuFbX9XODa7q0=
+        Tue, 29 Oct 2019 08:47:37 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m7so15127129lji.2;
+        Tue, 29 Oct 2019 05:47:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=6VqIj3BTfFgV4L15YGzzwv6yyFmVnbm7JQmLRtMKsic=;
-        b=cCOIlldsMxsR1PrnwzzezfrZX8Wr8vDfeBaOIsgj+jYVkVYdyvvcjqPaelwIIlDnzB
-         09C6ZJq7jMSOghp6x5SrUyYl3KBgZhzWGXbA52uj8XfKakg/d9dAQs1PxnfnvKpQLefW
-         wQFOUMH/j0laYd0N4XzL8pX9f3pPA+UeQ8aOeZTRdzOfM5owqPYLoeUHxntTeW01+c7k
-         zKopjfeFVeH5BwTPGabwmGMSu1WK+Ji+F1VwLBMhRieN01K/qVkz9HYl2vv5r6MSMfP2
-         zHwZCCsQsU1TsDP1tQXoYJdFBHnSuFRcKFGK0WazhOUuVjz0n+suFbeKNEjJs+YE1Whh
-         XksQ==
-X-Gm-Message-State: APjAAAUcP/rw1fHsABqjpJCG1rWjvbQhMqe6Wl3tLUn62MsAobsVI2VA
-        4zxZjwU/JAAll0CkTWAU4Wljlw==
-X-Google-Smtp-Source: APXvYqxP32WsuIeX0uHdKVMlzu2T3N+gMRJC+9wtmoLuOudI6BOZebwGZYeFObYe4CxYzxOkt41AhA==
-X-Received: by 2002:a5d:4142:: with SMTP id c2mr18809312wrq.208.1572353244608;
-        Tue, 29 Oct 2019 05:47:24 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id l4sm1953002wml.33.2019.10.29.05.47.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OywAa/Wh8Fm343vqCkC5f2sTAIa0gIrZIUYIplehcos=;
+        b=AZPWfXJfAu5lhRyeq31OLXpw56fx8ThtkH1kOrt9gX5B5l4DkRZBrUil9COzLBXOr5
+         lqUoIxIl/4c34WNwRM0cFObHhHyBHXcV0wCjUEM5m0jvSfx6tMDebi5AOkyVwIEoUyzE
+         XmORAI3dInXxj7mFSjFb4Locd4VmilLFwQ6wg01FI84GA+mmyFliKz8QuszvLb/qNViR
+         jvwY9W9BpijcfUNvmq6yFSFkK0fXwp020YMBHWQYJu1axUaaPRBnOARZcpqkExcP1vlE
+         Z1euINfOUgwEN7mfD6lKSnVQhXBNuXzhqOX3B3gCFsEpe72CKXDOphd2wJv9VmOBic0l
+         iuwA==
+X-Gm-Message-State: APjAAAWPgE5MhY+pYLBREG6i2601OjvtjDcloaVG56cs/wzF7H65vH9J
+        2uZfvbHuyFWmbwJS2f0K9h8=
+X-Google-Smtp-Source: APXvYqz3KOrNCPv19g707lVMFVblbBiUMnyAwQ7zp6WrerCE97y+DEoSLjJp5M6MwVtGyvxf0zDC9w==
+X-Received: by 2002:a2e:420a:: with SMTP id p10mr2662653lja.16.1572353254415;
+        Tue, 29 Oct 2019 05:47:34 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id i128sm8918346lfd.6.2019.10.29.05.47.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 05:47:23 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 13:47:17 +0100
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [GIT PULL] fuse fixes for 5.4-rc6
-Message-ID: <20191029124717.GA7805@miu.piliscsaba.redhat.com>
+        Tue, 29 Oct 2019 05:47:33 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:47:26 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 2/5] dt-bindings: an30259a: example for using fixed LED
+ node names.
+Message-ID: <5b9f9e7cd3dc959962fc43d27e471245e63f5f29.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Use predefined LED node name to match the LED node in driver.
 
-Please pull from:
+It would be nice to offload common LED property parsing to
+LED core driver. One of the key things to allow this is somehow
+'pair' the LED DT node with LED driver initialization data.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-fixes-5.4-rc6
+This patch uses LED node name as a 'key' in a same fashion
+as regulators do. The an30259a was selected as demonstration
+example and this change may not be really feasible for an30259a
+as I have no idea whether the existing DTs for devices out there
+have specific node names (or can be changed). This servers just
+as an example to initiate discussion as to how we could pair the
+driver data and DT node.
 
-Mostly virtiofs fixes, but also fixes a regression and couple of
-longstanding data/metadata writeback ordering issues.
-
-Thanks,
-Miklos
-
-----------------------------------------------------------------
-Alan Somers (1):
-      fuse: Add changelog entries for protocols 7.1 - 7.8
-
-Miklos Szeredi (5):
-      virtio-fs: don't show mount options
-      fuse: don't dereference req->args on finished request
-      fuse: don't advise readdirplus for negative lookup
-      fuse: flush dirty data/metadata before non-truncate setattr
-      fuse: truncate pending writes on O_TRUNC
-
-Vasily Averin (1):
-      fuse: redundant get_fuse_inode() calls in fuse_writepages_fill()
-
-Vivek Goyal (6):
-      virtio-fs: Change module name to virtiofs.ko
-      virtiofs: Do not end request in submission context
-      virtiofs: No need to check fpq->connected state
-      virtiofs: Set FR_SENT flag only after request has been sent
-      virtiofs: Count pending forgets as in_flight forgets
-      virtiofs: Retry request submission from worker context
-
-zhengbin (1):
-      virtiofs: Remove set but not used variable 'fc'
-
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- fs/fuse/Makefile          |   3 +-
- fs/fuse/dev.c             |   4 +-
- fs/fuse/dir.c             |  16 ++++-
- fs/fuse/file.c            |  14 ++--
- fs/fuse/fuse_i.h          |   4 ++
- fs/fuse/inode.c           |   4 ++
- fs/fuse/virtio_fs.c       | 169 +++++++++++++++++++++++++++++++---------------
- include/uapi/linux/fuse.h |  37 ++++++++++
- 8 files changed, 186 insertions(+), 65 deletions(-)
+ Documentation/devicetree/bindings/leds/leds-an30259a.txt | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-an30259a.txt b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+index cbd833906b2b..bd1a2d11a0ad 100644
+--- a/Documentation/devicetree/bindings/leds/leds-an30259a.txt
++++ b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+@@ -9,7 +9,8 @@ Required properties:
+ 	- #address-cells: Must be 1.
+ 	- #size-cells: Must be 0.
+ 
+-Each LED is represented as a sub-node of the panasonic,an30259a node.
++Each LED is represented as a sub-node of the panasonic,an30259a node. LED nodes
++must be named as led1 led2 and led3.
+ 
+ Required sub-node properties:
+ 	- reg: Pin that the LED is connected to. Must be 1, 2, or 3.
+@@ -34,20 +35,20 @@ led-controller@30 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 
+-	led@1 {
++	led1 {
+ 		reg = <1>;
+ 		linux,default-trigger = "heartbeat";
+ 		function = LED_FUNCTION_INDICATOR;
+ 		color = <LED_COLOR_ID_RED>;
+ 	};
+ 
+-	led@2 {
++	led2 {
+ 		reg = <2>;
+ 		function = LED_FUNCTION_INDICATOR;
+ 		color = <LED_COLOR_ID_GREEN>;
+ 	};
+ 
+-	led@3 {
++	led3 {
+ 		reg = <3>;
+ 		function = LED_FUNCTION_INDICATOR;
+ 		color = <LED_COLOR_ID_BLUE>;
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
