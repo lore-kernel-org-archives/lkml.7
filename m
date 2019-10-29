@@ -2,112 +2,151 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706FBCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D038CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4381E2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFE321479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NjXdPhBD"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="xUtlmgfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731756AbfJ2ScF (ORCPT
+        id S1727977AbfJ2Sec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:32:05 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42186 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfJ2ScE (ORCPT
+        Tue, 29 Oct 2019 14:34:32 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37016 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfJ2Seb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:32:04 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TIOwfb171648;
-        Tue, 29 Oct 2019 18:31:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=W5i8RaPuVxfk2wF9jP1qOXUbfa1KG3Gyj6D6MLp1DEs=;
- b=NjXdPhBDYKdqRh4Wu+tccs0Fs6vlwdxTeMtGEOX0HssoCew4FOYZNl5boTN+bpfkvgaw
- Ms5BwxZh/ABu+16yFvwO2JzCJA2MzXZ+BAlKbuKtuWGlZ5W6vUSZG28JbZqvTcbq7UPl
- RL4+BeXLYB6zBl4MEqGpfAmHy7flzJBtpKl2ecAarxa5fNlNdsM04eHMykTu/xAmAQ+A
- ZtkaVVKLeDK/T/A0WwcAU+61XwOJDBZxlS714UZvCd89pluAw6z6A/Nth8nlCYxdi94U
- 2qXOie2NUdrkIqBtailmTlHCgnMkFu/h49Yuzw4R9RBbE6e4K9d4lfLMsPniYUGiTDvt vQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2vve3qb4ae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:31:54 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TISme2036943;
-        Tue, 29 Oct 2019 18:29:54 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2vxpfdh4tj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:29:54 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9TITq3g015039;
-        Tue, 29 Oct 2019 18:29:52 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Oct 2019 11:29:51 -0700
-Date:   Tue, 29 Oct 2019 21:29:43 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     "Andrew F. Davis" <afd@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] dma-buf: Fix a warning message in dma_heap_buffer_destroy()
-Message-ID: <20191029182943.GD17569@mwanda>
+        Tue, 29 Oct 2019 14:34:31 -0400
+Received: by mail-qt1-f195.google.com with SMTP id g50so21692644qtb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uIU7OLCPQwf11UO7remUH85e2MdSUd0Df/No5kThl+Q=;
+        b=xUtlmgfTX/z8VFSs9NdfjYD2h7uC3bxMX9c2AFApAHuLU7LT6V7ubs5uXk74wKkkx/
+         PJ2uLnbqAvx+8TOq/4JkQXCvAYH/t2uV1hkfDxQQv4ceHZH7Ta/AjZmchGgfTanNnlp5
+         NtrxxujwR8dWyTNdCfJSiSCza6w//XxLj2TpNNhUvb8PYNxuf7QXmDzvi7i+ppvNcF2G
+         Y//gF7lM27cJmeZ9XiwN2vLDy0qpLyjKuI6ydePXHTokzd0Wa9uzNwMCIAebJUNtY7e4
+         mo4P1zqBlD5wVxm/X3fGz8j9J9XPnHJRFFY3NYkb+aB0UfDSVhLMAK8uAJiD1a1xHjlm
+         xwwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uIU7OLCPQwf11UO7remUH85e2MdSUd0Df/No5kThl+Q=;
+        b=jS6L3hEFgMdSQbKHlBJYm4T9KjOv9kITYHTHE9pX4UkQcyeYM8eoP26gq3L8b4UX3v
+         c1VmjEAqKBQ5I7yZ88vk5otcCDxKCUSoQV9US+F5kEYBC1/ipT25p8HPXpghppHaNLk4
+         wZ2gIM+WNO3v9VfyPjm85I/7tg6LznPw24+4x/k92j2ndR+Jz5fHaIzKYKHzZR6G1MNY
+         rWlW4AkNzanOs9ijMw64QeFoPxsqPvvPXIz2LfeseasFZ5doaXX8t4Mfsfh4llj0mn7o
+         T3/0nP8yMIm8jchxBOrXrOAASI2jBmklIKNchR3TkUPZ60MELXjaTSNt1ddsVgnJhU9/
+         dlFw==
+X-Gm-Message-State: APjAAAUEj4hfNk5EgKEPJMsDMWoIn2NDcUpjAt1wPO70WiUkUJhdta6Q
+        /ZnNb0vPo6nLB+TVDOY165N+OQ==
+X-Google-Smtp-Source: APXvYqz9kg4EYQY0RLUVbwPGIGxrPWbJ4IxQP3b9gI4g2nGc6loAjVWiGAcg76RCo1vI30uYda0BWw==
+X-Received: by 2002:a05:6214:803:: with SMTP id df3mr24777703qvb.215.1572374070331;
+        Tue, 29 Oct 2019 11:34:30 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::7081])
+        by smtp.gmail.com with ESMTPSA id g25sm9088353qtc.90.2019.10.29.11.34.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 11:34:29 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:34:28 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com,
+        elver@google.com
+Subject: Re: [PATCH] mm: memcontrol: fix data race in
+ mem_cgroup_select_victim_node
+Message-ID: <20191029183428.GA38233@cmpxchg.org>
+References: <20191029005405.201986-1-shakeelb@google.com>
+ <20191029090347.GG31513@dhcp22.suse.cz>
+ <CALvZod648GRvjd_LqViFzLRwxnzSrLZzjaNBOJju4xkDQkvrXw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910290161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910290161
+In-Reply-To: <CALvZod648GRvjd_LqViFzLRwxnzSrLZzjaNBOJju4xkDQkvrXw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first argument of WARN() is a condition so this will just print the
-function name instead of the whole warning message.
+On Tue, Oct 29, 2019 at 11:09:29AM -0700, Shakeel Butt wrote:
+> +Marco
+> 
+> On Tue, Oct 29, 2019 at 2:03 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Mon 28-10-19 17:54:05, Shakeel Butt wrote:
+> > > Syzbot reported the following bug:
+> > >
+> > > BUG: KCSAN: data-race in mem_cgroup_select_victim_node / mem_cgroup_select_victim_node
+> > >
+> > > write to 0xffff88809fade9b0 of 4 bytes by task 8603 on cpu 0:
+> > >  mem_cgroup_select_victim_node+0xb5/0x3d0 mm/memcontrol.c:1686
+> > >  try_to_free_mem_cgroup_pages+0x175/0x4c0 mm/vmscan.c:3376
+> > >  reclaim_high.constprop.0+0xf7/0x140 mm/memcontrol.c:2349
+> > >  mem_cgroup_handle_over_high+0x96/0x180 mm/memcontrol.c:2430
+> > >  tracehook_notify_resume include/linux/tracehook.h:197 [inline]
+> > >  exit_to_usermode_loop+0x20c/0x2c0 arch/x86/entry/common.c:163
+> > >  prepare_exit_to_usermode+0x180/0x1a0 arch/x86/entry/common.c:194
+> > >  swapgs_restore_regs_and_return_to_usermode+0x0/0x40
+> > >
+> > > read to 0xffff88809fade9b0 of 4 bytes by task 7290 on cpu 1:
+> > >  mem_cgroup_select_victim_node+0x92/0x3d0 mm/memcontrol.c:1675
+> > >  try_to_free_mem_cgroup_pages+0x175/0x4c0 mm/vmscan.c:3376
+> > >  reclaim_high.constprop.0+0xf7/0x140 mm/memcontrol.c:2349
+> > >  mem_cgroup_handle_over_high+0x96/0x180 mm/memcontrol.c:2430
+> > >  tracehook_notify_resume include/linux/tracehook.h:197 [inline]
+> > >  exit_to_usermode_loop+0x20c/0x2c0 arch/x86/entry/common.c:163
+> > >  prepare_exit_to_usermode+0x180/0x1a0 arch/x86/entry/common.c:194
+> > >  swapgs_restore_regs_and_return_to_usermode+0x0/0x40
+> > >
+> > > mem_cgroup_select_victim_node() can be called concurrently which reads
+> > > and modifies memcg->last_scanned_node without any synchrnonization. So,
+> > > read and modify memcg->last_scanned_node with READ_ONCE()/WRITE_ONCE()
+> > > to stop potential reordering.
+> >
+> > I am sorry but I do not understand the problem and the fix. Why does the
+> > race happen and why does _ONCE fixes it? There is still no
+> > synchronization. Do you want to prevent from memcg->last_scanned_node
+> > reloading?
+> >
+> 
+> The problem is memcg->last_scanned_node can read and modified
+> concurrently. Though to me it seems like a tolerable race and not
+> worth to add an explicit lock. My aim was to make KCSAN happy here to
+> look elsewhere for the concurrency bugs. However I see that it might
+> complain next on memcg->scan_nodes.
+> 
+> Now taking a step back, I am questioning the whole motivation behind
+> mem_cgroup_select_victim_node(). Since we pass ZONELIST_FALLBACK
+> zonelist to the reclaimer, the shrink_node will be called for all
+> potential nodes. Also we don't short circuit the traversal of
+> shrink_node for all nodes on nr_reclaimed and we scan (size_on_node >>
+> priority) for all nodes, I don't see the reason behind having round
+> robin order of node traversal.
 
-Fixes: 7b87ea704fd9 ("dma-buf: heaps: Add heap helpers")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/dma-buf/heaps/heap-helpers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It's actually only very recently that we don't bail out of the reclaim
+loop anymore - if I'm not missing anything, it was only 1ba6fc9af35b
+("mm: vmscan: do not share cgroup iteration between reclaimers") that
+removed the last bailout condition on sc->nr_reclaimed.
 
-diff --git a/drivers/dma-buf/heaps/heap-helpers.c b/drivers/dma-buf/heaps/heap-helpers.c
-index 750bef4e902d..a31684c0d5b2 100644
---- a/drivers/dma-buf/heaps/heap-helpers.c
-+++ b/drivers/dma-buf/heaps/heap-helpers.c
-@@ -52,7 +52,7 @@ static void *dma_heap_map_kernel(struct heap_helper_buffer *buffer)
- static void dma_heap_buffer_destroy(struct heap_helper_buffer *buffer)
- {
- 	if (buffer->vmap_cnt > 0) {
--		WARN("%s: buffer still mapped in the kernel\n", __func__);
-+		WARN(1, "%s: buffer still mapped in the kernel\n", __func__);
- 		vunmap(buffer->vaddr);
- 	}
- 
--- 
-2.20.1
+> I am thinking of removing the whole mem_cgroup_select_victim_node()
+> heuristic. Please let me know if there are any objections.
 
+In the current state, I don't see any reason to keep it, either. We
+can always just start the zonelist walk from the current node.
+
+A nice cleanup, actually. Good catch!
