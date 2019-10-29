@@ -2,95 +2,252 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CA4C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD8DCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8776F21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:49:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pbz4wDP9"
+	by mail.kernel.org (Postfix) with ESMTP id 81DD021835
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfJ2Bt0 (ORCPT
+        id S1728504AbfJ2Bt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:49:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46716 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfJ2Bt0 (ORCPT
+        Mon, 28 Oct 2019 21:49:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58030 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727364AbfJ2Bt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:49:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9T1mn6S085568;
-        Tue, 29 Oct 2019 01:49:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=BwpL56zWq/DyfZTKkawyTy/VoYhLLKsZYiZWk9+XeG4=;
- b=Pbz4wDP9qK47sd+UlHmbfMR3sAcbeA0oh32YCSuQdVpKoX8XO48b0IfZs0nUosmVmthm
- JYN81VCbL2MDePWj4lYeyKOSbT61lsbCNoyNODldDV4n46xKAh+IXJa3PJ/8Deqk9JqC
- QYN6O4lm7AF3hDZE8r3sBg2ImjoUJYyGU5wKj0zhiP3noaNOeb8dKwVJXR0LieJ3dFw+
- nO/wm8J0ziZw4RhP6Md8jTwebZSS0j21+6+ht4HL6I7JnhAuB2WXNDj9RUsQ8gySDnpv
- V7f+cbsuRQTLA4Z/tA+cXadlID/Lzc8ggBcz/MZhS204cwCH/DgK/EQBv3E+r8+hdetT jw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vvumfag7b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 01:49:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9T1gq6A107620;
-        Tue, 29 Oct 2019 01:49:11 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vw09gu3nn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 01:49:10 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9T1n6qI020391;
-        Tue, 29 Oct 2019 01:49:06 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 28 Oct 2019 18:49:06 -0700
-To:     James Smart <jsmart2021@gmail.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, martin.petersen@oracle.com,
-        sfr@canb.auug.org.au, Dick Kennedy <dick.kennedy@broadcom.com>
-Subject: Re: [PATCH] lpfc: fix build error of lpfc_debugfs.c for vfree/vmalloc
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191025182530.26653-1-jsmart2021@gmail.com>
-Date:   Mon, 28 Oct 2019 21:49:04 -0400
-In-Reply-To: <20191025182530.26653-1-jsmart2021@gmail.com> (James Smart's
-        message of "Fri, 25 Oct 2019 11:25:30 -0700")
-Message-ID: <yq1tv7s8gof.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 28 Oct 2019 21:49:28 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9T1CrwN093911
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 21:49:27 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vx5ryb3sd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 21:49:27 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Tue, 29 Oct 2019 01:49:24 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 29 Oct 2019 01:49:15 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9T1nEWE62849144
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 01:49:14 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0022852057;
+        Tue, 29 Oct 2019 01:49:13 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 589A65204E;
+        Tue, 29 Oct 2019 01:49:13 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 389C5A020A;
+        Tue, 29 Oct 2019 12:49:11 +1100 (AEDT)
+Subject: Re: [PATCH 04/10] powerpc: Map & release OpenCAPI LPC memory
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Allison Randal <allison@lohutok.net>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Greg Kurz <groug@kaod.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20191025044721.16617-1-alastair@au1.ibm.com>
+ <20191025044721.16617-5-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Tue, 29 Oct 2019 12:49:11 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=722
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910290017
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=821 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910290018
+In-Reply-To: <20191025044721.16617-5-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102901-0012-0000-0000-0000035E9649
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102901-0013-0000-0000-00002199D5DB
+Message-Id: <32caa2ef-43b2-f71d-f470-ccfed0ae094e@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910290011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 25/10/19 3:46 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> This patch adds platform support to map & release LPC memory.
+>  > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>   arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
+>   arch/powerpc/platforms/powernv/ocxl.c | 41 +++++++++++++++++++++++++++
+>   include/linux/memory_hotplug.h        |  5 ++++
+>   mm/memory_hotplug.c                   |  3 +-
+>   4 files changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/include/asm/pnv-ocxl.h b/arch/powerpc/include/asm/pnv-ocxl.h
+> index 7de82647e761..f8f8ffb48aa8 100644
+> --- a/arch/powerpc/include/asm/pnv-ocxl.h
+> +++ b/arch/powerpc/include/asm/pnv-ocxl.h
+> @@ -32,5 +32,7 @@ extern int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle)
+>   
+>   extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
+>   extern void pnv_ocxl_free_xive_irq(u32 irq);
+> +extern u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size);
+> +extern void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
+>   
+>   #endif /* _ASM_PNV_OCXL_H */
+> diff --git a/arch/powerpc/platforms/powernv/ocxl.c b/arch/powerpc/platforms/powernv/ocxl.c
+> index 8c65aacda9c8..c6d4234e0aba 100644
+> --- a/arch/powerpc/platforms/powernv/ocxl.c
+> +++ b/arch/powerpc/platforms/powernv/ocxl.c
+> @@ -475,6 +475,47 @@ void pnv_ocxl_spa_release(void *platform_data)
+>   }
+>   EXPORT_SYMBOL_GPL(pnv_ocxl_spa_release);
+>   
+> +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
+> +{
+> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> +	struct pnv_phb *phb = hose->private_data;
+> +	u32 bdfn = (pdev->bus->number << 8) | pdev->devfn;
 
-James,
+I think pci_dev_id() is the canonical way to do this? (same applies in 
+release)
 
-> lpfc_debufs.c was missing include of vmalloc.h when compiled on PPC.
->
-> Add missing header.
+> +	u64 base_addr = 0;
+> +	int rc;
+> +
+> +	rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size, &base_addr);
+> +	if (rc) {
+> +		dev_warn(&pdev->dev,
+> +			 "OPAL could not allocate LPC memory, rc=%d\n", rc);
+> +		return 0;
+> +	}
+> +
+> +	base_addr = be64_to_cpu(base_addr);
 
-Applied to 5.5/scsi-queue, thanks!
+sparse doesn't like this, the way it's usually done is declare a __be64 
+variable, pass that to the opal call, then store the conversion in a 
+regular u64
+
+> +
+> +	rc = check_hotplug_memory_addressable(base_addr >> PAGE_SHIFT,
+> +					      size >> PAGE_SHIFT);
+> +	if (rc)
+> +		return 0;
+> +
+> +	return base_addr;
+> +}
+> +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_setup);
+> +
+> +void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev)
+> +{
+> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> +	struct pnv_phb *phb = hose->private_data;
+> +	u32 bdfn = (pdev->bus->number << 8) | pdev->devfn;
+> +	int rc;
+> +
+> +	rc = opal_npu_mem_release(phb->opal_id, bdfn);
+> +	if (rc)
+> +		dev_warn(&pdev->dev,
+> +			 "OPAL reported rc=%d when releasing LPC memory\n", rc);
+> +}
+> +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_release);
+> +
+> +
+>   int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle)
+>   {
+>   	struct spa_data *data = (struct spa_data *) platform_data;
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index f46ea71b4ffd..3f5f1a642abe 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -339,6 +339,11 @@ static inline int remove_memory(int nid, u64 start, u64 size)
+>   static inline void __remove_memory(int nid, u64 start, u64 size) {}
+>   #endif /* CONFIG_MEMORY_HOTREMOVE */
+>   
+> +#if CONFIG_MEMORY_HOTPLUG_SPARSE
+
+This needs to be #ifdef.
+
+> +int check_hotplug_memory_addressable(unsigned long pfn,
+> +		unsigned long nr_pages);
+> +#endif /* CONFIG_MEMORY_HOTPLUG_SPARSE */
+> +
+>   extern void __ref free_area_init_core_hotplug(int nid);
+>   extern int __add_memory(int nid, u64 start, u64 size);
+>   extern int add_memory(int nid, u64 start, u64 size);
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 2cecf07b396f..b39827dbd071 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -278,7 +278,7 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
+>   	return 0;
+>   }
+>   
+> -static int check_hotplug_memory_addressable(unsigned long pfn,
+> +int check_hotplug_memory_addressable(unsigned long pfn,
+>   					    unsigned long nr_pages)
+>   {
+>   	const u64 max_addr = PFN_PHYS(pfn + nr_pages) - 1;
+> @@ -294,6 +294,7 @@ static int check_hotplug_memory_addressable(unsigned long pfn,
+>   
+>   	return 0;
+>   }
+> +EXPORT_SYMBOL_GPL(check_hotplug_memory_addressable);
+
+This export seems unnecessary, you don't seem to be using this function 
+in a module anywhere in this series AFAICT.
+
+Also it looks like a whitespace fix from removing the static ended up in 
+patch #8 rather than here.
+
+>   
+>   /*
+>    * Reasonably generic function for adding memory.  It is
+> 
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
+
