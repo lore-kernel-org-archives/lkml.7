@@ -2,184 +2,205 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BACCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE00CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9217720830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:31:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rohmjOlQ"
+	by mail.kernel.org (Postfix) with ESMTP id A829D20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbfJ2TbW (ORCPT
+        id S1730812AbfJ2TeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:31:22 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55262 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfJ2TbW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:31:22 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TJSmcH030842;
-        Tue, 29 Oct 2019 19:31:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=Je70oog1C51FTi7jCQQ1fCUjNy5E69wjO9Mhp3rlIp4=;
- b=rohmjOlQHx42xiyy428MvtqAkoyKLQRY8/xoiGlo/DrtanFMknfwJcYra2M8FuRbwxnP
- 68mHtPiNJpjOESliTkFL6Fcji48/7tqiMObcPQQm2dgdXAjPmKuyJifyE3VykOezJuNo
- T3vSRm/8QqnoW0SWa4KtvBSpNRJLqTncvfCzQ/F3pde1kvVdboKm0zCqlb9uDpHE9vwb
- 6iMtnc39oV05fKzElvL4YC3GZH48qSdD0dgNWsvrmXZfyP5JqA9KTid2HB+6M4dlQTtH
- +wYr5CHLvFpFASYm1/ZmhDLiZxPd33pjqnAWlnO3xN0ZoCQBu3EGhPKE6/zLh+JF1EBh iQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2vve3qbewy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 19:31:06 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TJTWq0064195;
-        Tue, 29 Oct 2019 19:31:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2vxpgfh960-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 19:31:06 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TJV4qs022644;
-        Tue, 29 Oct 2019 19:31:04 GMT
-Received: from [10.159.243.118] (/10.159.243.118)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Oct 2019 12:31:04 -0700
-Subject: Re: [PATCH v1 1/1] rxe: calculate inline data size based on requested
- values
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1571851957-3524-1-git-send-email-rao.shoaib@oracle.com>
- <1571851957-3524-2-git-send-email-rao.shoaib@oracle.com>
- <20191029191155.GA10841@ziepe.ca>
-From:   Rao Shoaib <rao.shoaib@oracle.com>
-Message-ID: <4c23244e-44bf-2927-6b9d-17c4d279ebe3@oracle.com>
-Date:   Tue, 29 Oct 2019 12:31:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191029191155.GA10841@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 29 Oct 2019 15:34:09 -0400
+Received: from mga04.intel.com ([192.55.52.120]:15752 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729253AbfJ2TeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 15:34:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 12:34:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
+   d="scan'208";a="199013716"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by fmsmga007.fm.intel.com with ESMTP; 29 Oct 2019 12:34:07 -0700
+Message-ID: <10eef14e434375ef4bb7cf23ecb987b3591064a6.camel@linux.intel.com>
+Subject: Re: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load
+ balancing path"
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Doug Smythies <doug.smythies@gmail.com>, vincent.guittot@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Doug Smythies <dsmythies@telus.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, sargun@sargun.me,
+        tj@kernel.org, xiexiuqi@huawei.com, xiezhipeng1@huawei.com
+Date:   Tue, 29 Oct 2019 12:34:08 -0700
+In-Reply-To: <1572018904-5234-1-git-send-email-dsmythies@telus.net>
+References: <1572018904-5234-1-git-send-email-dsmythies@telus.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910290167
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910290167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+On Fri, 2019-10-25 at 08:55 -0700, Doug Smythies wrote:
 
-Thanks for the comments, please see inline.
+[...]
 
-On 10/29/19 12:11 PM, Jason Gunthorpe wrote:
-> On Wed, Oct 23, 2019 at 10:32:37AM -0700, rao Shoaib wrote:
->> From: Rao Shoaib <rao.shoaib@oracle.com>
->>
->> rxe driver has a hard coded value for the size of inline data, where as
->> mlx5 driver calculates number of SGE's and inline data size based on the
->> values in the qp request. This patch modifies rxe driver to do the same
->> so that applications can work seamlessly across drivers.
-> This description doesn't seem accurate at all, and this patch seems to
-> be doing two things:
-I thought the note described the change, I will try harder next time.
->
->> Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
->> ---
->>   drivers/infiniband/sw/rxe/rxe_param.h | 2 +-
->>   drivers/infiniband/sw/rxe/rxe_qp.c    | 4 ++++
->>   2 files changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/infiniband/sw/rxe/rxe_param.h b/drivers/infiniband/sw/rxe/rxe_param.h
->> index 1b596fb..657f9303 100644
->> --- a/drivers/infiniband/sw/rxe/rxe_param.h
->> +++ b/drivers/infiniband/sw/rxe/rxe_param.h
->> @@ -68,7 +68,6 @@ enum rxe_device_param {
->>   	RXE_HW_VER			= 0,
->>   	RXE_MAX_QP			= 0x10000,
->>   	RXE_MAX_QP_WR			= 0x4000,
->> -	RXE_MAX_INLINE_DATA		= 400,
->>   	RXE_DEVICE_CAP_FLAGS		= IB_DEVICE_BAD_PKEY_CNTR
->>   					| IB_DEVICE_BAD_QKEY_CNTR
->>   					| IB_DEVICE_AUTO_PATH_MIG
->> @@ -81,6 +80,7 @@ enum rxe_device_param {
->>   					| IB_DEVICE_MEM_MGT_EXTENSIONS,
->>   	RXE_MAX_SGE			= 32,
->>   	RXE_MAX_SGE_RD			= 32,
->> +	RXE_MAX_INLINE_DATA		= RXE_MAX_SGE * sizeof(struct ib_sge),
->>   	RXE_MAX_CQ			= 16384,
->>   	RXE_MAX_LOG_CQE			= 15,
->>   	RXE_MAX_MR			= 2 * 1024,
-> Increasing RXE_MAX_INLINE_DATA to match the WQE size limited the
-> MAX_SGE. IMHO this is done in a hacky way, instead we should define a
-> maximim WQE size and from there derive the MAX_INLINE_DATA and MAX_SGE
-> limitations.
-There was already RXE_MAX_SGE defined so I did not define MAX_WQE. If 
-that is what is preference I can submit a patch with that. What is a 
-good value for MAX_WQE?
->
->> diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
->> index aeea994..45b5da5 100644
->> --- a/drivers/infiniband/sw/rxe/rxe_qp.c
->> +++ b/drivers/infiniband/sw/rxe/rxe_qp.c
->> @@ -229,6 +229,7 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
->>   {
->>   	int err;
->>   	int wqe_size;
->> +	unsigned int inline_size;
->>   
->>   	err = sock_create_kern(&init_net, AF_INET, SOCK_DGRAM, 0, &qp->sk);
->>   	if (err < 0)
->> @@ -244,6 +245,9 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
->>   			 sizeof(struct rxe_send_wqe) +
->>   			 qp->sq.max_inline);
->>   
->> +	inline_size = wqe_size - sizeof(struct rxe_send_wqe);
->> +	qp->sq.max_inline = inline_size;
->> +	init->cap.max_inline_data = inline_size;
-> Whatever this is doing. Is this trying to expand the supported inline
-> data when max_sge is provided? That seems reasonable but
-> peculiar. Should be it's own patch.
-Yes that is what it is dong same as mlx5 which takes the larger of the 
-two values reqquested and bumps the other. I will submit a separate patch.
->
-> Also don't double initialize qp->sq.max_inline in the same function,
-> and there is no need for the temporary 'inline_size'
+> Experiment method:
+> 
+> enable only idle state 1
+> Dountil stopped
+>   apply a 100% load (all CPUs)
+>   after awhile (about 50 seconds) remove the load.
+>   allow a short transient delay (1 second).
+>   measure the processor package joules used over the next 149
+> seconds.
+> Enduntil
+> 
+> Kernel k5.4-rc2 + reversion (this method)
+> Average processor package power: 9.148 watts (128 samples, > 7 hours)
+> Minimum: 9.02 watts
+> Maximum: 9.29 watts
+> Note: outlyer data point group removed, as it was assumed the
+> computer
+> had something to do and wasn't actually "idle".
+> 
+> Kernel 5.4-rc2:
+> Average processor package power: 9.969 watts (150 samples, > 8 hours)
+> Or 9% more energy for the idle phases of the work load.
+> Minimum: 9.15 watts
+> Maximum: 13.79 watts (51% more power)
+Hi Doug,
 
-I used a separate variable as I would have to repeat the calculation 
-twice. I do not understand your comment about double initialization, can 
-you please clarify that for me.
+Do you have intel_pstate_tracer output? I guess that when started
+request to measure the measure joules, it started at higher P-state
+without revert.
+Other way is check by fixing the max and min scaling frequency to some
+frequency, then we shouldn't see power difference.
 
 Thanks,
+Srinivas
 
-Shoaib
 
->
-> Jason
->
->
->>   	qp->sq.queue = rxe_queue_init(rxe,
->>   				      &qp->sq.max_wr,
->>   				      wqe_size);
->> -- 
->> 1.8.3.1
->>
+> 
+> ---
+>  kernel/sched/fair.c | 43 +++++++++----------------------------------
+>  1 file changed, 9 insertions(+), 34 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 83ab35e..51625b8 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -381,10 +381,9 @@ static inline void
+> assert_list_leaf_cfs_rq(struct rq *rq)
+>  	SCHED_WARN_ON(rq->tmp_alone_branch != &rq->leaf_cfs_rq_list);
+>  }
+>  
+> -/* Iterate thr' all leaf cfs_rq's on a runqueue */
+> -#define for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos)			
+> \
+> -	list_for_each_entry_safe(cfs_rq, pos, &rq->leaf_cfs_rq_list,	
+> \
+> -				 leaf_cfs_rq_list)
+> +/* Iterate through all cfs_rq's on a runqueue in bottom-up order */
+> +#define for_each_leaf_cfs_rq(rq, cfs_rq) \
+> +	list_for_each_entry_rcu(cfs_rq, &rq->leaf_cfs_rq_list,
+> leaf_cfs_rq_list)
+>  
+>  /* Do the two (enqueued) entities belong to the same group ? */
+>  static inline struct cfs_rq *
+> @@ -481,8 +480,8 @@ static inline void assert_list_leaf_cfs_rq(struct
+> rq *rq)
+>  {
+>  }
+>  
+> -#define for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos)	\
+> -		for (cfs_rq = &rq->cfs, pos = NULL; cfs_rq; cfs_rq =
+> pos)
+> +#define for_each_leaf_cfs_rq(rq, cfs_rq)	\
+> +		for (cfs_rq = &rq->cfs; cfs_rq; cfs_rq = NULL)
+>  
+>  static inline struct sched_entity *parent_entity(struct sched_entity
+> *se)
+>  {
+> @@ -7502,27 +7501,10 @@ static inline void
+> update_blocked_load_status(struct rq *rq, bool has_blocked) {
+>  
+>  #ifdef CONFIG_FAIR_GROUP_SCHED
+>  
+> -static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
+> -{
+> -	if (cfs_rq->load.weight)
+> -		return false;
+> -
+> -	if (cfs_rq->avg.load_sum)
+> -		return false;
+> -
+> -	if (cfs_rq->avg.util_sum)
+> -		return false;
+> -
+> -	if (cfs_rq->avg.runnable_load_sum)
+> -		return false;
+> -
+> -	return true;
+> -}
+> -
+>  static void update_blocked_averages(int cpu)
+>  {
+>  	struct rq *rq = cpu_rq(cpu);
+> -	struct cfs_rq *cfs_rq, *pos;
+> +	struct cfs_rq *cfs_rq;
+>  	const struct sched_class *curr_class;
+>  	struct rq_flags rf;
+>  	bool done = true;
+> @@ -7534,7 +7516,7 @@ static void update_blocked_averages(int cpu)
+>  	 * Iterates the task_group tree in a bottom up fashion, see
+>  	 * list_add_leaf_cfs_rq() for details.
+>  	 */
+> -	for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
+> +	for_each_leaf_cfs_rq(rq, cfs_rq) {
+>  		struct sched_entity *se;
+>  
+>  		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq),
+> cfs_rq))
+> @@ -7545,13 +7527,6 @@ static void update_blocked_averages(int cpu)
+>  		if (se && !skip_blocked_update(se))
+>  			update_load_avg(cfs_rq_of(se), se, 0);
+>  
+> -		/*
+> -		 * There can be a lot of idle CPU cgroups.  Don't let
+> fully
+> -		 * decayed cfs_rqs linger on the list.
+> -		 */
+> -		if (cfs_rq_is_decayed(cfs_rq))
+> -			list_del_leaf_cfs_rq(cfs_rq);
+> -
+>  		/* Don't need periodic decay once load/util_avg are
+> null */
+>  		if (cfs_rq_has_blocked(cfs_rq))
+>  			done = false;
+> @@ -10444,10 +10419,10 @@ const struct sched_class fair_sched_class =
+> {
+>  #ifdef CONFIG_SCHED_DEBUG
+>  void print_cfs_stats(struct seq_file *m, int cpu)
+>  {
+> -	struct cfs_rq *cfs_rq, *pos;
+> +	struct cfs_rq *cfs_rq;
+>  
+>  	rcu_read_lock();
+> -	for_each_leaf_cfs_rq_safe(cpu_rq(cpu), cfs_rq, pos)
+> +	for_each_leaf_cfs_rq(cpu_rq(cpu), cfs_rq)
+>  		print_cfs_rq(m, cpu, cfs_rq);
+>  	rcu_read_unlock();
+>  }
+
