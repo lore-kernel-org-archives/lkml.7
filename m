@@ -2,160 +2,110 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DEFCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136F9CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 676F22087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572386807;
-	bh=GsWtfZrelbRzE6pizQLf+50Tmch918LtZ4T05e9esIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hMCZrvnQzcY9bL0cdMV3RgCOuEhpKCdOCZgSQSUjdCWNR++a9u8DucAOoMaDH1ck1
-	 bT4zVTeundODz0LZjsxNC/+h9iXvIJlMrXlXeKa3Abi8SfmtTV+z0E+2HaSAyjguqd
-	 mr/zTnsExAXP+jt4E626L3xOHZm7mYhvibz7ScjE=
+	by mail.kernel.org (Postfix) with ESMTP id D9A6821734
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:06:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWPG4khJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbfJ2WGb (ORCPT
+        id S1728972AbfJ2WGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:06:31 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45588 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728223AbfJ2WGW (ORCPT
+        Tue, 29 Oct 2019 18:06:48 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35860 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbfJ2WGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:06:22 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k2so198358oij.12;
-        Tue, 29 Oct 2019 15:06:22 -0700 (PDT)
+        Tue, 29 Oct 2019 18:06:30 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so365049ljj.3;
+        Tue, 29 Oct 2019 15:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OOKan3CLVuuggtEwiJ2dOdUbhegm99fdKupMkWRSejQ=;
+        b=jWPG4khJIbpbvh/BtmbDvzACurG5Z2WUYb63PX7u6SsZj5yotkQWZSo9DcLZllabRc
+         pQWwzivoCPZWjOpp2G9taWtV+HJijqD0vexMkHsIsuTY46dlcjupfGpzXav86HkCTYKo
+         4APSKpi/yesfEsk3lKOEoRdoedY+vacaQtUZagbSkZOx5UEOqcpFS2GyrYK+ei66YLbV
+         rpJZXfWP6sepmRtenxYsdo1/Hxtac1pOWnrYxIFvxvDjFPNZBiYOS0U4rXL6c+04YHev
+         5hfnc3xNfgZWK5ZprFkfiYfXpYlwcvOqzB6iAl2Oy89PPOfoFc7nWr2HiC+K/hUP/y82
+         mr5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vfqb9iayrD7twK1Yov7mjax5KVdTInGQjQseAedA/Nc=;
-        b=odIb8YvScJrkMmLmKHNymP0waXURvKZmCG5AtQ5ZHAJkGrMRbawhvdrjdElcVoWzkV
-         gRo8f5DzndHwcwpSg1ZWrBh/S5hPKmvubD9goCGzKWBv24+yk1yJoeqICS2p2tot//Bt
-         8qa2SFVmMQIhjTGAuHBBqSbx7MMjK+UAneeXAxZftG2OoSvs4gHLQJaKoDw2lRvJziaF
-         1plGzbndhd5s25zr6NEdMeQfNzcXOZWr6c1TWzgm4FJiLflHf/3MlWiQO3I0WdQawWgH
-         vxrgl5wO85vpSM5upH9PpEJxrB0S0UzSdDuIKNOIYtlwr+kVj2zzBOE1xXZsaxY04U1B
-         cgTQ==
-X-Gm-Message-State: APjAAAUyTJZjyDBmYiDJGKkBb7Y3Eu0zwLfrOUBwSf43rioVrKpooJVg
-        wsUwCOt/HYovSP4oO9fcZA==
-X-Google-Smtp-Source: APXvYqxwuc2I1yytREdN+EWBcO63dl9Z8r2Iv+fVZtPjjtDikI1+tT3JcyRAJk+RU3PXiiEyUtzOXg==
-X-Received: by 2002:aca:e104:: with SMTP id y4mr6256504oig.117.1572386781514;
-        Tue, 29 Oct 2019 15:06:21 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h3sm90777otj.64.2019.10.29.15.06.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OOKan3CLVuuggtEwiJ2dOdUbhegm99fdKupMkWRSejQ=;
+        b=E4cFRrd7yP0faozfNwTgG4vaY+A8XbnrRtR5NaqlQkTJiyoAgFDt0m69fGhRjme4Fc
+         Dyw4Hbg5+K0I1QE3MMKIDB4PnwFD1lwMdyiS9jvVtefEbUJbA+I996RQW39vMSHh6yW6
+         y/Zm+PhW+yIXx3QYagqayNTwYgt49VKIBz+ThPg05gdx/Zd1Tl1lC2uWEbm03yp2EDpx
+         P1/Rv8razn5vqYPdto2i5ZFXPlIuqACL00KUMRkpuNIzYdSio8M0sKrK89FWTJh9r1+D
+         BYbcK9FzzhlsATjb0c8yWu7WaaxysA4xWvRCq2qYvmHm/Sx4kVpUfYDKaTzeotNeW+gb
+         aBIw==
+X-Gm-Message-State: APjAAAWxaBXndec9m9yoD1CHluJwonxVNqNMn1+Im2W40bNwhIcO0sgv
+        2faO5vdP5FWHcjIDSg0Bf8g=
+X-Google-Smtp-Source: APXvYqxek/dVgREG9HDGjmd0s1GV2YQBzqBUtodR9xEh8CoSPKZM/5t+5NvHVjNjcRjAFonSC4w1jw==
+X-Received: by 2002:a2e:7405:: with SMTP id p5mr4170166ljc.191.1572386787699;
+        Tue, 29 Oct 2019 15:06:27 -0700 (PDT)
+Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id 12sm51536lje.92.2019.10.29.15.06.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 15:06:20 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 17:06:20 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH v11 1/7] dt-bindings: sun6i-dsi: Document A64 MIPI-DSI
- controller
-Message-ID: <20191029220620.GA14316@bogus>
-References: <20191025175625.8011-1-jagan@amarulasolutions.com>
- <20191025175625.8011-2-jagan@amarulasolutions.com>
+        Tue, 29 Oct 2019 15:06:27 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7 18/19] PM / devfreq: tegra30: Tune up MCCPU boost-down coefficient
+Date:   Wed, 30 Oct 2019 01:00:18 +0300
+Message-Id: <20191029220019.26773-19-digetx@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191029220019.26773-1-digetx@gmail.com>
+References: <20191029220019.26773-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025175625.8011-2-jagan@amarulasolutions.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 11:26:19PM +0530, Jagan Teki wrote:
-> The MIPI DSI controller in Allwinner A64 is similar to A33.
-> 
-> But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
-> to have separate compatible for A64 on the same driver.
-> 
-> DSI_SCLK uses mod clock-names on dt-bindings, so the same
-> is not required for A64.
-> 
-> On that note
-> - A64 require minimum of 1 clock like the bus clock
-> - A33 require minimum of 2 clocks like both bus, mod clocks
-> 
-> So, update dt-bindings so-that it can document both A33,
-> A64 bindings requirements.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
->  .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 20 +++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> index dafc0980c4fa..2b7016ca382c 100644
-> --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> @@ -15,7 +15,9 @@ properties:
->    "#size-cells": true
->  
->    compatible:
-> -    const: allwinner,sun6i-a31-mipi-dsi
-> +    oneOf:
-> +      - const: allwinner,sun6i-a31-mipi-dsi
-> +      - const: allwinner,sun50i-a64-mipi-dsi
+MCCPU boosts up very aggressively by 800% and boosts down very mildly by
+10%. This doesn't work well when system is idling because the very slow
+de-boosting results in lots of consecutive-down interrupts, in result
+memory stays clocked high and CPU doesn't enter deepest idling state
+instead of keeping memory at lowest freq and having CPU cluster turned
+off. A more faster de-boosting fixes the case of idling system and doesn't
+affect the case of an active system.
 
-Use 'enum' instead of oneOf+const.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/devfreq/tegra30-devfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-With that fixed,
+diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+index d0dd42856e5b..9a21a29198ee 100644
+--- a/drivers/devfreq/tegra30-devfreq.c
++++ b/drivers/devfreq/tegra30-devfreq.c
+@@ -123,7 +123,7 @@ static const struct tegra_devfreq_device_config actmon_device_configs[] = {
+ 		.offset = 0x200,
+ 		.irq_mask = 1 << 25,
+ 		.boost_up_coeff = 800,
+-		.boost_down_coeff = 90,
++		.boost_down_coeff = 40,
+ 		.boost_up_threshold = 27,
+ 		.boost_down_threshold = 10,
+ 		.avg_dependency_threshold = 50000,
+-- 
+2.23.0
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
->  
->    reg:
->      maxItems: 1
-> @@ -24,6 +26,8 @@ properties:
->      maxItems: 1
->  
->    clocks:
-> +    minItems: 1
-> +    maxItems: 2
->      items:
->        - description: Bus Clock
->        - description: Module Clock
-> @@ -63,13 +67,25 @@ required:
->    - reg
->    - interrupts
->    - clocks
-> -  - clock-names
->    - phys
->    - phy-names
->    - resets
->    - vcc-dsi-supply
->    - port
->  
-> +allOf:
-> +  - if:
-> +      properties:
-> +         compatible:
-> +           contains:
-> +             const: allwinner,sun6i-a31-mipi-dsi
-> +      then:
-> +        properties:
-> +          clocks:
-> +            minItems: 2
-> +        required:
-> +          - clock-names
-> +
->  additionalProperties: false
->  
->  examples:
-> -- 
-> 2.18.0.321.gffc6fa0e3
-> 
