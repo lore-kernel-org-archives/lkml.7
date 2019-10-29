@@ -2,128 +2,167 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C05CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCFEC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46ABA20874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2F120856
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ezQBmeJb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tcym8wbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389725AbfJ2PAQ (ORCPT
+        id S2389731AbfJ2PCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:00:16 -0400
-Received: from mail-eopbgr1410117.outbound.protection.outlook.com ([40.107.141.117]:60896
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389387AbfJ2PAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:00:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zmk5EPlX9W+1tb6F20if+FbKIwC2Mu8f8n7OM4RSWhgzM5PDWZ8M2WHqx52Hna/ES9OUD5ispY6l1t8FfR+HPV6zGvdeJH/tx3d9tU915zWNLb7jtk33+4fvW9PHYJOiWwo3b1i1nj/Dcuogmob7VLQmDFM9QaIPRstkWtTpsH0NWkBobNnrfpkXQLsb0bvG13mBP8DYwPvpfax7Uoh4BzRlAJrd6FSGirnoIN8xfrjxqt56trwdm6yuWVaSHNT4POufk390waVS6UzPYq7x02C00axRxMC8V8YG9lNWr8udYH6w/2jCIoXBKKTK0Aqq6mlJjF4c1OlPVO2GjhTSEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kvmof0V5pmkmn0KGFNBv/2xFL15c0FBGq89Kc09t8eM=;
- b=Snu0ZwkrC4t+MVOKauqsyBukaykSbg6vpCeByZZZuxZeHJPQixvLBzrKuS2CnwnlYwHCvqQxXnGFjn8l0wwieGKFA4NYllSvFbbYBBJeQjE/mms25bC+hYma+q+zgReOcS6JxEEnZ4M8Ghz1QZWaJK6APgAQJbv3zKtulWZwkvl99mFwo0tywTEH7hcqhgg6o8TDFeOQlpdU+4PdypGDEkDAR9NywBfKMmJxb1GKM2tYNojtEeSA/U3WySUEyxGphguBoM1n+kNXXo5Y82UhNTGt+CA2J6rLj2qW5B9ur5PDtBZJFjKb+mepbXVBuTeAKAFPFd6Tvdoode0BGgcXRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Tue, 29 Oct 2019 11:02:05 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35179 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ2PCF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 11:02:05 -0400
+Received: by mail-io1-f67.google.com with SMTP id h9so15173295ioh.2;
+        Tue, 29 Oct 2019 08:02:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kvmof0V5pmkmn0KGFNBv/2xFL15c0FBGq89Kc09t8eM=;
- b=ezQBmeJbKQBmk+lTLLEWO5J4yWRnL7VioaQls8MUcWgOQnU/DoKIXUiJGE7ytrD1BgbHkaQZzPwQXLR66aUJVHC73L9r5kuT55wvEowJllL5Q4QdMjM9Mehn7gb+ZFQhrudzfYPcsL7fRB6ivNFBKoUa9QbO41CUd3eC8Zqo9tw=
-Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com (52.134.248.22) by
- OSAPR01MB2067.jpnprd01.prod.outlook.com (52.134.236.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.23; Tue, 29 Oct 2019 15:00:09 +0000
-Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com
- ([fe80::f193:eee6:cb3b:a3b5]) by OSAPR01MB3025.jpnprd01.prod.outlook.com
- ([fe80::f193:eee6:cb3b:a3b5%3]) with mapi id 15.20.2387.028; Tue, 29 Oct 2019
- 15:00:09 +0000
-From:   Vincent Cheng <vincent.cheng.xh@renesas.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: ptp: Add bindings doc for IDT
- ClockMatrix based PTP clock
-Thread-Topic: [PATCH v3 1/2] dt-bindings: ptp: Add bindings doc for IDT
- ClockMatrix based PTP clock
-Thread-Index: AQHViEnsnceJntXJaUCNpjtJej9X26drxUsAgAX9LYA=
-Date:   Tue, 29 Oct 2019 15:00:08 +0000
-Message-ID: <20191029145953.GA29825@renesas.com>
-References: <1571687868-22834-1-git-send-email-vincent.cheng.xh@renesas.com>
- <20191025193228.GA31398@bogus>
-In-Reply-To: <20191025193228.GA31398@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [173.195.53.163]
-x-clientproxiedby: MWHPR14CA0040.namprd14.prod.outlook.com
- (2603:10b6:300:12b::26) To OSAPR01MB3025.jpnprd01.prod.outlook.com
- (2603:1096:604:2::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vincent.cheng.xh@renesas.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 310d0869-5317-4848-e423-08d75c80b096
-x-ms-traffictypediagnostic: OSAPR01MB2067:
-x-microsoft-antispam-prvs: <OSAPR01MB206717FE2FFFBC8CD4E70219D2610@OSAPR01MB2067.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0205EDCD76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(376002)(366004)(136003)(346002)(189003)(199004)(51874003)(2616005)(5660300002)(478600001)(6486002)(36756003)(7736002)(14444005)(316002)(6916009)(256004)(4326008)(99286004)(14454004)(6436002)(1076003)(26005)(54906003)(186003)(229853002)(76176011)(64756008)(305945005)(6246003)(386003)(33656002)(52116002)(81166006)(476003)(486006)(66446008)(25786009)(66946007)(66476007)(66556008)(3846002)(81156014)(8936002)(2906002)(66066001)(86362001)(71190400001)(8676002)(102836004)(6512007)(446003)(71200400001)(11346002)(6506007)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB2067;H:OSAPR01MB3025.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1bNDr84TeTm3luYN5WpKhBzfs09zJp69WG1lI8FxFQMSMko3a09JVyDLmY1Ss8eNySzRCEMF3nRQ2pbxE44Gai4dzAcfPDOQaDIpmPTQWj2NyaKgU/nejzcsDwFO45Ae3YFgqjor/AP2/LU7MRpnlnO7+b2/ynv7YoZy37n+gp6wSYAkuLkRSMh1fvBmN55udAdcWyQ9j1W94ymoP18UIkrP5XwzcBOtQ7XliZ+PaxxAoUc7GqFQfyVYRj1p2JBmmCKQ+HWib4jR7GZ69yqZGuafJw/OU8EqUs0fHDx6mQZl1pbqqJpfaPaVkw23bOdbTK1GsvKnhPg/PKd8zvW24Bm+Gxa2+RfV/2uB2ztee94/slBZbcaD6VjBeCsI62FQ1/zcsF5OHivZYosnPL/uv0DPWQvtyW3Faeylj1AGjNFeLI1GvuQ32ctYCvYC3PZj
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F720A537515CB2489DC612E4443CE80D@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nviDhX5eHZuccHclre8MmSPBqdycbWsdLIjtyjp/3bg=;
+        b=tcym8wbDGztiJe9+mM9W4HNr1IeUPWbQSUFQWIVrTu22BruegDCKWLz8varVgwxuOP
+         S4zy8G5Bp5zWPTWGu0QNBQZYFs8iEGJ/C8scAPV8uLBSIzxK2upzhOV1Nvv/0XhW+0ju
+         M7FK0PCbThiQcV0lH4hLCVLXA/2pylYhpbrjuAroUVnu9zKBITGyAJQzNpChJi6Bszea
+         ItzSk5NJ+f6DT6F7heJB4L61fGxKMtGHehslO4b5vtmgRztDXlBr7X0FtCyDOj+7VpNL
+         yxV+gx4YeyrYRMmm6KoJSzX6BgON3bPJzjW9/ftGJePyrNP6ynfWA592UH2y9H95LsUx
+         U9mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nviDhX5eHZuccHclre8MmSPBqdycbWsdLIjtyjp/3bg=;
+        b=SPpEyaA93mzSjKpxKA0U45+HsHbJ6tsr93oYc9RKP3tgR7GShXGXLejaJohaxar4ku
+         XyNhOpsq9AB7jM51Oe6Phto67rPzEK2BsipNWEaDtQm2oTbFtNnB7z7FTKyRzsrTIhtx
+         EK2YBw6rBHeOMppsP4w5VxVuU3DKhkiV5dcqJT7E9OzXMhrc17J+aLw0kV4tjto7BxG7
+         tc7o5Wa6EIu2WHPkhSkcwrwOxjjVMjKFYYGJcro4EScdIg0vAZbdL9nayI0M/ssgOlY6
+         82gKG5Vynt6X0SSBqnxluXqWw8Ekal+b8JJ+CSRl4Od/1EF4ryMeUoH/1OpZoMgbIkM9
+         uzlg==
+X-Gm-Message-State: APjAAAUsblLb1qzGcp+XYWijiSL6RAV91XeaeEZCXoPnxffnr1o56EhY
+        W/zGSNs2x/VHWKJoX88Z1pU=
+X-Google-Smtp-Source: APXvYqxpmIbZ+JeH9dmI+sZWnLhXEw2k+1SXYAcp+ECySPiG7577LX3o3NwM+N7P8OeU5GHZ1YWWMw==
+X-Received: by 2002:a6b:fa08:: with SMTP id p8mr4335018ioh.84.1572361323918;
+        Tue, 29 Oct 2019 08:02:03 -0700 (PDT)
+Received: from dell.localdomain ([216.249.49.33])
+        by smtp.googlemail.com with ESMTPSA id g79sm2015632ilf.14.2019.10.29.08.02.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 08:02:03 -0700 (PDT)
+From:   Ethan Sommer <e5ten.arch@gmail.com>
+Cc:     Ethan Sommer <e5ten.arch@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2] kbuild: support byacc as alternative YACC to bison
+Date:   Tue, 29 Oct 2019 11:01:16 -0400
+Message-Id: <20191029150119.19823-1-e5ten.arch@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
+References: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 310d0869-5317-4848-e423-08d75c80b096
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 15:00:08.7131
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: udCXJRehcSoZpkrQtEz+BPXhWhqodJLgKO/UEUZBpShLm0pgw01QAWX4YYJ6e+YiMzqQNhL5tk7eRdk88sKVlXwtCBLKrypiqgLDGbVpqJk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2067
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCBPY3QgMjUsIDIwMTkgYXQgMDM6MzI6MjhQTSBFRFQsIFJvYiBIZXJyaW5nIHdyb3Rl
-Og0KPk9uIE1vbiwgT2N0IDIxLCAyMDE5IGF0IDAzOjU3OjQ3UE0gLTA0MDAsIHZpbmNlbnQuY2hl
-bmcueGhAcmVuZXNhcy5jb20gd3JvdGU6DQo+PiBGcm9tOiBWaW5jZW50IENoZW5nIDx2aW5jZW50
-LmNoZW5nLnhoQHJlbmVzYXMuY29tPg0KPj4gDQo+PiBBZGQgZGV2aWNlIHRyZWUgYmluZGluZyBk
-b2MgZm9yIHRoZSBJRFQgQ2xvY2tNYXRyaXggUFRQIGNsb2NrLg0KPj4gDQo+PiArDQo+PiArZXhh
-bXBsZXM6DQo+PiArICAtIHwNCj4+ICsgICAgcGhjQDViIHsNCj4NCj5wdHBANWINCj4NCj5FeGFt
-cGxlcyBhcmUgYnVpbHQgbm93IGFuZCB0aGlzIGZhaWxzOg0KPg0KPkRvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wdHAvcHRwLWlkdGNtLmV4YW1wbGUuZHRzOjE5LjE1LTI4OiANCj5X
-YXJuaW5nIChyZWdfZm9ybWF0KTogL2V4YW1wbGUtMC9waGNANWI6cmVnOiBwcm9wZXJ0eSBoYXMg
-aW52YWxpZCBsZW5ndGggKDQgYnl0ZXMpICgjYWRkcmVzcy1jZWxscyA9PSAxLCAjc2l6ZS1jZWxs
-cyA9PSAxKQ0KPg0KPlRoZSBwcm9ibGVtIGlzIGkyYyBkZXZpY2VzIG5lZWQgdG8gYmUgc2hvd24g
-dW5kZXIgYW4gaTJjIGJ1cyBub2RlLg0KPg0KPj4gKyAgICAgICAgICBjb21wYXRpYmxlID0gImlk
-dCw4YTM0MDAwIjsNCj4+ICsgICAgICAgICAgcmVnID0gPDB4NWI+Ow0KPj4gKyAgICB9Ow0KDQpJ
-IGFtIHRyeWluZyB0byByZXBsaWNhdGUgdGhlIHByb2JsZW0gbG9jYWxseSB0byBjb25maXJtIHRo
-ZSBmaXggcHJpb3IgdG8gcmUtc3VibWlzc2lvbi4NCg0KSSBoYXZlIHRyaWVkIHRoZSBmb2xsb3dp
-bmc6DQoNCi4vdG9vbHMvZHQtZG9jLXZhbGlkYXRlIH4vcHJvamVjdHMvbGludXgvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B0cC9wdHAtaWR0Y20ueWFtbA0KLi90b29scy9kdC1l
-eHRyYWN0LWV4YW1wbGUgfi9wcm9qZWN0cy9saW51eC9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcHRwL3B0cC1pZHRjbS55YW1sID4gZXhhbXBsZS5kdHMNCg0KSG93IHRvIHZhbGlk
-YXRlIHRoZSBleGFtcGxlLmR0cyBmaWxlIGFnYWluc3QgdGhlIHNjaGVtYSBpbiBwdHAtaWR0Y20u
-eWFtbD8NCg0KVGhhbmtzIGluIGFkdmFuY2UuDQoNClJlZ2FyZHMsDQpWaW5jZW50DQo=
+Switches to a more portable set of flags for generating the same file
+names instead of the bison-specific --defines, uses the more portable -V
+instead of --version, and explicitly defines YYSTYPE in lex.l, which
+bison implicitly defines if not present but byacc does not.
+
+Add %locations to dtc-parser.y to explicitly enable location tracking
+for byacc, and define YYERROR_CALL explicitly to prevent the locations
+directive from causing it to be defined to a 2-parameter call to
+yyerror, which dtc-parser.y defines to accept one parameter.
+
+Requires byacc to be built with --enable-btyacc.
+
+Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
+---
+ scripts/Makefile.host     | 2 +-
+ scripts/dtc/dtc-parser.y  | 4 ++++
+ scripts/genksyms/Makefile | 2 +-
+ scripts/genksyms/lex.l    | 2 ++
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+index 4c51c95d40f4..64e98e1d4825 100644
+--- a/scripts/Makefile.host
++++ b/scripts/Makefile.host
+@@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
+ # YACC
+ # ---------------------------------------------------------------------------
+ quiet_cmd_bison = YACC    $(basename $@).[ch]
+-      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
++      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
+ 
+ $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
+ 	$(call if_changed,bison)
+diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
+index 2ed4dc1f07fd..40dcf4f149da 100644
+--- a/scripts/dtc/dtc-parser.y
++++ b/scripts/dtc/dtc-parser.y
+@@ -2,6 +2,8 @@
+ /*
+  * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
+  */
++%locations
++
+ %{
+ #include <stdio.h>
+ #include <inttypes.h>
+@@ -17,6 +19,8 @@ extern void yyerror(char const *s);
+ 		treesource_error = true; \
+ 	} while (0)
+ 
++#define YYERROR_CALL(msg) yyerror(msg)
++
+ extern struct dt_info *parser_output;
+ extern bool treesource_error;
+ %}
+diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
+index 78629f515e78..397c2dc8182b 100644
+--- a/scripts/genksyms/Makefile
++++ b/scripts/genksyms/Makefile
+@@ -15,7 +15,7 @@ genksyms-objs	:= genksyms.o parse.tab.o lex.lex.o
+ ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+ 
+ quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
+-      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
++      cmd_bison_no_warn = $(YACC) -V >/dev/null; \
+ 			  $(cmd_bison) 2>/dev/null
+ 
+ $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
+diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
+index e265c5d96861..0580c088527f 100644
+--- a/scripts/genksyms/lex.l
++++ b/scripts/genksyms/lex.l
+@@ -19,6 +19,8 @@
+ #include "genksyms.h"
+ #include "parse.tab.h"
+ 
++extern YYSTYPE yylval;
++
+ /* We've got a two-level lexer here.  We let flex do basic tokenization
+    and then we categorize those basic tokens in the second stage.  */
+ #define YY_DECL		static int yylex1(void)
+-- 
+2.23.0
+
