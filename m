@@ -2,94 +2,184 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83755CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BACCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 498D820659
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572377286;
-	bh=apLTNV5FI4HqB73ycnDqLkUuNALccPR33EKsR7jaXZc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EPBTz1BuYP5zuY0hDHGj7ETLpffC3vrpb8FBE4ZrMB2Y16RUaRB5Eez6j1ntml1R6
-	 1nhl1oMF5VMmEkxZxMxcYaBPvVzRnh9m+fNk8I3xCQi40LYqOut37+THS/yp6n7feL
-	 1MT5/aiLLoeJdQ9gw6x6r2S2LVeFI0FKfbXR4FqA=
+	by mail.kernel.org (Postfix) with ESMTP id 9217720830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rohmjOlQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbfJ2T2F (ORCPT
+        id S1730377AbfJ2TbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:28:05 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38979 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbfJ2T2F (ORCPT
+        Tue, 29 Oct 2019 15:31:22 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55262 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfJ2TbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:28:05 -0400
-Received: by mail-ot1-f68.google.com with SMTP id t8so4693328otl.6;
-        Tue, 29 Oct 2019 12:28:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0zdnZwmokAR/GsYiaZ2pYAzVNUBZHxjHTMKuDhMdpYM=;
-        b=JMLQW7U7MQy3HqMsPX6SQsHE/CpMjgSMAy+OWVztK+RQU8BxXReHEe9aR1/GGxzjhl
-         8vOvxN2aIaUUs9cAmTzVYpIdQvBZ1V6gaA2uBMXG2QFsxQH9izYS2W38hv8vkjDqHbFo
-         EaPiUsYzzqXWACEjowGFdKwDpLtEZBgQN2mIm+hhhiNmf8fVcG3Q6EsXKf/jU7htJvqr
-         8Pu0ai24P4QdMK6leIcPWCiWWppToG3PNfEoEBFBqmeuIhvvEdSf5UiVvPWtwAld65EM
-         AsPGea2+PiFBud3uIisXJNdnxtepCapZ7+04qhOSAe7JFSCbbSLBUKf4wL52HPSBpdfb
-         cANA==
-X-Gm-Message-State: APjAAAWnVI4PkvyInaDVtUeCGGlLICA7p0Cd8zwuX/BXscnK/hMooteV
-        iTo2SDjj9/vyP4MKgM0CZw==
-X-Google-Smtp-Source: APXvYqzJ2OGkDg7Vi9JH4GFnkn6p59w8xzjoTajxVuI3H1NYV9vMfSDmHlkyOxYkTrLcJ9f/qmqtXw==
-X-Received: by 2002:a05:6830:22ef:: with SMTP id t15mr8798502otc.256.1572377283925;
-        Tue, 29 Oct 2019 12:28:03 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 88sm5104885otb.63.2019.10.29.12.28.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 12:28:03 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 14:28:02 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add bindings for USB3 phy on
- Allwinner H6
-Message-ID: <20191029192802.GA1282@bogus>
-References: <20191024105500.2252707-1-megous@megous.com>
- <20191024105500.2252707-2-megous@megous.com>
+        Tue, 29 Oct 2019 15:31:22 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TJSmcH030842;
+        Tue, 29 Oct 2019 19:31:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=Je70oog1C51FTi7jCQQ1fCUjNy5E69wjO9Mhp3rlIp4=;
+ b=rohmjOlQHx42xiyy428MvtqAkoyKLQRY8/xoiGlo/DrtanFMknfwJcYra2M8FuRbwxnP
+ 68mHtPiNJpjOESliTkFL6Fcji48/7tqiMObcPQQm2dgdXAjPmKuyJifyE3VykOezJuNo
+ T3vSRm/8QqnoW0SWa4KtvBSpNRJLqTncvfCzQ/F3pde1kvVdboKm0zCqlb9uDpHE9vwb
+ 6iMtnc39oV05fKzElvL4YC3GZH48qSdD0dgNWsvrmXZfyP5JqA9KTid2HB+6M4dlQTtH
+ +wYr5CHLvFpFASYm1/ZmhDLiZxPd33pjqnAWlnO3xN0ZoCQBu3EGhPKE6/zLh+JF1EBh iQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2vve3qbewy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 19:31:06 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TJTWq0064195;
+        Tue, 29 Oct 2019 19:31:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2vxpgfh960-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 19:31:06 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TJV4qs022644;
+        Tue, 29 Oct 2019 19:31:04 GMT
+Received: from [10.159.243.118] (/10.159.243.118)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 29 Oct 2019 12:31:04 -0700
+Subject: Re: [PATCH v1 1/1] rxe: calculate inline data size based on requested
+ values
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
+        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1571851957-3524-1-git-send-email-rao.shoaib@oracle.com>
+ <1571851957-3524-2-git-send-email-rao.shoaib@oracle.com>
+ <20191029191155.GA10841@ziepe.ca>
+From:   Rao Shoaib <rao.shoaib@oracle.com>
+Message-ID: <4c23244e-44bf-2927-6b9d-17c4d279ebe3@oracle.com>
+Date:   Tue, 29 Oct 2019 12:31:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024105500.2252707-2-megous@megous.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191029191155.GA10841@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910290167
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910290167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019 12:54:57 +0200, Ondrej Jirman wrote:
-> The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
-> external USB3 pins of the SoC.
-> 
-> Add a device tree binding for the PHY.
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Acked-by: Maxime Ripard <mripard@kernel.org>
-> ---
->  .../phy/allwinner,sun50i-h6-usb3-phy.yaml     | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
-> 
+Hi Jason,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks for the comments, please see inline.
+
+On 10/29/19 12:11 PM, Jason Gunthorpe wrote:
+> On Wed, Oct 23, 2019 at 10:32:37AM -0700, rao Shoaib wrote:
+>> From: Rao Shoaib <rao.shoaib@oracle.com>
+>>
+>> rxe driver has a hard coded value for the size of inline data, where as
+>> mlx5 driver calculates number of SGE's and inline data size based on the
+>> values in the qp request. This patch modifies rxe driver to do the same
+>> so that applications can work seamlessly across drivers.
+> This description doesn't seem accurate at all, and this patch seems to
+> be doing two things:
+I thought the note described the change, I will try harder next time.
+>
+>> Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
+>> ---
+>>   drivers/infiniband/sw/rxe/rxe_param.h | 2 +-
+>>   drivers/infiniband/sw/rxe/rxe_qp.c    | 4 ++++
+>>   2 files changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/infiniband/sw/rxe/rxe_param.h b/drivers/infiniband/sw/rxe/rxe_param.h
+>> index 1b596fb..657f9303 100644
+>> --- a/drivers/infiniband/sw/rxe/rxe_param.h
+>> +++ b/drivers/infiniband/sw/rxe/rxe_param.h
+>> @@ -68,7 +68,6 @@ enum rxe_device_param {
+>>   	RXE_HW_VER			= 0,
+>>   	RXE_MAX_QP			= 0x10000,
+>>   	RXE_MAX_QP_WR			= 0x4000,
+>> -	RXE_MAX_INLINE_DATA		= 400,
+>>   	RXE_DEVICE_CAP_FLAGS		= IB_DEVICE_BAD_PKEY_CNTR
+>>   					| IB_DEVICE_BAD_QKEY_CNTR
+>>   					| IB_DEVICE_AUTO_PATH_MIG
+>> @@ -81,6 +80,7 @@ enum rxe_device_param {
+>>   					| IB_DEVICE_MEM_MGT_EXTENSIONS,
+>>   	RXE_MAX_SGE			= 32,
+>>   	RXE_MAX_SGE_RD			= 32,
+>> +	RXE_MAX_INLINE_DATA		= RXE_MAX_SGE * sizeof(struct ib_sge),
+>>   	RXE_MAX_CQ			= 16384,
+>>   	RXE_MAX_LOG_CQE			= 15,
+>>   	RXE_MAX_MR			= 2 * 1024,
+> Increasing RXE_MAX_INLINE_DATA to match the WQE size limited the
+> MAX_SGE. IMHO this is done in a hacky way, instead we should define a
+> maximim WQE size and from there derive the MAX_INLINE_DATA and MAX_SGE
+> limitations.
+There was already RXE_MAX_SGE defined so I did not define MAX_WQE. If 
+that is what is preference I can submit a patch with that. What is a 
+good value for MAX_WQE?
+>
+>> diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+>> index aeea994..45b5da5 100644
+>> --- a/drivers/infiniband/sw/rxe/rxe_qp.c
+>> +++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+>> @@ -229,6 +229,7 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
+>>   {
+>>   	int err;
+>>   	int wqe_size;
+>> +	unsigned int inline_size;
+>>   
+>>   	err = sock_create_kern(&init_net, AF_INET, SOCK_DGRAM, 0, &qp->sk);
+>>   	if (err < 0)
+>> @@ -244,6 +245,9 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
+>>   			 sizeof(struct rxe_send_wqe) +
+>>   			 qp->sq.max_inline);
+>>   
+>> +	inline_size = wqe_size - sizeof(struct rxe_send_wqe);
+>> +	qp->sq.max_inline = inline_size;
+>> +	init->cap.max_inline_data = inline_size;
+> Whatever this is doing. Is this trying to expand the supported inline
+> data when max_sge is provided? That seems reasonable but
+> peculiar. Should be it's own patch.
+Yes that is what it is dong same as mlx5 which takes the larger of the 
+two values reqquested and bumps the other. I will submit a separate patch.
+>
+> Also don't double initialize qp->sq.max_inline in the same function,
+> and there is no need for the temporary 'inline_size'
+
+I used a separate variable as I would have to repeat the calculation 
+twice. I do not understand your comment about double initialization, can 
+you please clarify that for me.
+
+Thanks,
+
+Shoaib
+
+>
+> Jason
+>
+>
+>>   	qp->sq.queue = rxe_queue_init(rxe,
+>>   				      &qp->sq.max_wr,
+>>   				      wqe_size);
+>> -- 
+>> 1.8.3.1
+>>
