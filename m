@@ -2,144 +2,234 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F71CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56015CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7719121734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:18:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572383933;
-	bh=zpgMRmB2+OUmfkPUJn+0sPhsYPa/nJY+387yladmnrc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PTOIJxTxUvXUwNgLPv6QGRK9T171sxn8laPri7Kzn/oXwk9Pl2SsJk/TQcCd5Zv3q
-	 FBCGL6NEKCq++IPPK3clkQLLHJxMjd+e6lhxxBTm/NGORh+Qt+6ANOllJYsVTLgTMR
-	 DBK0EsIDikO0r6608S6bGdxybUsCPey+U3IDIxkg=
+	by mail.kernel.org (Postfix) with ESMTP id 2B4A92087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbfJ2VSw (ORCPT
+        id S1729665AbfJ2VTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:18:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbfJ2VSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:18:52 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134B821734;
-        Tue, 29 Oct 2019 21:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572383931;
-        bh=zpgMRmB2+OUmfkPUJn+0sPhsYPa/nJY+387yladmnrc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M372WvepBD01pI9VIjsiCfpipdnqFMbpzbuthX+wVwQEqQ8XZ8lV6VZFciCZZs6fh
-         ELbBr4yJxE4+jWNbJ2Z6nweRDOhuqp0KuVCaMxqtwY36d9LeuJB6KhctgTZSpIt/Ok
-         0bSgcASRz+8ocb7i4RsnEiJtOVZ61x7G7p+s9Ito=
-Received: by mail-qt1-f176.google.com with SMTP id e14so253842qto.1;
-        Tue, 29 Oct 2019 14:18:51 -0700 (PDT)
-X-Gm-Message-State: APjAAAXmTLb4uwxxzIseSgQCZdcHi0tiOBktOFS8d4vE1VutiKttwuqt
-        4tVEOsrFV2PEg0evjG6TZViTymlUXud5uC42Xw==
-X-Google-Smtp-Source: APXvYqxo+gATAnWKaH4+/7DfLaTaJSdXC7dT+aqj7Pm+u15wwoD9JB4JIj7f9Qiz9jWQueCpx/cWWbcYKy3Q5nqHfi8=
-X-Received: by 2002:ac8:741a:: with SMTP id p26mr1394611qtq.143.1572383930154;
- Tue, 29 Oct 2019 14:18:50 -0700 (PDT)
+        Tue, 29 Oct 2019 17:19:40 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33928 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727706AbfJ2VTj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 17:19:39 -0400
+Received: by mail-ot1-f68.google.com with SMTP id m19so239765otp.1;
+        Tue, 29 Oct 2019 14:19:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ecDqSfSuAIrQpm88YN5y/79NJNgXFx+waZx0U92w3DQ=;
+        b=MVNbcmDWKkwBYwJhxKx5Hb4jhCkYU26aI3Lw6occxjLF4VDYwCD/FV2UgX283wTAve
+         izoaQY9ncOwzg7C3w6jg5jQaSrVsdSf7cRx3ghvkpE3j1s99ZlxVzl8WEpBiPWgs5TpH
+         Gs5a+ostZxaOUecicQNJgYX8Pfg/FpxSZJBf5VXMPU9FElfd9XIjBvvEgiTMNj6x3mXu
+         qOhzBFa2qx7b8NmNtBTtl+QnkJ8ItjGnN4uU6LLei6mBwm7lr9DY4J0YWgtujOc+Uezc
+         PYaOgDuMqxdAWl9VekrMDEwgp4J0g7cdjA9Ij3mbq8bPYNsHaZwfhVdEioNDUoD2kq6M
+         XtfQ==
+X-Gm-Message-State: APjAAAVfRAL0gLmy134/tLe8pHmDiVCXrgo9bW7Yr+4PoqyG/lITRjON
+        XzA5PQZz+rDYIlyhdsmss1p9lNM19Ao=
+X-Google-Smtp-Source: APXvYqwad8XV+0tM14Xmpvqz9e9R5YPGusPpN7XuwHI5LwQvtbgGY6hNd8j8rtGSMfvO79lFQrFtEA==
+X-Received: by 2002:a9d:1a5:: with SMTP id e34mr20767800ote.286.1572383978012;
+        Tue, 29 Oct 2019 14:19:38 -0700 (PDT)
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com. [209.85.210.43])
+        by smtp.gmail.com with ESMTPSA id b31sm46672otc.70.2019.10.29.14.19.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Oct 2019 14:19:37 -0700 (PDT)
+Received: by mail-ot1-f43.google.com with SMTP id 94so203961oty.8;
+        Tue, 29 Oct 2019 14:19:37 -0700 (PDT)
+X-Received: by 2002:a05:6830:2322:: with SMTP id q2mr14516847otg.74.1572383976764;
+ Tue, 29 Oct 2019 14:19:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191023024348.225969-1-ikjn@chromium.org> <20191025194101.GA4734@bogus>
- <CAATdQgDxC_1EH4cBqf7deEqRjtRU1s4o=L8vOztvVZ7NS_q9Mw@mail.gmail.com>
-In-Reply-To: <CAATdQgDxC_1EH4cBqf7deEqRjtRU1s4o=L8vOztvVZ7NS_q9Mw@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 29 Oct 2019 16:18:37 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJkFND8JP1bG6jbk9E365MpoNOHn1s9=SG-mFjwBa6Gvg@mail.gmail.com>
-Message-ID: <CAL_JsqJkFND8JP1bG6jbk9E365MpoNOHn1s9=SG-mFjwBa6Gvg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: input: Add DT bindings for Whiskers switch
-To:     Ikjoon Jang <ikjn@chromium.org>
-Cc:     Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+References: <20191024092644.26583-1-ran.wang_1@nxp.com>
+In-Reply-To: <20191024092644.26583-1-ran.wang_1@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Tue, 29 Oct 2019 16:19:25 -0500
+X-Gmail-Original-Message-ID: <CADRPPNSTq8=uH-HLP0qhzR1Ob+BQc5=h53km+z3vumMSBX1ccQ@mail.gmail.com>
+Message-ID: <CADRPPNSTq8=uH-HLP0qhzR1Ob+BQc5=h53km+z3vumMSBX1ccQ@mail.gmail.com>
+Subject: Re: [PATCH v10 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nicolas Boitchat <drinkcat@chromium.org>
+        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>,
+        Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 2:23 AM Ikjoon Jang <ikjn@chromium.org> wrote:
+On Thu, Oct 24, 2019 at 4:29 AM Ran Wang <ran.wang_1@nxp.com> wrote:
 >
-> On Sat, Oct 26, 2019 at 3:41 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, Oct 23, 2019 at 10:43:48AM +0800, Ikjoon Jang wrote:
-> > > Add the DT binding document for Hammer's TABLET_MODE switch.
-> >
-> > This doesn't have any properties. Why does it need to be in DT? Just
-> > have the EC driver instantiate it.
-> >
-> > >
-> > > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> > > ---
-> > >  .../devicetree/bindings/input/cros-cbas.yaml  | 22 +++++++++++++++++++
-> > >  1 file changed, 22 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/input/cros-cbas.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/input/cros-cbas.yaml b/Documentation/devicetree/bindings/input/cros-cbas.yaml
-> > > new file mode 100644
-> > > index 000000000000..3bc989c6a295
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/cros-cbas.yaml
-> > > @@ -0,0 +1,22 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> >
-> > (GPL-2.0-only OR BSD-2-Clause) for new bindings please.
+> Some user might want to go through all registered wakeup sources
+> and doing things accordingly. For example, SoC PM driver might need to
+> do HW programming to prevent powering down specific IP which wakeup
+> source depending on. So add this API to help walk through all registered
+> wakeup source objects on that list and return them one by one.
 >
-> This will be GPL-2.0-only in next patch.
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-That's not what I said. Dual licensed please:
+Series applied to soc/fsl for next.  Thanks.
 
-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-
+Regards,
+Leo
+> ---
+> Change in v10:
+>         - Add 'Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>'
+>           to commit message.
 >
-> >
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/input/cros-cbas.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: ChromeOS Hammer's Base Attached Switch
-> > > +
-> > > +maintainers:
-> > > +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > +
-> > > +description:
-> > > +  This device is used to signal when a detachable base is attached to a
-> > > +  Chrome OS tablet. The node for this device must be under a cros-ec node
-> > > +  like google,cros-ec-spi or google,cros-ec-i2c.
-> >
-> > This should probably just be part of an EC schema where it can be
-> > enforced that this is a child node. It could be either embedded into it
-> > or referenced. I'd lean toward the former given this is only a
-> > compatible string...
+> Change in v9:
+>         - Supplement comments for wakeup_sources_read_lock(),
+>           wakeup_sources_read_unlock, wakeup_sources_walk_start and
+>           wakeup_sources_walk_next().
 >
-> Sorry for basic questions here but I'm a bit confused,
-> "embedding" means that cros-ec.txt should be converted
-> into json schema first and embed this child bindings into there?
-
-Right.
-
-> Many Chrome OS tablets have a switch exposed by 'cros-ec-keyb' device
-> which is directly controlled by EC. But this 'cros_cbas' switch device is for
-> other types of tablets which need additional logics on EC and HID.
+> Change in v8:
+>         - Rename wakeup_source_get_next() to wakeup_sources_walk_next().
+>         - Add wakeup_sources_read_lock() to take over locking job of
+>           wakeup_source_get_star().
+>         - Rename wakeup_source_get_start() to wakeup_sources_walk_start().
+>         - Replace wakeup_source_get_stop() with wakeup_sources_read_unlock().
+>         - Define macro for_each_wakeup_source(ws).
 >
-> Currently it doesn't need to have other properties, but maybe it could require
-> additional properties or device links in the future, plus this device
-> is not just
-> a EC subdevice, so I'd prefer this to be a separate binding.
-
-But in the description you say it is a child device.
-
-Rob
+> Change in v7:
+>         - Remove define of member *dev in wake_irq to fix conflict with commit
+>         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs"), user
+>         will use ws->dev->parent instead.
+>         - Remove '#include <linux/of_device.h>' because it is not used.
+>
+> Change in v6:
+>         - Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned
+>         with wakeup_sources_stats_seq_start/nex/stop.
+>
+> Change in v5:
+>         - Update commit message, add decription of walk through all wakeup
+>         source objects.
+>         - Add SCU protection in function wakeup_source_get_next().
+>         - Rename wakeup_source member 'attached_dev' to 'dev' and move it up
+>         (before wakeirq).
+>
+> Change in v4:
+>         - None.
+>
+> Change in v3:
+>         - Adjust indentation of *attached_dev;.
+>
+> Change in v2:
+>         - None.
+>
+>  drivers/base/power/wakeup.c | 54 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_wakeup.h   |  9 ++++++++
+>  2 files changed, 63 insertions(+)
+>
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 5817b51..70a9edb 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -248,6 +248,60 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+>  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+>
+>  /**
+> + * wakeup_sources_read_lock - Lock wakeup source list for read.
+> + *
+> + * Returns an index of srcu lock for struct wakeup_srcu.
+> + * This index must be passed to the matching wakeup_sources_read_unlock().
+> + */
+> +int wakeup_sources_read_lock(void)
+> +{
+> +       return srcu_read_lock(&wakeup_srcu);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_read_lock);
+> +
+> +/**
+> + * wakeup_sources_read_unlock - Unlock wakeup source list.
+> + * @idx: return value from corresponding wakeup_sources_read_lock()
+> + */
+> +void wakeup_sources_read_unlock(int idx)
+> +{
+> +       srcu_read_unlock(&wakeup_srcu, idx);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_read_unlock);
+> +
+> +/**
+> + * wakeup_sources_walk_start - Begin a walk on wakeup source list
+> + *
+> + * Returns first object of the list of wakeup sources.
+> + *
+> + * Note that to be safe, wakeup sources list needs to be locked by calling
+> + * wakeup_source_read_lock() for this.
+> + */
+> +struct wakeup_source *wakeup_sources_walk_start(void)
+> +{
+> +       struct list_head *ws_head = &wakeup_sources;
+> +
+> +       return list_entry_rcu(ws_head->next, struct wakeup_source, entry);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_walk_start);
+> +
+> +/**
+> + * wakeup_sources_walk_next - Get next wakeup source from the list
+> + * @ws: Previous wakeup source object
+> + *
+> + * Note that to be safe, wakeup sources list needs to be locked by calling
+> + * wakeup_source_read_lock() for this.
+> + */
+> +struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws)
+> +{
+> +       struct list_head *ws_head = &wakeup_sources;
+> +
+> +       return list_next_or_null_rcu(ws_head, &ws->entry,
+> +                               struct wakeup_source, entry);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_walk_next);
+> +
+> +/**
+>   * device_wakeup_attach - Attach a wakeup source object to a device object.
+>   * @dev: Device to handle.
+>   * @ws: Wakeup source object to attach to @dev.
+> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+> index 661efa0..aa3da66 100644
+> --- a/include/linux/pm_wakeup.h
+> +++ b/include/linux/pm_wakeup.h
+> @@ -63,6 +63,11 @@ struct wakeup_source {
+>         bool                    autosleep_enabled:1;
+>  };
+>
+> +#define for_each_wakeup_source(ws) \
+> +       for ((ws) = wakeup_sources_walk_start();        \
+> +            (ws);                                      \
+> +            (ws) = wakeup_sources_walk_next((ws)))
+> +
+>  #ifdef CONFIG_PM_SLEEP
+>
+>  /*
+> @@ -92,6 +97,10 @@ extern void wakeup_source_remove(struct wakeup_source *ws);
+>  extern struct wakeup_source *wakeup_source_register(struct device *dev,
+>                                                     const char *name);
+>  extern void wakeup_source_unregister(struct wakeup_source *ws);
+> +extern int wakeup_sources_read_lock(void);
+> +extern void wakeup_sources_read_unlock(int idx);
+> +extern struct wakeup_source *wakeup_sources_walk_start(void);
+> +extern struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws);
+>  extern int device_wakeup_enable(struct device *dev);
+>  extern int device_wakeup_disable(struct device *dev);
+>  extern void device_set_wakeup_capable(struct device *dev, bool capable);
+> --
+> 2.7.4
+>
