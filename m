@@ -2,151 +2,287 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F33CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FC4CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F68520862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:41:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VLQKO+JO"
+	by mail.kernel.org (Postfix) with ESMTP id 12E7220862
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730813AbfJ2Cl0 (ORCPT
+        id S1730834AbfJ2Cog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:41:26 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34926 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730215AbfJ2ClZ (ORCPT
+        Mon, 28 Oct 2019 22:44:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9586 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727987AbfJ2Cog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:41:25 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l10so11953201wrb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 19:41:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZeDXYfJYer9ewRjx0PKDp7gkl9UyDafoP/CtcLx8QMs=;
-        b=VLQKO+JOvP8uz/jmVZM9OjdCfHDXyDMWpkMpTUHQHfjmA84+CUWD7XxXQNaduG/DhK
-         WpLIlhGmDUXteBLSWlDLv3lLQKGl9plS/P7jNHsE1n2OgqkcjY1MB0T3Q0WBTvNA1F40
-         PLq6JygSU3JQITuvsF6azO0JElsbcTQp8BtSk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZeDXYfJYer9ewRjx0PKDp7gkl9UyDafoP/CtcLx8QMs=;
-        b=uib2oGZIQ8KfAN5LQ5P5Zw9AIUNUbKp/Vdmab/+DJg4Okzu7jsEtgl4I55Z3F0KE6O
-         AuTcleLIicfIbo5u9azkqyZ2CeapHN8pNISYE3BDMX3zkuhlyfq/tTUMpdfu5O7n6yYC
-         fl7CcRhX0PohM29mq1xpb1KIeytM0ycdWvmLXRsgPtsVG83tYzCIFcV21l4H+Q27tT9V
-         1FcF9upD+15I74YslBRwQX/0GMldbwMb0O+EIlInMWpHDc1vSIC6IoPDKfsU0gA+ki7F
-         hBw1tbEZB2JKG+0dJqShdgd//ThBnon/VeeRBuCJ+WlnvLWYWJvXkad2PpJG93ePKW/m
-         CJBA==
-X-Gm-Message-State: APjAAAXmmePq4nNLdwNHnxLp6nFDen6DRq9tKy8BgbREUtCFo1k8TpsD
-        E3Y+RQyz/DdmIkNwAGOrQOemzbr1JdbZxEG32929tg==
-X-Google-Smtp-Source: APXvYqyc+JXXHY09WmrhUa6gx/7O5d2iKpnoJiK3FXpiuNcBFCoy0/gMtIdx+mtcV6BqjcvdZ3c6ru0/7R8MCJ1fJrA=
-X-Received: by 2002:adf:e806:: with SMTP id o6mr15942278wrm.139.1572316882248;
- Mon, 28 Oct 2019 19:41:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191025133007.11190-4-cychiang@chromium.org> <201910290345.w2EEW5S3%lkp@intel.com>
-In-Reply-To: <201910290345.w2EEW5S3%lkp@intel.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Tue, 29 Oct 2019 10:40:55 +0800
-Message-ID: <CAFv8NwJYrpT=hCFwWfbdRvC971X-XGS-mjEBJrggQTJ02nhv7g@mail.gmail.com>
-Subject: Re: [PATCH v8 3/6] ASoC: rockchip_max98090: Optionally support HDMI
- use case
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+        Mon, 28 Oct 2019 22:44:36 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9T264ug044239
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 22:44:35 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vx9wxmxp9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 22:44:34 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Tue, 29 Oct 2019 02:44:31 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 29 Oct 2019 02:44:24 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9T2hnux33358248
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 02:43:49 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12B3B5204E;
+        Tue, 29 Oct 2019 02:44:23 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7493352050;
+        Tue, 29 Oct 2019 02:44:22 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 4367FA020A;
+        Tue, 29 Oct 2019 13:44:19 +1100 (AEDT)
+Subject: Re: [PATCH 04/10] powerpc: Map & release OpenCAPI LPC memory
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Allison Randal <allison@lohutok.net>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Greg Kurz <groug@kaod.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Tue, 29 Oct 2019 13:44:19 +1100
+In-Reply-To: <32caa2ef-43b2-f71d-f470-ccfed0ae094e@linux.ibm.com>
+References: <20191025044721.16617-1-alastair@au1.ibm.com>
+         <20191025044721.16617-5-alastair@au1.ibm.com>
+         <32caa2ef-43b2-f71d-f470-ccfed0ae094e@linux.ibm.com>
+Organization: IBM Australia
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102902-0012-0000-0000-0000035E9919
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102902-0013-0000-0000-00002199D8C7
+Message-Id: <4dc37533df4f5566fdbe5c212289c438d0fe2c3b.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910290018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 3:10 AM kbuild test robot <lkp@intel.com> wrote:
->
-> Hi Cheng-Yi,
->
-> I love your patch! Yet something to improve:
->
-> [auto build test ERROR on rockchip/for-next]
-> [also build test ERROR on v5.4-rc5 next-20191028]
-> [if your patch is applied to the wrong git tree, please drop us a note to=
- help
-> improve the system. BTW, we also suggest to use '--base' option to specif=
-y the
-> base tree in git format-patch, please see https://stackoverflow.com/a/374=
-06982]
->
-> url:    https://github.com/0day-ci/linux/commits/Cheng-Yi-Chiang/Add-HDMI=
--jack-support-on-RK3288/20191028-212502
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockc=
-hip.git for-next
-> config: i386-allmodconfig (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=3Di386
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->    sound/soc/rockchip/snd-soc-rockchip-max98090: struct of_device_id is 1=
-96 bytes.  The last of 3 is:
->    0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x72 0x6f 0x63 0x6b 0x63 0x68 0x69 0x70 0x2c 0x72 =
-0x6f 0x63 0x6b 0x63 0x68 0x69 0x70 0x2d 0x61 0x75 0x64 0x69 0x6f 0x2d 0x6d =
-0x61 0x78 0x39 0x38 0x30 0x39 0x30 0x2d 0x68 0x64 0x6d 0x69 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x10 0x00 =
-0x00 0x00
-> >> FATAL: sound/soc/rockchip/snd-soc-rockchip-max98090: struct of_device_=
-id is not terminated with a NULL entry!
+On Tue, 2019-10-29 at 12:49 +1100, Andrew Donnellan wrote:
+> On 25/10/19 3:46 pm, Alastair D'Silva wrote:
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > This patch adds platform support to map & release LPC memory.
+> >  > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >   arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
+> >   arch/powerpc/platforms/powernv/ocxl.c | 41
+> > +++++++++++++++++++++++++++
+> >   include/linux/memory_hotplug.h        |  5 ++++
+> >   mm/memory_hotplug.c                   |  3 +-
+> >   4 files changed, 50 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/powerpc/include/asm/pnv-ocxl.h
+> > b/arch/powerpc/include/asm/pnv-ocxl.h
+> > index 7de82647e761..f8f8ffb48aa8 100644
+> > --- a/arch/powerpc/include/asm/pnv-ocxl.h
+> > +++ b/arch/powerpc/include/asm/pnv-ocxl.h
+> > @@ -32,5 +32,7 @@ extern int pnv_ocxl_spa_remove_pe_from_cache(void
+> > *platform_data, int pe_handle)
+> >   
+> >   extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
+> >   extern void pnv_ocxl_free_xive_irq(u32 irq);
+> > +extern u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64
+> > size);
+> > +extern void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
+> >   
+> >   #endif /* _ASM_PNV_OCXL_H */
+> > diff --git a/arch/powerpc/platforms/powernv/ocxl.c
+> > b/arch/powerpc/platforms/powernv/ocxl.c
+> > index 8c65aacda9c8..c6d4234e0aba 100644
+> > --- a/arch/powerpc/platforms/powernv/ocxl.c
+> > +++ b/arch/powerpc/platforms/powernv/ocxl.c
+> > @@ -475,6 +475,47 @@ void pnv_ocxl_spa_release(void *platform_data)
+> >   }
+> >   EXPORT_SYMBOL_GPL(pnv_ocxl_spa_release);
+> >   
+> > +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
+> > +{
+> > +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> > +	struct pnv_phb *phb = hose->private_data;
+> > +	u32 bdfn = (pdev->bus->number << 8) | pdev->devfn;
+> 
+> I think pci_dev_id() is the canonical way to do this? (same applies
+> in 
+> release)
 
-Please ignore this error for v8 patch series because the change in
-rockchip_max98090.c of of_device_id is removed in v9 patch series.
-Thanks!
+Thanks.
 
->
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Ce=
-nter
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corpora=
-tion
+> 
+> > +	u64 base_addr = 0;
+> > +	int rc;
+> > +
+> > +	rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size, &base_addr);
+> > +	if (rc) {
+> > +		dev_warn(&pdev->dev,
+> > +			 "OPAL could not allocate LPC memory, rc=%d\n",
+> > rc);
+> > +		return 0;
+> > +	}
+> > +
+> > +	base_addr = be64_to_cpu(base_addr);
+> 
+> sparse doesn't like this, the way it's usually done is declare a
+> __be64 
+> variable, pass that to the opal call, then store the conversion in a 
+> regular u64
+> 
+
+Ok.
+
+> > +
+> > +	rc = check_hotplug_memory_addressable(base_addr >> PAGE_SHIFT,
+> > +					      size >> PAGE_SHIFT);
+> > +	if (rc)
+> > +		return 0;
+> > +
+> > +	return base_addr;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_setup);
+> > +
+> > +void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev)
+> > +{
+> > +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> > +	struct pnv_phb *phb = hose->private_data;
+> > +	u32 bdfn = (pdev->bus->number << 8) | pdev->devfn;
+> > +	int rc;
+> > +
+> > +	rc = opal_npu_mem_release(phb->opal_id, bdfn);
+> > +	if (rc)
+> > +		dev_warn(&pdev->dev,
+> > +			 "OPAL reported rc=%d when releasing LPC
+> > memory\n", rc);
+> > +}
+> > +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_release);
+> > +
+> > +
+> >   int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int
+> > pe_handle)
+> >   {
+> >   	struct spa_data *data = (struct spa_data *) platform_data;
+> > diff --git a/include/linux/memory_hotplug.h
+> > b/include/linux/memory_hotplug.h
+> > index f46ea71b4ffd..3f5f1a642abe 100644
+> > --- a/include/linux/memory_hotplug.h
+> > +++ b/include/linux/memory_hotplug.h
+> > @@ -339,6 +339,11 @@ static inline int remove_memory(int nid, u64
+> > start, u64 size)
+> >   static inline void __remove_memory(int nid, u64 start, u64 size)
+> > {}
+> >   #endif /* CONFIG_MEMORY_HOTREMOVE */
+> >   
+> > +#if CONFIG_MEMORY_HOTPLUG_SPARSE
+> 
+> This needs to be #ifdef.
+> 
+
+Yup, 0 day caught that one too :)
+
+> > +int check_hotplug_memory_addressable(unsigned long pfn,
+> > +		unsigned long nr_pages);
+> > +#endif /* CONFIG_MEMORY_HOTPLUG_SPARSE */
+> > +
+> >   extern void __ref free_area_init_core_hotplug(int nid);
+> >   extern int __add_memory(int nid, u64 start, u64 size);
+> >   extern int add_memory(int nid, u64 start, u64 size);
+> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> > index 2cecf07b396f..b39827dbd071 100644
+> > --- a/mm/memory_hotplug.c
+> > +++ b/mm/memory_hotplug.c
+> > @@ -278,7 +278,7 @@ static int check_pfn_span(unsigned long pfn,
+> > unsigned long nr_pages,
+> >   	return 0;
+> >   }
+> >   
+> > -static int check_hotplug_memory_addressable(unsigned long pfn,
+> > +int check_hotplug_memory_addressable(unsigned long pfn,
+> >   					    unsigned long nr_pages)
+> >   {
+> >   	const u64 max_addr = PFN_PHYS(pfn + nr_pages) - 1;
+> > @@ -294,6 +294,7 @@ static int
+> > check_hotplug_memory_addressable(unsigned long pfn,
+> >   
+> >   	return 0;
+> >   }
+> > +EXPORT_SYMBOL_GPL(check_hotplug_memory_addressable);
+> 
+> This export seems unnecessary, you don't seem to be using this
+> function 
+> in a module anywhere in this series AFAICT.
+> 
+
+This is used within this patch, in the map call.
+
+> Also it looks like a whitespace fix from removing the static ended up
+> in 
+> patch #8 rather than here.
+
+Thanks.
+
+> 
+> >   
+> >   /*
+> >    * Reasonably generic function for adding memory.  It is
+> > 
+
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
