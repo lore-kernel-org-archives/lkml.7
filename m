@@ -2,131 +2,103 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D278CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63711CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C0C21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4C02087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:15:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="GzRBZMkn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I8U+d2V8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbfJ2VLu (ORCPT
+        id S1729353AbfJ2VPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:11:50 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42983 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfJ2VLt (ORCPT
+        Tue, 29 Oct 2019 17:15:42 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39956 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfJ2VPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:11:49 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a15so2932480wrf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:11:48 -0700 (PDT)
+        Tue, 29 Oct 2019 17:15:42 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p5so3130624plr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:15:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jzc5SphXTBrdUOnsHcsz6Kv2zKhcckogB+EMxfSC+W4=;
-        b=GzRBZMknZ6PJjqjSg7LcletNje7HHjxj2/Py6Vgos74AI/KzFBUTImuNepZmauCZxp
-         xW9pq09rGBWK5BFK4Lbsy/PHbnCyKiNI+z3dC5Xh1hPQxChHD8YO/kd7p1RYrjoiLLQi
-         x/or0KdFUGqKLXyadfMjgS/sUeKYoEVgYJ/2A=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4W0RQy7L8eh7pRvWVxgcmtPohgICmGJuDBiUC3OtQXc=;
+        b=I8U+d2V8b9DcvszTpNkYzx8YDIuowvCEAN8/hq06mWUBrW1C9IFc9zOdTV8NmetYIx
+         XdchWOKTprtzj7BrCs1SWXwtizr/5Svkqrapz3CRCsQMazLT/znGCXGXfPoHk47uKD4s
+         H8DeqA+Bp69QYF4iTcRYw2od2qrlqFz95t1aQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jzc5SphXTBrdUOnsHcsz6Kv2zKhcckogB+EMxfSC+W4=;
-        b=W3UAJqJlx4/2A6AaCWMMASLW42DbM0QSbKl4WxX3ItTUoYPodDvA2dPIx9dIzS2q3p
-         3hmEzkaBPl7ngaa6MfgU0l5z6XML8UWk6Q9n5VrG1D7A7YP1qfE53+ZXGz2QDOJQCXAg
-         6aNp42RVteyjyse2ArOSbcUDa78PypjE7FtbFouKmGsi9jXnMIcqyogZ9Y49LjfzysuP
-         o/Tmu/I+HuKszOv9kP/WM+sRqHAUJnySLhWHTxCdPQazWfsS9439VxFKsSmJykU0BRYP
-         GfHui0YSwK7Dpk62CgALa7kPW2CgXozD2KTkHW7BfC+iGszz2T9BZwB9tf4mVfw1LTjL
-         yWZg==
-X-Gm-Message-State: APjAAAUSpAkr2a9YLqHIHLHSGCRxMkczvrR8uzM4UGbmt+TM3h003kxx
-        wsQiOqFvhIM/7GXJLSOranF7F42G34idxUkd
-X-Google-Smtp-Source: APXvYqywIRKIxrTc5gINIOm/p9vuLkFieHMMNMHKw0+1nObWCoreZtWPnevND5QedwZIF87dCvk6eA==
-X-Received: by 2002:a05:6000:92:: with SMTP id m18mr22618873wrx.105.1572383507160;
-        Tue, 29 Oct 2019 14:11:47 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id l26sm4251157wmg.3.2019.10.29.14.11.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 14:11:46 -0700 (PDT)
-Subject: Re: [PATCH 4/7] module: avoid code duplication in
- include/linux/export.h
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
- <20190927093603.9140-5-yamada.masahiro@socionext.com>
- <f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk>
- <20191029191925.GA19316@linux-8ccs>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <a2e6bdc2-3d35-a3dc-13ef-1ce32f77ef17@rasmusvillemoes.dk>
-Date:   Tue, 29 Oct 2019 22:11:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4W0RQy7L8eh7pRvWVxgcmtPohgICmGJuDBiUC3OtQXc=;
+        b=RdKHS1KWg1VezH9jfFPOc5RYBa0yKf114qkCJE3Sn7Kt/rEIE77LRoEurlppji+2DH
+         zRml7K8kfZA0cB/q4NOsvSyDxjzoIHItYtRXxNOLmYK+waky9uODgYRtko4DeBcj0kZV
+         Ktq9v1ZaGjUL+SBq3Eu+3wtp8/AbyRZCxW3wBuLJbcYV+Il/IqT2gXEvGZi/Jg0epMPy
+         s6iC9heFiqxXLgLjr/1oaXq/BJ6k5FUsJBb1Qhw6TwaVLOKMBk1Ce8GH0HMDH+46mco3
+         NjyS9FHhY36B0XB3kQiUiQMfWXCuSVCNcQcf10xN/WkPTc/kc+Xa6AE+NL824NWVWcU6
+         jZIg==
+X-Gm-Message-State: APjAAAUX/JLotspMXRUEwaxdey1QfZwgeEI1AODp7H4s2gFe9o1RTBbr
+        CgFHXc6M1a23cq0mEEW9prqvFQ==
+X-Google-Smtp-Source: APXvYqxcKsW5UISFe0oAVMX295CcWwGO1CFi+pF1WGPYr1NNtMArlvLHufwgOSgweI/u+V6GrCnhCQ==
+X-Received: by 2002:a17:902:a98c:: with SMTP id bh12mr723589plb.289.1572383741354;
+        Tue, 29 Oct 2019 14:15:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z18sm27341pfq.182.2019.10.29.14.15.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 14:15:40 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:15:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Segher Boessenkool <segher@kernel.crashing.org>,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        Michal Simek <monstr@monstr.eu>, x86@kernel.org,
+        linux-ia64@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-xtensa@linux-xtensa.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-parisc@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org
+Subject: Re: [PATCH v2 01/29] powerpc: Rename "notes" PT_NOTE to "note"
+Message-ID: <201910291414.F29F738B7@keescook>
+References: <20191011000609.29728-1-keescook@chromium.org>
+ <20191011000609.29728-2-keescook@chromium.org>
+ <20191011082519.GI9749@gate.crashing.org>
+ <201910110910.48270FC97@keescook>
+ <20191011162552.GK9749@gate.crashing.org>
+ <20191015165412.GD596@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20191029191925.GA19316@linux-8ccs>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015165412.GD596@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/10/2019 20.19, Jessica Yu wrote:
-> +++ Rasmus Villemoes [27/09/19 13:07 +0200]:
->> On 27/09/2019 11.36, Masahiro Yamada wrote:
->>>
->>> A typical kernel configuration has 10K exported symbols, so it
->>> increases 10KB in rough estimation.
->>>
->>> I did not come up with a good idea to refactor it without increasing
->>> the code size.
->>
->> Can't we put the "aMS" flags on the __ksymtab_strings section? That
->> would make the empty strings free, and would also deduplicate the
->> USB_STORAGE string. And while almost per definition we don't have exact
->> duplicates among the names of exported symbols, we might have both a foo
->> and __foo, so that could save even more.
->>
->> I don't know if we have it already, but we'd need each arch to tell us
->> what symbol to use for @ in @progbits (e.g. % for arm). It seems most
->> are fine with @, so maybe a generic version could be
->>
->> #ifndef ARCH_SECTION_TYPE_CHAR
->> #define ARCH_SECTION_TYPE_CHAR "@"
->> #endif
->>
->> and then it would be
->> section("__ksymtab_strings,\"aMS\","ARCH_SECTION_TYPE_CHAR"progbits,1")
+On Tue, Oct 15, 2019 at 06:54:13PM +0200, Borislav Petkov wrote:
+> On Fri, Oct 11, 2019 at 11:25:52AM -0500, Segher Boessenkool wrote:
+> > Names *matter*, internal names doubly so.  So why replace a good name with
+> > a worse name?  Because it is slightly less work for you?
 > 
-> FWIW, I've just tinkered with this, and unfortunately the strings
-> don't get deduplicated for kernel modules :-(
-> 
-> Apparently ld does not do the deduplication for SHF_MERGE|SHF_STRINGS
-> sections for relocatable files (ld -r), which kernel modules are. See:
-> 
->    https://sourceware.org/ml/binutils/2009-07/msg00291.html
+> So if we agree on the name "notes" and we decide to rename the other
+> arches, this should all be done in a separate patchset anyway, and ontop
+> of this one. And I believe Kees wouldn't mind doing it ontop since he's
+> gotten his hands dirty already. :-P
 
-I know <https://patches-gcc.linaro.org/patch/5858/> :)
+I've added more rationale to patch #1 in the just-sent v3 of this
+series. If I still can't convince you Segher, I'm happy to send "patch
+30/29" to do a bulk rename to "notes". Let me know. :)
 
-> But, the strings do get deduplicated for vmlinux. Not sure if we can
-> find a workaround for modules or if the benefit is significant enough
-> if it only for vmlinux.
-
-I think it's definitely worth if, even if it "only" benefits vmlinux for
-now. And I still hope to revisit the --force-section-merge some day, but
-it's very far down my priority list.
-
-Rasmus
-
-
+-- 
+Kees Cook
