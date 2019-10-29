@@ -2,91 +2,115 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A459ACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213B0CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA2520679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:33:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572384834;
-	bh=uUPuRp21vww4JYMwj4VwNL4OIhJJzH6oL3Bf7yVJvsc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aX+00vuRcac+OZcoEtiDut4+yKnaOirMVXXG421rwxhfSAJ7p3U5l5zfNUFuTPfX4
-	 TrxmPmWvkSXnyKAgJEvkZ2o8nvKHOwNyeLlBH8F+DG3Jg4vGtXMEJ7DvNwE0CjlunN
-	 JJwREY3YEgrXScufiFRHfkaaAPONklu6VtoKaWGw=
+	by mail.kernel.org (Postfix) with ESMTP id E57FA20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:34:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jJCcL1Oz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbfJ2Vdx (ORCPT
+        id S1729284AbfJ2Vei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:33:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbfJ2Vdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:33:53 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7CD320659;
-        Tue, 29 Oct 2019 21:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572384832;
-        bh=uUPuRp21vww4JYMwj4VwNL4OIhJJzH6oL3Bf7yVJvsc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ig2sslsC+KKOWPf5TweLOBiWHqzEIdHcblfcpRa78d8p9GG4aMiDM+J6BCmf+GCfU
-         VCbyJiS9/RUoTppBGPF7/jWTGfV1ySfmgkDK89lYtWGuIrHojUb/R27+lZ+7hKExg/
-         ku50TDOkl6WcZDYLoluREtTZ+5pLWWNpSVmyWQ6Q=
-Date:   Tue, 29 Oct 2019 14:33:51 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        David Rientjes <rientjes@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote
- hugepages
-Message-Id: <20191029143351.95f781f09a9fbf254163d728@linux-foundation.org>
-In-Reply-To: <20191029151549.GO31513@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
-        <20190927074803.GB26848@dhcp22.suse.cz>
-        <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
-        <20190930112817.GC15942@dhcp22.suse.cz>
-        <20191001054343.GA15624@dhcp22.suse.cz>
-        <20191001083743.GC15624@dhcp22.suse.cz>
-        <20191018141550.GS5017@dhcp22.suse.cz>
-        <53c4a6ca-a4d0-0862-8744-f999b17d82d8@suse.cz>
-        <alpine.DEB.2.21.1910241156370.130350@chino.kir.corp.google.com>
-        <08a3f4dd-c3ce-0009-86c5-9ee51aba8557@suse.cz>
-        <20191029151549.GO31513@dhcp22.suse.cz>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 29 Oct 2019 17:34:38 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44005 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728549AbfJ2Vei (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 17:34:38 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 3so5817pfb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=czQOnB8XGZh1drUQRgi49wj4hvdzWXuEnHlZa/FCwwU=;
+        b=jJCcL1OzsUe+bTt3PewqduHXFL93EB/nCB4OSiHOVahR0Ylu4ChCUJH4ZGtQZSpHit
+         y/K9Ro6QZlNcEtPfRnEWcEodVFKxVZYen8dfHq+uhuWXx4db3dLwXYNIzmfgTk3baazY
+         O8GkJZ1Bkn6fMAfPcej6FxUcsb6rdVbnpzNwY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=czQOnB8XGZh1drUQRgi49wj4hvdzWXuEnHlZa/FCwwU=;
+        b=ZzUm/OGARdSc4TDhVdMWeKf1QYcW/OBwcNeTWRiYX3s8RO0zlS/EdOhWpXcN/ABeO9
+         ZadidGfcGZGBOIKAa8x6WMPoZdB4khQXi1fTncCY7Gvat4LTSURwmIHrNJo3X6H0akXK
+         xT5PYw+FEwg+K1uDvQQYw2t/VDlXSAtprg+mRtTLuy6zqNTOB+CmDQdOO+A6+pKeIIsW
+         UmbUw7C+fcg1WhmcnCbMmz24h3F2e8oMBYOcsQzKYDHeIkCLUhOYWJZ3HONB/qlobe4B
+         GkqnmohFybZpafAanA97L2wIpw/INffn0v3ATcm4q4vbXlb8stlYonStBarNoqZp+bhi
+         HpJg==
+X-Gm-Message-State: APjAAAWlqjXb+dwKXYFTVF+pdx9ox/orGO4ngRwhkeNf2ta1/nfHcjvI
+        CYzxcI5QRL/LVcVq1StJl5PzTQ==
+X-Google-Smtp-Source: APXvYqzDkl6Dlr2YTkZfRwU7n8Cd5bbpx8yPw330Hmh+iHEb7mfXtE+8pXQMv6X1a32OfqrVoZekEg==
+X-Received: by 2002:a63:1c4:: with SMTP id 187mr30059349pgb.57.1572384877513;
+        Tue, 29 Oct 2019 14:34:37 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q185sm57411pfc.153.2019.10.29.14.34.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 14:34:36 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Semmle Security Reports <security-reports@semmle.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/2] usb: core: Remove redundant vmap checks
+Date:   Tue, 29 Oct 2019 14:34:23 -0700
+Message-Id: <20191029213423.28949-3-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191029213423.28949-1-keescook@chromium.org>
+References: <20191029213423.28949-1-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 16:15:49 +0100 Michal Hocko <mhocko@kernel.org> wrote:
+Now that the vmap area checks are being performed in the DMA
+infrastructure directly, there is no need to repeat them in USB.
 
-> > 
-> > 1. local node only THP allocation with no reclaim, just compaction.
-> > 2. for madvised VMA's or when synchronous compaction is enabled always - THP
-> >    allocation from any node with effort determined by global defrag setting
-> >    and VMA madvise
-> > 3. fallback to base pages on any node
-> > 
-> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> 
-> I've given this a try and here are the results of my previous testcase
-> (memory full of page cache).
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/usb/core/hcd.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-Thanks, I'll queue this for some more testing.  At some point we should
-decide on a suitable set of Fixes: tags and a backporting strategy, if any?
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index f225eaa98ff8..281568d464f9 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -1410,10 +1410,7 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
+ 		if (hcd->self.uses_pio_for_control)
+ 			return ret;
+ 		if (hcd_uses_dma(hcd)) {
+-			if (is_vmalloc_addr(urb->setup_packet)) {
+-				WARN_ONCE(1, "setup packet is not dma capable\n");
+-				return -EAGAIN;
+-			} else if (object_is_on_stack(urb->setup_packet)) {
++			if (object_is_on_stack(urb->setup_packet)) {
+ 				WARN_ONCE(1, "setup packet is on stack\n");
+ 				return -EAGAIN;
+ 			}
+@@ -1479,9 +1476,6 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
+ 					ret = -EAGAIN;
+ 				else
+ 					urb->transfer_flags |= URB_DMA_MAP_PAGE;
+-			} else if (is_vmalloc_addr(urb->transfer_buffer)) {
+-				WARN_ONCE(1, "transfer buffer not dma capable\n");
+-				ret = -EAGAIN;
+ 			} else if (object_is_on_stack(urb->transfer_buffer)) {
+ 				WARN_ONCE(1, "transfer buffer is on stack\n");
+ 				ret = -EAGAIN;
+-- 
+2.17.1
+
