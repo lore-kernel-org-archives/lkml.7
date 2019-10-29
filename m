@@ -2,65 +2,91 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6167BCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEC9CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9B92086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E3E2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:48:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Pss4uR2X";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fzhTJJ3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbfJ2RsQ (ORCPT
+        id S1730109AbfJ2Rsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:48:16 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:57528 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbfJ2RsP (ORCPT
+        Tue, 29 Oct 2019 13:48:32 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58462 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbfJ2Rsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:48:15 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6D6BD14CDECD3;
-        Tue, 29 Oct 2019 10:48:14 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 10:48:14 -0700 (PDT)
-Message-Id: <20191029.104814.1303198183585893748.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     epomozov@marvell.com, igor.russkikh@aquantia.com,
-        dmitry.bezrukov@aquantia.com, sergey.samoilenko@aquantia.com,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net: aquantia: fix unintention integer overflow
- on left shift
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191025115811.20433-1-colin.king@canonical.com>
-References: <20191025115811.20433-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 29 Oct 2019 10:48:14 -0700 (PDT)
+        Tue, 29 Oct 2019 13:48:31 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 19A3A60E20; Tue, 29 Oct 2019 17:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572371311;
+        bh=O1zkui5yJKuNG0ziv1PZdCM5bIolIL/i4n+wVBNcTf8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Pss4uR2XOAHi+P6+iIsbJtklIy7LEdUwnUmMasEZgrreYsfVACoMYlhHuoaANeljS
+         MGSIQwdPld8yx3uo91+EgG8gWkzzsKMQs1TJ90ynJtCGROIRQM8agdJIPd9sIUaTD6
+         7zjM7iR/au4gY7RID+wk/eoNNPi6/P33fwTjTxYM=
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1EDDB60D6F;
+        Tue, 29 Oct 2019 17:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572371310;
+        bh=O1zkui5yJKuNG0ziv1PZdCM5bIolIL/i4n+wVBNcTf8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fzhTJJ3BfFJIqC90U723NKKkxr+T8PTAvCjzUYcm/4yFeor7SPdhKDuBpEN6VKkz4
+         b4XnpFFrK2i+VNA1YCsIKmnGsjyNdns0ktlZOBuMQTsjn9llSWi2ZfBMdqDehO6/E1
+         YTNtXU/fFRqPjB85CfA8zpFw/b0q0TXKHhuH3yFg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1EDDB60D6F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v2 0/3] Add support for RPMHCC for SC7180
+Date:   Tue, 29 Oct 2019 23:18:16 +0530
+Message-Id: <1572371299-16774-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Fri, 25 Oct 2019 12:58:11 +0100
+[v2]
+ * Fix indentation issues in YAML Documentation.
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Shifting the integer value 1 is evaluated using 32-bit
-> arithmetic and then used in an expression that expects a 64-bit
-> value, so there is potentially an integer overflow. Fix this
-> by using the BIT_ULL macro to perform the shift and avoid the
-> overflow.
-> 
-> Addresses-Coverity: ("Unintentional integer overflow")
-> Fixes: 04a1839950d9 ("net: aquantia: implement data PTP datapath")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+[v1]
+ * Update the Documentation binding of RPMHCC to YAML schemas.
+ * Add RPMH clocks required to be supported on SC7180.
 
-Applied.
+Taniya Das (3):
+  dt-bindings: clock: Add YAML schemas for the QCOM RPMHCC clock
+    bindings
+  dt-bindings: clock: Introduce RPMHCC bindings for SC7180
+  clk: qcom: clk-rpmh: Add support for RPMHCC for SC7180
+
+ .../devicetree/bindings/clock/qcom,rpmh-clk.txt    | 27 ------------
+ .../devicetree/bindings/clock/qcom,rpmhcc.yaml     | 49 ++++++++++++++++++++++
+ drivers/clk/qcom/clk-rpmh.c                        | 19 +++++++++
+ 3 files changed, 68 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
+
