@@ -2,68 +2,94 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07AACA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6866CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E66920717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B1E21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572385382;
+	bh=HGgOwB8zn7hGRq98QTvXr1XyvnOKco7gk0eRzvX9g5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AcQMLfm2iJSPHEZcgLSKquTUbo4582aUKuo0QQp/oOXkrTy/HuXMBfISiG7+U2n3t
+	 lpQzH4jh1dCW+E3U8tVhGNHRVZrU0g+/yeMw1kk5Pg1UZFP8jonPayjp4tG27riYkN
+	 tj0+RMym5dy9r+MS2CXBGk5cXvQjsOokcR6++Sl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbfJ2Vmj (ORCPT
+        id S1729507AbfJ2VnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:42:39 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37363 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727706AbfJ2Vmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:42:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 14:42:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
-   d="scan'208";a="374692453"
-Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
-  by orsmga005.jf.intel.com with ESMTP; 29 Oct 2019 14:42:37 -0700
-From:   thor.thayer@linux.intel.com
-To:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>
-Subject: [PATCH] arm64: dts: agilex: add SMMU clocks
-Date:   Tue, 29 Oct 2019 16:44:18 -0500
-Message-Id: <1572385458-14225-1-git-send-email-thor.thayer@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 29 Oct 2019 17:43:01 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36179 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727706AbfJ2VnB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 17:43:01 -0400
+Received: by mail-oi1-f195.google.com with SMTP id j7so194284oib.3;
+        Tue, 29 Oct 2019 14:43:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UOz2jnU2NvuGE+cTHFffFFLe2zlC54aXD8we4ZSsAAs=;
+        b=c2sA/rPfXLSsZDYwCfe2AhNDdPK0WFwJrwI9xFmgS2JINVTTFgyPLDk1Mm7T0jOS0k
+         QEqjOIJ+yoaAP016uEwRwHG/8FIVdpAV8yRVY7bwFgtnQBrdKWkESxS2DC2IrK1EJxbc
+         CAyGTYItlKdzrpzJ8shs38aEdrW2h6J9C0TYDdKkUub2IuunQaANmZ/BrrpXzLS7LHUU
+         6iM/C/14pczjk/fy2PWYfr6DUOh1Zue48kNDGLOmfsTiUn4hairSZH09iStM4NvCfR+4
+         r8i7uapkS1tynWqigZ8yd70nJyMdxwNW8DbwEd8Ss0agj5EOuAkzhaVKEy8NpDXjCrtQ
+         b4fg==
+X-Gm-Message-State: APjAAAVubExfWVeJP6TgAUPzDeZRltfoCftMtxnm8Z86DDVaJm83oES5
+        0P5mtv8scCTIcARSnMb14Q==
+X-Google-Smtp-Source: APXvYqwsMsBNTiZmW+ZkqE+oq5oUJPEMfBdYaW4zQbwv7qbMVuBJGTKLiIKce1gwB0sh9qEJnwUcvw==
+X-Received: by 2002:aca:bf54:: with SMTP id p81mr3946023oif.81.1572385380085;
+        Tue, 29 Oct 2019 14:43:00 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h79sm14247oib.3.2019.10.29.14.42.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 14:42:58 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 16:42:58 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/17] dt-bindings: cpufreq: Add binding for NVIDIA
+ Tegra20/30
+Message-ID: <20191029214258.GA18586@bogus>
+References: <20191024221416.14197-1-digetx@gmail.com>
+ <20191024221416.14197-7-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024221416.14197-7-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+On Fri, 25 Oct 2019 01:14:05 +0300, Dmitry Osipenko wrote:
+> Add device-tree binding that describes CPU frequency-scaling hardware
+> found on NVIDIA Tegra20/30 SoCs.
+> 
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+> 
 
-Add the SMMU clocks needed for Agilex SMMU.
-
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-index fd9a22fff1fe..12f7e182c018 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-@@ -348,6 +348,9 @@
- 				<0 162 4>, <0 163 4>, <0 164 4>, <0 165 4>,
- 				<0 166 4>, <0 167 4>, <0 168 4>, <0 169 4>;
- 			stream-match-mask = <0x7ff0>;
-+			clocks = <&clkmgr AGILEX_MPU_L2RAM_CLK>,
-+				 <&clkmgr AGILEX_L3_MAIN_FREE_CLK>,
-+				 <&clkmgr AGILEX_L4_MAIN_CLK>;
- 			status = "disabled";
- 		};
- 
--- 
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
