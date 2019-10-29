@@ -2,230 +2,117 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C92CC47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA5FCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50FA320830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:00:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IK4qb1TT"
+	by mail.kernel.org (Postfix) with ESMTP id AEF3C20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732147AbfJ2TAU (ORCPT
+        id S1729079AbfJ2TC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:00:20 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58626 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfJ2TAU (ORCPT
+        Tue, 29 Oct 2019 15:02:27 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:48059 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbfJ2TC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:00:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TIrnje021732;
-        Tue, 29 Oct 2019 18:59:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=tGwA6mxDu+wj8nb3JlA1NbM4cZ+dWsihJQgOglQIpp4=;
- b=IK4qb1TTWYgAwqKIUn5wT1oiV2FhATXzu9eBp0FY6faNA8GalkJHnx270OUPN1EO2Yc9
- 9h5hoSbn47hgNTw1kWYZZkX7c/tcNk9Fo6JDS+VpBlw8Sk14MpDUi6sQh2l8nFpb2hjD
- REzYpxMjAlCBw2Q6G03i3Kxw07clHkN9bAqeZUDfvdf2Ao8XwI/uBSPLiL3xrLNbHgj1
- 5MNnbUnJTxTiaXKdDQxbY+L0nhohoiCpMeLppVj96QfhQT5+bJthda/msACHvnPzrhJW
- Qjrfe3IaoCifk+hOrgx4REQ/XNMf4hdqCWHzg6a2sbcf6/kiFBTlt58oXCpww0KEOrAn mw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vvdjubg65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:59:48 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TIrwmH178549;
-        Tue, 29 Oct 2019 18:59:48 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vxj8gs6fb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:59:47 +0000
-Received: from abhmp0021.oracle.com (abhmp0021.oracle.com [141.146.116.27])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TIxe3G031111;
-        Tue, 29 Oct 2019 18:59:40 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Oct 2019 11:59:40 -0700
-Date:   Tue, 29 Oct 2019 21:59:30 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     jic23@kernel.org, devel@driverdev.osuosl.org, mark.rutland@arm.com,
-        lars@metafoo.de, biabeniamin@outlook.com,
-        Michael.Hennerich@analog.com, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, gregkh@linuxfoundation.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        nicolas.ferre@microchip.com, robh+dt@kernel.org, pmeerw@pmeerw.net,
-        knaack.h@gmx.de, mchehab+samsung@kernel.org, paulmck@linux.ibm.com,
-        Paul Cercueil <paul.cercueil@analog.com>
-Subject: Re: [PATCH v2 1/4] iio: adc: Add support for AD7091R5 ADC
-Message-ID: <20191029185930.GB1705@kadam>
-References: <20191029162928.9720-1-beniamin.bia@analog.com>
+        Tue, 29 Oct 2019 15:02:27 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iPWl0-0004EV-T4; Tue, 29 Oct 2019 13:02:18 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iPWl0-0006xT-3i; Tue, 29 Oct 2019 13:02:18 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Andrea Righi <righi.andrea@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Peter Rosin <peda@axentia.se>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        security@kernel.org, Kees Cook <keescook@chromium.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+References: <20191029182320.GA17569@mwanda>
+Date:   Tue, 29 Oct 2019 14:02:11 -0500
+In-Reply-To: <20191029182320.GA17569@mwanda> (Dan Carpenter's message of "Tue,
+        29 Oct 2019 21:23:20 +0300")
+Message-ID: <87zhhjjryk.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029162928.9720-1-beniamin.bia@analog.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910290163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910290163
+Content-Type: text/plain
+X-XM-SPF: eid=1iPWl0-0006xT-3i;;;mid=<87zhhjjryk.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18PHyqhwTatudH41XJqOC8sC0I5jQ9SR2U=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] fbdev: potential information leak in do_fb_ioctl()
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It looks like you're going to have to respin the patchset so I'm adding
-my nits even though it's a bit late.
+Dan Carpenter <dan.carpenter@oracle.com> writes:
+
+> The "fix" struct has a 2 byte hole after ->ywrapstep and the
+> "fix = info->fix;" assignment doesn't necessarily clear it.  It depends
+> on the compiler.
+>
+> Fixes: 1f5e31d7e55a ("fbmem: don't call copy_from/to_user() with mutex held")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> I have 13 more similar places to patch...  I'm not totally sure I
+> understand all the issues involved.
+
+What I have done in a similar situation with struct siginfo, is that
+where the structure first appears I have initialized it with memset,
+and then field by field.
+
+Then when the structure is copied I copy the structure with memcpy.
+
+That ensures all of the bytes in the original structure are initialized
+and that all of the bytes are copied.
+
+The goal is to avoid memory that has values of the previous users of
+that memory region from leaking to userspace.  Which depending on who
+the previous user of that memory region is could tell userspace
+information about what the kernel is doing that it should not be allowed
+to find out.
+
+I tried to trace through where "info" and thus presumably "info->fix" is
+coming from and only made it as far as  register_framebuffer.  Given
+that I suspect a local memset, and then a field by field copy right
+before copy_to_user might be a sound solution.  But ick.  That is a lot
+of fields to copy.
 
 
-> +static int ad7091r_set_mode(struct ad7091r_state *st, enum ad7091r_mode mode)
-> +{
-> +	int ret;
-> +
-> +	switch (mode) {
-> +	case AD7091R_MODE_SAMPLE:
-> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
-> +					 AD7091R_REG_CONF_MODE_MASK, 0);
-> +		break;
-> +	case AD7091R_MODE_COMMAND:
-> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
-> +					 AD7091R_REG_CONF_MODE_MASK,
-> +					 AD7091R_REG_CONF_CMD);
-> +		break;
-> +	case AD7091R_MODE_AUTOCYCLE:
-> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
-> +					 AD7091R_REG_CONF_MODE_MASK,
-> +					 AD7091R_REG_CONF_AUTO);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-
-This would look even better as:
-
-	switch (mode) {
-	case AD7091R_MODE_SAMPLE:
-		conf = 0;
-		break;
-	case AD7091R_MODE_COMMAND:
-		conf = AD7091R_REG_CONF_CMD;
-		break;
-	case AD7091R_MODE_AUTOCYCLE:
-		conf = AD7091R_REG_CONF_AUTO;
-		break;
-	default:
-		return -EINVAL;
-	}
-
-	ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
-				 AD7091R_REG_CONF_MODE_MASK, conf);
-	if (ret)
-		return ret;
-
-	st->mode = mode;
-
-	return 0;
-
-> +int ad7091r_probe(struct device *dev, const char *name,
-> +		const struct ad7091r_chip_info *chip_info,
-> +		struct regmap *map, int irq)
-> +{
-> +	struct iio_dev *iio_dev;
-> +	struct ad7091r_state *st;
-> +	int ret;
-> +
-> +	iio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!iio_dev)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(iio_dev);
-> +	st->dev = dev;
-> +	st->chip_info = chip_info;
-> +	st->map = map;
-> +
-> +	iio_dev->dev.parent = dev;
-> +	iio_dev->name = name;
-> +	iio_dev->info = &ad7091r_info;
-> +	iio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	iio_dev->num_channels = chip_info->num_channels;
-> +	iio_dev->channels = chip_info->channels;
-> +
-> +	if (irq) {
-> +		ret = devm_request_threaded_irq(dev, irq, NULL,
-> +				ad7091r_event_handler,
-> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT, name, st);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	/* Use command mode by default to convert only desired channels*/
-> +	ret = ad7091r_set_mode(st, AD7091R_MODE_COMMAND);
-> +	if (ret < 0)
-
-if (ret) {
-
-> +		return ret;
-> +
-> +	return iio_device_register(iio_dev);
-> +}
-> +EXPORT_SYMBOL_GPL(ad7091r_probe);
-
-[ snip ]
-
-> +#include <linux/i2c.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "ad7091r-base.h"
-> +
-> +static const struct iio_event_spec ad7091r5_events[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +			BIT(IIO_EV_INFO_ENABLE),
-
-This would be more clear if it were aligned like so:
-
-		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-				 BIT(IIO_EV_INFO_ENABLE),
+Eric
 
 
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +			BIT(IIO_EV_INFO_ENABLE),
 
-		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-				 BIT(IIO_EV_INFO_ENABLE),
-
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_EITHER,
-> +		.mask_separate = BIT(IIO_EV_INFO_HYSTERESIS),
-> +	},
-> +};
-> +
-
-regards,
-dan carpenter
-
+>  drivers/video/fbdev/core/fbmem.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+> index 6f6fc785b545..b4ce6a28aed9 100644
+> --- a/drivers/video/fbdev/core/fbmem.c
+> +++ b/drivers/video/fbdev/core/fbmem.c
+> @@ -1109,6 +1109,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+>  			ret = -EFAULT;
+>  		break;
+>  	case FBIOGET_FSCREENINFO:
+> +		memset(&fix, 0, sizeof(fix));
+>  		lock_fb_info(info);
+>  		fix = info->fix;
+>  		if (info->flags & FBINFO_HIDE_SMEM_START)
