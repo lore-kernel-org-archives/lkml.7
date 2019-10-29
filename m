@@ -2,291 +2,96 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDBDCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA36CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D0D2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:12:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="X9RPhRP6"
+	by mail.kernel.org (Postfix) with ESMTP id 6EBDE20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390375AbfJ2QM4 (ORCPT
+        id S2390304AbfJ2QSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:12:56 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:48483 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389902AbfJ2QM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 12:12:56 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 472c7R74R9z9v10H;
-        Tue, 29 Oct 2019 17:12:51 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=X9RPhRP6; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id WaPPY6jevBFa; Tue, 29 Oct 2019 17:12:51 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 472c7R60b8z9v10G;
-        Tue, 29 Oct 2019 17:12:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1572365571; bh=ZqYkI8FFGtDxdNcYCy6xzyyqz3qCfVjbMAzAkmk2X9g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=X9RPhRP6pIzSnTo0ia7CQj77WJjpHUjSxi+zbXN7HA9C6/xyw9AOQPbwrHbxh1zR0
-         WPmPRkJk6koK/BhlnTexvy5KDzOMyNrMHVoxBWqRiQB5BEFjZ60XwooZy+Rmcq16Gd
-         sTK9N5viIjCqtH3i1jbJt+FF+nip2MsYmj6NZTRQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 630F68B86A;
-        Tue, 29 Oct 2019 17:12:53 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id UhHpE0SpLY7B; Tue, 29 Oct 2019 17:12:53 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DACB98B86E;
-        Tue, 29 Oct 2019 17:12:52 +0100 (CET)
-Subject: Re: [PATCH v2 4/8] powerpc/vdso32: inline __get_datapage()
-To:     Santosh Sivaraj <santosh@fossix.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <cover.1566491310.git.christophe.leroy@c-s.fr>
- <194fb7bc973ef2ce43016c97dd32f2b2dcbae4e7.1566491310.git.christophe.leroy@c-s.fr>
- <87h864iiq9.fsf@santosiv.in.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <169a83b0-437a-419e-cac4-84338cf95d94@c-s.fr>
-Date:   Tue, 29 Oct 2019 17:12:52 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 12:18:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13582 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390165AbfJ2QSC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 12:18:02 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9TFqXRb025381
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:18:00 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vxnxx0m47-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:18:00 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Tue, 29 Oct 2019 16:17:58 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 29 Oct 2019 16:17:55 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9TGHJAq29753754
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 16:17:19 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36F504C05C;
+        Tue, 29 Oct 2019 16:17:53 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D0FFF4C040;
+        Tue, 29 Oct 2019 16:17:52 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.85])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 29 Oct 2019 16:17:52 +0000 (GMT)
+Date:   Tue, 29 Oct 2019 17:17:51 +0100
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     gor@linux.ibm.com, borntraeger@de.ibm.com, jpoimboe@redhat.com,
+        joe.lawrence@redhat.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jikos@kernel.org, pmladek@suse.com,
+        nstange@suse.de, live-patching@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] s390/livepatch: Implement reliable stack tracing
+ for the consistency model
+References: <20191029143904.24051-1-mbenes@suse.cz>
+ <20191029143904.24051-4-mbenes@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <87h864iiq9.fsf@santosiv.in.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029143904.24051-4-mbenes@suse.cz>
+X-TM-AS-GCONF: 00
+x-cbid: 19102916-0016-0000-0000-000002BED7FB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102916-0017-0000-0000-00003320311E
+Message-Id: <20191029161751.GH5646@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=668 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910290144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Santosh,
+Hi Miroslav,
 
-Le 26/08/2019 à 07:44, Santosh Sivaraj a écrit :
-> Hi Christophe,
-> 
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> 
->> __get_datapage() is only a few instructions to retrieve the
->> address of the page where the kernel stores data to the VDSO.
->>
->> By inlining this function into its users, a bl/blr pair and
->> a mflr/mtlr pair is avoided, plus a few reg moves.
->>
->> The improvement is noticeable (about 55 nsec/call on an 8xx)
->>
->> vdsotest before the patch:
->> gettimeofday:    vdso: 731 nsec/call
->> clock-gettime-realtime-coarse:    vdso: 668 nsec/call
->> clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
->>
->> vdsotest after the patch:
->> gettimeofday:    vdso: 677 nsec/call
->> clock-gettime-realtime-coarse:    vdso: 613 nsec/call
->> clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/kernel/vdso32/cacheflush.S   | 10 +++++-----
->>   arch/powerpc/kernel/vdso32/datapage.S     | 29 ++++-------------------------
->>   arch/powerpc/kernel/vdso32/datapage.h     | 11 +++++++++++
->>   arch/powerpc/kernel/vdso32/gettimeofday.S | 13 ++++++-------
->>   4 files changed, 26 insertions(+), 37 deletions(-)
->>   create mode 100644 arch/powerpc/kernel/vdso32/datapage.h
-> 
-> The datapage.h file should ideally be moved under include/asm, then we can use
-> the same for powerpc64 too.
+> +bool unwind_next_frame_reliable(struct unwind_state *state)
+> +{
+...
+> +}
+> +
+>  void __unwind_start(struct unwind_state *state, struct task_struct *task,
+>  		    struct pt_regs *regs, unsigned long sp,
+>  		    bool unwind_reliable)
 
-Finally, I added the get_datapage macro to the existing asm/vdso_datapage.h
+Did you send the wrong version of your patch series? This patch does
+not integrate your new function into the existing one. Also the new
+parameter you added with the second patch isn't used at all.
 
-Christophe
-
-> 
-> Santosh
-> 
->>
->> diff --git a/arch/powerpc/kernel/vdso32/cacheflush.S b/arch/powerpc/kernel/vdso32/cacheflush.S
->> index 7f882e7b9f43..e9453837e4ee 100644
->> --- a/arch/powerpc/kernel/vdso32/cacheflush.S
->> +++ b/arch/powerpc/kernel/vdso32/cacheflush.S
->> @@ -10,6 +10,8 @@
->>   #include <asm/vdso.h>
->>   #include <asm/asm-offsets.h>
->>   
->> +#include "datapage.h"
->> +
->>   	.text
->>   
->>   /*
->> @@ -24,14 +26,12 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
->>     .cfi_startproc
->>   	mflr	r12
->>     .cfi_register lr,r12
->> -	mr	r11,r3
->> -	bl	__get_datapage@local
->> +	get_datapage	r10, r0
->>   	mtlr	r12
->> -	mr	r10,r3
->>   
->>   	lwz	r7,CFG_DCACHE_BLOCKSZ(r10)
->>   	addi	r5,r7,-1
->> -	andc	r6,r11,r5		/* round low to line bdy */
->> +	andc	r6,r3,r5		/* round low to line bdy */
->>   	subf	r8,r6,r4		/* compute length */
->>   	add	r8,r8,r5		/* ensure we get enough */
->>   	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
->> @@ -48,7 +48,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
->>   
->>   	lwz	r7,CFG_ICACHE_BLOCKSZ(r10)
->>   	addi	r5,r7,-1
->> -	andc	r6,r11,r5		/* round low to line bdy */
->> +	andc	r6,r3,r5		/* round low to line bdy */
->>   	subf	r8,r6,r4		/* compute length */
->>   	add	r8,r8,r5
->>   	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
->> diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
->> index 6984125b9fc0..d480d2d4a3fe 100644
->> --- a/arch/powerpc/kernel/vdso32/datapage.S
->> +++ b/arch/powerpc/kernel/vdso32/datapage.S
->> @@ -11,34 +11,13 @@
->>   #include <asm/unistd.h>
->>   #include <asm/vdso.h>
->>   
->> +#include "datapage.h"
->> +
->>   	.text
->>   	.global	__kernel_datapage_offset;
->>   __kernel_datapage_offset:
->>   	.long	0
->>   
->> -V_FUNCTION_BEGIN(__get_datapage)
->> -  .cfi_startproc
->> -	/* We don't want that exposed or overridable as we want other objects
->> -	 * to be able to bl directly to here
->> -	 */
->> -	.protected __get_datapage
->> -	.hidden __get_datapage
->> -
->> -	mflr	r0
->> -  .cfi_register lr,r0
->> -
->> -	bcl	20,31,data_page_branch
->> -data_page_branch:
->> -	mflr	r3
->> -	mtlr	r0
->> -	addi	r3, r3, __kernel_datapage_offset-data_page_branch
->> -	lwz	r0,0(r3)
->> -  .cfi_restore lr
->> -	add	r3,r0,r3
->> -	blr
->> -  .cfi_endproc
->> -V_FUNCTION_END(__get_datapage)
->> -
->>   /*
->>    * void *__kernel_get_syscall_map(unsigned int *syscall_count) ;
->>    *
->> @@ -53,7 +32,7 @@ V_FUNCTION_BEGIN(__kernel_get_syscall_map)
->>   	mflr	r12
->>     .cfi_register lr,r12
->>   	mr	r4,r3
->> -	bl	__get_datapage@local
->> +	get_datapage	r3, r0
->>   	mtlr	r12
->>   	addi	r3,r3,CFG_SYSCALL_MAP32
->>   	cmpli	cr0,r4,0
->> @@ -74,7 +53,7 @@ V_FUNCTION_BEGIN(__kernel_get_tbfreq)
->>     .cfi_startproc
->>   	mflr	r12
->>     .cfi_register lr,r12
->> -	bl	__get_datapage@local
->> +	get_datapage	r3, r0
->>   	lwz	r4,(CFG_TB_TICKS_PER_SEC + 4)(r3)
->>   	lwz	r3,CFG_TB_TICKS_PER_SEC(r3)
->>   	mtlr	r12
->> diff --git a/arch/powerpc/kernel/vdso32/datapage.h b/arch/powerpc/kernel/vdso32/datapage.h
->> new file mode 100644
->> index 000000000000..74f4f57c2da8
->> --- /dev/null
->> +++ b/arch/powerpc/kernel/vdso32/datapage.h
->> @@ -0,0 +1,11 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later */
->> +
->> +.macro get_datapage ptr, tmp
->> +	bcl	20,31,.+4
->> +	mflr	\ptr
->> +	addi	\ptr, \ptr, __kernel_datapage_offset - (.-4)
->> +	lwz	\tmp, 0(\ptr)
->> +	add	\ptr, \tmp, \ptr
->> +.endm
->> +
->> +
->> diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
->> index 355b537d327a..3e55cba19f44 100644
->> --- a/arch/powerpc/kernel/vdso32/gettimeofday.S
->> +++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
->> @@ -12,6 +12,8 @@
->>   #include <asm/asm-offsets.h>
->>   #include <asm/unistd.h>
->>   
->> +#include "datapage.h"
->> +
->>   /* Offset for the low 32-bit part of a field of long type */
->>   #ifdef CONFIG_PPC64
->>   #define LOPART	4
->> @@ -35,8 +37,7 @@ V_FUNCTION_BEGIN(__kernel_gettimeofday)
->>   
->>   	mr	r10,r3			/* r10 saves tv */
->>   	mr	r11,r4			/* r11 saves tz */
->> -	bl	__get_datapage@local	/* get data page */
->> -	mr	r9, r3			/* datapage ptr in r9 */
->> +	get_datapage	r9, r0
->>   	cmplwi	r10,0			/* check if tv is NULL */
->>   	beq	3f
->>   	lis	r7,1000000@ha		/* load up USEC_PER_SEC */
->> @@ -82,8 +83,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
->>   	mflr	r12			/* r12 saves lr */
->>     .cfi_register lr,r12
->>   	mr	r11,r4			/* r11 saves tp */
->> -	bl	__get_datapage@local	/* get data page */
->> -	mr	r9,r3			/* datapage ptr in r9 */
->> +	get_datapage	r9, r0
->>   	lis	r7,NSEC_PER_SEC@h	/* want nanoseconds */
->>   	ori	r7,r7,NSEC_PER_SEC@l
->>   	beq	cr5, .Lcoarse_clocks
->> @@ -208,7 +208,7 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
->>   
->>   	mflr	r12
->>     .cfi_register lr,r12
->> -	bl	__get_datapage@local	/* get data page */
->> +	get_datapage	r3, r0
->>   	lwz	r5, CLOCK_HRTIMER_RES(r3)
->>   	mtlr	r12
->>   	li	r3,0
->> @@ -242,8 +242,7 @@ V_FUNCTION_BEGIN(__kernel_time)
->>     .cfi_register lr,r12
->>   
->>   	mr	r11,r3			/* r11 holds t */
->> -	bl	__get_datapage@local
->> -	mr	r9, r3			/* datapage ptr in r9 */
->> +	get_datapage	r9, r0
->>   
->>   	lwz	r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
->>   
->> -- 
->> 2.13.3
