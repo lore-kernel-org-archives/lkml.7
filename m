@@ -2,128 +2,271 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1594ECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE8ECA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6D021479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4697421479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="snicYa4x"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="um8gmOZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387469AbfJ2Jxt (ORCPT
+        id S1730425AbfJ2Jxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:53:49 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38253 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733162AbfJ2Jxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:53:46 -0400
-Received: by mail-ed1-f65.google.com with SMTP id y8so10229907edu.5
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 02:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:subject:to:cc:references:openpgp:message-id:date:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=HGDKIfiK4WqAtiXxg2PaSaV3tKJwX+/+66kephvgEMc=;
-        b=snicYa4xa75qBwamypvTLqSPyFkZPl5dVyOqrJzmSnFo9ZWuJnc5ulCdFp8WlWQHOl
-         0AuO/24CzCPv7qVgEFhoukv2GFOuJ1bWq1gG2vGzILd3Sn50nx7Fi9m6nayEaiWTNeWY
-         ZCadVMAYdVU8FMtX8KFyDOyJIcHoqkuUGtzHURxZSnjPpu6p02UHO+TMXf7o5/0gNxYn
-         X+HUMTxEw5ceA3gawdZXe2RtYoL4PpaXATQWnklS4ADEMVGaVtRb2ZGtSlttNdf8qviH
-         SrQ8FWJCTqwBRF+wvNq/NxQJiignNV7jT9hOeVxyd31CXmFMEC2a4MK+EqJ4CMbagW3M
-         Jqgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:openpgp:message-id
-         :date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HGDKIfiK4WqAtiXxg2PaSaV3tKJwX+/+66kephvgEMc=;
-        b=Y47JY08dyccPKkhqnzCu5TbyOE8Hv41btOhRTSSFcKQSk2LNWFZqXkdF+DKNbD2JQq
-         Ji0KaKpQJ+90ZBnzhNGePVm7dqbOU1zIqz3MbxJg0WqJJvlhYjc8pIMAavEme/76XjeB
-         LsN7YBtuaMHab2nfUshfEvDV9SwvMjvGPBazjif6k81LQdAGD0at8ZOHZ/USNNsO1nD0
-         Fmp2VtMfFKP7jnfWK9qKDCh+a8TDGSbsza3Q9A3srx2Df6zb74PHvpwNwQZreCenBN9u
-         AHZhuk2sOdyNLlAYCrDchZujP9v9CuNjCDoiccdXuqi29iEzy5QiTkGSoXhtq5zhFg8A
-         JXuQ==
-X-Gm-Message-State: APjAAAUuF+hpHl6iXv2ZCwTOABWcxCI9uqjNxhT+6OSjCwvvjypWOBg3
-        pufuwUdwULimmKUva+VY67ku3Q==
-X-Google-Smtp-Source: APXvYqyFyb/NYxsK1RWq4WxvayVYls/goH6XAAk9FVVYjH3wL1Zb5+8jNZclhKtCmGdk5NT+7BUT2g==
-X-Received: by 2002:a50:eb92:: with SMTP id y18mr23242997edr.244.1572342824719;
-        Tue, 29 Oct 2019 02:53:44 -0700 (PDT)
-Received: from [192.168.27.135] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id x6sm664005edc.50.2019.10.29.02.53.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 02:53:44 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [RFC PATCH 4/4] interconnect: qcom: sdm845: Split qnodes into
- their respective NoCs
-To:     David Dai <daidavid1@codeaurora.org>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org
-Cc:     evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
-        seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-References: <1571278852-8023-1-git-send-email-daidavid1@codeaurora.org>
- <1571278852-8023-5-git-send-email-daidavid1@codeaurora.org>
-Openpgp: preference=signencrypt
-Message-ID: <9f879f99-527d-50bc-d5ef-5a72d4a65c4d@linaro.org>
-Date:   Tue, 29 Oct 2019 11:53:42 +0200
-MIME-Version: 1.0
-In-Reply-To: <1571278852-8023-5-git-send-email-daidavid1@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 29 Oct 2019 05:53:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:21947 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733170AbfJ2JxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:53:11 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 472RjK09wqz9tynh;
+        Tue, 29 Oct 2019 10:53:09 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=um8gmOZv; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id LM_92Agcvcx0; Tue, 29 Oct 2019 10:53:08 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 472RjJ6Bvpz9tygy;
+        Tue, 29 Oct 2019 10:53:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1572342788; bh=N+uhF8c4ECNo6xEQ72XQwCRncDBpG6xv4rvsvbrtlfM=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=um8gmOZv5mQkPHoKCAI+xAPEr1IhuEzkGaBYlAIIQq1Y/Xtm4OonORB3BK6YtKDZu
+         IFSdy1akc10UjocqfIsVUUoQ4z6CMq0BfYF5V/tupA0Ak8J0rRnPqewlQovIf11tdc
+         PdNMVVdQa4THCUcizfQnSbhMMK1xIRSLqErAGPOE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ECD1A8B755;
+        Tue, 29 Oct 2019 10:53:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id xQ2iBKZhFQh4; Tue, 29 Oct 2019 10:53:09 +0100 (CET)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A00A38B84E;
+        Tue, 29 Oct 2019 10:53:09 +0100 (CET)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 6BE376B6FD; Tue, 29 Oct 2019 09:53:09 +0000 (UTC)
+Message-Id: <9c9fe32df8633e6ba8e670274dc3eef82a1b5a65.1572342582.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1572342582.git.christophe.leroy@c-s.fr>
+References: <cover.1572342582.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3 4/8] powerpc/vdso32: inline __get_datapage()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 29 Oct 2019 09:53:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+__get_datapage() is only a few instructions to retrieve the
+address of the page where the kernel stores data to the VDSO.
 
-On 17.10.19 г. 5:20 ч., David Dai wrote:
-> In order to better represent the hardware and its different Network-On-Chip
-> devices, split the sdm845 provider driver into NoC specific providers.
-> Remove duplicate functionality already provided by the icc rpmh and
-> bcm voter drivers to calculate and commit bandwidth requests to hardware.
-> 
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> ---
->  drivers/interconnect/qcom/sdm845.c | 727 +++++++++++--------------------------
->  1 file changed, 206 insertions(+), 521 deletions(-)
-> 
-> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-> index 502a6c2..a731f4d 100644
-> --- a/drivers/interconnect/qcom/sdm845.c
-> +++ b/drivers/interconnect/qcom/sdm845.c
-[..]
->  static int qnoc_probe(struct platform_device *pdev)
->  {
-> @@ -808,6 +480,12 @@ static int qnoc_probe(struct platform_device *pdev)
->  	qp->bcms = desc->bcms;
->  	qp->num_bcms = desc->num_bcms;
->  
-> +	qp->voter = of_bcm_voter_get(qp->dev, NULL);
+By inlining this function into its users, a bl/blr pair and
+a mflr/mtlr pair is avoided, plus a few reg moves.
 
-I assume that we could have a second optional bcm-voter? The
-"qcom,bcm-voter-names" DT property is not used anywhere, is it needed? Maybe
-give an example in patch 1.
+The improvement is noticeable (about 55 nsec/call on an 8xx)
 
-> +	if (IS_ERR(qp->voter)) {
-> +		dev_err(&pdev->dev, "bcm_voter err:%d\n", PTR_ERR(qp->voter));
+vdsotest before the patch:
+gettimeofday:    vdso: 731 nsec/call
+clock-gettime-realtime-coarse:    vdso: 668 nsec/call
+clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
 
-Should be %ld
+vdsotest after the patch:
+gettimeofday:    vdso: 677 nsec/call
+clock-gettime-realtime-coarse:    vdso: 613 nsec/call
+clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
 
-> +		return PTR_ERR(qp->voter);
-> +	}
-> +
->  	ret = icc_provider_add(provider);
->  	if (ret) {
->  		dev_err(&pdev->dev, "error adding interconnect provider\n");
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Nit: I would also put patch 2/4 at the end of the series.
+---
+v3: define get_datapage macro in asm/vdso_datapage.h
+---
+ arch/powerpc/include/asm/vdso_datapage.h  | 10 ++++++++++
+ arch/powerpc/kernel/vdso32/cacheflush.S   |  9 ++++-----
+ arch/powerpc/kernel/vdso32/datapage.S     | 28 +++-------------------------
+ arch/powerpc/kernel/vdso32/gettimeofday.S | 12 +++++-------
+ 4 files changed, 22 insertions(+), 37 deletions(-)
 
-Thanks,
-Georgi
+diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
+index 2ccb938d8544..da3d2de817f6 100644
+--- a/arch/powerpc/include/asm/vdso_datapage.h
++++ b/arch/powerpc/include/asm/vdso_datapage.h
+@@ -116,6 +116,16 @@ struct vdso_data {
+ 
+ extern struct vdso_data *vdso_data;
+ 
++#else /* __ASSEMBLY__ */
++
++.macro get_datapage ptr, tmp
++	bcl	20, 31, .+4
++	mflr	\ptr
++	addi	\ptr, \ptr, __kernel_datapage_offset - (.-4)
++	lwz	\tmp, 0(\ptr)
++	add	\ptr, \tmp, \ptr
++.endm
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* __KERNEL__ */
+diff --git a/arch/powerpc/kernel/vdso32/cacheflush.S b/arch/powerpc/kernel/vdso32/cacheflush.S
+index 7f882e7b9f43..d178ec8c279d 100644
+--- a/arch/powerpc/kernel/vdso32/cacheflush.S
++++ b/arch/powerpc/kernel/vdso32/cacheflush.S
+@@ -8,6 +8,7 @@
+ #include <asm/processor.h>
+ #include <asm/ppc_asm.h>
+ #include <asm/vdso.h>
++#include <asm/vdso_datapage.h>
+ #include <asm/asm-offsets.h>
+ 
+ 	.text
+@@ -24,14 +25,12 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+   .cfi_startproc
+ 	mflr	r12
+   .cfi_register lr,r12
+-	mr	r11,r3
+-	bl	__get_datapage@local
++	get_datapage	r10, r0
+ 	mtlr	r12
+-	mr	r10,r3
+ 
+ 	lwz	r7,CFG_DCACHE_BLOCKSZ(r10)
+ 	addi	r5,r7,-1
+-	andc	r6,r11,r5		/* round low to line bdy */
++	andc	r6,r3,r5		/* round low to line bdy */
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
+@@ -48,7 +47,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+ 
+ 	lwz	r7,CFG_ICACHE_BLOCKSZ(r10)
+ 	addi	r5,r7,-1
+-	andc	r6,r11,r5		/* round low to line bdy */
++	andc	r6,r3,r5		/* round low to line bdy */
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5
+ 	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
+diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
+index 6c7401bd284e..1095d818f94a 100644
+--- a/arch/powerpc/kernel/vdso32/datapage.S
++++ b/arch/powerpc/kernel/vdso32/datapage.S
+@@ -10,35 +10,13 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ #include <asm/vdso.h>
++#include <asm/vdso_datapage.h>
+ 
+ 	.text
+ 	.global	__kernel_datapage_offset;
+ __kernel_datapage_offset:
+ 	.long	0
+ 
+-V_FUNCTION_BEGIN(__get_datapage)
+-  .cfi_startproc
+-	/* We don't want that exposed or overridable as we want other objects
+-	 * to be able to bl directly to here
+-	 */
+-	.protected __get_datapage
+-	.hidden __get_datapage
+-
+-	mflr	r0
+-  .cfi_register lr,r0
+-
+-	bcl	20,31,data_page_branch
+-data_page_branch:
+-	mflr	r3
+-	mtlr	r0
+-	addi	r3, r3, __kernel_datapage_offset-data_page_branch
+-	lwz	r0,0(r3)
+-  .cfi_restore lr
+-	add	r3,r0,r3
+-	blr
+-  .cfi_endproc
+-V_FUNCTION_END(__get_datapage)
+-
+ /*
+  * void *__kernel_get_syscall_map(unsigned int *syscall_count) ;
+  *
+@@ -53,7 +31,7 @@ V_FUNCTION_BEGIN(__kernel_get_syscall_map)
+ 	mflr	r12
+   .cfi_register lr,r12
+ 	mr	r4,r3
+-	bl	__get_datapage@local
++	get_datapage	r3, r0
+ 	mtlr	r12
+ 	addi	r3,r3,CFG_SYSCALL_MAP32
+ 	cmpli	cr0,r4,0
+@@ -75,7 +53,7 @@ V_FUNCTION_BEGIN(__kernel_get_tbfreq)
+   .cfi_startproc
+ 	mflr	r12
+   .cfi_register lr,r12
+-	bl	__get_datapage@local
++	get_datapage	r3, r0
+ 	lwz	r4,(CFG_TB_TICKS_PER_SEC + 4)(r3)
+ 	lwz	r3,CFG_TB_TICKS_PER_SEC(r3)
+ 	mtlr	r12
+diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+index 355b537d327a..9867c7b9a25a 100644
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -9,6 +9,7 @@
+ #include <asm/processor.h>
+ #include <asm/ppc_asm.h>
+ #include <asm/vdso.h>
++#include <asm/vdso_datapage.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ 
+@@ -35,8 +36,7 @@ V_FUNCTION_BEGIN(__kernel_gettimeofday)
+ 
+ 	mr	r10,r3			/* r10 saves tv */
+ 	mr	r11,r4			/* r11 saves tz */
+-	bl	__get_datapage@local	/* get data page */
+-	mr	r9, r3			/* datapage ptr in r9 */
++	get_datapage	r9, r0
+ 	cmplwi	r10,0			/* check if tv is NULL */
+ 	beq	3f
+ 	lis	r7,1000000@ha		/* load up USEC_PER_SEC */
+@@ -82,8 +82,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	mflr	r12			/* r12 saves lr */
+   .cfi_register lr,r12
+ 	mr	r11,r4			/* r11 saves tp */
+-	bl	__get_datapage@local	/* get data page */
+-	mr	r9,r3			/* datapage ptr in r9 */
++	get_datapage	r9, r0
+ 	lis	r7,NSEC_PER_SEC@h	/* want nanoseconds */
+ 	ori	r7,r7,NSEC_PER_SEC@l
+ 	beq	cr5, .Lcoarse_clocks
+@@ -208,7 +207,7 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
+ 
+ 	mflr	r12
+   .cfi_register lr,r12
+-	bl	__get_datapage@local	/* get data page */
++	get_datapage	r3, r0
+ 	lwz	r5, CLOCK_HRTIMER_RES(r3)
+ 	mtlr	r12
+ 	li	r3,0
+@@ -242,8 +241,7 @@ V_FUNCTION_BEGIN(__kernel_time)
+   .cfi_register lr,r12
+ 
+ 	mr	r11,r3			/* r11 holds t */
+-	bl	__get_datapage@local
+-	mr	r9, r3			/* datapage ptr in r9 */
++	get_datapage	r9, r0
+ 
+ 	lwz	r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
+ 
+-- 
+2.13.3
+
