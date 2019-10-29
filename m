@@ -2,97 +2,139 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87697CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7271FCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADD22086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524C9208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:46:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387862AbfJ2Mpb (ORCPT
+        id S2387861AbfJ2Mqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:45:31 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5644 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726048AbfJ2Mpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:45:31 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5FDA78BCD0989B2D6C0A;
-        Tue, 29 Oct 2019 20:45:26 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
- 20:45:17 +0800
-Subject: Re: [PATCH 2/3] KVM: arm/arm64: vgic: Fix some comments typo
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <eric.auger@redhat.com>, <james.morse@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <wanghaibin.wang@huawei.com>
-References: <20191029071919.177-1-yuzenghui@huawei.com>
- <20191029071919.177-3-yuzenghui@huawei.com> <86o8xzylb1.wl-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <7055e836-cdad-1cfa-66f3-fba88dad5f5b@huawei.com>
-Date:   Tue, 29 Oct 2019 20:45:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Tue, 29 Oct 2019 08:46:31 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37023 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfJ2Mqb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:46:31 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v2so855045lji.4;
+        Tue, 29 Oct 2019 05:46:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=SmXBqMQnjI4Fb5pWVH79fOjCH7aXT9QQnr1eIyZGvcI=;
+        b=kPxmtU27XbTFQ7uutYG2u2XGr3StpvZt+PuJr1Dybqisjhs8IhRuoJrDGX9OpRJ1Ih
+         Zh0s0mw+8J5zVuc7yQN/1+mddx+SNjmP0Bs0Qc/hnuU47FHqnzpMbDd1TAkGxOl7IYpt
+         KyXAV4BrCYO2bi3JBGOPMoDqQkbUJYISuusZFtzBr2mD+wR5Ie2Il1E1so/NmSJKIqPC
+         tvxL9wpYv8Qmt1vzvp8A38BavkrlByksRy2QAxCkPjKnL7hYvRjZVP/Bqd2xv1uQH7/t
+         FhnADoccjucxEMt4dhZbKijUPi8l40shVSloIeQYh52YpN/Q8xRI42xv0DGtpBtzUF/I
+         guog==
+X-Gm-Message-State: APjAAAVAVv/DI9qYkGiAk6DKIDZUcBwZ1zcSR1ULBFuSFJ8evLbHzB2e
+        5iyLwuz2h19JNW3LC0O0GyA=
+X-Google-Smtp-Source: APXvYqxkVCm41zzITF3FOQIAQ/XackjtVW6az/7Nr0u8MJdACHufwvUnYj0VlJFrRh9QckkFGTGyZA==
+X-Received: by 2002:a05:651c:1023:: with SMTP id w3mr2506858ljm.79.1572353188859;
+        Tue, 29 Oct 2019 05:46:28 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id z26sm2237139lfg.94.2019.10.29.05.46.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 05:46:28 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:46:20 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
+Message-ID: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <86o8xzylb1.wl-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/29 17:04, Marc Zyngier wrote:
-> Hi Zenghui,
-> 
-> On Tue, 29 Oct 2019 07:19:18 +0000,
-> Zenghui Yu <yuzenghui@huawei.com> wrote:
->>
->> s/vgic_its_save_pending_tables/vgic_v3_save_pending_tables/
->> s/then/the/
->>
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> ---
->>   include/kvm/arm_vgic.h      | 2 +-
->>   virt/kvm/arm/vgic/vgic-v3.c | 2 +-
->>   virt/kvm/arm/vgic/vgic-v4.c | 2 +-
->>   3 files changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
->> index 0fb240ec0a2a..01f8b3739a09 100644
->> --- a/include/kvm/arm_vgic.h
->> +++ b/include/kvm/arm_vgic.h
->> @@ -240,7 +240,7 @@ struct vgic_dist {
->>   	 * Contains the attributes and gpa of the LPI configuration table.
->>   	 * Since we report GICR_TYPER.CommonLPIAff as 0b00, we can share
->>   	 * one address across all redistributors.
->> -	 * GICv3 spec: 6.1.2 "LPI Configuration tables"
->> +	 * GICv3 spec "LPI Configuration tables"
+RFC series improving common LED binding parsing support
 
-Ah, this part shouldn't have been in this patch, as the description in
-the commit message.
-(And I remember the reason is just that, it it "6.1.1" in IHI 0069E but
-"6.1.2" in some older versions.)
+Qucik grep for 'for_each' or 'linux,default-trigger' says it all.
 
-> 
-> Why the change here? Pointing to the chapter in the spec is pretty
-> helpful, given that it is 800 pages long (although it should mention
-> what revision of the spec this refers to). For example, it should say
-> something like "IHI 0069E 6.1.1 ...".
+Multiple LED controller drivers implement the very similar looping
+through the child DT nodes in order to locate the LED nodes and read
+and support the common LED dt bindings. Implementing this same
+stuff for all LED controllers gets old pretty fast.
 
-Yes, I agreed with you.  Marc, please feel free to drop this part,
-or I can resend it with your suggestion.
+This RFC contains 3 suggestions:
+
+Simplest is adding support for parsing the linux,default-trigger,
+and default-state DT properties in led-core.
+
+More interesting part is adding correct LED DT node lookup in
+LED core. This RFC uses LED DT node names as a 'key' in a same
+way regulator framework does for regulators. The thing is that
+this approach requires the LED controller binding to dictate allowed
+LED node names - which may or may not be doable. I need your help to
+evaluate this and suggest better options :) If we still look at the
+regulators, the regulator core did originally use "regulator-core"
+property to do driver data/DT node pairing - but has since then
+changed the approach to using the DT node names.
+
+Last and least clear point is isolating the led_classdev to be owned
+by the LED core. Controller drivers should pretty much never touch
+it after the initialization. So one approach would be that drivers
+only provided initialization data and operations to the core.
+
+The patch series contains the led-core and led-class changes which
+introduce (yet another) APIs for registering led class device to
+core. Adding new interface is probably not the best option - one
+might consider changing the (devm_)led_classdev_register_ext to do
+what this new RFC API is doing.
+
+In addition to core changes this series converted two (randomly
+selected) existing drivers to use the new API. This can give an
+overview how offloading the DT parsing to core could simplify many
+of the LED controlled drivers.
+
+Patches HAVE NOT BEEN TESTED other than for compiling. They are
+only intended to be a starting point for discussion - and if the
+ideas are seen worthy - then the patches should be further worked
+and properly tested before being applied.
+
+Matti Vaittinen (5):
+  leds: Add common LED binding parsing support to LED class/core
+  dt-bindings: an30259a: example for using fixed LED node names.
+  leds: an30259a: Offload DT node locating and parsing to core
+  dt-bindings: lm3692x: example for using fixed LED node names.
+  leds: lm3692x: Offload DT node locating and parsing to core
+
+ .../bindings/leds/leds-an30259a.txt           |   9 +-
+ .../devicetree/bindings/leds/leds-lm3692x.txt |   4 +-
+ drivers/leds/led-class.c                      | 247 +++++++++++++++++-
+ drivers/leds/led-core.c                       | 111 +++++---
+ drivers/leds/leds-an30259a.c                  | 181 ++++++-------
+ drivers/leds/leds-lm3692x.c                   |  75 +++---
+ include/linux/leds.h                          | 144 +++++++++-
+ 7 files changed, 586 insertions(+), 185 deletions(-)
+
+-- 
+2.21.0
 
 
-Thanks,
-Zenghui
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
