@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAC5CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D920CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4872087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DFCD214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="P5hfgmKp"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Jo9fbP/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389333AbfJ2OPt (ORCPT
+        id S2389355AbfJ2OP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:15:49 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:53354 "EHLO
+        Tue, 29 Oct 2019 10:15:56 -0400
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:53348 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389086AbfJ2OPS (ORCPT
+        by vger.kernel.org with ESMTP id S2388932AbfJ2OPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 29 Oct 2019 10:15:18 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 45EB5C04DE;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 37710C04DC;
         Tue, 29 Oct 2019 14:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1572358517; bh=zbdUkdCwazmoCsthT9nKk/TAMzcgQzGGNjyeeOr0eTU=;
+        t=1572358517; bh=AAMOx6e5D47bkbXqXrtoDHy1k1iDqzrTt/zXJAhG2jI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=P5hfgmKpO/taS2j29Zdi525V4TnD9XoB+Hxxt6/F7SEL67vJMp3OC32oCX4oTbg1G
-         dPaMLb5cGzB3DU+aN5gYqlpu/6RyGDbAD7CYreuDxMfhf1EGw8WwfDD7yTU1HnI7pr
-         7/DHLyThO7IRgVP+UkqEfEfq7ZTE1xH9HBzEz86UhlIysBI1AS2aUsgR7Zw0GsvJJz
-         obv6U9JLnVjRAv8g44F4Ui+YvKXG5edmEAG1qF7ReojWZOPbmM0heaVboSP/CGW/Uy
-         Hr9VWSN7hASaloDuiiNk6+w6BteTC/iSpuN28+kjIlylb+oZJ3HK4CRJUOpFvuVNTv
-         BYPGXRBDAUS0A==
+        b=Jo9fbP/aSDkD2XloCo4ygLMiJ67jBLLL9XrXz9HDmxYq9Mp2cpmLER9DYFGxcRGiF
+         VO8cjGxxQkHr6eil+0YRKe2MS13RHMwgW58DUpR8hdSmbN3f9rDyjZXq2erevo+ZuX
+         mAMfJ5V9SHJRvhLi9wd7uStLQhZB27S+b7y5tUemBvjTrw/57FSouSMRmbUG9t+S99
+         PUVb+oKs9fy1PnMbAp8feZodTOHakd2h/TXgJndBzcl6+CUTZvS5gLqHJa77xLce7z
+         X3NC5wNDpNpTfnDKyNwK2qTowg+CkVMg/C47dEk2Snw0DMgvX6FzsQnErzdvUjfZy+
+         W2D7tTLVfycLg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 9B7EBA005D;
+        by mailhost.synopsys.com (Postfix) with ESMTP id BDEC9A0069;
         Tue, 29 Oct 2019 14:15:14 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 1/9] net: stmmac: Fix sparse warning
-Date:   Tue, 29 Oct 2019 15:14:45 +0100
-Message-Id: <e2f11aad32bb264a31074877b5a568f1dd1383ee.1572355609.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 3/9] net: stmmac: xgmac: bitrev32 returns u32
+Date:   Tue, 29 Oct 2019 15:14:47 +0100
+Message-Id: <fc89e2306802511f70d0320a2b82487032cb237e.1572355609.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1572355609.git.Jose.Abreu@synopsys.com>
 References: <cover.1572355609.git.Jose.Abreu@synopsys.com>
@@ -65,10 +65,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VID is converted to le16 so the variable must be __le16 type.
+The bitrev32 function returns an u32 var, not an int. Fix it.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: c7ab0b8088d7 ("net: stmmac: Fallback to VLAN Perfect filtering if HASH is not available")
+Fixes: 0efedbf11f07 ("net: stmmac: xgmac: Fix XGMAC selftests")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -82,77 +81,22 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c   | 2 +-
  drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h          | 2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c   | 5 +++--
- 4 files changed, 6 insertions(+), 5 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index bec929daf703..365e607f07cd 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -733,7 +733,7 @@ static void dwmac4_set_mac_loopback(void __iomem *ioaddr, bool enable)
- }
- 
- static void dwmac4_update_vlan_hash(struct mac_device_info *hw, u32 hash,
--				    u16 perfect_match, bool is_double)
-+				    __le16 perfect_match, bool is_double)
- {
- 	void __iomem *ioaddr = hw->pcsr;
- 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 5cda360d5d07..e24382d00e62 100644
+index e24382d00e62..b58522b8f782 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -555,7 +555,7 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
- }
+@@ -463,7 +463,7 @@ static void dwxgmac2_set_filter(struct mac_device_info *hw,
+ 		value |= XGMAC_FILTER_HMC;
  
- static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
--				      u16 perfect_match, bool is_double)
-+				      __le16 perfect_match, bool is_double)
- {
- 	void __iomem *ioaddr = hw->pcsr;
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 1303d1e9a18f..509daeefdb79 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -357,7 +357,7 @@ struct stmmac_ops {
- 			     struct stmmac_rss *cfg, u32 num_rxq);
- 	/* VLAN */
- 	void (*update_vlan_hash)(struct mac_device_info *hw, u32 hash,
--				 u16 perfect_match, bool is_double);
-+				 __le16 perfect_match, bool is_double);
- 	void (*enable_vlan)(struct mac_device_info *hw, u32 type);
- 	/* TX Timestamp */
- 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 28705dbe5801..063b0ecd244b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4207,6 +4207,7 @@ static u32 stmmac_vid_crc32_le(__le16 vid_le)
- static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
- {
- 	u32 crc, hash = 0;
-+	__le16 pmatch = 0;
- 	int count = 0;
- 	u16 vid = 0;
- 
-@@ -4221,11 +4222,11 @@ static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
- 		if (count > 2) /* VID = 0 always passes filter */
- 			return -EOPNOTSUPP;
- 
--		vid = cpu_to_le16(vid);
-+		pmatch = cpu_to_le16(vid);
- 		hash = 0;
- 	}
- 
--	return stmmac_update_vlan_hash(priv, priv->hw, hash, vid, is_double);
-+	return stmmac_update_vlan_hash(priv, priv->hw, hash, pmatch, is_double);
- }
- 
- static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid)
+ 		netdev_for_each_mc_addr(ha, dev) {
+-			int nr = (bitrev32(~crc32_le(~0, ha->addr, 6)) >>
++			u32 nr = (bitrev32(~crc32_le(~0, ha->addr, 6)) >>
+ 					(32 - mcbitslog2));
+ 			mc_filter[nr >> 5] |= (1 << (nr & 0x1F));
+ 		}
 -- 
 2.7.4
 
