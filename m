@@ -2,133 +2,88 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E216CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C20CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025E421721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572382933;
-	bh=DU276rBOmXNq/UGPWSsHr+vCt4tZPq33yvckroogy+s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dItvL+BnQioaJxRvnEfhhzTqNi0GHOuqJixAabt5LdoNP/vESxCSvRAulwsh6xSyF
-	 +W8LJYlXevrJ6zk5EDGi2u0CniF1vY23KtdKoPatN1FKFvThGywwFN2NDZyCpQb4P9
-	 t6qUsNtP1GLFpeW39Lzo/XzsIg75PEpYLj8tNSeg=
+	by mail.kernel.org (Postfix) with ESMTP id 740C321734
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:02:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vNLtnlmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbfJ2VCL (ORCPT
+        id S1728648AbfJ2VCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfJ2VCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:02:11 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 199182087E;
-        Tue, 29 Oct 2019 21:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572382930;
-        bh=DU276rBOmXNq/UGPWSsHr+vCt4tZPq33yvckroogy+s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NwwDI9pwnDo75NGmhbNfHM/Z52BOv/JUemoHekwTJypzHNtZFbJvRDk+E1Wc7jgUC
-         On20wb4dVGoVudHP0YtkioHoHAmgGvETr9xPwj0hBuoBho6V+6x/fFUAFlnWfQN9Vw
-         pFqgMOSZ0/b9dD4OKeTBUpNaSAK7B84JMq1Kn71U=
-Date:   Tue, 29 Oct 2019 14:02:09 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-mm@kvack.org,
-        =?ISO-8859-1?Q?J=E9?= =?ISO-8859-1?Q?r=F4me?= Glisse 
-        <jglisse@redhat.com>, Ralph Campbell <rcampbell@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: khugepaged might_sleep() warn due to CONFIG_HIGHPTE=y
-Message-Id: <20191029140209.e70385637d3617ad43869f31@linux-foundation.org>
-In-Reply-To: <20191029201513.GG1208@intel.com>
-References: <20191029201513.GG1208@intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+        Tue, 29 Oct 2019 17:02:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43583 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfJ2VCQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 17:02:16 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l24so10467238pgh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/xRrKgwXdsmpjinuBDfuaLVGRyFAxJUz5gD94L89fPI=;
+        b=vNLtnlmdsA7PaAhCvchomclNhYC1/dWNQk40LZe45aHTxOTQ4KsQcnzQbCnVQ3ztXK
+         HnFyQrXTk2ZJT3k/NIwPhd3BHe43Z6mufbfaxl4t2+14jRfgRK25QLo7npW1YtE5haEM
+         eV3erMc6ny4p8uBuJL+400GBAVdGUWZx6j5AWCT+dc2J3lIH4BuQVGI57ABmsRpgNA/h
+         hzjPCS+QcosGZGat8Sz7WkBE1puZfs7OEE+EiUy87klxkj26Y7YdSmisvE7mwLphyVjy
+         QJhBG3KyfZs836A+VaUmmNgxHdNQACzT4kVI+OyghD40HkS19ecfgVra+pGfzv3zmKq2
+         Qnrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/xRrKgwXdsmpjinuBDfuaLVGRyFAxJUz5gD94L89fPI=;
+        b=SBJUVmoPanTzWyl0FGY5UQ75ldPLTU7uCCfWxmaEHPXgZFxUvEMIb4RVOu2kOz0fML
+         pFVqobOQPDQyAQ/Hxia3QW1ov8cYnvTJUb9AZ91pxWfxX56KTMF+4D4nx3iz0lOKFksl
+         To/GF9xyRho4QMil5EBb8nl9MG2Y9ryjYajABE1+0sVFfxpg7jnGYSqmS14fy784T8nw
+         ZAYwxVPfM0vplahBG+AvM5GcGpyn0gTLgxeOKvJBcb5adk6sMqshYnQu+42JVU/r/ibD
+         q9QQeYQe60g5BQfZdDB9EaBcPMARiM1SCQSNzJi9ymURVQDwwMHBOLgwfTyS6dcADHiJ
+         98Tw==
+X-Gm-Message-State: APjAAAXnvaH/hH+/KzHAFAWzwSAyxrcaCpX8hmdx/0+bAuThdd7G+Ukw
+        xEnlaM0K6lZ6ELJsN+LX9gPC2wPpTgT6mdXPKItLuQ==
+X-Google-Smtp-Source: APXvYqx5ypoKVeh+p1v42clF+cG0vqBqmVXwUTA7EkbmfXj/0qUXK7K8JIXAaN7XkxUlda3YEu9lME5MWnRfhrnTLlo=
+X-Received: by 2002:a6b:fb0c:: with SMTP id h12mr5986548iog.239.1572382934731;
+ Tue, 29 Oct 2019 14:02:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <1564980742-19124-1-git-send-email-hongxing.zhu@nxp.com>
+ <1564980742-19124-5-git-send-email-hongxing.zhu@nxp.com> <CAEnQRZDk4TjU0nWgGXEV06ZygvSyuPHc61_uT7KRu0j2Aaxj7w@mail.gmail.com>
+In-Reply-To: <CAEnQRZDk4TjU0nWgGXEV06ZygvSyuPHc61_uT7KRu0j2Aaxj7w@mail.gmail.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Tue, 29 Oct 2019 16:02:03 -0500
+Message-ID: <CABb+yY1-PrmT_Qp6M1+WTnVAKizVqJLYJcip4KfqcAjcuN3GCg@mail.gmail.com>
+Subject: Re: [RESEND PATCH v5 4/4] mailbox: imx: add support for imx v1 mu
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 22:15:13 +0200 Ville Syrj=E4l=E4 <ville.syrjala@linux.i=
-ntel.com> wrote:
+On Tue, Oct 29, 2019 at 4:07 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
+>
+> Since we got no answer from Jassi in 4 months I think it is safe
+> to assume that we can get this through Shawn's tree.
+>
+Please don't top post.
+This patchset doesn't lack my love. It contains support for a new
+platform and was sent after last merge window. I send new
+features/support only for next release. If you want some urgent
+bugfixes picked , please send them separately.
 
-> Hi,
->=20
-> I got some khugepaged spew on a 32bit x86:
->=20
-> [  217.490026] BUG: sleeping function called from invalid context at incl=
-ude/linux/mmu_notifier.h:346
-> [  217.492826] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 25,=
- name: khugepaged
-> [  217.495589] INFO: lockdep is turned off.
-> [  217.498371] CPU: 1 PID: 25 Comm: khugepaged Not tainted 5.4.0-rc5-elk+=
- #206
-> [  217.501233] Hardware name: System manufacturer P5Q-EM/P5Q-EM, BIOS 220=
-3    07/08/2009
-> [  217.501697] Call Trace:
-> [  217.501697]  dump_stack+0x66/0x8e
-> [  217.501697]  ___might_sleep.cold.96+0x95/0xa6
-> [  217.501697]  __might_sleep+0x2e/0x80
-> [  217.501697]  collapse_huge_page.isra.51+0x5ac/0x1360
-> [  217.501697]  ? __alloc_pages_nodemask+0xec/0xf80
-> [  217.501697]  ? __alloc_pages_nodemask+0x191/0xf80
-> [  217.501697]  ? trace_hardirqs_on+0x4a/0xf0
-> [  217.501697]  khugepaged+0x9a9/0x20f0
-> [  217.501697]  ? _raw_spin_unlock+0x21/0x30
-> [  217.501697]  ? trace_hardirqs_on+0x4a/0xf0
-> [  217.501697]  ? wait_woken+0xa0/0xa0
-> [  217.501697]  kthread+0xf5/0x110
-> [  217.501697]  ? collapse_pte_mapped_thp+0x3b0/0x3b0
-> [  217.501697]  ? kthread_create_worker_on_cpu+0x20/0x20
-> [  217.501697]  ret_from_fork+0x2e/0x38
->=20
-> Looks like it's due to CONFIG_HIGHPTE=3Dy pte_offset_map()->kmap_atomic()=
- vs.
-> mmu_notifier_invalidate_range_start().
->=20
-> My naive idea would be to just reorder those things, but not sure
-> if there's some magic ordering constraint here. At least the machine
-> still boots when I do it :)
->=20
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 0a1b4b484ac5..f05d27b7183d 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1028,12 +1028,13 @@ static void collapse_huge_page(struct mm_struct *=
-mm,
-> =20
->  	anon_vma_lock_write(vma->anon_vma);
-> =20
-> -	pte =3D pte_offset_map(pmd, address);
-> -	pte_ptl =3D pte_lockptr(mm, pmd);
-> -
->  	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, NULL, mm,
->  				address, address + HPAGE_PMD_SIZE);
->  	mmu_notifier_invalidate_range_start(&range);
-> +
-> +	pte =3D pte_offset_map(pmd, address);
-> +	pte_ptl =3D pte_lockptr(mm, pmd);
-> +
->  	pmd_ptl =3D pmd_lock(mm, pmd); /* probably unnecessary */
->  	/*
->  	 * After this gup_fast can't run anymore. This also removes
->=20
-
-Looks good to me.  Can you resend it with a signoff please?
+Cheers!
