@@ -2,1121 +2,891 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E437CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E1CCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB59D208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:14:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jWOIDUcX"
+	by mail.kernel.org (Postfix) with ESMTP id AD5A0208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387491AbfJ2MOC (ORCPT
+        id S2387659AbfJ2MOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:14:02 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:8808 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbfJ2MOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:14:01 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 472Vqn5SM0z9tys5;
-        Tue, 29 Oct 2019 13:13:57 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=jWOIDUcX; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id t6ocCQ9iSp9L; Tue, 29 Oct 2019 13:13:57 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 472Vqn4DZyz9tys3;
-        Tue, 29 Oct 2019 13:13:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1572351237; bh=kL7PNae1FcpZTGvaDw1sGgS27DutbqjXhsIrUjZ2r0A=;
-        h=From:Subject:To:Cc:Date:From;
-        b=jWOIDUcXPpQzsoVuPodcaqlwP8OHAvQLbxOZ1nvaERJH+C2JzH170MWN4pSZ2i/O6
-         dctinoQHPaVLG5KiIJeM0mhw51XWO67WxhNbz16GiKODDBbwl8ZIJIe5CkyKopT0XU
-         +SPWO5sJZjNs11qeMHfZKwPE3F0wCH1PmmYFQvAo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C11498B854;
-        Tue, 29 Oct 2019 13:13:58 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 1YxhF3ZH2UpT; Tue, 29 Oct 2019 13:13:58 +0100 (CET)
-Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 486DD8B755;
-        Tue, 29 Oct 2019 13:13:58 +0100 (CET)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id E5A6066315; Tue, 29 Oct 2019 12:13:57 +0000 (UTC)
-Message-Id: <e235973a1198195763afd3b6baffa548a83f4611.1572351221.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v4 1/2] powerpc/32: Split kexec low level code out of
- misc_32.S
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 29 Oct 2019 12:13:57 +0000 (UTC)
+        Tue, 29 Oct 2019 08:14:08 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:44464 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727082AbfJ2MOH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:14:07 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id E9A6B634C87;
+        Tue, 29 Oct 2019 14:13:21 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1iPQNF-0001VR-04; Tue, 29 Oct 2019 14:13:21 +0200
+Date:   Tue, 29 Oct 2019 14:13:20 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v3 2/2] media: i2c: Add IMX296 CMOS image sensor driver
+Message-ID: <20191029121320.GA5017@valkosipuli.retiisi.org.uk>
+References: <20191025175908.14260-1-manivannan.sadhasivam@linaro.org>
+ <20191025175908.14260-3-manivannan.sadhasivam@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025175908.14260-3-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Almost half of misc_32.S is dedicated to kexec.
-That's the relocation function for kexec.
+Hi Manivannan,
 
-Drop it into a dedicated kexec_relocate_32.S
+On Fri, Oct 25, 2019 at 11:29:08PM +0530, Manivannan Sadhasivam wrote:
+> Add driver for Sony IMX296 CMOS image sensor driver. The driver only
+> supports I2C interface for programming and MIPI CSI-2 for sensor output.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  MAINTAINERS                |   8 +
+>  drivers/media/i2c/Kconfig  |  11 +
+>  drivers/media/i2c/Makefile |   1 +
+>  drivers/media/i2c/imx296.c | 733 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 753 insertions(+)
+>  create mode 100644 drivers/media/i2c/imx296.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 55199ef7fa74..5b7332d121d8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15140,6 +15140,14 @@ S:	Maintained
+>  F:	drivers/media/i2c/imx274.c
+>  F:	Documentation/devicetree/bindings/media/i2c/imx274.txt
+>  
+> +SONY IMX296 SENSOR DRIVER
+> +M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +L:	linux-media@vger.kernel.org
+> +T:	git git://linuxtv.org/media_tree.git
+> +S:	Maintained
+> +F:	drivers/media/i2c/imx296.c
+> +F:	Documentation/devicetree/bindings/media/i2c/imx296.txt
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+The new bindings are in YAML format, so txt -> yaml.
 
----
-v2: no change
-v3: renamed kexec_32.S to kexec_relocate_32.S
-v4: rebased (conflict on Makefile) and dropped irrelevant spaces in kexec_relocate_32.S
----
- arch/powerpc/kernel/Makefile            |   1 +
- arch/powerpc/kernel/kexec_relocate_32.S | 500 ++++++++++++++++++++++++++++++++
- arch/powerpc/kernel/misc_32.S           | 491 -------------------------------
- 3 files changed, 501 insertions(+), 491 deletions(-)
- create mode 100644 arch/powerpc/kernel/kexec_relocate_32.S
+Also the MAINTAINERS change needs to be done no later than adding the
+files.
 
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index a7ca8fe62368..ca1a0ffa068d 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -83,6 +83,7 @@ obj-y				+= fadump.o
- endif
- ifdef CONFIG_PPC32
- obj-$(CONFIG_E500)		+= idle_e500.o
-+obj-$(CONFIG_KEXEC_CORE)	+= kexec_relocate_32.o
- endif
- obj-$(CONFIG_PPC_BOOK3S_32)	+= idle_6xx.o l2cr_6xx.o cpu_setup_6xx.o
- obj-$(CONFIG_TAU)		+= tau_6xx.o
-diff --git a/arch/powerpc/kernel/kexec_relocate_32.S b/arch/powerpc/kernel/kexec_relocate_32.S
-new file mode 100644
-index 000000000000..8a8b4887c879
---- /dev/null
-+++ b/arch/powerpc/kernel/kexec_relocate_32.S
-@@ -0,0 +1,500 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * This file contains kexec low-level functions.
-+ *
-+ * Copyright (C) 2002-2003 Eric Biederman  <ebiederm@xmission.com>
-+ * GameCube/ppc32 port Copyright (C) 2004 Albert Herranz
-+ * PPC44x port. Copyright (C) 2011,  IBM Corporation
-+ * 		Author: Suzuki Poulose <suzuki@in.ibm.com>
-+ */
-+
-+#include <asm/reg.h>
-+#include <asm/page.h>
-+#include <asm/mmu.h>
-+#include <asm/ppc_asm.h>
-+#include <asm/kexec.h>
-+
-+	.text
-+
-+	/*
-+	 * Must be relocatable PIC code callable as a C function.
-+	 */
-+	.globl relocate_new_kernel
-+relocate_new_kernel:
-+	/* r3 = page_list   */
-+	/* r4 = reboot_code_buffer */
-+	/* r5 = start_address      */
-+
-+#ifdef CONFIG_FSL_BOOKE
-+
-+	mr	r29, r3
-+	mr	r30, r4
-+	mr	r31, r5
-+
-+#define ENTRY_MAPPING_KEXEC_SETUP
-+#include "fsl_booke_entry_mapping.S"
-+#undef ENTRY_MAPPING_KEXEC_SETUP
-+
-+	mr      r3, r29
-+	mr      r4, r30
-+	mr      r5, r31
-+
-+	li	r0, 0
-+#elif defined(CONFIG_44x)
-+
-+	/* Save our parameters */
-+	mr	r29, r3
-+	mr	r30, r4
-+	mr	r31, r5
-+
-+#ifdef CONFIG_PPC_47x
-+	/* Check for 47x cores */
-+	mfspr	r3,SPRN_PVR
-+	srwi	r3,r3,16
-+	cmplwi	cr0,r3,PVR_476FPE@h
-+	beq	setup_map_47x
-+	cmplwi	cr0,r3,PVR_476@h
-+	beq	setup_map_47x
-+	cmplwi	cr0,r3,PVR_476_ISS@h
-+	beq	setup_map_47x
-+#endif /* CONFIG_PPC_47x */
-+
-+/*
-+ * Code for setting up 1:1 mapping for PPC440x for KEXEC
-+ *
-+ * We cannot switch off the MMU on PPC44x.
-+ * So we:
-+ * 1) Invalidate all the mappings except the one we are running from.
-+ * 2) Create a tmp mapping for our code in the other address space(TS) and
-+ *    jump to it. Invalidate the entry we started in.
-+ * 3) Create a 1:1 mapping for 0-2GiB in chunks of 256M in original TS.
-+ * 4) Jump to the 1:1 mapping in original TS.
-+ * 5) Invalidate the tmp mapping.
-+ *
-+ * - Based on the kexec support code for FSL BookE
-+ *
-+ */
-+
-+	/*
-+	 * Load the PID with kernel PID (0).
-+	 * Also load our MSR_IS and TID to MMUCR for TLB search.
-+	 */
-+	li	r3, 0
-+	mtspr	SPRN_PID, r3
-+	mfmsr	r4
-+	andi.	r4,r4,MSR_IS@l
-+	beq	wmmucr
-+	oris	r3,r3,PPC44x_MMUCR_STS@h
-+wmmucr:
-+	mtspr	SPRN_MMUCR,r3
-+	sync
-+
-+	/*
-+	 * Invalidate all the TLB entries except the current entry
-+	 * where we are running from
-+	 */
-+	bl	0f				/* Find our address */
-+0:	mflr	r5				/* Make it accessible */
-+	tlbsx	r23,0,r5			/* Find entry we are in */
-+	li	r4,0				/* Start at TLB entry 0 */
-+	li	r3,0				/* Set PAGEID inval value */
-+1:	cmpw	r23,r4				/* Is this our entry? */
-+	beq	skip				/* If so, skip the inval */
-+	tlbwe	r3,r4,PPC44x_TLB_PAGEID		/* If not, inval the entry */
-+skip:
-+	addi	r4,r4,1				/* Increment */
-+	cmpwi	r4,64				/* Are we done?	*/
-+	bne	1b				/* If not, repeat */
-+	isync
-+
-+	/* Create a temp mapping and jump to it */
-+	andi.	r6, r23, 1		/* Find the index to use */
-+	addi	r24, r6, 1		/* r24 will contain 1 or 2 */
-+
-+	mfmsr	r9			/* get the MSR */
-+	rlwinm	r5, r9, 27, 31, 31	/* Extract the MSR[IS] */
-+	xori	r7, r5, 1		/* Use the other address space */
-+
-+	/* Read the current mapping entries */
-+	tlbre	r3, r23, PPC44x_TLB_PAGEID
-+	tlbre	r4, r23, PPC44x_TLB_XLAT
-+	tlbre	r5, r23, PPC44x_TLB_ATTRIB
-+
-+	/* Save our current XLAT entry */
-+	mr	r25, r4
-+
-+	/* Extract the TLB PageSize */
-+	li	r10, 1 			/* r10 will hold PageSize */
-+	rlwinm	r11, r3, 0, 24, 27	/* bits 24-27 */
-+
-+	/* XXX: As of now we use 256M, 4K pages */
-+	cmpwi	r11, PPC44x_TLB_256M
-+	bne	tlb_4k
-+	rotlwi	r10, r10, 28		/* r10 = 256M */
-+	b	write_out
-+tlb_4k:
-+	cmpwi	r11, PPC44x_TLB_4K
-+	bne	default
-+	rotlwi	r10, r10, 12		/* r10 = 4K */
-+	b	write_out
-+default:
-+	rotlwi	r10, r10, 10		/* r10 = 1K */
-+
-+write_out:
-+	/*
-+	 * Write out the tmp 1:1 mapping for this code in other address space
-+	 * Fixup  EPN = RPN , TS=other address space
-+	 */
-+	insrwi	r3, r7, 1, 23		/* Bit 23 is TS for PAGEID field */
-+
-+	/* Write out the tmp mapping entries */
-+	tlbwe	r3, r24, PPC44x_TLB_PAGEID
-+	tlbwe	r4, r24, PPC44x_TLB_XLAT
-+	tlbwe	r5, r24, PPC44x_TLB_ATTRIB
-+
-+	subi	r11, r10, 1		/* PageOffset Mask = PageSize - 1 */
-+	not	r10, r11		/* Mask for PageNum */
-+
-+	/* Switch to other address space in MSR */
-+	insrwi	r9, r7, 1, 26		/* Set MSR[IS] = r7 */
-+
-+	bl	1f
-+1:	mflr	r8
-+	addi	r8, r8, (2f-1b)		/* Find the target offset */
-+
-+	/* Jump to the tmp mapping */
-+	mtspr	SPRN_SRR0, r8
-+	mtspr	SPRN_SRR1, r9
-+	rfi
-+
-+2:
-+	/* Invalidate the entry we were executing from */
-+	li	r3, 0
-+	tlbwe	r3, r23, PPC44x_TLB_PAGEID
-+
-+	/* attribute fields. rwx for SUPERVISOR mode */
-+	li	r5, 0
-+	ori	r5, r5, (PPC44x_TLB_SW | PPC44x_TLB_SR | PPC44x_TLB_SX | PPC44x_TLB_G)
-+
-+	/* Create 1:1 mapping in 256M pages */
-+	xori	r7, r7, 1			/* Revert back to Original TS */
-+
-+	li	r8, 0				/* PageNumber */
-+	li	r6, 3				/* TLB Index, start at 3  */
-+
-+next_tlb:
-+	rotlwi	r3, r8, 28			/* Create EPN (bits 0-3) */
-+	mr	r4, r3				/* RPN = EPN  */
-+	ori	r3, r3, (PPC44x_TLB_VALID | PPC44x_TLB_256M) /* SIZE = 256M, Valid */
-+	insrwi	r3, r7, 1, 23			/* Set TS from r7 */
-+
-+	tlbwe	r3, r6, PPC44x_TLB_PAGEID	/* PageID field : EPN, V, SIZE */
-+	tlbwe	r4, r6, PPC44x_TLB_XLAT		/* Address translation : RPN   */
-+	tlbwe	r5, r6, PPC44x_TLB_ATTRIB	/* Attributes */
-+
-+	addi	r8, r8, 1			/* Increment PN */
-+	addi	r6, r6, 1			/* Increment TLB Index */
-+	cmpwi	r8, 8				/* Are we done ? */
-+	bne	next_tlb
-+	isync
-+
-+	/* Jump to the new mapping 1:1 */
-+	li	r9,0
-+	insrwi	r9, r7, 1, 26			/* Set MSR[IS] = r7 */
-+
-+	bl	1f
-+1:	mflr	r8
-+	and	r8, r8, r11			/* Get our offset within page */
-+	addi	r8, r8, (2f-1b)
-+
-+	and	r5, r25, r10			/* Get our target PageNum */
-+	or	r8, r8, r5			/* Target jump address */
-+
-+	mtspr	SPRN_SRR0, r8
-+	mtspr	SPRN_SRR1, r9
-+	rfi
-+2:
-+	/* Invalidate the tmp entry we used */
-+	li	r3, 0
-+	tlbwe	r3, r24, PPC44x_TLB_PAGEID
-+	sync
-+	b	ppc44x_map_done
-+
-+#ifdef CONFIG_PPC_47x
-+
-+	/* 1:1 mapping for 47x */
-+
-+setup_map_47x:
-+
-+	/*
-+	 * Load the kernel pid (0) to PID and also to MMUCR[TID].
-+	 * Also set the MSR IS->MMUCR STS
-+	 */
-+	li	r3, 0
-+	mtspr	SPRN_PID, r3			/* Set PID */
-+	mfmsr	r4				/* Get MSR */
-+	andi.	r4, r4, MSR_IS@l		/* TS=1? */
-+	beq	1f				/* If not, leave STS=0 */
-+	oris	r3, r3, PPC47x_MMUCR_STS@h	/* Set STS=1 */
-+1:	mtspr	SPRN_MMUCR, r3			/* Put MMUCR */
-+	sync
-+
-+	/* Find the entry we are running from */
-+	bl	2f
-+2:	mflr	r23
-+	tlbsx	r23, 0, r23
-+	tlbre	r24, r23, 0			/* TLB Word 0 */
-+	tlbre	r25, r23, 1			/* TLB Word 1 */
-+	tlbre	r26, r23, 2			/* TLB Word 2 */
-+
-+
-+	/*
-+	 * Invalidates all the tlb entries by writing to 256 RPNs(r4)
-+	 * of 4k page size in all  4 ways (0-3 in r3).
-+	 * This would invalidate the entire UTLB including the one we are
-+	 * running from. However the shadow TLB entries would help us
-+	 * to continue the execution, until we flush them (rfi/isync).
-+	 */
-+	addis	r3, 0, 0x8000			/* specify the way */
-+	addi	r4, 0, 0			/* TLB Word0 = (EPN=0, VALID = 0) */
-+	addi	r5, 0, 0
-+	b	clear_utlb_entry
-+
-+	/* Align the loop to speed things up. from head_44x.S */
-+	.align	6
-+
-+clear_utlb_entry:
-+
-+	tlbwe	r4, r3, 0
-+	tlbwe	r5, r3, 1
-+	tlbwe	r5, r3, 2
-+	addis	r3, r3, 0x2000			/* Increment the way */
-+	cmpwi	r3, 0
-+	bne	clear_utlb_entry
-+	addis	r3, 0, 0x8000
-+	addis	r4, r4, 0x100			/* Increment the EPN */
-+	cmpwi	r4, 0
-+	bne	clear_utlb_entry
-+
-+	/* Create the entries in the other address space */
-+	mfmsr	r5
-+	rlwinm	r7, r5, 27, 31, 31		/* Get the TS (Bit 26) from MSR */
-+	xori	r7, r7, 1			/* r7 = !TS */
-+
-+	insrwi	r24, r7, 1, 21			/* Change the TS in the saved TLB word 0 */
-+
-+	/*
-+	 * write out the TLB entries for the tmp mapping
-+	 * Use way '0' so that we could easily invalidate it later.
-+	 */
-+	lis	r3, 0x8000			/* Way '0' */
-+
-+	tlbwe	r24, r3, 0
-+	tlbwe	r25, r3, 1
-+	tlbwe	r26, r3, 2
-+
-+	/* Update the msr to the new TS */
-+	insrwi	r5, r7, 1, 26
-+
-+	bl	1f
-+1:	mflr	r6
-+	addi	r6, r6, (2f-1b)
-+
-+	mtspr	SPRN_SRR0, r6
-+	mtspr	SPRN_SRR1, r5
-+	rfi
-+
-+	/*
-+	 * Now we are in the tmp address space.
-+	 * Create a 1:1 mapping for 0-2GiB in the original TS.
-+	 */
-+2:
-+	li	r3, 0
-+	li	r4, 0				/* TLB Word 0 */
-+	li	r5, 0				/* TLB Word 1 */
-+	li	r6, 0
-+	ori	r6, r6, PPC47x_TLB2_S_RWX	/* TLB word 2 */
-+
-+	li	r8, 0				/* PageIndex */
-+
-+	xori	r7, r7, 1			/* revert back to original TS */
-+
-+write_utlb:
-+	rotlwi	r5, r8, 28			/* RPN = PageIndex * 256M */
-+						/* ERPN = 0 as we don't use memory above 2G */
-+
-+	mr	r4, r5				/* EPN = RPN */
-+	ori	r4, r4, (PPC47x_TLB0_VALID | PPC47x_TLB0_256M)
-+	insrwi	r4, r7, 1, 21			/* Insert the TS to Word 0 */
-+
-+	tlbwe	r4, r3, 0			/* Write out the entries */
-+	tlbwe	r5, r3, 1
-+	tlbwe	r6, r3, 2
-+	addi	r8, r8, 1
-+	cmpwi	r8, 8				/* Have we completed ? */
-+	bne	write_utlb
-+
-+	/* make sure we complete the TLB write up */
-+	isync
-+
-+	/*
-+	 * Prepare to jump to the 1:1 mapping.
-+	 * 1) Extract page size of the tmp mapping
-+	 *    DSIZ = TLB_Word0[22:27]
-+	 * 2) Calculate the physical address of the address
-+	 *    to jump to.
-+	 */
-+	rlwinm	r10, r24, 0, 22, 27
-+
-+	cmpwi	r10, PPC47x_TLB0_4K
-+	bne	0f
-+	li	r10, 0x1000			/* r10 = 4k */
-+	bl	1f
-+
-+0:
-+	/* Defaults to 256M */
-+	lis	r10, 0x1000
-+
-+	bl	1f
-+1:	mflr	r4
-+	addi	r4, r4, (2f-1b)			/* virtual address  of 2f */
-+
-+	subi	r11, r10, 1			/* offsetmask = Pagesize - 1 */
-+	not	r10, r11			/* Pagemask = ~(offsetmask) */
-+
-+	and	r5, r25, r10			/* Physical page */
-+	and	r6, r4, r11			/* offset within the current page */
-+
-+	or	r5, r5, r6			/* Physical address for 2f */
-+
-+	/* Switch the TS in MSR to the original one */
-+	mfmsr	r8
-+	insrwi	r8, r7, 1, 26
-+
-+	mtspr	SPRN_SRR1, r8
-+	mtspr	SPRN_SRR0, r5
-+	rfi
-+
-+2:
-+	/* Invalidate the tmp mapping */
-+	lis	r3, 0x8000			/* Way '0' */
-+
-+	clrrwi	r24, r24, 12			/* Clear the valid bit */
-+	tlbwe	r24, r3, 0
-+	tlbwe	r25, r3, 1
-+	tlbwe	r26, r3, 2
-+
-+	/* Make sure we complete the TLB write and flush the shadow TLB */
-+	isync
-+
-+#endif
-+
-+ppc44x_map_done:
-+
-+
-+	/* Restore the parameters */
-+	mr	r3, r29
-+	mr	r4, r30
-+	mr	r5, r31
-+
-+	li	r0, 0
-+#else
-+	li	r0, 0
-+
-+	/*
-+	 * Set Machine Status Register to a known status,
-+	 * switch the MMU off and jump to 1: in a single step.
-+	 */
-+
-+	mr	r8, r0
-+	ori     r8, r8, MSR_RI|MSR_ME
-+	mtspr	SPRN_SRR1, r8
-+	addi	r8, r4, 1f - relocate_new_kernel
-+	mtspr	SPRN_SRR0, r8
-+	sync
-+	rfi
-+
-+1:
-+#endif
-+	/* from this point address translation is turned off */
-+	/* and interrupts are disabled */
-+
-+	/* set a new stack at the bottom of our page... */
-+	/* (not really needed now) */
-+	addi	r1, r4, KEXEC_CONTROL_PAGE_SIZE - 8 /* for LR Save+Back Chain */
-+	stw	r0, 0(r1)
-+
-+	/* Do the copies */
-+	li	r6, 0 /* checksum */
-+	mr	r0, r3
-+	b	1f
-+
-+0:	/* top, read another word for the indirection page */
-+	lwzu	r0, 4(r3)
-+
-+1:
-+	/* is it a destination page? (r8) */
-+	rlwinm.	r7, r0, 0, 31, 31 /* IND_DESTINATION (1<<0) */
-+	beq	2f
-+
-+	rlwinm	r8, r0, 0, 0, 19 /* clear kexec flags, page align */
-+	b	0b
-+
-+2:	/* is it an indirection page? (r3) */
-+	rlwinm.	r7, r0, 0, 30, 30 /* IND_INDIRECTION (1<<1) */
-+	beq	2f
-+
-+	rlwinm	r3, r0, 0, 0, 19 /* clear kexec flags, page align */
-+	subi	r3, r3, 4
-+	b	0b
-+
-+2:	/* are we done? */
-+	rlwinm.	r7, r0, 0, 29, 29 /* IND_DONE (1<<2) */
-+	beq	2f
-+	b	3f
-+
-+2:	/* is it a source page? (r9) */
-+	rlwinm.	r7, r0, 0, 28, 28 /* IND_SOURCE (1<<3) */
-+	beq	0b
-+
-+	rlwinm	r9, r0, 0, 0, 19 /* clear kexec flags, page align */
-+
-+	li	r7, PAGE_SIZE / 4
-+	mtctr   r7
-+	subi    r9, r9, 4
-+	subi    r8, r8, 4
-+9:
-+	lwzu    r0, 4(r9)  /* do the copy */
-+	xor	r6, r6, r0
-+	stwu    r0, 4(r8)
-+	dcbst	0, r8
-+	sync
-+	icbi	0, r8
-+	bdnz    9b
-+
-+	addi    r9, r9, 4
-+	addi    r8, r8, 4
-+	b	0b
-+
-+3:
-+
-+	/* To be certain of avoiding problems with self-modifying code
-+	 * execute a serializing instruction here.
-+	 */
-+	isync
-+	sync
-+
-+	mfspr	r3, SPRN_PIR /* current core we are running on */
-+	mr	r4, r5 /* load physical address of chunk called */
-+
-+	/* jump to the entry point, usually the setup routine */
-+	mtlr	r5
-+	blrl
-+
-+1:	b	1b
-+
-+relocate_new_kernel_end:
-+
-+	.globl relocate_new_kernel_size
-+relocate_new_kernel_size:
-+	.long relocate_new_kernel_end - relocate_new_kernel
-diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-index 82df4b09e79f..6cbcabac7ee1 100644
---- a/arch/powerpc/kernel/misc_32.S
-+++ b/arch/powerpc/kernel/misc_32.S
-@@ -6,11 +6,6 @@
-  * Largely rewritten by Cort Dougan (cort@cs.nmt.edu)
-  * and Paul Mackerras.
-  *
-- * kexec bits:
-- * Copyright (C) 2002-2003 Eric Biederman  <ebiederm@xmission.com>
-- * GameCube/ppc32 port Copyright (C) 2004 Albert Herranz
-- * PPC44x port. Copyright (C) 2011,  IBM Corporation
-- * 		Author: Suzuki Poulose <suzuki@in.ibm.com>
-  */
- 
- #include <linux/sys.h>
-@@ -25,7 +20,6 @@
- #include <asm/thread_info.h>
- #include <asm/asm-offsets.h>
- #include <asm/processor.h>
--#include <asm/kexec.h>
- #include <asm/bug.h>
- #include <asm/ptrace.h>
- #include <asm/export.h>
-@@ -614,488 +608,3 @@ _GLOBAL(start_secondary_resume)
-  */
- _GLOBAL(__main)
- 	blr
--
--#ifdef CONFIG_KEXEC_CORE
--	/*
--	 * Must be relocatable PIC code callable as a C function.
--	 */
--	.globl relocate_new_kernel
--relocate_new_kernel:
--	/* r3 = page_list   */
--	/* r4 = reboot_code_buffer */
--	/* r5 = start_address      */
--
--#ifdef CONFIG_FSL_BOOKE
--
--	mr	r29, r3
--	mr	r30, r4
--	mr	r31, r5
--
--#define ENTRY_MAPPING_KEXEC_SETUP
--#include "fsl_booke_entry_mapping.S"
--#undef ENTRY_MAPPING_KEXEC_SETUP
--
--	mr      r3, r29
--	mr      r4, r30
--	mr      r5, r31
--
--	li	r0, 0
--#elif defined(CONFIG_44x)
--
--	/* Save our parameters */
--	mr	r29, r3
--	mr	r30, r4
--	mr	r31, r5
--
--#ifdef CONFIG_PPC_47x
--	/* Check for 47x cores */
--	mfspr	r3,SPRN_PVR
--	srwi	r3,r3,16
--	cmplwi	cr0,r3,PVR_476FPE@h
--	beq	setup_map_47x
--	cmplwi	cr0,r3,PVR_476@h
--	beq	setup_map_47x
--	cmplwi	cr0,r3,PVR_476_ISS@h
--	beq	setup_map_47x
--#endif /* CONFIG_PPC_47x */
--	
--/*
-- * Code for setting up 1:1 mapping for PPC440x for KEXEC
-- *
-- * We cannot switch off the MMU on PPC44x.
-- * So we:
-- * 1) Invalidate all the mappings except the one we are running from.
-- * 2) Create a tmp mapping for our code in the other address space(TS) and
-- *    jump to it. Invalidate the entry we started in.
-- * 3) Create a 1:1 mapping for 0-2GiB in chunks of 256M in original TS.
-- * 4) Jump to the 1:1 mapping in original TS.
-- * 5) Invalidate the tmp mapping.
-- *
-- * - Based on the kexec support code for FSL BookE
-- *
-- */
--
--	/* 
--	 * Load the PID with kernel PID (0).
--	 * Also load our MSR_IS and TID to MMUCR for TLB search.
--	 */
--	li	r3, 0
--	mtspr	SPRN_PID, r3
--	mfmsr	r4
--	andi.	r4,r4,MSR_IS@l
--	beq	wmmucr
--	oris	r3,r3,PPC44x_MMUCR_STS@h
--wmmucr:
--	mtspr	SPRN_MMUCR,r3
--	sync
--
--	/*
--	 * Invalidate all the TLB entries except the current entry
--	 * where we are running from
--	 */
--	bl	0f				/* Find our address */
--0:	mflr	r5				/* Make it accessible */
--	tlbsx	r23,0,r5			/* Find entry we are in */
--	li	r4,0				/* Start at TLB entry 0 */
--	li	r3,0				/* Set PAGEID inval value */
--1:	cmpw	r23,r4				/* Is this our entry? */
--	beq	skip				/* If so, skip the inval */
--	tlbwe	r3,r4,PPC44x_TLB_PAGEID		/* If not, inval the entry */
--skip:
--	addi	r4,r4,1				/* Increment */
--	cmpwi	r4,64				/* Are we done?	*/
--	bne	1b				/* If not, repeat */
--	isync
--
--	/* Create a temp mapping and jump to it */
--	andi.	r6, r23, 1		/* Find the index to use */
--	addi	r24, r6, 1		/* r24 will contain 1 or 2 */
--
--	mfmsr	r9			/* get the MSR */
--	rlwinm	r5, r9, 27, 31, 31	/* Extract the MSR[IS] */
--	xori	r7, r5, 1		/* Use the other address space */
--
--	/* Read the current mapping entries */
--	tlbre	r3, r23, PPC44x_TLB_PAGEID
--	tlbre	r4, r23, PPC44x_TLB_XLAT
--	tlbre	r5, r23, PPC44x_TLB_ATTRIB
--
--	/* Save our current XLAT entry */
--	mr	r25, r4
--
--	/* Extract the TLB PageSize */
--	li	r10, 1 			/* r10 will hold PageSize */
--	rlwinm	r11, r3, 0, 24, 27	/* bits 24-27 */
--
--	/* XXX: As of now we use 256M, 4K pages */
--	cmpwi	r11, PPC44x_TLB_256M
--	bne	tlb_4k
--	rotlwi	r10, r10, 28		/* r10 = 256M */
--	b	write_out
--tlb_4k:
--	cmpwi	r11, PPC44x_TLB_4K
--	bne	default
--	rotlwi	r10, r10, 12		/* r10 = 4K */
--	b	write_out
--default:
--	rotlwi	r10, r10, 10		/* r10 = 1K */
--
--write_out:
--	/*
--	 * Write out the tmp 1:1 mapping for this code in other address space
--	 * Fixup  EPN = RPN , TS=other address space
--	 */
--	insrwi	r3, r7, 1, 23		/* Bit 23 is TS for PAGEID field */
--
--	/* Write out the tmp mapping entries */
--	tlbwe	r3, r24, PPC44x_TLB_PAGEID
--	tlbwe	r4, r24, PPC44x_TLB_XLAT
--	tlbwe	r5, r24, PPC44x_TLB_ATTRIB
--
--	subi	r11, r10, 1		/* PageOffset Mask = PageSize - 1 */
--	not	r10, r11		/* Mask for PageNum */
--
--	/* Switch to other address space in MSR */
--	insrwi	r9, r7, 1, 26		/* Set MSR[IS] = r7 */
--
--	bl	1f
--1:	mflr	r8
--	addi	r8, r8, (2f-1b)		/* Find the target offset */
--
--	/* Jump to the tmp mapping */
--	mtspr	SPRN_SRR0, r8
--	mtspr	SPRN_SRR1, r9
--	rfi
--
--2:
--	/* Invalidate the entry we were executing from */
--	li	r3, 0
--	tlbwe	r3, r23, PPC44x_TLB_PAGEID
--
--	/* attribute fields. rwx for SUPERVISOR mode */
--	li	r5, 0
--	ori	r5, r5, (PPC44x_TLB_SW | PPC44x_TLB_SR | PPC44x_TLB_SX | PPC44x_TLB_G)
--
--	/* Create 1:1 mapping in 256M pages */
--	xori	r7, r7, 1			/* Revert back to Original TS */
--
--	li	r8, 0				/* PageNumber */
--	li	r6, 3				/* TLB Index, start at 3  */
--
--next_tlb:
--	rotlwi	r3, r8, 28			/* Create EPN (bits 0-3) */
--	mr	r4, r3				/* RPN = EPN  */
--	ori	r3, r3, (PPC44x_TLB_VALID | PPC44x_TLB_256M) /* SIZE = 256M, Valid */
--	insrwi	r3, r7, 1, 23			/* Set TS from r7 */
--
--	tlbwe	r3, r6, PPC44x_TLB_PAGEID	/* PageID field : EPN, V, SIZE */
--	tlbwe	r4, r6, PPC44x_TLB_XLAT		/* Address translation : RPN   */
--	tlbwe	r5, r6, PPC44x_TLB_ATTRIB	/* Attributes */
--
--	addi	r8, r8, 1			/* Increment PN */
--	addi	r6, r6, 1			/* Increment TLB Index */
--	cmpwi	r8, 8				/* Are we done ? */
--	bne	next_tlb
--	isync
--
--	/* Jump to the new mapping 1:1 */
--	li	r9,0
--	insrwi	r9, r7, 1, 26			/* Set MSR[IS] = r7 */
--
--	bl	1f
--1:	mflr	r8
--	and	r8, r8, r11			/* Get our offset within page */
--	addi	r8, r8, (2f-1b)
--
--	and	r5, r25, r10			/* Get our target PageNum */
--	or	r8, r8, r5			/* Target jump address */
--
--	mtspr	SPRN_SRR0, r8
--	mtspr	SPRN_SRR1, r9
--	rfi
--2:
--	/* Invalidate the tmp entry we used */
--	li	r3, 0
--	tlbwe	r3, r24, PPC44x_TLB_PAGEID
--	sync
--	b	ppc44x_map_done
--
--#ifdef CONFIG_PPC_47x
--
--	/* 1:1 mapping for 47x */
--
--setup_map_47x:
--
--	/*
--	 * Load the kernel pid (0) to PID and also to MMUCR[TID].
--	 * Also set the MSR IS->MMUCR STS
--	 */
--	li	r3, 0
--	mtspr	SPRN_PID, r3			/* Set PID */
--	mfmsr	r4				/* Get MSR */
--	andi.	r4, r4, MSR_IS@l		/* TS=1? */
--	beq	1f				/* If not, leave STS=0 */
--	oris	r3, r3, PPC47x_MMUCR_STS@h	/* Set STS=1 */
--1:	mtspr	SPRN_MMUCR, r3			/* Put MMUCR */
--	sync
--
--	/* Find the entry we are running from */
--	bl	2f
--2:	mflr	r23
--	tlbsx	r23, 0, r23
--	tlbre	r24, r23, 0			/* TLB Word 0 */
--	tlbre	r25, r23, 1			/* TLB Word 1 */
--	tlbre	r26, r23, 2			/* TLB Word 2 */
--
--
--	/*
--	 * Invalidates all the tlb entries by writing to 256 RPNs(r4)
--	 * of 4k page size in all  4 ways (0-3 in r3).
--	 * This would invalidate the entire UTLB including the one we are
--	 * running from. However the shadow TLB entries would help us 
--	 * to continue the execution, until we flush them (rfi/isync).
--	 */
--	addis	r3, 0, 0x8000			/* specify the way */
--	addi	r4, 0, 0			/* TLB Word0 = (EPN=0, VALID = 0) */
--	addi	r5, 0, 0
--	b	clear_utlb_entry
--
--	/* Align the loop to speed things up. from head_44x.S */
--	.align	6
--
--clear_utlb_entry:
--
--	tlbwe	r4, r3, 0
--	tlbwe	r5, r3, 1
--	tlbwe	r5, r3, 2
--	addis	r3, r3, 0x2000			/* Increment the way */
--	cmpwi	r3, 0
--	bne	clear_utlb_entry
--	addis	r3, 0, 0x8000
--	addis	r4, r4, 0x100			/* Increment the EPN */
--	cmpwi	r4, 0
--	bne	clear_utlb_entry
--
--	/* Create the entries in the other address space */
--	mfmsr	r5
--	rlwinm	r7, r5, 27, 31, 31		/* Get the TS (Bit 26) from MSR */
--	xori	r7, r7, 1			/* r7 = !TS */
--
--	insrwi	r24, r7, 1, 21			/* Change the TS in the saved TLB word 0 */
--
--	/* 
--	 * write out the TLB entries for the tmp mapping
--	 * Use way '0' so that we could easily invalidate it later.
--	 */
--	lis	r3, 0x8000			/* Way '0' */ 
--
--	tlbwe	r24, r3, 0
--	tlbwe	r25, r3, 1
--	tlbwe	r26, r3, 2
--
--	/* Update the msr to the new TS */
--	insrwi	r5, r7, 1, 26
--
--	bl	1f
--1:	mflr	r6
--	addi	r6, r6, (2f-1b)
--
--	mtspr	SPRN_SRR0, r6
--	mtspr	SPRN_SRR1, r5
--	rfi
--
--	/* 
--	 * Now we are in the tmp address space.
--	 * Create a 1:1 mapping for 0-2GiB in the original TS.
--	 */
--2:
--	li	r3, 0
--	li	r4, 0				/* TLB Word 0 */
--	li	r5, 0				/* TLB Word 1 */
--	li	r6, 0
--	ori	r6, r6, PPC47x_TLB2_S_RWX	/* TLB word 2 */
--
--	li	r8, 0				/* PageIndex */
--
--	xori	r7, r7, 1			/* revert back to original TS */
--
--write_utlb:
--	rotlwi	r5, r8, 28			/* RPN = PageIndex * 256M */
--						/* ERPN = 0 as we don't use memory above 2G */
--
--	mr	r4, r5				/* EPN = RPN */
--	ori	r4, r4, (PPC47x_TLB0_VALID | PPC47x_TLB0_256M)
--	insrwi	r4, r7, 1, 21			/* Insert the TS to Word 0 */
--
--	tlbwe	r4, r3, 0			/* Write out the entries */
--	tlbwe	r5, r3, 1
--	tlbwe	r6, r3, 2
--	addi	r8, r8, 1
--	cmpwi	r8, 8				/* Have we completed ? */
--	bne	write_utlb
--
--	/* make sure we complete the TLB write up */
--	isync
--
--	/* 
--	 * Prepare to jump to the 1:1 mapping.
--	 * 1) Extract page size of the tmp mapping
--	 *    DSIZ = TLB_Word0[22:27]
--	 * 2) Calculate the physical address of the address
--	 *    to jump to.
--	 */
--	rlwinm	r10, r24, 0, 22, 27
--
--	cmpwi	r10, PPC47x_TLB0_4K
--	bne	0f
--	li	r10, 0x1000			/* r10 = 4k */
--	bl	1f
--
--0:
--	/* Defaults to 256M */
--	lis	r10, 0x1000
--	
--	bl	1f
--1:	mflr	r4
--	addi	r4, r4, (2f-1b)			/* virtual address  of 2f */
--
--	subi	r11, r10, 1			/* offsetmask = Pagesize - 1 */
--	not	r10, r11			/* Pagemask = ~(offsetmask) */
--
--	and	r5, r25, r10			/* Physical page */
--	and	r6, r4, r11			/* offset within the current page */
--
--	or	r5, r5, r6			/* Physical address for 2f */
--
--	/* Switch the TS in MSR to the original one */
--	mfmsr	r8
--	insrwi	r8, r7, 1, 26
--
--	mtspr	SPRN_SRR1, r8
--	mtspr	SPRN_SRR0, r5
--	rfi
--
--2:
--	/* Invalidate the tmp mapping */
--	lis	r3, 0x8000			/* Way '0' */
--
--	clrrwi	r24, r24, 12			/* Clear the valid bit */
--	tlbwe	r24, r3, 0
--	tlbwe	r25, r3, 1
--	tlbwe	r26, r3, 2
--
--	/* Make sure we complete the TLB write and flush the shadow TLB */
--	isync
--
--#endif
--
--ppc44x_map_done:
--
--
--	/* Restore the parameters */
--	mr	r3, r29
--	mr	r4, r30
--	mr	r5, r31
--
--	li	r0, 0
--#else
--	li	r0, 0
--
--	/*
--	 * Set Machine Status Register to a known status,
--	 * switch the MMU off and jump to 1: in a single step.
--	 */
--
--	mr	r8, r0
--	ori     r8, r8, MSR_RI|MSR_ME
--	mtspr	SPRN_SRR1, r8
--	addi	r8, r4, 1f - relocate_new_kernel
--	mtspr	SPRN_SRR0, r8
--	sync
--	rfi
--
--1:
--#endif
--	/* from this point address translation is turned off */
--	/* and interrupts are disabled */
--
--	/* set a new stack at the bottom of our page... */
--	/* (not really needed now) */
--	addi	r1, r4, KEXEC_CONTROL_PAGE_SIZE - 8 /* for LR Save+Back Chain */
--	stw	r0, 0(r1)
--
--	/* Do the copies */
--	li	r6, 0 /* checksum */
--	mr	r0, r3
--	b	1f
--
--0:	/* top, read another word for the indirection page */
--	lwzu	r0, 4(r3)
--
--1:
--	/* is it a destination page? (r8) */
--	rlwinm.	r7, r0, 0, 31, 31 /* IND_DESTINATION (1<<0) */
--	beq	2f
--
--	rlwinm	r8, r0, 0, 0, 19 /* clear kexec flags, page align */
--	b	0b
--
--2:	/* is it an indirection page? (r3) */
--	rlwinm.	r7, r0, 0, 30, 30 /* IND_INDIRECTION (1<<1) */
--	beq	2f
--
--	rlwinm	r3, r0, 0, 0, 19 /* clear kexec flags, page align */
--	subi	r3, r3, 4
--	b	0b
--
--2:	/* are we done? */
--	rlwinm.	r7, r0, 0, 29, 29 /* IND_DONE (1<<2) */
--	beq	2f
--	b	3f
--
--2:	/* is it a source page? (r9) */
--	rlwinm.	r7, r0, 0, 28, 28 /* IND_SOURCE (1<<3) */
--	beq	0b
--
--	rlwinm	r9, r0, 0, 0, 19 /* clear kexec flags, page align */
--
--	li	r7, PAGE_SIZE / 4
--	mtctr   r7
--	subi    r9, r9, 4
--	subi    r8, r8, 4
--9:
--	lwzu    r0, 4(r9)  /* do the copy */
--	xor	r6, r6, r0
--	stwu    r0, 4(r8)
--	dcbst	0, r8
--	sync
--	icbi	0, r8
--	bdnz    9b
--
--	addi    r9, r9, 4
--	addi    r8, r8, 4
--	b	0b
--
--3:
--
--	/* To be certain of avoiding problems with self-modifying code
--	 * execute a serializing instruction here.
--	 */
--	isync
--	sync
--
--	mfspr	r3, SPRN_PIR /* current core we are running on */
--	mr	r4, r5 /* load physical address of chunk called */
--
--	/* jump to the entry point, usually the setup routine */
--	mtlr	r5
--	blrl
--
--1:	b	1b
--
--relocate_new_kernel_end:
--
--	.globl relocate_new_kernel_size
--relocate_new_kernel_size:
--	.long relocate_new_kernel_end - relocate_new_kernel
--#endif
+> +
+>  SONY IMX319 SENSOR DRIVER
+>  M:	Bingbu Cao <bingbu.cao@intel.com>
+>  L:	linux-media@vger.kernel.org
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index 7eee1812bba3..930db46fa2b8 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -598,6 +598,17 @@ config VIDEO_IMX274
+>  	  This is a V4L2 sensor driver for the Sony IMX274
+>  	  CMOS image sensor.
+>  
+> +config VIDEO_IMX296
+> +	tristate "Sony IMX296 sensor support"
+> +	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
+> +	select V4L2_FWNODE
+> +	help
+> +	  This is a Video4Linux2 sensor driver for the Sony
+> +	  IMX296 camera sensor.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called imx296.
+> +
+>  config VIDEO_IMX319
+>  	tristate "Sony IMX319 sensor support"
+>  	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
+> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+> index beb170b002dc..ed0c02bda450 100644
+> --- a/drivers/media/i2c/Makefile
+> +++ b/drivers/media/i2c/Makefile
+> @@ -112,6 +112,7 @@ obj-$(CONFIG_VIDEO_TC358743)	+= tc358743.o
+>  obj-$(CONFIG_VIDEO_IMX214)	+= imx214.o
+>  obj-$(CONFIG_VIDEO_IMX258)	+= imx258.o
+>  obj-$(CONFIG_VIDEO_IMX274)	+= imx274.o
+> +obj-$(CONFIG_VIDEO_IMX296)	+= imx296.o
+>  obj-$(CONFIG_VIDEO_IMX319)	+= imx319.o
+>  obj-$(CONFIG_VIDEO_IMX355)	+= imx355.o
+>  obj-$(CONFIG_VIDEO_ST_MIPID02) += st-mipid02.o
+> diff --git a/drivers/media/i2c/imx296.c b/drivers/media/i2c/imx296.c
+> new file mode 100644
+> index 000000000000..98fff0a93277
+> --- /dev/null
+> +++ b/drivers/media/i2c/imx296.c
+> @@ -0,0 +1,733 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Sony IMX296 CMOS Image Sensor Driver
+> + *
+> + * Copyright (C) 2019 FRAMOS GmbH.
+> + *
+> + * Copyright (C) 2019 Linaro Ltd.
+> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <media/media-entity.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-fwnode.h>
+> +#include <media/v4l2-subdev.h>
+> +
+> +#define IMX296_STANDBY 0x3000
+> +#define IMX296_REGHOLD 0x3008
+> +#define IMX296_XMSTA 0x300a
+> +#define IMX296_GAIN_LOW 0x3204
+> +#define IMX296_GAIN_HIGH 0x3205
+> +
+> +#define IMX296_DEFAULT_FORMAT MEDIA_BUS_FMT_SRGGB10_1X10
+> +
+> +static const char * const imx296_supply_name[] = {
+> +	"vdda",
+> +	"vddd",
+> +	"vddo",
+> +};
+> +
+> +#define IMX296_NUM_SUPPLIES ARRAY_SIZE(imx296_supply_name)
+> +
+> +struct imx296_regval {
+> +	u16 reg;
+> +	u8 val;
+> +};
+> +
+> +struct imx296_mode {
+> +	u32 width;
+> +	u32 height;
+> +	u32 pixel_rate;
+> +
+> +	const struct imx296_regval *data;
+> +	u32 data_size;
+> +};
+> +
+> +struct imx296 {
+> +	struct device *dev;
+> +	struct clk *mclk;
+> +	struct regmap *regmap;
+> +
+> +	struct v4l2_subdev sd;
+> +	struct v4l2_fwnode_endpoint ep;
+> +	struct media_pad pad;
+> +	struct v4l2_mbus_framefmt current_format;
+> +	const struct imx296_mode *current_mode;
+> +
+> +	struct regulator_bulk_data supplies[IMX296_NUM_SUPPLIES];
+> +	struct gpio_desc *rst_gpio;
+> +
+> +	struct v4l2_ctrl_handler ctrls;
+> +	struct v4l2_ctrl *pixel_rate;
+> +
+> +	struct mutex lock;
+> +};
+> +
+> +static const struct regmap_config imx296_regmap_config = {
+> +	.reg_bits = 16,
+> +	.val_bits = 8,
+> +	.cache_type = REGCACHE_RBTREE,
+> +};
+> +
+> +static const struct imx296_regval imx296_global_init_settings[] = {
+> +	{ 0x3a00, 0x80 },
+> +	{ 0x3005, 0xf0 },
+> +	{ 0x350b, 0x0f },
+> +	{ 0x300d, 0x00 },
+> +	{ 0x400e, 0x58 },
+> +	{ 0x3010, 0x5e },
+> +	{ 0x3011, 0x04 },
+> +	{ 0x3014, 0x4c },
+> +	{ 0x4014, 0x1c },
+> +	{ 0x3015, 0x04 },
+> +	{ 0x3516, 0x77 },
+> +	{ 0x321a, 0x00 },
+> +	{ 0x3226, 0x02 },
+> +	{ 0x3832, 0xf5 },
+> +	{ 0x3833, 0x00 },
+> +	{ 0x3541, 0x72 },
+> +	{ 0x4041, 0x2a },
+> +	{ 0x3d48, 0xa3 },
+> +	{ 0x3d49, 0x00 },
+> +	{ 0x3d4a, 0x85 },
+> +	{ 0x3d4b, 0x00 },
+> +	{ 0x3256, 0x01 },
+> +	{ 0x3758, 0xa3 },
+> +	{ 0x3759, 0x00 },
+> +	{ 0x375a, 0x85 },
+> +	{ 0x375b, 0x00 },
+> +	{ 0x3165, 0x00 },
+> +	{ 0x3169, 0x10 },
+> +	{ 0x316a, 0x02 },
+> +	{ 0x4174, 0x00 },
+> +	{ 0x3079, 0x08 },
+> +	{ 0x3090, 0x04 },
+> +	{ 0x3094, 0x04 },
+> +	{ 0x3098, 0x04 },
+> +	{ 0x309e, 0x04 },
+> +	{ 0x30a0, 0x04 },
+> +	{ 0x30a1, 0x3c },
+> +	{ 0x38a2, 0xf6 },
+> +	{ 0x40a2, 0x06 },
+> +	{ 0x38a3, 0x00 },
+> +	{ 0x30a4, 0x5f },
+> +	{ 0x30a8, 0x91 },
+> +	{ 0x30ac, 0x28 },
+> +	{ 0x30af, 0x09 },
+> +	{ 0x40c1, 0xf6 },
+> +	{ 0x40c7, 0x0f },
+> +	{ 0x31c8, 0xf3 },
+> +	{ 0x40c8, 0x00 },
+> +	{ 0x31d0, 0xf4 },
+> +	{ 0x30df, 0x00 },
+> +};
+> +
+> +static const struct imx296_regval imx296_1440_1088_settings[] = {
+> +	{ 0x300d, 0x00 },
+> +	{ 0x3010, 0xcb },
+> +	{ 0x3011, 0x08 },
+> +	{ 0x3014, 0x4c },
+> +	{ 0x3015, 0x04 },
+> +	{ 0x3300, 0x03 },
+> +	{ 0x3310, 0x08 },
+> +	{ 0x3311, 0x00 },
+> +	{ 0x3312, 0x00 },
+> +	{ 0x3313, 0x00 },
+> +	{ 0x3314, 0xa0 },
+> +	{ 0x3315, 0x05 },
+> +	{ 0x3316, 0x40 },
+> +	{ 0x3317, 0x04 },
+> +
+> +	{ 0x3204, 0x00 },
+> +	{ 0x3205, 0x00 },
+> +	{ 0x3212, 0x08 },
+> +	{ 0x3254, 0x3c },
+> +	{ 0x3255, 0x00 },
+> +	{ 0x3089, 0x80 },
+> +	{ 0x308a, 0x0b },
+> +	{ 0x308b, 0x80 },
+> +	{ 0x308c, 0x08 },
+> +	{ 0x418c, 0x74 },
+> +	{ 0x308d, 0x0e },
+> +	{ 0x308e, 0x00 },
+> +	{ 0x308f, 0x00 },
+> +};
+> +
+> +/* Mode configs */
+> +static const struct imx296_mode imx296_modes[] = {
+> +	{
+> +		.width = 1440,
+> +		.height = 1088,
+> +		.data = imx296_1440_1088_settings,
+> +		.data_size = ARRAY_SIZE(imx296_1440_1088_settings),
+> +		.pixel_rate = 80000000,
+> +	},
+> +};
+> +
+> +static inline struct imx296 *to_imx296(struct v4l2_subdev *_sd)
+> +{
+> +	return container_of(_sd, struct imx296, sd);
+> +}
+> +
+> +static inline int imx296_read_reg(struct imx296 *imx296, u16 addr, u8 *value)
+> +{
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = regmap_read(imx296->regmap, addr, &regval);
+> +	if (ret) {
+> +		dev_err(imx296->dev, "I2C read failed for addr: %x\n", addr);
+> +		return ret;
+> +	}
+> +
+> +	*value = regval & 0xff;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx296_write_reg(struct imx296 *imx296, u16 addr, u8 value)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_write(imx296->regmap, addr, value);
+> +	if (ret) {
+> +		dev_err(imx296->dev, "I2C write failed for addr: %x\n", addr);
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int imx296_set_register_array(struct imx296 *imx296,
+> +				     const struct imx296_regval *settings,
+> +				     unsigned int num_settings)
+> +{
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	for (i = 0; i < num_settings; ++i, ++settings) {
+> +		ret = imx296_write_reg(imx296, settings->reg, settings->val);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		/* Settle time is 10ms for all registers */
+
+Is this really needed? It'll take very long...
+
+> +		msleep(10);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx296_write_buffered_reg(struct imx296 *imx296, u16 address_low,
+> +				     u8 nr_regs, u32 value)
+> +{
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	ret = imx296_write_reg(imx296, IMX296_REGHOLD, 0x01);
+> +	if (ret) {
+> +		dev_err(imx296->dev, "Error setting hold register\n");
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < nr_regs; i++) {
+> +		ret = imx296_write_reg(imx296, address_low + i,
+> +				       (u8)(value >> (i * 8)));
+> +		if (ret) {
+> +			dev_err(imx296->dev, "Error writing buffered registers\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = imx296_write_reg(imx296, IMX296_REGHOLD, 0x00);
+> +	if (ret) {
+> +		dev_err(imx296->dev, "Error setting hold register\n");
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int imx296_set_gain(struct imx296 *imx296, u32 value)
+> +{
+> +	int ret;
+> +
+> +	ret = imx296_write_buffered_reg(imx296, IMX296_GAIN_HIGH, 1,
+> +					(u8)((value >> 8) & 0xFF));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = imx296_write_buffered_reg(imx296, IMX296_GAIN_HIGH, 1,
+
+return ...
+
+> +					(u8)((value) & 0xFF));
+
+You need neither casting nor and here as the value will be cast by
+imx296_write_buffered_reg() soon.
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Stop streaming */
+> +static int imx296_stop_streaming(struct imx296 *imx296)
+> +{
+> +	int ret;
+> +
+> +	ret = imx296_write_reg(imx296, IMX296_STANDBY, 0x01);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	msleep(30);
+> +
+> +	return imx296_write_reg(imx296, IMX296_XMSTA, 0x01);
+> +}
+> +
+> +static int imx296_set_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +	struct imx296 *imx296 = container_of(ctrl->handler,
+> +					     struct imx296, ctrls);
+> +	int ret = 0;
+> +
+> +	/* V4L2 controls values will be applied only when power is already up */
+> +	if (!pm_runtime_get_if_in_use(imx296->dev))
+> +		return 0;
+> +
+> +	switch (ctrl->id) {
+> +	case V4L2_CID_GAIN:
+> +		ret = imx296_set_gain(imx296, ctrl->val);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	pm_runtime_put(imx296->dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops imx296_ctrl_ops = {
+> +	.s_ctrl = imx296_set_ctrl,
+> +};
+> +
+> +static int imx296_enum_mbus_code(struct v4l2_subdev *sd,
+> +				 struct v4l2_subdev_pad_config *cfg,
+> +				 struct v4l2_subdev_mbus_code_enum *code)
+> +{
+> +	code->code = IMX296_DEFAULT_FORMAT;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx296_get_fmt(struct v4l2_subdev *sd,
+> +			  struct v4l2_subdev_pad_config *cfg,
+> +			  struct v4l2_subdev_format *fmt)
+> +{
+> +	struct imx296 *imx296 = to_imx296(sd);
+> +	struct v4l2_mbus_framefmt *framefmt;
+> +
+> +	mutex_lock(&imx296->lock);
+> +
+> +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY)
+> +		framefmt = v4l2_subdev_get_try_format(&imx296->sd, cfg,
+> +						      fmt->pad);
+> +	else
+> +		framefmt = &imx296->current_format;
+> +
+> +	fmt->format = *framefmt;
+> +
+> +	mutex_unlock(&imx296->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx296_set_fmt(struct v4l2_subdev *sd,
+> +			  struct v4l2_subdev_pad_config *cfg,
+> +			  struct v4l2_subdev_format *fmt)
+> +{
+> +	struct imx296 *imx296 = to_imx296(sd);
+> +	const struct imx296_mode *mode;
+> +	struct v4l2_mbus_framefmt *format;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&imx296->lock);
+> +
+> +	mode = v4l2_find_nearest_size(imx296_modes,
+> +				      ARRAY_SIZE(imx296_modes),
+> +				      width, height,
+> +				      fmt->format.width, fmt->format.height);
+> +
+> +	fmt->format.width = mode->width;
+> +	fmt->format.height = mode->height;
+> +
+> +	fmt->format.code = IMX296_DEFAULT_FORMAT;
+> +	fmt->format.field = V4L2_FIELD_NONE;
+> +
+> +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
+> +		format = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
+> +	} else {
+> +		format = &imx296->current_format;
+> +		__v4l2_ctrl_s_ctrl_int64(imx296->pixel_rate, mode->pixel_rate);
+> +
+> +		imx296->current_mode = mode;
+> +	}
+> +
+> +	*format = fmt->format;
+> +
+> +	mutex_unlock(&imx296->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int imx296_entity_init_cfg(struct v4l2_subdev *subdev,
+> +				  struct v4l2_subdev_pad_config *cfg)
+> +{
+> +	struct v4l2_subdev_format fmt = { 0 };
+> +
+> +	fmt.which = cfg ? V4L2_SUBDEV_FORMAT_TRY : V4L2_SUBDEV_FORMAT_ACTIVE;
+> +	fmt.format.width = 1440;
+> +	fmt.format.height = 1088;
+> +
+> +	imx296_set_fmt(subdev, cfg, &fmt);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Start streaming */
+> +static int imx296_start_streaming(struct imx296 *imx296)
+> +{
+> +	int ret;
+> +
+> +	/* Set init register settings */
+> +	ret = imx296_set_register_array(imx296, imx296_global_init_settings,
+> +				ARRAY_SIZE(imx296_global_init_settings));
+> +	if (ret < 0) {
+> +		dev_err(imx296->dev, "Could not set init registers\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Apply default values of current mode */
+> +	ret = imx296_set_register_array(imx296, imx296->current_mode->data,
+> +					imx296->current_mode->data_size);
+> +	if (ret < 0) {
+> +		dev_err(imx296->dev, "Could not set current mode\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Apply customized values from user */
+> +	ret = v4l2_ctrl_handler_setup(imx296->sd.ctrl_handler);
+> +	if (ret) {
+> +		dev_err(imx296->dev, "Could not sync v4l2 controls\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = imx296_write_reg(imx296, IMX296_STANDBY, 0x00);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	msleep(30);
+> +
+> +	/* Start streaming */
+> +	return imx296_write_reg(imx296, IMX296_XMSTA, 0x00);
+> +}
+> +
+> +static int imx296_set_stream(struct v4l2_subdev *sd, int enable)
+> +{
+> +	struct imx296 *imx296 = to_imx296(sd);
+> +	int ret;
+> +
+> +	if (enable) {
+> +		ret = pm_runtime_get_sync(imx296->dev);
+> +		if (ret < 0) {
+> +			pm_runtime_put_noidle(imx296->dev);
+> +			return ret;
+> +		}
+> +
+> +		ret = imx296_start_streaming(imx296);
+> +		if (ret) {
+> +			dev_err(imx296->dev, "Start stream failed\n");
+> +			pm_runtime_put(imx296->dev);
+> +			return ret;
+> +		}
+> +	} else {
+> +		imx296_stop_streaming(imx296);
+> +		pm_runtime_put(imx296->dev);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx296_get_regulators(struct device *dev, struct imx296 *imx296)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < IMX296_NUM_SUPPLIES; i++)
+> +		imx296->supplies[i].supply = imx296_supply_name[i];
+> +
+> +	return devm_regulator_bulk_get(dev, IMX296_NUM_SUPPLIES,
+> +				       imx296->supplies);
+> +}
+> +
+> +static int imx296_power_on(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct imx296 *imx296 = to_imx296(sd);
+> +	int ret;
+> +
+> +	ret = regulator_bulk_enable(IMX296_NUM_SUPPLIES, imx296->supplies);
+> +	if (ret) {
+> +		dev_err(imx296->dev, "Failed to enable regulators\n");
+> +		return ret;
+> +	}
+> +
+> +	usleep_range(1, 2);
+> +
+> +	gpiod_set_value_cansleep(imx296->rst_gpio, 1);
+> +
+> +	usleep_range(1, 2);
+> +
+> +	ret = clk_prepare_enable(imx296->mclk);
+> +	if (ret) {
+> +		dev_err(imx296->dev, "Failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+> +	usleep_range(30000, 31000);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx296_power_off(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct imx296 *imx296 = to_imx296(sd);
+> +
+> +	clk_disable_unprepare(imx296->mclk);
+> +	gpiod_set_value_cansleep(imx296->rst_gpio, 0);
+> +	regulator_bulk_disable(IMX296_NUM_SUPPLIES, imx296->supplies);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops imx296_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(imx296_power_on, imx296_power_off, NULL)
+> +};
+> +
+> +static const struct v4l2_subdev_video_ops imx296_video_ops = {
+> +	.s_stream = imx296_set_stream,
+> +};
+> +
+> +static const struct v4l2_subdev_pad_ops imx296_pad_ops = {
+> +	.init_cfg = imx296_entity_init_cfg,
+> +	.enum_mbus_code = imx296_enum_mbus_code,
+> +	.get_fmt = imx296_get_fmt,
+> +	.set_fmt = imx296_set_fmt,
+> +};
+> +
+> +static const struct v4l2_subdev_ops imx296_subdev_ops = {
+> +	.video = &imx296_video_ops,
+> +	.pad = &imx296_pad_ops,
+> +};
+> +
+> +static const struct media_entity_operations imx296_subdev_entity_ops = {
+> +	.link_validate = v4l2_subdev_link_validate,
+> +};
+> +
+> +static int imx296_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct fwnode_handle *endpoint;
+> +	struct imx296 *imx296;
+> +	u32 mclk_freq;
+> +	int ret;
+> +
+> +	imx296 = devm_kzalloc(dev, sizeof(*imx296), GFP_KERNEL);
+> +	if (!imx296)
+> +		return -ENOMEM;
+> +
+> +	imx296->dev = dev;
+> +	imx296->regmap = devm_regmap_init_i2c(client, &imx296_regmap_config);
+> +	if (IS_ERR(imx296->regmap)) {
+> +		dev_err(dev, "Unable to initialize I2C\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(dev), NULL);
+> +	if (!endpoint) {
+> +		dev_err(dev, "Endpoint node not found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &imx296->ep);
+
+Please allocate ep in stack instead, there's no need to keep it around
+further as the driver doesn't use it. Also initialise the bus_type field;
+support for figuring it out is there just for old drivers.
+
+> +	fwnode_handle_put(endpoint);
+> +	if (ret) {
+> +		dev_err(dev, "Parsing endpoint node failed\n");
+> +		goto free_err;
+> +	}
+> +
+> +	/* Only CSI2 is supported for now */
+> +	if (imx296->ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
+
+After setting the bus_type field, you can omit this check.
+
+> +		dev_err(dev, "Unsupported bus type, should be CSI2\n");
+> +		ret = -EINVAL;
+> +		goto free_err;
+> +	}
+> +
+> +	/* Set default mode to max resolution */
+> +	imx296->current_mode = &imx296_modes[0];
+> +
+> +	/* get system clock (mclk) */
+> +	imx296->mclk = devm_clk_get(dev, "mclk");
+> +	if (IS_ERR(imx296->mclk)) {
+> +		dev_err(dev, "Could not get mclk");
+> +		ret = PTR_ERR(imx296->mclk);
+> +		goto free_err;
+> +	}
+> +
+> +	ret = fwnode_property_read_u32(dev_fwnode(dev), "clock-frequency",
+> +				       &mclk_freq);
+> +	if (ret) {
+> +		dev_err(dev, "Could not get mclk frequency\n");
+> +		goto free_err;
+> +	}
+> +
+> +	/* external clock must be 37.125 MHz */
+> +	if (mclk_freq != 37125000) {
+> +		dev_err(dev, "External clock frequency %u is not supported\n",
+> +			mclk_freq);
+> +		ret = -EINVAL;
+> +		goto free_err;
+> +	}
+> +
+> +	ret = clk_set_rate(imx296->mclk, mclk_freq);
+> +	if (ret) {
+> +		dev_err(dev, "Could not set mclk frequency\n");
+> +		goto free_err;
+> +	}
+> +
+> +	ret = imx296_get_regulators(dev, imx296);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Cannot get regulators\n");
+> +		goto free_err;
+> +	}
+> +
+> +	imx296->rst_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
+> +	if (IS_ERR(imx296->rst_gpio)) {
+> +		dev_err(dev, "Cannot get reset gpio\n");
+> +		ret = PTR_ERR(imx296->rst_gpio);
+> +		goto free_err;
+> +	}
+> +
+> +	mutex_init(&imx296->lock);
+> +
+> +	v4l2_ctrl_handler_init(&imx296->ctrls, 3);
+> +
+> +	v4l2_ctrl_new_std(&imx296->ctrls, &imx296_ctrl_ops,
+> +			  V4L2_CID_GAIN, 0, 72, 1, 0);
+> +
+> +	imx296->pixel_rate = v4l2_ctrl_new_std(&imx296->ctrls, &imx296_ctrl_ops,
+> +					       V4L2_CID_PIXEL_RATE, 1,
+> +					       INT_MAX, 1,
+> +					       imx296_modes[0].pixel_rate);
+> +
+> +	imx296->sd.ctrl_handler = &imx296->ctrls;
+> +
+> +	if (imx296->ctrls.error) {
+> +		dev_err(dev, "Control initialization error %d\n",
+> +			imx296->ctrls.error);
+> +		ret = imx296->ctrls.error;
+> +		goto free_ctrl;
+> +	}
+> +
+> +	v4l2_i2c_subdev_init(&imx296->sd, client, &imx296_subdev_ops);
+> +	imx296->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	imx296->sd.dev = &client->dev;
+> +	imx296->sd.entity.ops = &imx296_subdev_entity_ops;
+> +	imx296->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
+> +
+> +	imx296->pad.flags = MEDIA_PAD_FL_SOURCE;
+> +	ret = media_entity_pads_init(&imx296->sd.entity, 1, &imx296->pad);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Could not register media entity\n");
+> +		goto free_ctrl;
+> +	}
+> +
+> +	ret = v4l2_async_register_subdev(&imx296->sd);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Could not register v4l2 device\n");
+> +		goto free_entity;
+> +	}
+> +
+> +	/* Power on the device to match runtime PM state below */
+> +	ret = imx296_power_on(dev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Could not power on the device\n");
+> +		goto free_entity;
+> +	}
+> +
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+> +	pm_runtime_idle(dev);
+> +
+> +	v4l2_fwnode_endpoint_free(&imx296->ep);
+> +
+> +	return 0;
+> +
+> +free_entity:
+> +	media_entity_cleanup(&imx296->sd.entity);
+> +free_ctrl:
+> +	v4l2_ctrl_handler_free(&imx296->ctrls);
+> +	mutex_destroy(&imx296->lock);
+> +free_err:
+> +	v4l2_fwnode_endpoint_free(&imx296->ep);
+> +
+> +	return ret;
+> +}
+> +
+> +static int imx296_remove(struct i2c_client *client)
+> +{
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct imx296 *imx296 = to_imx296(sd);
+> +
+> +	v4l2_async_unregister_subdev(sd);
+> +	media_entity_cleanup(&sd->entity);
+> +	v4l2_ctrl_handler_free(sd->ctrl_handler);
+> +
+> +	mutex_destroy(&imx296->lock);
+> +
+> +	pm_runtime_disable(imx296->dev);
+> +	if (!pm_runtime_status_suspended(imx296->dev))
+> +		imx296_power_off(imx296->dev);
+> +	pm_runtime_set_suspended(imx296->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx296_of_match[] = {
+> +	{ .compatible = "sony,imx296" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx296_of_match);
+> +
+> +static struct i2c_driver imx296_i2c_driver = {
+> +	.probe_new  = imx296_probe,
+> +	.remove = imx296_remove,
+> +	.driver = {
+> +		.name  = "imx296",
+> +		.pm = &imx296_pm_ops,
+> +		.of_match_table = of_match_ptr(imx296_of_match),
+
+No need for of_match_ptr here.
+
+> +	},
+> +};
+> +
+> +module_i2c_driver(imx296_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("Sony IMX296 CMOS Image Sensor Driver");
+> +MODULE_AUTHOR("FRAMOS GmbH");
+> +MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
+> +MODULE_LICENSE("GPL v2");
+
 -- 
-2.13.3
+Kind regards,
 
+Sakari Ailus
