@@ -2,118 +2,153 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D039C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC6EC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13DC7218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:52:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="NXjTJHsv"
+	by mail.kernel.org (Postfix) with ESMTP id 9D054214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389214AbfKGNwD (ORCPT
+        id S2389256AbfKGNwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:52:03 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:9000 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389192AbfKGNwD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:52:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573134721;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=xePb0EruLlu0nO5HtILqFKWXJ1QLBtzbkUwOSAhevVY=;
-        b=NXjTJHsvHtbkJP3pxp/2rSK3PLCYBdnd7kDoMoPSiO4KsDJoHLWsVIH05nBd4GCqrE
-        /Hs/McN9zb4OF81PXb8OOlgLGr7gGgkdKl5kXy22gIHKsrb0/xTqRCgmgvOjaicLcwK5
-        u1KR8ThBsXDXwlWXGmX2Awpr073df7VIxcCck2vN3oyLeCsf66OOTdsmdS4tVpNAczjC
-        maRn+obuPrcVQXWv3Wcv1rSwUWJKLxYoMdmqCbyC2myoN5FjiX/UrHdviy5PSUEcAFIG
-        WNrnkiuomvaEeip0tfIdxK18e692OVUUpu9kW8oquqJChMACK3c/84sX8W/IOYHyThcT
-        Gu6w==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4kV1cX92EW4mFvNjTRB"
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id 20735bvA7DmxlOo
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 7 Nov 2019 14:48:59 +0100 (CET)
-Date:   Thu, 7 Nov 2019 14:48:50 +0100
-From:   Olaf Hering <olaf@aepfle.de>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "open list\:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
-Message-ID: <20191107144850.37587edb.olaf@aepfle.de>
-In-Reply-To: <874kzfbybk.fsf@vitty.brq.redhat.com>
-References: <20191024144943.26199-1-olaf@aepfle.de>
-        <874kzfbybk.fsf@vitty.brq.redhat.com>
-X-Mailer: Claws Mail 2019.05.18 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/TfRDKLn+ytyQpDe=3EHiVfq"; protocol="application/pgp-signature"
+        Thu, 7 Nov 2019 08:52:06 -0500
+Received: from verein.lst.de ([213.95.11.211]:57400 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389192AbfKGNwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:52:05 -0500
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id 2089C68BE1; Thu,  7 Nov 2019 14:52:02 +0100 (CET)
+In-Reply-To: <20191107135018.0A04068BE1@verein.lst.de>
+References: <20191107135018.0A04068BE1@verein.lst.de>
+From:   Torsten Duwe <duwe@lst.de>
+Date:   Tue, 29 Oct 2019 13:16:57 +0100
+Subject: [PATCH v5 1/7] drm/bridge: move ANA78xx driver to analogix
+ subdirectory
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-Id: <20191107135202.2089C68BE1@verein.lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TfRDKLn+ytyQpDe=3EHiVfq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Icenowy Zheng <icenowy@aosc.io>
 
-Am Thu, 07 Nov 2019 14:39:11 +0100
-schrieb Vitaly Kuznetsov <vkuznets@redhat.com>:
+As ANA78xx chips are designed and produced by Analogix Semiconductor,
+Inc, move their driver codes into analogix subdirectory.
 
-> Olaf Hering <olaf@aepfle.de> writes:
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Torsten Duwe <duwe@suse.de>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+---
+ drivers/gpu/drm/bridge/Kconfig                           | 10 ----------
+ drivers/gpu/drm/bridge/Makefile                          |  4 ++--
+ drivers/gpu/drm/bridge/analogix/Kconfig                  | 10 ++++++++++
+ drivers/gpu/drm/bridge/analogix/Makefile                 |  1 +
+ drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c |  0
+ drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h |  0
+ 6 files changed, 13 insertions(+), 12 deletions(-)
+ rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (100%)
+ rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h (100%)
 
-> Is it only EAI_AGAIN or do you see any other return values which justify
-> the retry? I'm afraid that in case of a e.g. non-existing hostname we'll
-> be infinitely looping with EAI_FAIL.
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index 1cc9f502c1f2..6c48722130fd 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -16,16 +16,6 @@ config DRM_PANEL_BRIDGE
+ menu "Display Interface Bridges"
+ 	depends on DRM && DRM_BRIDGE
+ 
+-config DRM_ANALOGIX_ANX78XX
+-	tristate "Analogix ANX78XX bridge"
+-	select DRM_KMS_HELPER
+-	select REGMAP_I2C
+-	---help---
+-	  ANX78XX is an ultra-low power Full-HD SlimPort transmitter
+-	  designed for portable devices. The ANX78XX transforms
+-	  the HDMI output of an application processor to MyDP
+-	  or DisplayPort.
+-
+ config DRM_CDNS_DSI
+ 	tristate "Cadence DPI/DSI bridge"
+ 	select DRM_KMS_HELPER
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index 4934fcf5a6f8..a6c7dd7727ea 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -1,5 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+ obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+ obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+@@ -12,8 +11,9 @@ obj-$(CONFIG_DRM_SII9234) += sii9234.o
+ obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
+-obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
+ obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
+ obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
+ obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
++
++obj-y += analogix/
+ obj-y += synopsys/
+diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
+index e930ff9b5cd4..29ba1b21019e 100644
+--- a/drivers/gpu/drm/bridge/analogix/Kconfig
++++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+@@ -1,4 +1,14 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++config DRM_ANALOGIX_ANX78XX
++	tristate "Analogix ANX78XX bridge"
++	select DRM_KMS_HELPER
++	select REGMAP_I2C
++	help
++	  ANX78XX is an ultra-low power Full-HD SlimPort transmitter
++	  designed for portable devices. The ANX78XX transforms
++	  the HDMI output of an application processor to MyDP
++	  or DisplayPort.
++
+ config DRM_ANALOGIX_DP
+ 	tristate
+ 	depends on DRM
+diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
+index fdbf3fd2f087..6fcbfd3ee560 100644
+--- a/drivers/gpu/drm/bridge/analogix/Makefile
++++ b/drivers/gpu/drm/bridge/analogix/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o
++obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+similarity index 100%
+rename from drivers/gpu/drm/bridge/analogix-anx78xx.c
+rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+similarity index 100%
+rename from drivers/gpu/drm/bridge/analogix-anx78xx.h
+rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+-- 
+2.16.4
 
-I currently do not have a setup that reproduces the failure.
-I think if this thread loops forever, so be it.
-
-The report I have shows "getaddrinfo failed: 0xfffffffe Name or service not=
- known" on the host side.
-And that went away within the VM once "networking was fixed", whatever this=
- means.
-But hv_kvp_daemon would report the error string forever.
-
-> > +	pthread_detach(t); =20
-> I think this should be complemented with pthread_cancel/pthread_join
-> before exiting main().
-
-If the thread is detached, it is exactly that: detached. Why do you think t=
-he main thread should wait for the detached thread?
-
-Olaf
-
---Sig_/TfRDKLn+ytyQpDe=3EHiVfq
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl3EIMIACgkQ86SN7mm1
-DoDUzxAAoj3rIvo4UnuYA6gdsJXo/4gzx1ef87gMMUDuTYvUerULqG3HqC0PbzWg
-T7nX3L8MqHDqTJ3NhZyIuicIqGub5HfwnzQDnTMS/1PIW/t0tkiVbFbnXyYaRx9B
-wC8aJLxpaR6NT4XCqq1HMv1zF2fr329phf3kFOPRONGwRoh1ACgk8N9cVnK6Wakl
-SCXWvXxaUtpt5I3A9UQUmQUSDDtv2+DrHiJctWfVZR2ZW2EVSeCNqMVJS4ZyF6Fo
-WMPCnb/5zLlLYo204jlsdEB9ny/FgKrLhjQeuEO2Mt+qBXK//Rz79jRQLhKB1EpV
-NrIpSgZ2PJAmnKRXVoKhqDo6CkPHmCbZFlWHGbmaRg9b5tQpY2cTiZI/4UgM8IIm
-ogFuGEFAM7uWC+iPKgf/apAofMmNoL/8YHwThlgCptHZZotaZu/FdFHnUT1mYSY/
-BsfFqhjjNKFkiy4J0GubudeCyKCyiIQ+aQ3inXDCJF3Mh2EbV4MMGIkzy9BqjCG3
-pnmv5kcSXiuUv4r/KGBS0L+JD9D9cAQcF2arbs/YR4U20WbMQb+WHQmZgfKmjW9u
-hLvAPIQSvkt6SJOVhqxUtC+YpuNp8gn+muX2SeTVFhIzYUhDwRUKdwGA/vcYeD+O
-NT2FTV4m6T68jhRCWT1EcvAYztABDp8g9mhn2KJYvssbbstKIpk=
-=A5vV
------END PGP SIGNATURE-----
-
---Sig_/TfRDKLn+ytyQpDe=3EHiVfq--
