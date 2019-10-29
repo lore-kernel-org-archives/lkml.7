@@ -2,97 +2,149 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7499CCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C227CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A852086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572338425;
-	bh=mgWIhjckqxqZSyRbf9Ero4ZNiEz9TMOyb3Twc/C42Qw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OdWnm+Oad0qR3DRQ8BalK3RlFOW6pEhQEMgTPYHTdZtUJSgXiZuFV0wDAg5VE7VAa
-	 L7tgYMvThw/aAX5qHeyk2mDmdahUS9L/HV+dA0ncruDUZq9q/ydAGP3Ppt4a0gXrF9
-	 z7b3XM6CvH7SbdVri7EJFaSidxuDEAz2xYEv38mM=
+	by mail.kernel.org (Postfix) with ESMTP id D67D42067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:41:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ncentric-com.20150623.gappssmtp.com header.i=@ncentric-com.20150623.gappssmtp.com header.b="pPHnC2jz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbfJ2IkY (ORCPT
+        id S1729753AbfJ2Ilm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbfJ2IkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:40:24 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 292D52067D;
-        Tue, 29 Oct 2019 08:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572338423;
-        bh=mgWIhjckqxqZSyRbf9Ero4ZNiEz9TMOyb3Twc/C42Qw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VX+bTrWJaxeA2GZo6IMS5PC8kXNJvpeD5Q4wP4xSZ7Dr2B5qn68G1qj1p3C1WtNj9
-         tgZPaKROjJoIbCD9PNoQMMTZg1tQrDhBnNx/3TihzsuYA5c+v07maBq+iDHzyr44sg
-         RebUP5pDHloE7kPCl3rCVrWGqXWjBrgT+dUVSSzY=
-Date:   Tue, 29 Oct 2019 09:30:12 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] arm: dts: sun8i: a83t: a711: Add touchscreen node
-Message-ID: <20191029083012.62wgvonpxkgmznpn@hendrix>
-References: <20191029005806.3577376-1-megous@megous.com>
- <20191029005806.3577376-4-megous@megous.com>
+        Tue, 29 Oct 2019 04:41:42 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38381 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfJ2Ilk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:41:40 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 22so1435821wms.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 01:41:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ncentric-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=DUE+XOir+sEq8Jjt6ZqFoZP8jxttvHmbtNjKbTObY9Y=;
+        b=pPHnC2jzOsNQtFwKWKM84eQfcMIczrZRRakDJasaSgNDYqEpq5bkSkEmSQokHT5Ic7
+         TRSTsQEjnG5bXDRhJwN6zbp6rsw+ArB8T4EtOiOcOm+FLZcBXvf/mOhOEDupb0/h79/2
+         poyjiibNRB2bUGgklHNODDYzLXaLXEHJlmgyQgv7uWTBAE9SPXY9QfUbhN8hAWurOdOA
+         2IQgVfDF1Ep1VFPJ/UuLp4xFEBXmOI7/OemGOj7GR8w2XjcHS1V9Q30wADyPsF9qP9hz
+         HO1g0lEOtJPqfjsd5amgxY+Ff1OAs2aF2+t0sb2auBJJ7qKfq4gT+RdxkUC4rQOgEz65
+         2EYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=DUE+XOir+sEq8Jjt6ZqFoZP8jxttvHmbtNjKbTObY9Y=;
+        b=LZWbhLnKwjdrx5dnLIkA0wFuV9CSF72rm1d3m0VbaS4AQ8dZoLRXsPqmna1quGLC3i
+         +TDUn41Zp7cH/GqAqCdWrV0x0220RIuK7mb1LrtZswGzIw8Sj2ekFen0Gi00/SNQcfp/
+         eb+qxtne2KebWnUwD/8Ws1qqPvBKmKQJEpT8f+G0pA8OHC2uJTWrMDWlH1ykqqMhnzsg
+         /k3gsQOGqyZ1Qd1rZ0mEACtVH10a1TiyCnit1EhEL/Q2VSAsAeXooQ0Cq7NMFyEfrncy
+         O9VqF9jqiH+QnPvw/MIWg//d1M3+Az46HycoPtxJNHRVfdg5rO8rFMa7PjBUtPqazDy0
+         jqQA==
+X-Gm-Message-State: APjAAAX+B5lTi6JQJBBpkKCs0jMI6TqFkx3CX5jJyz3Zn2TDeMfwPl1e
+        P7sc4heu4rCS0IFPWgoyCX9VNSBGHGU=
+X-Google-Smtp-Source: APXvYqyftOvlRJ9dg8wL3C+zw81qRJgiCNNRVg6nEmYDGwPHS05minYwSNVy0ezRwvY2ORWwUG3b8g==
+X-Received: by 2002:a1c:a4c5:: with SMTP id n188mr2887218wme.30.1572338496714;
+        Tue, 29 Oct 2019 01:41:36 -0700 (PDT)
+Received: from [192.168.3.176] (d515300d8.static.telenet.be. [81.83.0.216])
+        by smtp.gmail.com with ESMTPSA id u21sm2275041wmu.27.2019.10.29.01.41.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 01:41:36 -0700 (PDT)
+Subject: Re: [PATCH v2] 802.11n IBSS: wlan0 stops receiving packets due to
+ aggregation after sender reboot
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        =?UTF-8?Q?Krzysztof_Ha=c5=82asa?= <khalasa@piap.pl>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <m34l02mh71.fsf@t19.piap.pl> <m37e4tjfbu.fsf@t19.piap.pl>
+ <e5b07b4ce51f806ce79b1ae06ff3cbabbaa4873d.camel@sipsolutions.net>
+From:   Koen Vandeputte <koen.vandeputte@ncentric.com>
+Message-ID: <30465e05-3465-f496-d57f-5e115551f5cb@ncentric.com>
+Date:   Tue, 29 Oct 2019 09:41:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vjc7bik6lfh4bmzh"
-Content-Disposition: inline
-In-Reply-To: <20191029005806.3577376-4-megous@megous.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <e5b07b4ce51f806ce79b1ae06ff3cbabbaa4873d.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---vjc7bik6lfh4bmzh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Oct 29, 2019 at 01:58:06AM +0100, Ondrej Jirman wrote:
-> From: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+On 28.10.19 13:21, Johannes Berg wrote:
+> On Fri, 2019-10-25 at 12:21 +0200, Krzysztof Hałasa wrote:
+>> Fix a bug where the mac80211 RX aggregation code sets a new aggregation
+>> "session" at the remote station's request, but the head_seq_num
+>> (the sequence number the receiver expects to receive) isn't reset.
+>>
+>> Spotted on a pair of AR9580 in IBSS mode.
+>>
+>> Signed-off-by: Krzysztof Halasa <khalasa@piap.pl>
+>>
+>> diff --git a/net/mac80211/agg-rx.c b/net/mac80211/agg-rx.c
+>> index 4d1c335e06e5..67733bd61297 100644
+>> --- a/net/mac80211/agg-rx.c
+>> +++ b/net/mac80211/agg-rx.c
+>> @@ -354,10 +354,13 @@ void ___ieee80211_start_rx_ba_session(struct sta_info *sta,
+>>   			 */
+>>   			rcu_read_lock();
+>>   			tid_rx = rcu_dereference(sta->ampdu_mlme.tid_rx[tid]);
+>> -			if (tid_rx && tid_rx->timeout == timeout)
+>> +			if (tid_rx && tid_rx->timeout == timeout) {
+>> +				tid_rx->ssn = start_seq_num;
+>> +				tid_rx->head_seq_num = start_seq_num;
+>>   				status = WLAN_STATUS_SUCCESS;
+> This is wrong, this is the case of *updating an existing session*, we
+> must not reset the head SN then.
 >
-> Enable a FocalTech EDT-FT5x06 Polytouch touchscreen.
+> I think you just got very lucky (or unlucky) to have the same dialog
+> token, because we start from 0 - maybe we should initialize it to a
+> random value to flush out such issues.
 >
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+> Really what I think probably happened is that one of your stations lost
+> the connection to the other, and didn't tell it about it in any way - so
+> the other kept all the status alive.
+>
+> I suspect to make all this work well we need to not only have the fixes
+> I made recently to actually send and parse deauth frames, but also to
+> even send an auth and reset the state when we receive that, so if we
+> move out of range and even the deauth frame is lost, we can still reset
+> properly.
+>
+> In any case, this is not the right approach - we need to handle the
+> "lost connection" case better I suspect, but since you don't say what
+> really happened I don't really know that that's what you're seeing.
+>
+> johannes
 
-Applied, thanks
+Hi all,
 
---vjc7bik6lfh4bmzh
-Content-Type: application/pgp-signature; name="signature.asc"
+I can confirm the issue as I'm also seeing this sometimes in the field here.
 
------BEGIN PGP SIGNATURE-----
+Sometimes when a devices goes out of range and then re-enters,
+the link refuses to "come up", as in rx looks to be "stuck" without any 
+reports in system log or locking issues (lockdep enabled)
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbf4lAAKCRDj7w1vZxhR
-xVbSAQDT1XY746DPYfIud8pyJ8oPJujpzqL4+l8r1CyT6njIYQD/UIVWkNxtxcoq
-K3j4wdKkaXwfIZ5fyFVqDB6uE9PToAc=
-=wvMX
------END PGP SIGNATURE-----
+I have dozens of devices installed offshore (802.11n based), both on 
+static and moving assets,
+which cover from short (250m) up to very long distances (~35km)
 
---vjc7bik6lfh4bmzh--
+So .. while there is some momentum for this issue,
+I'm more than happy to provide extensive testing should fixes be posted 
+regarding IBSS in general.
+
+Regards,
+
+Koen
+
