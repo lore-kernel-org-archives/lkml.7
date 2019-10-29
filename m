@@ -2,99 +2,123 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F7DCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8AECA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A28214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:36:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fB4dLq1s"
+	by mail.kernel.org (Postfix) with ESMTP id 74B5A214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:36:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572352572;
+	bh=QMnsZceNxEcrN9tSFrRt4Xg3wuFc/x194NzA1aT85TE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=tsMP1vCjzNlsflsO/RDx7OXDq/t5r+j3LmdkvyCm2SUDRPmBeALuu5gYpmSLcLaZn
+	 KF+AP6HXhmcfG0s/QGL5LI/NXKcI7cRf5DbPJr0JgsqZSCc2TJNkdHFH+EUb7iXn51
+	 80nEUaJhVdqgfs5zEHzm9it4qZHeJQBi6K6bxnN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfJ2MgB (ORCPT
+        id S1729436AbfJ2MgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:36:01 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41361 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfJ2MgB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:36:01 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m125so8060427qkd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 05:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5hGoQiN8reA7dGIYQ91t9fYgfvZm6X7mudHXkHxFTbc=;
-        b=fB4dLq1s7yc0cqWr3UX3wBllXkTMDEA+8azMjeCZxyyzzVlboXjhGwEMMGoTiKhPKy
-         dcEI4NlpVcTUs9uzgbLjV2rZEGrAdTXVOIdc15xG4p6JajycEAFzCxckmpQ8hJlGgYIL
-         LOmZKdh1pITtoNZ7VsPwksUopPCUmV9BflINLdmfyie7OhR2+FT1OTAaQTjDf7PI+JrE
-         S7W5Dd5YHrm7sFDuCVa3Oyn657WXt6+9t3D+Q6Uxh1F+C9EdSzI5K8s876KWFrk8On9b
-         yFcFGINtsJMkyxrC0/DzrdGMzlAOTevuWCU28Kdj/3Orb0ybScuDqXpyob/dwIO+1qRk
-         vxGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5hGoQiN8reA7dGIYQ91t9fYgfvZm6X7mudHXkHxFTbc=;
-        b=hUuHw9+AdZ71LNA2+uDaM51GLG8FQoFAVDaaVKAWyWHevaPfR/Cj1mOmS25sKXDF7R
-         md2nLVaec6SgKPUT0Ib5pxoUpX2AdR2k0h/1pACuG7k1T05VMvcGfOoxXzvxzSL91pyH
-         P12q+GyiNQJgQ1ccI4lVPqI4Pp3wP/vRmH5v30P4GnWIVH8vuHAYxcpIliABU9BdCD0l
-         UEmhTofXU1A0Ze+Dcm1u+xiHnfdMZIB+HyyOkygu2etV8EIA3dQ2GXB802uykMVll8go
-         b0ZOqIkyAyGTlXuyVDSKJ2qk4tmNN8oLtF/I5S4/CJV3QlZcBLitz88C0QoBReiJ/x0C
-         kx6w==
-X-Gm-Message-State: APjAAAUpZTmKcFWWNQr/DRHKBXWWf0y+0hB5YgQoqHNb36W9FrgczKk5
-        IlEPe99aS0DurE0feACahYQzvw==
-X-Google-Smtp-Source: APXvYqz2LdmyfhNiUSxN199BU5n72r+ZeOEi+bTfhZqQeFA1tB81/aFKBbah4O2SxXzo26oZBioP5g==
-X-Received: by 2002:a37:8405:: with SMTP id g5mr8682859qkd.387.1572352558913;
-        Tue, 29 Oct 2019 05:35:58 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id 27sm3676195qtu.71.2019.10.29.05.35.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 29 Oct 2019 05:35:58 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iPQj7-0004ib-GH; Tue, 29 Oct 2019 09:35:57 -0300
-Date:   Tue, 29 Oct 2019 09:35:57 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        linux-kernel@lists.codethink.co.uk, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm: huge_pte_offset() returns pte_t *, not integer
-Message-ID: <20191029123557.GA6128@ziepe.ca>
-References: <20191016095111.29163-1-ben.dooks@codethink.co.uk>
- <bd0ac181-7334-9970-b16a-ce7fd78d30ec@oracle.com>
+        Tue, 29 Oct 2019 08:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728004AbfJ2MgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:36:11 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67FEF214B2;
+        Tue, 29 Oct 2019 12:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572352569;
+        bh=QMnsZceNxEcrN9tSFrRt4Xg3wuFc/x194NzA1aT85TE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=w7aeQo1gk4oNam6lA+XYvRDr51NU3KISOEbXw/o1Y528ZLW/pEAeRNptnu8aIvH1G
+         otckF6bUBfLsqHmH199BEfwPJjrc89B5U1NQn+IyzSuB7qZbiEJYH8CXhhg3qirGZp
+         oYq1n4+lXs/VPTKhwqYV1MmY8eX2gxxyUAq313o4=
+Date:   Tue, 29 Oct 2019 07:36:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        martin.blumenstingl@googlemail.com,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
+ pcie link
+Message-ID: <20191029123607.GA33916@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bd0ac181-7334-9970-b16a-ce7fd78d30ec@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAJZ5v0jdxR4roEUC_Hs3puCzGY4ThdLsi_XcxfBUUxqruP4z7A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 02:55:13PM -0700, Mike Kravetz wrote:
+[+cc Heiner for ASPM conversation]
 
-> > diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> > index 53fc34f930d0..e42c76aa1577 100644
-> > --- a/include/linux/hugetlb.h
-> > +++ b/include/linux/hugetlb.h
-> > @@ -185,7 +185,7 @@ static inline void hugetlb_show_meminfo(void)
-> >  #define hugetlb_free_pgd_range(tlb, addr, end, floor, ceiling) ({BUG(); 0; })
-> >  #define hugetlb_mcopy_atomic_pte(dst_mm, dst_pte, dst_vma, dst_addr, \
-> >  				src_addr, pagep)	({ BUG(); 0; })
-> > -#define huge_pte_offset(mm, address, sz)	0
-> > +#define huge_pte_offset(mm, address, sz)	(pte_t *)NULL
+On Tue, Oct 29, 2019 at 11:42:53AM +0100, Rafael J. Wysocki wrote:
+> On Tue, Oct 22, 2019 at 2:59 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > [+cc Rafael, linux-pm, beginning of discussion at
+> > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
+> >
+> > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
+> > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+> > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+> > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+> > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
+> > > > > > of changing link width and speed on the fly.
+> > > > Please add more details about why this is needed.  Since you're adding
+> > > > sysfs files, it sounds like it's not actually the *driver* that needs
+> > > > this; it's something in userspace?
+> >
+> > > We have use cases to change the link speed and width on the fly.
+> > > One is EMI check and other is power saving.  Some battery backed
+> > > applications have to switch PCIe link from higher GEN to GEN1 and
+> > > width to x1. During the cases like external power supply got
+> > > disconnected or broken. Once external power supply is connected then
+> > > switch PCIe link to higher GEN and width.
+> >
+> > That sounds plausible, but of course nothing there is specific to the
+> > Intel Gateway, so we should implement this generically so it would
+> > work on all hardware.
+> >
+> > I'm not sure what the interface should look like -- should it be a
+> > low-level interface as you propose where userspace would have to
+> > identify each link of interest, or is there some system-wide
+> > power/performance knob that could tune all links?  Cc'd Rafael and
+> > linux-pm in case they have ideas.
+> 
+> Frankly, I need some time to think about this and, in case you are
+> wondering about whether or not it has been discussed with me already,
+> it hasn't.
+> 
+> At this point I can only say that since we have an ASPM interface,
+> which IMO is not fantastic, it may be good to come up with a common
+> link management interface.
 
-We have recently been converting functions like this to static
-inlines, maybe that is more appropriate for this block of 'functions'
-as well?
+The ASPM interface hasn't been merged yet, so if you have better
+ideas, now is the time.  That one is definitely very low-level, partly
+because the first use case is working around defects in a specific
+device.
 
-Jason
+Some sort of unification of link management does sound like a good
+idea.
+
+Bjorn
