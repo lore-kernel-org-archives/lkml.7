@@ -2,89 +2,98 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B520ECA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB9CC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7210B20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D824D20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572339879;
-	bh=IbQkjMguEXcLEaRwhCuLeXjDzwQdVquZPVX8W/lviKg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aVaDMqPWyvUJXvddY4y1w+JRsH3G0M/o24XzQvKIQSdUdSyA7fEl2wsXvPH836eB8
-	 K0K1N9cQsE/TW+obg4AGYYANfUKa8DUnlIZ6o3xZbxzfNwp1yTKfKEPtiKpMv9L54v
-	 3mnrZd9NhHF53km7AQOzfdKSqX0fJitsarHM4aIs=
+	s=default; t=1572339885;
+	bh=w2z3QwyvjxWb031hC33QUmA8g7oNLT5WYBU21sxdGF0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aavWB7zz+eaJjkC2mH8Su8i87pbSXbt1GNdJABK2EWoPS2ZlWmvLhEerWYRe73VYD
+	 cf0auUWR6Sra95lQBiCCSFreZ9kslULiL632I+ult9C/brxObcHpKGDrxQFAoWBlyo
+	 feGaFXdab4qRSS+jHKjo+QtPb20s6Q/dKKN6So9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbfJ2JEi (ORCPT
+        id S1730811AbfJ2JEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfJ2JEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:04:38 -0400
-Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D85220717;
-        Tue, 29 Oct 2019 09:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572339877;
-        bh=IbQkjMguEXcLEaRwhCuLeXjDzwQdVquZPVX8W/lviKg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=y0mtnxGHmEXBt6yS2fKXZGQbFQrC5WwQwo06fbCZFtkj/zq6Qp7C65laj9VBFfNbL
-         iz7eUSSaCvLEFeSxSh+ja53yFpQeQb3zVnAWvPCl9pZefXXFvXUuqPGTgmSKHHwLqn
-         8yXeGePrih8sWBtQparb0MBWo+ANNibjtA/KExko=
-Date:   Tue, 29 Oct 2019 05:04:35 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 095/100] USB: usb-skeleton: fix
- use-after-free after driver unbind
-Message-ID: <20191029090435.GJ1554@sasha-vm>
-References: <20191018220525.9042-1-sashal@kernel.org>
- <20191018220525.9042-95-sashal@kernel.org>
- <20191018222205.GA6978@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191018222205.GA6978@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 29 Oct 2019 05:04:43 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:35381 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727525AbfJ2JEn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:04:43 -0400
+Received: from [91.217.168.176] (helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iPNQZ-0005PR-7S; Tue, 29 Oct 2019 10:04:35 +0100
+Date:   Tue, 29 Oct 2019 09:04:34 +0000
+Message-ID: <86o8xzylb1.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <eric.auger@redhat.com>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>
+Subject: Re: [PATCH 2/3] KVM: arm/arm64: vgic: Fix some comments typo
+In-Reply-To: <20191029071919.177-3-yuzenghui@huawei.com>
+References: <20191029071919.177-1-yuzenghui@huawei.com>
+        <20191029071919.177-3-yuzenghui@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 91.217.168.176
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 06:22:05PM -0400, Greg Kroah-Hartman wrote:
->On Fri, Oct 18, 2019 at 06:05:20PM -0400, Sasha Levin wrote:
->> From: Johan Hovold <johan@kernel.org>
->>
->> [ Upstream commit 6353001852776e7eeaab4da78922d4c6f2b076af ]
->>
->> The driver failed to stop its read URB on disconnect, something which
->> could lead to a use-after-free in the completion handler after driver
->> unbind in case the character device has been closed.
->>
->> Fixes: e7389cc9a7ff ("USB: skel_read really sucks royally")
->> Signed-off-by: Johan Hovold <johan@kernel.org>
->> Link: https://lore.kernel.org/r/20191009170944.30057-3-johan@kernel.org
->> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>  drivers/usb/usb-skeleton.c | 1 +
->>  1 file changed, 1 insertion(+)
->
->This file does not even get built in the kernel tree, no need to
->backport anything for it :)
+Hi Zenghui,
 
-I'll drop it, but you're taking patches for this driver:
-https://lore.kernel.org/patchwork/patch/1140673/ .
+On Tue, 29 Oct 2019 07:19:18 +0000,
+Zenghui Yu <yuzenghui@huawei.com> wrote:
+> 
+> s/vgic_its_save_pending_tables/vgic_v3_save_pending_tables/
+> s/then/the/
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  include/kvm/arm_vgic.h      | 2 +-
+>  virt/kvm/arm/vgic/vgic-v3.c | 2 +-
+>  virt/kvm/arm/vgic/vgic-v4.c | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
+> index 0fb240ec0a2a..01f8b3739a09 100644
+> --- a/include/kvm/arm_vgic.h
+> +++ b/include/kvm/arm_vgic.h
+> @@ -240,7 +240,7 @@ struct vgic_dist {
+>  	 * Contains the attributes and gpa of the LPI configuration table.
+>  	 * Since we report GICR_TYPER.CommonLPIAff as 0b00, we can share
+>  	 * one address across all redistributors.
+> -	 * GICv3 spec: 6.1.2 "LPI Configuration tables"
+> +	 * GICv3 spec "LPI Configuration tables"
+
+Why the change here? Pointing to the chapter in the spec is pretty
+helpful, given that it is 800 pages long (although it should mention
+what revision of the spec this refers to). For example, it should say
+something like "IHI 0069E 6.1.1 ...".
+
+Thanks,
+
+	M.
 
 -- 
-Thanks,
-Sasha
+Jazz is not dead, it just smells funny.
