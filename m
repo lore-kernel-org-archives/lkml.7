@@ -2,93 +2,101 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7160ACA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F03CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 470952086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382742086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572337190;
-	bh=ZRF796Wus2o0Ya1YW5Koj4SnZvUVISTZ2oEhfyYzeN0=;
+	s=default; t=1572337233;
+	bh=CrG2u9UyUZXG3Xr/MHkZ4yqOAoADNz6ZmA0e8aqOJMQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=orPNdzF7tRWBKc8SITH1dWPg4eoTfEnN+fzyJfEDRIr0Eil38tRIrLqz6APw9HPlD
-	 JGQU2ACRECNS3ZyBescHz47iIEfs8JwjR+OI5JdkZ/8k4Df21La+WuSd9JhKGAfK8o
-	 fBDOPyLU1Pr0qcyOOg2MOlV8NhdZid2AaBayatOc=
+	b=OL3uOtcqUh4ZYXUZIhCrBseFNC7GHOKH2Due6X0z0xpAdk1O8q9GqomwZCWnTLTPd
+	 CDL7mIo2XwQfe2S40kFhcX5oykPEKgT2Vbcry/QRZsN5WTZRg4d3pfEZYEk+zwFcql
+	 gxAKwk0OY5tjgKh5aui8eSiaYX1IXiF2rBsog2n4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfJ2ITt (ORCPT
+        id S1729129AbfJ2IUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55786 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 04:20:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728869AbfJ2ITs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:19:48 -0400
+        id S1728113AbfJ2IUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:20:31 -0400
 Received: from localhost (unknown [91.217.168.176])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D7BA2086A;
-        Tue, 29 Oct 2019 08:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B9FA20717;
+        Tue, 29 Oct 2019 08:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572337188;
-        bh=ZRF796Wus2o0Ya1YW5Koj4SnZvUVISTZ2oEhfyYzeN0=;
+        s=default; t=1572337230;
+        bh=CrG2u9UyUZXG3Xr/MHkZ4yqOAoADNz6ZmA0e8aqOJMQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wEVhW4da2JeAw+Ddhxd52NlhX9cZj8HNq84M+PJTQsTrWHCN/WYR4BU8SgnxIMBzG
-         vMFgmkP33ElOyQ0oYD8GjVNUL6l/Bllq8lvXxpyZU3eg39Kl63Ih+U6nRFukiaJNSO
-         cvty9ZXBYVkMla+Noi6iKTf9r9AOWHntdAMPhHog=
-Date:   Tue, 29 Oct 2019 09:10:32 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, stable@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: sunxi: Fix CPU powerdown on A83T
-Message-ID: <20191029081032.5xhysz3mv65e7azv@hendrix>
-References: <20191028214914.3465156-1-megous@megous.com>
+        b=tP2EWmWDTDOwlKQY6OqmtNaVVbLWFdrj7VyVwMH7t57sVVQfl04E5mvl2rFY8xg/U
+         FA8Y4x8hqVZDCZNLH1K0QfxAnApHr8bdIolMQZHpr/KPFQRSt1+KFtxtZcqjeaD9+6
+         b/SoVB+76aT8kjXLi1pqANXyN/ciYHGSy99WYBHM=
+Date:   Tue, 29 Oct 2019 09:20:28 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        LTP List <ltp@lists.linux.it>
+Subject: Re: [PATCH 4.19 00/93] 4.19.81-stable review
+Message-ID: <20191029082028.GA554294@kroah.com>
+References: <20191027203251.029297948@linuxfoundation.org>
+ <CA+G9fYuA+kLqLo1_ev0=QRvYtMrVhwRvm+QO-tOCVYca2Mt97Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="c2ir2aunacvuu6l7"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191028214914.3465156-1-megous@megous.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYuA+kLqLo1_ev0=QRvYtMrVhwRvm+QO-tOCVYca2Mt97Q@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 29, 2019 at 11:51:26AM +0530, Naresh Kamboju wrote:
+> On Mon, 28 Oct 2019 at 02:44, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 4.19.81 release.
+> > There are 93 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.81-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
+> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
+> 
+> Note:
+> The new test case  from LTP version upgrade syscalls sync_file_range02 is an
+> intermittent failure. We are investigating this case.
+> The listed fixes in the below section are due to LTP upgrade to v20190930.
 
---c2ir2aunacvuu6l7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for testing two of these and letting me know.
 
-On Mon, Oct 28, 2019 at 10:49:14PM +0100, Ondrej Jirman wrote:
-> PRCM_PWROFF_GATING_REG has CPU0 at bit 4 on A83T. So without this
-> patch, instead of gating the CPU0, the whole cluster was power gated,
-> when shutting down first CPU in the cluster.
->
-> Fixes: 6961275e72a8c1 ("ARM: sun8i: smp: Add support for A83T")
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Cc: stable@vger.kernel.org
-
-Applied, thanks
-
-Maxime
-
---c2ir2aunacvuu6l7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbfz+AAKCRDj7w1vZxhR
-xabNAQDq9EMAe4I8hY+8J4KL3Khhrxd27KAbY3b3TIuqdn3a/AD/U7cgXhoTiEyI
-oc9v/zgOOL7PxQCykeoNxNc8SHYdiQc=
-=XYsh
------END PGP SIGNATURE-----
-
---c2ir2aunacvuu6l7--
+greg k-h
