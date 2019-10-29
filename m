@@ -2,130 +2,139 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 677AFCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2890C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45EA1208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C5A4208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:12:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Bkgtdolu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732187AbfJ2MJ2 (ORCPT
+        id S1732674AbfJ2MMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:09:28 -0400
-Received: from mail-sh.amlogic.com ([58.32.228.43]:16887 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727681AbfJ2MJ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:09:28 -0400
-Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 29 Oct
- 2019 20:09:39 +0800
-Subject: Re: [PATCH v3 1/4] dt-bindings: power: add Amlogic secure power
- domains bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1571391167-79679-1-git-send-email-jianxin.pan@amlogic.com>
- <1571391167-79679-2-git-send-email-jianxin.pan@amlogic.com>
- <20191029020125.GA11182@bogus>
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-Message-ID: <07f0ed9d-0b1a-d84f-de8b-1967e56bbd21@amlogic.com>
-Date:   Tue, 29 Oct 2019 20:09:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 08:12:31 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:53398 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730269AbfJ2MMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:12:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Eiamd8BZfLfRuXNZB2AmOrEcDfBpZ/Uhno+/TVo4R04=; b=BkgtdoluLOQ/wU6W7bXTn08LW
+        /CDuKs2U9LxRap16ydtYGsiNXTM8KbS90p4L6IK0pCK43+VyuxVM6vfrB3VPq6+MrVpVx8WCnItMp
+        EfjmhjJ9/MjaDb6GpE3b+e8em1ltjaLqKgXZVH7B7eA7xn5VzDAsOc3W9PNOAz7PLQS+8=;
+Received: from [2a02:790:ff:919:7ee9:d3ff:fe1f:a246] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iPQMJ-00070z-HR; Tue, 29 Oct 2019 13:12:26 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iPLGh-00077y-7E; Tue, 29 Oct 2019 07:46:15 +0100
+Date:   Tue, 29 Oct 2019 07:46:03 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     lee.jones@linaro.org, a.zummo@towertech.it,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        phh@phh.me, b.galvani@gmail.com, stefan@agner.ch,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH 5/5] rtc: rtc-rc5t583: add ricoh rc5t619 RTC driver
+Message-ID: <20191029074603.499a3940@kemnade.info>
+In-Reply-To: <20191023231717.GU3125@piout.net>
+References: <20191021054104.26155-1-andreas@kemnade.info>
+        <20191021054104.26155-6-andreas@kemnade.info>
+        <20191021101528.GU3125@piout.net>
+        <20191021231359.1cada218@kemnade.info>
+        <20191023231717.GU3125@piout.net>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191029020125.GA11182@bogus>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.18.29.227]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/t.bt3Q4nWziP.Q+C7kPJ5iY"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerome,
+--Sig_/t.bt3Q4nWziP.Q+C7kPJ5iY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Could you give some advice about this?
+On Thu, 24 Oct 2019 01:17:17 +0200
+Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
 
-In a1/c1, watchdog and powerdomain are the same, they use secure monitor [0] and
-there is no share memory needed.
+[...]
+> > > Is the RTC 1900-2099 or 2000-2199? Please include the ouput of rtc-ra=
+nge
+> > > in the commit log:
+> > >=20
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.gi=
+t/tree/rtc-range.c
+> > >  =20
+> > # ./rtc-range=20
+> >=20
+> > Testing 2000-02-28 23:59:59.
+> > OK
+> >=20
+> > Testing 2038-01-19 03:14:07.
+> > OK
+> >=20
+> > Testing 2069-12-31 23:59:59.
+> > OK
+> >=20
+> > Testing 2099-12-31 23:59:59.
+> > KO RTC_RD_TIME returned 22 (line 138)
+> >=20
+> > Testing 2100-02-28 23:59:59.
+> > KO RTC_RD_TIME returned 22 (line 138)
+> >=20
+> > Testing 2106-02-07 06:28:15.
+> > OK
+> >=20
+> > Testing 2262-04-11 23:47:16.
+> > KO  Read back 2102-04-11 23:47:16.
+> >=20
+> > I think it is 1900 to 2099.
+> >  =20
+>=20
+> It is, I'm very curious to know why it doesn't roll over properly from
+> 2099-12-31 23:59:59 to 1900-01-01 00:00:00.
+>=20
+It rolls over correcly, but rtc_valid_tm() bails out if
+year < 70.
 
-[0]
-https://lore.kernel.org/linux-amlogic/20190731082339.20163-1-ccaione@baylibre.com/
+I am preparing a v2 of this series.
 
-On 2019/10/29 10:01, Rob Herring wrote:
-> On Fri, Oct 18, 2019 at 05:32:44PM +0800, Jianxin Pan wrote:
->> Add the bindings for the Amlogic Secure power domains, controlling the
->> secure power domains.
->>
->> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
->> power domain registers are in secure world.
->>
->> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->> ---
->>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 ++++++++++++++++++++++
->>  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++
->>  2 files changed, 74 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->>  create mode 100644 include/dt-bindings/power/meson-a1-power.h
->>
->> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->> new file mode 100644
->> index 00000000..88d8261
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->> @@ -0,0 +1,42 @@
->> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +# Copyright (c) 2019 Amlogic, Inc
->> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Amlogic Meson Secure Power Domains
->> +
->> +maintainers:
->> +  - Jianxin Pan <jianxin.pan@amlogic.com>
->> +
->> +description: |+
->> +  Meson Secure Power Domains used in A1/C1 SoCs.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - amlogic,meson-a1-pwrc
->> +
->> +  "#power-domain-cells":
->> +    const: 1
->> +
->> +  secure-monitor:
->> +    description: phandle to the secure-monitor node
->> +    $ref: /schemas/types.yaml#/definitions/phandle
-> 
-> Like the watchdog, make this a child or the secure firmware node. Or 
-> just add '#power-domain-cells' to it. You don't really need a child node 
-> here if there's not other resources in DT for this.
-> 
-> Rob
-> 
-> .
-> 
+Regards,
+Andreas
 
+--Sig_/t.bt3Q4nWziP.Q+C7kPJ5iY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl234CwACgkQl4jFM1s/
+ye9YORAAlarwaf3wXAvD0muX8zYJ4SLGZ+jOO9JLBcR8mAWjevZg/fsK0juGopPO
+FJrDvCIYOQ42i92/nNuALcQz4uGbsUqnYQB9KvxDwGeYIMRijjPciNeYgBwegPrk
+QpwhWFXKQQrcgvGb/KvZMxmHnoFmOMDY4qa+ZmxhzCtRr0FKC57lGa+isTcihxm7
+0LAb35kb2Vqx+O4LZsS5agDiToJT6oW3bDG7MwjTkgul1Z+8mMitr43zIlVM6OcI
+ASt8rNddP++fOsexd3ossl9EH+/cpOe2m6S/Qgm2vwTxpEr9lmeQ4KYKpb6b8FqP
+ZfOznrGGNZgzOGjx/3EIUBFXvTrISmcmdQymj0Y0P0omqc+qeGnCt5K6LDdcBcQU
+83XcaAPAhIkz2cHmQ6FRTpIRoM5O+bjt1fduQF458vfasNicCE1jPUozYJsVgCzh
+aetmPqSviPt3ha2d9hq1A96+L+zFel0F60KqwI1jrnxpu4Q59Q7d5uGBcHBnnqk8
+BT7EZe6DCnHRPVDGPipjqHdefeQu+2FXcrQPbLxfuNewDowj5KDCRQyFVAgNjvFy
+sFL/anHT15WFB3tt425cChaTC2V2U3QfguUuOFhYJ7EUqLA5TAKWwcTUV7WqlUap
+udFGCx9RREvi9WkCTXpD06y4Geg/MAaUvrNZxKcYFRqVGGHmMEw=
+=XPEe
+-----END PGP SIGNATURE-----
+
+--Sig_/t.bt3Q4nWziP.Q+C7kPJ5iY--
