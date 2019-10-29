@@ -2,114 +2,138 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1DACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B73ECA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F249921721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:03:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572368638;
-	bh=Eia+GZH44EeGJ54mGoLfGXl2InVxm6ZE3joewBlbUhk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kTDJulb/OehfRiECoPr0p9EnWS+YEnXkZoaI/Vc7XWjSUIjuN5FRNCTcfTULWPbM/
-	 Cg1kAzYXUWlKp6X7WO/MwacHJgJ6154mZTtJODnwpqp+dUm4BIjXTH22a8xYDw794N
-	 GvlHnZd4Wh7PVeEzR8FDBh2zTg0uBCvYx7XwQxdI=
+	by mail.kernel.org (Postfix) with ESMTP id E6780222C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y3TOYber"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390728AbfJ2RD4 (ORCPT
+        id S2390756AbfJ2REC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:03:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbfJ2RD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:03:56 -0400
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5469C218AC
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 17:03:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572368635;
-        bh=Eia+GZH44EeGJ54mGoLfGXl2InVxm6ZE3joewBlbUhk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lPu1XwPS59/pvfiPwEUwru3NeqNzPFZyXHJBiv4zBAG0aCoMUEOwDTS9nostwp+Ay
-         HL+ByC7tsYHuABMhQn6+RU47q10e1cBxgUkoeStmIdCsxrBt9HV8X8S/efUOg/+n6m
-         oyv1MrV2wbNqTXNyqfE5OlNetLJUfC6dDcl+MnGY=
-Received: by mail-wm1-f47.google.com with SMTP id c22so3223897wmd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:03:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAXbk365/9J7+kb3MrTQLzfvEYCrVW21cJtW4bOmgN+FEeEDBra2
-        fZb7uHn34bOfs0NU2tUtwI4l7XnpsJshyQvBw2YdWA==
-X-Google-Smtp-Source: APXvYqzJWcbs84/PwCmd/nkZZ5hCGiu24QSMYOGvyu5VK5EpkxoEblrXGkFf/eAJ13JTrsKkAiwZMmn6nzysJ9Qwh0s=
-X-Received: by 2002:a1c:1fca:: with SMTP id f193mr4715301wmf.173.1572368633735;
- Tue, 29 Oct 2019 10:03:53 -0700 (PDT)
+        Tue, 29 Oct 2019 13:04:02 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37232 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbfJ2REC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 13:04:02 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u9so5284065pfn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:04:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Q5qKTb2AGnzQjjrVBPZDGTc0pOQQJCIJrhUvwgBwwt8=;
+        b=y3TOYber+p0qKKhM7TPlBuz0zXaB//zf1AuJ4gnhs3TT2teityV1QJVea37wsKzDVS
+         GhewnCBAkvafmxm3hZwU7zZrfS164DlFCovqYyxmQoJH4Vqq+dDuohxAHXup0VYM8Sqn
+         30+IiCwmpgU3xzdJLodL5i/TQLPeynrGS+Fqjbq6ikazkKAac6DRuFJY/1yXrZYvQu/H
+         R7s43g5g4866mW1NiHcavB3OseMzA6nBOpW8dDqjnE4vRwTWhvhvddWzbUEH+GJTf4hZ
+         cqG+tC4Zj91pvq11DPRkCKPBLUu74TMxQp1DEAe4OLkwvty/3YuCP+owQcVHXWOSKj5p
+         e2mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q5qKTb2AGnzQjjrVBPZDGTc0pOQQJCIJrhUvwgBwwt8=;
+        b=HeO8PoHzDEeP2NUDN4n6xctSLbMNabSHj+Y+hFfrnZ+KyP7XfVO/nvJ6FQC9iiBYvW
+         G34in6Ous7cfayyTHyA+KVN2XXflUHfcFgLhynNNtiVYmkA2vs4Eh8ny3s32mA9YBuwN
+         513gf7j66ipYobGf3cQVOX8R76d0Q9n5bIkGbC30n75pwGtsdikPSec4mrqPj7s0E0kg
+         WHBCo4SUNNcyeHcHcWUbLgn0TLD4S6RvvGiQ53oEK/Mtr10Aqb8zzLamgyRBrvnIaMum
+         9SsLz0rA/4JjqD1bAUEbsJS/K3wGnHz5+Xcc46xF1XAab4YUw8obC/8zGliLUO6SAewn
+         x7SQ==
+X-Gm-Message-State: APjAAAVQsE8sw0F0QFFMeZL+1PkAmKYVxk4eghj42s9YhfxF5o2vsz0J
+        uIpkp6OHpIl7f87hPqadQZ6p8A==
+X-Google-Smtp-Source: APXvYqyr6EB0JTFhtAMYl+t/hU+USnVlB+EYIp1st5QMMmHXT4WXGhGGGAWyx57D7FIYLb07L0FktQ==
+X-Received: by 2002:a65:47cd:: with SMTP id f13mr7492243pgs.356.1572368641038;
+        Tue, 29 Oct 2019 10:04:01 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id e3sm1070108pff.134.2019.10.29.10.03.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 10:04:00 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 10:03:57 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, stable@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] arm64: cpufeature: Enable Qualcomm erratas
+Message-ID: <20191029170357.GW571@minitux>
+References: <20191029060432.1208859-1-bjorn.andersson@linaro.org>
+ <20191029113956.GC12103@willie-the-truck>
 MIME-Version: 1.0
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org> <2236FBA76BA1254E88B949DDB74E612BA4EEC0CE@IRSMSX102.ger.corp.intel.com>
-In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4EEC0CE@IRSMSX102.ger.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 29 Oct 2019 10:03:42 -0700
-X-Gmail-Original-Message-ID: <CALCETrWN9kc+10tf7YoBp9ixqkO_KZ=b1E_cFBr_Uogxhu68PQ@mail.gmail.com>
-Message-ID: <CALCETrWN9kc+10tf7YoBp9ixqkO_KZ=b1E_cFBr_Uogxhu68PQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
-To:     "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Alan Cox <alan@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029113956.GC12103@willie-the-truck>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 4:25 AM Reshetova, Elena
-<elena.reshetova@intel.com> wrote:
->
-> > The patch below aims to allow applications to create mappins that have
-> > pages visible only to the owning process. Such mappings could be used to
-> > store secrets so that these secrets are not visible neither to other
-> > processes nor to the kernel.
->
-> Hi Mike,
->
-> I have actually been looking into the closely related problem for the past
-> couple of weeks (on and off). What is common here is the need for userspace
-> to indicate to kernel that some pages contain secrets. And then there are
-> actually a number of things that kernel can do to try to protect these secrets
-> better. Unmap from direct map is one of them. Another thing is to map such
-> pages as non-cached, which can help us to prevent or considerably restrict
-> speculation on such pages. The initial proof of concept for marking pages as
-> "UNCACHED" that I got from Dave Hansen was actually based on mlock2()
-> and a new flag for it for this purpose. Since then I have been thinking on what
-> interface suits the use case better and actually selected going with new madvise()
-> flag instead because of all possible implications for fragmentation and performance.
+On Tue 29 Oct 04:39 PDT 2019, Will Deacon wrote:
 
-Doing all of this with MAP_SECRET seems bad to me.  If user code wants
-UC memory, it should ask for UC memory -- having the kernel involved
-in the decision to use UC memory is a bad idea, because the
-performance impact of using UC memory where user code wasn't expecting
-it wil be so bad that the system might as well not work at all.  (For
-kicks, I once added a sysctl to turn off caching in CR0.  I enabled it
-in gnome-shell.  The system slowed down to such an extent that I was
-unable to enter the three or so keystrokes to turn it back off.)
+> On Mon, Oct 28, 2019 at 11:04:32PM -0700, Bjorn Andersson wrote:
+> > With the introduction of 'cce360b54ce6 ("arm64: capabilities: Filter the
+> > entries based on a given mask")' the Qualcomm erratas are no long
+> > applied.
+> > 
+> > The result of not applying errata 1003 is that MSM8996 runs into various
+> > RCU stalls and fails to boot most of the times.
+> > 
+> > Give both 1003 and 1009 a "type" to ensure they are not filtered out in
+> > update_cpu_capabilities().
+> 
+> Oh nasty. Thanks for debugging and fixing this.
+> 
+> > Fixes: cce360b54ce6 ("arm64: capabilities: Filter the entries based on a given mask")
+> > Cc: stable@vger.kernel.org
+> > Reported-by: Mark Brown <broonie@kernel.org>
+> > Suggested-by: Will Deacon <will@kernel.org>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  arch/arm64/kernel/cpu_errata.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> > index df9465120e2f..cdd8df033536 100644
+> > --- a/arch/arm64/kernel/cpu_errata.c
+> > +++ b/arch/arm64/kernel/cpu_errata.c
+> > @@ -780,6 +780,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+> >  	{
+> >  		.desc = "Qualcomm Technologies Falkor/Kryo erratum 1003",
+> >  		.capability = ARM64_WORKAROUND_QCOM_FALKOR_E1003,
+> > +		.type = ARM64_CPUCAP_SCOPE_LOCAL_CPU,
+> >  		.matches = cpucap_multi_entry_cap_matches,
+> 
+> This should probably be ARM64_CPUCAP_LOCAL_CPU_ERRATUM instead, but I'll
+> want Suzuki's ack before I take the change.
+> 
 
-EXCLUSIVE makes sense.  Saying "don't ptrace this" makes sense.  UC
-makes sense.  But having one flag to rule them all does not make sense
-to me.
+Sure thing, will fix!
+
+> >  		.match_list = qcom_erratum_1003_list,
+> >  	},
+> > @@ -788,6 +789,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+> >  	{
+> >  		.desc = "Qualcomm erratum 1009, ARM erratum 1286807",
+> >  		.capability = ARM64_WORKAROUND_REPEAT_TLBI,
+> > +		.type = ARM64_CPUCAP_SCOPE_LOCAL_CPU,
+> >  		ERRATA_MIDR_RANGE_LIST(arm64_repeat_tlbi_cpus),
+> 
+> ERRATA_MIDR_RANGE_LIST sets the type already, so I think this is redundant.
+> 
+
+You're right, I got lost in the macros. Apologies for that.
+
+Will respin the patch.
+
+Thanks,
+Bjorn
