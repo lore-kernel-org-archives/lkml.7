@@ -2,133 +2,190 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEABCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCE2CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54BE208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572346038;
-	bh=bPgPRwEGk1WpIlNo+2VVkScLdSYBAcfmNMZD0CbgvJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h8AHEdlH3w2xJOC4Mf+NEfLr3wpv9INbVuu/6ziVMNINX05LD5/bylq4MKExwtUUC
-	 XfDKz9fei+F//KeRd9J6xGFHwkSJnNJ1mrhAeltXtBFkS+u2+dc6MJVmej6wEJfU5H
-	 JHFIlcf95ZHVkZJja8rYSEoGh1bPGtvV5Uub1j9U=
+	by mail.kernel.org (Postfix) with ESMTP id 9D9A12087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:49:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ps3rMyfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730229AbfJ2KrR (ORCPT
+        id S1730432AbfJ2KtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 06:47:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728189AbfJ2KrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 06:47:17 -0400
-Received: from earth.universe (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 29 Oct 2019 06:49:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32195 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728189AbfJ2KtV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 06:49:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572346160;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ku5QMX1PXe0RMduAjOLbTYKTX3zeaaRJXqe/yt5ek0A=;
+        b=Ps3rMyfT85QtyBGghcVd6o8ogKzK9DP4dOTrTVvbT20LY2C0NlVVvFcMNk3dEGTDefCWlM
+        Nz5viSKEr1K7zgG//DL2uJqv/r1xh4OMuhyYJp85W3CVH/X432iKiTDCjdNMBVv0jNHkCx
+        Izzzq1ExcGUcvlyalWIKP7KPGyjMzyg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-Ojy6gkM5P2myIxO3H-nb5w-1; Tue, 29 Oct 2019 06:49:17 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA83E2087F;
-        Tue, 29 Oct 2019 10:47:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572346037;
-        bh=bPgPRwEGk1WpIlNo+2VVkScLdSYBAcfmNMZD0CbgvJI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HC1+K+Vlea6DuSonfaVFQWYy2NX8zBJVpl1gGPj0bcJe0Kg2MWFpp7k+IqrD/bEZX
-         uFtzH5CeeIXx04cLLLxr2o71nL87uy1ASdFuM6m1f+/OfINlZP0ddtcpFqcXqgVzdY
-         P/6TJzQVlI1Nz/gjB4V8xdonsmkxAvX6A/AEUbls=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 997043C09B2; Tue, 29 Oct 2019 11:47:13 +0100 (CET)
-Date:   Tue, 29 Oct 2019 11:47:13 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: reset: gpio-restart: don't error on deferral
-Message-ID: <20191029104713.tvdeskct2ulvo6pv@earth.universe>
-References: <20191029004302.384-1-chris.packham@alliedtelesis.co.nz>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 844FC476;
+        Tue, 29 Oct 2019 10:49:15 +0000 (UTC)
+Received: from [10.72.12.223] (ovpn-12-223.pek2.redhat.com [10.72.12.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1916B600F0;
+        Tue, 29 Oct 2019 10:48:35 +0000 (UTC)
+Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+References: <5a7bc5da-d501-2750-90bf-545dd55f85fa@redhat.com>
+ <20191024042155.GA21090@___>
+ <d37529e1-5147-bbe5-cb9d-299bd6d4aa1a@redhat.com>
+ <d4cc4f4e-2635-4041-2f68-cd043a97f25a@redhat.com>
+ <20191024091839.GA17463@___>
+ <fefc82a3-a137-bc03-e1c3-8de79b238080@redhat.com>
+ <e7e239ba-2461-4f8d-7dd7-0f557ac7f4bf@redhat.com>
+ <20191025080143-mutt-send-email-mst@kernel.org> <20191028015842.GA9005@___>
+ <5e8a623d-9d91-607a-1f9e-7a7086ba9a68@redhat.com> <20191029095738.GA7228@___>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <146752f4-174c-c916-3682-b965b96d7872@redhat.com>
+Date:   Tue, 29 Oct 2019 18:48:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="o3fv7kb6h6ycyusl"
-Content-Disposition: inline
-In-Reply-To: <20191029004302.384-1-chris.packham@alliedtelesis.co.nz>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191029095738.GA7228@___>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: Ojy6gkM5P2myIxO3H-nb5w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---o3fv7kb6h6ycyusl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2019/10/29 =E4=B8=8B=E5=8D=885:57, Tiwei Bie wrote:
+> On Mon, Oct 28, 2019 at 11:50:49AM +0800, Jason Wang wrote:
+>> On 2019/10/28 =E4=B8=8A=E5=8D=889:58, Tiwei Bie wrote:
+>>> On Fri, Oct 25, 2019 at 08:16:26AM -0400, Michael S. Tsirkin wrote:
+>>>> On Fri, Oct 25, 2019 at 05:54:55PM +0800, Jason Wang wrote:
+>>>>> On 2019/10/24 =E4=B8=8B=E5=8D=886:42, Jason Wang wrote:
+>>>>>> Yes.
+>>>>>>
+>>>>>>
+>>>>>>>  =C2=A0 And we should try to avoid
+>>>>>>> putting ctrl vq and Rx/Tx vqs in the same DMA space to prevent
+>>>>>>> guests having the chance to bypass the host (e.g. QEMU) to
+>>>>>>> setup the backend accelerator directly.
+>>>>>> That's really good point.=C2=A0 So when "vhost" type is created, par=
+ent
+>>>>>> should assume addr of ctrl_vq is hva.
+>>>>>>
+>>>>>> Thanks
+>>>>> This works for vhost but not virtio since there's no way for virtio k=
+ernel
+>>>>> driver to differ ctrl_vq with the rest when doing DMA map. One possib=
+le
+>>>>> solution is to provide DMA domain isolation between virtqueues. Then =
+ctrl vq
+>>>>> can use its dedicated DMA domain for the work.
+>>> It might not be a bad idea to let the parent drivers distinguish
+>>> between virtio-mdev mdevs and vhost-mdev mdevs in ctrl-vq handling
+>>> by mdev's class id.
+>> Yes, that should work, I have something probable better, see below.
+>>
+>>
+>>>>> Anyway, this could be done in the future. We can have a version first=
+ that
+>>>>> doesn't support ctrl_vq.
+>>> +1, thanks
+>>>
+>>>>> Thanks
+>>>> Well no ctrl_vq implies either no offloads, or no XDP (since XDP needs
+>>>> to disable offloads dynamically).
+>>>>
+>>>>          if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_CTRL_GUEST_OFF=
+LOADS)
+>>>>              && (virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_TSO4)=
+ ||
+>>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_TSO6)=
+ ||
+>>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_ECN) =
+||
+>>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_UFO) =
+||
+>>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_CSUM)=
+)) {
+>>>>                  NL_SET_ERR_MSG_MOD(extack, "Can't set XDP while host =
+is implementing LRO/CSUM, disable LRO/CSUM first");
+>>>>                  return -EOPNOTSUPP;
+>>>>          }
+>>>>
+>>>> neither is very attractive.
+>>>>
+>>>> So yes ok just for development but we do need to figure out how it wil=
+l
+>>>> work down the road in production.
+>>> Totally agree.
+>>>
+>>>> So really this specific virtio net device does not support control vq,
+>>>> instead it supports a different transport specific way to send command=
+s
+>>>> to device.
+>>>>
+>>>> Some kind of extension to the transport? Ideas?
+>> So it's basically an issue of isolating DMA domains. Maybe we can start =
+with
+>> transport API for querying per vq DMA domain/ASID?
+>>
+>> - for vhost-mdev, userspace can query the DMA domain for each specific
+>> virtqueue. For control vq, mdev can return id for software domain, for t=
+he
+>> rest mdev will return id of VFIO domain. Then userspace know that it sho=
+uld
+>> use different API for preparing the virtqueue, e.g for vq other than con=
+trol
+>> vq, it should use VFIO DMA API. The control vq it should use hva instead=
+.
+>>
+>> - for virito-mdev, we can introduce per-vq DMA device, and route DMA map=
+ping
+>> request for control vq back to mdev instead of the hardware. (We can wra=
+p
+>> them into library or helpers to ease the development of vendor physical
+>> drivers).
+> Thanks for this proposal! I'm thinking about it these days.
+> I think it might be too complicated. I'm wondering whether we
+> can have something simpler. I will post a RFC patch to show
+> my idea today.
 
-Hi,
 
-On Tue, Oct 29, 2019 at 01:43:02PM +1300, Chris Packham wrote:
-> Don't generate an error message when devm_gpiod_get fails with
-> -EPROBE_DEFER.
->=20
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
+Thanks, will check.
 
-Change looks good generally, but please make it like this to reduce
-the amount of PTR_ERR():
+Btw, for virtio-mdev, the change should be very minimal, will post an
+RFC as well. For vhost-mdev, it could be just a helper to return an ID
+for DMA domain like ID_VFIO or ID_HVA.
 
-ret =3D PTR_ERR_OR_ZERO(gpio_restart->reset_gpio)
-if (ret) {
-    if (ret !=3D -EPROBE_DEFER)
-        dev_err(...)
-    return ret;
-}
+Or a more straightforward way is to force queues like control vq to use PA.
 
-Thanks,
 
--- Sebastian
+>
+> Thanks,
+> Tiwei
+>
 
->  drivers/power/reset/gpio-restart.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/reset/gpio-restart.c b/drivers/power/reset/gpi=
-o-restart.c
-> index 308ca9d9d276..4aaa46b80ba2 100644
-> --- a/drivers/power/reset/gpio-restart.c
-> +++ b/drivers/power/reset/gpio-restart.c
-> @@ -65,7 +65,8 @@ static int gpio_restart_probe(struct platform_device *p=
-dev)
->  	gpio_restart->reset_gpio =3D devm_gpiod_get(&pdev->dev, NULL,
->  			open_source ? GPIOD_IN : GPIOD_OUT_LOW);
->  	if (IS_ERR(gpio_restart->reset_gpio)) {
-> -		dev_err(&pdev->dev, "Could not get reset GPIO\n");
-> +		if (PTR_ERR(gpio_restart->reset_gpio) !=3D -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Could not get reset GPIO\n");
->  		return PTR_ERR(gpio_restart->reset_gpio);
->  	}
-> =20
-> --=20
-> 2.23.0
->=20
-
---o3fv7kb6h6ycyusl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl24GKkACgkQ2O7X88g7
-+ppLNg//e7gNFSD7knrBaxJXh+wwjjOYQjhY/U6JhYxP77dkuAQiJXizjE01u7mX
-Cug/sKZM32xfkuamHoxaCdVSGTEcrJNFS6GW8Fr2dSvg1Jn9oPu9FjW2/hAsLhPp
-Vulz2USN7FMzgI5a38CvOXnUp37wjGq5ZcoS/JTY+v6APQX5oGf4LGCah468HP3Q
-LjK9b+cdOawoGGl1JE6qBLkcPlakoNzqVxMwYUSwu6zhB8y5nTbkxlLDeadyFtPV
-MplK6UDR7BRhlej2Zh80PwFiA2LLHNcbBGMG7VqlJHKPayKavHq2B/02+nHZFEcf
-wUFgxI2HimZXidAB/HXw2Ocl/9+Dpr5mZr19sA+AYDumDsoc/mFlJY0wmj4vQCbc
-uOn7jdTh+/EVShtyl6DvLvqgbiGMwajjSEqJRHY78AmLCY4mi74tvtxEPWjcSHjw
-FDfQri+4bGG/93LnER3Qh5vmHe11OwusghLaVi/qWHY0bjPfS/tncL4fAUYTOVLd
-3rfY0lDY8VLLBgNhHN5baoLu1reNFQIjWoxIY8CVGLMpSs2fyyzAGSpo+SAD8+nr
-Or1b60M0T/K3JCTDX6hrDQMh3D1L8OeHplrYVXlV66WItoUuACmwhh+FR8GbmA7t
-1e+MlmQnQS5QyR3goNwlO6eDkVSQfPFOvPmajd9kf04p9yJRzAs=
-=sesJ
------END PGP SIGNATURE-----
-
---o3fv7kb6h6ycyusl--
