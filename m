@@ -2,114 +2,91 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62536CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0E2CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3838220830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D2E20830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:50:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iR7KWdeG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PNrtOie1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390517AbfJ2QuU (ORCPT
+        id S2390563AbfJ2Qum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:50:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35180 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbfJ2QuT (ORCPT
+        Tue, 29 Oct 2019 12:50:42 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36283 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390530AbfJ2Qum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 12:50:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fIL1Adi28JKakaN1g7A5cYvjz9S3B/LlVrClKBzVNUg=; b=iR7KWdeGJ6IKWizwsGIN/qDyH
-        Iq2kpS0o/8rrl2nt3rTN/6xKl4OxrDkSkRONXz7hN0Q5XuRL7bPWhk5Ec3m6vtBjK2MyUctCR7aC8
-        fy7uhV1Xb+TmfITt4SsPvh3020vahab8yY7Rb4d1Lx2PfPctOLd5ZftqcN5zNXu7dPhh7/ZoYtPvq
-        x4pSxhTwC5zi7fDBsH3xpiFm04YIcmY4Si8+N/dAR7yYCqDlXmWwobDpJLNyi6DrmYejBpHNXBSh6
-        ufrdVRopDyOJ+gaFv2PbzLBCi2zcR3C6V85u0ZdcEUKweJVel8uQjHFgujopMFFw5ctVRdwoPfwBK
-        b2Vht7r6g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPUgx-0008Vu-Dk; Tue, 29 Oct 2019 16:49:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3BA86300E4D;
-        Tue, 29 Oct 2019 17:48:54 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C957C20D7FEFA; Tue, 29 Oct 2019 17:49:55 +0100 (CET)
-Date:   Tue, 29 Oct 2019 17:49:55 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Doug Smythies <dsmythies@telus.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load
- balancing path"
-Message-ID: <20191029164955.GO4131@hirez.programming.kicks-ass.net>
-References: <1572018904-5234-1-git-send-email-dsmythies@telus.net>
- <CAKfTPtDFAS3TiNaaPoEXFZbqdMt_-tfGm9ffVcQAN=Mu_KbRdQ@mail.gmail.com>
- <000c01d58bca$f5709b30$e051d190$@net>
- <CAKfTPtDx6nu7YtYN=JLRAseZS3Q6Nt-QdMQuG_XoUtmtR_101A@mail.gmail.com>
- <001201d58e68$eaa39630$bfeac290$@net>
- <20191029153615.GP4114@hirez.programming.kicks-ass.net>
- <CAKfTPtD79VE+gqffpBAGd39bJKe7ao+jbmVSQ7PtS=dky0Wx6g@mail.gmail.com>
+        Tue, 29 Oct 2019 12:50:42 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v19so9995901pfm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 09:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:subject:to:cc:user-agent:date;
+        bh=1EcVhtgmI0wFYEgWlYfQnU4+/BM9ln0YQj1/qNn/9r8=;
+        b=PNrtOie1EYtyDxfR1GgH1g/+4BjjbSeoTj7w6ok05O/9iLbYcCMl4x+Ikl0ciFmGWk
+         FaHhnx8/qn1KfpX4wLCK2HWFLsJuWNZxqgoVINug1Ov1UgXgCGAX1yNNsTPAd+88zTyq
+         yOb1VIHhfTVl79VXR8mcZPjz0+ZrJ5Yh1z1iU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:subject:to:cc
+         :user-agent:date;
+        bh=1EcVhtgmI0wFYEgWlYfQnU4+/BM9ln0YQj1/qNn/9r8=;
+        b=YDT+x7pNVEjfAdSrQriE+8xpcwP4Z7Dq0nlIId6TzjsWk9iVIISQySsUhM/VIKRwfz
+         aNTGeNswTcNDU5nyJ6BVIjfeuoA8ANE7Gy7Uq9XbehZB9pgVnTBn/NVXhlXUmKEhnbU/
+         uJQNP3Ptx85m2WzHnrIVFwY+2cJoe72RWoI+6ovW3si97g7462J7q3QahnwClD/XoiAT
+         db8Pmr0K5xXoApjUc8ObpJdnWHXRFnWe1KreOnfX72/MGEA+I9gBudXTNkvC1O7f6YLq
+         GXwcBK+i7TuIYOnlG4GXb1HGtzdnmOH9F2kmYPBbPnX5ADGvnaVg5b34d+ebF4djz6RF
+         pqWQ==
+X-Gm-Message-State: APjAAAX+tqCqriZzBI/oOdfaAKh6L3Oo7JR3KaXCKcLW3Nkjh4AN5//a
+        ESs8mDSsuIN35bdJHgMTy79hjQ==
+X-Google-Smtp-Source: APXvYqzuJp5yJFfn3l5GHPNYKExU7ekP3dRen8od3Km9IrisWb1nMSBoOt0RzryHGcRAF2KPFrFjIA==
+X-Received: by 2002:aa7:838f:: with SMTP id u15mr28280727pfm.74.1572367841595;
+        Tue, 29 Oct 2019 09:50:41 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id l23sm329226pjy.12.2019.10.29.09.50.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 09:50:40 -0700 (PDT)
+Message-ID: <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtD79VE+gqffpBAGd39bJKe7ao+jbmVSQ7PtS=dky0Wx6g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191023090219.15603-12-rnayak@codeaurora.org>
+References: <20191023090219.15603-1-rnayak@codeaurora.org> <20191023090219.15603-12-rnayak@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt controller
+To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 29 Oct 2019 09:50:40 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 05:20:56PM +0100, Vincent Guittot wrote:
-> On Tue, 29 Oct 2019 at 16:36, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Tue, Oct 29, 2019 at 07:55:26AM -0700, Doug Smythies wrote:
-> >
-> > > I only know that the call to the intel_pstate driver doesn't
-> > > happen, and that it is because cfs_rq_is_decayed returns TRUE.
-> > > So, I am asserting that the request is not actually decayed, and
-> > > should not have been deleted.
-> >
-> > So what cfs_rq_is_decayed() does is allow a cgroup's cfs_rq to be
-> > removed from the list.
-> >
-> > Once it is removed, that cfs_rq will no longer be checked in the
-> > update_blocked_averages() loop. Which means done has less chance of
-> > getting false. Which in turn means that it's more likely
-> > rq->has_blocked_load becomes 0.
-> >
-> > Which all sounds good.
-> >
-> > Can you please trace what keeps the CPU awake?
-> 
-> I think that the sequence below is what intel pstate driver was using
-> 
-> rt/dl task wakes up and run for some times
-> rt/dl pelt signal is no more null so periodic decay happens.
-> 
-> before optimization update_cfs_rq_load_avg() for root cfs_rq was
-> called even if pelt was null,
-> which calls cfs_rq_util_change,  which calls intel pstate
-> 
-> after optimization its no more called.
+Quoting Rajendra Nayak (2019-10-23 02:02:19)
+> From: Maulik Shah <mkshah@codeaurora.org>
+>=20
+> Add pdc interrupt controller for sc7180
+>=20
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+> v3:
+> Used the qcom,sdm845-pdc compatible for pdc node
 
-Not calling cfs_rq_util_change() when it doesn't change, seems like the
-right thing. Why would intel_pstate want it called when it doesn't
-change?
+Everything else isn't doing the weird old compatible thing. Why not just
+add the new compatible and update the driver? I guess I'll have to go
+read the history.
+
