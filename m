@@ -2,174 +2,108 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8060CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88BBCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 911B02067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCEC2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:58:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="MxyfswLk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIfLPB0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfJ2Tyb (ORCPT
+        id S1726757AbfJ2T6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:54:31 -0400
-Received: from mail-eopbgr760085.outbound.protection.outlook.com ([40.107.76.85]:30400
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725830AbfJ2Tyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:54:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IkEoz4lNQmYbiaLU0/SWVoIeW7W1Y0YtuMy/Soy9hNQ2ugFNkcnAu+5PwW9dd4PzjvK67RdXs57JHfeBX3dW0UZduqUfRAVWKZ5pWNI/iMcFjqJLrYXKvD63IVkDnWtSHvgM1x62oXUYRpSYdzSvadINfZrrr6befA9tModCwNoQndP34S4dVZMIlD5xWohYEWzmTXGN5J/TMt2BvydE+dWoFqrFXNeJYPpx8X2PDHaMEjXscoNnvJkD3J5a5cURZCjqcMbO9fQ+HHmK/E339MhZXVLxGYJz0IBh7VPAtrzOhX+3P0d2Bb5peJW1K3keZcp/CJ+ENdhUMneZ125ikA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=znjCa8zI0q68x+XGLgf6Rmam0XAfaH6jV2sdeI0QLiI=;
- b=HAw8zPlUz3m2wa0EiEt1eCm+zeeeeawsTuhtaWiVKvdUk+QS2+Te5BHayD8Bj3IBflkKCBmwExt7zXtD8qmmrx37nUHAQlyjmIUyEGDM5eEVBY8gLT+/a96ADzVBj2cA5DN1skLrmsBJ+g/dIKk0tBdx721AZQbWmHom6NYelIORb1WSVFQ9bJ/unpL7szFyJU5JU5fjvQQa+Cj10IGFlIoCEEkBVIKNik70OGoS00yf82Dy3+UFdYb6zvvdZBKrqrCJgp24wkzDrsuOj0FzsWfMS4wDr7voH1dbBtsxe8uRM56qrpJOKhL2hB51/e0+69/y7x60dJWbl7ZSxllqvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Tue, 29 Oct 2019 15:58:38 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45777 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfJ2T6i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 15:58:38 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q13so14989274wrs.12;
+        Tue, 29 Oct 2019 12:58:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=znjCa8zI0q68x+XGLgf6Rmam0XAfaH6jV2sdeI0QLiI=;
- b=MxyfswLkANHiNm9cq4XMfiDT4ANXxyJkUCcCLQ9FZjz9ADcjYlZvSeS55IfraLYYmnplHit1vMonZxRj56ZUqkROKth9jxYmf0NUK9qHhBBNwn941NpUnBo7fkWZVr+4FUCbFvH0GwY2SoM38GblzYKEsJsLrb0Ls8aLLhin0rY=
-Received: from BYAPR03MB4135.namprd03.prod.outlook.com (20.177.127.85) by
- BYAPR03MB4903.namprd03.prod.outlook.com (20.179.92.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Tue, 29 Oct 2019 19:54:25 +0000
-Received: from BYAPR03MB4135.namprd03.prod.outlook.com
- ([fe80::1c9c:d382:1308:515c]) by BYAPR03MB4135.namprd03.prod.outlook.com
- ([fe80::1c9c:d382:1308:515c%7]) with mapi id 15.20.2387.027; Tue, 29 Oct 2019
- 19:54:25 +0000
-From:   Andrew Duggan <aduggan@synaptics.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Simon Wood <simon@mungewell.org>,
-        Nick Dyer <nick@shmanahar.org>
-Subject: Re: [PATCH 1/3] Input: synaptics-rmi4 - disable the relative position
- IRQ in the F12 driver
-Thread-Topic: [PATCH 1/3] Input: synaptics-rmi4 - disable the relative
- position IRQ in the F12 driver
-Thread-Index: AQHVisrE0vTfWVJQc0GvTvForKD/Kadvjm4AgAKBToA=
-Date:   Tue, 29 Oct 2019 19:54:25 +0000
-Message-ID: <09cba6d5-b282-a0ea-8774-4bd121930df9@synaptics.com>
-References: <20191025002527.3189-1-aduggan@synaptics.com>
- <20191025002527.3189-2-aduggan@synaptics.com>
- <20191028053904.GG163068@dtor-ws>
-In-Reply-To: <20191028053904.GG163068@dtor-ws>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.147.44.15]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-clientproxiedby: BYAPR05CA0104.namprd05.prod.outlook.com
- (2603:10b6:a03:e0::45) To BYAPR03MB4135.namprd03.prod.outlook.com
- (2603:10b6:a03:77::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aduggan@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e76f186-074d-4230-606a-08d75ca9ccb9
-x-ms-traffictypediagnostic: BYAPR03MB4903:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR03MB49037C93178576BA1ACDB2D6B2610@BYAPR03MB4903.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0205EDCD76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(376002)(396003)(366004)(39860400002)(199004)(189003)(386003)(186003)(14454004)(102836004)(53546011)(26005)(6506007)(6486002)(66066001)(25786009)(36756003)(476003)(65956001)(966005)(2616005)(65806001)(478600001)(446003)(71200400001)(71190400001)(316002)(14444005)(76176011)(256004)(4326008)(486006)(11346002)(58126008)(52116002)(5660300002)(6916009)(6246003)(66946007)(86362001)(64756008)(99286004)(6116002)(305945005)(229853002)(66446008)(66556008)(66476007)(54906003)(6512007)(6306002)(6436002)(2906002)(3846002)(31696002)(81156014)(7736002)(81166006)(8676002)(31686004)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4903;H:BYAPR03MB4135.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:3;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /SNUfvYYQYFRAnQq1w5fUKEBBogHg8PsxTuXjtJztu/J+KQrqYbj/cHCFxcvW5Pgv/eLXOMy2F2Wvt33iOiHVtiqiwcfpB/PnOJUFm1aOHKsLYncxlqv1Qb+XrfguGESGjmZUw2T9i/6KD1ehZpw5Jhwb3Go5fljc+lOR49Gy4w0HwpdvTMKL8D0Uebpk9mcpL6W1HlyYpy1pvEws92pO5vjqEX8ydhbg6s34XOqcHClzNh7JjIMaVlDcnZRTEAI6ywmTkh96adRObPpYF6WRVIoMpZZdYob7rJTDc1ZTGUM2MafktGx+VVeBg2d052+fSMTtVQiXkpxX0ZRhLiuFJWnORYssSZD3qlYyjMFy0Fn3ZySQZ/pW3iGDINocpVSFYMIsMrW/e5EHNEX5RKJmpiFtRrj3W5KXc8kaka0JQgPq3c7xsw/Sjv03JoHCqSzEdE9Hjnk/SnAr2C2KQw8yW9jFZ8DXLH7Pmj18JN63rU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <62365E303A9537428EF24CC65EA10A3D@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b7IvYuP/9lAkoKJJR5jbNA9xfToVvOCAxEvOAT3opgI=;
+        b=DIfLPB0ndh9iMMWhIe9GfJxhMem4O7bx1KQexiAM7D/v9DiOIldiQk1mbr5MIWI4MB
+         398w+qJQad6XigNmOxC1ybZ7rVv5TOgKBg931XBqMx9NsyEE/mSEtCPNb7bXS3v4nkGT
+         nsTJRyu7axYIfyZWqHwayHYFuPIAVdNWjXMVAow0VvV73VuglA3FQMUowOuwlkZbyMoz
+         2XRDvLtQuFbdVeC6d22+n7smHVFUFLS79LrCxA+cX4bzFjUihOoCiaGrjqZKVbHKXhK0
+         gQG3pCnZOx1i//kjRule98dXzsGFDfzfZq0NP1W3EI83bep3BV3Y2wvJoCjIKDS4qJbb
+         tZPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b7IvYuP/9lAkoKJJR5jbNA9xfToVvOCAxEvOAT3opgI=;
+        b=BB/FvnF1Aiuz+W2D/wVvg2eSVEmFPEbHvFTwxC5CPWS2mDWywxWBq3q/JJTQZrSGPm
+         zmmsWCSYTcBiqs5/7oujGMsX07e7wlfbgFUBN6jSzpni68gcX2XS0GIC3CGOIZtoo2dy
+         7m1GOKUzv1e/+pPJNjfDBf/jL+6odt6rqanzSCWFvcM1AFGzhcW+CqffPaqOJarPDQ0N
+         eeALR+CknYo6PM0+K+127bbUbmRuP0ejCgvdgk9jCc1S1+/TwJ27cTH71GVE4oBk9+io
+         1DPkSTkL1goOBNYhU7XwcTMu2nYkttZl6vfI03rqM7FvnEyAxEdnydUjCfr/b2Y8ICwT
+         qsSg==
+X-Gm-Message-State: APjAAAUE18a8ICWrCemWE2+Nb8mKZu6C5zSIj58qFGjCzcPP0UWv0Piy
+        TD9MY18V1PfCKxuaLFNceQ7P1XPrOK852fJYDwfFtw==
+X-Google-Smtp-Source: APXvYqwMUZUIE4NWGMxmA5FuaGCauNE/7brDJDjAWOQsPbl8iqaD2FM3cbqhGEkBSVi2QlVXcssay2Cf7soKDLK1eTs=
+X-Received: by 2002:a5d:444b:: with SMTP id x11mr21557409wrr.207.1572379115494;
+ Tue, 29 Oct 2019 12:58:35 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e76f186-074d-4230-606a-08d75ca9ccb9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 19:54:25.1682
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: epWmPlgHJukKHeyTJw6LhSKLlz361/18Cekgw+BB4equaPCT5bzrUkHHCeCcrVjuanJYTZ4hSmEq2GFZRUPuNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4903
+References: <20191029162916.26579-1-andrew.smirnov@gmail.com> <226f5a669c2199408abcdec0ccddc9ff05672631.camel@pengutronix.de>
+In-Reply-To: <226f5a669c2199408abcdec0ccddc9ff05672631.camel@pengutronix.de>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Tue, 29 Oct 2019 12:58:24 -0700
+Message-ID: <CAHQ1cqF3BgberQMMY3sKH5iabG3oN6-H=o-y00Q710zrB7KNgw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] enable CAAM's HWRNG as default
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, Chris Healy <cphealy@gmail.com>,
+        =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRG1pdHJ5LA0KDQpPbiAxMC8yNy8xOSAxMDozOSBQTSwgRG1pdHJ5IFRvcm9raG92IHdyb3Rl
-Og0KPg0KPiBIaSBBbmRyZXcsDQo+DQo+IE9uIEZyaSwgT2N0IDI1LCAyMDE5IGF0IDEyOjI1OjU2
-QU0gKzAwMDAsIEFuZHJldyBEdWdnYW4gd3JvdGU6DQo+PiBUaGlzIHBhdGNoIGZpeGVzIGFuIGlz
-c3VlIHNlZW4gb24gSElEIHRvdWNocGFkcyB3aGljaCByZXBvcnQgZmluZ2VyDQo+PiBwb3NpdGlv
-bnMgdXNpbmcgUk1JNCBGdW5jdGlvbiAxMi4gVGhlIGlzc3VlIG1hbmlmZXN0cyBpdHNlbGYgYXMN
-Cj4+IHNwdXJpb3VzIGJ1dHRvbiBwcmVzc2VzIGFzIGRlc2NyaWJlZCBpbjoNCj4+IGh0dHBzOi8v
-d3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LWlucHV0L21zZzU4NjE4Lmh0bWwNCj4+DQo+PiBD
-b21taXQgMjRkMjhlNGYxMjcxICgiSW5wdXQ6IHN5bmFwdGljcy1ybWk0IC0gY29udmVydCBpcnEg
-ZGlzdHJpYnV0aW9uDQo+PiB0byBpcnFfZG9tYWluIikgc3dpdGNoZWQgdGhlIFJNSTQgZHJpdmVy
-IHRvIHVzaW5nIGFuIGlycV9kb21haW4gdG8gaGFuZGxlDQo+PiBSTUk0IGZ1bmN0aW9uIGludGVy
-cnVwdHMuIEZ1bmN0aW9ucyB3aXRoIG1vcmUgdGhlbiBvbmUgaW50ZXJydXB0IG5vdyBoYXZlDQo+
-PiBlYWNoIGludGVycnVwdCBtYXBwZWQgdG8gdGhlaXIgb3duIElSUSBhbmQgSVJRIGhhbmRsZXIu
-IFRoZSByZXN1bHQgb2YNCj4+IHRoaXMgY2hhbmdlIGlzIHRoYXQgdGhlIEYxMiBJUlEgaGFuZGxl
-ciB3YXMgbm93IGdldHRpbmcgY2FsbGVkIHR3aWNlLiBPbmNlDQo+PiBmb3IgdGhlIGFic29sdXRl
-IGRhdGEgaW50ZXJydXB0IGFuZCBvbmNlIGZvciB0aGUgcmVsYXRpdmUgZGF0YSBpbnRlcnJ1cHQu
-DQo+PiBGb3IgSElEIGRldmljZXMsIGNhbGxpbmcgcm1pX2YxMl9hdHRlbnRpb24oKSBhIHNlY29u
-ZCB0aW1lIGNhdXNlcyB0aGUNCj4+IGF0dG5fZGF0YSBkYXRhIHBvaW50ZXIgYW5kIHNpemUgdG8g
-YmUgc2V0IGluY29ycmVjdGx5LiBXaGVuIHRoZSB0b3VjaHBhZA0KPj4gYnV0dG9uIGlzIHByZXNz
-ZWQsIEYzMCB3aWxsIGdlbmVyYXRlIGFuIGludGVycnVwdCBhbmQgYXR0ZW1wdCB0byByZWFkIHRo
-ZQ0KPj4gRjMwIGRhdGEgZnJvbSB0aGUgaW52YWxpZCBhdHRuX2RhdGEgZGF0YSBwb2ludGVyIGFu
-ZCByZXBvcnQgaW5jb3JyZWN0DQo+PiBidXR0b24gZXZlbnRzLg0KPiBNYXliZSB3ZSBzaG91bGQg
-Y3JlYXRlIG9ubHkgMSBpbnRlcnJ1cHQgcGVyIGZ1bmN0aW9uIGluc3RlYWQgb2YNCj4gbXVsdGlw
-bGU/IEl0IGxvb2tzIGxpa2UgdGhlIGZ1bmN0aW9ucyByZWFkIHRoZWlyIGVudGlyZSBibG9jayBv
-ZiBkYXRhIG9uDQo+IGFueSBpbnRlcnJ1cHQgcmVjZWl2ZWQuDQoNClllcywgd2UgY291bGQgb25s
-eSBjcmVhdGUgMSBpbnRlcnJ1cHQgcGVyIGZ1bmN0aW9uLiBXZSBjb3VsZCBtb2RpZnkgdGhlIA0K
-cm1pX2NyZWF0ZV9mdW5jdGlvbl9pcnEoKSBmdW5jdGlvbiB0byBvbmx5IG1hcCBhIHNwZWNpZmlj
-IElSUSBhbmQgY2FsbCANCml0IGZyb20gdGhlIGZ1bmN0aW9uIGRyaXZlcidzIHByb2JlIGZ1bmN0
-aW9uIGluc3RlYWQgb2YgDQpybWlfZnVuY3Rpb25fcHJvYmUoKS4gSSBjb25zaWRlcmVkIHRoYXQs
-IGJ1dCBpdCB3YXMgYSBiaXQgbW9yZSBvZiBhIA0KbW9kaWZpY2F0aW9uIHRoZW4gSSB3YW50ZWQg
-dG8gbWFrZSBhdCB0aGlzIHBvaW50Lg0KDQo+PiBUaGlzIHBhdGNoIGRpc2FibGVzIHRoZSBGMTIg
-cmVsYXRpdmUgaW50ZXJydXB0IHdoaWNoIHByZXZlbnRzDQo+PiBybWlfZjEyX2F0dGVudGlvbigp
-IGZyb20gYmVpbmcgY2FsbGVkIHR3aWNlLg0KPiBEb24ndCB3ZSBoYXZlIHNpbWlsYXIgaXNzdWUg
-d2l0aCBGMTEsIGFuZCBtYXliZSBvdGhlcnM/DQoNCkN1cnJlbnRseSwgRjExIHByZXZlbnRzIHRo
-aXMgZnJvbSBoYXBwZW5pbmcgYnkgZGlzYWJsaW5nIG9uZSBvZiB0aGUgdHdvIA0KSVJRcyBvbiB0
-aGUgdG91Y2ggY29udHJvbGxlciAodXN1YWxseSB0aGUgcmVsYXRpdmUgSVJRKS4gRjExIHdpbGwg
-ZGVjaWRlIA0KdG8gcmVwb3J0IGFicyBvciByZWwgZXZlbnRzIGJhc2VkIG9uIHRoZSBGMTEgcXVl
-cnkgcmVnaXN0ZXJzLiBUaGVuIGl0IA0Kd2lsbCBzZXQgdGhlIElSUSBpdCB3YW50cyBhbmQgY2xl
-YXIgdGhlIElSUSBpdCBkb2VzIG5vdCBpbiANCnJtaV9mMTFfY29uZmlnKCkuIEJvdGggSVJRcyBh
-cmUgc3RpbGwgbWFwcGVkIGluIHRoZSBpcnFfZG9tYWluLCBidXQgdGhlIA0KdG91Y2ggY29udHJv
-bGxlciB3aWxsIG9ubHkgZ2VuZXJhdGUgYW4gSVJRIGZvciBvbmUgb2YgdGhlbSBhbmQgDQpybWlf
-ZjExX2F0dGVudGlvbigpIHdpbGwgb25seSBiZSBjYWxsZWQgb25jZS4gSSBiZWxpZXZlIEYxMSBh
-bmQgRjEyIGFyZSANCnRoZSBvbmx5IFJNSSBmdW5jdGlvbnMgd2hpY2ggcmVwb3J0IG1vcmUgdGhl
-biBvbmUgSVJRLiBFdmVuIGlmIA0KdGVjaG5pY2FsbHkgdGhlIHNwZWMgYWxsb3dzIHVwIHRvIDYg
-dG8gYmUgZGVjbGFyZWQuIFRoaXMgcGF0Y2gganVzdCANCmltcGxlbWVudHMgdGhlIHNhbWUgYmVo
-YXZpb3IgYXMgRjExIGZvciBGMTIuDQoNCj4NCj4gQWxzbywgYXMgZmFyIGFzIEYxMiBnb2VzLCBJ
-IHNlZSB0aGF0IGl0IG1heSBtYXJrIHNlbnNvciBhcyByZXBvcnRpbmcNCj4gcmVsYXRpdmUgY29v
-cmRpbmF0ZXMsIGJ1dCBJIGRvIG5vdCBzZWUgd2hlcmUgaXQgd291bGQgYWN0dWFsbHkgZW1pdA0K
-PiByZWxhdGl2ZSBldmVudHMuIEkgbXVzdCBiZSBtaXNzaW5nIHNvbWV0aGluZyBoZXJlLi4uDQoN
-Ck5vcGUsIHlvdSBhcmUgbm90IG1pc3NpbmcgYW55dGhpbmcuIFRoZSBjb2RlIHRvIHBhcnNlIHRo
-ZSByZWxhdGl2ZSBkYXRhIA0KZnJvbSB0aGUgZGF0YTkgcmVnaXN0ZXIgd2FzIG5ldmVyIGltcGxl
-bWVudGVkLiBJIG5vdGljZWQgdGhhdCB0b28gd2hlbiANCmNyZWF0aW5nIHRoaXMgcGF0Y2guIFRo
-aXMgbXVzdCBoYXZlIGJlZW4gYW4gb3ZlcnNpZ2h0IGR1cmluZyB0aGUgDQpvcmlnaW5hbCBpbXBs
-ZW1lbnRhdGlvbiBvZiB0aGUgRjEyIGRyaXZlci4gSSBjb25zaWRlcmVkIGFkZGluZyB0aGUgY29k
-ZSANCnRvIHJlcG9ydCByZWxhdGl2ZSBldmVudHMsIGJ1dCBJIGRpZCBub3QgaGF2ZSBhbnkgaGFy
-ZHdhcmUgcmVhZGlseSANCmF2YWlsYWJsZSB0byB0ZXN0IHdpdGguIEl0IHNlZW1zIHVubGlrZWx5
-IHRoYXQgdGhlcmUgd291bGQgYmUgYSBkZXZpY2UgDQp1c2luZyBvbmUgb2Ygb3VyIHRvdWNoIGNv
-bnRyb2xsZXJzIHN1cHBvcnRpbmcgRjEyIHdoaWNoIG9ubHkgcmVwb3J0ZWQgDQpyZWxhdGl2ZSBl
-dmVudHMuIEFsc28sIG5vIG9uZSBzZWVtcyB0byBoYXZlIGNvbXBsYWluZWQgYWJvdXQgdGhlIGxh
-c3Qgb2YgDQpyZXBvcnRpbmcgcmVsYXRpdmUgZXZlbnRzIGluIHRoZSBsYXN0IGZldyB5ZWFycy4g
-SW5zdGVhZCwgaW4gdGhpcyBwYXRjaCANCkkganVzdCBjbGVhciB0aGUgcmVsYXRpdmUgSVJRIHRv
-IHByZXZlbnQgcm1pX2YxMl9hdHRlbnRpb24oKSBmcm9tIGJlaW5nIA0KY2FsbGVkIHR3aWNlLiBJ
-IGNvdWxkIGFkZCBhIGNvbW1lbnQgb3IgYSB3YXJuaW5nIHN0YXRpbmcgdGhhdCByZXBvcnRpbmcg
-DQpyZWxhdGl2ZSBldmVudHMgaW4gRjEyIGlzIHVuc3VwcG9ydGVkLg0KDQpUaGFua3MsDQoNCkFu
-ZHJldw0KDQo+IFRoYW5rcy4NCj4NCj4gLS0NCj4gRG1pdHJ5DQo=
+On Tue, Oct 29, 2019 at 9:43 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> On Di, 2019-10-29 at 09:29 -0700, Andrey Smirnov wrote:
+> > Everyone:
+> >
+> > This series is a continuation of original [discussion]. I don't know
+> > if what's in the series is enough to use CAAMs HWRNG system wide, but
+> > I am hoping that with enough iterations and feedback it will be.
+> >
+> > Feedback is welcome!
+>
+> I'm not sure if we can ever use the job based RNG interface to hook it
+> up to the Linux HWRNG interface. After all the job based RNG interface
+> is always a DRNG, which only gets seeded by the TRNG. The reseed
+> interval is given in number of clock cycles, so there is no clear
+> correlation between really true random input bits and the number of
+> DRNG output bits.
+>
+
+Doesn't enabling prediction resistance gives us that correlation? E.g.
+that every time new random data is generated, DRNG is reseeded? I am
+assuming even if this is true we'd have to significantly limit
+generated data length (< seed length?), so maybe what you propose
+below is still simpler.
+
+> I've hacked up some proof of concept code which uses the TRNG access in
+> the control interface to get the raw TRNG random bits. This seems to
+> yield about 6400 bit/s of true entropy. It may be better to use this
+> interface to hook up to the Linux HWRNG framework.
+>
+
+OK, I'll take a look into that and send out a v2 with results.
+
+Thanks,
+Andrey Smirnov
