@@ -7,58 +7,65 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A73CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0384ACA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA0E20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB49420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ba68fn1A"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GayfmIV9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfJ2SYM (ORCPT
+        id S1729811AbfJ2SZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:24:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60752 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfJ2SYM (ORCPT
+        Tue, 29 Oct 2019 14:25:14 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48686 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfJ2SZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:24:12 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TI5UUe155040;
-        Tue, 29 Oct 2019 18:24:08 GMT
+        Tue, 29 Oct 2019 14:25:13 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TI5FDj175951;
+        Tue, 29 Oct 2019 18:23:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=CBucKVszmtDkvTv5jp3bH4K3Bhl/s5iJ0btzBQYUPTw=;
- b=Ba68fn1ARkOxtVaBzMD7fr/JplX/xSOKPF/C8n19nSMHdoAJBri7TREZRrhMlXdyjMSj
- ibEuYrI9UHQ+WevL07YZNrk7ypp1QYw9AhWP6pPUNxaaOoEvmHKVuNhwG291qG31SO91
- wViQ2OqL5UEZi533lG9U4TXW/kuj2/yYhYZObZYy0B7V+TyGwldlGYTVOcC51peRSpJ5
- qJMQ4u0Num+8VmIXSU3oKsbkl1cYQZc1cXoS1CZj9kYD1D4fQV4OJ/UVLcJU8dVioWjk
- Ha2pk3q2pjOegvuPhbO0+LDQ+Lbr9eg8t/NsdM03dvIB6KNog49EtKdLFlANjoHBUU71 Fw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vve3qb2wc-1
+ bh=pvaGyOZDLlNqbGIv4aiDa+8jV2u8TRmd0Sg/3CdaYfQ=;
+ b=GayfmIV97A/7KomJSAsydyBuszzE+3RDo1LCbszbUU03PKeOPpUsle4oX8Bz1eM7+QTg
+ w17fUSx26ItlguIpsL8eUG0ZQzM19hMSpsyOjpclWpMjsMwnIU1OJ0G/0HZ9jt9TcWPu
+ nc2WRwGPQVL9Ox2RSIbuHMSbPWSSss3mVfWN2ZOT14JMBpQIsvN3gB/FH1OC1i7XgMgI
+ pKVgT+27FvJ6I9IkQhR7tVJmBVx3R9ZIPK8kaaHl/VEpXSNaajWQENUJs13sEKJacAWV
+ fQuop4wCqvSb1Q1wLkFTAlw40mAmIgY55WNYNdaRCm4j8RVgdThKmUpTxLYJCbEjnlRz Jw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2vvdjub9ee-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:24:08 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TI8RBT052331;
-        Tue, 29 Oct 2019 18:24:07 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vxj8gqc81-1
+        Tue, 29 Oct 2019 18:23:39 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TI8BBK179764;
+        Tue, 29 Oct 2019 18:23:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2vxpfdgt2e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:24:07 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TIO64U007303;
-        Tue, 29 Oct 2019 18:24:06 GMT
+        Tue, 29 Oct 2019 18:23:39 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TINU14011472;
+        Tue, 29 Oct 2019 18:23:30 GMT
 Received: from mwanda (/41.57.98.10)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Oct 2019 11:24:06 -0700
-Date:   Tue, 29 Oct 2019 21:24:01 +0300
+        with ESMTP ; Tue, 29 Oct 2019 11:23:30 -0700
+Date:   Tue, 29 Oct 2019 21:23:20 +0300
 From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] media: smiapp: unlock on error in smiapp_start_streaming()
-Message-ID: <20191029182401.GB17569@mwanda>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Andrea Righi <righi.andrea@gmail.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Peter Rosin <peda@axentia.se>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        security@kernel.org, Kees Cook <keescook@chromium.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+Subject: [PATCH] fbdev: potential information leak in do_fb_ioctl()
+Message-ID: <20191029182320.GA17569@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -80,35 +87,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We added two new error paths to smiapp_start_streaming(), but we can't
-return directly without dropping the "sensor->mutex" lock.
+The "fix" struct has a 2 byte hole after ->ywrapstep and the
+"fix = info->fix;" assignment doesn't necessarily clear it.  It depends
+on the compiler.
 
-Fixes: f8c4352c1bef ("media: smiapp: Move binning configuration to streaming start")
+Fixes: 1f5e31d7e55a ("fbmem: don't call copy_from/to_user() with mutex held")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/media/i2c/smiapp/smiapp-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I have 13 more similar places to patch...  I'm not totally sure I
+understand all the issues involved.
 
-diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index 77dfce7c3be9..84f9771b5fed 100644
---- a/drivers/media/i2c/smiapp/smiapp-core.c
-+++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -1362,13 +1362,13 @@ static int smiapp_start_streaming(struct smiapp_sensor *sensor)
- 		rval = smiapp_write(
- 			sensor, SMIAPP_REG_U8_BINNING_TYPE, binning_type);
- 		if (rval < 0)
--			return rval;
-+			goto out;
- 
- 		binning_mode = 1;
- 	}
- 	rval = smiapp_write(sensor, SMIAPP_REG_U8_BINNING_MODE, binning_mode);
- 	if (rval < 0)
--		return rval;
-+		goto out;
- 
- 	/* Set up PLL */
- 	rval = smiapp_pll_configure(sensor);
+ drivers/video/fbdev/core/fbmem.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index 6f6fc785b545..b4ce6a28aed9 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -1109,6 +1109,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 			ret = -EFAULT;
+ 		break;
+ 	case FBIOGET_FSCREENINFO:
++		memset(&fix, 0, sizeof(fix));
+ 		lock_fb_info(info);
+ 		fix = info->fix;
+ 		if (info->flags & FBINFO_HIDE_SMEM_START)
 -- 
 2.20.1
 
