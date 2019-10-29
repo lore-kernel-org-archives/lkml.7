@@ -2,157 +2,158 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE500CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86001CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B030A20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:25:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XHPCvXv2"
+	by mail.kernel.org (Postfix) with ESMTP id 5BF5021835
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 06:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732502AbfJ2GZ6 (ORCPT
+        id S1732578AbfJ2G27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 02:25:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28299 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726067AbfJ2GZ6 (ORCPT
+        Tue, 29 Oct 2019 02:28:59 -0400
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:50556 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732549AbfJ2G26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 02:25:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572330356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X50ijSp+B0o1arpNjHljt3f++0frPk6KMXEog3CQ89o=;
-        b=XHPCvXv2CChLuJqLBoydG2cmYikOw6iUfcLRWDlk0GFcvlYQmuCDQyQ9DW95oGeDnVVlEy
-        D1MbWCpB/VyTY5/BT7gP22Ks/HAcQfPQXi8338SD4tGQV4RVjkj33S1UGrvM5NQd5GVuDV
-        93Z63OkFeJa+VBs7Ndh/4p+DkBBUKlM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-P6sGBN67PIm5dGAhj0AmYw-1; Tue, 29 Oct 2019 02:25:53 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D07A1005500;
-        Tue, 29 Oct 2019 06:25:51 +0000 (UTC)
-Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B61FF5C1D6;
-        Tue, 29 Oct 2019 06:25:45 +0000 (UTC)
-Date:   Tue, 29 Oct 2019 14:25:43 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     lijiang <lijiang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, dyoung@redhat.com,
-        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
-        horms@verge.net.au, kexec@lists.infradead.org
-Subject: Re: [PATCH 1/2 v7] x86/kdump: always reserve the low 1MiB when the
- crashkernel option is specified
-Message-ID: <20191029062543.GC7616@MiWiFi-R3L-srv>
-References: <20191029021059.22070-1-lijiang@redhat.com>
- <20191029021059.22070-2-lijiang@redhat.com>
- <20191029052842.GA7616@MiWiFi-R3L-srv>
- <ffb0d2d3-31c3-fba0-e0f4-bd48999a033e@redhat.com>
+        Tue, 29 Oct 2019 02:28:58 -0400
+X-AuditID: c0a8fbf4-183ff70000001fa6-f5-5db7dc27a4dc
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 70.9A.08102.72CD7BD5; Tue, 29 Oct 2019 07:28:55 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Tue, 29 Oct 2019 07:28:51 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [RFC PATCH v2 05/13] clk: bd718x7: Support ROHM BD71828 clk
+ block
+Thread-Topic: [RFC PATCH v2 05/13] clk: bd718x7: Support ROHM BD71828 clk
+ block
+Thread-Index: AQHVimBwjNMwf0EEZEiGH5vTJctNV6dwqoeAgAB0NIA=
+Date:   Tue, 29 Oct 2019 06:28:51 +0000
+Message-ID: <95b21eeaee8025dc430623429273116c35c1b769.camel@fi.rohmeurope.com>
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+         <5c66ac7d43ae1f57c335b6e565553fe1df703a83.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191028233256.798AD21479@mail.kernel.org>
+In-Reply-To: <20191028233256.798AD21479@mail.kernel.org>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BA1237DA9BAD5540B994689D32145663@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <ffb0d2d3-31c3-fba0-e0f4-bd48999a033e@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: P6sGBN67PIm5dGAhj0AmYw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TWUwTQRh2dre7S3HNUoqMqEQbTb0Fo2aiRnkxWYzxfDEaxAUW2tCDbIvn
+        C4lHpZB4gUflUAQkQFQQRYk1iFC0arEeiHhRr1BD8EINEcVdVoWn+TLf9U/yD41rAmQUbbTY
+        BdHCm3Skmmis+FkzW/+8PiHmYVc0KvU/ppCjt5xCfYVeAuUH3pKouNmnQjl36lTo2aULBHr1
+        rQWg74/2Yyhv4CyGPue+VKGLxQMAPWwoINGlnnMAeaoekajsiR9DBWW3COT3LkcvvC0k2utu
+        ptDv9hoiLoKrLqoG3MeOvRRXVL2Lu+p6QXG1ldkk97z9Gsm1dtRj3LGifoyrqPpBcV9ro9eo
+        N4YuSeLtW9cb0yxzl24JNew78FmV0TBt+9GqfCIL1OmdIISG7HzYcf0XKWMN+xjAntY4J1BL
+        +BaAlS31wAlommSXQOdTStZo2SR48UsOIWtw9hsF7w+6CZkIZ9fArKAPU0Rroev4e5WCF8Hd
+        3/uGMMFOhVdfN+IyZthV8HpeDVDKHgD4wF8NZCKERTDXs2dIBNiJMDurdygUZyNh7fsfKmVq
+        FpZea8MVHAGDb37/vddBd3+AkIfG2enwfMNcxRoH8+87CAVPhnk5AUqZIQzePvGWOAjGukY0
+        uIbdrhFu1wi3a4T7FFBVAmjmjaY03i7EzhGFzDmi1WCWjmSruRYoK9N3BQw2xTcBjAZNYByN
+        6SKYAU99gmZMkjVlh4G3GRLFTJNgawKQxnVaxn/3coKGSeF37BRE6z9qPE3oIhl94FCChpW7
+        0gUhQxD/sRNoWgeZqc+k0DBRSBO2pxpN9mEao0PkcHWU1iZYUgSRz7QbEuX9SLRJCyJTo6Ve
+        lWxnbBm8WbpVrF4wkz4YLCzB6ebCshJcQ1isFiEqktHKUlaWGjIt/4s+gEga6MKZkk6JHS39
+        m/85H6QKTKqY1S8/zWbnh6moLBDW9sS0wid0m7M94T3qXmN6c9/JI+M6F/Z0nYxddvtwzDxf
+        zQazd6Vzt/7eFMeGmOkv09eN6g9aqAPR2woWuO/uXFt+/kbvhNW/rOmb4gfbikvjGxen+vSB
+        Y4mbHV0omOS42Zlsqvv07ijo3h+R64kO9bYnT8LGpGmmrTytdZ/prtQRNgMfOwMXbfwfGu26
+        MfQDAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/29/19 at 02:06pm, lijiang wrote:
-> >>  struct crash_memmap_data {
-> >> @@ -68,6 +70,19 @@ static inline void cpu_crash_vmclear_loaded_vmcss(v=
-oid)
-> >>  =09rcu_read_unlock();
-> >>  }
-> >> =20
-> >> +/*
-> >> + * When the crashkernel option is specified, only use the low
-> >> + * 1MiB for the real mode trampoline.
-> >> + */
-> >> +void __init kexec_reserve_low_1MiB(void)
-> >=20
-> > Thanks for the effort, Lianbo. I believe everyone is confident with thi=
-s
-> > solution and fix.
-> >=20
-> > I have a tiny concern, why the function name is
-> > kexec_reserve_low_1MiB(), but not kexec_reserve_low_1M()?
->=20
-> Thanks for your comment, Baoquan.
->=20
-> It means that kernel will reserve 1M 'Byte' memory, the function name doe=
-s not
-> have special meaning.
->=20
-> Would you mind if i change it to the crash_reserve_low_1M()?
-
-Yes, crash_xx looks better since it's only related to crash dumping. As
-for 1M, not very sure, see if other people have comment about it. Anyway,
-crash_reserve_low_1M() looks good to me. Thanks.
-
->=20
-> void __init crash_reserve_low_1M(void)
->=20
-> Thanks.
-> Lianbo
->=20
-> > I searched in kernel code with below filter, didn't see MiB appearing i=
-n
-> > a function name. I am not sure about it either, just ask.
-> >=20
-> > git grep "_[1-9]*M " arch/ kernel/ mm include/ drivers/ net/ init fs cr=
-ypto/ certs/ ipc lib
-> >=20
-> > Thanks
-> > Baoquan
-> >=20
-> >> +{
-> >> +=09if (cmdline_find_option(boot_command_line, "crashkernel",
-> >> +=09=09=09=09NULL, 0) > 0) {
-> >> +=09=09memblock_reserve(0, 1<<20);
-> >> +=09=09pr_info("Reserving the low 1MiB of memory for crashkernel\n");
-> >> +=09}
-> >> +}
-> >> +
-> >>  #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
-> >> =20
-> >>  static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
-> >> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-> >> index 7dce39c8c034..b8bbd0017ca8 100644
-> >> --- a/arch/x86/realmode/init.c
-> >> +++ b/arch/x86/realmode/init.c
-> >> @@ -8,6 +8,7 @@
-> >>  #include <asm/pgtable.h>
-> >>  #include <asm/realmode.h>
-> >>  #include <asm/tlbflush.h>
-> >> +#include <asm/crash.h>
-> >> =20
-> >>  struct real_mode_header *real_mode_header;
-> >>  u32 *trampoline_cr4_features;
-> >> @@ -34,6 +35,7 @@ void __init reserve_real_mode(void)
-> >> =20
-> >>  =09memblock_reserve(mem, size);
-> >>  =09set_real_mode_mem(mem);
-> >> +=09kexec_reserve_low_1MiB();
-> >>  }
-> >> =20
-> >>  static void __init setup_real_mode(void)
-> >> --=20
-> >> 2.17.1
-> >>
-
+SGVsbG8gU3RlcGhlbiwNCg0KVGhhbmtzIGZvciB0aGUgY29tbWVudHMgb25jZSBhZ2FpbiA6KQ0K
+DQpPbiBNb24sIDIwMTktMTAtMjggYXQgMTY6MzIgLTA3MDAsIFN0ZXBoZW4gQm95ZCB3cm90ZToN
+Cj4gUXVvdGluZyBNYXR0aSBWYWl0dGluZW4gKDIwMTktMTAtMjQgMDQ6NDQ6NDApDQo+ID4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2Nsay1iZDcxOHg3LmMgYi9kcml2ZXJzL2Nsay9jbGstYmQ3
+MTh4Ny5jDQo+ID4gaW5kZXggYWU2ZTViYWVlMzMwLi5kMTdhMTllMDQ1OTIgMTAwNjQ0DQo+ID4g
+LS0tIGEvZHJpdmVycy9jbGsvY2xrLWJkNzE4eDcuYw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2Ns
+ay1iZDcxOHg3LmMNCj4gPiBAQCAtOCw2ICs4LDcgQEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3Bs
+YXRmb3JtX2RldmljZS5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPiA+ICAjaW5j
+bHVkZSA8bGludXgvbWZkL3JvaG0tYmQ3MTh4Ny5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbWZk
+L3JvaG0tYmQ3MTgyOC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvbWZkL3JvaG0tYmQ3MDUyOC5o
+Pg0KPiANCj4gSXQgd291bGQgYmUgcmVhbGx5IGdyZWF0IHRvIG5vdCBuZWVkIHRvIGluY2x1ZGUg
+dGhlc2UgcmFuZG9tIGhlYWRlcg0KPiBmaWxlcyBpbiB0aGlzIGRyaXZlciBhbmQganVzdCB1c2Ug
+cmF3IG51bWJlcnMgc29tZWhvdy4gTG9va3MgbGlrZQ0KPiBtYXliZQ0KPiBpdCBjYW4gYmUgZG9u
+ZSBieSBwb3B1bGF0aW5nIGEgZGlmZmVyZW50IGRldmljZSBuYW1lIGZyb20gdGhlIG1mZA0KPiBk
+cml2ZXINCj4gZGVwZW5kaW5nIG9uIHRoZSB2ZXJzaW9uIG9mIHRoZSBjbGsgY29udHJvbGxlciBk
+ZXNpcmVkPyBUaGVuIHRoYXQgY2FuDQo+IGJlDQo+IG1hdGNoZWQgaW4gdGhpcyBjbGsgZHJpdmVy
+IGFuZCB3ZSBjYW4ganVzdCBwdXQgdGhlIHJlZ2lzdGVyIGluZm8gaW4NCj4gdGhpcw0KPiBmaWxl
+Pw0KDQpJIHN0aWxsIGxpa2Uga2VlcGluZyB0aGUgY2hpcCB0eXBlIGluZm9ybWF0aW9uIG9uIG9u
+ZSBoZWFkZXIgLSBubw0KbWF0dGVyIHdoYXQtZXZlciBmb3JtYXQgdGhlIGNsay1jb250cm9sbGVy
+IHR5cGUvdmVyc2lvbiBpbmZvcm1hdGlvbiBpcy4NClJhdGlvbmFsZSBpcyB0aGF0IE1GRCBhbmQg
+YWxzbyBmZXcgb3RoZXIgc3ViLWRldmljZXMgKG5vdCBvbmx5IHRoZSBjbGspDQpuZWVkIHRvIHVz
+ZSBpdC4gQ3VycmVudGx5IGF0IGxlYXN0IHRoZSBSVEMuDQoNCkJ1dCBpZiB3ZSBkZWZpbmUgY2xr
+IHJlZ2lzdGVyIGluZm9ybWF0aW9uIGZvciBhbGwgUE1JQ3MgaW4gdGhpcyBjLWZpbGUsIA0KdGhl
+biAoSSB0aGluaykgd2UgY2FuIG9ubHkgaW5jbHVkZSB0aGUgPGxpbnV4L21mZC9yb2htLWdlbmVy
+aWMuaD4gLQ0Kd2hpY2ggY29udGFpbnMgdGhlIFBNSUMgdHlwZSBkZWZpbmVzIGFuZCB0aGUgZ2Vu
+ZXJpYyBNRkQgZGF0YQ0Kc3RydWN0dXJlLiBUaGF0IHdvdWxkOg0KDQotI2luY2x1ZGUgPGxpbnV4
+L21mZC9yb2htLWJkNzE4eDcuaD4NCi0jaW5jbHVkZSA8bGludXgvbWZkL3JvaG0tYmQ3MTgyOC5o
+Pg0KLSNpbmNsdWRlIDxsaW51eC9tZmQvcm9obS1iZDcwNTI4Lmg+DQorI2luY2x1ZGUgPGxpbnV4
+L21mZC9yb2htLWdlbmVyaWMuaD4NCg0KVGhhdCB3YXkgdGhlIGNoaXAtdHlwZSBpbmZvcm1hdGlv
+biBjb3VsZCBzdGlsbCBiZSBzYW1lIGZvciBNRkQgYW5kIGFsbA0Kc3ViLWRldmljZXMgYnV0IGNs
+ayBkcml2ZXIgd291bGQgbm90IG5lZWQgdG8gaW5jbHVkZSBhbGwgdGhlIGRldGFpbHMNCmZvciBh
+bGwgdGhlIFBNSUNzLiBJIHVuZGVyc3RhbmQgeW91ciBwb2ludCB3ZWxsIGFzIGNsayByZWdpc3Rl
+cnMgZm9yDQp0aGVzZSBQTUlDcyBhcmUgcmVhbGx5ICpsaW1pdGVkKi4NCg0KPiANCj4gPiAgI2lu
+Y2x1ZGUgPGxpbnV4L2Nsay1wcm92aWRlci5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvY2xrZGV2
+Lmg+DQo+ID4gQEAgLTIxLDEwICsyMiw4IEBAIHN0cnVjdCBiZDcxOHh4X2NsayB7DQo+ID4gICAg
+ICAgICBzdHJ1Y3Qgcm9obV9yZWdtYXBfZGV2ICptZmQ7DQo+ID4gIH07DQo+ID4gIA0KPiA+IC1z
+dGF0aWMgaW50IGJkNzE4MzdfY2xrX3NldChzdHJ1Y3QgY2xrX2h3ICpodywgaW50IHN0YXR1cykN
+Cj4gPiArc3RhdGljIGludCBiZDcxODM3X2Nsa19zZXQoc3RydWN0IGJkNzE4eHhfY2xrICpjLCBp
+bnQgc3RhdHVzKQ0KPiANCj4gc2hvdWxkIGl0IGJlIHVuc2lnbmVkIGludCBzdGF0dXM/IE9yIG1h
+eWJlIHUzMj8NCj4gDQo+ID4gIHsNCj4gPiAtICAgICAgIHN0cnVjdCBiZDcxOHh4X2NsayAqYyA9
+IGNvbnRhaW5lcl9vZihodywgc3RydWN0DQo+ID4gYmQ3MTh4eF9jbGssIGh3KTsNCj4gPiAtDQo+
+ID4gICAgICAgICByZXR1cm4gcmVnbWFwX3VwZGF0ZV9iaXRzKGMtPm1mZC0+cmVnbWFwLCBjLT5y
+ZWcsIGMtPm1hc2ssDQo+ID4gc3RhdHVzKTsNCj4gPiAgfQ0KPiA+ICANCj4gPiBAQCAtMzMsMTQg
+KzMyLDE2IEBAIHN0YXRpYyB2b2lkIGJkNzE4MzdfY2xrX2Rpc2FibGUoc3RydWN0IGNsa19odw0K
+PiA+ICpodykNCj4gPiAgICAgICAgIGludCBydjsNCj4gPiAgICAgICAgIHN0cnVjdCBiZDcxOHh4
+X2NsayAqYyA9IGNvbnRhaW5lcl9vZihodywgc3RydWN0DQo+ID4gYmQ3MTh4eF9jbGssIGh3KTsN
+Cj4gPiAgDQo+ID4gLSAgICAgICBydiA9IGJkNzE4MzdfY2xrX3NldChodywgMCk7DQo+ID4gKyAg
+ICAgICBydiA9IGJkNzE4MzdfY2xrX3NldChjLCAwKTsNCj4gPiAgICAgICAgIGlmIChydikNCj4g
+PiAgICAgICAgICAgICAgICAgZGV2X2RiZygmYy0+cGRldi0+ZGV2LCAiRmFpbGVkIHRvIGRpc2Fi
+bGUgMzJLIGNsaw0KPiA+ICglZClcbiIsIHJ2KTsNCj4gPiAgfQ0KPiA+ICANCj4gPiAgc3RhdGlj
+IGludCBiZDcxODM3X2Nsa19lbmFibGUoc3RydWN0IGNsa19odyAqaHcpDQo+ID4gIHsNCj4gPiAt
+ICAgICAgIHJldHVybiBiZDcxODM3X2Nsa19zZXQoaHcsIDEpOw0KPiA+ICsgICAgICAgc3RydWN0
+IGJkNzE4eHhfY2xrICpjID0gY29udGFpbmVyX29mKGh3LCBzdHJ1Y3QNCj4gPiBiZDcxOHh4X2Ns
+aywgaHcpOw0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiBiZDcxODM3X2Nsa19zZXQoYywgMHhm
+ZmZmZmZmZik7DQo+IA0KPiBCZWNhdXNlIG5vdyB0aGlzIGlzIHBhc3NpbmcgLTEgdG8gdW5zaWdu
+ZWQgaW50IHRha2luZw0KPiByZWdtYXBfdXBkYXRlX2JpdHMoKT8NCg0KSSB0aGluayB0aGF0IGJp
+dC13aXNlIGl0IGlzIGFsbCB0aGUgc2FtZS4gQ3VycmVudGx5IHJlZ2lzdGVycyBhcmUgb25seQ0K
+OGJpdHMgd2lkZSBzbyBpdCBpcyBlbm91Z2ggdGhhdCBsb3dlc3QgOCBiaXRzIGFyZSBzZXQuIEFu
+ZCAweGZmZmZmZmZmDQpzaG91bGQgd29yayBuaWNlbHkgdXAtdG8gMzJiaXQgcmVnaXN0ZXJzIGFz
+IGxvbmcgYXMgaW50IGlzIDMyIGJpdCBvcg0KbW9yZS4NCg0KQnV0IHlvdSBhcmUgY29ycmVjdCB0
+aGF0IHRoaXMgaXMgbm90IGxvb2tpbmcgZ29vZC4gQXQgZmlyc3Qgc2lnaHQNCnVuc2lnbmVkIGlu
+dCBpcyBtdWNoIG5pY2VyLiBJIHByZWZlciB1bnNpZ25lZCBpbnQgb3ZlciBmb3JjZWQgdTMyIHRv
+DQpndWFyYW50ZWUgbmF0dXJhbCBhbGlnbm1lbnQgLSB3aGljaCBkb2VzIG5vdCByZWFsbHkgbWF0
+dGVyIGluIHRoaXMgY2FzZQ0KZWl0aGVyLiB1bnNpZ25lZCBpbnQgbWF0Y2hlcyByZWdtYXAgdGhv
+dWdoIHNvIEknbGwgc3dpdGNoIHRvIGl0LiBUaGFua3MNCmZvciBwb2ludGluZyB0aGlzIG91dCA6
+KQ0KDQpJJ2xsIHRyeSB0byBpbmNsdWRlIHRoZXNlIGNsayBjaGFuZ2VzIGluIHYzLg0KDQoNCkJy
+LA0KCU1hdHRpIFZhaXR0aW5lbg0K
