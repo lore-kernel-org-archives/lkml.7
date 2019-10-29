@@ -2,75 +2,109 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE01CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB4ECA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB162054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A1202054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfJ2WOB (ORCPT
+        id S1726535AbfJ2WPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:14:01 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:55014 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfJ2WOB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:14:01 -0400
-Received: from cust-east-parth2-46-193-72-114.wb.wifirst.net (46.193.72.114) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id f51bf1077fadacd6; Tue, 29 Oct 2019 23:13:57 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yin Fengwei <fengwei.yin@intel.com>
-Subject: Re: linux-next: manual merge of the vhost tree with the pm tree
-Date:   Tue, 29 Oct 2019 23:13:57 +0100
-Message-ID: <2535052.Q9mzRWFaI7@kreacher>
-In-Reply-To: <20191029151928.780c8ede@canb.auug.org.au>
-References: <20191029151928.780c8ede@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 29 Oct 2019 18:15:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:20625 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfJ2WPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 18:15:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 15:15:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
+   d="diff'?scan'208";a="225127666"
+Received: from spandruv-mobl3.jf.intel.com ([10.255.229.217])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Oct 2019 15:15:16 -0700
+Message-ID: <aaff9d379a325e5500651ca2f2e2ec7e21c245e3.camel@linux.intel.com>
+Subject: Re: "Force HWP min perf before offline" triggers unchecked MSR
+ access errors
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Qian Cai <cai@lca.pw>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Chen Yu <yu.c.chen@intel.com>, Len Brown <lenb@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 29 Oct 2019 15:15:16 -0700
+In-Reply-To: <53fc01bf9ef25012a1a43b87954b62a02101d85c.camel@linux.intel.com>
+References: <CAJZ5v0g6_-HBEKfHtfe8LFG9PKosGeUW3-gwTBW6F32OwFwO3g@mail.gmail.com>
+         <A94C23C3-E6B9-4390-B380-C49D87731D81@lca.pw>
+         <53fc01bf9ef25012a1a43b87954b62a02101d85c.camel@linux.intel.com>
+Content-Type: multipart/mixed; boundary="=-EbG5otTQwJdOLYnc5Foy"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, October 29, 2019 5:19:28 AM CET Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the vhost tree got a conflict in:
-> 
->   drivers/acpi/processor_idle.c
-> 
-> between commit:
-> 
->   fa583f71a99c ("ACPI: processor_idle: Skip dummy wait if kernel is in guest")
-> 
-> from the pm tree and commit:
-> 
->   a04c0533b07c ("ACPI: disable extra P_LVLx access on KVM")
 
-Well, if this touches code under drivers/acpi/, it should have been CCed to
-linux-acpi@vger.kernel.org, but I don't recall seeing it.
+--=-EbG5otTQwJdOLYnc5Foy
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-> from the vhost tree.
+On Tue, 2019-10-29 at 15:13 -0700, Srinivas Pandruvada wrote:
+> On Tue, 2019-10-29 at 18:01 -0400, Qian Cai wrote:
+> > > On Oct 29, 2019, at 5:47 PM, Rafael J. Wysocki <rafael@kernel.org
+> > > >
+> > > wrote:
+> > > 
+> > > The MSR_IA32_ENERGY_PERF_BIAS MSR appears to be not present,
+> > > which
+> > > should be caught by the X86_FEATURE_EPB check in
+> > > intel_pstate_set_epb().
+> > > 
+> > > Do you run this in a guest perchance?
+> > 
+> > No, it is a baremetal HPE server. The dmesg does say something like
+> > energy perf bias changed from performance to normal, and the
+> > cpuflag
+> > contains epb which I thought that would pass the feature check? I
+> > could upload the whole dmesg a bit later if that helps.
 > 
-> I fixed it up (I just used the pm tree version) and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
+> Try the attached change. You have a Skylake server with no EPP
+> support.
+> This is odd.
 > 
+Sorry.
+Ignore the previous one. It had some unrelated change.
+
+> Thanks,
+> Srinivas
 > 
 
+--=-EbG5otTQwJdOLYnc5Foy
+Content-Disposition: attachment; filename="epb_power.diff"
+Content-Type: text/x-patch; name="epb_power.diff"; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3B1ZnJlcS9pbnRlbF9wc3RhdGUuYyBiL2RyaXZlcnMvY3B1
+ZnJlcS9pbnRlbF9wc3RhdGUuYwppbmRleCA5ZjAyZGU5YTFiNDcuLmVhYjhiMDQ4ZGM5ZiAxMDA2
+NDQKLS0tIGEvZHJpdmVycy9jcHVmcmVxL2ludGVsX3BzdGF0ZS5jCisrKyBiL2RyaXZlcnMvY3B1
+ZnJlcS9pbnRlbF9wc3RhdGUuYwpAQCAtODUxLDcgKzg1MSw3IEBAIHN0YXRpYyB2b2lkIGludGVs
+X3BzdGF0ZV9od3BfZm9yY2VfbWluX3BlcmYoaW50IGNwdSkKIAlpZiAoYm9vdF9jcHVfaGFzKFg4
+Nl9GRUFUVVJFX0hXUF9FUFApKQogCQl2YWx1ZSB8PSBIV1BfRU5FUkdZX1BFUkZfUFJFRkVSRU5D
+RShIV1BfRVBQX1BPV0VSU0FWRSk7CiAJZWxzZQotCQlpbnRlbF9wc3RhdGVfc2V0X2VwYihjcHUs
+IEhXUF9FUFBfQkFMQU5DRV9QT1dFUlNBVkUpOworCQlpbnRlbF9wc3RhdGVfc2V0X2VwYihjcHUs
+IDB4MEYpOwogCiAJd3Jtc3JsX29uX2NwdShjcHUsIE1TUl9IV1BfUkVRVUVTVCwgdmFsdWUpOwog
+fQo=
 
 
+--=-EbG5otTQwJdOLYnc5Foy--
 
