@@ -2,81 +2,123 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8B5CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2DDCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843C9208C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6B621835
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:57:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pT5nXJVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730230AbfJ2B4m (ORCPT
+        id S1730274AbfJ2B5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:56:42 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:58290 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730082AbfJ2B4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:56:37 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CCB4F1A00F4;
-        Tue, 29 Oct 2019 02:56:35 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 40EAD1A0310;
-        Tue, 29 Oct 2019 02:56:33 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B4FE3402E2;
-        Tue, 29 Oct 2019 09:56:29 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     fugang.duan@nxp.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH RESEND 2/2] net: fec_ptp: Use platform_get_irq_xxx_optional() to avoid error message
-Date:   Tue, 29 Oct 2019 09:53:19 +0800
-Message-Id: <1572313999-23317-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572313999-23317-1-git-send-email-Anson.Huang@nxp.com>
-References: <1572313999-23317-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 28 Oct 2019 21:57:00 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:41073 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727263AbfJ2B47 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 21:56:59 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x9T1ufbp013620;
+        Tue, 29 Oct 2019 10:56:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x9T1ufbp013620
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572314202;
+        bh=WiGt+TCyyATo5E1qzm7PLkeK8QQ2Cm8OCwWpT1e4wCI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pT5nXJVc2vnAqpTvk7LjqeXZFnkhsKLCcbarM4RZdq2krk8GUlh/Hm1LiVHfYMS1N
+         l/4CmjA6bXuGkykUTHuBgkptWP+QjGuVT79bR8k7dCQ8DIjvnTvOsAF2nw4QNMBZXJ
+         snvZ99/qEBIAAhTsvbUx77S1xP0XQHhHCAInzEGOF3PZEXYGj/ZIfgfQK4KePr8DBW
+         zpua6fFLJremi+i/GcE+n9P3QeMUjjeMgbxh4p/NGwcEWXh7vE4ErPbMBmgcPOF8Vi
+         hw0SdxsNs11za2H4osYYS8o13aOY8sa3z6zal85UzFXDAC1Lv8B2CE5TX4zRCI1rCc
+         TKEDTQREOT1cg==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id k1so5121939vsm.0;
+        Mon, 28 Oct 2019 18:56:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAXqX4JjueQpxjBVQ4/1eA7HYliayFLytWjVBzYZE0vgK2LMbQHf
+        5tilmaSlZLnKiQhedAhMFTkraBEUK8t1AL+laLQ=
+X-Google-Smtp-Source: APXvYqw4kXxcZxGMoV8fdNR8r1mhiMi5Z5h5vFWYkK8GzACp8lOcuRj3PXb39YwbsZs+601M5TcPsE18xEHxVq5KHww=
+X-Received: by 2002:a67:2d08:: with SMTP id t8mr298470vst.155.1572314201070;
+ Mon, 28 Oct 2019 18:56:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191028155639.30330-1-e5ten.arch@gmail.com> <CAK7LNAS41TxKMLBj3_N=WE57CT7ttHes+7GdLWNW-mAgPkvW7w@mail.gmail.com>
+ <CAMEGPiq+Z7kbjJSNA0m=1TAymamQExud_7v5yzakSPdciPbq1Q@mail.gmail.com>
+In-Reply-To: <CAMEGPiq+Z7kbjJSNA0m=1TAymamQExud_7v5yzakSPdciPbq1Q@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 29 Oct 2019 10:56:05 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
+Message-ID: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: support byacc as alternative YACC to bison
+To:     Ethan Sommer <e5ten.arch@gmail.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use platform_get_irq_byname_optional() and platform_get_irq_optional()
-instead of platform_get_irq_byname() and platform_get_irq() for optional
-IRQs to avoid below error message during probe:
+Hi Ethan,
 
-[    0.795803] fec 30be0000.ethernet: IRQ pps not found
-[    0.800787] fec 30be0000.ethernet: IRQ index 3 not found
+On Tue, Oct 29, 2019 at 10:41 AM Ethan Sommer <e5ten.arch@gmail.com> wrote:
+>
+> > I applied this patch, and tried the latest byacc,
+> > but I still cannot build kconfig probably because
+> > %destructor is not supported.
+> > byacc does not seem to work anyway.
+>
+> Hi Masahiro, because I hadn't built it in a while I completely forgot
+> that to support %destructor byacc needs to be built with
+> --enable-btyacc, should I update the commit message to include that
+> detail?
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Acked-by: Fugang Duan <fugang.duan@nxp.com>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
-	- The patch f1da567f1dc1 ("driver core: platform: Add platform_get_irq_byname_optional()")
-	  already landed on network/master, resend this patch set.
----
- drivers/net/ethernet/freescale/fec_ptp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+OK, I was able to build kconfig with --enable-btyacc.
 
-diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
-index 19e2365..945643c 100644
---- a/drivers/net/ethernet/freescale/fec_ptp.c
-+++ b/drivers/net/ethernet/freescale/fec_ptp.c
-@@ -600,9 +600,9 @@ void fec_ptp_init(struct platform_device *pdev, int irq_idx)
- 
- 	INIT_DELAYED_WORK(&fep->time_keep, fec_time_keep);
- 
--	irq = platform_get_irq_byname(pdev, "pps");
-+	irq = platform_get_irq_byname_optional(pdev, "pps");
- 	if (irq < 0)
--		irq = platform_get_irq(pdev, irq_idx);
-+		irq = platform_get_irq_optional(pdev, irq_idx);
- 	/* Failure to get an irq is not fatal,
- 	 * only the PTP_CLOCK_PPS clock events should stop
- 	 */
+byacc still cannot build scripts/dtc/dtc-parser.y
+Thought?
+
+dtc is not compiled for x86.
+Please try ARCH=arm.
+
+
+masahiro@pug:~/ref/linux$ make ARCH=arm
+CROSS_COMPILE=arm-linux-gnueabihf- YACC=/home/masahiro/bin/yacc
+scripts/kconfig/conf  --syncconfig Kconfig
+  SYSHDR  arch/arm/include/generated/uapi/asm/unistd-common.h
+  SYSHDR  arch/arm/include/generated/uapi/asm/unistd-oabi.h
+  SYSHDR  arch/arm/include/generated/uapi/asm/unistd-eabi.h
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/data.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/checks.o
+  HOSTCC  scripts/dtc/util.o
+  LEX     scripts/dtc/dtc-lexer.lex.c
+  YACC    scripts/dtc/dtc-parser.tab.[ch]
+/home/masahiro/bin/yacc: e - line 120 of "scripts/dtc/dtc-parser.y",
+syntax error
+ERROR(&@2, "Header flags don't match earlier ones");
+       ^
+make[1]: *** [scripts/Makefile.host;17: scripts/dtc/dtc-parser.tab.h] Error 1
+make[1]: *** Deleting file 'scripts/dtc/dtc-parser.tab.h'
+make[1]: *** [scripts/dtc/dtc-parser.tab.h] Deleting file
+'scripts/dtc/dtc-parser.tab.c'
+make: *** [Makefile;1260: scripts_dtc] Error 2
+
+
+
+
 -- 
-2.7.4
-
+Best Regards
+Masahiro Yamada
