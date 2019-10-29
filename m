@@ -2,114 +2,85 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE3BCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555D4CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608392086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1142086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gCIsjn8K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="erCRbeIB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389140AbfJ2OPS (ORCPT
+        id S2389300AbfJ2OPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:15:18 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:53308 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389039AbfJ2OPR (ORCPT
+        Tue, 29 Oct 2019 10:15:45 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:43034 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389285AbfJ2OPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:15:17 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 848F2C0C41;
-        Tue, 29 Oct 2019 14:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1572358517; bh=ntn5h+EtiIr26cxuzm1ZrBPes0SSBYvLTZygjleUGzc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=gCIsjn8Ku5XeJLlLhtD2SPNIXN5ekmpgV5MLXScQWNw5wDoAXrpYULQWFFBbwztSU
-         Ix8E+4shQdeqEqR4uFMH0I0kKW5YbVUBIHIdPhU+/dB0+liDtGQWoh2jiJ5TdofOH7
-         pb0oJYWpmPS0smMcuShMfyrU1Y6/McdwmCwpqgXHtxBlqA7k0nuhJSDvLw1csBHZ4T
-         +S1Ij/+5nE34GhEzuHZXvUetVDWTx/2SqQSIhpQtQJKFPteZsR0ydZmsJ28Y0yushQ
-         yVVso3+RzmXVKzzVOFaVYdA5BQ/d/3Xq4DVONg0kQ1FToMu1rXAM4cvnGXeu4xfSv9
-         I04ctY+eZfdgw==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 29016A0081;
-        Tue, 29 Oct 2019 14:15:15 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 9/9] net: stmmac: xgmac: Disable MMC interrupts by default
-Date:   Tue, 29 Oct 2019 15:14:53 +0100
-Message-Id: <4c77b55e43cf7a3243086a465b50568eb352d534.1572355609.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1572355609.git.Jose.Abreu@synopsys.com>
-References: <cover.1572355609.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1572355609.git.Jose.Abreu@synopsys.com>
-References: <cover.1572355609.git.Jose.Abreu@synopsys.com>
+        Tue, 29 Oct 2019 10:15:44 -0400
+Received: by mail-vs1-f67.google.com with SMTP id s130so4946431vsc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 07:15:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2CJkMB8W25QC+LmwHZCR/dC2OeYvdCpp2yKraECtwkc=;
+        b=erCRbeIBHUu53eIreClKHV+uY6SMssROpbDKJZMSC3l+mDep04YpyeFnPKet5PX5N1
+         K6d9GL7q+TBbHhpf38xASFO/TXfXIgOnQd+2jwtbABwkUzNKRv4crlJCQ5sm33YkfEj4
+         u0npQzAAraEWJu+naiJKHKuW/DZPeUOAf7F1bBLeNGslfkb7ZIPfYWSV9H/PfDxih3hV
+         coNmtYtFiskJu7ap8vyMmzTx37J9AxaFbD9LknHJc/hx3PVruIT1Bbo9+aHjnSy/QjoV
+         6LB1xAnri/kSOeQaJ0PsMW1btfvx/BA9yOxpu4tBlBCWlPodHSRXiAFe8R7+Kv+9rPOU
+         vfBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2CJkMB8W25QC+LmwHZCR/dC2OeYvdCpp2yKraECtwkc=;
+        b=qZxQ8tcUiTXJVm8dnbrmvAKx5RIo9g4Q/TMeikz06UsTd4s66Ab9qgXhe3C+13swBQ
+         PymaRLxqQxeToY26bcIk+24DuxRFaba83ELW/twEaXw2We1DVUVLGhI8+3ZaRdRiB9yA
+         2k4BMwTGCSvl+jTDH3egfaMLLJHO35Xtf+g7jRhhU23wWXwvKB89G/QLRn8vo1GArlL5
+         TBR1ygCxk1vcxIpvVj+ETYuss6KFFxSVCrAV2esfQiNCT+azwqcnXiu3QbLWRs8k8pdb
+         Z4SBrDofhoilke4W2Rwx+YXMQlcrbM5ukdW6GZpNff8YXMkd8Hij13xF2SUDRvzauxcD
+         rlGQ==
+X-Gm-Message-State: APjAAAXcTqKxh8JSDO8eR8JBzTktGRvxcyBV8TAEIyYNl6v81oRx64T8
+        YhuGk0OrRYsOmJCMFZA9MzI6YuK6VcSrSnx3t3jmxQ==
+X-Google-Smtp-Source: APXvYqzrRPTOdVe3rVj/q8mFjvCWiOOTxiTZFSQn4yLUcuktimo2dgWY3hYMbxvwByEex6FdTHrCbR8bcgRkCp0CTm8=
+X-Received: by 2002:a67:fb5a:: with SMTP id e26mr1980049vsr.200.1572358542448;
+ Tue, 29 Oct 2019 07:15:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191021064413.19840-1-manivannan.sadhasivam@linaro.org> <20191021064413.19840-5-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20191021064413.19840-5-manivannan.sadhasivam@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 29 Oct 2019 15:15:31 +0100
+Message-ID: <CACRpkdaZFr+DAthpoEeJgMeqhQfMbDNcd9dVQOEhqfqP6MmP=Q@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] MAINTAINERS: Add entry for RDA Micro GPIO driver
+ and binding
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-unisoc@lists.infradead.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MMC interrupts were being enabled, which is not what we want because it
-will lead to a storm of interrupts that are not handled at all. Fix it
-by disabling all MMC interrupts for XGMAC.
+On Mon, Oct 21, 2019 at 8:44 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 
-Fixes: b6cdf09f51c2 ("net: stmmac: xgmac: Implement MMC counters")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+> Add MAINTAINERS entry for RDA Micro GPIO driver and devicetree binding.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/mmc_core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Patch applied!
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-index a223584f5f9a..252cf48c5816 100644
---- a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-@@ -176,6 +176,7 @@
- #define MMC_XGMAC_RX_PKT_SMD_ERR	0x22c
- #define MMC_XGMAC_RX_PKT_ASSEMBLY_OK	0x230
- #define MMC_XGMAC_RX_FPE_FRAG		0x234
-+#define MMC_XGMAC_RX_IPC_INTR_MASK	0x25c
- 
- static void dwmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
- {
-@@ -333,8 +334,9 @@ static void dwxgmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
- 
- static void dwxgmac_mmc_intr_all_mask(void __iomem *mmcaddr)
- {
--	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_RX_INTR_MASK);
--	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_TX_INTR_MASK);
-+	writel(0x0, mmcaddr + MMC_RX_INTR_MASK);
-+	writel(0x0, mmcaddr + MMC_TX_INTR_MASK);
-+	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_XGMAC_RX_IPC_INTR_MASK);
- }
- 
- static void dwxgmac_read_mmc_reg(void __iomem *addr, u32 reg, u32 *dest)
--- 
-2.7.4
-
+Yours,
+Linus Walleij
