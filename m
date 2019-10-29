@@ -2,127 +2,126 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E683CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965D8CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68DB420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6115E20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:41:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XGvC7h/U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wnTqEjP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbfJ2Rko (ORCPT
+        id S1730018AbfJ2RlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:40:44 -0400
-Received: from mail-eopbgr00046.outbound.protection.outlook.com ([40.107.0.46]:3814
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727518AbfJ2Rkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:40:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WUPH9F32xG8Q4grHq3ln92WrKKyNuFdL3jFPDp//7ZkWb/yOGg45+t0lTIS/D/qvAhHNLfNI2E4w5vSSzzLDawvIZwIiMOtp68eHAaphNqMlKlC5KJ6/d6H2df0kQBh27n4IHLyC/UfyWl71V4NeJhlzSlVFV3xQ285xI9ECjX8EfHVM9hPRzm6+zQKh9GWrGawP1JVmJXuzZoZvToz6mpmDkktXZg30AdOXSQxrJzGRKu/mho6lgT4cwoh7KwF95HtgA+B2+cKCZotHdKYcc+HNBchbW7ZbblWR48M4ev3TYajlL1zwWobtFK6TiaHOkpbBV+Xtc2Kcp7ktbmCqHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T5G5m7LpgytKX3nmEc3O9CVDwVeKycrTz9gPuQSFOfQ=;
- b=dDZW6rYBXPLi/p3HNozECazmS5I26mi0HpWi2TRLFLKbVIqZlx/LuM8scs65jgaRrfS9zlyru5LdTyuT38jiAP2hn2A0xKaHFmicrAFmD489Yy2roY65MaLWpW4VQZFcZa5pM+Yk5lBuguvKaF++YG3qXa8UP6H/qr2ut9nbBZLFuPYS8UfuElMbZnjMdxxmLMPCQKqzyoxJ6T0QkaVPA9xETzmmp0yYs4fJtfUcBClyp/bnVF8JMo2SzbkocGoo2Q/9pKzSclBTf9CFl/jlb/0qqiWnH5YpmrPNaysk70FhgADBhU4R8Y3auflWqiF1BZhk0kezhEMos2VKXWMHrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T5G5m7LpgytKX3nmEc3O9CVDwVeKycrTz9gPuQSFOfQ=;
- b=XGvC7h/UDq33Hlf+6rsbWxlmEXiPCRJY1Lwqh0TErziavI+C/TU0PbbMad3rSfn2CYMw2WJghcIXqCAcBGkEdkdLrI+HUAdpxZxOiAxbWo7WqsVmrSy+jH4khzOmPhmhu6ABXAhgIefCITKyfdTbZC5y0THr5NI+hQDPkK3vr7g=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB5183.eurprd05.prod.outlook.com (20.178.9.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.22; Tue, 29 Oct 2019 17:40:39 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2387.027; Tue, 29 Oct 2019
- 17:40:39 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-CC:     John Hubbard <jhubbard@nvidia.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/3] mm/hmm: make full use of walk_page_range()
-Thread-Topic: [PATCH v3 1/3] mm/hmm: make full use of walk_page_range()
-Thread-Index: AQHVidvQNc+e+9eo5ka32bzGBwuw3qdx7DkA
-Date:   Tue, 29 Oct 2019 17:40:39 +0000
-Message-ID: <20191029174036.GR22766@mellanox.com>
-References: <20191023195515.13168-1-rcampbell@nvidia.com>
- <20191023195515.13168-2-rcampbell@nvidia.com>
-In-Reply-To: <20191023195515.13168-2-rcampbell@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR02CA0003.namprd02.prod.outlook.com
- (2603:10b6:208:fc::16) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.162.113.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bcb05ac0-f770-494a-82b4-08d75c971d03
-x-ms-traffictypediagnostic: VI1PR05MB5183:
-x-microsoft-antispam-prvs: <VI1PR05MB5183A7F8AD19BC473DB03EDACF610@VI1PR05MB5183.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0205EDCD76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(189003)(199004)(486006)(66476007)(5660300002)(11346002)(2616005)(446003)(476003)(2906002)(66946007)(14444005)(64756008)(66556008)(3846002)(6116002)(86362001)(6506007)(26005)(186003)(102836004)(386003)(71190400001)(8936002)(66446008)(33656002)(71200400001)(54906003)(6436002)(305945005)(110136005)(99286004)(316002)(7736002)(76176011)(6246003)(81156014)(52116002)(14454004)(256004)(6512007)(478600001)(1076003)(66574012)(6486002)(4326008)(25786009)(36756003)(81166006)(66066001)(8676002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5183;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5uqbelTWpl2zlSSi/IT+IR6sBGou0Acv7BXFRndT6XZGZ/IzU16X49grdtZKqsMbr4VXstZpvZq79X3my4whlzNvNcLaNHyxwYwktOr4N/3/6Bo5MWe4QMRQKdGE8A3ft23XRMB4JuKRhdzEKgVjjjADFrkbhjaeqL4Fj8OFjrGHKyhBTbNjxkNEw6acP6KzXfp0e74KkFeGNdNGlj++PDs+cp0cisTuUDW5fJU0QsbKOxgfLqKMzfW62An6XziHY0OAFlToZ2pp8Ie6QypzqG1UT9wnmDzHB7T1DUaSQtIDQBRfq8w5WZNMv2kezhus+WGpadLxBQ3F8wWnnsKwLlWb0ubqvpfVsUO0Skfpnz8b4YZeccLf5PxrDQXazAjLUA5ef7kxbLjkTG7UgyHS1rZIMxXhRkLgxlzXy5eH0gZvfcOgzXQ+YR1A/b/GoQUY
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8F71407F39E42F409A92850DDBE5B983@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 29 Oct 2019 13:41:09 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45911 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729025AbfJ2RlJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 13:41:09 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c7so8895819pfo.12
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:41:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7xSEaHgPrL2UMVtxpL/QZyWiD7SSfTEWfSkyz0gH5eU=;
+        b=wnTqEjP2Tr9b5JhJyLAz1L4c7C4QhzqJWcOY+tdXJYJElTH10oMGQKbeC8gEGeBUQ5
+         +ZvVFkcSODbxuaTDpe6rNxjMftbhaKWI67YeVSEffZFgXWUNmPRKLIjG3PsgaBf5EBsV
+         CDiIZGcJ4ucM39YfWheBfyk+rAm84/Nfl5TauR91/IC9moGCnGEC46jgKz0OWmH+6/H/
+         8WDG665mJuuBWFUwhDE8IbfluKH90ODUX8xAIuMYVFnrxWvxdEkko0n3eoOVsFHoOUjP
+         uvH16Yh2SRkrErzDMgMm8PcAS0FF7bpOp7W0rB7eEHO6fZ8ebQoF/dmUEFxfKFhH56V+
+         Mzmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7xSEaHgPrL2UMVtxpL/QZyWiD7SSfTEWfSkyz0gH5eU=;
+        b=Z+wCMbuOXBVScrfeP029e0w4z+oaT9U+mC0hgRnV9SC9yedM4RY8Gh8JKb+u58phIE
+         aXVgCAzXBufRSrdCh4I+X3ZVilXyPh2fMJFoA+7cZ89nTCxOyzO/NUAHV2SI0ww1/BtS
+         g/K/NXpKqJF/xeT2xzooXQ8X0wNB66+e179RTuJZKb6v8NPlUfUtih5LhouHcZMjH7dG
+         owj1o4ctFcyRIgLVOuQBH+ZHPyk25w272bAhX2gyY3sw5TClqai2sNc9sqWJfaUDs1VV
+         qZBJwdEDGCS0ML719N29WM0a9vaXy81taraunz+Y1P+x1br2aOooQO5LJrgUs7tB8cPH
+         /a+A==
+X-Gm-Message-State: APjAAAX1LkmkG5SLM5uqiqCuuMscbNeQki85V+XspDI9UayiKHaqFzUw
+        17zG60AQ2l8WwQzcBYoeocCpIw==
+X-Google-Smtp-Source: APXvYqyd4hqnHPf92+j9leQi9Xj5QEv/PWa7fTRzsFDdaeWRUCsbNJ3+iDfBuDtveWhmFNd+HdMKNQ==
+X-Received: by 2002:a17:90a:5d04:: with SMTP id s4mr8087919pji.125.1572370868152;
+        Tue, 29 Oct 2019 10:41:08 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h186sm17651256pfb.63.2019.10.29.10.41.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 10:41:07 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 10:41:05 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, stable@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] arm64: cpufeature: Enable Qualcomm Falkor/Kryo errata
+ 1003
+Message-ID: <20191029174105.GZ571@minitux>
+References: <20191029171539.1374553-1-bjorn.andersson@linaro.org>
+ <20191029173915.GC13281@willie-the-truck>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bcb05ac0-f770-494a-82b4-08d75c971d03
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 17:40:39.4360
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ve4A1od5xs+cR1YlLaMi8WFRoMA2xRrTr8p4w4uPqHAem+tvIblyG8Bc8V7mL2VLbeavhxmTyVqX6mM4+Ea2vA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5183
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029173915.GC13281@willie-the-truck>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCBPY3QgMjMsIDIwMTkgYXQgMTI6NTU6MTNQTSAtMDcwMCwgUmFscGggQ2FtcGJlbGwg
-d3JvdGU6DQo+IGhtbV9yYW5nZV9mYXVsdCgpIGNhbGxzIGZpbmRfdm1hKCkgYW5kIHdhbGtfcGFn
-ZV9yYW5nZSgpIGluIGEgbG9vcC4NCj4gVGhpcyBpcyB1bm5lY2Vzc2FyeSBkdXBsaWNhdGlvbiBz
-aW5jZSB3YWxrX3BhZ2VfcmFuZ2UoKSBjYWxscyBmaW5kX3ZtYSgpDQo+IGluIGEgbG9vcCBhbHJl
-YWR5Lg0KPiBTaW1wbGlmeSBobW1fcmFuZ2VfZmF1bHQoKSBieSBkZWZpbmluZyBhIHdhbGtfdGVz
-dCgpIGNhbGxiYWNrIGZ1bmN0aW9uDQo+IHRvIGZpbHRlciB1bmhhbmRsZWQgdm1hcy4NCj4gVGhp
-cyBhbHNvIGZpeGVzIGEgYnVnIHdoZXJlIGhtbV9yYW5nZV9mYXVsdCgpIHdhcyBub3QgY2hlY2tp
-bmcNCj4gc3RhcnQgPj0gdm1hLT52bV9zdGFydCBiZWZvcmUgY2hlY2tpbmcgdm1hLT52bV9mbGFn
-cyBzbyBobW1fcmFuZ2VfZmF1bHQoKQ0KPiBjb3VsZCByZXR1cm4gYW4gZXJyb3IgYmFzZWQgb24g
-dGhlIHdyb25nIHZtYSBmb3IgdGhlIHJlcXVlc3RlZCByYW5nZS4NCj4gSXQgYWxzbyBmaXhlcyBh
-IGJ1ZyB3aGVuIHRoZSB2bWEgaGFzIG5vIHJlYWQgYWNjZXNzIGFuZCB0aGUgY2FsbGVyIGRpZA0K
-PiBub3QgcmVxdWVzdCBhIGZhdWx0LCB0aGVyZSBzaG91bGRuJ3QgYmUgYW55IGVycm9yIHJldHVy
-biBjb2RlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUmFscGggQ2FtcGJlbGwgPHJjYW1wYmVsbEBu
-dmlkaWEuY29tPg0KPiBDYzogIkrDqXLDtG1lIEdsaXNzZSIgPGpnbGlzc2VAcmVkaGF0LmNvbT4N
-Cj4gQ2M6IEphc29uIEd1bnRob3JwZSA8amdnQG1lbGxhbm94LmNvbT4NCj4gQ2M6IENocmlzdG9w
-aCBIZWxsd2lnIDxoY2hAbHN0LmRlPg0KPiAgbW0vaG1tLmMgfCAxMjYgKysrKysrKysrKysrKysr
-KysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDYzIGluc2VydGlvbnMoKyksIDYzIGRlbGV0aW9ucygtKQ0KDQpUaGlzIGlzIGxvb2tpbmcg
-T0ssIGNhbiB3ZSBnZXQgYW4gYWNrIGZyb20gSmVyb21lPyBDaHJpc3RvcGg/DQoNCkkgcmVjYWxs
-IG15IGZpcnN0IHdvcnJ5IHdhcyB0aGF0IHdhbGstPnZtYSBjb3VsZCBub3cgYmUgbnVsbCwgYXMN
-Cm9wcy0+cHRlX2hvbGUgaXMgc2V0LiBCdXQgaXQgbG9va3MgbGlrZSB0aGF0IGlzIGFsbCBoYW5k
-bGVkIG5vdz8NCg0KVGhhbmtzLA0KSmFzb24NCg==
+On Tue 29 Oct 10:39 PDT 2019, Will Deacon wrote:
+
+> On Tue, Oct 29, 2019 at 10:15:39AM -0700, Bjorn Andersson wrote:
+> > With the introduction of 'cce360b54ce6 ("arm64: capabilities: Filter the
+> > entries based on a given mask")' the Qualcomm Falkor/Kryo errata 1003 is
+> > no long applied.
+> > 
+> > The result of not applying errata 1003 is that MSM8996 runs into various
+> > RCU stalls and fails to boot most of the times.
+> > 
+> > Give 1003 a "type" to ensure they are not filtered out in
+> > update_cpu_capabilities().
+> > 
+> > Fixes: cce360b54ce6 ("arm64: capabilities: Filter the entries based on a given mask")
+> > Cc: stable@vger.kernel.org
+> > Reported-by: Mark Brown <broonie@kernel.org>
+> > Suggested-by: Will Deacon <will@kernel.org>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> > 
+> > Changes since v1:
+> > - s/ARM64_CPUCAP_SCOPE_LOCAL_CPU/ARM64_CPUCAP_LOCAL_CPU_ERRATUM/
+> > - Dropped 1009 "fix" as it already had a type from ERRATA_MIDR_RANGE_LIST()
+> > 
+> >  arch/arm64/kernel/cpu_errata.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> > index df9465120e2f..3facd5ca52ed 100644
+> > --- a/arch/arm64/kernel/cpu_errata.c
+> > +++ b/arch/arm64/kernel/cpu_errata.c
+> > @@ -780,6 +780,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+> >  	{
+> >  		.desc = "Qualcomm Technologies Falkor/Kryo erratum 1003",
+> >  		.capability = ARM64_WORKAROUND_QCOM_FALKOR_E1003,
+> > +		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
+> >  		.matches = cpucap_multi_entry_cap_matches,
+> >  		.match_list = qcom_erratum_1003_list,
+> >  	},
+> > -- 
+> > 2.23.0
+> 
+> Thanks, I'll pick this up as a fix.
+> 
+
+Thank you!
