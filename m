@@ -2,118 +2,100 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F131CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB14CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0F920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8735B2083E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 03:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uayqepFL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbfJ2Des (ORCPT
+        id S1731423AbfJ2Dkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 23:34:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5216 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726025AbfJ2Der (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 23:34:47 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 875B859B04CB6891E704;
-        Tue, 29 Oct 2019 11:34:42 +0800 (CST)
-Received: from [127.0.0.1] (10.133.224.57) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
- 11:34:34 +0800
-Subject: Re: [PATCH] pci: lock the pci_cfg_wait queue for the consistency of
- data
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <bhelgaas@google.com>, <wangxiongfeng2@huawei.com>,
-        <wanghaibin.wang@huawei.com>, <guoheyi@huawei.com>,
-        <yebiaoxiang@huawei.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <tglx@linutronix.de>, <guohanjun@huawei.com>,
-        <yangyingliang@huawei.com>
-References: <20191028091809.35212-1-zhengxiang9@huawei.com>
- <20191028163041.GA8257@bombadil.infradead.org>
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-Message-ID: <14e7d02e-215d-30dc-548c-e605f3ffdf1e@huawei.com>
-Date:   Tue, 29 Oct 2019 11:34:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 28 Oct 2019 23:40:36 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36768 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731114AbfJ2Dkg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 23:40:36 -0400
+Received: by mail-pg1-f195.google.com with SMTP id j22so2503270pgh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 20:40:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=cTJ/5ueE8SvgUdZQJcjb9C4BjM0/MnFjXu7d16hPfEE=;
+        b=uayqepFLEbT17OItKInIgyzSaTQTIU3+znFT/Q6z1MZIPCyS7kpDuUrQDiwgsYXecG
+         OWhMrS50AGiSKNP/pVNclWclacE0R+YH/aIeDbS3T2jompGDdJVW0wHSEQ3VMgrBFZit
+         uj21rhz/iBfP7emBcKGLuoyXjimJbIbpjqt515gEowuzwqNVx1oG7sdp0kliDyaQr8Ja
+         8FnZ+O3+/IGjSFRzI3cV8PxzPiCcMUvvnCZ6Wt8R2DoE2JqtD+h/4kPN5+KdhVaQVfmA
+         GLMA9aVzLCuYh9pHSe5X0VMd54qRAR11Prf9uRq9gWq0MBSJPPRHoTeN3U8QJzTKFRhS
+         EuGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=cTJ/5ueE8SvgUdZQJcjb9C4BjM0/MnFjXu7d16hPfEE=;
+        b=sV6jR6oFDN/bslGTeitqxY+YSAlTB4kB5WMlQ5KqMZ85M7bDjKlkCcctelxET8q9K5
+         /OCyrJJBWKFjbysWnBtplQLicqFGdXOqJFZe2r6BjW1qsR1hYxWzIGfTwn75FwYbeBQ9
+         DzuwZENfamDsbGn2Ib1tSIELLXosMn/l1H4fJhoeZbaugArGdchsNF3216namt18q2Tm
+         WigQ9pkEbLVbw8N7rGsjk5yW7skHtZCcjczdE4teQPJSNyd5Hz8e45NHUUlNJvhJSe63
+         QYpCLtZ3A9HR26wp1Px/j/6wlkLxBV6kE7LYBn+meqx/64ZWllFnzgbTysU104mYQ4ma
+         ULEA==
+X-Gm-Message-State: APjAAAUOvoAL3c3zjn5qyKDtTWclT4yUM24v5iIiRvohkRsWGmx4Vvgl
+        o3M0yWFJXskEsfmGk1N9wO0=
+X-Google-Smtp-Source: APXvYqwnKoU9U846A1HWXHnbxkTSiV3L1FbA3LwJy2VUUEt7swz4KjWlyX6zJbeAP06Tfd4x/oM5dQ==
+X-Received: by 2002:a63:9543:: with SMTP id t3mr24798812pgn.350.1572320435280;
+        Mon, 28 Oct 2019 20:40:35 -0700 (PDT)
+Received: from saurav ([27.62.167.137])
+        by smtp.gmail.com with ESMTPSA id l11sm13911499pgf.73.2019.10.28.20.40.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 20:40:34 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 09:10:27 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        groug@kaod.org, clg@kaod.org, christophe.jaillet@wanadoo.fr,
+        tglx@linutronix.de, saurav.girepunje@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] powerpc: sysdev: xive: Fix use true/false for bool type
+Message-ID: <20191029034027.GA7226@saurav>
 MIME-Version: 1.0
-In-Reply-To: <20191028163041.GA8257@bombadil.infradead.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.224.57]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use true/false for bool return type in xive_spapr_cleanup_queue
+function.
 
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+ arch/powerpc/sysdev/xive/spapr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 2019/10/29 0:30, Matthew Wilcox wrote:
-> On Mon, Oct 28, 2019 at 05:18:09PM +0800, Xiang Zheng wrote:
->> Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
->> and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
->>
->> However, since the commit "cdcb33f98244" merged, the accesses to
->> the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
->> insufficient and we need to hold an additional queue lock while
->> read/write the wait queue.
->>
->> So let's use the add_wait_queue()/remove_wait_queue() instead of
->> __add_wait_queue()/__remove_wait_queue().
-> 
-> As I said earlier, this reintroduces the deadlock addressed by
-> cdcb33f9824429a926b971bf041a6cec238f91ff
-> 
-
-Thanks Matthew, sorry for that I did not understand the way to reintroduce
-the deadlock and sent this patch. If what I think is right, the possible
-deadlock may be caused by the condition in which there are three processes:
-
-   *Process*                          *Acquired*         *Wait For*
-   wake_up_all()                      wq_head->lock      pi_lock
-   snbep_uncore_pci_read_counter()    pi_lock            pci_lock
-   pci_wait_cfg()                     pci_lock           wq_head->lock
-
-These processes suffer from the nested locks.:)
-
-But for this problem, what do you think about the solution below:
-
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 2fccb5762c76..09342a74e5ea 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
+index 33c10749edec..74e3ffae0be6 100644
+--- a/arch/powerpc/sysdev/xive/spapr.c
++++ b/arch/powerpc/sysdev/xive/spapr.c
+@@ -533,7 +533,7 @@ static void xive_spapr_cleanup_queue(unsigned int cpu, struct xive_cpu *xc,
+ static bool xive_spapr_match(struct device_node *node)
  {
-        DECLARE_WAITQUEUE(wait, current);
-
--       __add_wait_queue(&pci_cfg_wait, &wait);
-        do {
-                set_current_state(TASK_UNINTERRUPTIBLE);
-                raw_spin_unlock_irq(&pci_lock);
-+               add_wait_queue(&pci_cfg_wait, &wait);
-                schedule();
-+               remove_wait_queue(&pci_cfg_wait, &wait);
-                raw_spin_lock_irq(&pci_lock);
-        } while (dev->block_cfg_access);
--       __remove_wait_queue(&pci_cfg_wait, &wait);
+ 	/* Ignore cascaded controllers for the moment */
+-	return 1;
++	return true;
  }
-
- /* Returns 0 on success, negative values indicate error. */
-
-
-
-> .
-> 
-
+ 
+ #ifdef CONFIG_SMP
 -- 
-
-Thanks,
-Xiang
+2.20.1
 
