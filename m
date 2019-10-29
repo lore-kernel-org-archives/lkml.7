@@ -2,130 +2,115 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34446CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BBDCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9192087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:10:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="CFk0NZNw"
+	by mail.kernel.org (Postfix) with ESMTP id 0DD7720874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732295AbfJ2LKh (ORCPT
+        id S1731670AbfJ2LNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:10:37 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35572 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbfJ2LKg (ORCPT
+        Tue, 29 Oct 2019 07:13:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61398 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727020AbfJ2LNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:10:36 -0400
-Received: by mail-qt1-f194.google.com with SMTP id l3so9015980qtp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 04:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=W7Kz1lk1jTiGFiH/QrMM5e5TkKbKcEVmB9JU/Z9Ifbo=;
-        b=CFk0NZNw6lCtY4pC7kLl4vONt0CmFR3XcfKQ/PYZQlQmFD2CgeX+YztULXSrWGAg+m
-         /O8gONnFpYX79HHdNe9rEdCjKraeRKekFR4BE7kxjQchY+8z0Cm2CryJOBqGdTn39HUD
-         e7LvnYgFVv3ejl9iyWn72GT2ySonqaVExz3e3AIlTB6aFHK0bHMd7Eqf7nyq/Hdiot28
-         MX6kNjrV7CtJMIbaVuXosiv/hSi6RCuMc9Yz65uvHu3Be0LhO13+OC9All0f2wu+vHlk
-         9i+QdoPhGFOXZZ2Oz80/wkcxUDlVGTNcABucOv5lHCxcNHf+HkcWf+n81XEf+mFiS/im
-         RgjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=W7Kz1lk1jTiGFiH/QrMM5e5TkKbKcEVmB9JU/Z9Ifbo=;
-        b=SsNV8g/co8yVtSOMG+uL3uuNK1az0hKdfDOYI4M4fQe+gpcxKMHPA97Aap8PWZq7sS
-         18wehZky2HfIGolZof75/Z3+csgV2znSLZdSbhzOM6BR57o7pGIe6v1lnmRWKYc+14ep
-         MfowaHbms1avfHDUuR3MFeaImrefdlWZaDrYOEDM7PM91aKdvQQ+GulNGR4ZspjbLicO
-         Th5+/Gii0LwZ0m8I0+oeYceK2bl3WMgmcn0W0epK0vLW+EdYxLBQZxNHwKdx3ysYNJR5
-         +YzJCOA0my/LfeM1pMpl+plEFDqK6UL5vu+8GI5dUTMiq+k6donwCrh3xiFHEC/P5KwR
-         NI2A==
-X-Gm-Message-State: APjAAAUCXOah99RQFdvEb36g36NbpRYDk+y4LYFYl72aO36J/+dBcRcg
-        51cLA02b7oRRXnxalR8eZTj2RHTI4Bz2wQ==
-X-Google-Smtp-Source: APXvYqzquRGYq6C8pQjQPQfyYnvfNC542XcJbzJYQEkQZ/5Z/Q8g43Fp4LNgLIPcQISTgbwUVtSRig==
-X-Received: by 2002:ad4:450c:: with SMTP id k12mr12072073qvu.61.1572347435363;
-        Tue, 29 Oct 2019 04:10:35 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id q34sm9332310qte.50.2019.10.29.04.10.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Oct 2019 04:10:34 -0700 (PDT)
+        Tue, 29 Oct 2019 07:13:32 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9TAxqka045400;
+        Tue, 29 Oct 2019 07:13:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vxjpk3xmw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 29 Oct 2019 07:13:21 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9TB0jjZ049636;
+        Tue, 29 Oct 2019 07:13:20 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vxjpk3xm7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 29 Oct 2019 07:13:20 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9TBAO0A016392;
+        Tue, 29 Oct 2019 11:13:19 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01dal.us.ibm.com with ESMTP id 2vvds91be4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 29 Oct 2019 11:13:19 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9TBDInd52560190
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 11:13:18 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C84842805A;
+        Tue, 29 Oct 2019 11:13:18 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7428D28059;
+        Tue, 29 Oct 2019 11:13:18 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.199.37.192])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 29 Oct 2019 11:13:18 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id A873D2E3143; Tue, 29 Oct 2019 16:43:14 +0530 (IST)
+Date:   Tue, 29 Oct 2019 16:43:14 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Nathan Lynch <nathanl@linux.ibm.com>
+Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamaleshb@in.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH v2 0/1] pseries/hotplug: Change the default behaviour of
+ cede_offline
+Message-ID: <20191029111314.GC12266@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <1571740391-3251-1-git-send-email-ego@linux.vnet.ibm.com>
+ <87o8y45sxt.fsf@linux.ibm.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] sched: Avoid spurious lock dependencies
-Date:   Tue, 29 Oct 2019 07:10:34 -0400
-Message-Id: <EE57FDCF-E3CD-4A0D-B0CC-C3CBAA7EBCBD@lca.pw>
-References: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
-Cc:     akpm@linux-foundation.org, bigeasy@linutronix.de,
-        tglx@linutronix.de, thgarnie@google.com, tytso@mit.edu,
-        cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        mingo@redhat.com, will@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, keescook@chromium.org
-In-Reply-To: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: iPhone Mail (17A878)
+Content-Disposition: inline
+In-Reply-To: <87o8y45sxt.fsf@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=901 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910290114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Nathan,
 
 
-> On Oct 1, 2019, at 5:18 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> Does the below adequately describe the situation?
->=20
-> ---
-> Subject: sched: Avoid spurious lock dependencies
->=20
-> While seemingly harmless, __sched_fork() does hrtimer_init(), which,
-> when DEBUG_OBJETS, can end up doing allocations.
->=20
-> This then results in the following lock order:
->=20
->  rq->lock
->    zone->lock.rlock
->      batched_entropy_u64.lock
->=20
-> Which in turn causes deadlocks when we do wakeups while holding that
-> batched_entropy lock -- as the random code does.
->=20
-> Solve this by moving __sched_fork() out from under rq->lock. This is
-> safe because nothing there relies on rq->lock, as also evident from the
-> other __sched_fork() callsite.
->=20
-> Fixes: b7d5dc21072c ("random: add a spinlock_t to struct batched_entropy")=
+On Fri, Oct 25, 2019 at 06:03:26PM -0500, Nathan Lynch wrote:
+> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
+> > This is the v2 of the fix to change the default behaviour of
+> > cede_offline.
+> 
+> OK, but why keep the cede offline behavior at all? Can we remove it? I
+> think doing so would allow us to remove all the code that temporarily
+> onlines threads for partition migration.
 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
-> kernel/sched/core.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 7880f4f64d0e..1832fc0fbec5 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -6039,10 +6039,11 @@ void init_idle(struct task_struct *idle, int cpu)
->    struct rq *rq =3D cpu_rq(cpu);
->    unsigned long flags;
->=20
-> +    __sched_fork(0, idle);
-> +
->    raw_spin_lock_irqsave(&idle->pi_lock, flags);
->    raw_spin_lock(&rq->lock);
->=20
-> -    __sched_fork(0, idle);
->    idle->state =3D TASK_RUNNING;
->    idle->se.exec_start =3D sched_clock();
->    idle->flags |=3D PF_IDLE;
+May be I am missing something. But don't we want all the CPUs to come
+online and execute the H_JOIN hcall before performing partition
+migration? How will this change whether the offlined CPUs are in
+H_CEDE or rtas-stop-self?
 
-It looks like this patch has been forgotten forever. Do you need to repost, s=
-o Ingo might have a better chance to pick it up?=
+--
+Thanks and Regards
+gautham.
+
+
