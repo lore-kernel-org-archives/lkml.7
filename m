@@ -2,111 +2,103 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C18C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70B9CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D47214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85986214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 04:10:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arB2RctS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gxuiK8t7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfJ2EJk (ORCPT
+        id S1727855AbfJ2EKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 00:09:40 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33283 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfJ2EJk (ORCPT
+        Tue, 29 Oct 2019 00:10:20 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:46323 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfJ2EKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 00:09:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c184so8573904pfb.0;
-        Mon, 28 Oct 2019 21:09:38 -0700 (PDT)
+        Tue, 29 Oct 2019 00:10:20 -0400
+Received: by mail-pg1-f202.google.com with SMTP id 195so10103830pgc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Oct 2019 21:10:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=IvoM2eWpiqYm1TPcjOfOHitp5xuEj0gkRugCi8K3Djg=;
-        b=arB2RctSY1mxcFWm+0FTKr97oFW87d+WaW+fHurjvRY0TL7FCFMtGwpI/SmgkW2QsR
-         K8F0dJ8x2lLjl/zRJhQuNLfoHklh5vPZfsWOgo8752DUc5gok5aUFSIGEqHdDWGn6Uqr
-         8GaeGfbAAn1QII0JFtS+EzfbPajDfgFO/syQdIr4ZUWWzMhDVAMjcUXVNWdkGBPOLK5N
-         Gt6MFaZdD1foSe3hFdytQm5JiCIlTGyZEArsKi1oePRwGNv98dDcJSALdC/3P8b0fPG8
-         6nQhB75o3Dc3NflvcIAk6YqZuLABlFaKED7f5VfmLfZ8Gu8/5VOS3dusg0QLHfxexLag
-         3eaw==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=czBj5iiyb2avkPaBBfY6a4eoR3k0n1KTRJeBk9+xohE=;
+        b=gxuiK8t7b1l9J+ede3Wdzp6UYjkJG581WVbXyHzn7x7V4xDTN3fzvf/yQVizPEVDom
+         AOLhNYP7ghbMWKIAAUjYP606jeGf4vR2rnVuFbi45pomkT0tBHvhqGdJVb2YQqFufo/+
+         3pgD/WHwbjQ2i9Q1+Lj01BhwpBCvJGqpTuTO4GR46BSbaoUkBVsAqMEYYJBzSDKxqSsH
+         n7o3b992almzi3sbMQsIeoaxBy8l3s4EcwmJSMHCdzDVkSAlfHYM5ksGyWVP9G2znN2J
+         p1La4c6RwgN9dzC3sag0z+CUnMtJdSDXDyjLJ7jx39xfGXagJM2FfczBEt53wo0xFxqz
+         eBFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=IvoM2eWpiqYm1TPcjOfOHitp5xuEj0gkRugCi8K3Djg=;
-        b=Ydv/CrgujMjE9vhy6ul7LUN14Jonozkm3FBTu+dHahpEHmZLLK2Uw29JMXc3c+4414
-         fGwVK7kyh7+ekIcCZhpI9OkVsJk3v5d0/XyEPSE0fvSC/t5hl92jYB2zLzi4P2mxMVu4
-         3BsKZZCYKkqfW22xRnP83Gvp83J1m2dE5BypVTi9Xr4AdQI9V92whT92VOGocihRpKCO
-         K4aWKWuxjeCRMpw/HTA5Am3MJjY9kYf7XDXLuJ3pg9PtC5Rne84F6LAatV0TD1XNhmUi
-         G7cqPUNcsId2p7qx8eRAFueBnx87tm7/HBQg4X/ZVM2eBjW2QzXn8M1lsv6Wp3mHkvZX
-         awJg==
-X-Gm-Message-State: APjAAAWwzsBv8EGh8d9BybAjCdGSfv1uZNwg8Oo3fVtXwwN16c0gwNAD
-        2PNd7xrSKBnaLIbeni0o0pl/K2Qx
-X-Google-Smtp-Source: APXvYqw1bAKAzjKX7DWOZEPp2c0sjnuqtnYHBAHUUyRYVp/dgdTGHZMLZdlfwNujm4e4y5uvz3UDXA==
-X-Received: by 2002:a62:4d04:: with SMTP id a4mr24610260pfb.71.1572322177975;
-        Mon, 28 Oct 2019 21:09:37 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id i123sm14373079pfe.145.2019.10.28.21.09.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 21:09:36 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 21:09:33 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Matthias Fend <Matthias.Fend@wolfvision.net>
-Cc:     Martin Kepplinger <martink@posteo.de>,
-        Dixit Parmar <dixitparmar19@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/8] Face lift for st1232 touchscreen driver
-Message-ID: <20191029040933.GC57214@dtor-ws>
-References: <20191022195622.66976-1-dmitry.torokhov@gmail.com>
- <VI1PR08MB37588375F08EA4F692AE475D85660@VI1PR08MB3758.eurprd08.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR08MB37588375F08EA4F692AE475D85660@VI1PR08MB3758.eurprd08.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=czBj5iiyb2avkPaBBfY6a4eoR3k0n1KTRJeBk9+xohE=;
+        b=VNNN7V3/luXVAgjR7/sJm4D2T5/zwg4Th6E/ypq/f57APtq3xUkaQj9SiLFmIEGJrX
+         CsfoCoxhQs5xBYq+P5+l/62KYtJQc7l3Zlve/hopNEg+k3YVNC+p8JS1JYEusen+KCT0
+         FUMrBzt1p5CDr6SIs396RWDIE8neLwjdyHmEr8zGrqvPPjTQ22lANP10MLyr7qo2twXy
+         cTCRK2XmDrNfgIHsRK5vRJR0gmUIPs5GP0JAlxgwuhGHeY/kwxDvlp5gIs1pqntpbdx/
+         UaTTxbxT9PSCh/7aLy2q+PY5uMaOuwliV9bSGzA2BPzfzE8VFdnEcGc6Vv8SQSSByi7i
+         jOwA==
+X-Gm-Message-State: APjAAAWTs7HUhfgXX/t/HE8r2z9ttO/CjJxUMyQVvPEyHDAz3tFE1cWw
+        2VF2jwu1GLG6a1sWOitBfgpXq458wbw=
+X-Google-Smtp-Source: APXvYqwqXTMFNoIpwHeXuo9on4sLaxON2YuoG2Ily/6j/rQRUpKUszZ8hDawtzsD1lR9Jp/zlgoqV95Ty30=
+X-Received: by 2002:a63:da04:: with SMTP id c4mr24123103pgh.172.1572322219069;
+ Mon, 28 Oct 2019 21:10:19 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 13:10:13 +0900
+In-Reply-To: <20191018010846.186484-1-pliard@google.com>
+Message-Id: <20191029041013.175636-1-pliard@google.com>
+Mime-Version: 1.0
+References: <20191018010846.186484-1-pliard@google.com>
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: Re: [PATCH] squashfs: Migrate from ll_rw_block usage to BIO
+From:   Philippe Liard <pliard@google.com>
+To:     phillip@squashfs.org.uk, hch@lst.de
+Cc:     linux-kernel@vger.kernel.org, groeck@chromium.org,
+        pliard@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 07:28:51AM +0000, Matthias Fend wrote:
-> Hi Dmitry,
+> > I don't see why you still need buffer_heads at all.  Basically if
+> > you replace each of your allocated buffer heads with a simple page
+> > allocation the code will be much simpler (this version adds more
+> > than 100 lines of code!) and probaby still a bit faster as you
+> > don't need the squashfs_bio_request allocation either.
+>
+> Thanks Christoph for taking a look. I like the idea of simplifying
+> this if possible. I think I understand your suggestion in principle
+> but I'm not seeing a way to apply it here. Would it be possible for
+> you to be a little more specific? Let me try to explain this below.
 > 
-> > -----Ursprüngliche Nachricht-----
-> > Von: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > Gesendet: Dienstag, 22. Oktober 2019 21:56
-> > An: Martin Kepplinger <martink@posteo.de>
-> > Cc: Dixit Parmar <dixitparmar19@gmail.com>; Henrik Rydberg
-> > <rydberg@bitmath.org>; Kuninori Morimoto
-> > <kuninori.morimoto.gx@renesas.com>; Matthias Fend
-> > <Matthias.Fend@wolfvision.net>; linux-input@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Betreff: [PATCH 0/8] Face lift for st1232 touchscreen driver
-> > 
-> > This series cleans up the driver and switches it over to the slotted
-> > multi-touch protocol (MT-B) that should reduce the traffic between kernel
-> > and userspace.
-> > 
-> > Note that I do not have hardware, so I would appreciate if you could try
-> > running it and tell me if it is broken or not.
+> My admittedly limited understanding is that using BIO indirectly
+> requires buffer_head or an alternative including some
+> synchronization mechanism at least.
+> It's true that the bio_{alloc,add_page,submit}() functions don't
+> require passing a buffer_head. However because bio_submit() is
+> asynchronous AFAICT the client needs to use a synchronization
+> mechanism to wait for and notify the completion of the request which
+> buffer heads provide. This is achieved respectively by
+> wait_on_buffer() and {set,clear}_buffer_uptodate().
 > 
-> Looks good. I tested the series from your st1232 branch [1] and could not see any regressions.
-> Note that I my 'real' application only supports ONE finger. So, the other fingers are just tested with debug output.
+> Another dependency on buffer heads is the fact that
+> squashfs_read_data() calls into other squashfs functions operating
+> on buffer heads outside this file. For example squashfs_decompress()
+> operates on a buffer_head array.
+> 
+> Given that bio_submit() is asynchronous I'm also not seeing how the
+> squashfs_bio_request allocation can be removed? There can be
+> multiple BIO requests in flight each needing to carry some context
+> used on completion of the request.
 
-Thank you for testing. I committed the patches.
-
--- 
-Dmitry
+Christoph, do you still think this could be simplified as you
+suggested?
