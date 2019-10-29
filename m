@@ -2,93 +2,150 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055FFCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09260CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C4021835
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0CA217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:25:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbfJ2BZW (ORCPT
+        id S1728899AbfJ2BZ2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:25:22 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5204 "EHLO huawei.com"
+        Mon, 28 Oct 2019 21:25:28 -0400
+Received: from mail-oln040092066048.outbound.protection.outlook.com ([40.92.66.48]:1507
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728754AbfJ2BZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:25:20 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3800B9EF4580E136FF24;
-        Tue, 29 Oct 2019 09:25:17 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.218) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
- 09:25:15 +0800
-Message-ID: <5DB794FB.4010203@huawei.com>
-Date:   Tue, 29 Oct 2019 09:25:15 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        id S1728754AbfJ2BZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 21:25:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cfgWIjlvzt6bg+FSZq+/mUddgeOSEjIrDzTa3nSV1S5sghGEGoPJh5pqMuPBQbKfamG+fwIwDERUl0X1LXoNLZrxtFA81YIgc3WhMin0DIXHEDtThv/HLys7frjoOAN++GhtDOx8TM5Hej5e0+xQg3wpQE4fm8dWDCn6KzyayyVz+QYnvEjvvlnKpV5GZ35Fx7XeRlWjueyBfftpbnIzBQRhg7i37YFouXOFrnNKz6Wcz4eGQf+CyTtyIt952lKq2eAdzx+5uTsepTU+SdowgMpOOs2FrOyjhpNEuaCnGkd04y7mmZeFnToF/7mFaXw2hCEeGXDkDGGVdCpufjMFtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZWLA17RhTy/P12QWhXV/uUeryxHKqnl0eWMaGIQpmRo=;
+ b=IqQHwSqd88prj5TGFubSeCFvNX5JBvKksTJUMpKhESrgLoFlyGFL+bKikiWEtux/ExrBO11IoH/fsYNny9YfBNA9eGdK7Zy5PwjEwVj8Fr5aFghFpJYahJgJ+qNUa/mCbrt307GOpnA0kyUgfVBgXS2Fk80J9g0Dpw0Syn/7czy+X+hZtviOSCEQtt6pTeBCbeE6mLufNHNAToX8obj3htMKoq6i5cbb9bd1YJdL7HgkPn1eqshyTRhrKbUmIlSd3b/1Xg9TNpj6AktRItA9B6tm2QQrpDMikjiVmAReIK6y5WLvSYyarmRQtVFUt/Xtk0A+KhLQvq+nd817m9BTGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from VE1EUR01FT039.eop-EUR01.prod.protection.outlook.com
+ (10.152.2.55) by VE1EUR01HT182.eop-EUR01.prod.protection.outlook.com
+ (10.152.3.169) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.20; Tue, 29 Oct
+ 2019 01:24:51 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.2.56) by
+ VE1EUR01FT039.mail.protection.outlook.com (10.152.3.35) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20 via Frontend Transport; Tue, 29 Oct 2019 01:24:51 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::b1cf:db6f:95fc:84cc]) by HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::b1cf:db6f:95fc:84cc%7]) with mapi id 15.20.2387.025; Tue, 29 Oct 2019
+ 01:24:51 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+CC:     Jonas Karlman <jonas@kwiboo.se>, Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 07/10] media: hantro: Remove now unused H264 pic_size
+Thread-Topic: [PATCH v2 07/10] media: hantro: Remove now unused H264 pic_size
+Thread-Index: AQHVjfepVNzXvr4wxEChzENhNjxOww==
+Date:   Tue, 29 Oct 2019 01:24:51 +0000
+Message-ID: <HE1PR06MB4011F0A6FB7B474D16DD7957AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <20191029012430.24566-1-jonas@kwiboo.se>
+In-Reply-To: <20191029012430.24566-1-jonas@kwiboo.se>
+Accept-Language: sv-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR09CA0090.eurprd09.prod.outlook.com
+ (2603:10a6:7:3d::34) To HE1PR06MB4011.eurprd06.prod.outlook.com
+ (2603:10a6:7:9c::32)
+x-incomingtopheadermarker: OriginalChecksum:DA2863AF379F9D4AC40C3B3D740CD38C289EA01DAAAA39200AD3BDE89C895BC5;UpperCasedChecksum:D54D73927F7BE65D119DCC12801521C0C0A62EB3F909A56BF22BDF47BDC7D2A9;SizeAsReceived:7620;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-tmn:  [/1ht+c4wAinBGu7RZ8ipog7S040cACHf]
+x-microsoft-original-message-id: <20191029012430.24566-7-jonas@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: VE1EUR01HT182:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: N9Bb1jj9HaBi0RVe4ZeDxonXOSs6nopA58mr/CpG72pHR2a7mhlJAx2ROMs0b/jVoknUbMUOzCwrQyFKnVw/vXY22PT2mSIw6fnQM7IogPQMd04GxS1iWt68M7h6Jy1TO/a/Ucvhg8VXku0OovBSlkPmrQIZTN4prGp2a6D6orNUpsgsUSM1Yi/JciGJqIuW
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: rtl8723bs: remove an redundant null check before
- kfree()
-References: <1571211506-19005-1-git-send-email-zhongjiang@huawei.com> <20191025024216.GB331827@kroah.com> <5DB711AE.1040904@huawei.com> <20191028162434.GB321492@kroah.com>
-In-Reply-To: <20191028162434.GB321492@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.218]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: bad8c7ea-194b-493c-77bc-08d75c0ecbad
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 01:24:51.7002
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/29 0:24, Greg KH wrote:
-> On Tue, Oct 29, 2019 at 12:05:02AM +0800, zhong jiang wrote:
->> On 2019/10/25 10:42, Greg KH wrote:
->>> On Wed, Oct 16, 2019 at 03:38:26PM +0800, zhong jiang wrote:
->>>> kfree() has taken null pointer into account. hence it is safe to remove
->>>> the unnecessary check.
->>>>
->>>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->>>> ---
->>>>  drivers/staging/rtl8723bs/core/rtw_xmit.c | 3 +--
->>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
->>>> index 7011c2a..4597f4f 100644
->>>> --- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
->>>> +++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
->>>> @@ -2210,8 +2210,7 @@ void rtw_free_hwxmits(struct adapter *padapter)
->>>>  	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
->>>>  
->>>>  	hwxmits = pxmitpriv->hwxmits;
->>>> -	if (hwxmits)
->>>> -		kfree(hwxmits);
->>>> +	kfree(hwxmits);
->>>>  }
->>>>  
->>>>  void rtw_init_hwxmits(struct hw_xmit *phwxmit, sint entry)
->>>> -- 
->>>> 1.7.12.4
->>>>
->>> Patch does not apply to my tree :(
->>>
->>> .
->>>
->> Greg,  Could you apply the patch to your  tree ?
-> It did not apply, so what do you want me to do with it?
->
-> confused,
-Could you  receive the patch ? :-)
+pic_size in hantro_h264_dec_hw_ctx struct is no longer used,
+lets remove it.
 
-Thanks,
-zhong jiang
-> greg k-h
->
-> .
->
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ drivers/staging/media/hantro/hantro_h264.c | 5 -----
+ drivers/staging/media/hantro/hantro_hw.h   | 3 ---
+ 2 files changed, 8 deletions(-)
 
+diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
+index 694a330f508e..568640eab3a6 100644
+--- a/drivers/staging/media/hantro/hantro_h264.c
++++ b/drivers/staging/media/hantro/hantro_h264.c
+@@ -618,7 +618,6 @@ int hantro_h264_dec_init(struct hantro_ctx *ctx)
+ 	struct hantro_h264_dec_hw_ctx *h264_dec = &ctx->h264_dec;
+ 	struct hantro_aux_buf *priv = &h264_dec->priv;
+ 	struct hantro_h264_dec_priv_tbl *tbl;
+-	struct v4l2_pix_format_mplane pix_mp;
+ 
+ 	priv->cpu = dma_alloc_coherent(vpu->dev, sizeof(*tbl), &priv->dma,
+ 				       GFP_KERNEL);
+@@ -629,9 +628,5 @@ int hantro_h264_dec_init(struct hantro_ctx *ctx)
+ 	tbl = priv->cpu;
+ 	memcpy(tbl->cabac_table, h264_cabac_table, sizeof(tbl->cabac_table));
+ 
+-	v4l2_fill_pixfmt_mp(&pix_mp, ctx->dst_fmt.pixelformat,
+-			    ctx->dst_fmt.width, ctx->dst_fmt.height);
+-	h264_dec->pic_size = pix_mp.plane_fmt[0].sizeimage;
+-
+ 	return 0;
+ }
+diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
+index 69b88f4d3fb3..fa91dd1848b7 100644
+--- a/drivers/staging/media/hantro/hantro_hw.h
++++ b/drivers/staging/media/hantro/hantro_hw.h
+@@ -80,15 +80,12 @@ struct hantro_h264_dec_reflists {
+  * @dpb:	DPB
+  * @reflists:	P/B0/B1 reflists
+  * @ctrls:	V4L2 controls attached to a run
+- * @pic_size:	Size in bytes of decoded picture, this is needed
+- *		to pass the location of motion vectors.
+  */
+ struct hantro_h264_dec_hw_ctx {
+ 	struct hantro_aux_buf priv;
+ 	struct v4l2_h264_dpb_entry dpb[HANTRO_H264_DPB_SIZE];
+ 	struct hantro_h264_dec_reflists reflists;
+ 	struct hantro_h264_dec_ctrls ctrls;
+-	size_t pic_size;
+ };
+ 
+ /**
+-- 
+2.17.1
 
