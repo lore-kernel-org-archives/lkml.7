@@ -2,111 +2,147 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AADCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52DFCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8F720830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:36:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AD67DtNX"
+	by mail.kernel.org (Postfix) with ESMTP id A6EDB20874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390096AbfJ2Pgq (ORCPT
+        id S2390099AbfJ2PiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:36:46 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:41504 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389836AbfJ2Pgp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:36:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=W3q1hEPDjEq734wvyAniCbZ5fe1dDnGICoYFdUBg30Q=; b=AD67DtNX69rkr3VK72+eCTm/1
-        VbJtW0ublnyfqj3j01o9ySArpHOfNbaqMN5/8yz1Yv0MBAP9nME2PN+Cf5+y6K6d27hGaC5KEyeoq
-        eM1F4ljbsQNewvLAxPxAwWvgOZXwvR1wiKGB+kPb7PmEg4Je49PnPxdSObIP6wK8OG9zOG0PWhQkg
-        9lpOhT/DrcRm6gijNLiIEggE8WUBPO7jS73/cf4BnLSkoHgU92Vz6DqFPVi1zfh+8hlSJtC8lazUN
-        2LhBYOEZAwuLf7EO9Wu/kp+G9GkgmXcOBUQk8xjeH/grORd6jVzv/Vm1Jc08XCoh9TTCf4m4d8xZw
-        cY/lm2AOA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPTXf-0006Dy-Gr; Tue, 29 Oct 2019 15:36:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7B271300E4D;
-        Tue, 29 Oct 2019 16:35:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EC61420D7FEFA; Tue, 29 Oct 2019 16:36:15 +0100 (CET)
-Date:   Tue, 29 Oct 2019 16:36:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     'Vincent Guittot' <vincent.guittot@linaro.org>,
-        'linux-kernel' <linux-kernel@vger.kernel.org>,
-        "'open list:THERMAL'" <linux-pm@vger.kernel.org>,
-        'Ingo Molnar' <mingo@kernel.org>,
-        'Linus Torvalds' <torvalds@linux-foundation.org>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'Sargun Dhillon' <sargun@sargun.me>,
-        'Tejun Heo' <tj@kernel.org>, 'Xie XiuQi' <xiexiuqi@huawei.com>,
-        xiezhipeng1@huawei.com,
-        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
-        'Rik van Riel' <riel@surriel.com>
-Subject: Re: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load
- balancing path"
-Message-ID: <20191029153615.GP4114@hirez.programming.kicks-ass.net>
-References: <1572018904-5234-1-git-send-email-dsmythies@telus.net>
- <CAKfTPtDFAS3TiNaaPoEXFZbqdMt_-tfGm9ffVcQAN=Mu_KbRdQ@mail.gmail.com>
- <000c01d58bca$f5709b30$e051d190$@net>
- <CAKfTPtDx6nu7YtYN=JLRAseZS3Q6Nt-QdMQuG_XoUtmtR_101A@mail.gmail.com>
- <001201d58e68$eaa39630$bfeac290$@net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <001201d58e68$eaa39630$bfeac290$@net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 29 Oct 2019 11:38:20 -0400
+Received: from verein.lst.de ([213.95.11.211]:40629 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389836AbfJ2PiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 11:38:20 -0400
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id C631668C4E; Tue, 29 Oct 2019 16:38:15 +0100 (CET)
+From:   Torsten Duwe <duwe@lst.de>
+Subject: [PATCH v4 0/7] Add anx6345 DP/eDP bridge for Olimex Teres-I
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-Id: <20191029153815.C631668C4E@verein.lst.de>
+Date:   Tue, 29 Oct 2019 16:38:15 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 07:55:26AM -0700, Doug Smythies wrote:
 
-> I only know that the call to the intel_pstate driver doesn't
-> happen, and that it is because cfs_rq_is_decayed returns TRUE.
-> So, I am asserting that the request is not actually decayed, and
-> should not have been deleted.
+ANX6345 LVTTL->eDP video bridge, driver with device tree bindings.
+Long time, few but important changes.
 
-So what cfs_rq_is_decayed() does is allow a cgroup's cfs_rq to be
-removed from the list.
+Changes since v3:
 
-Once it is removed, that cfs_rq will no longer be checked in the
-update_blocked_averages() loop. Which means done has less chance of
-getting false. Which in turn means that it's more likely
-rq->has_blocked_load becomes 0.
+* converted binding schema file to json-schema ("YAML")
+  It now validates (itself and the dts) like a charm ;-)
+  Input port0 is mandatory, output port1 is optional.
 
-Which all sounds good.
+* Enric Balletbo i Serra waived analogix-anx6345 module ownership to icenowy
+  <CAFqH_50s0J_NEevV9b5o-wq-bw+xGaUZ3WyhVDRZKyM2Yn-iVg@mail.gmail.com>
+  Since they both agree, I won't interfere.
 
-Can you please trace what keeps the CPU awake?
+Changes from v2:
 
-> Now, if we also look back at the comments for the original commit:
-> 
-> 	"In an edge case where temporary cgroups were leaking, this
-> 	caused the kernel to consume good several tens of percents of
-> 	CPU cycles running update_blocked_averages(), each run taking
-> 	multiple millisecs."
-> 
-> To my way of thinking: Fix the leak, don't program around it; The
-> commit breaks something else, so revert it.
+* use SPDX-IDs throughout
 
-The leak was fixed, but it still doesn't make sense to keep idle cgroups
-on that list. Some people have a stupid amount of cgroups, most of which
-are pointless and unused, so being able to remove them is good.
+* removed the panel output again, as it was not what Maxime had in mind.
+  At least the Teres-I does very well without.
 
-Which is why it got added back, once list management issues were sorted.
+* binding clarifications and cosmetic changes as suggested by Andrzej
+
+Changes from v1:
+
+* fixed up copyright information. Most code changes are only moves and thus
+  retain copyright and module ownership. Even the new analogix-anx6345.c originates
+  from the old 1495-line analogix-anx78xx.c, with 306 insertions and 987 deletions
+  (ignoring the trivial anx78xx -> anx6345 replacements) 306 new vs. 508 old...
+
+* fixed all minor formatting issues brought up
+
+* merged previously separate new analogix_dp_i2c module into existing analogix_dp
+
+* split additional defines into a preparatory patch
+
+* renamed the factored-out common functions anx_aux_* -> anx_dp_aux_*, because
+  anx_...aux_transfer was exported globally. Besides, it is now GPL-only exported.
+
+* moved chip ID read into a separate function.
+
+* keep the chip powered after a successful probe.
+  (There's a good chance that this is the only display during boot!)
+
+* updated the binding document: LVTTL input is now required, only the output side
+  description is optional.
+
+ Laurent: I have also looked into the drm_panel_bridge infrastructure,
+ but it's not that trivial to convert these drivers to it.
+
+Changes from the respective previous versions:
+
+* the reset polarity is corrected in DT and the driver;
+  things should be clearer now.
+
+* as requested, add a panel (the known innolux,n116bge) and connect
+  the ports.
+
+* renamed dvdd?? to *-supply to match the established scheme
+
+* trivial update to the #include list, to make it compile in 5.2
+
+
+Icenowy Zheng (4):
+  drm/bridge: move ANA78xx driver to analogix subdirectory
+  drm/bridge: split some definitions of ANX78xx to dedicated headers
+  drm/bridge: extract some Analogix I2C DP common code
+  drm/bridge: Add Analogix anx6345 support
+
+Torsten Duwe (3):
+  drm/bridge: Prepare Analogix anx6345 support
+  dt-bindings: Add ANX6345 DP/eDP transmitter binding
+  arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
+
+ .../bindings/display/bridge/anx6345.yaml           |  92 +++
+ .../boot/dts/allwinner/sun50i-a64-teres-i.dts      |  45 +-
+ drivers/gpu/drm/bridge/Kconfig                     |  10 -
+ drivers/gpu/drm/bridge/Makefile                    |   4 +-
+ drivers/gpu/drm/bridge/analogix-anx78xx.h          | 710 ------------------
+ drivers/gpu/drm/bridge/analogix/Kconfig            |  22 +
+ drivers/gpu/drm/bridge/analogix/Makefile           |   4 +-
+ drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 793 +++++++++++++++++++++
+ .../drm/bridge/{ => analogix}/analogix-anx78xx.c   | 146 +---
+ drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h | 255 +++++++
+ .../gpu/drm/bridge/analogix/analogix-i2c-dptx.c    | 165 +++++
+ .../gpu/drm/bridge/analogix/analogix-i2c-dptx.h    | 258 +++++++
+ .../drm/bridge/analogix/analogix-i2c-txcommon.h    | 236 ++++++
+ 13 files changed, 1868 insertions(+), 872 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.yaml
+ delete mode 100644 drivers/gpu/drm/bridge/analogix-anx78xx.h
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+ rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (90%)
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h
+
+-- 
+2.16.4
+
