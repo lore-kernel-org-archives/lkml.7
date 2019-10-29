@@ -2,81 +2,153 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E2ECA9EC0
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B76CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD48F20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B15220679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 02:14:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iWqIr28E";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XyngsHL5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbfJ2COV (ORCPT
+        id S1730526AbfJ2COc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:14:21 -0400
-Received: from mga02.intel.com ([134.134.136.20]:11033 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729412AbfJ2COV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:14:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 19:14:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,242,1569308400"; 
-   d="scan'208";a="205342149"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Oct 2019 19:14:20 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 0198C301C0F; Mon, 28 Oct 2019 19:14:19 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 19:14:19 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
-        jolsa@kernel.org, eranian@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/7] perf pmu: Use file system cache to optimize sysfs
- access
-Message-ID: <20191029021419.GT4660@tassilo.jf.intel.com>
-References: <20191025181417.10670-1-andi@firstfloor.org>
- <20191025181417.10670-2-andi@firstfloor.org>
- <20191028220137.GF28772@krava>
+        Mon, 28 Oct 2019 22:14:32 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49012 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728497AbfJ2COc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 22:14:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3EB676032D; Tue, 29 Oct 2019 02:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572315271;
+        bh=mM+8iA4RCQ/3hHjKmFsx3ITFIQk6Ug1K0cEpK7e2uWE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iWqIr28Ex9TnplfbvamCnn7+4QboVgJkFcyEPJhmcxGWkpzrjwWpq/fqReUSZFP76
+         mf7HsLWrapY5HxyeItpgy2UAQwg3nEoxJKjKF2JiT2mHtJprXATqpv3E+abZCY2odo
+         ERRqU2V/UNBnHBoL/2ZDVOA4O1SDa7LAF1yamRUc=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 67C116032D;
+        Tue, 29 Oct 2019 02:14:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572315270;
+        bh=mM+8iA4RCQ/3hHjKmFsx3ITFIQk6Ug1K0cEpK7e2uWE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XyngsHL5oH8sUvUQBv4U21wQB4g9pOhsl3g8zuJ+QgeFuOyulOzs5bFZ+e6g6Obv0
+         mJ4KPqSlQe1SINQBFHsPviCmtawLOqlp/0CKpa21AKYghIHGIqXv64L9jXApYIF1Xr
+         2wXQCXk8NEFHev0PQ15t9pWSXRUMrFOCbTzgWjBg=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028220137.GF28772@krava>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 29 Oct 2019 10:14:30 +0800
+From:   cang@codeaurora.org
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/5] scsi: Adjust DBD setting in mode sense for caching
+ mode page per LLD
+In-Reply-To: <0ca52845-10ec-3310-83f7-81bdb635ec12@acm.org>
+References: <1572234608-32654-1-git-send-email-cang@codeaurora.org>
+ <1572234608-32654-2-git-send-email-cang@codeaurora.org>
+ <0ca52845-10ec-3310-83f7-81bdb635ec12@acm.org>
+Message-ID: <ecb93b31aaee952e94b31331c6025eda@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 11:01:37PM +0100, Jiri Olsa wrote:
-> On Fri, Oct 25, 2019 at 11:14:11AM -0700, Andi Kleen wrote:
+On 2019-10-28 22:58, Bart Van Assche wrote:
+> On 10/27/19 8:50 PM, Can Guo wrote:
+>> Host sends MODE_SENSE_10 with caching mode page, to check if the 
+>> device
+>> supports the cache feature.
+>> Some LLD standards requires DBD field to be set to 1.
 > 
-> SNIP
+> Which LLD standard are you referring to? Please mention at least one
+> name of such a standard in the patch description.
 > 
-> >  	if (pmu_aliases_parse(path, head))
-> >  		return -1;
-> > @@ -525,7 +524,6 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
-> >   */
-> >  static int pmu_type(const char *name, __u32 *type)
-> >  {
-> > -	struct stat st;
-> >  	char path[PATH_MAX];
-> >  	FILE *file;
-> >  	int ret = 0;
-> > @@ -537,7 +535,7 @@ static int pmu_type(const char *name, __u32 *type)
-> >  	snprintf(path, PATH_MAX,
-> >  		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/type", sysfs, name);
-> >  
-> > -	if (stat(path, &st) < 0)
-> > +	if (access(path, R_OK) < 0)
+
+Hi Bart, Thank you for your review.
+
+The LLD standard here is UFS. I will update the commit message and 
+re-upload it later.
+
+Thanks,
+
+Can Guo
+
+>> Change-Id: I0c8752c1888654942d6d7e6e0f6dc197033ac326
 > 
-> why not file_available call in here?
+> Change-IDs should be left out from upstream patches. Does the presence
+> of this ID mean that this patch has not been verified with checkpatch?
+> From the checkpatch source code:
+> 
+> # Check for unwanted Gerrit info
+> if ($in_commit_log && $line =~ /^\s*change-id:/i) {
+> 	ERROR("GERRIT_CHANGE_ID",
+> 	      "Remove Gerrit Change-Id's before submitting upstream.\n"\
+> 		 . $herecurr);
+> }
+> 
 
-iirc it doesn't do any redundant accesses.
+Sorry, forgot to remove the change-id.
 
--Andi
-
+>> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+>> index aab4ed8..6d8194f 100644
+>> --- a/drivers/scsi/sd.c
+>> +++ b/drivers/scsi/sd.c
+>> @@ -2629,6 +2629,7 @@ static int sd_try_rc16_first(struct scsi_device 
+>> *sdp)
+>>   {
+>>   	int len = 0, res;
+>>   	struct scsi_device *sdp = sdkp->device;
+>> +	struct Scsi_Host *host = sdp->host;
+>>     	int dbd;
+>>   	int modepage;
+>> @@ -2660,7 +2661,10 @@ static int sd_try_rc16_first(struct scsi_device 
+>> *sdp)
+>>   		dbd = 8;
+>>   	} else {
+>>   		modepage = 8;
+>> -		dbd = 0;
+>> +		if (host->set_dbd_for_caching)
+>> +			dbd = 8;
+>> +		else
+>> +			dbd = 0;
+>>   	}
+>>     	/* cautiously ask */
+>> diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
+>> index 2c3f0c5..3900987 100644
+>> --- a/include/scsi/scsi_host.h
+>> +++ b/include/scsi/scsi_host.h
+>> @@ -650,6 +650,12 @@ struct Scsi_Host {
+>>   	unsigned no_scsi2_lun_in_cdb:1;
+>>     	/*
+>> +	 * Set "DBD" field in mode_sense caching mode page in case it is
+>> +	 * mandatory by LLD standard.
+>> +	 */
+>> +	unsigned set_dbd_for_caching:1;
+>> +
+>> +	/*
+>>   	 * Optional work queue to be utilized by the transport
+>>   	 */
+>>   	char work_q_name[20];
+> 
+> Since this patch by itself has no effect, please resubmit this patch
+> together with the LLD patch that sets set_dbd_for_caching.
+> 
+> Thanks,
+> 
+> Bart.
