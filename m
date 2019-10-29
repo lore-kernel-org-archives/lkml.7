@@ -2,281 +2,153 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AA3CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B68CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 553D821D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572865504;
-	bh=FyZuc7dJZfocOqpxPVuDlFz8ZNpPGWXvZcxvB+dXEps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j9OvXbsXKpPar4MlsJF4bAzfp13uS7Y8fT/Ems8kuaAo4fOdAHyENdMBW7/jGQpgk
-	 OyFGmsQcDT4SPyfrDe/xtyHqpdacO0z4pMqL/LnSt7Ac+Rx1CdkEhYhX4IAqKKhADk
-	 BMrtAtQ7fsgzwTLAjtVUQnlof+d2xzPOcTZ8r8YU=
+	by mail.kernel.org (Postfix) with ESMTP id 699AA21D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbfKDLFD convert rfc822-to-8bit (ORCPT
+        id S1728587AbfKDLGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:05:03 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45085 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728064AbfKDLFC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:05:02 -0500
-Received: by mail-ed1-f67.google.com with SMTP id b5so1938024eds.12;
-        Mon, 04 Nov 2019 03:05:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=82Y+8lvkmODTXZfIxvOLUD6KLkdYBYM4N45xnXT7cGM=;
-        b=cnfZOjLhGxkogFnx6z24sA/R4WPzBkpW7+jaIJDyPmjuGuews94elHo6+LYw4JFPIZ
-         7VWGDHcsaDOSzbC6XQujcpv1v6s4/3v7Sr+VLuzu+3rSFEjX54vDonVo74ZLUgd3HhiH
-         uVWgEg298mSfq8f1WKfPAp/ELtRipQak7ZDzTLn8dNK7tXk7vCOOvZsEp0Xu+IffSDuk
-         Abu0b2m30sUJ0RSRsfZgW5sX/PXhjaWzKHjMDl3kL0BXIPmUmTebNncYSmDuV2XeA4EP
-         AGId447DL3McLGnnjEDKIj4yox92g4SqqHE+hvVTk58W2+W6t7qC7Oh7UtzwzQGqyOdC
-         HbJg==
-X-Gm-Message-State: APjAAAWanRhGS68tsT8wETx0orLtkGeQR3jgAKc/giihz64zfr9EQRVz
-        oAGj6zBX3Z9RUdqorzWflDo=
-X-Google-Smtp-Source: APXvYqzRu3QjLIaQW+1GGHUm1InQweyS031HWvyusQQe0eog2OzqeXH/r8xEukjNzVGEbdWu6V6T9Q==
-X-Received: by 2002:aa7:d40b:: with SMTP id z11mr594423edq.142.1572865499955;
-        Mon, 04 Nov 2019 03:04:59 -0800 (PST)
-Received: from pi3 ([194.230.155.180])
-        by smtp.googlemail.com with ESMTPSA id a102sm869102edf.46.2019.11.04.03.04.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 03:04:59 -0800 (PST)
-Date:   Mon, 4 Nov 2019 12:04:57 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        lee.jones@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-Message-ID: <20191104110457.GB30857@pi3>
-References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
- <20191031184134.30621-1-matheus@castello.eng.br>
- <20191031184134.30621-4-matheus@castello.eng.br>
- <20191101152755.GC28931@pi3>
- <c18ab487-6242-4ac2-b2c2-ef78c899521a@castello.eng.br>
- <4acd4bcf-4488-01f2-cacc-0170c33e20c2@castello.eng.br>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <4acd4bcf-4488-01f2-cacc-0170c33e20c2@castello.eng.br>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Mon, 4 Nov 2019 06:06:08 -0500
+Received: from verein.lst.de ([213.95.11.211]:38186 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbfKDLGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 06:06:08 -0500
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id E364A68BE1; Mon,  4 Nov 2019 12:06:03 +0100 (CET)
+In-Reply-To: <20191104110400.F319F68BE1@verein.lst.de>
+References: <20191104110400.F319F68BE1@verein.lst.de>
+From:   Torsten Duwe <duwe@lst.de>
+Date:   Tue, 29 Oct 2019 13:16:57 +0100
+Subject: [PATCH v5 1/7] drm/bridge: move ANA78xx driver to analogix
+ subdirectory
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-Id: <20191104110603.E364A68BE1@verein.lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 02, 2019 at 03:12:44PM -0300, Matheus Castello wrote:
-> 
-> 
-> Em 11/1/19 1:52 PM, Matheus Castello escreveu:
-> > 
-> > 
-> > Em 11/1/19 12:27 PM, Krzysztof Kozlowski escreveu:
-> > > On Thu, Oct 31, 2019 at 03:41:33PM -0300, Matheus Castello wrote:
-> > > > For configuration of fuel gauge alert for a low level state of charge
-> > > > interrupt we add a function to config level threshold and a device tree
-> > > > binding property to set it in flatned device tree node.
-> > > > 
-> > > > Now we can use "maxim,alert-low-soc-level" property with the values from
-> > > > 1% up to 32% to configure alert interrupt threshold.
-> > > > 
-> > > > Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> > > > ---
-> > > >   drivers/power/supply/max17040_battery.c | 88 +++++++++++++++++++++----
-> > > >   1 file changed, 74 insertions(+), 14 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/power/supply/max17040_battery.c
-> > > > b/drivers/power/supply/max17040_battery.c
-> > > > index 75459f76d02c..802575342c72 100644
-> > > > --- a/drivers/power/supply/max17040_battery.c
-> > > > +++ b/drivers/power/supply/max17040_battery.c
-> > > > @@ -29,6 +29,9 @@
-> > > >   #define MAX17040_DELAY        1000
-> > > >   #define MAX17040_BATTERY_FULL    95
-> > > > 
-> > > > +#define MAX17040_ATHD_MASK        0xFFC0
-> > > > +#define MAX17040_ATHD_DEFAULT_POWER_UP    4
-> > > > +
-> > > >   struct max17040_chip {
-> > > >       struct i2c_client        *client;
-> > > >       struct delayed_work        work;
-> > > > @@ -43,6 +46,8 @@ struct max17040_chip {
-> > > >       int soc;
-> > > >       /* State Of Charge */
-> > > >       int status;
-> > > > +    /* Low alert threshold from 32% to 1% of the State of Charge */
-> > > > +    u32 low_soc_alert_threshold;
-> > > >   };
-> > > > 
-> > > >   static int max17040_get_property(struct power_supply *psy,
-> > > > @@ -99,6 +104,22 @@ static void max17040_reset(struct i2c_client
-> > > > *client)
-> > > >       max17040_write_reg(client, MAX17040_CMD, 0x0054);
-> > > >   }
-> > > > 
-> > > > +static int max17040_set_low_soc_threshold_alert(struct
-> > > > i2c_client *client,
-> > > > +    u32 level)
-> > > > +{
-> > > > +    int ret;
-> > > > +    u16 data;
-> > > > +
-> > > > +    level = 32 - level;
-> > > > +    data = max17040_read_reg(client, MAX17040_RCOMP);
-> > > > +    /* clear the alrt bit and set LSb 5 bits */
-> > > > +    data &= MAX17040_ATHD_MASK;
-> > > > +    data |= level;
-> > > > +    ret = max17040_write_reg(client, MAX17040_RCOMP, data);
-> > > > +
-> > > > +    return ret;
-> > > > +}
-> > > > +
-> > > >   static void max17040_get_vcell(struct i2c_client *client)
-> > > >   {
-> > > >       struct max17040_chip *chip = i2c_get_clientdata(client);
-> > > > @@ -115,7 +136,6 @@ static void max17040_get_soc(struct
-> > > > i2c_client *client)
-> > > >       u16 soc;
-> > > > 
-> > > >       soc = max17040_read_reg(client, MAX17040_SOC);
-> > > > -
-> > > >       chip->soc = (soc >> 8);
-> > > >   }
-> > > > 
-> > > > @@ -161,6 +181,24 @@ static void max17040_get_status(struct
-> > > > i2c_client *client)
-> > > >           chip->status = POWER_SUPPLY_STATUS_FULL;
-> > > >   }
-> > > > 
-> > > > +static int max17040_get_of_data(struct max17040_chip *chip)
-> > > > +{
-> > > > +    struct device *dev = &chip->client->dev;
-> > > > +    struct device_node *np = dev->of_node;
-> > > > +    int ret = 0;
-> > > > +
-> > > > +    if (of_property_read_u32(np, "maxim,alert-low-soc-level",
-> > > > +            &chip->low_soc_alert_threshold)) {
-> > > 
-> > > Please align the line break with line above. checkpatch --strict might
-> > > give you hints about this.
-> > > >> +        chip->low_soc_alert_threshold =
-> > > MAX17040_ATHD_DEFAULT_POWER_UP;
-> > > > +    /* check if low_soc_alert_threshold is between 1% and 32% */
-> > > 
-> > > The comment looks misleading here, like it belongs to previous block.
-> > > Maybe put it inside else if {} block?
-> > > 
-> > > > +    } else if (chip->low_soc_alert_threshold <= 0 ||
-> > > > +            chip->low_soc_alert_threshold >= 33){
-> > > 
-> > > Missing space before {.
-> > > 
-> > > > +        ret = -EINVAL;
-> > > > +    }
-> > > > +
-> > > > +    return ret;
-> > > > +}
-> > > > +
-> > > >   static void max17040_check_changes(struct i2c_client *client)
-> > > >   {
-> > > >       max17040_get_vcell(client);
-> > > > @@ -192,6 +230,10 @@ static irqreturn_t
-> > > > max17040_thread_handler(int id, void *dev)
-> > > >       /* send uevent */
-> > > >       power_supply_changed(chip->battery);
-> > > > 
-> > > > +    /* reset alert bit */
-> > > > +    max17040_set_low_soc_threshold_alert(client,
-> > > > +        chip->low_soc_alert_threshold);
-> > > 
-> > > Unless the continuation exceeds 80 character limit, please align it with
-> > > previous line.
-> > > 
-> > > > +
-> > > >       return IRQ_HANDLED;
-> > > >   }
-> > > > 
-> > > > @@ -216,6 +258,7 @@ static int max17040_probe(struct i2c_client *client,
-> > > >       struct i2c_adapter *adapter = client->adapter;
-> > > >       struct power_supply_config psy_cfg = {};
-> > > >       struct max17040_chip *chip;
-> > > > +    int ret;
-> > > > 
-> > > >       if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
-> > > >           return -EIO;
-> > > > @@ -226,6 +269,12 @@ static int max17040_probe(struct i2c_client
-> > > > *client,
-> > > > 
-> > > >       chip->client = client;
-> > > >       chip->pdata = client->dev.platform_data;
-> > > > +    ret = max17040_get_of_data(chip);
-> > > > +    if (ret) {
-> > > > +        dev_err(&client->dev,
-> > > > +            "failed: low SOC alert OF data out of bounds\n");
-> > > > +        return ret;
-> > > > +    }
-> > > > 
-> > > >       i2c_set_clientdata(client, chip);
-> > > >       psy_cfg.drv_data = chip;
-> > > > @@ -242,20 +291,31 @@ static int max17040_probe(struct
-> > > > i2c_client *client,
-> > > > 
-> > > >       /* check interrupt */
-> > > >       if (client->irq) {
-> > > > -        int ret;
-> > > > -        unsigned int flags;
-> > > > -
-> > > > -        dev_info(&client->dev, "IRQ: enabled\n");
-> > > > -        flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
-> > > > -        ret = devm_request_threaded_irq(&client->dev,
-> > > > client->irq, NULL,
-> > > > -                        max17040_thread_handler, flags,
-> > > > -                        chip->battery->desc->name,
-> > > > -                        chip);
-> > > > -
-> > > > -        if (ret) {
-> > > > -            client->irq = 0;
-> > > > +        if (of_device_is_compatible(client->dev.of_node,
-> > > > +            "maxim,max77836-battery")) {
-> > > 
-> > > Alignment.
-> > > 
-> > > > +            ret = max17040_set_low_soc_threshold_alert(client,
-> > > > +                chip->low_soc_alert_threshold);
-> > > 
-> > > Ditto.
-> > > 
-> 
-> I am working to fix the alignments issues using the checkpath strict and I
-> have a doubt. Here for example if I fix the check "Alignment should match
-> open parenthesis" it will pass the 80 characters limit and will show me a
-> warning.
+From: Icenowy Zheng <icenowy@aosc.io>
 
-Indeed which is a hint that the code readabiltiy is affected by long
-function name + two indentations + long variable name. You can split it
-to different function (covering the IRQ case) which will reduce one
-indentation.
+As ANA78xx chips are designed and produced by Analogix Semiconductor,
+Inc, move their driver codes into analogix subdirectory.
 
-Alternatively do not align it but add few more tabs before chip->:
-		ret = max17040_set_low_soc_threshold_alert(client,
-						chip->low_soc_alert_threshold);
-Renaming low_soc_alert_threshold to something shorter can help as well
-(soc_alert seems enough descriptive).
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Torsten Duwe <duwe@suse.de>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+---
+ drivers/gpu/drm/bridge/Kconfig                           | 10 ----------
+ drivers/gpu/drm/bridge/Makefile                          |  4 ++--
+ drivers/gpu/drm/bridge/analogix/Kconfig                  | 10 ++++++++++
+ drivers/gpu/drm/bridge/analogix/Makefile                 |  1 +
+ drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c |  0
+ drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h |  0
+ 6 files changed, 13 insertions(+), 12 deletions(-)
+ rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (100%)
+ rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h (100%)
 
-
-Best regards,
-Krzysztof
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index 1cc9f502c1f2..6c48722130fd 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -16,16 +16,6 @@ config DRM_PANEL_BRIDGE
+ menu "Display Interface Bridges"
+ 	depends on DRM && DRM_BRIDGE
+ 
+-config DRM_ANALOGIX_ANX78XX
+-	tristate "Analogix ANX78XX bridge"
+-	select DRM_KMS_HELPER
+-	select REGMAP_I2C
+-	---help---
+-	  ANX78XX is an ultra-low power Full-HD SlimPort transmitter
+-	  designed for portable devices. The ANX78XX transforms
+-	  the HDMI output of an application processor to MyDP
+-	  or DisplayPort.
+-
+ config DRM_CDNS_DSI
+ 	tristate "Cadence DPI/DSI bridge"
+ 	select DRM_KMS_HELPER
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index 4934fcf5a6f8..a6c7dd7727ea 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -1,5 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+ obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+ obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+@@ -12,8 +11,9 @@ obj-$(CONFIG_DRM_SII9234) += sii9234.o
+ obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
+-obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
+ obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
+ obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
+ obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
++
++obj-y += analogix/
+ obj-y += synopsys/
+diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
+index e930ff9b5cd4..29ba1b21019e 100644
+--- a/drivers/gpu/drm/bridge/analogix/Kconfig
++++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+@@ -1,4 +1,14 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++config DRM_ANALOGIX_ANX78XX
++	tristate "Analogix ANX78XX bridge"
++	select DRM_KMS_HELPER
++	select REGMAP_I2C
++	help
++	  ANX78XX is an ultra-low power Full-HD SlimPort transmitter
++	  designed for portable devices. The ANX78XX transforms
++	  the HDMI output of an application processor to MyDP
++	  or DisplayPort.
++
+ config DRM_ANALOGIX_DP
+ 	tristate
+ 	depends on DRM
+diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
+index fdbf3fd2f087..6fcbfd3ee560 100644
+--- a/drivers/gpu/drm/bridge/analogix/Makefile
++++ b/drivers/gpu/drm/bridge/analogix/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o
++obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+similarity index 100%
+rename from drivers/gpu/drm/bridge/analogix-anx78xx.c
+rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+similarity index 100%
+rename from drivers/gpu/drm/bridge/analogix-anx78xx.h
+rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+-- 
+2.16.4
 
