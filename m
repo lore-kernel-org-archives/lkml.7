@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4114CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9C1CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2ED420659
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9450820659
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:48:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CkwdYGQt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JCRbAozj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfJ2WsH (ORCPT
+        id S1726729AbfJ2WsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:48:07 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41763 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbfJ2WsH (ORCPT
+        Tue, 29 Oct 2019 18:48:08 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37948 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfJ2WsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 29 Oct 2019 18:48:07 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t10so16554plr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 15:48:06 -0700 (PDT)
+Received: by mail-pf1-f194.google.com with SMTP id c13so134396pfp.5
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 15:48:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0G08DVDmHHpYBvqrNiRz2P/EWIDmTXItkvaTB27EiyI=;
-        b=CkwdYGQthHbjeB7YJk2k7oOQyekpKWhBz8LE56+eFTTP9mqZeL9MuGgiv2GrcLSaBg
-         rE2sCuLvAVGnNCs4vowlSz50Su8Mv9l48u1zbUbe4ZDaypaV5WsadZZAOOcYYKfOmOIf
-         EmLxn+hz5Gpaz6QM1cM8GcO4kjJgDDwECBfv8=
+        bh=qKUfU/s6VNCMjI6UpTZnmPGQRCLUuGC/0Ur+XQYjYn4=;
+        b=JCRbAozjQ5VTk70EYdt3VQp5FkX2TuQhI8+q0O4swFbEKS/ln8ZpNnfrYQNiTJub2f
+         VQLa3gkCiTL02XzRdUu4wS9OJ+52SaR9sC98PuxTQVCYDfX+vDvExtqftZCxF5xCObaF
+         hABVTjF8M6/pRCAh5vpu7idIZ5tib6qfY2wrc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0G08DVDmHHpYBvqrNiRz2P/EWIDmTXItkvaTB27EiyI=;
-        b=GgSWVs6KmXZuctr4eoJuoF2FALypQGul1KAljHXc+NmGEkw7hsqvTg+YNeF/Ykv5g6
-         gq4jGvehpM+ZG33g1SIvqfMac+hYto1vS9Hh9PYV94rYL9pGDYRDg7oE5VpKE4AfhcTa
-         qtgrr0yygflCZ3KzRbVcBBVtegEVEr00k/9Ydy1peLiIKNOxpSrZFYyHll0rS8HCn8p0
-         Vt3nTsTcKYcpw6Bx2JXcQE32pLgUTTbsyAwtkBKPvo4OOoR4lbD2Ywes+yMuPhujWbcW
-         X0pDe3Iz42nCnjX0tg6Z9NTp5yRGLisrBpSSc70dfoptAGFoQzSg4NUURnm1sP3++z50
-         ONEw==
-X-Gm-Message-State: APjAAAWu5AgXaFhZHcKH5fCTmtPpUfEBca+0Fke/czSXzGnbBVTepSlH
-        67KBzZ6H6uvTVskiW5Uuq6ZcBg==
-X-Google-Smtp-Source: APXvYqy6v7l6MhB+p5gWacT10BGV47R2lNIZI3D56QBZanDs4YzchO4lyFefyJjvfINrgcE9a5Si7A==
-X-Received: by 2002:a17:902:b091:: with SMTP id p17mr1086640plr.13.1572389286296;
+        bh=qKUfU/s6VNCMjI6UpTZnmPGQRCLUuGC/0Ur+XQYjYn4=;
+        b=HOqc5oenG19EfM8G6hYBN/FPyn10qBInBII+ptfo8AqqWEsc9nNqpC01mv3IN2x/V1
+         tvLlanwesVX2uq7VEI7BTNvO/1HxMJKj2+jTd6g6hcRHWdV8tGKYoBRwGJ9xrq81hMrX
+         x9efUzObKnTGowoofKpXQETxNMk871OPTDoHb0rqVjxj7E6KNfKdT3FnhEQg/zQnCLu4
+         CA7I1AGZXW4B0g7Qw/ZhsZMZcALVpnH2rkk16Ch2KtGm0lNmu0WN0cGeyEfM9tGOnVxQ
+         RE+MtQwAl6KTVZXZ8o9Ob46wc4GCtKbIJsJSAUKnhkadUA0LpEauGKZeL6u8tlsAXOld
+         a/dg==
+X-Gm-Message-State: APjAAAXDHwzJwinTjh2LeH51l3RjWhLs2qyWLyuM0gK+XX0u1tr6ssjh
+        7vuJI/FVbr/D3R66oSleNibqhQ==
+X-Google-Smtp-Source: APXvYqx2jf6YGVEJMofLmnQuj1bd8RRLe/mmzmKbe1+WcVdSDVf/LY61lDqqHnkFYpwNpoarVLLQbw==
+X-Received: by 2002:a62:cecf:: with SMTP id y198mr10781942pfg.86.1572389286825;
         Tue, 29 Oct 2019 15:48:06 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e7sm254020pgr.25.2019.10.29.15.48.04
+        by smtp.gmail.com with ESMTPSA id b23sm143117pju.16.2019.10.29.15.48.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 29 Oct 2019 15:48:05 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -62,9 +62,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         netdev@vger.kernel.org, linux-arch@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/3] linux/stddef.h: Add sizeof_member() macro
-Date:   Tue, 29 Oct 2019 15:47:55 -0700
-Message-Id: <20191029224756.28618-3-keescook@chromium.org>
+Subject: [PATCH v3 1/3] MIPS: OCTEON: Replace SIZEOF_FIELD() macro
+Date:   Tue, 29 Oct 2019 15:47:54 -0700
+Message-Id: <20191029224756.28618-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191029224756.28618-1-keescook@chromium.org>
 References: <20191029224756.28618-1-keescook@chromium.org>
@@ -75,78 +75,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
 
-At present we have 2 different macros to calculate the size of a member
-of a struct: FIELD_SIZEOF() and sizeof_field(). As a prerequisite to
-bringing uniformity to the entire kernel source tree, add sizeof_member()
-macro as it is both more pleasant (not upper case) and more correct
-(sizeof()-family cannot operate on bit fields; this is meant to operate
-on struct members), as discussed[1].
-
-Future patches will replace all occurrences of above macros with
-sizeof_member().
-
-[1] https://www.openwall.com/lists/kernel-hardening/2019/07/02/2
+In preparation for switching to a standard sizeof_member() macro to find the
+size of a member of a struct, remove the custom SIZEOF_FIELD() macro and use
+the more common FIELD_SIZEOF() instead. Later patches will globally replace
+FIELD_SIZEOF() and sizeof_field() with the more accurate sizeof_member().
 
 Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Link: https://lore.kernel.org/r/20190924105839.110713-2-pankaj.laxminarayan.bharadiya@intel.com
+Link: https://lore.kernel.org/r/20190924105839.110713-4-pankaj.laxminarayan.bharadiya@intel.com
 Co-developed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/stddef.h                 | 13 ++++++++++++-
- tools/testing/selftests/bpf/bpf_util.h |  6 +++---
- 2 files changed, 15 insertions(+), 4 deletions(-)
+ arch/mips/cavium-octeon/executive/cvmx-bootmem.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index 998a4ba28eba..ecadb736c853 100644
---- a/include/linux/stddef.h
-+++ b/include/linux/stddef.h
-@@ -27,6 +27,17 @@ enum {
-  */
- #define sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
+diff --git a/arch/mips/cavium-octeon/executive/cvmx-bootmem.c b/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
+index ba8f82a29a81..44b506a14666 100644
+--- a/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
++++ b/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
+@@ -44,13 +44,6 @@ static struct cvmx_bootmem_desc *cvmx_bootmem_desc;
  
-+/**
-+ * sizeof_member(TYPE, MEMBER) - get the size of a struct's member
-+ *
-+ * @TYPE: the target struct
-+ * @MEMBER: the target struct's member
-+ *
-+ * Return: the size of @MEMBER in the struct definition without having a
-+ * declared instance of @TYPE.
-+ */
-+#define sizeof_member(TYPE, MEMBER)	(sizeof(((TYPE *)0)->MEMBER))
-+
+ /* See header file for descriptions of functions */
+ 
+-/**
+- * This macro returns the size of a member of a structure.
+- * Logically it is the same as "sizeof(s::field)" in C++, but
+- * C lacks the "::" operator.
+- */
+-#define SIZEOF_FIELD(s, field) sizeof(((s *)NULL)->field)
+-
  /**
-  * offsetofend(TYPE, MEMBER)
-  *
-@@ -34,6 +45,6 @@ enum {
-  * @MEMBER: The member within the structure to get the end offset of
-  */
- #define offsetofend(TYPE, MEMBER) \
--	(offsetof(TYPE, MEMBER)	+ sizeof_field(TYPE, MEMBER))
-+	(offsetof(TYPE, MEMBER)	+ sizeof_member(TYPE, MEMBER))
+  * This macro returns a member of the
+  * cvmx_bootmem_named_block_desc_t structure. These members can't
+@@ -65,7 +58,7 @@ static struct cvmx_bootmem_desc *cvmx_bootmem_desc;
+ #define CVMX_BOOTMEM_NAMED_GET_FIELD(addr, field)			\
+ 	__cvmx_bootmem_desc_get(addr,					\
+ 		offsetof(struct cvmx_bootmem_named_block_desc, field),	\
+-		SIZEOF_FIELD(struct cvmx_bootmem_named_block_desc, field))
++		FIELD_SIZEOF(struct cvmx_bootmem_named_block_desc, field))
  
- #endif
-diff --git a/tools/testing/selftests/bpf/bpf_util.h b/tools/testing/selftests/bpf/bpf_util.h
-index ec219f84e041..6b4b3e24ba9f 100644
---- a/tools/testing/selftests/bpf/bpf_util.h
-+++ b/tools/testing/selftests/bpf/bpf_util.h
-@@ -31,13 +31,13 @@ static inline unsigned int bpf_num_possible_cpus(void)
- # define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
- #endif
- 
--#ifndef sizeof_field
--#define sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
-+#ifndef sizeof_member
-+#define sizeof_member(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
- #endif
- 
- #ifndef offsetofend
- #define offsetofend(TYPE, MEMBER) \
--	(offsetof(TYPE, MEMBER)	+ sizeof_field(TYPE, MEMBER))
-+	(offsetof(TYPE, MEMBER)	+ sizeof_member(TYPE, MEMBER))
- #endif
- 
- #endif /* __BPF_UTIL__ */
+ /**
+  * This function is the implementation of the get macros defined
 -- 
 2.17.1
 
