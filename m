@@ -2,161 +2,154 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DB0CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DABACA9EC0
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB2A217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:21:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NhWgqpQe"
+	by mail.kernel.org (Postfix) with ESMTP id 06C60217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbfJ2BVg (ORCPT
+        id S1728288AbfJ2BXb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:21:36 -0400
-Received: from mail-eopbgr40080.outbound.protection.outlook.com ([40.107.4.80]:35662
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        Mon, 28 Oct 2019 21:23:31 -0400
+Received: from mail-oln040092066067.outbound.protection.outlook.com ([40.92.66.67]:11566
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727778AbfJ2BVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:21:35 -0400
+        id S1727778AbfJ2BXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 21:23:31 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MRUzYcJzv8sBcWr31ZjHuaphgdybskZyRCcUJO8blD0WyNpkD9AuDSThiFHz/vHQ1tbDNXy7xY1tobruQZck+XdZGBO5ubMk+UXqete+SrLn20BTGw9vFwdsrcT0kV292wLcVDEo2NrFjXFxGDumXC+fJ+50FbJ/DpUPSlnwjrlq0c3kyvhopTrf+X0I7bxlPFgPveBACbdcS3UZ76CyN3yk5LlHLEo8YNGULOQn3ksNmB4fdzOpuohgGpdbQQK0ESXi97ZJ2xaPYgOj/kQ1BxnpZh989f+tOfDu9W3V9NLpvjv5iypkgaYM2/XVF942SnQgsjsNsNoBG/OC7Q8jmg==
+ b=NMVTeyvHZIsImwo02/6U7jPctBg7+o7I2druAlh5bBHDoroCdiKbhmuO88Y4x5C70rNQBRx0nO7bb3BnyQbQhFXKgwb0Pzu2Nc8xlxlK4ach5PLsRMicIUAHyH6V2fk3Qb7tTUTt9U/clZwekKIMg2j0+6mmB1iKdoofqF88eS5mLrbvT2pO7nOlLPAkXgtFElt4lZdtvhEjFPj+TO0uDWkxsfqXG+IcJK2snSlnw8DZEU6FEP3LUHZJ63dToaJPhJtfNDZTyH8K2uBe0ekcOLAVK53EJjWHNQq/ujCTEsFEg62zxJWQ3imMRjCbW1pWIeMZGqUze/TzNXqMwZB2qw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=06B8nMCen2Aq7zCYlzh5HKJF/55BGBuLUo3AoilwY1c=;
- b=Lg0J/de6BZ6ePJbmDeq6yjD61rjbbn0Dm5a3TRSF8iLfHhChZcvTG9zloFuCxlTJd1MF6RiompzBaihaiK64YdAf4zQBz0oq7zKnvNRuQwaX34y13vTNyCUDBTnLJTqrBJQ2m3WA8IYcF5l7z7bIujykwQ7I0Rn300797nTcy7hb9HlVV2nSoH4XhYD4JS05hVTTmlT6fEFPG5YPvG3v6v92UDsnDl3IIPISl7aZPi/jLwYOyY7zIe43X6lWZi8/g7Z31/x1u8O0rADu02B9Y3z44F+T8lal8tRhRYXlcyZhXbzfKkpsk0l97UgKDNlcdSCQWKsZN/xmm08pn3O2Iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=06B8nMCen2Aq7zCYlzh5HKJF/55BGBuLUo3AoilwY1c=;
- b=NhWgqpQed3iPlP6naNB/E8bx1WiAFtdZtTH5+EZ9/uf0EpN9GfgZttkKGeQ8p3+XkAd4Uoxw0fYhWV+/hZf0QMDwa6olHVFkdd1E/FvrhAOcaO71KwEGejY/PyBO0l6gXQymzT+vesBDWrTkoIB7/neNkAE/IK8fBevT99XY1nI=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4306.eurprd04.prod.outlook.com (52.134.124.139) with Microsoft SMTP
+ bh=XffVFpPPDP2pJl7bG9Wy1nJEOsKX05N0vzN1DhypToc=;
+ b=F2dEm4jRklRr3YAgKNhG7YTvMU5eEDM9U9TkazOVDh+ZYXwQOtWlOWCMsqJ2SFyGtkFSTg1bpGTL0zqVuXBvfVSMfC7beZrwankX53EZgl/Kl3oByn2fhpNtlmEpBCKBN1Nki9OWb3W5bUP1Sd5JgiuLSDctUyDFxgywsd7092BffTRciQQGpHAN97nVkWZAq/51+in11eQU7Z2+mEUBRdQJby29msDJMHRlfEeLqkSsnT7vE475tUcoLhByFMtM/Z6Ht/fxiy3kisz6GD0wNm8WnqkQwW0zOQdl8A4IKm1PWfgH1KcvDcjw+s2UbpCKHA1EkyRDADjxAhDLQYku5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from VE1EUR01FT039.eop-EUR01.prod.protection.outlook.com
+ (10.152.2.55) by VE1EUR01HT015.eop-EUR01.prod.protection.outlook.com
+ (10.152.3.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Tue, 29 Oct
+ 2019 01:23:27 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.2.56) by
+ VE1EUR01FT039.mail.protection.outlook.com (10.152.3.35) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Tue, 29 Oct 2019 01:21:31 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::843c:e722:27cb:74e1]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::843c:e722:27cb:74e1%5]) with mapi id 15.20.2387.023; Tue, 29 Oct 2019
- 01:21:31 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 2/2] regulator: fixed: add off-on-delay
-Thread-Topic: [PATCH 2/2] regulator: fixed: add off-on-delay
-Thread-Index: AQHVjfcxRKga6PWwwEWycaXD/sbfZw==
-Date:   Tue, 29 Oct 2019 01:21:31 +0000
-Message-ID: <1572311875-22880-3-git-send-email-peng.fan@nxp.com>
-References: <1572311875-22880-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1572311875-22880-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
+ 15.20.2387.20 via Frontend Transport; Tue, 29 Oct 2019 01:23:27 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::b1cf:db6f:95fc:84cc]) by HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::b1cf:db6f:95fc:84cc%7]) with mapi id 15.20.2387.025; Tue, 29 Oct 2019
+ 01:23:27 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+CC:     Jonas Karlman <jonas@kwiboo.se>, Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH RFC v2 00/10] media: hantro: H264 fixes and improvements
+Thread-Topic: [PATCH RFC v2 00/10] media: hantro: H264 fixes and improvements
+Thread-Index: AQHVjfd3nRnQyPYxpEuxItiFYWopyg==
+Date:   Tue, 29 Oct 2019 01:23:27 +0000
+Message-ID: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Accept-Language: sv-SE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR02CA0177.apcprd02.prod.outlook.com
- (2603:1096:201:21::13) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
+x-clientproxiedby: HE1PR0501CA0035.eurprd05.prod.outlook.com
+ (2603:10a6:3:1a::45) To HE1PR06MB4011.eurprd06.prod.outlook.com
+ (2603:10a6:7:9c::32)
+x-incomingtopheadermarker: OriginalChecksum:F4C6F7AF2937385D03B06DE8B0B745ACB4A64062428A536BAECA0EA3C379A823;UpperCasedChecksum:467EA6084040EAE1ECD16B1EEA826757C1741316BDEA50DB7BF7E536C379149B;SizeAsReceived:7429;Count:47
 x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
+x-mailer: git-send-email 2.17.1
+x-tmn:  [7U6dGqpatfCYk6ddu1BXzS0LeN19pAEl]
+x-microsoft-original-message-id: <20191029012316.24511-1-jonas@kwiboo.se>
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b7a04e52-c953-4dea-11b2-08d75c0e5443
-x-ms-traffictypediagnostic: AM0PR04MB4306:|AM0PR04MB4306:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB430637C100BA0FDFCA72323888610@AM0PR04MB4306.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0205EDCD76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(199004)(189003)(71190400001)(66946007)(305945005)(52116002)(2906002)(54906003)(110136005)(102836004)(66476007)(66556008)(64756008)(66446008)(25786009)(7736002)(44832011)(3846002)(6116002)(2201001)(5660300002)(6436002)(6486002)(66066001)(86362001)(99286004)(2616005)(256004)(36756003)(476003)(6512007)(50226002)(8676002)(81166006)(8936002)(2501003)(81156014)(11346002)(316002)(14444005)(486006)(4326008)(446003)(478600001)(186003)(26005)(14454004)(6506007)(386003)(71200400001)(76176011)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4306;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: VE1EUR01HT015:
+x-ms-exchange-purlcount: 2
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eCwfKTmT6fAO+K6YgLjQbb0BtqEHJ6M8RkSWklw6KmAvU1M3TtEPKRNmiKDaKlFi7nd6PA2lJDG7/8v8x2mJcq48GXGlxZ2Zg/5KYdSXFg09dAI9sXPkzDOvMA2Wtc26NaX02zxlvNxh61lKBeQmE50IBweCqZhgk5WNvYHKP6rekGd13L+kRm7nDC+MUtqsgTggxK18HO5J53iPC7OHE3GSFAaS16FEvWfQ72HeYHxenLEiZGAg5O3nLWPMOhtlURlTDyJZs0e/w63qP/lJLAeUOQoe7lwEUtsk3iRPMc03lxEK22ltl6w9iq68E/kaXSY/QKXk8HMe5JRPzU5OVfNwJbT/6CeRL8Kifcamzt5FmALJ4t8WP0gKke2gjHlCSOBhT7fNwynMH+EXfZs5WlFY9OBmjv7lD6r894lO3XkS88YIktN7P8aVvhrbX74k
+x-microsoft-antispam-message-info: Nt/qO/2YEIMwU1pRMyjS/91pFpXjuNdWgufsuyM8oGLN7EmX6LeUtcwWUvl0Fapt914b+bCNqsBzTB0czA4/WpI41KNM4zeab3RjPB9n43wbdEnCv8/aJ2SwZE1et8+KmYsajFplLp+eNdHCUEBfXjFQHh5etGHT0vcyeOupuN9v/RuKX4jZu0RtB5Lvr+b2SZMswRKVy8eXOfAn/b0kXF63mOBvWH2yK13gOcqzRAE=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7a04e52-c953-4dea-11b2-08d75c0e5443
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 01:21:31.1902
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6621a09-de0c-40af-ce09-08d75c0e999b
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 01:23:27.6354
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rMIAnQxi0oT5ql7mRuTlgV0h6AMEeJc3wIQ9IrGrNDj7r/MaDXWpWc/tRLys5wllzwwXiWyH1wUwuQgiopXZkg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4306
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+This series contains fixes and improvements for the hantro H264 decoder.
 
-Depends on board design, the gpio controlling regulator may
-connects with a big capacitance. When need off, it takes some time
-to let the regulator to be truly off. If not add enough delay, the
-regulator might have always been on, so introduce off-on-delay to
-handle such case.
+Patch 1-3 is updated patches from the "media: hantro: Collected fixes for v5.4"
+series.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+Patch 4-8 fixes issues and limitations observed when preparing support
+for field encoded content.
 
-V1:
- There is a checkpatch warning "
- Prefer 'unsigned int' to bare use of 'unsigned' ",
- so I use unsigned int for off_on_delay.
+Patch 9 introduce new DPB entry flags that is used to signal how a reference
+frame is referenced. This information is needed to correctly build a
+reference list for field encoded content.
 
- drivers/regulator/fixed.c       | 2 ++
- include/linux/regulator/fixed.h | 1 +
- 2 files changed, 3 insertions(+)
+Patch 10 adds bits to handle field encoded content, this is a rough patch
+and should be reworked with proper code style and formatting.
+Please get back with feedback on how to improve this.
 
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index d90a6fd8cbc7..5dbdc41743f3 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -123,6 +123,7 @@ of_get_fixed_voltage_config(struct device *dev,
- 		config->enabled_at_boot =3D true;
-=20
- 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
-+	of_property_read_u32(np, "off-on-delay-us", &config->off_on_delay);
-=20
- 	if (of_find_property(np, "vin-supply", NULL))
- 		config->input_supply =3D "vin";
-@@ -190,6 +191,7 @@ static int reg_fixed_voltage_probe(struct platform_devi=
-ce *pdev)
- 	}
-=20
- 	drvdata->desc.enable_time =3D config->startup_delay;
-+	drvdata->desc.off_on_delay =3D config->off_on_delay;
-=20
- 	if (config->input_supply) {
- 		drvdata->desc.supply_name =3D devm_kstrdup(&pdev->dev,
-diff --git a/include/linux/regulator/fixed.h b/include/linux/regulator/fixe=
-d.h
-index d44ce5f18a56..623a5c574782 100644
---- a/include/linux/regulator/fixed.h
-+++ b/include/linux/regulator/fixed.h
-@@ -36,6 +36,7 @@ struct fixed_voltage_config {
- 	const char *input_supply;
- 	int microvolts;
- 	unsigned startup_delay;
-+	unsigned int off_on_delay;
- 	unsigned enabled_at_boot:1;
- 	struct regulator_init_data *init_data;
- };
---=20
-2.16.4
+The following samples from [1] are now playable with this series
+- H264_1080i-25-interlace_Kaesescheibchen.mkv
+- H264_10_1080i_50_AC3-Astra19.2_ProSieben_HD.ts
+- big_buck_bunny_1080p_H264_AAC_25fps_7200K.mp4
+- h264_tivo_sample.ts
+
+This series has been tested using ffmpeg v4l2 request hwaccel at [2]
+
+[1] http://kwiboo.libreelec.tv/test/samples/
+[2] https://github.com/Kwiboo/FFmpeg/compare/4.0.4-Leia-18.4...v4l2-request-hwaccel-4.0.4-hantro
+
+Changes in v2:
+  - scaling list changes split to its own series
+  - address feedback from Philipp and Ezequiel
+
+Regards,
+Jonas
+
+Francois Buergisser (2):
+  media: hantro: Fix motion vectors usage condition
+  media: hantro: Fix picture order count table enable
+
+Jonas Karlman (8):
+  media: hantro: Fix H264 max frmsize supported on RK3288
+  media: hantro: Fix H264 motion vector buffer offset
+  media: hantro: Reduce H264 extra space for motion vectors
+  media: hantro: Use capture buffer width and height for H264 decoding
+  media: hantro: Remove now unused H264 pic_size
+  media: hantro: Set H264 FIELDPIC_FLAG_E flag correctly
+  media: uapi: h264: Add DPB entry field reference flags
+  media: hantro: Fix H264 decoding of field encoded content
+
+ .../media/uapi/v4l/ext-ctrls-codec.rst        |  12 ++
+ .../staging/media/hantro/hantro_g1_h264_dec.c |  62 ++++-----
+ drivers/staging/media/hantro/hantro_h264.c    | 126 +++++++++++-------
+ drivers/staging/media/hantro/hantro_hw.h      |   5 +-
+ drivers/staging/media/hantro/hantro_v4l2.c    |   6 +-
+ drivers/staging/media/hantro/rk3288_vpu_hw.c  |   4 +-
+ include/media/h264-ctrls.h                    |   4 +
+ 7 files changed, 135 insertions(+), 84 deletions(-)
+
+-- 
+2.17.1
 
