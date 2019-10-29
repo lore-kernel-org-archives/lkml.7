@@ -2,115 +2,138 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BBDCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150CECA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD7720874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCBF32173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="RYCBY6vN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731670AbfJ2LNd (ORCPT
+        id S1732356AbfJ2LNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:13:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61398 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727020AbfJ2LNc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:13:32 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9TAxqka045400;
-        Tue, 29 Oct 2019 07:13:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vxjpk3xmw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 07:13:21 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9TB0jjZ049636;
-        Tue, 29 Oct 2019 07:13:20 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vxjpk3xm7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 07:13:20 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9TBAO0A016392;
-        Tue, 29 Oct 2019 11:13:19 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01dal.us.ibm.com with ESMTP id 2vvds91be4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 11:13:19 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9TBDInd52560190
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 11:13:18 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C84842805A;
-        Tue, 29 Oct 2019 11:13:18 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7428D28059;
-        Tue, 29 Oct 2019 11:13:18 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.199.37.192])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 29 Oct 2019 11:13:18 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id A873D2E3143; Tue, 29 Oct 2019 16:43:14 +0530 (IST)
-Date:   Tue, 29 Oct 2019 16:43:14 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamaleshb@in.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH v2 0/1] pseries/hotplug: Change the default behaviour of
- cede_offline
-Message-ID: <20191029111314.GC12266@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1571740391-3251-1-git-send-email-ego@linux.vnet.ibm.com>
- <87o8y45sxt.fsf@linux.ibm.com>
+        Tue, 29 Oct 2019 07:13:43 -0400
+Received: from vps.xff.cz ([195.181.215.36]:59982 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731826AbfJ2LNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 07:13:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1572347620; bh=Obh7tvfkovm1tGf8wM3sGTB+Ja4afeHSPQtadzplAcc=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=RYCBY6vNV4YeeENeH3RNTeWeZG3kO3f0QWxALt4GLNgqTCg0brQtQhmuBq9x/Y49n
+         fpvK97qY0FSViYwMAY/jfp39tdfeEsIEd14Mo5FallMrTTMm9iLTviBLEwaIE+1V4r
+         n582CF6f19v/OQIz5a+UGsXA3vIgefQhMA2yzP9s=
+Date:   Tue, 29 Oct 2019 12:13:39 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     linux-sunxi@googlegroups.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] arm: dts: sun8i: a83t: a711: Add touchscreen node
+Message-ID: <20191029111339.7okiyig3tbehn5kj@core.my.home>
+Mail-Followup-To: Marco Felsch <m.felsch@pengutronix.de>,
+        linux-sunxi@googlegroups.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20191029005806.3577376-1-megous@megous.com>
+ <20191029005806.3577376-4-megous@megous.com>
+ <20191029090801.zls2qns7rxcvmxor@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <87o8y45sxt.fsf@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=901 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910290114
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029090801.zls2qns7rxcvmxor@pengutronix.de>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Nathan,
+Hello Marco,
 
-
-On Fri, Oct 25, 2019 at 06:03:26PM -0500, Nathan Lynch wrote:
-> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
-> > This is the v2 of the fix to change the default behaviour of
-> > cede_offline.
+On Tue, Oct 29, 2019 at 10:08:01AM +0100, Marco Felsch wrote:
+> Hi,
 > 
-> OK, but why keep the cede offline behavior at all? Can we remove it? I
-> think doing so would allow us to remove all the code that temporarily
-> onlines threads for partition migration.
+> On 19-10-29 01:58, Ondrej Jirman wrote:
+> > From: Mylène Josserand <mylene.josserand@bootlin.com>
+> > 
+> > Enable a FocalTech EDT-FT5x06 Polytouch touchscreen.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> > ---
+> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > index 568b90ece342..19f520252dc5 100644
+> > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > @@ -164,6 +164,22 @@
+> >  	status = "okay";
+> >  };
+> >  
+> > +&i2c0 {
+> > +	clock-frequency = <400000>;
+> > +	status = "okay";
+> > +
+> > +	touchscreen@38 {
+> > +		compatible = "edt,edt-ft5x06";
+> > +		reg = <0x38>;
+> > +		interrupt-parent = <&r_pio>;
+> > +		interrupts = <0 7 IRQ_TYPE_EDGE_FALLING>; /* PL7 */
+> > +		reset-gpios = <&pio 3 5 GPIO_ACTIVE_LOW>; /* PD5 */
+> > +		vcc-supply = <&reg_ldo_io0>;
+> > +		touchscreen-size-x = <1024>;
+> > +		touchscreen-size-y = <600>;
+> 
+> Do you want this touchscreen as wakeup-src? If so please add the
+> property here. I've send patches converting the driver from the default
+> behaviour: https://patchwork.kernel.org/cover/11149039/ and all agreed
+> to break backward compatibility.
 
-May be I am missing something. But don't we want all the CPUs to come
-online and execute the H_JOIN hcall before performing partition
-migration? How will this change whether the offlined CPUs are in
-H_CEDE or rtas-stop-self?
+Not at this moment, thank you.
 
---
-Thanks and Regards
-gautham.
+regards,
+	o.
 
-
+> Regards,
+>   Marco
+> 
+> > +	};
+> > +};
+> > +
+> >  &i2c1 {
+> >  	clock-frequency = <400000>;
+> >  	status = "okay";
+> > -- 
+> > 2.23.0
+> > 
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
