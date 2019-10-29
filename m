@@ -2,167 +2,119 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCFEC47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A138ECA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2F120856
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74EBD208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:03:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tcym8wbD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L9o/9d7l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389731AbfJ2PCF (ORCPT
+        id S2389777AbfJ2PDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:02:05 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35179 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ2PCF (ORCPT
+        Tue, 29 Oct 2019 11:03:09 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41228 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ2PDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:02:05 -0400
-Received: by mail-io1-f67.google.com with SMTP id h9so15173295ioh.2;
-        Tue, 29 Oct 2019 08:02:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nviDhX5eHZuccHclre8MmSPBqdycbWsdLIjtyjp/3bg=;
-        b=tcym8wbDGztiJe9+mM9W4HNr1IeUPWbQSUFQWIVrTu22BruegDCKWLz8varVgwxuOP
-         S4zy8G5Bp5zWPTWGu0QNBQZYFs8iEGJ/C8scAPV8uLBSIzxK2upzhOV1Nvv/0XhW+0ju
-         M7FK0PCbThiQcV0lH4hLCVLXA/2pylYhpbrjuAroUVnu9zKBITGyAJQzNpChJi6Bszea
-         ItzSk5NJ+f6DT6F7heJB4L61fGxKMtGHehslO4b5vtmgRztDXlBr7X0FtCyDOj+7VpNL
-         yxV+gx4YeyrYRMmm6KoJSzX6BgON3bPJzjW9/ftGJePyrNP6ynfWA592UH2y9H95LsUx
-         U9mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nviDhX5eHZuccHclre8MmSPBqdycbWsdLIjtyjp/3bg=;
-        b=SPpEyaA93mzSjKpxKA0U45+HsHbJ6tsr93oYc9RKP3tgR7GShXGXLejaJohaxar4ku
-         XyNhOpsq9AB7jM51Oe6Phto67rPzEK2BsipNWEaDtQm2oTbFtNnB7z7FTKyRzsrTIhtx
-         EK2YBw6rBHeOMppsP4w5VxVuU3DKhkiV5dcqJT7E9OzXMhrc17J+aLw0kV4tjto7BxG7
-         tc7o5Wa6EIu2WHPkhSkcwrwOxjjVMjKFYYGJcro4EScdIg0vAZbdL9nayI0M/ssgOlY6
-         82gKG5Vynt6X0SSBqnxluXqWw8Ekal+b8JJ+CSRl4Od/1EF4ryMeUoH/1OpZoMgbIkM9
-         uzlg==
-X-Gm-Message-State: APjAAAUsblLb1qzGcp+XYWijiSL6RAV91XeaeEZCXoPnxffnr1o56EhY
-        W/zGSNs2x/VHWKJoX88Z1pU=
-X-Google-Smtp-Source: APXvYqxpmIbZ+JeH9dmI+sZWnLhXEw2k+1SXYAcp+ECySPiG7577LX3o3NwM+N7P8OeU5GHZ1YWWMw==
-X-Received: by 2002:a6b:fa08:: with SMTP id p8mr4335018ioh.84.1572361323918;
-        Tue, 29 Oct 2019 08:02:03 -0700 (PDT)
-Received: from dell.localdomain ([216.249.49.33])
-        by smtp.googlemail.com with ESMTPSA id g79sm2015632ilf.14.2019.10.29.08.02.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 08:02:03 -0700 (PDT)
-From:   Ethan Sommer <e5ten.arch@gmail.com>
-Cc:     Ethan Sommer <e5ten.arch@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2] kbuild: support byacc as alternative YACC to bison
-Date:   Tue, 29 Oct 2019 11:01:16 -0400
-Message-Id: <20191029150119.19823-1-e5ten.arch@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
-References: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
+        Tue, 29 Oct 2019 11:03:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yPYBOVbzLkddXxQyoPdM/cinJsJOnw5vh/XAFVlfDHM=; b=L9o/9d7ljXJbX9mcF5Ru9ZBZG
+        g1r7VSnXDcAzdDvKHTB52IikrHsdoE/BddnxtMhK3toC53ejzx2xN3NG+fh6u3i3FcZ2DANbUw43y
+        QYFFEPqehro/BHuF3J0K9kkb5H5qDGqER81BxxXJe33XHIpcOpNaGHCayDIAmxSVr9jAYbo/BNMuU
+        emAvJakMUB+zqjrv1volXvTz3iDeYBD8nWocPZ0poGWUHhNFeO74ZMXU2L3u1xjP36Cw5NW627TSN
+        IUVGywLVQJC5uL85TI9/7bzjymznmI46x6v1Sz2DAGIuQ7YDS3sBsvkyU2xMRQLblEKc4K67gxxS8
+        s6j+HBRvg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPT1B-00052p-K7; Tue, 29 Oct 2019 15:02:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 54DE4300E4D;
+        Tue, 29 Oct 2019 16:01:42 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1C7AE2B43836D; Tue, 29 Oct 2019 16:02:43 +0100 (CET)
+Date:   Tue, 29 Oct 2019 16:02:43 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Luwei Kang <luwei.kang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, ak@linux.intel.com, thomas.lendacky@amd.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org
+Subject: Re: [PATCH v1 2/8] KVM: x86: PEBS output to Intel PT MSRs emulation
+Message-ID: <20191029150243.GM4097@hirez.programming.kicks-ass.net>
+References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
+ <1572217877-26484-3-git-send-email-luwei.kang@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572217877-26484-3-git-send-email-luwei.kang@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switches to a more portable set of flags for generating the same file
-names instead of the bison-specific --defines, uses the more portable -V
-instead of --version, and explicitly defines YYSTYPE in lex.l, which
-bison implicitly defines if not present but byacc does not.
+On Sun, Oct 27, 2019 at 07:11:11PM -0400, Luwei Kang wrote:
+> Intel new hardware introduces a mechanism to direct PEBS records
+> output into the Intel PT buffer that can be used for enabling PEBS
+> in KVM guest. This patch implements the registers read and write
+> emulation when PEBS is supported in KVM guest.
+> 
+> KMM needs to reprogram the counters when the value of these MSRs
+> be changed that to make sure it can take effect in hardware.
+> 
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h  |  4 +++
+>  arch/x86/include/asm/msr-index.h |  6 ++++
+>  arch/x86/kvm/vmx/capabilities.h  | 15 ++++++++++
+>  arch/x86/kvm/vmx/pmu_intel.c     | 63 ++++++++++++++++++++++++++++++++++++++--
+>  4 files changed, 86 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index 20ce682..d22f8d9 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -131,9 +131,13 @@
+>  #define LBR_INFO_ABORT			BIT_ULL(61)
+>  #define LBR_INFO_CYCLES			0xffff
+>  
+> +#define MSR_IA32_PEBS_PMI_AFTER_REC	BIT_ULL(60)
+> +#define MSR_IA32_PEBS_OUTPUT_PT		BIT_ULL(61)
+> +#define MSR_IA32_PEBS_OUTPUT_MASK	(3ULL << 61)
+>  #define MSR_IA32_PEBS_ENABLE		0x000003f1
+>  #define MSR_PEBS_DATA_CFG		0x000003f2
+>  #define MSR_IA32_DS_AREA		0x00000600
+> +#define MSR_IA32_PERF_CAP_PEBS_OUTPUT_PT	BIT_ULL(16)
+>  #define MSR_IA32_PERF_CAPABILITIES	0x00000345
+>  #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
+>  
+> @@ -665,6 +669,8 @@
+>  #define MSR_IA32_MISC_ENABLE_FERR			(1ULL << MSR_IA32_MISC_ENABLE_FERR_BIT)
+>  #define MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX_BIT		10
+>  #define MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX		(1ULL << MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX_BIT)
+> +#define MSR_IA32_MISC_ENABLE_PEBS_BIT			12
+> +#define MSR_IA32_MISC_ENABLE_PEBS			(1ULL << MSR_IA32_MISC_ENABLE_PEBS_BIT)
+>  #define MSR_IA32_MISC_ENABLE_TM2_BIT			13
+>  #define MSR_IA32_MISC_ENABLE_TM2			(1ULL << MSR_IA32_MISC_ENABLE_TM2_BIT)
+>  #define MSR_IA32_MISC_ENABLE_ADJ_PREF_DISABLE_BIT	19
 
-Add %locations to dtc-parser.y to explicitly enable location tracking
-for byacc, and define YYERROR_CALL explicitly to prevent the locations
-directive from causing it to be defined to a 2-parameter call to
-yyerror, which dtc-parser.y defines to accept one parameter.
-
-Requires byacc to be built with --enable-btyacc.
-
-Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
----
- scripts/Makefile.host     | 2 +-
- scripts/dtc/dtc-parser.y  | 4 ++++
- scripts/genksyms/Makefile | 2 +-
- scripts/genksyms/lex.l    | 2 ++
- 4 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-index 4c51c95d40f4..64e98e1d4825 100644
---- a/scripts/Makefile.host
-+++ b/scripts/Makefile.host
-@@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
- # YACC
- # ---------------------------------------------------------------------------
- quiet_cmd_bison = YACC    $(basename $@).[ch]
--      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
-+      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
- 
- $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
- 	$(call if_changed,bison)
-diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
-index 2ed4dc1f07fd..40dcf4f149da 100644
---- a/scripts/dtc/dtc-parser.y
-+++ b/scripts/dtc/dtc-parser.y
-@@ -2,6 +2,8 @@
- /*
-  * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
-  */
-+%locations
-+
- %{
- #include <stdio.h>
- #include <inttypes.h>
-@@ -17,6 +19,8 @@ extern void yyerror(char const *s);
- 		treesource_error = true; \
- 	} while (0)
- 
-+#define YYERROR_CALL(msg) yyerror(msg)
-+
- extern struct dt_info *parser_output;
- extern bool treesource_error;
- %}
-diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
-index 78629f515e78..397c2dc8182b 100644
---- a/scripts/genksyms/Makefile
-+++ b/scripts/genksyms/Makefile
-@@ -15,7 +15,7 @@ genksyms-objs	:= genksyms.o parse.tab.o lex.lex.o
- ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
- 
- quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
--      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
-+      cmd_bison_no_warn = $(YACC) -V >/dev/null; \
- 			  $(cmd_bison) 2>/dev/null
- 
- $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
-diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
-index e265c5d96861..0580c088527f 100644
---- a/scripts/genksyms/lex.l
-+++ b/scripts/genksyms/lex.l
-@@ -19,6 +19,8 @@
- #include "genksyms.h"
- #include "parse.tab.h"
- 
-+extern YYSTYPE yylval;
-+
- /* We've got a two-level lexer here.  We let flex do basic tokenization
-    and then we categorize those basic tokens in the second stage.  */
- #define YY_DECL		static int yylex1(void)
--- 
-2.23.0
-
+Some of these already exist but are local to perf. Don't blindly
+introduce more without unifying.
