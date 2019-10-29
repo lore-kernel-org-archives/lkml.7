@@ -2,118 +2,214 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEC5CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C940CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61ECC2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276712087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572343551;
-	bh=T3Jv864WYca7U24b6VXhszVhAiZTCgcps18cy66P130=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LBD0P89J0jbAsr4oUayBl0Re6RLWsMG/5J4D7DtwKTkbQYGlQFrNPx51EtaK3b91t
-	 eDrLSbTnPZ59rz/b5En1CuSd7B33y/LcKv6yeYCAWnhDoW/lQwz/iBKK4Jb5KX83gV
-	 k/S4UU6xjUjVf6dGW71ux9qRVN7DSPUgneM+nDHY=
+	s=default; t=1572343569;
+	bh=FMbuBN1oCdTYjXZWl1ed/CoUuwWzBee+m6QmA4X1wnQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=V+woXV5mHtbYGnIMbcxWjALKaFHLx12VtkSk8nUi4QSUAnTvJhImqKe/1h2ARsSTy
+	 2G2mCLMMPUsmet7lSaTUH+hwgCbEp2WMUqKMWut7Dg7MEqbuzukYcoz+cdZ7VF53ug
+	 kWDYCf4ha7lwjpP6+wNOepyuMDCu6LcVODDNMaZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfJ2KFu (ORCPT
+        id S1727937AbfJ2KGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 06:05:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37234 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ2KFu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 06:05:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q130so1709103wme.2;
-        Tue, 29 Oct 2019 03:05:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VwVCJvBkvTdm9BSUnd9jdf4FOOPb5NaI8k+d4L1wBU4=;
-        b=Q4zxjV67mrd/xnpNh5n6mQlH9CT33ulNoVoUUUuEoaeLQOiTFigDf29n3Jn/RqTGTg
-         54Kp7ZymjvHUe+HVDNTz3LoElSoytx0PJ+YmHQkO4N4XU59PxV3e6WIykGj8MmxzMbMq
-         ZPoLuTg1S63uun3TOKI72DBC3P6tmPoAiGqd2rlV8v/qCVvl/+nwmH2yMbOtxsp044Z9
-         Ff1+z6i/m45tKwe/PRRVlEo4qEY2sV1aUNycXrIIDFnnUFZNsVRk1qBu5OsdT9lYMnoN
-         ySZOC9MczHXIqI7CB7S9UGBTQAoTgDrhHiMKhld37CeukpTix6ArNGmRTC7US3jjFvGn
-         UD5A==
-X-Gm-Message-State: APjAAAUTl2HB8Dz+2PWYKn0p27tM9KbZh7mZAgYpxLiGoIg7zYz5o7As
-        T/IRqf5elBSLYcOCz4T+0tGDMgQoAdM=
-X-Google-Smtp-Source: APXvYqw5btc3uQXDpSHksE3uGXSr3w8/dvCp3XGFGivwHvwVClXWQs9OVelli8XsNivum7XMd+LniQ==
-X-Received: by 2002:a1c:2344:: with SMTP id j65mr3455802wmj.38.1572343547384;
-        Tue, 29 Oct 2019 03:05:47 -0700 (PDT)
-Received: from pi (100.50.158.77.rev.sfr.net. [77.158.50.100])
-        by smtp.gmail.com with ESMTPSA id c144sm2358614wmd.1.2019.10.29.03.05.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 03:05:46 -0700 (PDT)
-Received: from johan by pi with local (Exim 4.92.2)
-        (envelope-from <johan@pi>)
-        id 1iPOMW-000205-8U; Tue, 29 Oct 2019 11:04:28 +0100
-Date:   Tue, 29 Oct 2019 11:04:28 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 095/100] USB: usb-skeleton: fix
- use-after-free after driver unbind
-Message-ID: <20191029100428.GA4691@localhost>
-References: <20191018220525.9042-1-sashal@kernel.org>
- <20191018220525.9042-95-sashal@kernel.org>
- <20191018222205.GA6978@kroah.com>
- <20191029090435.GJ1554@sasha-vm>
- <20191029094321.GA582711@kroah.com>
+        Tue, 29 Oct 2019 06:06:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727578AbfJ2KGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 06:06:07 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F16EE2087F;
+        Tue, 29 Oct 2019 10:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572343566;
+        bh=FMbuBN1oCdTYjXZWl1ed/CoUuwWzBee+m6QmA4X1wnQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=J6aDAZx4xqFMpkILuT9p6FzEtCKmEPbnIGD+C6pge10/Ms6Q0paV9BBE/RFW0qSYg
+         yLb4VqSYUMjDwubtIlvojneMZvdd1Z5kDgjEQb9zJX0eZoHaejuY0HfS7znCHey88W
+         HvsNnFg64Cyma4wDEPnewh+5iccuUnaQN6Kff8bA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C4F163521071; Tue, 29 Oct 2019 03:06:05 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 03:06:05 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     paulmck@kernel.org, joel@joelfernandes.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] Documentation: RCU: NMI-RCU: Converted NMI-RCU.txt to
+ NMI-RCU.rst.
+Message-ID: <20191029100605.GI20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191028214252.17580-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029094321.GA582711@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191028214252.17580-1-madhuparnabhowmik04@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 10:43:21AM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Oct 29, 2019 at 05:04:35AM -0400, Sasha Levin wrote:
-> > On Fri, Oct 18, 2019 at 06:22:05PM -0400, Greg Kroah-Hartman wrote:
-> > > On Fri, Oct 18, 2019 at 06:05:20PM -0400, Sasha Levin wrote:
-> > > > From: Johan Hovold <johan@kernel.org>
-> > > > 
-> > > > [ Upstream commit 6353001852776e7eeaab4da78922d4c6f2b076af ]
-> > > > 
-> > > > The driver failed to stop its read URB on disconnect, something which
-> > > > could lead to a use-after-free in the completion handler after driver
-> > > > unbind in case the character device has been closed.
-> > > > 
-> > > > Fixes: e7389cc9a7ff ("USB: skel_read really sucks royally")
-> > > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > > Link: https://lore.kernel.org/r/20191009170944.30057-3-johan@kernel.org
-> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > > ---
-> > > >  drivers/usb/usb-skeleton.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > 
-> > > This file does not even get built in the kernel tree, no need to
-> > > backport anything for it :)
-> > 
-> > I'll drop it, but you're taking patches for this driver:
-> > https://lore.kernel.org/patchwork/patch/1140673/ .
+On Tue, Oct 29, 2019 at 03:12:52AM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 > 
-> Ah yeah, I probably shouldn't have taken stable backports for that, my
-> fault.
+> This patch converts NMI-RCU from txt to rst format.
+> Also adds NMI-RCU in the index.rst file.
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-Note that this was all due to
+Applied for further review, thank you!  Assuming review goes well,
+I will be pushing this for v5.6 (not the upcoming merge window, but
+the one after it).
 
-	https://lkml.kernel.org/r/20190930161205.18803-2-johan@kernel.org
+							Thanx, Paul
 
-which fixed a PM bug due to an API change that was backported to stable.
-
-I considered it comparable to a documentation fix to make sure that the
-template driver matched the new API, hence the stable tag.
-
-Johan
+> ---
+>  .../RCU/{NMI-RCU.txt => NMI-RCU.rst}          | 53 ++++++++++---------
+>  Documentation/RCU/index.rst                   |  1 +
+>  2 files changed, 29 insertions(+), 25 deletions(-)
+>  rename Documentation/RCU/{NMI-RCU.txt => NMI-RCU.rst} (73%)
+> 
+> diff --git a/Documentation/RCU/NMI-RCU.txt b/Documentation/RCU/NMI-RCU.rst
+> similarity index 73%
+> rename from Documentation/RCU/NMI-RCU.txt
+> rename to Documentation/RCU/NMI-RCU.rst
+> index 881353fd5bff..da5861f6a433 100644
+> --- a/Documentation/RCU/NMI-RCU.txt
+> +++ b/Documentation/RCU/NMI-RCU.rst
+> @@ -1,4 +1,7 @@
+> +.. _NMI_rcu_doc:
+> +
+>  Using RCU to Protect Dynamic NMI Handlers
+> +=========================================
+>  
+>  
+>  Although RCU is usually used to protect read-mostly data structures,
+> @@ -9,7 +12,7 @@ work in "arch/x86/oprofile/nmi_timer_int.c" and in
+>  "arch/x86/kernel/traps.c".
+>  
+>  The relevant pieces of code are listed below, each followed by a
+> -brief explanation.
+> +brief explanation.::
+>  
+>  	static int dummy_nmi_callback(struct pt_regs *regs, int cpu)
+>  	{
+> @@ -18,12 +21,12 @@ brief explanation.
+>  
+>  The dummy_nmi_callback() function is a "dummy" NMI handler that does
+>  nothing, but returns zero, thus saying that it did nothing, allowing
+> -the NMI handler to take the default machine-specific action.
+> +the NMI handler to take the default machine-specific action.::
+>  
+>  	static nmi_callback_t nmi_callback = dummy_nmi_callback;
+>  
+>  This nmi_callback variable is a global function pointer to the current
+> -NMI handler.
+> +NMI handler.::
+>  
+>  	void do_nmi(struct pt_regs * regs, long error_code)
+>  	{
+> @@ -53,11 +56,12 @@ anyway.  However, in practice it is a good documentation aid, particularly
+>  for anyone attempting to do something similar on Alpha or on systems
+>  with aggressive optimizing compilers.
+>  
+> -Quick Quiz:  Why might the rcu_dereference_sched() be necessary on Alpha,
+> -	     given that the code referenced by the pointer is read-only?
+> +Quick Quiz:
+> +		Why might the rcu_dereference_sched() be necessary on Alpha, given that the code referenced by the pointer is read-only?
+>  
+> +:ref:`Answer to Quick Quiz <answer_quick_quiz_NMI>`
+>  
+> -Back to the discussion of NMI and RCU...
+> +Back to the discussion of NMI and RCU...::
+>  
+>  	void set_nmi_callback(nmi_callback_t callback)
+>  	{
+> @@ -68,7 +72,7 @@ The set_nmi_callback() function registers an NMI handler.  Note that any
+>  data that is to be used by the callback must be initialized up -before-
+>  the call to set_nmi_callback().  On architectures that do not order
+>  writes, the rcu_assign_pointer() ensures that the NMI handler sees the
+> -initialized values.
+> +initialized values::
+>  
+>  	void unset_nmi_callback(void)
+>  	{
+> @@ -82,7 +86,7 @@ up any data structures used by the old NMI handler until execution
+>  of it completes on all other CPUs.
+>  
+>  One way to accomplish this is via synchronize_rcu(), perhaps as
+> -follows:
+> +follows::
+>  
+>  	unset_nmi_callback();
+>  	synchronize_rcu();
+> @@ -98,24 +102,23 @@ to free up the handler's data as soon as synchronize_rcu() returns.
+>  Important note: for this to work, the architecture in question must
+>  invoke nmi_enter() and nmi_exit() on NMI entry and exit, respectively.
+>  
+> +.. _answer_quick_quiz_NMI:
+>  
+> -Answer to Quick Quiz
+> -
+> -	Why might the rcu_dereference_sched() be necessary on Alpha, given
+> -	that the code referenced by the pointer is read-only?
+> +Answer to Quick Quiz:
+> +	Why might the rcu_dereference_sched() be necessary on Alpha, given that the code referenced by the pointer is read-only?
+>  
+> -	Answer: The caller to set_nmi_callback() might well have
+> -		initialized some data that is to be used by the new NMI
+> -		handler.  In this case, the rcu_dereference_sched() would
+> -		be needed, because otherwise a CPU that received an NMI
+> -		just after the new handler was set might see the pointer
+> -		to the new NMI handler, but the old pre-initialized
+> -		version of the handler's data.
+> +	The caller to set_nmi_callback() might well have
+> +	initialized some data that is to be used by the new NMI
+> +	handler.  In this case, the rcu_dereference_sched() would
+> +	be needed, because otherwise a CPU that received an NMI
+> +	just after the new handler was set might see the pointer
+> +	to the new NMI handler, but the old pre-initialized
+> +	version of the handler's data.
+>  
+> -		This same sad story can happen on other CPUs when using
+> -		a compiler with aggressive pointer-value speculation
+> -		optimizations.
+> +	This same sad story can happen on other CPUs when using
+> +	a compiler with aggressive pointer-value speculation
+> +	optimizations.
+>  
+> -		More important, the rcu_dereference_sched() makes it
+> -		clear to someone reading the code that the pointer is
+> -		being protected by RCU-sched.
+> +	More important, the rcu_dereference_sched() makes it
+> +	clear to someone reading the code that the pointer is
+> +	being protected by RCU-sched.
+> diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+> index 8d20d44f8fd4..627128c230dc 100644
+> --- a/Documentation/RCU/index.rst
+> +++ b/Documentation/RCU/index.rst
+> @@ -10,6 +10,7 @@ RCU concepts
+>     arrayRCU
+>     rcu
+>     listRCU
+> +   NMI-RCU
+>     UP
+>  
+>     Design/Memory-Ordering/Tree-RCU-Memory-Ordering
+> -- 
+> 2.17.1
+> 
