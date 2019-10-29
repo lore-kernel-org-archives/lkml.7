@@ -2,164 +2,116 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C6DCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156A0CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145562087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00792087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:51:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bIwIy3Wf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388919AbfJ2Nuw (ORCPT
+        id S2388980AbfJ2NvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:50:52 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39625 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388773AbfJ2Nuv (ORCPT
+        Tue, 29 Oct 2019 09:51:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26859 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388802AbfJ2NvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:50:51 -0400
-X-Originating-IP: 92.184.102.232
-Received: from localhost (unknown [92.184.102.232])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 734B0FF811;
-        Tue, 29 Oct 2019 13:50:32 +0000 (UTC)
-Date:   Tue, 29 Oct 2019 14:50:21 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH 09/13] mfd: rtc: support RTC on ROHM BD71828 with
- BD70528 driver
-Message-ID: <20191029135021.GC11234@piout.net>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <9ccc83f3dfd0fd0dc8178adf41b52115f960c45a.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <20191017101225.GB3125@piout.net>
- <a1aa91f74b41033fed4a7106247f48f9b9f78bd9.camel@fi.rohmeurope.com>
- <20191017104859.GC3125@piout.net>
- <bf7a8ce661277aca3c4dede5fb17ef4163a56027.camel@fi.rohmeurope.com>
+        Tue, 29 Oct 2019 09:51:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572357064;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+Ptrz2Yswaus+WKDG/vA8NkrbE6i0FJ85P0xohydacQ=;
+        b=bIwIy3WfalptrpmuhKEZawE1vJtp29PhYBB11AAHS1GoRejlawbrKM737MAe1OlQDUDfXz
+        DMnkJz89lW7aJeozM5JYqgKS0/u7BPrMxJiuBbTsgvJyw34nCZ2lmGe+XsfKECgSIPZkdX
+        LADtV05ZiuC6nhFr/4s0bZJ6ahNXuyQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-gah7qXDgP22w51ewU25bFw-1; Tue, 29 Oct 2019 09:51:00 -0400
+Received: by mail-wm1-f72.google.com with SMTP id f2so882629wmf.8
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 06:51:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UlvxO01Z2Ul860RxIp3leF/YeqCFOTpWgj3ZwcjunwQ=;
+        b=rnDbw+ipZxGCrh7zXPrkADlJq9b1kG85kshEoAkJDMx3Oh/ruoJ6yjkhVipTqiiWBQ
+         OoBjxOqajSr+zcuOW04N5Jdpjl7kiZpgDuCltgKpAYVJnKnmtpKKedWptJoLus7HPAIT
+         ykMpbMAeOzr6oRfD5OXCJPN1krVoM6CN41H0edlxp0iO4n1t0uQWM//IvUzuuPtgFjD4
+         c5Mo0qyUeEZGQz3/T1wzjkliHym4K2dwkWfoCDstgXgz5UwO9c/ep7hWSON0LqW7TeXl
+         6M1sm7n0mA7J4DcsWgubRMUxpuhR11Oq2+DRHr8RHi2dRgU2DaizXlpr4US3toXeeAaz
+         C0rA==
+X-Gm-Message-State: APjAAAUdMr9M+TLyhmzGt/h8GL7SgfHxCgS5cxS8wC7YLMeRQV26GBmU
+        8Xfd+zh0yRBzkGRm0vnvDfPiUm2xG5xGeP4FeB1GRuFWeq9omrf5PlYCYYAJr/cSbIVKQVSfhvS
+        WSQAsNSRTa1JhulSH+kkbOIon
+X-Received: by 2002:a5d:4606:: with SMTP id t6mr19071451wrq.173.1572357059286;
+        Tue, 29 Oct 2019 06:50:59 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxiNpbtiXQVaQtMbJhepi411mWyeAD9dyQuax48oQX25AnmundSwJpn6ZhYZJEjeyZL5wFNuA==
+X-Received: by 2002:a5d:4606:: with SMTP id t6mr19071429wrq.173.1572357059102;
+        Tue, 29 Oct 2019 06:50:59 -0700 (PDT)
+Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
+        by smtp.gmail.com with ESMTPSA id 189sm2556920wmc.7.2019.10.29.06.50.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 06:50:58 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S . Miller " <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Blakey <paulb@mellanox.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 0/4] ICMP flow improvements
+Date:   Tue, 29 Oct 2019 14:50:49 +0100
+Message-Id: <20191029135053.10055-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf7a8ce661277aca3c4dede5fb17ef4163a56027.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MC-Unique: gah7qXDgP22w51ewU25bFw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/10/2019 10:27:43+0000, Vaittinen, Matti wrote:
-> Hello again Alexandre,
-> 
-> On Thu, 2019-10-17 at 12:48 +0200, Alexandre Belloni wrote:
-> > On 17/10/2019 10:36:44+0000, Vaittinen, Matti wrote:
-> > > Hello Alexandre,
-> > > 
-> > > Thanks for quick check! I'll be off for the rest of the week but I
-> > > will
-> > > re-work this patch at next week :) I agree with you regarding most
-> > > of
-> > > the comments.
-> > > 
-> > > > > +
-> > > > > +
-> > > > > +/*
-> > > > > + * RTC definitions shared between
-> > > > > + *
-> > > > > + * BD70528
-> > > > > + * and BD71828
-> > > > > + */
-> > > > > +
-> > > > > +#define ROHM_BD1_MASK_RTC_SEC		0x7f
-> > > > > +#define ROHM_BD1_MASK_RTC_MINUTE	0x7f
-> > > > > +#define ROHM_BD1_MASK_RTC_HOUR_24H	0x80
-> > > > > +#define ROHM_BD1_MASK_RTC_HOUR_PM	0x20
-> > > > > +#define ROHM_BD1_MASK_RTC_HOUR		0x3f
-> > > > > +#define ROHM_BD1_MASK_RTC_DAY		0x3f
-> > > > > +#define ROHM_BD1_MASK_RTC_WEEK		0x07
-> > > > > +#define ROHM_BD1_MASK_RTC_MONTH		0x1f
-> > > > > +#define ROHM_BD1_MASK_RTC_YEAR		0xff
-> > > > > +#define ROHM_BD1_MASK_ALM_EN		0x7
-> > > > > +
-> > > > 
-> > > > All that renaming is distracting and useless. Please resubmit
-> > > > without
-> > > > renaming defines, structs and functions to make it easier to
-> > > > review.
-> > > 
-> > > I would prefer renaming because it makes it clearly visible which
-> > > defines/structs/functions are common for both PMICs and which are
-> > > PMIC
-> > > specific. But I really understand the problem of spotting real
-> > > changes.
-> > > Would it be Ok if I did renaming in separate patch which does not
-> > > bring
-> > > in any other changes - and then the functional changes in separate
-> > > patch?
-> > > 
-> > 
-> > No, unless you can guarantee that all future PMICs from rohm matching
-> > the wildcard will use this driver.
-> > 
-> I started re-working this patch and remembered my original idea
-> regarding the naming :) I should have commented it as I had already
-> forgotten it. You are correct what comes to the difficulty of using
-> correct wild-cards. And I agree with you what comes to function and
-> struct names like bd7xx28 - those are somewhat fragile as next PMIC
-> which we want to support with this driver may be BD12345 - yielding our
-> wild-card useless.
-> 
-> But if we take a look of common definitions in header rohm-shared.h
-> which I added - those are prefixed as ROHM_BD1. My idea was introducing
-> this common RTC define group 1 - which would be common define group for
-> all devices which belong to BD1 group. Currently that would be BD71828
-> and BD70528. What was missing is the comment explaining this (and lack
-> of comment made this useless as even I forgot it already).
-> 
-> I already reverted this naming change and all BD70528 specific and
-> common defines/functions/enums are prefixed with the good old BD70528.
-> Only new definitions which I added for BD71828 are prefixed with
-> BD71828. But how do you see the grouping the common defines to format
-> ROHM_BD<group number>_FOO_BAR in the rohm-shared.h - with comment that
-> group BD1 consists of definitions which are common for BD70528 and
-> BD71828?
-> 
-> My only fear when using prefix BD70528 for common defines is that
-> someone changes some defines to match the BD70528 data-sheet without
-> evaluating if this impacts to other PMICs. It may be useless paranoia
-> though - hence I am asking for your opinion at this phase. I can do
-> this grouping in own patch - or just leave it as it is now in my local
-> repo - with the old BD70528 being common prefix.
-> 
+This series improves the flow inspector handling of ICMP packets:
+The first two patches just add some comments in the code which would have s=
+aved
+me a few minutes of time, and refactor a piece of code.
+The third one adds to the flow inspector the capability to extract the
+Identifier field, if present, so echo requests and replies are classified
+as part of the same flow.
+The fourth patch uses the function introduced earlier to the bonding driver=
+,
+so echo replies can be balanced across bonding slaves.
 
-I don't think those masks will ever change, all the BCD RTCs are using
-the same.
+v1 -> v2:
+ - remove unused struct members
+ - add an helper to check for the Id field
+ - use a local flow_dissector_key in the bonding to avoid
+   changing behaviour of the flow dissector
 
-Note that ROHM_BD1_MASK_RTC_HOUR_24H, ROHM_BD1_MASK_RTC_HOUR_PM and
-ROHM_BD1_MASK_ALM_EN are bits and should use BIT() to make that clear.
-Those may change later but I don't see how someone looking at the
-BD70528 datasheet would get those wrong.
+Matteo Croce (4):
+  flow_dissector: add meaningful comments
+  flow_dissector: skip the ICMP dissector for non ICMP packets
+  flow_dissector: extract more ICMP information
+  bonding: balance ICMP echoes in layer3+4 mode
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+ drivers/net/bonding/bond_main.c |  77 ++++++++++++++++++++---
+ include/net/flow_dissector.h    |  20 +++---
+ net/core/flow_dissector.c       | 108 +++++++++++++++++++++++---------
+ 3 files changed, 160 insertions(+), 45 deletions(-)
+
+--=20
+2.21.0
+
