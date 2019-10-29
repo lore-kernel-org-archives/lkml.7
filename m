@@ -2,109 +2,140 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682FFCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C9ACA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAFE2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Dj0yQWOT"
+	by mail.kernel.org (Postfix) with ESMTP id 9C7BD2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572380406;
+	bh=Clnomsacv7T6a/ubml3afB3fbMamN9cVGn6ssr4l9qY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tkPcT1F7tJKxcYfyHbE7JW37UMqSXniwtODQU606Mhx05PyC8J1JuxCFtn7Ubjte6
+	 DZzYkN0SyboefSBD3AddAKFETVqk2s4nNLrtSBMWRHXLXzeDqXmUlgfM+tElHVLdRL
+	 5cF/2yXxpNIT4mneV61sEBH+xk9eQqJhC+pYHFCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfJ2URq (ORCPT
+        id S1726619AbfJ2UUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:17:46 -0400
-Received: from vps.xff.cz ([195.181.215.36]:37728 "EHLO vps.xff.cz"
+        Tue, 29 Oct 2019 16:20:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726244AbfJ2URp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:17:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572380264; bh=wW5JFIsIsJu0qPYpAaTlE7obxGziUNClJYFMYvv4v04=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Dj0yQWOTPdD26/mFn0ZEgxk2VXGGM6MomYqE+KAtPCZjp2/fHu+uNncetcslpRtrj
-         +06T0cawiwc4SOgkF32JWGQOE4Q5KV0T2QLSPJqy4j3qmbwSy6GauIIdPBqsaP52HE
-         GdIxDfnxZqnmv74Jw8xQVxF4znG7RaGAPPwCc1wI=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 0/4] Add USB 3 support for H6 and Orange Pi 3
-Date:   Tue, 29 Oct 2019 21:17:37 +0100
-Message-Id: <20191029201741.3820913-1-megous@megous.com>
+        id S1725951AbfJ2UUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:20:05 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E3DF2086A;
+        Tue, 29 Oct 2019 20:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572380404;
+        bh=Clnomsacv7T6a/ubml3afB3fbMamN9cVGn6ssr4l9qY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=S/8rYQezY07m5/GuMp+eUDHBLwmHpdOZheShfDHSS0hS/0TCprkl6ldKq5gKVDIyW
+         P1t9wBcIP2MPDRDtsHKYMWNwZe8Nblj6cSyyGnQpVgsTCSR/+lYKFuFbfcjLqXdhMP
+         lCrKFEYbyLKtfKqPEYsSY+I+THwku5JITalxHVS4=
+Received: by mail-qt1-f174.google.com with SMTP id l3so896qtp.2;
+        Tue, 29 Oct 2019 13:20:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAXaYPfVSYvJiP4EUh8kgUy5mjz288IKjy8VleAyYt/qLUnmZvs/
+        bTKdSfsfAWCoLTvy4xnW+5w1pGtLYBrTE1xWKA==
+X-Google-Smtp-Source: APXvYqxabGX/POiNRA0N56A14M3a7t/UWULx2rYZa74WIi4+N6DZNC2UX/jDPYkIQG5TuAM8HOsEpCdBSi3MN/Svr1k=
+X-Received: by 2002:ac8:70c4:: with SMTP id g4mr1134179qtp.136.1572380403327;
+ Tue, 29 Oct 2019 13:20:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1571387933-23397-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20191029015708.GA29561@bogus> <TYAPR01MB4544FD4F09FAA09F7AF79EF0D8610@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB4544FD4F09FAA09F7AF79EF0D8610@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 29 Oct 2019 15:19:52 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+H-4V=v0GTUgTXAiwOtn_BoMtcMpinb1v51V_Jy9mBXA@mail.gmail.com>
+Message-ID: <CAL_Jsq+H-4V=v0GTUgTXAiwOtn_BoMtcMpinb1v51V_Jy9mBXA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: phy: renesas: usb2-phy: convert bindings to json-schema
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     "kishon@ti.com" <kishon@ti.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series implements USB 3 support for Xunlong Orange Pi 3 board.
+On Mon, Oct 28, 2019 at 11:14 PM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+>
+> Hi Rob,
+>
+> Thank you for your review!
+>
+> > From: Rob Herring, Sent: Tuesday, October 29, 2019 10:57 AM
+> >
+> > On Fri, Oct 18, 2019 at 05:38:53PM +0900, Yoshihiro Shimoda wrote:
+> > > Convert Renesas R-Car generation 3 USB 2.0 PHY bindings documentation
+> > > to json-schema.
+> > >
+> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > ---
+> > >  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 --------------
+> > >  .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 106 +++++++++++++++++++++
+> > >  2 files changed, 106 insertions(+), 70 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> >
+> >
+> > > diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> > b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> > > new file mode 100644
+> > > index 00000000..0f109c2
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> > > @@ -0,0 +1,106 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/phy/renesas,usb2-phy.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Renesas R-Car generation 3 USB 2.0 PHY
+> > > +
+> > > +maintainers:
+> > > +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> >
+> > This:
+>
+> What does the "This:" mean?
 
-This is a re-hash of the Icenowy's earlier USB3 work[1] without code
-that caused controversy previously. Orange Pi 3 board doesn't need vbus
-supply to be dynamically enabled, so that code is not needed to support
-USB3 on this board.
+I was referring to the 3 lines below. I was trying to be clear which
+lines to replace with just 'const'.
 
-Most of patches are already reviewed. I've converted dt-bindings to yaml
-format, and added the Orange Pi 3 board modifications.
-
-Hopefully with this series we can get USB3 support into mainline for
-Orange Pi 3, and build on it later to support more boards, where
-supporting them is more complicated.
-
-Please take a look.
-
-thank you and regards,
-  Ondrej Jirman
-
-[1] https://lore.kernel.org/patchwork/patch/1058919/
-
-Changes in v3:
-- Added DT reviewed-by tag
-- more sun50i / H6 name clarifications (Kconfig, ...)
-- dropped USB_COMMON and linux/usb/of.h
-
-Changes in v2:
-- Added Maxime's Acked-By's
-- Fixed title of DT bindings file
-
-Changes since Icenowy v5 series:
-- use earlier patches that did not include VBUS regulator/connector
-  code
-- converted dt bindings to yaml
-- added patch to enable usb3 on Orange Pi 3
-
-Icenowy Zheng (2):
-  phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC
-  arm64: dts: allwinner: h6: add USB3 device nodes
-
-Ondrej Jirman (2):
-  dt-bindings: Add bindings for USB3 phy on Allwinner H6
-  arm64: dts: allwinner: orange-pi-3: Enable USB 3.0 host support
-
- .../phy/allwinner,sun50i-h6-usb3-phy.yaml     |  47 +++++
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    |   8 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  32 +++
- drivers/phy/allwinner/Kconfig                 |  11 +
- drivers/phy/allwinner/Makefile                |   1 +
- drivers/phy/allwinner/phy-sun50i-usb3.c       | 190 ++++++++++++++++++
- 6 files changed, 289 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
- create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
-
--- 
-2.23.0
-
+> If I replaced the "oneOf:" with "This:",
+> the following error happens when "make dt_binding_check":
+>
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+> warning: no schema found in file: Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> [snip]/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml: ignoring, error in schema 'compatible'
+> Documentation/devicetree/bindings/Makefile:33: recipe for target 'Documentation/devicetree/bindings/processed-schema.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/processed-schema.yaml] Error 255
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+> > > +      - items:
+> > > +          - enum:
+> > > +              - renesas,usb2-phy-r8a77470 # RZ/G1C
+> >
+> > You can simplify to just:
+> >
+> >          - const: renesas,usb2-phy-r8a77470 # RZ/G1C
+>
+> I'll fix it.
