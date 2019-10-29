@@ -2,105 +2,136 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE42CCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4A4CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6B52067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F5A2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:43:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="wavt2/1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbfJ2InE (ORCPT
+        id S1729798AbfJ2InZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:43:04 -0400
-Received: from mga06.intel.com ([134.134.136.31]:55781 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbfJ2InD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:43:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 01:43:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="224901941"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.122])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Oct 2019 01:42:59 -0700
-Date:   Tue, 29 Oct 2019 10:42:58 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        Ken Goldman <kgold@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Message-ID: <20191029084258.GA5649@linux.intel.com>
-References: <20191008235339.GB13926@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
- <20191014190033.GA15552@linux.intel.com>
- <1571081397.3728.9.camel@HansenPartnership.com>
- <20191016110031.GE10184@linux.intel.com>
- <1571229252.3477.7.camel@HansenPartnership.com>
- <20191016162543.GB6279@linux.intel.com>
- <1571253029.17520.5.camel@HansenPartnership.com>
- <20191017180440.GG6667@linux.intel.com>
- <20191021113939.GA11649@linux.intel.com>
+        Tue, 29 Oct 2019 04:43:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41696 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbfJ2InZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:43:25 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p4so12628931wrm.8
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 01:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2Y1e6eXMXynj3RVm6A/v7p+Rx7z46GaGYsW4oOsjovc=;
+        b=wavt2/1wTjV79EJap7JbgnE2Twi+9BnBLl1BHzBNl3vIs2ZXYZ5HrrxkfM3CKwswgj
+         sw6aeOhyfWasmAuDA08IFOYHsMO5LIBf5pt7y/wA3OVWD1tdoJBDyMNGJDcZHed3K0hQ
+         TGIps6ZZGwOZNPavurYTlkGlU30hmfoZIJOEcYN97v5MIS0O24fHR+K8ChWaH2zKHIsh
+         ICO8D+vwppTHPxR+5+JldQ3zx6FnSsFOXwCb8M9bkBt88WuwnipSdlRin1MJUpzqVmXp
+         EVrEom4gkCv75CNw3zuLBldoeXeMrrVQ1LiZ6DAEtqXZf6rd2VdeislzDMV+Bh1GEfnV
+         poIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Y1e6eXMXynj3RVm6A/v7p+Rx7z46GaGYsW4oOsjovc=;
+        b=njNlhyjuabjo5g+co/oHC0zZOtk0b10lXf3NCWE7dv/FmsVQTke1e/HJjiVE4ujLdA
+         6sMs47V09UExAXtho+QKst/CCwBxcsszAObWO/GDNk7iyGRbnCRSTEXyAgkOOlHxgl3p
+         GHGiVkSRGARxyvB/YUd66msyEVwaPeaivh5vsJ4QudgKKBr546YXidJBTcEFwb8PCvv+
+         li18fFBPlU9NDjbbwbE4BzRBK0ZbN6Et8l1tQSBIeYMjT+iZrHvJ8FNkEjWT6KySrwKs
+         XlIgLYeH+G8Ryxny3NUHwIaQBGgHdGLu0gKsJOAWyMv9nZ63VofWEQ4JTEX+3RxYwoKe
+         8+Hw==
+X-Gm-Message-State: APjAAAV2PJjSGbhlLnRDdUUQyK4W+xoPhnEsYydAo9Bs2NhvwTUVNm37
+        T594DbFg30/0jT2+nZyl/Z2avA==
+X-Google-Smtp-Source: APXvYqx+LFWSW8vxJhxbdOsjx1jGLoXPJPKXrqqM25niggkWBSCsM/ioC7zlbwA136enGM6e3I1O9g==
+X-Received: by 2002:adf:f152:: with SMTP id y18mr19562113wro.285.1572338603282;
+        Tue, 29 Oct 2019 01:43:23 -0700 (PDT)
+Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
+        by smtp.gmail.com with ESMTPSA id p10sm15381693wrx.2.2019.10.29.01.43.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 01:43:22 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 09:43:21 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net, swinslow@gmail.com,
+        will@kernel.org, opensource@jilayne.com, baijiaju1990@gmail.com,
+        tglx@linutronix.de, linux-wireless@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, saurav.girepunje@hotmail.com
+Subject: Re: [PATCH] b43: Fix use true/false for bool type
+Message-ID: <20191029084320.GC23615@netronome.com>
+References: <20191028190204.GA27248@saurav>
+ <20191029082427.GB23615@netronome.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021113939.GA11649@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20191029082427.GB23615@netronome.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:39:39PM +0300, Jarkko Sakkinen wrote:
-> On Thu, Oct 17, 2019 at 09:04:40PM +0300, Jarkko Sakkinen wrote:
-> > On Wed, Oct 16, 2019 at 03:10:29PM -0400, James Bottomley wrote:
-> > > On Wed, 2019-10-16 at 19:25 +0300, Jarkko Sakkinen wrote:
-> > > > On Wed, Oct 16, 2019 at 08:34:12AM -0400, James Bottomley wrote:
-> > > > > reversible ciphers are generally frowned upon in random number
-> > > > > generation, that's why the krng uses chacha20.  In general I think
-> > > > > we shouldn't try to code our own mixing and instead should get the
-> > > > > krng to do it for us using whatever the algorithm du jour that the
-> > > > > crypto guys have blessed is.  That's why I proposed adding the TPM
-> > > > > output to the krng as entropy input and then taking the output of
-> > > > > the krng.
-> > > > 
-> > > > It is already registered as hwrng. What else?
-> > > 
-> > > It only contributes entropy once at start of OS.
-> > 
-> > Ok.
-> > 
-> > > >  Was the issue that it is only used as seed when the rng is init'd
-> > > > first? I haven't at this point gone to the internals of krng.
-> > > 
-> > > Basically it was similar to your xor patch except I got the kernel rng
-> > > to do the mixing, so it would use the chacha20 cipher at the moment
-> > > until they decide that's unsafe and change it to something else:
-> > > 
-> > > https://lore.kernel.org/linux-crypto/1570227068.17537.4.camel@HansenPartnership.com/
-> > > 
-> > > It uses add_hwgenerator_randomness() to do the mixing.  It also has an
-> > > unmixed source so that read of the TPM hwrng device works as expected.
-> > 
-> > Thinking that could this potentially racy? I.e. between the calls
-> > something else could eat the entropy added?
+On Tue, Oct 29, 2019 at 09:24:27AM +0100, Simon Horman wrote:
+> Hi Saurav,
 > 
-> Also, what is wrong just taking one value from krng and mixing
-> it with a value from TPM RNG where needed? That would be non-racy
-> too.
+> thanks for your patch.
+> 
+> On Tue, Oct 29, 2019 at 12:32:04AM +0530, Saurav Girepunje wrote:
+> > use true/false on bool type variable assignment.
+> > 
+> > Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+> 
+> This does not seem to cover the case in dma.c,
+> which seems to want fixing for the sake of consistency.
 
-I guess we can move forward with this?
+I now see this handled in a separate patch, sorry for the noise.
 
-/Jarkko
+> Also, I wonder why bools rather than a bitmask was chosen
+> for this field, it seems rather space intensive in its current form.
+> 
+> > ---
+> >  drivers/net/wireless/broadcom/b43/main.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
+> > index b85603e91c7a..39da1a4c30ac 100644
+> > --- a/drivers/net/wireless/broadcom/b43/main.c
+> > +++ b/drivers/net/wireless/broadcom/b43/main.c
+> > @@ -3600,7 +3600,7 @@ static void b43_tx_work(struct work_struct *work)
+> >  			else
+> >  				err = b43_dma_tx(dev, skb);
+> >  			if (err == -ENOSPC) {
+> > -				wl->tx_queue_stopped[queue_num] = 1;
+> > +				wl->tx_queue_stopped[queue_num] = true;
+> >  				ieee80211_stop_queue(wl->hw, queue_num);
+> >  				skb_queue_head(&wl->tx_queue[queue_num], skb);
+> >  				break;
+> > @@ -3611,7 +3611,7 @@ static void b43_tx_work(struct work_struct *work)
+> >  		}
+> >  
+> >  		if (!err)
+> > -			wl->tx_queue_stopped[queue_num] = 0;
+> > +			wl->tx_queue_stopped[queue_num] = false;
+> >  	}
+> >  
+> >  #if B43_DEBUG
+> > @@ -5603,7 +5603,7 @@ static struct b43_wl *b43_wireless_init(struct b43_bus_dev *dev)
+> >  	/* Initialize queues and flags. */
+> >  	for (queue_num = 0; queue_num < B43_QOS_QUEUE_NUM; queue_num++) {
+> >  		skb_queue_head_init(&wl->tx_queue[queue_num]);
+> > -		wl->tx_queue_stopped[queue_num] = 0;
+> > +		wl->tx_queue_stopped[queue_num] = false;
+> >  	}
+> >  
+> >  	snprintf(chip_name, ARRAY_SIZE(chip_name),
+> > -- 
+> > 2.20.1
+> > 
+> 
