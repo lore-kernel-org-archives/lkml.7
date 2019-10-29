@@ -2,546 +2,245 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE06CCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442DDCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FADF21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AD7A21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="gLnlXTwF"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I8mlcOfU";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iOCuzRPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbfJ2MXf (ORCPT
+        id S1732234AbfJ2MYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:23:35 -0400
-Received: from mail-eopbgr80059.outbound.protection.outlook.com ([40.107.8.59]:60388
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729317AbfJ2MXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:23:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a6QYEgm7BFEGNTZEm2wJ603IOEdi2BQKN4Hyaxr3wZk2nn4oTuez4kBw49QoU4UUu0ZExVNYuxGXNMVt4QtLGa5OemobaLNpaezoV5+X6DAOW5PxuWpaF6OB59KiJy1WSfYnRtWeiyc7CBccRzQ33vrDwRg50sQy2QlCL/AZ+3L3bRp187X0POR57zj/IRrH/lxSA86I/7gLD1yUYH3SmGZhBB4+izHNiR4I8MUOhEsxStdQwEY9WmpCSshuP7ckGCA7vDXY6qIJGbWj55u9UmK+aKwCu8rCp45r70TOEueQ0LoUBdgCD6QqFYcI1/SZxzazIlC/PAN5S+7R/iKwrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LwvwHf2J3piXSf2Q8PhGbanqGIHbah8KHV2R62rDMig=;
- b=HUaSfF5joZtnGxASZAbIg0+eiw2s6n6azoi4XwnsmOz9RaEU2cp083X/Cf7215sa/+qbzHgc5VlDoh5xHgZ0l8s5mHPsFZ4iXLjoWUC7LfgThVXD8OxGebxCdIEmGLmko4OSKjXQOEDqyIABAKzPCf+xKUncg1+9RKDYYUvI4aqHd3uTe9OnDkIoTqS64tjgiNtoxDm0PjzNM9y+6AGZCgJ2Pz4ZEzh4yPzCdzV9v2AWew4xLeadCzYGIWiAuZEaqQePTKiKG5oi4DKH059gfxyA6RqCxJQBOSBCi6eoUmdKEHr0wIPsbQSQhLGigwB65bTLaJYwlJzVVdGn9lHw1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kococonnector.com; dmarc=pass action=none
- header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LwvwHf2J3piXSf2Q8PhGbanqGIHbah8KHV2R62rDMig=;
- b=gLnlXTwFL17ZfEjGCIDQQ/g793BsihYaFdTlKpn4icBuVKu1LMCL/ITlN971Yyn8ui2BPQufiAScNj3/0nrA2qmLpIO8X677JkiUtNlAE0ZTKl5o45WFUJyH4GuZS90KBAUdDY/EMgycCxhqLbKYt/xuMT7P3SsaiQG1J0E++/U=
-Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com (10.170.212.23) by
- DB6PR0902MB1799.eurprd09.prod.outlook.com (10.171.74.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.17; Tue, 29 Oct 2019 12:23:11 +0000
-Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com
- ([fe80::b1b2:ecb1:9c98:6b74]) by DB6PR0902MB2072.eurprd09.prod.outlook.com
- ([fe80::b1b2:ecb1:9c98:6b74%6]) with mapi id 15.20.2387.027; Tue, 29 Oct 2019
- 12:23:11 +0000
-From:   Oliver Graute <oliver.graute@kococonnector.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "oliver.graute@gmail.com" <oliver.graute@gmail.com>,
-        "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>,
-        "peng.fan@nxp.com" <peng.fan@nxp.com>,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Pramod Kumar <pramod.kumar_1@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
-        Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [RFC PATCH 1/1] arm64: dts: added basic DTS for qmx8 congatec board
-Thread-Topic: [RFC PATCH 1/1] arm64: dts: added basic DTS for qmx8 congatec
- board
-Thread-Index: AQHVjlOhmUO+GQPCiUm3JhXNjuywwQ==
-Date:   Tue, 29 Oct 2019 12:23:11 +0000
-Message-ID: <20191029122026.14208-2-oliver.graute@kococonnector.com>
-References: <20191029122026.14208-1-oliver.graute@kococonnector.com>
-In-Reply-To: <20191029122026.14208-1-oliver.graute@kococonnector.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0023.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100::35)
- To DB6PR0902MB2072.eurprd09.prod.outlook.com (2603:10a6:6:8::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oliver.graute@kococonnector.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [193.47.161.132]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5fb5f1b5-ce34-44cb-6d2f-08d75c6ac230
-x-ms-traffictypediagnostic: DB6PR0902MB1799:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0902MB1799D9D51BA135B48A54DF73EB610@DB6PR0902MB1799.eurprd09.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1227;
-x-forefront-prvs: 0205EDCD76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39830400003)(346002)(136003)(396003)(199004)(189003)(36756003)(6306002)(86362001)(386003)(966005)(6506007)(6916009)(6116002)(316002)(14444005)(256004)(5640700003)(1076003)(99286004)(11346002)(486006)(476003)(2906002)(6512007)(2616005)(26005)(2501003)(54906003)(44832011)(4326008)(186003)(66946007)(14454004)(446003)(66476007)(7736002)(8936002)(102836004)(305945005)(7416002)(508600001)(50226002)(8676002)(81156014)(1730700003)(2351001)(64756008)(66446008)(6436002)(81166006)(71200400001)(71190400001)(66556008)(25786009)(5660300002)(76176011)(52116002)(6486002)(3846002)(66066001)(30864003)(414714003)(473944003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0902MB1799;H:DB6PR0902MB2072.eurprd09.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: kococonnector.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZBYfRbRMTiDzUYNMFl9MhS/0YmUdMhTRpNOvs6Y97GKteYWlXQTZSDNO2iOgfG9eIpMb75QTHOk31LSfMzShS+joag19rodqbxKHSamoNZlm6KspoBmAWyPAW38rxC56wCQ9+PWRId9tCapZAN47LVrGA/5N7WvM/nBIeKIHAOMlQtBfDgNHBsK9OkR4CI8Cg10C58F/vaUeHahtpHeaFHS/u77L87OAyKMaKt7dysXjkQorBcwaXjsBMgSdl+Fd4yeIss2TP0hRL8bbciZeIlzUcszy2iJjSINTXUKKlj3Bt7G2NCGuyykFfB+d4xlKQQPbtx9dD63PgktUOogX0esJeeB7GXy0t/7EisXTdpTSw8pqZrmKX1xorXbC6+vlDDQvYNcB2QRxv1kFQ4N2xf3tavimCilGcQ3gR3HpbmhA/8tIQkifqqCGf4N1pjN02Bntg26i6Nkuylc1rIiDkxbpB0Jw7GYVj2hKhS6RNkw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: kococonnector.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fb5f1b5-ce34-44cb-6d2f-08d75c6ac230
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 12:23:11.4163
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 59845429-0644-4099-bd7e-17fba65a2f2b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: A8LkQlnQnojIutiR+zwIZlE7H5cx44HAV7hXKyZIlAWiHTVYdmlB7rFsDZb0DYiOYWfQICAVUX6OcDxbA/bNFBtDbmE8UBahZ6zg7pPfEv8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0902MB1799
+        Tue, 29 Oct 2019 08:24:16 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55714 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbfJ2MYP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:24:15 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id AAA3060D82; Tue, 29 Oct 2019 12:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572351854;
+        bh=/Qo6Hv2FZsKypPRWNYDV4xww0EnSM9kVbfvsdPCr1nw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I8mlcOfU0VXU3tV+Qj6tPnLeyBBGm3HC0tgeuen3RTCfsLOsCy/OG3/5icV3EFF3h
+         EQh1OZX5jhDuXaK9yCkyCOi/0CJGl2q3EoM3lQwuXcP0EX8FS+Id4J1cEhtUE5yqC3
+         PokO7S2LxtISZ++mbL8SFZRGTHnknsg/IrqyRLPo=
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0BD7F60E41;
+        Tue, 29 Oct 2019 12:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572351847;
+        bh=/Qo6Hv2FZsKypPRWNYDV4xww0EnSM9kVbfvsdPCr1nw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iOCuzRPkGSJuwdWuVDb6QMSlNziOd/aSpGC8nfTI95KMtLLLFdaZdMxZIT+jXgP0w
+         /5h6wHa8GBF52VvzZHup0xWUNoqUxqDfYQ8PAk/J1rSMaP9JOLeHO/f8ldjuDL0Orf
+         GMNr+YUDXQAeOsi4tljAefq5XjaXZt4I+ekmG/GY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0BD7F60E41
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Subhash Jadavani <subhashj@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1 1/2] scsi: ufs: Fix up clock scaling
+Date:   Tue, 29 Oct 2019 05:23:48 -0700
+Message-Id: <1572351831-30373-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1572351831-30373-1-git-send-email-cang@codeaurora.org>
+References: <1572351831-30373-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic dts support for a Congatec iMX8QM Qseven Board
+From: Subhash Jadavani <subhashj@codeaurora.org>
 
-Product Page: https://www.congatec.com/de/produkte/qseven/conga-qmx8x.html
+In host reset and restore path, after hba is stopped but before it is
+enabled back again, we scale up clocks to their max frequencies.
+If clock scale notify vendor specific ops happens to have any operations
+to hba, DME commands for example, it would fail due to hba is stopped at
+this moment. This change introduces another func to explicitly set clock
+frequency so that it can be used here and also in ufshcd_scale_clks().
+Meanwhile, this change modifies the clock scaling preparation error out
+path so that clock is released before it returns.
 
-Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
+Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
 ---
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../boot/dts/freescale/imx8qm-cgt-qmx8.dts    | 391 ++++++++++++++++++
- 2 files changed, 392 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-cgt-qmx8.dts
+ drivers/scsi/ufs/ufshcd.c | 74 +++++++++++++++++++++++++++++++----------------
+ 1 file changed, 49 insertions(+), 25 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/f=
-reescale/Makefile
-index 5f7e4aa0da60..a3639654c567 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -31,6 +31,7 @@ dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-nitrogen.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-pico-pi.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-zii-ultra-rmb3.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-zii-ultra-zest.dtb
-+dtb-$(CONFIG_ARCH_MXC) +=3D imx8qm-cgt-qmx8.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8qxp-ai_ml.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8qxp-mek.dtb
-=20
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-cgt-qmx8.dts b/arch/arm64=
-/boot/dts/freescale/imx8qm-cgt-qmx8.dts
-new file mode 100644
-index 000000000000..e1597bbfe0f5
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-cgt-qmx8.dts
-@@ -0,0 +1,391 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017 NXP
-+ * Copyright (C) 2019 Oliver Graute <oliver.graute@kococonnector.com>
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index c28c144..3a0b99b 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -903,28 +903,29 @@ static bool ufshcd_is_unipro_pa_params_tuning_req(struct ufs_hba *hba)
+ 		return false;
+ }
+ 
+-static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
++/**
++ * ufshcd_set_clk_freq - set UFS controller clock frequencies
++ * @hba: per adapter instance
++ * @scale_up: If True, set max possible frequency othewise set low frequency
++ *
++ * Returns 0 if successful
++ * Returns < 0 for any other errors
 + */
-+/dts-v1/;
++static int ufshcd_set_clk_freq(struct ufs_hba *hba, bool scale_up)
+ {
+ 	int ret = 0;
+ 	struct ufs_clk_info *clki;
+ 	struct list_head *head = &hba->clk_list_head;
+-	ktime_t start = ktime_get();
+-	bool clk_state_changed = false;
+ 
+ 	if (list_empty(head))
+ 		goto out;
+ 
+-	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
+-	if (ret)
+-		return ret;
+-
+ 	list_for_each_entry(clki, head, list) {
+ 		if (!IS_ERR_OR_NULL(clki->clk)) {
+ 			if (scale_up && clki->max_freq) {
+ 				if (clki->curr_freq == clki->max_freq)
+ 					continue;
+ 
+-				clk_state_changed = true;
+ 				ret = clk_set_rate(clki->clk, clki->max_freq);
+ 				if (ret) {
+ 					dev_err(hba->dev, "%s: %s clk set rate(%dHz) failed, %d\n",
+@@ -943,7 +944,6 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
+ 				if (clki->curr_freq == clki->min_freq)
+ 					continue;
+ 
+-				clk_state_changed = true;
+ 				ret = clk_set_rate(clki->clk, clki->min_freq);
+ 				if (ret) {
+ 					dev_err(hba->dev, "%s: %s clk set rate(%dHz) failed, %d\n",
+@@ -962,13 +962,36 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
+ 				clki->name, clk_get_rate(clki->clk));
+ 	}
+ 
++out:
++	return ret;
++}
 +
-+#include "imx8qm.dtsi"
++/**
++ * ufshcd_scale_clks - scale up or scale down UFS controller clocks
++ * @hba: per adapter instance
++ * @scale_up: True if scaling up and false if scaling down
++ *
++ * Returns 0 if successful
++ * Returns < 0 for any other errors
++ */
++int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
++{
++	int ret = 0;
 +
-+/ {
-+	model =3D "Congatec QMX8 Qseven series";
-+	compatible =3D "fsl,imx8qm-qmx8", "fsl,imx8qm";
++	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
++	if (ret)
++		return ret;
 +
-+	chosen {
-+		bootargs =3D "console=3DttyLP0,115200 earlycon=3Dlpuart32,0x5a060000,115=
-200";
-+		stdout-path =3D &lpuart0;
-+	};
++	ret = ufshcd_set_clk_freq(hba, scale_up);
++	if (ret)
++		return ret;
 +
-+	cpus {
-+		/delete-node/ cpu-map;
-+		/delete-node/ cpu@100;
-+		/delete-node/ cpu@101;
-+	};
-+
-+	memory@80000000 {
-+		device_type =3D "memory";
-+		reg =3D <0x00000000 0x80000000 0 0x40000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells =3D <2>;
-+		#size-cells =3D <2>;
-+		ranges;
-+
-+		/* global autoconfigured region for contiguous allocations */
-+		linux,cma {
-+			compatible =3D "shared-dma-pool";
-+			reusable;
-+			size =3D <0 0x28000000>;
-+			alloc-ranges =3D <0 0x80000000 0 0x80000000>;
-+			linux,cma-default;
-+		};
-+	};
-+
-+	regulators {
-+		compatible =3D "simple-bus";
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		reg_audio: regulator@0 {
-+			compatible =3D "regulator-fixed";
-+			reg =3D <2>;
-+			regulator-name =3D "cs42888_supply";
-+			regulator-min-microvolt =3D <3300000>;
-+			regulator-max-microvolt =3D <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_usdhc2_vmmc: usdhc2_vmmc {
-+			compatible =3D "regulator-fixed";
-+			regulator-name =3D "sw-3p3-sd1";
-+			regulator-min-microvolt =3D <3300000>;
-+			regulator-max-microvolt =3D <3300000>;
-+			gpio =3D <&lsio_gpio4 7 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+			off-on-delay =3D <3000>;
-+		};
-+
-+		reg_usdhc3_vmmc: usdhc3_vmmc {
-+			compatible =3D "regulator-fixed";
-+			regulator-name =3D "sw-3p3-sd2";
-+			regulator-min-microvolt =3D <3300000>;
-+			regulator-max-microvolt =3D <3300000>;
-+			gpio =3D <&lsio_gpio4 9 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+			off-on-delay =3D <3000>;
-+		};
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_fec1>;
-+	phy-mode =3D "rgmii";
-+	phy-handle =3D <&ethphy0>;
-+	fsl,magic-packet;
-+	fsl,rgmii_txc_dly;
-+	fsl,rgmii_rxc_dly;
-+	status =3D "okay";
-+
-+	mdio {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible =3D "ethernet-phy-ieee802.3-c22";
-+			reg =3D <6>;
-+			at803x,eee-disabled;
-+			at803x,vddio-1p8v;
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	#address-cells =3D <1>;
-+	#size-cells =3D <0>;
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_lpi2c0>;
-+	clock-frequency =3D <100000>;
-+	status =3D "okay";
-+
-+	rtc_ext: m41t62@68 {
-+		compatible =3D "st,m41t62";
-+		reg =3D <0x68>;
-+	};
-+};
-+
-+&lpuart0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_lpuart0>;
-+	status =3D "okay";
-+};
-+
-+&lpuart1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_lpuart1>;
-+	status =3D "okay";
-+};
-+
-+&lsio_gpio2 {
-+	status =3D "okay";
-+};
-+
-+&lsio_gpio5 {
-+	status =3D "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 =3D <&pinctrl_usdhc1>;
-+	pinctrl-1 =3D <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 =3D <&pinctrl_usdhc1_200mhz>;
-+	bus-width =3D <8>;
-+	non-removable;
-+	status =3D "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 =3D <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-1 =3D <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-2 =3D <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-+	bus-width =3D <4>;
-+	cd-gpios =3D <&lsio_gpio5 22 GPIO_ACTIVE_LOW>;
-+	wp-gpios =3D <&lsio_gpio5 21 GPIO_ACTIVE_HIGH>;
-+	vmmc-supply =3D <&reg_usdhc2_vmmc>;
-+	fsl,tuning-start-tap =3D <20>;
-+	fsl,tuning-step=3D <2>;
-+	status =3D "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 =3D <&pinctrl_usdhc3>, <&pinctrl_usdhc3_gpio>;
-+	pinctrl-1 =3D <&pinctrl_usdhc3_100mhz>, <&pinctrl_usdhc3_gpio>;
-+	pinctrl-2 =3D <&pinctrl_usdhc3_200mhz>, <&pinctrl_usdhc3_gpio>;
-+	bus-width =3D <4>;
-+	cd-gpios =3D <&lsio_gpio4 12 GPIO_ACTIVE_LOW>;
-+	vmmc-supply =3D <&reg_usdhc3_vmmc>;
-+	fsl,tuning-start-tap =3D <20>;
-+	fsl,tuning-step=3D <2>;
-+	no-1-8-v;
-+	status =3D "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_hog>;
-+
-+	imx8qm-qmx8 {
-+
-+		pinctrl_hog: hoggrp{
-+			fsl,pins =3D <
-+				IMX8QM_M40_GPIO0_01_LSIO_GPIO0_IO09		0x00000021
-+				IMX8QM_USB_SS3_TC1_LSIO_GPIO4_IO04		0x00000021
-+				IMX8QM_M40_GPIO0_00_LSIO_GPIO0_IO08		0x00000021
-+				IMX8QM_ESAI1_SCKT_LSIO_GPIO2_IO07		0x00000021
-+				IMX8QM_SPDIF0_TX_LSIO_GPIO2_IO15		0x00000021
-+				IMX8QM_FLEXCAN1_RX_LSIO_GPIO3_IO31		0x00000021
-+				IMX8QM_ESAI1_TX0_LSIO_GPIO2_IO08		0x00000021
-+				IMX8QM_FLEXCAN1_TX_LSIO_GPIO4_IO00		0x00000021
-+				IMX8QM_ESAI1_TX1_LSIO_GPIO2_IO09		0x00000021
-+			>;
-+		};
-+
-+		pinctrl_fec1: fec1grp {
-+			fsl,pins =3D <
-+				IMX8QM_ENET0_MDC_CONN_ENET0_MDC			0x06000020
-+				IMX8QM_ENET0_MDIO_CONN_ENET0_MDIO		0x06000020
-+				IMX8QM_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x06000020
-+				IMX8QM_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC	0x06000020
-+				IMX8QM_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0	0x06000020
-+				IMX8QM_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1	0x06000020
-+				IMX8QM_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2	0x06000020
-+				IMX8QM_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3	0x06000020
-+				IMX8QM_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC	0x06000020
-+				IMX8QM_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x06000020
-+				IMX8QM_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0	0x06000020
-+				IMX8QM_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1	0x06000020
-+				IMX8QM_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2	0x06000020
-+				IMX8QM_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3	0x06000020
-+			>;
-+		};
-+
-+		pinctrl_lpi2c0: lpi2c0grp {
-+			fsl,pins =3D <
-+				IMX8QM_HDMI_TX0_TS_SCL_DMA_I2C0_SCL	0xc600004c
-+				IMX8QM_HDMI_TX0_TS_SDA_DMA_I2C0_SDA	0xc600004c
-+			>;
-+		};
-+
-+		pinctrl_lpi2c1: lpi2c1grp {
-+			fsl,pins =3D <
-+				IMX8QM_GPT0_CLK_DMA_I2C1_SCL		0xc600004c
-+				IMX8QM_GPT0_CAPTURE_DMA_I2C1_SDA	0xc600004c
-+			>;
-+		};
-+
-+		pinctrl_lpuart0: lpuart0grp {
-+			fsl,pins =3D <
-+				IMX8QM_UART0_RX_DMA_UART0_RX		0x06000020
-+				IMX8QM_UART0_TX_DMA_UART0_TX		0x06000020
-+			>;
-+		};
-+
-+		pinctrl_lpuart1: lpuart1grp {
-+			fsl,pins =3D <
-+				IMX8QM_UART1_RX_DMA_UART1_RX		0x06000020
-+				IMX8QM_UART1_TX_DMA_UART1_TX		0x06000020
-+				IMX8QM_UART1_CTS_B_DMA_UART1_CTS_B	0x06000020
-+				IMX8QM_UART1_RTS_B_DMA_UART1_RTS_B	0x06000020
-+			>;
-+		};
-+
-+		pinctrl_lpuart3: lpuart3grp {
-+			fsl,pins =3D <
-+				IMX8QM_M41_GPIO0_00_DMA_UART3_RX	0x06000020
-+				IMX8QM_M41_GPIO0_01_DMA_UART3_TX	0x06000020
-+			>;
-+		};
-+
-+		pinctrl_usdhc1: usdhc1grp {
-+			fsl,pins =3D <
-+				IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000041
-+				IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000021
-+				IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000021
-+				IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000021
-+				IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000021
-+				IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000021
-+				IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000021
-+				IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000021
-+				IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000021
-+				IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000021
-+				IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000041
-+				IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000021
-+			>;
-+		};
-+
-+		pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+			fsl,pins =3D <
-+				IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000040
-+				IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000020
-+				IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000020
-+				IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000020
-+				IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000020
-+				IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000020
-+				IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000020
-+				IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000020
-+				IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000020
-+				IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000020
-+				IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000040
-+				IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000020
-+			>;
-+		};
-+
-+		pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+			fsl,pins =3D <
-+				IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000040
-+				IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000020
-+				IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000020
-+				IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000020
-+				IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000020
-+				IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000020
-+				IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000020
-+				IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000020
-+				IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000020
-+				IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000020
-+				IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000040
-+				IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000020
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_gpio: usdhc2grpgpio {
-+			fsl,pins =3D <
-+				IMX8QM_USDHC1_DATA6_LSIO_GPIO5_IO21	0x00000021
-+				IMX8QM_USDHC1_DATA7_LSIO_GPIO5_IO22	0x00000021
-+				IMX8QM_USDHC1_RESET_B_LSIO_GPIO4_IO07	0x00000021
-+			>;
-+		};
-+
-+		pinctrl_usdhc2: usdhc2grp {
-+			fsl,pins =3D <
-+				IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000041
-+				IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000021
-+				IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000021
-+				IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000021
-+				IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000021
-+				IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000021
-+				IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-+			fsl,pins =3D <
-+				IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000040
-+				IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000020
-+				IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000020
-+				IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000020
-+				IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000020
-+				IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000020
-+				IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000020
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-+			fsl,pins =3D <
-+				IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000040
-+				IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000020
-+				IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000020
-+				IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000020
-+				IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000020
-+				IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000020
-+				IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000020
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_gpio: usdhc3grpgpio {
-+			fsl,pins =3D <
-+				IMX8QM_USDHC2_RESET_B_LSIO_GPIO4_IO09	0x00000021
-+				IMX8QM_USDHC2_CD_B_LSIO_GPIO4_IO12	0x00000021
-+			>;
-+		};
-+
-+		pinctrl_usdhc3: usdhc3grp {
-+			fsl,pins =3D <
-+				IMX8QM_USDHC2_CLK_CONN_USDHC2_CLK	0x06000041
-+				IMX8QM_USDHC2_CMD_CONN_USDHC2_CMD	0x00000021
-+				IMX8QM_USDHC2_DATA0_CONN_USDHC2_DATA0	0x00000021
-+				IMX8QM_USDHC2_DATA1_CONN_USDHC2_DATA1	0x00000021
-+				IMX8QM_USDHC2_DATA2_CONN_USDHC2_DATA2	0x00000021
-+				IMX8QM_USDHC2_DATA3_CONN_USDHC2_DATA3	0x00000021
-+				IMX8QM_USDHC2_VSELECT_CONN_USDHC2_VSELECT	0x00000021
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
-+			fsl,pins =3D <
-+				IMX8QM_USDHC2_CLK_CONN_USDHC2_CLK	0x06000040
-+				IMX8QM_USDHC2_CMD_CONN_USDHC2_CMD	0x00000020
-+				IMX8QM_USDHC2_DATA0_CONN_USDHC2_DATA0	0x00000020
-+				IMX8QM_USDHC2_DATA1_CONN_USDHC2_DATA1	0x00000020
-+				IMX8QM_USDHC2_DATA2_CONN_USDHC2_DATA2	0x00000020
-+				IMX8QM_USDHC2_DATA3_CONN_USDHC2_DATA3	0x00000020
-+				IMX8QM_USDHC2_VSELECT_CONN_USDHC2_VSELECT	0x00000020
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
-+			fsl,pins =3D <
-+				IMX8QM_USDHC2_CLK_CONN_USDHC2_CLK	0x06000040
-+				IMX8QM_USDHC2_CMD_CONN_USDHC2_CMD	0x00000020
-+				IMX8QM_USDHC2_DATA0_CONN_USDHC2_DATA0	0x00000020
-+				IMX8QM_USDHC2_DATA1_CONN_USDHC2_DATA1	0x00000020
-+				IMX8QM_USDHC2_DATA2_CONN_USDHC2_DATA2	0x00000020
-+				IMX8QM_USDHC2_DATA3_CONN_USDHC2_DATA3	0x00000020
-+				IMX8QM_USDHC2_VSELECT_CONN_USDHC2_VSELECT	0x00000020
-+			>;
-+		};
-+	};
-+};
---=20
-2.17.1
+ 	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
++	if (ret) {
++		ufshcd_set_clk_freq(hba, !scale_up);
++		return ret;
++	}
+ 
+-out:
+-	if (clk_state_changed)
+-		trace_ufshcd_profile_clk_scaling(dev_name(hba->dev),
+-			(scale_up ? "up" : "down"),
+-			ktime_to_us(ktime_sub(ktime_get(), start)), ret);
+ 	return ret;
+ }
+ 
+@@ -1154,35 +1177,36 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, bool scale_up)
+ 
+ 	ret = ufshcd_clock_scaling_prepare(hba);
+ 	if (ret)
+-		return ret;
++		goto out;
+ 
+ 	/* scale down the gear before scaling down clocks */
+ 	if (!scale_up) {
+ 		ret = ufshcd_scale_gear(hba, false);
+ 		if (ret)
+-			goto out;
++			goto clk_scaling_unprepare;
+ 	}
+ 
+ 	ret = ufshcd_scale_clks(hba, scale_up);
+-	if (ret) {
+-		if (!scale_up)
+-			ufshcd_scale_gear(hba, true);
+-		goto out;
+-	}
++	if (ret)
++		goto scale_up_gear;
+ 
+ 	/* scale up the gear after scaling up clocks */
+ 	if (scale_up) {
+ 		ret = ufshcd_scale_gear(hba, true);
+ 		if (ret) {
+ 			ufshcd_scale_clks(hba, false);
+-			goto out;
++			goto clk_scaling_unprepare;
+ 		}
+ 	}
+ 
+-	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
++	goto clk_scaling_unprepare;
+ 
+-out:
++scale_up_gear:
++	if (!scale_up)
++		ufshcd_scale_gear(hba, true);
++clk_scaling_unprepare:
+ 	ufshcd_clock_scaling_unprepare(hba);
++out:
+ 	ufshcd_release(hba);
+ 	return ret;
+ }
+@@ -6207,7 +6231,7 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 
+ 	/* scale up clocks to max frequency before full reinitialization */
+-	ufshcd_scale_clks(hba, true);
++	ufshcd_set_clk_freq(hba, true);
+ 
+ 	err = ufshcd_hba_enable(hba);
+ 	if (err)
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
