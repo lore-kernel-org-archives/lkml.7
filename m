@@ -2,104 +2,150 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A4BCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EAACA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C2C20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:25:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="kBbbNspQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9BC3E20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389194AbfJ2OZh (ORCPT
+        id S2389239AbfJ2O02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:25:37 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:42410 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728306AbfJ2OZh (ORCPT
+        Tue, 29 Oct 2019 10:26:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41747 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728306AbfJ2O02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:25:37 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id C01D82E1519;
-        Tue, 29 Oct 2019 17:25:33 +0300 (MSK)
-Received: from iva4-c987840161f8.qloud-c.yandex.net (iva4-c987840161f8.qloud-c.yandex.net [2a02:6b8:c0c:3da5:0:640:c987:8401])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id k4OaEZrLEs-PW9K6jN5;
-        Tue, 29 Oct 2019 17:25:33 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1572359133; bh=kIwUyXR7LgBl9um7BtroesKEgDforbsjtA4cvjy2EaU=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=kBbbNspQ8dCoThI+PybXLSgQ176sm7Z+eKaEXWqy1B0+EU7umkCtVUjkP3zEvwtue
-         T1uqg9AYAwWiNQg9CQIaTBCFw6xNAeWTf2aYVAcqruPn7u8pk9Ezua17H+QLx0YF4W
-         FYg+COEp5VbV26jJ6t1VTi8pJwOaADIjOXLiCnaI=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
-        by iva4-c987840161f8.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id iezr0jZMY7-PRWCqN9i;
-        Tue, 29 Oct 2019 17:25:27 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] mm/filemap: do not allocate cache pages beyond end of
- file at read
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux-MM <linux-mm@kvack.org>,
+        Tue, 29 Oct 2019 10:26:28 -0400
+Received: from [91.217.168.176] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iPSS0-0003ey-E8; Tue, 29 Oct 2019 14:26:24 +0000
+Date:   Tue, 29 Oct 2019 15:26:23 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jann Horn <jannh@google.com>, Florian Weimer <fweimer@redhat.com>
+Cc:     Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Steven Whitehouse <swhiteho@redhat.com>
-References: <157225677483.3442.4227193290486305330.stgit@buzz>
- <20191028124222.ld6u3dhhujfqcn7w@box>
- <CAHk-=wgQ-Dcs2keNJPovTb4gG33M81yANH6KZM9d5NLUb-cJ1g@mail.gmail.com>
- <20191028125702.xdfbs7rqhm3wer5t@box>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <ac83fee6-9bcd-8c66-3596-2c0fbe6bcf96@yandex-team.ru>
-Date:   Tue, 29 Oct 2019 17:25:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: For review: documentation of clone3() system call
+Message-ID: <20191029142622.jxmssu4s4ndui7bw@wittgenstein>
+References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
+ <CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com>
+ <20191028172143.4vnnjpdljfnexaq5@wittgenstein>
+ <CAG48ez20hn8vToY+=C62nA-rbUfxh=JD6N-f7XVS3_GZOoPjxw@mail.gmail.com>
+ <20191029112706.p5dd5yzpcgouo6n5@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <20191028125702.xdfbs7rqhm3wer5t@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191029112706.p5dd5yzpcgouo6n5@wittgenstein>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/10/2019 15.57, Kirill A. Shutemov wrote:
-> On Mon, Oct 28, 2019 at 01:47:16PM +0100, Linus Torvalds wrote:
->> On Mon, Oct 28, 2019 at 1:42 PM Kirill A. Shutemov <kirill@shutemov.name> wrote:
->>>
->>> I've tried something of this sort back in 2013:
->>>
->>> http://lore.kernel.org/r/1377099441-2224-1-git-send-email-kirill.shutemov@linux.intel.com
->>>
->>> and I've got push back.
->>>
->>> Apparently, some filesystems may not have valid i_size before >readpage().
->>> Not sure if it's still the case...
->>
->> Well, I agree that there might be some network filesystem that might
->> have inode sizes that are stale, but if that's the case then I don't
->> think your previous patch works either.
->>
->> It too will avoid the readpage() if the read position is beyond i_size.
->>
->> No?
+On Tue, Oct 29, 2019 at 12:27:07PM +0100, Christian Brauner wrote:
+> On Mon, Oct 28, 2019 at 08:09:13PM +0100, Jann Horn wrote:
+> > On Mon, Oct 28, 2019 at 6:21 PM Christian Brauner
+> > <christian.brauner@ubuntu.com> wrote:
+> > > On Mon, Oct 28, 2019 at 04:12:09PM +0100, Jann Horn wrote:
+> > > > On Fri, Oct 25, 2019 at 6:59 PM Michael Kerrisk (man-pages)
+> > > > <mtk.manpages@gmail.com> wrote:
+> > > > > I've made a first shot at adding documentation for clone3(). You can
+> > > > > see the diff here:
+> > > > > https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/commit/?id=faa0e55ae9e490d71c826546bbdef954a1800969
+> > [...]
+> > > > You might want to note somewhere that its flags can't be
+> > > > seccomp-filtered because they're stored in memory, making it
+> > > > inappropriate to use in heavily sandboxed processes.
+> > >
+> > > Hm, I don't think that belongs on the clone manpage. Granted that
+> > > process creation is an important syscall but so are a bunch of others
+> > > that aren't filterable because of pointer arguments.
+> > > We can probably mention on the seccomp manpage that seccomp can't filter
+> > > on pointer arguments and then provide a list of examples. If you setup a
+> > > seccomp filter and don't know that you can't filter syscalls with
+> > > pointer args that seems pretty bad to begin with.
+> > 
+> > Fair enough.
+> > 
+> > [...]
+> > > One thing I never liked about clone() was that userspace had to know
+> > > about stack direction. And there is a lot of ugly code in userspace that
+> > > has nasty clone() wrappers like:
+> > [...]
+> > > where stack + stack_size is addition on a void pointer which usually
+> > > clang and gcc are not very happy about.
+> > > I wanted to bring this up on the mailing list soon: If possible, I don't
+> > > want userspace to need to know about stack direction and just have stack
+> > > point to the beginning and then have the kernel do the + stack_size
+> > > after the copy_clone_args_from_user() if the arch needs it. For example,
+> > > by having a dumb helder similar to copy_thread_tls()/coyp_thread() that
+> > > either does the + stack_size or not. Right now, clone3() is supported on
+> > > parisc and afaict, the stack grows upwards for it. I'm not sure if there
+> > > are obvious reasons why that won't work or it would be a bad idea...
+> > 
+> > That would mean adding a new clone flag that redefines how those
+> > parameters work and describing the current behavior in the manpage as
+> > the behavior without the flag (which doesn't exist on 5.3), right?
 > 
-> Yes. That's the reason the patch was rejected back then.
-> 
-> My point is that we need to make sure that this patch not break anything.
-> 
+> I would break API and if someone reports breakage we'll revert and go
+> the more complicated route you outlined (see [1]).
 
-I think all network filesystems which synchronize metadata lazily should be
-marked. For example as "SB_VOLATILE". And vfs could handle them specially.
+@Jann, I think the following patch might even be enough?...
 
-For this case generic_file_buffered_read() could call for them readpages
-for single page (rather than readpage) to let filesystem revalidate
-metadata and drop unneeded page without inserting it into inode and lru.
+@Florian, do you have an opinion about always passing the stack from the
+lowest address with clone3()?
+
+From 72b2a5711fd37e34e87df1b29b2e1885bb28cf75 Mon Sep 17 00:00:00 2001
+From: Christian Brauner <christian.brauner@ubuntu.com>
+Date: Tue, 29 Oct 2019 13:55:39 +0100
+Subject: [PATCH] fork: stack direction
+
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ kernel/fork.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index bcdf53125210..22dc72071a6d 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2584,6 +2584,13 @@ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
+ 	return true;
+ }
+ 
++static inline void clone3_prepare_stack(struct kernel_clone_args *kargs)
++{
++#if !defined(CONFIG_STACK_GROWSUP) && !defined(CONFIG_IA64)
++	kargs->stack += kargs->stack_size;
++#endif
++}
++
+ /**
+  * clone3 - create a new process with specific properties
+  * @uargs: argument structure
+@@ -2605,6 +2612,8 @@ SYSCALL_DEFINE2(clone3, struct clone_args __user *, uargs, size_t, size)
+ 	if (err)
+ 		return err;
+ 
++	clone3_prepare_stack(&kargs);
++
+ 	if (!clone3_args_valid(&kargs))
+ 		return -EINVAL;
+ 
+-- 
+2.23.0
