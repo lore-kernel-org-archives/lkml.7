@@ -2,277 +2,402 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC6CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BFDCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11DE208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:34:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G5zNODaZ"
+	by mail.kernel.org (Postfix) with ESMTP id 725CF20874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390012AbfJ2PeR (ORCPT
+        id S2390080AbfJ2PfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:34:17 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36066 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389319AbfJ2PeQ (ORCPT
+        Tue, 29 Oct 2019 11:35:04 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45305 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390017AbfJ2PfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:34:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w18so14173508wrt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 08:34:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=egpzKa9durI0YZ6fDULW0yEdE4Y2j7wOLS6NIBp98G4=;
-        b=G5zNODaZw0YS3H/CLkxusD3J2FoD8ewgB28UElStBdOc4s+clQZhyHrjtakBZRdvwA
-         ElYhXSyYGTnhT2swegSd5cgSpudBQdXJT9zksp6p08CarP9PMpLn4qYbpnGI8f4VlSkd
-         +PyYm/hUd31C49/Te1+1gCaFLpHry/WhN+AlShANeTNnKOX9V2d7KBrwLBIy4l8AOzS0
-         VEn/T8I5nG3482LY49M2jcrhKU0vdcDRittiiE62nKLJdE6cu1iz7RJ4fv5s1e4OZzJk
-         4dYH2vU9x7maJm7lGFn2y8gLjpy6UHa8DZSm8U3FhmnZTyvruViJbWHG30YOv61eeEPa
-         4BiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=egpzKa9durI0YZ6fDULW0yEdE4Y2j7wOLS6NIBp98G4=;
-        b=qHzEKcGwybOgkke4/KOUUyBdjzHFHHRaQI7/ZOvisczAaJAf36T2XC8N25kzNIttpz
-         egDpGZZ/sJnKbClTvB+Z7nxj3zL5+cyhYf44smVPFSbyT53iq9P1SdIKuAzIITOn4pc0
-         X2PsDthTAiSbU/BojbGf4vnmlcvNpPgzAvF3RhkpEVA6KfU+gp0LhVurJLjp5+ke1F3x
-         ljyBQaTpRTm+Ks4mBy9rQLsnk7YiZgEfT+mQkT4tTEX16Elm1ZjfqSUUf/a5DbEpoHoW
-         ysgnpggoXew7o2rcrUYWhWvJUbBafKxXUASbegx/JEKbydsd2h9ZdWfi8QP8zjZexh1G
-         EpIw==
-X-Gm-Message-State: APjAAAWIHC7MOtUGCilodGjVxk/sOtQN5d3DT/St0S4eW8t0/kb2hQpk
-        GAa1qV6qS5yv8BBbBAfbXaozkg==
-X-Google-Smtp-Source: APXvYqzgcXhCT40Ktv3jhbJZAHerY7SrToKZ9+jBMd76mLrFoJ4QayPTZMTlklUJDBQZl+nP+oaTmw==
-X-Received: by 2002:a5d:628e:: with SMTP id k14mr20311016wru.60.1572363253465;
-        Tue, 29 Oct 2019 08:34:13 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:7037:cc11:eb05:9c6a? ([2a01:e34:ed2f:f020:7037:cc11:eb05:9c6a])
-        by smtp.googlemail.com with ESMTPSA id p1sm3053717wmg.11.2019.10.29.08.34.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 08:34:12 -0700 (PDT)
-Subject: Re: [Patch v4 0/6] Introduce Thermal Pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        edubezval@gmail.com, qperret@google.com
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org
-References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <c6169634-ab1d-6bda-183f-bdd06048736a@linaro.org>
-Date:   Tue, 29 Oct 2019 16:34:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 29 Oct 2019 11:35:04 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iPTWL-0001qa-LN; Tue, 29 Oct 2019 16:34:57 +0100
+Message-ID: <f9ccc316d0974d162bee421baaa2c872632cdc5b.camel@pengutronix.de>
+Subject: Re: [PATCH v2 3/3] reset: npcm: add NPCM reset controller driver
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Tomer Maimon <tmaimon77@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, yuenn@google.com, venture@google.com,
+        benjaminfair@google.com, avifishman70@gmail.com, joel@jms.id.au
+Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Date:   Tue, 29 Oct 2019 16:34:56 +0100
+In-Reply-To: <20191028155403.134126-4-tmaimon77@gmail.com>
+References: <20191028155403.134126-1-tmaimon77@gmail.com>
+         <20191028155403.134126-4-tmaimon77@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thara,
-
-On 22/10/2019 22:34, Thara Gopinath wrote:
-> Thermal governors can respond to an overheat event of a cpu by
-> capping the cpu's maximum possible frequency. This in turn
-> means that the maximum available compute capacity of the
-> cpu is restricted. But today in the kernel, task scheduler is 
-> not notified of capping of maximum frequency of a cpu.
-> In other words, scheduler is unware of maximum capacity
-> restrictions placed on a cpu due to thermal activity.
-> This patch series attempts to address this issue.
-> The benefits identified are better task placement among available
-> cpus in event of overheating which in turn leads to better
-> performance numbers.
+On Mon, 2019-10-28 at 17:54 +0200, Tomer Maimon wrote:
+> Add Nuvoton NPCM BMC reset controller driver.
 > 
-> The reduction in the maximum possible capacity of a cpu due to a 
-> thermal event can be considered as thermal pressure. Instantaneous
-> thermal pressure is hard to record and can sometime be erroneous
-> as there can be mismatch between the actual capping of capacity
-> and scheduler recording it. Thus solution is to have a weighted
-> average per cpu value for thermal pressure over time.
-> The weight reflects the amount of time the cpu has spent at a
-> capped maximum frequency. Since thermal pressure is recorded as
-> an average, it must be decayed periodically. Exisiting algorithm
-> in the kernel scheduler pelt framework is re-used to calculate
-> the weighted average. This patch series also defines a sysctl
-> inerface to allow for a configurable decay period.
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  drivers/reset/Kconfig      |   7 +
+>  drivers/reset/Makefile     |   1 +
+>  drivers/reset/reset-npcm.c | 275 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 283 insertions(+)
+>  create mode 100644 drivers/reset/reset-npcm.c
 > 
-> Regarding testing, basic build, boot and sanity testing have been
-> performed on db845c platform with debian file system.
-> Further, dhrystone and hackbench tests have been
-> run with the thermal pressure algorithm. During testing, due to
-> constraints of step wise governor in dealing with big little systems,
-> trip point 0 temperature was made assymetric between cpus in little
-> cluster and big cluster; the idea being that
-> big core will heat up and cpu cooling device will throttle the
-> frequency of the big cores faster, there by limiting the maximum available
-> capacity and the scheduler will spread out tasks to little cores as well.
-> 
-> Test Results
-> 
-> Hackbench: 1 group , 30000 loops, 10 runs       
->                                                Result         SD             
->                                                (Secs)     (% of mean)     
->  No Thermal Pressure                            14.03       2.69%           
->  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%         
->  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%           
->  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%         
->  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%           
->  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%  
-> 
-> Dhrystone Run Time  : 20 threads, 3000 MLOOPS
->                                                  Result      SD             
->                                                  (Secs)    (% of mean)     
->  No Thermal Pressure                              9.452      4.49%
->  Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
->  Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
->  Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
->  Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
->  Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%  
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 7b07281aa0ae..5dbfdf6d717a 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -89,6 +89,13 @@ config RESET_MESON_AUDIO_ARB
+>  	  This enables the reset driver for Audio Memory Arbiter of
+>  	  Amlogic's A113 based SoCs
+>  
+> +config RESET_NPCM
+> +	bool "NPCM BMC Reset Driver"
+> +	depends on ARCH_NPCM || COMPILE_TEST
+> +	help
+> +	  This enables the reset controller driver for Nuvoton NPCM 
+> +	  BMC SoCs.
+> +
 
-I took the opportunity to try glmark2 on the db845c platform with the
-default decay and got the following glmark2 scores:
+Is there any reason to ever disable this driver when building ARCH_NPCM?
 
-Without thermal pressure:
+>  config RESET_OXNAS
+>  	bool
+>  
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index cf60ce526064..00767c03f5f2 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
+>  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>  obj-$(CONFIG_RESET_MESON) += reset-meson.o
+>  obj-$(CONFIG_RESET_MESON_AUDIO_ARB) += reset-meson-audio-arb.o
+> +obj-$(CONFIG_RESET_NPCM) += reset-npcm.o
+>  obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+>  obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
+>  obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
+> diff --git a/drivers/reset/reset-npcm.c b/drivers/reset/reset-npcm.c
+> new file mode 100644
+> index 000000000000..ebb3071767e1
+> --- /dev/null
+> +++ b/drivers/reset/reset-npcm.c
+> @@ -0,0 +1,275 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2019 Nuvoton Technology corporation.
+> +
+> +#include <linux/clk.h>
 
-# NumSamples = 9; Min = 790.00; Max = 805.00
-# Mean = 794.888889; Variance = 19.209877; SD = 4.382907; Median 794.000000
-# each ∎ represents a count of 1
-  790.0000 -   791.5000 [     2]: ∎∎
-  791.5000 -   793.0000 [     2]: ∎∎
-  793.0000 -   794.5000 [     2]: ∎∎
-  794.5000 -   796.0000 [     1]: ∎
-  796.0000 -   797.5000 [     0]:
-  797.5000 -   799.0000 [     1]: ∎
-  799.0000 -   800.5000 [     0]:
-  800.5000 -   802.0000 [     0]:
-  802.0000 -   803.5000 [     0]:
-  803.5000 -   805.0000 [     1]: ∎
+Please remove unused header includes.
 
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reboot.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of_address.h>
+> +
+> +/* NPCM7xx GCR registers */
+> +#define NPCM_MDLR_OFFSET	0x7C
+> +#define NPCM_MDLR_USBD0		BIT(9)
+> +#define NPCM_MDLR_USBD1		BIT(8)
+> +#define NPCM_MDLR_USBD2_4	BIT(21)
+> +#define NPCM_MDLR_USBD5_9	BIT(22)
+> +
+> +#define NPCM_USB1PHYCTL_OFFSET	0x140
+> +#define NPCM_USB2PHYCTL_OFFSET	0x144
+> +#define NPCM_USBXPHYCTL_RS	BIT(28)
+> +
+> +/* NPCM7xx Reset registers */
+> +#define NPCM_SWRSTR		0x14
+> +#define NPCM_SWRST		BIT(2)
+> +
+> +#define NPCM_IPSRST1		0x20
+> +#define NPCM_IPSRST1_USBD1	BIT(5)
+> +#define NPCM_IPSRST1_USBD2	BIT(8)
+> +#define NPCM_IPSRST1_USBD3	BIT(25)
+> +#define NPCM_IPSRST1_USBD4	BIT(22)
+> +#define NPCM_IPSRST1_USBD5	BIT(23)
+> +#define NPCM_IPSRST1_USBD6	BIT(24)
+> +
+> +#define NPCM_IPSRST2		0x24
+> +#define NPCM_IPSRST2_USB_HOST	BIT(26)
+> +
+> +#define NPCM_IPSRST3		0x34
+> +#define NPCM_IPSRST3_USBD0	BIT(4)
+> +#define NPCM_IPSRST3_USBD7	BIT(5)
+> +#define NPCM_IPSRST3_USBD8	BIT(6)
+> +#define NPCM_IPSRST3_USBD9	BIT(7)
+> +#define NPCM_IPSRST3_USBPHY1	BIT(24)
+> +#define NPCM_IPSRST3_USBPHY2	BIT(25)
+> +
+> +#define NPCM_RC_RESETS_PER_REG	32
+> +
+> +struct npcm_rc_data {
+> +	struct reset_controller_dev rcdev;
+> +	struct notifier_block restart_nb;
+> +	u32 sw_reset_number;
+> +	void __iomem *base;
+> +	spinlock_t lock;
+> +};
+> +
+> +#define to_rc_data(p) container_of(p, struct npcm_rc_data, rcdev)
+> +
+> +static int npcm_rc_restart(struct notifier_block *nb, unsigned long mode,
+> +			   void *cmd)
+> +{
+> +	struct npcm_rc_data *rc = container_of(nb, struct npcm_rc_data,
+> +					       restart_nb);
+> +
+> +	writel(NPCM_SWRST << rc->sw_reset_number, rc->base + NPCM_SWRSTR);
+> +	mdelay(1000);
+> +
+> +	pr_emerg("%s: unable to restart system\n", __func__);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static int npcm_rc_setclear_reset(struct reset_controller_dev *rcdev,
+> +				  unsigned long id, bool set)
+> +{
+> +	struct npcm_rc_data *rc = to_rc_data(rcdev);
+> +	u32 ctrl_offset = NPCM_IPSRST1;
+> +	unsigned long flags;
+> +	u32 stat, rst_bit;
+> +
+> +	ctrl_offset += (id / NPCM_RC_RESETS_PER_REG) * sizeof(u32);
+> +	rst_bit = 1 << (id % NPCM_RC_RESETS_PER_REG);
+> +
+> +	spin_lock_irqsave(&rc->lock, flags);
+> +	stat = readl(rc->base + ctrl_offset);
+> +	if (set)
+> +		writel(stat | rst_bit, rc->base + ctrl_offset);
+> +	else
+> +		writel(stat & ~rst_bit, rc->base + ctrl_offset);
+> +	spin_unlock_irqrestore(&rc->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int npcm_rc_assert(struct reset_controller_dev *rcdev, unsigned long id)
+> +{
+> +	return npcm_rc_setclear_reset(rcdev, id, true);
+> +}
+> +
+> +static int npcm_rc_deassert(struct reset_controller_dev *rcdev,
+> +			    unsigned long id)
+> +{
+> +	return npcm_rc_setclear_reset(rcdev, id, false);
+> +}
+> +
+> +static int npcm_rc_status(struct reset_controller_dev *rcdev,
+> +			  unsigned long id)
+> +{
+> +	struct npcm_rc_data *rc = to_rc_data(rcdev);
+> +	u32 bit, ctrl_offset = NPCM_IPSRST1;
+> +
+> +	ctrl_offset += (id / NPCM_RC_RESETS_PER_REG) * sizeof(u32);
+> +	bit = 1 << (id % NPCM_RC_RESETS_PER_REG);
+> +
+> +	return (readl(rc->base + ctrl_offset) & bit);
+> +}
+> +
+> +/*
+> + *  The following procedure should be observed in USB PHY, USB device and
+> + *  USB host initialization at BMC boot
+> + */
+> +static int npcm_usb_reset(struct platform_device *pdev, struct npcm_rc_data *rc)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	u32 mdlr, iprst1, iprst2, iprst3;
+> +	struct regmap *gcr_regmap;
+> +	u32 ipsrst1_bits = 0;
+> +	u32 ipsrst2_bits = NPCM_IPSRST2_USB_HOST;
+> +	u32 ipsrst3_bits = 0;
+> +
+> +	if (of_device_is_compatible(np, "nuvoton,npcm750-reset")) {
+> +		gcr_regmap = syscon_regmap_lookup_by_compatible("nuvoton,npcm750-gcr");
+> +		if (IS_ERR(gcr_regmap)) {
+> +			dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-gcr\n");
+> +			return PTR_ERR(gcr_regmap);
+> +		}
+> +	}
+> +	if (!gcr_regmap)
+> +		return -ENXIO;
+> +
+> +	/* checking which USB device is enabled */
+> +	regmap_read(gcr_regmap, NPCM_MDLR_OFFSET, &mdlr);
+> +	if (!(mdlr & NPCM_MDLR_USBD0))
+> +		ipsrst3_bits |= NPCM_IPSRST3_USBD0;
+> +	if (!(mdlr & NPCM_MDLR_USBD1))
+> +		ipsrst1_bits |= NPCM_IPSRST1_USBD1;
+> +	if (!(mdlr & NPCM_MDLR_USBD2_4))
+> +		ipsrst1_bits |= (NPCM_IPSRST1_USBD2 |
+> +				 NPCM_IPSRST1_USBD3 |
+> +				 NPCM_IPSRST1_USBD4);
+> +	if (!(mdlr & NPCM_MDLR_USBD0)) {
+> +		ipsrst1_bits |= (NPCM_IPSRST1_USBD5 |
+> +				 NPCM_IPSRST1_USBD6);
+> +		ipsrst3_bits |= (NPCM_IPSRST3_USBD7 |
+> +				 NPCM_IPSRST3_USBD8 |
+> +				 NPCM_IPSRST3_USBD9);
+> +	}
+> +
+> +	/* assert reset USB PHY and USB devices */
+> +	iprst1 = readl(rc->base + NPCM_IPSRST1);
+> +	iprst2 = readl(rc->base + NPCM_IPSRST2);
+> +	iprst3 = readl(rc->base + NPCM_IPSRST3);
+> +
+> +	iprst1 |= ipsrst1_bits;
+> +	iprst2 |= ipsrst2_bits;
+> +	iprst3 |= (ipsrst3_bits | NPCM_IPSRST3_USBPHY1 |
+> +		   NPCM_IPSRST3_USBPHY2);
+> +
+> +	writel(iprst1, rc->base + NPCM_IPSRST1);
+> +	writel(iprst2, rc->base + NPCM_IPSRST2);
+> +	writel(iprst3, rc->base + NPCM_IPSRST3);
+> +
+> +	/* clear USB PHY RS bit */
+> +	regmap_update_bits(gcr_regmap, NPCM_USB1PHYCTL_OFFSET,
+> +			   NPCM_USBXPHYCTL_RS, 0);
+> +	regmap_update_bits(gcr_regmap, NPCM_USB2PHYCTL_OFFSET,
+> +			   NPCM_USBXPHYCTL_RS, 0);
+> +
+> +	/* deassert reset USB PHY */
+> +	iprst3 &= ~(NPCM_IPSRST3_USBPHY1 | NPCM_IPSRST3_USBPHY2);
+> +	writel(iprst3, rc->base + NPCM_IPSRST3);
+> +
+> +	udelay(50);
+> +
+> +	/* set USB PHY RS bit */
+> +	regmap_update_bits(gcr_regmap, NPCM_USB1PHYCTL_OFFSET,
+> +			   NPCM_USBXPHYCTL_RS, NPCM_USBXPHYCTL_RS);
+> +	regmap_update_bits(gcr_regmap, NPCM_USB2PHYCTL_OFFSET,
+> +			   NPCM_USBXPHYCTL_RS, NPCM_USBXPHYCTL_RS);
+> +
+> +	/* deassert reset USB devices*/
+> +	iprst1 &= ~ipsrst1_bits;
+> +	iprst2 &= ~ipsrst2_bits;
+> +	iprst3 &= ~ipsrst3_bits;
+> +
+> +	writel(iprst1, rc->base + NPCM_IPSRST1);
+> +	writel(iprst2, rc->base + NPCM_IPSRST2);
+> +	writel(iprst3, rc->base + NPCM_IPSRST3);
+> +
+> +	return 0;
+> +}
 
-With thermal pressure:
+Is there no better place for this, such as USB glue code?
 
-# NumSamples = 9; Min = 933.00; Max = 960.00
-# Mean = 940.777778; Variance = 64.172840; SD = 8.010795; Median 937.000000
-# each ∎ represents a count of 1
-  933.0000 -   935.7000 [     3]: ∎∎∎
-  935.7000 -   938.4000 [     2]: ∎∎
-  938.4000 -   941.1000 [     2]: ∎∎
-  941.1000 -   943.8000 [     0]:
-  943.8000 -   946.5000 [     0]:
-  946.5000 -   949.2000 [     1]: ∎
-  949.2000 -   951.9000 [     0]:
-  951.9000 -   954.6000 [     0]:
-  954.6000 -   957.3000 [     0]:
-  957.3000 -   960.0000 [     1]: ∎
+> +static const struct reset_control_ops npcm_rc_ops = {
+> +	.assert		= npcm_rc_assert,
+> +	.deassert	= npcm_rc_deassert,
+> +	.status		= npcm_rc_status,
+> +};
+> +
+> +static int npcm_rc_probe(struct platform_device *pdev)
+> +{
+> +	struct npcm_rc_data *rc;
+> +	struct resource res;
+> +	int ret;
+> +
+> +	rc = devm_kzalloc(&pdev->dev, sizeof(*rc), GFP_KERNEL);
+> +	if (!rc)
+> +		return -ENOMEM;
+> +
+> +	of_address_to_resource(pdev->dev.of_node, 0, &res);
+> +	rc->base = devm_ioremap_resource(&pdev->dev, &res);
 
+Can't you just use
 
+	rc->base = devm_platform_ioremap_resource(pdev, 0);
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+here?
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> +	if (IS_ERR(rc->base))
+> +		return PTR_ERR(rc->base);
+> +
+> +	spin_lock_init(&rc->lock);
+> +
+> +	rc->rcdev.owner = THIS_MODULE;
+> +	rc->rcdev.nr_resets = resource_size(&res) / 4 * BITS_PER_LONG;
+
+That doesn't seem right. With the ctrl_offset = NPCM_IPSRST1 in
+npcm_rc_setclear_reset that would allow access beyond the configured
+register range.
+
+> +	rc->rcdev.ops = &npcm_rc_ops;
+> +	rc->rcdev.of_node = pdev->dev.of_node;
+> +
+> +	platform_set_drvdata(pdev, rc);
+> +
+> +	ret = reset_controller_register(&rc->rcdev);
+
+	ret = devm_reset_controller_register(&pdev->dev, &rc->rcdev);
+
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "unable to register device\n");
+> +		return ret;
+> +	}
+> +
+> +	if (npcm_usb_reset(pdev, rc))
+> +		dev_warn(&pdev->dev, "NPCM USB reset failed, can cause issues with UDC and USB host\n");
+> +
+> +	if (!of_property_read_u32(pdev->dev.of_node, "nuvoton,sw-reset-number",
+> +				  &rc->sw_reset_number)) {
+> +		if (rc->sw_reset_number && rc->sw_reset_number < 5) {
+> +			rc->restart_nb.priority = 192,
+> +			rc->restart_nb.notifier_call = npcm_rc_restart,
+> +			ret = register_restart_handler(&rc->restart_nb);
+> +			if (ret)
+> +				dev_warn(&pdev->dev, "failed to register restart handler\n");
+> +		}
+> +	}
+> +
+> +	pr_info("NPCM RESET driver probed\n");
+
+It think this is a bit verbose.
+
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id npcm_rc_match[] = {
+> +	{ .compatible = "nuvoton,npcm750-reset" },
+> +	{ }
+> +};
+> +
+> +static struct platform_driver npcm_rc_driver = {
+> +	.probe	= npcm_rc_probe,
+> +	.driver	= {
+> +		.name			= "npcm-reset",
+> +		.of_match_table		= npcm_rc_match,
+> +		.suppress_bind_attrs	= true,
+> +	},
+> +};
+> +builtin_platform_driver(npcm_rc_driver);
+
+regards
+Philipp
 
