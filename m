@@ -2,159 +2,123 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2737CA9EC1
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED03BCA9EC1
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C9620717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572313011;
-	bh=UXJEiwLQLFYO5y3BIbyUux/VbYsr8k7i4t2/5U+zFS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=grI91d8B6r7uy6ORDQ6aCHv4d5pWzNz54Er931R/FD16g5v1V876ul2FpZfor+lYa
-	 bY5jCYFxBLy2T0Af5ps9Jxzs9pYNlAECuClywwyh8Ax5PsrGCI5uCWU7PeLhZ1Ysln
-	 Ax0YgmedoJvq18dxobjRyC75CVucbb2hJVBAIPeE=
+	by mail.kernel.org (Postfix) with ESMTP id BFF2D21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 01:39:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jomxKuQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfJ2Bgu (ORCPT
+        id S1729532AbfJ2Bjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:36:50 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34657 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbfJ2Bgu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 28 Oct 2019 21:36:50 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m19so8432328otp.1;
-        Mon, 28 Oct 2019 18:36:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cUdKKEZxRPnFHu2QVFPMIhJT0tZzKagr6VomA8Jxo6Y=;
-        b=RF8uAzXmfQbjN12wUWCrpaKS4OJClaip3oXx0EohDaWN5vPfUgWq/6ebBWU+JQ0giA
-         R9dyBFFU9FirWgOjoFYvCnZdEPemQ+54XbAkEtdUKE7+Lp8xYkJm1vMLBck65l/ANzGE
-         iEWSXop7qAKBXFMysDhcS3pkfIFtAgT1MA62t296QUI8PcMY4r+w6bxkZgZB9wPzXHi2
-         Jvcr5OPokbVjHkI/ziWjfiXDN2cFduH9utiq77SMBICiws+WDNImnYWqX/WPuyNQ2Kia
-         HWVUZY9fKseQbq6H+UCHgLDBvTGmi3g8KGfpagq6fM3WRlA+gpq+QFGHX0lSwWDdJntL
-         SG2A==
-X-Gm-Message-State: APjAAAXIldZGjYqKVl79gfsDkjixAkqhLlwMgAHiPDI1I+oBAflOBMfd
-        O6fbh8f6lD5rmwmuYEcPBQ==
-X-Google-Smtp-Source: APXvYqwxn84pDfRZOnEp1z2t14ueJoGhKjtzuewBpLvrfQbeO2MKZOGKV9rs31NSOa3Nb7V+31MQrg==
-X-Received: by 2002:a9d:620c:: with SMTP id g12mr6225748otj.11.1572313009351;
-        Mon, 28 Oct 2019 18:36:49 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s3sm3377053otq.76.2019.10.28.18.36.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 18:36:48 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 20:36:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, amit.kucheria@verdurent.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 6/7] dt-bindings: soc: qcom: Extend RPMh power
- controller binding to describe thermal warming device
-Message-ID: <20191029013648.GB27045@bogus>
-References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
- <1571254641-13626-7-git-send-email-thara.gopinath@linaro.org>
- <CAPDyKFqcKfmnNJ7j4Jb+JH739FBcHg5NBD6aR4H_N=zWGwm1ww@mail.gmail.com>
- <5DA88892.5000408@linaro.org>
- <CAPDyKFpYG7YADb6Xmm=8ug5=5X3d1y+JdkRvrnvtroeV3Yj62Q@mail.gmail.com>
- <5DA89267.30806@linaro.org>
+        Mon, 28 Oct 2019 21:39:43 -0400
+Received: from mail-eopbgr10058.outbound.protection.outlook.com ([40.107.1.58]:30262
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729462AbfJ2Bjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 28 Oct 2019 21:39:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aAJ3PMih2+pcSD95z1pW/7CBb+ZEwfahTBVw3UOGQZF8vWZoNrp7LxNnShUtt4+/Ry+8aArDDebIMYJtAEY31tkNVGE/jJDna2cbmoFrpF5N4nRkayv59bJ2xIx06uQcO2DUo62eFljMNX+D6N0/rL2/WiAHIf6jG82eetAPZISrVnGgrBKLEN7IC6DsZnM3VlEX0l9O0fGVnu6Y50USdCzFUtlIbcgW4MDcZBOAwoVzza3zDPM1wtemPtyLZHjmg0+oqG5oot5IJaAhmTuG8z95HDLuFrikf/uXRNu1XHgpKOkoKzzVaPxZ1TBMikB8hyIpnnTpnhuvzPwlJPSFZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CrXpW/plVWEitWgxxteKuKm/Or2uLWtw9JrtoYJsV2k=;
+ b=fL2TC5Nf4+kW20/Jgox7s0nF2s70KlUC4oY1TYLcRjM98Yo94yJ8IidDtb16SP6SoZMfHPx/vfRe/ZjZ4qgU7dUZCMcqeVSu/0+nmOv0kAftRza2/GNAP1wu5CxP4KgDG3lnumeG9vYOyK0YBfeRUbkgYrqsWvFIvGclNZgWFsMV9EnjNKP0xw0Gei7TjAVqxCKPlt3DOtRtUFbXiVIPCfA8t5vplmR4v/cDBCla5FIhYXOw9oOc8tysCLYefdz7Jg5ZFG4YPeFjmrSbvyaj6mk7vb6jlKProtcNDU9QbEYp6t99mNMYxH+zA1Ods0A9A1nu7pgNdu4bZi+JPgihXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CrXpW/plVWEitWgxxteKuKm/Or2uLWtw9JrtoYJsV2k=;
+ b=jomxKuQbCgcjw1EweWOojxsL66uv9xhjwluyMMgAIoj7XjiffO094vIQKfTEey5/lXaxPMvM0nR2gbj9k7yY4aZt1+6lwMeQLDJP43uTzAOVqJ9cIpeKPJ5eZq162xL1DCzyounasAilsU8k5C7xoymOWNoCbZ/S/J43R61dzBE=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.232.225) by
+ VE1PR04MB6608.eurprd04.prod.outlook.com (20.179.235.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.25; Tue, 29 Oct 2019 01:39:38 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::e052:9278:76a3:27c]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::e052:9278:76a3:27c%6]) with mapi id 15.20.2387.025; Tue, 29 Oct 2019
+ 01:39:38 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM64: imx8mn: Change compatible string for sdma
+Thread-Topic: [PATCH] ARM64: imx8mn: Change compatible string for sdma
+Thread-Index: AdWN+a8BcHtcOb+lQK62IHYWavsiDw==
+Date:   Tue, 29 Oct 2019 01:39:38 +0000
+Message-ID: <VE1PR04MB64796EA8BCD1D957AE030964E3610@VE1PR04MB6479.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 125939cd-df22-42d2-3ecc-08d75c10dc79
+x-ms-traffictypediagnostic: VE1PR04MB6608:|VE1PR04MB6608:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6608E89EF496FC43FB74163AE3610@VE1PR04MB6608.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0205EDCD76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(346002)(39860400002)(366004)(199004)(189003)(76116006)(305945005)(7736002)(229853002)(66946007)(66476007)(7416002)(6436002)(66556008)(6246003)(64756008)(66066001)(25786009)(52536014)(486006)(9686003)(8676002)(81156014)(4744005)(5660300002)(102836004)(256004)(4326008)(71190400001)(71200400001)(478600001)(81166006)(55016002)(99286004)(8936002)(54906003)(7696005)(26005)(316002)(2906002)(74316002)(86362001)(33656002)(3846002)(6116002)(186003)(6916009)(6506007)(66446008)(476003)(14454004)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6608;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +LuHBioGV/P131iZ3XFaYWyBAhldTSbIglESAp8ghAJGmFwlvxFKM0pp8oa74NOrE71ekK2qzRuXaVNHDT44luQh2BXWrdF/47ii1bjvggS1KLcIdwA1KMyD+skVopfp+qJh/lIn7gg8tbp+OoLKbo97fJ+79muBSsx53neWzap+Xh0Hshim690K1qKeznF5OdhITvZDz1cWZ1RdSLYibwtDBsmje69NooyF/+MHtMAW4uZw3TEq0iTYd84I+EDY0DsXs+sGJDlWcqce66I4EYTJmiBP7aSZ4i/Lhy33DzJ70vG3YmJs0KJKSfxFZHkLMtuAE6cC70nKnKURUhOrVmtU0DJTqyuN/+iS6Eizi5DEjQDmTeDzaeNsq6l699AqmLfDBQ0kb2f9URdC6jgsRw0zuf0wy+CImBkcSPsluxhl+W0FH9MCOvw9cj7G50uo
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5DA89267.30806@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 125939cd-df22-42d2-3ecc-08d75c10dc79
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 01:39:38.3110
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vnq0AjuXVUGyP3xiMBfo39NoNQD9knWqGX3Afhs7WNAnF55Mpc7h12D0+R4bRkErOjkEhfRZcL/NSR2bmjJJRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6608
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:10:15PM -0400, Thara Gopinath wrote:
-> On 10/17/2019 11:43 AM, Ulf Hansson wrote:
-> > On Thu, 17 Oct 2019 at 17:28, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> >>
-> >> Hello Ulf,
-> >> Thanks for the review!
-> >>
-> >> On 10/17/2019 05:04 AM, Ulf Hansson wrote:
-> >>> On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> >>>>
-> >>>> RPMh power controller hosts mx domain that can be used as thermal
-> >>>> warming device. Add a sub-node to specify this.
-> >>>>
-> >>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> >>>> ---
-> >>>>  Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 10 ++++++++++
-> >>>>  1 file changed, 10 insertions(+)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> >>>> index eb35b22..fff695d 100644
-> >>>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> >>>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> >>>> @@ -18,6 +18,16 @@ Required Properties:
-> >>>>  Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
-> >>>>  various OPPs for different platforms as well as Power domain indexes
-> >>>>
-> >>>> += SUBNODES
-> >>>> +RPMh alsp hosts power domains that can behave as thermal warming device.
-> >>>> +These are expressed as subnodes of the RPMh. The name of the node is used
-> >>>> +to identify the power domain and must therefor be "mx".
-> >>>> +
-> >>>> +- #cooling-cells:
-> >>>> +       Usage: optional
-> >>>> +       Value type: <u32>
-> >>>> +       Definition: must be 2
-> >>>> +
-> >>>
-> >>> Just wanted to express a minor thought about this. In general we use
-> >>> subnodes of PM domain providers to represent the topology of PM
-> >>> domains (subdomains), this is something different, which I guess is
-> >>> fine.
-> >>>
-> >>> I assume the #cooling-cells is here tells us this is not a PM domain
-> >>> provider, but a "cooling device provider"?
-> >> Yep.
-> >>>
-> >>> Also, I wonder if it would be fine to specify "power-domains" here,
-> >>> rather than using "name" as I think that is kind of awkward!?
-> >> Do you mean "power-domain-names" ? I am using this to match against the
-> >> genpd names defined in the provider driver.
-> > 
-> > No. If you are using "power-domains" it means that you allow to
-> > describe the specifier for the provider.
-> Yep. But won't this look funny in DT ? The provider node will have a sub
-> node with a power domain referencing to itself Like below: Is this ok ?
-> 
-> rpmhpd: power-controller {
->                                 compatible = "qcom,sdm845-rpmhpd";
->                                 #power-domain-cells = <1>;
-> 
-> 			...
-> 			...
-> 				mx_cdev: mx {
->                                         #cooling-cells = <2>;
->                                         power-domains = <&rpmhpd	SDM845_MX>;
->                                 };
-> 				
+Hi
+>=20
+> On Fri, Oct 25, 2019 at 04:40:07PM +0800, Shengjiu Wang wrote:
+> > SDMA in i.MX8MN should use same configuration as i.MX8MQ So need to
+> > change compatible string to be "fsl,imx8mq-sdma".
+> >
+> > Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi
+> > support")
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+>=20
+> Updated subject like below, and applied the patch.
+>=20
+>   arm64: dts: imx8mn: fix compatible string for sdma
+>=20
+> Shawn
 
-The whole concept here seems all wrong to me. Isn't it what's in the 
-power domain that's the cooling device. A CPU power domain is not a 
-cooling device, the CPU is. Or we wouldn't make a clock a cooling 
-device, but what the clock drives.
-
-Rob
+Thanks, Shawn.
