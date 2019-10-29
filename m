@@ -2,92 +2,125 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1344C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03762CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B830F21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:27:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="yON6aSpt"
+	by mail.kernel.org (Postfix) with ESMTP id D7384208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 15:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389947AbfJ2P1n (ORCPT
+        id S2390021AbfJ2P2G convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:27:43 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37627 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731885AbfJ2P1n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 11:27:43 -0400
-Received: by mail-qt1-f195.google.com with SMTP id g50so20789962qtb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 08:27:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IaX9sKsjpPdSSUy9AahNEhXIeFC3ruEZOj8gXqHdNOc=;
-        b=yON6aSptlWxQnB1NOO3MIdAVC5s9k6tL+2+axo3G/mV3WZQvPJyiy0ooi4nGW5E9HW
-         E/he2s1tMULMYHKQctEfszNGnxx8BhhocSBiqqfEajny2czIY+z6W5VIvoBDmKer/Grm
-         dUAwUvW54hV3lOYtPJhD3Y4T6TdZ2D38x9XhZkcD/mPUjrWe9jCrwV4VjiroYwFmDd6W
-         F0RoKT+6tPvf6FOdvD8WzKrFIEbgdXjVgR+3lQhEgqAagm5zoW8zhe3cwXvZiBSCkf+j
-         vTzShxaiPBorZ1NjksCiWvGoVJTfXDgNrxu76KS3tgM9/dFkw+kO0UlGa1q1E0xx6f+C
-         sY6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IaX9sKsjpPdSSUy9AahNEhXIeFC3ruEZOj8gXqHdNOc=;
-        b=lr0JfpF1uQRhC/JZDyqrzeeqzlyZZcSRCZCQZhIRL4px24tRkoLDeMeZmljb8uSzGL
-         UJbN0bxWZf1N80J3QP1GcZ25ON1MviPPvXu2mkl8UH/P7BfXBCStDPbAq28AX06Z6g/l
-         B9DQgZmiZIx024ObxPzASxR4SRDoMBVxfWG12E6F0xnYy7aPT/6vbDXGBMOf2T75qSjI
-         zlpNWvbd0D10e0XX7DiXN0FxQKydX1Fdad3X+mM0h8YqgY2m2gNxLWSq63Ef/ryT6qL8
-         lf1g6n25bOAT89P/6Br9hGvC6ohlILitjz6BCaHEZIKJQQmebXgCt5AcbcmsZYiN0ENd
-         y/7A==
-X-Gm-Message-State: APjAAAUuGUVU6rHH+8yYP1E9otJ3H+C6iL5nhtcjV3e3iO2YNTjENDuQ
-        Z2l7GAfA6iFUtSgQ7t291mFiXA==
-X-Google-Smtp-Source: APXvYqxNlKt3WrThbG7XbGaAd4zpBqVJ+bOempozXCLm9LT2jgDE9M88gCm6ijCz3K1Ul1o1a7VTZw==
-X-Received: by 2002:ac8:72cd:: with SMTP id o13mr5000311qtp.303.1572362862156;
-        Tue, 29 Oct 2019 08:27:42 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::7081])
-        by smtp.gmail.com with ESMTPSA id x9sm5041806qtp.83.2019.10.29.08.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 08:27:41 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 11:27:40 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Hillf Danton <hdanton@sina.com>, linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [RFC v2] mm: add page preemption
-Message-ID: <20191029152740.GB33522@cmpxchg.org>
-References: <20191026112808.14268-1-hdanton@sina.com>
- <20191029084153.GD31513@dhcp22.suse.cz>
+        Tue, 29 Oct 2019 11:28:06 -0400
+Received: from mail-oln040092253053.outbound.protection.outlook.com ([40.92.253.53]:34113
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389975AbfJ2P2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 11:28:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fzp48Y28OvQnu2LLnZmuIsKlRLuwDm0Ohn4o4DAIoV+/cZ69f/whSUX7zdZHrkifwKXPUa3sQX2EuYE/UJ60z51z+xDNmZbF4v849Frd6jqqVcP8z5IklrHVUr3muK++zDHDvgvwD+2rYkrKeWcQzG+IlB8NPvHcQhb+1P3vodZkvs3eU17XtpsYTPmpOYewEof6T4Aww0EvkpMmANZC7cUNUCoyZhjX2GwX175nfGGbtDr2t6fDJ2J0DSCTv1IW+REm2IQDpQS0WK9ds0rAAZOAa3/bK/OXUbjFwGth/SLSP0tBYUrZ0jMlGt9zqgFKVBWG31jweYsAmv0XRaoAFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nm6czOgb+ChSBWDJEie23stQRa1AQMI4M9FNrPIYBWs=;
+ b=TMWbohl/0Km7v/ltKetJTOkgYxuZq/XekfvdAvwxOcWCm1yVTupUheem1hOQhuftrV543kp/zmk5q0YNHAM9JOPeYoUxnshiDCaXJASAFkwvamJ/9CwjPyZpiP5K0mHs9oMqrY+GaeWFr0YrfJxoSfBSlIVgH73QZa12dn37bbT2v6YvodL2CssJXenxlmSQrztEz/JZeFI1Yck1b1XCtP9qiU9CwZWZ8l9qJkFJ6MiSiyFAo8Wn4M8I3+h5AUXeSlzYgjP3BDDuaQqAQuUUvEzGA5YPr5B9aMPV3DN/PBfeADaLehr4kDhpgqCuqZYNFwZm88BucHsC0mIXgllVIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT018.eop-APC01.prod.protection.outlook.com
+ (10.152.252.52) by PU1APC01HT036.eop-APC01.prod.protection.outlook.com
+ (10.152.253.49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Tue, 29 Oct
+ 2019 15:27:59 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.53) by
+ PU1APC01FT018.mail.protection.outlook.com (10.152.253.189) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20 via Frontend Transport; Tue, 29 Oct 2019 15:27:59 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::ec26:6771:625e:71d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::ec26:6771:625e:71d%8]) with mapi id 15.20.2387.028; Tue, 29 Oct 2019
+ 15:27:59 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: [PATCH v9 0/4] PCI: Patch series to support Thunderbolt without any
+ BIOS support
+Thread-Topic: [PATCH v9 0/4] PCI: Patch series to support Thunderbolt without
+ any BIOS support
+Thread-Index: AQHVjm1xplapXFmZIkCq3Hpwmc2uSQ==
+Date:   Tue, 29 Oct 2019 15:27:59 +0000
+Message-ID: <SL2P216MB01877B771222A6E1699D14F480610@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SY3PR01CA0084.ausprd01.prod.outlook.com
+ (2603:10c6:0:19::17) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:22::19)
+x-incomingtopheadermarker: OriginalChecksum:91745C2D76E02F26978D3A05B3F8020673FB9D7E54A3878040C638631CEAE437;UpperCasedChecksum:6761C367EEA246311420D29B56CBD5CDF930F9C8ABDAC1A04DBE1CA0B3D5AA29;SizeAsReceived:7522;Count:46
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [uMjUQEL97shVgVs3/Nx7cZpvR4PZpQplgrJbSC4ecojXMrKGt5br6Aqf53kwOazW98nIv4PYjTI=]
+x-microsoft-original-message-id: <20191029152750.GA1909@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 46
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: PU1APC01HT036:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uxxxfep8NdZ8bXiXzHakO5YRJGIC76Z8IIhVDUCiucdQG12DIM8Fw7vT+7sStC6iPPuTHsU/LkVD2+Ig4DCiQG7TpiNeCPp2XAK95ShIkAyDaQmKmd4He2NEsPYOcZB69YVl2/OACfJFNsOOJRw4U3sElKAviGygcTGmyTKbivIBH9KM7jBiMYBneL4XUGug
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F7BC39385E2C6545927FD4FC0650470F@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029084153.GD31513@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b96cd4d-88ca-4013-ff3c-08d75c849430
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 15:27:59.2559
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 09:41:53AM +0100, Michal Hocko wrote:
-> As already raised in the review of v1. There is no real life usecase
-> described in the changelog. I have also expressed concerns about how
-> such a reclaim would work in the first place (priority inversion,
-> expensive reclaim etc.). Until that is provided/clarified
-> 
-> Nacked-by: Michal Hocko <mhocko@suse.com>
+Since last time:
 
-I second this.
+Broken off two patches from the series to be dealt with separately.
 
-Nacked-by: Johannes Weiner <hannes@cmpxchg.org>
+Adding const like Mika suggested gives compile warning due to
+pci_resource_alignment() function.
+
+Does it matter that the dates on my patches might be out of date? I do
+not normally re-create them.
+
+I do "git am patchfile" and then do "git commit --amend ."
+
+It is late and I am tired, so apologies if I have forgotten to fix some
+things or made mistakes. If I do not get it done, I will keep putting it
+off.
+
+Thanks to all reviewers.
+
+Nicholas Johnson (4):
+  PCI: Consider alignment of hot-added bridges when distributing
+    available resources
+  PCI: In extend_bridge_window() change available to new_size
+  PCI: Change extend_bridge_window() to set resource size directly
+  PCI: Allow extend_bridge_window() to shrink resource if necessary
+
+ drivers/pci/setup-bus.c | 182 +++++++++++++++++++---------------------
+ 1 file changed, 88 insertions(+), 94 deletions(-)
+
+-- 
+2.23.0
+
