@@ -2,120 +2,90 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB456CA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA501CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A1D2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572335483;
-	bh=6tlkf+68BBehN6NWoxxSf2mpJUjTFaOogiNKGoJC7bY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ztfc/Lc7DcUoEilqMF+cHkA0QtUfvQ1FquNDuig6fNvBYzm2apWaLxHtM4X3ryRQN
-	 NbIubtRZi6zC88eub9LwSqNjLv0L1FlkTTQhMWImS5fSA0SdeJtVIl5psZvmBfuIAG
-	 o4Lnd975MpyqvvpkYJmo65EUg2Ik8VQLchJA9GL0=
+	by mail.kernel.org (Postfix) with ESMTP id 916502086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfJ2HvW (ORCPT
+        id S1728254AbfJ2Hxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:51:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49174 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 03:53:32 -0400
+Received: from mga04.intel.com ([192.55.52.120]:23959 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfJ2HvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:51:22 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12A6320862;
-        Tue, 29 Oct 2019 07:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572335481;
-        bh=6tlkf+68BBehN6NWoxxSf2mpJUjTFaOogiNKGoJC7bY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qV00x03f338JdvJ8sD/N37vqFpuGbrwN7BQvxXmDTNpn7dHPEk2t3zHB5EAarZMah
-         NE93pTwnI5a7XjKftR2rVc8OPq2N3Uu3XkgoZKiTta6Z8OsNHLrUgGz+B7nS2DzKEc
-         OYa7bgOM7aEXanYx0H/FiEjifC3Xvy1boi1qvMkM=
-Date:   Tue, 29 Oct 2019 08:45:58 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm: sun4i: Add support for suspending the display driver
-Message-ID: <20191029074558.rarf2avdwg6r365j@hendrix>
-References: <20191028214313.3463732-1-megous@megous.com>
+        id S1726233AbfJ2Hxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 03:53:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 00:53:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="scan'208";a="350904323"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 29 Oct 2019 00:53:29 -0700
+Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id 372E8580372;
+        Tue, 29 Oct 2019 00:53:24 -0700 (PDT)
+Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
+ <CAFBinCCSX_kVB=W3O-WXDMD2_2_Rnv+kiehf37xDkjL8+QoyHQ@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <42016b72-da39-7234-c3d3-f007636ff573@linux.intel.com>
+Date:   Tue, 29 Oct 2019 15:53:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="etwovadxcnmgzzzn"
-Content-Disposition: inline
-In-Reply-To: <20191028214313.3463732-1-megous@megous.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAFBinCCSX_kVB=W3O-WXDMD2_2_Rnv+kiehf37xDkjL8+QoyHQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Martin,
 
---etwovadxcnmgzzzn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Mon, Oct 28, 2019 at 10:43:13PM +0100, Ondrej Jirman wrote:
-> Shut down the display engine during suspend.
+On 10/25/2019 4:31 AM, Martin Blumenstingl wrote:
+> Hi Dilip,
 >
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/gpu/drm/sun4i/sun4i_drv.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
+> thank you for the update
+> two nit-picks below, apart from those it looks good to me
+Thanks for reviewing it.
 >
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> index a5757b11b730..c519d7cfcf43 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> @@ -346,6 +346,27 @@ static int sun4i_drv_add_endpoints(struct device *dev,
->  	return count;
->  }
+> On Mon, Oct 21, 2019 at 8:39 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+> [...]
+>> +examples:
+>> +  - |
+>> +    pcie10:pcie@d0e00000 {
+> why no space between pcie10 and pcie@d0e00000?
+Agree, will fix it in the next patch version.
 >
-> +#ifdef CONFIG_PM_SLEEP
-> +static int sun4i_drv_drm_sys_suspend(struct device *dev)
-> +{
-> +        struct drm_device *drm = dev_get_drvdata(dev);
-> +
-> +        return drm_mode_config_helper_suspend(drm);
-> +}
-> +
-> +static int sun4i_drv_drm_sys_resume(struct device *dev)
-> +{
-> +        struct drm_device *drm = dev_get_drvdata(dev);
-> +
-> +        return drm_mode_config_helper_resume(drm);
-> +}
-> +#endif
+> [...]
+>> +      status = "okay";
+> examples should not use the status property, see commit 4da722ca19f30f
+> ("dt-bindings: Remove "status" from examples")
 
-It looks like you've used spaces instead of tabs to indent. The rest
-of the patch is fine though.
+Agree, will fix it in the next patch version.
+(sorry for the late reply, i am back today from sick leave).
 
-Maxime
+Regards,
+Dilip
 
---etwovadxcnmgzzzn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbfuNgAKCRDj7w1vZxhR
-xavJAP4yYAzBMFxdoeP+c8qATt84FYIsJ8KJOBusx6+6zRv0swD9ETG+/4EFeHLd
-11lcmTIUtbetqxDMq0qB9BUz4ozo0g8=
-=T1AE
------END PGP SIGNATURE-----
-
---etwovadxcnmgzzzn--
+>
+>
+> Martin
