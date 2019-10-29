@@ -2,129 +2,77 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58168CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8CFC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E61B208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572343727;
-	bh=ZANRd+WQW3JT8mVuvajQ37u5wGVAQvgdGCj3+V1EpA0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=fZ6gw8qe55pDYInWyPLiWnLcD2JX49KJ+mQju+UBuNcgXI4ZmBD2MulSlFP6x8JL1
-	 5h2YVczoCo0YrRASTjKFRTEUJAfnVT8mxK0oNB2YPOfVa8e+aICCJ0RJuTlPVwRQSb
-	 RDxpwyF2v+UjjnBKmQkQoB74avoaachS/26080VQ=
+	by mail.kernel.org (Postfix) with ESMTP id 93CC3214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbfJ2KIq (ORCPT
+        id S1728632AbfJ2KMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 06:08:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56568 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 06:12:05 -0400
+Received: from gentwo.org ([3.19.106.255]:37920 "EHLO gentwo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbfJ2KIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 06:08:46 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2957E20830;
-        Tue, 29 Oct 2019 10:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572343725;
-        bh=ZANRd+WQW3JT8mVuvajQ37u5wGVAQvgdGCj3+V1EpA0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=uj0QeNso2Sj8RsEHDZh6RtZvohVQsmgYcJD7ng6ur1eqIxUFuK8nMMuWiRICpawc5
-         HXE0zf41GeAwhOSn/jOWu8GQRgj6Va9V8Xdzh+RfMe+DuDWmz3xaWTCkz58k76+R+G
-         gLWkco3GElfCPhEUI6Ds9x8F76mgBq215og8xGhU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 032BD3521071; Tue, 29 Oct 2019 03:08:45 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 03:08:44 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ryan Attard <ryanattard@ryanattard.info>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: linux-next: manual merge of the scsi tree with the rcu tree
-Message-ID: <20191029100844.GJ20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191029150826.38c26ef8@canb.auug.org.au>
+        id S1725867AbfJ2KMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 06:12:05 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 199B33EF15; Tue, 29 Oct 2019 10:12:04 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 1877F3EF14;
+        Tue, 29 Oct 2019 10:12:04 +0000 (UTC)
+Date:   Tue, 29 Oct 2019 10:12:04 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Mike Rapoport <rppt@kernel.org>
+cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, x86@kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+In-Reply-To: <20191029085551.GA18773@rapoport-lnx>
+Message-ID: <alpine.DEB.2.21.1910291011090.5411@www.lameter.com>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org> <1572171452-7958-2-git-send-email-rppt@kernel.org> <20191028123124.ogkk5ogjlamvwc2s@box> <20191028130018.GA7192@rapoport-lnx> <20191028131623.zwuwguhm4v4s5imh@box> <alpine.DEB.2.21.1910290706360.3769@www.lameter.com>
+ <20191029085551.GA18773@rapoport-lnx>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029150826.38c26ef8@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 03:08:26PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the scsi tree got a conflict in:
-> 
->   drivers/scsi/scsi_sysfs.c
-> 
-> between commit:
-> 
->   81db81f82993 ("drivers/scsi: Replace rcu_swap_protected() with rcu_replace()")
-> 
-> from the rcu tree and commit:
-> 
->   d188b0675b21 ("scsi: core: Add sysfs attributes for VPD pages 0h and 89h")
-> 
-> from the scsi tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
 
-Looks good to me, thank you very much!
 
-							Thanx, Paul
+On Tue, 29 Oct 2019, Mike Rapoport wrote:
 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc drivers/scsi/scsi_sysfs.c
-> index cc51f4756077,0fa2ed343c7f..000000000000
-> --- a/drivers/scsi/scsi_sysfs.c
-> +++ b/drivers/scsi/scsi_sysfs.c
-> @@@ -466,12 -467,18 +467,18 @@@ static void scsi_device_dev_release_use
->   	sdev->request_queue = NULL;
->   
->   	mutex_lock(&sdev->inquiry_mutex);
->  -	rcu_swap_protected(sdev->vpd_pg0, vpd_pg0,
->  -			   lockdep_is_held(&sdev->inquiry_mutex));
->  -	rcu_swap_protected(sdev->vpd_pg80, vpd_pg80,
->  -			   lockdep_is_held(&sdev->inquiry_mutex));
->  -	rcu_swap_protected(sdev->vpd_pg83, vpd_pg83,
->  -			   lockdep_is_held(&sdev->inquiry_mutex));
->  -	rcu_swap_protected(sdev->vpd_pg89, vpd_pg89,
->  -			   lockdep_is_held(&sdev->inquiry_mutex));
-> ++	vpd_pg0 = rcu_replace_pointer(sdev->vpd_pg0, vpd_pg0,
-> ++				      lockdep_is_held(&sdev->inquiry_mutex));
->  +	vpd_pg80 = rcu_replace_pointer(sdev->vpd_pg80, vpd_pg80,
->  +				       lockdep_is_held(&sdev->inquiry_mutex));
->  +	vpd_pg83 = rcu_replace_pointer(sdev->vpd_pg83, vpd_pg83,
->  +				       lockdep_is_held(&sdev->inquiry_mutex));
-> ++	vpd_pg89 = rcu_replace_pointer(sdev->vpd_pg89, vpd_pg89,
-> ++				       lockdep_is_held(&sdev->inquiry_mutex));
->   	mutex_unlock(&sdev->inquiry_mutex);
->   
-> + 	if (vpd_pg0)
-> + 		kfree_rcu(vpd_pg0, rcu);
->   	if (vpd_pg83)
->   		kfree_rcu(vpd_pg83, rcu);
->   	if (vpd_pg80)
+> I've talked with Thomas yesterday and he suggested something similar:
+>
+> When the MAP_EXCLUSIVE request comes for the first time, we allocate a huge
+> page for it and then use this page as a pool of 4K pages for subsequent
+> requests. Once this huge page is full we allocate a new one and append it
+> to the pool. When all the 4K pages that comprise the huge page are freed
+> the huge page is collapsed.
 
+Or write a device driver that allows you to mmap a secure area and avoid
+all core kernel modifications?
+
+/dev/securemem or so?
+
+It may exist already.
 
