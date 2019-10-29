@@ -2,200 +2,268 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E990CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B14CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4578208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZnHiuN/D"
+	by mail.kernel.org (Postfix) with ESMTP id 7F2A321734
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572353851;
+	bh=0F60U76FnYGohq7iryhnBjaJTxDAo9zbijH6kzMXCXc=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=e90mYHo8dqH+AKv+icn990JqYMWubM6tg57WLqi3mPLUowXXM98szCd/qLzC2g0eb
+	 eZuWUnMZaRcE8mH6ovbBJPmBl9ihSnou18uj0ruy4k4mPVNPqIv2NNYfL6nAD6Stg9
+	 v8WFlBazeVysI5Iex8ujL3LqHltO15XJXm6OsmPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388117AbfJ2M5Y (ORCPT
+        id S2388143AbfJ2M5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:57:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35114 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbfJ2M5X (ORCPT
+        Tue, 29 Oct 2019 08:57:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57084 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbfJ2M51 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:57:23 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TCuq2u050432;
-        Tue, 29 Oct 2019 12:57:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=K23I0fHCuQa32+M7xTwe3H0uAQYUSo/omP+J7PzvdJY=;
- b=ZnHiuN/DpHGrlQgU6+5am1guW/1LKNAoS9NN1ZnWWUd3IpmtUZvHoE+zkM/NEgDEz7wR
- cj0a0hNUClAWowCYX5YcLswJFUABQELPeQE27HbqPmCczzFpf+Ew28kHqWqY5FhZvjS5
- Pkj5OkOeZoiOwdSftEtoTOUdvrMfS+diISHd/j4Xy/9RKS//BgZBZiCGIDLc18Nz0XyN
- tN9LTVO70d2Gg0jXE5iu3PfeoxXdffxCoKc12DbJJASQlPyQWLgp6bWiZLFlKJRSNxek
- RcZMn4S+ialvUFWjNSL2O1463+pVVQ2zDx1rGSiAj0gYV+/OzP/emtJ3VVCirjZAvQq4 gQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2vvumfdtcu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 12:57:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TChNZp042107;
-        Tue, 29 Oct 2019 12:57:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2vwam12pks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 12:57:19 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TCvGs5008542;
-        Tue, 29 Oct 2019 12:57:16 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Oct 2019 05:57:16 -0700
-Date:   Tue, 29 Oct 2019 15:57:09 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.co>,
-        linux-sparse@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: detecting misuse of of_get_property
-Message-ID: <20191029125606.GH1922@kadam>
-References: <ec277c12-c608-6326-7723-be8cab4f524a@rasmusvillemoes.dk>
- <20191029104917.GI1944@kadam>
- <e255d01b-ecd7-8386-e99e-b3226dac27c4@rasmusvillemoes.dk>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0F1p//8PRICkK4MW"
-Content-Disposition: inline
-In-Reply-To: <e255d01b-ecd7-8386-e99e-b3226dac27c4@rasmusvillemoes.dk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910290126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910290126
+        Tue, 29 Oct 2019 08:57:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=UVHMIFb85JIHvAPZmwfb8Jx9ya9sTe0Tgnzxjy0WJlc=; b=LPxarDj51he3
+        9cgJDYwV+2dkTT+ZlscXHdCtuW/cJvN4b5yFJbTU8pQnLE3vbBV+UxDQlAEE+fBJSvzAz0Iq/SBgS
+        apmM0DO6RzOSMW1iFgmFXQEITrTXPHCioRbFll8GskOZ5vjGB9jmvDPGue3VPSoUTJzAF5t1jOpGU
+        jvMnQ=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iPR3U-0002DM-Bt; Tue, 29 Oct 2019 12:57:00 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id DE0F92742998; Tue, 29 Oct 2019 12:56:59 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     alsa-devel@alsa-project.org, Andrzej Hajda <a.hajda@samsung.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        dgreid@chromium.org, dianders@chromium.org,
+        dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Takashi Iwai <tiwai@suse.com>, tzungbi@chromium.org
+Subject: Applied "drm: bridge: dw-hdmi: Report connector status using callback" to the asoc tree
+In-Reply-To: <20191028071930.145899-2-cychiang@chromium.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20191029125659.DE0F92742998@ypsilon.sirena.org.uk>
+Date:   Tue, 29 Oct 2019 12:56:59 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
---0F1p//8PRICkK4MW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   drm: bridge: dw-hdmi: Report connector status using callback
 
-On Tue, Oct 29, 2019 at 12:43:24PM +0100, Rasmus Villemoes wrote:
-> On 29/10/2019 11.50, Dan Carpenter wrote:
-> > This should probably work?
-> 
-> I haven't tested it, but yes, something like that. Can you also do the
-> case of struct property::value, i.e. handling
-> 
->   struct property *p = ...;
->   u32 *v = p->value;
+has been applied to the asoc tree at
 
-Attached.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
-This has a bunch of flaws like "void *value = p->value;" doesn't
-generate a warning.  A function that returns a u32 pointer doing
-"return p->value;" doesn't generate a value.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Anyway, it's a starting point to experiment with.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-regards,
-dan carpenter
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---0F1p//8PRICkK4MW
-Content-Type: text/x-csrc; charset=us-ascii
-Content-Disposition: attachment; filename="check_of_get_property.c"
+Thanks,
+Mark
 
-/*
- * Copyright (C) 2019 Oracle.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see http://www.gnu.org/copyleft/gpl.txt
- */
+From a9c82d63ca4819d3d03964dbf4aa427b36c5a67f Mon Sep 17 00:00:00 2001
+From: Cheng-Yi Chiang <cychiang@chromium.org>
+Date: Mon, 28 Oct 2019 15:19:25 +0800
+Subject: [PATCH] drm: bridge: dw-hdmi: Report connector status using callback
 
-#include "smatch.h"
-#include "smatch_slist.h"
+Allow codec driver register callback function for plug event.
 
-static int my_id;
+The callback registration flow:
+dw-hdmi <--- hw-hdmi-i2s-audio <--- hdmi-codec
 
-static bool is_u8_or_endian(struct expression *expr)
-{
-	struct symbol *type;
+dw-hdmi-i2s-audio implements hook_plugged_cb op
+so codec driver can register the callback.
 
-	type = get_type(expr);
-	if (!type || type->type != SYM_PTR)
-		return true;
-	type = get_base_type(type);
-	if (type == &void_ctype)
-		return true;
-	if (type_bits(type) == 8)
-		return true;
-	if (type->type == SYM_RESTRICT)
-		return true;
-	return false;
-}
+dw-hdmi exports a function dw_hdmi_set_plugged_cb so platform device
+can register the callback.
 
-static void match_of_get_property(const char *fn, struct expression *expr, void *unused)
-{
-	if (is_u8_or_endian(expr->left))
-		return;
-	sm_warning("'%s' returns big endian data", fn);
-}
+When connector plug/unplug event happens, report this event using the
+callback.
 
-static void match_assign(struct expression *expr)
-{
-	struct expression *right;
-	struct symbol *type;
+Make sure that audio and drm are using the single source of truth for
+connector status.
 
-	if (expr->op != '=')
-		return;
-	if (is_u8_or_endian(expr->left))
-		return;
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Link: https://lore.kernel.org/r/20191028071930.145899-2-cychiang@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   | 11 +++++
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 41 ++++++++++++++++++-
+ include/drm/bridge/dw_hdmi.h                  |  4 ++
+ 3 files changed, 55 insertions(+), 1 deletion(-)
 
-	right = strip_expr(expr->right);
-	if (!is_void_pointer(right))
-		return;
-	if (right->type != EXPR_DEREF)
-		return;
-	if (!right->member || strcmp(right->member->name, "value") != 0)
-		return;
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+index 1d15cf9b6821..6c2c44d0bdee 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+@@ -151,11 +151,22 @@ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
+ 	return -EINVAL;
+ }
+ 
++static int dw_hdmi_i2s_hook_plugged_cb(struct device *dev, void *data,
++				       hdmi_codec_plugged_cb fn,
++				       struct device *codec_dev)
++{
++	struct dw_hdmi_i2s_audio_data *audio = data;
++	struct dw_hdmi *hdmi = audio->hdmi;
++
++	return dw_hdmi_set_plugged_cb(hdmi, fn, codec_dev);
++}
++
+ static struct hdmi_codec_ops dw_hdmi_i2s_ops = {
+ 	.hw_params	= dw_hdmi_i2s_hw_params,
+ 	.audio_shutdown	= dw_hdmi_i2s_audio_shutdown,
+ 	.get_eld	= dw_hdmi_i2s_get_eld,
+ 	.get_dai_id	= dw_hdmi_i2s_get_dai_id,
++	.hook_plugged_cb = dw_hdmi_i2s_hook_plugged_cb,
+ };
+ 
+ static int snd_dw_hdmi_probe(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index 521d689413c8..2102872bf43c 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -191,6 +191,10 @@ struct dw_hdmi {
+ 
+ 	struct mutex cec_notifier_mutex;
+ 	struct cec_notifier *cec_notifier;
++
++	hdmi_codec_plugged_cb plugged_cb;
++	struct device *codec_dev;
++	enum drm_connector_status last_connector_result;
+ };
+ 
+ #define HDMI_IH_PHY_STAT0_RX_SENSE \
+@@ -215,6 +219,28 @@ static inline u8 hdmi_readb(struct dw_hdmi *hdmi, int offset)
+ 	return val;
+ }
+ 
++static void handle_plugged_change(struct dw_hdmi *hdmi, bool plugged)
++{
++	if (hdmi->plugged_cb && hdmi->codec_dev)
++		hdmi->plugged_cb(hdmi->codec_dev, plugged);
++}
++
++int dw_hdmi_set_plugged_cb(struct dw_hdmi *hdmi, hdmi_codec_plugged_cb fn,
++			   struct device *codec_dev)
++{
++	bool plugged;
++
++	mutex_lock(&hdmi->mutex);
++	hdmi->plugged_cb = fn;
++	hdmi->codec_dev = codec_dev;
++	plugged = hdmi->last_connector_result == connector_status_connected;
++	handle_plugged_change(hdmi, plugged);
++	mutex_unlock(&hdmi->mutex);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(dw_hdmi_set_plugged_cb);
++
+ static void hdmi_modb(struct dw_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
+ {
+ 	regmap_update_bits(hdmi->regm, reg << hdmi->reg_shift, mask, data);
+@@ -2161,6 +2187,7 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
+ {
+ 	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+ 					     connector);
++	enum drm_connector_status result;
+ 
+ 	mutex_lock(&hdmi->mutex);
+ 	hdmi->force = DRM_FORCE_UNSPECIFIED;
+@@ -2168,7 +2195,18 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
+ 	dw_hdmi_update_phy_mask(hdmi);
+ 	mutex_unlock(&hdmi->mutex);
+ 
+-	return hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
++	result = hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
++
++	mutex_lock(&hdmi->mutex);
++	if (result != hdmi->last_connector_result) {
++		dev_dbg(hdmi->dev, "read_hpd result: %d", result);
++		handle_plugged_change(hdmi,
++				      result == connector_status_connected);
++		hdmi->last_connector_result = result;
++	}
++	mutex_unlock(&hdmi->mutex);
++
++	return result;
+ }
+ 
+ static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+@@ -2619,6 +2657,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+ 	hdmi->rxsense = true;
+ 	hdmi->phy_mask = (u8)~(HDMI_PHY_HPD | HDMI_PHY_RX_SENSE);
+ 	hdmi->mc_clkdis = 0x7f;
++	hdmi->last_connector_result = connector_status_disconnected;
+ 
+ 	mutex_init(&hdmi->mutex);
+ 	mutex_init(&hdmi->audio_mutex);
+diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+index cf528c289857..9a0c8381a069 100644
+--- a/include/drm/bridge/dw_hdmi.h
++++ b/include/drm/bridge/dw_hdmi.h
+@@ -6,6 +6,8 @@
+ #ifndef __DW_HDMI__
+ #define __DW_HDMI__
+ 
++#include <sound/hdmi-codec.h>
++
+ struct drm_connector;
+ struct drm_display_mode;
+ struct drm_encoder;
+@@ -154,6 +156,8 @@ void dw_hdmi_resume(struct dw_hdmi *hdmi);
+ 
+ void dw_hdmi_setup_rx_sense(struct dw_hdmi *hdmi, bool hpd, bool rx_sense);
+ 
++int dw_hdmi_set_plugged_cb(struct dw_hdmi *hdmi, hdmi_codec_plugged_cb fn,
++			   struct device *codec_dev);
+ void dw_hdmi_set_sample_rate(struct dw_hdmi *hdmi, unsigned int rate);
+ void dw_hdmi_set_channel_count(struct dw_hdmi *hdmi, unsigned int cnt);
+ void dw_hdmi_set_channel_allocation(struct dw_hdmi *hdmi, unsigned int ca);
+-- 
+2.20.1
 
-	type = get_type(right->deref);
-	if (!type || type->type != SYM_STRUCT || !type->ident ||
-	    strcmp(type->ident->name, "property") != 0)
-		return;
-
-	sm_warning("'(struct property)->value' is big endian");
-}
-
-void check_of_get_property(int id)
-{
-	my_id = id;
-
-	if (option_project != PROJ_KERNEL)
-		return;
-
-	add_function_assign_hook("of_get_property", &match_of_get_property, NULL);
-	add_hook(&match_assign, ASSIGNMENT_HOOK);
-}
-
---0F1p//8PRICkK4MW--
