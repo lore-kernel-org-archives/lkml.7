@@ -2,92 +2,87 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD9ECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9DCCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C9E2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572342206;
-	bh=wfH6HpOMrQ8JJk8YTc5ZX31N64KCBGtRjp8Rl5bdk6I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mAv5G3uyWVjY901J6urYSdQ2241+BPiBTHaN4xJVhVLLE0nsNz7ym0mnwmeVisxlN
-	 vazD5rzhNYfhyjNlnUYXxY/d/Aglem6z/PBaTcXeqGC6esPZJhevCGootdCGEuRGtt
-	 kgoaw6Zq09ouxGawYDY88ivw9oRPsnn+v4n6TfuM=
+	by mail.kernel.org (Postfix) with ESMTP id A02C52087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfJ2JnZ (ORCPT
+        id S1728083AbfJ2JoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:43:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44034 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 05:44:12 -0400
+Received: from mga12.intel.com ([192.55.52.136]:24181 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbfJ2JnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:43:25 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBAB32087E;
-        Tue, 29 Oct 2019 09:43:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572342204;
-        bh=wfH6HpOMrQ8JJk8YTc5ZX31N64KCBGtRjp8Rl5bdk6I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N6PYH1H7UaLzWmvmxEWgivHothCUvMDoCzLVUxBgJJzQcnq9REoG/81uZa0IEJ3ON
-         A/xdIqe0+c5pGvU6Aluh9PzjwoLuqfiqOUg6B//pZn9Ovn8PEy+bSgQGqAjzGkpcok
-         Zk3vHCiX+9rOoI5ualgUjzkh+5r2dxIMm1BbPo9Y=
-Date:   Tue, 29 Oct 2019 10:43:21 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 095/100] USB: usb-skeleton: fix
- use-after-free after driver unbind
-Message-ID: <20191029094321.GA582711@kroah.com>
-References: <20191018220525.9042-1-sashal@kernel.org>
- <20191018220525.9042-95-sashal@kernel.org>
- <20191018222205.GA6978@kroah.com>
- <20191029090435.GJ1554@sasha-vm>
+        id S1726689AbfJ2JoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:44:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:44:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="scan'208";a="211071508"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Oct 2019 02:44:10 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 09E5BF3; Tue, 29 Oct 2019 11:44:09 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] mfd: intel-lpss: Add Intel Comet Lake PCH-H PCI IDs
+Date:   Tue, 29 Oct 2019 11:44:09 +0200
+Message-Id: <20191029094409.43741-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029090435.GJ1554@sasha-vm>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 05:04:35AM -0400, Sasha Levin wrote:
-> On Fri, Oct 18, 2019 at 06:22:05PM -0400, Greg Kroah-Hartman wrote:
-> > On Fri, Oct 18, 2019 at 06:05:20PM -0400, Sasha Levin wrote:
-> > > From: Johan Hovold <johan@kernel.org>
-> > > 
-> > > [ Upstream commit 6353001852776e7eeaab4da78922d4c6f2b076af ]
-> > > 
-> > > The driver failed to stop its read URB on disconnect, something which
-> > > could lead to a use-after-free in the completion handler after driver
-> > > unbind in case the character device has been closed.
-> > > 
-> > > Fixes: e7389cc9a7ff ("USB: skel_read really sucks royally")
-> > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > Link: https://lore.kernel.org/r/20191009170944.30057-3-johan@kernel.org
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > ---
-> > >  drivers/usb/usb-skeleton.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > 
-> > This file does not even get built in the kernel tree, no need to
-> > backport anything for it :)
-> 
-> I'll drop it, but you're taking patches for this driver:
-> https://lore.kernel.org/patchwork/patch/1140673/ .
+Intel Comet Lake PCH-H has the same LPSS than Intel Cannon Lake.
+Add the new IDs to the list of supported devices.
 
-Ah yeah, I probably shouldn't have taken stable backports for that, my
-fault.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/mfd/intel-lpss-pci.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-greg k-h
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 9355db29d2f9..6a7bfa2ab06d 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -128,7 +128,7 @@ static const struct intel_lpss_platform_info cnl_i2c_info = {
+ };
+ 
+ static const struct pci_device_id intel_lpss_pci_ids[] = {
+-	/* CML */
++	/* CML-LP */
+ 	{ PCI_VDEVICE(INTEL, 0x02a8), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x02a9), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x02aa), (kernel_ulong_t)&spt_info },
+@@ -141,6 +141,17 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x02ea), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x02eb), (kernel_ulong_t)&cnl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x02fb), (kernel_ulong_t)&spt_info },
++	/* CML-H */
++	{ PCI_VDEVICE(INTEL, 0x06a8), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x06a9), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x06aa), (kernel_ulong_t)&spt_info },
++	{ PCI_VDEVICE(INTEL, 0x06ab), (kernel_ulong_t)&spt_info },
++	{ PCI_VDEVICE(INTEL, 0x06c7), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x06e8), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x06e9), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x06ea), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x06eb), (kernel_ulong_t)&cnl_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x06fb), (kernel_ulong_t)&spt_info },
+ 	/* BXT A-Step */
+ 	{ PCI_VDEVICE(INTEL, 0x0aac), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x0aae), (kernel_ulong_t)&bxt_i2c_info },
+-- 
+2.23.0
+
