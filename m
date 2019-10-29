@@ -2,82 +2,170 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1277ACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EEACA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3AED2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4714C20830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:24:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xYlRm4uk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403792AbfJ2RVa (ORCPT
+        id S1726315AbfJ2RYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:21:30 -0400
-Received: from relay.sw.ru ([185.231.240.75]:57476 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390793AbfJ2RVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:21:30 -0400
-Received: from [172.16.25.5]
-        by relay.sw.ru with esmtp (Exim 4.92.2)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1iPVBI-0006h5-VT; Tue, 29 Oct 2019 20:21:21 +0300
-Subject: Re: [PATCH v10 4/5] x86/kasan: support KASAN_VMALLOC
-To:     Daniel Axtens <dja@axtens.net>, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, x86@kernel.org, glider@google.com,
-        luto@kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, dvyukov@google.com, christophe.leroy@c-s.fr
-Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191029042059.28541-1-dja@axtens.net>
- <20191029042059.28541-5-dja@axtens.net>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <a144eaca-d7e1-1a18-5975-bd0bfdb9450e@virtuozzo.com>
-Date:   Tue, 29 Oct 2019 20:21:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 13:24:36 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43236 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfJ2RYf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 13:24:35 -0400
+Received: by mail-pl1-f195.google.com with SMTP id v5so7958562ply.10
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 10:24:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=D988j7nxePJvhbrARcDGhWwamnWrYkBVzSnWRIC5KfI=;
+        b=xYlRm4ukFhyZyY8yGMyhb9fCZy4Sypc+bwJb/yS5r1Xqo8fiyDFKw295jEd1AzGhIt
+         N2SUI+ob8lY7eJV6MMkP6s66E7w8NsTySgW/k7+uVJrFGQ3Owa8Jy0W697G0fB8+Gq3D
+         A9lhs5D2EUmeXE4FVENWdKkFaUjRE3PAPwCoBMiuhcB5V5z87LZyFaYPPzp6TX4Dtjgb
+         mBxP+++NODKRl1fjWLQDsR/t0mQn7uqw7zGeN9rz2D73eEvrNsD4WU0SThjGh4v+2E0N
+         RJ/CRwTo+kdRKrI/wh81tBP+P5rGE3zXKrlhIOM8OtfbPiLx5Ih2MsBBORlozoWy6eLT
+         JqvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=D988j7nxePJvhbrARcDGhWwamnWrYkBVzSnWRIC5KfI=;
+        b=c9GsYtGNmPIpBhBM/oA+l8oi8EAKCNvXJerTiS4+n7GrMs8dIsShkcDjCJd2reBQ8g
+         jMvZ2AoUB//T8/eMLppyZVMRgudFgRtOGdfOuMjr46tmcb1MBE4CCFHCK5fDMRwjjqjD
+         rQblaa3b4L8ILuiixETyZ6+0cAGAxdkrlwT4+fnESethJnRFf+m77WIZ6n4DE9acD1xo
+         Wowz4B/dnHM3nu1DrMIyJr3AMEOraYEtl1aJYE+JTSkrGUnn06i67HkhUEQHR3ODuNOz
+         WRz4fGT81WJrHAnjWL375dUkQZ+FY/r6ih0/zEb4VEolwNapwABZsH/25Vo5U3RT+M25
+         vNSQ==
+X-Gm-Message-State: APjAAAW2hVzqqKQY66ALghAysZRK3mG4bjKoDa2TUU5mgyxwc1bDt/93
+        fSWzgtt2WeBzEQAnZkgsyX0cfR15VuA=
+X-Google-Smtp-Source: APXvYqwb/AiauyxMbmB6UShIuFo/DUzUsBmBhxbUgEo7JDSSYS/27dWFw9Km+BO5e2aT7ZNARHN3jg==
+X-Received: by 2002:a17:902:9b93:: with SMTP id y19mr5168098plp.96.1572369874655;
+        Tue, 29 Oct 2019 10:24:34 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id t1sm4288687pgp.9.2019.10.29.10.24.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 10:24:33 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 10:24:31 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] arm64: cpufeature: Enable Qualcomm Falkor errata 1009
+ for Kryo
+Message-ID: <20191029172431.GY571@minitux>
+References: <20191029060604.1208925-1-bjorn.andersson@linaro.org>
+ <20191029115008.GD12103@willie-the-truck>
+ <16ccb343-8253-0224-e957-c73f51f110a1@codeaurora.org>
+ <d9700408-b11e-b5c8-db9d-f70ccd1bde73@codeaurora.org>
+ <20191029171149.GB13281@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20191029042059.28541-5-dja@axtens.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029171149.GB13281@willie-the-truck>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 29 Oct 10:11 PDT 2019, Will Deacon wrote:
 
-
-On 10/29/19 7:20 AM, Daniel Axtens wrote:
-> In the case where KASAN directly allocates memory to back vmalloc
-> space, don't map the early shadow page over it.
+> On Tue, Oct 29, 2019 at 09:07:53AM -0600, Jeffrey Hugo wrote:
+> > On 10/29/2019 7:44 AM, Jeffrey Hugo wrote:
+> > > On 10/29/2019 4:50 AM, Will Deacon wrote:
+> > > > On Mon, Oct 28, 2019 at 11:06:04PM -0700, Bjorn Andersson wrote:
+> > > > > The Kryo cores share errata 1009 with Falkor, so add their model
+> > > > > definitions and enable it for them as well.
+> > > > > 
+> > > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > > > ---
+> > > > >   arch/arm64/include/asm/cputype.h | 4 ++++
+> > > > >   arch/arm64/kernel/cpu_errata.c   | 2 ++
+> > > > >   2 files changed, 6 insertions(+)
+> > > > > 
+> > > > > diff --git a/arch/arm64/include/asm/cputype.h
+> > > > > b/arch/arm64/include/asm/cputype.h
+> > > > > index b1454d117cd2..8067476ea2e4 100644
+> > > > > --- a/arch/arm64/include/asm/cputype.h
+> > > > > +++ b/arch/arm64/include/asm/cputype.h
+> > > > > @@ -84,6 +84,8 @@
+> > > > >   #define QCOM_CPU_PART_FALKOR_V1        0x800
+> > > > >   #define QCOM_CPU_PART_FALKOR        0xC00
+> > > > >   #define QCOM_CPU_PART_KRYO        0x200
+> > > > > +#define QCOM_CPU_PART_KRYO_GOLD        0x211
+> > > > > +#define QCOM_CPU_PART_KRYO_SILVER    0x205
+> > > 
+> > > These are not Kryo part numbers (8998+).  They are Hydra ones.
+> > > 
+> > > > 
+> > > > Can you double-check this, please? My Pixel-1 phone claims something with
+> > > > 0x201, but I don't know if that's what you were aiming for. It would be
+> > > > great if Qualcomm could document these register fields somewhere,
+> > > > especially
+> > > > since we're trying to work around their hardware errata for them.
+> > > 
+> > > I wish I could point you to public documentation.  I don't happen to
+> > > know where it is.  As far as 8996 goes, there are quite a few part
+> > > numbers.  The ones I could find are:
+> > > 201
+> > > 205
+> > > 211
+> > > 241
+> > > 251
+> > > 
+> > > 281 happens to be QDF2432
+> > 
+> > From asking around, I found someone in the know.  We don't have public
+> > documentation, but I can follow up to try to create something - its likely
+> > going to take a bit.  I was given the following information to share.  This
+> > is specific to Hydra only-
+> > 
+> > MIDR[15:12] = PART[11:8]
+> > Hydra and technology node differentiator (0x1 = Hydra 16nm; 0x2 = Hydra
+> > 14nm; 0x3 = Hydra 10nm)
+> > 
+> > MIDR[11:10] = PART[7:6]
+> > This corresponds to the cluster revision number
+> > 
+> > MIDR[9:8] = PART[5:4]
+> > Technology variant within the node
+> > 
+> > MIDR[7:6] = PART[3:2]
+> > 0b00 = 512KB L2
+> > 0b01 = 1MB L2
+> > 0b10 = 2MB L2
+> > 0b11 = 4MB L2
+> > 
+> > MIDR[5:4] = PART[1:0]
+> > 0b00 = uni-core
+> > 0b01 = dual-core cluster
+> > 0b10 = tri-core cluster
+> > 0b11 = quad-core cluster
 > 
-> We prepopulate pgds/p4ds for the range that would otherwise be empty.
-> This is required to get it synced to hardware on boot, allowing the
-> lower levels of the page tables to be filled dynamically.
+> Thanks for digging up the details, Jeffrey. As far as I can tell, our
+> 'is_kryo_midr()' function will return 'true' for all of these, so I think
+> that's what we should be using for this erratum workaround. Would that work
+> for you?
 > 
-> Acked-by: Dmitry Vyukov <dvyukov@google.com>
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
-> 
-> ---
 
-> +static void __init kasan_shallow_populate_pgds(void *start, void *end)
-> +{
-> +	unsigned long addr, next;
-> +	pgd_t *pgd;
-> +	void *p;
-> +	int nid = early_pfn_to_nid((unsigned long)start);
+Yes, I agree. There's a fair amount of variants involved, so let's go
+for is_kryo_midr() (which should be is_hydra_midr()).
 
-This doesn't make sense. start is not even a pfn. With linear mapping 
-we try to identify nid to have the shadow on the same node as memory. But 
-in this case we don't have memory or the corresponding shadow (yet),
-we only install pgd/p4d.
-I guess we could just use NUMA_NO_NODE.
-
-The rest looks ok, so with that fixed:
-
-Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-
-
-
+Regards,
+Bjorn
