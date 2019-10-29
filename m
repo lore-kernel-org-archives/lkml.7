@@ -2,126 +2,140 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A324CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC35CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD13B21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:55:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572382500;
-	bh=fRWKdzlU8j22o6ENaferL47IJRTpabXJT7Vi/Zm4l18=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=uKN1egRUK9Zxnjb6F7C5CvH0W2kYuOWw0AUSxGJcoNzMX1C///4lwE1HkHaHLPblr
-	 MSZ2n4W/NIiHIAS892+bsBJtS3rTcJ/Jl9GajZAmtuHm4qISWqeILTL5C9gS5uJ7/9
-	 jcfVkvxFVV2GwAnyFh/SuyMgYnmoemVz43ysv7kg=
+	by mail.kernel.org (Postfix) with ESMTP id 3154C21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:55:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="aXoVegOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfJ2Uy7 (ORCPT
+        id S1728547AbfJ2UzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:54:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfJ2Uy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:54:59 -0400
-Received: from localhost (unknown [69.71.4.100])
+        Tue, 29 Oct 2019 16:55:01 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:58365 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfJ2UzA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:55:00 -0400
+Received: from [100.68.212.125] (ip-109-40-129-141.web.vodafone.de [109.40.129.141])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8023208E3;
-        Tue, 29 Oct 2019 20:54:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572382498;
-        bh=fRWKdzlU8j22o6ENaferL47IJRTpabXJT7Vi/Zm4l18=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rRmkEDjO0yLpFVt5jxGAENCOvzR5c9Dy49qE0aW2lx6ZWFh8vjxFd9o/6el3tOvdl
-         BidOizYA7LQtqklw8WId8awtY5O4U7TI3FnHRZf8tJ3uVOoq929ua7Vx7p+tXi4foZ
-         tIPme/KPz+gAUMFbNhABnvcQVYd70dfNi8gh1kbU=
-Date:   Tue, 29 Oct 2019 15:54:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Matthias Andree <matthias.andree@gmx.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191029205456.GA100782@google.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id D39A922E07;
+        Tue, 29 Oct 2019 21:54:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1572382496;
+        bh=3aiIfyWXY1iPXO+4Ob07dVw4rPtBd4EDLCI8JulktDs=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=aXoVegOLM+oArB/yjNaGjvBEgwLi/VPUsPvYGNT3IyhfGbhKnd3q3U6HMSpEeUic8
+         0f/ArgltNnU572xY57tcbA5F8A3/pPclA4t57/D/iTsqIx2pLCHAKwDYbxYHrUlJub
+         LxNDK6prYzHW4s/96e+HrVB4UvkZjD0g9M2L9gho=
+Date:   Tue, 29 Oct 2019 21:54:53 +0100
+User-Agent: K-9 Mail for Android
+In-Reply-To: <519d52d2-cd83-b544-591b-ca9d9bb16dfa@gmail.com>
+References: <20191029174819.3502-1-michael@walle.cc> <519d52d2-cd83-b544-591b-ca9d9bb16dfa@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004123947.11087-3-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 0/3] net: phy: initialize PHYs via device tree properties
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+CC:     Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+From:   Michael Walle <michael@walle.cc>
+Message-ID: <4B4A80A7-05C8-441A-B224-7CC01E3D8C30@walle.cc>
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 03:39:47PM +0300, Mika Westerberg wrote:
-> Currently Linux does not follow PCIe spec regarding the required delays
-> after reset. A concrete example is a Thunderbolt add-in-card that
-> consists of a PCIe switch and two PCIe endpoints:
-> ...
+Am 29=2E Oktober 2019 18:59:07 MEZ schrieb Florian Fainelli <f=2Efainelli@g=
+mail=2Ecom>:
+>On 10/29/19 10:48 AM, Michael Walle wrote:
+>> I was trying to configure the Atheros PHY for my board=2E There are
+>fixups
+>> all over the place, for example to enable the 125MHz clock output in
+>almost
+>> any i=2EMX architecture=2E Instead of adding another fixup in
+>architecture
+>> specific code, try to provide a generic way to init the PHY
+>registers=2E
+>>=20
+>> This patch series tries to pick up the "broadcom,reg-init" and
+>> "marvell,reg-init" device tree properties idea and make it a more
+>generic
+>> "reg-init" which is handled by phy_device instead of a particular phy
+>> driver=2E
+>
+>These two examples are actually quite bad and were symptomatic of a few
+>things at the time:
+>
+>- rush to get a specific feature/device supported without thinking
+>about
+>the big picture
+>- lack of appropriate review on the Device Tree bindings
+>
+>Fortunately, the last item is now not happening anymore=2E
+>
+>The problem with letting that approach go through is that the Device
+>Tree can now hold a configuration policy which is passed through as-is
+>from DT to the PHY device, this is bad on so many different levels,
+>starting with abstraction=2E
 
-> @@ -1025,15 +1025,11 @@ static void __pci_start_power_transition(struct pci_dev *dev, pci_power_t state)
->  	if (state == PCI_D0) {
->  		pci_platform_power_transition(dev, PCI_D0);
->  		/*
-> -		 * Mandatory power management transition delays, see
-> -		 * PCI Express Base Specification Revision 2.0 Section
-> -		 * 6.6.1: Conventional Reset.  Do not delay for
-> -		 * devices powered on/off by corresponding bridge,
-> -		 * because have already delayed for the bridge.
-> +		 * Mandatory power management transition delays are handled
-> +		 * in pci_pm_runtime_resume() of the corresponding
-> +		 * downstream/root port.
->  		 */
->  		if (dev->runtime_d3cold) {
-> -			if (dev->d3cold_delay && !dev->imm_ready)
-> -				msleep(dev->d3cold_delay);
+I see=2E
 
-This removes the only use of d3cold_delay.  I assume that's
-intentional?  If we no longer need it, we might as well remove it from
-the pci_dev and remove the places that set it.  It'd be nice if that
-could be a separate patch, even if we waited a little longer than
-necessary at that one bisection point.
+>If all you need is to enable a particular clock, introduce device
+>specific properties that describe the hardware, and make the necessary
+>change to the local driver that needs to act on those=2E You can always
+>define a more generic scope property if you see a recurring pattern=2E
 
-It also removes one of the three uses of imm_ready, leaving only the
-two in FLR.  I suspect there are other places we should use imm_ready,
-e.g., transitions to/from D1 and D2, but that would be beyond the
-scope of this patch.
+Could you have a quick look at the following patch I made for u-boot, whic=
+h adds a binding for the Atheros PHY=2E If that is the right direction=2E Y=
+eah, I should have made it first to Linux to get some feedback on the bindi=
+ng :p
 
-> +	/*
-> +	 * For PCIe downstream and root ports that do not support speeds
-> +	 * greater than 5 GT/s need to wait minimum 100 ms. For higher
-> +	 * speeds (gen3) we need to wait first for the data link layer to
-> +	 * become active.
-> +	 *
-> +	 * However, 100 ms is the minimum and the PCIe spec says the
-> +	 * software must allow at least 1s before it can determine that the
-> +	 * device that did not respond is a broken device. There is
-> +	 * evidence that 100 ms is not always enough, for example certain
-> +	 * Titan Ridge xHCI controller does not always respond to
-> +	 * configuration requests if we only wait for 100 ms (see
-> +	 * https://bugzilla.kernel.org/show_bug.cgi?id=203885).
-> +	 *
-> +	 * Therefore we wait for 100 ms and check for the device presence.
-> +	 * If it is still not present give it an additional 100 ms.
-> +	 */
-> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
-> +	    pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
-> +		return;
+https://patchwork=2Eozlabs=2Eorg/patch/1184516/
 
-Shouldn't this be:
+I'd then prepare another patch for Linux based on your suggestions=2E=20
 
-  if (!pcie_downstream_port(dev))
-    return
+-michael=20
 
-so we include PCI/PCI-X to PCIe bridges?
+>
+>So just to be clear on the current approach: NACK=2E
+>
+>>=20
+>> Michael Walle (3):
+>>   dt-bindings: net: phy: Add reg-init property
+>>   net: phy: export __phy_{read|write}_page
+>>   net: phy: Use device tree properties to initialize any PHYs
+>>=20
+>>  =2E=2E=2E/devicetree/bindings/net/ethernet-phy=2Eyaml | 31 ++++++
+>>  MAINTAINERS                                   |  1 +
+>>  drivers/net/phy/phy-core=2Ec                    | 24 ++++-
+>>  drivers/net/phy/phy_device=2Ec                  | 97
+>++++++++++++++++++-
+>>  include/dt-bindings/net/phy=2Eh                 | 18 ++++
+>>  include/linux/phy=2Eh                           |  2 +
+>>  6 files changed, 170 insertions(+), 3 deletions(-)
+>>  create mode 100644 include/dt-bindings/net/phy=2Eh
+>>=20
+>> Cc: Andrew Lunn <andrew@lunn=2Ech>
+>> Cc: Florian Fainelli <f=2Efainelli@gmail=2Ecom>
+>> Cc: Heiner Kallweit <hkallweit1@gmail=2Ecom>
+>> Cc: "David S=2E Miller" <davem@davemloft=2Enet>
+>> Cc: Rob Herring <robh+dt@kernel=2Eorg>
+>> Cc: Mark Rutland <mark=2Erutland@arm=2Ecom>
+>>=20
+
+Hi Florian, 
