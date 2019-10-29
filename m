@@ -2,118 +2,129 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73BECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D80CCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D9B208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1787721479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 17:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572370744;
+	bh=TZP5RGLTh46FKw2IHMHKaCfLhrDgBMwi+Av69vqWVBI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MxK3SJzk9WAS0kOyhUgq49MfIKKc6/0y7AYwEWMzFGEfhYNB2+eGaBu0k/45vCX3a
+	 RUVGVVfB9Xxs6QfrCBUQ/KgrSDDux4SXn8YDsLDAqkKduU37FzWvw9Es7BXKXQHsSO
+	 LGY23YPI1Ac+jgFlDRK5JAZGix4C5NMAlfGstqyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfJ2RhS (ORCPT
+        id S1728052AbfJ2RjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:37:18 -0400
-Received: from mga05.intel.com ([192.55.52.43]:18881 "EHLO mga05.intel.com"
+        Tue, 29 Oct 2019 13:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfJ2RhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 13:37:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 10:37:17 -0700
-X-IronPort-AV: E=Sophos;i="5.68,244,1569308400"; 
-   d="scan'208";a="193678661"
-Received: from acox1-desk1.ger.corp.intel.com ([10.251.81.197])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 10:37:13 -0700
-Message-ID: <57f25261400464ea58b65bf39ca1b4f89eea2ce2.camel@linux.intel.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-From:   Alan Cox <alan@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Date:   Tue, 29 Oct 2019 17:37:10 +0000
-In-Reply-To: <CALCETrWN9kc+10tf7YoBp9ixqkO_KZ=b1E_cFBr_Uogxhu68PQ@mail.gmail.com>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
-         <2236FBA76BA1254E88B949DDB74E612BA4EEC0CE@IRSMSX102.ger.corp.intel.com>
-         <CALCETrWN9kc+10tf7YoBp9ixqkO_KZ=b1E_cFBr_Uogxhu68PQ@mail.gmail.com>
-Organization: Intel Corporation
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726068AbfJ2RjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 13:39:02 -0400
+Received: from e123331-lin.home (lfbn-mar-1-643-104.w90-118.abo.wanadoo.fr [90.118.215.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4650920679;
+        Tue, 29 Oct 2019 17:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572370741;
+        bh=TZP5RGLTh46FKw2IHMHKaCfLhrDgBMwi+Av69vqWVBI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xI/+BecBR5HnXNvy8BbJdxAEdOyoAxaUe6muUdJJM9yVStcxohIbweKxu1OlpumIl
+         pyquMZCS2cdeQViNLLKqF5YTPMZm8x1fgKVykCXm2uXesKHHH0UsHy3yex+NsYlBuL
+         rgzZ/rypjQ2EmSB39WLO8+mRVsRy0kWA1u7UmXuM=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, Chester Lin <clin@suse.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guillaume Gardet <Guillaume.Gardet@arm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Kairui Song <kasong@redhat.com>,
+        Laszlo Ersek <lersek@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Narendra K <Narendra.K@dell.com>
+Subject: [GIT PULL v2 0/6] EFI fixes for v5.4
+Date:   Tue, 29 Oct 2019 18:37:49 +0100
+Message-Id: <20191029173755.27149-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Doing all of this with MAP_SECRET seems bad to me.  If user code
-> wants
-> UC memory, it should ask for UC memory -- having the kernel involved
-> in the decision to use UC memory is a bad idea, because the
-> performance impact of using UC memory where user code wasn't
-> expecting
+Ingo, Thomas,
 
-The user has no idea that they want UC memory. It varies by platform
-what this means. There are some systems (eg in order uclinux devices,
-M68K, old atoms) for which it probably means 'no-op', there are those
-where UC helps, those it hinders, there are those where WC is probably
-sufficient. There are platforms where 'secret' memory might best be
-implemented by using on die memory pools or cache locking. It might
-even mean 'put me in a non HT cgroup'.
+The v1 of this pull request/series was sent out last Wednesday, and
+appears to have slipped through the cracks. This is actually for the
+better, given that I had overlooked a patch that I had queued in the
+wrong place, so I have included it now for this v2.
 
-Secret might also mean 'not accessible by thunderbolt', or 'do not swap
-unless swap is encrypted' and other things.
-
-IMHO the question is what is the actual semantic here. What are you
-asking for ? Does it mean "at any cost", what does it guarantee (100%
-or statistically), what level of guarantee is acceptable, what level is
--EOPNOTSUPP or similar ?
-
-I'm also wary of the focus always being on keys. If you decrypt a file
-I'm probably just as interested in the contents so can I mmap a file
-this way and if so what happens on the unmap. Yes key theft lets me do
-all sorts of theoretical long term bad stuff, but frequently data theft
-is sufficient to do lots of practical short term bad stuff. Also as an
-attacker I'm probably a script, and I don't want to be exposing my
-master long term because they want the footprints gone.
-
-> in gnome-shell.  The system slowed down to such an extent that I was
-> unable to enter the three or so keystrokes to turn it back off.)
-
-Yes - and any uncached pages also need to be kept away from anything
-that the kernel touches under locks, or use in atomic user operations
-stuff. Copy on write of an uncached page for example is suddenly really
-slow and there are so many other cases we'd have to find and deal with.
-
-> EXCLUSIVE makes sense.  Saying "don't ptrace this" makes sense.  UC
-> makes sense.  But having one flag to rule them all does not make
-> sense
-> to me.
-
-We already support not ptracing, and if I can ptrace any of the code I
-can access all of its code/data so that one isn't hard and the LSM
-interfaces can do it. That one is easy - minus the fact that malware
-writers are big fans of anything that stops tracing...
-
-Alan
+Thanks,
+Ard.
 
 
+The following changes since commit 7d194c2100ad2a6dded545887d02754948ca5241:
+
+  Linux 5.4-rc4 (2019-10-20 15:56:22 -0400)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent
+
+for you to fetch changes up to 8a1022da89857a21556eb04f53d281eda94ef02d:
+
+  efi/efi_test: lock down /dev/efi_test and require CAP_SYS_ADMIN (2019-10-29 10:30:18 +0100)
+
+----------------------------------------------------------------
+Some more fixes for the EFI subsystem:
+- Prevent boot problems on HyperV due to incorrect placement of the kernel
+- Classify UEFI randomness as bootloader randomness
+- Fix EFI boot for the Raspberry Pi2 running U-boot
+- A capability/lockdown fix for the efi_test module.
+- Some more odd fixes.
+
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      efi: libstub/arm: account for firmware reserved memory at the base of RAM
+
+Dominik Brodowski (1):
+      efi/random: treat EFI_RNG_PROTOCOL output as bootloader randomness
+
+Javier Martinez Canillas (1):
+      efi/efi_test: lock down /dev/efi_test and require CAP_SYS_ADMIN
+
+Jerry Snitselaar (1):
+      efi/tpm: return -EINVAL when determining tpm final events log size fails
+
+Kairui Song (1):
+      x86, efi: never relocate kernel below lowest acceptable address
+
+Narendra K (1):
+      efi: Make CONFIG_EFI_RCI2_TABLE selectable on x86 only
+
+ arch/x86/boot/compressed/eboot.c               |  4 +++-
+ drivers/firmware/efi/Kconfig                   |  1 +
+ drivers/firmware/efi/efi.c                     |  2 +-
+ drivers/firmware/efi/libstub/Makefile          |  1 +
+ drivers/firmware/efi/libstub/arm32-stub.c      | 16 +++++++++++++---
+ drivers/firmware/efi/libstub/efi-stub-helper.c | 24 ++++++++++--------------
+ drivers/firmware/efi/test/efi_test.c           |  8 ++++++++
+ drivers/firmware/efi/tpm.c                     |  1 +
+ include/linux/efi.h                            | 18 ++++++++++++++++--
+ include/linux/security.h                       |  1 +
+ security/lockdown/lockdown.c                   |  1 +
+ 11 files changed, 56 insertions(+), 21 deletions(-)
