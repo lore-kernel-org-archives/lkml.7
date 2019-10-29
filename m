@@ -2,711 +2,153 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE294CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF686CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD7C2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913582083E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:34:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="efsmSO4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfJ2UaG (ORCPT
+        id S1727220AbfJ2Ue6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:30:06 -0400
-Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:49289 "EHLO
-        smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfJ2UaF (ORCPT
+        Tue, 29 Oct 2019 16:34:58 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:39139 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfJ2Ue5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:30:05 -0400
-Received: from smtp8.infomaniak.ch (smtp8.infomaniak.ch [83.166.132.38])
-        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x9THFUnj119194
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:15:31 +0100
-Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
-        (authenticated bits=0)
-        by smtp8.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x9THFU5P168850;
-        Tue, 29 Oct 2019 18:15:30 +0100
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Drysdale <drysdale@google.com>,
-        Florent Revest <revest@chromium.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Tue, 29 Oct 2019 16:34:57 -0400
+Received: by mail-yw1-f68.google.com with SMTP id k127so78302ywc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 13:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3e7RG+yymRb8+UsDjN9H9kt+0y+nm/jojOW5ivlVFvw=;
+        b=efsmSO4ZMSKlzNExqN+trF4cPvgy7drS2gKPDQSANIsrX4igow0dM/O50BYeZbKDQM
+         hiazdisICBi094slGKVMuxcYklIV2arLTepYlLiueeUMimvvjusFE9SSZRoC6ZOR/aoU
+         +1dcTTm3FY/2R3dglgtSpuJI0IVzLNEfJFJWc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3e7RG+yymRb8+UsDjN9H9kt+0y+nm/jojOW5ivlVFvw=;
+        b=k6x6rk0pxzrDom/cMyrsCdU4dVZ50wbze8NjIWbEJfPEAs5ojWu5loCHelxZ+nD454
+         6zdqXFIT9vXED3IpiKxPg5F7yVHDHEdAjgscrMFIKM3iY/qdOZw71RnqWqk/8DO62akQ
+         WZEQSCzuRY3cT2v/BOv5NkVbLBEBjgTSdhRhg/E7LuoBp328w37FweO9hMdFgQnJrgyr
+         J7XfYlN1dN9ogMrwOIp4cwQD0oT2VD4ONhe5pxil5mdV0vmghuIurEOaXwM4clVsCT43
+         WLoZRInCKUtDFLcrAMoXU4BASp26q2+zuXjLDyN7XKcO/kPO46DudMFX2IebmWAzFx6N
+         +jyg==
+X-Gm-Message-State: APjAAAX0rReDhrgS6u1pm82DzN3NGkSxpuEEaeDrr8xEZNfP6Ro3IH1g
+        tfGuXDR+VF5oCGB03s3gBhbOZg==
+X-Google-Smtp-Source: APXvYqw53pPyegiei3tZ7Yzm+loCH8bzg7nHRm+d4aamBP2EMIXnNiwJny609a7DNSN6g3lneI+8Qg==
+X-Received: by 2002:a81:bd05:: with SMTP id b5mr19023466ywi.243.1572381295382;
+        Tue, 29 Oct 2019 13:34:55 -0700 (PDT)
+Received: from sinkpad (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
+        by smtp.gmail.com with ESMTPSA id l68sm4501863ywf.95.2019.10.29.13.34.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 29 Oct 2019 13:34:54 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 16:34:47 -0400
+From:   Julien Desfossez <jdesfossez@digitalocean.com>
+To:     Dario Faggioli <dfaggioli@suse.com>
+Cc:     Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
         Kees Cook <keescook@chromium.org>,
-        KP Singh <kpsingh@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH bpf-next v11 6/7] bpf,landlock: Add tests for the Landlock ptrace program type
-Date:   Tue, 29 Oct 2019 18:15:04 +0100
-Message-Id: <20191029171505.6650-7-mic@digikod.net>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191029171505.6650-1-mic@digikod.net>
-References: <20191029171505.6650-1-mic@digikod.net>
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20191029203447.GA13345@sinkpad>
+References: <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
+ <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
+ <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
+ <20190911140204.GA52872@aaronlu>
+ <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
+ <20190912120400.GA16200@aaronlu>
+ <CAERHkrsrszO4hJqVy=g7P74h9d_YJzW7GY4ptPKykTX-mc9Mdg@mail.gmail.com>
+ <20190915141402.GA1349@aaronlu>
+ <277737d6034b3da072d3b0b808d2fa6e110038b0.camel@suse.com>
+ <d30d343a8d9bf2c2e2977be7ac8370f26fd4df3d.camel@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d30d343a8d9bf2c2e2977be7ac8370f26fd4df3d.camel@suse.com>
+X-Mailer: Mutt 1.9.4 (2018-02-28)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test eBPF program context access and ptrace hooks semantic.
+On 29-Oct-2019 10:20:57 AM, Dario Faggioli wrote:
+> > Hello,
+> > 
+> > As anticipated, I've been trying to follow the development of this
+> > feature and, in the meantime, I have done some benchmarks.
+> > 
+> > I actually have a lot of data (and am planning for more), so I am
+> > sending a few emails, each one with a subset of the numbers in it,
+> > instead than just one which would be beyond giant! :-)
+> > 
 
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: James Morris <jmorris@namei.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Serge E. Hallyn <serge@hallyn.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Will Drewry <wad@chromium.org>
----
+Hi Dario,
 
-Changes since v10:
-* rework tests with new Landlock ptrace programs which restrict ptrace
-  thanks to the task_landlock_ptrace_ancestor() helper
-* simplify ptrace tests (make expect_ptrace implicit)
-* add tests:
-  * check a child process tracing its parent
-  * check Landlock domain without ptrace enforcement (e.g. useful for
-    audit/signaling purpose)
-  * check inherited-only domains
-  * check task pointer arithmetic
-* fix flaky test for multi-core
-* increase log size
-* cosmetic renames
-* update and improve the Makefile
+Thank you for this comprehensive set of tests and analyses !
 
-Changes since v9:
-* replace subtype with expected_attach_type and expected_attach_triggers
-* rename inode_map_lookup() into inode_map_lookup_elem()
-* check for inode map entry without value (which is now possible thanks
-  to the pointer null check)
-* use read-only inode map for Landlock programs
+It confirms the trend we are seeing for the VM cases. Basically when the
+CPUs are overcommitted, core scheduling helps compared to noHT. But when
+we have I/O in the mix (sysbench-oltp), then it becomes a bit less
+clear, it depends if the CPU is still overcommitted or not. About the
+2nd VM that is doing the background noise, is it enough to fill up the
+disk queues or is its disk throughput somewhat limited ? Have you
+compared the results if you disable the disk noise ?
 
-Changes since v8:
-* update eBPF include path for macros
-* use TEST_GEN_PROGS and use the generic "clean" target
-* add more verbose errors
-* update the bpf/verifier files
-* remove chain tests (from landlock and bpf/verifier)
-* replace the whitelist tests with blacklist tests (because of stateless
-  Landlock programs): remove "dotdot" tests and other depth tests
-* sync the landlock Makefile with its bpf sibling directory and use
-  bpf_load_program_xattr()
+Our approach for bare-metal tests is a bit different, we are
+constraining a set of processes only on a limited set of cpus, but I
+like your approach because it pushes more the number of processes
+against the whole system. And I have no explanation for why sysbench
+thread vs process is so different.
 
-Changes since v7:
-* update tests and add new ones for filesystem hierarchy and Landlock
-  chains.
+And it also confirms, core scheduling has trouble scaling with the
+number of threads, it works pretty well in VMs because the number of
+threads is limited by the number of vcpus, but the bare-metal cases show
+a major scaling issue (which is not too surprising).
 
-Changes since v6:
-* use the new kselftest_harness.h
-* use const variables
-* replace ASSERT_STEP with ASSERT_*
-* rename BPF_PROG_TYPE_LANDLOCK to BPF_PROG_TYPE_LANDLOCK_RULE
-* force sample library rebuild
-* fix install target
+I am curious, for the tagging in KVM, do you move all the vcpus into the
+same cgroup before tagging ?  Did you leave the emulator threads
+untagged at all time ?
 
-Changes since v5:
-* add subtype test
-* add ptrace tests
-* split and rename files
-* cleanup and rebase
----
- scripts/bpf_helpers_doc.py                    |   1 +
- tools/include/uapi/linux/bpf.h                |  23 +-
- tools/include/uapi/linux/landlock.h           |  22 ++
- tools/lib/bpf/libbpf_probes.c                 |   3 +
- tools/testing/selftests/bpf/config            |   3 +
- tools/testing/selftests/bpf/test_verifier.c   |   1 +
- .../testing/selftests/bpf/verifier/landlock.c |  56 +++++
- tools/testing/selftests/landlock/.gitignore   |   5 +
- tools/testing/selftests/landlock/Makefile     |  27 +++
- tools/testing/selftests/landlock/config       |   5 +
- tools/testing/selftests/landlock/test.h       |  48 ++++
- tools/testing/selftests/landlock/test_base.c  |  24 ++
- .../testing/selftests/landlock/test_ptrace.c  | 210 ++++++++++++++++++
- 13 files changed, 427 insertions(+), 1 deletion(-)
- create mode 100644 tools/include/uapi/linux/landlock.h
- create mode 100644 tools/testing/selftests/bpf/verifier/landlock.c
- create mode 100644 tools/testing/selftests/landlock/.gitignore
- create mode 100644 tools/testing/selftests/landlock/Makefile
- create mode 100644 tools/testing/selftests/landlock/config
- create mode 100644 tools/testing/selftests/landlock/test.h
- create mode 100644 tools/testing/selftests/landlock/test_base.c
- create mode 100644 tools/testing/selftests/landlock/test_ptrace.c
+For the overhead (without tagging), have you tried bisecting the
+patchset to see which patch introduces the overhead ? it is more than I
+had in mind.
 
-diff --git a/scripts/bpf_helpers_doc.py b/scripts/bpf_helpers_doc.py
-index 7548569e8076..8e4c0fe75663 100755
---- a/scripts/bpf_helpers_doc.py
-+++ b/scripts/bpf_helpers_doc.py
-@@ -466,6 +466,7 @@ class PrinterHelpers(Printer):
-             'const struct sk_buff': 'const struct __sk_buff',
-             'struct sk_msg_buff': 'struct sk_msg_md',
-             'struct xdp_buff': 'struct xdp_md',
-+            'struct task_struct': 'void',
-     }
- 
-     def print_header(self):
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 4af8b0819a32..c88436b97163 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -173,6 +173,7 @@ enum bpf_prog_type {
- 	BPF_PROG_TYPE_CGROUP_SYSCTL,
- 	BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE,
- 	BPF_PROG_TYPE_CGROUP_SOCKOPT,
-+	BPF_PROG_TYPE_LANDLOCK_HOOK,
- };
- 
- enum bpf_attach_type {
-@@ -199,6 +200,7 @@ enum bpf_attach_type {
- 	BPF_CGROUP_UDP6_RECVMSG,
- 	BPF_CGROUP_GETSOCKOPT,
- 	BPF_CGROUP_SETSOCKOPT,
-+	BPF_LANDLOCK_PTRACE,
- 	__MAX_BPF_ATTACH_TYPE
- };
- 
-@@ -2775,6 +2777,24 @@ union bpf_attr {
-  * 		restricted to raw_tracepoint bpf programs.
-  * 	Return
-  * 		0 on success, or a negative error in case of failure.
-+ *
-+ * int bpf_task_landlock_ptrace_ancestor(struct task_struct *parent, struct task_struct *child)
-+ *	Description
-+ *		Check the relation of a potentially parent task with a child
-+ *		one, according to their Landlock ptrace hook programs.
-+ *	Return
-+ *		**-EINVAL** if the child's ptrace programs are not comparable
-+ *		to the parent ones, i.e. one of them is an empty set.
-+ *
-+ *		**-ENOENT** if the parent's ptrace programs are either in a
-+ *		separate hierarchy of the child ones, or if the parent's ptrace
-+ *		programs are a superset of the child ones.
-+ *
-+ *		0 if the parent's ptrace programs are the same as the child
-+ *		ones.
-+ *
-+ *		1 if the parent's ptrace programs are indeed a subset of the
-+ *		child ones.
-  */
- #define __BPF_FUNC_MAPPER(FN)		\
- 	FN(unspec),			\
-@@ -2888,7 +2908,8 @@ union bpf_attr {
- 	FN(sk_storage_delete),		\
- 	FN(send_signal),		\
- 	FN(tcp_gen_syncookie),		\
--	FN(skb_output),
-+	FN(skb_output),			\
-+	FN(task_landlock_ptrace_ancestor),
- 
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-  * function eBPF program intends to call
-diff --git a/tools/include/uapi/linux/landlock.h b/tools/include/uapi/linux/landlock.h
-new file mode 100644
-index 000000000000..3db2d190c4e7
---- /dev/null
-+++ b/tools/include/uapi/linux/landlock.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Landlock - UAPI headers
-+ *
-+ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2018-2019 ANSSI
-+ */
-+
-+#ifndef _UAPI__LINUX_LANDLOCK_H__
-+#define _UAPI__LINUX_LANDLOCK_H__
-+
-+#include <linux/types.h>
-+
-+#define LANDLOCK_RET_ALLOW	0
-+#define LANDLOCK_RET_DENY	1
-+
-+struct landlock_context_ptrace {
-+	__u64 tracer;
-+	__u64 tracee;
-+};
-+
-+#endif /* _UAPI__LINUX_LANDLOCK_H__ */
-diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
-index 4b0b0364f5fc..1e0d6346a7c7 100644
---- a/tools/lib/bpf/libbpf_probes.c
-+++ b/tools/lib/bpf/libbpf_probes.c
-@@ -78,6 +78,9 @@ probe_load(enum bpf_prog_type prog_type, const struct bpf_insn *insns,
- 	case BPF_PROG_TYPE_KPROBE:
- 		xattr.kern_version = get_kernel_version();
- 		break;
-+	case BPF_PROG_TYPE_LANDLOCK_HOOK:
-+		xattr.expected_attach_type = BPF_LANDLOCK_PTRACE;
-+		break;
- 	case BPF_PROG_TYPE_UNSPEC:
- 	case BPF_PROG_TYPE_SOCKET_FILTER:
- 	case BPF_PROG_TYPE_SCHED_CLS:
-diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
-index 5dc109f4c097..3161a88a6059 100644
---- a/tools/testing/selftests/bpf/config
-+++ b/tools/testing/selftests/bpf/config
-@@ -35,3 +35,6 @@ CONFIG_MPLS_ROUTING=m
- CONFIG_MPLS_IPTUNNEL=m
- CONFIG_IPV6_SIT=m
- CONFIG_BPF_JIT=y
-+CONFIG_SECCOMP_FILTER=y
-+CONFIG_SECURITY=y
-+CONFIG_SECURITY_LANDLOCK=y
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index d27fd929abb9..74f249dafc0b 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -30,6 +30,7 @@
- #include <linux/bpf.h>
- #include <linux/if_ether.h>
- #include <linux/btf.h>
-+#include <linux/landlock.h>
- 
- #include <bpf/bpf.h>
- #include <bpf/libbpf.h>
-diff --git a/tools/testing/selftests/bpf/verifier/landlock.c b/tools/testing/selftests/bpf/verifier/landlock.c
-new file mode 100644
-index 000000000000..59cd333745dc
---- /dev/null
-+++ b/tools/testing/selftests/bpf/verifier/landlock.c
-@@ -0,0 +1,56 @@
-+{
-+	"landlock/ptrace: always accept",
-+	.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK,
-+	.expected_attach_type = BPF_LANDLOCK_PTRACE,
-+	.insns = {
-+		BPF_MOV32_IMM(BPF_REG_0, 0),
-+		BPF_EXIT_INSN(),
-+	},
-+	.result = ACCEPT,
-+},
-+{
-+	"landlock/ptrace: forbid arbitrary return value",
-+	.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK,
-+	.expected_attach_type = BPF_LANDLOCK_PTRACE,
-+	.insns = {
-+		BPF_MOV32_IMM(BPF_REG_0, 2),
-+		BPF_EXIT_INSN(),
-+	},
-+	.result = REJECT,
-+	.errstr = "At program exit the register R0 has value (0x2; 0x0) should have been in (0x0; 0x1)",
-+},
-+{
-+	"landlock/ptrace: read context and call dedicated helper",
-+	.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK,
-+	.expected_attach_type = BPF_LANDLOCK_PTRACE,
-+	.insns = {
-+		BPF_MOV64_REG(BPF_REG_6, BPF_REG_1),
-+		BPF_LDX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6,
-+			offsetof(struct landlock_context_ptrace, tracer)),
-+		BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_6,
-+			offsetof(struct landlock_context_ptrace, tracer)),
-+		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
-+				BPF_FUNC_task_landlock_ptrace_ancestor),
-+		BPF_MOV32_IMM(BPF_REG_0, 0),
-+		BPF_EXIT_INSN(),
-+	},
-+	.result = ACCEPT,
-+},
-+{
-+	"landlock/ptrace: forbid pointer arithmetic",
-+	.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK,
-+	.expected_attach_type = BPF_LANDLOCK_PTRACE,
-+	.insns = {
-+		BPF_MOV64_REG(BPF_REG_6, BPF_REG_1),
-+		BPF_LDX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6,
-+			offsetof(struct landlock_context_ptrace, tracer)),
-+		BPF_ALU64_IMM(BPF_ADD, BPF_REG_1, 1),
-+		BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_6,
-+			offsetof(struct landlock_context_ptrace, tracee)),
-+		BPF_ALU64_IMM(BPF_ADD, BPF_REG_2, 1),
-+		BPF_MOV32_IMM(BPF_REG_0, 0),
-+		BPF_EXIT_INSN(),
-+	},
-+	.result = REJECT,
-+	.errstr = "R1 pointer arithmetic on task prohibited",
-+},
-diff --git a/tools/testing/selftests/landlock/.gitignore b/tools/testing/selftests/landlock/.gitignore
-new file mode 100644
-index 000000000000..4c5c01d23fe0
---- /dev/null
-+++ b/tools/testing/selftests/landlock/.gitignore
-@@ -0,0 +1,5 @@
-+/feature
-+/fixdep
-+/*libbpf*
-+/test_base
-+/test_ptrace
-diff --git a/tools/testing/selftests/landlock/Makefile b/tools/testing/selftests/landlock/Makefile
-new file mode 100644
-index 000000000000..2da77c30e77f
---- /dev/null
-+++ b/tools/testing/selftests/landlock/Makefile
-@@ -0,0 +1,27 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+LIBDIR := $(abspath ../../../lib)
-+BPFDIR := $(LIBDIR)/bpf
-+TOOLSDIR := $(abspath ../../../include)
-+APIDIR := $(TOOLSDIR)/uapi
-+
-+CFLAGS += -g -Wall -O2 -I$(APIDIR) -I$(LIBDIR) -I$(TOOLSDIR)
-+LDLIBS += -lelf
-+
-+test_src = $(wildcard test_*.c)
-+
-+TEST_GEN_PROGS := $(test_src:.c=)
-+
-+include ../lib.mk
-+
-+BPFOBJ := $(OUTPUT)/libbpf.a
-+
-+$(TEST_GEN_PROGS): $(BPFOBJ) ../kselftest_harness.h
-+
-+.PHONY: force
-+
-+# force a rebuild of BPFOBJ when its dependencies are updated
-+force:
-+
-+$(BPFOBJ): force
-+	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/
-diff --git a/tools/testing/selftests/landlock/config b/tools/testing/selftests/landlock/config
-new file mode 100644
-index 000000000000..fa5081b840ad
---- /dev/null
-+++ b/tools/testing/selftests/landlock/config
-@@ -0,0 +1,5 @@
-+CONFIG_BPF=y
-+CONFIG_BPF_SYSCALL=y
-+CONFIG_SECCOMP_FILTER=y
-+CONFIG_SECURITY=y
-+CONFIG_SECURITY_LANDLOCK=y
-diff --git a/tools/testing/selftests/landlock/test.h b/tools/testing/selftests/landlock/test.h
-new file mode 100644
-index 000000000000..836df68b6bb8
---- /dev/null
-+++ b/tools/testing/selftests/landlock/test.h
-@@ -0,0 +1,48 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Landlock helpers
-+ *
-+ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2019 ANSSI
-+ */
-+
-+#include <bpf/bpf.h>
-+#include <errno.h>
-+#include <linux/filter.h>
-+#include <linux/landlock.h>
-+#include <linux/seccomp.h>
-+#include <sys/prctl.h>
-+#include <sys/syscall.h>
-+
-+#include "../kselftest_harness.h"
-+#include "../../../../samples/bpf/bpf_load.h"
-+
-+#ifndef SECCOMP_PREPEND_LANDLOCK_PROG
-+#define SECCOMP_PREPEND_LANDLOCK_PROG	4
-+#endif
-+
-+#ifndef seccomp
-+static int __attribute__((unused)) seccomp(unsigned int op, unsigned int flags,
-+		void *args)
-+{
-+	errno = 0;
-+	return syscall(__NR_seccomp, op, flags, args);
-+}
-+#endif
-+
-+static int __attribute__((unused)) ll_bpf_load_program(
-+		const struct bpf_insn *bpf_insns, size_t insns_len,
-+		char *log_buf, size_t log_buf_sz,
-+		const enum bpf_attach_type attach_type)
-+{
-+	struct bpf_load_program_attr load_attr;
-+
-+	memset(&load_attr, 0, sizeof(struct bpf_load_program_attr));
-+	load_attr.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK;
-+	load_attr.expected_attach_type = attach_type;
-+	load_attr.insns = bpf_insns;
-+	load_attr.insns_cnt = insns_len / sizeof(struct bpf_insn);
-+	load_attr.license = "GPL";
-+
-+	return bpf_load_program_xattr(&load_attr, log_buf, log_buf_sz);
-+}
-diff --git a/tools/testing/selftests/landlock/test_base.c b/tools/testing/selftests/landlock/test_base.c
-new file mode 100644
-index 000000000000..db46f39048cb
---- /dev/null
-+++ b/tools/testing/selftests/landlock/test_base.c
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Landlock tests - base
-+ *
-+ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
-+ */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+
-+#include "test.h"
-+
-+TEST(seccomp_landlock)
-+{
-+	int ret;
-+
-+	ret = seccomp(SECCOMP_PREPEND_LANDLOCK_PROG, 0, NULL);
-+	EXPECT_EQ(-1, ret);
-+	EXPECT_EQ(EFAULT, errno) {
-+		TH_LOG("Kernel does not support CONFIG_SECURITY_LANDLOCK");
-+	}
-+}
-+
-+TEST_HARNESS_MAIN
-diff --git a/tools/testing/selftests/landlock/test_ptrace.c b/tools/testing/selftests/landlock/test_ptrace.c
-new file mode 100644
-index 000000000000..f4ee67126394
---- /dev/null
-+++ b/tools/testing/selftests/landlock/test_ptrace.c
-@@ -0,0 +1,210 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Landlock tests - ptrace
-+ *
-+ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2019 ANSSI
-+ */
-+
-+#define _GNU_SOURCE
-+#include <signal.h> /* raise */
-+#include <sys/ptrace.h>
-+#include <sys/types.h> /* waitpid */
-+#include <sys/wait.h> /* waitpid */
-+#include <unistd.h> /* fork, pipe */
-+
-+#include "test.h"
-+
-+#define LOG_SIZE 512
-+
-+static void create_domain(struct __test_metadata *_metadata,
-+		bool scoped_ptrace, bool inherited_only)
-+{
-+	const struct bpf_insn prog_void[] = {
-+		BPF_MOV32_IMM(BPF_REG_0, LANDLOCK_RET_ALLOW),
-+		BPF_EXIT_INSN(),
-+	};
-+	const struct bpf_insn prog_check[] = {
-+		BPF_ALU64_REG(BPF_MOV, BPF_REG_6, BPF_REG_1),
-+		BPF_LDX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6,
-+			offsetof(struct landlock_context_ptrace, tracer)),
-+		BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_6,
-+			offsetof(struct landlock_context_ptrace, tracee)),
-+		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
-+				BPF_FUNC_task_landlock_ptrace_ancestor),
-+		/* if @tracee is an ancestor or at the same level of @tracer,
-+		 * then allow ptrace (warning: do not use BPF_JGE 0) */
-+		BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, inherited_only ? 0 : 1, 2),
-+		BPF_MOV32_IMM(BPF_REG_0, LANDLOCK_RET_DENY),
-+		BPF_EXIT_INSN(),
-+		BPF_MOV32_IMM(BPF_REG_0, LANDLOCK_RET_ALLOW),
-+		BPF_EXIT_INSN(),
-+	};
-+	int prog;
-+	char log[LOG_SIZE] = "";
-+
-+	if (scoped_ptrace)
-+		prog = ll_bpf_load_program(prog_check, sizeof(prog_check),
-+				log, sizeof(log), BPF_LANDLOCK_PTRACE);
-+	else
-+		prog = ll_bpf_load_program(prog_void, sizeof(prog_void),
-+				log, sizeof(log), BPF_LANDLOCK_PTRACE);
-+	ASSERT_NE(-1, prog) {
-+		TH_LOG("Failed to load the %s program: %s\n%s",
-+				scoped_ptrace ? "check" : "void",
-+				strerror(errno), log);
-+	}
-+	ASSERT_EQ(0, seccomp(SECCOMP_PREPEND_LANDLOCK_PROG, 0, &prog)) {
-+		TH_LOG("Failed to create a Landlock domain: %s", strerror(errno));
-+	}
-+	EXPECT_EQ(0, close(prog));
-+}
-+
-+/* test PTRACE_TRACEME and PTRACE_ATTACH for parent and child */
-+static void _check_ptrace(struct __test_metadata *_metadata,
-+		bool scoped_ptrace, bool domain_both,
-+		bool domain_parent, bool domain_child)
-+{
-+	pid_t child, parent;
-+	int status;
-+	int pipe_child[2], pipe_parent[2];
-+	char buf_parent;
-+	const bool inherited_only = domain_both && !domain_parent && !domain_child;
-+
-+	parent = getpid();
-+
-+	ASSERT_EQ(0, pipe(pipe_child));
-+	ASSERT_EQ(0, pipe(pipe_parent));
-+	if (domain_both)
-+		create_domain(_metadata, scoped_ptrace, inherited_only);
-+
-+	child = fork();
-+	ASSERT_LE(0, child);
-+	if (child == 0) {
-+		char buf_child;
-+
-+		EXPECT_EQ(0, close(pipe_parent[1]));
-+		EXPECT_EQ(0, close(pipe_child[0]));
-+		if (domain_child)
-+			create_domain(_metadata, scoped_ptrace, inherited_only);
-+
-+		/* sync #1 */
-+		ASSERT_EQ(1, read(pipe_parent[0], &buf_child, 1)) {
-+			TH_LOG("Failed to read() sync #1 from parent");
-+		}
-+		ASSERT_EQ('.', buf_child);
-+
-+		/* test the parent protection */
-+		ASSERT_EQ((domain_child && scoped_ptrace) ? -1 : 0,
-+				ptrace(PTRACE_ATTACH, parent, NULL, 0));
-+		if (domain_child && scoped_ptrace) {
-+			ASSERT_EQ(EPERM, errno);
-+		} else {
-+			ASSERT_EQ(parent, waitpid(parent, &status, 0));
-+			ASSERT_EQ(1, WIFSTOPPED(status));
-+			ASSERT_EQ(0, ptrace(PTRACE_DETACH, parent, NULL, 0));
-+		}
-+
-+		/* sync #2 */
-+		ASSERT_EQ(1, write(pipe_child[1], ".", 1)) {
-+			TH_LOG("Failed to write() sync #2 to parent");
-+		}
-+
-+		/* test traceme */
-+		ASSERT_EQ((domain_parent && scoped_ptrace) ? -1 : 0,
-+				ptrace(PTRACE_TRACEME));
-+		if (domain_parent && scoped_ptrace) {
-+			ASSERT_EQ(EPERM, errno);
-+		} else {
-+			ASSERT_EQ(0, raise(SIGSTOP));
-+		}
-+
-+		/* sync #3 */
-+		ASSERT_EQ(1, read(pipe_parent[0], &buf_child, 1)) {
-+			TH_LOG("Failed to read() sync #3 from parent");
-+		}
-+		ASSERT_EQ('.', buf_child);
-+		_exit(_metadata->passed ? EXIT_SUCCESS : EXIT_FAILURE);
-+	}
-+
-+	EXPECT_EQ(0, close(pipe_child[1]));
-+	EXPECT_EQ(0, close(pipe_parent[0]));
-+	if (domain_parent)
-+		create_domain(_metadata, scoped_ptrace, inherited_only);
-+
-+	/* sync #1 */
-+	ASSERT_EQ(1, write(pipe_parent[1], ".", 1)) {
-+		TH_LOG("Failed to write() sync #1 to child");
-+	}
-+
-+	/* test the parent protection */
-+	/* sync #2 */
-+	ASSERT_EQ(1, read(pipe_child[0], &buf_parent, 1)) {
-+		TH_LOG("Failed to read() sync #2 from child");
-+	}
-+	ASSERT_EQ('.', buf_parent);
-+
-+	/* test traceme */
-+	if (!(domain_parent && scoped_ptrace)) {
-+		ASSERT_EQ(child, waitpid(child, &status, 0));
-+		ASSERT_EQ(1, WIFSTOPPED(status));
-+		ASSERT_EQ(0, ptrace(PTRACE_DETACH, child, NULL, 0));
-+	}
-+	/* test attach */
-+	ASSERT_EQ((domain_parent && scoped_ptrace) ? -1 : 0,
-+			ptrace(PTRACE_ATTACH, child, NULL, 0));
-+	if (domain_parent && scoped_ptrace) {
-+		ASSERT_EQ(EPERM, errno);
-+	} else {
-+		ASSERT_EQ(child, waitpid(child, &status, 0));
-+		ASSERT_EQ(1, WIFSTOPPED(status));
-+		ASSERT_EQ(0, ptrace(PTRACE_DETACH, child, NULL, 0));
-+	}
-+
-+	/* sync #3 */
-+	ASSERT_EQ(1, write(pipe_parent[1], ".", 1)) {
-+		TH_LOG("Failed to write() sync #3 to child");
-+	}
-+	ASSERT_EQ(child, waitpid(child, &status, 0));
-+	if (WIFSIGNALED(status) || WEXITSTATUS(status))
-+		_metadata->passed = 0;
-+}
-+
-+/* keep the *_scoped order to check program inheritance */
-+#define CHECK_PTRACE(name, domain_both, domain_parent, domain_child) \
-+	TEST(name ## _unscoped) { \
-+		_check_ptrace(_metadata, false, domain_both, domain_parent, \
-+				domain_child); \
-+	} \
-+	TEST(name ## _scoped) { \
-+		_check_ptrace(_metadata, false, domain_both, domain_parent, \
-+				domain_child); \
-+		_check_ptrace(_metadata, true, domain_both, domain_parent, \
-+				domain_child); \
-+	}
-+
-+/* no domain */
-+CHECK_PTRACE(allow_without_domain, false, false, false);
-+
-+/* child domain */
-+CHECK_PTRACE(allow_with_one_domain, false, false, true);
-+
-+/* parent domain */
-+CHECK_PTRACE(deny_with_parent_domain, false, true, false);
-+
-+/* parent and child domain */
-+CHECK_PTRACE(deny_with_sibling_domain, false, true, true);
-+
-+/* inherited domain */
-+CHECK_PTRACE(allow_sibling_domain, true, false, false);
-+
-+/* inherited and child domain */
-+CHECK_PTRACE(allow_with_nested_domain, true, false, true);
-+
-+/* inherited and parent domain */
-+CHECK_PTRACE(deny_with_nested_and_parent_domain, true, true, false);
-+
-+/* inherited, parent and child domain */
-+CHECK_PTRACE(deny_with_forked_domain, true, true, true);
-+
-+TEST_HARNESS_MAIN
--- 
-2.23.0
+And for the cases when core scheduling improves the performance compared
+to the baseline numbers, could it be related to frequency scaling (more
+work to do means a higher chance of running at a higher frequency) ?
 
+We are almost ready to send the v4 patchset (most likely tomorrow), it
+has been rebased on v5.3.5, so stay tuned and ready for another set of
+tests ;-)
+
+Thanks,
+
+Julien
