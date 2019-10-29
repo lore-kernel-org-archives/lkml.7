@@ -2,123 +2,156 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4ACCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42F6CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C625E2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844F82067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389556AbfJ2OpM (ORCPT
+        id S2389575AbfJ2OqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:45:12 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:57863
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727255AbfJ2OpM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:45:12 -0400
-X-IronPort-AV: E=Sophos;i="5.68,244,1569276000"; 
-   d="scan'208";a="325017627"
-Received: from ppp-seco11pareq2-46-193-149-47.wb.wifirst.net (HELO hadrien) ([46.193.149.47])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 15:45:08 +0100
-Date:   Tue, 29 Oct 2019 15:45:07 +0100 (CET)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Matthias Maennich <maennich@google.com>
-cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Warning message from 'make nsdeps' when namespace is lower
- cases
-In-Reply-To: <20191029143722.GB33177@google.com>
-Message-ID: <alpine.DEB.2.21.1910291544180.2144@hadrien>
-References: <CAK7LNAQ8Wi1zED0rYJhk9tYi5-jgCoyeHNtofvgKet4ZTzKFcA@mail.gmail.com> <alpine.DEB.2.21.1910291437450.2179@hadrien> <20191029143722.GB33177@google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 29 Oct 2019 10:46:15 -0400
+Received: from smtp2.goneo.de ([85.220.129.33]:52806 "EHLO smtp2.goneo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727255AbfJ2OqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 10:46:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp2.goneo.de (Postfix) with ESMTP id 4183823FA55;
+        Tue, 29 Oct 2019 15:46:11 +0100 (CET)
+X-Virus-Scanned: by goneo
+Received: from smtp2.goneo.de ([127.0.0.1])
+        by localhost (smtp2.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id j4643k9o8BOZ; Tue, 29 Oct 2019 15:46:10 +0100 (CET)
+Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
+        by smtp2.goneo.de (Postfix) with ESMTPA id 631F023F62E;
+        Tue, 29 Oct 2019 15:46:09 +0100 (CET)
+From:   Lars Poeschel <poeschel@lemonage.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lars Poeschel <poeschel@lemonage.de>,
+        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Cc:     Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v11 2/7] nfc: pn532: Add uart phy docs and rename it
+Date:   Tue, 29 Oct 2019 15:45:58 +0100
+Message-Id: <20191029144602.17974-1-poeschel@lemonage.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191029144320.17718-1-poeschel@lemonage.de>
+References: <20191029144320.17718-1-poeschel@lemonage.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This adds documentation about the uart phy to the pn532 binding doc. As
+the filename "pn533-i2c.txt" is not appropriate any more, rename it to
+the more general "pn532.txt".
+This also documents the deprecation of the compatible strings ending
+with "...-i2c".
 
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Simon Horman <horms@verge.net.au>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+Changes in v10:
+- Rebased the patch series on net-next 'Commit 503a64635d5e ("Merge
+  branch 'DPAA-Ethernet-changes'")'
 
-On Tue, 29 Oct 2019, Matthias Maennich wrote:
+Changes in v9:
+- Rebased the patch series on v5.4-rc2
+- Produce patch with -M4 to git format-patch to detect the rename
+- Change DT node name from pn532@24 to nfc@24 in example
 
-> Hi!
->
-> On Tue, Oct 29, 2019 at 02:38:36PM +0100, Julia Lawall wrote:
-> >
-> >
-> > On Tue, 29 Oct 2019, Masahiro Yamada wrote:
-> >
-> > > Hi.
-> > >
-> > > When I was playing with 'make nsdeps',
-> > > I saw a new warning.
-> > >
-> > > If I rename USB_STORAGE to usb_storage,
-> > > I see 'warning: line 15: should usb_storage be a metavariable?'
-> > > Why? I think it comes from spatch.
-> >
-> > Yes, it would come from spatch.
-> >
-> > > It should be technically OK to use either upper or lower cases
-> > > for the namespace name.
-> >
-> > What is normally wanted?  Uppercase or lowercase?
->
-> There is no (documented) preference or convention yet. The existing
-> namespaces (USB_STORAGE and MCB) use upper case. While technically both
-> should work, I have a personal preference for consistently using upper
-> case. Is there a way to suppress this warning as I agree that it might
-> be confusing?
+Changes in v8:
+- Update existing binding doc instead of adding a new one:
+  - Add uart phy example
+  - Add general "pn532" compatible string
+  - Deprecate "...-i2c" compatible strings
+  - Rename file to a more general filename
+- Intentionally drop Rob's Reviewed-By as I guess this rather big change
+  requires a new review
 
-The warning is not intentional in this case.  I will have to fix
-Coccinelle, but I can't do it until next week.
+Changes in v7:
+- Accidentally lost Rob's Reviewed-By
 
-julia
+Changes in v6:
+- Rebased the patch series on v5.3-rc5
+- Picked up Rob's Reviewed-By
 
->
-> Cheers,
-> Matthias
->
-> >
-> > julia
-> >
-> > >
-> > > Just apply the following, and try 'make nsdeps'.
-> > >
-> > >
-> > > diff --git a/drivers/usb/storage/Makefile b/drivers/usb/storage/Makefile
-> > > index 46635fa4a340..6f817d65c26b 100644
-> > > --- a/drivers/usb/storage/Makefile
-> > > +++ b/drivers/usb/storage/Makefile
-> > > @@ -8,7 +8,7 @@
-> > >
-> > >  ccflags-y := -I $(srctree)/drivers/scsi
-> > >
-> > > -ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_STORAGE
-> > > +ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=usb_storage
-> > >
-> > >  obj-$(CONFIG_USB_UAS)          += uas.o
-> > >  obj-$(CONFIG_USB_STORAGE)      += usb-storage.o
-> > >
-> > >
-> > >
-> > >
-> > >
-> > >
-> > >
-> > >
-> > >
-> > >
-> > > --
-> > > Best Regards
-> > > Masahiro Yamada
-> > >
->
+Changes in v4:
+- Add documentation about reg property in case of i2c
+
+Changes in v3:
+- seperate binding doc instead of entry in trivial-devices.txt
+
+ .../net/nfc/{pn533-i2c.txt => pn532.txt}      | 25 ++++++++++++++++---
+ 1 file changed, 21 insertions(+), 4 deletions(-)
+ rename Documentation/devicetree/bindings/net/nfc/{pn533-i2c.txt => pn532.txt} (42%)
+
+diff --git a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt b/Documentation/devicetree/bindings/net/nfc/pn532.txt
+similarity index 42%
+rename from Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
+rename to Documentation/devicetree/bindings/net/nfc/pn532.txt
+index 2efe3886b95b..a5507dc499bc 100644
+--- a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
++++ b/Documentation/devicetree/bindings/net/nfc/pn532.txt
+@@ -1,9 +1,16 @@
+ * NXP Semiconductors PN532 NFC Controller
+ 
+ Required properties:
+-- compatible: Should be "nxp,pn532-i2c" or "nxp,pn533-i2c".
++- compatible: Should be
++    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
++                  where the NFC chip is connected to.
++                  Currently the kernel has phy bindings for uart and i2c.
++    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
++    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
++
++Required properties if connected on i2c:
+ - clock-frequency: I²C work frequency.
+-- reg: address on the bus
++- reg: for the I²C bus address. This is fixed at 0x24 for the PN532.
+ - interrupts: GPIO interrupt to which the chip is connected
+ 
+ Optional SoC Specific Properties:
+@@ -15,9 +22,9 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
+ &i2c2 {
+ 
+ 
+-	pn532: pn532@24 {
++	pn532: nfc@24 {
+ 
+-		compatible = "nxp,pn532-i2c";
++		compatible = "nxp,pn532";
+ 
+ 		reg = <0x24>;
+ 		clock-frequency = <400000>;
+@@ -27,3 +34,13 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
+ 
+ 	};
+ };
++
++Example (for PN532 connected via uart):
++
++uart4: serial@49042000 {
++        compatible = "ti,omap3-uart";
++
++        pn532: nfc {
++                compatible = "nxp,pn532";
++        };
++};
+-- 
+2.23.0
+
