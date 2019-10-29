@@ -2,135 +2,126 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F6DCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA28CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F901208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234FE20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:59:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QR0rThkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403777AbfJ2Q72 (ORCPT
+        id S2390825AbfJ2Q72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 29 Oct 2019 12:59:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:54760 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390802AbfJ2Q72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 12:59:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F8347AD;
-        Tue, 29 Oct 2019 09:59:27 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0B57C3F71F;
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40553 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390785AbfJ2Q71 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 12:59:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 15so9993698pgt.7;
+        Tue, 29 Oct 2019 09:59:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=KCNhk6Yyd07rDJH7lQx7kz/Ad42c+i5/xKh7Sj0sJEQ=;
+        b=QR0rThkgr8CuA3Iz9x+OXG2n78b36W+SuAbts3NDbG0QugZD3+iKZfrjKTIxXbaBtC
+         C+Y6ycxu2c4G1d7oH8fpdHVux43AaGxUNwIBbVKg0DEoKZPW9lbljtjM7PzUKBYcdmnX
+         Uaj9bTD0PMb2Uo3W8VQrDFmvFlr5M2/G8GvxrJVWH0uEqqBWwE6Yp4ogLheYYTWe3bTF
+         zXbM0V5Osw3sOkV/Iu7hp6w7CHkf5NzK4U7LU/sgSTT9EGYT6XYMb8IjDlN9+JcdMqcY
+         qZWOEbR4QLn7OZ3sjjGgubCgxNyRQLrOMtKixAn0yUvUT3OOJiHm73RfCNkbqcK3mjES
+         l47w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=KCNhk6Yyd07rDJH7lQx7kz/Ad42c+i5/xKh7Sj0sJEQ=;
+        b=qwa1TJaiooPtocFUXI79zeQTGMzkcgn5ce5DwHqUl9nkQJgvFg5Fnd06cDTD1QlCip
+         qAcagkwLKiE3E0WpCxDe8feorCeGjdhoclHxap4wXkDf/jQLlNaiVT8tsK4G2oxhF4m5
+         rKg8HFpSxHAn7x9SW2G28M7UyT6K9eARbWYjFjok7gWEyZKmQ7ZGtDSJz4W4ngV7Q1dr
+         icLvmrGM9AhmvNqtCuT7bLgGIQvdzBonNkWfmnoX8lGeZ4D6KckQ5/RTaJr/I/GToZp8
+         1pJtFaNU8jLaf0UlsxOaacOtI3Vx2zDN5nrgpTNgryugCaAEgNZNPAABRtsqR7iNwTZf
+         qPcw==
+X-Gm-Message-State: APjAAAXrPUjZbGr4uXEIBOx1mjM4QU33jUtyv7HVpGgZfkCfoGzQqWkC
+        KLdtTds+WhB4HpWUYzcBdw==
+X-Google-Smtp-Source: APXvYqwtndnUnpXGYFo0j440tyVgOz/e0L1PpTBpjkbheGFr1ZQ2ySKh0q94bQxxlwUJobKft2V6pA==
+X-Received: by 2002:aa7:908b:: with SMTP id i11mr29026643pfa.140.1572368364864;
         Tue, 29 Oct 2019 09:59:24 -0700 (PDT)
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@arm.com,
-        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
-        James.Bottomley@HansenPartnership.com, james.morse@arm.com,
-        jeyu@kernel.org, jpoimboe@redhat.com, jthierry@redhat.com,
-        linux-parisc@vger.kernel.org, mark.rutland@arm.com,
-        mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
-        svens@stackframe.org, takahiro.akashi@linaro.org, will@kernel.org
-Subject: [PATCHv2 8/8] arm64: ftrace: minimize ifdeffery
-Date:   Tue, 29 Oct 2019 16:58:32 +0000
-Message-Id: <20191029165832.33606-9-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191029165832.33606-1-mark.rutland@arm.com>
-References: <20191029165832.33606-1-mark.rutland@arm.com>
+Received: from localhost.localdomain ([216.52.21.4])
+        by smtp.gmail.com with ESMTPSA id w6sm14384147pfw.84.2019.10.29.09.59.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 29 Oct 2019 09:59:24 -0700 (PDT)
+From:   Praveen Chaudhary <praveen5582@gmail.com>
+X-Google-Original-From: Praveen Chaudhary <pchaudhary@linkedin.com>
+To:     fw@strlen.de, davem@davemloft.net, kadlec@netfilter.org,
+        pablo@netfilter.org, netfilter-devel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Zhenggen Xu <zxu@linkedin.com>,
+        Andy Stracner <astracner@linkedin.com>
+Subject: [PATCH v2] [netfilter]: Fix skb->csum calculation when netfilter manipulation for NF_NAT_MANIP_SRC\DST is done on IPV6 packet.
+Date:   Tue, 29 Oct 2019 09:59:11 -0700
+Message-Id: <1572368351-3156-2-git-send-email-pchaudhary@linkedin.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572368351-3156-1-git-send-email-pchaudhary@linkedin.com>
+References: <1572368351-3156-1-git-send-email-pchaudhary@linkedin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we no longer refer to mod->arch.ftrace_trampolines in the body
-of ftrace_make_call(), we can use IS_ENABLED() rather than ifdeffery,
-and make the code easier to follow. Likewise in ftrace_make_nop().
+No need to update skb->csum in function inet_proto_csum_replace16(),
+even if skb->ip_summed == CHECKSUM_COMPLETE, because change in L4
+header checksum field and change in IPV6 header cancels each other
+for skb->csum calculation.
 
-Let's do so.
+Signed-off-by: Praveen Chaudhary <pchaudhary@linkedin.com>
+Signed-off-by: Zhenggen Xu <zxu@linkedin.com>
+Signed-off-by: Andy Stracner <astracner@linkedin.com>
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
+Reviewed-by: Florian Westphal <fw@strlen.de>
 ---
- arch/arm64/kernel/ftrace.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+Changes in V2.
+1.) Updating diff as per email discussion with Florian Westphal.
+    Since inet_proto_csum_replace16() does incorrect calculation
+    for skb->csum in all cases.
+2.) Change in Commmit logs.
+---
+---
+ net/core/utils.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-index aea652c33a38..8618faa82e6d 100644
---- a/arch/arm64/kernel/ftrace.c
-+++ b/arch/arm64/kernel/ftrace.c
-@@ -62,18 +62,18 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
- 	return ftrace_modify_code(pc, 0, new, false);
+diff --git a/net/core/utils.c b/net/core/utils.c
+index 6b6e51d..cec9924 100644
+--- a/net/core/utils.c
++++ b/net/core/utils.c
+@@ -438,6 +438,12 @@ void inet_proto_csum_replace4(__sum16 *sum, struct sk_buff *skb,
  }
+ EXPORT_SYMBOL(inet_proto_csum_replace4);
  
--#ifdef CONFIG_ARM64_MODULE_PLTS
- static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
- {
-+#ifdef CONFIG_ARM64_MODULE_PLTS
- 	struct plt_entry *plt = mod->arch.ftrace_trampolines;
- 
- 	if (addr == FTRACE_ADDR)
- 		return &plt[FTRACE_PLT_IDX];
- 	if (addr == FTRACE_REGS_ADDR && IS_ENABLED(CONFIG_FTRACE_WITH_REGS))
- 		return &plt[FTRACE_REGS_PLT_IDX];
-+#endif
- 	return NULL;
- }
--#endif
- 
- /*
-  * Turn on the call to ftrace_caller() in instrumented function
-@@ -85,10 +85,12 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- 	long offset = (long)pc - (long)addr;
- 
- 	if (offset < -SZ_128M || offset >= SZ_128M) {
--#ifdef CONFIG_ARM64_MODULE_PLTS
- 		struct module *mod;
- 		struct plt_entry *plt;
- 
-+		if (!IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
-+			return -EINVAL;
-+
- 		/*
- 		 * On kernels that support module PLTs, the offset between the
- 		 * branch instruction and its target may legally exceed the
-@@ -113,9 +115,6 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- 		}
- 
- 		addr = (unsigned long)plt;
--#else /* CONFIG_ARM64_MODULE_PLTS */
--		return -EINVAL;
--#endif /* CONFIG_ARM64_MODULE_PLTS */
- 	}
- 
- 	old = aarch64_insn_gen_nop();
-@@ -185,9 +184,11 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
- 	long offset = (long)pc - (long)addr;
- 
- 	if (offset < -SZ_128M || offset >= SZ_128M) {
--#ifdef CONFIG_ARM64_MODULE_PLTS
- 		u32 replaced;
- 
-+		if (!IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
-+			return -EINVAL;
-+
- 		/*
- 		 * 'mod' is only set at module load time, but if we end up
- 		 * dealing with an out-of-range condition, we can assume it
-@@ -218,9 +219,6 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
- 			return -EINVAL;
- 
- 		validate = false;
--#else /* CONFIG_ARM64_MODULE_PLTS */
--		return -EINVAL;
--#endif /* CONFIG_ARM64_MODULE_PLTS */
- 	} else {
- 		old = aarch64_insn_gen_branch_imm(pc, addr,
- 						  AARCH64_INSN_BRANCH_LINK);
++/**
++ * No need to update skb->csum in this function, even if
++ * skb->ip_summed == CHECKSUM_COMPLETE, because change in
++ * L4 header checksum field and change in IPV6 header
++ * cancels each other for skb->csum calculation.
++ */
+ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
+ 			       const __be32 *from, const __be32 *to,
+ 			       bool pseudohdr)
+@@ -449,9 +455,6 @@ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
+ 	if (skb->ip_summed != CHECKSUM_PARTIAL) {
+ 		*sum = csum_fold(csum_partial(diff, sizeof(diff),
+ 				 ~csum_unfold(*sum)));
+-		if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
+-			skb->csum = ~csum_partial(diff, sizeof(diff),
+-						  ~skb->csum);
+ 	} else if (pseudohdr)
+ 		*sum = ~csum_fold(csum_partial(diff, sizeof(diff),
+ 				  csum_unfold(*sum)));
 -- 
-2.11.0
+2.7.4
 
