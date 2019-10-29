@@ -2,91 +2,149 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE63ECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AC1CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5932086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CB1F20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572355288;
-	bh=5FUZq++GHv4sGmxrv80vQc/AUpyif4SKXWktKkbSBog=;
+	s=default; t=1572355321;
+	bh=9DPgkLEkBOHW6zeW/2bHQtGIc5Bfkrw+8fTROnA4jG0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WhbnlL9TD+cYXVVur/7JFOqL8jyoqZW0vtLgFb7utw605n3XneK6G4RJ+LAfU173R
-	 xfmA1W4WAN8r+X26KMlTHXxh5J/zyCqaO37zfYT5m7UHHxDnAAa+yG8BckYb6ISFwz
-	 FCBOkSYPvzOKf9jHoYNqox3ZCAA5FJ46xiSLkn9o=
+	b=KZLT5aMMPhnBeADIKN1XYLX1mlgVo96HTznZS/c6RkHDAJ9RBeP4y0F17U3IC77Hl
+	 L4Og0YSa1eEzxSgkdv/jHYrdGeQZWMKbJTj7KvTxpj4zcYxEtvtXnqh7g/uP4c1bkr
+	 9rmuwgox2aN4Pam+uoYZYjPi4p7Wb+HG7ehLsL1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388445AbfJ2NV1 (ORCPT
+        id S2388460AbfJ2NWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:21:27 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42781 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfJ2NV1 (ORCPT
+        Tue, 29 Oct 2019 09:22:00 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40030 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732534AbfJ2NWA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:21:27 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m4so12133467qke.9
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 06:21:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1YpYMICvtfF10jHRaLvbJtkSuykMWavtIqdMoqx0V/U=;
-        b=WHQJCFkajK2zHSstOrIxbWsS1IvSJSZMSpBhufG6qZpWrgzSB9vqgMRV9FGitJYID3
-         bPuu5YirlOH/CAnekaWkyG9Bw7BYn+sMMGtZ76XGjzwGABnqiWl/pRMk/nP6B4hd78o8
-         DAYufsmEBg4Ujd5vLGNfzqa/mB/dOgbi1h65CTvP2k9tZEItx6Tm7+pDyg0DIblUd5lo
-         uchd5GkkZ2gM5KBcgd2UaMEb+9DwZNoEDtpWUR657Il+c0C0qwo0xceW5l/yIzdhIrvF
-         IPJFVTia5E2YkKDqqHlLOn8dfU7BhuAOPPe/+jhpwjlbB8f+KO/p4UpOFPHFJUFT9R/1
-         kPbg==
+        Tue, 29 Oct 2019 09:22:00 -0400
+Received: by mail-ot1-f65.google.com with SMTP id d8so9701800otc.7;
+        Tue, 29 Oct 2019 06:21:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1YpYMICvtfF10jHRaLvbJtkSuykMWavtIqdMoqx0V/U=;
-        b=lB/03hfMWBYF2bXYmi2T1i2PiZvdhTqi2Lt9e8LfCdKe21uwPNzz2QOpMJPOxJtTvJ
-         E0t5okQABAGmk2Tn2sDlHBDJNACrEBFS8VkomAbmHc4MOEQyjsnJCHsA3cOCAFTJT/po
-         DcCtQnTRYi3pjHF7khe85PHuoAaG9tgDy9Kcef8PqkHSUEFuBiWoDUedzxft8On4o8wz
-         DMeMpCjFxnqv54xJeRLxxWrc9vmODJ+kjPNFQQ82Yr8p8+73kPnK+NoSYWv7dJpdM5d5
-         dp/BxYFNkrYCTh/qBCCAXnX7BzchGIg50oiEg4UTxVY/HZU59poEAj0hqkFbvgwajrlJ
-         iKOw==
-X-Gm-Message-State: APjAAAUj94fVn6uPN+Hnluete8Aa5OnF1MrMSJjhfciIo7QXmLStH/yn
-        dN236fNoP9peqs9ov1fDZgTOmqv5
-X-Google-Smtp-Source: APXvYqx0BOZQSNWo73uAIj4uP76Zzt3szUQBma2RA7YgmozEJdZFx6MmGa+BCjmQN42dru7I3hLL4Q==
-X-Received: by 2002:a37:9e89:: with SMTP id h131mr21656614qke.477.1572355286090;
-        Tue, 29 Oct 2019 06:21:26 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::8ce9])
-        by smtp.gmail.com with ESMTPSA id o2sm2083929qkf.68.2019.10.29.06.21.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 06:21:25 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 06:21:21 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        saurav.girepunje@hotmail.com
-Subject: Re: [PATCH] fs: kernfs: file.c: Drop the condition with no effect.
-Message-ID: <20191029132121.GK3622521@devbig004.ftw2.facebook.com>
-References: <20191029095552.GA11561@saurav>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qm6YKg+tpScIEXrceozPkWxGdk+JQIAQFB6SK8BhUfo=;
+        b=ckxDPvWBqqgAkpZ4i+mMDypA9t065qiYQhjNb02MnEWuzyQiZfa4SK8gFti2XTwIqJ
+         HbIlI0NCwtUGCenwN4Xr/vtr4zPMqtSRJLtbl+7zN6Du+5JKyDqJUUjxG08ql06zd/v9
+         CIpjqNQ+wsRBnwwoOyhPnqTSqrxJylHE6wvRLSM+xe0Ae6QLmJIMj8TMt0EQ9hxJFTZw
+         NJ96MGCJoADw7aF/j68NioKnTATvh1jTtAaDAQatALYhuTo9ybK5owxX3xeZF8ZjTMkT
+         NSF88R3fNeiPLOCTEI3bCI0QK5y0kZJpt3hiPtkb62OQAtwenMPzdRl8u+jXzN5tHdz0
+         dpjg==
+X-Gm-Message-State: APjAAAXxt3hpoKcMr6zrgf6m0cGlF0oSR0MR2wJaxiRU53REeW0Ni0On
+        zutEhgaOTZ7r8qSGST0T1w==
+X-Google-Smtp-Source: APXvYqwERtm1vBKo153rKw19EJkDo3JTPsearfO7CzEj+WTKjFxIcVlacg9tF6oYAAIvPjtZLNbbkQ==
+X-Received: by 2002:a9d:7f8d:: with SMTP id t13mr17183455otp.27.1572355318795;
+        Tue, 29 Oct 2019 06:21:58 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l7sm1668737otf.39.2019.10.29.06.21.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 06:21:58 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 08:21:57 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch 02/19] dt-bindings: media: cal: update binding example
+Message-ID: <20191029132157.GA27757@bogus>
+References: <20191018153437.20614-1-bparrot@ti.com>
+ <20191018153437.20614-3-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029095552.GA11561@saurav>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191018153437.20614-3-bparrot@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 03:25:52PM +0530, Saurav Girepunje wrote:
-> As the "if" and "else" branch body are identical the condition
-> has no effect. So drop the if,else condition.
+On Fri, Oct 18, 2019 at 10:34:20AM -0500, Benoit Parrot wrote:
+> Update binding example to show proper endpoint properties and linkage.
 > 
-> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  .../devicetree/bindings/media/ti-cal.txt      | 32 ++++++++++---------
+>  1 file changed, 17 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
+> index 782f801b12a9..6b56fddcfc4a 100644
+> --- a/Documentation/devicetree/bindings/media/ti-cal.txt
+> +++ b/Documentation/devicetree/bindings/media/ti-cal.txt
+> @@ -27,7 +27,6 @@ Documentation/devicetree/bindings/media/video-interfaces.txt.
+>  Example:
+>  	cal: cal@4845b000 {
+>  		compatible = "ti,dra72-cal";
+> -		ti,hwmods = "cal";
+>  		reg = <0x4845B000 0x400>,
+>  		      <0x4845B800 0x40>,
+>  		      <0x4845B900 0x40>;
+> @@ -45,9 +44,10 @@ Example:
+>  
+>  			csi2_0: port@0 {
+>  				reg = <0>;
+> -				endpoint {
+> -					slave-mode;
+> -					remote-endpoint = <&ar0330_1>;
+> +				csi2_phy0: endpoint@0 {
 
-Nack.  Please read the comment right above.
+Unit address without 'reg' is not correct.
 
-Thanks.
+> +					remote-endpoint = <&csi2_cam0>;
+> +					clock-lanes = <0>;
+> +					data-lanes = <1 2>;
+>  				};
+>  			};
+>  			csi2_1: port@1 {
+> @@ -57,19 +57,21 @@ Example:
+>  	};
+>  
+>  	i2c5: i2c@4807c000 {
+> -		ar0330@10 {
+> -			compatible = "ti,ar0330";
+> -			reg = <0x10>;
+> +		status = "okay";
 
--- 
-tejun
+Don't show status in examples.
+
+> +		clock-frequency = <400000>;
+>  
+> -			port {
+> -				#address-cells = <1>;
+> -				#size-cells = <0>;
+> +		ov5640@3c {
+
+camera-sensor@3c
+
+> +			compatible = "ovti,ov5640";
+> +			reg = <0x3c>;
+> +
+> +			clocks = <&clk_ov5640_fixed>;
+> +			clock-names = "xclk";
+>  
+> -				ar0330_1: endpoint {
+> -					reg = <0>;
+> -					clock-lanes = <1>;
+> -					data-lanes = <0 2 3 4>;
+> -					remote-endpoint = <&csi2_0>;
+> +			port {
+> +				csi2_cam0: endpoint {
+> +					remote-endpoint = <&csi2_phy0>;
+> +					clock-lanes = <0>;
+> +					data-lanes = <1 2>;
+>  				};
+>  			};
+>  		};
+> -- 
+> 2.17.1
+> 
