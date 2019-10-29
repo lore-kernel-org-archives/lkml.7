@@ -2,90 +2,126 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DD1CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C1ECA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C489A2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572338256;
-	bh=dnMXb3m4kD24TqWFe8QYOmVotckjAnvSJX/1VpC4d7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TLLR5C5vV7MciW2Zcw1cOV9O9LP3dG//z9/DlEosqXrCIo2+qCpG/AD7AyRUw+RaL
-	 pm63steP+AmRaRMX+38wkcbpJdudVZvVQW1QKJFS2xQtGMVJ2xeH4sJ781cXWDuIPt
-	 0/bKXpSbfH2Gzhw6nCfxmMG2OfeXQj/BUH5aigRE=
+	by mail.kernel.org (Postfix) with ESMTP id 13E962086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 08:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbfJ2Ihf (ORCPT
+        id S1729752AbfJ2IiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:37:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51096 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728757AbfJ2Ihf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:37:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 11716AE87;
-        Tue, 29 Oct 2019 08:37:32 +0000 (UTC)
-Date:   Tue, 29 Oct 2019 09:37:30 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Chris Down <chris@chrisdown.name>, Tejun Heo <tj@kernel.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [RFC v2] memcg: add memcg lru for page reclaiming
-Message-ID: <20191029083730.GC31513@dhcp22.suse.cz>
-References: <20191026110745.12956-1-hdanton@sina.com>
+        Tue, 29 Oct 2019 04:38:08 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:46232 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728757AbfJ2IiI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:38:08 -0400
+Received: by mail-il1-f200.google.com with SMTP id i74so8658960ild.13
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 01:38:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=yW+jCv0zd4b+sIjQ5SBw5MYgudn7HjMjQQA3P/FMSgM=;
+        b=qiWdofOxG2WT+wRy8Tz0C6EB09Q/gK/jWIIfhQ/yh3hFqFJnGGJ4oqWfE2tjgRH8cS
+         r+Z+BFKyqSsLH1ldU0UIqnjuHFzfF1kNsQAAm1R4WCQj8NdBvaPjQpTzOE32V4sBps4C
+         PynnyI0vdGeX6TdNFewnzvvPxeVnDsOLd/NQZsZu7ZuskocDBiU2Zn8pSUlZqcRLODwf
+         oCzDitOcPgCuewCupbcDp1Yya7z7JaLKakP1oPD/X2ge1uEYhMapcANkAx1UkBAgy13u
+         juiZ8oBNRQXOdMqKm/LzfW0F1RwjQZrkYaon5kIGe7WoozOqjqHSm/mLpOCs21enPm23
+         d66Q==
+X-Gm-Message-State: APjAAAUvLvUIRmT/b4HrFKOgZi1JSFqG/A9OngiHoomvNNLZ37RrWO8x
+        iJP1roMlBIK2VlRkTFerrAl37XwbVmr7bR9Tm7b3N3RyJjfP
+X-Google-Smtp-Source: APXvYqzJ8QwrCvVd34SJmF0g9JoVfI9omz/GkkPDZySU+/8+eicOV4ZLM9iGms3K1tN+Z9Y50lBPJF2xwqhrITxlTvucG3B5iBmD
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191026110745.12956-1-hdanton@sina.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a02:c7d2:: with SMTP id s18mr15406571jao.88.1572338287787;
+ Tue, 29 Oct 2019 01:38:07 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 01:38:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001c46d5059608892f@google.com>
+Subject: general protection fault in process_one_work
+From:   syzbot <syzbot+9ed8f68ab30761f3678e@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, jakub.kicinski@netronome.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 26-10-19 19:07:45, Hillf Danton wrote:
-> 
-> Currently soft limit reclaim is frozen, see
-> Documentation/admin-guide/cgroup-v2.rst for reasons.
-> 
-> This work adds memcg hook into kswapd's logic to bypass slr,
-> paving a brick for its cleanup later.
-> 
-> After b23afb93d317 ("memcg: punt high overage reclaim to
-> return-to-userland path"), high limit breachers are reclaimed one
-> after another spiraling up through the memcg hierarchy before
-> returning to userspace.
-> 
-> We can not add new hook yet if it is infeasible to defer that
-> reclaiming a bit further until kswapd becomes active.
-> 
-> It can be defered however because high limit breach looks benign
-> in the absence of memory pressure, or we ensure it will be
-> reclaimed soon in the presence of kswapd.
+Hello,
 
-This is not true and I have already expressed that in a responsoce to
-the v1 of this patch. Let me repeat (for the last time hopefully) the
-high limit is aimed at throttling allocators even when the system is not
-under a memory pressure. So no, we cannot defer to kswapd.
+syzbot found the following crash on:
 
-This patchset is ignoring the previous review feedback. You still
-haven't described any real usecase and any reasons why the existing
-feature list doesn't satisfy it.
+HEAD commit:    38207291 bpf: Prepare btf_ctx_access for non raw_tp use case
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14173c0f600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=41648156aa09be10
+dashboard link: https://syzkaller.appspot.com/bug?extid=9ed8f68ab30761f3678e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Until this is sorted out:
-Nacked-by: Michal Hocko <mhocko@suse.com>
--- 
-Michal Hocko
-SUSE Labs
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9ed8f68ab30761f3678e@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 9149 Comm: kworker/1:3 Not tainted 5.4.0-rc1+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events nsim_dev_trap_report_work
+RIP: 0010:nsim_dev_trap_report_work+0xc4/0xaf0  
+drivers/net/netdevsim/dev.c:409
+Code: 89 45 d0 0f 84 8b 07 00 00 49 bc 00 00 00 00 00 fc ff df e8 3e ae ef  
+fc 48 8b 45 d0 48 05 68 01 00 00 48 89 45 90 48 c1 e8 03 <42> 80 3c 20 00  
+0f 85 b1 09 00 00 48 8b 45 d0 48 8b 98 68 01 00 00
+RSP: 0018:ffff88806c98fc90 EFLAGS: 00010a06
+RAX: 1bd5a0000000004d RBX: 0000000000000000 RCX: ffffffff84836e22
+RDX: 0000000000000000 RSI: ffffffff84836db2 RDI: 0000000000000001
+RBP: ffff88806c98fd30 R08: ffff88806c9863c0 R09: ffffed100d75f3d9
+R10: ffffed100d75f3d8 R11: ffff88806baf9ec7 R12: dffffc0000000000
+R13: ffff88806baf9ec0 R14: ffff8880a9a13900 R15: ffff8880ae934500
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007efdd0c9e000 CR3: 000000009cc1b000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace ba29cd1c27f63d86 ]---
+RIP: 0010:nsim_dev_trap_report_work+0xc4/0xaf0  
+drivers/net/netdevsim/dev.c:409
+Code: 89 45 d0 0f 84 8b 07 00 00 49 bc 00 00 00 00 00 fc ff df e8 3e ae ef  
+fc 48 8b 45 d0 48 05 68 01 00 00 48 89 45 90 48 c1 e8 03 <42> 80 3c 20 00  
+0f 85 b1 09 00 00 48 8b 45 d0 48 8b 98 68 01 00 00
+RSP: 0018:ffff88806c98fc90 EFLAGS: 00010a06
+RAX: 1bd5a0000000004d RBX: 0000000000000000 RCX: ffffffff84836e22
+RDX: 0000000000000000 RSI: ffffffff84836db2 RDI: 0000000000000001
+RBP: ffff88806c98fd30 R08: ffff88806c9863c0 R09: ffffed100d75f3d9
+R10: ffffed100d75f3d8 R11: ffff88806baf9ec7 R12: dffffc0000000000
+R13: ffff88806baf9ec0 R14: ffff8880a9a13900 R15: ffff8880ae934500
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007efdd0c9e000 CR3: 000000009cc1b000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
