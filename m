@@ -2,45 +2,44 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F48CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C959CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDC321479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4135421479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:15:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jdji5QQ8"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="iNG18Otb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389252AbfJ2OPX (ORCPT
+        id S2389282AbfJ2OPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:15:23 -0400
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:53408 "EHLO
+        Tue, 29 Oct 2019 10:15:30 -0400
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:53394 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389225AbfJ2OPW (ORCPT
+        by vger.kernel.org with ESMTP id S2389207AbfJ2OPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:15:22 -0400
+        Tue, 29 Oct 2019 10:15:20 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 373A7C04DB;
-        Tue, 29 Oct 2019 14:15:16 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3731FC04BB;
+        Tue, 29 Oct 2019 14:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1572358521; bh=w+35Zm06nbcsSx34hHesT2HOr9i1dwp2O4opUncMwW8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=jdji5QQ85lQV6kLB27iYYOpkvhjJ9r+r5mnM9v07NDAonbXKiXPyuypJDcMY4RMQB
-         AQVXt3MtHcgpkJCE1IO54DtsRz9D1Ux4jDrZB+GkpF4XYrx1CBWGheJMNzsXnZKGgI
-         ROmXuQZ2MaeJRkYSkcGA7+IO2hGY23ebA2riaNQiIKzPSGk506u5S6o/muStcbaPLT
-         oDAM1Wwfxg1b0pJ4/czoLjPkMRPAzVrLhj56UyfEyyYLxTWJJDiD/upJfG8EbELHqC
-         yWpSA4EMj8mFiJ1eHI0Q5QKISqAx34ekxloTVnfKuqSlpAPm+DEb76y2oo8C1Eugb7
-         QViggvTYJ+yow==
+        t=1572358520; bh=nGvMdw6v8QDeKK9JnNRRIrf2w9HChn1Wdr+DNEOBHYA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iNG18OtbHULWKiWvg4ptyuJZJ/uwepsJ4ZxfBLvqzEPhb6abo/kHUWLbhYAev+oYm
+         mAsJiltcGBwyFA0hqWlhQ9D7f1WoSnonrGO1w604iQQEH9JFOrkj2SAveDuU6AVn+m
+         a07foVBen1Qu8Ie+fjtuv0utJN9SvCUbfryp5dlPfOg4p+8gl37g3WYUY++x8FDpWc
+         wuGaWTo7OO1LzTcG+M0TA6XBfnZ0TZDOWq9dY6zKG6w4BXhkekfjCgJLD5KyPb/IJH
+         a4MRmhkwRsbWhKktXJ1/X4g5m3B0MFTyn50B91Gf5oqfL+2YrLcTZlR9WMdf7+bCMZ
+         LSqW4UXNqJx1A==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id D060EA006D;
-        Tue, 29 Oct 2019 14:15:14 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id BA0ECA0057;
+        Tue, 29 Oct 2019 14:15:08 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -52,25 +51,33 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 4/9] net: stmmac: selftests: Must remove UC/MC addresses to prevent false positives
-Date:   Tue, 29 Oct 2019 15:14:48 +0100
-Message-Id: <36d9af9080068c4e38cf50e80b6f2a5eafc9ed99.1572355609.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 0/9] net: stmmac: Fixes for -net
+Date:   Tue, 29 Oct 2019 15:14:44 +0100
+Message-Id: <cover.1572355609.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1572355609.git.Jose.Abreu@synopsys.com>
-References: <cover.1572355609.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1572355609.git.Jose.Abreu@synopsys.com>
-References: <cover.1572355609.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In L2 tests that filter packets by destination MAC address we need to
-remove all addresses that are currently in the device so that we don't
-get false positives when running the tests.
+Misc fixes for stmmac.
 
-Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Patch 1/9, corrects a sparse warning reported by kbuild.
+
+Patch 2/9 and 3/9, use the correct variable type for bitrev32() calls.
+
+Patch 4/9, fixes the random failures the we were seing when running selftests.
+
+Patch 5/9, prevents a crash that can occur when receiving AVB packets and with
+SPH feature enabled on XGMAC.
+
+Patch 6/9, fixes the correct settings for CBS on XGMAC.
+
+Patch 7/9, corrects the interpretation of AVB feature on XGMAC.
+
+Patch 8/9, disables Flow Control for AVB enabled queues on XGMAC.
+
+Patch 9/9, disables MMC interrupts on XGMAC, preventing a storm of interrupts.
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -83,210 +90,30 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 104 +++++++++++++++------
- 1 file changed, 76 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index 0b5db52149bc..bcc902f44318 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -490,6 +490,8 @@ static int stmmac_test_hfilt(struct stmmac_priv *priv)
- 	unsigned char gd_addr[ETH_ALEN] = {0x01, 0xee, 0xdd, 0xcc, 0xbb, 0xaa};
- 	unsigned char bd_addr[ETH_ALEN] = {0x01, 0x01, 0x02, 0x03, 0x04, 0x05};
- 	struct stmmac_packet_attrs attr = { };
-+	struct net_device *dummy_dev;
-+	struct netdev_hw_addr *ha;
- 	int ret;
- 
- 	ret = stmmac_filter_check(priv);
-@@ -499,9 +501,18 @@ static int stmmac_test_hfilt(struct stmmac_priv *priv)
- 	if (netdev_mc_count(priv->dev) >= priv->hw->multicast_filter_bins)
- 		return -EOPNOTSUPP;
- 
-+	dummy_dev = alloc_etherdev(0);
-+	if (!dummy_dev)
-+		return -ENOMEM;
-+
-+	/* Remove all MC addresses */
-+	netdev_for_each_mc_addr(ha, priv->dev)
-+		dev_mc_add(dummy_dev, ha->addr);
-+	dev_mc_flush(priv->dev);
-+
- 	ret = dev_mc_add(priv->dev, gd_addr);
- 	if (ret)
--		return ret;
-+		goto sync;
- 
- 	attr.dst = gd_addr;
- 
-@@ -518,6 +529,11 @@ static int stmmac_test_hfilt(struct stmmac_priv *priv)
- 
- cleanup:
- 	dev_mc_del(priv->dev, gd_addr);
-+sync:
-+	/* Restore MC addresses */
-+	netdev_for_each_mc_addr(ha, dummy_dev)
-+		dev_mc_add(priv->dev, ha->addr);
-+	free_netdev(dummy_dev);
- 	return ret;
- }
- 
-@@ -526,14 +542,25 @@ static int stmmac_test_pfilt(struct stmmac_priv *priv)
- 	unsigned char gd_addr[ETH_ALEN] = {0x00, 0x01, 0x44, 0x55, 0x66, 0x77};
- 	unsigned char bd_addr[ETH_ALEN] = {0x08, 0x00, 0x22, 0x33, 0x44, 0x55};
- 	struct stmmac_packet_attrs attr = { };
-+	struct net_device *dummy_dev;
-+	struct netdev_hw_addr *ha;
- 	int ret;
- 
- 	if (stmmac_filter_check(priv))
- 		return -EOPNOTSUPP;
- 
-+	dummy_dev = alloc_etherdev(0);
-+	if (!dummy_dev)
-+		return -ENOMEM;
-+
-+	/* Remove all UC addresses */
-+	netdev_for_each_uc_addr(ha, priv->dev)
-+		dev_uc_add(dummy_dev, ha->addr);
-+	dev_uc_flush(priv->dev);
-+
- 	ret = dev_uc_add(priv->dev, gd_addr);
- 	if (ret)
--		return ret;
-+		goto sync;
- 
- 	attr.dst = gd_addr;
- 
-@@ -550,28 +577,21 @@ static int stmmac_test_pfilt(struct stmmac_priv *priv)
- 
- cleanup:
- 	dev_uc_del(priv->dev, gd_addr);
-+sync:
-+	/* Restore UC addresses */
-+	netdev_for_each_uc_addr(ha, dummy_dev)
-+		dev_uc_add(priv->dev, ha->addr);
-+	free_netdev(dummy_dev);
- 	return ret;
- }
- 
--static int stmmac_dummy_sync(struct net_device *netdev, const u8 *addr)
--{
--	return 0;
--}
--
--static void stmmac_test_set_rx_mode(struct net_device *netdev)
--{
--	/* As we are in test mode of ethtool we already own the rtnl lock
--	 * so no address will change from user. We can just call the
--	 * ndo_set_rx_mode() callback directly */
--	if (netdev->netdev_ops->ndo_set_rx_mode)
--		netdev->netdev_ops->ndo_set_rx_mode(netdev);
--}
--
- static int stmmac_test_mcfilt(struct stmmac_priv *priv)
- {
- 	unsigned char uc_addr[ETH_ALEN] = {0x00, 0x01, 0x44, 0x55, 0x66, 0x77};
- 	unsigned char mc_addr[ETH_ALEN] = {0x01, 0x01, 0x44, 0x55, 0x66, 0x77};
- 	struct stmmac_packet_attrs attr = { };
-+	struct net_device *dummy_dev;
-+	struct netdev_hw_addr *ha;
- 	int ret;
- 
- 	if (stmmac_filter_check(priv))
-@@ -579,13 +599,21 @@ static int stmmac_test_mcfilt(struct stmmac_priv *priv)
- 	if (!priv->hw->multicast_filter_bins)
- 		return -EOPNOTSUPP;
- 
--	/* Remove all MC addresses */
--	__dev_mc_unsync(priv->dev, NULL);
--	stmmac_test_set_rx_mode(priv->dev);
-+	dummy_dev = alloc_etherdev(0);
-+	if (!dummy_dev)
-+		return -ENOMEM;
-+
-+	/* Remove all UC and MC addresses */
-+	netdev_for_each_uc_addr(ha, priv->dev)
-+		dev_uc_add(dummy_dev, ha->addr);
-+	netdev_for_each_mc_addr(ha, priv->dev)
-+		dev_mc_add(dummy_dev, ha->addr);
-+	dev_uc_flush(priv->dev);
-+	dev_mc_flush(priv->dev);
- 
- 	ret = dev_uc_add(priv->dev, uc_addr);
- 	if (ret)
--		goto cleanup;
-+		goto sync;
- 
- 	attr.dst = uc_addr;
- 
-@@ -602,8 +630,13 @@ static int stmmac_test_mcfilt(struct stmmac_priv *priv)
- 
- cleanup:
- 	dev_uc_del(priv->dev, uc_addr);
--	__dev_mc_sync(priv->dev, stmmac_dummy_sync, NULL);
--	stmmac_test_set_rx_mode(priv->dev);
-+sync:
-+	/* Restore UC and MC addresses */
-+	netdev_for_each_uc_addr(ha, dummy_dev)
-+		dev_uc_add(priv->dev, ha->addr);
-+	netdev_for_each_mc_addr(ha, dummy_dev)
-+		dev_mc_add(priv->dev, ha->addr);
-+	free_netdev(dummy_dev);
- 	return ret;
- }
- 
-@@ -612,6 +645,8 @@ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
- 	unsigned char uc_addr[ETH_ALEN] = {0x00, 0x01, 0x44, 0x55, 0x66, 0x77};
- 	unsigned char mc_addr[ETH_ALEN] = {0x01, 0x01, 0x44, 0x55, 0x66, 0x77};
- 	struct stmmac_packet_attrs attr = { };
-+	struct net_device *dummy_dev;
-+	struct netdev_hw_addr *ha;
- 	int ret;
- 
- 	if (stmmac_filter_check(priv))
-@@ -619,13 +654,21 @@ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
- 	if (!priv->hw->multicast_filter_bins)
- 		return -EOPNOTSUPP;
- 
--	/* Remove all UC addresses */
--	__dev_uc_unsync(priv->dev, NULL);
--	stmmac_test_set_rx_mode(priv->dev);
-+	dummy_dev = alloc_etherdev(0);
-+	if (!dummy_dev)
-+		return -ENOMEM;
-+
-+	/* Remove all UC and MC addresses */
-+	netdev_for_each_uc_addr(ha, priv->dev)
-+		dev_uc_add(dummy_dev, ha->addr);
-+	netdev_for_each_mc_addr(ha, priv->dev)
-+		dev_mc_add(dummy_dev, ha->addr);
-+	dev_uc_flush(priv->dev);
-+	dev_mc_flush(priv->dev);
- 
- 	ret = dev_mc_add(priv->dev, mc_addr);
- 	if (ret)
--		goto cleanup;
-+		goto sync;
- 
- 	attr.dst = mc_addr;
- 
-@@ -642,8 +685,13 @@ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
- 
- cleanup:
- 	dev_mc_del(priv->dev, mc_addr);
--	__dev_uc_sync(priv->dev, stmmac_dummy_sync, NULL);
--	stmmac_test_set_rx_mode(priv->dev);
-+sync:
-+	/* Restore UC and MC addresses */
-+	netdev_for_each_uc_addr(ha, dummy_dev)
-+		dev_uc_add(priv->dev, ha->addr);
-+	netdev_for_each_mc_addr(ha, dummy_dev)
-+		dev_mc_add(priv->dev, ha->addr);
-+	free_netdev(dummy_dev);
- 	return ret;
- }
- 
+Jose Abreu (9):
+  net: stmmac: Fix sparse warning
+  net: stmmac: gmac4: bitrev32 returns u32
+  net: stmmac: xgmac: bitrev32 returns u32
+  net: stmmac: selftests: Must remove UC/MC addresses to prevent false
+    positives
+  net: stmmac: xgmac: Only get SPH header len if available
+  net: stmmac: xgmac: Fix TSA selection
+  net: stmmac: xgmac: Fix AV Feature detection
+  net: stmmac: xgmac: Disable Flow Control when 1 or more queues are in
+    AV
+  net: stmmac: xgmac: Disable MMC interrupts by default
+
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |   4 +-
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |   5 +-
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |   3 +-
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   4 +-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/mmc_core.c     |   6 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   5 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 104 +++++++++++++++------
+ 8 files changed, 94 insertions(+), 39 deletions(-)
+
 -- 
 2.7.4
 
