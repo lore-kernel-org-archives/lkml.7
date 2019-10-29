@@ -2,187 +2,117 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D22C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718B4CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1E4F21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572372649;
-	bh=mmqqgcnvD3Xud8Yvhd/XeHf9l9aSOrYjKCNVmej7nv0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xCBWQ4DE2meMrGfVnB50Th0IVlH3UPP9qnu9aVunSkPSVAA9SaWe+Y/daf2Zt/YvS
-	 fSWsmHMSpSFvKxDVt6+sMMuRfjSl8zPZ1UIqs6iksxKvJgNc3uRUyvtlGiFytV7Vnv
-	 5dUDo2sJdknQdf9NestTTHAguf1Frm3NX6JoRKAs=
+	by mail.kernel.org (Postfix) with ESMTP id 4760020830
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:14:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z8vduQv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbfJ2SKs (ORCPT
+        id S1731049AbfJ2SOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:10:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbfJ2SKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:10:48 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF8D1222C5
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 18:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572372647;
-        bh=mmqqgcnvD3Xud8Yvhd/XeHf9l9aSOrYjKCNVmej7nv0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e94CpByjlElpCBSdGUw8LOUInMuzqLKgLsu2uwnO0r3HVjCV4JW7sUt1C6hs3eFmj
-         j+vn75mvMAfROWiNwnx9nN+jLqNLHL155HSgxVTUgc1MkUhMPL0Czut3zx/MmLr8Pb
-         D/TJ+hYXOpGdFFJdT8VUuj4Kba3ILPFDnGuB2pkA=
-Received: by mail-wr1-f50.google.com with SMTP id l10so14719859wrb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:10:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAVY4y5+4M8Qk9fGHmfv41PTzqWr5yqMXQ1cvnfGLE72wfVFr06u
-        bub2X3m3j/8qRY5Ec8+bSxt1nN6AtbkkYO3B6c6BXw==
-X-Google-Smtp-Source: APXvYqyyGQurQRoJqssK2xQ7l0EkhvtO2ydIBS+FoKGjmrJ5tPxXAskMG/ddIaZ/DfCEvnkwuipKTQJ42JZRKo2GfSU=
-X-Received: by 2002:a5d:51c2:: with SMTP id n2mr20627016wrv.149.1572372644926;
- Tue, 29 Oct 2019 11:10:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <2236FBA76BA1254E88B949DDB74E612BA4EEC0CE@IRSMSX102.ger.corp.intel.com>
- <CALCETrWN9kc+10tf7YoBp9ixqkO_KZ=b1E_cFBr_Uogxhu68PQ@mail.gmail.com> <1572371012.4812.19.camel@linux.ibm.com>
-In-Reply-To: <1572371012.4812.19.camel@linux.ibm.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 29 Oct 2019 11:10:33 -0700
-X-Gmail-Original-Message-ID: <CALCETrUhGqyEJtyBQWubh=5cUt2i-N-oZJqcBM5jBnGi1saxsQ@mail.gmail.com>
-Message-ID: <CALCETrUhGqyEJtyBQWubh=5cUt2i-N-oZJqcBM5jBnGi1saxsQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
-To:     James Bottomley <jejb@linux.ibm.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Alan Cox <alan@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 29 Oct 2019 14:14:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37282 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730417AbfJ2SOb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 14:14:31 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TI5Edg175947;
+        Tue, 29 Oct 2019 18:14:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=WkZ9zbwFeDXQfqWTR1gASliBtGitlEcG01F4/M1sPtI=;
+ b=Z8vduQv06HXTJGt+06q4bnJkBE2cRhWRisjZxjdSYIeERv/78O+GdM9jwxF+35dV2ypt
+ 3WVsAN2kgaaSHAnNQHWQ2jyxzzVnBF5jVXeCcsHaXfs67dPLHVyOiWSzPEmuV5gw6gmR
+ wBFlhtgyY+GcbgKpxNfE1dvyyxpye+YhQgBoIakyMkNsPQJSXmn+nADRs68JalP6lyzR
+ Nd/kFl7sKdMyqq56WN+q5jqVoKVNsze04zNMoql2NtIqZmtGtjgUXcGjZtjljDEkOeNB
+ 1PQ1+WEu+3n9fV6J6zCshuvRgC/1Bpr7MOliem9mpsvkREdNRrTIZXHFdtf6VYIRtsUI Sw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2vvdjub7v8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 18:14:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TI8lO6040494;
+        Tue, 29 Oct 2019 18:14:22 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2vxpgfdmvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 18:14:22 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TIELHG005793;
+        Tue, 29 Oct 2019 18:14:21 GMT
+Received: from localhost.localdomain (/10.159.132.196)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 29 Oct 2019 11:14:21 -0700
+From:   Santosh Shilimkar <santosh.shilimkar@oracle.com>
+To:     arm@kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     khilman@kernel.org, arnd@arndb.de, olof@lixom.net,
+        linux-kernel@vger.kernel.org, santosh.shilimkar@oracle.com
+Subject: [RESEND][GIT PULL 1/2] soc: TI soc updates for v5.5
+Date:   Tue, 29 Oct 2019 11:14:15 -0700
+Message-Id: <1572372856-20598-1-git-send-email-santosh.shilimkar@oracle.com>
+X-Mailer: git-send-email 1.9.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=4 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910290160
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=4
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910290160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 10:44 AM James Bottomley <jejb@linux.ibm.com> wrote:
->
-> On Tue, 2019-10-29 at 10:03 -0700, Andy Lutomirski wrote:
-> > On Tue, Oct 29, 2019 at 4:25 AM Reshetova, Elena
-> > <elena.reshetova@intel.com> wrote:
-> > >
-> > > > The patch below aims to allow applications to create mappins that
-> > > > have
-> > > > pages visible only to the owning process. Such mappings could be
-> > > > used to
-> > > > store secrets so that these secrets are not visible neither to
-> > > > other
-> > > > processes nor to the kernel.
-> > >
-> > > Hi Mike,
-> > >
-> > > I have actually been looking into the closely related problem for
-> > > the past
-> > > couple of weeks (on and off). What is common here is the need for
-> > > userspace
-> > > to indicate to kernel that some pages contain secrets. And then
-> > > there are
-> > > actually a number of things that kernel can do to try to protect
-> > > these secrets
-> > > better. Unmap from direct map is one of them. Another thing is to
-> > > map such
-> > > pages as non-cached, which can help us to prevent or considerably
-> > > restrict
-> > > speculation on such pages. The initial proof of concept for marking
-> > > pages as
-> > > "UNCACHED" that I got from Dave Hansen was actually based on
-> > > mlock2()
-> > > and a new flag for it for this purpose. Since then I have been
-> > > thinking on what
-> > > interface suits the use case better and actually selected going
-> > > with new madvise()
-> > > flag instead because of all possible implications for fragmentation
-> > > and performance.
-> >
-> > Doing all of this with MAP_SECRET seems bad to me.  If user code
-> > wants UC memory, it should ask for UC memory -- having the kernel
-> > involved in the decision to use UC memory is a bad idea, because the
-> > performance impact of using UC memory where user code wasn't
-> > expecting it wil be so bad that the system might as well not work at
-> > all.  (For kicks, I once added a sysctl to turn off caching in
-> > CR0.  I enabled it in gnome-shell.  The system slowed down to such an
-> > extent that I was unable to enter the three or so keystrokes to turn
-> > it back off.)
-> >
-> > EXCLUSIVE makes sense.  Saying "don't ptrace this" makes sense.  UC
-> > makes sense.  But having one flag to rule them all does not make
-> > sense to me.
->
-> So this is a usability problem.  We have a memory flag that can be used
-> for "secrecy" for some userspace value of the word and we have a load
-> of internal properties depending on how the hardware works, including
-> potentially some hardware additions like SEV or TME, that can be used
-> to implement the property.  If we expose our hardware vagaries, the
-> user is really not going to know what to do ... and we have a limited
-> number of flags to express this, so it stands to reason that we need to
-> define "secrecy" for the user and then implement it using whatever
-> flags we have.  So I think no ptrace and no direct map make sense for
-> pretty much any value of "secrecy".  The UC bit seems to be an attempt
-> to prevent exfiltration via L1TF or other cache side channels, so it
-> looks like it should only be applied if the side channel mitigations
-> aren't active ... which would tend to indicate it's a kernel decision
-> as well.
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-I just don't think this will work in practice.  Someone will say "hey,
-let's keep this giant buffer we do crypto from, or maybe even the
-entire data area of some critical service, secret".  It will work
-*fine* at first.  But then some kernel config changes and we can't do
-DMA, and now it breaks on some configs.  Someone else will say "hey, I
-don't have L1TF or whatever mitigation, let's turn on UC", and
-everything goes to hell.
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-IMO the kernel should attempt to keep *all memory* secret.  Specific
-applications that want greater levels of secrecy should opt in to more
-expensive things.  Here's what's already on the table:
+are available in the git repository at:
 
-Exclusive / XPFO / XPO: allocation might be extremely expensive.
-Overuse might hurt performance due to huge page fragmentation  DMA may
-not work.  Otherwise it's peachy.
+  git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git for_5.5/driver-soc
 
-SEV: Works only in some contexts.  The current kernel implementation
-is, IMO, unacceptable to the extent that I wish I could go back in
-time and NAK it.
+for you to fetch changes up to faee19ece8263738c147cb0140e0fbc7b5397ca8:
 
-TME: it's on or it's off.  There's no room for a MAP_ flag here.
+  memory: emif: remove set but not used variables 'cs1_used' and 'custom_configs' (2019-10-29 09:57:57 -0700)
 
-MKTME: of highly dubious value here.  The only useful thing here I can
-thing it would be a MAP_NOTSECRET to opt *out* of encryption for a
-specific range.  Other than that, it has all the same performance
-implications that EXCLUSIVE has.
+----------------------------------------------------------------
+Tero Kristo (9):
+      dt-bindings: omap: add new binding for PRM instances
+      soc: ti: add initial PRM driver with reset control support
+      soc: ti: omap-prm: poll for reset complete during de-assert
+      soc: ti: omap-prm: add support for denying idle for reset clockdomain
+      soc: ti: omap-prm: add omap4 PRM data
+      soc: ti: omap-prm: add data for am33xx
+      soc: ti: omap-prm: add dra7 PRM data
+      soc: ti: omap-prm: add am4 PRM data
+      soc: ti: omap-prm: add omap5 PRM data
 
-UC: Performance hit is extreme.  *Also* has the perf implications of
-exclusive.  I can't imagine this making any sense except were the user
-application is written in the expectation that UC might be used so
-that the access patterns would be reasonable.
+Wei Yongjun (1):
+      soc: ti: omap-prm: fix return value check in omap_prm_probe()
 
-WC: Same issues as UC plus memory ordering issues such that
-unsuspecting applications will corrupt data.
+YueHaibing (1):
+      memory: emif: remove set but not used variables 'cs1_used' and 'custom_configs'
 
-Trying to bundle these together with kernel- or admin-only config
-seems like a lost cause.
+ .../devicetree/bindings/arm/omap/prm-inst.txt      |  29 ++
+ arch/arm/mach-omap2/Kconfig                        |   1 +
+ drivers/memory/emif.c                              |   5 +-
+ drivers/soc/ti/Makefile                            |   1 +
+ drivers/soc/ti/omap_prm.c                          | 391 +++++++++++++++++++++
+ include/linux/platform_data/ti-prm.h               |  21 ++
+ 6 files changed, 444 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+ create mode 100644 drivers/soc/ti/omap_prm.c
+ create mode 100644 include/linux/platform_data/ti-prm.h
