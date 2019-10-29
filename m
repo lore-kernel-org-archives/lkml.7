@@ -2,174 +2,124 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468ABCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A6DCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A22721721
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9BC21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:59:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loewWdgj"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="qgkV77A9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbfJ2V61 (ORCPT
+        id S1726532AbfJ2V7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:58:27 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40559 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727842AbfJ2V61 (ORCPT
+        Tue, 29 Oct 2019 17:59:16 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40951 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfJ2V7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:58:27 -0400
-Received: by mail-lf1-f66.google.com with SMTP id f4so5710369lfk.7;
-        Tue, 29 Oct 2019 14:58:25 -0700 (PDT)
+        Tue, 29 Oct 2019 17:59:15 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p5so3179102plr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UO6breZIX8wufz2DetE33SaJQBNJUnFXRb083pTIPVM=;
-        b=loewWdgjtq+zmaGLulYqSZ7GE8rNdvpHmVbC3FU3RXnABnH6uK7Kt1cG3htvZ1mb54
-         llqibIQrV9wl8uagBrs+tSjXewoig5sfnBI1kJrhfOXhGLXB3q60tOMRQG+N8qgAfvU6
-         SmnkIkE4x6xmRGmXhGvU7S/r1Sj6hIkm4M+K8M2268mPUgLe0VirRnO5DBXnmRL74A65
-         WESpHxlpXmMMnCiMvK18i54iUBil8E2TSWMvEM48DT8oS1ix4XrcizcQTNoqrYsg8iJc
-         Dhj2N0Q96Pslg2WcCe7EQmCjd3ipn0WIOGjjyEuQfaYyAVhp5ElJT+hVDvDevk2kCdjN
-         Nvzg==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DpN5YTXrp9hp71uxbnpmiOwzB6GTFkwG/3T4Kj5BrEM=;
+        b=qgkV77A9tGs/sOv5qzKPxPbYxXbujKalYxznr/KJcAe6aHZXkpz2sB7b0GwaCBdIk5
+         3AwShV2aLjyJtqCJZqgIrvfLUdOfsdTOAyEBfQVvUPGmwf7VXSg3zyiZ+pVn2P1rBoOm
+         6nvgQ1Bcrgd79MPUNP7FKGx5ZYxjvd7ZEWwpK6R7K2HHKzpWhgCf2T11tuSaV8QLDB7o
+         Xt2ksQZgxh1ThsQ6ZZmzq8HgpVWKu0jwtyGXC9xc+Sngf75prU0+zt7cuJgjTOpdXglL
+         Ku52vyE+ow5Vwet0EDpMTyWeX7GSlMnL8UK9bxhJR2CvrlVSy0cbXnvz+bKysuAUrCUH
+         dL7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UO6breZIX8wufz2DetE33SaJQBNJUnFXRb083pTIPVM=;
-        b=hyuqdo1gt4qVJu1uIprLJZt97qp8WU5cvFceiWQ/I0w7KW4dQMWi/9P2HFecMUwPA4
-         kXSPaXeHdF2O+yRHX6rVmRk5U0sCcF+1CJqsNM/HTkdJpy9UDbaxQ/FTFAZypjx+Nt7G
-         1osGE+NxHxlHLajd8Cu/F2pb8CdrvBuSfVqhDYJhGOjUjU5TRHTPphcujZ/TW7ML6zP/
-         XoP+97vSIWAVWs7aXhubpnX1956HcC5MyWjNvfO0eJ0wVlqEE3cPRx22ppQRU0aEOHcH
-         Ong1uKhIaA1AV5BQOn3rD/tjkV3UvS1q5a6w5yd6mu7BDRbws8x0l9PY6FzUIN1bsg6J
-         pazQ==
-X-Gm-Message-State: APjAAAUp22hEh/bNW1DA7PfVRryPkaIn0Mde74+vQzr48t9Te1K1CIis
-        33qfzR1vk+qPF19OqCZWz7vfQrfu20cHtIEo/Je+aN9h
-X-Google-Smtp-Source: APXvYqx5/KHIfGSp7upif3CSUTqa8+IOLkKx8NdUhTGkUIzVZH+otQ6dcbMU/jNlMKFhGlhL4+u9FeOGbykQTe9i2mM=
-X-Received: by 2002:a05:6512:409:: with SMTP id u9mr3860895lfk.0.1572386304531;
- Tue, 29 Oct 2019 14:58:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DpN5YTXrp9hp71uxbnpmiOwzB6GTFkwG/3T4Kj5BrEM=;
+        b=fg8xyNcYOQhScpz84sWEqatXwjs1D37Mbg1WvrFvpil+nw2pMQmln9aIhYDVL04Sbr
+         zxbsmTjkXVWt8UlPXjDmeDZLKZQj4rTcP86kFhbR1+Q+szA5n6REu8iU0ADJjmQBtW+o
+         DBrsjIIvQ8IoXmrtGUX26+NMagnFSnK9Pj/RkEOW9MahQBFbIs+Iqf3IZPe+cNVzSi9A
+         84/Uk6U2LwRjCnuqQRVw4sL5IR57lTZwvFGQUTlaRXWRsO+VFb9GHVc0ax9Pw22zluII
+         AhdEJwAFz8vom8uyye2sEANGFh7ROHZnEpxSfoVb68HNB2/QpLyDUZYSjdoBE9TBajP4
+         IRbw==
+X-Gm-Message-State: APjAAAXemH/ieP+32zl2T8wtMMftft5ssnkKN91gqo2H/NHeKM5QBtHt
+        MnCAqY/7iFRw8Eq4P7yYwKt47w==
+X-Google-Smtp-Source: APXvYqwNwn6ag5YudPb6b9eKtM6k1ulB0HqZ/o7WfnbelP889IRTVFDRbkId8DAH5pLmscTc97rObA==
+X-Received: by 2002:a17:902:988d:: with SMTP id s13mr915958plp.335.1572386354831;
+        Tue, 29 Oct 2019 14:59:14 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id j10sm85753pfn.128.2019.10.29.14.59.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 14:59:14 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:59:05 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next, 3/4] hv_netvsc: Add XDP support
+Message-ID: <20191029145905.414f86c3@hermes.lan>
+In-Reply-To: <DM6PR21MB1337547067BE5E52DFE05E20CA610@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
+        <1572296801-4789-4-git-send-email-haiyangz@microsoft.com>
+        <20191028143322.45d81da4@cakuba.hsd1.ca.comcast.net>
+        <DM6PR21MB1337547067BE5E52DFE05E20CA610@DM6PR21MB1337.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-References: <20191023082634.18195-1-alexandru.ardelean@analog.com> <20191027165651.1da18263@archlinux>
-In-Reply-To: <20191027165651.1da18263@archlinux>
-From:   Jack Andersen <jackoalan@gmail.com>
-Date:   Tue, 29 Oct 2019 11:58:16 -1000
-Message-ID: <CAPHBK3a-EQVZzF-LZC-jNCinF3i09PRG7ZA+hporMr5JvFpDtQ@mail.gmail.com>
-Subject: Re: [PATCH] iio: dln2-adc: fix iio_triggered_buffer_postenable() position
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These changes look fine to me as well.
+On Tue, 29 Oct 2019 19:17:25 +0000
+Haiyang Zhang <haiyangz@microsoft.com> wrote:
 
-I no longer have access to a DLN2 for empirical testing, but since this is
-mainly integration improvements with the IIO side of things, it shouldn't make
-a difference for the hardware.
+> > -----Original Message-----
+> > From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> > Sent: Monday, October 28, 2019 5:33 PM
+> > To: Haiyang Zhang <haiyangz@microsoft.com>
+> > Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org;
+> > netdev@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen
+> > Hemminger <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
+> > <vkuznets@redhat.com>; davem@davemloft.net; linux-
+> > kernel@vger.kernel.org
+> > Subject: Re: [PATCH net-next, 3/4] hv_netvsc: Add XDP support
+> > 
+> > On Mon, 28 Oct 2019 21:07:04 +0000, Haiyang Zhang wrote:  
+> > > This patch adds support of XDP in native mode for hv_netvsc driver, and
+> > > transparently sets the XDP program on the associated VF NIC as well.
+> > >
+> > > XDP program cannot run with LRO (RSC) enabled, so you need to disable  
+> > LRO  
+> > > before running XDP:
+> > >         ethtool -K eth0 lro off
+> > >
+> > > XDP actions not yet supported:
+> > >         XDP_TX, XDP_REDIRECT  
+> > 
+> > I don't think we want to merge support without at least XDP_TX these
+> > days..  
+> Thanks for your detailed comments --
+> I'm working on the XDP_TX...
+> 
+> > 
+> > And without the ability to prepend headers this may be the least
+> > complete initial XDP implementation we've seen :(  
+> The RNDIS packet buffer received by netvsc doesn't have a head room, but I'm
+> considering copy the packets to the page buffer, with a head room space 
+> reserved for XDP.
 
 
-
-On Sun, 27 Oct 2019 at 06:56, Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Wed, 23 Oct 2019 11:26:34 +0300
-> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
->
-> > The iio_triggered_buffer_postenable() hook should be called first to
-> > attach the poll function. The iio_triggered_buffer_predisable() hook is
-> > called last (as is it should).
-> >
-> > This change moves iio_triggered_buffer_postenable() to be called first. It
-> > adds iio_triggered_buffer_predisable() on the error paths of the postenable
-> > hook.
-> > For the predisable hook, some code-paths have been changed to make sure
-> > that the iio_triggered_buffer_predisable() hook gets called in case there
-> > is an error before it.
-> >
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> +CC Jack who wrote the driver.
->
-> Looks fine to me, but I always like these to sit for a while and ideally get
-> review from the authors / maintainers of the drivers.
->
-> Thanks,
->
-> Jonathan
->
-> > ---
-> >  drivers/iio/adc/dln2-adc.c | 20 ++++++++++++++------
-> >  1 file changed, 14 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
-> > index 5fa78c273a25..65c7c9329b1c 100644
-> > --- a/drivers/iio/adc/dln2-adc.c
-> > +++ b/drivers/iio/adc/dln2-adc.c
-> > @@ -524,6 +524,10 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
-> >       u16 conflict;
-> >       unsigned int trigger_chan;
-> >
-> > +     ret = iio_triggered_buffer_postenable(indio_dev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> >       mutex_lock(&dln2->mutex);
-> >
-> >       /* Enable ADC */
-> > @@ -537,6 +541,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
-> >                               (int)conflict);
-> >                       ret = -EBUSY;
-> >               }
-> > +             iio_triggered_buffer_predisable(indio_dev);
-> >               return ret;
-> >       }
-> >
-> > @@ -550,6 +555,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
-> >               mutex_unlock(&dln2->mutex);
-> >               if (ret < 0) {
-> >                       dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
-> > +                     iio_triggered_buffer_predisable(indio_dev);
-> >                       return ret;
-> >               }
-> >       } else {
-> > @@ -557,12 +563,12 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
-> >               mutex_unlock(&dln2->mutex);
-> >       }
-> >
-> > -     return iio_triggered_buffer_postenable(indio_dev);
-> > +     return 0;
-> >  }
-> >
-> >  static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
-> >  {
-> > -     int ret;
-> > +     int ret, ret2;
-> >       struct dln2_adc *dln2 = iio_priv(indio_dev);
-> >
-> >       mutex_lock(&dln2->mutex);
-> > @@ -577,12 +583,14 @@ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
-> >       ret = dln2_adc_set_port_enabled(dln2, false, NULL);
-> >
-> >       mutex_unlock(&dln2->mutex);
-> > -     if (ret < 0) {
-> > +     if (ret < 0)
-> >               dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
-> > -             return ret;
-> > -     }
-> >
-> > -     return iio_triggered_buffer_predisable(indio_dev);
-> > +     ret2 = iio_triggered_buffer_predisable(indio_dev);
-> > +     if (ret == 0)
-> > +             ret = ret2;
-> > +
-> > +     return ret;
-> >  }
-> >
-> >  static const struct iio_buffer_setup_ops dln2_adc_buffer_setup_ops = {
->
+There is a small amount of headroom available by reusing the RNDIS
+header and packet space. Looks like 40 bytes or so.
