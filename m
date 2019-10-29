@@ -2,128 +2,117 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7603FCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD99CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513A1208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D26F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 11:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfJ2L0p (ORCPT
+        id S1728343AbfJ2L1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:26:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:50680 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfJ2L0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:26:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02E131F1;
-        Tue, 29 Oct 2019 04:26:44 -0700 (PDT)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B61E3F71E;
-        Tue, 29 Oct 2019 04:26:42 -0700 (PDT)
-Subject: Re: [PATCH] arm64: cpufeature: Export Armv8.6 Matrix feature to
- userspace
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, suzuki.poulose@arm.com,
-        Dave.Martin@arm.com
-References: <20191025171056.30641-1-julien.grall@arm.com>
- <20191029111517.GE11590@willie-the-truck>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <f58cb01f-4543-6041-df2d-7ca7ba887bc9@arm.com>
-Date:   Tue, 29 Oct 2019 11:26:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 07:27:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37084 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfJ2L1K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 07:27:10 -0400
+Received: from [91.217.168.176] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iPPeW-0005r1-8D; Tue, 29 Oct 2019 11:27:08 +0000
+Date:   Tue, 29 Oct 2019 12:27:07 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: For review: documentation of clone3() system call
+Message-ID: <20191029112706.p5dd5yzpcgouo6n5@wittgenstein>
+References: <CAKgNAkjo2WHq+zESU1iuCHJJ0x-fTNrakS9-d1+BjzUuV2uf2Q@mail.gmail.com>
+ <CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com>
+ <20191028172143.4vnnjpdljfnexaq5@wittgenstein>
+ <CAG48ez20hn8vToY+=C62nA-rbUfxh=JD6N-f7XVS3_GZOoPjxw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191029111517.GE11590@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAG48ez20hn8vToY+=C62nA-rbUfxh=JD6N-f7XVS3_GZOoPjxw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+On Mon, Oct 28, 2019 at 08:09:13PM +0100, Jann Horn wrote:
+> On Mon, Oct 28, 2019 at 6:21 PM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> > On Mon, Oct 28, 2019 at 04:12:09PM +0100, Jann Horn wrote:
+> > > On Fri, Oct 25, 2019 at 6:59 PM Michael Kerrisk (man-pages)
+> > > <mtk.manpages@gmail.com> wrote:
+> > > > I've made a first shot at adding documentation for clone3(). You can
+> > > > see the diff here:
+> > > > https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/commit/?id=faa0e55ae9e490d71c826546bbdef954a1800969
+> [...]
+> > > You might want to note somewhere that its flags can't be
+> > > seccomp-filtered because they're stored in memory, making it
+> > > inappropriate to use in heavily sandboxed processes.
+> >
+> > Hm, I don't think that belongs on the clone manpage. Granted that
+> > process creation is an important syscall but so are a bunch of others
+> > that aren't filterable because of pointer arguments.
+> > We can probably mention on the seccomp manpage that seccomp can't filter
+> > on pointer arguments and then provide a list of examples. If you setup a
+> > seccomp filter and don't know that you can't filter syscalls with
+> > pointer args that seems pretty bad to begin with.
+> 
+> Fair enough.
+> 
+> [...]
+> > One thing I never liked about clone() was that userspace had to know
+> > about stack direction. And there is a lot of ugly code in userspace that
+> > has nasty clone() wrappers like:
+> [...]
+> > where stack + stack_size is addition on a void pointer which usually
+> > clang and gcc are not very happy about.
+> > I wanted to bring this up on the mailing list soon: If possible, I don't
+> > want userspace to need to know about stack direction and just have stack
+> > point to the beginning and then have the kernel do the + stack_size
+> > after the copy_clone_args_from_user() if the arch needs it. For example,
+> > by having a dumb helder similar to copy_thread_tls()/coyp_thread() that
+> > either does the + stack_size or not. Right now, clone3() is supported on
+> > parisc and afaict, the stack grows upwards for it. I'm not sure if there
+> > are obvious reasons why that won't work or it would be a bad idea...
+> 
+> That would mean adding a new clone flag that redefines how those
+> parameters work and describing the current behavior in the manpage as
+> the behavior without the flag (which doesn't exist on 5.3), right?
 
-On 29/10/2019 11:15, Will Deacon wrote:
-> On Fri, Oct 25, 2019 at 06:10:56PM +0100, Julien Grall wrote:
->> This patch provides support for reporting the presence of Armv8.6
->> Matrix and its optional features to userspace.
-> 
-> Are you sure this is 8.6 and not earlier?
+I would break API and if someone reports breakage we'll revert and go
+the more complicated route you outlined (see [1]).
+But I don't think it will a big deal. First, we haven't documented how
+stack needs to be passed so who knows what people currently do. Second,
+clone3() has not been out for a long time and currently does _not_
+provide features that legacy clone() does not provide apart from a
+cleaner interface. So userspace has no incentive to use clone3() over
+clone() right now. That'll change latest with v5.5 where we have new
+features on top of clone3() (CLONE_CLEAR_SIGHAND). So let's just try and
+fix it.
 
-This was introduced by Armv8.6 see [1] but allowed to be used by Armv8.2 and 
-onwards.
+[1]: This is basically what Linus has repeatedly said: it's not about
+     never breaking api in principle but rather about whether this
+     breaks someones usecase. And if it does break, we need to revert.
 
-> 
->> This based on [1] + commit ec52c7134b1f "arm64: cpufeature: Treat
->> ID_AA64ZFR0_EL1 as RAZ when SVE is not enabled" (taken from v5.4-rc4).
->>
->> [1]  arm64/for-next/elf-hwcap-docs
->> ---
->>   Documentation/arm64/cpu-feature-registers.rst |  8 ++++++++
->>   Documentation/arm64/elf_hwcaps.rst            | 15 +++++++++++++++
->>   arch/arm64/include/asm/hwcap.h                |  4 ++++
->>   arch/arm64/include/asm/sysreg.h               |  7 +++++++
->>   arch/arm64/include/uapi/asm/hwcap.h           |  4 ++++
->>   arch/arm64/kernel/cpufeature.c                | 11 +++++++++++
->>   arch/arm64/kernel/cpuinfo.c                   |  4 ++++
->>   7 files changed, 53 insertions(+)
->>
->> diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
->> index ffcf4e2c71ef..d1d6d56a7b08 100644
->> --- a/Documentation/arm64/cpu-feature-registers.rst
->> +++ b/Documentation/arm64/cpu-feature-registers.rst
->> @@ -193,6 +193,8 @@ infrastructure:
->>        +------------------------------+---------+---------+
->>        | Name                         |  bits   | visible |
->>        +------------------------------+---------+---------+
->> +     | I8MM                         | [52-55] |    y    |
->> +     +------------------------------+---------+---------+
-> 
-> Looking at:
-> 
-> https://developer.arm.com/docs/ddi0601/latest/aarch64-system-registers/id_aa64isar1_el1
-> 
-> Then I8MM is advertised as "Armv8.2", alongside other fields that we haven't
-> listed here such as BF16 and SPECRES.
-> 
-> So we probably want a patch bringing all of this up to speed, rather than
-> randomly advertising some features and not others.
-> 
->>        | SB                           | [36-39] |    y    |
->>        +------------------------------+---------+---------+
->>        | FRINTTS                      | [32-35] |    y    |
->> @@ -227,6 +229,12 @@ infrastructure:
->>        +------------------------------+---------+---------+
->>        | Name                         |  bits   | visible |
->>        +------------------------------+---------+---------+
->> +     | F64MM                        | [56-59] |    y    |
->> +     +------------------------------+---------+---------+
->> +     | F32MM                        | [52-55] |    y    |
->> +     +------------------------------+---------+---------+
->> +     | I8MM                         | [44-47] |    y    |
->> +     +------------------------------+---------+---------+
-> 
-> Urgh, we're inconsistent in our bitfields. Some are [lo-hi] whilst others
-> are [hi-lo]. Please can you fix that in a preparatory patch? I prefer
-> [hi-lo] and it matches the arch docs.
-
-Sure.
-
-Cheers,
-
-[1] 
-https://community.arm.com/developer/ip-products/processors/b/processors-ip-blog/posts/arm-architecture-developments-armv8-6-a
-
-> 
-> Will
-> 
-
--- 
-Julien Grall
+Christian
