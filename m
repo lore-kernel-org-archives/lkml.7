@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B14CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B8CCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2A321734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01B9208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572353851;
-	bh=0F60U76FnYGohq7iryhnBjaJTxDAo9zbijH6kzMXCXc=;
+	s=default; t=1572353854;
+	bh=L0Itmaavya1mySRDN+CxTsr5XPOuAtTRQ5Cr2WmVB3M=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=e90mYHo8dqH+AKv+icn990JqYMWubM6tg57WLqi3mPLUowXXM98szCd/qLzC2g0eb
-	 eZuWUnMZaRcE8mH6ovbBJPmBl9ihSnou18uj0ruy4k4mPVNPqIv2NNYfL6nAD6Stg9
-	 v8WFlBazeVysI5Iex8ujL3LqHltO15XJXm6OsmPk=
+	b=Ww3YISRF++8kZmR2J/Azjw0p/7l/Q5PLvB+IfCf3uod8Mkjs66D1d1ZVK9ItPFXxK
+	 N4i6BBWlkdKQwRq9ZD/9y9Ds7xYjRFg7/TYw3xaUuwswdxPQrUUmdtrIz1XFhbHAgL
+	 NNlR1GGZFlt7PT2fktiKkN/2FNwqTE3FqTybqaM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388143AbfJ2M5a (ORCPT
+        id S2388165AbfJ2M5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:57:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57084 "EHLO
+        Tue, 29 Oct 2019 08:57:33 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57200 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbfJ2M51 (ORCPT
+        with ESMTP id S2388138AbfJ2M5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:57:27 -0400
+        Tue, 29 Oct 2019 08:57:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=UVHMIFb85JIHvAPZmwfb8Jx9ya9sTe0Tgnzxjy0WJlc=; b=LPxarDj51he3
-        9cgJDYwV+2dkTT+ZlscXHdCtuW/cJvN4b5yFJbTU8pQnLE3vbBV+UxDQlAEE+fBJSvzAz0Iq/SBgS
-        apmM0DO6RzOSMW1iFgmFXQEITrTXPHCioRbFll8GskOZ5vjGB9jmvDPGue3VPSoUTJzAF5t1jOpGU
-        jvMnQ=;
+        List-Archive; bh=Wl+5/Qj/XhSNlZehVwD9qVk1hUUvfQ5iMLqz0DQGd0E=; b=Enb9SgsKSwwH
+        4l7KNx3nuvInMfXC5o/09C023lh/1CtRMwg8irjeb2vSpFbbOqYD+Ag/wrCyTSljba7Rlv2UapKx+
+        Mflf4De6z8aXfQL+mtEKqFpezAkzVPeLjL215UXSJYv03IcuePxdc9GTQImZKgbRi+oDJtic8qNUk
+        BL3pY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iPR3U-0002DM-Bt; Tue, 29 Oct 2019 12:57:00 +0000
+        id 1iPR3U-0002DI-3j; Tue, 29 Oct 2019 12:57:00 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id DE0F92742998; Tue, 29 Oct 2019 12:56:59 +0000 (GMT)
+        id 98B622742990; Tue, 29 Oct 2019 12:56:59 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Cheng-Yi Chiang <cychiang@chromium.org>
 Cc:     alsa-devel@alsa-project.org, Andrzej Hajda <a.hajda@samsung.com>,
@@ -67,10 +67,10 @@ Cc:     alsa-devel@alsa-project.org, Andrzej Hajda <a.hajda@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
         Russell King <rmk+kernel@armlinux.org.uk>,
         Takashi Iwai <tiwai@suse.com>, tzungbi@chromium.org
-Subject: Applied "drm: bridge: dw-hdmi: Report connector status using callback" to the asoc tree
-In-Reply-To: <20191028071930.145899-2-cychiang@chromium.org>
+Subject: Applied "ASoC: rockchip-max98090: Support usage with and without HDMI" to the asoc tree
+In-Reply-To: <20191028071930.145899-3-cychiang@chromium.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20191029125659.DE0F92742998@ypsilon.sirena.org.uk>
+Message-Id: <20191029125659.98B622742990@ypsilon.sirena.org.uk>
 Date:   Tue, 29 Oct 2019 12:56:59 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -79,7 +79,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   drm: bridge: dw-hdmi: Report connector status using callback
+   ASoC: rockchip-max98090: Support usage with and without HDMI
 
 has been applied to the asoc tree at
 
@@ -104,166 +104,80 @@ to this mail.
 Thanks,
 Mark
 
-From a9c82d63ca4819d3d03964dbf4aa427b36c5a67f Mon Sep 17 00:00:00 2001
+From f03412b78a947857bbd20899e1423482fba55761 Mon Sep 17 00:00:00 2001
 From: Cheng-Yi Chiang <cychiang@chromium.org>
-Date: Mon, 28 Oct 2019 15:19:25 +0800
-Subject: [PATCH] drm: bridge: dw-hdmi: Report connector status using callback
+Date: Mon, 28 Oct 2019 15:19:26 +0800
+Subject: [PATCH] ASoC: rockchip-max98090: Support usage with and without HDMI
 
-Allow codec driver register callback function for plug event.
+Add one optional property "rockchip,hdmi-codec" to let user specify HDMI
+device node in DTS so machine driver can find hdmi-codec device node for
+HDMI codec DAI.
 
-The callback registration flow:
-dw-hdmi <--- hw-hdmi-i2s-audio <--- hdmi-codec
+Use the presence of rockchip,audio-codec and rockchip,hdmi-codec to
+specify the use case.
 
-dw-hdmi-i2s-audio implements hook_plugged_cb op
-so codec driver can register the callback.
+Use max98090 only : specify rockchip,audio-codec.
+Use HDMI only: specify rockchip,hdmi-codec.
+Use both max98090 and HDMI: specify rockchip,audio-codec and
+rockchip,hdmi-codec.
 
-dw-hdmi exports a function dw_hdmi_set_plugged_cb so platform device
-can register the callback.
-
-When connector plug/unplug event happens, report this event using the
-callback.
-
-Make sure that audio and drm are using the single source of truth for
-connector status.
+Move these properties to optional because they are not needed for
+HDMI-only use case.
+"rockchip,audio-codec": The phandle of the MAX98090 audio codec
+"rockchip,headset-codec": The phandle of Ext chip for jack detection
 
 Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Link: https://lore.kernel.org/r/20191028071930.145899-2-cychiang@chromium.org
+Link: https://lore.kernel.org/r/20191028071930.145899-3-cychiang@chromium.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   | 11 +++++
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 41 ++++++++++++++++++-
- include/drm/bridge/dw_hdmi.h                  |  4 ++
- 3 files changed, 55 insertions(+), 1 deletion(-)
+ .../bindings/sound/rockchip-max98090.txt      | 27 +++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-index 1d15cf9b6821..6c2c44d0bdee 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-@@ -151,11 +151,22 @@ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
- 	return -EINVAL;
- }
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+index a805aa99ad75..e9c58b204399 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+@@ -5,15 +5,38 @@ Required properties:
+ - rockchip,model: The user-visible name of this sound complex
+ - rockchip,i2s-controller: The phandle of the Rockchip I2S controller that's
+   connected to the CODEC
+-- rockchip,audio-codec: The phandle of the MAX98090 audio codec
+-- rockchip,headset-codec: The phandle of Ext chip for jack detection
++
++Optional properties:
++- rockchip,audio-codec: The phandle of the MAX98090 audio codec.
++- rockchip,headset-codec: The phandle of Ext chip for jack detection. This is
++                          required if there is rockchip,audio-codec.
++- rockchip,hdmi-codec: The phandle of HDMI device for HDMI codec.
  
-+static int dw_hdmi_i2s_hook_plugged_cb(struct device *dev, void *data,
-+				       hdmi_codec_plugged_cb fn,
-+				       struct device *codec_dev)
-+{
-+	struct dw_hdmi_i2s_audio_data *audio = data;
-+	struct dw_hdmi *hdmi = audio->hdmi;
+ Example:
+ 
++/* For max98090-only board. */
++sound {
++	compatible = "rockchip,rockchip-audio-max98090";
++	rockchip,model = "ROCKCHIP-I2S";
++	rockchip,i2s-controller = <&i2s>;
++	rockchip,audio-codec = <&max98090>;
++	rockchip,headset-codec = <&headsetcodec>;
++};
 +
-+	return dw_hdmi_set_plugged_cb(hdmi, fn, codec_dev);
-+}
++/* For HDMI-only board. */
++sound {
++	compatible = "rockchip,rockchip-audio-max98090";
++	rockchip,model = "ROCKCHIP-I2S";
++	rockchip,i2s-controller = <&i2s>;
++	rockchip,hdmi-codec = <&hdmi>;
++};
 +
- static struct hdmi_codec_ops dw_hdmi_i2s_ops = {
- 	.hw_params	= dw_hdmi_i2s_hw_params,
- 	.audio_shutdown	= dw_hdmi_i2s_audio_shutdown,
- 	.get_eld	= dw_hdmi_i2s_get_eld,
- 	.get_dai_id	= dw_hdmi_i2s_get_dai_id,
-+	.hook_plugged_cb = dw_hdmi_i2s_hook_plugged_cb,
++/* For max98090 plus HDMI board. */
+ sound {
+ 	compatible = "rockchip,rockchip-audio-max98090";
+ 	rockchip,model = "ROCKCHIP-I2S";
+ 	rockchip,i2s-controller = <&i2s>;
+ 	rockchip,audio-codec = <&max98090>;
+ 	rockchip,headset-codec = <&headsetcodec>;
++	rockchip,hdmi-codec = <&hdmi>;
  };
- 
- static int snd_dw_hdmi_probe(struct platform_device *pdev)
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 521d689413c8..2102872bf43c 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -191,6 +191,10 @@ struct dw_hdmi {
- 
- 	struct mutex cec_notifier_mutex;
- 	struct cec_notifier *cec_notifier;
-+
-+	hdmi_codec_plugged_cb plugged_cb;
-+	struct device *codec_dev;
-+	enum drm_connector_status last_connector_result;
- };
- 
- #define HDMI_IH_PHY_STAT0_RX_SENSE \
-@@ -215,6 +219,28 @@ static inline u8 hdmi_readb(struct dw_hdmi *hdmi, int offset)
- 	return val;
- }
- 
-+static void handle_plugged_change(struct dw_hdmi *hdmi, bool plugged)
-+{
-+	if (hdmi->plugged_cb && hdmi->codec_dev)
-+		hdmi->plugged_cb(hdmi->codec_dev, plugged);
-+}
-+
-+int dw_hdmi_set_plugged_cb(struct dw_hdmi *hdmi, hdmi_codec_plugged_cb fn,
-+			   struct device *codec_dev)
-+{
-+	bool plugged;
-+
-+	mutex_lock(&hdmi->mutex);
-+	hdmi->plugged_cb = fn;
-+	hdmi->codec_dev = codec_dev;
-+	plugged = hdmi->last_connector_result == connector_status_connected;
-+	handle_plugged_change(hdmi, plugged);
-+	mutex_unlock(&hdmi->mutex);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(dw_hdmi_set_plugged_cb);
-+
- static void hdmi_modb(struct dw_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
- {
- 	regmap_update_bits(hdmi->regm, reg << hdmi->reg_shift, mask, data);
-@@ -2161,6 +2187,7 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
- {
- 	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
- 					     connector);
-+	enum drm_connector_status result;
- 
- 	mutex_lock(&hdmi->mutex);
- 	hdmi->force = DRM_FORCE_UNSPECIFIED;
-@@ -2168,7 +2195,18 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
- 	dw_hdmi_update_phy_mask(hdmi);
- 	mutex_unlock(&hdmi->mutex);
- 
--	return hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
-+	result = hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
-+
-+	mutex_lock(&hdmi->mutex);
-+	if (result != hdmi->last_connector_result) {
-+		dev_dbg(hdmi->dev, "read_hpd result: %d", result);
-+		handle_plugged_change(hdmi,
-+				      result == connector_status_connected);
-+		hdmi->last_connector_result = result;
-+	}
-+	mutex_unlock(&hdmi->mutex);
-+
-+	return result;
- }
- 
- static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
-@@ -2619,6 +2657,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
- 	hdmi->rxsense = true;
- 	hdmi->phy_mask = (u8)~(HDMI_PHY_HPD | HDMI_PHY_RX_SENSE);
- 	hdmi->mc_clkdis = 0x7f;
-+	hdmi->last_connector_result = connector_status_disconnected;
- 
- 	mutex_init(&hdmi->mutex);
- 	mutex_init(&hdmi->audio_mutex);
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index cf528c289857..9a0c8381a069 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -6,6 +6,8 @@
- #ifndef __DW_HDMI__
- #define __DW_HDMI__
- 
-+#include <sound/hdmi-codec.h>
-+
- struct drm_connector;
- struct drm_display_mode;
- struct drm_encoder;
-@@ -154,6 +156,8 @@ void dw_hdmi_resume(struct dw_hdmi *hdmi);
- 
- void dw_hdmi_setup_rx_sense(struct dw_hdmi *hdmi, bool hpd, bool rx_sense);
- 
-+int dw_hdmi_set_plugged_cb(struct dw_hdmi *hdmi, hdmi_codec_plugged_cb fn,
-+			   struct device *codec_dev);
- void dw_hdmi_set_sample_rate(struct dw_hdmi *hdmi, unsigned int rate);
- void dw_hdmi_set_channel_count(struct dw_hdmi *hdmi, unsigned int cnt);
- void dw_hdmi_set_channel_allocation(struct dw_hdmi *hdmi, unsigned int ca);
 -- 
 2.20.1
 
