@@ -2,246 +2,189 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCC2CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB267CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F1B21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C3721479
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 20:59:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="saVdvDEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbfJ2U7I (ORCPT
+        id S1729113AbfJ2U7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:59:08 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54926 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727545AbfJ2U7I (ORCPT
+        Tue, 29 Oct 2019 16:59:13 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46654 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727545AbfJ2U7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:59:08 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 1C94628DE5D
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, kernel@collabora.com, krisman@collabora.com,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH v2] blk-mq: Document functions for sending request
-Date:   Tue, 29 Oct 2019 17:57:33 -0300
-Message-Id: <20191029205733.86697-1-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.23.0
+        Tue, 29 Oct 2019 16:59:13 -0400
+Received: by mail-ed1-f68.google.com with SMTP id z22so7593957edr.13;
+        Tue, 29 Oct 2019 13:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CjYSqe0NVHv7PBpKzZgujNqWXOTQ3EeJ6Ic+T4FxfJc=;
+        b=saVdvDEiiNLvD7aTOsNw9iGbWLFMyQr2XnMdQEk/CKnERA3bYRYYJMDhfo9s7f84rR
+         IYfl94E0OLzR1MnA81gWde9+vp5sviFozxoV3G0Id2LHsUymKcg1nupt3GOttgxkjynf
+         IOinaAKgXTM1ITqNCP66LGTvFN7TegzBwLGTi1iSUlQU6xZUoiSQYt2mT9uXFbn5qkpq
+         uaYET9A1mYQ9BBprxvF9e8Ph1lFe3BDrHj1GuHKrjXHM7+O+gRtyh/59+vBdjNWAkNHD
+         5YOOHTMMGWmxZ/0FrGonK+v416+okaZBE876ZvCPhII/Nj8+Lxrce1d+923CTIKyZF4V
+         k5iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=CjYSqe0NVHv7PBpKzZgujNqWXOTQ3EeJ6Ic+T4FxfJc=;
+        b=K6ihzJoezm5sw4VpJZrhO/0v12QeX+76GEjJzQNNUYU4AUmInZpmRdJaCcuPonGf9y
+         ycG686O+QYDMR1a01jHneS+uTMPK+oErms++Wio4SVNdrqZjJ+M3nAMDOCQ9u/01CMrH
+         CGbBTLH8I4u4lXNgoAxxH0gBNgmx2b1JfxoshoTzEMXXTocaeB+lCRjriQDLQYjspEdK
+         d9deAAwo+OyhcUTbeNz1Q1EW4lbYqWLfsS5MhGQScJcFZZJi2vrSXc0d7dB/uZ8+9HOh
+         LI10n6shoz26CsJ+EgsIHNxwvudDY4SiIM7Hl+Eym0w/qMsz/Shy01uF49tKdTPQGhtt
+         hhoA==
+X-Gm-Message-State: APjAAAUM9mCFdCdJoK3xPrIPQbgzDhosIAw72Qd6FM70DWBvMh4qT9QA
+        f/EBTOdT+UXHUPLQ4dKYpp0=
+X-Google-Smtp-Source: APXvYqwEVdyt82IAftK6qhuzMhSmKVkdVaK7Wiqe8LHdMahMC6kx1TfFwhmOwDTxu6Fxbae7h/ZUyg==
+X-Received: by 2002:a17:906:4ec9:: with SMTP id i9mr5435592ejv.8.1572382748939;
+        Tue, 29 Oct 2019 13:59:08 -0700 (PDT)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id d12sm689932edt.57.2019.10.29.13.59.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 13:59:08 -0700 (PDT)
+Subject: Re: [PATCH 0/3] net: phy: initialize PHYs via device tree properties
+To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20191029174819.3502-1-michael@walle.cc>
+ <519d52d2-cd83-b544-591b-ca9d9bb16dfa@gmail.com>
+ <4B4A80A7-05C8-441A-B224-7CC01E3D8C30@walle.cc>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <c9447284-1c20-6dc7-8629-e62c61a7b4a8@gmail.com>
+Date:   Tue, 29 Oct 2019 13:59:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4B4A80A7-05C8-441A-B224-7CC01E3D8C30@walle.cc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add or improve documentation for function regarding creating and sending
-IO requests to the hardware.
+On 10/29/19 1:54 PM, Michael Walle wrote:
+> Am 29. Oktober 2019 18:59:07 MEZ schrieb Florian Fainelli <f.fainelli@gmail.com>:
+>> On 10/29/19 10:48 AM, Michael Walle wrote:
+>>> I was trying to configure the Atheros PHY for my board. There are
+>> fixups
+>>> all over the place, for example to enable the 125MHz clock output in
+>> almost
+>>> any i.MX architecture. Instead of adding another fixup in
+>> architecture
+>>> specific code, try to provide a generic way to init the PHY
+>> registers.
+>>>
+>>> This patch series tries to pick up the "broadcom,reg-init" and
+>>> "marvell,reg-init" device tree properties idea and make it a more
+>> generic
+>>> "reg-init" which is handled by phy_device instead of a particular phy
+>>> driver.
+>>
+>> These two examples are actually quite bad and were symptomatic of a few
+>> things at the time:
+>>
+>> - rush to get a specific feature/device supported without thinking
+>> about
+>> the big picture
+>> - lack of appropriate review on the Device Tree bindings
+>>
+>> Fortunately, the last item is now not happening anymore.
+>>
+>> The problem with letting that approach go through is that the Device
+>> Tree can now hold a configuration policy which is passed through as-is
+>>from DT to the PHY device, this is bad on so many different levels,
+>> starting with abstraction.
+> 
+> I see.
+> 
+>> If all you need is to enable a particular clock, introduce device
+>> specific properties that describe the hardware, and make the necessary
+>> change to the local driver that needs to act on those. You can always
+>> define a more generic scope property if you see a recurring pattern.
+> 
+> Could you have a quick look at the following patch I made for u-boot, which adds a binding for the Atheros PHY. If that is the right direction. Yeah, I should have made it first to Linux to get some feedback on the binding :p
+> 
+> https://patchwork.ozlabs.org/patch/1184516/
+> 
+> I'd then prepare another patch for Linux based on your suggestions. 
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
-Hello,
-
-I did my best to describe all variations of *_run_hw_queue, although
-their names and functionally are really similar. I would be happy to get
-feedback about those functions descriptions.
-
-Those comments were tested with:
-
-./scripts/kernel-doc -none block/blk-mq.c
-
-Which did not returned any warning or error.
-
-Thanks,
-	André
-
-Changes since v1:
-- Add documentation for blk_mq_start_request()
----
- block/blk-mq.c | 87 ++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 85 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index c0f3357a2050..5646519c8d57 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -647,6 +647,14 @@ bool blk_mq_complete_request(struct request *rq)
- }
- EXPORT_SYMBOL(blk_mq_complete_request);
- 
-+/**
-+ * blk_mq_start_request - Start processing a request
-+ * @rq: Pointer to request to be started
-+ *
-+ * Function used by device drivers to notify the block layer that a request
-+ * is going to be processed now, so blk layer can do proper initializations
-+ * such as starting the timeout timer.
-+ */
- void blk_mq_start_request(struct request *rq)
- {
- 	struct request_queue *q = rq->q;
-@@ -1333,6 +1341,12 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
- 	return (queued + errors) != 0;
- }
- 
-+/**
-+ * __blk_mq_run_hw_queue - Run a hardware queue.
-+ * @hctx: Pointer to the hardware queue to run.
-+ *
-+ * Send pending requests to the hardware.
-+ */
- static void __blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx)
- {
- 	int srcu_idx;
-@@ -1430,6 +1444,15 @@ static int blk_mq_hctx_next_cpu(struct blk_mq_hw_ctx *hctx)
- 	return next_cpu;
- }
- 
-+/**
-+ * __blk_mq_delay_run_hw_queue - Run (or schedule to run) a hardware queue.
-+ * @hctx: Pointer to the hardware queue to run.
-+ * @async: If we want to run the queue asynchronously.
-+ * @msecs: Microseconds of delay to wait before running the queue.
-+ *
-+ * If !@async, try to run the queue now. Else, run the queue asynchronously and
-+ * with a delay of @msecs.
-+ */
- static void __blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async,
- 					unsigned long msecs)
- {
-@@ -1451,12 +1474,30 @@ static void __blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async,
- 				    msecs_to_jiffies(msecs));
- }
- 
-+/**
-+ * blk_mq_delay_run_hw_queue - Run a hardware queue asynchronously.
-+ * @hctx: Pointer to the hardware queue to run.
-+ * @msecs: Microseconds of delay to wait before running the queue.
-+ *
-+ * Run a hardware queue asynchronously with a delay of @msecs.
-+ */
- void blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, unsigned long msecs)
- {
- 	__blk_mq_delay_run_hw_queue(hctx, true, msecs);
- }
- EXPORT_SYMBOL(blk_mq_delay_run_hw_queue);
- 
-+/**
-+ * blk_mq_run_hw_queue - Start to run a hardware queue.
-+ * @hctx: Pointer to the hardware queue to run.
-+ * @async: If we want to run the queue asynchronously.
-+ *
-+ * Check if the request queue is not in a quiesced state and if there are
-+ * pending requests to be sent. If this is true, run the queue to send requests
-+ * to hardware.
-+ *
-+ * Returns: True if we could run the queue, else otherwise.
-+ */
- bool blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async)
- {
- 	int srcu_idx;
-@@ -1484,6 +1525,11 @@ bool blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async)
- }
- EXPORT_SYMBOL(blk_mq_run_hw_queue);
- 
-+/**
-+ * blk_mq_run_hw_queue - Run all hardware queues in a request queue.
-+ * @q: Pointer to the request queue to run.
-+ * @async: If we want to run the queue asynchronously.
-+ */
- void blk_mq_run_hw_queues(struct request_queue *q, bool async)
- {
- 	struct blk_mq_hw_ctx *hctx;
-@@ -1635,7 +1681,11 @@ void __blk_mq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 	blk_mq_hctx_mark_pending(hctx, ctx);
- }
- 
--/*
-+/**
-+ * blk_mq_request_bypass_insert - Insert a request at dispatch list.
-+ * @rq: Pointer to request to be inserted.
-+ * @run_queue: If we should run the hardware queue after inserting the request.
-+ *
-  * Should only be used carefully, when the caller knows we want to
-  * bypass a potential IO scheduler on the target device.
-  */
-@@ -1838,6 +1888,17 @@ static blk_status_t __blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
- 	return BLK_STS_OK;
- }
- 
-+/**
-+ * blk_mq_try_issue_directly - Try to send a request directly to device driver.
-+ * @hctx: Pointer of the associated hardware queue.
-+ * @rq: Pointer to request to be sent.
-+ * @cookie: Request queue cookie.
-+ *
-+ * If the device has enough resources to accept a new request now, send the
-+ * request directly to device driver. Else, insert at hctx->dispatch queue, so
-+ * we can try send it another time in the future. Requests inserted at this
-+ * queue have higher priority.
-+ */
- static void blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
- 		struct request *rq, blk_qc_t *cookie)
- {
-@@ -1915,6 +1976,22 @@ static void blk_add_rq_to_plug(struct blk_plug *plug, struct request *rq)
- 	}
- }
- 
-+/**
-+ * blk_mq_make_request - Create and send a request to block device.
-+ * @q: Request queue pointer.
-+ * @bio: Bio pointer.
-+ *
-+ * Builds up a request structure from @q and @bio and send to the device. The
-+ * request may not be queued directly to hardware if:
-+ * * This request can be merged with another one
-+ * * We want to place request at plug queue for possible future merging
-+ * * There is an IO scheduler active at this queue
-+ *
-+ * It will not queue the request if there is an error with the bio, or at the
-+ * request creation.
-+ *
-+ * Returns: Request queue cookie.
-+ */
- static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- {
- 	const int is_sync = op_is_sync(bio->bi_opf);
-@@ -1960,7 +2037,7 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- 
- 	plug = blk_mq_plug(q, bio);
- 	if (unlikely(is_flush_fua)) {
--		/* bypass scheduler for flush rq */
-+		/* Bypass scheduler for flush requests */
- 		blk_insert_flush(rq);
- 		blk_mq_run_hw_queue(data.hctx, true);
- 	} else if (plug && (q->nr_hw_queues == 1 || q->mq_ops->commit_rqs ||
-@@ -1988,6 +2065,7 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- 
- 		blk_add_rq_to_plug(plug, rq);
- 	} else if (q->elevator) {
-+		/* Insert the request at the IO scheduler queue */
- 		blk_mq_sched_insert_request(rq, false, true, true);
- 	} else if (plug && !blk_queue_nomerges(q)) {
- 		/*
-@@ -2014,8 +2092,13 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- 		}
- 	} else if ((q->nr_hw_queues > 1 && is_sync) ||
- 			!data.hctx->dispatch_busy) {
-+		/*
-+		 * There is no scheduler and we can try to send directly
-+		 * to the hardware.
-+		 */
- 		blk_mq_try_issue_directly(data.hctx, rq, &cookie);
- 	} else {
-+		/* Default case. */
- 		blk_mq_sched_insert_request(rq, false, true, true);
- 	}
- 
+This looks like the right direction IMHO.
 -- 
-2.23.0
-
+Florian
