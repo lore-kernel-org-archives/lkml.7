@@ -2,118 +2,72 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCD2CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D364BCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39C62083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572339732;
-	bh=bOYMkrPnkSbi4aKQxcu6uc3pK8uAB8m/hoLokCCVXGU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A91Y75U3PU4n83YKnCF/8Zvf64gE/jq7i8o+DqdlG8gX6aplHTF7jtk5n7xKQSaI4
-	 dVQ4qqD87gA77IZemG9lfyGLRsBMoEMWLCXmuk8t7cTKZ9AAXjMhQzbmSgpTJInhzO
-	 yKyMPuoYYxWgBrUw0A+1pPUrer1klfkT5wkcOqCY=
+	by mail.kernel.org (Postfix) with ESMTP id B001620717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbfJ2JCL (ORCPT
+        id S1730517AbfJ2JDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbfJ2JCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:02:11 -0400
-Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3456620717;
-        Tue, 29 Oct 2019 09:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572339726;
-        bh=bOYMkrPnkSbi4aKQxcu6uc3pK8uAB8m/hoLokCCVXGU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XIQpQH93iGh9XKVRHrIjP5M0pKowp+j/DYe81iC7yDYP/yrQaFN3kQc70I446NNUA
-         BFUwORbg2S1M1iQn+NkCvD1RLPVb2El1M1GCKPrABFs1gae9RsnIF4s7m6xaIrnC7B
-         2HPKTrYTdAhNRLx9kbkBmdZdMtgF9gkcj5QemTgA=
-Date:   Tue, 29 Oct 2019 10:01:58 +0100
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191029090158.GB18773@rapoport-lnx>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <87d0eieb0i.fsf@mid.deneb.enyo.de>
- <385EB6D4-A1B0-4617-B256-181AA1C3BDE3@kernel.org>
- <87h83s62mi.fsf@mid.deneb.enyo.de>
+        Tue, 29 Oct 2019 05:03:12 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:60414 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727933AbfJ2JDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:03:12 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92.2)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1iPNP6-0004Ha-89; Tue, 29 Oct 2019 10:03:04 +0100
+Message-ID: <dbbc8c3e898ec499f30a6ac1f262666ced6905fb.camel@sipsolutions.net>
+Subject: Re: [PATCH v2] 802.11n IBSS: wlan0 stops receiving packets due to
+ aggregation after sender reboot
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Koen Vandeputte <koen.vandeputte@ncentric.com>,
+        Krzysztof =?UTF-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 29 Oct 2019 10:03:02 +0100
+In-Reply-To: <30465e05-3465-f496-d57f-5e115551f5cb@ncentric.com> (sfid-20191029_094137_778584_BACBC770)
+References: <m34l02mh71.fsf@t19.piap.pl> <m37e4tjfbu.fsf@t19.piap.pl>
+         <e5b07b4ce51f806ce79b1ae06ff3cbabbaa4873d.camel@sipsolutions.net>
+         <30465e05-3465-f496-d57f-5e115551f5cb@ncentric.com>
+         (sfid-20191029_094137_778584_BACBC770)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h83s62mi.fsf@mid.deneb.enyo.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 09:23:17PM +0100, Florian Weimer wrote:
-> * Mike Rapoport:
-> 
-> > On October 27, 2019 12:30:21 PM GMT+02:00, Florian Weimer
-> > <fw@deneb.enyo.de> wrote:
-> >>* Mike Rapoport:
-> >>
-> >>> The patch below aims to allow applications to create mappins that
-> >>have
-> >>> pages visible only to the owning process. Such mappings could be used
-> >>to
-> >>> store secrets so that these secrets are not visible neither to other
-> >>> processes nor to the kernel.
-> >>
-> >>How is this expected to interact with CRIU?
-> >
-> > CRIU dumps the memory contents using a parasite code from inside the
-> > dumpee address space, so it would work the same way as for the other
-> > mappings. Of course, at the restore time the exclusive mapping should
-> > be recreated with the appropriate flags.
-> 
-> Hmm, so it would use a bounce buffer to perform the extraction?
+On Tue, 2019-10-29 at 09:41 +0100, Koen Vandeputte wrote:
 
-At first I thought that CRIU would extract the memory contents from these
-mappings just as it does now using vmsplice(). But it seems that such
-mappings won't play well with pipes, so CRIU will need a bounce buffer
-indeed.
- 
-> >>> I've only tested the basic functionality, the changes should be
-> >>verified
-> >>> against THP/migration/compaction. Yet, I'd appreciate early feedback.
-> >>
-> >>What are the expected semantics for VM migration?  Should it fail?
-> >
-> > I don't quite follow. If qemu would use such mappings it would be able
-> > to transfer them during live migration.
+> I can confirm the issue as I'm also seeing this sometimes in the field here.
 > 
-> I was wondering if the special state is supposed to bubble up to the
-> host eventually.
+> Sometimes when a devices goes out of range and then re-enters,
+> the link refuses to "come up", as in rx looks to be "stuck" without any 
+> reports in system log or locking issues (lockdep enabled)
 
-Well, that was not intended.
+Right. I've recently debugged this due to issues in distributed
+beaconing (rather than moving in/out of range), but I guess it would be
+relatively simple to reproduce this with wmediumd, if that can be
+controlled dynamically?
 
--- 
-Sincerely yours,
-Mike.
+What kernel are you running? You could check if you have
+
+95697f9907bf ("mac80211: accept deauth frames in IBSS mode")
+4b08d1b6a994 ("mac80211: IBSS: send deauth when expiring inactive STAs")
+
+which might help somewhat, but don't fully cover the case of moving out
+of range.
+
+johannes
+
