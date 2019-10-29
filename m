@@ -2,150 +2,104 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B10CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49157CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E509C2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A56F2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="vYC9XHXm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733218AbfJ2JxO (ORCPT
+        id S2387419AbfJ2Jxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:53:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47811 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732998AbfJ2Jwr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:52:47 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iPOAq-0004R6-NG; Tue, 29 Oct 2019 10:52:24 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5943D1C0073;
-        Tue, 29 Oct 2019 10:52:21 +0100 (CET)
-Date:   Tue, 29 Oct 2019 09:52:21 -0000
-From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] context_tracking: Rename
- context_tracking_is_cpu_enabled() to context_tracking_enabled_this_cpu()
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191016025700.31277-7-frederic@kernel.org>
-References: <20191016025700.31277-7-frederic@kernel.org>
-MIME-Version: 1.0
-Message-ID: <157234274107.29376.11215352275412049465.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 29 Oct 2019 05:53:37 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:4802 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733196AbfJ2JxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:53:13 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 472RjM0wwlz9tysl;
+        Tue, 29 Oct 2019 10:53:11 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=vYC9XHXm; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id JGh0JQub58ey; Tue, 29 Oct 2019 10:53:11 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 472RjL6spdz9tysj;
+        Tue, 29 Oct 2019 10:53:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1572342791; bh=xWV6oWfFLWcIyU80fN4O23Nj6FAqGh/qPC9Al+Nw1Uc=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=vYC9XHXmPZrA3UkXsOOOpZe4CFgLCZ6Rq/2+3JJxBX7hldNMzBACB7+orHvaC8p/A
+         vLksRlPeLB7BksI3DdDTVAbMfh8eWnwZFj+ncyFMMD2WD7sWBfMFn5rzSAXO6ILX/B
+         unAWUsJIwo9IJCTgkLewkzuIcSzNO8RYuXeDKZXk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F11DF8B84E;
+        Tue, 29 Oct 2019 10:53:11 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id u8IokpS-Zt5O; Tue, 29 Oct 2019 10:53:11 +0100 (CET)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B10468B755;
+        Tue, 29 Oct 2019 10:53:11 +0100 (CET)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 7C5866B6FD; Tue, 29 Oct 2019 09:53:11 +0000 (UTC)
+Message-Id: <9ce0a935385af6ecb3325961d4894b16627ec1ae.1572342582.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1572342582.git.christophe.leroy@c-s.fr>
+References: <cover.1572342582.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3 6/8] powerpc/vdso32: use LOAD_REG_IMMEDIATE()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 29 Oct 2019 09:53:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+Use LOAD_REG_IMMEDIATE() to load registers with immediate value.
 
-Commit-ID:     84e0dacd0c347e9ee2531052013babd84683245f
-Gitweb:        https://git.kernel.org/tip/84e0dacd0c347e9ee2531052013babd84683245f
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Wed, 16 Oct 2019 04:56:52 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 29 Oct 2019 10:01:12 +01:00
-
-context_tracking: Rename context_tracking_is_cpu_enabled() to context_tracking_enabled_this_cpu()
-
-Standardize the naming on top of the context_tracking_enabled_*() base.
-Also make it clear we are checking the context tracking state of the
-*current* CPU with this function. We'll need to add an API to check that
-state on remote CPUs as well, so we must disambiguate the naming.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J . Wysocki <rjw@rjwysocki.net>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Link: https://lkml.kernel.org/r/20191016025700.31277-7-frederic@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- include/linux/context_tracking.h       | 2 +-
- include/linux/context_tracking_state.h | 4 ++--
- include/linux/vtime.h                  | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/vdso32/gettimeofday.S | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/context_tracking.h b/include/linux/context_tracking.h
-index f1601ba..c9065ad 100644
---- a/include/linux/context_tracking.h
-+++ b/include/linux/context_tracking.h
-@@ -118,7 +118,7 @@ static inline void guest_enter_irqoff(void)
- 	 * one time slice). Lets treat guest mode as quiescent state, just like
- 	 * we do with user-mode execution.
- 	 */
--	if (!context_tracking_cpu_is_enabled())
-+	if (!context_tracking_enabled_this_cpu())
- 		rcu_virt_note_context_switch(smp_processor_id());
- }
- 
-diff --git a/include/linux/context_tracking_state.h b/include/linux/context_tracking_state.h
-index 91250bd..08f125f 100644
---- a/include/linux/context_tracking_state.h
-+++ b/include/linux/context_tracking_state.h
-@@ -31,7 +31,7 @@ static inline bool context_tracking_enabled(void)
- 	return static_branch_unlikely(&context_tracking_key);
- }
- 
--static inline bool context_tracking_cpu_is_enabled(void)
-+static inline bool context_tracking_enabled_this_cpu(void)
- {
- 	return __this_cpu_read(context_tracking.active);
- }
-@@ -43,7 +43,7 @@ static inline bool context_tracking_in_user(void)
- #else
- static inline bool context_tracking_in_user(void) { return false; }
- static inline bool context_tracking_enabled(void) { return false; }
--static inline bool context_tracking_cpu_is_enabled(void) { return false; }
-+static inline bool context_tracking_enabled_this_cpu(void) { return false; }
- #endif /* CONFIG_CONTEXT_TRACKING */
- 
- #endif
-diff --git a/include/linux/vtime.h b/include/linux/vtime.h
-index 0fc7f11..54e9151 100644
---- a/include/linux/vtime.h
-+++ b/include/linux/vtime.h
-@@ -34,7 +34,7 @@ static inline bool vtime_accounting_enabled(void)
- static inline bool vtime_accounting_cpu_enabled(void)
- {
- 	if (vtime_accounting_enabled()) {
--		if (context_tracking_cpu_is_enabled())
-+		if (context_tracking_enabled_this_cpu())
- 			return true;
- 	}
- 
+diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+index 9867c7b9a25a..ff431482739c 100644
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -39,8 +39,7 @@ V_FUNCTION_BEGIN(__kernel_gettimeofday)
+ 	get_datapage	r9, r0
+ 	cmplwi	r10,0			/* check if tv is NULL */
+ 	beq	3f
+-	lis	r7,1000000@ha		/* load up USEC_PER_SEC */
+-	addi	r7,r7,1000000@l		/* so we get microseconds in r4 */
++	LOAD_REG_IMMEDIATE(r7, 1000000)	/* load up USEC_PER_SEC */
+ 	bl	__do_get_tspec@local	/* get sec/usec from tb & kernel */
+ 	stw	r3,TVAL32_TV_SEC(r10)
+ 	stw	r4,TVAL32_TV_USEC(r10)
+@@ -83,8 +82,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+   .cfi_register lr,r12
+ 	mr	r11,r4			/* r11 saves tp */
+ 	get_datapage	r9, r0
+-	lis	r7,NSEC_PER_SEC@h	/* want nanoseconds */
+-	ori	r7,r7,NSEC_PER_SEC@l
++	LOAD_REG_IMMEDIATE(r7, NSEC_PER_SEC)	/* load up NSEC_PER_SEC */
+ 	beq	cr5, .Lcoarse_clocks
+ .Lprecise_clocks:
+ 	bl	__do_get_tspec@local	/* get sec/nsec from tb & kernel */
+-- 
+2.13.3
+
