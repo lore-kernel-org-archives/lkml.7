@@ -2,127 +2,492 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 691ABCA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C15CA9EC2
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E42E20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC08020862
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LyqeUSga"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qQ8S4s9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfJ2HrL (ORCPT
+        id S1727608AbfJ2Hri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:47:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34527 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbfJ2HrK (ORCPT
+        Tue, 29 Oct 2019 03:47:38 -0400
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:46079 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfJ2Hri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:47:10 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v3so1355900wmh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 00:47:08 -0700 (PDT)
+        Tue, 29 Oct 2019 03:47:38 -0400
+Received: by mail-yw1-f74.google.com with SMTP id o204so9292091ywc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 00:47:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QL/t4s8oYyoEwjRvdWwn1+QXeN2oYFTHoVrFWP/brZc=;
-        b=LyqeUSga6k71OeNBPvq+4QehX6Y8Ls6aPEN7SbV01MeUAl2yuW/kMBBMiXOqRf1Mw8
-         atxzwUfggK4xFAVXM56mnRmXWvdqIbP5WaMng2GM6onoKwcQgi96aTWv0ReK0/8cYYZX
-         7Up+UbiMgTR+0dDale5j+LabelruOC9Cl1hjhL7/E7Hr7o+jbcIpAYFE5mjJtU5mlu7+
-         F/YiS0Zz7M1My2dSS45Nxr+RqwzJ9SOnBOEWpUAOmMHiN2QG2g/c5npaFbC4QN7h4gkk
-         A6xyFPHdS3DdDp9OTgqrgXbf5gdjeYk4TVtqNVm/7K3DbgqXPjwIiWLT1Hfw/NKmw8Cc
-         pQcg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=te3ydNPIn3gpqeEynYVfKMFBy5fG2M4vm4RpgzYYoOE=;
+        b=qQ8S4s9GHbjDxh9bFClKW2j19PNIrwNu6qDsNAEDiVScGSGL2Ql0lIE+YGxu/Xq7q2
+         f82pDRHfq/Q0+MQjZPuse53YR/jlf10Jza3NK5YZWGdbpoatnHwM2ep6k1uFl8Eox8Ay
+         4wE0+3eepIdt+xU5dCPLmj28NqKu2fGXPEZbhd0i2qSYob7Gdojdp5MMReY+S69e4xvp
+         zvCPNhorzL24qb6LBHLwqKeEFFxNDiAFKc3WryhKKYH9DPYv9aTfyNFmLrEFWL5MDbNK
+         bMV0DA7Ak/Uq0y/pnWZcWxM0xfRSxmmDnPtKVYjUH6nl4sH226NjX6+FG0AUSFrF6em/
+         Osew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QL/t4s8oYyoEwjRvdWwn1+QXeN2oYFTHoVrFWP/brZc=;
-        b=PZ5FOwJyAysUcbKZQCOtCemXiIG6CRissjtz9eXOzcR+qZOGG3hW/lWo7Dy8pxyJri
-         Wdy4RALEKwXlcN7wtVbE+RxmVn+zCxwwYRPnSmceYM77pBYG/BnYmh/VOCfhj//Wuy+T
-         PqIhM7+VJ7UMVyWkcjnDw8Rl9tOvJf82Ygpc8ipbHuIiDK6dmgCnhlsfLdp4ASC5PdDp
-         jSre9M8TgX+upAykdH7X718GXeqWyrfSTcBpuDkSyZONIvpE8LgSwTkl4yKegSToE9qJ
-         R3+oInWgr1vyEU0MrK7jsD30j57XePN4EZlpn9BJ2w35tOnAPgXO9frN0MASk1FQg3bZ
-         rU0A==
-X-Gm-Message-State: APjAAAWa9GrXPBLufICt4pQW+AQ4KqhL7TaiGvvGIZKxg5iynJ8aV0Hk
-        nlijPvvEBN2jaB4L0nsucVRxSpKokzTgGz/RjIPlkw==
-X-Google-Smtp-Source: APXvYqwu+5kNM2vsauI6RJYqxigG/JZTD84blgv9rKnBvwKkfn+X4kP0j+KgIxfY/to+sAtOuw95AbutLfqR2x5m6ZM=
-X-Received: by 2002:a7b:c925:: with SMTP id h5mr2413014wml.61.1572335228112;
- Tue, 29 Oct 2019 00:47:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191029060432.1208859-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20191029060432.1208859-1-bjorn.andersson@linaro.org>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 29 Oct 2019 08:46:56 +0100
-Message-ID: <CAKv+Gu--4h4gup97XkBz2P5SMXyOay5e5OoE1RYsnodyx==CfQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: cpufeature: Enable Qualcomm erratas
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Mark Brown <broonie@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=te3ydNPIn3gpqeEynYVfKMFBy5fG2M4vm4RpgzYYoOE=;
+        b=bFjgWefZ1ZLVX3gonATkKcxy2mNDtJ+d6bIQQScTLcLXAs5TCY2CbaonmabEt7Whu6
+         /yarU5oZGRsdb+8IfNmNZ3ZHwvYnOCkOyFVXNtEPrV2Jyj2HN9UI/Kx2qlxlMb1iaVoe
+         bsK6fHPSgwTBya6YzvztaOqUKf4dlTVyr4SIrxfem/6OWwesngq6VQEBE8cA7mR4pBqV
+         ZJxKPX23Da+43ECuDjiseSai6JovAHzyf6fVLsRcOnW5VYdREY9RpAOZEr6QeqR1aLrE
+         8iROJDgY/6gaT8bETYI8TktX6OR2UQ8euuPePHvdrAxdXBnJLTzU7GxZmFxWrsElWaAD
+         2u0Q==
+X-Gm-Message-State: APjAAAWzhxyNSZzMGbgdlabingS9zXf3lB1tAI5gfKLneYaxNozg1kFi
+        WfuVio0mLtdXAnmohoAMzkQW0lv0iFCvSQ==
+X-Google-Smtp-Source: APXvYqz//FJnOPc5ir+3KNgo2VmyqKUAkmCK/bwzU2HFq2SCF/LQe/yB7tCCy8bZM4eY9KE5vvZn7PHbnOlkjQ==
+X-Received: by 2002:a25:9d92:: with SMTP id v18mr16766238ybp.176.1572335256680;
+ Tue, 29 Oct 2019 00:47:36 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 15:47:28 +0800
+Message-Id: <20191029074728.171082-1-robinhsu@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: [PATCH 1/2] libf2fs_io: Add user-space cache
+From:   Robin Hsu <robinhsu@google.com>
+To:     jaegeuk@kernel.org, yuchao0@huawei.com,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Cc:     huangrandall@google.com, robinhsu@google.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 at 07:04, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> With the introduction of 'cce360b54ce6 ("arm64: capabilities: Filter the
-> entries based on a given mask")' the Qualcomm erratas are no long
-> applied.
->
-> The result of not applying errata 1003 is that MSM8996 runs into various
-> RCU stalls and fails to boot most of the times.
->
-> Give both 1003 and 1009 a "type" to ensure they are not filtered out in
-> update_cpu_capabilities().
->
-> Fixes: cce360b54ce6 ("arm64: capabilities: Filter the entries based on a given mask")
-> Cc: stable@vger.kernel.org
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Suggested-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Implemented cache options in F2FS configuration 'c':
+	* use c.cache_config.num_cache_entry to set the number of
+	  cache entries (in block), minimum 1024, or 0 to disable cache.
+	* use c.cache_config.max_hash_collision to set maximum hash
+	  collision (max 16).
+	* use c.cache_config.dbg_en to enable printing of debug messages.
 
-FYI the offending commit is now queued up for 4.14 as well.
+Signed-off-by: Robin Hsu <robinhsu@google.com>
+---
+ include/f2fs_fs.h |  20 +++
+ lib/libf2fs_io.c  | 317 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 337 insertions(+)
 
-> ---
->  arch/arm64/kernel/cpu_errata.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-> index df9465120e2f..cdd8df033536 100644
-> --- a/arch/arm64/kernel/cpu_errata.c
-> +++ b/arch/arm64/kernel/cpu_errata.c
-> @@ -780,6 +780,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
->         {
->                 .desc = "Qualcomm Technologies Falkor/Kryo erratum 1003",
->                 .capability = ARM64_WORKAROUND_QCOM_FALKOR_E1003,
-> +               .type = ARM64_CPUCAP_SCOPE_LOCAL_CPU,
->                 .matches = cpucap_multi_entry_cap_matches,
->                 .match_list = qcom_erratum_1003_list,
->         },
-> @@ -788,6 +789,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
->         {
->                 .desc = "Qualcomm erratum 1009, ARM erratum 1286807",
->                 .capability = ARM64_WORKAROUND_REPEAT_TLBI,
-> +               .type = ARM64_CPUCAP_SCOPE_LOCAL_CPU,
->                 ERRATA_MIDR_RANGE_LIST(arm64_repeat_tlbi_cpus),
->         },
->  #endif
-> --
-> 2.23.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/include/f2fs_fs.h b/include/f2fs_fs.h
+index 84f3f3e..a386e61 100644
+--- a/include/f2fs_fs.h
++++ b/include/f2fs_fs.h
+@@ -3,6 +3,8 @@
+  *
+  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+  *             http://www.samsung.com/
++ * Copyright (c) 2019 Google Inc.
++ *             http://www.google.com/
+  *
+  * Dual licensed under the GPL or LGPL version 2 licenses.
+  *
+@@ -329,6 +331,18 @@ struct device_info {
+ 	size_t zone_blocks;
+ };
+ 
++typedef off_t	off64_t;
++
++typedef struct {
++	/* Value 0 means no cache, minimum 1024 */
++	off64_t num_cache_entry;
++
++	/* Value 0 means always overwrite (no collision allowed). maximum 16 */
++	unsigned max_hash_collision;
++
++	bool dbg_en;
++} dev_cache_config_t;
++
+ struct f2fs_configuration {
+ 	u_int32_t reserved_segments;
+ 	u_int32_t new_reserved_segments;
+@@ -419,6 +433,9 @@ struct f2fs_configuration {
+ 
+ 	/* precomputed fs UUID checksum for seeding other checksums */
+ 	u_int32_t chksum_seed;
++
++	/* cache parameters */
++	dev_cache_config_t cache_config;
+ };
+ 
+ #ifdef CONFIG_64BIT
+@@ -1185,6 +1202,9 @@ extern int f2fs_init_sparse_file(void);
+ extern int f2fs_finalize_device(void);
+ extern int f2fs_fsync_device(void);
+ 
++extern void dcache_init(void);
++extern void dcache_release(void);
++
+ extern int dev_read(void *, __u64, size_t);
+ #ifdef POSIX_FADV_WILLNEED
+ extern int dev_readahead(__u64, size_t);
+diff --git a/lib/libf2fs_io.c b/lib/libf2fs_io.c
+index 4d0ea0d..4888b6e 100644
+--- a/lib/libf2fs_io.c
++++ b/lib/libf2fs_io.c
+@@ -3,6 +3,8 @@
+  *
+  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+  *             http://www.samsung.com/
++ * Copyright (c) 2019 Google Inc.
++ *             http://www.google.com/
+  *
+  * Dual licensed under the GPL or LGPL version 2 licenses.
+  */
+@@ -64,6 +66,309 @@ static inline off64_t lseek64(int fd, __u64 offset, int set)
+ }
+ #endif
+ 
++/* ---------- dev_cache, Least Used First (LUF) policy  ------------------- */
++/*
++ * Least used block will be the first victim to be replaced when max hash
++ * collision exceeds
++ */
++static bool *dcache_valid; /* is the cached block valid? */
++static off64_t  *dcache_blk; /* which block it cached */
++static uint64_t *dcache_lastused; /* last used ticks for cache entries */
++static char *dcache_buf; /* cached block data */
++static uint64_t dcache_usetick; /* current use tick */
++
++static int64_t dcache_raccess;
++static int64_t dcache_rhit;
++static int64_t dcache_rmiss;
++static int64_t dcache_rreplace;
++
++static bool dcache_exit_registered = false;
++
++/*
++ *  Shadow config:
++ *
++ *  Active set of the configurations.
++ *  Global configuration 'dcache_config' will be transferred here when
++ *  when dcache_init() is called
++ */
++static dev_cache_config_t dcache_config = {0, 16, 1};
++static bool dcache_initialized = false;
++
++#define MIN_NUM_CACHE_ENTRY  ((off64_t)1024)
++#define MAX_MAX_HASH_COLLISION  16
++
++static int dcache_relocate_offset0[] = {
++	20, -20, 40, -40, 80, -80, 160, -160,
++	320, -320, 640, -640, 1280, -1280, 2560, -2560,
++};
++static int dcache_relocate_offset[16];
++
++static void dcache_print_statistics(void)
++{
++	off64_t i;
++	off64_t useCnt;
++
++	/* Number of used cache entries */
++	useCnt = 0;
++	for (i = 0; i < dcache_config.num_cache_entry; i++)
++		if (dcache_valid[i])
++			++useCnt;
++
++	/*
++	 *  c: number of cache entries
++	 *  u: used entries
++	 *  RA: number of read access blocks
++	 *  CH: cache hit
++	 *  CM: cache miss
++	 *  Repl: read cache replaced
++	 */
++	printf ("\nc, u, RA, CH, CM, Repl=\n");
++	printf ("%lu %lu %ld %ld %ld %ld\n",
++			dcache_config.num_cache_entry,
++			useCnt,
++			dcache_raccess,
++			dcache_rhit,
++			dcache_rmiss,
++			dcache_rreplace);
++}
++
++void dcache_release(void)
++{
++	if (!dcache_initialized)
++		return;
++
++	dcache_initialized = false;
++
++	if (c.cache_config.dbg_en)
++		dcache_print_statistics();
++
++	if (dcache_blk != NULL)
++		free(dcache_blk);
++	if (dcache_lastused != NULL)
++		free(dcache_lastused);
++	if (dcache_buf != NULL)
++		free(dcache_buf);
++	if (dcache_valid != NULL)
++		free(dcache_valid);
++	dcache_config.num_cache_entry = 0;
++	dcache_blk = NULL;
++	dcache_lastused = NULL;
++	dcache_buf = NULL;
++	dcache_valid = NULL;
++}
++
++// return 0 for success, error code for failure.
++static int dcache_alloc_all(int n)
++{
++	if ((dcache_blk = (off64_t *) malloc(sizeof(off64_t) * n)) == NULL
++		|| (dcache_lastused = (uint64_t *)
++				malloc(sizeof(uint64_t) * n)) == NULL
++		|| (dcache_buf = (char *) malloc (F2FS_BLKSIZE * n)) == NULL
++		|| (dcache_valid = (bool *) malloc(sizeof(bool) * n)) == NULL)
++	{
++		dcache_release();
++		return -1;
++	}
++	dcache_config.num_cache_entry = n;
++	return 0;
++}
++
++static void dcache_relocate_init(void)
++{
++	int i;
++	int n0 = (sizeof(dcache_relocate_offset0)
++			/ sizeof(dcache_relocate_offset0[0]));
++	int n = (sizeof(dcache_relocate_offset)
++			/ sizeof(dcache_relocate_offset[0]));
++
++	ASSERT(n == n0);
++	for (i = 0; i < n && i < dcache_config.max_hash_collision; i++) {
++		if (abs(dcache_relocate_offset0[i])
++				> dcache_config.num_cache_entry / 2) {
++			dcache_config.max_hash_collision = i;
++			break;
++		}
++		dcache_relocate_offset[i] =
++				dcache_config.num_cache_entry
++				+ dcache_relocate_offset0[i];
++	}
++}
++
++void dcache_init(void)
++{
++	off64_t n;
++
++	if (c.cache_config.num_cache_entry == 0)
++		return;
++
++	/* release previous cache init, if any */
++	dcache_release();
++
++	dcache_blk = NULL;
++	dcache_lastused = NULL;
++	dcache_buf = NULL;
++	dcache_valid = NULL;
++
++	dcache_config = c.cache_config;
++
++	n = max(MIN_NUM_CACHE_ENTRY, dcache_config.num_cache_entry);
++
++	/* halve alloc size until alloc succeed, or min cache reached */
++	while (dcache_alloc_all(n) != 0 && n !=  MIN_NUM_CACHE_ENTRY)
++		n = max(MIN_NUM_CACHE_ENTRY, n/2);
++
++	/* must be the last: data dependent on num_cache_entry */
++	dcache_relocate_init();
++	dcache_initialized = true;
++
++	if (!dcache_exit_registered) {
++		dcache_exit_registered = true;
++		atexit(dcache_release); /* auto release */
++	}
++}
++
++static inline char *dcache_addr(off64_t entry)
++{
++	return dcache_buf + F2FS_BLKSIZE * entry;
++}
++
++/* relocate on (n+1)-th collision */
++static inline off64_t dcache_relocate(off64_t entry, int n)
++{
++	return (entry + dcache_relocate_offset[n]) %
++			dcache_config.num_cache_entry;
++}
++
++static off64_t dcache_find(off64_t blk)
++{
++	register off64_t n = dcache_config.num_cache_entry;
++	register unsigned m = dcache_config.max_hash_collision;
++	off64_t entry, least_used, target;
++	unsigned try;
++
++	target = least_used = entry = blk % n;
++
++	for (try = 0; try < m; try++) {
++		if (!dcache_valid[target] || dcache_blk[target] == blk)
++			return target;  /* found target or empty cache slot */
++		if (dcache_lastused[target] < dcache_lastused[least_used])
++			least_used = target;
++		target = dcache_relocate(entry, try); /* next target */
++	}
++	return least_used;  /* max search reached, return least used slot */
++}
++
++/* Physical read into cache */
++static int dcache_io_read(int fd, off64_t entry, off64_t offset, off64_t blk)
++{
++	if (lseek64(fd, (off64_t)offset, SEEK_SET) < 0) {
++		MSG(0, "\n lseek64 fail.\n");
++		return -1;
++	}
++	if (read(fd, dcache_buf + entry * F2FS_BLKSIZE, F2FS_BLKSIZE) < 0) {
++		MSG(0, "\n read() fail.\n");
++		return -1;
++	}
++	dcache_lastused[entry] = ++dcache_usetick;
++	dcache_valid[entry] = true;
++	dcache_blk[entry] = blk;
++	return 0;
++}
++
++/*
++ *  - Note: Read/Write are not symmetric:
++ *       For read, we need to do it block by block, due to the cache nature:
++ *           some blocks may be cached, and others don't.
++ *       For write, since we always do a write-thru, we can join all writes into one,
++ *       and write it once at the caller.  This function updates the cache for write, but
++ *       not the do a physical write.  The caller is responsible for the physical write.
++ *  - Note: We concentrate read/write together, due to the fact of similar structure to find
++ *          the relevant cache entries
++ *  - Return values:
++ *       0: success
++ *       1: cache not available (uninitialized)
++ *      -1: error
++ */
++static int dcache_update_rw(int fd, void *buf, off64_t offset,
++		size_t byte_count, bool is_write)
++{
++	off64_t blk;
++	int32_t addr_in_blk;
++	off64_t start;
++
++	if (!dcache_initialized)
++		dcache_init(); /* auto initialize */
++
++	if (!dcache_initialized)
++		return 1; /* not available */
++
++	blk = offset / F2FS_BLKSIZE;
++	addr_in_blk = offset % F2FS_BLKSIZE;
++	start = blk * F2FS_BLKSIZE;
++
++	while (byte_count != 0) {
++		int32_t cur_size = min(byte_count,
++				(size_t)(F2FS_BLKSIZE - addr_in_blk));
++		off64_t entry = dcache_find(blk);
++
++		if (!is_write)
++			++dcache_raccess;
++
++		if (dcache_valid[entry] && dcache_blk[entry] == blk) {
++			/* cache hit */
++			if (is_write)  /* write: update cache */
++				memcpy(dcache_addr(entry) + addr_in_blk,
++					buf, cur_size);
++			else
++				++dcache_rhit;
++		} else {
++			/* cache miss */
++			if (!is_write) {
++				int err;
++				++dcache_rmiss;
++				if (dcache_valid[entry])
++					++dcache_rreplace;
++				/* read: physical I/O read into cache */
++				err = dcache_io_read(fd, entry, start, blk);
++				if (err)
++					return err;
++			}
++		}
++
++		/* read: copy data from cache */
++		/* write: nothing to do, since we don't do physical write. */
++		if (!is_write)
++			memcpy(buf, dcache_addr(entry) + addr_in_blk,
++				cur_size);
++
++		/* next block */
++		++blk;
++		buf += cur_size;
++		offset += F2FS_BLKSIZE;
++		byte_count -= cur_size;
++		addr_in_blk = 0;
++	}
++	return 0;
++}
++
++/*
++ * dcache_update_cache() just update cache, won't do physical I/O.
++ * Thus even no error, we need normal non-cache I/O for actual write
++ *
++ * return value: 1: cache not available
++ *               0: success, -1: I/O error
++ */
++inline int dcache_update_cache(int fd, void *buf, off64_t offset, size_t count)
++{
++	return dcache_update_rw(fd, buf, offset, count, true);
++}
++
++/* handles read into cache + read into buffer  */
++inline int dcache_read(int fd, void *buf, off64_t offset, size_t count)
++{
++	return dcache_update_rw(fd, buf, offset, count, false);
++}
++
+ /*
+  * IO interfaces
+  */
+@@ -185,6 +490,7 @@ static int sparse_write_zeroed_blk(__u64 block, int count) { return 0; }
+ int dev_read(void *buf, __u64 offset, size_t len)
+ {
+ 	int fd;
++	int err;
+ 
+ 	if (c.sparse_mode)
+ 		return sparse_read_blk(offset / F2FS_BLKSIZE,
+@@ -194,6 +500,11 @@ int dev_read(void *buf, __u64 offset, size_t len)
+ 	if (fd < 0)
+ 		return fd;
+ 
++	/* err = 1: cache not available, fall back to non-cache R/W */
++	/* err = 0: success, err=-1: I/O error */
++	err = dcache_read(fd, buf, (off64_t)offset, len);
++	if (err <= 0)
++		return err;
+ 	if (lseek64(fd, (off64_t)offset, SEEK_SET) < 0)
+ 		return -1;
+ 	if (read(fd, buf, len) < 0)
+@@ -233,6 +544,12 @@ int dev_write(void *buf, __u64 offset, size_t len)
+ 	if (fd < 0)
+ 		return fd;
+ 
++	/*
++	 * dcache_update_cache() just update cache, won't do I/O.
++	 * Thus even no error, we need normal non-cache I/O for actual write
++	 */
++	if (dcache_update_cache(fd, buf, (off64_t)offset, len) < 0)
++		return -1;
+ 	if (lseek64(fd, (off64_t)offset, SEEK_SET) < 0)
+ 		return -1;
+ 	if (write(fd, buf, len) < 0)
+-- 
+2.24.0.rc0.303.g954a862665-goog
+
