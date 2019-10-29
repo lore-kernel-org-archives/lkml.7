@@ -4,171 +4,150 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8175CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01B9CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D13621479
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A329B2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="VYUWPhKL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="QeaydcZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732804AbfJ2MSP (ORCPT
+        id S1733227AbfJ2MTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:18:15 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:33640 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728359AbfJ2MSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:18:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZZ+5u4A+qnpHl/68OvUYQcD2pzD+zlilhEVKLONYfvU=; b=VYUWPhKLnHoCNMor4xDtDak84
-        Gc/1BVOIz1agTd2AssvOHtWX1qyIRf20wQPlrnniW8E8/lXx1TpWSe0umZOi1PWcr/vMzEdA4h7aZ
-        L5s9KOne9OZruFeFIyKU0kubi9SkXw4KrOU+oV5c6JX4PoCD1njo33Wwr3XZgoc8Znvy4=;
-Received: from [2a02:790:ff:919:7ee9:d3ff:fe1f:a246] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iPQRl-0007Aq-Qi; Tue, 29 Oct 2019 13:18:02 +0100
-Received: from [::1] (helo=localhost)
-        by eeepc with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iPQRj-0000pw-SV; Tue, 29 Oct 2019 13:17:59 +0100
-Date:   Tue, 29 Oct 2019 13:16:26 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: backlight: lm3630a: add
- enable_gpios
-Message-ID: <20191029131626.2a18d27e@kemnade.info>
-In-Reply-To: <CAL_Jsq+zDYifFntHMqmqU4qmsj7_nafN+W7a0Vh+HdwGvVj5TA@mail.gmail.com>
-References: <20190912213257.24147-1-andreas@kemnade.info>
-        <20190912213257.24147-2-andreas@kemnade.info>
-        <CAL_Jsq+zDYifFntHMqmqU4qmsj7_nafN+W7a0Vh+HdwGvVj5TA@mail.gmail.com>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        Tue, 29 Oct 2019 08:19:24 -0400
+Received: from smtp.domeneshop.no ([194.63.252.55]:52805 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ2MTY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 08:19:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+        ; s=ds201810; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=czvZRHgSb18GWkRiGLBe0qR2LanKlORlrSIu5TSo2LM=; b=QeaydcZ8J1y49IEo2JeOU7uLs3
+        HK5zeQjFjHAPAe9UECT0lHwszfoOA+qqBKNpp5nHJblYKle+HYSJwE+4LOSJ2qDqb2irb1351oimI
+        c02a7UBNfuRIaSdNKjDgTxDe4UPIJXS9b2JgeP8QYf1Cd6YWgoTQZr5W68qjrmxXrOs4jyUXBy6XU
+        iwE9jQkiNmJRLQSjeSE5TIekOGxCjZMwnRUegUIjV0bcRY1Hld7711irLipee8YRgZZEADPbl0FyU
+        nRrcH+zWsPZm/BBEWfw5dh+vhHIfyBC66Mb1ch57UUackMxYv+25HBWemXTWxSCWg1m52ByQzT2k5
+        pYLHMRJw==;
+Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:50959 helo=[192.168.10.177])
+        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <noralf@tronnes.org>)
+        id 1iPQT3-0001EA-F9; Tue, 29 Oct 2019 13:19:21 +0100
+Subject: Re: [PATCH] drm/tinydrm: Fix memroy leak in hx8357d_probe
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, kjlu@umn.edu,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        emamd001@umn.edu, smccaman@umn.edu
+References: <20191027173234.6449-1-navid.emamdoost@gmail.com>
+From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Message-ID: <8c297837-9270-0282-b8e7-d931e859adec@tronnes.org>
+Date:   Tue, 29 Oct 2019 13:19:14 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/DGHuyPjjOiEtDx6AE.MMu8p"; protocol="application/pgp-signature"
+In-Reply-To: <20191027173234.6449-1-navid.emamdoost@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DGHuyPjjOiEtDx6AE.MMu8p
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Navid,
 
-Hi,
+Den 27.10.2019 18.32, skrev Navid Emamdoost:
+> In the implementation of hx8357d_probe() the allocated memory for dbidev
+> is leaked when an error happens. Release dbidev if any of the  following
+> calls fail: devm_gpiod_get(), devm_of_find_backlight(),
+> mipi_dbi_spi_init(), mipi_dbi_init(), drm_dev_register().
+> 
+> Fixes: f300c86e33a6 ("drm: Add an hx8367d tinydrm driver.")
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  drivers/gpu/drm/tiny/hx8357d.c | 25 +++++++++++++++----------
+>  1 file changed, 15 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tiny/hx8357d.c b/drivers/gpu/drm/tiny/hx8357d.c
+> index 9af8ff84974f..da5ec944f47e 100644
+> --- a/drivers/gpu/drm/tiny/hx8357d.c
+> +++ b/drivers/gpu/drm/tiny/hx8357d.c
+> @@ -232,44 +232,49 @@ static int hx8357d_probe(struct spi_device *spi)
+>  
+>  	drm = &dbidev->drm;
+>  	ret = devm_drm_dev_init(dev, drm, &hx8357d_driver);
 
-On Mon, 28 Oct 2019 18:25:56 -0500
-Rob Herring <robh+dt@kernel.org> wrote:
+This is a device managed function that releases its resource(s) on
+device:driver unbind like the other devm_ functions (it can't free
+dbidev if it fails hence the kfree in the error path here).
 
-> On Thu, Sep 12, 2019 at 4:33 PM Andreas Kemnade <andreas@kemnade.info> wr=
-ote:
-> >
-> > add enable-gpios to describe HWEN pin
-> >
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > Acked-by: Daniel Thompson <daniel.thompson@linaro.org> =20
->=20
-> This breaking linux-next now...
->=20
-oops, sorry.=20
+This is the release call path:
 
-> > ---
-> > changes in v2: added example
-> > changes in v3: added Acked-by
-> > changes in v4: moved enable-gpios to the right position
-> >   in the example
-> >  .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-b=
-acklight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-ba=
-cklight.yaml
-> > index dc129d9a329e..c8470628fe02 100644
-> > --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backligh=
-t.yaml
-> > +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backligh=
-t.yaml
-> > @@ -29,6 +29,10 @@ properties:
-> >    '#size-cells':
-> >      const: 0
-> >
-> > +  enable-gpios:
-> > +    description: GPIO to use to enable/disable the backlight (HWEN pin=
-).
-> > +    maxItems: 1
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -96,6 +100,7 @@ examples:
-> >          led-controller@38 {
-> >                  compatible =3D "ti,lm3630a";
-> >                  reg =3D <0x38>;
-> > +                enable-gpios =3D <&gpio2 5 GPIO_ACTIVE_HIGH>; =20
->=20
-> Error: Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight=
-.example.dts:24.46-47
-> syntax error
-> FATAL ERROR: Unable to parse input tree
-> make[1]: *** [Documentation/devicetree/bindings/leds/backlight/lm3630a-ba=
-cklight.example.dt.yaml]
-> Error 1
-> scripts/Makefile.lib:314: recipe for target
-> 'Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.examp=
-le.dt.yaml'
-> failed
->=20
-> You need the include for the define.
+devm_drm_dev_init_release -> drm_dev_put -> drm_dev_release ->
+dev->driver->release : mipi_dbi_release.
 
-gpio/gpio.h is missing.
-Yes, was not aware of that these things will be compiled and the automatic
-check did not work on my system at all. So I decided not to fix that for ju=
-st
-this simple thing which was a not so good idea.
-Will send a fixup.
+Noralf.
 
-Regards,
-Andreas
-
---Sig_/DGHuyPjjOiEtDx6AE.MMu8p
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl24LZoACgkQl4jFM1s/
-ye/XiA/8DVVyxxx109wsfNmna3iGryDIzfVOZVxZKmh2SUGenfnGGggrA2vM9QJx
-GRYg0Wi7kkXEW2EmYrgI0AddYBxTsuEI82ANE4BO6umA+1nCSedjttxZ2OptyZCH
-sZqcV+nKvtROpTwSWOdG4cYH+3vpL7Is9meLNlyFbiDUjznJ67K0tgXuOCE6Iq69
-xvw1xhnaomCXazrimAlht1JNDQc6Rgma7FT9AUSM9ngEW7tbfxSVhuYUCKaMlN17
-M6DhV9PePIf1SZVelYIeOT8pkBHxpcb+Pza61FpQYrXF2iRwsmfMtzNx8LOiCobp
-5qnkyz2YIRZ5CIz7gc5EkZim+pIPCAJekZz3HEWsS3ypkhw3pLabRBOekX2r57iO
-NwqStsPFM71+xZnElqULvQ5o331G3aCbJEFkCsG9sZp98qNN0yI0UYABVl+MIeqT
-euvtkNHzvntSBsqYUm7MjWW8uUiFxuS0eL+AIiXBOofvJ6nsvuQHyEDvHsMNec1R
-dokvq/TxLbKe81rZY1OBGT/UGzMKKGuwkH0BetpuJ0eOYZJ+nHCXA20JWr5fCoPS
-06G2W/MLRyTTuL7tGJ8Xa6RcKvj9pCxO+upE3eRGp02ZxyGefs68gHprOS8UiclL
-TMCcxD8d3k9LmR2e089kZwoA+9JhgUK33pCZBQwVVIBGuSxl1nY=
-=c3AX
------END PGP SIGNATURE-----
-
---Sig_/DGHuyPjjOiEtDx6AE.MMu8p--
+> -	if (ret) {
+> -		kfree(dbidev);
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		goto free_dbidev;
+>  
+>  	drm_mode_config_init(drm);
+>  
+>  	dc = devm_gpiod_get(dev, "dc", GPIOD_OUT_LOW);
+>  	if (IS_ERR(dc)) {
+>  		DRM_DEV_ERROR(dev, "Failed to get gpio 'dc'\n");
+> -		return PTR_ERR(dc);
+> +		ret = PTR_ERR(dc);
+> +		goto free_dbidev;
+>  	}
+>  
+>  	dbidev->backlight = devm_of_find_backlight(dev);
+> -	if (IS_ERR(dbidev->backlight))
+> -		return PTR_ERR(dbidev->backlight);
+> +	if (IS_ERR(dbidev->backlight)) {
+> +		ret = PTR_ERR(dbidev->backlight);
+> +		goto free_dbidev;
+> +	}
+>  
+>  	device_property_read_u32(dev, "rotation", &rotation);
+>  
+>  	ret = mipi_dbi_spi_init(spi, &dbidev->dbi, dc);
+>  	if (ret)
+> -		return ret;
+> +		goto free_dbidev;
+>  
+>  	ret = mipi_dbi_dev_init(dbidev, &hx8357d_pipe_funcs, &yx350hv15_mode, rotation);
+>  	if (ret)
+> -		return ret;
+> +		goto free_dbidev;
+>  
+>  	drm_mode_config_reset(drm);
+>  
+>  	ret = drm_dev_register(drm, 0);
+>  	if (ret)
+> -		return ret;
+> +		goto free_dbidev;
+>  
+>  	spi_set_drvdata(spi, drm);
+>  
+>  	drm_fbdev_generic_setup(drm, 0);
+>  
+>  	return 0;
+> +
+> +free_dbidev:
+> +	kfree(dbidev);
+> +	return ret;
+>  }
+>  
+>  static int hx8357d_remove(struct spi_device *spi)
+> 
