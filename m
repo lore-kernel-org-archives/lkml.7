@@ -2,155 +2,185 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBC3CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D924ACA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B3A20874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5BE2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:05:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="x7FieTAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfJ2J4v (ORCPT
+        id S1727219AbfJ2KFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:56:51 -0400
-Received: from mga17.intel.com ([192.55.52.151]:31715 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbfJ2J4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:56:50 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:56:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="374497156"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
-  by orsmga005.jf.intel.com with ESMTP; 29 Oct 2019 02:56:47 -0700
-Date:   Tue, 29 Oct 2019 17:57:38 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
-Message-ID: <20191029095738.GA7228@___>
-References: <5a7bc5da-d501-2750-90bf-545dd55f85fa@redhat.com>
- <20191024042155.GA21090@___>
- <d37529e1-5147-bbe5-cb9d-299bd6d4aa1a@redhat.com>
- <d4cc4f4e-2635-4041-2f68-cd043a97f25a@redhat.com>
- <20191024091839.GA17463@___>
- <fefc82a3-a137-bc03-e1c3-8de79b238080@redhat.com>
- <e7e239ba-2461-4f8d-7dd7-0f557ac7f4bf@redhat.com>
- <20191025080143-mutt-send-email-mst@kernel.org>
- <20191028015842.GA9005@___>
- <5e8a623d-9d91-607a-1f9e-7a7086ba9a68@redhat.com>
+        Tue, 29 Oct 2019 06:05:15 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38702 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ2KFP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 06:05:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dJCDVLdqkAr+W3Koo7ilDlkhVjSvDu2e8VbFMsJFDkk=; b=x7FieTAbbc3QQFQx9uIkfh5bn
+        8iBDuintK8a7REjxu9NMJX0iAZqf6RQD1aHDsBfihVCLX3iPL+gxMB1uKKAYG5cfpiSx6JAdPpVqJ
+        MEon+piWO9vW2xyPJfG9VTPCRVHzHVfEKDAX5Lf9uIaVnAzsYlHnCA/ghmZCqf5OeeFmm6L3kXFP8
+        UApr0iWTdzi19vRvUcyj2A5lCWDTIcmgzQPwcsLEWTgMVUi88V+PIlMc0iOiqWB1LtE30Pt/7cGg4
+        EZZmjfNLqKIqo0QWsQV5yBWszoByyhwUbUEiUsf8BcVniwrkpdi05wkysKR81pcFfUlT4HJBN52yC
+        F3QIde5kg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPONC-0001ax-J8; Tue, 29 Oct 2019 10:05:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1736330025A;
+        Tue, 29 Oct 2019 11:04:06 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BAE0420D7FEEA; Tue, 29 Oct 2019 11:05:06 +0100 (CET)
+Date:   Tue, 29 Oct 2019 11:05:06 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Scott Wood <swood@redhat.com>
+Subject: Re: [PATCH] timers/nohz: Update nohz load even if tick already
+ stopped
+Message-ID: <20191029100506.GJ4114@hirez.programming.kicks-ass.net>
+References: <20191028150716.22890-1-frederic@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5e8a623d-9d91-607a-1f9e-7a7086ba9a68@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191028150716.22890-1-frederic@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 11:50:49AM +0800, Jason Wang wrote:
-> On 2019/10/28 上午9:58, Tiwei Bie wrote:
-> > On Fri, Oct 25, 2019 at 08:16:26AM -0400, Michael S. Tsirkin wrote:
-> > > On Fri, Oct 25, 2019 at 05:54:55PM +0800, Jason Wang wrote:
-> > > > On 2019/10/24 下午6:42, Jason Wang wrote:
-> > > > > Yes.
-> > > > > 
-> > > > > 
-> > > > > >    And we should try to avoid
-> > > > > > putting ctrl vq and Rx/Tx vqs in the same DMA space to prevent
-> > > > > > guests having the chance to bypass the host (e.g. QEMU) to
-> > > > > > setup the backend accelerator directly.
-> > > > > 
-> > > > > That's really good point.  So when "vhost" type is created, parent
-> > > > > should assume addr of ctrl_vq is hva.
-> > > > > 
-> > > > > Thanks
-> > > > 
-> > > > This works for vhost but not virtio since there's no way for virtio kernel
-> > > > driver to differ ctrl_vq with the rest when doing DMA map. One possible
-> > > > solution is to provide DMA domain isolation between virtqueues. Then ctrl vq
-> > > > can use its dedicated DMA domain for the work.
-> > It might not be a bad idea to let the parent drivers distinguish
-> > between virtio-mdev mdevs and vhost-mdev mdevs in ctrl-vq handling
-> > by mdev's class id.
+On Mon, Oct 28, 2019 at 04:07:16PM +0100, Frederic Weisbecker wrote:
+> From: Scott Wood <swood@redhat.com>
 > 
+> The way loadavg is tracked during nohz only pays attention to the load
+> upon entering nohz. This can be particularly noticeable if nohz is
+> entered while non-idle, and then the cpu goes idle and stays that way for
+> a long time. We've had reports of a loadavg near 150 on a mostly idle
+> system.
 > 
-> Yes, that should work, I have something probable better, see below.
-> 
-> 
-> > 
-> > > > Anyway, this could be done in the future. We can have a version first that
-> > > > doesn't support ctrl_vq.
-> > +1, thanks
-> > 
-> > > > Thanks
-> > > Well no ctrl_vq implies either no offloads, or no XDP (since XDP needs
-> > > to disable offloads dynamically).
-> > > 
-> > >          if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS)
-> > >              && (virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_TSO4) ||
-> > >                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_TSO6) ||
-> > >                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_ECN) ||
-> > >                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_UFO) ||
-> > >                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_CSUM))) {
-> > >                  NL_SET_ERR_MSG_MOD(extack, "Can't set XDP while host is implementing LRO/CSUM, disable LRO/CSUM first");
-> > >                  return -EOPNOTSUPP;
-> > >          }
-> > > 
-> > > neither is very attractive.
-> > > 
-> > > So yes ok just for development but we do need to figure out how it will
-> > > work down the road in production.
-> > Totally agree.
-> > 
-> > > So really this specific virtio net device does not support control vq,
-> > > instead it supports a different transport specific way to send commands
-> > > to device.
-> > > 
-> > > Some kind of extension to the transport? Ideas?
-> 
-> 
-> So it's basically an issue of isolating DMA domains. Maybe we can start with
-> transport API for querying per vq DMA domain/ASID?
-> 
-> - for vhost-mdev, userspace can query the DMA domain for each specific
-> virtqueue. For control vq, mdev can return id for software domain, for the
-> rest mdev will return id of VFIO domain. Then userspace know that it should
-> use different API for preparing the virtqueue, e.g for vq other than control
-> vq, it should use VFIO DMA API. The control vq it should use hva instead.
-> 
-> - for virito-mdev, we can introduce per-vq DMA device, and route DMA mapping
-> request for control vq back to mdev instead of the hardware. (We can wrap
-> them into library or helpers to ease the development of vendor physical
-> drivers).
+> Calling calc_load_nohz_start() regardless of whether the tick is already
+> stopped addresses the issue when going idle. Tracking load changes when
+> not going idle (e.g. multiple SCHED_FIFO tasks coming and going) is not
+> addressed by this patch.
 
-Thanks for this proposal! I'm thinking about it these days.
-I think it might be too complicated. I'm wondering whether we
-can have something simpler. I will post a RFC patch to show
-my idea today.
+Hurph, is that phenomena you describe NOHZ or NOHZ_FULL? Because that
+second thing you talk about, multiple SCHED_FIFO tasks running without a
+tick is definitely NOHZ_FULL.
 
-Thanks,
-Tiwei
+I'm thinking all of this is NOHZ_FULL because IIRC we always start the
+tick when there is a runnable task. So your example of going idle in
+NOHZ already cannot happen for regular NOHZ.
 
-> 
-> Thanks
-> 
-> 
-> > > 
-> > > 
-> > > -- 
-> > > MST
-> 
+And for loadavg vs NOHZ_FULL I don't much like this patch. It ductapes
+one symptom but doesn't address the actual issue. Let me go rediscover
+how loadavg-nohz works again, I so hate all this crap :/
+
+Bah, I can't get me head straight, but I'm thinking something like the
+below ought to do. Does it actually work?
+
+---
+ include/linux/sched/nohz.h |  2 ++
+ kernel/sched/core.c        |  3 +++
+ kernel/sched/loadavg.c     | 26 +++++++++++++++++++-------
+ 3 files changed, 24 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/sched/nohz.h b/include/linux/sched/nohz.h
+index 1abe91ff6e4a..a2296004351f 100644
+--- a/include/linux/sched/nohz.h
++++ b/include/linux/sched/nohz.h
+@@ -16,9 +16,11 @@ static inline void nohz_balance_enter_idle(int cpu) { }
+ #ifdef CONFIG_NO_HZ_COMMON
+ void calc_load_nohz_start(void);
+ void calc_load_nohz_stop(void);
++void calc_load_nohz_remote(int cpu);
+ #else
+ static inline void calc_load_nohz_start(void) { }
+ static inline void calc_load_nohz_stop(void) { }
++static inline void calc_load_nohz_remote(int cpu) { }
+ #endif /* CONFIG_NO_HZ_COMMON */
+ 
+ #if defined(CONFIG_NO_HZ_COMMON) && defined(CONFIG_SMP)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index eb42b71faab9..209e50d48f80 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3666,6 +3666,8 @@ static void sched_tick_remote(struct work_struct *work)
+ 	 * having one too much is no big deal because the scheduler tick updates
+ 	 * statistics and checks timeslices in a time-independent way, regardless
+ 	 * of when exactly it is running.
++	 *
++	 * XXX should we be checking tick_nohz_tick_stopped_cpu() under rq->lock ?
+ 	 */
+ 	if (idle_cpu(cpu) || !tick_nohz_tick_stopped_cpu(cpu))
+ 		goto out_requeue;
+@@ -3686,6 +3688,7 @@ static void sched_tick_remote(struct work_struct *work)
+ 	curr->sched_class->task_tick(rq, curr, 0);
+ 
+ out_unlock:
++	calc_load_nohz_remote(cpu);
+ 	rq_unlock_irq(rq, &rf);
+ 
+ out_requeue:
+diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
+index 28a516575c18..7549bd9b6853 100644
+--- a/kernel/sched/loadavg.c
++++ b/kernel/sched/loadavg.c
+@@ -231,16 +231,11 @@ static inline int calc_load_read_idx(void)
+ 	return calc_load_idx & 1;
+ }
+ 
+-void calc_load_nohz_start(void)
++static void calc_load_nohz_fold(struct rq *rq)
+ {
+-	struct rq *this_rq = this_rq();
+ 	long delta;
+ 
+-	/*
+-	 * We're going into NO_HZ mode, if there's any pending delta, fold it
+-	 * into the pending NO_HZ delta.
+-	 */
+-	delta = calc_load_fold_active(this_rq, 0);
++	delta = calc_load_fold_active(rq, 0);
+ 	if (delta) {
+ 		int idx = calc_load_write_idx();
+ 
+@@ -248,6 +243,23 @@ void calc_load_nohz_start(void)
+ 	}
+ }
+ 
++void calc_load_nohz_start(void)
++{
++	/*
++	 * We're going into NO_HZ mode, if there's any pending delta, fold it
++	 * into the pending NO_HZ delta.
++	 */
++	calc_load_nohz_fold(this_rq());
++}
++
++void calc_load_nohz_remote(int cpu)
++{
++	/*
++	 * XXX comment goes here.
++	 */
++	calc_load_nohz_fold(cpu_rq(cpu));
++}
++
+ void calc_load_nohz_stop(void)
+ {
+ 	struct rq *this_rq = this_rq();
