@@ -4,46 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C361ECA9EC2
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1529C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9629520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9692F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbfJ2HX0 (ORCPT
+        id S1729677AbfJ2HWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:23:26 -0400
+        Tue, 29 Oct 2019 03:22:51 -0400
 Received: from esa1.mentor.iphmx.com ([68.232.129.153]:7825 "EHLO
         esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387600AbfJ2HWx (ORCPT
+        with ESMTP id S1728386AbfJ2HWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:22:53 -0400
-IronPort-SDR: ZxkrBrWm1gC0umXcqx4mAZz3xJYcyOlONcUGLSiqspjLzVA1TV+ZVr7j1UbmJb8j+dJKrz9hV8
- M4W6gMWjDjs2woapDv9E4N+VTOsDiUvzaTkLLfrpEs9NgpwS8E/GF0907yA81WcJ3U+mQjI4QU
- hreX+xslx0kUWgHRfXDrPF6IOCnXRrq9l+4V1ubUUkc9HlNrDsWPInS2RJ7gswEJATPDTbHm/7
- 1cJnsJ8Z3M6G61qEYcz0/3VXKobMEGpmKHTKkXe3yIqqW1std/kkVpDadTvh/WoXi50xLY+e/E
- Nuk=
+        Tue, 29 Oct 2019 03:22:35 -0400
+IronPort-SDR: vjz7OoHzNZFjjcRUnztuuiWzP/o0HdjGCTU5rO+2srMfZr5whwrSWoUyEn6UQZQxyS5IOQDfv3
+ bvXNkhfpGDHivU7zvM8nRY0W3vHiFv836xbLYn2ehXhNJ+nFYFFqGZ7UmXgt4sQIdxbHOqEpXl
+ OaoTozuQ0bFyp9sTjF5e3My2rqh2B2qrUmhjMMvvrKewN3MmVZADoucDSblGEm3thv/LwSv5mE
+ 5YVwnvpvgv3w6lnoiEm51yjTYtcu/EESP1OUdVlaJwE9UIt+TG+QUcHdvnd7RFv+QVTUvyf1bD
+ FQU=
 X-IronPort-AV: E=Sophos;i="5.68,243,1569312000"; 
-   d="scan'208";a="44509456"
+   d="scan'208";a="44509443"
 Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 28 Oct 2019 23:22:52 -0800
-IronPort-SDR: wj0hNOI75eibM0FWtToOqSDP4G412jtwsX6W4OBMvyzI2Q9C6z4CJLV9uxCOjiwwySltYenJ0x
- T+0sER/CGZtfBn6iGITjIc7UxNCEes8k8okfUilX/9fEzcppFthYQR6fH077xv22GnMHlFzWdr
- gN9X5v6R/FE/sTjMcNUeczAixHcsMRAsdkZ38WOJQY6AskTEDUHYtHssPfWbUsiXAC8Dvh1Lc7
- zcA3gcqpOW12nsBLsTm9DH1ljIonI1lG9eI6Lu3ihwnSnubyPuLx2Jo7xTcipGRTUSOm/uH40z
- TBQ=
+  by esa1.mentor.iphmx.com with ESMTP; 28 Oct 2019 23:22:35 -0800
+IronPort-SDR: aIkwWtbXXoiF9uH+Kb4te6XItF633lJ85w52aORbQnPQ/HS3yY6FbT75wxYsD/nvFZC2EIBEUw
+ THMYA2W+PkOsQjpVF37eUAb6YhW4OVNtH6ks/fqtiWbYRSKoJ4qQ0RqQr/4rJ7p04y8uQkBiw9
+ BxwoemHfERLVtL7XWzrUpFV2kAvEMfiT9oy+2LfhFwQUx+vF/IhmVc6tS0ZxoCLlENRRUC5KxZ
+ ZrJNKk1tmQOt7F7krjDBKKnmrEa78b+NsaH/MPaS3xfIwm+C6waVB5hXMWvh/UF5ywToEr/P6c
+ aTc=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
         <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
         <Andrew_Gabbasov@mentor.com>
-Subject: [PATCH v4 44/48] Input: atmel_mxt_ts: use gpiod_set_value_cansleep for reset pin
-Date:   Tue, 29 Oct 2019 16:20:06 +0900
-Message-ID: <20191029072010.8492-45-jiada_wang@mentor.com>
+Subject: [PATCH v4 39/48] Input: Atmel: improve error handling in mxt_initialize()
+Date:   Tue, 29 Oct 2019 16:20:01 +0900
+Message-ID: <20191029072010.8492-40-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191029072010.8492-1-jiada_wang@mentor.com>
 References: <20191029072010.8492-1-jiada_wang@mentor.com>
@@ -54,67 +53,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+From: Deepak Das <deepak_das@mentor.com>
 
-In case of remote display, touch controller will be also remote.
-In such cases, the reset pin of the touch controller will be
-controlled through bridging ICs like Deserilizer and Serializer.
-Therefore accessing the gpio pins require transactions with the
-external IC. Using the function gpiod_set_value will print a
-warning like below
+Currently mxt_initialize() tries to probe bootloader mode
+even if valid bootloader address is not specified.
 
-WARNING: CPU: 0 PID: 576 at drivers/gpio/gpiolib.c:1441 gpiod_set_value+0x34/0x60()
-CPU: 0 PID: 576 Comm: modprobe Not tainted 3.14.79-08377-g84ea22f-dirty #4
-Backtrace:
-[<80011c58>] (dump_backtrace) from [<80011e60>] (show_stack+0x18/0x1c)
-[<80011e48>] (show_stack) from [<8052d7ac>] (dump_stack+0x7c/0x9c)
-[<8052d730>] (dump_stack) from [<800241bc>] (warn_slowpath_common+0x74/0x9c)
-[<80024148>] (warn_slowpath_common) from [<80024288>] (warn_slowpath_null+0x24/0x2c)
-[<80024264>] (warn_slowpath_null) from [<8029e070>] (gpiod_set_value+0x34/0x60)
-[<8029e03c>] (gpiod_set_value) from [<7f492e98>] (mxt_probe+0x1e0/0x718 [atmel_mxt_ts])
-[<7f492cb8>] (mxt_probe [atmel_mxt_ts]) from [<803c4d34>] (i2c_device_probe+0xcc/0xec)
-[<803c4c68>] (i2c_device_probe) from [<803252a0>] (driver_probe_device+0xc0/0x200)
+This commit modifies mxt_initialize() to return error
+if Device is not in appmode and bootloader address is
+not specified.
 
-Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
-Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Signed-off-by: Sanjeev Chugh <sanjeev_chugh@mentor.com>
+This commit also returns error code from mxt_send_bootloader_cmd()
+in mxt_initialize().
+
+Signed-off-by: Deepak Das <deepak_das@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 58 +++++++++++++++++-------
+ 1 file changed, 41 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 700b7228e133..3e81e5d9175b 100644
+index e6212d384b9d..a0e5910e6a2a 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -2490,7 +2490,7 @@ static void mxt_regulator_enable(struct mxt_data *data)
- 	if (!data->reg_vdd || !data->reg_avdd)
- 		return;
+@@ -716,17 +716,13 @@ static int mxt_lookup_bootloader_address(struct mxt_data *data, bool retry)
+ 	return 0;
+ }
  
--	gpiod_set_value(data->reset_gpio, 0);
-+	gpiod_set_value_cansleep(data->reset_gpio, 0);
+-static int mxt_probe_bootloader(struct mxt_data *data, bool alt_address)
++static int mxt_probe_bootloader(struct mxt_data *data)
+ {
+ 	struct device *dev = &data->client->dev;
+ 	int error;
+ 	u8 buf[3];
+ 	bool crc_failure, extended_id;
  
- 	error = regulator_enable(data->reg_vdd);
+-	error = mxt_lookup_bootloader_address(data, alt_address);
+-	if (error)
+-		return error;
+-
+ 	/* Check bootloader status and version information */
+ 	error = mxt_bootloader_read(data, buf, sizeof(buf));
  	if (error)
-@@ -2508,7 +2508,7 @@ static void mxt_regulator_enable(struct mxt_data *data)
- 	 * voltage
- 	 */
- 	msleep(MXT_REGULATOR_DELAY);
--	gpiod_set_value(data->reset_gpio, 1);
-+	gpiod_set_value_cansleep(data->reset_gpio, 1);
- 	msleep(MXT_CHG_DELAY);
+@@ -2923,6 +2919,32 @@ static void mxt_config_cb(const struct firmware *cfg, void *ctx)
+ 	release_firmware(cfg);
+ }
  
- retry_wait:
-@@ -4313,7 +4313,7 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		disable_irq(data->irq);
- 	} else if (data->reset_gpio) {
- 		msleep(MXT_RESET_GPIO_TIME);
--		gpiod_set_value(data->reset_gpio, 1);
-+		gpiod_set_value_cansleep(data->reset_gpio, 1);
- 		msleep(MXT_RESET_INVALID_CHG);
- 	} else {
- 		dev_dbg(&client->dev,
++static int mxt_bootloader_status(struct mxt_data *data)
++{
++	struct i2c_client *client = data->client;
++	int error;
++
++	error = mxt_lookup_bootloader_address(data, false);
++	if (error) {
++		dev_info(&client->dev,
++			 "Bootloader address is not specified\n");
++		return error;
++	}
++	/* Check bootloader state */
++	error = mxt_probe_bootloader(data);
++	if (error) {
++		dev_info(&client->dev, "Trying alternate bootloader address\n");
++		mxt_lookup_bootloader_address(data, true);
++		error = mxt_probe_bootloader(data);
++		if (error) {
++			dev_err(&client->dev,
++				"Chip is not in appmode or bootloader mode\n");
++			return error;
++		}
++	}
++	return 0;
++}
++
+ static int mxt_initialize(struct mxt_data *data)
+ {
+ 	struct i2c_client *client = data->client;
+@@ -2934,16 +2956,13 @@ static int mxt_initialize(struct mxt_data *data)
+ 		if (!error)
+ 			break;
+ 
+-		/* Check bootloader state */
+-		error = mxt_probe_bootloader(data, false);
+-		if (error) {
+-			dev_info(&client->dev, "Trying alternate bootloader address\n");
+-			error = mxt_probe_bootloader(data, true);
+-			if (error) {
+-				/* Chip is not in appmode or bootloader mode */
+-				return error;
+-			}
+-		}
++		dev_info(&client->dev,
++			 "info block read failed (%d), so try bootloader method\n",
++			 error);
++
++		error = mxt_bootloader_status(data);
++		if (error)
++			return error;
+ 
+ 		/* OK, we are in bootloader, see if we can recover */
+ 		if (++recovery_attempts > 1) {
+@@ -2957,7 +2976,9 @@ static int mxt_initialize(struct mxt_data *data)
+ 		}
+ 
+ 		/* Attempt to exit bootloader into app mode */
+-		mxt_send_bootloader_cmd(data, false);
++		error = mxt_send_bootloader_cmd(data, false);
++		if (error)
++			return error;
+ 		msleep(MXT_FW_RESET_TIME);
+ 	}
+ 
+@@ -3649,8 +3670,11 @@ static int mxt_enter_bootloader(struct mxt_data *data)
+ 
+ 		msleep(MXT_RESET_TIME);
+ 
++		ret = mxt_lookup_bootloader_address(data, false);
++		if (ret)
++			return ret;
+ 		/* Do not need to scan since we know family ID */
+-		ret = mxt_probe_bootloader(data, 0);
++		ret = mxt_probe_bootloader(data);
+ 		if (ret)
+ 			return ret;
+ 
 -- 
 2.17.1
 
