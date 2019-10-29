@@ -2,105 +2,132 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06294CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856A3CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D802087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564252087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 21:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiijxmXm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PrZ2AGRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbfJ2V0C (ORCPT
+        id S1728592AbfJ2VaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:26:02 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43482 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfJ2V0C (ORCPT
+        Tue, 29 Oct 2019 17:30:10 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41152 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727882AbfJ2VaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 17:26:02 -0400
-Received: by mail-lj1-f196.google.com with SMTP id s4so226882ljj.10;
-        Tue, 29 Oct 2019 14:26:00 -0700 (PDT)
+        Tue, 29 Oct 2019 17:30:09 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a21so43149edj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:30:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3ti1k4N8j2ZSElZ5dQiM1ptrNLuExzcmkQM4fcrPhug=;
-        b=OiijxmXmDw8P398uaEva7r04QCjWRg147Ojy43qdzFiORUHXmzlcQYpHw4me8PMAYE
-         uMrzRHBdPRMPf0Gf9ZwIogJDJu8UadWcLFn5EuR+QRFuNCDPj0n+8d2KgHLX+x8aF75Z
-         FFsf4WhYIeYMPXkTcofKrRzy5CgYGAzbwJo+Gu1HvhNJWhjvzEm1nlrBjteZATk6ymgd
-         rrORkjsyWTMNHHgZQRNuxTVbZsN2ORHRT0eb3JgOxjEQ8bDsz60/2BBUvS7ASnqqCYk7
-         WmvCQkyjpyAeLQZcVJHieNl8JV+AqBeogHSsYodi1LauRPg8jPYFnWw7neEx8iAAheHn
-         1i0A==
+        bh=TqdJq1f/qIhweQts5AB1HeIVb9O7ywkFDNZusrXv0ac=;
+        b=PrZ2AGRroeNtw796hVMPeML+80GYP6QyWEsnxgND+dc9gtx/OHg/KPAYFlRg85KJB2
+         ZrrwSetq2naXw50GkCSuX6vr2qTerRqUQrvbdlAbZ7OpLfmXRmRnVUmKMOZGBMfYn7il
+         34bQ7dLn6c6ccLIfSOQk8ypMzkskCSknF9H20=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3ti1k4N8j2ZSElZ5dQiM1ptrNLuExzcmkQM4fcrPhug=;
-        b=lMAgAQ9QnqeqaaS0QRKZe7hQ3jLX3skNyKCdqWPuswkqjaNiUv2WIKYova8bRm0a6R
-         A93GEX2HAj3TqHZFJmjbdWowBwR+T1TJCWh+pa/Gyu8u3h+5zLx+Gkbr1zHEa/jED4fo
-         nFAW885UIDH9vo64SqejkeMEOSUTVDm02r0v3HH9dUl7I3Ny19Bfzy1+hqvjFbFUovjx
-         VRJcwxGUHWfGvkMxXi2149GfJD2CiLtaju//gT4kYcTulTjvcpPCONkow2bKdKjK9WxC
-         vWMAxxtEacUrAWZrL85q+4BAWb1fdWu9t4sud4CAq/0rtm7+a7tP+92z8VWZAR4tdX1N
-         F41Q==
-X-Gm-Message-State: APjAAAXXD7qoSIZcWuIeMGhMGp2VM4NZLRmwnsYcxT73MHX7pnogTr4S
-        HoDyXfO1eG9c4CLvOMuNWP0X6i3YJrB8Ov0v7dY=
-X-Google-Smtp-Source: APXvYqy4POa3tJsYU9H82PDElDMXH0pN6cP1ClC2av7/QUUwp2nsI5wn7l82Uy/tKFwNYAEnh/LvfKtD7BKwBI5TjC4=
-X-Received: by 2002:a2e:8990:: with SMTP id c16mr2024514lji.226.1572384360091;
- Tue, 29 Oct 2019 14:26:00 -0700 (PDT)
+        bh=TqdJq1f/qIhweQts5AB1HeIVb9O7ywkFDNZusrXv0ac=;
+        b=sm7rGyXERaKylhUKcg6EC+gKb3sEsvsVZ2cT+5heUB1DLBPlL3LzvS8G/v4eSmXkuP
+         bzQHLBNforSoz5IJS3CbHBiBF0CaiwnowTpRY4xtwKny2oG4rjGd8vB2Kzsnmfl9P0SX
+         O+89eBG546xr1WFCaNj3fCCVkLmbEyGMio1/gnGTpro8gaiGc1wAeHz5rMrcdr8LVQo2
+         30NBqBIcrxPcAtGjZwnbnF6fhcflcwzIqBdaGC98vkmNS8fFXxztnu04NQ9kyeJ/YMYb
+         MT5DaxI/L/yvMaSjbyQ9C80akqSrr6VDH7RUXJaFSuOMd2E9vZBkVdbOpkx2nk/VSzqm
+         bt5A==
+X-Gm-Message-State: APjAAAV3ije7/y0L7etEZEKLsie+rTBeY6ie+ItJMvhzwpGi49qN9NuC
+        38JssVkp6JlcIDgElzp5hb09q77ufoU=
+X-Google-Smtp-Source: APXvYqzXWBsor63tKN2AgJDLBB+GtJBK1G4sl82zUXXEOLvUtrxWETktCMpRaLIkondZn/nUotOnNw==
+X-Received: by 2002:a17:906:6bcd:: with SMTP id t13mr5408941ejs.231.1572384606334;
+        Tue, 29 Oct 2019 14:30:06 -0700 (PDT)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
+        by smtp.gmail.com with ESMTPSA id m12sm364ejn.13.2019.10.29.14.30.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Oct 2019 14:30:05 -0700 (PDT)
+Received: by mail-wm1-f46.google.com with SMTP id g24so4166729wmh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 14:30:05 -0700 (PDT)
+X-Received: by 2002:a1c:28d4:: with SMTP id o203mr6068671wmo.147.1572384604588;
+ Tue, 29 Oct 2019 14:30:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191029200026.9790-1-jim.cromie@gmail.com> <e9835376-1efe-1d1b-4a99-8bb920e04a08@rasmusvillemoes.dk>
-In-Reply-To: <e9835376-1efe-1d1b-4a99-8bb920e04a08@rasmusvillemoes.dk>
-From:   jim.cromie@gmail.com
-Date:   Tue, 29 Oct 2019 15:25:33 -0600
-Message-ID: <CAJfuBxyEjhxkO5jv_qy17-EwrMyPfh6b_1EBCVyxyymH9qQVhg@mail.gmail.com>
-Subject: Re: [PATCH 04/16] dyndbg: rename __verbose section to __dyndbg
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        LKML <linux-kernel@vger.kernel.org>, Greg KH <greg@kroah.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
-        linux-arch@vger.kernel.org
+References: <20190730191303.206365-1-thgarnie@chromium.org>
+ <20190730191303.206365-9-thgarnie@chromium.org> <20190809173003.GG2152@zn.tnic>
+In-Reply-To: <20190809173003.GG2152@zn.tnic>
+From:   Thomas Garnier <thgarnie@chromium.org>
+Date:   Tue, 29 Oct 2019 14:29:53 -0700
+X-Gmail-Original-Message-ID: <CAJcbSZGfHDthCz4h_h19zGN5Mb9yC+2FCfKs7-rfCuF=G9rP3w@mail.gmail.com>
+Message-ID: <CAJcbSZGfHDthCz4h_h19zGN5Mb9yC+2FCfKs7-rfCuF=G9rP3w@mail.gmail.com>
+Subject: Re: [PATCH v9 08/11] x86/boot/64: Adapt assembly for PIE support
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Maran Wilson <maran.wilson@oracle.com>,
+        Feng Tang <feng.tang@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 2:37 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
+On Fri, Aug 9, 2019 at 10:29 AM Borislav Petkov <bp@alien8.de> wrote:
 >
-> On 29/10/2019 21.00, Jim Cromie wrote:
-> > dyndbg populates its callsite info into __verbose section, change that
-> > to a more specific and descriptive name, __dyndbg.
+> chOn Tue, Jul 30, 2019 at 12:12:52PM -0700, Thomas Garnier wrote:
+> > Change the assembly code to use only relative references of symbols for the
+> > kernel to be PIE compatible.
+> >
+> > Early at boot, the kernel is mapped at a temporary address while preparing
+> > the page table. To know the changes needed for the page table with KASLR,
 >
-> Yeah, that has always bugged me. Ack to that part.
+> These manipulations need to be done regardless of whether KASLR is
+> enabled or not. You're basically accomodating them to PIE.
 >
-> > Also, per checkpatch:
-> >   move extern struct _ddebug __(start|stop)__dyndbg[] to header file
+> > the boot code calculate the difference between the expected address of the
 >
-> Hm, why? checkpatch should often be ignored. Since we only refer to
-> those symbols in the .c file, there's no reason to pollute every other
-> translation unit with those declarations. Having declarations in a
-> header makes sense when the actual entity gets defined in some .c file
-> (which hopefully also includes the header). But these are defined by the
-> linker, so there's no type safety to be had.
+> calculates
 >
+> > kernel and the one chosen by KASLR. It does not work with PIE because all
+> > symbols in code are relatives. Instead of getting the future relocated
+> > virtual address, you will get the current temporary mapping.
+>
+> Please avoid "you", "we" etc personal pronouns in commit messages.
+>
+> > Instructions were changed to have absolute 64-bit references.
+>
+> From Documentation/process/submitting-patches.rst:
+>
+>  "Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
+>   instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
+>   to do frotz", as if you are giving orders to the codebase to change
+>   its behaviour."
 
-checkpatch wasnt in a mood to explain itself,
-but the other simplification seemed good, credit by association
+Sorry for the late reply, busy couple months.
 
-I guess the action-at-a-distance feel to the linker magic
-and the extern qualifier, swung me toward heeding the advice.
-OTOH, as you note, only dyndbg should be mucking with the symbols.
+I will integrate your feedback in v10. Thanks.
 
-
-
-> >   simplify __attribute(..) to __section(__dyndbg) declaration.
 >
-> Makes sense, since you're munching the thing anyway.
+> Thx.
 >
-> Rasmus
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> Good mailing practices for 400: avoid top-posting and trim the reply.
