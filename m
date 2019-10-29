@@ -2,160 +2,141 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF67DCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF95CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC9220578
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD922087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dnAtc9nS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DO1hZp2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732422AbfJ2TL6 (ORCPT
+        id S1732491AbfJ2TOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:11:58 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46016 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729263AbfJ2TL6 (ORCPT
+        Tue, 29 Oct 2019 15:14:33 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20103 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729263AbfJ2TOc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:11:58 -0400
-Received: by mail-qk1-f193.google.com with SMTP id q70so13385098qke.12
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uLg9geEqtyjt5mzDoUVYQlG4LfdVTLkoXQvZdovB90Y=;
-        b=dnAtc9nSiS/K636rH8LVXxFhcs9pKjtm5VWvqOOE06mikT+tAB8EPpOdlodS2NON8P
-         4HVtz3bKvCu8PSzy/Jt9oBrLjZpxKpFZCBI4UruhRyEdeePSDLFee7AKGQ54FZ29BjBy
-         fssa1K/0T1Peud0PmIgZ5uUkBXpoPumpFcy5QHQP2rDv6LbalvM1QSASLJAgboUP8HSI
-         E4GNkbb2quIg98rFRDKqY90Jak1kkAKYX54n5ld+CUkiUuAoqd+jsR6qJRuYqCEwCcfw
-         Y6YMEfQiwzIGkcYZ2SnThyLSriXJe8I6ghk/ty/rkf44OGdVeaUD4xzHOY2khF7cepn7
-         QmdQ==
+        Tue, 29 Oct 2019 15:14:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572376471;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nxayejYSVXr47U447mSkKDwpy7jX9q8NIi6Fc4NbQBc=;
+        b=DO1hZp2rjjvGs0jb/saN3Upvu+3I57KcitSChkmaHYFCzWvmrMpmhjglL/wfI7B2FF/bwh
+        Q4ADd1EqsE0IKPHgmeZeqLippB+3uN9FjtnbxzKVKIyGhOHTIkEP8P17C2IyL+pycV2Csn
+        HmYA+tCZgpoeOFwz+723SuMVnUzaipA=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-370-hexKA29EONG8U60qkByC_Q-1; Tue, 29 Oct 2019 15:14:29 -0400
+Received: by mail-lf1-f71.google.com with SMTP id o140so1990181lff.18
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:14:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uLg9geEqtyjt5mzDoUVYQlG4LfdVTLkoXQvZdovB90Y=;
-        b=JiSvwsjc0DruxvSe1ZBNix7Q8XOTBq+Fr2zoOzGaIZnW6qbqL4ndy2KEPKPIg0Q6lZ
-         kgwg5tqs69TwJXG1z3hEhu8CHq3pfsRHLFBfPx87u7b9q2KqaJd+Nb5Oj0XzmXDYhV2g
-         19+cXIh0Q4okXQzSDZVqR0XqY/Jm3LnVcvu006S/qJNkISpA8M2qPr03QhOG6X9hMOMa
-         1GeSqlPf11QGhDphBnHLm+gnqyz7JTjxoZonydm3bNWUOEWminfw2s/TK/Nlc/fSC4sH
-         dbd7e5l2VsmdEmkkOL6TfxbvMOTOj9FFwmcM9jSCngBRFwdkE6QPCxGuzrpp2WW+nkwb
-         UXRg==
-X-Gm-Message-State: APjAAAVAf0kEldlWKjXuZjsi06RVzR6q+rVoevUnuOFOrS5s+E0Ae4gL
-        sZ6Oe8mcZmOh6aa0jWDYHhVp1w==
-X-Google-Smtp-Source: APXvYqyZAPEze6LI2zKYbJMpKQdcO44XNM8IrD6qTtttrvFRyq4rsMXHje+UG3+u2cq2xAtjVN2Uug==
-X-Received: by 2002:a37:4ed5:: with SMTP id c204mr22831514qkb.41.1572376316697;
-        Tue, 29 Oct 2019 12:11:56 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id 11sm8326586qkv.131.2019.10.29.12.11.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 29 Oct 2019 12:11:56 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iPWuJ-0002sy-Li; Tue, 29 Oct 2019 16:11:55 -0300
-Date:   Tue, 29 Oct 2019 16:11:55 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     rao Shoaib <rao.shoaib@oracle.com>
-Cc:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] rxe: calculate inline data size based on
- requested values
-Message-ID: <20191029191155.GA10841@ziepe.ca>
-References: <1571851957-3524-1-git-send-email-rao.shoaib@oracle.com>
- <1571851957-3524-2-git-send-email-rao.shoaib@oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pwzekU6FTVb4WJ1KYylvE2Fm3CGIkd3DwRcFLlZGbuw=;
+        b=BXGNJZhfM4WOIZZJ++SeR9hcEpXhNABTW3A4xqg5d1uCzBytjBHbeSLAdu3jTLHP6+
+         CoK3E4LcHh2Ag711N+d1V7WTjXLdEbv7f90gAc6gtjqLrr/6Qqqh6FpcKKgRPd8LhaDU
+         DgVnIaXRvTvUnPqM5SB8wBStmxUxU1HLc+1fCH8BAs7bPTBLKD+Va1XcFPHr8mPIOP30
+         WHgT9gIgQWPccOXz3ZWiekzJPiBo/Ea2b/Bnq3ghhZ79Bc9y1lxq5ABR31hrD8MH+kD4
+         m6ozw9PcU2OEDPwx1nMuy4jQnYSdJdbB3QF9m3ptq+xxKz30wAjIbGEltaHmU0AUHbBO
+         mn4A==
+X-Gm-Message-State: APjAAAW0l35Ar+CYOA9yrcyfB05vtOLd68ZBcwkc6P92Dxy84U+oVoCE
+        HBu5Vu20zUGZ/PyVH+By/mmbxo6fFqWte5uYpMKkKpRtQna93itWEyTQFYr4SuYmKgT/ToxJBCy
+        a0rADXNG7ImWDfSq6WnO9EBhtdkygzTdf0Rd/rbuO
+X-Received: by 2002:a19:ac04:: with SMTP id g4mr3546581lfc.63.1572376467662;
+        Tue, 29 Oct 2019 12:14:27 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyB0C3Ii5OEJM05OMOUAAZ49o0SiI0p8Oyn3T8k9fDZCZX9ZMdZD7rNOLGdjhWiT4TOIpbqxNY+7kioHW7fcD4=
+X-Received: by 2002:a19:ac04:: with SMTP id g4mr3546566lfc.63.1572376467423;
+ Tue, 29 Oct 2019 12:14:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571851957-3524-2-git-send-email-rao.shoaib@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191029173755.27149-1-ardb@kernel.org> <20191029173755.27149-4-ardb@kernel.org>
+In-Reply-To: <20191029173755.27149-4-ardb@kernel.org>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Wed, 30 Oct 2019 00:44:14 +0530
+Message-ID: <CACi5LpMAagnn_yEmqRBGfxJFZcAUzohU30NACeGvdXaHFZwAMA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] efi/random: treat EFI_RNG_PROTOCOL output as
+ bootloader randomness
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-MC-Unique: hexKA29EONG8U60qkByC_Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 10:32:37AM -0700, rao Shoaib wrote:
-> From: Rao Shoaib <rao.shoaib@oracle.com>
-> 
-> rxe driver has a hard coded value for the size of inline data, where as
-> mlx5 driver calculates number of SGE's and inline data size based on the
-> values in the qp request. This patch modifies rxe driver to do the same
-> so that applications can work seamlessly across drivers.
+Hi Ard,
 
-This description doesn't seem accurate at all, and this patch seems to
-be doing two things:
+On Tue, Oct 29, 2019 at 11:10 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> From: Dominik Brodowski <linux@dominikbrodowski.net>
+>
+> Commit 428826f5358c ("fdt: add support for rng-seed") introduced
+> add_bootloader_randomness(), permitting randomness provided by the
+> bootloader or firmware to be credited as entropy. However, the fact
+> that the UEFI support code was already wired into the RNG subsystem
+> via a call to add_device_randomness() was overlooked, and so it was
+> not converted at the same time.
+>
+> Note that this UEFI (v2.4 or newer) feature is currently only
+> implemented for EFI stub booting on ARM, and further note that
+> CONFIG_RANDOM_TRUST_BOOTLOADER must be enabled, and this should be
+> done only if there indeed is sufficient trust in the bootloader
+> _and_ its source of randomness.
+>
+> Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
+> [ardb: update commit log]
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-> Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
+Seems my Tested-by was dropped which I provide for the RFC version of
+this patch.
+See <https://www.mail-archive.com/linux-efi@vger.kernel.org/msg12281.html>
+for details.
+
+I can provide a similar Tested-by for this version as well.
+
+Thanks,
+Bhupesh
+
+
 > ---
->  drivers/infiniband/sw/rxe/rxe_param.h | 2 +-
->  drivers/infiniband/sw/rxe/rxe_qp.c    | 4 ++++
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/sw/rxe/rxe_param.h b/drivers/infiniband/sw/rxe/rxe_param.h
-> index 1b596fb..657f9303 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_param.h
-> +++ b/drivers/infiniband/sw/rxe/rxe_param.h
-> @@ -68,7 +68,6 @@ enum rxe_device_param {
->  	RXE_HW_VER			= 0,
->  	RXE_MAX_QP			= 0x10000,
->  	RXE_MAX_QP_WR			= 0x4000,
-> -	RXE_MAX_INLINE_DATA		= 400,
->  	RXE_DEVICE_CAP_FLAGS		= IB_DEVICE_BAD_PKEY_CNTR
->  					| IB_DEVICE_BAD_QKEY_CNTR
->  					| IB_DEVICE_AUTO_PATH_MIG
-> @@ -81,6 +80,7 @@ enum rxe_device_param {
->  					| IB_DEVICE_MEM_MGT_EXTENSIONS,
->  	RXE_MAX_SGE			= 32,
->  	RXE_MAX_SGE_RD			= 32,
-> +	RXE_MAX_INLINE_DATA		= RXE_MAX_SGE * sizeof(struct ib_sge),
->  	RXE_MAX_CQ			= 16384,
->  	RXE_MAX_LOG_CQE			= 15,
->  	RXE_MAX_MR			= 2 * 1024,
+>  drivers/firmware/efi/efi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 69f00f7453a3..e98bbf8e56d9 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -554,7 +554,7 @@ int __init efi_config_parse_tables(void *config_table=
+s, int count, int sz,
+>                                               sizeof(*seed) + size);
+>                         if (seed !=3D NULL) {
+>                                 pr_notice("seeding entropy pool\n");
+> -                               add_device_randomness(seed->bits, seed->s=
+ize);
+> +                               add_bootloader_randomness(seed->bits, see=
+d->size);
+>                                 early_memunmap(seed, sizeof(*seed) + size=
+);
+>                         } else {
+>                                 pr_err("Could not map UEFI random seed!\n=
+");
+> --
+> 2.17.1
+>
 
-Increasing RXE_MAX_INLINE_DATA to match the WQE size limited the
-MAX_SGE. IMHO this is done in a hacky way, instead we should define a
-maximim WQE size and from there derive the MAX_INLINE_DATA and MAX_SGE
-limitations.
-
-> diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-> index aeea994..45b5da5 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_qp.c
-> +++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-> @@ -229,6 +229,7 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
->  {
->  	int err;
->  	int wqe_size;
-> +	unsigned int inline_size;
->  
->  	err = sock_create_kern(&init_net, AF_INET, SOCK_DGRAM, 0, &qp->sk);
->  	if (err < 0)
-> @@ -244,6 +245,9 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
->  			 sizeof(struct rxe_send_wqe) +
->  			 qp->sq.max_inline);
->  
-> +	inline_size = wqe_size - sizeof(struct rxe_send_wqe);
-> +	qp->sq.max_inline = inline_size;
-> +	init->cap.max_inline_data = inline_size;
-
-Whatever this is doing. Is this trying to expand the supported inline
-data when max_sge is provided? That seems reasonable but
-peculiar. Should be it's own patch.
-
-Also don't double initialize qp->sq.max_inline in the same function,
-and there is no need for the temporary 'inline_size'
-
-Jason
-
-
->  	qp->sq.queue = rxe_queue_init(rxe,
->  				      &qp->sq.max_wr,
->  				      wqe_size);
-> -- 
-> 1.8.3.1
-> 
