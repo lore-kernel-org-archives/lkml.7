@@ -2,156 +2,123 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B291CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4ACCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CAF02087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:44:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SEjue9U9";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="T3PFd8CY"
+	by mail.kernel.org (Postfix) with ESMTP id C625E2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 14:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389543AbfJ2OoW (ORCPT
+        id S2389556AbfJ2OpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:44:22 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42362 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbfJ2OoV (ORCPT
+        Tue, 29 Oct 2019 10:45:12 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:57863
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727255AbfJ2OpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:44:21 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 745F860AD9; Tue, 29 Oct 2019 14:44:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572360260;
-        bh=Cmr+zKAVQ6jEvDIP2LI+oD7q9FkjSncbqXOBHRCuysY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SEjue9U9SRO4eJHpVe9e4OyUEQRe8vErELE4q31TV3sox1UCGlZDZMqcBUW0v0TNy
-         FcOZpFnGN2SwBdrfBem1OxQflxB+1sd2Twcc3BqAUWrKpxclMhLY3rcnS7GVneW2fR
-         kAkaO3u03hD57HP8m9bPIk+s3u4PdfCpua4s8fT8=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB25360A74;
-        Tue, 29 Oct 2019 14:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572360259;
-        bh=Cmr+zKAVQ6jEvDIP2LI+oD7q9FkjSncbqXOBHRCuysY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=T3PFd8CYlF/5yVyrsNv7Vom/zoW4OT85zY6KbACy6cWMqjQWapOEMl2KDqrG7yDMP
-         iNdIaP8P+in/mqWlqfMHAVL2Ua801W+3EYWbKFqO65pIVInQNgxmYEzld/mgRxEH3K
-         jbCJwu4Uetu2e/2s02dmeFVrWL5tpS7Wc93C6gyg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EB25360A74
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH] arm64: cpufeature: Enable Qualcomm Falkor errata 1009 for
- Kryo
-To:     Will Deacon <will@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org
-References: <20191029060604.1208925-1-bjorn.andersson@linaro.org>
- <20191029115008.GD12103@willie-the-truck>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <16ccb343-8253-0224-e957-c73f51f110a1@codeaurora.org>
-Date:   Tue, 29 Oct 2019 08:44:17 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 10:45:12 -0400
+X-IronPort-AV: E=Sophos;i="5.68,244,1569276000"; 
+   d="scan'208";a="325017627"
+Received: from ppp-seco11pareq2-46-193-149-47.wb.wifirst.net (HELO hadrien) ([46.193.149.47])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 15:45:08 +0100
+Date:   Tue, 29 Oct 2019 15:45:07 +0100 (CET)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: julia@hadrien
+To:     Matthias Maennich <maennich@google.com>
+cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Warning message from 'make nsdeps' when namespace is lower
+ cases
+In-Reply-To: <20191029143722.GB33177@google.com>
+Message-ID: <alpine.DEB.2.21.1910291544180.2144@hadrien>
+References: <CAK7LNAQ8Wi1zED0rYJhk9tYi5-jgCoyeHNtofvgKet4ZTzKFcA@mail.gmail.com> <alpine.DEB.2.21.1910291437450.2179@hadrien> <20191029143722.GB33177@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20191029115008.GD12103@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/29/2019 4:50 AM, Will Deacon wrote:
-> On Mon, Oct 28, 2019 at 11:06:04PM -0700, Bjorn Andersson wrote:
->> The Kryo cores share errata 1009 with Falkor, so add their model
->> definitions and enable it for them as well.
->>
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> ---
->>   arch/arm64/include/asm/cputype.h | 4 ++++
->>   arch/arm64/kernel/cpu_errata.c   | 2 ++
->>   2 files changed, 6 insertions(+)
->>
->> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
->> index b1454d117cd2..8067476ea2e4 100644
->> --- a/arch/arm64/include/asm/cputype.h
->> +++ b/arch/arm64/include/asm/cputype.h
->> @@ -84,6 +84,8 @@
->>   #define QCOM_CPU_PART_FALKOR_V1		0x800
->>   #define QCOM_CPU_PART_FALKOR		0xC00
->>   #define QCOM_CPU_PART_KRYO		0x200
->> +#define QCOM_CPU_PART_KRYO_GOLD		0x211
->> +#define QCOM_CPU_PART_KRYO_SILVER	0x205
-
-These are not Kryo part numbers (8998+).  They are Hydra ones.
-
-> 
-> Can you double-check this, please? My Pixel-1 phone claims something with
-> 0x201, but I don't know if that's what you were aiming for. It would be
-> great if Qualcomm could document these register fields somewhere, especially
-> since we're trying to work around their hardware errata for them.
-
-I wish I could point you to public documentation.  I don't happen to 
-know where it is.  As far as 8996 goes, there are quite a few part 
-numbers.  The ones I could find are:
-201
-205
-211
-241
-251
-
-281 happens to be QDF2432
-
-> 
-> That said...
-> 
->>   #define NVIDIA_CPU_PART_DENVER		0x003
->>   #define NVIDIA_CPU_PART_CARMEL		0x004
->> @@ -109,6 +111,8 @@
->>   #define MIDR_QCOM_FALKOR_V1 MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR_V1)
->>   #define MIDR_QCOM_FALKOR MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR)
->>   #define MIDR_QCOM_KRYO MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO)
->> +#define MIDR_QCOM_KRYO_GOLD MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_GOLD)
->> +#define MIDR_QCOM_KRYO_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_SILVER)
->>   #define MIDR_NVIDIA_DENVER MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_DENVER)
->>   #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_CARMEL)
->>   #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
->> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
->> index cdd8df033536..315780e7bee7 100644
->> --- a/arch/arm64/kernel/cpu_errata.c
->> +++ b/arch/arm64/kernel/cpu_errata.c
->> @@ -627,6 +627,8 @@ static const struct midr_range arm64_harden_el2_vectors[] = {
->>   static const struct midr_range arm64_repeat_tlbi_cpus[] = {
->>   #ifdef CONFIG_QCOM_FALKOR_ERRATUM_1009
->>   	MIDR_RANGE(MIDR_QCOM_FALKOR_V1, 0, 0, 0, 0),
->> +	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_GOLD),
->> +	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_SILVER),
-> 
-> ... why aren't you following what we do for E1003 and using the
-> 'is_kryo_midr' callback to match these CPUs?
-> 
-> Will
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
 
 
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+On Tue, 29 Oct 2019, Matthias Maennich wrote:
+
+> Hi!
+>
+> On Tue, Oct 29, 2019 at 02:38:36PM +0100, Julia Lawall wrote:
+> >
+> >
+> > On Tue, 29 Oct 2019, Masahiro Yamada wrote:
+> >
+> > > Hi.
+> > >
+> > > When I was playing with 'make nsdeps',
+> > > I saw a new warning.
+> > >
+> > > If I rename USB_STORAGE to usb_storage,
+> > > I see 'warning: line 15: should usb_storage be a metavariable?'
+> > > Why? I think it comes from spatch.
+> >
+> > Yes, it would come from spatch.
+> >
+> > > It should be technically OK to use either upper or lower cases
+> > > for the namespace name.
+> >
+> > What is normally wanted?  Uppercase or lowercase?
+>
+> There is no (documented) preference or convention yet. The existing
+> namespaces (USB_STORAGE and MCB) use upper case. While technically both
+> should work, I have a personal preference for consistently using upper
+> case. Is there a way to suppress this warning as I agree that it might
+> be confusing?
+
+The warning is not intentional in this case.  I will have to fix
+Coccinelle, but I can't do it until next week.
+
+julia
+
+>
+> Cheers,
+> Matthias
+>
+> >
+> > julia
+> >
+> > >
+> > > Just apply the following, and try 'make nsdeps'.
+> > >
+> > >
+> > > diff --git a/drivers/usb/storage/Makefile b/drivers/usb/storage/Makefile
+> > > index 46635fa4a340..6f817d65c26b 100644
+> > > --- a/drivers/usb/storage/Makefile
+> > > +++ b/drivers/usb/storage/Makefile
+> > > @@ -8,7 +8,7 @@
+> > >
+> > >  ccflags-y := -I $(srctree)/drivers/scsi
+> > >
+> > > -ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_STORAGE
+> > > +ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=usb_storage
+> > >
+> > >  obj-$(CONFIG_USB_UAS)          += uas.o
+> > >  obj-$(CONFIG_USB_STORAGE)      += usb-storage.o
+> > >
+> > >
+> > >
+> > >
+> > >
+> > >
+> > >
+> > >
+> > >
+> > >
+> > > --
+> > > Best Regards
+> > > Masahiro Yamada
+> > >
+>
