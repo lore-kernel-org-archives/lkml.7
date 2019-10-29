@@ -2,149 +2,151 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A276CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4114CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658CB20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2ED420659
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 22:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ammmhVMd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CkwdYGQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfJ2Wog (ORCPT
+        id S1726642AbfJ2WsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:44:36 -0400
-Received: from mail-eopbgr50066.outbound.protection.outlook.com ([40.107.5.66]:22950
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725830AbfJ2Wog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:44:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BkFpA6Q+GhzLGDenxbmSIDGxZVop0PIszwCyNdBvkDiXCSOB9NPmD8QFJiqmtw3dnVCbGuz4AQUBjI8QjMbYbzwa8yflcicdGwfGlYMGH9vCBtz5rwhqfj3l9DwgmdbwhF586w6H1cZTiaTVMvGgmu3d1CZbjY8+GnLedSFYeoAx1Y/hjmvf2p0HVM1RpE/d9AwPVIQ4oyBPIzd5hWO51Kce/5zN6I6OGi0BVRpj5FmKJ2UiMx9sO3C18ZCAM4DVbj9mh3cKn1chsqs/UQ8G03uslUwgeZ65UwaKFtlZ156eRu3o9bpi2Q9hbnqSSL6KHXP/wsWvnpggF0fOxcXG6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GRBpJvjoxoG+b5Dpj6WaVjn3b9s8OVOD0L9cM3sVYf0=;
- b=Xp6QeNgc3kF8lrjlDxxm7h9SIOiNdC/4gmlQVGNgG4yyzP8Ek6hkLy+FBTCT4itCZgj9pU9rUd51KFoQYpkMsWTPyukcdzV51KIUf+UoGhcAnubFCHJwQnk1mXl5Qfft+gKJQmQetkwutG08I3NLzA8kL838iTuW7eyTM/pE0svtRYmlAm3SS3m6cSE8UMp9UDe1cpGrH/0f0px3gHyDxKBT71e9lY7Ku9m5ZnIxJy/WJt3jLu3vx1w+T6tisKWZT6l8g+snsYu9wKVmaW4ZosK+J/xIYBsFHLDTbC2tGInFXundHGgUanYmrZXaRtjBnex/9OExpvisrpn+8q15yQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GRBpJvjoxoG+b5Dpj6WaVjn3b9s8OVOD0L9cM3sVYf0=;
- b=ammmhVMdEYiOh6hOtUAP72gs3FQ2RCPWlwwpsnMDvd1uf8pmv4DaeyjctPvAUSy2RyaSJ5T2txpQ+KLtAsqkXS1mtp+bJVpjtr3CTCSH1T87dp+WSVlS77hQsRrmJSlDdTTz1ABAoG5rkMMErIo/FEleZE9xC1hWjCoyY4LG8YA=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
- VE1PR04MB6543.eurprd04.prod.outlook.com (20.179.235.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.24; Tue, 29 Oct 2019 22:44:32 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::c93:c279:545b:b6b6]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::c93:c279:545b:b6b6%3]) with mapi id 15.20.2387.027; Tue, 29 Oct 2019
- 22:44:32 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Qiang Zhao <qiang.zhao@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>,
-        Valentin Longchamp <valentin.longchamp@keymile.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-Subject: RE: [PATCH v2 20/23] serial: make SERIAL_QE depend on PPC32
-Thread-Topic: [PATCH v2 20/23] serial: make SERIAL_QE depend on PPC32
-Thread-Index: AQHVizGGK1AbHr0Ag0SyT1h3bdNPg6dyPcDA
-Date:   Tue, 29 Oct 2019 22:44:32 +0000
-Message-ID: <VE1PR04MB6687CA599C89D46076C9B3518F610@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191025124058.22580-1-linux@rasmusvillemoes.dk>
- <20191025124058.22580-21-linux@rasmusvillemoes.dk>
-In-Reply-To: <20191025124058.22580-21-linux@rasmusvillemoes.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a3e55dcc-d939-4d99-6d34-08d75cc19112
-x-ms-traffictypediagnostic: VE1PR04MB6543:|VE1PR04MB6543:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6543B7A877FD5E98318097AD8F610@VE1PR04MB6543.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0205EDCD76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(366004)(136003)(346002)(13464003)(189003)(199004)(476003)(7736002)(81166006)(8936002)(486006)(8676002)(11346002)(9686003)(81156014)(6246003)(446003)(55016002)(74316002)(6436002)(33656002)(2906002)(5660300002)(186003)(26005)(305945005)(229853002)(7696005)(14454004)(102836004)(76176011)(6506007)(316002)(25786009)(66066001)(52536014)(54906003)(110136005)(256004)(4326008)(478600001)(66476007)(66446008)(64756008)(66556008)(66946007)(76116006)(86362001)(71200400001)(71190400001)(99286004)(6116002)(3846002)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6543;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YQgycBYrXi9jcB4wzGPw0x8N9jH4WK21MqUtjzhkBpmZIghiEAOOKu95oQ+s1h4NNlNBIKFLw+kXzXQmaJSOSLHeZZL2sUjTFGFadFX87W02zHlR7e+o19Bn8cktNA+xXo35fJQjSzYHkodh1oLlNCwk1wu0QlwNRbghIg+e60zM6ZV+2Q34J48zZ8gib1Ak2LfHmP4cV5pj2nNQCUuclzzUMDb0LTZ5kCURPRX/4pqv/d1QPrqiZA7cFlqS4R/GpKZx9oGJk4AijRp3YuGILMMBpeQJ/jUkgiimVcIp9wUo3OqVEEyHbE9bvH+bytZlRS0PYNtM5ivRcYFONzDwWnPTzl4ieBWzBIOZYxAI2JyPmXGod+P0B3Du7vwwmniurHv8iX+r/CcZtg9vAK03peKraFexNBnasoSd6uBJQUuSMn0zbdwXmMRPdazQHTcX
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3e55dcc-d939-4d99-6d34-08d75cc19112
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2019 22:44:32.6792
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0ExFPY5twVtJy4ZezuXPXbnyoeFBTa9UfIfdDgB9+Xcj8txvBAnc+XTeR3HI0E9gZNrc2dMjoI7reZh7W6qfmA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6543
+        Tue, 29 Oct 2019 18:48:07 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41763 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbfJ2WsH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 18:48:07 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t10so16554plr.8
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 15:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=0G08DVDmHHpYBvqrNiRz2P/EWIDmTXItkvaTB27EiyI=;
+        b=CkwdYGQthHbjeB7YJk2k7oOQyekpKWhBz8LE56+eFTTP9mqZeL9MuGgiv2GrcLSaBg
+         rE2sCuLvAVGnNCs4vowlSz50Su8Mv9l48u1zbUbe4ZDaypaV5WsadZZAOOcYYKfOmOIf
+         EmLxn+hz5Gpaz6QM1cM8GcO4kjJgDDwECBfv8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=0G08DVDmHHpYBvqrNiRz2P/EWIDmTXItkvaTB27EiyI=;
+        b=GgSWVs6KmXZuctr4eoJuoF2FALypQGul1KAljHXc+NmGEkw7hsqvTg+YNeF/Ykv5g6
+         gq4jGvehpM+ZG33g1SIvqfMac+hYto1vS9Hh9PYV94rYL9pGDYRDg7oE5VpKE4AfhcTa
+         qtgrr0yygflCZ3KzRbVcBBVtegEVEr00k/9Ydy1peLiIKNOxpSrZFYyHll0rS8HCn8p0
+         Vt3nTsTcKYcpw6Bx2JXcQE32pLgUTTbsyAwtkBKPvo4OOoR4lbD2Ywes+yMuPhujWbcW
+         X0pDe3Iz42nCnjX0tg6Z9NTp5yRGLisrBpSSc70dfoptAGFoQzSg4NUURnm1sP3++z50
+         ONEw==
+X-Gm-Message-State: APjAAAWu5AgXaFhZHcKH5fCTmtPpUfEBca+0Fke/czSXzGnbBVTepSlH
+        67KBzZ6H6uvTVskiW5Uuq6ZcBg==
+X-Google-Smtp-Source: APXvYqy6v7l6MhB+p5gWacT10BGV47R2lNIZI3D56QBZanDs4YzchO4lyFefyJjvfINrgcE9a5Si7A==
+X-Received: by 2002:a17:902:b091:: with SMTP id p17mr1086640plr.13.1572389286296;
+        Tue, 29 Oct 2019 15:48:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e7sm254020pgr.25.2019.10.29.15.48.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 15:48:05 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        netdev@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/3] linux/stddef.h: Add sizeof_member() macro
+Date:   Tue, 29 Oct 2019 15:47:55 -0700
+Message-Id: <20191029224756.28618-3-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191029224756.28618-1-keescook@chromium.org>
+References: <20191029224756.28618-1-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
 
+At present we have 2 different macros to calculate the size of a member
+of a struct: FIELD_SIZEOF() and sizeof_field(). As a prerequisite to
+bringing uniformity to the entire kernel source tree, add sizeof_member()
+macro as it is both more pleasant (not upper case) and more correct
+(sizeof()-family cannot operate on bit fields; this is meant to operate
+on struct members), as discussed[1].
 
-> -----Original Message-----
-> From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Sent: Friday, October 25, 2019 7:41 AM
-> To: Qiang Zhao <qiang.zhao@nxp.com>; Leo Li <leoyang.li@nxp.com>;
-> Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; Scott Wood <oss@buserror.net>; Valentin
-> Longchamp <valentin.longchamp@keymile.com>; Rasmus Villemoes
-> <linux@rasmusvillemoes.dk>; linux-serial@vger.kernel.org
-> Subject: [PATCH v2 20/23] serial: make SERIAL_QE depend on PPC32
->=20
-> Currently SERIAL_QE depends on QUICC_ENGINE, which in turn depends on
-> PPC32, so this doesn't add any extra dependency. However, the QUICC
-> Engine IP block also exists on some arm boards, so this serves as prepara=
-tion
-> for removing the PPC32 dependency from QUICC_ENGINE and build the QE
-> support in drivers/soc/fsl/qe, while preventing allmodconfig/randconfig
-> failures due to SERIAL_QE not being supported yet.
->=20
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Future patches will replace all occurrences of above macros with
+sizeof_member().
 
-I think your purpose of this series is to make the QE UART not depending on=
- PPC32.  If it does accomplish that then we don't need this change.
+[1] https://www.openwall.com/lists/kernel-hardening/2019/07/02/2
 
-> ---
->  drivers/tty/serial/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig inde=
-x
-> 67a9eb3f94ce..78246f535809 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1056,6 +1056,7 @@ config SERIAL_LANTIQ  config SERIAL_QE
->  	tristate "Freescale QUICC Engine serial port support"
->  	depends on QUICC_ENGINE
-> +	depends on PPC32
->  	select SERIAL_CORE
->  	select FW_LOADER
->  	help
-> --
-> 2.23.0
+Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+Link: https://lore.kernel.org/r/20190924105839.110713-2-pankaj.laxminarayan.bharadiya@intel.com
+Co-developed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/stddef.h                 | 13 ++++++++++++-
+ tools/testing/selftests/bpf/bpf_util.h |  6 +++---
+ 2 files changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+index 998a4ba28eba..ecadb736c853 100644
+--- a/include/linux/stddef.h
++++ b/include/linux/stddef.h
+@@ -27,6 +27,17 @@ enum {
+  */
+ #define sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
+ 
++/**
++ * sizeof_member(TYPE, MEMBER) - get the size of a struct's member
++ *
++ * @TYPE: the target struct
++ * @MEMBER: the target struct's member
++ *
++ * Return: the size of @MEMBER in the struct definition without having a
++ * declared instance of @TYPE.
++ */
++#define sizeof_member(TYPE, MEMBER)	(sizeof(((TYPE *)0)->MEMBER))
++
+ /**
+  * offsetofend(TYPE, MEMBER)
+  *
+@@ -34,6 +45,6 @@ enum {
+  * @MEMBER: The member within the structure to get the end offset of
+  */
+ #define offsetofend(TYPE, MEMBER) \
+-	(offsetof(TYPE, MEMBER)	+ sizeof_field(TYPE, MEMBER))
++	(offsetof(TYPE, MEMBER)	+ sizeof_member(TYPE, MEMBER))
+ 
+ #endif
+diff --git a/tools/testing/selftests/bpf/bpf_util.h b/tools/testing/selftests/bpf/bpf_util.h
+index ec219f84e041..6b4b3e24ba9f 100644
+--- a/tools/testing/selftests/bpf/bpf_util.h
++++ b/tools/testing/selftests/bpf/bpf_util.h
+@@ -31,13 +31,13 @@ static inline unsigned int bpf_num_possible_cpus(void)
+ # define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+ #endif
+ 
+-#ifndef sizeof_field
+-#define sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
++#ifndef sizeof_member
++#define sizeof_member(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
+ #endif
+ 
+ #ifndef offsetofend
+ #define offsetofend(TYPE, MEMBER) \
+-	(offsetof(TYPE, MEMBER)	+ sizeof_field(TYPE, MEMBER))
++	(offsetof(TYPE, MEMBER)	+ sizeof_member(TYPE, MEMBER))
+ #endif
+ 
+ #endif /* __BPF_UTIL__ */
+-- 
+2.17.1
 
