@@ -2,207 +2,113 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6288CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EC8CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB8B21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93E8208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 12:50:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TYes92p0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ari5oMPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388060AbfJ2MtY (ORCPT
+        id S2388004AbfJ2Mu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:49:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24174 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729253AbfJ2MtX (ORCPT
+        Tue, 29 Oct 2019 08:50:27 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35572 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbfJ2Mu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:49:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572353362;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6BV4BcyOxaroiRY1nHh/W3bkCNLJ+ckD/r50Gn1yPT0=;
-        b=TYes92p0H7fd2VFu+U+M2eu77wlbQnYZ0ej4bTRVTBXYvh6aWfiv72Bt+u/VbFhTINImZl
-        1i+Zvhlao17RoXnXBm2RgtXbFO62ApQlG9tdm0gOI0m5gtgrhUHS9RWGqg2yKihaIdJM38
-        mYfFxhyqm0WtniCGfwlhPsFbZq4qXyA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-xZ4E5mL8OxaCghK5UyvDWg-1; Tue, 29 Oct 2019 08:49:18 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30293800C80;
-        Tue, 29 Oct 2019 12:49:17 +0000 (UTC)
-Received: from [10.36.118.15] (unknown [10.36.118.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3123F600C4;
-        Tue, 29 Oct 2019 12:49:13 +0000 (UTC)
-Subject: Re: [PATCH 3/3] KVM: arm/arm64: vgic: Don't rely on the wrong pending
- table
-To:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>
-Cc:     suzuki.poulose@arm.com, linux-kernel@vger.kernel.org,
-        james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-References: <20191029071919.177-1-yuzenghui@huawei.com>
- <20191029071919.177-4-yuzenghui@huawei.com> <86mudjykfa.wl-maz@kernel.org>
- <f8a30e65-7077-301a-1558-7fc504b5e891@huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <e2141f6a-c530-46d5-d5d9-26806b02d55b@redhat.com>
-Date:   Tue, 29 Oct 2019 13:49:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 29 Oct 2019 08:50:27 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m7so15136936lji.2;
+        Tue, 29 Oct 2019 05:50:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H+1+E1Mkw61uNWs7GIpUIl/WGmE8S7qBe+e6s/cPqZw=;
+        b=ari5oMPXp859DXdO+xnn+iL7LJAYqB1R/5IEpRjP0GyPrkUR+OXWZeDWb0mwdybwQZ
+         1odHGNN7BvobQHpJnR/IOu2q09pKaCtoa3r7g6V38Lag8Dzi5V6d83LYNyLYlN3Xl8wl
+         1PlZX8Fu5WOWKaLTTIb/AF0iuNGZDQRLLA2tuEAM7THXX+59A58mzGy6HARPryO0QIQ+
+         FmcbzYCktyZdZx6CPUou2NWAb5CwBRxwPl654n2QBzlgoaVi2BxJ2AbBGcR7ogkN0lfj
+         lT+g5wVHsWxBbCQJHqEjYgKE7GkZLyiLDjdgwiIGLFmfjeqQGYSQjLsAObdGlESu5zyJ
+         RlIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H+1+E1Mkw61uNWs7GIpUIl/WGmE8S7qBe+e6s/cPqZw=;
+        b=ZHZ5nAfLdKKrVUF83Xfk0BMSqp5u4+sHXpDswrH2JJI81817gvyPxTk8VD+xj651oV
+         BJkICXmGlNRbXGP3UUJ5dOFBz3+IPmBSeT1SmcYXX51Sp5/osn2j6CVkaYFNzrkdBjmz
+         cqc+H5bDePFOXlzFUZoyDDZCWel3g3iyiSs7nDMEilYkNjevGLXLRfezVGMujJkv50tu
+         RLYyeJP5bpoBY49iSVBvRxzlxLejZTBI1yxPcjNUgb8HqfjO25MYGkXKI3m52dIlAJhU
+         LtBrCjBTG4RY3jhmtC1XHIb8tObxSpzBBJuCnfDU80u6Qz7CekdzVKTrbd4PjWtvE6yA
+         Jk+g==
+X-Gm-Message-State: APjAAAWkYnO9oAUrEy43Z4z8G/vEdmqxydL3iWKUAt4U2emsGA8qgrAl
+        g43W47ZOAGImk2VXhkm8ssjVmiE6
+X-Google-Smtp-Source: APXvYqwT5xHzW80AdFTkNUJFyTUogFJ15bZtdQv5kxzSKhGfDa1Ig7x39l929QbapLvn7aSlJFZ3DQ==
+X-Received: by 2002:a2e:8604:: with SMTP id a4mr2623578lji.89.1572353424838;
+        Tue, 29 Oct 2019 05:50:24 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id q27sm6080287lfn.96.2019.10.29.05.50.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Oct 2019 05:50:23 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] clk: tegra: divider: Add missing check for
+ enable-bit on rate's recalculation
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190723025245.27754-1-digetx@gmail.com>
+ <20191028142753.GC27141@pdeschrijver-desktop.Nvidia.com>
+ <62c375bd-09ae-e09f-6ca2-c1395eebc5fa@gmail.com>
+Message-ID: <1dfd0270-b8d7-da22-46dd-7efc907d5655@gmail.com>
+Date:   Tue, 29 Oct 2019 15:50:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <f8a30e65-7077-301a-1558-7fc504b5e891@huawei.com>
+In-Reply-To: <62c375bd-09ae-e09f-6ca2-c1395eebc5fa@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: xZ4E5mL8OxaCghK5UyvDWg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+29.10.2019 03:14, Dmitry Osipenko пишет:
+> 28.10.2019 17:27, Peter De Schrijver пишет:
+>> On Tue, Jul 23, 2019 at 05:52:44AM +0300, Dmitry Osipenko wrote:
+>>> Unset "enable" bit means that divider is in bypass mode, hence it doesn't
+>>> have any effect in that case. Please note that there are no known bugs
+>>> caused by the missing check.
+>>>
+>>
+>> Technically this is not quite true, but for the purposes of CCF you can
+>> treat it that way. This bits defines if the value in the lower 16 bits
+>> of the divider register is used to configure the divider or if the
+>> contents of the UART DLM/DLL registers is used. So the divider isn't
+>> actually bypassed, it's just configured differently.
+>> In practice this bit is only set when the divider is non-zero when doing
+>> set rate. So the extra test isn't strictly needed as long as the sw
+>> running before the kernel also ensures the bit is only set when the
+>> divider is non-zero.
+>>
+>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> 
+> Thank you for the clarification. I hope that bootloader doesn't enable
+> the divider because it looks like standard 8250 driver won't be ready
+> for that. But serial-tegra driver seems should be good.
 
-On 10/29/19 1:27 PM, Zenghui Yu wrote:
-> Hi Marc,
->=20
-> On 2019/10/29 17:23, Marc Zyngier wrote:
->> On Tue, 29 Oct 2019 07:19:19 +0000,
->> Zenghui Yu <yuzenghui@huawei.com> wrote:
->>>
->>> It's possible that two LPIs locate in the same "byte_offset" but target
->>> two different vcpus, where their pending status are indicated by two
->>> different pending tables.=C2=A0 In such a scenario, using last_byte_off=
-set
->>> optimization will lead KVM relying on the wrong pending table entry.
->>> Let us use last_ptr instead, which can be treated as a byte index into
->>> a pending table and also, can be vcpu specific.
->>>
->>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->>> ---
->>>
->>> If this patch has done the right thing, we can even add the:
->>>
->>> Fixes: 280771252c1b ("KVM: arm64: vgic-v3:
->>> KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES")
->>>
->>> But to be honest, I'm not clear about what has this patch actually
->>> fixed.
->>> Pending tables should contain all zeros before we flush vgic_irq's
->>> pending
->>> status into guest's RAM (thinking that guest should never write anythin=
-g
->>> into it). So the pending table entry we've read from the guest memory
->>> seems always be zero. And we will always do the right thing even if we
->>> rely on the wrong pending table entry.
->>>
->>> I think I must have some misunderstanding here... Please fix me.
->>
->> I think you're spot on, and it is the code needs fixing, not you! The
->> problem is that we only read a byte once, irrespective of the vcpu the
->> interrupts is routed to. If we switch to another vcpu for the same
->> byte offset, we must reload it.
->>
->> This can be done by either checking the vcpu, or by tracking the guest
->> address that we read from (just like you do here).
->=20
-> okay, the remaining question is that in vgic_v3_save_pending_tables():
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0stored =3D val & (1U << bit_nr);
-> =C2=A0=C2=A0=C2=A0=C2=A0if (stored =3D=3D irq->pending_latch)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 continue;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0if (irq->pending_latch)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val |=3D 1 << bit_nr;
-> =C2=A0=C2=A0=C2=A0=C2=A0else
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~(1 << bit_nr);
->=20
-> Do we really have a scenario where irq->pending_latch=3D=3Dfalse and
-> stored=3D=3Dtrue (corresponds to the above "else") and then we clear
-> pending status of this LPI in guest memory?
-> I can not think out one now.
+Actually, it should be good because I missed that UART clocks are
+per-initialized in the clk driver init table.
 
-if you save, restore and save again. On the 1st save the LPI may be
-pending, it gets stored. On the second save the LPI may be not pending
-anymore?
-
-Thanks
-
-Eric
->=20
->>
->> A small comment below:
->>
->>> =C2=A0 virt/kvm/arm/vgic/vgic-v3.c | 6 +++---
->>> =C2=A0 1 file changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
->>> index 5ef93e5041e1..7cd2e2f81513 100644
->>> --- a/virt/kvm/arm/vgic/vgic-v3.c
->>> +++ b/virt/kvm/arm/vgic/vgic-v3.c
->>> @@ -363,8 +363,8 @@ int vgic_v3_lpi_sync_pending_status(struct kvm
->>> *kvm, struct vgic_irq *irq)
->>> =C2=A0 int vgic_v3_save_pending_tables(struct kvm *kvm)
->>> =C2=A0 {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vgic_dist *dist =3D &kvm->arch.vg=
-ic;
->>> -=C2=A0=C2=A0=C2=A0 int last_byte_offset =3D -1;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vgic_irq *irq;
->>> +=C2=A0=C2=A0=C2=A0 gpa_t last_ptr =3D -1;
->>
->> This should be written as
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gpa_t last_ptr =3D ~(gpa_t)0;
->=20
-> Thanks for pointing it out.
->=20
->>
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u8 val;
->>> =C2=A0 @@ -384,11 +384,11 @@ int vgic_v3_save_pending_tables(struct kvm=
- *kvm)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bit_nr =3D irq->=
-intid % BITS_PER_BYTE;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ptr =3D pendbase=
- + byte_offset;
->>> =C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (byte_offset !=3D=
- last_byte_offset) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ptr !=3D last_ptr) {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 ret =3D kvm_read_guest_lock(kvm, ptr, &val, 1);
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 if (ret)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 las=
-t_byte_offset =3D byte_offset;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 las=
-t_ptr =3D ptr;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 stored =
-=3D val & (1U << bit_nr);
->>
->> Otherwise, this looks good to me (no need to respin for the above
->> nit).
->=20
-> Thanks,
->=20
-> Zenghui
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+I'll update commit's message and send a new version of this patch.
