@@ -2,103 +2,194 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1C8CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4E9CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6334A20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99EE2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:53:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="UTgrs2sE"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="CL6xSLkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfJ2TvE (ORCPT
+        id S1727051AbfJ2TxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:51:04 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43417 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfJ2TvD (ORCPT
+        Tue, 29 Oct 2019 15:53:20 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35041 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfJ2TxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:51:03 -0400
-Received: by mail-qk1-f195.google.com with SMTP id a194so78605qkg.10
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:51:03 -0700 (PDT)
+        Tue, 29 Oct 2019 15:53:20 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y6so11479003lfj.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:53:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=cQkD4MvS0kKW1/ul+xB5LN/x1F0/sjmZ3GaEB4sIcXA=;
-        b=UTgrs2sEctwlidoemzTmSe3mg08J8lodDl8CYJjVTOFTT+YNjsbAdL/GBeqMFfnB0l
-         URtqgGALgtypK14/rZfHTviUq1QdHn+pD6y+O+SbVT+Ri9fp0oVJLCL30ZyW+ZV7GF/2
-         YAKog5d4ob6JulurRIoW80FwREVYBbDEKVeKM/c/hCMBHh5QTy1doYCBSUG3M1H7uidE
-         RU8VpQQPZm49g02i6f/9IgGaAP8yJsA5GqT/hGq96XsPzJuGWbltrYTTe/ncqPqIyBGe
-         uxfsHVTkc181cbNhqYo7YcmffiBnz+Te8Kb9Nq3MsuE90VUkKzHADyLLt2yWtaWlz3aN
-         IFqQ==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=ELIuHAsLUdOptuJRjC0EGY1vsp+EwGqf0TMIjtj9lzo=;
+        b=CL6xSLkCn8z+SPxn0Ox2Q6QupnXa+71PuXMVumYce/AdZ5SIw+naoKj16l8UR2SCHV
+         7i1haBetmU0frrYstQP06LJgQMQMft5ACDcvfsVzEKD5SAltBC2dnqXYH+wzgKuK6LO5
+         m9++MWlozUYf3gNf93unMZDWiaov7NrL4GYQ7kXkCp+vf6lNQ5H2MRE13ertgZP0+lCX
+         UETuw+o2EjBHSJFVt+NjApYTc259y7RV4Hw/Uam5kGh18cz+Jf8dEASSJTMq5zlq3B2m
+         uTAYA8f3f5+uKdzxBSaxaqgOGGjH6pJVUZnXIxnB2n7hw+9oVGzcp2DxG9WKNeHJ99XR
+         7CQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=cQkD4MvS0kKW1/ul+xB5LN/x1F0/sjmZ3GaEB4sIcXA=;
-        b=dlY0eUkioh+oug4AEbpAelLxo4KrY4gD9orEsfQAakaEv9XnU2xvuvZxGWdJ96DarM
-         2Hfs0xITZp18+GHLm+1dIeV9JmXthhqA8EC/8QWHRSShIptkFYUrfjK38Th2Y4ay2Oov
-         6inuA49UiCdw7wt2SFiLPCcHwFthvmi35FuAUz8Z78jqiS/B2/ap3UH2/zuHMhIvJN+l
-         8F19DaFU0uWIh+ky/FFQ0F2Rx0OVfpznENovUvQduSozp8wzSDTVXLmPpSoybjlfNABU
-         LbXKGJDF9WROW6wALKw0UjDugXNPmRcq+Ztzam5t5HcRor1BdRJM6mdf1tscgSnmZgjF
-         lKqA==
-X-Gm-Message-State: APjAAAWastKWG5UVKBMtyzKLiSHvYYMoz7WafvwRkKadjRU095O3Y0Xc
-        bgGAmpV3DcH1zRYocx3RT/syEg==
-X-Google-Smtp-Source: APXvYqwbJHyN8T+1UJD2wSYLRC6t1gVRWzQx3yuUuIdBzMtowjw0Nf3NT4k6ar6ntJVDgExf62sS1w==
-X-Received: by 2002:a37:8046:: with SMTP id b67mr24024593qkd.437.1572378662716;
-        Tue, 29 Oct 2019 12:51:02 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id g45sm4240565qtb.48.2019.10.29.12.51.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 29 Oct 2019 12:51:02 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iPXW9-0000Rd-PJ; Tue, 29 Oct 2019 16:51:01 -0300
-Date:   Tue, 29 Oct 2019 16:51:01 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dag Moxnes <dag.moxnes@oracle.com>
-Cc:     dledford@redhat.com, leon@kernel.org, parav@mellanox.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH rdma-next] RDMA/cma: Use ACK timeout for RoCE
- packetLifeTime
-Message-ID: <20191029195101.GA1654@ziepe.ca>
-References: <1572003721-26368-1-git-send-email-dag.moxnes@oracle.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=ELIuHAsLUdOptuJRjC0EGY1vsp+EwGqf0TMIjtj9lzo=;
+        b=LvyvVgTae4hz6vsJITHyYAZipS4QTqp3Ajovs64hLdTv0tPezNP/Tca7egeAuhAbe/
+         OLEeJcwCtpGZ555eiVTeqt3xnpwwGizFrB9jOdmiCXaseqgxwvlSGzIYrKN/qhMgeJvj
+         PpkfqqPDMcN4ZUGYNPj8bCQj6GAh8Pe3CuE+qOCIDjh9930ueESlOj6gM8lLqc2uNSXa
+         GfPYNzMEBmu42qhduXc4hXJ5UcH7UX8MoQsi8qnqaQrNmJsOdIkwce+bXQUzxCGydVSU
+         /Gi/k3yMDX3+1S73/eyfZwwyJZEjwN8dksyfsq9VTWRzAy0shVHVHZCLRdNHJ6uCOKMj
+         MJ/Q==
+X-Gm-Message-State: APjAAAVPV+ZClQ7u3OMVU3DD55Ze4sl7oM5hdmpFbz/tdubMmvx6e4z8
+        kixzzVoCkXMi/xTIAfCsktlY7A==
+X-Google-Smtp-Source: APXvYqxoXomwuRDO/YmNQAylZagn+LTxZqxb/kzuIdcD9fkqeiGTej2ZyTO75cc3M2ivp48a1iK2vw==
+X-Received: by 2002:a05:6512:1de:: with SMTP id f30mr3570832lfp.176.1572378797083;
+        Tue, 29 Oct 2019 12:53:17 -0700 (PDT)
+Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id c5sm6465233ljd.57.2019.10.29.12.53.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 12:53:16 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 12:53:08 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next, 3/4] hv_netvsc: Add XDP support
+Message-ID: <20191029125308.78b52511@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <DM6PR21MB1337547067BE5E52DFE05E20CA610@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
+        <1572296801-4789-4-git-send-email-haiyangz@microsoft.com>
+        <20191028143322.45d81da4@cakuba.hsd1.ca.comcast.net>
+        <DM6PR21MB1337547067BE5E52DFE05E20CA610@DM6PR21MB1337.namprd21.prod.outlook.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1572003721-26368-1-git-send-email-dag.moxnes@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 01:42:01PM +0200, Dag Moxnes wrote:
-> The cma is currently using a hard-coded value, CMA_IBOE_PACKET_LIFETIME,
-> for the PacketLifeTime, as it can not be determined from the network.
-> This value might not be optimal for all networks.
+On Tue, 29 Oct 2019 19:17:25 +0000, Haiyang Zhang wrote:
+> > > +int netvsc_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+> > > +		   struct netvsc_device *nvdev)
+> > > +{
+> > > +	struct bpf_prog *old_prog;
+> > > +	int frag_max, i;
+> > > +
+> > > +	old_prog = netvsc_xdp_get(nvdev);
+> > > +
+> > > +	if (!old_prog && !prog)
+> > > +		return 0;  
+> > 
+> > I think this case is now handled by the core.  
+> Thanks for the reminder. I saw the code in dev_change_xdp_fd(), so the upper layer
+> doesn't call XDP_SETUP_PROG with old/new prog both NULL.
+> But this function is also called by other functions in our driver, like netvsc_detach(),
+> netvsc_remove(), etc. Instead of checking for NULL in each place, I still keep the check inside
+> netvsc_xdp_set().
+
+I see. Makes sense on a closer look.
+
+BTW would you do me a favour and reformat this line:
+
+static struct netvsc_device_info *netvsc_devinfo_get
+			(struct netvsc_device *nvdev)
+
+to look like this:
+
+static 
+struct netvsc_device_info *netvsc_devinfo_get(struct netvsc_device *nvdev)
+
+or
+
+static struct netvsc_device_info *
+netvsc_devinfo_get(struct netvsc_device *nvdev)
+
+Otherwise git diff gets confused about which function given chunk
+belongs to. (Incorrectly thinking your patch is touching
+netvsc_get_channels()). I spent few minutes trying to figure out what's
+going on there :)
+
+> >   
+> > > +		return -EOPNOTSUPP;
+> > > +	}
+> > > +
+> > > +	if (prog) {
+> > > +		prog = bpf_prog_add(prog, nvdev->num_chn);
+> > > +		if (IS_ERR(prog))
+> > > +			return PTR_ERR(prog);
+> > > +	}
+> > > +
+> > > +	for (i = 0; i < nvdev->num_chn; i++)
+> > > +		rcu_assign_pointer(nvdev->chan_table[i].bpf_prog, prog);
+> > > +
+> > > +	if (old_prog)
+> > > +		for (i = 0; i < nvdev->num_chn; i++)
+> > > +			bpf_prog_put(old_prog);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +int netvsc_vf_setxdp(struct net_device *vf_netdev, struct bpf_prog *prog)  
+> > > +{
+> > > +	struct netdev_bpf xdp;
+> > > +	bpf_op_t ndo_bpf;
+> > > +
+> > > +	ASSERT_RTNL();
+> > > +
+> > > +	if (!vf_netdev)
+> > > +		return 0;
+> > > +
+> > > +	ndo_bpf = vf_netdev->netdev_ops->ndo_bpf;
+> > > +	if (!ndo_bpf)
+> > > +		return 0;
+> > > +
+> > > +	memset(&xdp, 0, sizeof(xdp));
+> > > +
+> > > +	xdp.command = XDP_SETUP_PROG;
+> > > +	xdp.prog = prog;
+> > > +
+> > > +	return ndo_bpf(vf_netdev, &xdp);  
+> > 
+> > IMHO the automatic propagation is not a good idea. Especially if the
+> > propagation doesn't make the entire installation fail if VF doesn't
+> > have ndo_bpf.  
 > 
-> The cma module supports the function rdma_set_ack_timeout to set the
-> ACK timeout for a QP associated with a connection. As per IBTA 12.7.34
-> local ACK timeout = (2 * PacketLifeTime + Local CA’s ACK delay).
-> Assuming a negligible local ACK delay, we can use
-> PacketLifeTime = local ACK timeout/2
-> as a reasonable approximation for RoCE networks.
-> 
-> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
-> Change-Id: I200eda9d54829184e556c3c55d6a8869558d76b2
+> On Hyperv and Azure hosts, VF is always acting as a slave below netvsc.
+> And they are both active -- most data packets go to VF, but broadcast,
+> multicast, and TCP SYN packets go to netvsc synthetic data path. The synthetic 
+> NIC (netvsc) is also a failover NIC when VF is not available.
+> We ask customers to only use the synthetic NIC directly. So propagation
+> of XDP setting to VF NIC is desired. 
+> But, I will change the return code to error, so the entire installation fails if VF is 
+> present but unable to set XDP prog.
 
-Please don't send Change-Id to the public lists. Run checkpatch before
-sending.
+Okay, if I read the rest of the code correctly you also fail attach
+if xdp propagation failed? If that's the case and we return an error
+here on missing NDO, then the propagation could be okay.
 
-Otherwise this seems reasonable to me..
+So the semantics are these:
 
-Jason
+(a) install on virt - potentially overwrites the existing VF prog;
+(b) install on VF is not noticed by virt;
+(c) uninstall on virt - clears both virt and VF, regardless what
+    program was installed on virt;
+(d) uninstall on VF does not propagate;
+
+Since you're adding documentation it would perhaps be worth stating
+there that touching the program on the VF is not supported/may lead 
+to breakage, and users should only touch/configure the program on the
+virt.
