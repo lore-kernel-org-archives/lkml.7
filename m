@@ -3,102 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F445CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF01ECA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5065420717
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE2220717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730903AbfJ2JF2 (ORCPT
+        id S1730933AbfJ2JHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:05:28 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34979 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfJ2JF1 (ORCPT
+        Tue, 29 Oct 2019 05:07:40 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:60514 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfJ2JHk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:05:27 -0400
-Received: by mail-oi1-f194.google.com with SMTP id n16so6040660oig.2;
-        Tue, 29 Oct 2019 02:05:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/e/OXl/eSB3S3s8RmU98HsH5ODaBeFtkQ+8P1wGA6WU=;
-        b=uFcYWpP2jsKfGccj9mkaRQdIj7iZYSxuqlx7YGmqN5cnVYeteZ5CfHujJwTjK/NFiq
-         btBarCLJZH61NlQx4GVLQcIivC743EpeLeuOSm8R3ewEXHZCEOiB2d7euG0VwRtb+XGe
-         bAQQ/6srVR8JkCXZ7MzjW0Pf++WVMfHSUhT944a8ZlnaX5aa62YT17KlIMW/4bzz8Fv6
-         1VER0gZGjMv6FA2+8QB8pTdB53vHGkY8+V9qGJPNPZRlYVhG+p0OEom5ZNrbucXMsJxJ
-         A3LQbV98x12okCHXm87jJjl0qjYsI+9fHxJo1zQJJj6gsIp3PqI6D4AHNus1L1+VKMcK
-         eBSA==
-X-Gm-Message-State: APjAAAUzMvNHgrnuwEjgCq4Dz+3X8/Y7PCMMQzpu1fUAOibu7YzEoaoP
-        Uh3WFvCqUjBMAXk9bgMJsMQXMAjqG37YFjcFtgo=
-X-Google-Smtp-Source: APXvYqx2l2QDxxl6Pp9UmXl3j5zgDTqm4st8pBarLtb61+fstLH97WqlTYGMWHYBEUNyjw/fr1XcKOIzzUAJbA3Q4U8=
-X-Received: by 2002:aca:fc92:: with SMTP id a140mr2914747oii.153.1572339926899;
- Tue, 29 Oct 2019 02:05:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191022102334.67e5d3d1@canb.auug.org.au>
-In-Reply-To: <20191022102334.67e5d3d1@canb.auug.org.au>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 29 Oct 2019 10:05:15 +0100
-Message-ID: <CAMuHMdUCx31k3VJt=nYSkFXcOQdRhH7FiY8_f5RX4w4zaksP-w@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the thermal tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>
+        Tue, 29 Oct 2019 05:07:40 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92.2)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1iPNTP-0004OR-Op; Tue, 29 Oct 2019 10:07:31 +0100
+Message-ID: <4725dcbd6297c74bf949671e7ad48eeeb0ceb0d0.camel@sipsolutions.net>
+Subject: Re: [PATCH v2] 802.11n IBSS: wlan0 stops receiving packets due to
+ aggregation after sender reboot
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Krzysztof =?UTF-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 29 Oct 2019 10:07:30 +0100
+In-Reply-To: <m37e4orkxr.fsf@t19.piap.pl>
+References: <m34l02mh71.fsf@t19.piap.pl> <m37e4tjfbu.fsf@t19.piap.pl>
+         <e5b07b4ce51f806ce79b1ae06ff3cbabbaa4873d.camel@sipsolutions.net>
+         <m37e4orkxr.fsf@t19.piap.pl>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 1:25 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> After merging the thermal tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
->
-> In file included from drivers/thermal/qcom/tsens-common.c:13:
-> drivers/thermal/qcom/tsens-common.c: In function 'tsens_set_interrupt':
-> include/linux/regmap.h:87:2: warning: 'index' may be used uninitialized in this function [-Wmaybe-uninitialized]
->    87 |  regmap_field_update_bits_base(field, ~0, val, NULL, false, false)
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/thermal/qcom/tsens-common.c:183:6: note: 'index' was declared here
->   183 |  u32 index;
->       |      ^~~~~
-> In file included from drivers/thermal/qcom/tsens-common.c:13:
-> include/linux/regmap.h:87:2: warning: 'index_clear' may be used uninitialized in this function [-Wmaybe-uninitialized]
->    87 |  regmap_field_update_bits_base(field, ~0, val, NULL, false, false)
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/thermal/qcom/tsens-common.c:199:18: note: 'index_clear' was declared here
->   199 |  u32 index_mask, index_clear;
->       |                  ^~~~~~~~~~~
-> drivers/thermal/qcom/tsens-common.c:199:6: warning: 'index_mask' may be used uninitialized in this function [-Wmaybe-uninitialized]
->   199 |  u32 index_mask, index_clear;
->       |      ^~~~~~~~~~
->
-> Introduced by commit
->
->   fbfe1a042cfd ("drivers: thermal: tsens: Add interrupt support")
+On Tue, 2019-10-29 at 09:54 +0100, Krzysztof Hałasa wrote:
 
-And kisskb reported the following link failure on m68k:
+> The problem I can see is that the dialog_tokens are 8-bit, way too small
+> to eliminate conflicts.
 
-    ERROR: "__udivdi3" [drivers/thermal/qcom/qcom_tsens.ko] undefined!
+Well, they're also per station, we could just randomize the start and
+then we'd delete the old session and start a new one, on the receiver.
 
-Probably caused by a plain 64-bit division in the code.
-I expect this shows up on other 32-bit platforms, too.
+So that would improve robustness somewhat (down to a 1/256 chance to hit
+this problem).
 
-Gr{oetje,eeting}s,
+> > Really what I think probably happened is that one of your stations lost
+> > the connection to the other, and didn't tell it about it in any way - so
+> > the other kept all the status alive.
+> 
+> You must have missed my previous mail - I simply rebooted that station,
+> and alternatively rmmoded/modprobed ath9k. But the problem originated in
+> a station going out of and back in range, in fact.
 
-                        Geert
+I was on vacation, so yeah, quite possible I missed it.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Sounds like we need not just
+4b08d1b6a994 ("mac80211: IBSS: send deauth when expiring inactive STAs")
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+but also send a deauth when we disconnect. Surprising we don't do that,
+actually.
+
+> > I suspect to make all this work well we need to not only have the fixes
+> > I made recently to actually send and parse deauth frames, but also to
+> > even send an auth and reset the state when we receive that, so if we
+> > move out of range and even the deauth frame is lost, we can still reset
+> > properly.
+> 
+> That's one thing. The other is a station trying ADDBA for the first time
+> after boot (while the local station has seen it before that reboot).
+
+That's the situation though - the local station needs to know that it
+has in fact *not* seen the same instance of the station, but that the
+station has reset and needs to be removed & re-added.
+
+> I guess we need to identify "new connection" reliably. Otherwise,
+> the new connections are treated as old ones and it doesn't work.
+
+Right. But we can implement the (optional) authentication (which you
+actually already get when you implement [encrypted] IBSS with wpa_s),
+and reset the station state when we get an authentication frame.
+
+johannes
+
