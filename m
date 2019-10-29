@@ -2,125 +2,103 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCACCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAD2CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8B220856
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D3320856
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 13:13:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqGegw9t"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="reO02uSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388233AbfJ2NNP (ORCPT
+        id S2388253AbfJ2NNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:13:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42538 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfJ2NNP (ORCPT
+        Tue, 29 Oct 2019 09:13:22 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:17799 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388235AbfJ2NNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 09:13:15 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a15so1313814wrf.9;
-        Tue, 29 Oct 2019 06:13:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W8PkCFVnCorrtSWGdVFof9XL+RN29yxwr92wnMWMfsg=;
-        b=hqGegw9tshvWHtIQow/p3XWzfwDpwhTwKtAo2Rb6OCl2QBqJbIL0+RMefu+L25Iwei
-         5COpMsatmSas6msShGrgSd6fpGg88UIxtJsXZiaUZ/7ie8V1ULHV9vfbtE4vBK6mvOUZ
-         PEyIyyEFqVODpZfbqPpBY5WCHZ1uiayo9KypO1Kpi/GxsIqy7WTFYC+CawqmN0ILhFJ7
-         kY7opCE36nNS/lae6b0xb8PGXJWo0ouUYyaoCV+2+dUoa3312RePliskFLh+8KZS1l1X
-         DPMN030Rrt4fIw6TmYUkmrjvnF7gFQFI+lniAP03n6qz544kZF74GQwg00fTwqdI9nrW
-         sxLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W8PkCFVnCorrtSWGdVFof9XL+RN29yxwr92wnMWMfsg=;
-        b=Z+cylLJWEvO+xVfhTHLsV5R51A+JCH2JnQekCMbNRTwMiqyWjRPHSymi9RKFpexBuW
-         /7aNhLtzG/gAqFOa67FRJVzSalPXl5ZEJio28hG9xlgEj3w/d4DrLeJ7m3b/r4JeoUYE
-         TlKFS+hTv9pZlzP11zUq3ozjLPwCMxunfXUBePEW4CNVEDYLVWHKU8nTcbu5JNBezQab
-         G3knvFcdn8J+f8g3k9KRonPbiRMiYLx9ExZlA7A9Cj5BtDR3hg3cGP0MQRi5xZObiQKZ
-         gLtTf3reMqV9PPl08+ZxSou29+jjwHlFX3tUhJQD1hMkGmpQBtz6BKS3E5oRz6uxplMB
-         WYew==
-X-Gm-Message-State: APjAAAW7LmBpdmH+A5fYvw5H3N6FrT/N3pDSQ+PyZaHUCmuwZ8XA0ipS
-        W5gWrZgBB4YuPyCrAEPcjAE=
-X-Google-Smtp-Source: APXvYqwTYDiXBly9gOa7PpLH0awe6adhtTX0gOKn67cC5MFmVPVqN4qC0h11nJmzD8pzD22UlVkv4A==
-X-Received: by 2002:a5d:69c8:: with SMTP id s8mr19946146wrw.167.1572354792114;
-        Tue, 29 Oct 2019 06:13:12 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id d20sm1153173wra.4.2019.10.29.06.13.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 06:13:10 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 14:13:09 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ARM: dts: tegra30: Connect SMMU with Video Decoder
- Engine
-Message-ID: <20191029131309.GC508460@ulmo>
-References: <20190623170730.5095-1-digetx@gmail.com>
- <20190623170730.5095-2-digetx@gmail.com>
+        Tue, 29 Oct 2019 09:13:22 -0400
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x9TDD9H7008016
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 22:13:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x9TDD9H7008016
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572354790;
+        bh=DFJCAzizH4g10ADI9Rn27rAUxoPMKfPEwBoru1VHVxA=;
+        h=From:Date:Subject:To:Cc:From;
+        b=reO02uSbAHEiFpcpuoY5UJNhpn0kLh5Dj2QO71BSTK3k3pwXlQDuuAtgPWtz3zNIH
+         NfPDCNagWGZDJY7oPXPs/Ps/0Pe/9cNig5HWLYrnpFiCtrm8o3GvrAT0ia1hlY9INT
+         MvuDMWB4G82zqXlOGIX8Ism57sfinIjk5fYGTDVh7Fh5gosTU+HyPx4Au2c+g6lSal
+         MNL6df8Hg+gKRg/3lAoTGrRZVUjMTMHQBuYEurTE2BvV4T95XenPDXPxgUliKdu//2
+         XuCoraRjAn5byjZm3heDx9pTKoAEr5L+HIIaGnjJO8SuCAE+4mGgkxEE5OBbOS+Wua
+         hMacoe4lqPsIQ==
+X-Nifty-SrcIP: [209.85.221.174]
+Received: by mail-vk1-f174.google.com with SMTP id g14so2846820vkl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 06:13:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAVJN7WFDAZlcBail+dSFwJmgpVXv510dG+rYUnJ9ZyBjz/Ijj8Z
+        ZKbfIp6RoULmSDLi0y6YDOowzegJhzpJH+jO22U=
+X-Google-Smtp-Source: APXvYqwSk5zozYtnYOUFkJt9J/Q7e7F+pJLQ82qQ4jKDaoYaSEYkYBruilGg08QiiaIIzCBMAtQodOEwwSp+lok8Esw=
+X-Received: by 2002:a1f:4b05:: with SMTP id y5mr11132787vka.12.1572354788616;
+ Tue, 29 Oct 2019 06:13:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
-Content-Disposition: inline
-In-Reply-To: <20190623170730.5095-2-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 29 Oct 2019 22:12:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ8Wi1zED0rYJhk9tYi5-jgCoyeHNtofvgKet4ZTzKFcA@mail.gmail.com>
+Message-ID: <CAK7LNAQ8Wi1zED0rYJhk9tYi5-jgCoyeHNtofvgKet4ZTzKFcA@mail.gmail.com>
+Subject: Warning message from 'make nsdeps' when namespace is lower cases
+To:     Matthias Maennich <maennich@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Coccinelle <cocci@systeme.lip6.fr>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi.
 
---DSayHWYpDlRfCAAQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When I was playing with 'make nsdeps',
+I saw a new warning.
 
-On Sun, Jun 23, 2019 at 08:07:24PM +0300, Dmitry Osipenko wrote:
-> Enable IOMMU support for the video decoder.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->=20
-> No changes since v1.
->=20
->  arch/arm/boot/dts/tegra30.dtsi | 1 +
->  1 file changed, 1 insertion(+)
+If I rename USB_STORAGE to usb_storage,
+I see 'warning: line 15: should usb_storage be a metavariable?'
+Why? I think it comes from spatch.
+It should be technically OK to use either upper or lower cases
+for the namespace name.
 
-Applied to for-5.5/arm/dt, thanks.
 
-Thierry
+Just apply the following, and try 'make nsdeps'.
 
---DSayHWYpDlRfCAAQ
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/usb/storage/Makefile b/drivers/usb/storage/Makefile
+index 46635fa4a340..6f817d65c26b 100644
+--- a/drivers/usb/storage/Makefile
++++ b/drivers/usb/storage/Makefile
+@@ -8,7 +8,7 @@
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl24OuUACgkQ3SOs138+
-s6FG0xAAgMsJHddh5VUJbI4i15//MpJSJLnwPjTUM0SfXsxqqMQwzkgqGe+AydBq
-IoFAAUvBVOxqMjXw0B5/Thy4tMSqd1VM7gdoY6yMWLD5GUnTH+7Ce5IUGl+5bHif
-G0Zl9ehYm2LkDEDTKEeYJ81O60iZtHR7IFdCnpwSD52dmxwnKk072UbpBB4XDW+A
-K7yseW78aKMPQ6YmuR1q/iA9a6pPoqDifZl+QCPDxP21wq9OHC3K1OJqJCT+B67f
-5B4fCugTTNCTsrHplkty95KBJfwDsrZd/nYA7FZJldeYgRTyIKIHQU6fv9dwDn5C
-cYRlp6RPITn0NGSrVanvfPAwk3rorQSfXPbw/At8CRttqkOzp2VOWB2PP3cOvtok
-1+SudogUvehLHoiPNKCKR1proc5WYYDaRgZyHmMDxzw6PxF62K9/qM0WhgeVvFoG
-TW3aaGq8783udERsm8KeKZDKeFk6MHC0Jam+5nCG/aB5cwqLyEivAx09VpddfsrY
-/znhxLFRQZGnbrnqD8+rKk0QMTN0XV3TQ1YP3SeQv6hFt67elWqWEzTcQyqW6Tno
-Voa3YOX6NdOVefo/JbaskkUMyWUvhQsV311+u2gfkq7Ba+K1ATjFVzGpYz+mywQc
-uxwNWBVJJO6BFaGcraonpnQCMx7Sq8dBqncQXAPfL4JAY1HvJhs=
-=Qfvc
------END PGP SIGNATURE-----
+ ccflags-y := -I $(srctree)/drivers/scsi
 
---DSayHWYpDlRfCAAQ--
+-ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_STORAGE
++ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=usb_storage
+
+ obj-$(CONFIG_USB_UAS)          += uas.o
+ obj-$(CONFIG_USB_STORAGE)      += usb-storage.o
+
+
+
+
+
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
