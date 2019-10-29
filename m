@@ -2,199 +2,225 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87012CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465AFCA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A60C2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572379131;
-	bh=WAdeg+B9VRaoa2GUGbY801lVq9HtWmhjZYVHysrysc4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sQufRgYDFM/fEBg4bb1ek046Aoq0E1Q7P7OR8Ub0kW1iNNrNAr/Ve91cIlOVgMxsC
-	 jUeAEZiy15YDFj5h8pGXR52sqFt5ZT1WAH6MV+QJ9TNn4CN8iGCAoi57JwiSttScXB
-	 4sLDAnvkc65OQ61uGIingMb+WGQmFQ72lBqy69Uw=
+	by mail.kernel.org (Postfix) with ESMTP id 22E7D2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 19:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfJ2T6u (ORCPT
+        id S1727267AbfJ2T7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:58:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56438 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 15:59:51 -0400
+Received: from mga06.intel.com ([134.134.136.31]:39895 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfJ2T6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:58:50 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 863B7217F9;
-        Tue, 29 Oct 2019 19:58:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572379128;
-        bh=WAdeg+B9VRaoa2GUGbY801lVq9HtWmhjZYVHysrysc4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NWcGI6t4d1C6w5YAcjerwQGwR40yf9qK1MLh8rjyF/petI083MZCWoDGvmAGjUNT+
-         osJVzDa0YEBwPO7Aa83PkbOI33Q1gE7pAw7jcVi8uWmcZglhBgxr0bcxGIyj55LVjE
-         ZoNK5yzBU/vrK/+f+MwxjVdJElZhbsS1weXQZGvA=
-Received: by mail-qt1-f178.google.com with SMTP id t26so12065009qtr.5;
-        Tue, 29 Oct 2019 12:58:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAWZd5iDblHh3dzs6lYXpuUIOZWwl3viiUKOtN3jkcnqgOUkGYDM
-        QcvxvTqRpFCYjkaw/KFP2b+mR7a6C02y2Gu2ZQ==
-X-Google-Smtp-Source: APXvYqzRmnIY3wGUVkxDxaAMji2JuEUN2V6Oi2AOYbmEqJQcYn6zDifp/TQUReouyPTdjsRGjIdcrF3l7Z6nybIbzJE=
-X-Received: by 2002:ac8:48c5:: with SMTP id l5mr469360qtr.110.1572379127527;
- Tue, 29 Oct 2019 12:58:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191016010544.14561-1-slongerbeam@gmail.com> <20191016010544.14561-3-slongerbeam@gmail.com>
- <20191027212121.GA3049@bogus> <2daa37a6-83a7-ec08-b89c-a07268b3ea4a@gmail.com>
-In-Reply-To: <2daa37a6-83a7-ec08-b89c-a07268b3ea4a@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 29 Oct 2019 14:58:36 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJK5CzQDpCWGZWKgp_8dPG7x0W1HLe+B3zHRP-Te9SToA@mail.gmail.com>
-Message-ID: <CAL_JsqJK5CzQDpCWGZWKgp_8dPG7x0W1HLe+B3zHRP-Te9SToA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: timer: imx: gpt: Add pin group bindings
- for input capture
-To:     Steve Longerbeam <slongerbeam@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:CLOCKSOURCE, CLOCKEVENT DRIVERS" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+        id S1725830AbfJ2T7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 15:59:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 12:59:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
+   d="scan'208";a="399912802"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Oct 2019 12:59:49 -0700
+Message-ID: <f13946cfc3f6f57230df7d0c2aad860940826148.camel@linux.intel.com>
+Subject: Re: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load
+ balancing path"
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Doug Smythies <doug.smythies@gmail.com>, vincent.guittot@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Doug Smythies <dsmythies@telus.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, sargun@sargun.me,
+        tj@kernel.org, xiexiuqi@huawei.com, xiezhipeng1@huawei.com
+Date:   Tue, 29 Oct 2019 12:59:49 -0700
+In-Reply-To: <10eef14e434375ef4bb7cf23ecb987b3591064a6.camel@linux.intel.com>
+References: <1572018904-5234-1-git-send-email-dsmythies@telus.net>
+         <10eef14e434375ef4bb7cf23ecb987b3591064a6.camel@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 6:59 PM Steve Longerbeam <slongerbeam@gmail.com> wrote:
->
-> Hi Rob,
->
-> Thanks for reviewing.
->
-> On 10/27/19 2:21 PM, Rob Herring wrote:
-> > On Tue, Oct 15, 2019 at 06:05:44PM -0700, Steve Longerbeam wrote:
-> >> Add pin group bindings to support input capture function of the i.MX
-> >> GPT.
-> >>
-> >> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-> >> ---
-> >>   .../devicetree/bindings/timer/fsl,imxgpt.txt  | 28 +++++++++++++++++++
-> >>   1 file changed, 28 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
-> >> index 5d8fd5b52598..32797b7b0d02 100644
-> >> --- a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
-> >> +++ b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
-> >> @@ -33,6 +33,13 @@ Required properties:
-> >>              an entry for each entry in clock-names.
-> >>   - clock-names : must include "ipg" entry first, then "per" entry.
-> >>
-> >> +Optional properties:
-> >> +
-> >> +- pinctrl-0: For the i.MX GPT to support the Input Capture function,
-> >> +         the input capture channel pin groups must be listed here.
-> >> +- pinctrl-names: must be "default".
-> >> +
-> >> +
-> >>   Example:
-> >>
-> >>   gpt1: timer@10003000 {
-> >> @@ -43,3 +50,24 @@ gpt1: timer@10003000 {
-> >>               <&clks IMX27_CLK_PER1_GATE>;
-> >>      clock-names = "ipg", "per";
-> >>   };
-> >> +
-> >> +
-> >> +Example with input capture channel 0 support:
-> >> +
-> >> +pinctrl_gpt_input_capture0: gptinputcapture0grp {
-> >> +    fsl,pins = <
-> >> +            MX6QDL_PAD_SD1_DAT0__GPT_CAPTURE1 0x1b0b0
-> >> +    >;
-> >> +};
-> >> +
-> >> +gpt: gpt@2098000 {
-> > timer@...
->
-> Ok.
->
-> >
-> > I don't really think this merits another example though.
->
-> Ok.
->
-> But for version 2 of this patch-set I'd like to run some ideas by you.
->
-> Because in this version I did not make any attempt to create a generic
-> timer capture framework. I just exported a couple imx-specific functions
-> to request and free a timer input capture channel in the imx-gpt driver.
->
-> So for version 2 I am thinking about a simple framework that other SoC
-> timers with timer input capture support can make use of.
->
-> To begin with I don't see that timer input capture warrants the
-> definition of a new device. At least for imx, timer input capture is
-> just one function of the imx GPT, where the other is Output Compare
-> which is used for the system timer. I think that is likely the case for
-> most all SoC timers, that is, input capture and output compare are
-> tightly interwoven functions of general purpose timers.
->
-> So I'm thinking there needs to be an additional #input-capture-cells
-> property that defines how many input capture channels the timer
-> contains, where a channel refers to a single input signal edge that can
-> capture the timer counter. The imx GPT has two input capture channels (2
-> separate input signals).
+On Tue, 2019-10-29 at 12:34 -0700, Srinivas Pandruvada wrote:
+> On Fri, 2019-10-25 at 08:55 -0700, Doug Smythies wrote:
+> 
+> [...]
+> 
+> > Experiment method:
+> > 
+> > enable only idle state 1
+> > Dountil stopped
+> >   apply a 100% load (all CPUs)
+> >   after awhile (about 50 seconds) remove the load.
+> >   allow a short transient delay (1 second).
+> >   measure the processor package joules used over the next 149
+> > seconds.
+> > Enduntil
+> > 
+> > Kernel k5.4-rc2 + reversion (this method)
+> > Average processor package power: 9.148 watts (128 samples, > 7
+> > hours)
+> > Minimum: 9.02 watts
+> > Maximum: 9.29 watts
+> > Note: outlyer data point group removed, as it was assumed the
+> > computer
+> > had something to do and wasn't actually "idle".
+> > 
+> > Kernel 5.4-rc2:
+> > Average processor package power: 9.969 watts (150 samples, > 8
+> > hours)
+> > Or 9% more energy for the idle phases of the work load.
+> > Minimum: 9.15 watts
+> > Maximum: 13.79 watts (51% more power)
+> 
+> Hi Doug,
+> 
+> Do you have intel_pstate_tracer output? I guess that when started
+> request to measure the measure joules, it started at higher P-state
+> without revert.
+> Other way is check by fixing the max and min scaling frequency to
+> some
+> frequency, then we shouldn't see power difference.
+I mean not significant power difference. Also to get real numbers, need
+to use some power meter measuring CPU power. If I can get your script,
+I may be able to measure that.
 
-#foo-cells is not how many of something, but how many u32 parameters a
-'foos' consumer property has. But seems like that's what you meant
-based on the example.
+Thanks,
+Srinivas
 
->
-> For example, on imx:
->
-> gpt: timer@2098000 {
->         compatible = "fsl,imx6q-gpt", "fsl,imx31-gpt";
->         /* ... */
->         #input-capture-cells = <1>;
->         pinctrl-names = "default", "icap1";
->         pinctrl-0 = <&pinctrl_gpt_input_capture0>;
->         pinctrl-1 = <&pinctrl_gpt_input_capture1>;
-> };
->
->
-> A device that is a listener/consumer of an timer capture event would then refer to a timer capture channel:
->
-> some-device {
->         /* ... */
->         timer-input-capture = <&gpt 0>;
-> };
+> 
+> Thanks,
+> Srinivas
+> 
+> 
+> > 
+> > ---
+> >  kernel/sched/fair.c | 43 +++++++++------------------------------
+> > ----
+> >  1 file changed, 9 insertions(+), 34 deletions(-)
+> > 
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 83ab35e..51625b8 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -381,10 +381,9 @@ static inline void
+> > assert_list_leaf_cfs_rq(struct rq *rq)
+> >  	SCHED_WARN_ON(rq->tmp_alone_branch != &rq->leaf_cfs_rq_list);
+> >  }
+> >  
+> > -/* Iterate thr' all leaf cfs_rq's on a runqueue */
+> > -#define for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos)			
+> > \
+> > -	list_for_each_entry_safe(cfs_rq, pos, &rq->leaf_cfs_rq_list,	
+> > \
+> > -				 leaf_cfs_rq_list)
+> > +/* Iterate through all cfs_rq's on a runqueue in bottom-up order
+> > */
+> > +#define for_each_leaf_cfs_rq(rq, cfs_rq) \
+> > +	list_for_each_entry_rcu(cfs_rq, &rq->leaf_cfs_rq_list,
+> > leaf_cfs_rq_list)
+> >  
+> >  /* Do the two (enqueued) entities belong to the same group ? */
+> >  static inline struct cfs_rq *
+> > @@ -481,8 +480,8 @@ static inline void
+> > assert_list_leaf_cfs_rq(struct
+> > rq *rq)
+> >  {
+> >  }
+> >  
+> > -#define for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos)	\
+> > -		for (cfs_rq = &rq->cfs, pos = NULL; cfs_rq; cfs_rq =
+> > pos)
+> > +#define for_each_leaf_cfs_rq(rq, cfs_rq)	\
+> > +		for (cfs_rq = &rq->cfs; cfs_rq; cfs_rq = NULL)
+> >  
+> >  static inline struct sched_entity *parent_entity(struct
+> > sched_entity
+> > *se)
+> >  {
+> > @@ -7502,27 +7501,10 @@ static inline void
+> > update_blocked_load_status(struct rq *rq, bool has_blocked) {
+> >  
+> >  #ifdef CONFIG_FAIR_GROUP_SCHED
+> >  
+> > -static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
+> > -{
+> > -	if (cfs_rq->load.weight)
+> > -		return false;
+> > -
+> > -	if (cfs_rq->avg.load_sum)
+> > -		return false;
+> > -
+> > -	if (cfs_rq->avg.util_sum)
+> > -		return false;
+> > -
+> > -	if (cfs_rq->avg.runnable_load_sum)
+> > -		return false;
+> > -
+> > -	return true;
+> > -}
+> > -
+> >  static void update_blocked_averages(int cpu)
+> >  {
+> >  	struct rq *rq = cpu_rq(cpu);
+> > -	struct cfs_rq *cfs_rq, *pos;
+> > +	struct cfs_rq *cfs_rq;
+> >  	const struct sched_class *curr_class;
+> >  	struct rq_flags rf;
+> >  	bool done = true;
+> > @@ -7534,7 +7516,7 @@ static void update_blocked_averages(int cpu)
+> >  	 * Iterates the task_group tree in a bottom up fashion, see
+> >  	 * list_add_leaf_cfs_rq() for details.
+> >  	 */
+> > -	for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
+> > +	for_each_leaf_cfs_rq(rq, cfs_rq) {
+> >  		struct sched_entity *se;
+> >  
+> >  		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq),
+> > cfs_rq))
+> > @@ -7545,13 +7527,6 @@ static void update_blocked_averages(int cpu)
+> >  		if (se && !skip_blocked_update(se))
+> >  			update_load_avg(cfs_rq_of(se), se, 0);
+> >  
+> > -		/*
+> > -		 * There can be a lot of idle CPU cgroups.  Don't let
+> > fully
+> > -		 * decayed cfs_rqs linger on the list.
+> > -		 */
+> > -		if (cfs_rq_is_decayed(cfs_rq))
+> > -			list_del_leaf_cfs_rq(cfs_rq);
+> > -
+> >  		/* Don't need periodic decay once load/util_avg are
+> > null */
+> >  		if (cfs_rq_has_blocked(cfs_rq))
+> >  			done = false;
+> > @@ -10444,10 +10419,10 @@ const struct sched_class fair_sched_class
+> > =
+> > {
+> >  #ifdef CONFIG_SCHED_DEBUG
+> >  void print_cfs_stats(struct seq_file *m, int cpu)
+> >  {
+> > -	struct cfs_rq *cfs_rq, *pos;
+> > +	struct cfs_rq *cfs_rq;
+> >  
+> >  	rcu_read_lock();
+> > -	for_each_leaf_cfs_rq_safe(cpu_rq(cpu), cfs_rq, pos)
+> > +	for_each_leaf_cfs_rq(cpu_rq(cpu), cfs_rq)
+> >  		print_cfs_rq(m, cpu, cfs_rq);
+> >  	rcu_read_unlock();
+> >  }
+> 
+> 
 
-We'd want to be more consistent in the naming, but seems reasonable.
-One of the challenges with timers is selecting which timer is used for
-what function. This helps as you can know if a timer is used for input
-capture or not. One issue will be is having '#input-capture-cells'
-enough to decide that, or does one have to walk the DT and find all
-the 'timer-input-capture' properties (shouldn't be a lot)? You could
-also want to use input capture, but not describe the connection in DT.
-
-Another thought is should it be just 'timers' to cover both input
-capture and output compare with those being selected with flags (like
-GPIO).
-
-My other question is just what are some real examples of devices
-needing to describe this connection. Timers have had input capture
-forever, but I've rarely seen it used. Output compare even less so.
-
-Rob
