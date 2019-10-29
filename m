@@ -2,386 +2,122 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCD1C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2509CCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1DDB20830
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A6B20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 09:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732452AbfJ2JUv (ORCPT
+        id S1732473AbfJ2JVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:20:51 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:47200 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730377AbfJ2JUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:20:50 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7BEDD200851;
-        Tue, 29 Oct 2019 10:20:48 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F1D60200847;
-        Tue, 29 Oct 2019 10:20:41 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4D476402C4;
-        Tue, 29 Oct 2019 17:20:34 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ASoC: fsl_asrc: Add support for imx8qm
-Date:   Tue, 29 Oct 2019 17:17:09 +0800
-Message-Id: <1572340629-20702-2-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572340629-20702-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1572340629-20702-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 29 Oct 2019 05:21:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41544 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728270AbfJ2JVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:21:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 24410B334;
+        Tue, 29 Oct 2019 09:20:59 +0000 (UTC)
+Subject: Re: [PATCH] drivers: mcb: use symbol namespaces
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
+        Michael Moese <mmoese@suse.de>, Jessica Yu <jeyu@kernel.org>
+References: <20191016100158.1400-1-jthumshirn@suse.de>
+ <20191016125139.GA26497@kroah.com>
+ <48f87640-d277-fdb6-3d6e-3f88b7623f22@suse.de>
+ <20191016135300.GA302460@kroah.com>
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jthumshirn@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c4e3216e-df8d-65cb-d60a-98eb159b9205@suse.de>
+Date:   Tue, 29 Oct 2019 10:20:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191016135300.GA302460@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two asrc module in imx8qm, each module has different
-clock configuration, and the DMA type is EDMA.
+On 16/10/2019 15:53, Greg KH wrote:
+[...]
+> I can take this now, into my -next tree.  I'll do so later this week
+> unless you object.
 
-So in this patch, we define the new clocks, refine the clock map,
-and include struct fsl_asrc_soc_data for different soc usage.
+Ping?
 
-The EDMA channel is fixed with each dma request, one dma request
-corresponding to one dma channel. So we need to request dma
-channel with dma request of asrc module.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_asrc.c     | 91 +++++++++++++++++++++++++++++-------
- sound/soc/fsl/fsl_asrc.h     | 65 +++++++++++++++++++++++++-
- sound/soc/fsl/fsl_asrc_dma.c | 39 ++++++++++++----
- 3 files changed, 167 insertions(+), 28 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index a3cfceea7d2f..9dc5b5a93fb0 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -43,24 +43,55 @@ static struct snd_pcm_hw_constraint_list fsl_asrc_rate_constraints = {
-  */
- static unsigned char input_clk_map_imx35[] = {
- 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
- };
- 
- static unsigned char output_clk_map_imx35[] = {
- 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
- };
- 
- /* i.MX53 uses the same map for input and output */
- static unsigned char input_clk_map_imx53[] = {
- /*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf */
- 	0x0, 0x1, 0x2, 0x7, 0x4, 0x5, 0x6, 0x3, 0x8, 0x9, 0xa, 0xb, 0xc, 0xf, 0xe, 0xd,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
- };
- 
- static unsigned char output_clk_map_imx53[] = {
- /*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf */
- 	0x8, 0x9, 0xa, 0x7, 0xc, 0x5, 0x6, 0xb, 0x0, 0x1, 0x2, 0x3, 0x4, 0xf, 0xe, 0xd,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
- };
- 
--static unsigned char *clk_map[2];
-+/* i.MX8QM uses the same map for input and output */
-+static unsigned char input_clk_map_imx8_0[] = {
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+};
-+
-+static unsigned char output_clk_map_imx8_0[] = {
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+};
-+
-+static unsigned char input_clk_map_imx8_1[] = {
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0x7, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0xb, 0xc, 0xf, 0xf, 0xd, 0xe, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	0x4, 0x5, 0x6, 0xf, 0x8, 0x9, 0xa, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+};
-+
-+static unsigned char output_clk_map_imx8_1[] = {
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0x7, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0xb, 0xc, 0xf, 0xf, 0xd, 0xe, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	0x4, 0x5, 0x6, 0xf, 0x8, 0x9, 0xa, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+};
- 
- /**
-  * Select the pre-processing and post-processing options
-@@ -353,8 +384,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- 	}
- 
- 	/* Validate input and output clock sources */
--	clk_index[IN] = clk_map[IN][config->inclk];
--	clk_index[OUT] = clk_map[OUT][config->outclk];
-+	clk_index[IN] = asrc_priv->soc->inclk_map[config->inclk];
-+	clk_index[OUT] = asrc_priv->soc->outclk_map[config->outclk];
- 
- 	/* We only have output clock for ideal ratio mode */
- 	clk = asrc_priv->asrck_clk[clk_index[ideal ? OUT : IN]];
-@@ -398,13 +429,13 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- 	/* Set the channel number */
- 	channels = config->channel_num;
- 
--	if (asrc_priv->channel_bits < 4)
-+	if (asrc_priv->soc->channel_bits < 4)
- 		channels /= 2;
- 
- 	/* Update channels for current pair */
- 	regmap_update_bits(asrc_priv->regmap, REG_ASRCNCR,
--			   ASRCNCR_ANCi_MASK(index, asrc_priv->channel_bits),
--			   ASRCNCR_ANCi(index, channels, asrc_priv->channel_bits));
-+			   ASRCNCR_ANCi_MASK(index, asrc_priv->soc->channel_bits),
-+			   ASRCNCR_ANCi(index, channels, asrc_priv->soc->channel_bits));
- 
- 	/* Default setting: Automatic selection for processing mode */
- 	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-@@ -531,7 +562,7 @@ static int fsl_asrc_dai_startup(struct snd_pcm_substream *substream,
- 	struct fsl_asrc *asrc_priv = snd_soc_dai_get_drvdata(dai);
- 
- 	/* Odd channel number is not valid for older ASRC (channel_bits==3) */
--	if (asrc_priv->channel_bits == 3)
-+	if (asrc_priv->soc->channel_bits == 3)
- 		snd_pcm_hw_constraint_step(substream->runtime, 0,
- 					   SNDRV_PCM_HW_PARAM_CHANNELS, 2);
- 
-@@ -964,14 +995,10 @@ static int fsl_asrc_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	if (of_device_is_compatible(np, "fsl,imx35-asrc")) {
--		asrc_priv->channel_bits = 3;
--		clk_map[IN] = input_clk_map_imx35;
--		clk_map[OUT] = output_clk_map_imx35;
--	} else {
--		asrc_priv->channel_bits = 4;
--		clk_map[IN] = input_clk_map_imx53;
--		clk_map[OUT] = output_clk_map_imx53;
-+	asrc_priv->soc = of_device_get_match_data(&pdev->dev);
-+	if (!asrc_priv->soc) {
-+		dev_err(&pdev->dev, "failed to get soc data\n");
-+		return -ENODEV;
- 	}
- 
- 	ret = fsl_asrc_init(asrc_priv);
-@@ -1113,9 +1140,39 @@ static const struct dev_pm_ops fsl_asrc_pm = {
- 	SET_SYSTEM_SLEEP_PM_OPS(fsl_asrc_suspend, fsl_asrc_resume)
- };
- 
-+static const struct fsl_asrc_soc_data fsl_asrc_imx35_data = {
-+	.use_edma = false,
-+	.channel_bits = 3,
-+	.inclk_map = input_clk_map_imx35,
-+	.outclk_map = output_clk_map_imx35,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx53_data = {
-+	.use_edma = false,
-+	.channel_bits = 4,
-+	.inclk_map = input_clk_map_imx53,
-+	.outclk_map = output_clk_map_imx53,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx8qm_0_data = {
-+	.use_edma = true,
-+	.channel_bits = 4,
-+	.inclk_map = input_clk_map_imx8_0,
-+	.outclk_map = output_clk_map_imx8_0,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx8qm_1_data = {
-+	.use_edma = true,
-+	.channel_bits = 4,
-+	.inclk_map = input_clk_map_imx8_1,
-+	.outclk_map = output_clk_map_imx8_1,
-+};
-+
- static const struct of_device_id fsl_asrc_ids[] = {
--	{ .compatible = "fsl,imx35-asrc", },
--	{ .compatible = "fsl,imx53-asrc", },
-+	{ .compatible = "fsl,imx35-asrc", .data = &fsl_asrc_imx35_data },
-+	{ .compatible = "fsl,imx53-asrc", .data = &fsl_asrc_imx53_data },
-+	{ .compatible = "fsl,imx8qm-asrc0", .data = &fsl_asrc_imx8qm_0_data },
-+	{ .compatible = "fsl,imx8qm-asrc1", .data = &fsl_asrc_imx8qm_1_data },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, fsl_asrc_ids);
-diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-index 2b57e8c53728..8decbe670c3e 100644
---- a/sound/soc/fsl/fsl_asrc.h
-+++ b/sound/soc/fsl/fsl_asrc.h
-@@ -308,6 +308,29 @@ enum asrc_inclk {
- 	INCLK_SSI3_TX = 0x0b,
- 	INCLK_SPDIF_TX = 0x0c,
- 	INCLK_ASRCK1_CLK = 0x0f,
-+
-+	/* clocks for imx8 */
-+	INCLK_AUD_PLL_DIV_CLK0 = 0x10,
-+	INCLK_AUD_PLL_DIV_CLK1 = 0x11,
-+	INCLK_AUD_CLK0         = 0x12,
-+	INCLK_AUD_CLK1         = 0x13,
-+	INCLK_ESAI0_RX_CLK     = 0x14,
-+	INCLK_ESAI0_TX_CLK     = 0x15,
-+	INCLK_SPDIF0_RX        = 0x16,
-+	INCLK_SPDIF1_RX        = 0x17,
-+	INCLK_SAI0_RX_BCLK     = 0x18,
-+	INCLK_SAI0_TX_BCLK     = 0x19,
-+	INCLK_SAI1_RX_BCLK     = 0x1a,
-+	INCLK_SAI1_TX_BCLK     = 0x1b,
-+	INCLK_SAI2_RX_BCLK     = 0x1c,
-+	INCLK_SAI3_RX_BCLK     = 0x1d,
-+	INCLK_ASRC0_MUX_CLK    = 0x1e,
-+
-+	INCLK_ESAI1_RX_CLK     = 0x20,
-+	INCLK_ESAI1_TX_CLK     = 0x21,
-+	INCLK_SAI6_TX_BCLK     = 0x22,
-+	INCLK_HDMI_RX_SAI0_RX_BCLK     = 0x24,
-+	INCLK_HDMI_TX_SAI0_TX_BCLK     = 0x25,
- };
- 
- enum asrc_outclk {
-@@ -325,6 +348,29 @@ enum asrc_outclk {
- 	OUTCLK_SSI3_RX = 0x0b,
- 	OUTCLK_SPDIF_RX = 0x0c,
- 	OUTCLK_ASRCK1_CLK = 0x0f,
-+
-+	/* clocks for imx8 */
-+	OUTCLK_AUD_PLL_DIV_CLK0 = 0x10,
-+	OUTCLK_AUD_PLL_DIV_CLK1 = 0x11,
-+	OUTCLK_AUD_CLK0         = 0x12,
-+	OUTCLK_AUD_CLK1         = 0x13,
-+	OUTCLK_ESAI0_RX_CLK     = 0x14,
-+	OUTCLK_ESAI0_TX_CLK     = 0x15,
-+	OUTCLK_SPDIF0_RX        = 0x16,
-+	OUTCLK_SPDIF1_RX        = 0x17,
-+	OUTCLK_SAI0_RX_BCLK     = 0x18,
-+	OUTCLK_SAI0_TX_BCLK     = 0x19,
-+	OUTCLK_SAI1_RX_BCLK     = 0x1a,
-+	OUTCLK_SAI1_TX_BCLK     = 0x1b,
-+	OUTCLK_SAI2_RX_BCLK     = 0x1c,
-+	OUTCLK_SAI3_RX_BCLK     = 0x1d,
-+	OUTCLK_ASRCO_MUX_CLK    = 0x1e,
-+
-+	OUTCLK_ESAI1_RX_CLK     = 0x20,
-+	OUTCLK_ESAI1_TX_CLK     = 0x21,
-+	OUTCLK_SAI6_TX_BCLK     = 0x22,
-+	OUTCLK_HDMI_RX_SAI0_RX_BCLK     = 0x24,
-+	OUTCLK_HDMI_TX_SAI0_TX_BCLK     = 0x25,
- };
- 
- #define ASRC_CLK_MAX_NUM	16
-@@ -387,6 +433,21 @@ struct dma_block {
- 	unsigned int length;
- };
- 
-+/**
-+ * fsl_asrc_soc_data: soc specific data
-+ *
-+ * @use_edma: using edma as dma device or not
-+ * @channel_bits: width of ASRCNCR register for each pair
-+ * @inclk_map: clock map for input clock
-+ * @outclk_map: clock map for output clock
-+ */
-+struct fsl_asrc_soc_data {
-+	bool use_edma;
-+	unsigned int channel_bits;
-+	unsigned char *inclk_map;
-+	unsigned char *outclk_map;
-+};
-+
- /**
-  * fsl_asrc_pair: ASRC Pair private data
-  *
-@@ -431,7 +492,7 @@ struct fsl_asrc_pair {
-  * @asrck_clk: clock sources to driver ASRC internal logic
-  * @lock: spin lock for resource protection
-  * @pair: pair pointers
-- * @channel_bits: width of ASRCNCR register for each pair
-+ * @soc: soc specific data
-  * @channel_avail: non-occupied channel numbers
-  * @asrc_rate: default sample rate for ASoC Back-Ends
-  * @asrc_width: default sample width for ASoC Back-Ends
-@@ -450,7 +511,7 @@ struct fsl_asrc {
- 	spinlock_t lock;
- 
- 	struct fsl_asrc_pair *pair[ASRC_PAIR_MAX_NUM];
--	unsigned int channel_bits;
-+	const struct fsl_asrc_soc_data *soc;
- 	unsigned int channel_avail;
- 
- 	int asrc_rate;
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index d6146de9acd2..dbb07a486504 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -199,19 +199,40 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
- 
- 	/* Get DMA request of Back-End */
- 	tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
--	tmp_data = tmp_chan->private;
--	pair->dma_data.dma_request = tmp_data->dma_request;
--	dma_release_channel(tmp_chan);
-+	/* tmp_chan may be NULL for it is already allocated by Back-End */
-+	if (tmp_chan) {
-+		tmp_data = tmp_chan->private;
-+		if (tmp_data)
-+			pair->dma_data.dma_request = tmp_data->dma_request;
-+		dma_release_channel(tmp_chan);
-+	}
- 
- 	/* Get DMA request of Front-End */
- 	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
--	tmp_data = tmp_chan->private;
--	pair->dma_data.dma_request2 = tmp_data->dma_request;
--	pair->dma_data.peripheral_type = tmp_data->peripheral_type;
--	pair->dma_data.priority = tmp_data->priority;
--	dma_release_channel(tmp_chan);
-+	if (tmp_chan) {
-+		tmp_data = tmp_chan->private;
-+		if (tmp_data) {
-+			pair->dma_data.dma_request2 = tmp_data->dma_request;
-+			pair->dma_data.peripheral_type =
-+				 tmp_data->peripheral_type;
-+			pair->dma_data.priority = tmp_data->priority;
-+		}
-+		dma_release_channel(tmp_chan);
-+	}
- 
--	pair->dma_chan[dir] = dma_request_channel(mask, filter, &pair->dma_data);
-+	/*
-+	 * For SDMA DEV_TO_DEV channel, we need to configure two dma requests,
-+	 * one is from Front-End, another is from Back-End.
-+	 * But for EDMA DEV_TO_DEV channel, only one dma request is needed.
-+	 * The EDMA channel of Back-End is already allocated, we can only
-+	 * get EDMA channel from Front-End.
-+	 */
-+	if (asrc_priv->soc->use_edma)
-+		pair->dma_chan[dir] =
-+			fsl_asrc_get_dma_channel(pair, dir);
-+	else
-+		pair->dma_chan[dir] =
-+			dma_request_channel(mask, filter, &pair->dma_data);
- 	if (!pair->dma_chan[dir]) {
- 		dev_err(dev, "failed to request DMA channel for Back-End\n");
- 		return -EINVAL;
+Byte,
+	Johannes
 -- 
-2.21.0
-
+Johannes Thumshirn                            SUSE Labs Filesystems
+jthumshirn@suse.de                                +49 911 74053 689
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5
+90409 Nürnberg
+Germany
+(HRB 36809, AG Nürnberg)
+Geschäftsführer: Felix Imendörffer
+Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
