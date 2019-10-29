@@ -2,89 +2,154 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04A0CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95418CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D36E208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572374495;
-	bh=TA13NVzsZV4FbAI5eOr9zzqul12jHNuS6K/b8+MtCMA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O36B14R7pNWETXHcso/0ZURvVhKREogLXD6WxZm8DG+Jea3BDZZ8+6GJAQTGfjrtu
-	 r83FibliArV1qzvZx5f/5b0xLdJeBcYqV7lwqRxeZ2BCVcqlz3SHcfIGc9MwAA/WTY
-	 5ARRrvrc98aSINtp/8WCyv+wlzH3SFn+ZHXLYm0U=
+	by mail.kernel.org (Postfix) with ESMTP id 6C4AE20874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 18:41:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="M3/bLect"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731619AbfJ2Sle (ORCPT
+        id S1731894AbfJ2Sl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:41:34 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43793 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbfJ2Sle (ORCPT
+        Tue, 29 Oct 2019 14:41:57 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38459 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731848AbfJ2Sl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 14:41:34 -0400
-Received: by mail-ot1-f66.google.com with SMTP id b19so8328496otq.10;
-        Tue, 29 Oct 2019 11:41:33 -0700 (PDT)
+        Tue, 29 Oct 2019 14:41:56 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q78so16437730lje.5
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 11:41:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7UdfhwQKek0cH5FgF1E74MWZWlb9IUQkDORwZcKXCak=;
+        b=M3/bLectZcXwmLc34MYtf27awinWIl5Qzf98rPOu/TLfav+pBaCKwWmHcTtc8aky6d
+         Jeq09Lwn6XuZzDKnzkz9C9bfvPmjBrRLUPiduFecaJmgxi+YCqLfbRW6DQf4OGZivfkh
+         YFG7Guc2d+yWQ2Q4U/ASm4Ag/YxvomssgXHWs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lCcDgbdqbuBTEikUEcKsB8OyooPRstoWxTDmJWpZKMA=;
-        b=gC4Q/CRjeDW1kgKk92b+hK6FliD/yMe4gddejIRtirW3E3NAmbu8ST1NFH5iMYfQPy
-         Rqe7qz3jNlfu3Ff/Dt5OwlyGOs8H1R1CXthGYqaWBpL2RKjrT8RsruWxtvobo97g9dk0
-         nO0Mhh7kz+Yhn2x4ZAOWAk3q0nFH9ObpPfBxlDhVe32Ob03RTAJAVU4QL4sJCA/dUHYv
-         piOMebbQiOfjp8qL+ww6L5QbbLRrmMC/y21fJdMYhwtTUnE9GQXOvTjQJlGunQ2Fj/nu
-         3nJaHlizuSh16PEIXPllpCPWBpbD8ygBziRlr0alaN5MHStsMG+MRjRKp4P/MKwY5gUt
-         oA1w==
-X-Gm-Message-State: APjAAAWn0tnwCWWJQLfThoqeSz9ys+rHBQDtBQRQpXS1Q7j7XI9Bj2gl
-        xjoy/AEgXIAPNozgUFUN5g==
-X-Google-Smtp-Source: APXvYqyVgC8Gsnj0NziyjeH40B60+G7bSv4Br+vl1MPHSuG6P0wTssUrdGYhc3TeATcb8OHCX8obxw==
-X-Received: by 2002:a9d:5f89:: with SMTP id g9mr18830085oti.227.1572374493211;
-        Tue, 29 Oct 2019 11:41:33 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y4sm4155556oie.42.2019.10.29.11.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 11:41:32 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 13:41:31 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Wen Su <Wen.Su@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com,
-        wen.su@mediatek.com
-Subject: Re: [PATCH 1/4] dt-bindings: regulator: Add document for MT6359
- regulator
-Message-ID: <20191029184131.GA3733@bogus>
-References: <1571218786-15073-1-git-send-email-Wen.Su@mediatek.com>
- <1571218786-15073-2-git-send-email-Wen.Su@mediatek.com>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7UdfhwQKek0cH5FgF1E74MWZWlb9IUQkDORwZcKXCak=;
+        b=WDETYIyGNn4wrQC9dNxkzX6aC78abKCldIzKeSdHmV++wCdfcIX8PzDI+iGHiqV4jQ
+         n1UBDT9+md6nAMsAxfKxxzsL7LLiUt36fc/FUNd7tA1sZaNRreyBzGuP5HVmHQhpBxK+
+         fJIdr2yK32JkQJLEoTJRTHf6HxpS1GMCwAF/Ckdnh7Fy7iqeV/T+9wZfpgzEV6KlaKiD
+         M4th7WM/LUF4brBSTqttpJgqPGcuqVDtbYfnxGMtXRcfW1o5mXfe9x0npQTPsLXUDlDo
+         kwYebeqAgadqCEtDrIzcoPnsjX3MOI7LUUgx7wiZfjchhKpzv4Hyhk6SkjqjhzHBmq5E
+         C3QQ==
+X-Gm-Message-State: APjAAAXOUf9/ff9vOZiLSR9r+v2YoO+EK0TdYBTOMQDBwfBiPQ4R6HIM
+        BqvzwvUs6+DsX6grCYbs9iUP25trSt0=
+X-Google-Smtp-Source: APXvYqxv/l6+QjoCAAGlN8tI+iV+MdWR1cqqFj0hZduxO1wdtE+1ApYZf8XQE0iPbk4RvvEC+vWx1w==
+X-Received: by 2002:a2e:80c1:: with SMTP id r1mr3696418ljg.195.1572374512118;
+        Tue, 29 Oct 2019 11:41:52 -0700 (PDT)
+Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id b2sm10414295lfq.27.2019.10.29.11.41.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Oct 2019 11:41:51 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 4/4] bonding: balance ICMP echoes in layer3+4
+ mode
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+To:     Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Blakey <paulb@mellanox.com>, linux-kernel@vger.kernel.org
+References: <20191029135053.10055-1-mcroce@redhat.com>
+ <20191029135053.10055-5-mcroce@redhat.com>
+ <5be14e4e-807f-486d-d11a-3113901e72fe@cumulusnetworks.com>
+Message-ID: <a7ef0f1b-e7f5-229c-3087-6eaed9652185@cumulusnetworks.com>
+Date:   Tue, 29 Oct 2019 20:41:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571218786-15073-2-git-send-email-Wen.Su@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5be14e4e-807f-486d-d11a-3113901e72fe@cumulusnetworks.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 17:39:43 +0800, Wen Su wrote:
-> From: "wen.su" <wen.su@mediatek.com>
+On 29/10/2019 20:35, Nikolay Aleksandrov wrote:
+> On 29/10/2019 15:50, Matteo Croce wrote:
+>> The bonding uses the L4 ports to balance flows between slaves. As the ICMP
+>> protocol has no ports, those packets are sent all to the same device:
+>>
+>>     # tcpdump -qltnni veth0 ip |sed 's/^/0: /' &
+>>     # tcpdump -qltnni veth1 ip |sed 's/^/1: /' &
+>>     # ping -qc1 192.168.0.2
+>>     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 315, seq 1, length 64
+>>     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 315, seq 1, length 64
+>>     # ping -qc1 192.168.0.2
+>>     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 316, seq 1, length 64
+>>     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 316, seq 1, length 64
+>>     # ping -qc1 192.168.0.2
+>>     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 317, seq 1, length 64
+>>     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 317, seq 1, length 64
+>>
+>> But some ICMP packets have an Identifier field which is
+>> used to match packets within sessions, let's use this value in the hash
+>> function to balance these packets between bond slaves:
+>>
+>>     # ping -qc1 192.168.0.2
+>>     0: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 303, seq 1, length 64
+>>     0: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 303, seq 1, length 64
+>>     # ping -qc1 192.168.0.2
+>>     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 304, seq 1, length 64
+>>     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 304, seq 1, length 64
+>>
+>> Aso, let's use a flow_dissector_key which defines FLOW_DISSECTOR_KEY_ICMP,
 > 
-> add dt-binding document for MediaTek MT6359 PMIC
+> Also ?
 > 
-> Signed-off-by: wen.su <wen.su@mediatek.com>
-> ---
->  .../bindings/regulator/mt6359-regulator.txt        | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mt6359-regulator.txt
+>> so we can balance pings encapsulated in a tunnel when using mode encap3+4:
+>>
+>>     # ping -q 192.168.1.2 -c1
+>>     0: IP 192.168.0.1 > 192.168.0.2: GREv0, length 102: IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 585, seq 1, length 64
+>>     0: IP 192.168.0.2 > 192.168.0.1: GREv0, length 102: IP 192.168.1.2 > 192.168.1.1: ICMP echo reply, id 585, seq 1, length 64
+>>     # ping -q 192.168.1.2 -c1
+>>     1: IP 192.168.0.1 > 192.168.0.2: GREv0, length 102: IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 586, seq 1, length 64
+>>     1: IP 192.168.0.2 > 192.168.0.1: GREv0, length 102: IP 192.168.1.2 > 192.168.1.1: ICMP echo reply, id 586, seq 1, length 64
+>>
+>> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+>> ---
+>>  drivers/net/bonding/bond_main.c | 77 ++++++++++++++++++++++++++++++---
+>>  1 file changed, 70 insertions(+), 7 deletions(-)
+>>
+> 
+> Hi Matteo,
+> Wouldn't it be more useful and simpler to use some field to choose the slave (override the hash
+> completely) in a deterministic way from user-space ?
+> For example the mark can be interpreted as a slave id in the bonding (should be
+> optional, to avoid breaking existing setups). ping already supports -m and
+> anything else can set it, this way it can be used to do monitoring for a specific
+> slave with any protocol and would be a much simpler change.
+> User-space can then implement any logic for the monitoring case and as a minor bonus
+> can monitor the slaves in parallel. And the opposite as well - if people don't want
+> these balanced for some reason, they wouldn't enable it.
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ooh I just noticed you'd like to balance replies as well. Nevermind
+
+> Or maybe I've misunderstood why this change is needed. :)
+> It would actually be nice to include the use-case which brought this on
+> in the commit message.
+> 
+> Cheers,
+>  Nik
+> 
+
