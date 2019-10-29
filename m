@@ -2,190 +2,223 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCE2CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DD4CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9A12087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19E92087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 10:50:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ps3rMyfT"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="p03N6vxV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbfJ2KtW (ORCPT
+        id S1730848AbfJ2Kuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 06:49:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32195 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728189AbfJ2KtV (ORCPT
+        Tue, 29 Oct 2019 06:50:55 -0400
+Received: from forward105p.mail.yandex.net ([77.88.28.108]:35385 "EHLO
+        forward105p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726175AbfJ2Kux (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 06:49:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572346160;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ku5QMX1PXe0RMduAjOLbTYKTX3zeaaRJXqe/yt5ek0A=;
-        b=Ps3rMyfT85QtyBGghcVd6o8ogKzK9DP4dOTrTVvbT20LY2C0NlVVvFcMNk3dEGTDefCWlM
-        Nz5viSKEr1K7zgG//DL2uJqv/r1xh4OMuhyYJp85W3CVH/X432iKiTDCjdNMBVv0jNHkCx
-        Izzzq1ExcGUcvlyalWIKP7KPGyjMzyg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-Ojy6gkM5P2myIxO3H-nb5w-1; Tue, 29 Oct 2019 06:49:17 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 844FC476;
-        Tue, 29 Oct 2019 10:49:15 +0000 (UTC)
-Received: from [10.72.12.223] (ovpn-12-223.pek2.redhat.com [10.72.12.223])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1916B600F0;
-        Tue, 29 Oct 2019 10:48:35 +0000 (UTC)
-Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
-To:     Tiwei Bie <tiwei.bie@intel.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-References: <5a7bc5da-d501-2750-90bf-545dd55f85fa@redhat.com>
- <20191024042155.GA21090@___>
- <d37529e1-5147-bbe5-cb9d-299bd6d4aa1a@redhat.com>
- <d4cc4f4e-2635-4041-2f68-cd043a97f25a@redhat.com>
- <20191024091839.GA17463@___>
- <fefc82a3-a137-bc03-e1c3-8de79b238080@redhat.com>
- <e7e239ba-2461-4f8d-7dd7-0f557ac7f4bf@redhat.com>
- <20191025080143-mutt-send-email-mst@kernel.org> <20191028015842.GA9005@___>
- <5e8a623d-9d91-607a-1f9e-7a7086ba9a68@redhat.com> <20191029095738.GA7228@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <146752f4-174c-c916-3682-b965b96d7872@redhat.com>
-Date:   Tue, 29 Oct 2019 18:48:27 +0800
+        Tue, 29 Oct 2019 06:50:53 -0400
+Received: from mxback30g.mail.yandex.net (mxback30g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:330])
+        by forward105p.mail.yandex.net (Yandex) with ESMTP id 466B54D41890;
+        Tue, 29 Oct 2019 13:50:49 +0300 (MSK)
+Received: from sas1-e6a95a338f12.qloud-c.yandex.net (sas1-e6a95a338f12.qloud-c.yandex.net [2a02:6b8:c08:37a4:0:640:e6a9:5a33])
+        by mxback30g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id prv0bwwOtD-ontqu6G0;
+        Tue, 29 Oct 2019 13:50:49 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1572346249;
+        bh=jduwSQJoGEIcWRg2hiWnE/M3uIcfKhtBYbUPGIA3qEI=;
+        h=In-Reply-To:From:To:Subject:Cc:Date:References:Message-ID;
+        b=p03N6vxVxS+eI7QMvFQ8rel15iQgyxucrjYAMK7I25h6P25uTkdjO6kX/+drF7Ucx
+         bEquFatGt17ECcIWsxBds+cR2Olw+lhB1mRipNOjU2uWPyqMOa28r7lBgWuG27TIED
+         flWIyKDdv/DC+PkQt79IY0wDgqdM8hmZ6rshpKRs=
+Authentication-Results: mxback30g.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by sas1-e6a95a338f12.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id zBH7CLbfZX-ogVeiGb9;
+        Tue, 29 Oct 2019 13:50:47 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH 4.14 027/119] MIPS: elf_hwcap: Export userspace ASEs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Meng Zhuo <mengzhuo1203@gmail.com>,
+        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Sasha Levin <sashal@kernel.org>
+References: <20191027203259.948006506@linuxfoundation.org>
+ <20191027203308.417745883@linuxfoundation.org>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <c7cea5a0-bb68-b8ad-0548-6f246465a8b6@flygoat.com>
+Date:   Tue, 29 Oct 2019 18:50:38 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191029095738.GA7228@___>
+In-Reply-To: <20191027203308.417745883@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: Ojy6gkM5P2myIxO3H-nb5w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/10/29 =E4=B8=8B=E5=8D=885:57, Tiwei Bie wrote:
-> On Mon, Oct 28, 2019 at 11:50:49AM +0800, Jason Wang wrote:
->> On 2019/10/28 =E4=B8=8A=E5=8D=889:58, Tiwei Bie wrote:
->>> On Fri, Oct 25, 2019 at 08:16:26AM -0400, Michael S. Tsirkin wrote:
->>>> On Fri, Oct 25, 2019 at 05:54:55PM +0800, Jason Wang wrote:
->>>>> On 2019/10/24 =E4=B8=8B=E5=8D=886:42, Jason Wang wrote:
->>>>>> Yes.
->>>>>>
->>>>>>
->>>>>>>  =C2=A0 And we should try to avoid
->>>>>>> putting ctrl vq and Rx/Tx vqs in the same DMA space to prevent
->>>>>>> guests having the chance to bypass the host (e.g. QEMU) to
->>>>>>> setup the backend accelerator directly.
->>>>>> That's really good point.=C2=A0 So when "vhost" type is created, par=
-ent
->>>>>> should assume addr of ctrl_vq is hva.
->>>>>>
->>>>>> Thanks
->>>>> This works for vhost but not virtio since there's no way for virtio k=
-ernel
->>>>> driver to differ ctrl_vq with the rest when doing DMA map. One possib=
-le
->>>>> solution is to provide DMA domain isolation between virtqueues. Then =
-ctrl vq
->>>>> can use its dedicated DMA domain for the work.
->>> It might not be a bad idea to let the parent drivers distinguish
->>> between virtio-mdev mdevs and vhost-mdev mdevs in ctrl-vq handling
->>> by mdev's class id.
->> Yes, that should work, I have something probable better, see below.
->>
->>
->>>>> Anyway, this could be done in the future. We can have a version first=
- that
->>>>> doesn't support ctrl_vq.
->>> +1, thanks
->>>
->>>>> Thanks
->>>> Well no ctrl_vq implies either no offloads, or no XDP (since XDP needs
->>>> to disable offloads dynamically).
->>>>
->>>>          if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_CTRL_GUEST_OFF=
-LOADS)
->>>>              && (virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_TSO4)=
- ||
->>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_TSO6)=
- ||
->>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_ECN) =
-||
->>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_UFO) =
-||
->>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_CSUM)=
-)) {
->>>>                  NL_SET_ERR_MSG_MOD(extack, "Can't set XDP while host =
-is implementing LRO/CSUM, disable LRO/CSUM first");
->>>>                  return -EOPNOTSUPP;
->>>>          }
->>>>
->>>> neither is very attractive.
->>>>
->>>> So yes ok just for development but we do need to figure out how it wil=
-l
->>>> work down the road in production.
->>> Totally agree.
->>>
->>>> So really this specific virtio net device does not support control vq,
->>>> instead it supports a different transport specific way to send command=
-s
->>>> to device.
->>>>
->>>> Some kind of extension to the transport? Ideas?
->> So it's basically an issue of isolating DMA domains. Maybe we can start =
-with
->> transport API for querying per vq DMA domain/ASID?
->>
->> - for vhost-mdev, userspace can query the DMA domain for each specific
->> virtqueue. For control vq, mdev can return id for software domain, for t=
-he
->> rest mdev will return id of VFIO domain. Then userspace know that it sho=
-uld
->> use different API for preparing the virtqueue, e.g for vq other than con=
-trol
->> vq, it should use VFIO DMA API. The control vq it should use hva instead=
-.
->>
->> - for virito-mdev, we can introduce per-vq DMA device, and route DMA map=
-ping
->> request for control vq back to mdev instead of the hardware. (We can wra=
-p
->> them into library or helpers to ease the development of vendor physical
->> drivers).
-> Thanks for this proposal! I'm thinking about it these days.
-> I think it might be too complicated. I'm wondering whether we
-> can have something simpler. I will post a RFC patch to show
-> my idea today.
-
-
-Thanks, will check.
-
-Btw, for virtio-mdev, the change should be very minimal, will post an
-RFC as well. For vhost-mdev, it could be just a helper to return an ID
-for DMA domain like ID_VFIO or ID_HVA.
-
-Or a more straightforward way is to force queues like control vq to use PA.
-
-
+在 2019/10/28 上午5:00, Greg Kroah-Hartman 写道:
+> From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 >
-> Thanks,
-> Tiwei
+> [ Upstream commit 38dffe1e4dde1d3174fdce09d67370412843ebb5 ]
 >
+> A Golang developer reported MIPS hwcap isn't reflecting instructions
+> that the processor actually supported so programs can't apply optimized
+> code at runtime.
+>
+> Thus we export the ASEs that can be used in userspace programs.
+>
+> Reported-by: Meng Zhuo <mengzhuo1203@gmail.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Cc: linux-mips@vger.kernel.org
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: <stable@vger.kernel.org> # 4.14+
+> Signed-off-by: Paul Burton <paul.burton@mips.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>   arch/mips/include/uapi/asm/hwcap.h | 11 ++++++++++
+>   arch/mips/kernel/cpu-probe.c       | 33 ++++++++++++++++++++++++++++++
+>   2 files changed, 44 insertions(+)
+>
+> diff --git a/arch/mips/include/uapi/asm/hwcap.h b/arch/mips/include/uapi/asm/hwcap.h
+> index 600ad8fd68356..2475294c3d185 100644
+> --- a/arch/mips/include/uapi/asm/hwcap.h
+> +++ b/arch/mips/include/uapi/asm/hwcap.h
+> @@ -5,5 +5,16 @@
+>   /* HWCAP flags */
+>   #define HWCAP_MIPS_R6		(1 << 0)
+>   #define HWCAP_MIPS_MSA		(1 << 1)
+> +#define HWCAP_MIPS_MIPS16	(1 << 3)
+> +#define HWCAP_MIPS_MDMX     (1 << 4)
+> +#define HWCAP_MIPS_MIPS3D   (1 << 5)
+> +#define HWCAP_MIPS_SMARTMIPS (1 << 6)
+> +#define HWCAP_MIPS_DSP      (1 << 7)
+> +#define HWCAP_MIPS_DSP2     (1 << 8)
+> +#define HWCAP_MIPS_DSP3     (1 << 9)
+> +#define HWCAP_MIPS_MIPS16E2 (1 << 10)
+> +#define HWCAP_LOONGSON_MMI  (1 << 11)
+> +#define HWCAP_LOONGSON_EXT  (1 << 12)
+> +#define HWCAP_LOONGSON_EXT2 (1 << 13)
+>   
+>   #endif /* _UAPI_ASM_HWCAP_H */
+> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+> index 3007ae1bb616a..c38cd62879f4e 100644
+> --- a/arch/mips/kernel/cpu-probe.c
+> +++ b/arch/mips/kernel/cpu-probe.c
+> @@ -2080,6 +2080,39 @@ void cpu_probe(void)
+>   		elf_hwcap |= HWCAP_MIPS_MSA;
+>   	}
+>   
+> +	if (cpu_has_mips16)
+> +		elf_hwcap |= HWCAP_MIPS_MIPS16;
+> +
+> +	if (cpu_has_mdmx)
+> +		elf_hwcap |= HWCAP_MIPS_MDMX;
+> +
+> +	if (cpu_has_mips3d)
+> +		elf_hwcap |= HWCAP_MIPS_MIPS3D;
+> +
+> +	if (cpu_has_smartmips)
+> +		elf_hwcap |= HWCAP_MIPS_SMARTMIPS;
+> +
+> +	if (cpu_has_dsp)
+> +		elf_hwcap |= HWCAP_MIPS_DSP;
+> +
+> +	if (cpu_has_dsp2)
+> +		elf_hwcap |= HWCAP_MIPS_DSP2;
+> +
+> +	if (cpu_has_dsp3)
+> +		elf_hwcap |= HWCAP_MIPS_DSP3;
+> +
+> +	if (cpu_has_loongson_mmi)
+> +		elf_hwcap |= HWCAP_LOONGSON_MMI;
+> +
+> +	if (cpu_has_loongson_mmi)
+> +		elf_hwcap |= HWCAP_LOONGSON_CAM;
+
+Hi:
+
+Sorry, there is a typo causing build failure.
+
+Should be:
+
+---
+  arch/mips/include/uapi/asm/hwcap.h | 11 ++++++++++
+  arch/mips/kernel/cpu-probe.c       | 33 ++++++++++++++++++++++++++++++
+  2 files changed, 44 insertions(+)
+
+diff --git a/arch/mips/include/uapi/asm/hwcap.h b/arch/mips/include/uapi/asm/hwcap.h
+index a2aba4b059e6..1ade1daa4921 100644
+--- a/arch/mips/include/uapi/asm/hwcap.h
++++ b/arch/mips/include/uapi/asm/hwcap.h
+@@ -6,5 +6,16 @@
+  #define HWCAP_MIPS_R6		(1 << 0)
+  #define HWCAP_MIPS_MSA		(1 << 1)
+  #define HWCAP_MIPS_CRC32	(1 << 2)
++#define HWCAP_MIPS_MIPS16	(1 << 3)
++#define HWCAP_MIPS_MDMX     (1 << 4)
++#define HWCAP_MIPS_MIPS3D   (1 << 5)
++#define HWCAP_MIPS_SMARTMIPS (1 << 6)
++#define HWCAP_MIPS_DSP      (1 << 7)
++#define HWCAP_MIPS_DSP2     (1 << 8)
++#define HWCAP_MIPS_DSP3     (1 << 9)
++#define HWCAP_MIPS_MIPS16E2 (1 << 10)
++#define HWCAP_LOONGSON_MMI  (1 << 11)
++#define HWCAP_LOONGSON_EXT  (1 << 12)
++#define HWCAP_LOONGSON_EXT2 (1 << 13)
+  
+  #endif /* _UAPI_ASM_HWCAP_H */
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index c2eb392597bf..f521cbf934e7 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -2180,6 +2180,39 @@ void cpu_probe(void)
+  		elf_hwcap |= HWCAP_MIPS_MSA;
+  	}
+  
++	if (cpu_has_mips16)
++		elf_hwcap |= HWCAP_MIPS_MIPS16;
++
++	if (cpu_has_mdmx)
++		elf_hwcap |= HWCAP_MIPS_MDMX;
++
++	if (cpu_has_mips3d)
++		elf_hwcap |= HWCAP_MIPS_MIPS3D;
++
++	if (cpu_has_smartmips)
++		elf_hwcap |= HWCAP_MIPS_SMARTMIPS;
++
++	if (cpu_has_dsp)
++		elf_hwcap |= HWCAP_MIPS_DSP;
++
++	if (cpu_has_dsp2)
++		elf_hwcap |= HWCAP_MIPS_DSP2;
++
++	if (cpu_has_dsp3)
++		elf_hwcap |= HWCAP_MIPS_DSP3;
++
++	if (cpu_has_mips16e2)
++		elf_hwcap |= HWCAP_MIPS_MIPS16E2;
++
++	if (cpu_has_loongson_mmi)
++		elf_hwcap |= HWCAP_LOONGSON_MMI;
++
++	if (cpu_has_loongson_ext)
++		elf_hwcap |= HWCAP_LOONGSON_EXT;
++
++	if (cpu_has_loongson_ext2)
++		elf_hwcap |= HWCAP_LOONGSON_EXT2;
++
+  	if (cpu_has_vz)
+  		cpu_probe_vz(c);
+  
+-- 2.23.0
+
 
