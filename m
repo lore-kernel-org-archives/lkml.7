@@ -2,96 +2,99 @@ Return-Path: <SRS0=sYEh=YW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CBDCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C77CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8C920874
-	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8DC320874
+	for <linux-kernel@archiver.kernel.org>; Tue, 29 Oct 2019 16:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390492AbfJ2QfB (ORCPT
+        id S2390569AbfJ2QfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:35:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33652 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390384AbfJ2QfA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 12:35:00 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9TGLwCm067020
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:34:59 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vxqqvkrbe-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 12:34:59 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Tue, 29 Oct 2019 16:34:57 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 29 Oct 2019 16:34:53 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9TGYquB44433852
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 16:34:52 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B77FA4051;
-        Tue, 29 Oct 2019 16:34:52 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD884A4040;
-        Tue, 29 Oct 2019 16:34:51 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.85])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 29 Oct 2019 16:34:51 +0000 (GMT)
-Date:   Tue, 29 Oct 2019 17:34:50 +0100
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     gor@linux.ibm.com, borntraeger@de.ibm.com, jpoimboe@redhat.com,
-        joe.lawrence@redhat.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jikos@kernel.org, pmladek@suse.com,
-        nstange@suse.de, live-patching@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] s390/livepatch: Implement reliable stack tracing
- for the consistency model
-References: <20191029143904.24051-1-mbenes@suse.cz>
+        Tue, 29 Oct 2019 12:35:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37906 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390473AbfJ2QfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 12:35:22 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EA9E854F5D
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 16:35:21 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id s9so8755775wrw.23
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 09:35:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FQnLYx2QWY4cuAKWiCGGUv4yf2h+qdP8BhSsdB+2sT0=;
+        b=NrY4om0pmttkhK8XOovYDDlkjXYEUi2ZwnoGzEcP18NhhXkfn1SeGl/0ff1fpmdbuy
+         dp13q6umoaC9hk5ZBeY9KFhmdi0Pc3EID5WEE//v8sHatPsN+EVjRRKwHcCfUHUU9eun
+         FhrWVUoNiU3r+vdJIIv1QNhyWY+lnbqWZjPuohvhPsSBA1kks0cBbp7SQaCgrv6exLV4
+         6xSZk5bKOf8BhaZWAf9PLPTQEIXrA+LKFhp6s0Co/pIEedVQqYS70wfnyJYhAZT0S5qx
+         WPfVceoPlHzyJnuR+zzXLna+U9NjfJ0uuvw5Dr99+5s9X9vkxh1Whbm4T1LtX8VYnbFc
+         N0fw==
+X-Gm-Message-State: APjAAAWpkwGQm3tzM/P9YD670sCCDKZUg2vi2zIiQtqjhKPk7nqDB9ZD
+        IS7enhLq1AjcpWrVsL6vGqvv0jEOgT0QwihqgcEVpy6EWqK4pn1wTKMgGaHStE9K5fwcVxBSAft
+        ecB8NlugkNi7sosqJ3uu7wAjF
+X-Received: by 2002:a1c:a9cb:: with SMTP id s194mr5321614wme.92.1572366920617;
+        Tue, 29 Oct 2019 09:35:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx29BHLiojOUxFUuXNicrwQ7MqELEUWM6W1qCELpsBAD/xgXR4ttLraQVt+y1hgrjzLl0jEJQ==
+X-Received: by 2002:a1c:a9cb:: with SMTP id s194mr5321583wme.92.1572366920428;
+        Tue, 29 Oct 2019 09:35:20 -0700 (PDT)
+Received: from steredhat (94.222.26.109.rev.sfr.net. [109.26.222.94])
+        by smtp.gmail.com with ESMTPSA id r19sm18295914wrr.47.2019.10.29.09.35.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 09:35:19 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 17:35:16 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>, kvm@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [PATCH net-next 12/14] vsock/vmci: register vmci_transport only
+ when VMCI guest/host are active
+Message-ID: <20191029163516.td6wk7lf5pmytwtk@steredhat>
+References: <20191023095554.11340-1-sgarzare@redhat.com>
+ <20191023095554.11340-13-sgarzare@redhat.com>
+ <20191027081752.GD4472@stefanha-x1.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029143904.24051-1-mbenes@suse.cz>
-X-TM-AS-GCONF: 00
-x-cbid: 19102916-0016-0000-0000-000002BED94E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102916-0017-0000-0000-000033203281
-Message-Id: <20191029163450.GI5646@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=486 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910290145
+In-Reply-To: <20191027081752.GD4472@stefanha-x1.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 03:39:01PM +0100, Miroslav Benes wrote:
-> - I tried to use the existing infrastructure as much as possible with
->   one exception. I kept unwind_next_frame_reliable() next to the
->   ordinary unwind_next_frame(). I did not come up with a nice solution
->   how to integrate it. The reliable unwinding is executed on a task
->   stack only, which leads to a nice simplification. My integration
->   attempts only obfuscated the existing unwind_next_frame() which is
->   already not easy to read. Ideas are definitely welcome.
+On Sun, Oct 27, 2019 at 09:17:52AM +0100, Stefan Hajnoczi wrote:
+> On Wed, Oct 23, 2019 at 11:55:52AM +0200, Stefano Garzarella wrote:
+> > +static int __init vmci_transport_init(void)
+> > +{
+> > +	int features = VSOCK_TRANSPORT_F_DGRAM;
+> 
+> Where is this variable used?
 
-Ah, now I see. So patch 2 seems to be leftover(?). Could you just send
-how the result would look like?
+It is introduced in the previous patch "vsock: add multi-transports support",
+and it is used in the vsock_core_register(), but since now the
+vmci_transport_init() registers the vmci_transport only with DGRAM
+feature, I can remove this variable and I can use directly the
+VSOCK_TRANSPORT_F_DGRAM.
 
-I'd really like to have only one function, since some of the sanity
-checks you added also make sense for what we already have - so code
-would diverge from the beginning.
+I'll fix in the v3.
 
+Thanks,
+Stefano
