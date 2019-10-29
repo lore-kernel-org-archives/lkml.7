@@ -7,26 +7,27 @@ X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095BDC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F588C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88A921D7E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC1A218AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389432AbfKGNw1 (ORCPT
+        id S2389451AbfKGNwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:52:27 -0500
-Received: from verein.lst.de ([213.95.11.211]:57486 "EHLO verein.lst.de"
+        Thu, 7 Nov 2019 08:52:30 -0500
+Received: from verein.lst.de ([213.95.11.211]:57503 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389365AbfKGNwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:52:25 -0500
+        id S2389401AbfKGNw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:52:27 -0500
 Received: by verein.lst.de (Postfix, from userid 2005)
-        id BD63768C4E; Thu,  7 Nov 2019 14:52:22 +0100 (CET)
+        id 82A2468C7B; Thu,  7 Nov 2019 14:52:25 +0100 (CET)
 In-Reply-To: <20191107135018.0A04068BE1@verein.lst.de>
 References: <20191107135018.0A04068BE1@verein.lst.de>
 From:   Torsten Duwe <duwe@lst.de>
 Date:   Tue, 29 Oct 2019 13:16:57 +0100
-Subject: [PATCH v5 6/7] dt-bindings: Add ANX6345 DP/eDP transmitter binding
+Subject: [PATCH v5 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge on
+ Teres-I
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -43,132 +44,95 @@ To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-Id: <20191107135222.BD63768C4E@verein.lst.de>
+Message-Id: <20191107135225.82A2468C7B@verein.lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
-for portable devices.
+Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
+the I2C controlling signals are connected to I2C0 bus.
 
-Add a binding document for it.
+Enable it in the device tree, and enable the display engine, video mixer
+and tcon0 as well.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Torsten Duwe <duwe@suse.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
- .../bindings/display/bridge/anx6345.yaml           | 102 ++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.yaml
+ .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 45 ++++++++++++++++++++--
+ 1 file changed, 41 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.yaml b/Documentation/devicetree/bindings/display/bridge/anx6345.yaml
-new file mode 100644
-index 000000000000..094e8e8a5faa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/anx6345.yaml
-@@ -0,0 +1,102 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/anx6345.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+index 1069e7012c9c..970415106dcf 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+@@ -100,18 +100,41 @@
+ 	status = "okay";
+ };
+ 
++&de {
++	status = "okay";
++};
 +
-+title: Analogix ANX6345 eDP Transmitter Device Tree Bindings
+ &ehci1 {
+ 	status = "okay";
+ };
+ 
+ 
+-/* The ANX6345 eDP-bridge is on i2c0. There is no linux (mainline)
+- * driver for this chip at the moment, the bootloader initializes it.
+- * However it can be accessed with the i2c-dev driver from user space.
+- */
+ &i2c0 {
+ 	clock-frequency = <100000>;
+ 	status = "okay";
 +
-+maintainers:
-+  - Torsten Duwe <duwe@lst.de>
++	anx6345: anx6345@38 {
++		compatible = "analogix,anx6345";
++		reg = <0x38>;
++		reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
++		dvdd25-supply = <&reg_dldo2>;
++		dvdd12-supply = <&reg_dldo3>;
 +
-+description: |
-+  The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
-+  portable devices.
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+properties:
-+  compatible:
-+    const: analogix,anx6345
++			port@0 {
++				anx6345_in: endpoint {
++					remote-endpoint = <&tcon0_out_anx6345>;
++				};
++			};
++		};
++	};
++};
 +
-+  reg:
-+    maxItems: 1
-+    description: base I2C address of the device
++&mixer0 {
++	status = "okay";
+ };
+ 
+ &mmc0 {
+@@ -319,6 +342,20 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd_rgb666_pins>;
 +
-+  reset-gpios:
-+    maxItems: 1
-+    description: GPIO connected to active low reset
++	status = "okay";
++};
 +
-+  dvdd12-supply:
-+    maxItems: 1
-+    description: Regulator for 1.2V digital core power.
++&tcon0_out {
++	tcon0_out_anx6345: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&anx6345_in>;
++	};
++};
 +
-+  dvdd25-supply:
-+    maxItems: 1
-+    description: Regulator for 2.5V digital core power.
-+
-+  ports:
-+    type: object
-+
-+    properties:
-+      port@0:
-+        type: object
-+        description: |
-+          Video port for LVTTL input
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Video port for eDP output (panel or connector).
-+          May be omitted if EDID works reliably.
-+
-+    required:
-+      - port@0
-+
-+required:
-+  - compatible
-+  - reg
-+  - reset-gpios
-+  - dvdd12-supply
-+  - dvdd25-supply
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      anx6345: anx6345@38 {
-+        compatible = "analogix,anx6345";
-+        reg = <0x38>;
-+        reset-gpios = <&pio42 1 /* GPIO_ACTIVE_LOW */>;
-+        dvdd25-supply = <&reg_dldo2>;
-+        dvdd12-supply = <&reg_fldo1>;
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          anx6345_in: port@0 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <0>;
-+            anx6345_in_tcon0: endpoint@0 {
-+              reg = <0>;
-+              remote-endpoint = <&tcon0_out_anx6345>;
-+            };
-+          };
-+
-+          anx6345_out: port@1 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <1>;
-+            anx6345_out_panel: endpoint@0 {
-+              reg = <0>;
-+              remote-endpoint = <&panel_in_edp>;
-+            };
-+          };
-+        };
-+      };
-+    };
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
+-- 
+2.16.4
+
