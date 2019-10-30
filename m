@@ -6,35 +6,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD7BCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537B7CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5185E208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E7BC205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfJ3PmM (ORCPT
+        id S1727327AbfJ3PmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:42:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:36584 "EHLO foss.arm.com"
+        Wed, 30 Oct 2019 11:42:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:36602 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfJ3PmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:42:12 -0400
+        id S1726175AbfJ3PmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:42:15 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E74E337;
-        Wed, 30 Oct 2019 08:42:11 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C4C4055D;
+        Wed, 30 Oct 2019 08:42:14 -0700 (PDT)
 Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2014E3F6C4;
-        Wed, 30 Oct 2019 08:42:10 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F8573F6C4;
+        Wed, 30 Oct 2019 08:42:13 -0700 (PDT)
 From:   Qais Yousef <qais.yousef@arm.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 02/12] x86: Replace cpu_up/down with devcie_online/offline
-Date:   Wed, 30 Oct 2019 15:38:27 +0000
-Message-Id: <20191030153837.18107-3-qais.yousef@arm.com>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Enrico Weigelt <info@metux.net>, Ram Pai <linuxram@us.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 03/12] powerpc: Replace cpu_up/down with device_online/offline
+Date:   Wed, 30 Oct 2019 15:38:28 +0000
+Message-Id: <20191030153837.18107-4-qais.yousef@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191030153837.18107-1-qais.yousef@arm.com>
 References: <20191030153837.18107-1-qais.yousef@arm.com>
@@ -54,104 +59,42 @@ This also prepares to make cpu_up/down a private interface for anything
 but the cpu subsystem.
 
 Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+CC: Paul Mackerras <paulus@samba.org>
+CC: Michael Ellerman <mpe@ellerman.id.au>
+CC: Enrico Weigelt <info@metux.net>
+CC: Ram Pai <linuxram@us.ibm.com>
+CC: Nicholas Piggin <npiggin@gmail.com>
+CC: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+CC: Christophe Leroy <christophe.leroy@c-s.fr>
 CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: x86@kernel.org
+CC: linuxppc-dev@lists.ozlabs.org
 CC: linux-kernel@vger.kernel.org
 ---
- arch/x86/kernel/topology.c | 4 ++--
- arch/x86/mm/mmio-mod.c     | 8 ++++++--
- arch/x86/xen/smp.c         | 4 +++-
- 3 files changed, 11 insertions(+), 5 deletions(-)
+ arch/powerpc/kernel/machine_kexec_64.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/topology.c b/arch/x86/kernel/topology.c
-index be5bc2e47c71..3b253088615e 100644
---- a/arch/x86/kernel/topology.c
-+++ b/arch/x86/kernel/topology.c
-@@ -69,7 +69,7 @@ int _debug_hotplug_cpu(int cpu, int action)
- 
- 	switch (action) {
- 	case 0:
--		ret = cpu_down(cpu);
-+		ret = device_offline(get_cpu_device(cpu));
- 		if (!ret) {
- 			pr_info("DEBUG_HOTPLUG_CPU0: CPU %u is now offline\n", cpu);
- 			dev->offline = true;
-@@ -78,7 +78,7 @@ int _debug_hotplug_cpu(int cpu, int action)
- 			pr_debug("Can't offline CPU%d.\n", cpu);
- 		break;
- 	case 1:
--		ret = cpu_up(cpu);
-+		ret = device_online(get_cpu_device(cpu));
- 		if (!ret) {
- 			dev->offline = false;
- 			kobject_uevent(&dev->kobj, KOBJ_ONLINE);
-diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-index b8ef8557d4b3..7ec7d05335ce 100644
---- a/arch/x86/mm/mmio-mod.c
-+++ b/arch/x86/mm/mmio-mod.c
-@@ -385,13 +385,15 @@ static void enter_uniprocessor(void)
- 		pr_notice("Disabling non-boot CPUs...\n");
- 	put_online_cpus();
+diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
+index 04a7cba58eff..ebf8cc7acc4d 100644
+--- a/arch/powerpc/kernel/machine_kexec_64.c
++++ b/arch/powerpc/kernel/machine_kexec_64.c
+@@ -208,13 +208,15 @@ static void wake_offline_cpus(void)
+ {
+ 	int cpu = 0;
  
 +	lock_device_hotplug();
- 	for_each_cpu(cpu, downed_cpus) {
--		err = cpu_down(cpu);
-+		err = device_offline(get_cpu_device(cpu));
- 		if (!err)
- 			pr_info("CPU%d is down.\n", cpu);
- 		else
- 			pr_err("Error taking CPU%d down: %d\n", cpu, err);
- 	}
-+	unlock_device_hotplug();
- out:
- 	if (num_online_cpus() > 1)
- 		pr_warning("multiple CPUs still online, may miss events.\n");
-@@ -405,13 +407,15 @@ static void leave_uniprocessor(void)
- 	if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
- 		return;
- 	pr_notice("Re-enabling CPUs...\n");
-+	lock_device_hotplug();
- 	for_each_cpu(cpu, downed_cpus) {
--		err = cpu_up(cpu);
-+		err = device_online(get_cpu_device(cpu));
- 		if (!err)
- 			pr_info("enabled CPU%d.\n", cpu);
- 		else
- 			pr_err("cannot re-enable CPU%d: %d\n", cpu, err);
- 	}
-+	unlock_device_hotplug();
- }
- 
- #else /* !CONFIG_HOTPLUG_CPU */
-diff --git a/arch/x86/xen/smp.c b/arch/x86/xen/smp.c
-index 7a43b2ae19f1..aaa31100a31e 100644
---- a/arch/x86/xen/smp.c
-+++ b/arch/x86/xen/smp.c
-@@ -128,11 +128,12 @@ void __init xen_smp_cpus_done(unsigned int max_cpus)
- 	if (xen_have_vcpu_info_placement)
- 		return;
- 
-+	lock_device_hotplug();
- 	for_each_online_cpu(cpu) {
- 		if (xen_vcpu_nr(cpu) < MAX_VIRT_CPUS)
- 			continue;
- 
--		rc = cpu_down(cpu);
-+		rc = device_offline(get_cpu_device(cpu));
- 
- 		if (rc == 0) {
- 			/*
-@@ -145,6 +146,7 @@ void __init xen_smp_cpus_done(unsigned int max_cpus)
- 				__func__, cpu, rc);
+ 	for_each_present_cpu(cpu) {
+ 		if (!cpu_online(cpu)) {
+ 			printk(KERN_INFO "kexec: Waking offline cpu %d.\n",
+ 			       cpu);
+-			WARN_ON(cpu_up(cpu));
++			WARN_ON(device_online(get_cpu_device(cpu)));
  		}
  	}
 +	unlock_device_hotplug();
- 	WARN(count, "%s: brought %d CPUs offline\n", __func__, count);
  }
  
+ static void kexec_prepare_cpus(void)
 -- 
 2.17.1
 
