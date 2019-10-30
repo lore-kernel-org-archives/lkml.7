@@ -2,195 +2,152 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD74CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D684CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6C3920873
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428D92083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hir19Hwd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SNiDRvpl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfJ3WDH (ORCPT
+        id S1727447AbfJ3WEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 18:03:07 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45576 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfJ3WDH (ORCPT
+        Wed, 30 Oct 2019 18:04:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44505 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726765AbfJ3WEI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:03:07 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q13so4042422wrs.12;
-        Wed, 30 Oct 2019 15:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Uklg+W0N6IvmcJN4v5yXUysUbBNaXJq19pwp0ft9oHA=;
-        b=Hir19Hwdjr8Vq7jDQv7pwHefjckxUKaFs1p0qR+R6t+GNS1OKq7oXcZJZn1akOjjIf
-         m18Zrzk+yjvTR9nKwnOOpQ5nexRrG6TnTsXoOWT77nLrUIgrWC2rlBqpbltlJDH3yEjH
-         QygfBafobFVfqpb1aEmGU1hkoUKPD0oeu5KcsUE1Wf/cW82U7QQ4N5oGy4oKLJfGJ77+
-         KgQlYxpsKAJVKcjcCd7MJVP5KqR79yXlpZb0S5pZQTvnxw2g9uVHDzn+ocSZEAi1jP3f
-         cBNK0tMc5dXmVx8S4YrzoWW8toykwBZa+kMopSBmta6oCVBdzqqdFNyMQJracgSRT+pM
-         XbCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Uklg+W0N6IvmcJN4v5yXUysUbBNaXJq19pwp0ft9oHA=;
-        b=bVdlCvoK3jPRJeVb2TmZFnPEdW0AhTmImyRqbNaqmM0JLsaWZgsdw2E5XzsOHLfZA8
-         ojxvDqwOb2NdURns3VgvCiYmRobZzDWm8nwgGuq10XZh/DbasnHK+ACjUNzDM1+ZJ4yG
-         CLE4F4rlkqWMBVR/2bjcZ5CD1pnGs/JuwrDQ8UTLWCYTlBiRexr4oJWLtVy4OKweY4kR
-         8zlr/x2ZLAQ3/iKATnIiMgjhZk8iulv5MXt7JmsVc5zDVHArrVPlBBZQberc5b5JlUIy
-         PGspwAnJS6uHejhxNXcU+bK8URbl3NRGowMKeedXJ1U1oBezZ37xsoEsUSmuSHppLRzu
-         xR/w==
-X-Gm-Message-State: APjAAAUt0iiPi5A5zVTG+6ceytd7U53DI9/uYiSs30acNYhoOys7vVyx
-        02x5bJ8Bhr6QprBa55+zzZwYp9qu
-X-Google-Smtp-Source: APXvYqxvctllyS7D9dBeaFNOcXJeoWL3vxo9TZa2TITQ7s3VmvvsFIJe/P64DUKNF7yb5dS1rE22qQ==
-X-Received: by 2002:adf:afef:: with SMTP id y47mr1978171wrd.190.1572472984015;
-        Wed, 30 Oct 2019 15:03:04 -0700 (PDT)
-Received: from [192.168.1.19] (bkv74.neoplus.adsl.tpnet.pl. [83.28.189.74])
-        by smtp.gmail.com with ESMTPSA id h17sm1697603wme.6.2019.10.30.15.03.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 15:03:03 -0700 (PDT)
-Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     pavel@ucw.cz, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191028183629.11779-7-dmurphy@ti.com>
- <201910302027.2hNdR993%lkp@intel.com>
- <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
- <075c9330-a9b5-1360-4447-71a4797553a9@gmail.com>
- <f32e2063-3c56-607c-0e74-f75f68e62e16@ti.com>
- <b50fa8f6-1a27-ad22-d4a7-37bc07fc6768@gmail.com>
- <6b64d284-0854-4143-6cd8-2b07ac268e5e@ti.com>
- <d2d42ff8-bda3-ff32-6163-a7d2122e3441@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ed2d1106-f388-6a36-cedf-33ebb5987d28@gmail.com>
-Date:   Wed, 30 Oct 2019 23:03:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 18:04:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572473046;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IZ23M/gMQsnd17K54zQYAc0WcgVlZvNdQOyTSj0SueE=;
+        b=SNiDRvpl36/lQi73+cAgETh20xX6XJ8JlG/3IVGCqrl8Ctcz2XBUVDEQj39h1Wbflukt5X
+        Pv3ox8iWU0WNh1uJWti/11oTwSC48wz3MB5MeRgVJ+agP+/VrxQVkJE6VWMDI0nbg7ob2K
+        UKek+mNzBVZK5nF1ZBNBIUeDrxRpXf0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-346-YodGD9WtO8qS3uIWWEjLYA-1; Wed, 30 Oct 2019 18:04:03 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31D371005502;
+        Wed, 30 Oct 2019 22:04:00 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4FBB15C548;
+        Wed, 30 Oct 2019 22:03:22 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 18:03:20 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
+ outside init_user_ns
+Message-ID: <20191030220320.tnwkaj5gbzchcn7j@madcap2.tricolour.ca>
+References: <cover.1568834524.git.rgb@redhat.com>
+ <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
+ <20191019013904.uevmrzbmztsbhpnh@madcap2.tricolour.ca>
+ <CAHC9VhRPygA=LsHLUqv+K=ouAiPFJ6fb2_As=OT-_zB7kGc_aQ@mail.gmail.com>
+ <20191021213824.6zti5ndxu7sqs772@madcap2.tricolour.ca>
+ <CAHC9VhRdNXsY4neJpSoNyJoAVEoiEc2oW5kSscF99tjmoQAxFA@mail.gmail.com>
+ <20191021235734.mgcjotdqoe73e4ha@madcap2.tricolour.ca>
+ <CAHC9VhSiwnY-+2awxvGeO4a0NgfVkOPd8fzzBVujp=HtjskTuQ@mail.gmail.com>
+ <20191024210010.owwgc3bqbvtdsqws@madcap2.tricolour.ca>
+ <CAHC9VhRDoX9du4XbCnBtBzsNPMGOsb-TKM1CC+sCL7HP=FuTRQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d2d42ff8-bda3-ff32-6163-a7d2122e3441@gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhRDoX9du4XbCnBtBzsNPMGOsb-TKM1CC+sCL7HP=FuTRQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: YodGD9WtO8qS3uIWWEjLYA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-10-30 16:27, Paul Moore wrote:
+> On Thu, Oct 24, 2019 at 5:00 PM Richard Guy Briggs <rgb@redhat.com> wrote=
+:
+> > Here's the note I had from that meeting:
+> >
+> > - Eric raised the issue that using /proc is likely to get more and more
+> >   hoary due to mount namespaces and suggested that we use a netlink
+> > audit message (or a new syscall) to set the audit container identifier
+> > and since the loginuid is a similar type of operation, that it should b=
+e
+> > migrated over to a similar mechanism to get it away from /proc.  Get
+> > could be done with a netlink audit message that triggers an audit log
+> > message to deliver the information.  I'm reluctant to further pollute
+> > the syscall space if we can find another method.  The netlink audit
+> > message makes sense since any audit-enabled service is likely to alread=
+y
+> > have an audit socket open.
+>=20
+> Thanks for the background info on the off-list meeting.  I would
+> encourage you to have discussions like this on-list in the future; if
+> that isn't possible, hosting a public call would okay-ish, but a
+> distant second.
 
+I'm still trying to get Eric's attention to get him to weigh in here and
+provide a more eloquent representation of his ideas and concerns.  Some
+of it was related to CRIU(sp?) issues which we've already of which we've
+already seen similar concerns in namespace identifiers including the
+device identity to qualify it.
 
-On 10/30/19 11:00 PM, Jacek Anaszewski wrote:
-> Dan,
-> 
-> On 10/30/19 9:55 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 10/30/19 3:50 PM, Jacek Anaszewski wrote:
->>> Dan,
->>>
->>> On 10/30/19 9:23 PM, Dan Murphy wrote:
->>>> Jacek
->>>>
->>>>
->>>>>> Does not appear here
->>>>>>
->>>>>> Finally not sure why the MIPS compiler is complaining about this
->>>>>> but the
->>>>>> ARM and x86 is not
->>>>> Compilation breaks also for ARM.
->>>> Thanks for the information.
->>>>
->>>> I am not seeing this issue or even a warning when using the ARM 8.3
->>>> toolchain even in a clean build.
->>>>
->>>> arm-linux-gnueabihf-gcc (GNU Toolchain for the A-profile Architecture
->>>> 8.3-2019.03 (arm-rel-8.36)) 8.3.0
->>>>
->>>> So is a bug in this toolchain?
->>>  From what I've just googled C specification allows for a compiler
->>> implementation to accept also other forms of constants expressions
->>> than standard ones pointed out in the spec.
->>>
->>> So this is not necessarily a bug.
->>>
->> OK.  Well I will try to repo with the above instructions.  And wait till
->> Friday for any other comments.  If I get no other comments I will make
->> the couple of changes and then post v16.
-> 
-> I confirm that with arm-unknown-linux-gnueabi-gcc just built with
-> crosstool-NG 1.24.0 I don't observe the issue either.
+> At this point in time I'm not overly concerned about /proc completely
+> going away in namespaces/containers that are full featured enough to
+> host a container orchestrator.  If/when reliance on procfs becomes an
+> issue, we can look at alternate APIs, but given the importance of
+> /proc to userspace (including to audit) I suspect we are going to see
+> it persist for some time.  I would prefer to see you to drop the audit
+> container ID netlink API portions of this patchset and focus on the
+> procfs API.
 
-Of course version 8.3.0.
+I've already refactored the code to put the netlink bits at the end as
+completely optional pieces for completeness so they won't get in the way
+of the real substance of this patchset.  The nesting depth and total
+number of containers checks have also been punted to the end of the
+patchset to get them out of the way of discussion.
 
-> Previously I used quite old gcc 5.2 or so.
-> 
+> Also, for the record, removing the audit loginuid from procfs is not
+> something to take lightly, if at all; like it or not, it's part of the
+> kernel API.
 
--- 
-Best regards,
-Jacek Anaszewski
+Oh, I'm quite aware of how important this change is and it was discussed
+with Steve Grubb who saw the concern and value of considering such a
+disruptive change.  Removing proc support for auid/ses would be a
+long-term deprecation if accepted.
+
+Really, I should have labelled the v7 patchset as RFC since there were
+so many new and disruptive ideas presented in it.
+
+> paul moore
+> www.paul-moore.com
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
