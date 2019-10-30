@@ -2,252 +2,96 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D62CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4664CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D93121906
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="mui5mngI"
+	by mail.kernel.org (Postfix) with ESMTP id 72FFA2190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572451290;
+	bh=NOlrqPWGx4Qt4ThG2zHhGh6kwXDfKzJEe1B4BQNVwPc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=l3mlKOknyh3dOBRoTvhjll8RFdciZtQ2Dq4Elr7t4IQ5C45ioiCC4mxxcy6oMH0oZ
+	 pD5aX1uHyFcvlnVijUY119z16btGLjoaQ1gn7szUxu8hTk/gWT3y2ZqLF/gkJ7eXvV
+	 gS8mwmJyVrf5xzS6IJu9LbaFBgr8S/M1phc0ml3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbfJ3QBQ (ORCPT
+        id S1727928AbfJ3QB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:01:16 -0400
-Received: from cmta20.telus.net ([209.171.16.93]:47520 "EHLO cmta20.telus.net"
+        Wed, 30 Oct 2019 12:01:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbfJ3Pyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:54:44 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id PqIvi7EwiN5I9PqIxinjBg; Wed, 30 Oct 2019 09:54:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1572450882; bh=va9ZeCOWgJyIDlEFl6M6pjvQjVeC+2/miiQxAuzQXuw=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=mui5mngII4Cr08aLE2TSnBe18qLGzj3Fnl/1mXH8xr9mxl2aeaNJCe/YJNrWZ0iRi
-         9WKxVSZ3TV/nlfKTECXjQfiFmgo5HPtIrJPc9KE2od8lk4XjuTlYhKtxQKQ5NrlH9U
-         dpfcqu7AdjSuhKTueaUNHI78y9FZ2aVSjOKLAG5Epr/3biHkt1L98EPBLyX5EtHg9z
-         TOP58PpoAX/TOX4+fYZCZS+8GCcoOiHJhbqpsXPOjoDZ6aMVy/NbWRThXg5N1gKaZ7
-         QcbTfz7UjBNBOdiN5s+kI2yjTPIW5QTZFbpXnakvUVxlwU8KcpGIyZQ6vU4MwhekpJ
-         jVLyq/R/myTkg==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=IkcTkHD0fZMA:10 a=eBx6XaJ-_6BMZ4NUrjMA:9 a=QEXdDO2ut3YA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        <vincent.guittot@linaro.org>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Ingo Molnar'" <mingo@kernel.org>,
-        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>, <sargun@sargun.me>,
-        <tj@kernel.org>, <xiexiuqi@huawei.com>, <xiezhipeng1@huawei.com>
-References: <1572018904-5234-1-git-send-email-dsmythies@telus.net>       <10eef14e434375ef4bb7cf23ecb987b3591064a6.camel@linux.intel.com> <f13946cfc3f6f57230df7d0c2aad860940826148.camel@linux.intel.com>
-In-Reply-To: <f13946cfc3f6f57230df7d0c2aad860940826148.camel@linux.intel.com>
-Subject: RE: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load balancing path"
-Date:   Wed, 30 Oct 2019 08:54:35 -0700
-Message-ID: <000101d58f3a$56ab4e00$0401ea00$@net>
+        id S1727792AbfJ3Pym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:54:42 -0400
+Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C62B2087E;
+        Wed, 30 Oct 2019 15:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572450881;
+        bh=NOlrqPWGx4Qt4ThG2zHhGh6kwXDfKzJEe1B4BQNVwPc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PV7a+xwNTJi2esfNZ3KPP8i/zinPg9uVxLJckPc5mSL3gCZHVwW+ITNyNHhynyodN
+         i4f2LYHInk3HCjbcXaRcGYolAsSGpuyW0IT5Gd7XY/3gUFMZOVz6xEPnm1BKVErXgA
+         vw1Tbp+JeVmETwRfj3jahSOzUQB3SVvoInjDarvc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Allen Pais <allen.pais@oracle.com>, Martin Wilck <mwilck@suse.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/38] scsi: qla2xxx: fix a potential NULL pointer dereference
+Date:   Wed, 30 Oct 2019 11:53:42 -0400
+Message-Id: <20191030155406.10109-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
+References: <20191030155406.10109-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdWOk25ZLh1n5QSOSl6606YjpTTIPAAHXaFw
-X-CMAE-Envelope: MS4wfAK0Ix1CXAhs4CHrotliPBpoRLO6Z9SD182WqfbxwzU3/Cy65szMFlj3C3QQ9vXIP6/O0EGZ8N4PHtb+f5GZOjJZAhvFA6I6Jyts4Y3myZCuNJ3VxEGJ
- 5LQ35PKieM/L40Dvp8IoxAa4KpmhZ/ZH19GcMUD94LnzX1ACqNmT4Ntfk70BmjmWE19db53VCwkyWfjLTTvaSpHy/tKDVJnPRWIMzYLG205WUmQYERLXITrr
- 9F5BVkTyaTikxmoWOkxECGXWRZj+OuW/xCWSW7Lw2HDeYFO1mwtBCfN94BT5StgJYMIgW6lBHIDNXtXDTylRl+ckgAiK3BvnrdGldSZiJaXNcMZZitdkOYF8
- KL3GRq/4GWtsJFOIofF5I7Vm9I2skbtHNd9+iyqDuYfwa9K+qcesMT4qP+t0BxuItrC4TIv3GjUint2eJDI0bMnptSODNwgbCvsfDNXnmGgoB1tIRnkYgv/o
- Km4Jjcf4/xh7knpn59SsSjEzcsKNiN/nz/Mg5ZInG2GTHv4nYH/2a7KUVsAMF4ABb8JUcQv/1S+LJmjf
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.10.29 13:00 Srinivas Pandruvada wrote:
-> On Tue, 2019-10-29 at 12:34 -0700, Srinivas Pandruvada wrote:
->> On Fri, 2019-10-25 at 08:55 -0700, Doug Smythies wrote:
->> 
->> [...]
->> 
->>> Experiment method:
->>> 
->>> enable only idle state 1
->> Dountil stopped
->>>   apply a 100% load (all CPUs)
->>>   after awhile (about 50 seconds) remove the load.
->>>   allow a short transient delay (1 second).
->>>   measure the processor package joules used over the next 149
->>> seconds.
->>> Enduntil
->>> 
->>> Kernel k5.4-rc2 + reversion (this method)
->>> Average processor package power: 9.148 watts (128 samples, > 7
->>> hours)
->>> Minimum: 9.02 watts
->>> Maximum: 9.29 watts
->>> Note: outlyer data point group removed, as it was assumed the
->>> computer
->>> had something to do and wasn't actually "idle".
->>> 
->>> Kernel 5.4-rc2:
->>> Average processor package power: 9.969 watts (150 samples, > 8
->>> hours)
->>> Or 9% more energy for the idle phases of the work load.
->>> Minimum: 9.15 watts
->>> Maximum: 13.79 watts (51% more power)
+From: Allen Pais <allen.pais@oracle.com>
 
->>  Hi Doug,
+[ Upstream commit 35a79a63517981a8aea395497c548776347deda8 ]
 
-Hi Srinivas,
+alloc_workqueue is not checked for errors and as a result a potential
+NULL dereference could occur.
 
->> 
->> Do you have intel_pstate_tracer output?
+Link: https://lore.kernel.org/r/1568824618-4366-1-git-send-email-allen.pais@oracle.com
+Signed-off-by: Allen Pais <allen.pais@oracle.com>
+Reviewed-by: Martin Wilck <mwilck@suse.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/qla2xxx/qla_os.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Yes, I have many many runs of intel_pstate_tracer.py
-and many plots of pstate and CPU frequency lingering high
-for a very very long time after the load is removed.
-Here is one example (my reference: results/teo041):
-
-The load is removed at test time 539.047 seconds,
-and requested pstates do start to fall. Example,
-cpu 4 at time 539.052, pstate request goes from
-38 (the max for an i7-2600K) to 32. The last CPU
-to reduce the pstate request is CPU 0 at time
-539.714, but only to 25.
-
-Then, CPU 4 doesn't run the driver for another
-5.9 seconds, and even then only reduces its request
-to pstate 21.
-
-CPU 4 remains the defining CPU, and doesn't run the
-driver again until time 577.235 seconds, at which time
-its pstate request drops to 18, even with 0 load.
-So, 38 seconds, and still only at pstate 18.
-
->> I guess that when started
->> request to measure the measure joules, it started at higher P-state
->> without revert.
-
-No, not really. The main difference is in the time it takes to fully
-drop to the lowest pstate.
-
->> Other way is check by fixing the max and min scaling frequency to
->> some frequency, then we shouldn't see power difference.
-
-Yes, I did that, to learn the numbers.
-
-> I mean not significant power difference.
-
-For idle state 1, at least for my processor (i7-2600K), the difference
-is huge. Keep in mind that (at least for my processor) a CPU in idle
-state 1 does not relinquish its vote into the CPU frequency PLL, thus
-the highest request dictates the CPU frequency.
-
-Here are the idle state 1 powers (42 percent is the minimum for my
-processor. For reference, with all idle state enabled, the idle
-power is 3.68 watts and the processor package temperature is about
-25 degrees, independent of the requested pstate):
-
-Min-percent watts	temp
-42		8.7	35
-50		10.0	36
-60		12.0	37
-70		14.4	38
-80		17.3	41
-90		21	43
-100		21	43
-
-Note that the 90 (pstate 35) and 100 (pstate 38)
-powers are the same due to this (I assume):
-
-cpu5: MSR_TURBO_RATIO_LIMIT: 0x23242526
-35 * 100.0 = 3500.0 MHz max turbo 4 active cores
-36 * 100.0 = 3600.0 MHz max turbo 3 active cores
-37 * 100.0 = 3700.0 MHz max turbo 2 active cores
-38 * 100.0 = 3800.0 MHz max turbo 1 active cores
-
-And can be verified by looking at the request
-And granted MSRs directly:
-
-At 100% min percent:
-
-Requested:
-doug@s15:~/temp-k-git/linux$ sudo rdmsr --bitfield 15:8 -d -a 0x199
-38
-38
-38
-38
-38
-38
-38
-38
-
-Granted:
-doug@s15:~/temp-k-git/linux$ sudo rdmsr --bitfield 15:8 -d -a 0x198
-35
-35
-35
-35
-35
-35
-35
-35
-
-> Also to get real numbers, need
-> to use some power meter measuring CPU power.
-
-Well, I have one, but for the box AC only. It just didn't seem
-worth the overhead. Yes, I used the joules MSR directly. I also
-do a sanity check by checking that the processor package temperature
-makes sense for the calculated processor package watts. I added a
-temperature column above.
-
-> If I can get your script,
-> I may be able to measure that.
-
-Hmmm... This was actually a saga all by itself, mainly my own
-fault. I am running a bit of a mess here so that I could minimize 
-the time between the multiple load drops from 100% to 0% so as
-to make it easier to follow via the intel_pstate_tracer data.
-Load methods aside, the rest is pretty simple:
-
-doug@s15:~/idle$ cat load-no-load-forever2
-#!/bin/dash
-
-#
-# load-no-load-forever2. Smyhies 2019.10.21
-#       Just trying to get some debug data.
-#       apply load (real, not via disabling all idle
-#       states) then no load. loop forever.
-#       load version 2.
-
-echo "load-no-load-forever2. Start. Doug Smythies 2019.10.21"
-
-while [ 1 ];
-do
-  ~/c/waiter 9 2 4 2000000000 0 1 > /dev/null
-  sleep 1
-  sudo ~/c/measure_energy 149
-done
-
-Where "measure_energy.c" just samples the
-joules MSR over an interval, sometimes a longer
-interval than turbostat will allow (with full
-accuracy), because I know that the joules counter
-did not wrap around.
-In a separate e-mail I'll send you the c programs,
-although I seem to recall that Intel strips out
-attached c programs from e-mails.
-
-Hope this helps.
-
-... Doug
-
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 60b6019a2fcae..856a7ceb9a041 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3186,6 +3186,10 @@ qla2x00_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	    req->req_q_in, req->req_q_out, rsp->rsp_q_in, rsp->rsp_q_out);
+ 
+ 	ha->wq = alloc_workqueue("qla2xxx_wq", 0, 0);
++	if (unlikely(!ha->wq)) {
++		ret = -ENOMEM;
++		goto probe_failed;
++	}
+ 
+ 	if (ha->isp_ops->initialize_adapter(base_vha)) {
+ 		ql_log(ql_log_fatal, base_vha, 0x00d6,
+-- 
+2.20.1
 
