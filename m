@@ -2,87 +2,185 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E89CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77903CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2CE208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462D2208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TalvjQhr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uKbzD6z3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfJ3QoD (ORCPT
+        id S1727080AbfJ3QpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:44:03 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54522 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfJ3QoD (ORCPT
+        Wed, 30 Oct 2019 12:45:02 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:43090 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbfJ3QpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:44:03 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UGhvSv043741;
-        Wed, 30 Oct 2019 11:43:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572453837;
-        bh=JZA35ZR2OC9OCmKXZOq7DrvfhEUrhnzLjIn2Oloo+8A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TalvjQhrav520Ub5Vrvc1la0zH8zKDP4ssG0fJUrN9lU6XQjog4eWOoRQeh6bjAyK
-         AjyTlbQqYsJV7pDtdmm2yKUlVxVXW19ZS1DoGxNHZ8jmQw7SIUykIIEG6pvEhhR7b3
-         yKD6xRGL1hz354nIer00R4vv23XFcOCkb8qlXZ9c=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UGhvDq006424
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 11:43:57 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 11:43:44 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 11:43:44 -0500
-Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UGhugx033777;
-        Wed, 30 Oct 2019 11:43:56 -0500
-Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-To:     kbuild test robot <lkp@intel.com>
-CC:     <kbuild-all@lists.01.org>, <jacek.anaszewski@gmail.com>,
-        <pavel@ucw.cz>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191028183629.11779-7-dmurphy@ti.com>
- <201910302027.2hNdR993%lkp@intel.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <29321f74-8200-90cd-40f9-8f5bdb86e34e@ti.com>
-Date:   Wed, 30 Oct 2019 11:43:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 12:45:00 -0400
+Received: by mail-ua1-f65.google.com with SMTP id c25so902250uap.10
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 09:44:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p3/pbvedwS4IhZb4B6nbOhbMOZh2AXw7ndulwhv3TfM=;
+        b=uKbzD6z3ZGjc1fWALJKpEEB/bbWW4HPabd5njl25crREYFACWhI8l1Kir807xOxFpf
+         uaLa/jYOBB4myt492ky0Bm4YMaUYwzK/94ra2AKsk/hjtGfxyIUNsYZMw3k03FhB7aa+
+         D2OMDUrVDFG4lh3JnM9JNhFiNrQATzIWHgWWrsFo/gfWlZcp7D/KPuimOVmXF9dmZDOE
+         kqpQKHr+JjnMM9ArF0cPmyy5HSVupmLBQmTJ2rUO9BmpLiphAUI7CTD1n8sVbxM3f7P+
+         y4tJ9cXCf+NQfuudxvOK6UYmowPV5Kf2WNvQcUvzZdfMJCJXPEp22cQ//ywxY1dvTRRP
+         vp1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p3/pbvedwS4IhZb4B6nbOhbMOZh2AXw7ndulwhv3TfM=;
+        b=RII9i6+UI+74Sr0/Jw6Sogg/LLe4Rbl6JcVvyeR0fv6+gsKgygnflF0S63R5QSnH3v
+         Yt79KPnPq1feL3hpx8xFf0w2MauqYBWPKDejR8raHBGgxL+zbXlXkp0TD3e/bSp0sy9u
+         mm95rYx2s3yKqfJzaeqRDEDatkbjK0WqHVipoJ0V2x6DIwyEMUROYpVQDJikXtZjQ7xb
+         Y82I2Mo8pv1o2XeqoTEVAFuoyP//TnLJJTwHtQH/egABLOwONcHSvKrhPwNdiAy9IUBc
+         3I9lC0e5dH8CjuAQN7a6MA7rr27KQ7F9gPx1mxwEpj53CJA0O7Xlc6dOjO6ZOYtpnoic
+         3Pjg==
+X-Gm-Message-State: APjAAAVcgV5wpZFwTr40f6Aka4vcBOTcM1oY2AFmJHbA0oJGHasgoBfZ
+        EKCDZ70HWJ6exIONgI6ebSesuixzAqYitwxfNlsseQ==
+X-Google-Smtp-Source: APXvYqxJtN6SyNTtxvr9eHmowjOiNggxSentSJ3MZnyqcgsnfmMgt0WjJPDMGJJ+lnTYhFM/TEriRkTW1hDBpWXDXFc=
+X-Received: by 2002:ab0:2258:: with SMTP id z24mr367974uan.100.1572453897721;
+ Wed, 30 Oct 2019 09:44:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <201910302027.2hNdR993%lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.1571510481.git.hns@goldelico.com> <bec9d76e6da03d734649b9bdf76e9d575c57631a.1571510481.git.hns@goldelico.com>
+In-Reply-To: <bec9d76e6da03d734649b9bdf76e9d575c57631a.1571510481.git.hns@goldelico.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 30 Oct 2019 17:44:21 +0100
+Message-ID: <CAPDyKFrMQ3fBaeeAYVJfUdL8m=PDRU9Xt_9oGw6D1XOY68qDuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 03/11] DTS: ARM: pandora-common: define wl1251 as child
+ node of mmc3
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        "# 4.0+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
-
-On 10/30/19 7:07 AM, kbuild test robot wrote:
-> Hi Dan,
+On Sat, 19 Oct 2019 at 20:42, H. Nikolaus Schaller <hns@goldelico.com> wrote:
 >
-> I love your patch! Yet something to improve:
+> Since v4.7 the dma initialization requires that there is a
+> device tree property for "rx" and "tx" channels which is
+> not provided by the pdata-quirks initialization.
 >
-> [auto build test ERROR on j.anaszewski-leds/for-next]
+> By conversion of the mmc3 setup to device tree this will
+> finally allows to remove the OpenPandora wlan specific omap3
+> data-quirks.
+>
+> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: <stable@vger.kernel.org> # 4.7.0
+> ---
+>  arch/arm/boot/dts/omap3-pandora-common.dtsi | 37 +++++++++++++++++++--
+>  1 file changed, 35 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/omap3-pandora-common.dtsi b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+> index ec5891718ae6..c595b3eb314d 100644
+> --- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
+> +++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+> @@ -226,6 +226,18 @@
+>                 gpio = <&gpio6 4 GPIO_ACTIVE_HIGH>;     /* GPIO_164 */
+>         };
+>
+> +       /* wl1251 wifi+bt module */
+> +       wlan_en: fixed-regulator-wg7210_en {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vwlan";
+> +               regulator-min-microvolt = <1800000>;
+> +               regulator-max-microvolt = <1800000>;
 
-You might want to get your tree to be the base now.
+I doubt these are correct.
 
-Dan
+I guess this should be in the range of 2.7V-3.6V.
 
+> +               startup-delay-us = <50000>;
+> +               regulator-always-on;
 
+Always on?
+
+> +               enable-active-high;
+> +               gpio = <&gpio1 23 GPIO_ACTIVE_HIGH>;
+> +       };
+> +
+>         /* wg7210 (wifi+bt module) 32k clock buffer */
+>         wg7210_32k: fixed-regulator-wg7210_32k {
+>                 compatible = "regulator-fixed";
+> @@ -522,9 +534,30 @@
+>         /*wp-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;*/    /* GPIO_127 */
+>  };
+>
+> -/* mmc3 is probed using pdata-quirks to pass wl1251 card data */
+>  &mmc3 {
+> -       status = "disabled";
+> +       vmmc-supply = <&wlan_en>;
+> +
+> +       bus-width = <4>;
+> +       non-removable;
+> +       ti,non-removable;
+> +       cap-power-off-card;
+> +
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&mmc3_pins>;
+> +
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +
+> +       wlan: wl1251@1 {
+> +               compatible = "ti,wl1251";
+> +
+> +               reg = <1>;
+> +
+> +               interrupt-parent = <&gpio1>;
+> +               interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;  /* GPIO_21 */
+> +
+> +               ti,wl1251-has-eeprom;
+> +       };
+>  };
+>
+>  /* bluetooth*/
+> --
+> 2.19.1
+>
+
+Kind regards
+Uffe
