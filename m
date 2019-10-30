@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CF4CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A30CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9723320874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE92B20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572419367;
-	bh=XMwWjvlfkKHHww7Ks8HvSGOaLb6jeQzakvfWivfDqbI=;
+	s=default; t=1572419376;
+	bh=dhv8JdjxHbw9EaTr7zUckwhTfoLvm9Uv9z/iSbeG5Sw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AD1hcbZdTJsJbwUOaF9hS3h9sfm337LNousNCWetbGbcjahn3G4Qn0DfZUY+3rJYE
-	 yzbXWNbfks2OPUe1FSubKqJs7Zr65Yu1QWapY7wTEdTkxJTVIvk5QPQ+tPd6W7zuOa
-	 KHOnAKIIiOtFuN93mXQq3eKqkV275Obl9uQOPNJ0=
+	b=QALZXREG3t5fgtNq7Xp4gqhEIveJ0MfeRIlcPW5Dsb9PMyi0S03XY/QlGkRbVg+R8
+	 QFe+QdnlQHevPjI1citJGOSSuKJ4X+8WiJTru2OM7kw+U2FrFOJ9H1DV35g7U+BWxb
+	 s72hWdW1Riw0XPTq8mk+x+8u3ZBzk6U/f+LjFuMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfJ3HJ0 (ORCPT
+        id S1727355AbfJ3HJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 03:09:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 03:09:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbfJ3HJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 03:09:26 -0400
+        id S1726108AbfJ3HJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 03:09:35 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D110120874;
-        Wed, 30 Oct 2019 07:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D11F20874;
+        Wed, 30 Oct 2019 07:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572419365;
-        bh=XMwWjvlfkKHHww7Ks8HvSGOaLb6jeQzakvfWivfDqbI=;
+        s=default; t=1572419374;
+        bh=dhv8JdjxHbw9EaTr7zUckwhTfoLvm9Uv9z/iSbeG5Sw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vGbowppJBlrf5Mz3oIW/SFlp0lELV3rDYmiG0P/47b9clc18RTQFatBCQoXQAYIiS
-         +oKjl/hUJOh6zmueTDLux8xgnfhXixwI2SUG0H+3+iRlsxHNJqd1wzky+cVwO9tZ1g
-         5nTsePIcK488DioKMu5pNKhzCLeTOvZGACLQb38I=
+        b=w+Ga2SdEj2jnjupLLVhdvnQ3i9eIVzKypJrs2Wlyo2UKLbhTFLurb+1c8w8f4K/08
+         qDJQ+yu9irFZq7780sZ1HuYm65P8oBQ6H7bvLY2Oztf+tpoz8YNf5uANad2frSpXDI
+         oG5o8fYN7LGzeDh/2Gnu9VixH+auuVQEFxg6na8U=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [BUGFIX PATCH 1/4] perf probe: Skip end-of-sequence and non statement lines
-Date:   Wed, 30 Oct 2019 16:09:21 +0900
-Message-Id: <157241936090.32002.12156347518596111660.stgit@devnote2>
+Subject: [BUGFIX PATCH 2/4] perf probe: Filter out instances except for inlined subroutine and subprogram
+Date:   Wed, 30 Oct 2019 16:09:30 +0900
+Message-Id: <157241937063.32002.11024544873990816590.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <157241935028.32002.10228194508152968737.stgit@devnote2>
 References: <157241935028.32002.10228194508152968737.stgit@devnote2>
@@ -59,86 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Skip end-of-sequence and non-statement lines while walking
-through lines list.
+Filter out instances except for inlined_subroutine and subprogram
+DIE in die_walk_instances() and die_is_func_instance().
+This fixes an issue that perf probe sets some probes on calling
+address instead of a target function itself.
 
-The "end-of-sequence" line information means
- "the current address is that of the first byte after the
-  end of a sequence of target machine instructions."
- (DWARF version 4 spec 6.2.2)
-This actually means out of scope and we can not probe on it.
+When perf probe walks on instances of an abstruct origin
+(a kind of function prototype of inlined function),
+die_walk_instances() can also pass a GNU_call_site (a GNU
+extension for call site) to callback. Since it is not
+an inlined instance of target function, we have to filter
+out when searching a probe point.
 
-On the other hand, the statement lines (is_stmt) means
- "the current instruction is a recommended breakpoint location.
-  A recommended breakpoint location is intended to “represent”
-  a line, a statement and/or a semantically distinct subpart
-  of a statement."
- (DWARF version 4 spec 6.2.2)
-So, non-statement line info also should be skipped.
+Without this patch, perf probe sets probes on call site
+address too.This can happen on some function which is marked
+"inlined", but has actual symbol. (I'm not sure why GCC mark
+it "inlined")
 
-These can reduce unneeded probe points and also avoid an error.
-
-E.g. without this patch,
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new events:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_3 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_4 (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask_4 -aR sleep 1
-
-  #
-
-This puts 5 probes on one line, but acutally it's not inlined
-function. This is because there are many non statement instructions
-at the function prologue.
+# perf probe -D vfs_read
+p:probe/vfs_read _text+2500017
+p:probe/vfs_read_1 _text+2499468
+p:probe/vfs_read_2 _text+2499563
+p:probe/vfs_read_3 _text+2498876
+p:probe/vfs_read_4 _text+2498512
+p:probe/vfs_read_5 _text+2498627
 
 With this patch,
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+# perf probe -D vfs_read
+p:probe/vfs_read _text+2498512
 
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  #
-
-Now perf-probe skips unneeded addresses.
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Fixes: db0d2c6420ee ("perf probe: Search concrete out-of-line instances")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/util/dwarf-aux.c |   19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index ac82fd937e4b..f31001d13bfb 100644
+index f31001d13bfb..ac1289043204 100644
 --- a/tools/perf/util/dwarf-aux.c
 +++ b/tools/perf/util/dwarf-aux.c
-@@ -782,6 +782,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	int decl = 0, inl;
- 	Dwarf_Die die_mem, *cu_die;
- 	size_t nlines, i;
-+	bool flag;
+@@ -334,18 +334,22 @@ int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr)
+  * @dw_die: a DIE
+  *
+  * Ensure that this DIE is an instance (which has an entry address).
+- * This returns true if @dw_die is a function instance. If not, you need to
+- * call die_walk_instances() to find actual instances.
++ * This returns true if @dw_die is a function instance. If not, the @dw_die
++ * must be a prototype. You can use die_walk_instances() to find actual
++ * instances.
+  **/
+ bool die_is_func_instance(Dwarf_Die *dw_die)
+ {
+ 	Dwarf_Addr tmp;
+ 	Dwarf_Attribute attr_mem;
++	int tag = dwarf_tag(dw_die);
  
- 	/* Get the CU die */
- 	if (dwarf_tag(rt_die) != DW_TAG_compile_unit) {
-@@ -812,6 +813,12 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 				  "Possible error in debuginfo.\n");
- 			continue;
- 		}
-+		/* Skip end-of-sequence */
-+		if (dwarf_lineendsequence(line, &flag) != 0 || flag)
-+			continue;
-+		/* Skip Non statement line-info */
-+		if (dwarf_linebeginstatement(line, &flag) != 0 || !flag)
-+			continue;
- 		/* Filter lines based on address */
- 		if (rt_die != cu_die) {
- 			/*
+-	/* Actually gcc optimizes non-inline as like as inlined */
+-	return !dwarf_func_inline(dw_die) &&
+-	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
+-		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
++	if (tag != DW_TAG_subprogram &&
++	    tag != DW_TAG_inlined_subroutine)
++		return false;
++
++	return dwarf_entrypc(dw_die, &tmp) == 0 ||
++		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL;
+ }
+ 
+ /**
+@@ -624,6 +628,9 @@ static int __die_walk_instances_cb(Dwarf_Die *inst, void *data)
+ 	Dwarf_Die *origin;
+ 	int tmp;
+ 
++	if (!die_is_func_instance(inst))
++		return DIE_FIND_CB_CONTINUE;
++
+ 	attr = dwarf_attr(inst, DW_AT_abstract_origin, &attr_mem);
+ 	if (attr == NULL)
+ 		return DIE_FIND_CB_CONTINUE;
 
