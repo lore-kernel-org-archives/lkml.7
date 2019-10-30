@@ -2,163 +2,127 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6DCCA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28A1CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0DB22087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BAE208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="hQBmMXBt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d6DG2M9A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfJ3Sei (ORCPT
+        id S1728244AbfJ3Sem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 14:34:38 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:43437 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728200AbfJ3See (ORCPT
+        Wed, 30 Oct 2019 14:34:42 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45090 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728227AbfJ3Sei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 14:34:34 -0400
-Received: by mail-yw1-f67.google.com with SMTP id g77so1180022ywb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:34:33 -0700 (PDT)
+        Wed, 30 Oct 2019 14:34:38 -0400
+Received: by mail-pg1-f195.google.com with SMTP id r1so2012128pgj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:34:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=sCPo7Sa7HT48HXeeD9u54Jo9TW2SXqApycTbqabqamA=;
-        b=hQBmMXBtE030jLPi+b9OoEqhm+GlYLhHzFG71MvXJfq6tN7DnEaZObUxiXcvp8yJM8
-         rA2lINv0taa91AQ1KQxEutyYsC/pcupxwkuTpRNSS3DwTJW0m2VqpZ7GzK79exctCUdr
-         YPub1UR6ihiKWvaGOQhGsV04S0Jwhg5oGj1rQ=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tHSogeK+yt1DUUuBmWj42bpihi2dqShY6piKNSwCQ7U=;
+        b=d6DG2M9AyXAJdRSBRLgIL5V4A8Wbx0+3jLgPCZOAtM0Pal7I8rxrnLh3+awvr3eEnh
+         3z3FEIquUN013mfYDZ0LduMjWZtHsVSB4PXNa3GDkcfg+mfxdbiNp+9IyE2tLSc6Ts18
+         gv/4MPhoR5u1chMbs78GSK0kQcySnwJ3M4/nQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=sCPo7Sa7HT48HXeeD9u54Jo9TW2SXqApycTbqabqamA=;
-        b=dvQ6I+0C+7al8XWFAbBv0O4M90W+0kDXl+fil5EaAn1oN2+bweUAFRP6RNbmbRoPn+
-         D1bPZg8vKxNje/+UOxdWCh7e7iJe6hQk1qkaeVozLPhjPRw8QK1da7ThOADO+ytYa1yY
-         y6kIRVij2QtMhvVDRStKTVE+RI3yJL8Gp/k/teqdih/VUTGPHlDiODHBUSMG/ehmQbNz
-         9Kgt2Qhrjneq35+WatZPIFIwKc5D9B1n/m7YmdGyr1TVj8+JAZCRvSSgxGuhRzrcTE/P
-         SLx0CRUDR6hY7VOZ7a0ViW9vVuVXsoxHiF32eSKHaZ0UWPtvLo9M7hocrCP17lNrDkhv
-         t7Mg==
-X-Gm-Message-State: APjAAAV8bomJ59vJmu8k/rK+3MqUP5k3r+hGBTudyTmi83357DcRRFij
-        oYslvxCaqHnNdHxlHfzi7Uy/IQ==
-X-Google-Smtp-Source: APXvYqxyRCbl173Y2AJcQqH0jMpvgTa3A4ebqWxDo3vdlfW7bs37KYq7Yd0C9KcKF0zDmNykSN4h7Q==
-X-Received: by 2002:a81:6cd6:: with SMTP id h205mr841373ywc.119.1572460472652;
-        Wed, 30 Oct 2019 11:34:32 -0700 (PDT)
-Received: from vpillai-dev.sfo2.internal.digitalocean.com ([138.68.32.68])
-        by smtp.gmail.com with ESMTPSA id m205sm558325ywd.82.2019.10.30.11.34.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 30 Oct 2019 11:34:32 -0700 (PDT)
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
-Cc:     Aaron Lu <aaron.lu@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, Dario Faggioli <dfaggioli@suse.com>,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Subject: [RFC PATCH v4 19/19] sched/fair : Wake up forced idle siblings if needed
-Date:   Wed, 30 Oct 2019 18:33:32 +0000
-Message-Id: <4aaad8379b0b54eca2df9a91cbc0eda47a7a8faf.1572437285.git.vpillai@digitalocean.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1572437285.git.vpillai@digitalocean.com>
-References: <cover.1572437285.git.vpillai@digitalocean.com>
-In-Reply-To: <cover.1572437285.git.vpillai@digitalocean.com>
-References: <cover.1572437285.git.vpillai@digitalocean.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tHSogeK+yt1DUUuBmWj42bpihi2dqShY6piKNSwCQ7U=;
+        b=hBXn2b6ifRMCrQM0bNg7K9akiCuKc1wyfE/ywpSkWdHsKmPB/5FV0gV+dLQZ+HyEH5
+         inXKO2xZbrMg2Cgxhu+GbkId3RHoqb5sUm5oATsziEIPXlZEX+SE12n6pIey78c2kzzb
+         Jb6+x3hF6dminJYQegIAu4YbgjXSYWqET38mB5RpeR9TZhVlEi1rCAh8tPbtYTylC53U
+         Gm7UXfT5cqmnCsr7WKucMK1rCGZxN3nuugtxVMER2BYoUYeUwucZ8UlFflelobtUVbSS
+         lT5EqjjpM7hW6t2R3oNeCLwJRXf6mLsGNISviJTPLIZzSB46Z1lbAlXoaj+6AlmfvSuf
+         fBiw==
+X-Gm-Message-State: APjAAAVjAghu59+4Gbhctf1MewHIorvBKwScHIHC1fLCcnhXA3p0SjOC
+        Z5FbHSGJqsr032hYbDaUo8YFfcBGpmI=
+X-Google-Smtp-Source: APXvYqwwHQfDOO4WMI4IprHNAu2U0ReqxJq4F1aFs9FpyfyqJcZt57TVhar9aYartJPQpCKq/TI5yQ==
+X-Received: by 2002:a63:fe16:: with SMTP id p22mr952562pgh.318.1572460477658;
+        Wed, 30 Oct 2019 11:34:37 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r22sm846151pfg.54.2019.10.30.11.34.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 11:34:36 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 11:34:35 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Miller <davem@davemloft.net>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH] tty: n_hdlc: fix build on SPARC
+Message-ID: <201910301131.2739AA83@keescook>
+References: <675e7bd9-955b-3ff3-1101-a973b58b5b75@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <675e7bd9-955b-3ff3-1101-a973b58b5b75@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Lu <aaron.lu@linux.alibaba.com>
+On Mon, Sep 30, 2019 at 07:15:12PM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix tty driver build on SPARC by not using __exitdata.
+> It appears that SPARC does not support section .exit.data.
+> 
+> Fixes these build errors:
+> 
+> `.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+> `.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+> `.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+> `.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Fixes: 063246641d4a ("format-security: move static strings to const")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 
-If the sibling of a forced idle cpu has only one task and if it has
-used up its timeslice, then we should try to wake up the forced idle
-cpu to give the starving task on it a chance.
+Wow. That commit is from 2.5 years ago. Is the SPARC port still alive?
 
-Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
----
- kernel/sched/fair.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>  drivers/tty/n_hdlc.c |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> --- mmotm-2019-0925-1810.orig/drivers/tty/n_hdlc.c
+> +++ mmotm-2019-0925-1810/drivers/tty/n_hdlc.c
+> @@ -968,6 +968,11 @@ static int __init n_hdlc_init(void)
+>  	
+>  }	/* end of init_module() */
+>  
+> +#ifdef CONFIG_SPARC
+> +#undef __exitdata
+> +#define __exitdata
+> +#endif
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index e8dd78a8c54d..9d4cc97d4dd8 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4165,6 +4165,13 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- 		update_min_vruntime(cfs_rq);
- }
- 
-+static inline bool
-+__entity_slice_used(struct sched_entity *se)
-+{
-+	return (se->sum_exec_runtime - se->prev_sum_exec_runtime) >
-+		sched_slice(cfs_rq_of(se), se);
-+}
-+
- /*
-  * Preempt the current task with a newly woken task if needed:
-  */
-@@ -10052,6 +10059,34 @@ static void rq_offline_fair(struct rq *rq)
- 
- #endif /* CONFIG_SMP */
- 
-+#ifdef CONFIG_SCHED_CORE
-+/*
-+ * If runqueue has only one task which used up its slice and
-+ * if the sibling is forced idle, then trigger schedule
-+ * to give forced idle task a chance.
-+ */
-+static void resched_forceidle_sibling(struct rq *rq, struct sched_entity *se)
-+{
-+	int cpu = cpu_of(rq), sibling_cpu;
-+	if (rq->cfs.nr_running > 1 || !__entity_slice_used(se))
-+		return;
-+
-+	for_each_cpu(sibling_cpu, cpu_smt_mask(cpu)) {
-+		struct rq *sibling_rq;
-+		if (sibling_cpu == cpu)
-+			continue;
-+		if (cpu_is_offline(sibling_cpu))
-+			continue;
-+
-+		sibling_rq = cpu_rq(sibling_cpu);
-+		if (sibling_rq->core_forceidle) {
-+			resched_curr(sibling_rq);
-+		}
-+	}
-+}
-+#endif
-+
-+
- /*
-  * scheduler tick hitting a task of our scheduling class.
-  *
-@@ -10075,6 +10110,11 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
- 
- 	update_misfit_status(curr, rq);
- 	update_overutilized_status(task_rq(curr));
-+
-+#ifdef CONFIG_SCHED_CORE
-+	if (sched_core_enabled(rq))
-+		resched_forceidle_sibling(rq, &curr->se);
-+#endif
- }
- 
- /*
+Shouldn't this be somewhere else? Any other driver wanting to use
+__exitdata would need a similar patch. This feels like it should be
+handled where __exitdata is normally defined?
+
+-Kees
+
+> +
+>  static const char hdlc_unregister_ok[] __exitdata =
+>  	KERN_INFO "N_HDLC: line discipline unregistered\n";
+>  static const char hdlc_unregister_fail[] __exitdata =
+> 
+> 
+
 -- 
-2.17.1
-
+Kees Cook
