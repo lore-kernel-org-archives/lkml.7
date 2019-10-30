@@ -2,98 +2,84 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E33CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBE6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B1C2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3055F2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572426489;
+	bh=e761Xyx0yYXRP619DZxFfKdqoRtYMZUkJSPlaGJ8qZw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qnvr71Jdx010u9PQ+SXyzAdXyrnXSLt8XOH7KP+KolyIs+Aiqq1cJ9rVeh+X+XUff
+	 6rGT85T0KpnLVt7eN6UjrU75FgtN5ubk0WGBRp7a5HkVLAG0sjCXmnm9OqwiGeZRy3
+	 84rxtFXWwXi9W7QoikUZaBIF/ptqf74t5UZ5ngBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfJ3JD4 (ORCPT
+        id S1726321AbfJ3JII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:03:56 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:21613 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726177AbfJ3JD4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:03:56 -0400
-X-UUID: 5c5d35fef1344567b3c5a1e569a2523a-20191030
-X-UUID: 5c5d35fef1344567b3c5a1e569a2523a-20191030
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <luhua.xu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 26910532; Wed, 30 Oct 2019 17:03:51 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 30 Oct 2019 17:03:47 +0800
-Received: from localhost.localdomain (10.15.20.246) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 30 Oct 2019 17:03:47 +0800
-From:   Luhua Xu <luhua.xu@mediatek.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Luhua Xu <luhua.xu@mediatek.com>
-Subject: [PATCH V2] spi: add power control when set_cs
-Date:   Wed, 30 Oct 2019 17:03:54 +0800
-Message-ID: <1572426234-30019-1-git-send-email-luhua.xu@mediatek.com>
-X-Mailer: git-send-email 2.6.4
+        Wed, 30 Oct 2019 05:08:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44636 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726028AbfJ3JIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:08:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F081CB6EF;
+        Wed, 30 Oct 2019 09:08:05 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 10:08:04 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pan Zhang <zhangpan26@huawei.com>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        hannes@cmpxchg.org, guro@fb.com, shakeelb@google.com,
+        chris@chrisdown.name, yang.shi@linux.alibaba.com, tj@kernel.org,
+        tglx@linutronix.de, hushiyuan@huawei.com, wuxu.wu@huawei.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fix a typo of memcg annotation.
+Message-ID: <20191030090804.GS31513@dhcp22.suse.cz>
+References: <1572400917-28079-1-git-send-email-zhangpan26@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572400917-28079-1-git-send-email-zhangpan26@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Luhua Xu" <luhua.xu@mediatek.com>
+On Wed 30-10-19 10:01:57, Pan Zhang wrote:
+> There is a annotation forgot to follow the patchset of `Move LRU page reclaim from zones to nodes`.
+> I corrected it to avoid misunderstanding.
+> 
+> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
 
-As to set_cs takes effect immediately, power spi
-is needed when setup spi.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Luhua Xu <luhua.xu@mediatek.com>
----
-V2:
-- move set_cs PM control from .set_cs callback in
-  vendor driver to spi_setup in spi framework.
+> ---
+>  include/linux/memcontrol.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index ae703ea..e211689 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -112,7 +112,7 @@ struct memcg_shrinker_map {
+>  };
+>  
+>  /*
+> - * per-zone information in memory controller.
+> + * per-node information in memory controller.
+>   */
+>  struct mem_cgroup_per_node {
+>  	struct lruvec		lruvec;
+> -- 
+> 2.7.4
 
-
- drivers/spi/spi.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index f9502db..19007e0 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3091,7 +3091,20 @@ int spi_setup(struct spi_device *spi)
- 	if (spi->controller->setup)
- 		status = spi->controller->setup(spi);
- 
--	spi_set_cs(spi, false);
-+	if (spi->controller->auto_runtime_pm && spi->controller->set_cs) {
-+		status = pm_runtime_get_sync(spi->controller->dev.parent);
-+		if (status < 0) {
-+			pm_runtime_put_noidle(spi->controller->dev.parent);
-+			dev_err(&spi->controller->dev, "Failed to power device: %d\n",
-+				status);
-+			return status;
-+		}
-+		spi_set_cs(spi, false);
-+		pm_runtime_mark_last_busy(spi->controller->dev.parent);
-+		pm_runtime_put_autosuspend(spi->controller->dev.parent);
-+	} else {
-+		spi_set_cs(spi, false);
-+	}
- 
- 	if (spi->rt && !spi->controller->rt) {
- 		spi->controller->rt = true;
 -- 
-2.6.4
-
+Michal Hocko
+SUSE Labs
