@@ -2,103 +2,160 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F0BCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AAACA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4352080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF9A20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="YNRHsI+l"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wmz4BN9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfJ3TQE (ORCPT
+        id S1726754AbfJ3TQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:16:04 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35856 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfJ3TQD (ORCPT
+        Wed, 30 Oct 2019 15:16:43 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45803 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfJ3TQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:16:03 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x14so4823944qtq.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 12:16:03 -0700 (PDT)
+        Wed, 30 Oct 2019 15:16:42 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c7so2237574pfo.12
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 12:16:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Cpa84iefVqkjjKhqw25JrRoeu7AV++eH5Wze4rYcprw=;
-        b=YNRHsI+lzFIiZJuqWErT6nhqJdHUyOrITkT3K6GC6+WwQsRwHDvaP7tzLLxSxPz5JB
-         9C77ZS54M3BSa6J7bRjLDbtzS8mqi5cXygauY0pVzMvLI8aRQTNPGdmZERtK1p7Wroz9
-         gccEHjx45NGthf0L0f/068kTn9bkB1g8/+AEsA09Eu2To9ppMpcOgJHJFsELj8ld8YyE
-         xjK3hAeky/7uf2skmKt21k7Oohf0EW+fIc7EjVCaHKRkLWSBaXgSNWR7CPxYOxricPxG
-         MTq1NaftRGcMaSRSJCBXtQw8WEiZnhhDXxe5DiAX9/5Wf5FXjhVpqNPcIyniA65qwuhe
-         qDcA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SkNeb7N/RtOHBRU9IGeZjCb9lUHhzMvIRm1lPkdmY94=;
+        b=Wmz4BN9I7WolTdUk59TZOxzjMRRja95bL9zO5kOJ57UJdIVxIrDaZMbHW4erd4Fros
+         2hPOZirzIw1BFU5a69eAT/lwCab1RZEA7hAgyA5U3O0Nm8S/HI/c6oEUtgJbTHYu6Fbg
+         su7wV2pd4MglPXtDzkpNzhd21Spi3W0VbfdXI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Cpa84iefVqkjjKhqw25JrRoeu7AV++eH5Wze4rYcprw=;
-        b=qpF5R5zv5dcjj06mh+FnwQp1VpEF5HZNEZMVknOEBzPAh6dJi6lf6atidNC/DgKAeY
-         K80kCFv15OoppWdJi7SqhlJvxT+nCZQcIHtB7DO7p+1PMW3LsmyC9YHmUmW2YdXY0yeQ
-         fNDG7ZtpFcgK1dgVo/90MC7UW8H6IrnVTbGsMyCTVAYLUsYXhkEariz2TNR4r8Y9YZZG
-         cW3m/nKQCUWCIwBFYSDKQtK1gOI8slDkQ8xK3ZLXcRmaPnxZyhyAiOKn3e/1DfQgwK4z
-         VPYRLZZil0BizzO6iXgNPyrhBoSLJCOM1cK5qR69IbFVcq2Its46FETA02XFxks5/BUA
-         nedw==
-X-Gm-Message-State: APjAAAXurNXnHinICXDadD+qeCbGJSXo1AVvyS/ou6JPVBW4Er9oTWME
-        CRZKM2+gSySwMfqIPAI7alHILmnrd66Grg==
-X-Google-Smtp-Source: APXvYqyC3vTZaFFNPiCvhN+5dfaKyIGMRbKBbGNx68oP0+sqyT+P89zOg9sJyPT8UnXmgHax7qvcAQ==
-X-Received: by 2002:ac8:746:: with SMTP id k6mr1698563qth.135.1572462962616;
-        Wed, 30 Oct 2019 12:16:02 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id v205sm476037qkb.123.2019.10.30.12.16.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 12:16:01 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     dan.j.williams@intel.com
-Cc:     vishal.l.verma@intel.com, dave.jiang@intel.com,
-        keith.busch@intel.com, ira.weiny@intel.com,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] nvdimm/btt: fix variable 'rc' set but not used
-Date:   Wed, 30 Oct 2019 15:15:39 -0400
-Message-Id: <1572462939-18201-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SkNeb7N/RtOHBRU9IGeZjCb9lUHhzMvIRm1lPkdmY94=;
+        b=JkCWwWsiLs0kcRBASeYvn2jcGSbUbW2ooTs+xlaSGaZ6+eXW+7Gp/In6YnkWJWCKIs
+         7a4RnVqYEGBi3ATYAR78Q3RlGMqNmsaY1xy5Uf8WYviwAXDnfPU4pjsUYMIZWDkO9q9B
+         EDEUDzRdunoceJbi00l2jhloGaOHPdEbTtq7TL7C/az6LIkjaUJhNCBDrZ5Htz3LsyVN
+         MVf8FNqIlEkgVoR9jwOIxycYJdhoz4Uoq3ZVZQq/Duyus4KFB9zkHtynDF+s5fmjLR70
+         0pjlgICjqA2fwMynKRA7ZSOPZZyoNxW2vkTqN57f42sxFjBjrV0To/vLIS8Nwi36349W
+         8Mug==
+X-Gm-Message-State: APjAAAWytHAwP/XeDyvgRRzOb9QPA1WXH086wzCQOsAxOOAxR5hn0ZzE
+        cicyBznP+QC4iwCl4NzmcuXrXw==
+X-Google-Smtp-Source: APXvYqxfh9ztLk2WfEQDJ7irJePRmGVvoJEr3DPY5+qzc1/dbiyg9erl6+par2Vm529nXY8KHdViig==
+X-Received: by 2002:aa7:9157:: with SMTP id 23mr982679pfi.73.1572463001813;
+        Wed, 30 Oct 2019 12:16:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e17sm719419pfh.121.2019.10.30.12.16.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 12:16:41 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 12:16:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, Jann Horn <jannh@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        kernel-hardening@lists.openwall.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/6] kselftest: Add test runner creation script
+Message-ID: <201910301216.5C3F9BA010@keescook>
+References: <20190405015859.32755-1-tobin@kernel.org>
+ <20190405015859.32755-3-tobin@kernel.org>
+ <CA+G9fYsfJpXQvOvHdjtg8z4a89dSStOQZOKa9zMjjQgWKng1aw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYsfJpXQvOvHdjtg8z4a89dSStOQZOKa9zMjjQgWKng1aw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/nvdimm/btt.c: In function 'btt_read_pg':
-drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
-[-Wunused-but-set-variable]
-    int rc;
-        ^~
+On Wed, Oct 30, 2019 at 06:15:22PM +0530, Naresh Kamboju wrote:
+> Hi Tobin,
+> 
+> On Fri, 5 Apr 2019 at 07:30, Tobin C. Harding <tobin@kernel.org> wrote:
+> >
+> > Currently if we wish to use kselftest to run tests within a kernel
+> > module we write a small script to load/unload and do error reporting.
+> > There are a bunch of these under tools/testing/selftests/lib/ that are
+> > all identical except for the test name.  We can reduce code duplication
+> > and improve maintainability if we have one version of this.  However
+> > kselftest requires an executable for each test.  We can move all the
+> > script logic to a central script then have each individual test script
+> > call the main script.
+> >
+> > Oneliner to call kselftest_module.sh courtesy of Kees, thanks!
+> >
+> > Add test runner creation script.  Convert
+> > tools/testing/selftests/lib/*.sh to use new test creation script.
+> >
+> > Testing
+> > -------
+> >
+> > Configure kselftests for lib/ then build and boot kernel.  Then run
+> > kselftests as follows:
+> >
+> >   $ cd /path/to/kernel/tree
+> >   $ sudo make O=$output_path -C tools/testing/selftests TARGETS="lib" run_tests
+> 
+> We are missing "kselftest_module.sh" file when we do "make install"
+> and followed by generating a tar file "gen_kselftest_tar.sh" and
+> copying that on to target device and running tests by using
+> "run_kselftest.sh" script file on the target.
 
-Add a ratelimited message in case a storm of errors is encountered.
+Yikes -- there's a problem with gen_kselftest_tar.sh using the wrong
+directory. I'll send a patch...
 
-Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/nvdimm/btt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+-Kees
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 3e9f45aec8d1..59852f7e2d60 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -1266,6 +1266,11 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
- 			/* Media error - set the e_flag */
- 			rc = btt_map_write(arena, premap, postmap, 0, 1,
- 				NVDIMM_IO_ATOMIC);
-+
-+			if (rc)
-+				dev_warn_ratelimited(to_dev(arena),
-+					"Error persistently tracking bad blocks\n");
-+
- 			goto out_rtt;
- 		}
- 
+> 
+> Could you install the supporting script file "kselftest_module.sh" ?
+> 
+> Error log,
+> -------------
+> # selftests lib printf.sh
+> lib: printf.sh_ #
+> # ./printf.sh line 4 ./../kselftest_module.sh No such file or directory
+> line: 4_./../kselftest_module.sh #
+> [FAIL] 1 selftests lib printf.sh # exit=127
+> selftests: lib_printf.sh [FAIL]
+> # selftests lib bitmap.sh
+> lib: bitmap.sh_ #
+> # ./bitmap.sh line 3 ./../kselftest_module.sh No such file or directory
+> line: 3_./../kselftest_module.sh #
+> [FAIL] 2 selftests lib bitmap.sh # exit=127
+> selftests: lib_bitmap.sh [FAIL]
+> # selftests lib prime_numbers.sh
+> lib: prime_numbers.sh_ #
+> # ./prime_numbers.sh line 4 ./../kselftest_module.sh No such file or directory
+> line: 4_./../kselftest_module.sh #
+> [FAIL] 3 selftests lib prime_numbers.sh # exit=127
+> selftests: lib_prime_numbers.sh [FAIL]
+> # selftests lib strscpy.sh
+> lib: strscpy.sh_ #
+> # ./strscpy.sh line 3 ./../kselftest_module.sh No such file or directory
+> line: 3_./../kselftest_module.sh #
+> [FAIL] 4 selftests lib strscpy.sh # exit=127
+> selftests: lib_strscpy.sh [FAIL]
+> 
+> - Naresh
+
 -- 
-1.8.3.1
-
+Kees Cook
