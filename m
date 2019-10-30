@@ -2,216 +2,1480 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE5CCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0354CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E7120874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863B320874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfJ3Jhd (ORCPT
+        id S1726357AbfJ3JjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:37:33 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50980 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725822AbfJ3Jhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:37:32 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F2C7BA0BD3193CAEC5F1;
-        Wed, 30 Oct 2019 17:37:28 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 30 Oct 2019 17:37:23 +0800
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>
-CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
-        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>
-Subject: [PATCH v7] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Date:   Wed, 30 Oct 2019 17:34:28 +0800
-Message-ID: <1572428068-180880-1-git-send-email-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Wed, 30 Oct 2019 05:39:00 -0400
+Received: from mga04.intel.com ([192.55.52.120]:28387 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbfJ3JjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:39:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 02:38:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="190227862"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 30 Oct 2019 02:38:54 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iPkRJ-00066Y-K1; Wed, 30 Oct 2019 17:38:53 +0800
+Date:   Wed, 30 Oct 2019 17:38:39 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     kbuild-all@lists.01.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] compiler*.h: Add '__' prefix and suffix to all
+ __attribute__ #defines
+Message-ID: <201910301644.N7zPlCBx%lkp@intel.com>
+References: <7a15bc8ad7437dc3a044a4f9cd283500bd0b5f36.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a15bc8ad7437dc3a044a4f9cd283500bd0b5f36.camel@perches.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When passing the return value of dev_to_node() to cpumask_of_node()
-without checking if the device's node id is NUMA_NO_NODE, there is
-global-out-of-bounds detected by KASAN.
+Hi Joe,
 
-From the discussion [1], NUMA_NO_NODE really means no node affinity,
-which also means all cpus should be usable. So the cpumask_of_node()
-should always return all cpus online when user passes the node id as
-NUMA_NO_NODE, just like similar semantic that page allocator handles
-NUMA_NO_NODE.
+I love your patch! Perhaps something to improve:
 
-But we cannot really copy the page allocator logic. Simply because the
-page allocator doesn't enforce the near node affinity. It just picks it
-up as a preferred node but then it is free to fallback to any other numa
-node. This is not the case here and node_to_cpumask_map will only restrict
-to the particular node's cpus which would have really non deterministic
-behavior depending on where the code is executed. So in fact we really
-want to return cpu_online_mask for NUMA_NO_NODE.
+[auto build test WARNING on linus/master]
+[cannot apply to v5.4-rc5 next-20191029]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-Also there is a debugging version of node_to_cpumask_map() for x86 and
-arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
-patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
+url:    https://github.com/0day-ci/linux/commits/Joe-Perches/compiler-h-Add-__-prefix-and-suffix-to-all-__attribute__-defines/20191030-054036
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 23fdb198ae81f47a574296dab5167c5e136a02ba
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-[1] https://lkml.org/lkml/2019/9/11/66
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Suggested-by: Michal Hocko <mhocko@kernel.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Paul Burton <paul.burton@mips.com> # MIPS bits
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   kernel/exit.c:715:17: sparse: sparse: symbol 'do_exit' redeclared with different type (originally declared at include/linux/kernel.h:328) - different modifiers
+   kernel/exit.c:879:6: sparse: sparse: symbol 'complete_and_exit' redeclared with different type (originally declared at include/linux/kernel.h:329) - different modifiers
+   kernel/exit.c:1732:13: sparse: sparse: symbol 'abort' was not declared. Should it be static?
+>> arch/x86/include/asm/irqflags.h:54:9: sparse: sparse: context imbalance in 'find_child_reaper' - unexpected unlock
+   kernel/exit.c:1007:17: sparse: sparse: context imbalance in 'wait_task_zombie' - unexpected unlock
+   kernel/exit.c:1199:24: sparse: sparse: context imbalance in 'wait_task_stopped' - unexpected unlock
+   include/linux/uidgid.h:168:9: sparse: sparse: context imbalance in 'wait_task_continued' - unexpected unlock
+   arch/x86/include/asm/current.h:15:16: sparse: sparse: context imbalance in 'do_wait' - different lock contexts for basic block
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/slab.h:690:38: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1000:47: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1000:47: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1000:47: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1037:59: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1037:59: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1037:59: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1128:47: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1128:47: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1128:47: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1384:65: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1384:65: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1384:65: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1453:27: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1453:27: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1453:27: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1627:54: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1627:54: sparse: sparse: cast to restricted gfp_t
+   kernel/resource.c:1627:54: sparse: sparse: cast to restricted gfp_t
+>> kernel/resource.c:88:13: sparse: sparse: context imbalance in 'r_start' - wrong count at exit
+>> kernel/resource.c:99:13: sparse: sparse: context imbalance in 'r_stop' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   kernel/user.c:85:19: sparse: sparse: symbol 'uidhash_table' was not declared. Should it be static?
+   kernel/user.c:185:53: sparse: sparse: cast to restricted gfp_t
+   kernel/user.c:185:53: sparse: sparse: cast to restricted gfp_t
+   kernel/user.c:185:53: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:680:44: sparse: sparse: cast to restricted gfp_t
+   kernel/user.c:217:28: sparse: sparse: cast to restricted slab_flags_t
+   kernel/user.c:217:47: sparse: sparse: cast to restricted slab_flags_t
+>> kernel/user.c:139:13: sparse: sparse: context imbalance in 'free_user' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   kernel/signal.c:1110:38: sparse: sparse: cast to restricted gfp_t
+   kernel/signal.c:1110:38: sparse: sparse: cast to restricted gfp_t
+   kernel/signal.c:1110:38: sparse: sparse: cast to restricted gfp_t
+   kernel/signal.c:1808:60: sparse: sparse: cast to restricted gfp_t
+   kernel/signal.c:1808:60: sparse: sparse: cast to restricted gfp_t
+   kernel/signal.c:1808:60: sparse: sparse: cast to restricted gfp_t
+   kernel/signal.c:4574:27: sparse: sparse: cast to restricted slab_flags_t
+   kernel/signal.c:1289:9: sparse: sparse: context imbalance in 'do_send_sig_info' - different lock contexts for basic block
+   include/linux/rcupdate.h:651:9: sparse: sparse: context imbalance in '__lock_task_sighand' - different lock contexts for basic block
+   include/linux/rcupdate.h:649:9: sparse: sparse: context imbalance in 'send_sigqueue' - wrong count at exit
+>> kernel/signal.c:2230:17: sparse: sparse: context imbalance in 'ptrace_stop' - unexpected unlock
+>> arch/x86/include/asm/current.h:15:16: sparse: sparse: context imbalance in 'do_signal_stop' - unexpected unlock
+>> arch/x86/include/asm/current.h:15:16: sparse: sparse: context imbalance in 'do_freezer_trap' - unexpected unlock
+   kernel/signal.c:2598:33: sparse: sparse: context imbalance in 'get_signal' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   kernel/workqueue.c:330:8: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:330:8: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:543:25: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:543:25: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:543:25: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:1820:48: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:1820:48: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:1820:48: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:701:43: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:1913:14: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:1913:14: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:1913:14: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3352:41: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3352:41: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3352:41: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:690:38: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3355:49: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3355:49: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3355:49: sparse: sparse: cast to restricted gfp_t
+   include/linux/idr.h:311:33: sparse: sparse: cast to restricted gfp_t
+   include/linux/idr.h:311:33: sparse: sparse: cast to restricted gfp_t
+   include/linux/idr.h:311:33: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/idr.h:311:33: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3607:44: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3607:44: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3607:44: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3780:48: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3780:48: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3780:48: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3896:63: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3896:63: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:3896:63: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:4247:46: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:4247:46: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:4247:46: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5267:49: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5267:49: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5267:49: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5546:43: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5546:43: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5546:43: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5608:56: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5608:56: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5608:56: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5835:52: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5835:52: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5835:52: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:629:47: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5839:17: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5839:17: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5839:17: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5874:9: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5874:9: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5874:9: sparse: sparse: cast to restricted gfp_t
+   kernel/workqueue.c:5877:21: sparse: sparse: cast to restricted slab_flags_t
+>> arch/x86/include/asm/irqflags.h:54:9: sparse: sparse: context imbalance in 'maybe_create_worker' - unexpected unlock
+>> kernel/workqueue.c:2240:9: sparse: sparse: context imbalance in 'process_one_work' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   kernel/futex.c:811:47: sparse: sparse: cast to restricted gfp_t
+   kernel/futex.c:811:47: sparse: sparse: cast to restricted gfp_t
+   kernel/futex.c:811:47: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:690:38: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   kernel/futex.c:1559:9: sparse: sparse: context imbalance in 'wake_futex_pi' - unexpected unlock
+   kernel/futex.c:1719:33: sparse: sparse: context imbalance in 'futex_wake_op' - different lock contexts for basic block
+   kernel/futex.c:2015:39: sparse: sparse: context imbalance in 'futex_requeue' - different lock contexts for basic block
+>> kernel/futex.c:2356:9: sparse: sparse: context imbalance in 'unqueue_me_pi' - unexpected unlock
+   kernel/futex.c:2491:9: sparse: sparse: context imbalance in 'fixup_pi_state_owner' - unexpected unlock
+   kernel/futex.c:2600:13: sparse: sparse: context imbalance in 'futex_wait_queue_me' - unexpected unlock
+   kernel/futex.c:2702:1: sparse: sparse: context imbalance in 'futex_wait_setup' - different lock contexts for basic block
+>> kernel/futex.c:2954:22: sparse: sparse: context imbalance in 'futex_lock_pi' - different lock contexts for basic block
+   kernel/futex.c:2981:12: sparse: sparse: context imbalance in 'futex_unlock_pi' - different lock contexts for basic block
+   include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in 'futex_wait_requeue_pi' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> arch/x86/kernel/process_32.c:159:66: sparse: sparse: cast to restricted gfp_t
+>> arch/x86/kernel/process_32.c:159:66: sparse: sparse: cast to restricted gfp_t
+>> arch/x86/kernel/process_32.c:159:66: sparse: sparse: cast to restricted gfp_t
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> arch/x86/kernel/irq_32.c:120:37: sparse: sparse: cast to restricted gfp_t
+>> arch/x86/kernel/irq_32.c:120:37: sparse: sparse: cast to restricted gfp_t
+>> arch/x86/kernel/irq_32.c:120:37: sparse: sparse: cast to restricted gfp_t
+>> arch/x86/kernel/irq_32.c:120:37: sparse: sparse: cast to restricted gfp_t
+>> arch/x86/kernel/irq_32.c:120:37: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:484:9: sparse: sparse: cast to restricted gfp_t
+   arch/x86/kernel/irq_32.c:123:37: sparse: sparse: cast to restricted gfp_t
+   arch/x86/kernel/irq_32.c:123:37: sparse: sparse: cast to restricted gfp_t
+   arch/x86/kernel/irq_32.c:123:37: sparse: sparse: cast to restricted gfp_t
+   arch/x86/kernel/irq_32.c:123:37: sparse: sparse: cast to restricted gfp_t
+   arch/x86/kernel/irq_32.c:123:37: sparse: sparse: cast to restricted gfp_t
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:232:45: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:232:45: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:232:45: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:257:36: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:257:36: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:257:36: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:701:43: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:323:38: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:323:38: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:323:38: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:342:39: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:342:39: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:342:39: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:382:9: sparse: sparse: cast to restricted gfp_t
+>> mm/mempool.c:382:9: sparse: sparse: cast from restricted gfp_t
+   mm/mempool.c:383:9: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:385:21: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:386:21: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:387:21: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:389:33: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:389:54: sparse: sparse: cast to restricted gfp_t
+   mm/mempool.c:422:26: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:484:9: sparse: sparse: cast to restricted gfp_t
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> mm/vmscan.c:392:47: sparse: sparse: cast to restricted gfp_t
+>> mm/vmscan.c:392:47: sparse: sparse: cast to restricted gfp_t
+>> mm/vmscan.c:392:47: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:690:38: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:753:46: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:753:46: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:753:46: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:1163:48: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:1164:65: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:1290:54: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:1540:29: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:1540:29: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:1540:29: sparse: sparse: cast to restricted gfp_t
+>> mm/vmscan.c:1583:47: sparse: sparse: cast to restricted isolate_mode_t
+   mm/vmscan.c:1596:20: sparse: sparse: cast to restricted isolate_mode_t
+   mm/vmscan.c:1625:21: sparse: sparse: cast to restricted isolate_mode_t
+   mm/vmscan.c:1695:52: sparse: sparse: cast to restricted isolate_mode_t
+   mm/vmscan.c:1852:30: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:1852:41: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:1852:56: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:1852:67: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:2154:29: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:2154:29: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:2154:29: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:2966:33: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:421:42: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:421:42: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:421:42: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:421:42: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:421:20: sparse: sparse: cast from restricted gfp_t
+   mm/vmscan.c:2978:50: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:2978:50: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:2978:50: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:2978:63: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:421:20: sparse: sparse: cast from restricted gfp_t
+   include/linux/gfp.h:421:20: sparse: sparse: cast from restricted gfp_t
+   mm/vmscan.c:3242:26: sparse: sparse: cast to restricted gfp_t
+>> include/linux/sched/mm.h:187:36: sparse: sparse: cast to restricted gfp_t
+   include/linux/sched/mm.h:187:47: sparse: sparse: cast to restricted gfp_t
+   include/linux/sched/mm.h:189:35: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:421:20: sparse: sparse: cast from restricted gfp_t
+   mm/vmscan.c:3586:29: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:3586:29: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:3586:29: sparse: sparse: cast to restricted gfp_t
+   mm/vmscan.c:4005:35: sparse: sparse: cast to restricted gfp_t
+   arch/x86/include/asm/irqflags.h:54:9: sparse: sparse: context imbalance in 'check_move_unevictable_pages' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> mm/slab_common.c:291:21: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:311:41: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:311:41: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:311:41: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:311:41: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:311:41: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:311:41: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:348:21: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:348:21: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:348:21: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:348:21: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:348:21: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:348:21: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:358:30: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:358:30: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:358:30: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:358:62: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:358:62: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:358:62: sparse: sparse: cast to restricted slab_flags_t
+>> mm/slab_common.c:392:43: sparse: sparse: cast to restricted gfp_t
+>> mm/slab_common.c:392:43: sparse: sparse: cast to restricted gfp_t
+>> mm/slab_common.c:392:43: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:680:44: sparse: sparse: cast to restricted gfp_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:476:22: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:487:18: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:499:42: sparse: sparse: cast to restricted gfp_t
+   mm/slab_common.c:499:42: sparse: sparse: cast to restricted gfp_t
+   mm/slab_common.c:499:42: sparse: sparse: cast to restricted gfp_t
+   mm/slab_common.c:521:29: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:612:24: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:1012:32: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:1065:62: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   mm/slab_common.c:1223:26: sparse: sparse: cast to restricted gfp_t
+   mm/slab_common.c:1232:26: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:1286:42: sparse: sparse: cast to restricted slab_flags_t
+   mm/slab_common.c:1303:18: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:484:9: sparse: sparse: cast to restricted gfp_t
+   mm/slab_common.c:1491:54: sparse: sparse: cast to restricted slab_flags_t
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> mm/compaction.c:81:46: sparse: sparse: cast to restricted gfp_t
+   mm/compaction.c:948:38: sparse: sparse: cast to restricted gfp_t
+>> mm/compaction.c:1108:57: sparse: sparse: cast to restricted isolate_mode_t
+   mm/compaction.c:1748:55: sparse: sparse: cast to restricted isolate_mode_t
+   mm/compaction.c:1749:45: sparse: sparse: cast to restricted isolate_mode_t
+   include/linux/gfp.h:310:9: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:310:9: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:310:9: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:310:9: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:318:29: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:318:29: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:318:27: sparse: sparse: restricted gfp_t degrades to integer
+   mm/compaction.c:2343:41: sparse: sparse: cast to restricted gfp_t
+   mm/compaction.c:2343:39: sparse: sparse: incorrect type in initializer (different base types) @@    expected int may_perform_io @@    got restricted gint may_perform_io @@
+   mm/compaction.c:2343:39: sparse:    expected int may_perform_io
+   mm/compaction.c:2343:39: sparse:    got restricted gfp_t
+   mm/compaction.c:2419:29: sparse: sparse: cast to restricted gfp_t
+   mm/compaction.c:2419:29: sparse: sparse: cast to restricted gfp_t
+   mm/compaction.c:2419:29: sparse: sparse: cast to restricted gfp_t
+   mm/compaction.c:2534:29: sparse: sparse: cast to restricted gfp_t
+   mm/compaction.c:2534:29: sparse: sparse: cast to restricted gfp_t
+   mm/compaction.c:2534:29: sparse: sparse: cast to restricted gfp_t
+   mm/compaction.c:482:13: sparse: sparse: context imbalance in 'compact_lock_irqsave' - wrong count at exit
+   include/linux/spinlock.h:393:9: sparse: sparse: context imbalance in 'compact_unlock_should_abort' - unexpected unlock
+   mm/compaction.c:638:39: sparse: sparse: context imbalance in 'isolate_freepages_block' - unexpected unlock
+   mm/compaction.c:1047:39: sparse: sparse: context imbalance in 'isolate_migratepages_block' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: cast to restricted gfp_t
+   mm/debug.c:36:9: sparse: sparse: cast from restricted gfp_t
+>> mm/debug.c:36:9: sparse: sparse: too many warnings
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   include/asm-generic/pgalloc.h:21:25: sparse: sparse: cast to restricted gfp_t
+   include/asm-generic/pgalloc.h:21:25: sparse: sparse: cast to restricted gfp_t
+   include/asm-generic/pgalloc.h:21:25: sparse: sparse: cast to restricted gfp_t
+   include/asm-generic/pgalloc.h:21:25: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:838:56: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:838:56: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:838:56: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2181:63: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2181:74: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2187:16: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2187:16: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2187:16: sparse: sparse: cast to restricted gfp_t
+   include/linux/highmem.h:208:16: sparse: sparse: cast to restricted gfp_t
+   include/linux/highmem.h:208:16: sparse: sparse: cast to restricted gfp_t
+   include/linux/highmem.h:208:16: sparse: sparse: cast to restricted gfp_t
+   include/linux/highmem.h:208:16: sparse: sparse: cast to restricted gfp_t
+   include/linux/highmem.h:208:16: sparse: sparse: cast to restricted gfp_t
+   include/linux/highmem.h:208:16: sparse: sparse: cast to restricted gfp_t
+   include/linux/highmem.h:208:16: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:484:9: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2326:28: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2326:28: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2326:28: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2326:28: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2326:28: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2326:28: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2333:55: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2333:55: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2333:55: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2777:32: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2777:32: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2777:32: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2777:32: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2777:32: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2777:32: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2787:56: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2787:56: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2787:56: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2787:56: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2787:56: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2787:56: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2844:59: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2844:59: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:2844:59: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3006:59: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3006:59: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3006:59: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3508:25: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3508:25: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3508:25: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3508:25: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3508:25: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3508:25: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3512:68: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3512:68: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:3512:68: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:4418:37: sparse: sparse: cast to restricted gfp_t
+   mm/memory.c:800:17: sparse: sparse: context imbalance in 'copy_pte_range' - different lock contexts for basic block
+   mm/memory.c:1412:16: sparse: sparse: context imbalance in '__get_locked_pte' - different lock contexts for basic block
+   mm/memory.c:1801:17: sparse: sparse: context imbalance in 'remap_pte_range' - different lock contexts for basic block
+   include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in 'apply_to_pte_range' - unexpected unlock
+   include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in 'wp_pfn_shared' - unexpected unlock
+>> include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in 'wp_page_shared' - unexpected unlock
+>> include/linux/mm.h:839:9: sparse: sparse: context imbalance in 'do_wp_page' - unexpected unlock
+>> mm/memory.c:2930:9: sparse: sparse: context imbalance in 'do_swap_page' - different lock contexts for basic block
+   mm/memory.c:3124:19: sparse: sparse: context imbalance in 'pte_alloc_one_map' - different lock contexts for basic block
+   include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in 'finish_fault' - unexpected unlock
+   mm/memory.c:3463:9: sparse: sparse: context imbalance in 'do_fault_around' - unexpected unlock
+>> mm/memory.c:3805:19: sparse: sparse: context imbalance in 'handle_pte_fault' - different lock contexts for basic block
+   mm/memory.c:4116:12: sparse: sparse: context imbalance in '__follow_pte_pmd' - different lock contexts for basic block
+   mm/memory.c:4195:5: sparse: sparse: context imbalance in 'follow_pte_pmd' - different lock contexts for basic block
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   fs/super.c:77:30: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:203:70: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:203:70: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:203:70: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:203:70: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:690:38: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1017:39: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1017:39: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1017:39: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1051:39: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1051:39: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1051:39: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1058:8: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1058:8: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1058:8: sparse: sparse: cast from restricted xa_mark_t
+   fs/super.c:1058:8: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1080:25: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1080:25: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1080:25: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1281:24: sparse: sparse: cast to restricted fmode_t
+   fs/super.c:1281:37: sparse: sparse: cast to restricted fmode_t
+   fs/super.c:1285:25: sparse: sparse: cast to restricted fmode_t
+   fs/super.c:1367:24: sparse: sparse: cast to restricted fmode_t
+   fs/super.c:1367:37: sparse: sparse: cast to restricted fmode_t
+   fs/super.c:1371:25: sparse: sparse: cast to restricted fmode_t
+   fs/super.c:1444:9: sparse: sparse: cast to restricted fmode_t
+   fs/super.c:1445:33: sparse: sparse: cast to restricted fmode_t
+   fs/super.c:1599:25: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1599:25: sparse: sparse: cast to restricted gfp_t
+   fs/super.c:1599:25: sparse: sparse: cast to restricted gfp_t
+>> fs/super.c:385:12: sparse: sparse: context imbalance in 'grab_super' - unexpected unlock
+>> fs/super.c:509:20: sparse: sparse: context imbalance in 'sget_fc' - different lock contexts for basic block
+>> fs/super.c:574:20: sparse: sparse: context imbalance in 'sget' - different lock contexts for basic block
+>> fs/super.c:845:20: sparse: sparse: context imbalance in 'get_active_super' - wrong count at exit
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   fs/dcache.c:1688:49: sparse: sparse: cast to restricted gfp_t
+   fs/dcache.c:1688:49: sparse: sparse: cast to restricted gfp_t
+   fs/dcache.c:1688:49: sparse: sparse: cast to restricted gfp_t
+   fs/dcache.c:1705:51: sparse: sparse: cast to restricted gfp_t
+   fs/dcache.c:1705:51: sparse: sparse: cast to restricted gfp_t
+   fs/dcache.c:1705:51: sparse: sparse: cast to restricted gfp_t
+   fs/dcache.c:1705:51: sparse: sparse: cast to restricted gfp_t
+   fs/dcache.c:1706:51: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   fs/dcache.c:3168:24: sparse: sparse: cast to restricted slab_flags_t
+   fs/dcache.c:3168:24: sparse: sparse: cast to restricted slab_flags_t
+   fs/dcache.c:3168:24: sparse: sparse: cast to restricted slab_flags_t
+   fs/dcache.c:3207:25: sparse: sparse: cast to restricted slab_flags_t
+   fs/dcache.c:3207:44: sparse: sparse: cast to restricted slab_flags_t
+>> fs/dcache.c:365:23: sparse: sparse: context imbalance in 'dentry_unlink_inode' - unexpected unlock
+   include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in '__dentry_kill' - unexpected unlock
+   fs/dcache.c:622:9: sparse: sparse: context imbalance in '__lock_parent' - wrong count at exit
+   fs/dcache.c:686:9: sparse: sparse: context imbalance in 'dentry_kill' - wrong count at exit
+>> include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in 'dput' - unexpected unlock
+   include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in 'dput_to_list' - unexpected unlock
+   include/linux/spinlock.h:338:9: sparse: sparse: context imbalance in 'd_prune_aliases' - different lock contexts for basic block
+   fs/dcache.c:1055:13: sparse: sparse: context imbalance in 'shrink_lock_dentry' - different lock contexts for basic block
+   include/linux/compiler.h:199:9: sparse: sparse: context imbalance in 'shrink_dentry_list' - different lock contexts for basic block
+   fs/dcache.c:1124:24: sparse: sparse: context imbalance in 'dentry_lru_isolate' - wrong count at exit
+   fs/dcache.c:1205:24: sparse: sparse: context imbalance in 'dentry_lru_isolate_shrink' - wrong count at exit
+   fs/dcache.c:1267:13: sparse: sparse: context imbalance in 'd_walk' - different lock contexts for basic block
+   fs/dcache.c:1501:24: sparse: sparse: context imbalance in 'select_collect2' - different lock contexts for basic block
+   include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in 'shrink_dcache_parent' - unexpected unlock
+   fs/dcache.c:2447:9: sparse: sparse: context imbalance in 'd_delete' - wrong count at exit
+   fs/dcache.c:2674:6: sparse: sparse: context imbalance in 'd_add' - different lock contexts for basic block
+   include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in '__d_move' - unexpected unlock
+   fs/dcache.c:3044:16: sparse: sparse: context imbalance in 'd_splice_alias' - different lock contexts for basic block
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   fs/file.c:111:47: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:111:47: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:111:47: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:111:47: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:115:58: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:115:58: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:115:58: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:115:58: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:122:34: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:122:34: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:122:34: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:122:34: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:280:47: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:280:47: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:280:47: sparse: sparse: cast to restricted gfp_t
+   fs/file.c:734:27: sparse: sparse: cast to restricted fmode_t
+   fs/file.c:739:27: sparse: sparse: cast to restricted fmode_t
+   fs/file.c:784:33: sparse: sparse: cast to restricted fmode_t
+   fs/file.c:798:37: sparse: sparse: cast to restricted fmode_t
+>> fs/file.c:148:12: sparse: sparse: context imbalance in 'expand_fdtable' - unexpected unlock
+>> include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in 'expand_files' - unexpected unlock
+>> include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in 'do_dup2' - unexpected unlock
+   fs/file.c:887:5: sparse: sparse: context imbalance in 'replace_fd' - different lock contexts for basic block
+>> fs/file.c:909:12: sparse: sparse: context imbalance in 'ksys_dup3' - different lock contexts for basic block
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast to restricted gfp_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast to restricted gfp_t
+   fs/fs-writeback.c:1557:48: sparse: sparse: cast to restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast to restricted gfp_t
+   fs/fs-writeback.c:2412:46: sparse: sparse: cast to restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast to restricted gfp_t
+>> include/linux/backing-dev.h:158:39: sparse: sparse: context imbalance in 'inode_to_wb_and_lock_list' - wrong count at exit
+>> fs/fs-writeback.c:1118:6: sparse: sparse: context imbalance in 'inode_io_list_del' - unexpected unlock
+>> fs/fs-writeback.c:1351:13: sparse: sparse: context imbalance in 'inode_sleep_on_writeback' - unexpected unlock
+   fs/fs-writeback.c:1577:20: sparse: sparse: context imbalance in 'writeback_single_inode' - different lock contexts for basic block
+   fs/fs-writeback.c:1639:9: sparse: sparse: context imbalance in 'writeback_sb_inodes' - different lock contexts for basic block
+>> fs/fs-writeback.c:1853:17: sparse: sparse: context imbalance in 'wb_writeback' - different lock contexts for basic block
+   fs/fs-writeback.c:2194:9: sparse: sparse: context imbalance in 'block_dump___mark_inode_dirty' - different lock contexts for basic block
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> arch/x86/include/asm/tlbflush.h:411:30: sparse: sparse: context imbalance in 'prepare_set' - wrong count at exit
+>> arch/x86/kernel/cpu/mtrr/generic.c:792:9: sparse: sparse: context imbalance in 'post_set' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> fs/notify/dnotify/dnotify.c:295:53: sparse: sparse: cast to restricted gfp_t
+>> fs/notify/dnotify/dnotify.c:295:53: sparse: sparse: cast to restricted gfp_t
+>> fs/notify/dnotify/dnotify.c:295:53: sparse: sparse: cast to restricted gfp_t
+   fs/notify/dnotify/dnotify.c:302:60: sparse: sparse: cast to restricted gfp_t
+   fs/notify/dnotify/dnotify.c:302:60: sparse: sparse: cast to restricted gfp_t
+   fs/notify/dnotify/dnotify.c:302:60: sparse: sparse: cast to restricted gfp_t
+>> fs/notify/dnotify/dnotify.c:388:32: sparse: sparse: cast to restricted slab_flags_t
+   fs/notify/dnotify/dnotify.c:390:30: sparse: sparse: cast to restricted slab_flags_t
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> fs/notify/inotify/inotify_fsnotify.c:99:36: sparse: sparse: cast to restricted gfp_t
+>> fs/notify/inotify/inotify_fsnotify.c:99:36: sparse: sparse: cast to restricted gfp_t
+>> fs/notify/inotify/inotify_fsnotify.c:99:36: sparse: sparse: cast to restricted gfp_t
+>> fs/notify/inotify/inotify_fsnotify.c:99:36: sparse: sparse: cast to restricted gfp_t
+   fs/notify/inotify/inotify_fsnotify.c:99:57: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> fs/notify/inotify/inotify_user.c:109:23: sparse: sparse: cast to restricted __poll_t
+   fs/notify/inotify/inotify_user.c:109:33: sparse: sparse: cast to restricted __poll_t
+>> fs/notify/inotify/inotify_user.c:362:21: sparse: sparse: cast to restricted gfp_t
+>> fs/notify/inotify/inotify_user.c:362:21: sparse: sparse: cast to restricted gfp_t
+>> fs/notify/inotify/inotify_user.c:362:21: sparse: sparse: cast to restricted gfp_t
+   fs/notify/inotify/inotify_user.c:365:51: sparse: sparse: cast to restricted gfp_t
+   fs/notify/inotify/inotify_user.c:570:66: sparse: sparse: cast to restricted gfp_t
+   fs/notify/inotify/inotify_user.c:570:66: sparse: sparse: cast to restricted gfp_t
+   fs/notify/inotify/inotify_user.c:570:66: sparse: sparse: cast to restricted gfp_t
+   fs/notify/inotify/inotify_user.c:632:61: sparse: sparse: cast to restricted gfp_t
+   fs/notify/inotify/inotify_user.c:632:61: sparse: sparse: cast to restricted gfp_t
+   fs/notify/inotify/inotify_user.c:632:61: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   include/linux/idr.h:137:9: sparse: sparse: cast to restricted gfp_t
+   include/linux/idr.h:137:9: sparse: sparse: cast to restricted gfp_t
+>> fs/notify/inotify/inotify_user.c:825:37: sparse: sparse: cast to restricted slab_flags_t
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   kernel/sched/core.c:5398:47: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5398:47: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5398:47: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5402:43: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5402:43: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5402:43: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5490:43: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5490:43: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5490:43: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5547:39: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5547:39: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:5547:39: sparse: sparse: cast to restricted gfp_t
+   kernel/sched/core.c:6561:51: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:690:38: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+>> kernel/sched/core.c:89:36: sparse: sparse: context imbalance in '__task_rq_lock' - wrong count at exit
+>> kernel/sched/core.c:130:36: sparse: sparse: context imbalance in 'task_rq_lock' - wrong count at exit
+>> kernel/sched/sched.h:1182:9: sparse: sparse: context imbalance in 'ttwu_remote' - unexpected unlock
+>> kernel/sched/core.c:2943:6: sparse: sparse: context imbalance in 'wake_up_new_task' - unexpected unlock
+>> arch/x86/include/asm/irqflags.h:54:9: sparse: sparse: context imbalance in 'finish_task_switch' - unexpected unlock
+>> kernel/sched/core.c:3579:9: sparse: sparse: context imbalance in 'task_sched_runtime' - unexpected unlock
+>> kernel/sched/core.c:3989:29: sparse: sparse: context imbalance in '__schedule' - wrong count at exit
+>> kernel/sched/core.c:4472:9: sparse: sparse: context imbalance in 'rt_mutex_setprio' - unexpected unlock
+>> kernel/sched/sched.h:1191:9: sparse: sparse: context imbalance in 'set_user_nice' - unexpected unlock
+>> kernel/sched/core.c:5002:23: sparse: sparse: context imbalance in '__sched_setscheduler' - unexpected unlock
+>> kernel/sched/core.c:5863:23: sparse: sparse: context imbalance in 'sched_rr_get_interval' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> kernel/sched/cputime.c:275:12: sparse: sparse: context imbalance in 'read_sum_exec_runtime' - unexpected unlock
+   kernel/sched/cputime.c:316:17: sparse: sparse: context imbalance in 'thread_group_cputime' - different lock contexts for basic block
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> kernel/sched/sched.h:1191:9: sparse: sparse: context imbalance in 'dl_task_timer' - unexpected unlock
+   kernel/sched/sched.h:1191:9: sparse: sparse: context imbalance in 'inactive_task_timer' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> kernel/time/timer.c:919:26: sparse: sparse: context imbalance in 'lock_timer_base' - wrong count at exit
+>> kernel/time/timer.c:1057:9: sparse: sparse: context imbalance in 'mod_timer_pending' - unexpected unlock
+>> kernel/time/timer.c:1057:9: sparse: sparse: context imbalance in 'mod_timer' - unexpected unlock
+>> kernel/time/timer.c:1057:9: sparse: sparse: context imbalance in 'timer_reduce' - unexpected unlock
+>> kernel/time/timer.c:1171:27: sparse: sparse: context imbalance in 'add_timer_on' - unexpected unlock
+>> kernel/time/timer.c:1199:17: sparse: sparse: context imbalance in 'del_timer' - unexpected unlock
+>> kernel/time/timer.c:1228:9: sparse: sparse: context imbalance in 'try_to_del_timer_sync' - unexpected unlock
+>> kernel/time/timer.c:1057:9: sparse: sparse: context imbalance in 'schedule_timeout' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   drivers/base/devres.c:153:44: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   drivers/base/devres.c:728:61: sparse: sparse: cast to restricted gfp_t
+   drivers/base/devres.c:728:61: sparse: sparse: cast to restricted gfp_t
+   drivers/base/devres.c:728:61: sparse: sparse: cast to restricted gfp_t
+   drivers/base/devres.c:1023:60: sparse: sparse: cast to restricted gfp_t
+   drivers/base/devres.c:1023:60: sparse: sparse: cast to restricted gfp_t
+   drivers/base/devres.c:1023:60: sparse: sparse: cast to restricted gfp_t
+   drivers/base/devres.c:1091:63: sparse: sparse: cast to restricted gfp_t
+   drivers/base/devres.c:1091:63: sparse: sparse: cast to restricted gfp_t
+   drivers/base/devres.c:1091:63: sparse: sparse: cast to restricted gfp_t
+>> drivers/base/devres.c:490:12: sparse: sparse: context imbalance in 'release_nodes' - unexpected unlock
+>> drivers/base/devres.c:521:5: sparse: sparse: context imbalance in 'devres_release_all' - different lock contexts for basic block
+>> drivers/base/devres.c:684:9: sparse: sparse: context imbalance in 'devres_release_group' - wrong count at exit
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   drivers/base/firmware_loader/main.c:174:45: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:174:45: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:174:45: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:690:38: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:178:51: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:178:51: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:178:51: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:479:16: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:479:16: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:479:16: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:609:28: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:609:28: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:609:28: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:612:41: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:612:41: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:612:41: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:693:61: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:693:61: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:693:61: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:1128:37: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:1128:37: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:1128:37: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:1132:41: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:1132:41: sparse: sparse: cast to restricted gfp_t
+   drivers/base/firmware_loader/main.c:1132:41: sparse: sparse: cast to restricted gfp_t
+>> drivers/base/firmware_loader/main.c:242:13: sparse: sparse: context imbalance in '__free_fw_priv' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> include/linux/spinlock.h:378:9: sparse: sparse: context imbalance in '__rpm_callback' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   lib/iov_iter.c:522:37: sparse: sparse: cast to restricted gfp_t
+   lib/iov_iter.c:522:37: sparse: sparse: cast to restricted gfp_t
+   lib/iov_iter.c:522:37: sparse: sparse: cast to restricted gfp_t
+   lib/iov_iter.c:522:37: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:484:9: sparse: sparse: cast to restricted gfp_t
+   include/net/checksum.h:86:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:92:32: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:59:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:60:17: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:47: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:17: sparse: sparse: cast to restricted __wsum
+   lib/iov_iter.c:1318:57: sparse: sparse: cast to restricted gfp_t
+   lib/iov_iter.c:1318:57: sparse: sparse: cast to restricted gfp_t
+   lib/iov_iter.c:1318:57: sparse: sparse: cast to restricted gfp_t
+   include/net/checksum.h:86:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:92:32: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:59:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:60:17: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:47: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:17: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:86:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:92:32: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:59:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:60:17: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:47: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:17: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:86:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:92:32: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:59:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:60:17: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:47: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:17: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:86:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:92:32: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:59:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:60:17: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:47: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:17: sparse: sparse: cast to restricted __wsum
+>> arch/x86/include/asm/checksum_32.h:196:17: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:86:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:92:32: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:59:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:60:17: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:47: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:17: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:86:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:92:32: sparse: sparse: cast to restricted __wsum
+   include/net/checksum.h:59:20: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:60:17: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:47: sparse: sparse: cast from restricted __wsum
+   include/net/checksum.h:61:17: sparse: sparse: cast to restricted __wsum
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   lib/once.c:26:33: sparse: sparse: cast to restricted gfp_t
+   lib/once.c:26:33: sparse: sparse: cast to restricted gfp_t
+   lib/once.c:26:33: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   lib/once.c:37:6: sparse: sparse: context imbalance in '__do_once_start' - wrong count at exit
+>> lib/once.c:55:6: sparse: sparse: context imbalance in '__do_once_done' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   lib/xarray.c:137:46: sparse: sparse: cast to restricted xa_mark_t
+   lib/xarray.c:137:29: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:301:33: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:302:24: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:32:17: sparse: sparse: cast from restricted gfp_t
+   lib/xarray.c:330:33: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:331:24: sparse: sparse: cast to restricted gfp_t
+   include/linux/gfp.h:325:31: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:365:29: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:365:42: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:367:41: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:368:32: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:62:31: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:57:31: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:79:29: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:73:28: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:73:28: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:74:35: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:74:35: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:79:29: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:79:29: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:67:30: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:67:30: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:68:33: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:68:33: sparse: sparse: cast to restricted gfp_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:79:29: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:597:37: sparse: sparse: cast to restricted xa_mark_t
+   lib/xarray.c:599:25: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:599:25: sparse: sparse: cast to restricted xa_mark_t
+   lib/xarray.c:79:29: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:79:29: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:79:29: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:67:30: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:67:30: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:68:33: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:68:33: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:79:29: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:79:29: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:73:28: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:73:28: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:74:35: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:74:35: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:941:29: sparse: sparse: cast to restricted xa_mark_t
+   lib/xarray.c:943:17: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:943:17: sparse: sparse: cast to restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:416:31: sparse: sparse: cast to restricted gfp_t
+   include/linux/xarray.h:1583:52: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:1658:29: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:1659:34: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:1673:41: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:1810:22: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:1848:22: sparse: sparse: cast from restricted xa_mark_t
+   include/linux/xarray.h:1583:52: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:1946:14: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:73:28: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:73:28: sparse: sparse: cast to restricted gfp_t
+   lib/xarray.c:74:35: sparse: sparse: cast from restricted xa_mark_t
+   lib/xarray.c:74:35: sparse: sparse: cast to restricted gfp_t
+>> arch/x86/include/asm/irqflags.h:54:9: sparse: sparse: context imbalance in '__xas_nomem' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> drivers/input/serio/libps2.c:35:17: sparse: sparse: context imbalance in 'ps2_do_sendbyte' - unexpected unlock
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> drivers/power/supply/power_supply_hwmon.c:290:32: sparse: sparse: cast to restricted gfp_t
+>> drivers/power/supply/power_supply_hwmon.c:290:32: sparse: sparse: cast to restricted gfp_t
+>> drivers/power/supply/power_supply_hwmon.c:290:32: sparse: sparse: cast to restricted gfp_t
+   drivers/power/supply/power_supply_hwmon.c:293:51: sparse: sparse: cast to restricted gfp_t
+   drivers/power/supply/power_supply_hwmon.c:293:51: sparse: sparse: cast to restricted gfp_t
+   drivers/power/supply/power_supply_hwmon.c:293:51: sparse: sparse: cast to restricted gfp_t
+   include/linux/device.h:919:46: sparse: sparse: cast to restricted gfp_t
+   drivers/power/supply/power_supply_hwmon.c:301:38: sparse: sparse: cast to restricted gfp_t
+   drivers/power/supply/power_supply_hwmon.c:301:38: sparse: sparse: cast to restricted gfp_t
+   drivers/power/supply/power_supply_hwmon.c:301:38: sparse: sparse: cast to restricted gfp_t
+   drivers/power/supply/power_supply_hwmon.c:342:52: sparse: sparse: cast to restricted gfp_t
+   drivers/power/supply/power_supply_hwmon.c:342:52: sparse: sparse: cast to restricted gfp_t
+   drivers/power/supply/power_supply_hwmon.c:342:52: sparse: sparse: cast to restricted gfp_t
+--
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+>> drivers/thermal/thermal_hwmon.c:143:41: sparse: sparse: cast to restricted gfp_t
+>> drivers/thermal/thermal_hwmon.c:143:41: sparse: sparse: cast to restricted gfp_t
+>> drivers/thermal/thermal_hwmon.c:143:41: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:690:38: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   drivers/thermal/thermal_hwmon.c:158:39: sparse: sparse: cast to restricted gfp_t
+   drivers/thermal/thermal_hwmon.c:158:39: sparse: sparse: cast to restricted gfp_t
+   drivers/thermal/thermal_hwmon.c:158:39: sparse: sparse: cast to restricted gfp_t
+
+vim +/find_child_reaper +54 arch/x86/include/asm/irqflags.h
+
+6abcd98ffafbff include/asm-x86/irqflags.h Glauber de Oliveira Costa 2008-01-30  51  
+6abcd98ffafbff include/asm-x86/irqflags.h Glauber de Oliveira Costa 2008-01-30  52  static inline void native_irq_enable(void)
+6abcd98ffafbff include/asm-x86/irqflags.h Glauber de Oliveira Costa 2008-01-30  53  {
+6abcd98ffafbff include/asm-x86/irqflags.h Glauber de Oliveira Costa 2008-01-30 @54  	asm volatile("sti": : :"memory");
+6abcd98ffafbff include/asm-x86/irqflags.h Glauber de Oliveira Costa 2008-01-30  55  }
+6abcd98ffafbff include/asm-x86/irqflags.h Glauber de Oliveira Costa 2008-01-30  56  
+
+:::::: The code at line 54 was first introduced by commit
+:::::: 6abcd98ffafbff81f0bfd7ee1d129e634af13245 x86: irqflags consolidation
+
+:::::: TO: Glauber de Oliveira Costa <gcosta@redhat.com>
+:::::: CC: Ingo Molnar <mingo@elte.hu>
+
 ---
-V7: replace -1 with NUMA_NO_NODE for mips ip27 as suggested by Paul.
-V6: Drop the cpu_all_mask -> cpu_online_mask change for it seems a
-    little controversial, may need deeper investigation, and rebased
-    on the latest linux-next.
-V5: Drop unsigned "fix" change for x86/arm64, and change comment log
-    according to Michal's comment.
-V4: Have all these changes in a single patch.
-V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
-    for NUMA_NO_NODE case, and change the commit log to better justify
-    the change.
-V2: make the node id checking change to other arches too.
----
- arch/arm64/include/asm/numa.h                    | 3 +++
- arch/arm64/mm/numa.c                             | 3 +++
- arch/mips/include/asm/mach-ip27/topology.h       | 2 +-
- arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
- arch/s390/include/asm/topology.h                 | 3 +++
- arch/x86/include/asm/topology.h                  | 3 +++
- arch/x86/mm/numa.c                               | 3 +++
- 7 files changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
-index 626ad01..c8a4b31 100644
---- a/arch/arm64/include/asm/numa.h
-+++ b/arch/arm64/include/asm/numa.h
-@@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
- /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return node_to_cpumask_map[node];
- }
- #endif
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 4decf16..5ae7eea 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -46,6 +46,9 @@ EXPORT_SYMBOL(node_to_cpumask_map);
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	if (WARN_ON(node >= nr_node_ids))
- 		return cpu_none_mask;
- 
-diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
-index 965f079..db293cf 100644
---- a/arch/mips/include/asm/mach-ip27/topology.h
-+++ b/arch/mips/include/asm/mach-ip27/topology.h
-@@ -15,7 +15,7 @@ struct cpuinfo_ip27 {
- extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
- 
- #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
--#define cpumask_of_node(node)	((node) == -1 ?				\
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
- 				 cpu_all_mask :				\
- 				 &hub_data(node)->h_cpus)
- struct pci_bus;
-diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
-index 7ff819a..e78daa6 100644
---- a/arch/mips/include/asm/mach-loongson64/topology.h
-+++ b/arch/mips/include/asm/mach-loongson64/topology.h
-@@ -5,7 +5,9 @@
- #ifdef CONFIG_NUMA
- 
- #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
--#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-+				 cpu_online_mask :			\
-+				 &__node_data[(node)]->cpumask)
- 
- struct pci_bus;
- extern int pcibus_to_node(struct pci_bus *);
-diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
-index cca406f..1bd2e73 100644
---- a/arch/s390/include/asm/topology.h
-+++ b/arch/s390/include/asm/topology.h
-@@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
- #define cpumask_of_node cpumask_of_node
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return &node_to_cpumask_map[node];
- }
- 
-diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-index 4b14d23..7fa82e1 100644
---- a/arch/x86/include/asm/topology.h
-+++ b/arch/x86/include/asm/topology.h
-@@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
- /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return node_to_cpumask_map[node];
- }
- #endif
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 4123100e..9859acb 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	if ((unsigned)node >= nr_node_ids) {
- 		printk(KERN_WARNING
- 			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
--- 
-2.8.1
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
