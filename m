@@ -2,130 +2,133 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38682CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B041CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2B02080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061882080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZQprLW6L";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aQ+A1RVK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T5Mt/3Wr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfJ3Mnc (ORCPT
+        id S1726864AbfJ3Mo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:43:32 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:40586 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfJ3Mnc (ORCPT
+        Wed, 30 Oct 2019 08:44:27 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44064 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfJ3Mo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:43:32 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2995060FEC; Wed, 30 Oct 2019 12:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572439411;
-        bh=gtP9LfS5sCqnnlWgSSUJdbnN/P+H+DyR6tGOfbevBa8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZQprLW6LCRVPBpRQQJhcS3XJF938VcYFw62n74Z6Fthy0yNAmkDjQAAzAsft85xY0
-         Ymhk109Kma3gJ8FFusz0BBcMms5TkyFnJ70Y0hqogfhb6Zyv6sL3VOQ6WPfbxRiEYH
-         GzKa4lBIfYAtdVXIJjsfeBstlOcpVq3FH7ggBnxI=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 0A97660F5C;
-        Wed, 30 Oct 2019 12:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572439410;
-        bh=gtP9LfS5sCqnnlWgSSUJdbnN/P+H+DyR6tGOfbevBa8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aQ+A1RVKqcRob0ei50QvOPjlkE0beOrqmBJz1zSmC7Agc8572oMlHgZnnxnI/7OZK
-         KtwyOuhd0XoJJ8Ugl4x4kfKVSeu+Izv86FpqVw4phRYz/AlKskQlZBy9KBDK/KGHAC
-         Ih3WCO2pAn4+bbLHQgDqsyySaC2KeUqWWNjU3xaQ=
+        Wed, 30 Oct 2019 08:44:27 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UChUtj062928;
+        Wed, 30 Oct 2019 12:44:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=hjXJQzJc4al81yxlwcOSrDOdSsG+1fpvdzD3Lp+qPLY=;
+ b=T5Mt/3WrukGnIB1hwM6uGkqF2if+FV9fHPH74L8xEEx15DWM/FN86yJBrde+QPyfVU/k
+ Z4Rems3OX+6/VHKYFfLFc/Dz2qe3/QomC/onqQBMDhuXmmRZrCfVZKdg8rdSmVfwBUwX
+ JbT9fUleXSA0p61Dqjsi5t3YI9a126LRmIUTnt8DH71G2kglccUgGhiEyv5HTkskpvgR
+ rXqnAt/xT1cl7Jjq9NHs1KJav+uZXjEN/o3albcAhKfwVI2ibW6ehKnHMtaypW98l0wC
+ IK8Jgf2recr6wFl/AhUxgwfuFevPVF97pxY0Ka3aXHaiJ9k7CVLdarBsIMXpnulyO+sN gQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2vxwhfbxkx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 12:44:11 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UChkch007847;
+        Wed, 30 Oct 2019 12:44:10 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2vxwhw07eu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 12:44:10 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9UCi881024861;
+        Wed, 30 Oct 2019 12:44:08 GMT
+Received: from dm-oel.no.oracle.com (/10.172.157.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 30 Oct 2019 05:44:08 -0700
+From:   Dag Moxnes <dag.moxnes@oracle.com>
+To:     dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
+        parav@mellanox.com
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dag.moxnes@oracle.com
+Subject: [PATCH rdma-next v2] RDMA/cma: Use ACK timeout for RoCE packetLifeTime
+Date:   Wed, 30 Oct 2019 13:44:00 +0100
+Message-Id: <1572439440-17416-1-git-send-email-dag.moxnes@oracle.com>
+X-Mailer: git-send-email 1.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 30 Oct 2019 20:43:29 +0800
-From:   cang@codeaurora.org
-To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
-Cc:     'Alim Akhtar' <alim.akhtar@samsung.com>,
-        'Avri Altman' <avri.altman@wdc.com>,
-        'Pedro Sousa' <pedrom.sousa@synopsys.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
-        'Evan Green' <evgreen@chromium.org>,
-        'Stanley Chu' <stanley.chu@mediatek.com>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'linux-scsi@vger.kernel.org'" <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH v1] scsi: ufs: delete redundant function
- ufshcd_def_desc_sizes()
-In-Reply-To: <BN7PR08MB5684A3ACE214C3D4792CE729DB610@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <BN7PR08MB5684A3ACE214C3D4792CE729DB610@BN7PR08MB5684.namprd08.prod.outlook.com>
-Message-ID: <32de5877a1fc6da9e0b23936d83ad956@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910300125
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910300125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-29 22:22, Bean Huo (beanhuo) wrote:
-> From: Bean Huo <beanhuo@micron.com>
-> 
-> There is no need to call ufshcd_def_desc_sizes() in ufshcd_init(),
-> since descriptor lengths will be checked and initialized later in
-> ufshcd_init_desc_sizes().
-> 
-> Fixes: a4b0e8a4e92b1b(scsi: ufs: Factor out ufshcd_read_desc_param)
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index c28c144d9b4a..21a7244882a1 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -6778,23 +6778,13 @@ static void ufshcd_init_desc_sizes(struct 
-> ufs_hba *hba)
->  		&hba->desc_size.geom_desc);
->  	if (err)
->  		hba->desc_size.geom_desc = QUERY_DESC_GEOMETRY_DEF_SIZE;
-> +
->  	err = ufshcd_read_desc_length(hba, QUERY_DESC_IDN_HEALTH, 0,
->  		&hba->desc_size.hlth_desc);
->  	if (err)
->  		hba->desc_size.hlth_desc = QUERY_DESC_HEALTH_DEF_SIZE;
->  }
-> 
-> -static void ufshcd_def_desc_sizes(struct ufs_hba *hba)
-> -{
-> -	hba->desc_size.dev_desc = QUERY_DESC_DEVICE_DEF_SIZE;
-> -	hba->desc_size.pwr_desc = QUERY_DESC_POWER_DEF_SIZE;
-> -	hba->desc_size.interc_desc = QUERY_DESC_INTERCONNECT_DEF_SIZE;
-> -	hba->desc_size.conf_desc = QUERY_DESC_CONFIGURATION_DEF_SIZE;
-> -	hba->desc_size.unit_desc = QUERY_DESC_UNIT_DEF_SIZE;
-> -	hba->desc_size.geom_desc = QUERY_DESC_GEOMETRY_DEF_SIZE;
-> -	hba->desc_size.hlth_desc = QUERY_DESC_HEALTH_DEF_SIZE;
-> -}
-> -
->  static struct ufs_ref_clk ufs_ref_clk_freqs[] = {
->  	{19200000, REF_CLK_FREQ_19_2_MHZ},
->  	{26000000, REF_CLK_FREQ_26_MHZ},
-> @@ -8283,9 +8273,6 @@ int ufshcd_init(struct ufs_hba *hba, void
-> __iomem *mmio_base, unsigned int irq)
->  	hba->mmio_base = mmio_base;
->  	hba->irq = irq;
-> 
-> -	/* Set descriptor lengths to specification defaults */
-> -	ufshcd_def_desc_sizes(hba);
-> -
->  	err = ufshcd_hba_init(hba);
->  	if (err)
->  		goto out_error;
+The cma is currently using a hard-coded value, CMA_IBOE_PACKET_LIFETIME,
+for the PacketLifeTime, as it can not be determined from the network.
+This value might not be optimal for all networks.
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
+The cma module supports the function rdma_set_ack_timeout to set the
+ACK timeout for a QP associated with a connection. As per IBTA 12.7.34
+local ACK timeout = (2 * PacketLifeTime + Local CA’s ACK delay).
+Assuming a negligible local ACK delay, we can use
+PacketLifeTime = local ACK timeout/2
+as a reasonable approximation for RoCE networks.
 
-Best regards
-Can Guo
+Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
+---
+ drivers/infiniband/core/cma.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index c8566a4237..2c1b08bde2 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -2530,7 +2530,9 @@ EXPORT_SYMBOL(rdma_set_service_type);
+  * This function should be called before rdma_connect() on active side,
+  * and on passive side before rdma_accept(). It is applicable to primary
+  * path only. The timeout will affect the local side of the QP, it is not
+- * negotiated with remote side and zero disables the timer.
++ * negotiated with remote side and zero disables the timer. In case it is
++ * set before rdma_resolve_route, the value will also be used to determine
++ * PacketLifeTime for RoCE.
+  *
+  * Return: 0 for success
+  */
+@@ -2939,7 +2941,16 @@ static int cma_resolve_iboe_route(struct rdma_id_private *id_priv)
+ 	route->path_rec->rate = iboe_get_rate(ndev);
+ 	dev_put(ndev);
+ 	route->path_rec->packet_life_time_selector = IB_SA_EQ;
+-	route->path_rec->packet_life_time = CMA_IBOE_PACKET_LIFETIME;
++	/* In case ACK timeout is set, use this value to calculate
++	 * PacketLifeTime.  As per IBTA 12.7.34,
++	 * local ACK timeout = (2 * PacketLifeTime + Local CA’s ACK delay).
++	 * Assuming a negligible local ACK delay, we can use
++	 * PacketLifeTime = local ACK timeout/2
++	 * as a reasonable approximation for RoCE networks.
++	 */
++	route->path_rec->packet_life_time = id_priv->timeout_set ?
++		id_priv->timeout - 1 : CMA_IBOE_PACKET_LIFETIME;
++
+ 	if (!route->path_rec->mtu) {
+ 		ret = -EINVAL;
+ 		goto err2;
+-- 
+2.20.1
+
