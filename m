@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02050CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BD0CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD4A920856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01EEF20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfJ3Pml (ORCPT
+        id S1727469AbfJ3Pmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:42:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:36748 "EHLO foss.arm.com"
+        Wed, 30 Oct 2019 11:42:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:36782 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727445AbfJ3Pmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:42:38 -0400
+        id S1727458AbfJ3Pml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:42:41 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0118C337;
-        Wed, 30 Oct 2019 08:42:38 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02F474F5;
+        Wed, 30 Oct 2019 08:42:41 -0700 (PDT)
 Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 333493F6C4;
-        Wed, 30 Oct 2019 08:42:36 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 371303F6C4;
+        Wed, 30 Oct 2019 08:42:39 -0700 (PDT)
 From:   Qais Yousef <qais.yousef@arm.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Qais Yousef <qais.yousef@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Jiri Kosina <jkosina@suse.cz>,
-        Nicholas Piggin <npiggin@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
         Eiichi Tsukata <devel@etsukata.com>,
         Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Nadav Amit <namit@vmware.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/12] smp: Create a new function to bringup nonboot cpus online
-Date:   Wed, 30 Oct 2019 15:38:36 +0000
-Message-Id: <20191030153837.18107-12-qais.yousef@arm.com>
+Subject: [PATCH 12/12] cpu: Hide cpu_up/down
+Date:   Wed, 30 Oct 2019 15:38:37 +0000
+Message-Id: <20191030153837.18107-13-qais.yousef@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191030153837.18107-1-qais.yousef@arm.com>
 References: <20191030153837.18107-1-qais.yousef@arm.com>
@@ -51,91 +51,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the last direct user of cpu_up() before we can hide it now as
-internal implementation detail of the cpu subsystem.
+Provide a special exported function for the device core to bring a cpu
+up/down and hide the real cpu_up/down as they are treated as private
+functions. cpu_up/down are lower level API and users outside the cpu
+subsystem should use device_online/offline which will take care of extra
+housekeeping work like keeping sysfs in sync.
 
 Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>
 CC: Thomas Gleixner <tglx@linutronix.de>
 CC: Josh Poimboeuf <jpoimboe@redhat.com>
+CC: Nicholas Piggin <npiggin@gmail.com>
 CC: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 CC: Jiri Kosina <jkosina@suse.cz>
-CC: Nicholas Piggin <npiggin@gmail.com>
 CC: Daniel Lezcano <daniel.lezcano@linaro.org>
-CC: Ingo Molnar <mingo@kernel.org>
 CC: Eiichi Tsukata <devel@etsukata.com>
 CC: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-CC: Nadav Amit <namit@vmware.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+CC: Ingo Molnar <mingo@kernel.org>
+CC: Pavankumar Kondeti <pkondeti@codeaurora.org>
 CC: linux-kernel@vger.kernel.org
 ---
- include/linux/cpu.h |  1 +
- kernel/cpu.c        | 13 +++++++++++++
- kernel/smp.c        |  9 +--------
- 3 files changed, 15 insertions(+), 8 deletions(-)
+ drivers/base/cpu.c  |  4 ++--
+ include/linux/cpu.h |  4 ++--
+ kernel/cpu.c        | 26 ++++++++++++++++++++++----
+ 3 files changed, 26 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index 3b1fbe192989..b1c7b788b8e9 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -88,6 +88,7 @@ void notify_cpu_starting(unsigned int cpu);
- extern void cpu_maps_update_begin(void);
- extern void cpu_maps_update_done(void);
- extern int hibernation_bringup_sleep_cpu(unsigned int sleep_cpu);
-+extern void smp_bringup_nonboot_cpus(unsigned int setup_max_cpus);
+diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+index cc37511de866..96c69c5fbfff 100644
+--- a/drivers/base/cpu.c
++++ b/drivers/base/cpu.c
+@@ -55,7 +55,7 @@ static int cpu_subsys_online(struct device *dev)
+ 	if (from_nid == NUMA_NO_NODE)
+ 		return -ENODEV;
  
- #else	/* CONFIG_SMP */
- #define cpuhp_tasks_frozen	0
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 219f9033f438..e16695b841de 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1211,6 +1211,19 @@ int hibernation_bringup_sleep_cpu(unsigned int sleep_cpu)
- 	}
+-	ret = cpu_up(cpuid);
++	ret = cpu_subsys_up(dev);
+ 	/*
+ 	 * When hot adding memory to memoryless node and enabling a cpu
+ 	 * on the node, node number of the cpu may internally change.
+@@ -69,7 +69,7 @@ static int cpu_subsys_online(struct device *dev)
+ 
+ static int cpu_subsys_offline(struct device *dev)
+ {
+-	return cpu_down(dev->id);
++	return cpu_subsys_down(dev);
  }
  
-+void smp_bringup_nonboot_cpus(unsigned int setup_max_cpus)
-+{
-+	unsigned int cpu;
-+
-+	/* FIXME: This should be done in userspace --RR */
-+	for_each_present_cpu(cpu) {
-+		if (num_online_cpus() >= setup_max_cpus)
-+			break;
-+		if (!cpu_online(cpu))
-+			cpu_up(cpu);
-+	}
-+}
-+
- #ifdef CONFIG_PM_SLEEP_SMP
- static cpumask_var_t frozen_cpus;
+ void unregister_cpu(struct cpu *cpu)
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index b1c7b788b8e9..6822e676f420 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -83,7 +83,7 @@ extern ssize_t arch_cpu_release(const char *, size_t);
  
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 7dbcb402c2fc..74134272b5aa 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -578,20 +578,13 @@ void __init setup_nr_cpu_ids(void)
- void __init smp_init(void)
+ #ifdef CONFIG_SMP
+ extern bool cpuhp_tasks_frozen;
+-int cpu_up(unsigned int cpu);
++int cpu_subsys_up(struct device *dev);
+ void notify_cpu_starting(unsigned int cpu);
+ extern void cpu_maps_update_begin(void);
+ extern void cpu_maps_update_done(void);
+@@ -114,7 +114,7 @@ extern void lockdep_assert_cpus_held(void);
+ extern void cpu_hotplug_disable(void);
+ extern void cpu_hotplug_enable(void);
+ void clear_tasks_mm_cpumask(int cpu);
+-int cpu_down(unsigned int cpu);
++int cpu_subsys_down(struct device *dev);
+ 
+ #else /* CONFIG_HOTPLUG_CPU */
+ 
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index e16695b841de..087c10dbfb99 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1045,11 +1045,20 @@ static int do_cpu_down(unsigned int cpu, enum cpuhp_state target)
+ 	return err;
+ }
+ 
+-int cpu_down(unsigned int cpu)
++static int cpu_down(unsigned int cpu)
  {
- 	int num_nodes, num_cpus;
--	unsigned int cpu;
+ 	return do_cpu_down(cpu, CPUHP_OFFLINE);
+ }
+-EXPORT_SYMBOL(cpu_down);
++
++/*
++ * This function is meant to be used by device core cpu subsystem.
++ *
++ * Other subsystems should use device_offline(get_cpu_device(cpu)) instead.
++ */
++int cpu_subsys_down(struct device *dev)
++{
++	return cpu_down(dev->id);
++}
  
- 	idle_threads_init();
- 	cpuhp_threads_init();
+ #else
+ #define takedown_cpu		NULL
+@@ -1191,11 +1200,20 @@ static int do_cpu_up(unsigned int cpu, enum cpuhp_state target)
+ 	return err;
+ }
  
- 	pr_info("Bringing up secondary CPUs ...\n");
+-int cpu_up(unsigned int cpu)
++static int cpu_up(unsigned int cpu)
+ {
+ 	return do_cpu_up(cpu, CPUHP_ONLINE);
+ }
+-EXPORT_SYMBOL_GPL(cpu_up);
++
++/*
++ * This function is meant to be used by device core cpu subsystem.
++ *
++ * Other subsystems should use device_online(get_cpu_device(cpu)) instead.
++ */
++int cpu_subsys_up(struct device *dev)
++{
++	return cpu_up(dev->id);
++}
  
--	/* FIXME: This should be done in userspace --RR */
--	for_each_present_cpu(cpu) {
--		if (num_online_cpus() >= setup_max_cpus)
--			break;
--		if (!cpu_online(cpu))
--			cpu_up(cpu);
--	}
-+	smp_bringup_nonboot_cpus(setup_max_cpus);
- 
- 	num_nodes = num_online_nodes();
- 	num_cpus  = num_online_cpus();
+ int hibernation_bringup_sleep_cpu(unsigned int sleep_cpu)
+ {
 -- 
 2.17.1
 
