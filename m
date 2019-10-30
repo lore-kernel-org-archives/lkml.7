@@ -2,432 +2,287 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30322CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2CECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014EC20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C178320717
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:58:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCrrh5U9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfJ3T4b (ORCPT
+        id S1726646AbfJ3T6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:56:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:61071 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfJ3T4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:56:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 12:56:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,248,1569308400"; 
-   d="scan'208";a="190386923"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga007.jf.intel.com with ESMTP; 30 Oct 2019 12:56:29 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id C332430038C; Wed, 30 Oct 2019 12:56:29 -0700 (PDT)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v3] x86: Add trace points to (nearly) all vectors
-Date:   Wed, 30 Oct 2019 12:56:19 -0700
-Message-Id: <20191030195619.22244-1-andi@firstfloor.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 30 Oct 2019 15:58:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55706 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfJ3T6E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 15:58:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g24so3419463wmh.5;
+        Wed, 30 Oct 2019 12:58:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=uJHxujovfFJ9h5r77MUYV3oU68SO0pgD7skhSfMTwQQ=;
+        b=CCrrh5U9JnxqTkLCAf0T7LsAyB2pDTxTIkiZFhLRaCwnqMwQbc2XRW5WDfmNhyA/PE
+         xqyA2L4QbZeo4CUKiIPW3gYOY5tIWKgrGRpMtRqkD+TDZ8M44xxBlOr0BSaZMnYikCPc
+         R5+Qel5ioiHEf8ZDP5Et+LInXH9j9rqj4mA4oTsLKZBGLndfUD3i8BI+JlZbxGBc7NII
+         YbZjjZ/YB7Afhhbt5Q2qu9YaLClDW49h4QuKrzQ1d4sL4reDDu+A8gBtVP/XhRzHOh2q
+         HOOVm9xCkubtHo3qfQzEPyiF5yTjXGSa8mI9OL0XGoE08Jae15XMCz96XtYbSgDHreBO
+         oYWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language;
+        bh=uJHxujovfFJ9h5r77MUYV3oU68SO0pgD7skhSfMTwQQ=;
+        b=QswqXXo4PnnoOIxusA1mhYLZcsQPhAQU3CTlbCatT8un3ElRKFbHNvLUdN04f0WYW9
+         ansXx2uGvH1t16q9NiHIJP+ZMyhcUvKaakY5DRgr3LbUcxwtQNteLzsAViTGg5CuZqyR
+         EeYe3gtLphJyFLAYJItQFGoj1v90r4w6kvC4OQcNMa0r7Mjs/Y7E74e/DnuQVY+3YLHc
+         Plfgmm5fxYERgE3d1mupvHbjRhUISO1hY+hZSMPXC4f9m5zmDDxFUhuD5qSEO+r5PdIn
+         z05uk5nPXVT2qKTpWrfpfPVHrD7VnETlcBLeWO3k4+x2DuSzKuawrDFqiV73tqXawgZG
+         rBmQ==
+X-Gm-Message-State: APjAAAUwkY5gz2e8wDMj1QrSQ4vYHOliR/3BRIqeORiK7dxFyKdyMTdb
+        izgKvhCvfuP0PZX1zg3Fy4x33gOv
+X-Google-Smtp-Source: APXvYqzkp6jTCzQD+qf30/iLJkKIhNzdF1FbQwIwOVtCurQOe3VJ6QIT4IB8D5At7B6YszwgGiLW4A==
+X-Received: by 2002:a1c:4c09:: with SMTP id z9mr1107999wmf.33.1572465481289;
+        Wed, 30 Oct 2019 12:58:01 -0700 (PDT)
+Received: from [192.168.1.19] (bkv74.neoplus.adsl.tpnet.pl. [83.28.189.74])
+        by smtp.gmail.com with ESMTPSA id b196sm1228119wmd.24.2019.10.30.12.57.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 12:58:00 -0700 (PDT)
+Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     Dan Murphy <dmurphy@ti.com>, kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, pavel@ucw.cz, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191028183629.11779-7-dmurphy@ti.com>
+ <201910302027.2hNdR993%lkp@intel.com>
+ <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <075c9330-a9b5-1360-4447-71a4797553a9@gmail.com>
+Date:   Wed, 30 Oct 2019 20:57:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
+Content-Type: multipart/mixed;
+ boundary="------------A18F7105DE67FD7CD77E8C5B"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+This is a multi-part message in MIME format.
+--------------A18F7105DE67FD7CD77E8C5B
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 
-In some scenarios it can be useful to count or trace every kernel
-entry. Most entry paths are covered by trace points already,
-but some of the more obscure entry points do not have
-trace points.
+Dan,
 
-The most common uncovered one was KVM async page fault.
+On 10/30/19 5:41 PM, Dan Murphy wrote:
+> Hello
+> 
+> On 10/30/19 7:07 AM, kbuild test robot wrote:
+>> Hi Dan,
+>>
+>> I love your patch! Yet something to improve:
+>>
+>> [auto build test ERROR on j.anaszewski-leds/for-next]
+>> [also build test ERROR on v5.4-rc5 next-20191029]
+> 
+> I went to both these references and I do not see this patchset on either
+> of these.
 
-This patch kit adds trace points to all the other vectors,
-except UV (anyone uses?), Xen (generic code), reboot (pointless)
+This branch is temporarily created by build bot by applying patch sets
+from lists on top of linux-leds for-next branch.
 
-To avoid creating a lot of new trace points this just
-lumps them all together into a "other_vector" trace point, because
-they're all fairly obscure and uncommon, and can be figured
-out from the number when needed, or filtered using the filter
-expression. This makes the needed perf command line much shorter.
+>> [if your patch is applied to the wrong git tree, please drop us a note
+>> to help
+>> improve the system. BTW, we also suggest to use '--base' option to
+>> specify the
+>> base tree in git format-patch, please see
+>> https://stackoverflow.com/a/37406982]
+>>
+>> url:   
+>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework/20191030-144320
+>>
+> It appears here though
+>> base:  
+>> https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
+>> for-next
+> 
+> Does not appear here
+> 
+> Finally not sure why the MIPS compiler is complaining about this but the
+> ARM and x86 is not
 
-The exception is the KVM async page fault which is fairly common
-inside KVM guests, so is worth breaking out.
+Compilation breaks also for ARM.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+This is not architecture specific but language specific thing.
 
---
+If you enter this error message got Google you will get an answer
+to why this happens in the first result.
 
-v2: Fix build errors found by 0day for some configurations.
-v3: Finally use correct CONFIG symbol to check for KVM guest.
-Thanks 0day.
----
- arch/x86/hyperv/hv_init.c                |  3 ++
- arch/x86/include/asm/trace/irq_vectors.h |  9 ++++++
- arch/x86/kernel/apic/vector.c            |  3 ++
- arch/x86/kernel/cpu/mce/core.c           |  3 ++
- arch/x86/kernel/irq.c                    |  6 ++++
- arch/x86/kernel/kvm.c                    |  5 +++
- arch/x86/kernel/traps.c                  | 40 +++++++++++++++++++-----
- 7 files changed, 61 insertions(+), 8 deletions(-)
+You need to patch your driver with the attached one.
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 2db3972c0e0f..d97e570e37b6 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -21,6 +21,7 @@
- #include <linux/slab.h>
- #include <linux/cpuhotplug.h>
- #include <clocksource/hyperv_timer.h>
-+#include <asm/trace/irq_vectors.h>
- 
- void *hv_hypercall_pg;
- EXPORT_SYMBOL_GPL(hv_hypercall_pg);
-@@ -144,8 +145,10 @@ __visible void __irq_entry hyperv_reenlightenment_intr(struct pt_regs *regs)
- 
- 	inc_irq_stat(irq_hv_reenlightenment_count);
- 
-+	trace_other_vector_entry(HYPERV_REENLIGHTENMENT_VECTOR);
- 	schedule_delayed_work(&hv_reenlightenment_work, HZ/10);
- 
-+	trace_other_vector_exit(HYPERV_REENLIGHTENMENT_VECTOR);
- 	exiting_irq();
- }
- 
-diff --git a/arch/x86/include/asm/trace/irq_vectors.h b/arch/x86/include/asm/trace/irq_vectors.h
-index 33b9d0f0aafe..58f1a8432a8e 100644
---- a/arch/x86/include/asm/trace/irq_vectors.h
-+++ b/arch/x86/include/asm/trace/irq_vectors.h
-@@ -71,6 +71,11 @@ DEFINE_IRQ_VECTOR_EVENT(error_apic);
-  */
- DEFINE_IRQ_VECTOR_EVENT(x86_platform_ipi);
- 
-+/*
-+ * Handle all other vectors.
-+ */
-+DEFINE_IRQ_VECTOR_EVENT(other_vector);
-+
- #ifdef CONFIG_IRQ_WORK
- /*
-  * irq_work - called when entering/exiting a irq work interrupt
-@@ -138,6 +143,10 @@ DEFINE_IRQ_VECTOR_EVENT(deferred_error_apic);
- DEFINE_IRQ_VECTOR_EVENT(thermal_apic);
- #endif
- 
-+#ifdef CONFIG_KVM_GUEST
-+DEFINE_IRQ_VECTOR_EVENT(async_page_fault);
-+#endif
-+
- TRACE_EVENT(vector_config,
- 
- 	TP_PROTO(unsigned int irq, unsigned int vector,
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index 2c5676b0a6e7..2e883f38b895 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -860,6 +860,7 @@ asmlinkage __visible void __irq_entry smp_irq_move_cleanup_interrupt(void)
- 	struct hlist_node *tmp;
- 
- 	entering_ack_irq();
-+	trace_other_vector_entry(IRQ_MOVE_CLEANUP_VECTOR);
- 	/* Prevent vectors vanishing under us */
- 	raw_spin_lock(&vector_lock);
- 
-@@ -884,6 +885,8 @@ asmlinkage __visible void __irq_entry smp_irq_move_cleanup_interrupt(void)
- 	}
- 
- 	raw_spin_unlock(&vector_lock);
-+	trace_other_vector_exit(IRQ_MOVE_CLEANUP_VECTOR);
-+	/* Prevent vectors vanishing under us */
- 	exiting_irq();
- }
- 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 743370ee4983..f593bd6b0ed7 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -61,6 +61,9 @@ static DEFINE_MUTEX(mce_sysfs_mutex);
- #define CREATE_TRACE_POINTS
- #include <trace/events/mce.h>
- 
-+#undef CREATE_TRACE_POINTS
-+#include <asm/trace/irq_vectors.h>
-+
- #define SPINUNIT		100	/* 100ns */
- 
- DEFINE_PER_CPU(unsigned, mce_exception_count);
-diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-index 21efee32e2b1..f57c148dc578 100644
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -308,8 +308,10 @@ __visible void smp_kvm_posted_intr_ipi(struct pt_regs *regs)
- 	struct pt_regs *old_regs = set_irq_regs(regs);
- 
- 	entering_ack_irq();
-+	trace_other_vector_entry(POSTED_INTR_VECTOR);
- 	inc_irq_stat(kvm_posted_intr_ipis);
- 	exiting_irq();
-+	trace_other_vector_exit(POSTED_INTR_VECTOR);
- 	set_irq_regs(old_regs);
- }
- 
-@@ -321,8 +323,10 @@ __visible void smp_kvm_posted_intr_wakeup_ipi(struct pt_regs *regs)
- 	struct pt_regs *old_regs = set_irq_regs(regs);
- 
- 	entering_ack_irq();
-+	trace_other_vector_entry(POSTED_INTR_WAKEUP_VECTOR);
- 	inc_irq_stat(kvm_posted_intr_wakeup_ipis);
- 	kvm_posted_intr_wakeup_handler();
-+	trace_other_vector_exit(POSTED_INTR_WAKEUP_VECTOR);
- 	exiting_irq();
- 	set_irq_regs(old_regs);
- }
-@@ -335,7 +339,9 @@ __visible void smp_kvm_posted_intr_nested_ipi(struct pt_regs *regs)
- 	struct pt_regs *old_regs = set_irq_regs(regs);
- 
- 	entering_ack_irq();
-+	trace_other_vector_entry(POSTED_INTR_NESTED_VECTOR);
- 	inc_irq_stat(kvm_posted_intr_nested_ipis);
-+	trace_other_vector_exit(POSTED_INTR_NESTED_VECTOR);
- 	exiting_irq();
- 	set_irq_regs(old_regs);
- }
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index e820568ed4d5..8d915b559617 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -33,6 +33,7 @@
- #include <asm/apicdef.h>
- #include <asm/hypervisor.h>
- #include <asm/tlb.h>
-+#include <asm/trace/irq_vectors.h>
- 
- static int kvmapf = 1;
- 
-@@ -246,6 +247,8 @@ do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned lon
- {
- 	enum ctx_state prev_state;
- 
-+	trace_async_page_fault_entry(0);
-+
- 	switch (kvm_read_and_reset_pf_reason()) {
- 	default:
- 		do_page_fault(regs, error_code, address);
-@@ -262,6 +265,8 @@ do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned lon
- 		rcu_irq_exit();
- 		break;
- 	}
-+
-+	trace_async_page_fault_exit(0);
- }
- NOKPROBE_SYMBOL(do_async_page_fault);
- 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 4bb0f8447112..6ccc01d74747 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -62,6 +62,8 @@
- #include <asm/vm86.h>
- #include <asm/umip.h>
- 
-+#include <asm/trace/irq_vectors.h>
-+
- #ifdef CONFIG_X86_64
- #include <asm/x86_init.h>
- #include <asm/pgalloc.h>
-@@ -264,19 +266,22 @@ static void do_error_trap(struct pt_regs *regs, long error_code, char *str,
- 	unsigned long trapnr, int signr, int sicode, void __user *addr)
- {
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-+	trace_other_vector_entry(trapnr);
- 
- 	/*
- 	 * WARN*()s end up here; fix them up before we call the
- 	 * notifier chain.
- 	 */
- 	if (!user_mode(regs) && fixup_bug(regs, trapnr))
--		return;
-+		goto out;
- 
- 	if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) !=
- 			NOTIFY_STOP) {
- 		cond_local_irq_enable(regs);
- 		do_trap(trapnr, signr, str, regs, error_code, sicode, addr);
- 	}
-+out:
-+	trace_other_vector_exit(trapnr);
- }
- 
- #define IP ((void __user *)uprobe_get_trap_addr(regs))
-@@ -433,9 +438,10 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
- 	const struct mpx_bndcsr *bndcsr;
- 
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-+	trace_other_vector_entry(X86_TRAP_BR);
- 	if (notify_die(DIE_TRAP, "bounds", regs, error_code,
- 			X86_TRAP_BR, SIGSEGV) == NOTIFY_STOP)
--		return;
-+		goto exit;
- 	cond_local_irq_enable(regs);
- 
- 	if (!user_mode(regs))
-@@ -501,6 +507,8 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
- 		die("bounds", regs, error_code);
- 	}
- 
-+exit:
-+	trace_other_vector_exit(X86_TRAP_BR);
- 	return;
- 
- exit_trap:
-@@ -512,6 +520,7 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
- 	 * time..
- 	 */
- 	do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, error_code, 0, NULL);
-+	goto exit;
- }
- 
- dotraplinkage void
-@@ -522,22 +531,23 @@ do_general_protection(struct pt_regs *regs, long error_code)
- 
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
- 	cond_local_irq_enable(regs);
-+	trace_other_vector_entry(X86_TRAP_GP);
- 
- 	if (static_cpu_has(X86_FEATURE_UMIP)) {
- 		if (user_mode(regs) && fixup_umip_exception(regs))
--			return;
-+			goto out;
- 	}
- 
- 	if (v8086_mode(regs)) {
- 		local_irq_enable();
- 		handle_vm86_fault((struct kernel_vm86_regs *) regs, error_code);
--		return;
-+		goto out;
- 	}
- 
- 	tsk = current;
- 	if (!user_mode(regs)) {
- 		if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
--			return;
-+			goto out;
- 
- 		tsk->thread.error_code = error_code;
- 		tsk->thread.trap_nr = X86_TRAP_GP;
-@@ -549,12 +559,12 @@ do_general_protection(struct pt_regs *regs, long error_code)
- 		 */
- 		if (!preemptible() && kprobe_running() &&
- 		    kprobe_fault_handler(regs, X86_TRAP_GP))
--			return;
-+			goto out;
- 
- 		if (notify_die(DIE_GPF, desc, regs, error_code,
- 			       X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
- 			die(desc, regs, error_code);
--		return;
-+		goto out;
- 	}
- 
- 	tsk->thread.error_code = error_code;
-@@ -563,6 +573,9 @@ do_general_protection(struct pt_regs *regs, long error_code)
- 	show_signal(tsk, SIGSEGV, "", desc, regs, error_code);
- 
- 	force_sig(SIGSEGV);
-+
-+out:
-+	trace_other_vector_exit(X86_TRAP_GP);
- }
- NOKPROBE_SYMBOL(do_general_protection);
- 
-@@ -588,6 +601,7 @@ dotraplinkage void notrace do_int3(struct pt_regs *regs, long error_code)
- 	 * This means that we can't schedule.  That's okay.
- 	 */
- 	ist_enter(regs);
-+	trace_other_vector_entry(X86_TRAP_BP);
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
- #ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
- 	if (kgdb_ll_trap(DIE_INT3, "int3", regs, error_code, X86_TRAP_BP,
-@@ -609,6 +623,7 @@ dotraplinkage void notrace do_int3(struct pt_regs *regs, long error_code)
- 	cond_local_irq_disable(regs);
- 
- exit:
-+	trace_other_vector_exit(X86_TRAP_BP);
- 	ist_exit(regs);
- }
- NOKPROBE_SYMBOL(do_int3);
-@@ -714,6 +729,7 @@ dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
- 	int si_code;
- 
- 	ist_enter(regs);
-+	trace_other_vector_entry(X86_TRAP_DB);
- 
- 	get_debugreg(dr6, 6);
- 	/*
-@@ -806,6 +822,7 @@ dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
- 	debug_stack_usage_dec();
- 
- exit:
-+	trace_other_vector_exit(X86_TRAP_DB);
- 	ist_exit(regs);
- }
- NOKPROBE_SYMBOL(do_debug);
-@@ -858,14 +875,18 @@ static void math_error(struct pt_regs *regs, int error_code, int trapnr)
- dotraplinkage void do_coprocessor_error(struct pt_regs *regs, long error_code)
- {
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-+	trace_other_vector_entry(X86_TRAP_MF);
- 	math_error(regs, error_code, X86_TRAP_MF);
-+	trace_other_vector_exit(X86_TRAP_MF);
- }
- 
- dotraplinkage void
- do_simd_coprocessor_error(struct pt_regs *regs, long error_code)
- {
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-+	trace_other_vector_entry(X86_TRAP_XF);
- 	math_error(regs, error_code, X86_TRAP_XF);
-+	trace_other_vector_exit(X86_TRAP_XF);
- }
- 
- dotraplinkage void
-@@ -881,6 +902,7 @@ do_device_not_available(struct pt_regs *regs, long error_code)
- 
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
- 
-+	trace_other_vector_entry(X86_TRAP_NM);
- #ifdef CONFIG_MATH_EMULATION
- 	if (!boot_cpu_has(X86_FEATURE_FPU) && (cr0 & X86_CR0_EM)) {
- 		struct math_emu_info info = { };
-@@ -889,7 +911,7 @@ do_device_not_available(struct pt_regs *regs, long error_code)
- 
- 		info.regs = regs;
- 		math_emulate(&info);
--		return;
-+		goto out;
- 	}
- #endif
- 
-@@ -905,6 +927,8 @@ do_device_not_available(struct pt_regs *regs, long error_code)
- 		 */
- 		die("unexpected #NM exception", regs, error_code);
- 	}
-+out: __maybe_unused;
-+	trace_other_vector_exit(X86_TRAP_NM);
- }
- NOKPROBE_SYMBOL(do_device_not_available);
- 
 -- 
-2.21.0
+Best regards,
+Jacek Anaszewski
 
+--------------A18F7105DE67FD7CD77E8C5B
+Content-Type: text/x-patch;
+ name="fix_lp50xx_struct_initialization.patch"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="fix_lp50xx_struct_initialization.patch"
+
+diff --git a/drivers/leds/leds-lp50xx.c b/drivers/leds/leds-lp50xx.c
+index 76ca5cc1347c..52246565f15d 100644
+--- a/drivers/leds/leds-lp50xx.c
++++ b/drivers/leds/leds-lp50xx.c
+@@ -336,7 +336,7 @@ enum lp50xx_model {
+  * @reset_reg: device reset register
+  */
+ struct lp50xx_chip_info {
+-	const struct regmap_config lp50xx_regmap_config;
++	const struct regmap_config *lp50xx_regmap_config;
+ 	int model_id;
+ 	u8 max_modules;
+ 	u8 num_leds;
+@@ -357,7 +357,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
+_tbl[] =3D {
+ 		.bank_brt_reg =3D LP5012_BNK_BRT,
+ 		.bank_mix_reg =3D LP5012_BNKA_CLR,
+ 		.reset_reg =3D LP5012_RESET,
+-		.lp50xx_regmap_config =3D lp5012_regmap_config,
++		.lp50xx_regmap_config =3D &lp5012_regmap_config,
+ 	},
+ 	[LP5012] =3D {
+ 		.model_id =3D LP5012,
+@@ -368,7 +368,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
+_tbl[] =3D {
+ 		.bank_brt_reg =3D LP5012_BNK_BRT,
+ 		.bank_mix_reg =3D LP5012_BNKA_CLR,
+ 		.reset_reg =3D LP5012_RESET,
+-		.lp50xx_regmap_config =3D lp5012_regmap_config,
++		.lp50xx_regmap_config =3D &lp5012_regmap_config,
+ 	},
+ 	[LP5018] =3D {
+ 		.model_id =3D LP5018,
+@@ -379,7 +379,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
+_tbl[] =3D {
+ 		.bank_brt_reg =3D LP5024_BNK_BRT,
+ 		.bank_mix_reg =3D LP5024_BNKA_CLR,
+ 		.reset_reg =3D LP5024_RESET,
+-		.lp50xx_regmap_config =3D lp5024_regmap_config,
++		.lp50xx_regmap_config =3D &lp5024_regmap_config,
+ 	},
+ 	[LP5024] =3D {
+ 		.model_id =3D LP5024,
+@@ -390,7 +390,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
+_tbl[] =3D {
+ 		.bank_brt_reg =3D LP5024_BNK_BRT,
+ 		.bank_mix_reg =3D LP5024_BNKA_CLR,
+ 		.reset_reg =3D LP5024_RESET,
+-		.lp50xx_regmap_config =3D lp5024_regmap_config,
++		.lp50xx_regmap_config =3D &lp5024_regmap_config,
+ 	},
+ 	[LP5030] =3D {
+ 		.model_id =3D LP5030,
+@@ -401,7 +401,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
+_tbl[] =3D {
+ 		.bank_brt_reg =3D LP5036_BNK_BRT,
+ 		.bank_mix_reg =3D LP5036_BNKA_CLR,
+ 		.reset_reg =3D LP5036_RESET,
+-		.lp50xx_regmap_config =3D lp5036_regmap_config,
++		.lp50xx_regmap_config =3D &lp5036_regmap_config,
+ 	},
+ 	[LP5036] =3D {
+ 		.model_id =3D LP5036,
+@@ -412,7 +412,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
+_tbl[] =3D {
+ 		.bank_brt_reg =3D LP5036_BNK_BRT,
+ 		.bank_mix_reg =3D LP5036_BNKA_CLR,
+ 		.reset_reg =3D LP5036_RESET,
+-		.lp50xx_regmap_config =3D lp5036_regmap_config,
++		.lp50xx_regmap_config =3D &lp5036_regmap_config,
+ 	},
+ };
+=20
+@@ -716,7 +716,7 @@ static int lp50xx_probe(struct i2c_client *client,
+ 	i2c_set_clientdata(client, led);
+=20
+ 	led->regmap =3D devm_regmap_init_i2c(client,
+-					&led->chip_info->lp50xx_regmap_config);
++					led->chip_info->lp50xx_regmap_config);
+ 	if (IS_ERR(led->regmap)) {
+ 		ret =3D PTR_ERR(led->regmap);
+ 		dev_err(&client->dev, "Failed to allocate register map: %d\n",
+
+--------------A18F7105DE67FD7CD77E8C5B--
