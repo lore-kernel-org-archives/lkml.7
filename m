@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7F4CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D129ECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D81B20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22A720874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450614;
-	bh=AesfdGlm8YQjMxu4s+FElDE3//jeAMGU3vcsCdV64L0=;
+	s=default; t=1572450617;
+	bh=dyWpOrS8kPblaluBAYmqNzbntvaVnGy7CHkLumzzqAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xHe5WtDsBb3tWnzbhOuHtmrVkgQ+VmLYuC6oRiMmpLO3UEqJNY6fOyq+wKAuzPkHN
-	 LwIHSg/faQqvke2u40Xf9MIEwjw+QY+WJqbi8+8wPxVPvSddM8vzSNZX9oaX6kYuDO
-	 nEhXFC8SXOexfwWZ9Ks2LU3qjI2t8yfHet7vwiQw=
+	b=aM+2kanzOPC7I+E+7zXxLIAOLtV7GTMSeotIOMCT6B7gbesdHP8e4Y2cKqn5ttlaJ
+	 eXJwCVzjjB41ZJN1BAI0DjyeaTs025iRepWzub+X/8OX89+CPdYQvckZ6GFKVb/8BX
+	 nkI6/gU1dHjJW+U8Bc/sv0TyAz0DbnOQOMN6SuC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfJ3PuN (ORCPT
+        id S1727580AbfJ3PuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 30 Oct 2019 11:50:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50896 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:50088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727201AbfJ3PuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:50:12 -0400
+        id S1726175AbfJ3Ptk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:49:40 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C610520856;
-        Wed, 30 Oct 2019 15:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA212087E;
+        Wed, 30 Oct 2019 15:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450611;
-        bh=AesfdGlm8YQjMxu4s+FElDE3//jeAMGU3vcsCdV64L0=;
+        s=default; t=1572450579;
+        bh=dyWpOrS8kPblaluBAYmqNzbntvaVnGy7CHkLumzzqAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gStvRPr3aGJ/9MTyymnagKeT6R2visvWUGtDB93I4x6veNHikAUTuUg+2fLW26g1m
-         tTI/VVk3dgPiaA9lzGO8jcIt2K5Bc0itDx3G5w1PZd0ax4da3VPzWcmGXew4stdPuT
-         wayxA9iu6XUXO9LpD+k+Cd8R7r8eS9O8fc8MBQ7Y=
+        b=ny3avsmbZ+JH+1/gN8NdRePqKYGQynjcUVbPm+PNtCeGn32DXk12PnThKPp9SraNB
+         8QXeVEbs7H7bz0njNWQtgepBAoVWp1R+ssUg8UT5zXuzsrQ836/w4WyiUEaC+RRNJx
+         ANUd5raXwfN29hPTav7uZIt9M17h3+lGurtqoTOg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keyon Jie <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 13/81] ASoC: SOF: topology: fix parse fail issue for byte/bool tuple types
-Date:   Wed, 30 Oct 2019 11:48:19 -0400
-Message-Id: <20191030154928.9432-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 05/81] ASoC: topology: Fix a signedness bug in soc_tplg_dapm_widget_create()
+Date:   Wed, 30 Oct 2019 11:48:11 -0400
+Message-Id: <20191030154928.9432-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -60,38 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keyon Jie <yang.jie@linux.intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 2e305a074061121220a2828f97a57d315cf8efba ]
+[ Upstream commit 752c938a5c14b8cbf0ed3ffbfa637fb166255c3f ]
 
-We are using sof_parse_word_tokens() to parse tokens with
-bool/byte/short/word tuple types, here add the missing check, to fix the
-parsing failure at byte/bool tuple types.
+The "template.id" variable is an enum and in this context GCC will
+treat it as an unsigned int so it can never be less than zero.
 
-Signed-off-by: Keyon Jie <yang.jie@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190927200538.660-3-pierre-louis.bossart@linux.intel.com
+Fixes: 8a9782346dcc ("ASoC: topology: Add topology core")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20190925110624.GR3264@mwanda
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/topology.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/soc-topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
-index 432ae343f9602..96230329e678f 100644
---- a/sound/soc/sof/topology.c
-+++ b/sound/soc/sof/topology.c
-@@ -907,7 +907,9 @@ static void sof_parse_word_tokens(struct snd_soc_component *scomp,
- 		for (j = 0; j < count; j++) {
- 			/* match token type */
- 			if (!(tokens[j].type == SND_SOC_TPLG_TUPLE_TYPE_WORD ||
--			      tokens[j].type == SND_SOC_TPLG_TUPLE_TYPE_SHORT))
-+			      tokens[j].type == SND_SOC_TPLG_TUPLE_TYPE_SHORT ||
-+			      tokens[j].type == SND_SOC_TPLG_TUPLE_TYPE_BYTE ||
-+			      tokens[j].type == SND_SOC_TPLG_TUPLE_TYPE_BOOL))
- 				continue;
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index dc463f1a9e242..1cc5a07a2f5c7 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -1588,7 +1588,7 @@ static int soc_tplg_dapm_widget_create(struct soc_tplg *tplg,
  
- 			/* match token id */
+ 	/* map user to kernel widget ID */
+ 	template.id = get_widget_id(le32_to_cpu(w->id));
+-	if (template.id < 0)
++	if ((int)template.id < 0)
+ 		return template.id;
+ 
+ 	/* strings are allocated here, but used and freed by the widget */
 -- 
 2.20.1
 
