@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5388CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAEBCA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A75272173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08FE217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451068;
-	bh=ZUSR9VoPo2ZvIQ3c86SNfsIuM/RV9efVWm0nda1ewrk=;
+	s=default; t=1572451073;
+	bh=D4v9sx3RRX0dU7Q3sH3IEQS/k618r0wxMght8d1CSyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lly9PisjHm9aVhV77r7IpZlXIa8h6nixYN5bzk0Vk4RKEFiKiTYkFVcOOhJcrN/G7
-	 VyBuBJHRBjLg4rLGfOU9Omr1qdTafeN36gBSMNtSeKDMPLhCfcYWJ/kzmdWZRmQXIA
-	 jRYm8JRx9+CZLdxx4lNyHoW5PhKqCvUXAa2pxS58=
+	b=WJb1FQpUTdvF9z2S40kMCheLpto17lG6IxgtjSnq5+kLkDElcmUA6vRtR5/a4+zHl
+	 lUgrPZ5pZcJKXxdj/UqcgCyThe7E6BDNPNvWG4mHxYBrHVHWcEGKNt7DHSuAKoToqk
+	 TkKgCVpBdCSTzdMkNX1fvxMtd2TlV8B8i6Sq7zHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfJ3P5n (ORCPT
+        id S1729167AbfJ3P5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59318 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:57:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729125AbfJ3P5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:57:39 -0400
+        id S1728346AbfJ3P5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:57:41 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 446FA21734;
-        Wed, 30 Oct 2019 15:57:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C489A2067D;
+        Wed, 30 Oct 2019 15:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451059;
-        bh=ZUSR9VoPo2ZvIQ3c86SNfsIuM/RV9efVWm0nda1ewrk=;
+        s=default; t=1572451061;
+        bh=D4v9sx3RRX0dU7Q3sH3IEQS/k618r0wxMght8d1CSyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FpVXTZWP16Zx/Iq2qqMao+xzLs9PzsHbYYl9FXbk2ai5GNTJnFJURVJ3ckX5g7bvw
-         cJ5uEhCs8y5zqKWyzD4PFhKLuZxXc05xAoIUjkNoobNNk3Nt5NwYQ11tCphRzIncU/
-         p+szreTnBQWZD7/PZ9QNbT4MMh84zA8D05uQt04o=
+        b=caTG0sC9/JU1v7dds63E7em7CgT0zqNApwRnkB2aul6ZjrDIuBc8osovv/AEuUeDn
+         IVBIo0u7DGypvSCv+dsucjv/hJMwDwqi7TA+seyOi2mBadnkVrSGmC2u+hJ0HgD6XT
+         e0a1Znl5Z7V7e9FJSlFfEN79F8WryMP2KEu5YPaI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/18] scsi: target: core: Do not overwrite CDB byte 1
-Date:   Wed, 30 Oct 2019 11:56:57 -0400
-Message-Id: <20191030155700.10748-15-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 16/18] of: unittest: fix memory leak in unittest_data_add
+Date:   Wed, 30 Oct 2019 11:56:58 -0400
+Message-Id: <20191030155700.10748-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155700.10748-1-sashal@kernel.org>
 References: <20191030155700.10748-1-sashal@kernel.org>
@@ -62,59 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 27e84243cb63601a10e366afe3e2d05bb03c1cb5 ]
+[ Upstream commit e13de8fe0d6a51341671bbe384826d527afe8d44 ]
 
-passthrough_parse_cdb() - used by TCMU and PSCSI - attepts to reset the LUN
-field of SCSI-2 CDBs (bits 5,6,7 of byte 1).  The current code is wrong as
-for newer commands not having the LUN field it overwrites relevant command
-bits (e.g. for SECURITY PROTOCOL IN / OUT). We think this code was
-unnecessary from the beginning or at least it is no longer useful. So we
-remove it entirely.
+In unittest_data_add, a copy buffer is created via kmemdup. This buffer
+is leaked if of_fdt_unflatten_tree fails. The release for the
+unittest_data buffer is added.
 
-Link: https://lore.kernel.org/r/12498eab-76fd-eaad-1316-c2827badb76a@ts.fujitsu.com
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: b951f9dc7f25 ("Enabling OF selftest to run without machine's devicetree")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_device.c | 21 ---------------------
- 1 file changed, 21 deletions(-)
+ drivers/of/unittest.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
-index cc38a3509f78c..c3d576ed6f135 100644
---- a/drivers/target/target_core_device.c
-+++ b/drivers/target/target_core_device.c
-@@ -1046,27 +1046,6 @@ passthrough_parse_cdb(struct se_cmd *cmd,
- {
- 	unsigned char *cdb = cmd->t_task_cdb;
- 
--	/*
--	 * Clear a lun set in the cdb if the initiator talking to use spoke
--	 * and old standards version, as we can't assume the underlying device
--	 * won't choke up on it.
--	 */
--	switch (cdb[0]) {
--	case READ_10: /* SBC - RDProtect */
--	case READ_12: /* SBC - RDProtect */
--	case READ_16: /* SBC - RDProtect */
--	case SEND_DIAGNOSTIC: /* SPC - SELF-TEST Code */
--	case VERIFY: /* SBC - VRProtect */
--	case VERIFY_16: /* SBC - VRProtect */
--	case WRITE_VERIFY: /* SBC - VRProtect */
--	case WRITE_VERIFY_12: /* SBC - VRProtect */
--	case MAINTENANCE_IN: /* SPC - Parameter Data Format for SA RTPG */
--		break;
--	default:
--		cdb[1] &= 0x1f; /* clear logical unit number */
--		break;
--	}
--
- 	/*
- 	 * For REPORT LUNS we always need to emulate the response, for everything
- 	 * else, pass it up.
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 0a1ebbbd3f163..92530525e3556 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -933,6 +933,7 @@ static int __init unittest_data_add(void)
+ 	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+ 	if (!unittest_data_node) {
+ 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
++		kfree(unittest_data);
+ 		return -ENODATA;
+ 	}
+ 	of_node_set_flag(unittest_data_node, OF_DETACHED);
 -- 
 2.20.1
 
