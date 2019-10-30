@@ -2,112 +2,77 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90523CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93620CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5795920717
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572423340;
-	bh=iS1J5NyS2mmPn50lpxeYWffskvCfVMjwF0kqUnoxyWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bCxSyAWKa7VGDL0FWccZ+YoV++oJ/1lsbfzbjfDEzGu8WjuGcLy+p64ht4pJ2Qx9Z
-	 g/zFgCIkwSKEn8JijYe/g8jfDyL30X1sSN1s6VgUfloFtcDa3hhhizO4mjRiLaIl5o
-	 aG2esCRXdjHF8tlQIWhtADYkCNTcDj5K6aYQu3S8=
+	by mail.kernel.org (Postfix) with ESMTP id 6CDAD2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfJ3IPj (ORCPT
+        id S1726455AbfJ3IQj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:15:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbfJ3IPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:15:39 -0400
-Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9CC62067D;
-        Wed, 30 Oct 2019 08:15:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572423338;
-        bh=iS1J5NyS2mmPn50lpxeYWffskvCfVMjwF0kqUnoxyWw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FyAYL+pk/pQmtYM6DFquQE87kHJQ+2nodze4tZvavQE73bdBil7hC7rx+P9j1WuGU
-         JlmZrz8Hf1kfu0trTmrlgRjxU+WoR1EdQemFlorT+lCJKW8ebDw74pSN9GIR0asSfK
-         aPtAhhSUkxoe/pVNW25rZQ0PopjelW+Hk9lv1tBE=
-Date:   Wed, 30 Oct 2019 09:15:30 +0100
-From:   Mike Rapoport <rppt@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191030081529.GB20624@rapoport-lnx>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
- <085ed07e-e646-f7a4-0370-06f33a2a4e4a@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Wed, 30 Oct 2019 04:16:39 -0400
+Received: from mx2.uni-regensburg.de ([194.94.157.147]:39476 "EHLO
+        mx2.uni-regensburg.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfJ3IQi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 04:16:38 -0400
+Received: from mx2.uni-regensburg.de (localhost [127.0.0.1])
+        by localhost (Postfix) with SMTP id 0671C6000059;
+        Wed, 30 Oct 2019 09:16:36 +0100 (CET)
+Received: from gwsmtp.uni-regensburg.de (gwsmtp1.uni-regensburg.de [132.199.5.51])
+        by mx2.uni-regensburg.de (Postfix) with ESMTP id EB5EE6000051;
+        Wed, 30 Oct 2019 09:16:35 +0100 (CET)
+Received: from uni-regensburg-smtp1-MTA by gwsmtp.uni-regensburg.de
+        with Novell_GroupWise; Wed, 30 Oct 2019 09:16:35 +0100
+Message-Id: <5DB946E1020000A100034B9C@gwsmtp.uni-regensburg.de>
+X-Mailer: Novell GroupWise Internet Agent 18.1.1 
+Date:   Wed, 30 Oct 2019 09:16:33 +0100
+From:   "Ulrich Windl" <Ulrich.Windl@rz.uni-regensburg.de>
+To:     "open-iscsi" <open-iscsi@googlegroups.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, "Chris Leech" <cleech@redhat.com>,
+        "Lee Duncan" <lduncan@suse.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>
+Cc:     <liuzhiqiang26@huawei.com>, <mingfangsen@huawei.com>
+Subject: Antw: [PATCH v2] scsi: avoid potential deadloop in iscsi_if_rx
+ func
+References: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DFA0FE@dggeml505-mbs.china.huawei.com>
+In-Reply-To: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DFA0FE@dggeml505-mbs.china.huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Content-Disposition: inline
-In-Reply-To: <085ed07e-e646-f7a4-0370-06f33a2a4e4a@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 12:02:34PM +0100, David Hildenbrand wrote:
-> On 27.10.19 11:17, Mike Rapoport wrote:
-> >From: Mike Rapoport <rppt@linux.ibm.com>
-> >
-> >The mappings created with MAP_EXCLUSIVE are visible only in the context of
-> >the owning process and can be used by applications to store secret
-> >information that will not be visible not only to other processes but to the
-> >kernel as well.
-> >
-> >The pages in these mappings are removed from the kernel direct map and
-> >marked with PG_user_exclusive flag. When the exclusive area is unmapped,
-> >the pages are mapped back into the direct map.
-> >
-> 
-> Just a thought, the kernel is still able to indirectly read the contents of
-> these pages by doing a kdump from kexec environment, right?
+>>> "wubo (T)" <wubo40@huawei.com> schrieb am 30.10.2019 um 08:56 in Nachricht
+<EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DFA0FE@dggeml505-mbs.china.huawei.com>:
+> From: Bo Wu <wubo40@huawei.com>
 
-Right.
+...
+> +			if (--retries < 0) {
+> +				printk(KERN_ERR "Send reply failed too many times. "
+> +				       "Max supported retries %u\n", ISCSI_SEND_MAX_ALLOWED);
 
-> Also, I wonder
-> what would happen if you map such pages via /dev/mem into another user space
-> application and e.g., use them along with kvm [1].
+Just for "personal taste": Why not simplify the message to:?
++				printk(KERN_ERR "Send reply failed too many times (%u)\n",
+                               ISCSI_SEND_MAX_ALLOWED);
 
-Do you mean that one application creates MAP_EXCLUSIVE and another
-applications accesses the same physical pages via /dev/mem? 
+> +				break;
+> +			}
+> +
 
-With /dev/mem all physical memory is visible...
- 
-> [1] https://lwn.net/Articles/778240/
-> 
-> -- 
-> 
-> Thanks,
-> 
-> David / dhildenb
-> 
+Maybe place the number after "many" as an alternative. I think as the message is expected to be rare, a short variant is justified.
+Also one could discuss wether the problem that originates "from external" should be KERN_ERR, or maybe just a warning, because the kernel itself can do little against that problem, and it's not a "kernel error" after all ;-)
 
--- 
-Sincerely yours,
-Mike.
+Regards,
+Ulrich
+
+
+
+
