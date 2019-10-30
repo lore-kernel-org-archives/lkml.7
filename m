@@ -2,107 +2,127 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDEBC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6945CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C432083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D35B2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:24:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JeM5H6a2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfJ3MW5 convert rfc822-to-8bit (ORCPT
+        id S1726242AbfJ3MYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:22:57 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:42268 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726353AbfJ3MW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:22:57 -0400
-Received: from DGGEML402-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id EC1363EBEB1E57610E20;
-        Wed, 30 Oct 2019 20:22:46 +0800 (CST)
-Received: from DGGEML505-MBS.china.huawei.com ([169.254.11.138]) by
- DGGEML402-HUB.china.huawei.com ([fe80::fca6:7568:4ee3:c776%31]) with mapi id
- 14.03.0439.000; Wed, 30 Oct 2019 20:22:37 +0800
-From:   "wubo (T)" <wubo40@huawei.com>
-To:     Ulrich Windl <Ulrich.Windl@rz.uni-regensburg.de>,
-        open-iscsi <open-iscsi@googlegroups.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        Chris Leech <cleech@redhat.com>, Lee Duncan <lduncan@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-CC:     "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>
-Subject: Antw: [PATCH v2] scsi: avoid potential deadloop in iscsi_if_rx func
-Thread-Topic: Antw: [PATCH v2] scsi: avoid potential deadloop in iscsi_if_rx
- func
-Thread-Index: AdWO9lESg1/320hTRWyI93hubYXiRQAAM+TA//+AUID//1OToA==
-Date:   Wed, 30 Oct 2019 12:22:37 +0000
-Message-ID: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DFA4D6@dggeml505-mbs.china.huawei.com>
-References: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DFA0FE@dggeml505-mbs.china.huawei.com>
- <5DB946E1020000A100034B9C@gwsmtp.uni-regensburg.de>
-In-Reply-To: <5DB946E1020000A100034B9C@gwsmtp.uni-regensburg.de>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.252]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Wed, 30 Oct 2019 08:24:37 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34093 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfJ3MYf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 08:24:35 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e6so237555wrw.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 05:24:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=MKCua1iUyxONn+bsOWnRZuMnXqiDfqvw9FIMx0dZRF8=;
+        b=JeM5H6a2s+6CWd9XEIxYAUqb70ZFjnB/1nhiQCi/ckl5nLth712zbo3IvCI/EbsOLT
+         MNm9i6RSPi8qZuw3Fx29Wrvnw6dItVeND28wsGa6nVBFppFShvdau60mMt27hcRSsxx3
+         TPPUuFWN2fsM0QwdasBVpdXmw28Jt72mUY7pjeMqijG7P6S4mwnhR6wApD8+UnNQERPd
+         19uy3WIVQJEKLb/e4h5d7/kZ5z/PBDN507ElNHDwBVdO5DvGT5hVFVtxlgObftxX2ZTW
+         s9gUsc334wSJF47aiFdPg/Hj0ezaiJ4SlPjA4Yi4CM5YLW+8DZSOe3BV4itybE7pp0Nk
+         Kb7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=MKCua1iUyxONn+bsOWnRZuMnXqiDfqvw9FIMx0dZRF8=;
+        b=PPnsCixNYk+ihpraMQSlu7zjwlmYFeO39eIqlcZpoW9FcpHYlJ4ingVVjWQ5GSju2H
+         DLntxj6jzmo6CAyy1TM5wfkafmrnQNfVA8AXxz89toHQOo7XarnruvdZ7U+u2qYZmZ3O
+         NzmzvjKGiJjgg1+ZSHF7j6A7JAXhbl6TgxM1zyxoas2P/zAcp9wnit+0WPza0dagqylX
+         FYb3tzvsHERGLAOuzjKNh0p9xmYyZlCJ6GjJN2t5lXZ3iS8vfC9l6izm81eXQLzX2jbl
+         qkMMsyWZaO249dvJSxPYRSFG/wtfxhg4SmDeMKPvmACgykfKFndC1UDQL0XCtbvRV03F
+         mwJQ==
+X-Gm-Message-State: APjAAAU2iZ4euxjXOV0cd4Yz4lHvAk/DIaTwhVJ8z5yGdTGmb7nIspNk
+        3dluvW0K3eS6M8g/NyhPqZVTBiZZvHI=
+X-Google-Smtp-Source: APXvYqzeJed9goyylmqlOBs3LxL7op1lRQ9/rFSPpVdMhG8ysk+IWFKHtQYfDtxb9UaVHLJiJm/kFQ==
+X-Received: by 2002:adf:fe81:: with SMTP id l1mr2930329wrr.165.1572438273075;
+        Wed, 30 Oct 2019 05:24:33 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id p13sm2075919wma.41.2019.10.30.05.24.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 30 Oct 2019 05:24:32 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org, jernej.skrabec@siol.net
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v3 1/3] ARM64: dts: sun50i-h6-pine-h64: state that the DT supports the modelB
+Date:   Wed, 30 Oct 2019 12:24:13 +0000
+Message-Id: <1572438255-26107-2-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572438255-26107-1-git-send-email-clabbe@baylibre.com>
+References: <1572438255-26107-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >>> "wubo (T)" <wubo40@huawei.com> schrieb am 30.10.2019 um 08:56 in
-> Nachricht
-> <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DFA0FE@dggeml505-mbs.china.
-> huawei.com>:
-> > From: Bo Wu <wubo40@huawei.com>
-> 
-> ...
-> > +			if (--retries < 0) {
-> > +				printk(KERN_ERR "Send reply failed too many times. "
-> > +				       "Max supported retries %u\n",
-> ISCSI_SEND_MAX_ALLOWED);
-> 
-> Just for "personal taste": Why not simplify the message to:?
-> +				printk(KERN_ERR "Send reply failed too many times
-> (%u)\n",
->                                ISCSI_SEND_MAX_ALLOWED);
-> 
-> > +				break;
-> > +			}
-> > +
-> 
-> Maybe place the number after "many" as an alternative. I think as the
-> message is expected to be rare, a short variant is justified.
+The current sun50i-h6-pine-h64 DT does not specify which model (A or B)
+it supports.
+When this file was created, only modelA was existing, but now both model
+exists and with the time, this DT drifted to support the model B since it is
+the most common one.
+Furtheremore, some part of the model A does not work with it like ethernet and
+HDMI connector (as confirmed by Jernej on IRC).
 
-Thanks for your suggestion. This problem occured when iscsi_if_send_reply returns -EAGAIN.
-Consider possible other anomalies scenes. In order to get diagnostic information, it is better to replace "many" with error code.
+So it is time to settle the issue, and the easiest way is to state that
+this DT is for model B.
+Easiest since only a small name changes is required.
+Doing the opposite (stating this file is for model A) will add changes (for
+ethernet and HDMI) and so, will break too many setup.
 
-Modify as follow:
-if (--retries < 0) {
-	printk(KERN_WARNING "Send reply failed, error %d\n", err);
-	break;
-}
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ Documentation/devicetree/bindings/arm/sunxi.yaml     | 4 ++--
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> Also one could discuss wether the problem that originates "from external"
-> should be KERN_ERR, or maybe just a warning, because the kernel itself can do
-> little against that problem, and it's not a "kernel error" after all ;-)
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 972b1e9ee804..9a1e4992b9e9 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -594,9 +594,9 @@ properties:
+           - const: pine64,pine64-plus
+           - const: allwinner,sun50i-a64
+ 
+-      - description: Pine64 PineH64
++      - description: Pine64 PineH64 model B
+         items:
+-          - const: pine64,pine-h64
++          - const: pine64,pine-h64-modelB
+           - const: allwinner,sun50i-h6
+ 
+       - description: Pine64 LTS
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index 30102daf83cc..f9070d9e6c43 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -10,8 +10,8 @@
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+-	model = "Pine H64";
+-	compatible = "pine64,pine-h64", "allwinner,sun50i-h6";
++	model = "Pine H64 model B";
++	compatible = "pine64,pine-h64-modelB", "allwinner,sun50i-h6";
+ 
+ 	aliases {
+ 		ethernet0 = &emac;
+-- 
+2.23.0
 
-You are right, This problem scene rarely appears .it is friendly to replace the error with warning.
-
-> 
-> Regards,
-> Ulrich
-> 
-> 
-> 
-
-Thanks,
-Bo Wu
