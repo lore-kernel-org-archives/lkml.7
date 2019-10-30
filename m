@@ -2,194 +2,166 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278B0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EB3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E079420874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:04:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r8lanPsZ"
+	by mail.kernel.org (Postfix) with ESMTP id C7B3F20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfJ3IE6 (ORCPT
+        id S1726364AbfJ3IFw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:04:58 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40777 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfJ3IE6 (ORCPT
+        Wed, 30 Oct 2019 04:05:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40376 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfJ3IFw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:04:58 -0400
-Received: by mail-lf1-f68.google.com with SMTP id f4so801660lfk.7
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 01:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tH0v8CKp4rkqpt8Oe+l5sC+1JZVbcOeXEIccbuIjsLY=;
-        b=r8lanPsZ5r4DYw8xhoSUxPC6Og+6ox8PfERevdtaWjVFkqYsqWlqGYvRTXWFjBxxkF
-         LSyNvdzS1ABOlsYBdGo9D7/bao9ip9WaDafN+ThzbwTB5RjYH2pICKu6rmHXFOr5+7fp
-         r9XWIritTeXZnmg8Gw+YYIYAQFLsfH8j0fgisUPBVAgdF6EE38FHQkIjWbNicBmyaJNY
-         cLl1ShtR0r4qiIoqDuwHuPahFVlphjGDVkc6F/9Cf+i6YvhjBaplw2C7N/YOa+PZXbjS
-         K3YkvEYAVKG4f91YnSW+gypAdouX6DxoywsPlVNSARVENvJapuzEam0vAkKjdf+NyDjA
-         hohA==
+        Wed, 30 Oct 2019 04:05:52 -0400
+Received: from mail-pf1-f197.google.com ([209.85.210.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iPizH-0008Be-0D
+        for linux-kernel@vger.kernel.org; Wed, 30 Oct 2019 08:05:51 +0000
+Received: by mail-pf1-f197.google.com with SMTP id 2so1078989pfv.21
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 01:05:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tH0v8CKp4rkqpt8Oe+l5sC+1JZVbcOeXEIccbuIjsLY=;
-        b=ZhYT+eih0FiewkCrH40H3wAQD6I9zD15Dp7k5nbm6YuN4laFfEKYzSeBXFkWY0o8L8
-         ZdxbSHaUrWwIlqFulqwEIdPtVIqfjpRfCRICyKcVHa/DyLT4NvxKekR0MIdUyFz3y/Rq
-         BZRFzWAfs5ynsQHcnPDhbXBfQ39H+47K+Uu/2R4CnuiKD5Ik94KL+TxKQoxI4zW8XvJQ
-         DSQ1GsmT25EERyar1KrvmkPGR+T3uYoEFlJIgOZSpiOO3RaCT0qDalaEMuKzcYHKMTCi
-         gOLyNpYOOiEnts4oUU08oH7ViVye7SEbgUYQtdavPmsTs1lxIVqbiFInMwCaUrGrY6Nz
-         xeyQ==
-X-Gm-Message-State: APjAAAVCSB1p7RTMXjGBE4pW/uLExwWhrDUXrc1wOE6nyCCwJV87Xv1H
-        PgmJrwq5F1Mo97507geCD9ANKuSVY4914Exu8yWPcg==
-X-Google-Smtp-Source: APXvYqwmKaoz+eND32DeKMSy8hUHpIOc38nMiJiEindaniFhBHsD7p3AkfybNOSyJG/lVRrF48F5hff5bzutZdDIJWY=
-X-Received: by 2002:ac2:5dc1:: with SMTP id x1mr5069448lfq.177.1572422695426;
- Wed, 30 Oct 2019 01:04:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191009104611.15363-1-qais.yousef@arm.com> <CAKfTPtA6Fvc374oTfbHYkviAJbZebHkBg=w2O3f0oZ0m3ujVjA@mail.gmail.com>
- <20191029110224.awoi37pdquachqtd@e107158-lin.cambridge.arm.com>
- <CAKfTPtA=CzkTVwdCJL6ULYB628tWdGAvpD-sHfgSfL59PyYvxA@mail.gmail.com>
- <20191029114824.2kb4fygxxx72r3in@e107158-lin.cambridge.arm.com>
- <CAKfTPtD7e-dXhZ3mG36igArt=0f-mNc52vaJ1bb-jv5zB9bkgg@mail.gmail.com>
- <20191029124630.ivfbpenue3fw33qt@e107158-lin.cambridge.arm.com>
- <CAKfTPtDnt6oh7X6dGnPUn70sLJXAQoxdkn0GCwdPvA8G4Wg0fA@mail.gmail.com> <20191029203619.GA7607@darkstar>
-In-Reply-To: <20191029203619.GA7607@darkstar>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 30 Oct 2019 09:04:44 +0100
-Message-ID: <CAKfTPtDFLsn-uSV2ms1qPMMs+2GYWK2jYw8=-2pr_BpBRid6Kw@mail.gmail.com>
-Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
-To:     Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=4fjfT+X0zdxQp+vm9KtOTYPAl/RrpViMNAYUxI244Zw=;
+        b=mdC7Ih/MJXzEMB5dFRiOOLznI4YnNKovH8TbFoMUNf3KRuPJY8bVH0QgM4I1ulzElw
+         ULKL4Rdl2O8J12IKnqegnw9QbRLHeCsVwglPqQ+aKqqQujt6UdzAYs/CANh+bzWwXMsv
+         LdrevSUmZatLPe6P2aqVwTNO9l1DqZVP6umM632gAcgC3riMMviRwYBXPlQn5ViVxHHt
+         FuX9uS9cbpZxglwuHlrjQFz1JEXkN8kmQMtpoMuzJPJjBkwF18GaZNVOEnJFaWrESuDi
+         fn4tVaZj7pTFXQKz9+gf6JyvvlxVnQ9w8u6b8+3m4yka0xHonOEJ5I489dRgQyBb8dbz
+         WEMQ==
+X-Gm-Message-State: APjAAAUPx0Q1PwrdOhc7S4zay4qe69CJqGNF0B5IQBSA5XwD+RVjMiWv
+        dBBDZuXa+z0ZWy6UGVr2/X8L8iLdXHaTWs5o36ZnOBpo1AVx/Gfyc8JbAVO/zYWH03QLMxSUPDH
+        SjszyKMA6GREN/gwaiCZTwtOxO9XHN/FBySlwh87o5Q==
+X-Received: by 2002:a62:2581:: with SMTP id l123mr32783402pfl.197.1572422749589;
+        Wed, 30 Oct 2019 01:05:49 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzJGBAZpI9S5VZ1C0iGWKVALmtKqjZ1JZTa7BVS3KQAcD9BjB82gWmCBgsC0gX7X/FQCA9Zsg==
+X-Received: by 2002:a62:2581:: with SMTP id l123mr32783369pfl.197.1572422749219;
+        Wed, 30 Oct 2019 01:05:49 -0700 (PDT)
+Received: from 2001-b011-380f-3c42-507c-6d05-b0b1-d40f.dynamic-ip6.hinet.net (2001-b011-380f-3c42-507c-6d05-b0b1-d40f.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:507c:6d05:b0b1:d40f])
+        by smtp.gmail.com with ESMTPSA id q7sm1739666pff.19.2019.10.30.01.05.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 01:05:48 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601\))
+Subject: Re: [PATCH 2/2] usb: core: Attempt power cycle when port is in
+ eSS.Disabled state
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20191007182840.4867-2-kai.heng.feng@canonical.com>
+Date:   Wed, 30 Oct 2019 16:05:45 +0800
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <E70C54D2-89DB-4336-B9CA-3FCB7642ECBD@canonical.com>
+References: <20191007182840.4867-1-kai.heng.feng@canonical.com>
+ <20191007182840.4867-2-kai.heng.feng@canonical.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3601)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 at 21:36, Patrick Bellasi
-<patrick.bellasi@matbug.net> wrote:
->
-> Hi Vincent, Qais,
->
-> On 29-Oct 13:54, Vincent Guittot wrote:
-> > On Tue, 29 Oct 2019 at 13:46, Qais Yousef <qais.yousef@arm.com> wrote:
-> > > On 10/29/19 13:20, Vincent Guittot wrote:
-> > > > > > Making big cores the default CPUs for all RT tasks is not a minor
-> > > > > > change and IMO locality should stay the default behavior when there is
-> > > > > > no uclamp constraint
->
-> The default value for system-wide's uclamp.min is 1024 because by
-> default _we want_ RT tasks running at MAX_OPP. This means that by
-> default RT tasks are running _under constraints_.
->
-> The "no uclamp constraints" case you mention requires that you set
-> uclamp.min=0 for that task. In that case, this patch will do exactly
-> what you ask for: locality is preserved.
->
-> > > > > How this is affecting locality? The task will always go to the big core, so it
-> > > > > should be local.
-> > > >
-> > > > local with the waker
-> > > > You will force rt task to run on big cluster although waker, data and
-> > > > interrupts can be on little one.
-> > > > So making big core as default is far from always being the best choice
-> > >
-> > > This is loaded with assumptions IMO. AFAICT we don't know what's the best
-> > > choice.
->
-> Agree... more on that after...
->
-> > > First, the value of uclamp.min is outside of the scope of this patch. Unless
-> > > what you're saying is that when uclamp.min is 1024 then we should NOT choose a
-> > > big cpu then there's no disagreement about what this patch do. If that's what
-> > > you're objecting to please be more specific about how do you see this working
-> > > instead.
-> >
-> > My point is that this patch makes the big cores the default CPUs for
-> > RT tasks which is far from being a minor change and far from being
-> > an obvious default good choice
->
-> Some time ago we agreed that going to MAX_OPP for RT tasks was
-> "mandatory". That was defenitively a big change, likely much more
-> impacting than the one proposed by this patch.
->
-> On many mobile devices we ended up pinning RT tasks on LITTLE cores
-> (mainly) to save quite a lot of energy by avoiding the case of big
-> CPUs randomly spiking to MAX_OPP just because of a small RT task
-> waking up on them. We also added some heuristic in schedutil has a
-> "band aid" for the effects of the aforementioned choice.
->
-> By running RT on LITTLEs there could be also some wakeup latency
-> improvement? Yes, maybe... would be interesting to have some real
-> HW *and* SW use-case on hand to compare.
->
-> However, we know that RT is all about "latency", but what is a bit
-> more fuzzy is the definition of "latency":
->
->  A) wakeup-latency
->     From a scheduler standpoint it's quite often considered as the the
->     time it takes to "wakeup" a task and actually start executing its
->     instructions.
->
->  B) completion-time
->     From an app standpoint, it's quite often important the time to
->     complete the task activation and go back to sleep.
->
-> Running at MAX_OPP looks much more related to the need to complete
-> fast than waking up fast, especially considering that that decision
 
-You will wake up faster as well when running at MAX_OPP because
-instructions will run faster or at least as fast. That being said,
-running twice faster doesn't mean at all waking up twice faster but
-for sure it will be faster although the gain can be really short.
-Whereas running on a big core with more capacity doesn't mean that you
-will wake up faster because of uarch difference.
-I agree that "long" running rt task will most probably benefit from
-big cores to complete earlier but that no more obvious for short one.
 
-> was taken looking mainly (perhaps only) to SMP systems.
->
-> On heterogeneous systems, "wakeup-latency" and "completion-time" are
-> two metrics which *maybe* can be better served by different cores.
-> However, it's very difficult to argument if one metric is more
-> important than the other. It's even more difficult to quantify it
-> because of the multitide of HW and SW combinations.
+> On Oct 8, 2019, at 02:28, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> 
+> On Dell TB16, Realtek USB ethernet (r8152) connects to an SMSC hub which
+> then connects to ASMedia xHCI's root hub:
+> 
+> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
+>    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
+>            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
+> 
+> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+> Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp. USB5537B
+> Bus 004 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
+> 
+> The SMSC hub may disconnect after system resume from suspend. When this
+> happens, the reset resume attempt fails, and the last resort to disable
+> the port and see something comes up later, also fails.
+> 
+> When the issue occurs, the link state stays in eSS.Disabled state
+> despite the warm reset attempts. The USB spec mentioned this can be
+> caused by invalid VBus, and after some expiremets, it does show that the
+> SMSC hub can be brought back after a power cycle.
+> 
+> So let's power cycle the port at the end of reset resume attempt, if
+> it's in eSS.Disabled state.
 
-That's the point of my comment, choosing big cores as default and
-always best choice is far from being obvious.
-And this patch changes the default behavior without study of the
-impact apart from stating that this should be ok
+Is there any suggestion to make this series get merged?
 
->
-> Thus, what's proposed here can be far from being an "obvious good
-> chooce", but it's also quite difficult to argue and proof that's
-> defenitively _not_ a good choice. It's just a default which:
->
->  1) keeps things simple for RT tasks by using the same default
->     policy for both frequency and CPUs selection
->     we always run (when possible) at the highest available capacity
->
->  2) it's based on a per-task/system-wide tunable mechanism
->
-> Is that not enought to justfy it as a default?
->
-> Best,
-> Patrick
->
-> --
-> #include <best/regards.h>
->
-> Patrick Bellasi
+Kai-Heng
+
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> drivers/usb/core/hub.c | 21 +++++++++++++++++++--
+> 1 file changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 6655a6a1651b..5f50aca7cf67 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -2739,20 +2739,33 @@ static bool hub_port_warm_reset_required(struct usb_hub *hub, int port1,
+> 		|| link_state == USB_SS_PORT_LS_COMP_MOD;
+> }
+> 
+> +static bool hub_port_power_cycle_required(struct usb_hub *hub, int port1,
+> +		u16 portstatus)
+> +{
+> +	u16 link_state;
+> +
+> +	if (!hub_is_superspeed(hub->hdev))
+> +		return false;
+> +
+> +	link_state = portstatus & USB_PORT_STAT_LINK_STATE;
+> +	return link_state == USB_SS_PORT_LS_SS_DISABLED;
+> +}
+> +
+> static void hub_port_power_cycle(struct usb_hub *hub, int port1)
+> {
+> +	struct usb_port *port_dev = hub->ports[port1  - 1];
+> 	int ret;
+> 
+> 	ret = usb_hub_set_port_power(hub, port1, false);
+> 	if (ret) {
+> -		dev_info(&udev->dev, "failed to disable port power\n");
+> +		dev_info(&port_dev->dev, "failed to disable port power\n");
+> 		return;
+> 	}
+> 
+> 	msleep(2 * hub_power_on_good_delay(hub));
+> 	ret = usb_hub_set_port_power(hub, port1, true);
+> 	if (ret) {
+> -		dev_info(&udev->dev, "failed to enable port power\n");
+> +		dev_info(&port_dev->dev, "failed to enable port power\n");
+> 		return;
+> 	}
+> 
+> @@ -3600,6 +3613,10 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
+> 	if (status < 0) {
+> 		dev_dbg(&udev->dev, "can't resume, status %d\n", status);
+> 		hub_port_logical_disconnect(hub, port1);
+> +		if (hub_port_power_cycle_required(hub, port1, portstatus)) {
+> +			dev_info(&udev->dev, "device in disabled state, attempt power cycle\n");
+> +			hub_port_power_cycle(hub, port1);
+> +		}
+> 	} else  {
+> 		/* Try to enable USB2 hardware LPM */
+> 		usb_enable_usb2_hardware_lpm(udev);
+> -- 
+> 2.17.1
+> 
+
