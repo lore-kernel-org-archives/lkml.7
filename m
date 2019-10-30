@@ -2,89 +2,100 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A359CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69700CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27DD2087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411862087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572441188;
+	bh=TYzyLtP+D7kB/qnfgS6x7BUXNu6ybul91VI0CYY7u8M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=imwdR/m67YQFQImzZsi9Y8flOkTjKX5+el8vrFWUBXMhljmY72pQpYt4NROktsnpN
+	 B/vst38NG/XWJKzecsvuGsdGdmpCOM20NTvf01rYenUeQVtxdGGwY7fqlUf8ueav7p
+	 yrt+efVTTGcQDV1tKlPZfM3On8M3wxZ3Vnz6Uikk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfJ3NL2 (ORCPT
+        id S1726371AbfJ3NNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:11:28 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:21213 "EHLO smtp2.axis.com"
+        Wed, 30 Oct 2019 09:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfJ3NL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:11:28 -0400
-IronPort-SDR: 4yyDR3sJFKrKPKpLcaUxoo9d9+Pa0Ek0erNLQarTDt+8/VKUKoAxoJCgSezeapCwfUIGpDd1iN
- 4QjHBoj3+5egc0nG5FUaM5YNEYdj0KlEdYCA3Ms8u1oRauTzxovDOLJVdG3RGhg79S1qUEri7+
- Uin78f580QoK6o98KzsmYYqyIeDnwu1P2zl82et/DWYeC2jAoAcg7k/1Cx2kM2GvQ4A5kVVtQY
- fGTSJ2CwXNfFRh3rwyxqaD1WUUzm6T7ZkwDMKWZFw/i9V2j/NBIIInkg2XuJWQ9GRUr1K/Axmp
- qPE=
-X-IronPort-AV: E=Sophos;i="5.68,247,1569276000"; 
-   d="scan'208";a="1923405"
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     akpm@linux-foundation.org
-Cc:     osalvador@suse.de, mhocko@suse.com, pasha.tatashin@oracle.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Vincent Whitchurch <rabinv@axis.com>
-Subject: [PATCH] mm/sparse: Consistently do not zero memmap
-Date:   Wed, 30 Oct 2019 14:11:22 +0100
-Message-Id: <20191030131122.8256-1-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.20.0
+        id S1726119AbfJ3NNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:13:07 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37FE3208E3;
+        Wed, 30 Oct 2019 13:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572441186;
+        bh=TYzyLtP+D7kB/qnfgS6x7BUXNu6ybul91VI0CYY7u8M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bSpRV8bJ94Yt1H4/pwx0XzesfPodlXVb29S+DU1VXYKifjAa+HKPLuvcQ6CI2uAka
+         GlRm3JpSuqUn6FAxTRna1ZsYcSY9ZzjUWlh0sDaSxPDF1+L2j1Ld2/lto6jMU/HmkW
+         JsJv7rS/aqpAvRuMD0rq8Hu/SIcQonDL9etPfobk=
+Received: by mail-qt1-f174.google.com with SMTP id g50so3132401qtb.4;
+        Wed, 30 Oct 2019 06:13:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAX0wpuUaQq5+JXhDIZFeCKGgrE9td+aEv4ooi1r9EET2cwxyWkd
+        ixRnJcItNRZukLJ9W8UkflzSYSF2Le1KWjIaHg==
+X-Google-Smtp-Source: APXvYqzpbAR616454Q99vvOIazcNBXYazAW21qXlBdc1UMHRA5TCBXDrgT6hbzNXT2P9BQZAhzCr31sSccUE5YWDInk=
+X-Received: by 2002:ac8:65d5:: with SMTP id t21mr4861712qto.300.1572441185291;
+ Wed, 30 Oct 2019 06:13:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 30 Oct 2019 08:12:53 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+Message-ID: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sparsemem without VMEMMAP has two allocation paths to allocate the
-memory needed for its memmap (done in sparse_mem_map_populate()).
+On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+> Hi,
+>
+> The shared GPIO line for external components tends to be a common issue and
+> there is no 'clean' way of handling it.
+>
+> I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
+> a driver tries to request a GPIO which is already in use.
+> However the driver must know that the component is going to be used in such a
+> way, which can be said to any external components with GPIO line, so in theory
+> all drivers must set this flag when requesting the GPIO...
+>
+> But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
+> GPIO line. For example any device using the same GPIO as reset/enable line can
+> reset/enable other devices, which is not something the other device might like
+> or can handle.
+> For example a device needs to be configured after it is enabled, but some other
+> driver would reset it while handling the same GPIO -> the device is not
+> operational anymmore as it lost it's configuration.
+>
+> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
+> the role of making sure that the GPIO line only changes state when it will not
+> disturb any of the clients sharing the same GPIO line.
 
-In one allocation path (sparse_buffer_alloc() succeeds), the memory is
-not zeroed (since it was previously allocated with
-memblock_alloc_try_nid_raw()).
+Why can't we just add a shared flag like we have for interrupts?
+Effectively, we have that for resets too, it's just hardcoded in the
+the drivers.
 
-In the other allocation path (sparse_buffer_alloc() fails and
-sparse_mem_map_populate() falls back to memblock_alloc_try_nid()), the
-memory is zeroed.
-
-AFAICS this difference does not appear to be on purpose.  If the code is
-supposed to work with non-initialized memory (__init_single_page() takes
-care of zeroing the struct pages which are actually used), we should
-consistently not zero the memory, to avoid masking bugs.
-
-(I noticed this because on my ARM64 platform, with 1 GiB of memory the
- first [and only] section is allocated from the zeroing path while with
- 2 GiB of memory the first 1 GiB section is allocated from the
- non-zeroing path.)
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
----
- mm/sparse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/sparse.c b/mm/sparse.c
-index f6891c1992b1..01e467adc219 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -458,7 +458,7 @@ struct page __init *__populate_section_memmap(unsigned long pfn,
- 	if (map)
- 		return map;
- 
--	map = memblock_alloc_try_nid(size,
-+	map = memblock_alloc_try_nid_raw(size,
- 					  PAGE_SIZE, addr,
- 					  MEMBLOCK_ALLOC_ACCESSIBLE, nid);
- 	if (!map)
--- 
-2.20.0
-
+Rob
