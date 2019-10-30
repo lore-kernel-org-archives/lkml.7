@@ -2,172 +2,508 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEDCCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3ADCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3892C208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572457638;
-	bh=sjprPqg2PbaiKLXjdDkpF8WMp02FewdHM7IhqCH/KBY=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=P2bXM1fu/C+YcxeJvC0ZxZC+1Nv4nP4J9BPoqOsk75iGFdui7Uo+h4JqCJJsNOjAv
-	 m57rfEaSKf95GQFQEu4sCy1p2O/Lbtoj3K1FLWxoI1ijAn/nv/uJin/ObIYTv+PXa7
-	 r6P3wzxWHdqsrjVNTdI1QiGLEwpTmvjT3NQMJoaA=
+	by mail.kernel.org (Postfix) with ESMTP id 02FF920659
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:48:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VbJv9ObK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfJ3RrR (ORCPT
+        id S1727502AbfJ3RsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 13:47:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726664AbfJ3RrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 13:47:16 -0400
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DB3820659;
-        Wed, 30 Oct 2019 17:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572457635;
-        bh=sjprPqg2PbaiKLXjdDkpF8WMp02FewdHM7IhqCH/KBY=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=qvf5Q3NhTT110wh2br44Y/15LJDDHIw6tTyaIc8WfsAp9TgtRSJZq1Mq29zfD47I5
-         Bgnzk6Iyez0hE4pGF4Iy/UfvI8iffKZxEG3+J1wiKpGuajR11oficmHqOe2eYmZDjH
-         GA2kpzpig2Q225fjWLu+HBSsUUk0UnkPOJfub28Y=
-Date:   Wed, 30 Oct 2019 10:47:14 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH 2/2] f2fs: support data compression
-Message-ID: <20191030174714.GA36729@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20191022171602.93637-1-jaegeuk@kernel.org>
- <20191022171602.93637-2-jaegeuk@kernel.org>
- <20191027225006.GA321938@sol.localdomain>
- <da214cdc-0074-b7bf-7761-d4c4ad3d4f6a@huawei.com>
- <20191030025512.GA4791@sol.localdomain>
- <97c33fa1-15af-b319-29a1-22f254a26c0a@huawei.com>
- <20191030165056.GA693@sol.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030165056.GA693@sol.localdomain>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+        Wed, 30 Oct 2019 13:48:09 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:36915 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbfJ3RsJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 13:48:09 -0400
+Received: by mail-pf1-f201.google.com with SMTP id c30so2271289pfj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 10:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=zXlXjc4+npIPAH6DvVDlchwdRCEZOxio1xYz7SEVDs8=;
+        b=VbJv9ObKSR1ySqNcyAOwx10/fYHByVKmkX45chMKx4LMYWfyDfW/sXlegyEhtVN+nw
+         va3+3hkfmMoNg69DkEQxRHCjV4IzIZrIO4Xm1ZrRaXHVeLC5GBBU5Rytw8YU5YldfO8q
+         lGMAiVVL4itU2wKBRgMPB85Stk1ZemK1m3mFLo2RD+jgUMitbww2m5zgv1zmlmv9U72s
+         u923GbFQtSN/FYQfhEn5VtJmR7sUyJGIXS9zTqsZBw+j9zyEdklDgipJDZ29UBZusMEA
+         S/bgnDLRYvRKgmyEzJLb8829NjM5pLoPpZhJoWny4mEspr5p96bqrniCXFrX4jM3KVXM
+         QaOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=zXlXjc4+npIPAH6DvVDlchwdRCEZOxio1xYz7SEVDs8=;
+        b=m1XjDOeFsMg9IPjpg1lazwxP7SzEe33PBicV8iFFWEHd1d7d7H2db0hyztdCNYdeex
+         xWeP1/Ektz9blPbjUbFNEmXyn7oW9MROUIQN4TY3hWV/hRAqdBsuraXyp7BdDJn38alP
+         lFq4NNlclAXGn8lItYEBOE7UJqRd8//0cEUYTdmQn0xkP2AGnnM5sDLjorvzmE90SjGl
+         Sz2XZlJ/KAEPwmCOP3acbYPC5wz9goNUBS0VTTMt6bc8svj7WC7YCKEECNAYXOPftI6c
+         mHLGruRp9WiyI8iP03JQIHzZdvb2h8xroMvFPNQL5KpF50VMSnbQmz/AzACk78CEbUMj
+         /Taw==
+X-Gm-Message-State: APjAAAULeWrQZp08mdQmMCrt23vIflekCGGPRdnv34axJFRPEFUZn6oB
+        QJf71h6g+r+Qj8g8ouIPu2w9VgZdSDAHEKlrtug=
+X-Google-Smtp-Source: APXvYqwlrPQdukBtJdIwvYKvrL7J3mLgJQDdPusjXdRlp3ucRmaqIWZPtVjs7+ciC8qDcrutLmFedW23SJPWP67lk8c=
+X-Received: by 2002:a63:ff1e:: with SMTP id k30mr640724pgi.273.1572457686301;
+ Wed, 30 Oct 2019 10:48:06 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 10:44:13 -0700
+Message-Id: <20191030174429.248697-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: [PATCH] arm: replace Sun/Solaris style flag on section directive
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     linux@armlinux.org.uk
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Jian Cai <jiancai@google.com>,
+        Peter Smith <peter.smith@linaro.org>,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Stefan Agner <stefan@agner.ch>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Roy Franz <rfranz@marvell.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/30, Eric Biggers wrote:
-> On Wed, Oct 30, 2019 at 04:43:52PM +0800, Chao Yu wrote:
-> > On 2019/10/30 10:55, Eric Biggers wrote:
-> > > On Tue, Oct 29, 2019 at 04:33:36PM +0800, Chao Yu wrote:
-> > >> On 2019/10/28 6:50, Eric Biggers wrote:
-> > >>>> +bool f2fs_is_compressed_page(struct page *page)
-> > >>>> +{
-> > >>>> +	if (!page_private(page))
-> > >>>> +		return false;
-> > >>>> +	if (IS_ATOMIC_WRITTEN_PAGE(page) || IS_DUMMY_WRITTEN_PAGE(page))
-> > >>>> +		return false;
-> > >>>> +	return *((u32 *)page_private(page)) == F2FS_COMPRESSED_PAGE_MAGIC;
-> > >>>> +}
-> > >>>
-> > >>> This code implies that there can be multiple page private structures each of
-> > >>> which has a different magic number.  But I only see F2FS_COMPRESSED_PAGE_MAGIC.
-> > >>> Where in the code is the other one(s)?
-> > >>
-> > >> I'm not sure I understood you correctly, did you mean it needs to introduce
-> > >> f2fs_is_atomic_written_page() and f2fs_is_dummy_written_page() like
-> > >> f2fs_is_compressed_page()?
-> > >>
-> > > 
-> > > No, I'm asking what is the case where the line
-> > > 
-> > > 	*((u32 *)page_private(page)) == F2FS_COMPRESSED_PAGE_MAGIC
-> > > 
-> > > returns false?
-> > 
-> > Should be this?
-> > 
-> > if (!page_private(page))
-> > 	return false;
-> > f2fs_bug_on(*((u32 *)page_private(page)) != F2FS_COMPRESSED_PAGE_MAGIC)
-> > return true;
-> 
-> Yes, that makes more sense, unless there are other cases.
-> 
-> > 
-> > > 
-> > >>>
-> > >>>> +
-> > >>>> +static void f2fs_set_compressed_page(struct page *page,
-> > >>>> +		struct inode *inode, pgoff_t index, void *data, refcount_t *r)
-> > >>>> +{
-> > >>>> +	SetPagePrivate(page);
-> > >>>> +	set_page_private(page, (unsigned long)data);
-> > >>>> +
-> > >>>> +	/* i_crypto_info and iv index */
-> > >>>> +	page->index = index;
-> > >>>> +	page->mapping = inode->i_mapping;
-> > >>>> +	if (r)
-> > >>>> +		refcount_inc(r);
-> > >>>> +}
-> > >>>
-> > >>> It isn't really appropriate to create fake pagecache pages like this.  Did you
-> > >>> consider changing f2fs to use fscrypt_decrypt_block_inplace() instead?
-> > >>
-> > >> We need to store i_crypto_info and iv index somewhere, in order to pass them to
-> > >> fscrypt_decrypt_block_inplace(), where did you suggest to store them?
-> > >>
-> > > 
-> > > The same place where the pages are stored.
-> > 
-> > Still we need allocate space for those fields, any strong reason to do so?
-> > 
-> 
-> page->mapping set implies that the page is a pagecache page.  Faking it could
-> cause problems with code elsewhere.
+It looks like a section directive was using "Solaris style" to declare
+the section flags. Replace this with the GNU style so that Clang's
+integrated assembler can assemble this directive.
 
-I've checked it with minchan, and it seems to be fine that filesystem uses
-this page internally only, not in pagecache.
+The modified instances were identified via:
+$ ag \\.section | grep \#
 
-> 
-> > > 
-> > >>>> +
-> > >>>> +void f2fs_destroy_compress_ctx(struct compress_ctx *cc)
-> > >>>> +{
-> > >>>> +	kvfree(cc->rpages);
-> > >>>> +}
-> > >>>
-> > >>> The memory is allocated with kzalloc(), so why is it freed with kvfree() and not
-> > >>> just kfree()?
-> > >>
-> > >> It was allocated by f2fs_*alloc() which will fallback to kvmalloc() once
-> > >> kmalloc() failed.
-> > > 
-> > > This seems to be a bug in f2fs_kmalloc() -- it inappropriately falls back to
-> > > kvmalloc().  As per its name, it should only use kmalloc().  f2fs_kvmalloc()
-> > > already exists, so it can be used when the fallback is wanted.
-> > 
-> > We can introduce f2fs_memalloc() to wrap f2fs_kmalloc() and f2fs_kvmalloc() as
-> > below:
-> > 
-> > f2fs_memalloc()
-> > {
-> > 	mem = f2fs_kmalloc();
-> > 	if (mem)
-> > 		return mem;
-> > 	return f2fs_kvmalloc();
-> > }
-> > 
-> > It can be used in specified place where we really need it, like the place
-> > descirbied in 5222595d093e ("f2fs: use kvmalloc, if kmalloc is failed") in where
-> > we introduced original logic.
-> 
-> No, just use kvmalloc().  The whole point of kvmalloc() is that it tries
-> kmalloc() and then falls back to vmalloc() if it fails.
-> 
-> - Eric
+Link: https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_chapter/as_7.html#SEC119
+Link: https://github.com/ClangBuiltLinux/linux/issues/744
+Link: https://bugs.llvm.org/show_bug.cgi?id=43759
+Link: https://reviews.llvm.org/D69296
+Suggested-by: Fangrui Song <maskray@google.com>
+Suggested-by: Jian Cai <jiancai@google.com>
+Suggested-by: Peter Smith <peter.smith@linaro.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ arch/arm/boot/bootp/init.S            | 2 +-
+ arch/arm/boot/compressed/big-endian.S | 2 +-
+ arch/arm/boot/compressed/head.S       | 2 +-
+ arch/arm/boot/compressed/piggy.S      | 2 +-
+ arch/arm/mm/proc-arm1020.S            | 2 +-
+ arch/arm/mm/proc-arm1020e.S           | 2 +-
+ arch/arm/mm/proc-arm1022.S            | 2 +-
+ arch/arm/mm/proc-arm1026.S            | 2 +-
+ arch/arm/mm/proc-arm720.S             | 2 +-
+ arch/arm/mm/proc-arm740.S             | 2 +-
+ arch/arm/mm/proc-arm7tdmi.S           | 2 +-
+ arch/arm/mm/proc-arm920.S             | 2 +-
+ arch/arm/mm/proc-arm922.S             | 2 +-
+ arch/arm/mm/proc-arm925.S             | 2 +-
+ arch/arm/mm/proc-arm926.S             | 2 +-
+ arch/arm/mm/proc-arm940.S             | 2 +-
+ arch/arm/mm/proc-arm946.S             | 2 +-
+ arch/arm/mm/proc-arm9tdmi.S           | 2 +-
+ arch/arm/mm/proc-fa526.S              | 2 +-
+ arch/arm/mm/proc-feroceon.S           | 2 +-
+ arch/arm/mm/proc-mohawk.S             | 2 +-
+ arch/arm/mm/proc-sa110.S              | 2 +-
+ arch/arm/mm/proc-sa1100.S             | 2 +-
+ arch/arm/mm/proc-v6.S                 | 2 +-
+ arch/arm/mm/proc-v7.S                 | 2 +-
+ arch/arm/mm/proc-v7m.S                | 4 ++--
+ arch/arm/mm/proc-xsc3.S               | 2 +-
+ arch/arm/mm/proc-xscale.S             | 2 +-
+ 28 files changed, 29 insertions(+), 29 deletions(-)
+
+diff --git a/arch/arm/boot/bootp/init.S b/arch/arm/boot/bootp/init.S
+index 5c476bd2b4ce..b562da2f7040 100644
+--- a/arch/arm/boot/bootp/init.S
++++ b/arch/arm/boot/bootp/init.S
+@@ -13,7 +13,7 @@
+  *  size immediately following the kernel, we could build this into
+  *  a binary blob, and concatenate the zImage using the cat command.
+  */
+-		.section .start,#alloc,#execinstr
++		.section .start, "ax"
+ 		.type	_start, #function
+ 		.globl	_start
+ 
+diff --git a/arch/arm/boot/compressed/big-endian.S b/arch/arm/boot/compressed/big-endian.S
+index 88e2a88d324b..0e092c36da2f 100644
+--- a/arch/arm/boot/compressed/big-endian.S
++++ b/arch/arm/boot/compressed/big-endian.S
+@@ -6,7 +6,7 @@
+  *  Author: Nicolas Pitre
+  */
+ 
+-	.section ".start", #alloc, #execinstr
++	.section ".start", "ax"
+ 
+ 	mrc	p15, 0, r0, c1, c0, 0	@ read control reg
+ 	orr	r0, r0, #(1 << 7)	@ enable big endian mode
+diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+index 93dffed0ac6e..15ecad944847 100644
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -140,7 +140,7 @@
+ #endif
+ 		.endm
+ 
+-		.section ".start", #alloc, #execinstr
++		.section ".start", "ax"
+ /*
+  * sort out different calling conventions
+  */
+diff --git a/arch/arm/boot/compressed/piggy.S b/arch/arm/boot/compressed/piggy.S
+index 0284f84dcf38..27577644ee72 100644
+--- a/arch/arm/boot/compressed/piggy.S
++++ b/arch/arm/boot/compressed/piggy.S
+@@ -1,5 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-	.section .piggydata,#alloc
++	.section .piggydata, "a"
+ 	.globl	input_data
+ input_data:
+ 	.incbin	"arch/arm/boot/compressed/piggy_data"
+diff --git a/arch/arm/mm/proc-arm1020.S b/arch/arm/mm/proc-arm1020.S
+index 4fa5371bc662..2785da387c91 100644
+--- a/arch/arm/mm/proc-arm1020.S
++++ b/arch/arm/mm/proc-arm1020.S
+@@ -491,7 +491,7 @@ cpu_arm1020_name:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__arm1020_proc_info,#object
+ __arm1020_proc_info:
+diff --git a/arch/arm/mm/proc-arm1020e.S b/arch/arm/mm/proc-arm1020e.S
+index 5d8a8339e09a..e9ea237ed785 100644
+--- a/arch/arm/mm/proc-arm1020e.S
++++ b/arch/arm/mm/proc-arm1020e.S
+@@ -449,7 +449,7 @@ arm1020e_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__arm1020e_proc_info,#object
+ __arm1020e_proc_info:
+diff --git a/arch/arm/mm/proc-arm1022.S b/arch/arm/mm/proc-arm1022.S
+index b3dd95c345e4..920c279e7879 100644
+--- a/arch/arm/mm/proc-arm1022.S
++++ b/arch/arm/mm/proc-arm1022.S
+@@ -443,7 +443,7 @@ arm1022_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__arm1022_proc_info,#object
+ __arm1022_proc_info:
+diff --git a/arch/arm/mm/proc-arm1026.S b/arch/arm/mm/proc-arm1026.S
+index ac5afde12f35..10e21012380b 100644
+--- a/arch/arm/mm/proc-arm1026.S
++++ b/arch/arm/mm/proc-arm1026.S
+@@ -437,7 +437,7 @@ arm1026_crval:
+ 	string	cpu_arm1026_name, "ARM1026EJ-S"
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__arm1026_proc_info,#object
+ __arm1026_proc_info:
+diff --git a/arch/arm/mm/proc-arm720.S b/arch/arm/mm/proc-arm720.S
+index c99d24363f32..39361e196d61 100644
+--- a/arch/arm/mm/proc-arm720.S
++++ b/arch/arm/mm/proc-arm720.S
+@@ -172,7 +172,7 @@ arm720_crval:
+  * See <asm/procinfo.h> for a definition of this structure.
+  */
+ 	
+-		.section ".proc.info.init", #alloc
++		.section ".proc.info.init", "a"
+ 
+ .macro arm720_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req, cpu_flush:req
+ 		.type	__\name\()_proc_info,#object
+diff --git a/arch/arm/mm/proc-arm740.S b/arch/arm/mm/proc-arm740.S
+index 1b4a3838393f..1a94bbf6e53f 100644
+--- a/arch/arm/mm/proc-arm740.S
++++ b/arch/arm/mm/proc-arm740.S
+@@ -128,7 +128,7 @@ __arm740_setup:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 	.type	__arm740_proc_info,#object
+ __arm740_proc_info:
+ 	.long	0x41807400
+diff --git a/arch/arm/mm/proc-arm7tdmi.S b/arch/arm/mm/proc-arm7tdmi.S
+index 17a4687065c7..52b66cf0259e 100644
+--- a/arch/arm/mm/proc-arm7tdmi.S
++++ b/arch/arm/mm/proc-arm7tdmi.S
+@@ -72,7 +72,7 @@ __arm7tdmi_setup:
+ 
+ 		.align
+ 
+-		.section ".proc.info.init", #alloc
++		.section ".proc.info.init", "a"
+ 
+ .macro arm7tdmi_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req, \
+ 	extra_hwcaps=0
+diff --git a/arch/arm/mm/proc-arm920.S b/arch/arm/mm/proc-arm920.S
+index 298c76b47749..31ac8acc34dc 100644
+--- a/arch/arm/mm/proc-arm920.S
++++ b/arch/arm/mm/proc-arm920.S
+@@ -434,7 +434,7 @@ arm920_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__arm920_proc_info,#object
+ __arm920_proc_info:
+diff --git a/arch/arm/mm/proc-arm922.S b/arch/arm/mm/proc-arm922.S
+index 824be3a0bc23..ca2c7ca8af21 100644
+--- a/arch/arm/mm/proc-arm922.S
++++ b/arch/arm/mm/proc-arm922.S
+@@ -412,7 +412,7 @@ arm922_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__arm922_proc_info,#object
+ __arm922_proc_info:
+diff --git a/arch/arm/mm/proc-arm925.S b/arch/arm/mm/proc-arm925.S
+index d40cff8f102c..a381a0c9f109 100644
+--- a/arch/arm/mm/proc-arm925.S
++++ b/arch/arm/mm/proc-arm925.S
+@@ -477,7 +477,7 @@ arm925_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ .macro arm925_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req, cache
+ 	.type	__\name\()_proc_info,#object
+diff --git a/arch/arm/mm/proc-arm926.S b/arch/arm/mm/proc-arm926.S
+index f3cd08f353f0..3188ab2bac61 100644
+--- a/arch/arm/mm/proc-arm926.S
++++ b/arch/arm/mm/proc-arm926.S
+@@ -460,7 +460,7 @@ arm926_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__arm926_proc_info,#object
+ __arm926_proc_info:
+diff --git a/arch/arm/mm/proc-arm940.S b/arch/arm/mm/proc-arm940.S
+index 1c26d991386d..4b8a00220cc9 100644
+--- a/arch/arm/mm/proc-arm940.S
++++ b/arch/arm/mm/proc-arm940.S
+@@ -340,7 +340,7 @@ __arm940_setup:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__arm940_proc_info,#object
+ __arm940_proc_info:
+diff --git a/arch/arm/mm/proc-arm946.S b/arch/arm/mm/proc-arm946.S
+index 2dc1c75a4fd4..555becf9c758 100644
+--- a/arch/arm/mm/proc-arm946.S
++++ b/arch/arm/mm/proc-arm946.S
+@@ -395,7 +395,7 @@ __arm946_setup:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 	.type	__arm946_proc_info,#object
+ __arm946_proc_info:
+ 	.long	0x41009460
+diff --git a/arch/arm/mm/proc-arm9tdmi.S b/arch/arm/mm/proc-arm9tdmi.S
+index 913c06e590af..ef517530130b 100644
+--- a/arch/arm/mm/proc-arm9tdmi.S
++++ b/arch/arm/mm/proc-arm9tdmi.S
+@@ -66,7 +66,7 @@ __arm9tdmi_setup:
+ 
+ 		.align
+ 
+-		.section ".proc.info.init", #alloc
++		.section ".proc.info.init", "a"
+ 
+ .macro arm9tdmi_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req
+ 		.type	__\name\()_proc_info, #object
+diff --git a/arch/arm/mm/proc-fa526.S b/arch/arm/mm/proc-fa526.S
+index 8120b6f4dbb8..dddf833fe000 100644
+--- a/arch/arm/mm/proc-fa526.S
++++ b/arch/arm/mm/proc-fa526.S
+@@ -185,7 +185,7 @@ fa526_cr1_set:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__fa526_proc_info,#object
+ __fa526_proc_info:
+diff --git a/arch/arm/mm/proc-feroceon.S b/arch/arm/mm/proc-feroceon.S
+index bb6dc34d42a3..b12b76bc8d30 100644
+--- a/arch/arm/mm/proc-feroceon.S
++++ b/arch/arm/mm/proc-feroceon.S
+@@ -571,7 +571,7 @@ feroceon_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ .macro feroceon_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req, cache:req
+ 	.type	__\name\()_proc_info,#object
+diff --git a/arch/arm/mm/proc-mohawk.S b/arch/arm/mm/proc-mohawk.S
+index f08308578885..d47d6c5cee63 100644
+--- a/arch/arm/mm/proc-mohawk.S
++++ b/arch/arm/mm/proc-mohawk.S
+@@ -416,7 +416,7 @@ mohawk_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__88sv331x_proc_info,#object
+ __88sv331x_proc_info:
+diff --git a/arch/arm/mm/proc-sa110.S b/arch/arm/mm/proc-sa110.S
+index d5bc5d702563..baba503ba816 100644
+--- a/arch/arm/mm/proc-sa110.S
++++ b/arch/arm/mm/proc-sa110.S
+@@ -196,7 +196,7 @@ sa110_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	.type	__sa110_proc_info,#object
+ __sa110_proc_info:
+diff --git a/arch/arm/mm/proc-sa1100.S b/arch/arm/mm/proc-sa1100.S
+index be7b611c76c7..75ebacc8e4e5 100644
+--- a/arch/arm/mm/proc-sa1100.S
++++ b/arch/arm/mm/proc-sa1100.S
+@@ -239,7 +239,7 @@ sa1100_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ .macro sa1100_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req
+ 	.type	__\name\()_proc_info,#object
+diff --git a/arch/arm/mm/proc-v6.S b/arch/arm/mm/proc-v6.S
+index c1c85eb3484f..1dd0d5ca27da 100644
+--- a/arch/arm/mm/proc-v6.S
++++ b/arch/arm/mm/proc-v6.S
+@@ -261,7 +261,7 @@ v6_crval:
+ 	string	cpu_elf_name, "v6"
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	/*
+ 	 * Match any ARMv6 processor core.
+diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
+index c4e8006a1a8c..48e0ef6f0dcc 100644
+--- a/arch/arm/mm/proc-v7.S
++++ b/arch/arm/mm/proc-v7.S
+@@ -644,7 +644,7 @@ __v7_setup_stack:
+ 	string	cpu_elf_name, "v7"
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ 	/*
+ 	 * Standard v7 proc info content
+diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
+index 1a49d503eafc..84459c1d31b8 100644
+--- a/arch/arm/mm/proc-v7m.S
++++ b/arch/arm/mm/proc-v7m.S
+@@ -93,7 +93,7 @@ ENTRY(cpu_cm7_proc_fin)
+ 	ret	lr
+ ENDPROC(cpu_cm7_proc_fin)
+ 
+-	.section ".init.text", #alloc, #execinstr
++	.section ".init.text", "ax"
+ 
+ __v7m_cm7_setup:
+ 	mov	r8, #(V7M_SCB_CCR_DC | V7M_SCB_CCR_IC| V7M_SCB_CCR_BP)
+@@ -177,7 +177,7 @@ ENDPROC(__v7m_setup)
+ 	string cpu_elf_name "v7m"
+ 	string cpu_v7m_name "ARMv7-M"
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ .macro __v7m_proc name, initfunc, cache_fns = nop_cache_fns, hwcaps = 0,  proc_fns = v7m_processor_functions
+ 	.long	0			/* proc_info_list.__cpu_mm_mmu_flags */
+diff --git a/arch/arm/mm/proc-xsc3.S b/arch/arm/mm/proc-xsc3.S
+index 1ac0fbbe9f12..42eaecc43cfe 100644
+--- a/arch/arm/mm/proc-xsc3.S
++++ b/arch/arm/mm/proc-xsc3.S
+@@ -496,7 +496,7 @@ xsc3_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ .macro xsc3_proc_info name:req, cpu_val:req, cpu_mask:req
+ 	.type	__\name\()_proc_info,#object
+diff --git a/arch/arm/mm/proc-xscale.S b/arch/arm/mm/proc-xscale.S
+index bdb2b7749b03..18ac5a1f8922 100644
+--- a/arch/arm/mm/proc-xscale.S
++++ b/arch/arm/mm/proc-xscale.S
+@@ -610,7 +610,7 @@ xscale_crval:
+ 
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc
++	.section ".proc.info.init", "a"
+ 
+ .macro xscale_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req, cache
+ 	.type	__\name\()_proc_info,#object
+-- 
+2.24.0.rc0.303.g954a862665-goog
+
