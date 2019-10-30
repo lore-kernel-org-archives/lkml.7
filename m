@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A532CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2724CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9BDB2087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B017220856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfJ3GFn (ORCPT
+        id S1727415AbfJ3GFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 02:05:43 -0400
+        Wed, 30 Oct 2019 02:05:47 -0400
 Received: from mga05.intel.com ([192.55.52.43]:63903 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbfJ3GFm (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 02:05:42 -0400
+        id S1727377AbfJ3GFq (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 02:05:46 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 23:05:42 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 23:05:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
-   d="scan'208";a="225217042"
+   d="scan'208";a="225217062"
 Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Oct 2019 23:05:40 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 29 Oct 2019 23:05:44 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v5 1/7] perf diff: Don't use hack to skip column length calculation
-Date:   Wed, 30 Oct 2019 14:04:24 +0800
-Message-Id: <20191030060430.23558-2-yao.jin@linux.intel.com>
+Subject: [PATCH v5 3/7] perf util: Count the total cycles of all samples
+Date:   Wed, 30 Oct 2019 14:04:26 +0800
+Message-Id: <20191030060430.23558-4-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191030060430.23558-1-yao.jin@linux.intel.com>
 References: <20191030060430.23558-1-yao.jin@linux.intel.com>
@@ -45,61 +45,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously we use a nasty hack to skip the hists__calc_col_len for
-block since this function is not very suitable for block column
-length calculation.
+We can get the per sample cycles by hist__account_cycles(). It's also
+useful to know the total cycles of all samples in order to get the
+cycles coverage for a single program block in further. For example,
 
-This patch removes the hack code and add a check at the entry of
-hists__calc_col_len to skip for block case.
+coverage = per block sampled cycles / total sampled cycles
+
+This patch creates a new argument 'total_cycles' in hist__account_cycles(),
+which will be added with the cycles of each sample.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/builtin-diff.c | 11 ++---------
- tools/perf/util/hist.c    |  2 ++
- 2 files changed, 4 insertions(+), 9 deletions(-)
+ tools/perf/builtin-annotate.c | 2 +-
+ tools/perf/builtin-diff.c     | 3 ++-
+ tools/perf/builtin-report.c   | 2 +-
+ tools/perf/builtin-top.c      | 3 ++-
+ tools/perf/util/hist.c        | 6 +++++-
+ tools/perf/util/hist.h        | 3 ++-
+ 6 files changed, 13 insertions(+), 6 deletions(-)
 
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 8db8fc9bddef..6ab0cc45b287 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -201,7 +201,7 @@ static int process_branch_callback(struct evsel *evsel,
+ 	if (a.map != NULL)
+ 		a.map->dso->hit = 1;
+ 
+-	hist__account_cycles(sample->branch_stack, al, sample, false);
++	hist__account_cycles(sample->branch_stack, al, sample, false, NULL);
+ 
+ 	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
+ 	return ret;
 diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 5281629c27b1..faf99a81ad3e 100644
+index 6728568fe5c4..376dbf10ad64 100644
 --- a/tools/perf/builtin-diff.c
 +++ b/tools/perf/builtin-diff.c
-@@ -765,13 +765,6 @@ static void block_hists_match(struct hists *hists_base,
+@@ -426,7 +426,8 @@ static int diff__process_sample_event(struct perf_tool *tool,
+ 			goto out_put;
+ 		}
+ 
+-		hist__account_cycles(sample->branch_stack, &al, sample, false);
++		hist__account_cycles(sample->branch_stack, &al, sample, false,
++				     NULL);
  	}
+ 
+ 	/*
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 7accaf8ef689..cdb436d6e11f 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -292,7 +292,7 @@ static int process_sample_event(struct perf_tool *tool,
+ 
+ 	if (ui__has_annotation() || rep->symbol_ipc) {
+ 		hist__account_cycles(sample->branch_stack, &al, sample,
+-				     rep->nonany_branch_mode);
++				     rep->nonany_branch_mode, NULL);
+ 	}
+ 
+ 	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index d96f24c8770d..14c52e4d47f6 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -725,7 +725,8 @@ static int hist_iter__top_callback(struct hist_entry_iter *iter,
+ 		perf_top__record_precise_ip(top, he, iter->sample, evsel, al->addr);
+ 
+ 	hist__account_cycles(iter->sample->branch_stack, al, iter->sample,
+-		     !(top->record_opts.branch_stack & PERF_SAMPLE_BRANCH_ANY));
++		     !(top->record_opts.branch_stack & PERF_SAMPLE_BRANCH_ANY),
++		     NULL);
+ 	return 0;
  }
  
--static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
--{
--	/* Skip the calculation of column length in output_resort */
--	he->filtered = true;
--	return 0;
--}
--
- static void hists__precompute(struct hists *hists)
- {
- 	struct rb_root_cached *root;
-@@ -820,8 +813,8 @@ static void hists__precompute(struct hists *hists)
- 				if (bh->valid && pair_bh->valid) {
- 					block_hists_match(&bh->block_hists,
- 							  &pair_bh->block_hists);
--					hists__output_resort_cb(&pair_bh->block_hists,
--								NULL, filter_cb);
-+					hists__output_resort(&pair_bh->block_hists,
-+							     NULL);
- 				}
- 				break;
- 			default:
 diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 679a1d75090c..daa6eef4fde0 100644
+index a7fa061987e4..0e27d6830011 100644
 --- a/tools/perf/util/hist.c
 +++ b/tools/perf/util/hist.c
-@@ -80,6 +80,8 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
- 	int symlen;
- 	u16 len;
+@@ -2572,7 +2572,8 @@ int hists__unlink(struct hists *hists)
+ }
  
-+	if (h->block_info)
-+		return;
- 	/*
- 	 * +4 accounts for '[x] ' priv level info
- 	 * +2 accounts for 0x prefix on raw addresses
+ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+-			  struct perf_sample *sample, bool nonany_branch_mode)
++			  struct perf_sample *sample, bool nonany_branch_mode,
++			  u64 *total_cycles)
+ {
+ 	struct branch_info *bi;
+ 
+@@ -2599,6 +2600,9 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+ 					nonany_branch_mode ? NULL : prev,
+ 					bi[i].flags.cycles);
+ 				prev = &bi[i].to;
++
++				if (total_cycles)
++					*total_cycles += bi[i].flags.cycles;
+ 			}
+ 			free(bi);
+ 		}
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 6a186b668303..4d87c7b4c1b2 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -527,7 +527,8 @@ unsigned int hists__sort_list_width(struct hists *hists);
+ unsigned int hists__overhead_width(struct hists *hists);
+ 
+ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+-			  struct perf_sample *sample, bool nonany_branch_mode);
++			  struct perf_sample *sample, bool nonany_branch_mode,
++			  u64 *total_cycles);
+ 
+ struct option;
+ int parse_filter_percentage(const struct option *opt, const char *arg, int unset);
 -- 
 2.17.1
 
