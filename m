@@ -2,101 +2,108 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A90CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408D9CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7878720856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B8C20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:05:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I3AwHM8N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kptuIiTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfJ3VEk (ORCPT
+        id S1727151AbfJ3VFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:04:40 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44102 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfJ3VEj (ORCPT
+        Wed, 30 Oct 2019 17:05:33 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34869 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfJ3VFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:04:39 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UL4NL4128665;
-        Wed, 30 Oct 2019 21:04:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=m8BQpoKL4gVtfFSx2IrDIKqn/JTZlYXtuUr58S1gZ0c=;
- b=I3AwHM8NFCoaWStcPR5VaVGVIUPSBRnCM7BT08dsWJxFHCaiN0sPx30k6Frn6xk4ePSh
- ye9qZ1KP80FnHuA3AnUQOTxXLAeW+F8BcKWvQ/yE7kMalGp+Ck0yPY66Fbm3kvqZ0UD3
- FOhEB97BcYwp6rZ0H//q0bAl2+H6RSGius9m6L0EO6dCTBmbiSUP95fyGLi5krBsf7eS
- uR6ZQ0lLUgcTGmKJMere0GXgkBqvGy0gtWfkiUQVJJL3orkArm5QmepQ+3zKaByfd7FD
- 1UoYP2SKisUuCPDV2d+M133BuqoPr1M/ZUKyfnyGmhUKaX7Cc5tnpXze1XrjSdXB1QLu pw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vxwhff2cu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 21:04:29 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UL4OsX130182;
-        Wed, 30 Oct 2019 21:04:28 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vxwhwtage-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 21:04:24 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9UL3Iov013454;
-        Wed, 30 Oct 2019 21:03:19 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 30 Oct 2019 14:03:18 -0700
-Date:   Wed, 30 Oct 2019 17:03:14 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>
-Subject: Re: [PATCH] mm: slab: make page_cgroup_ino() to recognize
- non-compound slab pages properly
-Message-ID: <20191030210314.2el7wysojucqypoq@ca-dmjordan1.us.oracle.com>
-References: <20191025232710.4081957-1-guro@fb.com>
+        Wed, 30 Oct 2019 17:05:32 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y6so2717914lfj.2;
+        Wed, 30 Oct 2019 14:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nkaIP1ijgOYFqnsYglfYHdRc24DvX3SU4ZQ7OZUvKUM=;
+        b=kptuIiTdPy3kXqZuC8a1zJUJ8GiyvG8oF0rvc9IU9wDZw+29au1yUPtmzXszddcYzd
+         M4F3NNfYrb3Asgkjh7UomGi+SEIpSoqBaRfQ5yP1UzeG0KidA3l7IwfTlzX21uhnjMuk
+         rn2eO06u9iGMQTcyN6DOFsqGoiLb0QM5pXCYH+xYfKhGRaAeuuXRyhFFcnAYFOVnPvGj
+         yDdNlH4ya81pCSv8Rhd9Hnd8oGqeL9ayv/K+HRsVhhlEmkbjqt2E/OkFOWnbRBT8GRw5
+         QTxDFDzg0H2a8ZUAYzSawhbOxYCmuDT9YIwgcaIYUxKdIAEadcjyz/jMjo507aDdN7bR
+         ZUKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nkaIP1ijgOYFqnsYglfYHdRc24DvX3SU4ZQ7OZUvKUM=;
+        b=r6uoaekrmWNUaavEBQaBJYsQuKcM+iaAfgY/JZxPkcm33bkgIi3sx2+n5YLcYS5i+p
+         M+al8BIZ00LziQHOCNkUANuLPheDGS5japZFVl2fbqcnms3G7HUiTtnQffzVwjwf9hVz
+         cuFiXhOWOY295Xla8xLAcKkkTLWTszg7f6jaBH9eR/G/QaM7AZufKj4lqVdfwp80yGg+
+         V8+g9sxG3ICT2UBUy6LBJq1B2Ag0RWy7mKW3rZhmToizGUGJj2rFmb8grLYThgbfKnKU
+         Yq1Al293Dal6UIx8uswNISv5CanRs1gydS7MB29ZwIl3YmHjaHlyvYWybw5ma3ElItRE
+         Od1Q==
+X-Gm-Message-State: APjAAAXYLCWv6HTqP61+JRzO6dDAssaRQ1e2f17ulYdTYGiYPheRcbyu
+        cLFY1SkNx2jlDHCtvEY2PoaEHW1N
+X-Google-Smtp-Source: APXvYqxrX4VoN4tXIb0m+jXClOMlA0A0NLHPTNUipKvKg8IRFWXzcRaxKR2RmNx78kgjKghJZ0AFVQ==
+X-Received: by 2002:a19:5e53:: with SMTP id z19mr146580lfi.111.1572469529984;
+        Wed, 30 Oct 2019 14:05:29 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id q15sm481394lfb.84.2019.10.30.14.05.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2019 14:05:29 -0700 (PDT)
+Subject: Re: [PATCH v2 06/17] dt-bindings: cpufreq: Add binding for NVIDIA
+ Tegra20/30
+To:     Rob Herring <robh@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191024221416.14197-1-digetx@gmail.com>
+ <20191024221416.14197-7-digetx@gmail.com> <20191029214258.GA18586@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b81fbaac-3566-1153-3c5c-c6b3ba2db522@gmail.com>
+Date:   Thu, 31 Oct 2019 00:05:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025232710.4081957-1-guro@fb.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=729
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910300183
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=816 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910300184
+In-Reply-To: <20191029214258.GA18586@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roman,
-
-On Fri, Oct 25, 2019 at 04:27:10PM -0700, Roman Gushchin wrote:
-> page_cgroup_ino() doesn't return a valid memcg pointer for non-compund
-> slab pages, because it depends on PgHead AND PgSlab flags to be set
-> to determine the memory cgroup from the kmem_cache.
-> It's correct for compound pages, but not for generic small pages. Those
-> don't have PgHead set, so it ends up returning zero.
+30.10.2019 00:42, Rob Herring пишет:
+> On Fri, 25 Oct 2019 01:14:05 +0300, Dmitry Osipenko wrote:
+>> Add device-tree binding that describes CPU frequency-scaling hardware
+>> found on NVIDIA Tegra20/30 SoCs.
+>>
+>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 56 +++++++++++++++++++
+>>  1 file changed, 56 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>>
 > 
-> Fix this by replacing the condition to PageSlab() && !PageTail().
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
 
-You may also want to update the comment above memcg_from_slab_page():
-
- * So this function assumes that the page can pass PageHead() and PageSlab()
- * checks.
+Thanks!
