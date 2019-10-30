@@ -2,205 +2,160 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C02ECA9ECB
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C35EC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 254152087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:28:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d01SDI/6"
+	by mail.kernel.org (Postfix) with ESMTP id 7127620874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572478319;
+	bh=ElTGOSuLgUTQYq8XexZSn2d5bXU2JaveiSKeV6HCZy8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fbnIofrD9wBvcn8HL/JRNZDr6K76Etsrp8ND2xcHYFERNbnzmG3aescJ9n21XKEvj
+	 yIXSqtX+S/rU17Z8gzqrqtkI1XNN6ph2TGu1j04jwotr4DzEL3s+6l4uMk4PsfqGiG
+	 LKWh7UeIcNsl7shTdQdcOM6CZToU0+s+xwoEtoig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfJ3X2z (ORCPT
+        id S1727801AbfJ3Xb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 19:28:55 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38582 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbfJ3X2y (ORCPT
+        Wed, 30 Oct 2019 19:31:58 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41768 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbfJ3Xb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 19:28:54 -0400
-Received: by mail-ed1-f65.google.com with SMTP id d23so558691edr.5;
-        Wed, 30 Oct 2019 16:28:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+24XCwnTFDCBoW4hF1216FJ7KR0Ap2KPs77lPcv6LTI=;
-        b=d01SDI/6AOYdVlceGpy7zctYdOJmVK1FfXa3bDLUAS8FdNoHRYxW3UFMLIalQSR5sE
-         a6rD5APUZ7rVb+gTnk4hblmDHtK5oSZmNfN8ZPPZ01dbufK5lvNHlxcIF96inVj0Vk8b
-         oyemJ+L+C3Re2hhdnyk9k66GgVMDVPzUSZRLB1dG6SvGb/uSq2mGmesHRdsvHbMmJjQj
-         HB5JBa/mMeWGbAq+g5ZaNb1FN58uadZQa3jf0QArcfJ+rWzDEKfDLqBPRDoZTzs6Cagh
-         JOYt2Hx36ZkAQY4CD+UyEzwfS9gXinNuV9r8/aZKqh3mKzCm8rrNdusJD3KH0d1bOeB7
-         DXIg==
+        Wed, 30 Oct 2019 19:31:58 -0400
+Received: by mail-oi1-f193.google.com with SMTP id g81so3564757oib.8;
+        Wed, 30 Oct 2019 16:31:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+24XCwnTFDCBoW4hF1216FJ7KR0Ap2KPs77lPcv6LTI=;
-        b=cWvf0Zd+WHJUYB+PULrHugvtoe6oJb4qKc/f6QrbII3YjuttFFcwsCRg7OUOM6RdtV
-         /nCYXvLmRO8e+s4BNVXY6UYZEcaXeN1Ngk6U3gr5VspG31Tf+viBuUY8PJxxYc1g1aUi
-         A0APF45qZDXA5Y69wIlAWxsBXWFwVyI/naLcuG/kfPhSOQeGilkA26xHqcHKu0FdUD72
-         PfhLbG9qUs0K2sA98G9MW2l79UZJ7Dx6gY2uDZkHsPQuIMtO60nTPfdKo9Rfu6IZ5ygG
-         DW4F0JQBgGwKaN2MGJKSqV0xnNnT/TPsX7K/borGdJ3bQCMXpjcVj3q7yGDrGUwYj1pk
-         p+yg==
-X-Gm-Message-State: APjAAAV35ue/NOWB1uZWHbx//ghXuBM46ZMxFowjXURMeJozl9oZISrH
-        An/Nq876Kc/ARhqL74GrcSr3LDBJ
-X-Google-Smtp-Source: APXvYqzBk36HYQLTGOfKAZNpxuATidha1q1v50qS12/sNZIuQCMKRUXpPIrUdtSx5cspEdW8UL/u+A==
-X-Received: by 2002:a50:f096:: with SMTP id v22mr2663214edl.149.1572478131764;
-        Wed, 30 Oct 2019 16:28:51 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id g43sm33546edb.14.2019.10.30.16.28.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 16:28:51 -0700 (PDT)
-Subject: Re: [RFC PATCH 2/3] dt-bindings: net: phy: Add support for AT803X
-To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org
-References: <20191030224251.21578-1-michael@walle.cc>
- <20191030224251.21578-3-michael@walle.cc>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <408bb56b-efe9-21c4-0177-2d433a7c20ce@gmail.com>
-Date:   Wed, 30 Oct 2019 16:28:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rXx2GYmLM7U7zBzNY7wC7H96LX/I00Fb3y4/X6I00lM=;
+        b=hKByCjWvdYjFKbdtog7rWeR0HGGmf0Jr5yyzP5X7S1WtPL4m6Pgpvn5zydRkSDSm3U
+         R/jqEnwseYIFN/rYz1GVnD4ruIpSvJLyt+sHGu3B1t7NKD41Kq3PgmiHWRgE8LEP5pqQ
+         MixcmOd0ENTgjyL5IyOAZVAtup+t5AjR8Kl0apEApwx5WUAJ+YidobrTQNVC/szvOw4b
+         wkpcEnq/1soPacFxuRwPsz+pUKMwHqp58eDswRRJQmzn4W6dd9eCM0ZJR4mGs583IABE
+         JnRNF0Ub16APJTj+Eg9sLoDlF9RaMER+yFfXIA+/yu9DiP5LU5enms8YxICIWZr+cYU5
+         0BJQ==
+X-Gm-Message-State: APjAAAXUpfXOfmcKP/bWNyeRmImEHj8WqXua9zel/dOKmh5Cg5C5/SKa
+        Xs/PMqJcR21GkvS3FP0Nwc8FhGQl8QID/x4Bwio=
+X-Google-Smtp-Source: APXvYqw845lK8btbYbzWMJIQX20f12jmmkksgbHhAetNT1BSGuSrcZ+htSZfoomUuVAybDhFr7bRJXfzXcMuAzOrof4=
+X-Received: by 2002:aca:bdc2:: with SMTP id n185mr1535587oif.103.1572478315453;
+ Wed, 30 Oct 2019 16:31:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191030224251.21578-3-michael@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <c1aadeea-7904-1455-5393-c4998fbd8037@linux.intel.com> <20191030221436.GA261632@google.com>
+In-Reply-To: <20191030221436.GA261632@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 31 Oct 2019 00:31:44 +0100
+Message-ID: <CAJZ5v0jiSKza2rM9=4=qw5UEEp6rpBkJwPHePSzikQhJF7TpLw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie link
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        martin.blumenstingl@googlemail.com,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/30/19 3:42 PM, Michael Walle wrote:
-> Document the Atheros AR803x PHY bindings.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  .../bindings/net/atheros,at803x.yaml          | 58 +++++++++++++++++++
->  include/dt-bindings/net/atheros-at803x.h      | 13 +++++
->  2 files changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/atheros,at803x.yaml
->  create mode 100644 include/dt-bindings/net/atheros-at803x.h
-> 
-> diff --git a/Documentation/devicetree/bindings/net/atheros,at803x.yaml b/Documentation/devicetree/bindings/net/atheros,at803x.yaml
-> new file mode 100644
-> index 000000000000..60500fd90fd8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/atheros,at803x.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/atheros,at803x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atheros AR803x PHY
-> +
-> +maintainers:
-> +  - TBD
-> +
-> +description: |
-> +  Bindings for Atheros AR803x PHYs
-> +
-> +allOf:
-> +  - $ref: ethernet-phy.yaml#
-> +
-> +properties:
-> +  atheros,clk-out-frequency:
-> +    description: Clock output frequency in Hertz.
-> +    enum: [ 25000000, 50000000, 62500000, 125000000 ]
-> +
-> +  atheros,clk-out-strength:
-> +    description: Clock output driver strength.
-> +    enum: [ 0, 1, 2 ]
-> +
-> +  atheros,keep-pll-enabled:
-> +    description: |
-> +      If set, keep the PLL enabled even if there is no link. Useful if you
-> +      want to use the clock output without an ethernet link.
+On Wed, Oct 30, 2019 at 11:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Heiner, Rajat]
+>
+> On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
+> > On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
+> > > [+cc Rafael, linux-pm, beginning of discussion at
+> > > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
+> > >
+> > > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
+> > > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+> > > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+> > > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+> > > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
+> > > > > > > of changing link width and speed on the fly.
+> > > > > Please add more details about why this is needed.  Since you're adding
+> > > > > sysfs files, it sounds like it's not actually the *driver* that needs
+> > > > > this; it's something in userspace?
+> > > > We have use cases to change the link speed and width on the fly.
+> > > > One is EMI check and other is power saving.  Some battery backed
+> > > > applications have to switch PCIe link from higher GEN to GEN1 and
+> > > > width to x1. During the cases like external power supply got
+> > > > disconnected or broken. Once external power supply is connected then
+> > > > switch PCIe link to higher GEN and width.
+> > > That sounds plausible, but of course nothing there is specific to the
+> > > Intel Gateway, so we should implement this generically so it would
+> > > work on all hardware.
+> > Agree.
+> > >
+> > > I'm not sure what the interface should look like -- should it be a
+> > > low-level interface as you propose where userspace would have to
+> > > identify each link of interest, or is there some system-wide
+> > > power/performance knob that could tune all links?  Cc'd Rafael and
+> > > linux-pm in case they have ideas.
+> >
+> > To my knowledge sysfs is the appropriate way to go.
+> > If there are any other best possible knobs, will be helpful.
+>
+> I agree sysfs is the right place for it; my question was whether we
+> should have files like:
+>
+>   /sys/.../0000:00:1f.3/pcie_speed
+>   /sys/.../0000:00:1f.3/pcie_width
+>
+> as I think this patch would add (BTW, please include sample paths like
+> the above in the commit log), or whether there should be a more global
+> thing that would affect all the links in the system.
+>
+> I think the low-level files like you propose would be better because
+> one might want to tune link performance differently for different
+> types of devices and workloads.
+>
+> We also have to decide if these files should be associated with the
+> device at the upstream or downstream end of the link.  For ASPM, the
+> current proposal [1] has the files at the downstream end on the theory
+> that the GPU, NIC, NVMe device, etc is the user-recognizable one.
+> Also, neither ASPM nor link speed/width make any sense unless there
+> *is* a device at the downstream end, so putting them there
+> automatically makes them visible only when they're useful.
+>
+> Rafael had some concerns about the proposed ASPM interface [2], but I
+> don't know what they are yet.
 
-This is more of a policy than a hardware description. Implementing this
-has a PHY tunable, possibly as a form of auto-power down
+I was talking about the existing ASPM interface in sysfs.  The new one
+I still have to review, but I'm kind of wondering what about people
+who used the old one?  Would it be supported going forward?
 
-> +    type: boolean
-> +
-> +  atheros,rgmii-io-1v8:
-> +    description: |
-> +      The PHY supports RGMII I/O voltages of 2.5V, 1.8V and 1.5V. By default,
-> +      the PHY uses a voltage of 1.5V. If this is set, the voltage will changed
-> +      to 1.8V.
-
-will be changed?
-
-This looks like a possibly dangerous configuration as it really can lead
-to some good damage happening on the pins if there is an incompatible
-voltage on the MAC and PHY side... of course, you have no way to tell
-ahead of time other than by looking at the board schematics, lovely.
-
-Does the PHY come up in some sort of super isolatation mode by default
-at least?
--- 
-Florian
+> For ASPM we added a "link_pm" directory, and maybe that's too
+> specific.  Maybe it should be a generic "link_mgt" or even "pcie"
+> directory that could contain both the ASPM and width/speed files.
+>
+> There's also a change coming to put AER stats in something like this:
+>
+>   /sys/.../0000:00:1f.3/aer_stats/correctable_rx_err
+>   /sys/.../0000:00:1f.3/aer_stats/correctable_timeout
+>   /sys/.../0000:00:1f.3/aer_stats/fatal_TLP
+>   ...
+>
+> It would certainly be good to have some organizational scheme or we'll
+> end up with a real hodge-podge.
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/aspm&id=ad46fe1c733656611788e2cd59793e891ed7ded7
+> [2] https://lore.kernel.org/r/CAJZ5v0jdxR4roEUC_Hs3puCzGY4ThdLsi_XcxfBUUxqruP4z7A@mail.gmail.com
