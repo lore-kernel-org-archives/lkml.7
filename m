@@ -2,97 +2,108 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EC2CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA51CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8251E2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6252087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DSuy0LLG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OrTeov0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfJ3Srd (ORCPT
+        id S1728347AbfJ3Sst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 14:47:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56610 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbfJ3Srd (ORCPT
+        Wed, 30 Oct 2019 14:48:49 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:45977 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfJ3Sst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 14:47:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1nzZur3YfoSXJfJqcb8vdwf0YnsifQ3iInz0JeAESnM=; b=DSuy0LLGbS6WvGW3toK6pj9Vh
-        fmm+cUxHijD4K2csXzP3wpKc2iycMAsmVgmhEWsOP3EkdxXNl30gWTCL3/ekj1BLIe9UbB4WVonRi
-        bIOG9sbEQxke3qOqJoSm916BzE5RMe0KGpPqSz76rQ0WRWRNr04SbMF3WL2lQfSD9/NCQ+0TmIPH5
-        R4EUBJRY94a+lFWUp5K5Tl9UQwJfR2pop0+kbUnUvqoJsZWwuhJBHQl3KjQ71Cpy9VyHCMWleKQFA
-        dEulRZFqSWHiF3bmAhfaEZy7NI4hw2oQmYjQooK8ZJMjKrKbRwKiwTF5r4XjNaq8hsAH0oTF3JfbG
-        J7+azzWaQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPt08-0005EA-VW; Wed, 30 Oct 2019 18:47:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1485630025A;
-        Wed, 30 Oct 2019 19:46:22 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 55D292B44D06F; Wed, 30 Oct 2019 19:47:23 +0100 (CET)
-Date:   Wed, 30 Oct 2019 19:47:23 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Will Deacon <will.deacon@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
-Message-ID: <20191030184723.GG5671@hirez.programming.kicks-ass.net>
-References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
- <20190806161741.GC21454@redhat.com>
- <20190806171515.GR2349@hirez.programming.kicks-ass.net>
- <20190807095657.GA24112@redhat.com>
- <20191029184739.GA3079@worktop.programming.kicks-ass.net>
- <20191030175231.GF5671@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030175231.GF5671@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 30 Oct 2019 14:48:49 -0400
+Received: by mail-pl1-f202.google.com with SMTP id c8so2127882pll.12
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=RxCCtsUMffCpcw7QGLE4bk1qQR+dpNRsJ71EwxdG0Xk=;
+        b=OrTeov0MyfaAmSyyfPGPKLg0eXpE53ZgPavJXpQQS8qz/f0XZUwmrS2wwKKaB2XVNc
+         DXZZ9vO41W/XihEybrbg3MGHikco/mfRz7ijImQGna9k0suLyvKl+OquRhFNdJTZ6Ddl
+         U7/wo9xULrSL3vFbr+mfi2XlI1z081HHasdMygINPFdd3zFw0Q2D36PmcAZVesg9OgZn
+         flYWUHl0Xqkoa5L/fXKxQRNABEIMyfEdcCm64me3SzYZpN2taFoxBIcD59LaHk10iTAx
+         g3CWUGR6buA84/x7ICNTEUKHOKc35SQuvHkXLF4colim3CrzEqYB2fba4zqGxTLNKiEf
+         oK0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=RxCCtsUMffCpcw7QGLE4bk1qQR+dpNRsJ71EwxdG0Xk=;
+        b=Zw8csCFRsTGgQ1WoxrwtT8Bh1gua7KFFi0w8Bv9l2rGMZmaciagaKl9TfN8EuMDQv9
+         HH9rnKz2FC+irqoOX9k1EWCG+EwfCyiY7nZ6tSZdAY5ZIeODazxAeL6n4p8ojVNVHKOa
+         b/Xcd7bmB10dpVBa2q3R2YLXDUkcgDD4DQRuESk0a8RbINb8o58f5Z2ZCSKlSZAhtvP8
+         W+5Hicx+F115hT8mVyhv8FsN6lXrGr21LS5d01zwB4fcr9A8PwYilhp8uZ5AIpVdEoDD
+         feA7SHPDOR/A9O9/d+RG3SsdyHubepcSGMU5uOC/wVZh5ds6mwZ/P2HCTSLhOwALiYwF
+         aBNA==
+X-Gm-Message-State: APjAAAVoxnOvroQ2J38Ktgystw7BNhKDVOnBaZFmvvvx4dnyEQ8rl3tu
+        mzEwnLN+JsgCPVVBKzLB9g7VPG0ouEt4PA==
+X-Google-Smtp-Source: APXvYqwiaSVnPpt9SNJjIcQs076rWEC2mGKAMEx5JMSKGZKIg45XQxwBTXX346eXp9II+TsQncwbggSHDgvvHQ==
+X-Received: by 2002:a63:dd17:: with SMTP id t23mr1081237pgg.134.1572461328271;
+ Wed, 30 Oct 2019 11:48:48 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 11:48:44 -0700
+Message-Id: <20191030184844.84219-1-edumazet@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: [PATCH] dma-debug: increase HASH_SIZE
+From:   Eric Dumazet <edumazet@google.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 06:52:31PM +0100, Peter Zijlstra wrote:
-> On Tue, Oct 29, 2019 at 07:47:39PM +0100, Peter Zijlstra wrote:
-> > I've made these changes. Now let me go have a play with that second
-> > waitqueue.
-> 
-> What I've ended up with is a 'custom' waitqueue and an rcuwait. The
-> rcuwait conveniently got around the tedious preempt_enable/disable
-> around the __percpu_up_read() wakeup.
-> 
-> I realized that up_read will only ever have to wake a (single) blocked
-> writer, never a series of readers.
-> 
-> Compile tested only, I'll build and boot test once i've had dinner.
+With modern NIC, it is not unusual having about ~256,000 active dma
+mappings. Hash size of 1024 buckets is too small.
 
-It seems to boot and build a kernel, it must be perfect ;-)
+Forcing full cache line per bucket does not seem useful,
+especially now that we have a contention on free_entries_lock
+for allocations and freeing of entries. Better using space
+to fit more buckets.
 
-I think I'll go split this into a number of smaller patches:
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ kernel/dma/debug.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- - move lockdep_map into percpu_rwsem and stop using the rwsem one
- - use bool
- - move the __this_cpu_{inc,dec} into the slowpath
- - rework __percpu_down_read() as per your earlier suggestion
- - replace rwsem with wait_queue + atomic_t
+diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+index 4ad74f5987ea9e95f9bb5e2d1592254e367d24fb..35e2a853bff9c482d789ab331d79aaee07753a97 100644
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -27,7 +27,7 @@
+ 
+ #include <asm/sections.h>
+ 
+-#define HASH_SIZE       1024ULL
++#define HASH_SIZE       16384ULL
+ #define HASH_FN_SHIFT   13
+ #define HASH_FN_MASK    (HASH_SIZE - 1)
+ 
+@@ -87,7 +87,7 @@ typedef bool (*match_fn)(struct dma_debug_entry *, struct dma_debug_entry *);
+ struct hash_bucket {
+ 	struct list_head list;
+ 	spinlock_t lock;
+-} ____cacheline_aligned_in_smp;
++};
+ 
+ /* Hash list to save the allocated dma addresses */
+ static struct hash_bucket dma_entry_hash[HASH_SIZE];
+-- 
+2.24.0.rc0.303.g954a862665-goog
 
-that might help make all this slightly easier to read.
