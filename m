@@ -2,216 +2,133 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1A8CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6A6CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538B9208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YQ8JrjFk"
+	by mail.kernel.org (Postfix) with ESMTP id BE5F021835
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572450909;
+	bh=1fs3qqd4O57VF5HWpCFLDPCsDsLjL3x6D7m8D8Cgxq0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yB3z1zTOZsWyVpP3jHzTGzmO9EhHNI+bnY2BiJxxDFJQkoPCtaqS8P0HIK/uJr1NO
+	 m4ocn0UJGaHdDCavsL2YNyN0L+B15VREFBZyNOrnPUjFQV7hW9Wmp/by8u2SoZv3ib
+	 SGGOmI7pZBbSUYuHBFBrete+3IpapG/8bsAlxiew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbfJ3PzC (ORCPT
+        id S1728531AbfJ3PzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 30 Oct 2019 11:55:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728512AbfJ3PzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 30 Oct 2019 11:55:02 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37607 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfJ3Py7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:54:59 -0400
-Received: by mail-wr1-f65.google.com with SMTP id e11so2912744wrv.4
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FgmJFc69aJGBfN43Lu4UDpX3eu2jhzY+mRsGnXR2dN8=;
-        b=YQ8JrjFkp6XLfBlPGUCLqHhaC6ro+clm5a1vsZRrj0w1wRsTIWAq0+OP/rWqhne4JZ
-         rTzIjBLdfjYc+US6nnKjMu07xq0zXfLtC3COLWnr04KS/RUqUCWPmRdhPJ7K03Qub2LC
-         wnVdo4PZcj2il8ZcWV8GQeSE4nT0O2MSgdAbw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=FgmJFc69aJGBfN43Lu4UDpX3eu2jhzY+mRsGnXR2dN8=;
-        b=kZGyRx02Un6IWrkTBLmqNiCU9LI+tTuBRS4a0fJsvEU7n4x9HfTm28Xw8vjGYdPqc8
-         xZDw3ykzYqB8Ypjp71pJ56LNCRqaGyrJ2s1Q8vymYdB/F7sN/2aAU/gapZwEnxDjq7RD
-         2lIOvFMhUpPQ4lIQj8gOdvd5QqRH7a0ufLmG0tTL8YdAPK0JFsn+ssV6alEbvD7Mxpwu
-         SWj99nu1tOZg4PLAACWadiBWeEA6Y22gBESL6TYuq2go3q27UPxiVeSQD4E/exVEZ8Bd
-         W1PFkIyqwu06eIQkuC67+aFZTJNpBi8LVBkkAOWWQU7RHHSivAfm5gT+mjbRWTSV2KEH
-         kW/g==
-X-Gm-Message-State: APjAAAUJzuTZI6aLAEL/O+on5qfHdqv9S7BXiiOP3pZ+uR4xP0efM2y2
-        w9RKTW+4fkTr4HjB16slI9pRRg==
-X-Google-Smtp-Source: APXvYqw1WJjIbOmeus2GIdvdbFV9JrCvx3qonEXRRGFUrDLsS2mD90po6hHglU+cnBz+gj9F81bRmw==
-X-Received: by 2002:adf:ed84:: with SMTP id c4mr482461wro.333.1572450896061;
-        Wed, 30 Oct 2019 08:54:56 -0700 (PDT)
-Received: from shitalt.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id g184sm499931wma.8.2019.10.30.08.54.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 30 Oct 2019 08:54:55 -0700 (PDT)
-From:   Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Vikram Prakash <vikram.prakash@broadcom.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vikas Gupta <vikas.gupta@broadcom.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org, bcm-kernel-feedback-list@broadcom.com,
-        netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Subject: [PATCH net-next V4 3/3] bnxt_en: Add support to collect crash dump via ethtool
-Date:   Wed, 30 Oct 2019 21:24:24 +0530
-Message-Id: <1572450864-16761-4-git-send-email-sheetal.tigadoli@broadcom.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1572450864-16761-1-git-send-email-sheetal.tigadoli@broadcom.com>
-References: <1572450864-16761-1-git-send-email-sheetal.tigadoli@broadcom.com>
+Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F31D52087E;
+        Wed, 30 Oct 2019 15:54:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572450902;
+        bh=1fs3qqd4O57VF5HWpCFLDPCsDsLjL3x6D7m8D8Cgxq0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fbUh0OOvNu36ULyD3QAh03yHE3rRhXGWbKDyeMi9tPi96WsY6hSiR5pVp1fgwQWOI
+         E5iNGjLClfi7hoY1Gj5Yus3ZRsMnesnVJAxVEy5KzI0WKKvZWf6NaLKI7UaZQ5gFON
+         1Up9MhjpEYdwyzzPifm2ZP3iYXKcx38OXoiShAPU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Hu Shiyuan <hushiyuan@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 20/38] perf c2c: Fix memory leak in build_cl_output()
+Date:   Wed, 30 Oct 2019 11:53:48 -0400
+Message-Id: <20191030155406.10109-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
+References: <20191030155406.10109-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-Driver supports 2 types of core dumps.
+[ Upstream commit ae199c580da1754a2b051321eeb76d6dacd8707b ]
 
-1. Live dump - Firmware dump when system is up and running.
-2. Crash dump - Dump which is collected during firmware crash
-                that can be retrieved after recovery.
-Crash dump is currently supported only on specific 58800 chips
-which can be retrieved using OP-TEE API only, as firmware cannot
-access this region directly.
+There is a memory leak problem in the failure paths of
+build_cl_output(), so fix it.
 
-User needs to set the dump flag using following command before
-initiating the dump collection:
-
-    $ ethtool -W|--set-dump eth0 N
-
-Where N is "0" for live dump and "1" for crash dump
-
-Command to collect the dump after setting the flag:
-
-    $ ethtool -w eth0 data Filename
-
-v3: Modify set_dump to support even when CONFIG_TEE_BNXT_FW=n.
-Also change log message to netdev_info().
-
-Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/4d3c0178-5482-c313-98e1-f82090d2d456@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.h     |  3 ++
- .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 37 ++++++++++++++++++-
- .../net/ethernet/broadcom/bnxt/bnxt_ethtool.h |  2 +
- 3 files changed, 40 insertions(+), 2 deletions(-)
+ tools/perf/builtin-c2c.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-index 09437150f818..3e7d1fb1b0b1 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -1807,6 +1807,9 @@ struct bnxt {
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 763c2edf52e7d..1452e5153c604 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2626,6 +2626,7 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 	bool add_sym   = false;
+ 	bool add_dso   = false;
+ 	bool add_src   = false;
++	int ret = 0;
  
- 	u8			num_leds;
- 	struct bnxt_led_info	leds[BNXT_MAX_LED];
-+	u16			dump_flag;
-+#define BNXT_DUMP_LIVE		0
-+#define BNXT_DUMP_CRASH		1
+ 	if (!buf)
+ 		return -ENOMEM;
+@@ -2644,7 +2645,8 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 			add_dso = true;
+ 		} else if (strcmp(tok, "offset")) {
+ 			pr_err("unrecognized sort token: %s\n", tok);
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto err;
+ 		}
+ 	}
  
- 	struct bpf_prog		*xdp_prog;
+@@ -2667,13 +2669,15 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 		add_sym ? "symbol," : "",
+ 		add_dso ? "dso," : "",
+ 		add_src ? "cl_srcline," : "",
+-		"node") < 0)
+-		return -ENOMEM;
++		"node") < 0) {
++		ret = -ENOMEM;
++		goto err;
++	}
  
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index 51c140476717..f2220b826d61 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -3311,6 +3311,24 @@ static int bnxt_get_coredump(struct bnxt *bp, void *buf, u32 *dump_len)
- 	return rc;
+ 	c2c.show_src = add_src;
+-
++err:
+ 	free(buf);
+-	return 0;
++	return ret;
  }
  
-+static int bnxt_set_dump(struct net_device *dev, struct ethtool_dump *dump)
-+{
-+	struct bnxt *bp = netdev_priv(dev);
-+
-+	if (dump->flag > BNXT_DUMP_CRASH) {
-+		netdev_info(dev, "Supports only Live(0) and Crash(1) dumps.\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!IS_ENABLED(CONFIG_TEE_BNXT_FW) && dump->flag == BNXT_DUMP_CRASH) {
-+		netdev_info(dev, "Cannot collect crash dump as TEE_BNXT_FW config option is not enabled.\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	bp->dump_flag = dump->flag;
-+	return 0;
-+}
-+
- static int bnxt_get_dump_flag(struct net_device *dev, struct ethtool_dump *dump)
- {
- 	struct bnxt *bp = netdev_priv(dev);
-@@ -3323,7 +3341,12 @@ static int bnxt_get_dump_flag(struct net_device *dev, struct ethtool_dump *dump)
- 			bp->ver_resp.hwrm_fw_bld_8b << 8 |
- 			bp->ver_resp.hwrm_fw_rsvd_8b;
- 
--	return bnxt_get_coredump(bp, NULL, &dump->len);
-+	dump->flag = bp->dump_flag;
-+	if (bp->dump_flag == BNXT_DUMP_CRASH)
-+		dump->len = BNXT_CRASH_DUMP_LEN;
-+	else
-+		bnxt_get_coredump(bp, NULL, &dump->len);
-+	return 0;
- }
- 
- static int bnxt_get_dump_data(struct net_device *dev, struct ethtool_dump *dump,
-@@ -3336,7 +3359,16 @@ static int bnxt_get_dump_data(struct net_device *dev, struct ethtool_dump *dump,
- 
- 	memset(buf, 0, dump->len);
- 
--	return bnxt_get_coredump(bp, buf, &dump->len);
-+	dump->flag = bp->dump_flag;
-+	if (dump->flag == BNXT_DUMP_CRASH) {
-+#ifdef CONFIG_TEE_BNXT_FW
-+		return tee_bnxt_copy_coredump(buf, 0, dump->len);
-+#endif
-+	} else {
-+		return bnxt_get_coredump(bp, buf, &dump->len);
-+	}
-+
-+	return 0;
- }
- 
- void bnxt_ethtool_init(struct bnxt *bp)
-@@ -3446,6 +3478,7 @@ const struct ethtool_ops bnxt_ethtool_ops = {
- 	.set_phys_id		= bnxt_set_phys_id,
- 	.self_test		= bnxt_self_test,
- 	.reset			= bnxt_reset,
-+	.set_dump		= bnxt_set_dump,
- 	.get_dump_flag		= bnxt_get_dump_flag,
- 	.get_dump_data		= bnxt_get_dump_data,
- };
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.h b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.h
-index b5b65b3f8534..01de7e79d14f 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.h
-@@ -59,6 +59,8 @@ struct hwrm_dbg_cmn_output {
- 	#define HWRM_DBG_CMN_FLAGS_MORE	1
- };
- 
-+#define BNXT_CRASH_DUMP_LEN	(8 << 20)
-+
- #define BNXT_LED_DFLT_ENA				\
- 	(PORT_LED_CFG_REQ_ENABLES_LED0_ID |		\
- 	 PORT_LED_CFG_REQ_ENABLES_LED0_STATE |		\
+ static int setup_coalesce(const char *coalesce, bool no_source)
 -- 
-2.17.1
+2.20.1
 
