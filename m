@@ -2,154 +2,159 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4A2CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA10CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101612087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152EB2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Hl4bUDYM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPN+erso"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfJ3Lzs (ORCPT
+        id S1726776AbfJ3L4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 07:55:48 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:19964 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbfJ3Lzs (ORCPT
+        Wed, 30 Oct 2019 07:56:34 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36343 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfJ3L4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 07:55:48 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9UBlhHm008896;
-        Wed, 30 Oct 2019 07:55:32 -0400
-Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2052.outbound.protection.outlook.com [104.47.41.52])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2vxwgw9gct-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 30 Oct 2019 07:55:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=junUjPqhHAM+a19FlGZ1KF37npC1WyhA3CQNWEtq+L0I2VV76HdKwmjQYh9a0eclrs6g1MLJZq27A4wrrk7/72uCQ/CU2bImBMQISzwoubWDDJ8uml3IQt0f9CgVQx2fKricw+orgp2IgEFqrs8sngRnS0OJbRMxHtlGlekIBeTIsRyQPIRNFBFNYrF4xaJkhbL6HJEwe7rYgsDyaX6xsxwmy7GR50D0CLp7rsyAAc2HYHwhsETAT+VuGv1fj2cIiKB7tzpxb3LzdrPekWYsweYPHjRCmVQBgLSPG6Q991kjmIEeBBxAVoJVzmys+k2b32gTcKxHcyExGy60QPqZZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mNVqn/wOghXwSVSvCsoW0WLZEJQ+8rG4X/dJV39Dcj0=;
- b=DZq7eSejn71/EFei/o4PUm/WrkqOdlpnr2mzTmoObyp4vrHIVNhuLislLlu16cdFW9ArEOuoZ9DcxMgFENWnDkR1/HOsaaVA/fjl6O5Gb6Go/fsXP2VNkeIUuH96fQfzuEk3cU07KMQqlyovI/04dlCkGlo3okzIsIIUGvX5m45Ab53fEtaON0RLp6E24Ph+g89O54cFQzKqU4BuvQsXWYXo2/sWojiIn7bFD2Hk2sp+Vmr1BNX4PBXuhIUzT2j5msj31EO7dd4jkGoEqmL3g7rQjJZwc1jf7ItntnV/kuplJK3u52vC9mzZqRKQskDtk9w28NjtCCRmJ1wicNKDZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
+        Wed, 30 Oct 2019 07:56:34 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x14so2810043qtq.3;
+        Wed, 30 Oct 2019 04:56:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mNVqn/wOghXwSVSvCsoW0WLZEJQ+8rG4X/dJV39Dcj0=;
- b=Hl4bUDYMXMJFsa85blf74O5v9jgZ1pSLJ8FiT6sk2E3VE7lAuTsFs9sE23EEu+2TFO+J6oc5XKmlGSS7hsL15lVvr8q9q3Vnwe9nElTaAUwTQmpkWGCM6lyjMt2cPKi1LKqWrI3PFUVTlePnZkULyWwJwftpHyJ9tvqe5Y2607I=
-Received: from DM6PR03CA0002.namprd03.prod.outlook.com (2603:10b6:5:40::15) by
- BYAPR03MB4613.namprd03.prod.outlook.com (2603:10b6:a03:13d::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.24; Wed, 30 Oct
- 2019 11:55:19 +0000
-Received: from BL2NAM02FT047.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::203) by DM6PR03CA0002.outlook.office365.com
- (2603:10b6:5:40::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2408.17 via Frontend
- Transport; Wed, 30 Oct 2019 11:55:18 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- BL2NAM02FT047.mail.protection.outlook.com (10.152.77.9) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2387.20
- via Frontend Transport; Wed, 30 Oct 2019 11:55:18 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x9UBtIHR011077
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 30 Oct 2019 04:55:18 -0700
-Received: from saturn.ad.analog.com (10.48.65.116) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 30 Oct 2019 07:55:17 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: imu: adis: assign value only if return code zero in read funcs
-Date:   Wed, 30 Oct 2019 13:55:11 +0200
-Message-ID: <20191030115511.28975-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9VRvwupe1Us8UkNQwMDn+6sFPpjxIr5st7RpNyH9QM4=;
+        b=TPN+erso+wzp3wJvXdGWSctMy6KBHzbD6wR04o/Aqvn3k79RXz6tgq9PpfG5jvad+m
+         GJA5uiTG3ccIQ0yhpGJellPz6PbO8XNVXF1HGw2lruzU3qv3jJslIQsq83EU+fLB8LHe
+         w/VBs1tnlPR2R2DPCwckiCqKUOhHT553zr22j2JjzkoYCmuRhYS/MvxmN4GCGRMXKlgs
+         1Gv6oC0g4VAFxgqnRKBp6OFtjojanjv8ZopqE6Y/sX+91nSsBhrpopvPZvTtEmxyGe0b
+         FrpSCh7FDHqxe8L7e5jED6DIY72JeGgEbh6Xd7HHFHsS5ugiEoDABdqG/fII54i5S+Qd
+         ZMow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9VRvwupe1Us8UkNQwMDn+6sFPpjxIr5st7RpNyH9QM4=;
+        b=dokMnhQXiOIPOcd3Orre4lvS0RSwDSOvmo45/caDaArS/rSc6zeDrs+ikSfLAoqQVJ
+         KWG7e5Ig7gdG0aVX6EJRoGTC5S+zqTvl1lE8vPAw6z3lJ+CY5B08N12NoQp7eAdeUnHK
+         zWNibFnuoJtqH5knJrB7y6qw8NBOP7goxwEvo//UyPgJvO6UoaXIPwPLklJMUIuIHyn2
+         Yf/ryRdIE4TqSKJTbgzTQQL+JfDVbPqWR4OJ6t6iIR7Hze4lySx8HcoshimdGvhWE7zA
+         CYf/JiKsti8AOBiR1J1ydUY8y+7eeAxy0W2dd/geucfeUSNxCOpMDu8qlI77eKAdta1X
+         4uhA==
+X-Gm-Message-State: APjAAAXS7DkSUsxEQe5bbRDL63skw4udPiX86tiCWFv4jK1qiehLE/hQ
+        3W0yL3xOATwVTC2Fr2wjhdA=
+X-Google-Smtp-Source: APXvYqxxqesP5RziDOAjL4/Qu38GF5afIzyj0oWgUb8Gys4rgwSK0lCEzGixCSGV08mdx8RZSN+ObQ==
+X-Received: by 2002:aed:3e75:: with SMTP id m50mr4307731qtf.87.1572436593246;
+        Wed, 30 Oct 2019 04:56:33 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id w15sm1200336qtk.43.2019.10.30.04.56.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 04:56:32 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 28557410D7; Wed, 30 Oct 2019 08:56:30 -0300 (-03)
+Date:   Wed, 30 Oct 2019 08:56:30 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v4 4/9] perf tools: splice events onto evlist even on
+ error
+Message-ID: <20191030115630.GC27327@kernel.org>
+References: <20191024190202.109403-1-irogers@google.com>
+ <20191025180827.191916-1-irogers@google.com>
+ <20191025180827.191916-5-irogers@google.com>
+ <20191028210712.GB6158@krava>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(396003)(39860400002)(376002)(136003)(189003)(199004)(36756003)(478600001)(7696005)(246002)(8676002)(8936002)(51416003)(2906002)(1076003)(2870700001)(107886003)(6666004)(356004)(5660300002)(486006)(50466002)(305945005)(48376002)(7636002)(126002)(47776003)(476003)(26005)(336012)(316002)(44832011)(426003)(186003)(70206006)(54906003)(106002)(110136005)(4326008)(86362001)(70586007)(2616005)(50226002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4613;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fe398d2a-d607-4bbe-43d0-08d75d300904
-X-MS-TrafficTypeDiagnostic: BYAPR03MB4613:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB461368B8B4F01FBC36F4FAB2F9600@BYAPR03MB4613.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 02065A9E77
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9YZx9rehPDXJQTpAzJbkQTFCUdz2BzJbmJqA1RbigJC1pgllvX1hRasyGXsb7PelfcFapbvYn/DvSGOqTuTqsa+qHD1n5AyX8yuUUgEd6BepmCBG0sWPb/InXliO7Vxqx1VAwRw1QoF6u8zRA7iEsE1p5Rc9MXSkrcME9gqOLqfuzf9cebj0q2BqhiwlblH4q6HCh0XRdCQu3R546GCUCPeQ5L76Dvw7rtGVgT5U8FW4lMKRCsgE1LI2aWZTrQZL2gy9SnHnukcoBHx47h63CEE/AemoWbUz76DkFa3TpCtDTKB571qfZB5bMNvn56g9Ej931+ri5K+f/I3swSKy4wQd2+U7H82ztvPpihQejpgbOvHaiHGwJmSJ7/0dd1IX5vs7VpcvVP/2PsUTbbk1AqzRjG77mXLDRl725lKbGY40aJ/UsrcaFeOLB1OgFNUN
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2019 11:55:18.6862
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe398d2a-d607-4bbe-43d0-08d75d300904
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4613
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-30_05:2019-10-30,2019-10-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=911
- lowpriorityscore=0 bulkscore=0 mlxscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 impostorscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910300119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028210712.GB6158@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The inline read functions in the ADIS library don't check the return value
-of the `adis_read_reg()` function and assign the value of `tmp` regardless.
+Em Mon, Oct 28, 2019 at 10:07:12PM +0100, Jiri Olsa escreveu:
+> On Fri, Oct 25, 2019 at 11:08:22AM -0700, Ian Rogers wrote:
+> > If event parsing fails the event list is leaked, instead splice the list
+> > onto the out result and let the caller cleanup.
+> > 
+> > An example input for parse_events found by libFuzzer that reproduces
+> > this memory leak is 'm{'.
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Fix this by checking if return value is zero and only then assigning the
-value of `tmp`.
+Thanks, applied.
+ 
+> thanks,
+> jirka
+> 
+> > ---
+> >  tools/perf/util/parse-events.c | 17 +++++++++++------
+> >  1 file changed, 11 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> > index c516d0cce946..4c4c6f3e866a 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -1952,15 +1952,20 @@ int parse_events(struct evlist *evlist, const char *str,
+> >  
+> >  	ret = parse_events__scanner(str, &parse_state, PE_START_EVENTS);
+> >  	perf_pmu__parse_cleanup();
+> > +
+> > +	if (!ret && list_empty(&parse_state.list)) {
+> > +		WARN_ONCE(true, "WARNING: event parser found nothing\n");
+> > +		return -1;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Add list to the evlist even with errors to allow callers to clean up.
+> > +	 */
+> > +	perf_evlist__splice_list_tail(evlist, &parse_state.list);
+> > +
+> >  	if (!ret) {
+> >  		struct evsel *last;
+> >  
+> > -		if (list_empty(&parse_state.list)) {
+> > -			WARN_ONCE(true, "WARNING: event parser found nothing\n");
+> > -			return -1;
+> > -		}
+> > -
+> > -		perf_evlist__splice_list_tail(evlist, &parse_state.list);
+> >  		evlist->nr_groups += parse_state.nr_groups;
+> >  		last = evlist__last(evlist);
+> >  		last->cmdline_group_boundary = true;
+> > -- 
+> > 2.24.0.rc0.303.g954a862665-goog
+> > 
 
-Fixes: 57a1228a06b7a ("iio:imu:adis: Add support for 32bit registers")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- include/linux/iio/imu/adis.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-index 4c53815bb729..92aae14593bf 100644
---- a/include/linux/iio/imu/adis.h
-+++ b/include/linux/iio/imu/adis.h
-@@ -129,7 +129,8 @@ static inline int adis_read_reg_16(struct adis *adis, unsigned int reg,
- 	int ret;
- 
- 	ret = adis_read_reg(adis, reg, &tmp, 2);
--	*val = tmp;
-+	if (ret == 0)
-+		*val = tmp;
- 
- 	return ret;
- }
-@@ -147,7 +148,8 @@ static inline int adis_read_reg_32(struct adis *adis, unsigned int reg,
- 	int ret;
- 
- 	ret = adis_read_reg(adis, reg, &tmp, 4);
--	*val = tmp;
-+	if (ret == 0)
-+		*val = tmp;
- 
- 	return ret;
- }
 -- 
-2.20.1
 
+- Arnaldo
