@@ -2,79 +2,118 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB058CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29924CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A829320874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010962087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:56:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/hIlRzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfJ3Nz6 (ORCPT
+        id S1726518AbfJ3N4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:55:58 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48622 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726171AbfJ3Nz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:55:58 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 02206D467BC788BFC20A;
-        Wed, 30 Oct 2019 21:55:52 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 30 Oct 2019
- 21:55:43 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <thierry.reding@gmail.com>, <mperttunen@nvidia.com>,
-        <arnd@arndb.de>, <seanpaul@chromium.org>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] gpu: host1x: Fix compile test failure
-Date:   Wed, 30 Oct 2019 21:54:58 +0800
-Message-ID: <20191030135458.27960-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 30 Oct 2019 09:56:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45084 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfJ3N4z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:56:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q13so2398015wrs.12
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 06:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DwVcSXoannBan2m8zWPB7PFI0kJUSthZFWNX18Hm/LQ=;
+        b=Y/hIlRzunT8W0Xp+WjWPqr78Z2vnSK7uei64oEtx4N+eNc0jemkWFRFCtgjT/jT1r8
+         XDd1W9iMqbd0lTmkQLX6U/7HUauSWOUU3l3ZgONqxoqUiV0sc7wfM9XPUoh+/sIN+n83
+         En5XSIt1UCBZ6rui4krmtoWgX2/U4Y0Hurw8kpOWcU7GjRu4DJ6KnZj33d+nkW+5Jhch
+         dimiw5OGcJx4ukM/iTFVW2eS248VFmsBk8VRVz7gRnY1CVRwmf2nO6Ii8x+hvlqjjlDj
+         d5xCYEb33OBjoaPvStBnEBdQ6ddMhTCI1BvAfGIp3P9hYFd8oGLd2eyWB1cSNxpejHnR
+         Wnvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DwVcSXoannBan2m8zWPB7PFI0kJUSthZFWNX18Hm/LQ=;
+        b=QcFwnmr+0aP+ZCLzRkPdmHdPycJ1ADBJ8dDFfew9TTgWvwFIbpHFULxcLaLjJfewTS
+         Itf4vV7ciUDHPu0ofCBdp4uZ3kjC+KA+2gWeHHUQw3Z+ttiK0mQfhnlnXmRs6VN9Rc62
+         Grit9+mN9+klAnI68dW/VgY8EyWo/yh7VeNzbNuhNUx26Hl7jbzdvCgG83BqlDI53//K
+         4qMY5rA9S20DRuGVa5aR+4QlARQvTJIbL/7urilkcN0W6xo8K9TxynxEHM9GPluQgJPy
+         FhUiEupF2B3vDp78tf2K2QRFTEqO8y5Jybpqksys8BsBggsgx++Dlodc6IBQE7nE6NIF
+         JlSw==
+X-Gm-Message-State: APjAAAVeONhIiQLP05HCrx/ue0gScuaMwiAWJ15IksOCZO7ZjRoAjht7
+        jFHy2vRl8hs9I2vjMkho5q1msfVhQvM5e9wE4ds=
+X-Google-Smtp-Source: APXvYqyEugonbjl2q4DWU/AHaJmj/Blp0GlAvoirFuqlE/MSiO8C4JoaW1C/7bETPx1i3Wzdu9TdNu6NLtRVVwtT8gU=
+X-Received: by 2002:a5d:6ac3:: with SMTP id u3mr24079wrw.206.1572443813028;
+ Wed, 30 Oct 2019 06:56:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <1572400673-42535-1-git-send-email-zhongjiang@huawei.com> <723f11bc-9a65-bce6-9c0f-2ef2dbe7a1db@amd.com>
+In-Reply-To: <723f11bc-9a65-bce6-9c0f-2ef2dbe7a1db@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 30 Oct 2019 09:56:40 -0400
+Message-ID: <CADnq5_PRfOn1BRJyqT54yKLnmiJxoDaMFwpTOFe=KgQWW0_bDw@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: remove redundant null pointer check
+ before kfree
+To:     Harry Wentland <hwentlan@amd.com>
+Cc:     zhong jiang <zhongjiang@huawei.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If IOMMU_SUPPORT is not set, but IOMMU_IOVA is m and
-COMPILE_TEST is y, building fails:
+On Wed, Oct 30, 2019 at 9:36 AM Harry Wentland <hwentlan@amd.com> wrote:
+>
+> On 2019-10-29 9:57 p.m., zhong jiang wrote:
+> > kfree has taken null pointer into account. hence it is safe to remove
+> > the unnecessary check.
+> >
+> > Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+>
+> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+>
 
-drivers/gpu/host1x/dev.o: In function `host1x_remove':
-dev.c:(.text+0x624): undefined reference to `put_iova_domain'
-dev.c:(.text+0x624): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `put_iova_domain'
-dev.c:(.text+0x62c): undefined reference to `iova_cache_put'
-dev.c:(.text+0x62c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `iova_cache_put'
+Applied.  thanks!
 
-Select IOMMU_IOVA while COMPILE_TEST is set to fix this.
+Alex
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 52499a6ad2ae ("gpu: host1x: select IOMMU_IOVA")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/host1x/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/host1x/Kconfig b/drivers/gpu/host1x/Kconfig
-index cf987a3..354232d 100644
---- a/drivers/gpu/host1x/Kconfig
-+++ b/drivers/gpu/host1x/Kconfig
-@@ -2,7 +2,7 @@
- config TEGRA_HOST1X
- 	tristate "NVIDIA Tegra host1x driver"
- 	depends on ARCH_TEGRA || (ARM && COMPILE_TEST)
--	select IOMMU_IOVA if IOMMU_SUPPORT
-+	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
- 	help
- 	  Driver for the NVIDIA Tegra host1x hardware.
- 
--- 
-2.7.4
-
-
+> Harry
+>
+> > ---
+> >  drivers/gpu/drm/amd/display/dc/hdcp/hdcp_msg.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/display/dc/hdcp/hdcp_msg.c b/drivers/gpu/drm/amd/display/dc/hdcp/hdcp_msg.c
+> > index cf6ef38..6f730b5 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/hdcp/hdcp_msg.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/hdcp/hdcp_msg.c
+> > @@ -174,9 +174,7 @@ static bool hdmi_14_process_transaction(
+> >                       link->ctx,
+> >                       link,
+> >                       &i2c_command);
+> > -
+> > -     if (buff)
+> > -             kfree(buff);
+> > +     kfree(buff);
+> >
+> >       return result;
+> >  }
+> >
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
