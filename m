@@ -2,234 +2,131 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2EACA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B10CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28312204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB3120862
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:42:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SidofrJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfJ3KlP (ORCPT
+        id S1726811AbfJ3Kmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:41:15 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:39422 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726046AbfJ3KlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:41:12 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id B8F41D1A2C661CFB10B6;
-        Wed, 30 Oct 2019 18:41:00 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 30 Oct 2019 18:41:00 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 30 Oct 2019 18:41:00 +0800
-Date:   Wed, 30 Oct 2019 18:43:45 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: bio_alloc should never fail
-Message-ID: <20191030104345.GB170703@architecture4>
-References: <20191030035518.65477-1-gaoxiang25@huawei.com>
- <20aa40bd-280d-d223-9f73-d9ed7dbe4f29@huawei.com>
- <20191030091542.GA24976@architecture4>
- <19a417e6-8f0e-564e-bc36-59bfc883ec16@huawei.com>
+        Wed, 30 Oct 2019 06:42:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46204 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfJ3Kmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 06:42:39 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UAYOTG136921;
+        Wed, 30 Oct 2019 10:42:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=815j/YhDXDAGFJ0kuShibnrAaDqoW4eFgfJomjo90O8=;
+ b=SidofrJwdWQhlAzf1RZSI9aljJMP0+RalQW6KdLntrTTjr0vU4EIpx4gt0hsV06MbSRf
+ pLHAwlfVdAuM33XJAEzJb/sNMUk/hPM2B4po67eYYUQ93EOVI34XB23tJvoVRVLAJ0vI
+ zbckmhEOAuoJcgcOMwJkRf4SqlKnZFqoh6ErhqLVqmXj374e+qXPJu6JwYeF+buGbI5T
+ POH6Dch1rsb2MCFfd2K4Cfd8I5YsIGyqlxVu4DWBarzpb2IqjZ/mDKcgxNjGW1GZKJBs
+ ACZR2XHV0IxqsighpcCSkJxCR8/h2ioi5KiN1/GwBFvOmuVdrnc8hPzBrRHddiNghjc7 2g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2vxwhfb3xt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 10:42:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UAcpIo058307;
+        Wed, 30 Oct 2019 10:42:29 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2vxwhvt2qd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 10:42:28 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9UAgRCO020665;
+        Wed, 30 Oct 2019 10:42:27 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 30 Oct 2019 03:42:26 -0700
+Date:   Wed, 30 Oct 2019 13:42:17 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     David Gow <davidgow@google.com>
+Cc:     shuah <shuah@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
+ the 'list' doubly linked list
+Message-ID: <20191030104217.GA18421@kadam>
+References: <20191024224631.118656-1-davidgow@google.com>
+ <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
+ <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <19a417e6-8f0e-564e-bc36-59bfc883ec16@huawei.com>
+In-Reply-To: <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910300106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910300106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 05:27:54PM +0800, Chao Yu wrote:
-> Hi Xiang,
+On Wed, Oct 30, 2019 at 01:02:11AM -0700, David Gow wrote:
+> > ERROR: that open brace { should be on the previous line
+> > #869: FILE: lib/list-test.c:680:
+> > +static void list_test_list_for_each_entry_reverse(struct kunit *test)
+> > +{
+> >
+> >
+> > I am seeing these error and warns. As per our hallway conversation, the
+> > "for_each*" in the test naming is tripping up checkpatch.pl
+> >
+> > For now you can change the name a bit to not trip checkpatch and maybe
+> > explore fixing checkpatch to differentiate between function names
+> > with "for_each" in them vs. the actual for_each usages in the code.
 > 
-> On 2019/10/30 17:15, Gao Xiang wrote:
-> > Hi Chao,
-> > 
-> > On Wed, Oct 30, 2019 at 04:56:17PM +0800, Chao Yu wrote:
-> >> On 2019/10/30 11:55, Gao Xiang wrote:
-> >>> remove such useless code and related fault injection.
-> >>
-> >> Hi Xiang,
-> >>
-> >> Although, there is so many 'nofail' allocation in f2fs, I think we'd better
-> >> avoid such allocation as much as possible (now for read path, we may allow to
-> >> fail to allocate bio), I suggest to keep the failure path and bio allocation
-> >> injection.
-> >>
-> >> It looks bio_alloc() will use its own mempool, which may suffer deadlock
-> >> potentially. So how about changing to use bio_alloc_bioset(, , NULL) instead of
-> >> bio_alloc()?
-> > 
-> > Yes, I noticed the original commit 740432f83560 ("f2fs: handle failed bio allocation"),
-> > yet I don't find any real call trace clue what happened before.
-> > 
-> > As my understanding, if we allocate bios without submit_bio (I mean write path) with
-> > default bs and gfp_flags GFP_NOIO or GFP_KERNEL, I think it will be slept inside
-> > mempool rather than return NULL to its caller... Please correct me if I'm wrong...
+> Thanks, Shuah.
 > 
-> I'm curious too...
+> Yes, the problem here is that checkpatch.pl believes that anything
+> with "for_each" in its name must be a loop, so expects that the open
+> brace is placed on the same line as for a for loop.
 > 
-> Jaegeuk may know the details.
-> 
-> > 
-> > I could send another patch with bio_alloc_bioset(, , NULL), I am curious to know the
-> > original issue and how it solved though...
-> > 
-> > For read or flush path, since it will submit_bio and bio_alloc one by one, I think
-> > mempool will get a page quicker (memory failure path could be longer). But I can
-> > send a patch just by using bio_alloc_bioset(, , NULL) instead as you suggested later.
-> 
-> You're right, in low memory scenario, allocation with bioset will be faster, as
-> you mentioned offline, maybe we can add/use a priviate bioset like btrfs did
-> rather than using global one, however, we'd better check how deadlock happen
-> with a bioset mempool first ...
+> Longer term, I think it'd be nicer, naming-wise, to fix or work around
+> this issue in checkpatch.pl itself, as that'd allow the tests to
+> continue to follow a naming pattern of "list_test_[x]", where [x] is
+> the name of the function/macro being tested. Of course, short of
+> trying to fit a whole C parser in checkpatch.pl, that's going to
+> involve some compromises as well.
 
-Okay, hope to get hints from Jaegeuk and redo this patch then...
-
-Thanks,
-Gao Xiang
+Just make it a black list of the 5 most common for_each macros.
 
 > 
-> Thanks,
-> 
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>>
-> >>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> >>> ---
-> >>>  Documentation/filesystems/f2fs.txt |  1 -
-> >>>  fs/f2fs/data.c                     |  6 ++----
-> >>>  fs/f2fs/f2fs.h                     | 21 ---------------------
-> >>>  fs/f2fs/segment.c                  |  5 +----
-> >>>  fs/f2fs/super.c                    |  1 -
-> >>>  5 files changed, 3 insertions(+), 31 deletions(-)
-> >>>
-> >>> diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
-> >>> index 7e1991328473..3477c3e4c08b 100644
-> >>> --- a/Documentation/filesystems/f2fs.txt
-> >>> +++ b/Documentation/filesystems/f2fs.txt
-> >>> @@ -172,7 +172,6 @@ fault_type=%d          Support configuring fault injection type, should be
-> >>>                         FAULT_KVMALLOC		0x000000002
-> >>>                         FAULT_PAGE_ALLOC		0x000000004
-> >>>                         FAULT_PAGE_GET		0x000000008
-> >>> -                       FAULT_ALLOC_BIO		0x000000010
-> >>>                         FAULT_ALLOC_NID		0x000000020
-> >>>                         FAULT_ORPHAN		0x000000040
-> >>>                         FAULT_BLOCK		0x000000080
-> >>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> >>> index 5755e897a5f0..3b88dcb15de6 100644
-> >>> --- a/fs/f2fs/data.c
-> >>> +++ b/fs/f2fs/data.c
-> >>> @@ -288,7 +288,7 @@ static struct bio *__bio_alloc(struct f2fs_io_info *fio, int npages)
-> >>>  	struct f2fs_sb_info *sbi = fio->sbi;
-> >>>  	struct bio *bio;
-> >>>  
-> >>> -	bio = f2fs_bio_alloc(sbi, npages, true);
-> >>> +	bio = bio_alloc(GFP_NOIO, npages);
-> >>>  
-> >>>  	f2fs_target_device(sbi, fio->new_blkaddr, bio);
-> >>>  	if (is_read_io(fio->op)) {
-> >>> @@ -682,9 +682,7 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
-> >>>  	struct bio_post_read_ctx *ctx;
-> >>>  	unsigned int post_read_steps = 0;
-> >>>  
-> >>> -	bio = f2fs_bio_alloc(sbi, min_t(int, nr_pages, BIO_MAX_PAGES), false);
-> >>> -	if (!bio)
-> >>> -		return ERR_PTR(-ENOMEM);
-> >>> +	bio = bio_alloc(GFP_KERNEL, min_t(int, nr_pages, BIO_MAX_PAGES));
-> >>>  	f2fs_target_device(sbi, blkaddr, bio);
-> >>>  	bio->bi_end_io = f2fs_read_end_io;
-> >>>  	bio_set_op_attrs(bio, REQ_OP_READ, op_flag);
-> >>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>> index 4024790028aa..40012f874be0 100644
-> >>> --- a/fs/f2fs/f2fs.h
-> >>> +++ b/fs/f2fs/f2fs.h
-> >>> @@ -44,7 +44,6 @@ enum {
-> >>>  	FAULT_KVMALLOC,
-> >>>  	FAULT_PAGE_ALLOC,
-> >>>  	FAULT_PAGE_GET,
-> >>> -	FAULT_ALLOC_BIO,
-> >>>  	FAULT_ALLOC_NID,
-> >>>  	FAULT_ORPHAN,
-> >>>  	FAULT_BLOCK,
-> >>> @@ -2210,26 +2209,6 @@ static inline void *f2fs_kmem_cache_alloc(struct kmem_cache *cachep,
-> >>>  	return entry;
-> >>>  }
-> >>>  
-> >>> -static inline struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi,
-> >>> -						int npages, bool no_fail)
-> >>> -{
-> >>> -	struct bio *bio;
-> >>> -
-> >>> -	if (no_fail) {
-> >>> -		/* No failure on bio allocation */
-> >>> -		bio = bio_alloc(GFP_NOIO, npages);
-> >>> -		if (!bio)
-> >>> -			bio = bio_alloc(GFP_NOIO | __GFP_NOFAIL, npages);
-> >>> -		return bio;
-> >>> -	}
-> >>> -	if (time_to_inject(sbi, FAULT_ALLOC_BIO)) {
-> >>> -		f2fs_show_injection_info(FAULT_ALLOC_BIO);
-> >>> -		return NULL;
-> >>> -	}
-> >>> -
-> >>> -	return bio_alloc(GFP_KERNEL, npages);
-> >>> -}
-> >>> -
-> >>>  static inline bool is_idle(struct f2fs_sb_info *sbi, int type)
-> >>>  {
-> >>>  	if (sbi->gc_mode == GC_URGENT)
-> >>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> >>> index 808709581481..28457c878d0d 100644
-> >>> --- a/fs/f2fs/segment.c
-> >>> +++ b/fs/f2fs/segment.c
-> >>> @@ -552,10 +552,7 @@ static int __submit_flush_wait(struct f2fs_sb_info *sbi,
-> >>>  	struct bio *bio;
-> >>>  	int ret;
-> >>>  
-> >>> -	bio = f2fs_bio_alloc(sbi, 0, false);
-> >>> -	if (!bio)
-> >>> -		return -ENOMEM;
-> >>> -
-> >>> +	bio = bio_alloc(GFP_KERNEL, 0);
-> >>>  	bio->bi_opf = REQ_OP_WRITE | REQ_SYNC | REQ_PREFLUSH;
-> >>>  	bio_set_dev(bio, bdev);
-> >>>  	ret = submit_bio_wait(bio);
-> >>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> >>> index 1443cee15863..51945dd27f00 100644
-> >>> --- a/fs/f2fs/super.c
-> >>> +++ b/fs/f2fs/super.c
-> >>> @@ -44,7 +44,6 @@ const char *f2fs_fault_name[FAULT_MAX] = {
-> >>>  	[FAULT_KVMALLOC]	= "kvmalloc",
-> >>>  	[FAULT_PAGE_ALLOC]	= "page alloc",
-> >>>  	[FAULT_PAGE_GET]	= "page get",
-> >>> -	[FAULT_ALLOC_BIO]	= "alloc bio",
-> >>>  	[FAULT_ALLOC_NID]	= "alloc nid",
-> >>>  	[FAULT_ORPHAN]		= "orphan",
-> >>>  	[FAULT_BLOCK]		= "no more block",
-> >>>
-> > .
-> > 
+> In the meantime, I'm sending out v7 which replaces "for_each" with
+> "for__each" (adding the extra underscore), so that checkpatch is
+> happy.
+
+It's better to ignore checkpatch and other scripts when they are wrong.
+(unless the warning message inspires you to make the code more readable
+for humans).
+
+regards,
+dan carpenter
+
