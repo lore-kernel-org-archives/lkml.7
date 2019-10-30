@@ -2,176 +2,212 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131EFCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8B1CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B7A21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FF821924
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U0sS/BZZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IkuRtYB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfJ3Wub (ORCPT
+        id S1727949AbfJ3Wun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 18:50:31 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36999 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbfJ3Wu3 (ORCPT
+        Wed, 30 Oct 2019 18:50:43 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:5340 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbfJ3Wt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:50:29 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q130so3945688wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 15:50:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f5pv0TrDckCPKq/kpy/66V+Rj+yO2dx6a+ZGMx39OTk=;
-        b=U0sS/BZZNsP6TKkYYN6B10usHzz5S2232rBMjOo8KfKq6KyHiKYTpvAbgVE7D8EeSY
-         SVa8hTEtcpbOMAjqXM5wXgiB5Lv7QuXvcV3y5xfYctwDBS5/DzmXhMoKj8CAg7MVyQTl
-         +m4RAoaytlo9rAE58wWfIrpQxfG6b5v61eZttegGq7EZzh1PHz0YP6ZkwhDloBI/T42T
-         sVsxSqrrlMb4QWs4AmNK6xyPMILT90LUvJcBc/msOQF2+f8Sl1zHFhb56EE6U0lHCdiV
-         yrObMW+p7g7GGVfyQOuyYkj/9z8NZ0B0907/7i5EyR0RbbirpmZ4mLqTVHR9a9K1MGEK
-         uTqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f5pv0TrDckCPKq/kpy/66V+Rj+yO2dx6a+ZGMx39OTk=;
-        b=cfxMBJw830J0xDafmJ6Sdg75nWHTNikeVbTnWnSFtRXrWW+XU0UpbfqkSfs1TEfOEa
-         /h1VD10MKTZ9xh9hrhPUXNIZP56J5N8mWxEmykzpOvlGvWmuBACwh879COxLbyC3SLq9
-         bmAHy2nEdLlSADs8xdQx8ckgkuZMj9G65KN47MFeN6ZO4RInQgK+IpdXmZXKE1/XDTwg
-         zP7s0LEClLWQ2ZEIsQ4i+2ckiNIHGrlBFgTluShKJ7klb21IKEAlfyxJ1DG6IRRLTOEb
-         M7zyBoUhsJQlpoyxBepcJS47o8HhoAU0XLcluf/szDtxxavRgButCyaHXImkyJIgaFpa
-         8GKw==
-X-Gm-Message-State: APjAAAWYKP+FrP6ao9P5auJnTqTGch6HuR30NE2ZOT5QtZ6XAm18BqAF
-        rJetp+jHGogd/IqpqECn+brSpf7AM/6GZ47ZSy1udw==
-X-Google-Smtp-Source: APXvYqwIuR/7aU9AfLmzsUpOEiGm8Sfd5QT+QzevSUMt1500kwG/j/o5S8PC06ZvL4JIe6bzRkQ/0BgFHrTFeeuGW8I=
-X-Received: by 2002:a1c:f60d:: with SMTP id w13mr1885289wmc.150.1572475826967;
- Wed, 30 Oct 2019 15:50:26 -0700 (PDT)
+        Wed, 30 Oct 2019 18:49:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dba139c0000>; Wed, 30 Oct 2019 15:50:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 30 Oct 2019 15:49:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 30 Oct 2019 15:49:57 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 30 Oct
+ 2019 22:49:57 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 30 Oct 2019 22:49:56 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dba13920000>; Wed, 30 Oct 2019 15:49:55 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 18/19] mm/gup: remove support for gup(FOLL_LONGTERM)
+Date:   Wed, 30 Oct 2019 15:49:29 -0700
+Message-ID: <20191030224930.3990755-19-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191030224930.3990755-1-jhubbard@nvidia.com>
+References: <20191030224930.3990755-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20191028174603.GA246917@google.com> <20191029113411.GP4643@worktop.programming.kicks-ass.net>
- <20191029115000.GA11194@google.com>
-In-Reply-To: <20191029115000.GA11194@google.com>
-From:   Ram Muthiah <rammuthiah@google.com>
-Date:   Wed, 30 Oct 2019 15:50:00 -0700
-Message-ID: <CA+CXyWsoW8ann52pcR66ejRmjJ=4QmoaHTRVhb3=ohe0ZDnm-A@mail.gmail.com>
-Subject: Re: NULL pointer dereference in pick_next_task_fair
-To:     Quentin Perret <qperret@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, aaron.lwe@gmail.com,
-        valentin.schneider@arm.com, mingo@kernel.org, pauld@redhat.com,
-        jdesfossez@digitalocean.com, naravamudan@digitalocean.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        juri.lelli@redhat.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, kernel-team@android.com, john.stultz@linaro.org
-Content-Type: text/plain; charset="UTF-8"
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572475804; bh=6eCoZ62YVqPRMh6hmCwd736iryX7QnOeiQKLTn0GI5E=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=IkuRtYB4d3kOJrZ+EENymTxZvsMF+ZD6tsSf6fZglZMnwtzOZ73h77ci85UZpFmUW
+         fQmmlzdC8n8mJLqJjmlbdC3DO4uaZw0YHORB/HafxMGpmFoCkTJ32qpfQg459tX+YK
+         +Gf494GooD+nQM+FC8NLkVHrkhEl1KDPfLs3huMk5X62opwbgjDWtnHAEEMzBGnI99
+         TD+I6HBpEKDObno8f3eOMuEVqd6qK/ifgd+derpKD20XS8ykxtZtU6JDOQRPdAIVXL
+         nhlxBDkBgZJpnJUcnjsjfG8G3sDLivqNtRrrO3BSwLQ5qluS/cq192ATGynOsvcFqk
+         qSCcSKzrPnw1A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 4:50 AM 'Quentin Perret' via kernel-team
-<kernel-team@android.com> wrote:
->
-> On Tuesday 29 Oct 2019 at 12:34:11 (+0100), Peter Zijlstra wrote:
-> > On Mon, Oct 28, 2019 at 05:46:03PM +0000, Quentin Perret wrote:
-> > > The issue is very transient and relatively hard to reproduce.
-> > >
-> > > After digging a bit, the offending commit seems to be:
-> > >
-> > >     67692435c411 ("sched: Rework pick_next_task() slow-path")
-> > >
-> > > By 'offending' I mean that reverting it makes the issue go away. The
-> > > issue comes from the fact that pick_next_entity() returns a NULL se in
-> > > the 'simple' path of pick_next_task_fair(), which causes obvious
-> > > problems in the subsequent call to set_next_entity().
-> > >
-> > > I'll dig more, but if anybody understands the issue in the meatime feel
-> > > free to send me a patch to try out :)
-> >
-> > Can you please see if this makes any difference?
-> >
-> > ---
-> >  kernel/sched/core.c | 6 ++++--
-> >  kernel/sched/fair.c | 2 +-
-> >  kernel/sched/idle.c | 3 +--
-> >  3 files changed, 6 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 7880f4f64d0e..abd2d4f80381 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -3922,8 +3922,10 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-> >                       goto restart;
-> >
-> >               /* Assumes fair_sched_class->next == idle_sched_class */
-> > -             if (unlikely(!p))
-> > -                     p = idle_sched_class.pick_next_task(rq, prev, rf);
-> > +             if (unlikely(!p)) {
-> > +                     prev->sched_class->put_prev_task(rq, prev, rf);
-> > +                     p = idle_sched_class.pick_next_task(rq, NULL, NULL);
-> > +             }
-> >
-> >               return p;
-> >       }
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 83ab35e2374f..2aad94bb7165 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -6820,7 +6820,7 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
-> >  simple:
-> >  #endif
-> >       if (prev)
-> > -             put_prev_task(rq, prev);
-> > +             prev->sched_class->put_prev_task(rq, prev, rf);
-> >
-> >       do {
-> >               se = pick_next_entity(cfs_rq, NULL);
-> > diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> > index 8dad5aa600ea..e8dfc84f375a 100644
-> > --- a/kernel/sched/idle.c
-> > +++ b/kernel/sched/idle.c
-> > @@ -390,8 +390,7 @@ pick_next_task_idle(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
-> >  {
-> >       struct task_struct *next = rq->idle;
-> >
-> > -     if (prev)
-> > -             put_prev_task(rq, prev);
-> > +     WARN_ON_ONCE(prev || rf);
-> >
-> >       set_next_task_idle(rq, next);
-> >
-> >
->
-> Unfortunately the issue went into hiding this morning and I struggle to
-> reproduce it (this is turning bordeline nightmare now TBH).
->
-> I'll try the patch once my reproducer is fixed :/
->
-> Thank you very much for the help,
-> Quentin
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
->
+Now that all other kernel callers of get_user_pages(FOLL_LONGTERM)
+have been converted to pin_longterm_pages(), lock it down:
 
-Quentin and I were able to create a setup which reproduces the issue.
+1) Add an assertion to get_user_pages(), preventing callers from
+   passing FOLL_LONGTERM (in addition to the existing assertion that
+   prevents FOLL_PIN).
 
-Given this, I tried Peter's proposed fix and was still able to reproduce the
-issue unfortunately. Current patch is located here -
-https://android-review.googlesource.com/c/kernel/common/+/1153487
+2) Remove the associated GUP_LONGTERM_BENCHMARK test.
 
-Our mitigation for this issue on the android-mainline branch has been to
-revert 67692435c411 ("sched: Rework pick_next_task() slow-path").
-https://android-review.googlesource.com/c/kernel/common/+/1152564
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ mm/gup.c                                   | 8 ++++----
+ mm/gup_benchmark.c                         | 9 +--------
+ tools/testing/selftests/vm/gup_benchmark.c | 7 ++-----
+ 3 files changed, 7 insertions(+), 17 deletions(-)
 
-I'll spend some time detailing repro steps next. I should be able to
-provide an update on those details early next week.
+diff --git a/mm/gup.c b/mm/gup.c
+index e51b3820a995..9a28935a2cb1 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1744,11 +1744,11 @@ long get_user_pages(unsigned long start, unsigned l=
+ong nr_pages,
+ 		struct vm_area_struct **vmas)
+ {
+ 	/*
+-	 * As detailed above, FOLL_PIN must only be set internally by the
+-	 * pin_user_page*() and pin_longterm_*() APIs, never directly by the
+-	 * caller, so enforce that with an assertion:
++	 * As detailed above, FOLL_PIN and FOLL_LONGTERM must only be set
++	 * internally by the pin_user_page*() and pin_longterm_*() APIs, never
++	 * directly by the caller, so enforce that with an assertion:
+ 	 */
+-	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
++	if (WARN_ON_ONCE(gup_flags & (FOLL_PIN | FOLL_LONGTERM)))
+ 		return -EINVAL;
+=20
+ 	return __gup_longterm_locked(current, current->mm, start, nr_pages,
+diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+index 2bb0f5df4803..de6941855b7e 100644
+--- a/mm/gup_benchmark.c
++++ b/mm/gup_benchmark.c
+@@ -6,7 +6,7 @@
+ #include <linux/debugfs.h>
+=20
+ #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
+-#define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
++/* Command 2 has been deleted. */
+ #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
+ #define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
+ #define PIN_LONGTERM_BENCHMARK	_IOWR('g', 5, struct gup_benchmark)
+@@ -28,7 +28,6 @@ static void put_back_pages(int cmd, struct page **pages, =
+unsigned long nr_pages)
+=20
+ 	switch (cmd) {
+ 	case GUP_FAST_BENCHMARK:
+-	case GUP_LONGTERM_BENCHMARK:
+ 	case GUP_BENCHMARK:
+ 		for (i =3D 0; i < nr_pages; i++)
+ 			put_page(pages[i]);
+@@ -94,11 +93,6 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 			nr =3D get_user_pages_fast(addr, nr, gup->flags & 1,
+ 						 pages + i);
+ 			break;
+-		case GUP_LONGTERM_BENCHMARK:
+-			nr =3D get_user_pages(addr, nr,
+-					    (gup->flags & 1) | FOLL_LONGTERM,
+-					    pages + i, NULL);
+-			break;
+ 		case GUP_BENCHMARK:
+ 			nr =3D get_user_pages(addr, nr, gup->flags & 1, pages + i,
+ 					    NULL);
+@@ -157,7 +151,6 @@ static long gup_benchmark_ioctl(struct file *filep, uns=
+igned int cmd,
+=20
+ 	switch (cmd) {
+ 	case GUP_FAST_BENCHMARK:
+-	case GUP_LONGTERM_BENCHMARK:
+ 	case GUP_BENCHMARK:
+ 	case PIN_FAST_BENCHMARK:
+ 	case PIN_LONGTERM_BENCHMARK:
+diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/sel=
+ftests/vm/gup_benchmark.c
+index c5c934c0f402..5ef3cf8f3da5 100644
+--- a/tools/testing/selftests/vm/gup_benchmark.c
++++ b/tools/testing/selftests/vm/gup_benchmark.c
+@@ -15,7 +15,7 @@
+ #define PAGE_SIZE sysconf(_SC_PAGESIZE)
+=20
+ #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
+-#define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
++/* Command 2 has been deleted. */
+ #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
+=20
+ /*
+@@ -46,7 +46,7 @@ int main(int argc, char **argv)
+ 	char *file =3D "/dev/zero";
+ 	char *p;
+=20
+-	while ((opt =3D getopt(argc, argv, "m:r:n:f:abctTLUuwSH")) !=3D -1) {
++	while ((opt =3D getopt(argc, argv, "m:r:n:f:abctTUuwSH")) !=3D -1) {
+ 		switch (opt) {
+ 		case 'a':
+ 			cmd =3D PIN_FAST_BENCHMARK;
+@@ -72,9 +72,6 @@ int main(int argc, char **argv)
+ 		case 'T':
+ 			thp =3D 0;
+ 			break;
+-		case 'L':
+-			cmd =3D GUP_LONGTERM_BENCHMARK;
+-			break;
+ 		case 'U':
+ 			cmd =3D GUP_BENCHMARK;
+ 			break;
+--=20
+2.23.0
 
-We appreciate the help so far.
-Thanks,
-Ram
