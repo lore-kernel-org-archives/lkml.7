@@ -2,184 +2,122 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7A9CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F081CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8789420874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD962087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:14:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hoLtUF/F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wk6g1uSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfJ3PNn (ORCPT
+        id S1727003AbfJ3PO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:13:43 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44969 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfJ3PNn (ORCPT
+        Wed, 30 Oct 2019 11:14:57 -0400
+Received: from mail-vs1-f73.google.com ([209.85.217.73]:55409 "EHLO
+        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfJ3PO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:13:43 -0400
-Received: by mail-qt1-f194.google.com with SMTP id b10so1885854qto.11;
-        Wed, 30 Oct 2019 08:13:41 -0700 (PDT)
+        Wed, 30 Oct 2019 11:14:56 -0400
+Received: by mail-vs1-f73.google.com with SMTP id m15so339299vsj.22
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5OZSYFVQQCN9jPq40PFQ0tbJN0l/5n2kSdVxcNbhMyc=;
-        b=hoLtUF/FRgVISM8STLXR0q+/Sx5TqkfUrzPES8j2pD9CC6WP+zr6GtPf3Sj5JvGMnv
-         TB9B6uyuVbpoWDXnIsZZRarLuLBM0u7hVL9x1U5nrKXpfHY7wHcossl4iEWVdMP4kVoQ
-         n3QZTM+Rg7lgcluVJE956us/iF0euvAvGjGE/Cm+vR5YUwIK6cjN2ChQJanmIHYcBhj0
-         N3MGJwPcTIiwOL7et4V/nsA/D41j1nF6AvR4saKq5zNmvo84y5qQyC1sAcxm0PmI/DZB
-         cSqf0MbfIVk6YjkzP0FGL2dq5oPv7b2y/eGIyMNk6QJ8MHEdUvTqir0oUBUIi4QxhQ2T
-         Ud6w==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=I6jD1WRmo86OM3bsIakAOe6JbGStvpAqVOoE2BT6rcU=;
+        b=Wk6g1uSOgxeYU9rbcErk6qD765qn6dLXwOR9Sy+xNuM+iSx5iBdg5gG2x3a++IBKQb
+         84T0d4ucZUMKle4HVIWjA7+kM7liZ+jdSvu5S72G9nLnxC8+IfznBaDiBXd5jfrDbi+V
+         GXsmqRHSNni4QTUgb/R1L7M9JJmll/eHRXNOw74/u040fGpS1lY951aQgcwc0xnMV2g9
+         KEWuO4+yEdntOCRBrpfM+FlwKXSpi0NsEn1eWPeDnvlTNVkyzpco0VbnwYsrFdOioqp5
+         HW5OIhZEVuWMjaDh8dXwKyp/VxgS4svDjrtiFCWiyBDbce+eDtOgoBsIWbRTjaJMsqJo
+         fD7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5OZSYFVQQCN9jPq40PFQ0tbJN0l/5n2kSdVxcNbhMyc=;
-        b=S+K2kIAxSRJpCSoLq5m9CROxGYwOMZzk2WWWkPCGknCPhyuqR1oyl7iLMTvwgkjbXj
-         5okowyAAh95J0XNJPtHQUWKDAFgtEQscrTUaRvx4KkIOa1q/SKKvLodKANzRRxkwN+Iq
-         zI9IenwL+JX8T9kLRtw6OIsuFIoKsH/d0yOqGGw6SvD/6UdotPi+Dk05BxdXm2qZHrYo
-         TbyjUVpanRpiMlVfA9LtAqgRpfj1VCLggAt5F6Xp96H5gGPmJXARFp3ep84YV8o7JH6J
-         l373MHxKtkkP5GnIQx7CXefdlKFYRa//9Txif97G9kn5Y0NopiHdDntRhwLmu0rbhos5
-         wOEg==
-X-Gm-Message-State: APjAAAVFDJozBjQF2booeTvl54Sfl4J7D4AC5pH97WJaO0FJTbHEw06m
-        fy67m7Cp3YqXkYE4S1WefvA=
-X-Google-Smtp-Source: APXvYqw0YNpPRjx9wexXpeihN29/pFYVjrKSeDEQLWPSiC1j1xnXsd8pptCmTl9iNnhGFZCJybh+Zw==
-X-Received: by 2002:ac8:3376:: with SMTP id u51mr561126qta.248.1572448420273;
-        Wed, 30 Oct 2019 08:13:40 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id c23sm257784qte.66.2019.10.30.08.13.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 08:13:38 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 93764410D7; Wed, 30 Oct 2019 12:13:36 -0300 (-03)
-Date:   Wed, 30 Oct 2019 12:13:36 -0300
-To:     James Clark <James.Clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] Fixes issue when debugging debug builds of Perf.
-Message-ID: <20191030151336.GD27327@kernel.org>
-References: <20191028113340.4282-1-james.clark@arm.com>
- <20191029140052.GB4922@kernel.org>
- <20191029141852.GC4922@kernel.org>
- <20191029142647.GD4922@kernel.org>
- <578c3a3a-2972-2b95-b98c-aee78950f5bb@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <578c3a3a-2972-2b95-b98c-aee78950f5bb@arm.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=I6jD1WRmo86OM3bsIakAOe6JbGStvpAqVOoE2BT6rcU=;
+        b=uWGYEvhbCCRx+cgl/3o6lo3xZdvd0C8cdVDnf6+LEOGn0EFwrWF0pjCVxbpsAM/YKe
+         IseGGPP7Snu3S3jhbs5OJnSAZdaCV9XNV/ufAZ1/RBdx6U2RtS/Vd1QXnInmhUOGqUa0
+         tS5Oh6rFmi//fF+HO2dP8QxIcAOnE/m9ra1NWe6AUbkbKkgMEBLt/RbIg0HwX8Y7NJ38
+         NDyTPSf4FCJrYPH8PI0ZMKNdN+gZuqswj1jaV1UzepfccCwPG76KB8GjVywzPrRPheV4
+         pmoK9RBj8eU3y/Z9MUWvfj60mrjdqkkRvF1N7+lsiG78M51o+m8hu+oGEu/nXRulKNNd
+         W08g==
+X-Gm-Message-State: APjAAAUB1e2o9HSBep8B1hpVl5oR3PYOMd88mPZAvFzmiKlaLQH1pmFs
+        r2EHzRK5IGR4h5SZcnUlfmxYfO4+VBJr
+X-Google-Smtp-Source: APXvYqzVXv3phZKJ6kK18tzuCBHmUvTKTyupg+8nDEpD/+f+55XCt8xAN1D0dRe2E3jxVYD4dOA87TGf/mZD
+X-Received: by 2002:a67:fe86:: with SMTP id b6mr5198734vsr.162.1572448494253;
+ Wed, 30 Oct 2019 08:14:54 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 15:14:47 +0000
+Message-Id: <20191030151451.7961-1-qperret@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: [PATCH v9 0/4] Make IPA use PM_EM
+From:   Quentin Perret <qperret@google.com>
+To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, will@kernel.org, daniel.lezcano@linaro.org
+Cc:     dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
+        mka@chromium.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, qperret@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Oct 30, 2019 at 11:03:43AM +0000, James Clark escreveu:
-> Hi Arnaldo,
-> 
-> Thanks for that, yes separating them looks better.
-> I will try to break down commits in the future.
-> 
-> > The patch came mangled, so I'm applying by hand, and separating it into
-> > two patches, the first for the first paragraph and the other for the
-> > second, ok?
-> 
-> By mangled do you mean the quoted printables "=3D" and "=20"?
-> 
-> It seems like git send-email falls back to this behavior by default:
-> 
->          
->      --transfer-encoding=(7bit|8bit|quoted-printable|base64|auto)
-> 
->        Specify the transfer encoding to be used to send the message over SMTP.
->        7bit will fail upon encountering a non-ASCII message. quoted-printable can be
->        useful when the repository contains files that contain carriage returns, but
->        makes the raw patch email file (as saved from a MUA) much harder to inspect
->        manually. base64 is even more fool proof, but also even more opaque. auto will
->        use 8bit when possible, and quoted-printable otherwise.
-> 
-> 
-> I copied my raw patch and was able to successfully apply it with git am, even with this escaping. Although I
-> did upgrade to a newer version of git (2.23.0).
-> 
-> If I view the patch that you created, then it doesn't have quoted printable escaping. So there does
-> seem to be a difference somewhere.
-> Do you think I should use "git send-email --transfer-encoding=7bit"?
+This removes the IPA-specific energy model code in favor of PM_EM which
+does the same thing in a generic way. For more details, please read the
+cover letter of the v7:
 
-Well, I'm using mutt defaults, I'd say take a look at:
+https://lore.kernel.org/lkml/20190812084235.21440-1-quentin.perret@arm.com/
 
-~/git/linux/Documentation/process/email-clients.rst
+Changes in v9:
+ - Rebased on 5.4-rc5 and fixed conflicts with pm_qos changes
 
-There is a sesion for your mail agent, maybe it helps.
+Changes in v8:
+ - Fixed checkpatch errors (Rui)
 
-- Arnaldo
- 
-> 
-> Thanks
-> James
-> 
-> On 29/10/2019 14:26, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Oct 29, 2019 at 11:18:52AM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> And here is the first patch out of your larger one, I changed the
-> >> subject line to reflect that this is not tools/perf specific, as
-> >> tools/objtool/ also uses libsubcmd, added Josh, objtool's maintainer so
-> >> that he is made aware.
-> > 
-> > And the second patch:
-> > 
-> > 
-> > commit d0381449fd9ab733ec2daf527263da9f73f1e94e
-> > Author: James Clark <James.Clark@arm.com>
-> > Date:   Mon Oct 28 11:34:01 2019 +0000
-> > 
-> >     libsubcmd: Use -O0 with DEBUG=1
-> >     
-> >     When a 'make DEBUG=1' build is done, the command parser is still built
-> >     with -O6 and is hard to step through, fix it making it use -O0 in that
-> >     case.
-> >     
-> >     Signed-off-by: James Clark <james.clark@arm.com>
-> >     Cc: Adrian Hunter <adrian.hunter@intel.com>
-> >     Cc: Ian Rogers <irogers@google.com>
-> >     Cc: Jiri Olsa <jolsa@kernel.org>
-> >     Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> >     Cc: Namhyung Kim <namhyung@kernel.org>
-> >     Cc: nd <nd@arm.com>
-> >     Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
-> >     [ split from a larger patch ]
-> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-> > index 352c6062deba..1c777a72bb39 100644
-> > --- a/tools/lib/subcmd/Makefile
-> > +++ b/tools/lib/subcmd/Makefile
-> > @@ -27,7 +27,9 @@ ifeq ($(DEBUG),0)
-> >    endif
-> >  endif
-> >  
-> > -ifeq ($(CC_NO_CLANG), 0)
-> > +ifeq ($(DEBUG),1)
-> > +  CFLAGS += -O0
-> > +else ifeq ($(CC_NO_CLANG), 0)
-> >    CFLAGS += -O3
-> >  else
-> >    CFLAGS += -O6
-> > 
+Changes in v7
+ - Added patch 02/04 to fix the build error reported by the kbuild bot
+
+Changes in v6
+ - Added Daniel's and Viresh's Acked-by to all patches
+
+Changes in v5:
+ - Changed patch 02 to guard IPA-specific code in cpu_cooling.c with
+   appropriate ifdefery (Daniel)
+ - Rebased on 5.2-rc2
+
+Changes in v4:
+ - Added Viresh's Acked-by to all 3 patches
+ - Improved commit message of patch 3/3 to explain how it has no
+   functional impact on existing users (Eduardo)
+
+Changes in v3:
+ - Changed warning message for unordered tables to something more
+   explicit (Viresh)
+ - Changed WARN() into a pr_err() for consistency
+
+Changes in v2:
+ - Fixed patch 01/03 to actually enable CONFIG_ENERGY_MODEL
+ - Added "depends on ENERGY_MODEL" to IPA (Daniel)
+ - Added check to bail out if the freq table is unsorted (Viresh)
+
+Quentin Perret (4):
+  arm64: defconfig: Enable CONFIG_ENERGY_MODEL
+  PM / EM: Declare EM data types unconditionally
+  thermal: cpu_cooling: Make the power-related code depend on IPA
+  thermal: cpu_cooling: Migrate to using the EM framework
+
+ arch/arm64/configs/defconfig  |   1 +
+ drivers/thermal/Kconfig       |   1 +
+ drivers/thermal/cpu_cooling.c | 404 ++++++++++++++--------------------
+ include/linux/energy_model.h  |   3 +-
+ 4 files changed, 167 insertions(+), 242 deletions(-)
 
 -- 
+2.24.0.rc0.303.g954a862665-goog
 
-- Arnaldo
