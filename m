@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A4FCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A20CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CC620656
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8CD20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450756;
-	bh=PPt6GBJsSbXbytF2kq1k6abXEUt6ZqOmQYI4oa1Cr6c=;
+	s=default; t=1572450764;
+	bh=3Yhs3WqnnkrvAAFYoJ4Y+AVbVYIMGkIaxwp46Lt48+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vYWKNCQ5mJf/Ng4NnagWgh4Cb/Jbk/XMfIoZntZCnGKNFiDFG8dQDjxf9Rs6hVbMj
-	 UspnCFHmM172CR1cW5jpD1vs3RQTexFyfe6652iYIk9p5l9MZiTKOtJslnTxBlvN9o
-	 mig7Q2aENLOPcCjiJen8vC2ugn+bvcqCBi5XqybU=
+	b=q+RQxRSC3AiIHpSvLGeTpxtLQzVHIBmNEYjTw+I13UKtZMHVyiug3tj91/cJs0hdQ
+	 VkFRKP862b1AgdfcQY38EmAD1yW+FaAhFxvTkluk+XHsXsECmZyXJ4vN4DxsE+z/rr
+	 ynDpPmeRpup05/xu2NBLYGIeD9T5m2PE1PLja4gU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfJ3PwJ (ORCPT
+        id S1728053AbfJ3Pwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:52:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53082 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:52:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727429AbfJ3PwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:52:03 -0400
+        id S1728030AbfJ3Pwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:52:40 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3186D20874;
-        Wed, 30 Oct 2019 15:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0AA020856;
+        Wed, 30 Oct 2019 15:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450722;
-        bh=PPt6GBJsSbXbytF2kq1k6abXEUt6ZqOmQYI4oa1Cr6c=;
+        s=default; t=1572450759;
+        bh=3Yhs3WqnnkrvAAFYoJ4Y+AVbVYIMGkIaxwp46Lt48+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sa1YnqfCCysbP9wnh1mo9yldIb/HfBhOmdk32ev9MOkqrH5JJRAAUgAGh89jvDJdk
-         06v3S9QDS9orpTapSVVuLBgTt9Sfmypbaqk7vjLZs69DvYY8JPatifo1Yt9Mola39N
-         +z31O1hD2E72DYf0Ul0ZeX8MqzlBfBcqKT12AJJI=
+        b=YrYaqn6FJ2rQ5uOfW31w2RhkvvZgvBf0pk/eAMAPwBn6IsK/hZtGL6tD8zXsjxBPM
+         ws3tdK+nBBjzk/UpvQJeWC01TTqoEv6WgjxR9a+JC18jKRrQR8V9uMIhDz/3Ml5AGd
+         bfFrkbtJg3HsWPyGBHg8xyVopRZi7ajlTmAyOs7A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Allen Pais <allen.pais@oracle.com>, Martin Wilck <mwilck@suse.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 35/81] scsi: qla2xxx: fix a potential NULL pointer dereference
-Date:   Wed, 30 Oct 2019 11:48:41 -0400
-Message-Id: <20191030154928.9432-35-sashal@kernel.org>
+Cc:     Ran Wang <ran.wang_1@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 43/81] arm64: dts: lx2160a: Correct CPU core idle state name
+Date:   Wed, 30 Oct 2019 11:48:49 -0400
+Message-Id: <20191030154928.9432-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -60,38 +59,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.pais@oracle.com>
+From: Ran Wang <ran.wang_1@nxp.com>
 
-[ Upstream commit 35a79a63517981a8aea395497c548776347deda8 ]
+[ Upstream commit 07159f67c77134dfdfdbdf3d8f657f5890de5b7f ]
 
-alloc_workqueue is not checked for errors and as a result a potential
-NULL dereference could occur.
+lx2160a support PW15 but not PW20, correct name to avoid confusing.
 
-Link: https://lore.kernel.org/r/1568824618-4366-1-git-send-email-allen.pais@oracle.com
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
-Reviewed-by: Martin Wilck <mwilck@suse.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Fixes: 00c5ce8ac023 ("arm64: dts: lx2160a: add cpu idle support")
+Acked-by: Li Yang <leoyang.li@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 36 +++++++++----------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 2835afbd2edc7..04cf6986eb8e6 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -3233,6 +3233,10 @@ qla2x00_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
- 	    req->req_q_in, req->req_q_out, rsp->rsp_q_in, rsp->rsp_q_out);
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index e6fdba39453c3..228ab83037d0e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -33,7 +33,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster0_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
  
- 	ha->wq = alloc_workqueue("qla2xxx_wq", 0, 0);
-+	if (unlikely(!ha->wq)) {
-+		ret = -ENOMEM;
-+		goto probe_failed;
-+	}
+ 		cpu@1 {
+@@ -49,7 +49,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster0_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
  
- 	if (ha->isp_ops->initialize_adapter(base_vha)) {
- 		ql_log(ql_log_fatal, base_vha, 0x00d6,
+ 		cpu@100 {
+@@ -65,7 +65,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster1_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@101 {
+@@ -81,7 +81,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster1_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@200 {
+@@ -97,7 +97,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster2_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@201 {
+@@ -113,7 +113,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster2_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@300 {
+@@ -129,7 +129,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster3_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@301 {
+@@ -145,7 +145,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster3_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@400 {
+@@ -161,7 +161,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster4_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@401 {
+@@ -177,7 +177,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster4_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@500 {
+@@ -193,7 +193,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster5_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@501 {
+@@ -209,7 +209,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster5_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@600 {
+@@ -225,7 +225,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster6_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@601 {
+@@ -241,7 +241,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster6_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@700 {
+@@ -257,7 +257,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster7_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@701 {
+@@ -273,7 +273,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster7_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cluster0_l2: l2-cache0 {
+@@ -340,9 +340,9 @@
+ 			cache-level = <2>;
+ 		};
+ 
+-		cpu_pw20: cpu-pw20 {
++		cpu_pw15: cpu-pw15 {
+ 			compatible = "arm,idle-state";
+-			idle-state-name = "PW20";
++			idle-state-name = "PW15";
+ 			arm,psci-suspend-param = <0x0>;
+ 			entry-latency-us = <2000>;
+ 			exit-latency-us = <2000>;
 -- 
 2.20.1
 
