@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6319FCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF8CCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299F5217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7DF21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451204;
-	bh=HrRc/uzkTfFPv0L8nCGXB774/xM81RQM7rhRnnprTsk=;
+	s=default; t=1572451209;
+	bh=eK03D9qDn2tTGcCq3GV9jpYR+3ahyJ+u39Vf1XxYdwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTwTRV/ugkDyFNASj/nW46M+c0qZQv0IVrYmrGapU7auEaiNLztfEHwf53gFYUnMJ
-	 4ETT6MJj9KQ1DAZi6mxvnpxDrfnSc4O5nXrWwAEw4YA6ZGSbboMudftt6/9W6CPVMm
-	 dfITq/Hs2eVKOvRYYIKQVIP3+U2PQoUunrhrd9m0=
+	b=v/nmhqGnALn6Qlrla4eBFLHUbRmTmhNyNMG9DeOyhZ5CYqCxHJqQl7UcEmsfLcdde
+	 6A2dyEgqz2mQ2QrAf6Pw70Ribs7BrwGSi/wD5YnZSvHcBelPaH9DjZzo8hY5V8YwHI
+	 /1+Ow0yN/Ibe+ywk/Zl2j6dCktce41uIZcMtWzn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfJ3QAC (ORCPT
+        id S1728760AbfJ3P4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:00:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57970 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726878AbfJ3P4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:56:21 -0400
+        id S1727535AbfJ3P4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:56:08 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C10AD2173E;
-        Wed, 30 Oct 2019 15:56:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1D89217D9;
+        Wed, 30 Oct 2019 15:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450981;
-        bh=HrRc/uzkTfFPv0L8nCGXB774/xM81RQM7rhRnnprTsk=;
+        s=default; t=1572450968;
+        bh=eK03D9qDn2tTGcCq3GV9jpYR+3ahyJ+u39Vf1XxYdwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/qsHVrSuSCQP3Di4/ftUgImGOOYkxLlwhh9FtE5jyDiuPw7K78ye9cvlAqL0ppPZ
-         tUkWSdfQd0C1klgLrjl1V/VCQexQU0zFs2Fe0rIA9Vx6+9Si8mmYQN8dTc0xYsTIKH
-         cWm9lNykVYYbKSmtZa3Typ4E02Cg/YWDiT+Ds8Qs=
+        b=rn86h3Se8QUA3zxnXm68w/WTO0NbcgK3tKjsRVWKPNXjszDllGJw7UzXKX9FmrgSr
+         hI0TzbpeLn8DCqcMda+r7FwBr5LSJNUTqS+3L2kgwnwpCVlMh2HZiMbRD/3rPe5+ve
+         4k/arD3WNzPvS3AGA2cEfeKQk6aIagRFIXp1lvPM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/24] scsi: sni_53c710: fix compilation error
-Date:   Wed, 30 Oct 2019 11:55:41 -0400
-Message-Id: <20191030155555.10494-10-sashal@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 05/24] ASoc: rockchip: i2s: Fix RPM imbalance
+Date:   Wed, 30 Oct 2019 11:55:36 -0400
+Message-Id: <20191030155555.10494-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155555.10494-1-sashal@kernel.org>
 References: <20191030155555.10494-1-sashal@kernel.org>
@@ -59,38 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 0ee6211408a8e939428f662833c7301394125b80 ]
+[ Upstream commit b1e620e7d32f5aad5353cc3cfc13ed99fea65d3a ]
 
-Drop out memory dev_printk() with wrong device pointer argument.
+If rockchip_pcm_platform_register() fails, e.g. upon deferring to wait
+for an absent DMA channel, we return without disabling RPM, which makes
+subsequent re-probe attempts scream with errors about the unbalanced
+enable. Don't do that.
 
-[mkp: typo]
-
-Link: https://lore.kernel.org/r/20191009151118.32350-1-tbogendoerfer@suse.de
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: ebb75c0bdba2 ("ASoC: rockchip: i2s: Adjust devm usage")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Link: https://lore.kernel.org/r/bcb12a849a05437fb18372bc7536c649b94bdf07.1570029862.git.robin.murphy@arm.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sni_53c710.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ sound/soc/rockchip/rockchip_i2s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sni_53c710.c b/drivers/scsi/sni_53c710.c
-index 1f9a087daf69f..3102a75984d3b 100644
---- a/drivers/scsi/sni_53c710.c
-+++ b/drivers/scsi/sni_53c710.c
-@@ -78,10 +78,8 @@ static int snirm710_probe(struct platform_device *dev)
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 66fc13a2396a0..0e07e3dea7de4 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -676,7 +676,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Could not register PCM\n");
+-		return ret;
++		goto err_suspend;
+ 	}
  
- 	base = res->start;
- 	hostdata = kzalloc(sizeof(*hostdata), GFP_KERNEL);
--	if (!hostdata) {
--		dev_printk(KERN_ERR, dev, "Failed to allocate host data\n");
-+	if (!hostdata)
- 		return -ENOMEM;
--	}
- 
- 	hostdata->dev = &dev->dev;
- 	dma_set_mask(&dev->dev, DMA_BIT_MASK(32));
+ 	return 0;
 -- 
 2.20.1
 
