@@ -2,87 +2,178 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC717CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 02:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60076CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 02:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793E420856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 02:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3298920856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 02:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OxfsEQxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfJ3C7d (ORCPT
+        id S1727223AbfJ3C7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 22:59:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5223 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726714AbfJ3C7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 22:59:33 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CA582C4A544F66292673;
-        Wed, 30 Oct 2019 10:59:30 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 30 Oct 2019 10:59:24 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-wimax@intel.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <zhongjiang@huawei.com>
-Subject: [PATCH] wimax: use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs fops
-Date:   Wed, 30 Oct 2019 10:55:34 +0800
-Message-ID: <1572404134-45159-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Tue, 29 Oct 2019 22:59:45 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:61863 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfJ3C7o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 22:59:44 -0400
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x9U2xZt1025589;
+        Wed, 30 Oct 2019 11:59:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x9U2xZt1025589
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572404376;
+        bh=zQxDpruBzRyBKppwP5ufPnzpMr/EBdaseHOs9UiGMV8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OxfsEQxgLNHEqymRgTqaLPInL64onTfT/jX7yOp8c2pSL1h5cnBoLl39FYdgY8MXA
+         yyG0PeMARKzREXlhJAgOhpZDJW1c6s8gwrv3UqVxyfxd+/TYM5hkrZTE8JPzpdB6ns
+         +lxc/N+/0YDobhp8hCs8+JwleD5eZGozzBKxjf6zQ3l/0Ye9p5xxNzkLE8MfEH6PG0
+         FzCOj4bMSD+fOAITzfAWBTWI6j6w8VfZKvr385MRgVTebnVdodd9vaOgxrn8zjUNy0
+         e56WlrWlD/lPSpQj5ErYNrm1XvipAtzaeOUlmtoCcawHMNEyxpCxqoYc0x4VTOJOyd
+         jZTKyEfq5GtUw==
+X-Nifty-SrcIP: [209.85.221.182]
+Received: by mail-vk1-f182.google.com with SMTP id d126so147609vkb.1;
+        Tue, 29 Oct 2019 19:59:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAXAkBYDm71cA3Fy3pnXsuX0sL1Vo0YvMSIF6P9b/PMi/Z7SRRzw
+        Fntm7W95YnpDcy0D6SQ943gu7hDukxJzkLsP/sY=
+X-Google-Smtp-Source: APXvYqyx4HWyZkPpQ4DmBVc4L5u+YULsarpybloXOc9/eX/T4/sYK5FeUYOgK1GaKScUCfxLZMXJrhqF6cCjNcJ1yPA=
+X-Received: by 2002:a1f:4b05:: with SMTP id y5mr13116072vka.12.1572404375169;
+ Tue, 29 Oct 2019 19:59:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+References: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
+ <20191029150119.19823-1-e5ten.arch@gmail.com>
+In-Reply-To: <20191029150119.19823-1-e5ten.arch@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 30 Oct 2019 11:58:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT0HdWrHaubdjNuVSEdQWvqj6SkXNybs5LvEd2i9Ku1cA@mail.gmail.com>
+Message-ID: <CAK7LNAT0HdWrHaubdjNuVSEdQWvqj6SkXNybs5LvEd2i9Ku1cA@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: support byacc as alternative YACC to bison
+To:     Ethan Sommer <e5ten.arch@gmail.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
-operation rather than DEFINE_SIMPLE_ATTRIBUTE.
+On Wed, Oct 30, 2019 at 12:02 AM Ethan Sommer <e5ten.arch@gmail.com> wrote:
+>
+> Switches to a more portable set of flags for generating the same file
+> names instead of the bison-specific --defines, uses the more portable -V
+> instead of --version, and explicitly defines YYSTYPE in lex.l, which
+> bison implicitly defines if not present but byacc does not.
+>
+> Add %locations to dtc-parser.y to explicitly enable location tracking
+> for byacc, and define YYERROR_CALL explicitly to prevent the locations
+> directive from causing it to be defined to a 2-parameter call to
+> yyerror, which dtc-parser.y defines to accept one parameter.
+>
+> Requires byacc to be built with --enable-btyacc.
+>
+> Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
+> ---
+>  scripts/Makefile.host     | 2 +-
+>  scripts/dtc/dtc-parser.y  | 4 ++++
+>  scripts/genksyms/Makefile | 2 +-
+>  scripts/genksyms/lex.l    | 2 ++
+>  4 files changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+> index 4c51c95d40f4..64e98e1d4825 100644
+> --- a/scripts/Makefile.host
+> +++ b/scripts/Makefile.host
+> @@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
+>  # YACC
+>  # ---------------------------------------------------------------------------
+>  quiet_cmd_bison = YACC    $(basename $@).[ch]
+> -      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
+> +      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
 
-It is detected with the help of coccinelle.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- drivers/net/wimax/i2400m/debugfs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Hmm, this is unfortunate since there is no common way to
+specify the header path directly.
 
-diff --git a/drivers/net/wimax/i2400m/debugfs.c b/drivers/net/wimax/i2400m/debugfs.c
-index 73f5892..1c640b4 100644
---- a/drivers/net/wimax/i2400m/debugfs.c
-+++ b/drivers/net/wimax/i2400m/debugfs.c
-@@ -26,7 +26,7 @@ int debugfs_netdev_queue_stopped_get(void *data, u64 *val)
- 	*val = netif_queue_stopped(i2400m->wimax_dev.net_dev);
- 	return 0;
- }
--DEFINE_SIMPLE_ATTRIBUTE(fops_netdev_queue_stopped,
-+DEFINE_DEBUGFS_ATTRIBUTE(fops_netdev_queue_stopped,
- 			debugfs_netdev_queue_stopped_get,
- 			NULL, "%llu\n");
- 
-@@ -154,7 +154,7 @@ int debugfs_i2400m_suspend_set(void *data, u64 val)
- 		result = 0;
- 	return result;
- }
--DEFINE_SIMPLE_ATTRIBUTE(fops_i2400m_suspend,
-+DEFINE_DEBUGFS_ATTRIBUTE(fops_i2400m_suspend,
- 			NULL, debugfs_i2400m_suspend_set,
- 			"%llu\n");
- 
-@@ -183,7 +183,7 @@ int debugfs_i2400m_reset_set(void *data, u64 val)
- 	}
- 	return result;
- }
--DEFINE_SIMPLE_ATTRIBUTE(fops_i2400m_reset,
-+DEFINE_DEBUGFS_ATTRIBUTE(fops_i2400m_reset,
- 			NULL, debugfs_i2400m_reset_set,
- 			"%llu\n");
- 
--- 
-1.7.12.4
+I am not sure how much effort we should invent
+to support non-GNU implementation
+since we already rely on various GNU tools.
 
+If we decide to support byacc,
+we must carry the restriction
+that bans GNU-extension.
+
+
+
+
+
+
+>  $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
+>         $(call if_changed,bison)
+> diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
+> index 2ed4dc1f07fd..40dcf4f149da 100644
+> --- a/scripts/dtc/dtc-parser.y
+> +++ b/scripts/dtc/dtc-parser.y
+> @@ -2,6 +2,8 @@
+>  /*
+>   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
+>   */
+> +%locations
+> +
+>  %{
+>  #include <stdio.h>
+>  #include <inttypes.h>
+> @@ -17,6 +19,8 @@ extern void yyerror(char const *s);
+>                 treesource_error = true; \
+>         } while (0)
+>
+> +#define YYERROR_CALL(msg) yyerror(msg)
+> +
+>  extern struct dt_info *parser_output;
+>  extern bool treesource_error;
+>  %}
+> diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
+> index 78629f515e78..397c2dc8182b 100644
+> --- a/scripts/genksyms/Makefile
+> +++ b/scripts/genksyms/Makefile
+> @@ -15,7 +15,7 @@ genksyms-objs := genksyms.o parse.tab.o lex.lex.o
+>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+>
+>  quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
+> -      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
+> +      cmd_bison_no_warn = $(YACC) -V >/dev/null; \
+>                           $(cmd_bison) 2>/dev/null
+>
+>  $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
+> diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
+> index e265c5d96861..0580c088527f 100644
+> --- a/scripts/genksyms/lex.l
+> +++ b/scripts/genksyms/lex.l
+> @@ -19,6 +19,8 @@
+>  #include "genksyms.h"
+>  #include "parse.tab.h"
+>
+> +extern YYSTYPE yylval;
+> +
+>  /* We've got a two-level lexer here.  We let flex do basic tokenization
+>     and then we categorize those basic tokens in the second stage.  */
+>  #define YY_DECL                static int yylex1(void)
+> --
+> 2.23.0
+>
+
+
+--
+Best Regards
+Masahiro Yamada
