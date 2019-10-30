@@ -2,123 +2,92 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19207CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D052ECA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30D320862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9007D21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="g33Q4U/Y"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="LAjdN+AI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfJ3Wip (ORCPT
+        id S1727425AbfJ3WnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 18:38:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38306 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfJ3Wio (ORCPT
+        Wed, 30 Oct 2019 18:43:06 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:57933 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbfJ3WnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:38:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v9so4140737wrq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 15:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qfICZRpjv9MzZUR3Km31YoPnMoXWt4BCtsBGyOPs+MA=;
-        b=g33Q4U/Y/PsWl2LTH18JY6gpMyFVmPxV9qqWkrT57lR2a/GCy9kyBDrbLXWbaa2fps
-         tOVndw1p6l/7VQHVRvGpLmhpFDr4RJXRgrTPx4hhh43FE6ruFdAPV73fa0XTmGA/7rmy
-         ly6YasutyEzFhYEmiEDQkruKueLdPUY1jDjaw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qfICZRpjv9MzZUR3Km31YoPnMoXWt4BCtsBGyOPs+MA=;
-        b=nkPaZ7YdCz97PMEMisZy0DszTUofMwUqTHwtS2FADGLegKn4RK8CzKoWfm9/lnYmkr
-         o3+D6CMLwOv7//wPKWIccSdiTkU+LdiHFIuQe0y1fzXxaA5dTMeWqbH3jHu3adLLm2Gc
-         HeJDOY8XldvjQp8k+AdOEGxy1gpnSpULGrzB+YgHb2BXWQu7hDst6D1hdnipCXlJh925
-         Dq/IbLmzJm1YDJaIzDyWzmp3tzgZBgGkfWkEwpiso29G3tEH59weTambtX8i+bnhu1Of
-         hbkjx7zFPZHSpGj34K44ekEmVGmieHvxyhmFhCTMPy8RjrI6kSQosJKe8g+cobMKW1m0
-         orgA==
-X-Gm-Message-State: APjAAAUvX6wu4rKJrYk4vn9y0+G+i2LK2vzWysWJ9CbCa3rv9mTNKIy+
-        28ZfubY1zT8xkbOnGNIlMEW/R7f7BWmVY+/sfHU=
-X-Google-Smtp-Source: APXvYqwy8Lp9RkPFYIcCKVwNc4bwfuBSBiCYr98GupWsvuOSYztGZY5yvtxoKwr5rWH+K4PLLBTR+g==
-X-Received: by 2002:adf:d1a3:: with SMTP id w3mr2258782wrc.9.1572475121267;
-        Wed, 30 Oct 2019 15:38:41 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id t24sm1858665wra.55.2019.10.30.15.38.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 15:38:40 -0700 (PDT)
-Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
- not cursor and length [ver #2]
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-api@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
- <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
- <CAOi1vP97DMX8zweOLfBDOFstrjC78=6RgxK3PPj_mehCOSeoaw@mail.gmail.com>
- <4892d186-8eb0-a282-e7e6-e79958431a54@rasmusvillemoes.dk>
- <CAOi1vP9paV2-2_S0NgfbZDE6+5kqHXVc9xabHVC-2Ss1MmXkCg@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <d08d13d9-8eee-9c1e-2f8d-e846063882d7@rasmusvillemoes.dk>
-Date:   Wed, 30 Oct 2019 23:38:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 18:43:05 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 81FA222178;
+        Wed, 30 Oct 2019 23:43:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1572475383;
+        bh=Ev/ubprJwnpqeqFsz+uRMTbLx49cuK2FjmTFTyw6tCI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LAjdN+AIMOBWrn3tGxQMOY6WcCtUoTZ6SQZs8BNBYhhFDsLZKtKvWoO1+q945gyG6
+         Dym3IRCuau5g/gmD7x6Zp8m8jNXb1jFpSvNMQJAXHFvsT+/01qSIUsdk971uoQd1Ts
+         SR0pnfCWRfCh7aQ/j/EbrYaicgBB4qFDslNx+GMQ=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Michael Walle <michael@walle.cc>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [RFC PATCH 0/3] net: phy: at803x device tree binding
+Date:   Wed, 30 Oct 2019 23:42:48 +0100
+Message-Id: <20191030224251.21578-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAOi1vP9paV2-2_S0NgfbZDE6+5kqHXVc9xabHVC-2Ss1MmXkCg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/10/2019 23.16, Ilya Dryomov wrote:
-> On Wed, Oct 30, 2019 at 9:35 PM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
->>
->> On 30/10/2019 17.19, Ilya Dryomov wrote:
->>> On Thu, Oct 24, 2019 at 11:49 AM David Howells <dhowells@redhat.com> wrote:
->>>>  /*
->>>> - * We use a start+len construction, which provides full use of the
->>>> - * allocated memory.
->>>> - * -- Florian Coosmann (FGC)
->>>> - *
->>>> + * We use head and tail indices that aren't masked off, except at the point of
->>>> + * dereference, but rather they're allowed to wrap naturally.  This means there
->>>> + * isn't a dead spot in the buffer, provided the ring size < INT_MAX.
->>>> + * -- David Howells 2019-09-23.
->>>
->>> Hi David,
->>>
->>> Is "ring size < INT_MAX" constraint correct?
->>
->> No. As long as one always uses a[idx % size] to access the array, the
->> only requirement is that size is representable in an unsigned int. Then
->> because one also wants to do the % using simple bitmasking, that further
->> restricts one to sizes that are a power of 2, so the end result is that
->> the max size is 2^31 (aka INT_MAX+1).
-> 
-> I think the fact that indices are free running and wrap at a power of
-> two already restricts you to sizes the are a power of two,
+Adds a device tree binding to configure the clock and the RGMII voltage.
 
-Ah, yes, of course. When reducing indices mod n that may already have
-been implicitly reduced mod N, N must be a multiple of n for the result
-to be well-defined.
+I do have the following questions:
+ - Who should be the maintainer of the atheros,at803x.yaml file?
+ - Is the "atheros,rgmii-io-1v8" boolean property ok or should it be a
+   "atheros,rgmii-io-microvolt = <1800000>"?
+ - There is actually a typo throughout the whole at803x file. The actual
+   name of the PHY is "Atheros AR803x". What should be the name of the yaml
+   file and the dt-bindings header file? atheros,at803x.yaml or
+   atheros,ar803x.yaml. Likewise for the header file.
 
-Rasmus
+Michael Walle (3):
+  net: phy: at803x: fix Kconfig description
+  dt-bindings: net: phy: Add support for AT803X
+  net: phy: at803x: add device tree binding
+
+ .../bindings/net/atheros,at803x.yaml          |  58 +++++++
+ drivers/net/phy/Kconfig                       |   4 +-
+ drivers/net/phy/at803x.c                      | 156 +++++++++++++++++-
+ include/dt-bindings/net/atheros-at803x.h      |  13 ++
+ 4 files changed, 227 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/atheros,at803x.yaml
+ create mode 100644 include/dt-bindings/net/atheros-at803x.h
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+-- 
+2.20.1
+
