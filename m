@@ -2,82 +2,99 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC2ECA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B286CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECEA42083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:09:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QHsP4VXY"
+	by mail.kernel.org (Postfix) with ESMTP id D93AB20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfJ3WJY (ORCPT
+        id S1726711AbfJ3WNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 18:09:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49842 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfJ3WJY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:09:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LDHbgfB76rTN8r9CILX2s5kzAZbtKVtwbuHFVM2PVVo=; b=QHsP4VXYRFu9SW8jGB6LM9xEa
-        Oftw4Mb+e/a25f1n+PfCZLBYUBv7hEOC0fihpZnRm9lqKNO6DsMyCwjxsaZLq+cysfApG8Bg1V6hd
-        4e1kEHEpTZD/96Ik8rs/zFPBmZY02xRPMAFEVtkNjjT65m2A9B14ZJGC03Ed3f8vkUebDf3RYLv8L
-        a8GsxN8GU6VOUk7uiyqOHS0vrnLA9H1Ee/I/2RBeTJCEVWCbDI17UoOeF9z/KEizuXCLQzgPHveIp
-        NATHAUUz7Ymyx/4DLtq88D/w7yMLqAjMQe1aI2LwmYzKNcNQIgOws4K2QtauRq5BDDF8ARFXRXBNP
-        Tsi/O746A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPvq6-0004GJ-Sq; Wed, 30 Oct 2019 21:49:14 +0000
-Date:   Wed, 30 Oct 2019 14:49:14 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>, mbrugger@suse.com,
-        f.fainelli@gmail.com, wahrenst@gmx.net,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH RFC 1/5] dma/direct: turn ARCH_ZONE_DMA_BITS into a
- variable
-Message-ID: <20191030214914.GA15939@infradead.org>
-References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
- <20191014183108.24804-2-nsaenzjulienne@suse.de>
+        Wed, 30 Oct 2019 18:13:19 -0400
+Received: from smtp.infotech.no ([82.134.31.41]:56431 "EHLO smtp.infotech.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfJ3WNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 18:13:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id 26C3E20418F;
+        Wed, 30 Oct 2019 23:13:17 +0100 (CET)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qlYrrmIX-qhs; Wed, 30 Oct 2019 23:13:14 +0100 (CET)
+Received: from [192.168.48.23] (host-23-251-188-50.dyn.295.ca [23.251.188.50])
+        by smtp.infotech.no (Postfix) with ESMTPA id 62F13204164;
+        Wed, 30 Oct 2019 23:13:12 +0100 (CET)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH 4/9] drivers/iio: Sign extend without triggering
+ implementation-defined behavior
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Bart Van Assche <bvanassche@acm.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+References: <20191028200700.213753-1-bvanassche@acm.org>
+ <20191028200700.213753-5-bvanassche@acm.org>
+ <20191030200232.GC3079@worktop.programming.kicks-ass.net>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <bc4941a9-25f0-c931-61f1-b4f96c4bdff9@interlog.com>
+Date:   Wed, 30 Oct 2019 18:13:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014183108.24804-2-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20191030200232.GC3079@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 08:31:03PM +0200, Nicolas Saenz Julienne wrote:
-> Some architectures, notably ARM, are interested in tweaking this
-> depending on their runtime DMA addressing limitations.
+On 2019-10-30 4:02 p.m., Peter Zijlstra wrote:
+> On Mon, Oct 28, 2019 at 01:06:55PM -0700, Bart Van Assche wrote:
+>>  From the C standard: "The result of E1 >> E2 is E1 right-shifted E2 bit
+>> positions. If E1 has an unsigned type or if E1 has a signed type and a
+>> nonnegative value, the value of the result is the integral part of the
+>> quotient of E1 / 2E2 . If E1 has a signed type and a negative value, the
+>> resulting value is implementation-defined."
 > 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> FWIW, we actually hard rely on this implementation defined behaviour all
+> over the kernel. See for example the generic sign_extend{32,64}()
+> functions.
+> 
+> AFAIR the only reason the C standard says this is implementation defined
+> is because it wants to support daft things like 1s complement and
+> saturating integers.
 
-Do you want me to pick this up for the 5.5 dma-mapping tree, or do you
-want me to wait for the rest to settle?
+See:
+    http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2218.htm
+
+That is in C++20 and on the agenda for C2x:
+    https://gustedt.wordpress.com/2018/11/12/c2x/
+
+Doug Gilbert
+
+> Luckily, Linux doesn't run on any such hardware and we hard rely on
+> signed being 2s complement and tell the compiler that by using
+> -fno-strict-overflow (which implies -fwrapv).
+> 
+> And the only sane choice for 2s complement signed shift right is
+> arithmetic shift right.
+> 
+> (this recently came up in another thread, which I can't remember enough
+> of to find just now, and I'm not sure we got a GCC person to confirm if
+> -fwrapv does indeed guarantee arithmetic shift, the GCC documentation
+> does not mention this)
+> 
+
