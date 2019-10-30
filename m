@@ -2,107 +2,206 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC58CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B77FCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23FD62080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:28:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="W6qOtwyI"
+	by mail.kernel.org (Postfix) with ESMTP id 3FF1C2087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572470919;
+	bh=XnMIsHcVdwBeAptKPGJSNsffx0HxomByGS8vfIyd67I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VNDPj+Kqk2cNIcls3obbEjlSk30Vl4IIDeOwn1hbOCVzipuC5fMVrmTq0a7nAOY8w
+	 ihTx4F/4Yj3O8AGMRmyKBN+EwOcwr5xq3rHJdFG7dvp+tuZsIWcCzthGuNAetH0gX5
+	 79UtXYTG8LsDlIthosTG4HxzXyhCtN++n989An0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfJ3V2a (ORCPT
+        id S1727191AbfJ3V2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:28:30 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39936 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbfJ3V2a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:28:30 -0400
-Received: by mail-qk1-f193.google.com with SMTP id y81so4450163qkb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 14:28:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=uytARhU4JI/IWniohgI1h0y5qFI/5ABlfCC5CreFQxg=;
-        b=W6qOtwyIBZjyUMzGqRXB6G/6qHMzRhvEGhB7sUAOb/7Q0fbDCI2YDLOkQh1eth0aoc
-         zqIciVQ+G3mGv+zctMK+TFdzw+XCwGqxXmtEkh94OX70f68eyfnbtWgJfSzHi1PcSZ3G
-         CAVcLdYgMbOSQHcqkV5VQE+QYliMeOEGx1e3ND3k2EIB6yapWK8ru7QD/5ztb7f5pujO
-         Pak0KSIiHl0AOG8ds3zA4UFJLxn3Jca/4N83l505TqjgpGl49Ei9pRJNsnmva3l2tOss
-         yS6VPCeMMoksJcTTHiqXoVHSDlPTvqMOf0mX5pLpaldc8m3ZG6ktwT8DHh/Vcz49xOu2
-         jpxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uytARhU4JI/IWniohgI1h0y5qFI/5ABlfCC5CreFQxg=;
-        b=eGl2xgc59EfDMHxSV+kBXjQfibXP8cJBP1dTUCqWPfGGBIIOoirSKasjqmEaRjD+tG
-         Qz5HJLmhL2iGYUgHLt1LSpAlEc4SAdKmqz+H+TxRlsKdPzz+JdJ0sNQXBSSH9wkmU+M7
-         lQhxcXJQD2J4vuosjiu3U9LmkW6wmf06C/tE8YTum1Eqva28uqipDR2tPaVWnq/U0PXY
-         XEnLDTT0mPMPth9zmbecFLRxjpU9dQBjtB20UO4XrCehCbN3xAx0IxqYiXVoUm7lSjRG
-         E4FXVFwWBL8Z9UAX2oTW0qK4GRhgS3ooVqWLiZt8QN12fj21QvJ11OUewtGy4F877+z9
-         Jsvw==
-X-Gm-Message-State: APjAAAXoFJ7wndh+oTucuLESDfsQ6V//9ceQpX9QMA14mmR/oLLYgADt
-        yx03JJRlTPGUXd8A6GABvREG6A==
-X-Google-Smtp-Source: APXvYqxcwYAkthju/bxaBiwmlQyXIhoDs08LzlEAC4htL2+UH1+5Ji7t08N+xcWqICHjkBR79GnO+g==
-X-Received: by 2002:a37:8a05:: with SMTP id m5mr1950049qkd.181.1572470907914;
-        Wed, 30 Oct 2019 14:28:27 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 15sm670984qke.120.2019.10.30.14.28.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 14:28:27 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     dan.j.williams@intel.com
-Cc:     vishal.l.verma@intel.com, dave.jiang@intel.com,
-        keith.busch@intel.com, ira.weiny@intel.com,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] nvdimm/btt: fix variable 'rc' set but not used
-Date:   Wed, 30 Oct 2019 17:28:09 -0400
-Message-Id: <1572470889-28754-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 30 Oct 2019 17:28:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727045AbfJ3V2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 17:28:37 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE7C620862
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 21:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572470916;
+        bh=XnMIsHcVdwBeAptKPGJSNsffx0HxomByGS8vfIyd67I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GcWeTabOhXFFYmG9IuepIBfPV5QRfttQWMLS1Y6Rk8rh2vTkVAkEhB6Um3JyKeqy4
+         LNs6p/NikovmiHK4i1587lHitpzbIZZEceZQnp9MC1Dd+FLh2eEfMYUuuLrCU/z23G
+         d6YvUwcSinsTp5iE3gKiIYHIUUNColKmb8wgsW14=
+Received: by mail-wr1-f44.google.com with SMTP id v9so3977640wrq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 14:28:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAVaUrnTM7eOp4c53gnmYXZUl/StKTsEja3QXW5nhbKxFWyH+Fsf
+        +QHmDgT10axY2NIIkb2gLsAaDUQ1AzSXorzFdwHJzQ==
+X-Google-Smtp-Source: APXvYqxL52nW7f18FABq7zaYN4yb2n3VI3Wgyrkk3D0RE6Z3WVzN667TLF9aXzvjCfAynZrgm0oE0wYz3oOaoK5HeOI=
+X-Received: by 2002:adf:f342:: with SMTP id e2mr1983177wrp.61.1572470914076;
+ Wed, 30 Oct 2019 14:28:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net> <20191029093254.GE18773@rapoport-lnx>
+ <CALCETrUuuc4DS0cdMBtS550Wkp0x9ND3M3SgtaMgyRROnDR5Kg@mail.gmail.com> <20191030084005.GC20624@rapoport-lnx>
+In-Reply-To: <20191030084005.GC20624@rapoport-lnx>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 30 Oct 2019 14:28:21 -0700
+X-Gmail-Original-Message-ID: <CALCETrXajrY+0SmzkL7t++ndYwRoYLLE9VPKwSGSyW8HZx-TeA@mail.gmail.com>
+Message-ID: <CALCETrXajrY+0SmzkL7t++ndYwRoYLLE9VPKwSGSyW8HZx-TeA@mail.gmail.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, X86 ML <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/nvdimm/btt.c: In function 'btt_read_pg':
-drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
-[-Wunused-but-set-variable]
-    int rc;
-        ^~
+On Wed, Oct 30, 2019 at 1:40 AM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> On Tue, Oct 29, 2019 at 10:00:55AM -0700, Andy Lutomirski wrote:
+> > On Tue, Oct 29, 2019 at 2:33 AM Mike Rapoport <rppt@kernel.org> wrote:
+> > >
+> > > On Mon, Oct 28, 2019 at 02:44:23PM -0600, Andy Lutomirski wrote:
+> > > >
+> > > > > On Oct 27, 2019, at 4:17 AM, Mike Rapoport <rppt@kernel.org> wrot=
+e:
+> > > > >
+> > > > > =EF=BB=BFFrom: Mike Rapoport <rppt@linux.ibm.com>
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > The patch below aims to allow applications to create mappins that=
+ have
+> > > > > pages visible only to the owning process. Such mappings could be =
+used to
+> > > > > store secrets so that these secrets are not visible neither to ot=
+her
+> > > > > processes nor to the kernel.
+> > > > >
+> > > > > I've only tested the basic functionality, the changes should be v=
+erified
+> > > > > against THP/migration/compaction. Yet, I'd appreciate early feedb=
+ack.
+> > > >
+> > > > I=E2=80=99ve contemplated the concept a fair amount, and I think yo=
+u should
+> > > > consider a change to the API. In particular, rather than having it =
+be a
+> > > > MAP_ flag, make it a chardev.  You can, at least at first, allow on=
+ly
+> > > > MAP_SHARED, and admins can decide who gets to use it.  It might als=
+o play
+> > > > better with the VM overall, and you won=E2=80=99t need a VM_ flag f=
+or it =E2=80=94 you
+> > > > can just wire up .fault to do the right thing.
+> > >
+> > > I think mmap()/mprotect()/madvise() are the natural APIs for such
+> > > interface.
+> >
+> > Then you have a whole bunch of questions to answer.  For example:
+> >
+> > What happens if you mprotect() or similar when the mapping is already
+> > in use in a way that's incompatible with MAP_EXCLUSIVE?
+>
+> Then we refuse to mprotect()? Like in any other case when vm_flags are no=
+t
+> compatible with required madvise()/mprotect() operation.
+>
 
-Add a ratelimited message in case a storm of errors is encountered.
+I'm not talking about flags.  I'm talking about the case where one
+thread (or RDMA or whatever) has get_user_pages()'d a mapping and
+another thread mprotect()s it MAP_EXCLUSIVE.
 
-Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
+> > Is it actually reasonable to malloc() some memory and then make it excl=
+usive?
+> >
+> > Are you permitted to map a file MAP_EXCLUSIVE?  What does it mean?
+>
+> I'd limit MAP_EXCLUSIVE only to anonymous memory.
+>
+> > What does MAP_PRIVATE | MAP_EXCLUSIVE do?
+>
+> My preference is to have only mmap() and then the semantics is more clear=
+:
+>
+> MAP_PRIVATE | MAP_EXCLUSIVE creates a pre-populated region, marks it lock=
+ed
+> and drops the pages in this region from the direct map.
+> The pages are returned back on munmap().
+> Then there is no way to change an existing area to be exclusive or vice
+> versa.
 
-v2: include the block address that is returning an error per Dan.
+And what happens if you fork()?  Limiting it to MAP_SHARED |
+MAP_EXCLUSIVE would about this particular nasty question.
 
- drivers/nvdimm/btt.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+>
+> > How does one pass exclusive memory via SCM_RIGHTS?  (If it's a
+> > memfd-like or chardev interface, it's trivial.  mmap(), not so much.)
+>
+> Why passing such memory via SCM_RIGHTS would be useful?
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 3e9f45aec8d1..10313be78221 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -1266,6 +1266,12 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
- 			/* Media error - set the e_flag */
- 			rc = btt_map_write(arena, premap, postmap, 0, 1,
- 				NVDIMM_IO_ATOMIC);
-+
-+			if (rc)
-+				dev_warn_ratelimited(to_dev(arena),
-+					"Error persistently tracking bad blocks at %#x\n",
-+					premap);
-+
- 			goto out_rtt;
- 		}
- 
--- 
-1.8.3.1
+Suppose I want to put a secret into exclusive memory and then send
+that secret to some other process.  The obvious approach would be to
+SCM_RIGHTS an fd over, but you can't do that with MAP_EXCLUSIVE as
+you've defined it.  In general, there are lots of use cases for memfd
+and other fd-backed memory.
 
+>
+> > And finally, there's my personal giant pet peeve: a major use of this
+> > will be for virtualization.  I suspect that a lot of people would like
+> > the majority of KVM guest memory to be unmapped from the host
+> > pagetables.  But people might also like for guest memory to be
+> > unmapped in *QEMU's* pagetables, and mmap() is a basically worthless
+> > interface for this.  Getting fd-backed memory into a guest will take
+> > some possibly major work in the kernel, but getting vma-backed memory
+> > into a guest without mapping it in the host user address space seems
+> > much, much worse.
+>
+> Well, in my view, the MAP_EXCLUSIVE is intended to keep small secrets
+> rather than use it for the entire guest memory. I even considered adding =
+a
+> limit for the mapping size, but then I decided that since RLIMIT_MEMLOCK =
+is
+> anyway enforced there is no need for a new one.
+>
+> I agree that getting fd-backed memory into a guest would be less pain tha=
+t
+> VMA, but KVM can already use memory outside the control of the kernel via
+> /dev/map [1].
+
+That series doesn't address the problem I'm talking about at all.  I'm
+saying that there is a legitimate use case where QEMU should *not*
+have a mapping of the memory.  So QEMU would create some exclusive
+memory using /dev/exclusive_memory and would tell KVM to map it into
+the guest without mapping it into QEMU's address space at all.
+
+(In fact, the way that SEV currently works is *functionally* like
+this, except that there's a bogus incoherent mapping in the QEMU
+process that is a giant can of worms.
+
+
+IMO a major benefit of a chardev approach is that you don't need a new
+VM_ flag and you don't need to worry about wiring it up everywhere in
+the core mm code.
