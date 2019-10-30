@@ -2,108 +2,88 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98DCCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2EDCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97DDB208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1234E2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrZwX3M6"
+	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="ArfLXaua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfJ3QCS (ORCPT
+        id S1727702AbfJ3PvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:02:18 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40749 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfJ3QCQ (ORCPT
+        Wed, 30 Oct 2019 11:51:13 -0400
+Received: from one.firstfloor.org ([193.170.194.197]:38256 "EHLO
+        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfJ3PvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:02:16 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d8so2567696otc.7;
-        Wed, 30 Oct 2019 09:02:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Io+g/Mop1YTO7IEeBRV6yOSmnttfivb/SWZtZYVfkLU=;
-        b=rrZwX3M614HUB1QzRH0h8zC9UfyKHcbaXzNo9WeFt6hAxhK/EIOLuHA5VowG5k/7M1
-         9TNp2/F06fJplrOREF7SilqiobyoD5l+j1L7Frx/WnD2ET0Fes8HEI1KB2MKAYWT5P43
-         wlEEJCfHRxmUsrhCl9T5toj1xlRnmq3vDKBKmVhL8s1M3RfoIaF4fnTpCV3HDyC862Mg
-         f9/D7R/lVUIMRaPLp5Jb7gXAySTVkTrvAfVE08styByL1LJhCjqB0bSMakInQhXt68VU
-         s4Gi4AtYJFDjNiYDKzLi3hhioJ3NhjDIpB2ACEjNCghsPHaOz49ml6/tE3T5QXGeoefJ
-         GkFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Io+g/Mop1YTO7IEeBRV6yOSmnttfivb/SWZtZYVfkLU=;
-        b=C4g7cROdYodD2AHkjvx22thIOVaRvax6tAweFHRhP8LNmc5h35dn0XKVJugisus+h6
-         l6ZvKYYnz5NVZ7ItAWb8oRaRcVPrsdOTv54apnu+4c/abAraTdwFEH79SWyHBy4cLQhd
-         SXDOmUytz63s8QOl+fwbxsmdn9Kzs1UAELlCkLDZZK9NkuQLvxxY6/smNUnBS1mHDkkw
-         +PvHedzrW+VVjb7Nv4bRDAQOgo5jMIaBHKjF1DgR12YLSDq1DeOcoj1zxJF+uUi0BizQ
-         6JxWt3mUBhiKpsdWb1o77EFOcujgiFwAg/P7coM+lW3VARW5OXXdt1AmI2Thf/BIiXNf
-         C/aA==
-X-Gm-Message-State: APjAAAXRRyYSmZTOPhA2Ba31HGKHzoCmpyRmE9beKAqgxGRH/nJWLUKa
-        H5Sck4prNc3Opb97rZgj3fY=
-X-Google-Smtp-Source: APXvYqxqGe7NQskyZekS8CGgFbCef9gYqCVGPeORga0Wgh98IHDBt0IuR+og2dT9OOYAkVfpClfCzw==
-X-Received: by 2002:a9d:509:: with SMTP id 9mr536124otw.70.1572451334923;
-        Wed, 30 Oct 2019 09:02:14 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id j129sm108696oib.22.2019.10.30.09.02.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 09:02:14 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH net-next] mlxsw: Fix 64-bit division in mlxsw_sp_sb_prs_init
-Date:   Wed, 30 Oct 2019 09:01:52 -0700
-Message-Id: <20191030160152.11305-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.0.rc1
+        Wed, 30 Oct 2019 11:51:11 -0400
+Received: by one.firstfloor.org (Postfix, from userid 503)
+        id B1E7A8675A; Wed, 30 Oct 2019 16:51:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
+        s=mail; t=1572450668;
+        bh=buEPZYQ7PmpiAS8Dp8tUdF7+RuFJhqEE6l218Vxc664=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ArfLXauaLFv2U7MBhT/k/YmlaTaS3l0BH/jECja1dEbxncGHZr4wB8HAK9fbiHFds
+         HUYpWud+ngjxG+hsUYJxtnxtNXmdDFemEeTz3pZuGka5WfBuBCqs1DNFgd/2NUgDVS
+         SFpMfH1BuPuHenAvtZ+whKELqVs4/Esed/yIPTz4=
+Date:   Wed, 30 Oct 2019 08:51:08 -0700
+From:   Andi Kleen <andi@firstfloor.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
+        jolsa@kernel.org, eranian@google.com, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v3 3/7] perf evsel: Add iterator to iterate over events
+ ordered by CPU
+Message-ID: <20191030155108.taqo2kbuaro3idhe@two.firstfloor.org>
+References: <20191025181417.10670-1-andi@firstfloor.org>
+ <20191025181417.10670-4-andi@firstfloor.org>
+ <20191030100606.GG20826@krava>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030100606.GG20826@krava>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building for 32-bit ARM, there is a link time error because of a
-64-bit division:
+On Wed, Oct 30, 2019 at 11:06:06AM +0100, Jiri Olsa wrote:
+> > +struct perf_cpu_map *evlist__cpu_iter_start(struct evlist *evlist)
+> > +{
+> > +	struct perf_cpu_map *cpus;
+> > +	struct evsel *pos;
+> > +
+> > +	/*
+> > +	 * evlist->cpus is not necessarily a superset of all the
+> > +	 * event's cpus, so compute our own super set. This
+> > +	 * assume that there is a super set
+> > +	 */
+> > +	cpus = evlist->core.cpus;
+> > +	evlist__for_each_entry(evlist, pos) {
+> > +		pos->cpu_index = 0;
+> > +		if (pos->core.cpus->nr > cpus->nr)
+> > +			cpus = pos->core.cpus;
+> > +	}
+> > +	return cpus;
+> 
+> I might not understand the reason for cpu_index, but 
 
-ld.lld: error: undefined symbol: __aeabi_uldivmod
->>> referenced by spectrum_buffers.c
->>>               net/ethernet/mellanox/mlxsw/spectrum_buffers.o:(mlxsw_sp_buffers_init) in archive drivers/built-in.a
->>> did you mean: __aeabi_uidivmod
->>> defined in: arch/arm/lib/lib.a(lib1funcs.o
+This is just so that we can iterate each event's map
+independently.
 
-Avoid this by using div_u64, which is designed to avoid this problem.
+> imagine something like below should be enough, no?
 
-Fixes: bc9f6e94bcb5 ("mlxsw: spectrum_buffers: Calculate the size of the main pool")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Well it's more complicated because evlist->all_cpus doesn't exist.
+The exists evlist->cpus cannot be used (I tried that)
+I also don't think we have an existing function to merge
+two maps, so that would need to be added to create it.
+Just using ->cpu_index is a much simpler change.
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c
-index 33a978af80d6..968f0902e4fe 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c
-@@ -470,7 +470,7 @@ static int mlxsw_sp_sb_prs_init(struct mlxsw_sp *mlxsw_sp,
- 				size_t prs_len)
- {
- 	/* Round down, unlike mlxsw_sp_bytes_cells(). */
--	u32 sb_cells = mlxsw_sp->sb->sb_size / mlxsw_sp->sb->cell_size;
-+	u32 sb_cells = div_u64(mlxsw_sp->sb->sb_size, mlxsw_sp->sb->cell_size);
- 	u32 rest_cells[2] = {sb_cells, sb_cells};
- 	int i;
- 	int err;
--- 
-2.24.0.rc1
 
+-Andi
