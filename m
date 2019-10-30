@@ -2,132 +2,82 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26D2CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC14CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6F321835
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="QMBsrUOA"
+	by mail.kernel.org (Postfix) with ESMTP id E34CF205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfJ3QND (ORCPT
+        id S1727108AbfJ3QQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:13:03 -0400
-Received: from sonic313-19.consmr.mail.gq1.yahoo.com ([98.137.65.82]:35343
-        "EHLO sonic313-19.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726691AbfJ3QNC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:13:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1572451981; bh=S/ZDvmEPfSmBt4lxF3DnDhcZlHbW70loQ/lD49ODK0I=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=QMBsrUOAQVdL2w29pwAQaHcD6kp2e/RxIp85wI+KnwsKuWxiqcJd8pATRVM9juGX5aZ/M7BuyUfS5wt7Y0p7vu709QHNPrLp1Z4E9h7z68tMh618U7f6ta2GmPLy7yQCZRox404VNutWwYT8qNk/aAZEK3WRXE0N4mH403ldgsBC/Tx9M9nzP1ZDHq8F/LlUB9fkdt258m47X/57Ox1024R3FIkEwNiQAL0XywHbe9psFuOezVpV3A2f7pZyQb3XI/aSvm+06Oh24z+xWW8r97t43nzeGYvIXZJ9ZW1Rge1RRzUwoHSyq7JHN5f5juBRxYTrFXNP84iAVH7ZY7+o3Q==
-X-YMail-OSG: VUDslHoVM1nmGfsRLE0u6zk7Oh8KL_GwpUfSYXRJd11NEDgJqdxoDyFqJsBHhwD
- J5Di1M9rrfPbZjoCYs9uFuiAHMizladxdFQNJmkGHayhDOIZsSFgNjLOmkN7zj_78F4XnsXXKNoH
- aUtTv9GZR9.VRdzMCwVd81Pts54VKsRZ.JD20NZe2pzYH6D7cZFxA3dN.jIIVb7C8JD6j3G5pfOA
- 7Wue0S3h8TiGNDOonY_o7fnuA7ga79sdfZBHRlvZKhgCJYlI_WUrZ76lG.8PHeUThs14_K0Mg9fK
- ia5Ow1aNkdZC3urIl0TUBB1e6oWR3s_cY_P9t6aXScNzQyyCMTIrU.qrp2tN68btDzsHIX8C19Sp
- PVZjDBlwW1cN6wgT5VhVXjoslEjOoBjVQGTkpsgtic5BWw2CwYb_paKFYyMh..sN4kfVoGcU5NCX
- Qc5n4ZRt02IsYfuF9uEEV7_Ztjx5Iy_he2eohLQL4FRd0mRBCXMTeBAgOe6iz0AOgVVKkaQwl8Vj
- oN96L9ZBf93ukvBDAcruF9nm.kL2Yfhaz8PpuaqOkfigoMuNNcQ1It94nLXHK8lHSJyJlK0uD675
- AjPw_Vud6NlafOCsZJY4N8iizqSpuE5QXkL8xbGOH.0B0iofYy0yezUFrY0kPdvhHwLMzfkgOsfL
- N0Tou4sPDQ4dSjwBbGbRhsfQpdGx3VcqEG0oWAY3ifxhnG9WVRbb_b_4p0qo1G2zeXPQ5jfxfbZs
- 6lVHyj.PZdOxnpLrLMJsyc_FdXTpkBxPadHWs11RBUNpiMuhAXEHFwyQQNxEq9sC0JyIZqejGhOv
- mi8r2eK3P8dEhDy5eX4EeWXinlzC1RG.KX4oqqBt1U85ALfe877Kq1qzxyzOFE9Atv22PxWqNbKM
- iLkBUqEizY8iFKZ8vZaBmdClhopDxeCmZrdSimesgEWCQjTKvrRhuSu0aLGjx42_jXxUTcOEbauc
- 6LZblcrM_54LoUOnQE8gCBcALNL2j5VUklssHHu8tbSNAmY2_LbkMQxB4ni2rbCd2z89la..ojMB
- JQCUkH3Dyfudae9CqZNIGztmvD4fwf.wn4p_krKtkiFusiiskMiaLsXNvXujMv6yXR5bk1SR4B6a
- zJfQ4V60duEOpO0XFgCd5Bzq0doRP6R6zJVzpSJZH4BDNb_qq4KqOKPtJvTyQLer9b7YIcYdLtBi
- Nt4Z2xs.KOYNhiQxc0Vrpjo0aWUwDzmjReN0SkgkmOt3FhPovo0oA3KcgN_cRDyV4CjGSvoKTqUA
- JhAVJ_wtD0hLl6umTyuUGUUJHnRkx9a1PK2v_LtCx8uvFRRMmBHs2F__keJdEBI0gc.6dzatprPn
- NYs.w_VYphckCWYGa1zNGZ_d1E2n3DqcQfYweifeee2FaOf8Z2j_nlc3sZihMdvquuwbJCzslQON
- RPKNRTQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.gq1.yahoo.com with HTTP; Wed, 30 Oct 2019 16:13:01 +0000
-Received: by smtp431.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 5bc5368066fdcbc1af6a611a83615b01;
-          Wed, 30 Oct 2019 16:12:59 +0000 (UTC)
-Date:   Thu, 31 Oct 2019 00:12:52 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] ext4: bio_alloc never fails
-Message-ID: <20191030161244.GB3953@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20191030042618.124220-1-gaoxiang25@huawei.com>
- <20191030101311.2175EA4055@d06av23.portsmouth.uk.ibm.com>
- <20191030150437.GB16197@mit.edu>
+        Wed, 30 Oct 2019 12:16:10 -0400
+Received: from muru.com ([72.249.23.125]:40252 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbfJ3QQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 12:16:09 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 3A61C8027;
+        Wed, 30 Oct 2019 16:16:43 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 09:16:04 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+Message-ID: <20191030161604.GA5610@atomide.com>
+References: <cover.1571424390.git.hns@goldelico.com>
+ <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191030150437.GB16197@mit.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Mailer: WebService/1.1.14593 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
+In-Reply-To: <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
+* H. Nikolaus Schaller <hns@goldelico.com> [191018 18:47]:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
+> @@ -0,0 +1,76 @@
+> +Imagination PVR/SGX GPU
+> +
+> +Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by this binding.
+> +
+> +Required properties:
+> +- compatible:	Should be one of
+> +		"img,sgx530-121", "img,sgx530", "ti,omap-omap3-sgx530-121";
+> +		  - BeagleBoard ABC, OpenPandora 600MHz
+> +		"img,sgx530-125", "img,sgx530", "ti,omap-omap3-sgx530-125";
+> +		  - BeagleBoard XM, GTA04, OpenPandora 1GHz
+> +		"img,sgx530-125", "img,sgx530", "ti,omap-am3517-sgx530-125";
+> +		"img,sgx530-125", "img,sgx530", "ti,omap-am335x-sgx530-125";
+> +		  - BeagleBone Black
+> +		"img,sgx540-120", "img,sgx540", "ti,omap-omap4-sgx540-120";
+> +		  - Pandaboard (ES)
+> +		"img,sgx544-112", "img,sgx544", "ti,omap-omap4-sgx544-112";
+> +		"img,sgx544-116", "img,sgx544", "ti,omap-omap5-sgx544-116";
+> +		  - OMAP5 UEVM, Pyra Handheld
+> +		"img,sgx544-116", "img,sgx544", "ti,omap-dra7-sgx544-116";
 
-On Wed, Oct 30, 2019 at 11:04:37AM -0400, Theodore Y. Ts'o wrote:
-> On Wed, Oct 30, 2019 at 03:43:10PM +0530, Ritesh Harjani wrote:
-> > 
-> > 
-> > On 10/30/19 9:56 AM, Gao Xiang wrote:
-> > > Similar to [1] [2], it seems a trivial cleanup since
-> > > bio_alloc can handle memory allocation as mentioned in
-> > > fs/direct-io.c (also see fs/block_dev.c, fs/buffer.c, ..)
-> > > 
-> > 
-> > AFAIU, the reason is that, bio_alloc with __GFP_DIRECT_RECLAIM
-> > flags guarantees bio allocation under some given restrictions,
-> > as stated in fs/direct-io.c
-> > So here it is ok to not check for NULL value from bio_alloc.
-> > 
-> > I think we can update above info too in your commit msg.
-> 
-> Please also add a short comment in the code itself, so it's clear why
-> it's OK to skip the error check, and reference the comments for
-> bio_alloc_bioset().  This is the fairly subtle bit which makes this
-> change not obvious:
+FYI, the compatible names above have unnecessary omap in them:
 
-OK, I will add short comments in code then, and tidy up later since
-it's not urgent (but I'm surprised that so many in-kernel code handles
-that, those also makes me misleaded before, but I think mempool back
-maybe better since the total efficient path is shorter compared with
-error handling path)... and I'd like to know the f2fs side as well :-)
+"ti,omap-omap3-sgx530-121" should be "ti,omap3-sgx530-121"
+"ti,omap-am335x-sgx530-125" should be "ti,am335x-sgx530-125";
+"ti,omap-dra7-sgx544-116" should be "ti,dra7-sgx544-116"
 
-> 
->  *   When @bs is not NULL, if %__GFP_DIRECT_RECLAIM is set then bio_alloc will
->  *   always be able to allocate a bio. This is due to the mempool guarantees.
->  *   To make this work, callers must never allocate more than 1 bio at a time
->  *   from this pool. Callers that need to allocate more than 1 bio must always
->  *   submit the previously allocated bio for IO before attempting to allocate
->  *   a new one. Failure to do so can cause deadlocks under memory pressure.
->  *
->  *   Note that when running under generic_make_request() (i.e. any block
->  *   driver), bios are not submitted until after you return - see the code in
->  *   generic_make_request() that converts recursion into iteration, to prevent
->  *   stack overflows.
->  *
->  *   This would normally mean allocating multiple bios under
->  *   generic_make_request() would be susceptible to deadlocks, but we have
->  *   deadlock avoidance code that resubmits any blocked bios from a rescuer
->  *   thread.
-> 
-> Otherwise, someone else may not understand why it's safe to not check
-> the error return then submit cleanup patch to add the error checking
-> back.  :-)
+And so on.
 
-Got it.
+Regards,
 
-Thanks,
-Gao Xiang
-
-> 
-> 					- Ted
-> 					
+Tony
