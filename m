@@ -2,110 +2,125 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C20CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1F9CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659A320656
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF0962087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:23:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEBALLbJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bf2xTGjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfJ3OVd (ORCPT
+        id S1726510AbfJ3OXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:21:33 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46241 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfJ3OVc (ORCPT
+        Wed, 30 Oct 2019 10:23:40 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37793 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfJ3OXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:21:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572445291;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=joBUg/8LLvLAx6tJ+C+Ow4ZMZTAOPeKx8j+cSlr0+Rc=;
-        b=UEBALLbJbODzpX9laanNwmRJbPaqkJ8eF7LFBKEWOP8tUr6DI6FcORQpb8O3x9+o7tAIJF
-        UoJgGZpwD4z/2eI6mzQMbDxnftwu1cFcvxu32AOuo8D8o0Z9dRYKq2oisKv+ahUE+II3V+
-        DpCFZ7SZELvQKAt55gbV4xAjss8S9Sg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-6-UkCuo7D2PL-i8Nnb9m9KVw-1; Wed, 30 Oct 2019 10:21:28 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 248762EDD;
-        Wed, 30 Oct 2019 14:21:26 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.206.16])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6289760876;
-        Wed, 30 Oct 2019 14:21:11 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 30 Oct 2019 15:21:25 +0100 (CET)
-Date:   Wed, 30 Oct 2019 15:21:10 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will.deacon@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
-Message-ID: <20191030142110.GA17800@redhat.com>
-References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
- <20190806161741.GC21454@redhat.com>
- <20190806171515.GR2349@hirez.programming.kicks-ass.net>
- <20190807095657.GA24112@redhat.com>
- <20191029184739.GA3079@worktop.programming.kicks-ass.net>
+        Wed, 30 Oct 2019 10:23:40 -0400
+Received: by mail-qk1-f193.google.com with SMTP id u184so2908419qkd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 07:23:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=Iieil+MuDaNJ5lIJEOFs9h7jIoiG48MeHaP0+PASXlo=;
+        b=bf2xTGjUYAa3MySkebfnobaQ/S7IFbvS3B8bSmpGJw21kTSBXvaEKLTGw+yavb0Dgz
+         Dw/dnD8CYZHxAuOvQrPSFUCZ/ggeRfDkgx444Sojdaa90kTduIlrOB9d69bpjAFWkAgO
+         iFKxRGN/WlM09anCsNQxhTKqBBTNObXzGqksZXZh1y5Xyh6UO+8EEv//zy84HhvzsJuH
+         iFKxK5PG0h0u0HO4h2JNTDGyeCbdkQ8QXHSdoDGDWM/zmThHe8lsMzrqI0qeHYlwKq7s
+         FFlVfJs/amMOXNIROl2Hq0GlFPvtATS00Dv6LBb+lrMpb0tttEUpSE03ufeyFMA9BRDT
+         7r1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=Iieil+MuDaNJ5lIJEOFs9h7jIoiG48MeHaP0+PASXlo=;
+        b=RlwAYgfKZVIrlkQX30w6eTbbhy+3/SAuZBaN4bOvS8+iDvX7TKhrz2lqNUvEoVWRAf
+         5TlRcztdQcvzuayk7S7Dnjr5frCoNp3Zeq8BYvCb8Gheu2vxv86Hf4St4FI7lf53HHkg
+         3PVcpknyv4cYon6HMRJ3fZRyf0W5ucUvncmahkU3cMXvSoPpOPGsTaX8RxL77/rtPWN6
+         AxbqRHC6iDYf+6toPCLBkY1tDbqwWRB3Agw4BVr2fhskPAxKkZuYSzUZYlFFlG0JIeIX
+         tSJlSD/N/ofvHZADb1Vf2XChYKatkTTbv5c1YBCFrFhxOKAxfvfLTB470/sYAdTncPNu
+         F2kA==
+X-Gm-Message-State: APjAAAUC+qjrZT4g47NnR5bbQbYc6mLC2o+SfsUqUeyvY4yeg4y0Mo3g
+        A4rLoXRhGe2ttm9B4PGvTczMbVFwMzY=
+X-Google-Smtp-Source: APXvYqzmbqgk6/kz7QU3nlWaRgKvHPWEG3ZIdKB73xjHpjGorCH8t3zSH+3B/Dh6UH8mTXW9UuCW5g==
+X-Received: by 2002:ae9:e713:: with SMTP id m19mr127213qka.338.1572445418273;
+        Wed, 30 Oct 2019 07:23:38 -0700 (PDT)
+Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id q4sm219231qtj.41.2019.10.30.07.23.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 07:23:37 -0700 (PDT)
+Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: Add mx power domain as thermal
+ warming device.
+To:     Rob Herring <robh@kernel.org>
+References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
+ <1571254641-13626-8-git-send-email-thara.gopinath@linaro.org>
+ <20191029013111.GA27045@bogus>
+Cc:     edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org,
+        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
+        agross@kernel.org, amit.kucheria@verdurent.com,
+        mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5DB99CE8.1050506@linaro.org>
+Date:   Wed, 30 Oct 2019 10:23:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-In-Reply-To: <20191029184739.GA3079@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: UkCuo7D2PL-i8Nnb9m9KVw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191029013111.GA27045@bogus>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/29, Peter Zijlstra wrote:
->
-> I like that symmetry, but see below ...
+On 10/28/2019 09:31 PM, Rob Herring wrote:
+> On Wed, Oct 16, 2019 at 03:37:21PM -0400, Thara Gopinath wrote:
+>> RPMh hosts mx power domain that can be used to warm up the SoC.
+>> Add sub-node to rpmhpd node for mx to be recognized
+>> as thermal warming device on sdm845.
+>>
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index 0222f48..0671c8a 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -3788,6 +3788,11 @@
+>>  						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
+>>  					};
+>>  				};
+>> +
+>> +				mx_cdev: mx {
+>> +					#cooling-cells = <2>;
+>> +					.name = "mx";
+> 
+> Copy this from C code?
+Hi Rob,
 
-...
+What do you mean ?
 
-> > void __percpu_up_read(struct percpu_rw_semaphore *sem)
-> > {
-> > =09smp_mb();
-> >
-> > =09__this_cpu_dec(*sem->read_count);
-> >
-> =09preempt_enable();
-> > =09wake_up(&sem->waiters);
-> =09preempt_disable()
->
-> and this (sadly) means there's a bunch of back-to-back
-> preempt_disable()+preempt_enable() calls.
+> 
+>> +				};
+>>  			};
+>>  
+>>  			rsc_hlos: interconnect {
+>> -- 
+>> 2.1.4
+>>
 
-Hmm. Where did these enable+disable come from?
 
-=09void __percpu_up_read(struct percpu_rw_semaphore *sem)
-=09{
-=09=09smp_mb();
-
-=09=09__this_cpu_dec(*sem->read_count);
-
-=09=09wake_up(&sem->waiters);
-=09}
-
-should work just fine?
-
-Oleg.
-
+-- 
+Warm Regards
+Thara
