@@ -2,128 +2,176 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E035CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF04CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283FB20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8F520874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z4rh9H+2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mw37YHGV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfJ3IoQ (ORCPT
+        id S1726475AbfJ3Iob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:44:16 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35778 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbfJ3IoP (ORCPT
+        Wed, 30 Oct 2019 04:44:31 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54400 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfJ3Ioa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:44:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x5so1163230wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 01:44:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r8+wN7r4BrgoWGfrY7VXP4mHc/bPGpidu8v8LPP2YUc=;
-        b=Z4rh9H+22xLXETaMo+PSqs80h6xxtBjz58NKJRTXfIHYnvYxG4qsk/qTPRZc5w3rSz
-         IaYfVX548vJpJJOpwCjeb9GR4LiRuqdLkIP5Y45r5GgJuW8v1Oy8gt0wsND9oKgGtdtM
-         OOaDZsNZfFYvSauMwEzJGHHJiVJQRNBWpLsdeCmj2MmrHUZ3NNWJARzBmVY/n6A6D0Dh
-         9BsmO4XwhXOdoBZ+nuo+EhlcTL2drFa/dPRmAzQDtl8AScWe+QR6A0XhEEPvQ6jvjMlC
-         dv/0S4msE94jk2DH0WkCWWVMKIXE/3o3p7/oZNPc7sQEkzDkcA03jf5JGH3HjALAFNud
-         ULCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r8+wN7r4BrgoWGfrY7VXP4mHc/bPGpidu8v8LPP2YUc=;
-        b=OLUED/QcZZT97WFmWzDv7HCEFIpYlphwHbL0KsgUHRpKhUZzFWvKidhjT76ha9VQlP
-         xI7BGH7r/UzSOIqHbVz0l7huYlLWlqIgCfGwYy8lxHeNQuu/44e2FPfpf6C7F8mRyllT
-         V5RJjIN4bfkat8aKV4t5VLBUmEWvo3NALkfHm6iTYV2ROD3+h8CNr9Y3d+fJMtq5x/ZL
-         dauWPpSmN7NdDJKmt1I8rZLM7cMJ175LNAQ6c3UN4cC9a+Ule1GftaeXGnRbQht1KidC
-         HHtPNeKn7NVVYU3pPE4hUKt606MaYLX0RqnWGNQ8B6I5WgAPpud346jApukxr9u0Jsxk
-         67Cg==
-X-Gm-Message-State: APjAAAV7+ZpCh8L1nXUH2lrv4VuQ6Z+k9L1m/JnbIOpvzb8ap+KK5E2V
-        mpUV1WraC7G9jrIjJWBNxgHQ8dIghR3KSA==
-X-Google-Smtp-Source: APXvYqyf/bgbpTbw1ikl55tZ1ofxh+SXQtEBmKYIHB9qzbVXVvoo7WtSZFMTd0FPH0oxU1jIoJrwng==
-X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr3508726wml.22.1572425052624;
-        Wed, 30 Oct 2019 01:44:12 -0700 (PDT)
-Received: from pine ([91.217.168.176])
-        by smtp.gmail.com with ESMTPSA id d10sm1327109wme.47.2019.10.30.01.44.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 30 Oct 2019 01:44:11 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 09:44:10 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joe@perches.com
-Subject: Re: [PATCH] sh: kgdb: Mark expected switch fall-throughs
-Message-ID: <20191030084410.c7x2sa4ak3m2h2l7@pine>
-References: <878sp2d7mm.wl-kuninori.morimoto.gx@renesas.com>
+        Wed, 30 Oct 2019 04:44:30 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9U8iEeI098145;
+        Wed, 30 Oct 2019 03:44:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572425054;
+        bh=E27tcJBYIvqvaA31Zqpz1NjcSVFU5/7cIiIXtS8r2MU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Mw37YHGV8JrhVh7Qmt4bWBP3OSmJyp5Oj7izmTpcXhms4HZettDOBj4ae0OH08FvZ
+         N+uMAvcdvv2SuBuNAJqkOIzCM8UOSGQQ+G3x7mFdOHTc3ViSbz8FCrufDTaLqahcFk
+         zAVOLDu7Eoaw1/cASLhzy9zZpUvCvIvvthdZWPX4=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9U8iEIC102783
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 03:44:14 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 03:44:01 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 03:44:00 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9U8iBda078433;
+        Wed, 30 Oct 2019 03:44:11 -0500
+Subject: Re: [PATCH] usb: cdns3: gadget: Fix g_audio use case when connected
+ to Super-Speed host
+To:     Peter Chen <peter.chen@nxp.com>
+CC:     "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "pawell@cadence.com" <pawell@cadence.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        "kurahul@cadence.com" <kurahul@cadence.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191029151514.28495-1-rogerq@ti.com>
+ <20191030063636.GE26815@b29397-desktop>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <b780ffea-dca0-310e-1d66-4ceca380b4ee@ti.com>
+Date:   Wed, 30 Oct 2019 10:44:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878sp2d7mm.wl-kuninori.morimoto.gx@renesas.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191030063636.GE26815@b29397-desktop>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 04:17:53PM +0900, Kuninori Morimoto wrote:
-> 
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> 
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following error:
-> 
-> LINUX/arch/sh/kernel/kgdb.c: In function 'kgdb_arch_handle_exception':
-> LINUX/arch/sh/kernel/kgdb.c:267:6: error: this statement may fall through [-Werror=implicit-fallthrough=]
-> if (kgdb_hex2long(&ptr, &addr))
-> ^
-> LINUX/arch/sh/kernel/kgdb.c:269:2: note: here
-> case 'D':
-> ^~~~
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-Just FYI this is likely to be converted to be the fallthrough
-pseudo-keyword shortly after introductionb but IIRC the keyword is only
-available in linux-next right now (and the conversion, from Joe Perches,
-is script based so it is likely the change will get picked up by the
-script without you having to do anything explicit).
 
 
-Daniel.
+On 30/10/2019 08:36, Peter Chen wrote:
+> On 19-10-29 17:15:14, Roger Quadros wrote:
+>> Take into account gadget driver's speed limit when programming
+>> controller speed.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>> Hi Greg,
+>>
+>> Please apply this for -rc.
+>> Without this, g_audio is broken on cdns3 USB controller is
+>> connected to a Super-Speed host.
+>>
+>> cheers,
+>> -roger
+>>
+>>   drivers/usb/cdns3/gadget.c | 31 ++++++++++++++++++++++++++-----
+>>   1 file changed, 26 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+>> index 40dad4e8d0dc..1c724c20d468 100644
+>> --- a/drivers/usb/cdns3/gadget.c
+>> +++ b/drivers/usb/cdns3/gadget.c
+>> @@ -2338,9 +2338,35 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+>>   {
+>>   	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
+>>   	unsigned long flags;
+>> +	enum usb_device_speed max_speed = driver->max_speed;
+>>   
+>>   	spin_lock_irqsave(&priv_dev->lock, flags);
+>>   	priv_dev->gadget_driver = driver;
+>> +
+>> +	/* limit speed if necessary */
+>> +	max_speed = min(driver->max_speed, gadget->max_speed);
+>> +
+>> +	switch (max_speed) {
+>> +	case USB_SPEED_FULL:
+>> +		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
+>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+>> +		break;
+>> +	case USB_SPEED_HIGH:
+>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+>> +		break;
+>> +	case USB_SPEED_SUPER:
+>> +		break;
+>> +	default:
+>> +		dev_err(priv_dev->dev,
+>> +			"invalid maximum_speed parameter %d\n",
+>> +			max_speed);
+>> +		/* fall through */
+>> +	case USB_SPEED_UNKNOWN:
+>> +		/* default to superspeed */
+>> +		max_speed = USB_SPEED_SUPER;
+>> +		break;
+>> +	}
+>> +
+>>   	cdns3_gadget_config(priv_dev);
+>>   	spin_unlock_irqrestore(&priv_dev->lock, flags);
+>>   	return 0;
+>> @@ -2570,12 +2596,7 @@ static int cdns3_gadget_start(struct cdns3 *cdns)
+>>   	/* Check the maximum_speed parameter */
+>>   	switch (max_speed) {
+>>   	case USB_SPEED_FULL:
+>> -		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
+>> -		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+>> -		break;
+>>   	case USB_SPEED_HIGH:
+>> -		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+>> -		break;
+>>   	case USB_SPEED_SUPER:
+>>   		break;
+>>   	default:
+> 
+> Just a small comment:
+> 
+> You could delete switch-case at cdns3_gadget_start, and just use
+> if() statement, eg:
+> 
+> 	max_speed = usb_get_maximum_speed(cdns->dev);
+> 	if (max_speed == USB_SPEED_UNKNOWN)
+> 		max_speed = USB_SPEED_SUPER;
 
-> ---
->  arch/sh/kernel/kgdb.c | 1 +
->  1 file changed, 1 insertion(+)
+But then it will not take care of bailing out for USB_SPEED_WIRELESS,
+USB_SPEED_SUPER_PLUS and any future speeds.
+
 > 
-> diff --git a/arch/sh/kernel/kgdb.c b/arch/sh/kernel/kgdb.c
-> index 6d61f8c..0d5f3c9 100644
-> --- a/arch/sh/kernel/kgdb.c
-> +++ b/arch/sh/kernel/kgdb.c
-> @@ -266,6 +266,7 @@ int kgdb_arch_handle_exception(int e_vector, int signo, int err_code,
->  		ptr = &remcomInBuffer[1];
->  		if (kgdb_hex2long(&ptr, &addr))
->  			linux_regs->pc = addr;
-> +		/* fallthrough */
->  	case 'D':
->  	case 'k':
->  		atomic_set(&kgdb_cpu_doing_single_step, -1);
-> -- 
-> 2.7.4
+> Otherwise:
 > 
+> Acked-by: Peter Chen <peter.chen@nxp.com>
+> 
+
+-- 
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
