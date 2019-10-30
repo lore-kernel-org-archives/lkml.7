@@ -2,95 +2,120 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C50CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91481CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD1E204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67C07204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:13:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jmQFYwo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfJ3TMs (ORCPT
+        id S1727105AbfJ3TNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:12:48 -0400
-Received: from dispatchb-us1.ppe-hosted.com ([148.163.129.53]:37330 "EHLO
-        dispatchb-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726259AbfJ3TMs (ORCPT
+        Wed, 30 Oct 2019 15:13:16 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50910 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfJ3TNP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:12:48 -0400
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us4.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 732FD4C0096;
-        Wed, 30 Oct 2019 19:12:46 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
- (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 30 Oct
- 2019 19:12:39 +0000
-Subject: Re: [PATCH] sfc: should check the return value after allocating
- memory
-To:     zhong jiang <zhongjiang@huawei.com>, <davem@davemloft.net>
-CC:     <mhabets@solarflare.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1572426765-43211-1-git-send-email-zhongjiang@huawei.com>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <337f8acc-63d0-4a0b-f112-0e7be1a7e51f@solarflare.com>
-Date:   Wed, 30 Oct 2019 19:12:37 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 30 Oct 2019 15:13:15 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UJ8aJe045614;
+        Wed, 30 Oct 2019 19:13:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=AmBK7NEnrbyy8RUxagWe8vIdghjuSiFyAV9Cl/vciNQ=;
+ b=jmQFYwo5iWZ23PiCeuwy3ZkbM0hkdaBTpNUVbdJdTqkuE97v+amI2mP4OY2Q+6T4zth1
+ Vza1ArWgoW9ub61ItEVls5Pb5zgsg/OVUxOwNSjq/aLzkVYihD9HKFMLBMnJXaZiatJs
+ rVT6l/yl/iEByo7/Wx7V9SZ/rUNb9ZA08mfLSAdugvnPH7NVY9v5xmgNXRh31Ifkf0tW
+ SwfB9zKVhAhvtEl5NEQRPU7Q+ztJrCmrb0BzlsYV4mejEei/rkJqpFs7iSKe2dtGzTHY
+ AxDkU4rvGM9loOLYs3vXqve6DX281pzCG6AzZPSpI463lYodKYa4vxdMxBTzwk8Jk41H gA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2vxwhfpe8s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 19:13:09 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UJ8bkk142361;
+        Wed, 30 Oct 2019 19:13:08 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2vxwj9vfd9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 19:13:08 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9UJD6h4014380;
+        Wed, 30 Oct 2019 19:13:06 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 30 Oct 2019 12:13:06 -0700
+Date:   Wed, 30 Oct 2019 22:12:55 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     shuah <shuah@kernel.org>
+Cc:     David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
+ the 'list' doubly linked list
+Message-ID: <20191030191255.GD18421@kadam>
+References: <20191024224631.118656-1-davidgow@google.com>
+ <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
+ <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
+ <20191030104217.GA18421@kadam>
+ <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1572426765-43211-1-git-send-email-zhongjiang@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.17.20.203]
-X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
- ukex01.SolarFlarecom.com (10.17.10.4)
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-25010.003
-X-TM-AS-Result: No-10.147300-8.000000-10
-X-TMASE-MatchedRID: csPTYAMX1+G8rRvefcjeTUPdsiR0fGlp69aS+7/zbj+qvcIF1TcLYJGW
-        qGxfG/4gr/8sDK1kxPZTvVffeIwvQwUcfW/oedmqPwKTD1v8YV5MkOX0UoduuQ26c11hS9dDhYb
-        DU23Mt3nfzLo6YdZ9oal+qkmFWiM7TIunQAI8qaIsIMJqMNlanczzMs2dyeyVnvO/7zfSaU/QDj
-        kgBdHEzeAtk5EGzSDBkZOl7WKIImrvXOvQVlExsFZ0V5tYhzdWxEHRux+uk8h+ICquNi0WJHtBE
-        lp7ch+v0yUsncabz9G5BWEde06qE1QLrVa0g2b3ftwZ3X11IV0=
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--10.147300-8.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-25010.003
-X-MDID: 1572462767-cdwbMBp8yqAx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910300165
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910300165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/10/2019 09:12, zhong jiang wrote:
-> kcalloc may fails to allocate memory, hence if it is in that case,
-> We should drop out in time.
+On Wed, Oct 30, 2019 at 10:27:12AM -0600, shuah wrote:
+> > It's better to ignore checkpatch and other scripts when they are wrong.
+> > (unless the warning message inspires you to make the code more readable
+> > for humans).
+> > 
 > 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  drivers/net/ethernet/sfc/efx.c | 2 ++
->  1 file changed, 2 insertions(+)
+> It gets confusing when to ignore and when not to. It takes work to
+> figure out and it is subjective.
 > 
-> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
-> index 2fef740..712380a 100644
-> --- a/drivers/net/ethernet/sfc/efx.c
-> +++ b/drivers/net/ethernet/sfc/efx.c
-> @@ -3040,6 +3040,8 @@ static int efx_init_struct(struct efx_nic *efx,
->  	/* Failure to allocate is not fatal, but may degrade ARFS performance */
->  	efx->rps_hash_table = kcalloc(EFX_ARFS_HASH_TABLE_SIZE,
->  				      sizeof(*efx->rps_hash_table), GFP_KERNEL);
-> +	if (!efx->rps_hash_table)
-> +		goto fail;
-NAK.
-As per the comment just above the allocation, if this allocation fails we are
- able to continue (albeit with possibly reduced performance), since the code
- paths that use efx->rps_hash_table all NULL-check it.
 
--Ed
->  #endif
->  	efx->phy_op = &efx_dummy_phy_operations;
->  	efx->mdio.dev = net_dev;
-> 
+In this case, it's not subjective because checkpatch is clearly not
+working as intended.
+
+I don't feel like "checkpatch clean" is a useful criteria for applying
+patches.  If someone sends a patch and I can spot a bunch of checkpatch
+issues with my bare eyeballs then I get slightly annoyed for wasting my
+time.  But as a reviewer, I mostly care about my own judgement.  Can I
+understand what the code is doing?  It is subjective, but I'm smarter
+than a Perl script and I try to be kind to people.
+
+The other things about warnings is that I always encourage people to
+just ignore old warnings.  If you're running Smatch and you see a
+warning in ancient code that means I saw it five years ago and didn't
+fix it so it's a false positive.  Old warnings are always 100% false
+positives.
+
+regards,
+dan carpenter
