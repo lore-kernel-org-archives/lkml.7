@@ -2,108 +2,84 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408D9CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C5FCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B8C20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:05:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kptuIiTd"
+	by mail.kernel.org (Postfix) with ESMTP id A001A20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfJ3VFd (ORCPT
+        id S1727069AbfJ3VKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:05:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34869 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfJ3VFc (ORCPT
+        Wed, 30 Oct 2019 17:10:54 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:47667 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbfJ3VKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:05:32 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y6so2717914lfj.2;
-        Wed, 30 Oct 2019 14:05:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nkaIP1ijgOYFqnsYglfYHdRc24DvX3SU4ZQ7OZUvKUM=;
-        b=kptuIiTdPy3kXqZuC8a1zJUJ8GiyvG8oF0rvc9IU9wDZw+29au1yUPtmzXszddcYzd
-         M4F3NNfYrb3Asgkjh7UomGi+SEIpSoqBaRfQ5yP1UzeG0KidA3l7IwfTlzX21uhnjMuk
-         rn2eO06u9iGMQTcyN6DOFsqGoiLb0QM5pXCYH+xYfKhGRaAeuuXRyhFFcnAYFOVnPvGj
-         yDdNlH4ya81pCSv8Rhd9Hnd8oGqeL9ayv/K+HRsVhhlEmkbjqt2E/OkFOWnbRBT8GRw5
-         QTxDFDzg0H2a8ZUAYzSawhbOxYCmuDT9YIwgcaIYUxKdIAEadcjyz/jMjo507aDdN7bR
-         ZUKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nkaIP1ijgOYFqnsYglfYHdRc24DvX3SU4ZQ7OZUvKUM=;
-        b=r6uoaekrmWNUaavEBQaBJYsQuKcM+iaAfgY/JZxPkcm33bkgIi3sx2+n5YLcYS5i+p
-         M+al8BIZ00LziQHOCNkUANuLPheDGS5japZFVl2fbqcnms3G7HUiTtnQffzVwjwf9hVz
-         cuFiXhOWOY295Xla8xLAcKkkTLWTszg7f6jaBH9eR/G/QaM7AZufKj4lqVdfwp80yGg+
-         V8+g9sxG3ICT2UBUy6LBJq1B2Ag0RWy7mKW3rZhmToizGUGJj2rFmb8grLYThgbfKnKU
-         Yq1Al293Dal6UIx8uswNISv5CanRs1gydS7MB29ZwIl3YmHjaHlyvYWybw5ma3ElItRE
-         Od1Q==
-X-Gm-Message-State: APjAAAXYLCWv6HTqP61+JRzO6dDAssaRQ1e2f17ulYdTYGiYPheRcbyu
-        cLFY1SkNx2jlDHCtvEY2PoaEHW1N
-X-Google-Smtp-Source: APXvYqxrX4VoN4tXIb0m+jXClOMlA0A0NLHPTNUipKvKg8IRFWXzcRaxKR2RmNx78kgjKghJZ0AFVQ==
-X-Received: by 2002:a19:5e53:: with SMTP id z19mr146580lfi.111.1572469529984;
-        Wed, 30 Oct 2019 14:05:29 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id q15sm481394lfb.84.2019.10.30.14.05.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Oct 2019 14:05:29 -0700 (PDT)
-Subject: Re: [PATCH v2 06/17] dt-bindings: cpufreq: Add binding for NVIDIA
- Tegra20/30
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191024221416.14197-1-digetx@gmail.com>
- <20191024221416.14197-7-digetx@gmail.com> <20191029214258.GA18586@bogus>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b81fbaac-3566-1153-3c5c-c6b3ba2db522@gmail.com>
-Date:   Thu, 31 Oct 2019 00:05:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 30 Oct 2019 17:10:54 -0400
+Received: from belgarion ([90.55.204.252])
+        by mwinf5d15 with ME
+        id KxAo210045TFNlm03xAoN2; Wed, 30 Oct 2019 22:10:52 +0100
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Wed, 30 Oct 2019 22:10:52 +0100
+X-ME-IP: 90.55.204.252
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 38/46] video: backlight: tosa: use gpio lookup table
+References: <20191018154052.1276506-1-arnd@arndb.de>
+        <20191018154201.1276638-38-arnd@arndb.de>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Wed, 30 Oct 2019 22:10:48 +0100
+In-Reply-To: <20191018154201.1276638-38-arnd@arndb.de> (Arnd Bergmann's
+        message of "Fri, 18 Oct 2019 17:41:53 +0200")
+Message-ID: <87h83qlz1j.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20191029214258.GA18586@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.10.2019 00:42, Rob Herring пишет:
-> On Fri, 25 Oct 2019 01:14:05 +0300, Dmitry Osipenko wrote:
->> Add device-tree binding that describes CPU frequency-scaling hardware
->> found on NVIDIA Tegra20/30 SoCs.
->>
->> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 56 +++++++++++++++++++
->>  1 file changed, 56 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
+Arnd Bergmann <arnd@arndb.de> writes:
 
-Thanks!
+> The driver should not require a machine specific header. Change
+> it to pass the gpio line through a lookup table, and move the
+> timing generator definitions into the drivers itself.
+>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> ---
+> I'm not overly confident that I got the correct device names
+> for the lookup table, it would be good if someone could
+> double-check.
+Ah the I2C and SPI devices querrying GPIOs ... unless someone does an actual
+test, this will probably be very regression prone ...
+
+Anyway :
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+
+Cheers.
+
+--
+Robert
