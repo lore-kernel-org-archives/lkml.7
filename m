@@ -4,65 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8498EC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F41CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64BD720856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A52D2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfJ3IYu (ORCPT
+        id S1726171AbfJ3IZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:24:50 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:45249 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfJ3IYt (ORCPT
+        Wed, 30 Oct 2019 04:25:55 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55819 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725923AbfJ3IZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:24:49 -0400
+        Wed, 30 Oct 2019 04:25:54 -0400
 X-Originating-IP: 81.185.173.67
 Received: from localhost.localdomain (67.173.185.81.rev.sfr.net [81.185.173.67])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id C62A0E000C;
-        Wed, 30 Oct 2019 08:24:46 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 3E8D320006;
+        Wed, 30 Oct 2019 08:25:51 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         linux-mtd@lists.infradead.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
         Richard Weinberger <richard@nod.at>,
-        linux-kernel@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
         Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH] mtd: rawnand: denali: remove the old unified controller/chip DT support
-Date:   Wed, 30 Oct 2019 09:24:44 +0100
-Message-Id: <20191030082444.12512-1-miquel.raynal@bootlin.com>
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH] MAINTAINERS: mtd/ubi/ubifs: Remove inactive maintainers
+Date:   Wed, 30 Oct 2019 09:25:50 +0100
+Message-Id: <20191030082550.13022-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191021022654.13886-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20191017142229.3853-1-miquel.raynal@bootlin.com>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: f34a5072c46510b20017d7703bc424dd695b3429
+X-linux-mtd-patch-commit: 5c1719a2b978f9a292d4fb3efa6d6525f36b7489
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-21 at 02:26:54 UTC, Masahiro Yamada wrote:
-> Commit d8e8fd0ebf8b ("mtd: rawnand: denali: decouple controller and
-> NAND chips") supported the new binding for the separate controller/chip
-> representation, keeping the backward compatibility.
+On Thu, 2019-10-17 at 14:22:29 UTC, Miquel Raynal wrote:
+> Despite their substantial personal investment in the MTD/UBI/UBIFS a
+> few years back, David, Brian, Artem and Adrian are not actively
+> maintaining the subsystem anymore. We warmly salute them for all the
+> work they have achieved and will of course still welcome their
+> participation and reviews.
 > 
-> All the device trees in upstream migrated to the new binding.
+> That said, Marek retired himself a few weeks ago quoting Harald [1]:
 > 
-> Remove the support for the old binding.
+>         It matters who has which title and when. Should somebody not
+>         be an active maintainer, make sure he's not listed as such.
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> For this same reason, let’s trim the maintainers list with the
+> actually active ones over the past two years.
+> 
+> [1] http://laforge.gnumonks.org/blog/20180307-mchardy-gpl/
+> 
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: Artem Bityutskiy <dedekind1@gmail.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Marek Vasut <marek.vasut@gmail.com>
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Acked-by: Brian Norris <computersforpeace@gmail.com>
+> Acked-by: Artem Bityutskiy <dedekind1@gmail.com>
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/next.
 
 Miquel
