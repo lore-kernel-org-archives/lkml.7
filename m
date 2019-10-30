@@ -2,149 +2,103 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9331CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE89CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8785C20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SFaro0Ph"
+	by mail.kernel.org (Postfix) with ESMTP id 146CE205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfJ3PcS (ORCPT
+        id S1727232AbfJ3Pd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:32:18 -0400
-Received: from mail-eopbgr770107.outbound.protection.outlook.com ([40.107.77.107]:37446
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727356AbfJ3PcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:32:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q7rY27M9kkM42i+APQBywF+by8fMb+77J2eJ2u5oyU68Thca9q9oC1EOqkBYrBHcAVYYjl3bvTsehRcJ/KquzR0WpsVawseeX99Lb7o8aLpdTMnZyW3sbvroECVimWihL57i77Ez+XNBKYDYGs60qvENE0Z4KHMpx4ihqAXWFIBT9f13z7M5ufT41rHQS2e+J2q7N2DFeYQHIem34geMJn/78miYy8Mh3eAW6xYhiRyLaLONVJu3HPfccTZVHrL68VKGxyUZcOK75ss8Z/U5oHMQwq/6kzgFTorS6q5CEGxlF39U5x7UASz30qaNUIV4hpJY4Sj1W85FLHxrP7n47w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zu/WBYk6iHDxjDjFlbiieOrrFMHBcVANvZq8rQv20f4=;
- b=YKqEGVzarcsRLdJJEhzS3ZXRXzPNeNo0IvBAruQiwxqPZG+iypxk0fNYrTXxlaZn2ZkgZn7r8mH3mPl9cONJmTg7eWj/gbVoJoLydWA0Yhc+yGNKws8h5OnBYcUsySabuCgBf6xCpW4yw6XtNFJGmRhwemqUTQnNiwn/N9VSi11BaTYN0XDRKuuGAeO5vUwZ3R8vscQgvO5tJsV6LjcjdAuNCtKjpmyrmz7uqiobC/DrLv2A+f/uwd0JvsPM/R38+cQFgAtJ+JZYy+o7f6qt2AxSpo75mQfxqwz0zh/xhjG29WZMeBO9pvd30ODPPsARKT08Pot1bKlACOBZBlDk+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zu/WBYk6iHDxjDjFlbiieOrrFMHBcVANvZq8rQv20f4=;
- b=SFaro0Ph0eLRvDAFbNmY/5EnuYjELj/C5GkdAGjuz0RTqUUFWWsJIzXmWAAEQHd0m7vjq1oQSuNQAO9zvXle+WneDjm5wMsC4RqyMNyK+MOZ3uR+42K8tGPN0UBaBn8RZdC33i8SHcpinqb5yRyTgUghAbkd5caoQMGVbaxH/Xg=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1323.namprd21.prod.outlook.com (20.179.53.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.9; Wed, 30 Oct 2019 15:32:13 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::756e:8d3f:e463:3bf7]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::756e:8d3f:e463:3bf7%3]) with mapi id 15.20.2408.016; Wed, 30 Oct 2019
- 15:32:13 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net, 2/2] hv_netvsc: Fix error handling in netvsc_attach()
-Thread-Topic: [PATCH net, 2/2] hv_netvsc: Fix error handling in
- netvsc_attach()
-Thread-Index: AQHVjzczuqsG+5QrCUWDw911uTLagA==
-Date:   Wed, 30 Oct 2019 15:32:13 +0000
-Message-ID: <1572449471-5219-3-git-send-email-haiyangz@microsoft.com>
-References: <1572449471-5219-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1572449471-5219-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR01CA0027.prod.exchangelabs.com (2603:10b6:300:101::13)
- To DM6PR21MB1242.namprd21.prod.outlook.com (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0197f6b9-e245-4dd2-03ea-08d75d4e5659
-x-ms-traffictypediagnostic: DM6PR21MB1323:|DM6PR21MB1323:|DM6PR21MB1323:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB1323A373CDBFB58BCFCE8407AC600@DM6PR21MB1323.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 02065A9E77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(376002)(366004)(396003)(346002)(189003)(199004)(5660300002)(2906002)(4720700003)(54906003)(110136005)(71190400001)(71200400001)(25786009)(10290500003)(8936002)(22452003)(2501003)(478600001)(6512007)(52116002)(4326008)(6436002)(7846003)(6392003)(8676002)(81156014)(6486002)(81166006)(10090500001)(486006)(476003)(66446008)(14444005)(256004)(305945005)(2616005)(7736002)(5024004)(50226002)(186003)(66946007)(26005)(64756008)(66556008)(66476007)(6506007)(386003)(102836004)(76176011)(2201001)(99286004)(3846002)(316002)(446003)(6116002)(11346002)(66066001)(14454004)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1323;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fWFCJzcEdcBGTSloI1df3qs0MeSjYxkluZa07UPw5b16u9SDjTY2tVFq7bt1YtoZ8A8ntC+NTJut4XrkTKA5Z6CvGObUPgz6PCV1tFSaoKUNwvKtAs2oKshEJ9Y4WNh55TUTY3oQKaZoEbDeo2neBu83oypkEfF1s4bMdHDFDbCs9pNjK7qB2BVp6J8epVws3GUVe6jRz3gtqW1HxwEyUvUQIUWtjHlZcw/77fbO0FQ/kg6lk7vTqugrDTiW7jvvXYTU1kWJYUO27S9rHJPpTk33iUTVE3ledGdzOWvoXh4MATealEPeQJMmozJs3KVfgLsWe5h/CATallzUGZAjRtfeyF50zohBioRH1jvAs5ItXU9+moH7oWb48Ag84GkSvwdaKm1LwwBVRtNFrOamVRr5a2ryMblNJ/eND9phtV0xMO8pit1KriSRgzys3eQx
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 30 Oct 2019 11:33:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:36380 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726255AbfJ3Pd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:33:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6D251FB;
+        Wed, 30 Oct 2019 08:33:28 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD6F23F6C4;
+        Wed, 30 Oct 2019 08:33:27 -0700 (PDT)
+Subject: Re: [PATCH 7/7] iommu/arm-smmu: Allow building as a module
+To:     Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20191030145112.19738-1-will@kernel.org>
+ <20191030145112.19738-8-will@kernel.org>
+ <20191030152212.ifzhl2w3knapc367@bogus>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9ffbf469-83a7-4ebb-504c-ac17c2f526cc@arm.com>
+Date:   Wed, 30 Oct 2019 15:33:26 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0197f6b9-e245-4dd2-03ea-08d75d4e5659
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 15:32:13.6239
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WliqyzkC1zF2GEzUWqvXmyfLrIIh3Oy2yrIo4F+bl9L0pmRk2jwwGTNW0j6LbR2xmurG64lDe+hItFHCnQ1xbg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1323
+In-Reply-To: <20191030152212.ifzhl2w3knapc367@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If rndis_filter_open() fails, we need to remove the rndis device created
-in earlier steps, before returning an error code. Otherwise, the retry of
-netvsc_attach() from its callers will fail and hang.
+On 30/10/2019 15:22, Rob Herring wrote:
+> On Wed, Oct 30, 2019 at 02:51:12PM +0000, Will Deacon wrote:
+>> By conditionally dropping support for the legacy binding and exporting
+>> the newly introduced 'arm_smmu_impl_init()' function we can allow the
+>> ARM SMMU driver to be built as a module.
+>>
+>> Signed-off-by: Will Deacon <will@kernel.org>
+>> ---
+>>   drivers/iommu/Kconfig         | 14 ++++++++-
+>>   drivers/iommu/arm-smmu-impl.c |  6 ++++
+>>   drivers/iommu/arm-smmu.c      | 54 +++++++++++++++++++++--------------
+>>   3 files changed, 51 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+>> index 7583d47fc4d5..02703f51e533 100644
+>> --- a/drivers/iommu/Kconfig
+>> +++ b/drivers/iommu/Kconfig
+>> @@ -350,7 +350,7 @@ config SPAPR_TCE_IOMMU
+>>   
+>>   # ARM IOMMU support
+>>   config ARM_SMMU
+>> -	bool "ARM Ltd. System MMU (SMMU) Support"
+>> +	tristate "ARM Ltd. System MMU (SMMU) Support"
+>>   	depends on (ARM64 || ARM) && MMU
+>>   	select IOMMU_API
+>>   	select IOMMU_IO_PGTABLE_LPAE
+>> @@ -362,6 +362,18 @@ config ARM_SMMU
+>>   	  Say Y here if your SoC includes an IOMMU device implementing
+>>   	  the ARM SMMU architecture.
+>>   
+>> +config ARM_SMMU_LEGACY_DT_BINDINGS
+>> +	bool "Support the legacy \"mmu-masters\" devicetree bindings"
+> 
+> Can't we just remove this now? The only user is Seattle. Is anyone still
+> using Seattle AND DT? There's been no real dts change since Feb '16.
+> There's a bit of clean-up needed in the Seattle dts files, so I'd like
+> to remove them if there's not users.
+> 
+> If there are users, can't we just make them move to the new binding?
+> Yes compatibility, but that really depends on the users caring.
 
-Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/net/hyperv/netvsc_drv.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Apparently it's also in the wild on Cavium ThunderX/OcteonTX machines as 
+well :(
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
-v.c
-index 734e411..a14fc8e 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -982,7 +982,7 @@ static int netvsc_attach(struct net_device *ndev,
- 	if (netif_running(ndev)) {
- 		ret =3D rndis_filter_open(nvdev);
- 		if (ret)
--			return ret;
-+			goto err;
-=20
- 		rdev =3D nvdev->extension;
- 		if (!rdev->link_state)
-@@ -990,6 +990,13 @@ static int netvsc_attach(struct net_device *ndev,
- 	}
-=20
- 	return 0;
-+
-+err:
-+	netif_device_detach(ndev);
-+
-+	rndis_filter_device_remove(hdev, nvdev);
-+
-+	return ret;
- }
-=20
- static int netvsc_set_channels(struct net_device *net,
---=20
-1.8.3.1
+> I though Calxeda was using this too, but I guess we didn't get that
+> finished. We should probably remove that secure mode flag as well.
 
+FWIW the secure quirk still comes in useful every now and then when 
+people prototype stuff on 32-bit VExpress, where it turns out an SMMU is 
+about the only thing which cares whether you're running Linux in Secure 
+mode or not.
+
+Robin.
