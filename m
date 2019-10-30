@@ -2,166 +2,163 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40E9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1219CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A4520856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u2vGvNxW"
+	by mail.kernel.org (Postfix) with ESMTP id 74CB120856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfJ3GEh (ORCPT
+        id S1727166AbfJ3GFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 02:04:37 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43835 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfJ3GEh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 02:04:37 -0400
-Received: by mail-ot1-f67.google.com with SMTP id b19so1083299otq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 23:04:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MYUu1o7Gjm7ckCy0ST4zrokOEsSb5X/Ix76ieyroiBg=;
-        b=u2vGvNxWEd7pbOofdxcD51Nta46qikqUEbSqvdYbQx3dwLyGVjuT0dz+sBt/HjyWu9
-         X1OxswKBfFc5XJH8PQoFI/jPHSmjluPw/jKTIaJzAbEfKbRSrVPbeKuTq+Y6DrZBPR6g
-         ORGQDV7y6CcJTFa3mGxFkZAwAOV2nsTsgbEA9R+PIU3Y+X6mcmLw+dle0TUSFUxNP4No
-         9PYFYTwsNMdvqzCZMoXme3Q+kGHQOAZf5pY1Zzca+voLifsEGvMWX+7Io/z/lkP34yC0
-         +AWvq5Cq2/I55/foTxl6rUzsg4KDS28bBChsrzLzVLEKGq6rouciX31QhBRMaOcUe42u
-         mt6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MYUu1o7Gjm7ckCy0ST4zrokOEsSb5X/Ix76ieyroiBg=;
-        b=XLoHgWiBMMVcxtGHgIn8k28BKI6ZjHPZbihNsc8a1E0vspeStg3VzZE0CBjrqBbCxH
-         HCHJa71X0Rt63yIZQCu/8l6J0w+F/p1me+3+UdDCtwEPlDFz2oQwQkOUTBdcGHT5rXVj
-         xddRlKBEFO1F+cpEntIv+RVrAqLXmO+SL2JUsuYdi+kZn+75Bajfz0RebM3F1mQw2wSj
-         9FizCT4ajQ/VwNnGeyqWinPTWdKdWpb6YgXf4b0ZpIejs61x8zDsrNg9KTKywjFJ5NZY
-         tmXxEX11vvI3G8+WPDDGHLlXdswp83LLvs1yR4Szx92jxqyvkAvM2RhZFuaS63W76uvx
-         vgUg==
-X-Gm-Message-State: APjAAAWlz+zsPpjQYcu2sAWe1aWuiAtZIvDwrnYmBjsXXDjFpwZZlqUJ
-        BTtaKCTedIXsmNT87QJzKvQ=
-X-Google-Smtp-Source: APXvYqyX+UhlPFCyIwKYvVsfzhxhIg1E26Bf7G5FWzbhdidLyzy1q7F7RKCzz37gAMTjxjqPDuxLHQ==
-X-Received: by 2002:a9d:82e:: with SMTP id 43mr21630303oty.23.1572415475989;
-        Tue, 29 Oct 2019 23:04:35 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 34sm472147otf.55.2019.10.29.23.04.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 23:04:35 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Cc:     Roman Li <Roman.Li@amd.com>,
-        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH -next] drm/amd/display: Add a conversion function for transmitter and phy_id enums
-Date:   Tue, 29 Oct 2019 23:04:11 -0700
-Message-Id: <20191030060411.21168-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.0.rc1
-MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+        Wed, 30 Oct 2019 02:05:41 -0400
+Received: from mga05.intel.com ([192.55.52.43]:63903 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726108AbfJ3GFl (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 02:05:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 23:05:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="225217032"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Oct 2019 23:05:38 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v5 0/7] perf report: Support sorting all blocks by cycles
+Date:   Wed, 30 Oct 2019 14:04:23 +0800
+Message-Id: <20191030060430.23558-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+It would be useful to support sorting for all blocks by the
+sampled cycles percent per block. This is useful to concentrate
+on the globally hottest blocks.
 
-../drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2520:42:
-error: implicit conversion from enumeration type 'enum transmitter' to
-different enumeration type 'enum physical_phy_id'
-[-Werror,-Wenum-conversion]
-        psr_context->smuPhyId = link->link_enc->transmitter;
-                              ~ ~~~~~~~~~~~~~~~~^~~~~~~~~~~
-1 error generated.
+This patch series implements a new option "--total-cycles" which
+sorts all blocks by 'Sampled Cycles%'. The 'Sampled Cycles%' is
+block sampled cycles aggregation / total sampled cycles
 
-As the comment above this assignment states, this is intentional. To
-match previous warnings of this nature, add a conversion function that
-explicitly converts between the enums and warns when there is a
-mismatch.
+For example,
 
-See commit 828cfa29093f ("drm/amdgpu: Fix amdgpu ras to ta enums
-conversion") and commit d9ec5cfd5a2e ("drm/amd/display: Use switch table
-for dc_to_smu_clock_type") for previous examples of this.
+perf record -b ./div
+perf report --total-cycles --stdio
 
-Fixes: e0d08a40a63b ("drm/amd/display: Add debugfs entry for reading psr state")
-Link: https://github.com/ClangBuiltLinux/linux/issues/758
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 38 ++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+ # To display the perf.data header info, please use --header/--header-only options.
+ #
+ #
+ # Total Lost Samples: 0
+ #
+ # Samples: 2M of event 'cycles'
+ # Event count (approx.): 2753248
+ #
+ # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                                              [Program Block Range]         Shared Object
+ # ...............  ..............  ...........  ..........  .................................................................  ....................
+ #
+            26.04%            2.8M        0.40%          18                                             [div.c:42 -> div.c:39]                   div
+            15.17%            1.2M        0.16%           7                                 [random_r.c:357 -> random_r.c:380]          libc-2.27.so
+             5.11%          402.0K        0.04%           2                                             [div.c:27 -> div.c:28]                   div
+             4.87%          381.6K        0.04%           2                                     [random.c:288 -> random.c:291]          libc-2.27.so
+             4.53%          381.0K        0.04%           2                                             [div.c:40 -> div.c:40]                   div
+             3.85%          300.9K        0.02%           1                                             [div.c:22 -> div.c:25]                   div
+             3.08%          241.1K        0.02%           1                                           [rand.c:26 -> rand.c:27]          libc-2.27.so
+             3.06%          240.0K        0.02%           1                                     [random.c:291 -> random.c:291]          libc-2.27.so
+             2.78%          215.7K        0.02%           1                                     [random.c:298 -> random.c:298]          libc-2.27.so
+             2.52%          198.3K        0.02%           1                                     [random.c:293 -> random.c:293]          libc-2.27.so
+             2.36%          184.8K        0.02%           1                                           [rand.c:28 -> rand.c:28]          libc-2.27.so
+             2.33%          180.5K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
+             2.28%          176.7K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
+             2.20%          168.8K        0.02%           1                                         [rand@plt+0 -> rand@plt+0]                   div
+             1.98%          158.2K        0.02%           1                                 [random_r.c:388 -> random_r.c:388]          libc-2.27.so
+             1.57%          123.3K        0.02%           1                                             [div.c:42 -> div.c:44]                   div
+             1.44%          116.0K        0.42%          19                                 [random_r.c:357 -> random_r.c:394]          libc-2.27.so
+ ......
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index 7b18087be585..38dfe460e13b 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -2447,6 +2447,41 @@ bool dc_link_get_psr_state(const struct dc_link *link, uint32_t *psr_state)
- 	return true;
- }
- 
-+static inline enum physical_phy_id
-+transmitter_to_phy_id(enum transmitter transmitter_value)
-+{
-+	switch (transmitter_value) {
-+	case TRANSMITTER_UNIPHY_A:
-+		return PHYLD_0;
-+	case TRANSMITTER_UNIPHY_B:
-+		return PHYLD_1;
-+	case TRANSMITTER_UNIPHY_C:
-+		return PHYLD_2;
-+	case TRANSMITTER_UNIPHY_D:
-+		return PHYLD_3;
-+	case TRANSMITTER_UNIPHY_E:
-+		return PHYLD_4;
-+	case TRANSMITTER_UNIPHY_F:
-+		return PHYLD_5;
-+	case TRANSMITTER_NUTMEG_CRT:
-+		return PHYLD_6;
-+	case TRANSMITTER_TRAVIS_CRT:
-+		return PHYLD_7;
-+	case TRANSMITTER_TRAVIS_LCD:
-+		return PHYLD_8;
-+	case TRANSMITTER_UNIPHY_G:
-+		return PHYLD_9;
-+	case TRANSMITTER_COUNT:
-+		return PHYLD_COUNT;
-+	case TRANSMITTER_UNKNOWN:
-+		return PHYLD_UNKNOWN;
-+	default:
-+		WARN_ONCE(1, "Unknown transmitter value %d\n",
-+			  transmitter_value);
-+		return PHYLD_0;
-+	}
-+}
-+
- bool dc_link_setup_psr(struct dc_link *link,
- 		const struct dc_stream_state *stream, struct psr_config *psr_config,
- 		struct psr_context *psr_context)
-@@ -2517,7 +2552,8 @@ bool dc_link_setup_psr(struct dc_link *link,
- 	/* Hardcoded for now.  Can be Pcie or Uniphy (or Unknown)*/
- 	psr_context->phyType = PHY_TYPE_UNIPHY;
- 	/*PhyId is associated with the transmitter id*/
--	psr_context->smuPhyId = link->link_enc->transmitter;
-+	psr_context->smuPhyId =
-+		transmitter_to_phy_id(link->link_enc->transmitter);
- 
- 	psr_context->crtcTimingVerticalTotal = stream->timing.v_total;
- 	psr_context->vsyncRateHz = div64_u64(div64_u64((stream->
+This patch series supports both stdio and tui. And also with the supporting
+of --percent-limit.
+
+ v5:
+ ---
+ 1. Move all block functions to block-info.c
+
+ 2. Move the code of setting ms(map+sym) in block hist_entry to
+    patch 'perf util: Support block formats with compare/sort/display'.
+    Because this info is needed for reporting the block range
+    (i.e. source line)
+
+ 3. Fix a crash issue when tui mode is enabled.
+
+ Impacted patches:
+ -----------------
+  perf util: Support block formats with compare/sort/display
+  perf report: Sort by sampled cycles percent per block for stdio
+  perf report: Support --percent-limit for --total-cycles
+  perf report: Sort by sampled cycles percent per block for tui 
+
+ v4:
+ ---
+ 1. Move the block collection out of block printing.
+
+ 2. Use new option '--total-cycles' to replace '-s total_cycles'
+
+ 3. Move code for skipping column length calculation to patch:
+    'perf diff: Don't use hack to skip column length calculation'
+
+ 4. Some minor updates and cleanup.
+
+ v3:
+ ---
+ 1. Move common block info functions to block-info.h/block-info.c
+
+ 2. Remove nasty hack for skipping calculation of column length.
+
+ 3. Some minor cleanup.
+
+ v2:
+ ---
+ Rebase to perf/core branch
+
+Jin Yao (7):
+  perf diff: Don't use hack to skip column length calculation
+  perf util: Cleanup and refactor block info functions
+  perf util: Count the total cycles of all samples
+  perf util: Support block formats with compare/sort/display
+  perf report: Sort by sampled cycles percent per block for stdio
+  perf report: Support --percent-limit for --total-cycles
+  perf report: Sort by sampled cycles percent per block for tui
+
+ tools/perf/Documentation/perf-report.txt |  11 +
+ tools/perf/builtin-annotate.c            |   2 +-
+ tools/perf/builtin-diff.c                | 121 +-----
+ tools/perf/builtin-report.c              |  74 +++-
+ tools/perf/builtin-top.c                 |   3 +-
+ tools/perf/ui/browsers/hists.c           |  62 ++-
+ tools/perf/ui/browsers/hists.h           |   2 +
+ tools/perf/ui/stdio/hist.c               |  29 +-
+ tools/perf/util/Build                    |   1 +
+ tools/perf/util/block-info.c             | 456 +++++++++++++++++++++++
+ tools/perf/util/block-info.h             |  74 ++++
+ tools/perf/util/hist.c                   |  13 +-
+ tools/perf/util/hist.h                   |  15 +-
+ tools/perf/util/symbol.c                 |  22 --
+ tools/perf/util/symbol.h                 |  24 --
+ tools/perf/util/symbol_conf.h            |   1 +
+ 16 files changed, 749 insertions(+), 161 deletions(-)
+ create mode 100644 tools/perf/util/block-info.c
+ create mode 100644 tools/perf/util/block-info.h
+
 -- 
-2.24.0.rc1
+2.17.1
 
