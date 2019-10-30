@@ -2,104 +2,165 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D81CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2E6CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD182087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB8120862
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Rz8J7E1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfJ3ABV (ORCPT
+        id S1726336AbfJ3AF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 20:01:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:27850 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbfJ3ABU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 20:01:20 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 17:01:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
-   d="scan'208";a="399967932"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Oct 2019 17:01:19 -0700
-Received: from orsmsx159.amr.corp.intel.com (10.22.240.24) by
- ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 29 Oct 2019 17:01:18 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.185]) by
- ORSMSX159.amr.corp.intel.com ([169.254.11.61]) with mapi id 14.03.0439.000;
- Tue, 29 Oct 2019 17:01:18 -0700
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "keescook@chromium.org" <keescook@chromium.org>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Dock, Deneen T" <deneen.t.dock@intel.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kristen@linux.intel.com" <kristen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-Subject: Re: [RFC PATCH 13/13] x86/Kconfig: Add Kconfig for KVM based XO
-Thread-Topic: [RFC PATCH 13/13] x86/Kconfig: Add Kconfig for KVM based XO
-Thread-Index: AQHVejL9bEbssnEvHkaqj3ZlTh7j36dy5EKAgAAHCIA=
-Date:   Wed, 30 Oct 2019 00:01:18 +0000
-Message-ID: <d645473f01c445a70bc1f2472217f1ae426b7020.camel@intel.com>
-References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
-         <20191003212400.31130-14-rick.p.edgecombe@intel.com>
-         <201910291634.7993D32374@keescook>
-In-Reply-To: <201910291634.7993D32374@keescook>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.54.75.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AD1FDB260C50C14AA22F570A0252BD64@intel.com>
-Content-Transfer-Encoding: base64
+        Tue, 29 Oct 2019 20:05:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42954 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfJ3AF0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 20:05:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4eLWX4aGGrtYqinzHW7T2fJxD73XVQJfUWvqDtu77Mk=; b=Rz8J7E1NZ62orPlNUgDL4VGtl
+        GiiMK3iBW654P7JbjDO4lzW99hLccBQWLcskHIrohxfuyqdK8gbW5gASgbg6zpcn9WsVKvBdigDs5
+        GS4AamLX9zys/aSrtjVBRj4+lfoq0ugyevY+DLVq8p77QfJgT3rU6PQ38iEfMLGgHdAobvbuTszZK
+        P0vW9qo/prQxuJfON8ZwL6pW2oWaA8P6oHGyD4NlSWctTLwFucN4Y7sI1TIIuY34FT/6yHp1vAfdF
+        YT1MEqjQfpRYB8T6So8fROW8gL5MaCQtfU0PhKsgmQV5mPQaw+k0z3YUqOwrnMZHMqPz8k+Zu+Iqa
+        CG2uZlIow==;
+Received: from [2603:3004:32:9a00::f45c] (helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPbUL-0006ry-53; Wed, 30 Oct 2019 00:05:25 +0000
+Subject: Re: [PATCH] scripts:prune-kernel:prune kernel and modules dir from
+ the system
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, bfields@fieldses.org
+Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191029030030.31659-1-unixbhaskar@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <de2a4604-e3ba-dab1-c72c-a0ff451541cf@infradead.org>
+Date:   Tue, 29 Oct 2019 17:05:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191029030030.31659-1-unixbhaskar@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTEwLTI5IGF0IDE2OjM2IC0wNzAwLCBLZWVzIENvb2sgd3JvdGU6DQo+IE9u
-IFRodSwgT2N0IDAzLCAyMDE5IGF0IDAyOjI0OjAwUE0gLTA3MDAsIFJpY2sgRWRnZWNvbWJlIHdy
-b3RlOg0KPiA+IEFkZCBDT05GSUdfS1ZNX1hPIGZvciBzdXBwb3J0aW5nIEtWTSBiYXNlZCBleGVj
-dXRlIG9ubHkgbWVtb3J5Lg0KPiANCj4gSSB3b3VsZCBleHBlY3QgdGhpcyBjb25maWcgdG8gYmUg
-YWRkZWQgZWFybGllciBpbiB0aGUgc2VyaWVzIHNvIHRoYXQgdGhlDQo+IGNvZGUgYmVpbmcgYWRk
-ZWQgdGhhdCBkZXBlbmRzIG9uIGl0IGNhbiBiZSBpbmNyZW1lbnRhbGx5IGJ1aWxkIHRlc3RlZC4u
-Lg0KPiANCj4gKEFsc28sIGlmIHRoaXMgaXMgZGVmYXVsdD15LCB3aHkgaGF2ZSBhIEtjb25maWcg
-Zm9yIGl0IGF0IGFsbD8gR3Vlc3RzDQo+IG5lZWQgdG8ga25vdyB0byB1c2UgdGhpcyBhbHJlYWR5
-LCB5ZXM/KQ0KPiANCj4gLUtlZXMNCkhtbSwgZ29vZCBwb2ludC4gT25lIHJlYXNvbiBjb3VsZCBi
-ZSB0aGF0IHRoaXMgcmVxdWlyZXMgU1BBUlNFTUVNX1ZNRU1NQVAgZHVlIHRvDQpzb21lIHByZS1w
-cm9jZXNzb3IgdHJpY2tzIHRoYXQgbmVlZCBhIGNvbXBpbGUgdGltZSBrbm93biBtYXggcGh5c2lj
-YWwgYWRkcmVzcw0Kc2l6ZS4gU28gbWF5YmUgc29tZW9uZSBjb3VsZCB3YW50IEtWTV9HVUVTVCBh
-bmQgIVNQQVJTRU1FTV9WTUVNTUFQLiBJJ20gbm90DQpzdXJlLg0KDQo+ID4gDQo+ID4gU2lnbmVk
-LW9mZi1ieTogUmljayBFZGdlY29tYmUgPHJpY2sucC5lZGdlY29tYmVAaW50ZWwuY29tPg0KPiA+
-IC0tLQ0KPiA+ICBhcmNoL3g4Ni9LY29uZmlnIHwgMTMgKysrKysrKysrKysrKw0KPiA+ICAxIGZp
-bGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNo
-L3g4Ni9LY29uZmlnIGIvYXJjaC94ODYvS2NvbmZpZw0KPiA+IGluZGV4IDIyMjg1NWNjMDE1OC4u
-M2EzYWYyYTQ1NmU4IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gveDg2L0tjb25maWcNCj4gPiArKysg
-Yi9hcmNoL3g4Ni9LY29uZmlnDQo+ID4gQEAgLTgwMiw2ICs4MDIsMTkgQEAgY29uZmlnIEtWTV9H
-VUVTVA0KPiA+ICAJICB1bmRlcmx5aW5nIGRldmljZSBtb2RlbCwgdGhlIGhvc3QgcHJvdmlkZXMg
-dGhlIGd1ZXN0IHdpdGgNCj4gPiAgCSAgdGltaW5nIGluZnJhc3RydWN0dXJlIHN1Y2ggYXMgdGlt
-ZSBvZiBkYXksIGFuZCBzeXN0ZW0gdGltZQ0KPiA+ICANCj4gPiArY29uZmlnIEtWTV9YTw0KPiA+
-ICsJYm9vbCAiU3VwcG9ydCBmb3IgS1ZNIGJhc2VkIGV4ZWN1dGUgb25seSB2aXJ0dWFsIG1lbW9y
-eSBwZXJtaXNzaW9ucyINCj4gPiArCXNlbGVjdCBEWU5BTUlDX1BIWVNJQ0FMX01BU0sNCj4gPiAr
-CXNlbGVjdCBTUEFSU0VNRU1fVk1FTU1BUA0KPiA+ICsJZGVwZW5kcyBvbiBLVk1fR1VFU1QgJiYg
-WDg2XzY0DQo+ID4gKwlkZWZhdWx0IHkNCj4gPiArCWhlbHANCj4gPiArCSAgVGhpcyBvcHRpb24g
-ZW5hYmxlcyBzdXBwb3J0IGZvciBleGVjdXRlIG9ubHkgbWVtb3J5IGZvciBLVk0gZ3Vlc3RzLiBJ
-Zg0KPiA+ICsJICBzdXBwb3J0IGZyb20gdGhlIHVuZGVybHlpbmcgVk1NIGlzIG5vdCBkZXRlY3Rl
-ZCBhdCBib290LCB0aGlzDQo+ID4gKwkgIGNhcGFiaWxpdHkgd2lsbCBhdXRvbWF0aWNhbGx5IGRp
-c2FibGUuDQo+ID4gKw0KPiA+ICsJICBJZiB5b3UgYXJlIHVuc3VyZSBob3cgdG8gYW5zd2VyIHRo
-aXMgcXVlc3Rpb24sIGFuc3dlciBZLg0KPiA+ICsNCj4gPiAgY29uZmlnIFBWSA0KPiA+ICAJYm9v
-bCAiU3VwcG9ydCBmb3IgcnVubmluZyBQVkggZ3Vlc3RzIg0KPiA+ICAJLS0taGVscC0tLQ0KPiA+
-IC0tIA0KPiA+IDIuMTcuMQ0KPiA+IA0KPiANCj4gDQo=
+Hi,
+
+On 10/28/19 8:00 PM, Bhaskar Chowdhury wrote:
+> This patch will remove old kernel and modules directory from 
+> the system interactive way and also at once ,provied the parameter
+> given to the invoking script.
+> 
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> ---
+>  scripts/prune-kernel | 58 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+> 
+> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+> index 58a7650ce592..a6c990450ddc 100755
+> --- a/scripts/prune-kernel
+> +++ b/scripts/prune-kernel
+> @@ -1,2 +1,60 @@
+>  #!/bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+> +#This script will delete old kernels and modules directory related to it,both
+> +#automated and interactive way, if you choose -i or --interactive as parameter.
+> +#For normal operation you have to invoke this script like below
+> +#prune-kernel -r kernel_ver modules_dir_name
+> +flag=$1
+> +kernel_ver=$2
+> +modules_dir_name=$3
+> +boot_dir=/boot
+> +modules_dir=/lib/modules
+> +
+> +remove_old_kernel() {
+> +	cd $boot_dir
+> +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
+> +	return 0
+> +}
+> +
+> +remove_old_modules_dir() {
+> +	cd $modules_dir
+> +	rm -rf $modules_version
+> +	return 0
+> +}
+> +
+> +usage() {
+> +	printf "Usage: $(basename $0) [-ri] \n"
+> +	printf "\n -r | --remove kernel_ver modules_dir_name \n"
+> +	printf "\n -i | --interactive use as interactive way \n"
+> +}
+> +
+> +while getopts :hir opt;do
+
+what is the purpose of "opt" above?
+It is not used AFAICT.
+
+My internet searching says that 'getopts' does not support "--options" (long options).
+But then $flag is used below, not $opt, so the long options are just supported
+by "flag=$1" at the beginning of the script.
+
+
+> +	case "$flag" in
+> +		-i | --interactive)
+> +			printf "\nEnter kernel version to remove or blank/empty to exit:%s"
+> +			read kernel_version
+> +			if [[ $kernel_version != "" ]]; then
+> +				remove_old_kernel
+> +				printf "Please give the full modules directory name to remove:%s"
+> +				read modules_version
+
+Need to handle modules_version = "" here.
+
+> +				remove_old_modules_dir
+> +				printf "\n\n\n Removed kernel version:$kernel_version and associated modules directory:$modules_version ..Done.\n"
+> +			else
+> +				exit 1
+> +			fi
+> +			;;
+> +		-h | --help)
+> +			usage
+> +			exit 1
+> +			;;
+> +		-r | --remove)
+
+What happens if a user enters:
+
+./scripts/prune-kernel -r
+and no kernel_ver or modules_dir_name after -r?
+
+
+> +			shift $(( OPTIND -1 ))
+
+What is the purpose of the 'shift' since there is no loop to process more options?
+
+> +			cd $boot_dir
+> +			rm -f $kernel_ver
+> +			cd $modules_dir
+> +			rm -rf $modules_dir_name
+> +			printf "Removed kernel version:$kernel_ver and modules directory:$modules_dir_name from the system. \n\n"
+> +			exit 0
+> +			;;
+> +	esac
+> +done
+
+This patch does not delete the original script loop, so that still follows
+after the 'done' above.  Was that intentional?
+
+-- 
+~Randy
