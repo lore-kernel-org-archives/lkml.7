@@ -2,120 +2,107 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9625FCA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80FCCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66862205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:35:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tR6noo5C"
+	by mail.kernel.org (Postfix) with ESMTP id B15C7205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfJ3PfZ (ORCPT
+        id S1727149AbfJ3Pf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:35:25 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39778 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfJ3PfZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:35:25 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y3so3184934ljj.6;
-        Wed, 30 Oct 2019 08:35:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6/cUvxppfvco+q/svBW0l1eTrvr4r1OMCG7AkgiKpcQ=;
-        b=tR6noo5CwOi34VQIokfGyMdP+tJf/ZPULHPz8KIcLua8ZoHBLlO50xCqeMHaAGvVQa
-         48WC0IzF8IxRv33JMgEH6NVNXDntgXn7Qbh44b6Itm/zy8iGjwULy02N0bndCfuE2mWn
-         J5Gwpff3AsiQbdxaPgA4+tL1vptqqQI4FjSr8FVKo2VUEXTe05i7hepKReBSN4ewi9tv
-         zbaqlMUmmjqzytwjIcNNu6xS9h9lWk0Eaj0NjvRt2/CJPLu+0YZNb2skTCtzBUyPYFNU
-         4LvGej/Mi9HNnkRrWKHopWrOtOHpFc32BVA/CVOOxGZuSTldPR3GNZh63N8HGJiB7fSn
-         K3Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6/cUvxppfvco+q/svBW0l1eTrvr4r1OMCG7AkgiKpcQ=;
-        b=a7G85NUd3PiSRYyz+PPHcvUPX8XFnp5xRv/fKEIFPBEaTClzadmxu2vw6e7wJlSfaK
-         /8BhwdjhG8RA7hDngdBoUi4STefYxbch3zK4rJmsJLs4xeZ6oEv5WuQOtPXHy1xBXtEI
-         abwQQXErdvqypLwf1Qm3puufAlGwyh+a96OxvcpKr7U2r0iaRZsMFfFvT03kSgua1Xvh
-         VevTTT6xctaJi2Ji954Qu4UtotJisPEnCB1Z1wwJAjUP5vY3ybhGxC0ms4JoqrA6doG+
-         6phCen7SOXVc3TYJoav2qwLi5ZgQHee6421/MgTQs5dfVf3P+wuxaSZZOqNGEr/VV8dr
-         cvvQ==
-X-Gm-Message-State: APjAAAUjf/oa0D64VtIqsqwlegW8iB8kED66rUkEAMUtLHn9uG3g28ro
-        Pwo4rzKn2cNKW8d2T1AkQkTkogdQ0Cx+0w/J90Q=
-X-Google-Smtp-Source: APXvYqxBvl31pTcQQnHQbXcbxQLKZEYYjr+em5rKZ5EtZ+2iT0oglxx0fEQ8/RXMOehSCT8SBwLe+R0VTmgUsFSdHMc=
-X-Received: by 2002:a2e:2412:: with SMTP id k18mr217604ljk.243.1572449721198;
- Wed, 30 Oct 2019 08:35:21 -0700 (PDT)
+        Wed, 30 Oct 2019 11:35:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:36414 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbfJ3Pf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:35:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EE0A1FB;
+        Wed, 30 Oct 2019 08:35:57 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F03D3F6C4;
+        Wed, 30 Oct 2019 08:35:56 -0700 (PDT)
+Subject: Re: [PATCH 0/7] iommu: Permit modular builds of ARM SMMU[v3] drivers
+To:     Will Deacon <will@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20191030145112.19738-1-will@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6e457227-ca06-2998-4ffa-a58ab171ce32@arm.com>
+Date:   Wed, 30 Oct 2019 15:35:55 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org> <20191028123124.ogkk5ogjlamvwc2s@box>
- <20191028130018.GA7192@rapoport-lnx> <20191028131623.zwuwguhm4v4s5imh@box>
- <20191028135521.GB4097@hirez.programming.kicks-ass.net> <0a35765f7412937c1775daa05177b20113760aee.camel@intel.com>
- <20191028210052.GM4643@worktop.programming.kicks-ass.net> <69c57f7fa9a1be145827673b37beff155a3adc3c.camel@intel.com>
- <20191030100418.GV4097@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191030100418.GV4097@hirez.programming.kicks-ass.net>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 30 Oct 2019 08:35:09 -0700
-Message-ID: <CAADnVQ+3LeLWv-rpATyfAbdS1w9L=sCQFuyy=paCZVBUr0rK6Q@mail.gmail.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rppt@kernel.org" <rppt@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "kirill@shutemov.name" <kirill@shutemov.name>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191030145112.19738-1-will@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 3:06 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Oct 29, 2019 at 05:27:43PM +0000, Edgecombe, Rick P wrote:
-> > On Mon, 2019-10-28 at 22:00 +0100, Peter Zijlstra wrote:
->
-> > > That should be limited to the module range. Random data maps could
-> > > shatter the world.
-> >
-> > BPF has one vmalloc space allocation for the byte code and one for the module
-> > space allocation for the JIT. Both get RO also set on the direct map alias of
-> > the pages, and reset RW when freed.
->
-> Argh, I didn't know they mapped the bytecode RO; why does it do that? It
-> can throw out the bytecode once it's JIT'ed.
+On 30/10/2019 14:51, Will Deacon wrote:
+> Hi all,
+> 
+> As part of the work to enable a "Generic Kernel Image" across multiple
+> Android devices, there is a need to seperate shared, core kernel code
+> from modular driver code that may not be needed by all SoCs. This means
+> building IOMMU drivers as modules.
+> 
+> It turns out that most of the groundwork has already been done to enable
+> the ARM SMMU drivers to be 'tristate' options in drivers/iommu/Kconfig;
+> with a few symbols exported from the IOMMU/PCI core, everything builds
+> nicely out of the box. The one exception is support for the legacy SMMU
+> DT binding, which is not in widespread use and has never worked with
+> modules, so we can simply remove that when building as a module rather
+> than try to paper over it with even more hacks.
+> 
+> Obviously you need to be careful about using IOMMU drivers as modules,
+> since late loading of the driver for an IOMMU serving active DMA masters
+> is going to end badly in many cases. On Android, we're using device links
+> to ensure that the IOMMU probes first.
 
-because of endless security "concerns" that some folks had.
-Like what if something can exploit another bug in the kernel
-and modify bytecode that was already verified
-then interpreter will execute that modified bytecode.
-Sort of similar reasoning why .text is read-only.
-I think it's not a realistic attack, but I didn't bother to argue back then.
-The mere presence of interpreter itself is a real security concern.
-People that care about speculation attacks should
-have CONFIG_BPF_JIT_ALWAYS_ON=y,
-so modifying bytecode via another exploit will be pointless.
-Getting rid of RO for bytecode will save a ton of memory too,
-since we won't need to allocate full page for each small programs.
+Out of curiosity, which device links are those? Clearly not the RPM 
+links created by the IOMMU drivers themselves... Is this some special 
+Android magic, or is there actually a chance of replacing all the 
+of_iommu_configure() machinery with something more generic?
+
+Robin.
+
+> 
+> Comments welcome,
+> 
+> Will
+> 
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> 
+> --->8
+> 
+> Will Deacon (7):
+>    drivers/iommu: Export core IOMMU API symbols to permit modular drivers
+>    iommu/of: Request ACS from the PCI core when configuring IOMMU linkage
+>    PCI: Export pci_ats_disabled() as a GPL symbol to modules
+>    Revert "iommu/arm-smmu: Make arm-smmu-v3 explicitly non-modular"
+>    iommu/arm-smmu-v3: Allow building as a module
+>    Revert "iommu/arm-smmu: Make arm-smmu explicitly non-modular"
+>    iommu/arm-smmu: Allow building as a module
+> 
+>   drivers/iommu/Kconfig         | 16 ++++++-
+>   drivers/iommu/arm-smmu-impl.c |  6 +++
+>   drivers/iommu/arm-smmu-v3.c   | 26 +++++++----
+>   drivers/iommu/arm-smmu.c      | 86 +++++++++++++++++++++--------------
+>   drivers/iommu/iommu-sysfs.c   |  5 ++
+>   drivers/iommu/iommu.c         |  8 ++++
+>   drivers/iommu/of_iommu.c      |  1 +
+>   drivers/pci/pci.c             |  1 +
+>   8 files changed, 102 insertions(+), 47 deletions(-)
+> 
