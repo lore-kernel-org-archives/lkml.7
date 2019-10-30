@@ -2,164 +2,274 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C87ACA9ECB
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B0CCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40F821925
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59E821906
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hu5aYBUc"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="WQYCiXIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfJ3WnK (ORCPT
+        id S1727558AbfJ3WnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 18:43:10 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:32778 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfJ3WnI (ORCPT
+        Wed, 30 Oct 2019 18:43:14 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:34885 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727106AbfJ3WnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:43:08 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u23so2538452pgo.0;
-        Wed, 30 Oct 2019 15:43:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y0oPUoFzTii7ISlKgBqFiFMQKVFEygUTi9cyMnkiLCk=;
-        b=Hu5aYBUcdoSDd90QlvKV/W8VXrJZeQw3jJdITe9I0iSl/Lt8Jm0Y03uMXbwhymKSe1
-         Eg/QToOWKxh6uOdgU38ghvs1Y+zwBpbgMmqRxZsgR8j4cK+EoLtPQvFUNwLEdfAHiXkH
-         1fKRURZoRJJU01e0ljT5raVLUFZaONGBW+vEwoH8mUBFQYqFCDM8jdlGYloZBCPlq770
-         VDvAAYHT5RF8XtZmrHoVbaLJyu7CMVcvgnXLeXKDDGPw6v7IZSIhn26BQDlHKFO0D6xM
-         pdkczxZlkBPvfxnEqve1mTorhjZJYw/jaiyDvaCeAttFaU+m6qECOYbFWGJmsMTpcDvZ
-         vEHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y0oPUoFzTii7ISlKgBqFiFMQKVFEygUTi9cyMnkiLCk=;
-        b=RG44ZwCbdHn3cAb+J88iYW5ZCag1KqaYf0F1/45q0g0HCq4ngFW7QThtpx9QggN0Go
-         VlebkohWH1LfL3+oRyXfGhVrxATscnJV2ZX+8/dwGPgcE8ZLThYdtFpe+k+aE5xJrBRW
-         Vf9SUrO6lbmrBLJnBrB7kAxoinhcgcFXAHQ4jnPvxA8JMWzQ/zuKPp3vuEnQX+33hQfq
-         kQN9XHrzQe5gW17SA1M6exDVhYunIGQsHyRO8iJ/Kpd4RTgPBwvmfu2aOS+yDCIHZEUm
-         n1PC2WWvwBX/kzt7S4lRP9GigpKbblOQzTv8oGZdla4QilMw6jGFqwA3PxYUZEynzdo5
-         zVvQ==
-X-Gm-Message-State: APjAAAVQz/h1QwCtOFqd1gURf9ysd+WJLXuzuJ4AmMSWwKkWK78Hf4mq
-        bmaNzvOjxUru0kEuhb9KIGY=
-X-Google-Smtp-Source: APXvYqyBfb9xuS39HM2yTn0aXyuVgz6M19c7eUmnE1VDN25ZFMX/dAt+2dtxP09MoQIhtjclqeUCog==
-X-Received: by 2002:a17:90a:5d0f:: with SMTP id s15mr2135497pji.126.1572475387770;
-        Wed, 30 Oct 2019 15:43:07 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id x7sm1100750pff.0.2019.10.30.15.43.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 15:43:06 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 15:43:04 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v6 00/15] software node: add support for reference
- properties
-Message-ID: <20191030224304.GH57214@dtor-ws>
-References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
+        Wed, 30 Oct 2019 18:43:07 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id BFD4822EE9;
+        Wed, 30 Oct 2019 23:43:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1572475383;
+        bh=XFnpLVTbRIOcv1JIzgMCiJ0o/IuB8jUGvt9WomlOMmk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WQYCiXIqi++5FhEhgAeuFiPqNbek6Rkmh9YO82+pNsUhBv27AZv9oygpNLusWhej5
+         CYvnyfdZbU5uRmcIM6BZ2hDA/4lxIjqYgQkXA4CHYiJtVKY+UJ5Jt/kUeIslQuUZN3
+         I/BqZIfXqXkn3Pvvz4lLncWIMC17wX6JMU+C6slg=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Michael Walle <michael@walle.cc>
+Subject: [RFC PATCH 3/3] net: phy: at803x: add device tree binding
+Date:   Wed, 30 Oct 2019 23:42:51 +0100
+Message-Id: <20191030224251.21578-4-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191030224251.21578-1-michael@walle.cc>
+References: <20191030224251.21578-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+Add support for configuring the CLK_25M pin as well as the RGMII I/O
+voltage by the device tree.
 
-On Wed, Oct 23, 2019 at 01:02:18PM -0700, Dmitry Torokhov wrote:
-> These series implement "references" properties for software nodes as true
-> properties, instead of managing them completely separately.
-> 
-> The first 10 patches are generic cleanups and consolidation and
-> unification of the existing code; patch #11 implements moving of small
-> properties inline when copying property entries; patch #12 implements
-> PROPERTY_ENTRY_REF() and friends; patch #13 converts the user of
-> references to the property syntax, and patch #14 removes the remains of
-> references as entities that are managed separately.
-> 
-> Patch #15 adds unit tests to verify that the handling of property
-> entries is correct.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/net/phy/at803x.c | 156 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 154 insertions(+), 2 deletions(-)
 
-Do you have any concerns with the series? I think Andy did all the
-reviewing that he could...
-
-Thanks!
-
-> 
-> Changes in v6:
-> - rebased onto next-20191023
-> - fixed patch moving small properties inline
-> - fixed handling boolean properties after is_array -> is_inline
->   conversion
-> - changed comments around is_inline "stored directly" vs embedded
->   in one place (Andy)
-> - added unit tests for property entries based on KUnit framework
-> - added Any's reviewed-by/acked-by
-> 
-> Changes in v5:
-> - rebased onto next-20191011
-> 
-> Changes in v4:
-> - dealt with union aliasing concerns
-> - inline small properties on copy
-> 
-> Changes in v3:
-> - added various cleanups before implementing reference properties
-> 
-> Changes in v2:
-> - reworked code so that even single-entry reference properties are
->   stored as arrays (i.e. the software_node_ref_args instances are
->   not part of property_entry structure) to avoid size increase.
->   From user's POV nothing is changed, one can still use PROPERTY_ENTRY_REF
->   macro to define reference "inline".
-> - dropped unused DEV_PROP_MAX
-> - rebased on linux-next
-> 
-> Dmitry Torokhov (15):
->   software node: remove DEV_PROP_MAX
->   software node: introduce PROPERTY_ENTRY_ARRAY_XXX_LEN()
->   efi/apple-properties: use PROPERTY_ENTRY_U8_ARRAY_LEN
->   software node: mark internal macros with double underscores
->   software node: clean up property_copy_string_array()
->   software node: get rid of property_set_pointer()
->   software node: remove property_entry_read_uNN_array functions
->   software node: unify PROPERTY_ENTRY_XXX macros
->   software node: simplify property_entry_read_string_array()
->   software node: rename is_array to is_inline
->   software node: move small properties inline when copying
->   software node: implement reference properties
->   platform/x86: intel_cht_int33fe: use inline reference properties
->   software node: remove separate handling of references
->   software node: add basic tests for property entries
-> 
->  drivers/base/swnode.c                         | 263 ++++------
->  drivers/base/test/Makefile                    |   2 +
->  drivers/base/test/property-entry-test.c       | 472 ++++++++++++++++++
->  drivers/firmware/efi/apple-properties.c       |  18 +-
->  .../platform/x86/intel_cht_int33fe_typec.c    |  81 +--
->  include/linux/property.h                      | 178 +++----
->  6 files changed, 702 insertions(+), 312 deletions(-)
->  create mode 100644 drivers/base/test/property-entry-test.c
-> 
-> -- 
-> 2.23.0.866.gb869b98d4c-goog
-> 
-
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index 1eb5d4fb8925..32be4c72cf4b 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -13,7 +13,9 @@
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+ #include <linux/of_gpio.h>
++#include <linux/bitfield.h>
+ #include <linux/gpio/consumer.h>
++#include <dt-bindings/net/atheros-at803x.h>
+ 
+ #define AT803X_SPECIFIC_STATUS			0x11
+ #define AT803X_SS_SPEED_MASK			(3 << 14)
+@@ -62,6 +64,37 @@
+ #define AT803X_DEBUG_REG_5			0x05
+ #define AT803X_DEBUG_TX_CLK_DLY_EN		BIT(8)
+ 
++#define AT803X_DEBUG_REG_1F			0x1F
++#define AT803X_DEBUG_PLL_ON			BIT(2)
++#define AT803X_DEBUG_RGMII_1V8			BIT(3)
++
++/* AT803x supports either the XTAL input pad, an internal PLL or the
++ * DSP as clock reference for the clock output pad. The XTAL reference
++ * is only used for 25 MHz output, all other frequencies need the PLL.
++ * The DSP as a clock reference is used in synchronous ethernet
++ * applications.
++ *
++ * By default the PLL is only enabled if there is a link. Otherwise
++ * the PHY will go into low power state and disabled the PLL. You can
++ * set the PLL_ON bit (see debug register 0x1f) to keep the PLL always
++ * enabled.
++ */
++#define AT803X_MMD7_CLK25M			0x8016
++#define AT803X_CLK_OUT_MASK			GENMASK(4, 2)
++#define AT803X_CLK_OUT_25MHZ_XTAL		0
++#define AT803X_CLK_OUT_25MHZ_DSP		1
++#define AT803X_CLK_OUT_50MHZ_PLL		2
++#define AT803X_CLK_OUT_50MHZ_DSP		3
++#define AT803X_CLK_OUT_62_5MHZ_PLL		4
++#define AT803X_CLK_OUT_62_5MHZ_DSP		5
++#define AT803X_CLK_OUT_125MHZ_PLL		6
++#define AT803X_CLK_OUT_125MHZ_DSP		7
++
++#define AT803X_CLK_OUT_STRENGTH_MASK		GENMASK(8, 7)
++#define AT803X_CLK_OUT_STRENGTH_FULL		0
++#define AT803X_CLK_OUT_STRENGTH_HALF		1
++#define AT803X_CLK_OUT_STRENGTH_QUARTER		2
++
+ #define ATH8030_PHY_ID 0x004dd076
+ #define ATH8031_PHY_ID 0x004dd074
+ #define ATH8035_PHY_ID 0x004dd072
+@@ -73,6 +106,11 @@ MODULE_LICENSE("GPL");
+ 
+ struct at803x_priv {
+ 	bool phy_reset:1;
++	int flags;
++#define AT803X_KEEP_PLL_ENABLED	BIT(0)	/* don't turn off internal PLL */
++#define AT803X_RGMII_1V8	BIT(1)	/* use 1.8V RGMII voltage */
++	u16 clk_25m_reg;
++	u16 clk_25m_mask;
+ };
+ 
+ struct at803x_context {
+@@ -240,6 +278,74 @@ static int at803x_resume(struct phy_device *phydev)
+ 	return phy_modify(phydev, MII_BMCR, BMCR_PDOWN | BMCR_ISOLATE, 0);
+ }
+ 
++static int at803x_parse_dt(struct phy_device *phydev)
++{
++	struct device_node *node = phydev->mdio.dev.of_node;
++	struct at803x_priv *priv = phydev->priv;
++	u32 freq, strength;
++	unsigned int sel;
++	int ret;
++
++	if (!IS_ENABLED(CONFIG_OF_MDIO))
++		return 0;
++
++	if (!node)
++		return 0;
++
++	if (of_property_read_bool(node, "atheros,keep-pll-enabled"))
++		priv->flags |= AT803X_KEEP_PLL_ENABLED;
++
++	if (of_property_read_bool(node, "atheros,rgmii-io-1v8"))
++		priv->flags |= AT803X_RGMII_1V8;
++
++	ret = of_property_read_u32(node, "atheros,clk-out-frequency", &freq);
++	if (!ret) {
++		switch (freq) {
++		case 25000000:
++			sel = AT803X_CLK_OUT_25MHZ_XTAL;
++			break;
++		case 50000000:
++			sel = AT803X_CLK_OUT_50MHZ_PLL;
++			break;
++		case 62500000:
++			sel = AT803X_CLK_OUT_62_5MHZ_PLL;
++			break;
++		case 125000000:
++			sel = AT803X_CLK_OUT_125MHZ_PLL;
++			break;
++		default:
++			phydev_err(phydev,
++				   "invalid atheros,clk-out-frequency\n");
++			return -EINVAL;
++		}
++
++		priv->clk_25m_reg |= FIELD_PREP(AT803X_CLK_OUT_MASK, sel);
++		priv->clk_25m_mask |= AT803X_CLK_OUT_MASK;
++	}
++
++	ret = of_property_read_u32(node, "atheros,clk-out-strength", &strength);
++	if (!ret) {
++		priv->clk_25m_mask |= AT803X_CLK_OUT_STRENGTH_MASK;
++		switch (strength) {
++		case AT803X_STRENGTH_FULL:
++			priv->clk_25m_reg |= AT803X_CLK_OUT_STRENGTH_FULL;
++			break;
++		case AT803X_STRENGTH_HALF:
++			priv->clk_25m_reg |= AT803X_CLK_OUT_STRENGTH_HALF;
++			break;
++		case AT803X_STRENGTH_QUARTER:
++			priv->clk_25m_reg |= AT803X_CLK_OUT_STRENGTH_QUARTER;
++			break;
++		default:
++			phydev_err(phydev,
++				   "invalid atheros,clk-out-strength\n");
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
+ static int at803x_probe(struct phy_device *phydev)
+ {
+ 	struct device *dev = &phydev->mdio.dev;
+@@ -251,11 +357,31 @@ static int at803x_probe(struct phy_device *phydev)
+ 
+ 	phydev->priv = priv;
+ 
+-	return 0;
++	return at803x_parse_dt(phydev);
++}
++
++static int at803x_clk_out_config(struct phy_device *phydev)
++{
++	struct at803x_priv *priv = phydev->priv;
++	int val;
++
++	if (!priv->clk_25m_mask)
++		return 0;
++
++	val = phy_read_mmd(phydev, MDIO_MMD_AN, AT803X_MMD7_CLK25M);
++	if (val < 0)
++		return val;
++
++	val &= ~priv->clk_25m_mask;
++	val |= priv->clk_25m_reg;
++
++	return phy_write_mmd(phydev, MDIO_MMD_AN, AT803X_MMD7_CLK25M, val);
+ }
+ 
+ static int at803x_config_init(struct phy_device *phydev)
+ {
++	struct at803x_priv *priv = phydev->priv;
++	u16 set = 0, clear = 0;
+ 	int ret;
+ 
+ 	/* The RX and TX delay default is:
+@@ -276,8 +402,34 @@ static int at803x_config_init(struct phy_device *phydev)
+ 		ret = at803x_enable_tx_delay(phydev);
+ 	else
+ 		ret = at803x_disable_tx_delay(phydev);
++	if (ret < 0)
++		return ret;
+ 
+-	return ret;
++	ret = at803x_clk_out_config(phydev);
++	if (ret < 0)
++		return ret;
++
++	/* The default after hardware reset is:
++	 *   1.5V RGMII I/O voltage
++	 *   PLL OFF (which means it is off if there is no link)
++	 *
++	 * After a soft reset, the values are retained.
++	 */
++	if (priv->flags & AT803X_KEEP_PLL_ENABLED)
++		set |= AT803X_DEBUG_PLL_ON;
++	else
++		clear |= AT803X_DEBUG_PLL_ON;
++
++	if (priv->flags & AT803X_RGMII_1V8)
++		set |= AT803X_DEBUG_RGMII_1V8;
++	else
++		clear |= AT803X_DEBUG_RGMII_1V8;
++
++	ret = at803x_debug_reg_mask(phydev, AT803X_DEBUG_REG_1F, clear, set);
++	if (ret < 0)
++		return ret;
++
++	return 0;
+ }
+ 
+ static int at803x_ack_interrupt(struct phy_device *phydev)
 -- 
-Dmitry
+2.20.1
+
