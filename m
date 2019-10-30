@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCF8CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64F1CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D610720874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56CD20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451024;
-	bh=sJExn/v6rfVY73vDlOBZHLw/udTUWt5BimvLvJe254w=;
+	s=default; t=1572451027;
+	bh=1fsxAptcHjRbaUtNupDgJEBnnb6rWnIiTS9hB/14wZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eStKTKrVdiw+0jrQx0/+UvShvJugPW5pGNTFTBw4Qh56QIpnmbgTWGZQV00rXY4p2
-	 q9tCmolo9vt7kufZj7M9VwNr2MlKj4H1oEiiOn8OxxrTWYn5xRpyObPOQz9VwiLkkv
-	 U5OdS9pSaQXV7W/D3cfRrRqVLRlSyuwwLGPTd+tw=
+	b=q4Wtsd3oFLUwsO7JMqjZAId7TL/beFrqaYz+C2zhAPzjompTFPiWjqiScI+5fli+n
+	 JU6vKDv95TJp+pyk5otmrVXKrRSuezWGCT0EkmfLHuyeO27J823H0ZaZmAU9OZwkni
+	 f3FCu/PnNrJ2PK37rlJCwM4XPwEzgH2T6NE0fJqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbfJ3P5D (ORCPT
+        id S1728260AbfJ3P5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58482 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:57:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfJ3P4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:56:55 -0400
+        id S1728938AbfJ3P47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:56:59 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40BDE2083E;
-        Wed, 30 Oct 2019 15:56:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AED042080F;
+        Wed, 30 Oct 2019 15:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451013;
-        bh=sJExn/v6rfVY73vDlOBZHLw/udTUWt5BimvLvJe254w=;
+        s=default; t=1572451018;
+        bh=1fsxAptcHjRbaUtNupDgJEBnnb6rWnIiTS9hB/14wZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzFdBVfQSXBGVQ39LHzvjmiidBXCApe7py+rDSeTDPAjyQZ2WfRijQaSzdhaBgZdn
-         vhzEI6FQTc803cbcwE6j6eX5545zkDn2hC4mcBBElNe/RWJNsMJjFAccVSGBgQd12F
-         DJtbQznmFKfaOdYYhWmWrf+StcDx3zMEU0AzXHqU=
+        b=j4sfqIP7q5w04rwCDXgg1TrMZM0C5Ey8buAAuV6Xj3wEAlgiDV0cP+TJOgJcVw4LA
+         5mVWuwXlzcR4N5LqA6YB6bGJgE1MoKlHYeETLbnL74XOauaKQ9edw8wm2U9eSKaVuk
+         ChW+9ULY1jyXMRJQXQUbBFoTxOmp/TB7K4UJAHPs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Wysochanski <dwysocha@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 22/24] cifs: Fix cifsInodeInfo lock_sem deadlock when reconnect occurs
-Date:   Wed, 30 Oct 2019 11:55:53 -0400
-Message-Id: <20191030155555.10494-22-sashal@kernel.org>
+Cc:     Mike Christie <mchristi@redhat.com>,
+        syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com,
+        "Richard W . M . Jones" <rjones@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org, nbd@other.debian.org
+Subject: [PATCH AUTOSEL 4.14 24/24] nbd: verify socket is supported during setup
+Date:   Wed, 30 Oct 2019 11:55:55 -0400
+Message-Id: <20191030155555.10494-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155555.10494-1-sashal@kernel.org>
 References: <20191030155555.10494-1-sashal@kernel.org>
@@ -60,178 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+From: Mike Christie <mchristi@redhat.com>
 
-[ Upstream commit d46b0da7a33dd8c99d969834f682267a45444ab3 ]
+[ Upstream commit cf1b2326b734896734c6e167e41766f9cee7686a ]
 
-There's a deadlock that is possible and can easily be seen with
-a test where multiple readers open/read/close of the same file
-and a disruption occurs causing reconnect.  The deadlock is due
-a reader thread inside cifs_strict_readv calling down_read and
-obtaining lock_sem, and then after reconnect inside
-cifs_reopen_file calling down_read a second time.  If in
-between the two down_read calls, a down_write comes from
-another process, deadlock occurs.
+nbd requires socket families to support the shutdown method so the nbd
+recv workqueue can be woken up from its sock_recvmsg call. If the socket
+does not support the callout we will leave recv works running or get hangs
+later when the device or module is removed.
 
-        CPU0                    CPU1
-        ----                    ----
-cifs_strict_readv()
- down_read(&cifsi->lock_sem);
-                               _cifsFileInfo_put
-                                  OR
-                               cifs_new_fileinfo
-                                down_write(&cifsi->lock_sem);
-cifs_reopen_file()
- down_read(&cifsi->lock_sem);
+This adds a check during socket connection/reconnection to make sure the
+socket being passed in supports the needed callout.
 
-Fix the above by changing all down_write(lock_sem) calls to
-down_write_trylock(lock_sem)/msleep() loop, which in turn
-makes the second down_read call benign since it will never
-block behind the writer while holding lock_sem.
-
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Suggested-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed--by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Reported-by: syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com
+Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+Tested-by: Richard W.M. Jones <rjones@redhat.com>
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifsglob.h  |  5 +++++
- fs/cifs/cifsproto.h |  1 +
- fs/cifs/file.c      | 23 +++++++++++++++--------
- fs/cifs/smb2file.c  |  2 +-
- 4 files changed, 22 insertions(+), 9 deletions(-)
+ drivers/block/nbd.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index 7b7ab10a9db18..600bb838c15b8 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1210,6 +1210,11 @@ void cifsFileInfo_put(struct cifsFileInfo *cifs_file);
- struct cifsInodeInfo {
- 	bool can_cache_brlcks;
- 	struct list_head llist;	/* locks helb by this inode */
-+	/*
-+	 * NOTE: Some code paths call down_read(lock_sem) twice, so
-+	 * we must always use use cifs_down_write() instead of down_write()
-+	 * for this semaphore to avoid deadlocks.
-+	 */
- 	struct rw_semaphore lock_sem;	/* protect the fields above */
- 	/* BB add in lists for dirty pages i.e. write caching info for oplock */
- 	struct list_head openFileList;
-diff --git a/fs/cifs/cifsproto.h b/fs/cifs/cifsproto.h
-index ccdb42f71b2e8..3a7fb8e750e97 100644
---- a/fs/cifs/cifsproto.h
-+++ b/fs/cifs/cifsproto.h
-@@ -149,6 +149,7 @@ extern int cifs_unlock_range(struct cifsFileInfo *cfile,
- 			     struct file_lock *flock, const unsigned int xid);
- extern int cifs_push_mandatory_locks(struct cifsFileInfo *cfile);
- 
-+extern void cifs_down_write(struct rw_semaphore *sem);
- extern struct cifsFileInfo *cifs_new_fileinfo(struct cifs_fid *fid,
- 					      struct file *file,
- 					      struct tcon_link *tlink,
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 71a960da7cce1..40f22932343c6 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -280,6 +280,13 @@ cifs_has_mand_locks(struct cifsInodeInfo *cinode)
- 	return has_locks;
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index f322bb3286910..2fef2efa9051f 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -918,6 +918,25 @@ static blk_status_t nbd_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	return ret;
  }
  
-+void
-+cifs_down_write(struct rw_semaphore *sem)
++static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
++				     int *err)
 +{
-+	while (!down_write_trylock(sem))
-+		msleep(10);
++	struct socket *sock;
++
++	*err = 0;
++	sock = sockfd_lookup(fd, err);
++	if (!sock)
++		return NULL;
++
++	if (sock->ops->shutdown == sock_no_shutdown) {
++		dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown callout must be supported.\n");
++		*err = -EINVAL;
++		return NULL;
++	}
++
++	return sock;
 +}
 +
- struct cifsFileInfo *
- cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
- 		  struct tcon_link *tlink, __u32 oplock)
-@@ -305,7 +312,7 @@ cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
- 	INIT_LIST_HEAD(&fdlocks->locks);
- 	fdlocks->cfile = cfile;
- 	cfile->llist = fdlocks;
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	list_add(&fdlocks->llist, &cinode->llist);
- 	up_write(&cinode->lock_sem);
- 
-@@ -457,7 +464,7 @@ void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
- 	 * Delete any outstanding lock records. We'll lose them when the file
- 	 * is closed anyway.
- 	 */
--	down_write(&cifsi->lock_sem);
-+	cifs_down_write(&cifsi->lock_sem);
- 	list_for_each_entry_safe(li, tmp, &cifs_file->llist->locks, llist) {
- 		list_del(&li->llist);
- 		cifs_del_lock_waiters(li);
-@@ -1011,7 +1018,7 @@ static void
- cifs_lock_add(struct cifsFileInfo *cfile, struct cifsLockInfo *lock)
+ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+ 			  bool netlink)
  {
- 	struct cifsInodeInfo *cinode = CIFS_I(d_inode(cfile->dentry));
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	list_add_tail(&lock->llist, &cfile->llist->locks);
- 	up_write(&cinode->lock_sem);
- }
-@@ -1033,7 +1040,7 @@ cifs_lock_add_if(struct cifsFileInfo *cfile, struct cifsLockInfo *lock,
+@@ -927,7 +946,7 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+ 	struct nbd_sock *nsock;
+ 	int err;
  
- try_again:
- 	exist = false;
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
+-	sock = sockfd_lookup(arg, &err);
++	sock = nbd_get_socket(nbd, arg, &err);
+ 	if (!sock)
+ 		return err;
  
- 	exist = cifs_find_lock_conflict(cfile, lock->offset, lock->length,
- 					lock->type, &conf_lock, CIFS_LOCK_OP);
-@@ -1055,7 +1062,7 @@ cifs_lock_add_if(struct cifsFileInfo *cfile, struct cifsLockInfo *lock,
- 					(lock->blist.next == &lock->blist));
- 		if (!rc)
- 			goto try_again;
--		down_write(&cinode->lock_sem);
-+		cifs_down_write(&cinode->lock_sem);
- 		list_del_init(&lock->blist);
- 	}
+@@ -979,7 +998,7 @@ static int nbd_reconnect_socket(struct nbd_device *nbd, unsigned long arg)
+ 	int i;
+ 	int err;
  
-@@ -1108,7 +1115,7 @@ cifs_posix_lock_set(struct file *file, struct file_lock *flock)
- 		return rc;
+-	sock = sockfd_lookup(arg, &err);
++	sock = nbd_get_socket(nbd, arg, &err);
+ 	if (!sock)
+ 		return err;
  
- try_again:
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	if (!cinode->can_cache_brlcks) {
- 		up_write(&cinode->lock_sem);
- 		return rc;
-@@ -1314,7 +1321,7 @@ cifs_push_locks(struct cifsFileInfo *cfile)
- 	int rc = 0;
- 
- 	/* we are going to update can_cache_brlcks here - need a write access */
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	if (!cinode->can_cache_brlcks) {
- 		up_write(&cinode->lock_sem);
- 		return rc;
-@@ -1505,7 +1512,7 @@ cifs_unlock_range(struct cifsFileInfo *cfile, struct file_lock *flock,
- 	if (!buf)
- 		return -ENOMEM;
- 
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	for (i = 0; i < 2; i++) {
- 		cur = buf;
- 		num = 0;
-diff --git a/fs/cifs/smb2file.c b/fs/cifs/smb2file.c
-index 1add404618f06..2c809233084bb 100644
---- a/fs/cifs/smb2file.c
-+++ b/fs/cifs/smb2file.c
-@@ -139,7 +139,7 @@ smb2_unlock_range(struct cifsFileInfo *cfile, struct file_lock *flock,
- 
- 	cur = buf;
- 
--	down_write(&cinode->lock_sem);
-+	cifs_down_write(&cinode->lock_sem);
- 	list_for_each_entry_safe(li, tmp, &cfile->llist->locks, llist) {
- 		if (flock->fl_start > li->offset ||
- 		    (flock->fl_start + length) <
 -- 
 2.20.1
 
