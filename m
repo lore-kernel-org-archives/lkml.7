@@ -2,140 +2,98 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE19CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8C5CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F91020578
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:40:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5U/GaUz"
+	by mail.kernel.org (Postfix) with ESMTP id 4C03B20578
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfJ3NkC (ORCPT
+        id S1726622AbfJ3NlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:40:02 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40467 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfJ3NkB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:40:01 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r4so1610140pfl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 06:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6hewunER1BJ3JHZmiLHPwNFknENQ0spNgw9Su+32lGw=;
-        b=i5U/GaUzYYTNmgE0d7+egpWalDF1wGMJltWY5Kj+DsOY3SklsuL6jLLTnN5Fx2cR3x
-         PR5Jp5k+DJFDsfWza66xxO/kpd3vmLsDaMep5qJs8w+TBP4+VbMRB72wJaIFypD4IZTF
-         QOvwHprRWuMt027mMmukKvfhWdJxXHpT1E3JXrdhsGvFZw5ZLASziLh1gKw4odMvMy4U
-         VZOIwL3lzynrY8NMzfhMouXy1iaB9kJrvsCInd2TlGl+OAoKM/TFk6GMqlx3rvn9E+9E
-         G9gM7AcAE5vPIxTpLCMi79b0/0dv4t/ew8E8pGrRx/Y1vuiU0GIJxrL6UcFTf/ASYon3
-         u75w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6hewunER1BJ3JHZmiLHPwNFknENQ0spNgw9Su+32lGw=;
-        b=B8/jtOeQJcQsWpyxq7hFmWZmNygAivXmn+tQdAq7eeAA+4PDKlpbBAJe/to3Yy4zmP
-         e/KmkypIwZqE1jMjn3H479sm8yw3iy1FwYgk+O7z6BIrIt5K+bAnrYfWwHeYqNXMFFJW
-         HvIvAr2gbu4gIKkr0n/nh1izZUBoBSanXxP8zKnHnymNELICWUJCRNuK8JSNEZMYVYFZ
-         6PU++gNmM6y3vV7jp6dz5jrFx7d6ccdG6GBl4eVYfkCy0O5k0JHp5N2TMst1rFDv/j5E
-         RflSoJthL98lBlxddEarIYha1nb42NxvYMJ4epNg+NVdvwPgtxubRi/qKumQolOMyjaz
-         3LfQ==
-X-Gm-Message-State: APjAAAV1VQRvuAO3KlMRoJuC6nlcL37ohjddczu3WyJzp8tBC/Zoaanx
-        sTJdJAgR907/lOzUuLitSxfUawb3gimOZiJ0McQ=
-X-Google-Smtp-Source: APXvYqxnhe4RY9omxQUIA+E+AAyAyt0AaSmxl6SyaVdsCbcJIOtyrJoSNMQ7bVLhT5uc/MKyT8mExRRvvw24fUf0mxo=
-X-Received: by 2002:a63:5619:: with SMTP id k25mr34026206pgb.439.1572442801008;
- Wed, 30 Oct 2019 06:40:01 -0700 (PDT)
+        Wed, 30 Oct 2019 09:41:12 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45426 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbfJ3NlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:41:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 06:41:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="283555445"
+Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
+  by orsmga001.jf.intel.com with ESMTP; 30 Oct 2019 06:41:05 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        "Kang\, Luwei" <luwei.kang@intel.com>
+Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar\@redhat.com" <rkrcmar@redhat.com>,
+        "Christopherson\, Sean J" <sean.j.christopherson@intel.com>,
+        "vkuznets\@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli\@tencent.com" <wanpengli@tencent.com>,
+        "jmattson\@google.com" <jmattson@google.com>,
+        "joro\@8bytes.org" <joro@8bytes.org>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "mingo\@redhat.com" <mingo@redhat.com>,
+        "bp\@alien8.de" <bp@alien8.de>, "hpa\@zytor.com" <hpa@zytor.com>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "ak\@linux.intel.com" <ak@linux.intel.com>,
+        "thomas.lendacky\@amd.com" <thomas.lendacky@amd.com>,
+        "acme\@kernel.org" <acme@kernel.org>,
+        "mark.rutland\@arm.com" <mark.rutland@arm.com>,
+        "jolsa\@redhat.com" <jolsa@redhat.com>,
+        "namhyung\@kernel.org" <namhyung@kernel.org>,
+        alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS event
+In-Reply-To: <20191030094941.GQ4097@hirez.programming.kicks-ass.net>
+References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com> <1572217877-26484-4-git-send-email-luwei.kang@intel.com> <20191029144612.GK4097@hirez.programming.kicks-ass.net> <82D7661F83C1A047AF7DC287873BF1E173835B1A@SHSMSX104.ccr.corp.intel.com> <20191030094941.GQ4097@hirez.programming.kicks-ass.net>
+Date:   Wed, 30 Oct 2019 15:41:04 +0200
+Message-ID: <87k18mfj0v.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-References: <1572440776-50318-1-git-send-email-zhongjiang@huawei.com>
-In-Reply-To: <1572440776-50318-1-git-send-email-zhongjiang@huawei.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Wed, 30 Oct 2019 22:39:49 +0900
-Message-ID: <CAC5umyhRiJ9LHD1fhhSUygmWtXMe28WL4KB9=5DXv0rU6rJ0vg@mail.gmail.com>
-Subject: Re: [PATCH v2] fault-inject: Use debugfs_create_ulong() instead of debugfs_create_ul()
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B410=E6=9C=8830=E6=97=A5(=E6=B0=B4) 22:10 zhong jiang <zhongjian=
-g@huawei.com>:
->
-> debugfs_create_ulong() has implemented the function of debugfs_create_ul(=
-)
-> in lib/fault-inject.c. hence we can replace it.
->
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  lib/fault-inject.c | 43 ++++++++++++++-----------------------------
->  1 file changed, 14 insertions(+), 29 deletions(-)
->
-> diff --git a/lib/fault-inject.c b/lib/fault-inject.c
-> index 8186ca8..326fc1d 100644
-> --- a/lib/fault-inject.c
-> +++ b/lib/fault-inject.c
-> @@ -151,10 +151,13 @@ bool should_fail(struct fault_attr *attr, ssize_t s=
-ize)
->  EXPORT_SYMBOL_GPL(should_fail);
->
->  #ifdef CONFIG_FAULT_INJECTION_DEBUG_FS
-> +#ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
->
-> -static int debugfs_ul_set(void *data, u64 val)
-> +static int debugfs_stacktrace_depth_set(void *data, u64 val)
->  {
-> -       *(unsigned long *)data =3D val;
-> +       *(unsigned long *)data =3D
-> +               min_t(unsigned long, val, MAX_STACK_TRACE_DEPTH);
-> +
->         return 0;
->  }
->
-> @@ -164,26 +167,8 @@ static int debugfs_ul_get(void *data, u64 *val)
->         return 0;
->  }
->
-> -DEFINE_SIMPLE_ATTRIBUTE(fops_ul, debugfs_ul_get, debugfs_ul_set, "%llu\n=
-");
-> -
-> -static void debugfs_create_ul(const char *name, umode_t mode,
-> -                             struct dentry *parent, unsigned long *value=
-)
-> -{
-> -       debugfs_create_file(name, mode, parent, value, &fops_ul);
-> -}
-> -
-> -#ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
-> -
-> -static int debugfs_stacktrace_depth_set(void *data, u64 val)
-> -{
-> -       *(unsigned long *)data =3D
-> -               min_t(unsigned long, val, MAX_STACK_TRACE_DEPTH);
-> -
-> -       return 0;
-> -}
-> -
-> -DEFINE_SIMPLE_ATTRIBUTE(fops_stacktrace_depth, debugfs_ul_get,
-> -                       debugfs_stacktrace_depth_set, "%llu\n");
-> +DEFINE_DEBUGFS_ATTRIBUTE(fops_stacktrace_depth, debugfs_ul_get,
-> +                        debugfs_stacktrace_depth_set, "%llu\n");
->
+Peter Zijlstra <peterz@infradead.org> writes:
 
-The commit message doesn't describe the s/SIMPLE/DEBUGFS/ change
-for fops_stacktrace_depth.
+> On Wed, Oct 30, 2019 at 04:06:36AM +0000, Kang, Luwei wrote:
+>> > >  static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+>> > >  				  unsigned config, bool exclude_user,
+>> > >  				  bool exclude_kernel, bool intr,
+>> > > -				  bool in_tx, bool in_tx_cp)
+>> > > +				  bool in_tx, bool in_tx_cp, bool pebs)
+>> > >  {
+>> > >  	struct perf_event *event;
+>> > >  	struct perf_event_attr attr = {
+>> > > @@ -111,9 +111,12 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+>> > >  		.exclude_user = exclude_user,
+>> > >  		.exclude_kernel = exclude_kernel,
+>> > >  		.config = config,
+>> > > +		.precise_ip = pebs ? 1 : 0,
+>> > > +		.aux_output = pebs ? 1 : 0,
+>> > 
+>> > srsly?
+>> 
+>> Hi Peter,
+>>     Thanks for review. For aux_output, I think it should be set 1 when the guest wants to enabled PEBS by Intel PT.
+>>      For precise_ip, it is the precise level in perf and set by perf command line in KVM guest, this may not reflect the accurate value (can be 0~3) here. Here set to 1 is used to allocate a counter for PEBS event and set the MSR_IA32_PEBS_ENABLE register. For PMU virtualization, KVM will trap the guest's write operation to PMU registers and allocate/free event counter from host if a counter enable/disable in guest. We can't always deduce the exact parameter of perf command line from the value of the guest writers to the register.
+>
+> Please, teach your MUA to wrap on 78 chars.
+>
+> The thing I really fell over is the gratuitous 'bool ? 1 : 0'. But yes,
 
-It is better to prepare another patch and I think debugfs_create_file()
-in debugfs_create_stacktrace_depth() can now be replaced by
-debugfs_create_file_unsafe().
+Notice the .exclude_kernel assignment above that does the same thing the
+other way around.
+
+Regards,
+--
+Alex
