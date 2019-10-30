@@ -2,142 +2,105 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF957CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 581D3CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951E42087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3166D2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:37:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572435426;
+	bh=HADBrgwJF8SpkSFNq10ts5EgPNqAlWpwbph3HURGSoQ=;
+	h=From:Date:To:Cc:Cc:Cc:Cc:Cc:Subject:List-ID:From;
+	b=Lf0YrnY+Jku4j7Ek4E5vypuaMdZphYEWoYMjUoBCFS3hSA/qWOUv3w8kTdldR+Bqy
+	 Q5+mwsox9xHTZLZA5Mjeagsr8J33L7jJgrjkGCObzahINn/NEOouD6qdTOlQsBSEsk
+	 V+oJGMWnz1TONv53J5+J4aOnjbLOi1Lz4HGjmFno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfJ3Ld7 (ORCPT
+        id S1726269AbfJ3LhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 07:33:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:42159 "EHLO mga06.intel.com"
+        Wed, 30 Oct 2019 07:37:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbfJ3Ld7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 07:33:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 04:33:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
-   d="scan'208";a="211306127"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 30 Oct 2019 04:33:53 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 30 Oct 2019 13:33:53 +0200
-Date:   Wed, 30 Oct 2019 13:33:53 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Matthias Andree <matthias.andree@gmx.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191030113353.GY2593@lahna.fi.intel.com>
-References: <20191004123947.11087-3-mika.westerberg@linux.intel.com>
- <20191029205456.GA100782@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029205456.GA100782@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1726065AbfJ3LhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 07:37:04 -0400
+Received: from localhost (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 266992083E;
+        Wed, 30 Oct 2019 11:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572435423;
+        bh=HADBrgwJF8SpkSFNq10ts5EgPNqAlWpwbph3HURGSoQ=;
+        h=From:Date:To:Cc:Cc:Cc:Cc:Cc:Subject:From;
+        b=Z4rFH4sd/tjdRCY3KYKxEQUOPmGTOmGj9NCpG77yAmzySv63TRVnesAiu1wBLh+tj
+         dElVWv0nTVs0VM+p07Bd9hzzQ7OSrn7eKSvzefhnKHFhee5I4Hvd/65ptsUzG7dXr0
+         5AWzgJwXO8iZiVdnNpbi/7CUjo7dyL6cI4Z2zujE=
+From:   Sasha Levin <sashal@kernel.org>
+Date:   Wed, 30 Oct 2019 07:37:00 -0400
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@microsoft.com
+Cc:     linux-hyperv@vger.kernel.org
+Cc:     kys@microsoft.com
+Cc:     sthemmin@microsoft.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Hyper-V commits for 5.4-rc
+Message-Id: <20191030113703.266992083E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 03:54:56PM -0500, Bjorn Helgaas wrote:
-> On Fri, Oct 04, 2019 at 03:39:47PM +0300, Mika Westerberg wrote:
-> > Currently Linux does not follow PCIe spec regarding the required delays
-> > after reset. A concrete example is a Thunderbolt add-in-card that
-> > consists of a PCIe switch and two PCIe endpoints:
-> > ...
-> 
-> > @@ -1025,15 +1025,11 @@ static void __pci_start_power_transition(struct pci_dev *dev, pci_power_t state)
-> >  	if (state == PCI_D0) {
-> >  		pci_platform_power_transition(dev, PCI_D0);
-> >  		/*
-> > -		 * Mandatory power management transition delays, see
-> > -		 * PCI Express Base Specification Revision 2.0 Section
-> > -		 * 6.6.1: Conventional Reset.  Do not delay for
-> > -		 * devices powered on/off by corresponding bridge,
-> > -		 * because have already delayed for the bridge.
-> > +		 * Mandatory power management transition delays are handled
-> > +		 * in pci_pm_runtime_resume() of the corresponding
-> > +		 * downstream/root port.
-> >  		 */
-> >  		if (dev->runtime_d3cold) {
-> > -			if (dev->d3cold_delay && !dev->imm_ready)
-> > -				msleep(dev->d3cold_delay);
-> 
-> This removes the only use of d3cold_delay.  I assume that's
-> intentional?  If we no longer need it, we might as well remove it from
-> the pci_dev and remove the places that set it.  It'd be nice if that
-> could be a separate patch, even if we waited a little longer than
-> necessary at that one bisection point.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
 
-Yes, it is intentional. In the previous version I had function
-pcie_get_downstream_delay() that used both d3cold_delay and imm_ready to
-calculate the downstream device delay but you said:
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-  I'm not sold on the idea that this delay depends on what's *below* the                                                                                                   
-  bridge.  We're using sec 6.6.1 to justify the delay, and that section                                                                                               
-  doesn't say anything about downstream devices.
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-So I dropped it and use 100 ms instead.
+are available in the Git repository at:
 
-Now that you mention, I think if we want to continue support that _DSM,
-we should still take d3cold_delay into account in this patch. There is
-also one driver (drivers/mfd/intel-lpss-pci.c) that sets it to 0.
+  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
 
-> It also removes one of the three uses of imm_ready, leaving only the
-> two in FLR.  I suspect there are other places we should use imm_ready,
-> e.g., transitions to/from D1 and D2, but that would be beyond the
-> scope of this patch.
+for you to fetch changes up to 590c28b9199c99593b879cbb82d7d4be605894ec:
 
-Right, I think imm_ready does not apply here. If I understand correctly
-it is exactly for D1, D2 and D3hot transitions which we should take into
-account in pci_dev_d3_sleep() (which we don't do right now).
+  Drivers: hv: vmbus: Fix harmless building warnings without CONFIG_PM_SLEEP (2019-10-28 12:24:53 -0400)
 
-> > +	/*
-> > +	 * For PCIe downstream and root ports that do not support speeds
-> > +	 * greater than 5 GT/s need to wait minimum 100 ms. For higher
-> > +	 * speeds (gen3) we need to wait first for the data link layer to
-> > +	 * become active.
-> > +	 *
-> > +	 * However, 100 ms is the minimum and the PCIe spec says the
-> > +	 * software must allow at least 1s before it can determine that the
-> > +	 * device that did not respond is a broken device. There is
-> > +	 * evidence that 100 ms is not always enough, for example certain
-> > +	 * Titan Ridge xHCI controller does not always respond to
-> > +	 * configuration requests if we only wait for 100 ms (see
-> > +	 * https://bugzilla.kernel.org/show_bug.cgi?id=203885).
-> > +	 *
-> > +	 * Therefore we wait for 100 ms and check for the device presence.
-> > +	 * If it is still not present give it an additional 100 ms.
-> > +	 */
-> > +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
-> > +	    pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
-> > +		return;
-> 
-> Shouldn't this be:
-> 
->   if (!pcie_downstream_port(dev))
->     return
-> 
-> so we include PCI/PCI-X to PCIe bridges?
+- ----------------------------------------------------------------
+- - Fix a leak and improve the handling of the ring buffer in the Hyper-V
+HID driver from Dexuan Cui.
+- - Fix a (harmless) build warning in vmbus PM code by Dexuan Cui.
+- - A fix for a build issue in the Hyper-V IOMMU driver resulting from
+enablement on new architectures by Boqun Feng.
 
-Yes, I'll change it in v3.
+- ----------------------------------------------------------------
+Boqun Feng (1):
+      drivers: iommu: hyperv: Make HYPERV_IOMMU only available on x86
+
+Dexuan Cui (2):
+      HID: hyperv: Use in-place iterator API in the channel callback
+      Drivers: hv: vmbus: Fix harmless building warnings without CONFIG_PM_SLEEP
+
+ drivers/hid/hid-hyperv.c | 56 +++++++++---------------------------------------
+ drivers/hv/vmbus_drv.c   |  6 ++++++
+ drivers/iommu/Kconfig    |  2 +-
+ 3 files changed, 17 insertions(+), 47 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE4n5dijQDou9mhzu83qZv95d3LNwFAl25dZ0ACgkQ3qZv95d3
+LNwEXg/+LjI3+t8Qw5rd2aaCU2NUEVTQJA1bMOx8HT62lKVhrbPT7Y3XZ+zP2K9P
+fE6c3bHjTnSymrAx3XMNO2qAXYocA6fo3ggNVleTSA7zrh21fIR2XV0NVDoDNZ/d
+KEU/kJbAMyVADKRlwnKA9+O+bfOQhvP4wDb3r1fKaKQ+HznEw8rrbQ0NgohGRO0i
+85diHq3KUkXfGvh1PzkzeXGSuxMlmoM/ZtsjE+8Okj4NU0R3Wp0nd6kJzi2EwkDz
+ZGmxLpV5Se+qilA7gUfayhSdYS0UyFO0BX+rONfKPdEOLwxVS81/5wROwtivJ2xJ
+gMqfZg78X8yiqEkFEMfVngxoeARzJGcFYiqjl8iOGL57tU875Mz2yZgAx1PH0J4y
+nZ86X44A13ZViOYlMwV0JG0h94FRtiab3PeVbLCXNU1ULSBJcppLP4lUxdVgeZyz
+F9xS6RY35QaGxyT1/cb+g2qr//TAXPQaJh4vnh5vEx/U3lI86+IyCs0xuaOhKP06
+frdoXOTdRmLZoqm7ruoCt4gTJUIGbYvGruisAVifdS0401UxXssIKoh1/1CHbBE6
+1/bUofBwNrXtyfbru2VyROxRqb/uxZj+UECQwRqJkkg4JUOglBz08h+O+Rjie79i
+PrUjPAwhUAKxQ19Cj59M+r6MlT5U9L/Fp2q/BODk1gu1jC3bRAM=
+=UL+8
+-----END PGP SIGNATURE-----
