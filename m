@@ -2,119 +2,104 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C8ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B19CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA17E2087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:02:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OjUstP+Z"
+	by mail.kernel.org (Postfix) with ESMTP id 25A28217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:02:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572426177;
+	bh=raH+iI0aQiORbOrO2yDf8CX82VI9Uy4H5AJIucXb10M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=ChZhzVZYgV+L4j1nRucghbNUwsHrCMNbUFzdfffi+LfxP0fYAR0zEBiymk9htoYKm
+	 6U474UHed34oQ9v+O8VDk3VL95EsJqfERhXoQlOxQac++ouQUEea6HuI1sTjLL4kto
+	 uqRG+l3tX9ra6ERjemsv6n1UogiSjTziWdWaWfv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfJ3JC2 (ORCPT
+        id S1726731AbfJ3JC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:02:28 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41062 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfJ3JC2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:02:28 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p26so1118359pfq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 02:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LAPsnGt1pYtfbduk+JeNTkq03C0NkkTkxfb05DzEQJ0=;
-        b=OjUstP+ZDVdOGkJvM7Td/6qBjFXM/KJF6OJzUcEP7TyIJ4ZvUAn9T7yD8XjYxDNEJN
-         KHjfvWijYiNtqenb9bwa4Sd1uGk/jU8FssM6dooJ4yDHUi45cn17lSpLQFbVew2amgW1
-         FPa8iEp/VeagMZARlx0/Hkpd+Tt/g031BieCjXyxwn2gsco2zYNWb50cT4woJ+ovMB3Z
-         fzA4VRtI6KPvbdbp/WHauQOggzc/Pzxm45n53SBGlLJ/X4cN+ny0thBTdo/0mLdX21nN
-         udm+afipjTPSHKncaghH/3F0Zwzwekn1z/WYsofoSyAtuLp7QCy8b/4kPAXWhs5jUQrf
-         Bfnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=LAPsnGt1pYtfbduk+JeNTkq03C0NkkTkxfb05DzEQJ0=;
-        b=q3wQ7hTtn0M9erzd3muajo4jcmVSRm8wZkGPXHnCIUopratZb/G9HOvD/Y8Pt1dPk1
-         W7kNBNMwQGLDVTHj4+eL2UTQuHBwVnpiK2XOfxkN51RaSpZaHhVE3/L1p8z0jHOeaO+m
-         biD0eYZPvfr+isFSW02cLlk3IZFQwXYOVybB2lqpiEe4Ez6Y4YU+TwZkCQBdcL5+uZmN
-         4HiIC+u0UX0+FNNyLyH2P/47gXpZm7FEzNsLeDw3PZ1YMKSM/ph0+PRsHGXEDVSYNk02
-         bgdUr3Pu5rdFoJPy67QFb3qM2+BD47du2uKxO8o1MZY7w2ScIeJiXtjhXj4Cs/a9ivIt
-         yLjg==
-X-Gm-Message-State: APjAAAUM2gg5lt9Pk9VlhA8qjB4Rh1VMlFS31FdGCsC1JsN7eNdWAjI7
-        +qcc5jewDyhAElJyN9jRjPbi
-X-Google-Smtp-Source: APXvYqxsyssWpqE3cm5I9+vC1DFWm8h7Zo1nOKgSKfAdxUIWWIrp9fIwVWU5LGEWc9pZGi9gWdp/CA==
-X-Received: by 2002:a63:6d02:: with SMTP id i2mr33658547pgc.64.1572426146740;
-        Wed, 30 Oct 2019 02:02:26 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:618e:77d9:c9fa:423a:3851:8df4])
-        by smtp.gmail.com with ESMTPSA id g24sm2070351pfi.81.2019.10.30.02.02.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 02:02:26 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        darshak.patel@einfochips.com, prajose.john@einfochips.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH v2 4/4] mtd: spi-nor: Add support for w25q256jw
-Date:   Wed, 30 Oct 2019 14:31:24 +0530
-Message-Id: <20191030090124.24900-5-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
-References: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
+        Wed, 30 Oct 2019 05:02:56 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7949 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726184AbfJ3JC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:02:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 02:02:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="225264093"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga004.fm.intel.com with ESMTP; 30 Oct 2019 02:02:51 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4 5/9] usb: dwc3: Rework clock initialization to be more flexible
+In-Reply-To: <CALAqxLXcD8V1o01yMrHpeoqU2MfJ=8d3dbzC8T-+aoovDUd8kA@mail.gmail.com>
+References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-6-john.stultz@linaro.org> <87k18nj4mj.fsf@gmail.com> <CALAqxLXcD8V1o01yMrHpeoqU2MfJ=8d3dbzC8T-+aoovDUd8kA@mail.gmail.com>
+Date:   Wed, 30 Oct 2019 11:02:51 +0200
+Message-ID: <87h83qhah0.fsf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MTD support for w25q256jw SPI NOR chip from Winbond. This chip
-supports dual/quad I/O mode with 512 blocks of memory organized in
-64KB sectors. In addition to this, there is also small 4KB sectors
-available for flexibility. The device has been validated using Thor96
-board.
 
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org
-Signed-off-by: Darshak Patel <darshak.patel@einfochips.com>
-[Mani: cleaned up for upstream]
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/mtd/spi-nor/spi-nor.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hi,
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 1d8621d43160..2c25b371d9f0 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -2482,6 +2482,8 @@ static const struct flash_info spi_nor_ids[] = {
- 	{ "w25q256", INFO(0xef4019, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "w25q256jvm", INFO(0xef7019, 0, 64 * 1024, 512,
- 			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-+	{ "w25q256jw", INFO(0xef6019, 0, 64 * 1024, 512,
-+			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
- 			SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
- 
+John Stultz <john.stultz@linaro.org> writes:
+> On Tue, Oct 29, 2019 at 2:14 AM Felipe Balbi <balbi@kernel.org> wrote:
+>> John Stultz <john.stultz@linaro.org> writes:
+>>
+>> > The dwc3 core binding specifies three clocks:
+>> >   ref, bus_early, and suspend
+>> >
+>> > which are all controlled in the driver together.
+>> >
+>> > However some variants of the hardware my not have all three clks
+>>                                         ^^
+>>                                         may
+>>
+>> In fact *all* platforms have all three clocks. It's just that in some
+>> cases clock pins are shorted together (or take input from same clock).
+>>
+> ...
+>> another option would be to pass three clocks with the same phandle. That
+>> would even make sure that clock usage counts are correct, no?
+>
+> Hey Felipe!
+>
+> So I actually had done that initially (and it seemed to work), but Rob
+> suggested this way instead.
+> I'm fine with either, as long as having multiple references to the
+> same clk in the enable/disable paths doesn't cause trouble.
+>
+> Thanks so much for the review here!
+
+same as the other patch, if we're supposed to describe the HW, then we
+should describe what's actually happening.
+
 -- 
-2.17.1
-
+balbi
