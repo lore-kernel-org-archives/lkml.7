@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A372CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2A7CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1775121906
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9709217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450947;
-	bh=ajrQFUpHfoZrFxmZ57IP0Y32djqaiWekFynq+8+EYS8=;
+	s=default; t=1572450950;
+	bh=b5E4t656muwHmdXlT7k0hXbv0wJVVOwBCGzDoTObq+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lAjH3oGIhdh92Ba/PBUc1yS2D6fwzxM+3AJkx26Q08mVDidprQTyS7bMOpWOc3vPt
-	 6nPMAgTRHgXEuyr7vSmI1lBbiR6VJ9wUNF8TBNSbVNPguhKt13vqjJSU40MwQzXtVV
-	 Y3qCLMR4vdGY3zUAAXWWPXBXg25dHAz3QqsPjIlg=
+	b=araLOLStFvVnLispsR1ICudv7ynQr40S53PnGa2R156Oi+9lHK0EGm8yu76Q+lUaP
+	 IN/L1Ug8QiLVGt4c3eJuvofNGzKWs1lGKL3+QweJrCKLwHyqC4kedsN73OhLLXMHOL
+	 UTutYlZKBaOOnRAcwAh3/VVGfbSUEoPLcr9+UoYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfJ3Pzp (ORCPT
+        id S1728672AbfJ3Pzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57288 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:55:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728645AbfJ3Pzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:55:42 -0400
+        id S1728645AbfJ3Pzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:55:46 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C07A92173E;
-        Wed, 30 Oct 2019 15:55:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 243B4217F9;
+        Wed, 30 Oct 2019 15:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450941;
-        bh=ajrQFUpHfoZrFxmZ57IP0Y32djqaiWekFynq+8+EYS8=;
+        s=default; t=1572450945;
+        bh=b5E4t656muwHmdXlT7k0hXbv0wJVVOwBCGzDoTObq+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xikIvcNKjV59W4m+PWW+O/Crf4wBCAQfMtc9qb894kpXhEThH9iruisqhzMH4/wjn
-         mJmz2w3r3ypuBP5Nm2gIH+8ar+OzOaLu9lAl2y2LFordD4d9JvZCpfc9GpoRUEWiZF
-         Wh3HJLdo1U05VnPn/5ok1u35IVixU0PftjOpNTZc=
+        b=dH6UkL05UTi5gWL66sdAPbeYhMSqtF+jc3H3s5iT9WcaXRJ06wkmQDIwNZm7KFNi1
+         u9iEvR8xF1ZuYpZbmBzgXyXTUn5PAiTSaRIDZQqk1ep0NQ4mB414PCgDWPBCd2MBvh
+         fVEWPzQdAf8MmFhc0YqzMQbAlL1vn7WtYw5z6uRY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 33/38] i2c: stm32f7: fix a race in slave mode with arbitration loss irq
-Date:   Wed, 30 Oct 2019 11:54:01 -0400
-Message-Id: <20191030155406.10109-33-sashal@kernel.org>
+Cc:     Dave Wysochanski <dwysocha@redhat.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 35/38] cifs: Fix cifsInodeInfo lock_sem deadlock when reconnect occurs
+Date:   Wed, 30 Oct 2019 11:54:03 -0400
+Message-Id: <20191030155406.10109-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
 References: <20191030155406.10109-1-sashal@kernel.org>
@@ -60,72 +60,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Dave Wysochanski <dwysocha@redhat.com>
 
-[ Upstream commit 6d6b0d0d5afc8c4c84b08261260ba11dfa5206f2 ]
+[ Upstream commit d46b0da7a33dd8c99d969834f682267a45444ab3 ]
 
-When in slave mode, an arbitration loss (ARLO) may be detected before the
-slave had a chance to detect the stop condition (STOPF in ISR).
-This is seen when two master + slave adapters switch their roles. It
-provokes the i2c bus to be stuck, busy as SCL line is stretched.
-- the I2C_SLAVE_STOP event is never generated due to STOPF flag is set but
-  don't generate an irq (race with ARLO irq, STOPIE is masked). STOPF flag
-  remains set until next master xfer (e.g. when STOPIE irq get unmasked).
-  In this case, completion is generated too early: immediately upon new
-  transfer request (then it doesn't send all data).
-- Some data get stuck in TXDR register. As a consequence, the controller
-  stretches the SCL line: the bus gets busy until a future master transfer
-  triggers the bus busy / recovery mechanism (this can take time... and
-  may never happen at all)
+There's a deadlock that is possible and can easily be seen with
+a test where multiple readers open/read/close of the same file
+and a disruption occurs causing reconnect.  The deadlock is due
+a reader thread inside cifs_strict_readv calling down_read and
+obtaining lock_sem, and then after reconnect inside
+cifs_reopen_file calling down_read a second time.  If in
+between the two down_read calls, a down_write comes from
+another process, deadlock occurs.
 
-So choice is to let the STOPF being detected by the slave isr handler,
-to properly handle this stop condition. E.g. don't mask IRQs in error
-handler, when the slave is running.
+        CPU0                    CPU1
+        ----                    ----
+cifs_strict_readv()
+ down_read(&cifsi->lock_sem);
+                               _cifsFileInfo_put
+                                  OR
+                               cifs_new_fileinfo
+                                down_write(&cifsi->lock_sem);
+cifs_reopen_file()
+ down_read(&cifsi->lock_sem);
 
-Fixes: 60d609f30de2 ("i2c: i2c-stm32f7: Add slave support")
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fix the above by changing all down_write(lock_sem) calls to
+down_write_trylock(lock_sem)/msleep() loop, which in turn
+makes the second down_read call benign since it will never
+block behind the writer while holding lock_sem.
+
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Suggested-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed--by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-stm32f7.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ fs/cifs/cifsglob.h  |  5 +++++
+ fs/cifs/cifsproto.h |  1 +
+ fs/cifs/file.c      | 23 +++++++++++++++--------
+ fs/cifs/smb2file.c  |  2 +-
+ 4 files changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 48521bc8a4d23..362b23505f214 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -1488,7 +1488,7 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
- 	void __iomem *base = i2c_dev->base;
- 	struct device *dev = i2c_dev->dev;
- 	struct stm32_i2c_dma *dma = i2c_dev->dma;
--	u32 mask, status;
-+	u32 status;
+diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
+index 4dbae6e268d6a..71c2dd0c7f038 100644
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -1286,6 +1286,11 @@ void cifsFileInfo_put(struct cifsFileInfo *cifs_file);
+ struct cifsInodeInfo {
+ 	bool can_cache_brlcks;
+ 	struct list_head llist;	/* locks helb by this inode */
++	/*
++	 * NOTE: Some code paths call down_read(lock_sem) twice, so
++	 * we must always use use cifs_down_write() instead of down_write()
++	 * for this semaphore to avoid deadlocks.
++	 */
+ 	struct rw_semaphore lock_sem;	/* protect the fields above */
+ 	/* BB add in lists for dirty pages i.e. write caching info for oplock */
+ 	struct list_head openFileList;
+diff --git a/fs/cifs/cifsproto.h b/fs/cifs/cifsproto.h
+index 20adda4de83be..d7ac75ea881c7 100644
+--- a/fs/cifs/cifsproto.h
++++ b/fs/cifs/cifsproto.h
+@@ -159,6 +159,7 @@ extern int cifs_unlock_range(struct cifsFileInfo *cfile,
+ 			     struct file_lock *flock, const unsigned int xid);
+ extern int cifs_push_mandatory_locks(struct cifsFileInfo *cfile);
  
- 	status = readl_relaxed(i2c_dev->base + STM32F7_I2C_ISR);
++extern void cifs_down_write(struct rw_semaphore *sem);
+ extern struct cifsFileInfo *cifs_new_fileinfo(struct cifs_fid *fid,
+ 					      struct file *file,
+ 					      struct tcon_link *tlink,
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index b4e33ef2ff315..a8e2bc47dcf27 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -280,6 +280,13 @@ cifs_has_mand_locks(struct cifsInodeInfo *cinode)
+ 	return has_locks;
+ }
  
-@@ -1513,12 +1513,15 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
- 		f7_msg->result = -EINVAL;
++void
++cifs_down_write(struct rw_semaphore *sem)
++{
++	while (!down_write_trylock(sem))
++		msleep(10);
++}
++
+ struct cifsFileInfo *
+ cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
+ 		  struct tcon_link *tlink, __u32 oplock)
+@@ -305,7 +312,7 @@ cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
+ 	INIT_LIST_HEAD(&fdlocks->locks);
+ 	fdlocks->cfile = cfile;
+ 	cfile->llist = fdlocks;
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	list_add(&fdlocks->llist, &cinode->llist);
+ 	up_write(&cinode->lock_sem);
+ 
+@@ -461,7 +468,7 @@ void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
+ 	 * Delete any outstanding lock records. We'll lose them when the file
+ 	 * is closed anyway.
+ 	 */
+-	down_write(&cifsi->lock_sem);
++	cifs_down_write(&cifsi->lock_sem);
+ 	list_for_each_entry_safe(li, tmp, &cifs_file->llist->locks, llist) {
+ 		list_del(&li->llist);
+ 		cifs_del_lock_waiters(li);
+@@ -1016,7 +1023,7 @@ static void
+ cifs_lock_add(struct cifsFileInfo *cfile, struct cifsLockInfo *lock)
+ {
+ 	struct cifsInodeInfo *cinode = CIFS_I(d_inode(cfile->dentry));
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	list_add_tail(&lock->llist, &cfile->llist->locks);
+ 	up_write(&cinode->lock_sem);
+ }
+@@ -1038,7 +1045,7 @@ cifs_lock_add_if(struct cifsFileInfo *cfile, struct cifsLockInfo *lock,
+ 
+ try_again:
+ 	exist = false;
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 
+ 	exist = cifs_find_lock_conflict(cfile, lock->offset, lock->length,
+ 					lock->type, &conf_lock, CIFS_LOCK_OP);
+@@ -1060,7 +1067,7 @@ cifs_lock_add_if(struct cifsFileInfo *cfile, struct cifsLockInfo *lock,
+ 					(lock->blist.next == &lock->blist));
+ 		if (!rc)
+ 			goto try_again;
+-		down_write(&cinode->lock_sem);
++		cifs_down_write(&cinode->lock_sem);
+ 		list_del_init(&lock->blist);
  	}
  
--	/* Disable interrupts */
--	if (stm32f7_i2c_is_slave_registered(i2c_dev))
--		mask = STM32F7_I2C_XFER_IRQ_MASK;
--	else
--		mask = STM32F7_I2C_ALL_IRQ_MASK;
--	stm32f7_i2c_disable_irq(i2c_dev, mask);
-+	if (!i2c_dev->slave_running) {
-+		u32 mask;
-+		/* Disable interrupts */
-+		if (stm32f7_i2c_is_slave_registered(i2c_dev))
-+			mask = STM32F7_I2C_XFER_IRQ_MASK;
-+		else
-+			mask = STM32F7_I2C_ALL_IRQ_MASK;
-+		stm32f7_i2c_disable_irq(i2c_dev, mask);
-+	}
+@@ -1113,7 +1120,7 @@ cifs_posix_lock_set(struct file *file, struct file_lock *flock)
+ 		return rc;
  
- 	/* Disable dma */
- 	if (i2c_dev->use_dma) {
+ try_again:
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	if (!cinode->can_cache_brlcks) {
+ 		up_write(&cinode->lock_sem);
+ 		return rc;
+@@ -1319,7 +1326,7 @@ cifs_push_locks(struct cifsFileInfo *cfile)
+ 	int rc = 0;
+ 
+ 	/* we are going to update can_cache_brlcks here - need a write access */
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	if (!cinode->can_cache_brlcks) {
+ 		up_write(&cinode->lock_sem);
+ 		return rc;
+@@ -1510,7 +1517,7 @@ cifs_unlock_range(struct cifsFileInfo *cfile, struct file_lock *flock,
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	for (i = 0; i < 2; i++) {
+ 		cur = buf;
+ 		num = 0;
+diff --git a/fs/cifs/smb2file.c b/fs/cifs/smb2file.c
+index b204e84b87fb5..9168b2266e4fa 100644
+--- a/fs/cifs/smb2file.c
++++ b/fs/cifs/smb2file.c
+@@ -137,7 +137,7 @@ smb2_unlock_range(struct cifsFileInfo *cfile, struct file_lock *flock,
+ 
+ 	cur = buf;
+ 
+-	down_write(&cinode->lock_sem);
++	cifs_down_write(&cinode->lock_sem);
+ 	list_for_each_entry_safe(li, tmp, &cfile->llist->locks, llist) {
+ 		if (flock->fl_start > li->offset ||
+ 		    (flock->fl_start + length) <
 -- 
 2.20.1
 
