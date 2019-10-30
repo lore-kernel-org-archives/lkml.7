@@ -2,91 +2,155 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A045CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4B1CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE35020866
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3942086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfJ3BZM (ORCPT
+        id S1726913AbfJ3B0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 21:25:12 -0400
-Received: from mga17.intel.com ([192.55.52.151]:40177 "EHLO mga17.intel.com"
+        Tue, 29 Oct 2019 21:26:40 -0400
+Received: from mga06.intel.com ([134.134.136.31]:60961 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbfJ3BZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 21:25:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726108AbfJ3B0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 21:26:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 18:25:12 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 18:26:39 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
-   d="scan'208";a="198538632"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga008.fm.intel.com with ESMTP; 29 Oct 2019 18:25:09 -0700
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     akpm@linux-foundation.org, richardw.yang@linux.intel.com,
-        rppt@linux.ibm.com, will@kernel.org, mhocko@suse.com,
-        catalin.marinas@arm.com, aarcange@redhat.com, jannh@google.com,
-        darrick.wong@oracle.com, steve.capper@arm.com, walken@google.com,
-        dave.hansen@linux.intel.com, tiny.windzz@gmail.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/mmap.c: make vma_merge() comment more easy to understand
-Date:   Wed, 30 Oct 2019 09:24:45 +0800
-Message-Id: <20191030012445.16944-1-richardw.yang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+   d="scan'208";a="203039462"
+Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
+  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 18:26:36 -0700
+Date:   Wed, 30 Oct 2019 09:27:28 +0800
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
+Message-ID: <20191030012728.GA29333@___>
+References: <d37529e1-5147-bbe5-cb9d-299bd6d4aa1a@redhat.com>
+ <d4cc4f4e-2635-4041-2f68-cd043a97f25a@redhat.com>
+ <20191024091839.GA17463@___>
+ <fefc82a3-a137-bc03-e1c3-8de79b238080@redhat.com>
+ <e7e239ba-2461-4f8d-7dd7-0f557ac7f4bf@redhat.com>
+ <20191025080143-mutt-send-email-mst@kernel.org>
+ <20191028015842.GA9005@___>
+ <5e8a623d-9d91-607a-1f9e-7a7086ba9a68@redhat.com>
+ <20191029095738.GA7228@___>
+ <146752f4-174c-c916-3682-b965b96d7872@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <146752f4-174c-c916-3682-b965b96d7872@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Case 1/6, 2/7 and 3/8 have the same pattern and we handle them in the
-same logic.
+On Tue, Oct 29, 2019 at 06:48:27PM +0800, Jason Wang wrote:
+> On 2019/10/29 下午5:57, Tiwei Bie wrote:
+> > On Mon, Oct 28, 2019 at 11:50:49AM +0800, Jason Wang wrote:
+> >> On 2019/10/28 上午9:58, Tiwei Bie wrote:
+> >>> On Fri, Oct 25, 2019 at 08:16:26AM -0400, Michael S. Tsirkin wrote:
+> >>>> On Fri, Oct 25, 2019 at 05:54:55PM +0800, Jason Wang wrote:
+> >>>>> On 2019/10/24 下午6:42, Jason Wang wrote:
+> >>>>>> Yes.
+> >>>>>>
+> >>>>>>
+> >>>>>>>    And we should try to avoid
+> >>>>>>> putting ctrl vq and Rx/Tx vqs in the same DMA space to prevent
+> >>>>>>> guests having the chance to bypass the host (e.g. QEMU) to
+> >>>>>>> setup the backend accelerator directly.
+> >>>>>> That's really good point.  So when "vhost" type is created, parent
+> >>>>>> should assume addr of ctrl_vq is hva.
+> >>>>>>
+> >>>>>> Thanks
+> >>>>> This works for vhost but not virtio since there's no way for virtio kernel
+> >>>>> driver to differ ctrl_vq with the rest when doing DMA map. One possible
+> >>>>> solution is to provide DMA domain isolation between virtqueues. Then ctrl vq
+> >>>>> can use its dedicated DMA domain for the work.
+> >>> It might not be a bad idea to let the parent drivers distinguish
+> >>> between virtio-mdev mdevs and vhost-mdev mdevs in ctrl-vq handling
+> >>> by mdev's class id.
+> >> Yes, that should work, I have something probable better, see below.
+> >>
+> >>
+> >>>>> Anyway, this could be done in the future. We can have a version first that
+> >>>>> doesn't support ctrl_vq.
+> >>> +1, thanks
+> >>>
+> >>>>> Thanks
+> >>>> Well no ctrl_vq implies either no offloads, or no XDP (since XDP needs
+> >>>> to disable offloads dynamically).
+> >>>>
+> >>>>          if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS)
+> >>>>              && (virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_TSO4) ||
+> >>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_TSO6) ||
+> >>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_ECN) ||
+> >>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_UFO) ||
+> >>>>                  virtio_has_feature(vi->vdev, VIRTIO_NET_F_GUEST_CSUM))) {
+> >>>>                  NL_SET_ERR_MSG_MOD(extack, "Can't set XDP while host is implementing LRO/CSUM, disable LRO/CSUM first");
+> >>>>                  return -EOPNOTSUPP;
+> >>>>          }
+> >>>>
+> >>>> neither is very attractive.
+> >>>>
+> >>>> So yes ok just for development but we do need to figure out how it will
+> >>>> work down the road in production.
+> >>> Totally agree.
+> >>>
+> >>>> So really this specific virtio net device does not support control vq,
+> >>>> instead it supports a different transport specific way to send commands
+> >>>> to device.
+> >>>>
+> >>>> Some kind of extension to the transport? Ideas?
+> >> So it's basically an issue of isolating DMA domains. Maybe we can start with
+> >> transport API for querying per vq DMA domain/ASID?
+> >>
+> >> - for vhost-mdev, userspace can query the DMA domain for each specific
+> >> virtqueue. For control vq, mdev can return id for software domain, for the
+> >> rest mdev will return id of VFIO domain. Then userspace know that it should
+> >> use different API for preparing the virtqueue, e.g for vq other than control
+> >> vq, it should use VFIO DMA API. The control vq it should use hva instead.
+> >>
+> >> - for virito-mdev, we can introduce per-vq DMA device, and route DMA mapping
+> >> request for control vq back to mdev instead of the hardware. (We can wrap
+> >> them into library or helpers to ease the development of vendor physical
+> >> drivers).
+> > Thanks for this proposal! I'm thinking about it these days.
+> > I think it might be too complicated. I'm wondering whether we
+> > can have something simpler. I will post a RFC patch to show
+> > my idea today.
+> 
+> 
+> Thanks, will check.
+> 
+> Btw, for virtio-mdev, the change should be very minimal, will post an
+> RFC as well. For vhost-mdev, it could be just a helper to return an ID
+> for DMA domain like ID_VFIO or ID_HVA.
+> 
+> Or a more straightforward way is to force queues like control vq to use PA.
 
-Rearrange the comment to make it a little easy for audience to
-understand.
+Will check. Thanks!
 
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
----
- mm/mmap.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
-
-diff --git a/mm/mmap.c b/mm/mmap.c
-index a7d8c84d19b7..d485100f9d29 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1116,15 +1116,18 @@ can_vma_merge_after(struct vm_area_struct *vma, unsigned long vm_flags,
-  * the area passed down from mprotect_fixup, never extending beyond one
-  * vma, PPPPPP is the prev vma specified, and NNNNNN the next vma after:
-  *
-- *     AAAA             AAAA                AAAA          AAAA
-- *    PPPPPPNNNNNN    PPPPPPNNNNNN    PPPPPPNNNNNN    PPPPNNNNXXXX
-- *    cannot merge    might become    might become    might become
-- *                    PPNNNNNNNNNN    PPPPPPPPPPNN    PPPPPPPPPPPP 6 or
-- *    mmap, brk or    case 4 below    case 5 below    PPPPPPPPXXXX 7 or
-- *    mremap move:                                    PPPPXXXXXXXX 8
-- *        AAAA
-- *    PPPP    NNNN    PPPPPPPPPPPP    PPPPPPPPNNNN    PPPPNNNNNNNN
-- *    might become    case 1 below    case 2 below    case 3 below
-+ *     AAAA             AAAA                   AAAA
-+ *    PPPPPPNNNNNN    PPPPPPNNNNNN       PPPPPPNNNNNN
-+ *    cannot merge    might become       might become
-+ *                    PPNNNNNNNNNN       PPPPPPPPPPNN
-+ *    mmap, brk or    case 4 below       case 5 below
-+ *    mremap move:
-+ *                        AAAA               AAAA
-+ *                    PPPP    NNNN       PPPPNNNNXXXX
-+ *                    might become       might become
-+ *                    PPPPPPPPPPPP 1 or  PPPPPPPPPPPP 6 or
-+ *                    PPPPPPPPNNNN 2 or  PPPPPPPPXXXX 7 or
-+ *                    PPPPNNNNNNNN 3     PPPPXXXXXXXX 8
-  *
-  * It is important for case 8 that the vma NNNN overlapping the
-  * region AAAA is never going to extended over XXXX. Instead XXXX must
--- 
-2.17.1
-
+> 
+> 
+> >
+> > Thanks,
+> > Tiwei
+> >
+> 
