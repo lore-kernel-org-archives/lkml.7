@@ -2,196 +2,171 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A91CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD358CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC472083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E352083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:43:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ABv3Ut2n"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ipAlUMbd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfJ3Lkp (ORCPT
+        id S1726331AbfJ3Lnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 07:40:45 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:41982 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfJ3Lko (ORCPT
+        Wed, 30 Oct 2019 07:43:32 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:44558 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726088AbfJ3Lnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 07:40:44 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191030114040epoutp01840e13e2ee11cd772c07cd3481eb8f2d~SaeJeG62k1703417034epoutp01E
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:40:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191030114040epoutp01840e13e2ee11cd772c07cd3481eb8f2d~SaeJeG62k1703417034epoutp01E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572435640;
-        bh=fcdA96fAhOZu69tylRLeTwYGvXQzPgZtuuhY+765OU8=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=ABv3Ut2n2+7BujH7yFVtuA0AuBmSWBvH284Iv7G43KagCFj81W0PSw3sN2TvB6XaJ
-         IICWih3SG8MwR7/AJ6LjMTO2j2Md+A9gHHKYcjLMpZKV2S5mDrR0PSsId+dqWWbH9L
-         3pL1kSqUz0hH/3gD8vyHFO/SUsGcdtf3HmGOFzro=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20191030114040epcas5p18fd2ddd084238197f6242694a5750ef0~SaeIsO9Dw0210402104epcas5p1h;
-        Wed, 30 Oct 2019 11:40:40 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        16.B7.20293.7B679BD5; Wed, 30 Oct 2019 20:40:39 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191030114039epcas5p434c9a7ffb715f2af2f4d3745239b5bbd~SaeIOjiJk1697616976epcas5p4p;
-        Wed, 30 Oct 2019 11:40:39 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191030114039epsmtrp26d1364d554fa887d94beb3389434335c~SaeINYQAW0981509815epsmtrp2D;
-        Wed, 30 Oct 2019 11:40:39 +0000 (GMT)
-X-AuditID: b6c32a49-fe3ff70000014f45-6a-5db976b7dee7
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        61.FA.25663.7B679BD5; Wed, 30 Oct 2019 20:40:39 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191030114037epsmtip1fabd0f9fcb22cabe2e38eeae9d36a063~SaeGn5Kma3254032540epsmtip1j;
-        Wed, 30 Oct 2019 11:40:37 +0000 (GMT)
-From:   Pankaj Sharma <pankj.sharma@samsung.com>
-To:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        pankaj.dubey@samsung.com, rcsekar@samsung.com,
-        jhofstee@victronenergy.com, simon.horman@netronome.com,
-        Pankaj Sharma <pankj.sharma@samsung.com>,
-        Sriram Dash <sriram.dash@samsung.com>
-Subject: [PATCH v3] can: m_can: add support for handling arbitration error
-Date:   Wed, 30 Oct 2019 17:08:59 +0530
-Message-Id: <1572435539-3315-1-git-send-email-pankj.sharma@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGIsWRmVeSWpSXmKPExsWy7bCmuu72sp2xBlemW1rMOd/CYrHi/T5W
-        i1XfpzJbXN41h81i/aIpLBbHFohZLNr6hd1iedd9ZotZF3awWtzYyWlxYz27xdJ7O1kdeDy2
-        rLzJ5PHx0m1Gj+ndD5k9+v8aePRtWcXo8XmTnMekgx/YA9ijuGxSUnMyy1KL9O0SuDK+NUxl
-        KbgrVnFs732mBsZ7Ql2MnBwSAiYSd888Y+9i5OIQEtjNKHF1axc7SEJI4BOjRPMFQ4jEN0aJ
-        +YtuMcF0bH25khUisZdR4mTfU2YIp4VJ4sDsflaQKjYBPYlL7yezgdgiAqESy3ongHUwC/xh
-        lOg68Y8FJCEs4CVxoL0RrIhFQFVi2fxpYHFeAXeJ+0camSHWyUncPNcJtkFCYAubxLeZP1gh
-        Ei4SR5/tgLKFJV4d38IOYUtJfH63lw3CzpZYuLsfaCgHkF0h0TZDGCJsL3HgyhywMLOApsT6
-        XfogYWYBPone30+YIKp5JTraoEGkJjH16TtGCFtG4s6jzWwQJR4SF97LQgIrVuLt850sExhl
-        ZiHMXMDIuIpRMrWgODc9tdi0wDAvtVyvODG3uDQvXS85P3cTIzg1aHnuYJx1zucQowAHoxIP
-        7wRgyhBiTSwrrsw9xCjBwawkwvvNBijEm5JYWZValB9fVJqTWnyIUZqDRUmcdxLr1RghgfTE
-        ktTs1NSC1CKYLBMHp1QDY2F92vL8syVPPQ2/ST7REXE/v5Vz+i3XM798l+3s8zq3/Fvmpnv3
-        mhnP+vQ8WVIR+aRb79KTqa/yv+4u2clQnbR24YrIH5kpm9xldzkLvusKbT6YP2mCf/Ljw5d0
-        HvCdZPN3OVy6t9N3f3PDqra9KTx39ZmXse1IzWM6HP6vwOf9nx8s/htDPZVYijMSDbWYi4oT
-        AQUE4X4JAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNLMWRmVeSWpSXmKPExsWy7bCSnO72sp2xBhc2ylrMOd/CYrHi/T5W
-        i1XfpzJbXN41h81i/aIpLBbHFohZLNr6hd1iedd9ZotZF3awWtzYyWlxYz27xdJ7O1kdeDy2
-        rLzJ5PHx0m1Gj+ndD5k9+v8aePRtWcXo8XmTnMekgx/YA9ijuGxSUnMyy1KL9O0SuDK+NUxl
-        KbgrVnFs732mBsZ7Ql2MnBwSAiYSW1+uZO1i5OIQEtjNKPHqwjsghwMoISOx+HM1RI2wxMp/
-        z9khapqYJBov/mIGSbAJ6Elcej+ZDcQWEQiX2DmhiwmkiFmgjUni9fcDrCAJYQEviQPtjWBF
-        LAKqEsvmT2MBsXkF3CXuH2lkhtggJ3HzXCfzBEaeBYwMqxglUwuKc9Nziw0LjPJSy/WKE3OL
-        S/PS9ZLzczcxgoNQS2sH44kT8YcYBTgYlXh4JwCDU4g1say4MvcQowQHs5II7zcboBBvSmJl
-        VWpRfnxRaU5q8SFGaQ4WJXFe+fxjkUIC6YklqdmpqQWpRTBZJg5OqQZG4XdzhKuUw/cqdiSE
-        SrW3BCmdumdntk35yLfaVXebmH/PmDbh/fFqTSFDnf0LsoKFy69YHn2ZX3Btw9TrvhP0xcvm
-        XZXpeLL7SORsvs9XnNzmRhdP276uhL1imVn7aWuB5jk3Jv5YYrz3yxs20wnflgnMVfMMXu2X
-        e/ZtD/OGuVccXKNyFNfdUWIpzkg01GIuKk4EAIwcxgc+AgAA
-X-CMS-MailID: 20191030114039epcas5p434c9a7ffb715f2af2f4d3745239b5bbd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191030114039epcas5p434c9a7ffb715f2af2f4d3745239b5bbd
-References: <CGME20191030114039epcas5p434c9a7ffb715f2af2f4d3745239b5bbd@epcas5p4.samsung.com>
+        Wed, 30 Oct 2019 07:43:32 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 4B6692E14E5;
+        Wed, 30 Oct 2019 14:43:28 +0300 (MSK)
+Received: from iva4-c987840161f8.qloud-c.yandex.net (iva4-c987840161f8.qloud-c.yandex.net [2a02:6b8:c0c:3da5:0:640:c987:8401])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 82dg4vUT95-hRe8nwYV;
+        Wed, 30 Oct 2019 14:43:28 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1572435808; bh=pA6mNmTIWq/Cwxmgu8JH1E701Iel80nhtPksH0lcKiI=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=ipAlUMbdXEs+AwZT4OP3cjhssAs6ZCUz0BCfWWjCwxLEL3py+H3xgj0DZ7wEvkOnB
+         XPqF5Z2EGRueUUaT+DMVrAJzi2/G4zGw17UD4anJdfklWOLpCsDqMjcb3xz+kR5XFU
+         BEFbpkC5qnFv6fhBCEYRPeIfeWR8NKQ7z3dNMrec=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
+        by iva4-c987840161f8.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id 5J6hnNaLMQ-hRW0aKlN;
+        Wed, 30 Oct 2019 14:43:27 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] fs/ext4: get project quota from inode for mangling statfs
+ results
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Theodore Ts'o <tytso@mit.edu>, linux-kernel@vger.kernel.org,
+        Jan Kara <jack@suse.com>, Li Xi <lixi@ddn.com>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+References: <157225912326.3929.8539227851002947260.stgit@buzz>
+ <20191030105953.GC28525@quack2.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <dfb9185a-f16d-0a6f-06e1-219b7af59cd3@yandex-team.ru>
+Date:   Wed, 30 Oct 2019 14:43:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191030105953.GC28525@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Bosch MCAN hardware (3.1.0 and above) supports interrupt flag to
-detect Protocol error in arbitration phase.
+On 30/10/2019 13.59, Jan Kara wrote:
+> On Mon 28-10-19 13:38:43, Konstantin Khlebnikov wrote:
+>> Right now ext4_statfs_project() does quota lookup by id every time.
+>> This is costly operation, especially if there is no inode who hold
+>> reference to this quota and dqget() reads it from disk each time.
+>>
+>> Function ext4_statfs_project() could be moved into generic quota code,
+>> it is required for every filesystem which uses generic project quota.
+>>
+>> Reported-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> ---
+>>   fs/ext4/super.c |   25 ++++++++++++++++---------
+>>   1 file changed, 16 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+>> index dd654e53ba3d..f841c66aa499 100644
+>> --- a/fs/ext4/super.c
+>> +++ b/fs/ext4/super.c
+>> @@ -5532,18 +5532,23 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+>>   }
+>>   
+>>   #ifdef CONFIG_QUOTA
+>> -static int ext4_statfs_project(struct super_block *sb,
+>> -			       kprojid_t projid, struct kstatfs *buf)
+>> +static int ext4_statfs_project(struct inode *inode, struct kstatfs *buf)
+>>   {
+>> -	struct kqid qid;
+>> +	struct super_block *sb = inode->i_sb;
+>>   	struct dquot *dquot;
+>>   	u64 limit;
+>>   	u64 curblock;
+>> +	int err;
+>> +
+>> +	err = dquot_initialize(inode);
+> 
+> Hum, I'm kind of puzzled here: Your patch seems to be concerned with
+> performance but how is this any faster than what we do now?
+> dquot_initialize() will look up three dquots instead of one in the current
+> code? Oh, I guess you are concerned about *repeated* calls to statfs() and
+> thus repeated lookups of dquot structure? And this patch effectively caches
+> looked up dquots in the inode?
+> 
+> That starts to make some sense but still, even if dquot isn't cached in any
+> inode, we still hold on to it (it's in the free_list) until shrinker evicts
+> it. So lookup of such dquot should be just a hash table lookup which should
+> be very fast. Then there's the cost of dquot_acquire() / dquot_release()
+> that get always called on first / last get of a dquot. So are you concerned
+> about that cost? Or do you really see IO happening to fetch quota structure
+> on each statfs call again and again? The only situation where I could see
+> that happening is when the quota structure would be actually completely
+> empty (i.e., not originally present in the quota file). But then this
+> cannot be a case when there's actually an inode belonging to this
+> project...
+> 
+> So I'm really curious about the details of what you are seeing as the
+> changelog / patch doesn't quite make sense to me yet.
 
-Transmit error statistics is currently not updated from the MCAN driver.
-Protocol error in arbitration phase is a TX error and the network
-statistics should be updated accordingly.
+Yep, we have seen than disaster with non-present quota blocks.
+For consistent quota performance loss should be much less significant,
+but caching would not hurt.
 
-The member "tx_error" of "struct net_device_stats" should be incremented
-as arbitration is a transmit protocol error. Also "arbitration_lost" of
-"struct can_device_stats" should be incremented to report arbitration
-lost.
+Tools like "df" calls statfs for all mountpoints.
+These inodes are never reclaimed because pinned by vfsmount.
 
-Signed-off-by: Pankaj Sharma <pankj.sharma@samsung.com>
-Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
----
-
-changes in v3:
-- handle arbitration lost stats even if the allocation of the skb fails
-
-changes in v2:
-- common m_can_ prefix for is_protocol_err function
-- handling stats even if the allocation of the skb fails
-- resolving build errors on net-next branch
-
- drivers/net/can/m_can/m_can.c | 42 +++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
-
-diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-index 75e7490c4299..02c5795b7393 100644
---- a/drivers/net/can/m_can/m_can.c
-+++ b/drivers/net/can/m_can/m_can.c
-@@ -778,6 +778,43 @@ static inline bool is_lec_err(u32 psr)
- 	return psr && (psr != LEC_UNUSED);
- }
- 
-+static inline bool m_can_is_protocol_err(u32 irqstatus)
-+{
-+	return irqstatus & IR_ERR_LEC_31X;
-+}
-+
-+static int m_can_handle_protocol_error(struct net_device *dev, u32 irqstatus)
-+{
-+	struct net_device_stats *stats = &dev->stats;
-+	struct m_can_classdev *cdev = netdev_priv(dev);
-+	struct can_frame *cf;
-+	struct sk_buff *skb;
-+
-+	/* propagate the error condition to the CAN stack */
-+	skb = alloc_can_err_skb(dev, &cf);
-+
-+	/* update tx error stats since there is protocol error */
-+	stats->tx_errors++;
-+
-+	/* update arbitration lost status */
-+	if (cdev->version >= 31 && (irqstatus & IR_PEA)) {
-+		netdev_dbg(dev, "Protocol error in Arbitration fail\n");
-+		cdev->can.can_stats.arbitration_lost++;
-+		if (skb) {
-+			cf->can_id |= CAN_ERR_LOSTARB;
-+			cf->data[0] |= CAN_ERR_LOSTARB_UNSPEC;
-+		}
-+	}
-+
-+	if (unlikely(!skb)) {
-+		netdev_dbg(dev, "allocation of skb failed\n");
-+		return 0;
-+	}
-+	netif_receive_skb(skb);
-+
-+	return 1;
-+}
-+
- static int m_can_handle_bus_errors(struct net_device *dev, u32 irqstatus,
- 				   u32 psr)
- {
-@@ -792,6 +829,11 @@ static int m_can_handle_bus_errors(struct net_device *dev, u32 irqstatus,
- 	    is_lec_err(psr))
- 		work_done += m_can_handle_lec_err(dev, psr & LEC_UNUSED);
- 
-+	/* handle protocol errors in arbitration phase */
-+	if ((cdev->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) &&
-+	    m_can_is_protocol_err(irqstatus))
-+		work_done += m_can_handle_protocol_error(dev, irqstatus);
-+
- 	/* other unproccessed error interrupts */
- 	m_can_handle_other_err(dev, irqstatus);
- 
--- 
-2.17.1
-
+> 
+> 								Honza
+> 
+> 
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	spin_lock(&inode->i_lock);
+>> +	dquot = ext4_get_dquots(inode)[PRJQUOTA];
+>> +	if (!dquot)
+>> +		goto out_unlock;
+>>   
+>> -	qid = make_kqid_projid(projid);
+>> -	dquot = dqget(sb, qid);
+>> -	if (IS_ERR(dquot))
+>> -		return PTR_ERR(dquot);
+>>   	spin_lock(&dquot->dq_dqb_lock);
+>>   
+>>   	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
+>> @@ -5569,7 +5574,9 @@ static int ext4_statfs_project(struct super_block *sb,
+>>   	}
+>>   
+>>   	spin_unlock(&dquot->dq_dqb_lock);
+>> -	dqput(dquot);
+>> +out_unlock:
+>> +	spin_unlock(&inode->i_lock);
+>> +
+>>   	return 0;
+>>   }
+>>   #endif
+>> @@ -5609,7 +5616,7 @@ static int ext4_statfs(struct dentry *dentry, struct kstatfs *buf)
+>>   #ifdef CONFIG_QUOTA
+>>   	if (ext4_test_inode_flag(dentry->d_inode, EXT4_INODE_PROJINHERIT) &&
+>>   	    sb_has_quota_limits_enabled(sb, PRJQUOTA))
+>> -		ext4_statfs_project(sb, EXT4_I(dentry->d_inode)->i_projid, buf);
+>> +		ext4_statfs_project(dentry->d_inode, buf);
+>>   #endif
+>>   	return 0;
+>>   }
+>>
