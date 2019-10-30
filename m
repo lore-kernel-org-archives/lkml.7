@@ -2,184 +2,104 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D31CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8239CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C752087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985C9208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BqNmjNu8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ukToVhLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfJ3PHv (ORCPT
+        id S1726905AbfJ3PHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:07:51 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35347 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726554AbfJ3PHu (ORCPT
+        Wed, 30 Oct 2019 11:07:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55805 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfJ3PHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 30 Oct 2019 11:07:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572448069;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X/BAPwzaK/VJWK6Euc/hOkg2V08gfO99tWNJkHvuumY=;
-        b=BqNmjNu88ryFH2Mg0xNhZ2PO3P7D753sI+6IB6YAqLi0BkkbcWwduCfiz0Fbeh42BaJBHg
-        g1CYarYiq+IcmmniJkXpsT1HIVngvUobNSIg0LGAFUnYCwTHCDVgkcD1Qf+LSb2Y12fE88
-        Jxl6gJDo5p64jjJ966wvwFe+I+AvhVw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-400-71cRbL-gN9-DhBO2t6aLVw-1; Wed, 30 Oct 2019 11:07:46 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFE5F107ACC0;
-        Wed, 30 Oct 2019 15:07:44 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B6C160C85;
-        Wed, 30 Oct 2019 15:07:39 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id E0B832256E4; Wed, 30 Oct 2019 11:07:38 -0400 (EDT)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com
-Cc:     virtualization@lists.linux-foundation.org, vgoyal@redhat.com,
-        miklos@szeredi.hu, stefanha@redhat.com, dgilbert@redhat.com
-Subject: [PATCH 3/3] virtiofs: Use completions while waiting for queue to be drained
-Date:   Wed, 30 Oct 2019 11:07:19 -0400
-Message-Id: <20191030150719.29048-4-vgoyal@redhat.com>
-In-Reply-To: <20191030150719.29048-1-vgoyal@redhat.com>
-References: <20191030150719.29048-1-vgoyal@redhat.com>
+Received: by mail-wm1-f65.google.com with SMTP id g24so2483136wmh.5;
+        Wed, 30 Oct 2019 08:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IVhb82hZKy3JKoMCSWoDHfXIpFlhHoV+nkQ7avEsjo8=;
+        b=ukToVhLSujgmB9Tsiif4JAXcvd0xOODNlntL+1C3r/lc/f58KQACTRUGKbG5qP2hAw
+         U74Ix2ccXLUAiQWVrbAwUPMFq+yEXzkjX3nQIYGl6metluaAOkyl/5hiXQL/H4zKuJDB
+         WAK5Tbh2E2k0bvw6+aqmI9jZsOPu0Zk5/LfRcfrdUiSiHzP5FtUzqWAUddDJQovDB5Af
+         jhIDrBoTrTYtoKg3WrsnRBAZEAlanmnC0/BI7G0643ST2BUk7yyQzjCRVZjDUGq0MDQT
+         mm7VogHOeHMAOW74rp7Gw+/SyULbZD673Cah1FKY4JUzC3K8h6yfL4mt/m6L7tsHPq9+
+         +iLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IVhb82hZKy3JKoMCSWoDHfXIpFlhHoV+nkQ7avEsjo8=;
+        b=Y1APl4FXHfnxQHkRzYDIcsEXVSnkPUu8DuwNXVYh4Tm7wztF1x/4zT83JJRH3V4yRe
+         6xTUHQc50ukOHEzbS1mSX9p8Byso3P8y1Pnb8X08tAqouxarSbakSYSDbqWcHu3H7PBb
+         o8r6FLGkS/Ul029TNb8nBeJUGuG2MtODFaJOjq3ED+wizyDBVsP1NXt3CdhSyeaf9i+Q
+         ArDm9ZQjUpI2Z2FHwUKKLTZvdhWTfSQ4XnJA+qXjGIodppYT33kcKV2Os/UxrITl0FsR
+         /WrMIidS2FRGurCZdspRHEhu7dtCdlYjXO+AHgKNCpuHUHO65yMoSwUfxJ2IIfJSMgwF
+         zHXg==
+X-Gm-Message-State: APjAAAWkHumqEl9JnUEFMglz5RCFRhIs+ghJiLljO6m7/JBrtVBLSR+h
+        5jTsAtsk2C/pjhugdBQeHLY=
+X-Google-Smtp-Source: APXvYqxbS22vg9ni+tcUXA1fmRlwnTOErKtdg+KUUsw6WFM4XaT+NAQHuQDlB3SGcH30V/QKToPdFA==
+X-Received: by 2002:a05:600c:254:: with SMTP id 20mr8704020wmj.123.1572448067972;
+        Wed, 30 Oct 2019 08:07:47 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id 11sm278074wmg.36.2019.10.30.08.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 08:07:47 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v7 0/2] Allwinner H6 Mali GPU support
+Date:   Wed, 30 Oct 2019 16:07:40 +0100
+Message-Id: <20191030150742.3573-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 71cRbL-gN9-DhBO2t6aLVw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While we wait for queue to finish draining, use completions instead of
-uslee_range(). This is better way of waiting for event.
+Hi,
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- fs/fuse/virtio_fs.c | 39 +++++++++++++++++++++++++++++----------
- 1 file changed, 29 insertions(+), 10 deletions(-)
+Proper iommu patches has been merged[0].
 
-diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index 43224db8d9ed..b5ba83ef1914 100644
---- a/fs/fuse/virtio_fs.c
-+++ b/fs/fuse/virtio_fs.c
-@@ -35,6 +35,7 @@ struct virtio_fs_vq {
- =09struct fuse_dev *fud;
- =09bool connected;
- =09long in_flight;
-+=09struct completion in_flight_zero; /* No inflight requests */
- =09char name[24];
- } ____cacheline_aligned_in_smp;
-=20
-@@ -85,6 +86,8 @@ static inline void dec_in_flight_req(struct virtio_fs_vq =
-*fsvq)
- {
- =09WARN_ON(fsvq->in_flight <=3D 0);
- =09fsvq->in_flight--;
-+=09if (!fsvq->in_flight)
-+=09=09complete(&fsvq->in_flight_zero);
- }
-=20
- static void release_virtio_fs_obj(struct kref *ref)
-@@ -115,22 +118,23 @@ static void virtio_fs_drain_queue(struct virtio_fs_vq=
- *fsvq)
- =09WARN_ON(fsvq->in_flight < 0);
-=20
- =09/* Wait for in flight requests to finish.*/
--=09while (1) {
--=09=09spin_lock(&fsvq->lock);
--=09=09if (!fsvq->in_flight) {
--=09=09=09spin_unlock(&fsvq->lock);
--=09=09=09break;
--=09=09}
-+=09spin_lock(&fsvq->lock);
-+=09if (fsvq->in_flight) {
-+=09=09/* We are holding virtio_fs_mutex. There should not be any
-+=09=09 * waiters waiting for completion.
-+=09=09 */
-+=09=09reinit_completion(&fsvq->in_flight_zero);
-+=09=09spin_unlock(&fsvq->lock);
-+=09=09wait_for_completion(&fsvq->in_flight_zero);
-+=09} else {
- =09=09spin_unlock(&fsvq->lock);
--=09=09/* TODO use completion instead of timeout */
--=09=09usleep_range(1000, 2000);
- =09}
-=20
- =09flush_work(&fsvq->done_work);
- =09flush_delayed_work(&fsvq->dispatch_work);
- }
-=20
--static void virtio_fs_drain_all_queues(struct virtio_fs *fs)
-+static void virtio_fs_drain_all_queues_locked(struct virtio_fs *fs)
- {
- =09struct virtio_fs_vq *fsvq;
- =09int i;
-@@ -141,6 +145,19 @@ static void virtio_fs_drain_all_queues(struct virtio_f=
-s *fs)
- =09}
- }
-=20
-+static void virtio_fs_drain_all_queues(struct virtio_fs *fs)
-+{
-+=09/* Provides mutual exclusion between ->remove and ->kill_sb
-+=09 * paths. We don't want both of these draining queue at the
-+=09 * same time. Current completion logic reinits completion
-+=09 * and that means there should not be any other thread
-+=09 * doing reinit or waiting for completion already.
-+=09 */
-+=09mutex_lock(&virtio_fs_mutex);
-+=09virtio_fs_drain_all_queues_locked(fs);
-+=09mutex_unlock(&virtio_fs_mutex);
-+}
-+
- static void virtio_fs_start_all_queues(struct virtio_fs *fs)
- {
- =09struct virtio_fs_vq *fsvq;
-@@ -581,6 +598,7 @@ static int virtio_fs_setup_vqs(struct virtio_device *vd=
-ev,
- =09INIT_LIST_HEAD(&fs->vqs[VQ_HIPRIO].end_reqs);
- =09INIT_DELAYED_WORK(&fs->vqs[VQ_HIPRIO].dispatch_work,
- =09=09=09virtio_fs_hiprio_dispatch_work);
-+=09init_completion(&fs->vqs[VQ_HIPRIO].in_flight_zero);
- =09spin_lock_init(&fs->vqs[VQ_HIPRIO].lock);
-=20
- =09/* Initialize the requests virtqueues */
-@@ -591,6 +609,7 @@ static int virtio_fs_setup_vqs(struct virtio_device *vd=
-ev,
- =09=09=09=09  virtio_fs_request_dispatch_work);
- =09=09INIT_LIST_HEAD(&fs->vqs[i].queued_reqs);
- =09=09INIT_LIST_HEAD(&fs->vqs[i].end_reqs);
-+=09=09init_completion(&fs->vqs[i].in_flight_zero);
- =09=09snprintf(fs->vqs[i].name, sizeof(fs->vqs[i].name),
- =09=09=09 "requests.%u", i - VQ_REQUEST);
- =09=09callbacks[i] =3D virtio_fs_vq_done;
-@@ -684,7 +703,7 @@ static void virtio_fs_remove(struct virtio_device *vdev=
-)
- =09/* This device is going away. No one should get new reference */
- =09list_del_init(&fs->list);
- =09virtio_fs_stop_all_queues(fs);
--=09virtio_fs_drain_all_queues(fs);
-+=09virtio_fs_drain_all_queues_locked(fs);
- =09vdev->config->reset(vdev);
- =09virtio_fs_cleanup_vqs(vdev, fs);
-=20
---=20
+There is still work to do to make it works with panfrost
+but all modules can be probed and removed smoothly.
+
+These bindings could be used also for out-of-tree modules.
+
+[0]: https://lore.kernel.org/linux-iommu/cover.1569851517.git.robin.murphy@arm.com/
+
+Change since v6:
+ - Remove iommu patches
+ - Rebase on 5.4-rc4
+
+Clément Péron (2):
+  arm64: dts: allwinner: Add ARM Mali GPU node for H6
+  arm64: dts: allwinner: Add mali GPU supply for H6 boards
+
+ .../boot/dts/allwinner/sun50i-h6-beelink-gs1.dts   |  6 ++++++
+ .../boot/dts/allwinner/sun50i-h6-orangepi-3.dts    |  6 ++++++
+ .../boot/dts/allwinner/sun50i-h6-orangepi.dtsi     |  6 ++++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts      |  6 ++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi       | 14 ++++++++++++++
+ 5 files changed, 38 insertions(+)
+
+-- 
 2.20.1
 
