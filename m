@@ -2,145 +2,111 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949A7CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AD8CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8E620856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F7F22087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572442176;
-	bh=igiX650YpjR8H3mGZ/ALPmIk+Lrkf/kUdT1CdvytKdY=;
+	s=default; t=1572442203;
+	bh=aFG6BGDDmjJyMn3ku+VuQqMfCYFPXnrqn881bsl/MYg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tWPQB/Q4hLTKAgUih4d+CidJWGwMJLJ4JnM25OUYrtxu6uv5n1grbJBFM0PXp547y
-	 H0aSTvpRhHSYq2IRFKtP6/maVpVMGEgiiX+JlkqkhyHaLrFeFh22ZqE/GaWCKdjaSV
-	 ueIpoV+6EIzyNj6bZl95gGdkLQUYiqPjnK5aS18s=
+	b=qHYhbK/zZ5eoPg5r8IGH1Xi/P1h8kz5hpdZzzTyucIWGUFfZb/9QD7I7SLJNnMuix
+	 7zXlgExE1vff+YaYhiW8o/M7ZcIm+MXWziImWlNn6NRipRu752jnbAAXjvny0xU8Fx
+	 rcpcLFNaQx8S6AjpJ+9AEAbUB+kd1c7ITs52vViE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfJ3N3f (ORCPT
+        id S1726442AbfJ3NaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:29:35 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44702 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfJ3N3e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:29:34 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n48so2055016ota.11;
-        Wed, 30 Oct 2019 06:29:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2PIp3nuujjbVDTCQlERuQPPmNS4hMz6vAUUQvwn05Tc=;
-        b=HCru8Ej2p19n/vaYXq0Vuji5lWKCNrkqKpiBpfQ+0eQJ+UNkYiN0kCMRhYPXBsOV44
-         LF/HfHmdCwHFLkHSf7OOPvHN/VX4g4IZZiYiMF2uzcFGq5nP3uXWjiI+YGfZ6NvFWtp1
-         guA8AYHYihnaXhbuMKuXiaPl+8z3Ow9GIvBEYedo/sW4wvId3dtqiOIFh7fvZBz0pdMm
-         isdPwWD/Llz39wfX9KKX/mtomWoNi9jTyjJEZOcYVn3E9c4pG2lMsbxzuI+6yjosh5+r
-         lFis5fL7IGMSKLgNQD23g/gYx3nfIBz17JkvCA+hed/FDO6Tz4a8qowpwswTS9Q7goay
-         ZEWQ==
-X-Gm-Message-State: APjAAAXe2PLU20K+ZKZ1dJm9uCZVqUrr+Zp57UAxBnKPHnXWlaD2ionr
-        BpO2iz0YQLnW7q3x/tAJ6g==
-X-Google-Smtp-Source: APXvYqxZ/cduY/57uFpVQbDA+dzUHNgNL7l4CUKcqiu/GlyrSfqJ4CfvFx7pOS+ityjeM2CS6IH5vA==
-X-Received: by 2002:a05:6830:1e65:: with SMTP id m5mr13647806otr.41.1572442173786;
-        Wed, 30 Oct 2019 06:29:33 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u1sm9804oie.37.2019.10.30.06.29.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 06:29:33 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 08:29:32 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Rob Herring <rob.e.herring@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [RFC][PATCH 1/3] dt-bindings: dma-buf: heaps: Describe CMA
- regions to be added to dmabuf heaps interface.
-Message-ID: <20191030132932.GA7292@bogus>
-References: <20191025225009.50305-1-john.stultz@linaro.org>
- <20191025225009.50305-2-john.stultz@linaro.org>
- <CAC=3eda3sCMjCQbFX2Y0-6iVt-YRR7P_Y1ksJOsLw9CmJJRxbA@mail.gmail.com>
- <CALAqxLXG8LrWAQevEyj7BJ00CiAkodfgFMdCbuMRucO5w5yhKg@mail.gmail.com>
+        Wed, 30 Oct 2019 09:30:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36924 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726119AbfJ3NaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:30:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4E72FB351;
+        Wed, 30 Oct 2019 13:29:59 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 14:29:58 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     akpm@linux-foundation.org, osalvador@suse.de,
+        pasha.tatashin@oracle.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Vincent Whitchurch <rabinv@axis.com>
+Subject: Re: [PATCH] mm/sparse: Consistently do not zero memmap
+Message-ID: <20191030132958.GD31513@dhcp22.suse.cz>
+References: <20191030131122.8256-1-vincent.whitchurch@axis.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALAqxLXG8LrWAQevEyj7BJ00CiAkodfgFMdCbuMRucO5w5yhKg@mail.gmail.com>
+In-Reply-To: <20191030131122.8256-1-vincent.whitchurch@axis.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 04:55:35PM -0700, John Stultz wrote:
-> On Fri, Oct 25, 2019 at 4:32 PM Rob Herring <rob.e.herring@gmail.com> wrote:
-> >
-> > On Fri, Oct 25, 2019 at 5:51 PM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > This binding specifies which CMA regions should be added to the
-> > > dmabuf heaps interface.
-> >
-> > Is this an ION DT binding in disguise? I thought I killed that. ;)
+On Wed 30-10-19 14:11:22, Vincent Whitchurch wrote:
+> sparsemem without VMEMMAP has two allocation paths to allocate the
+> memory needed for its memmap (done in sparse_mem_map_populate()).
 > 
-> Maybe? I may not have been paying attention back then.  :)
+> In one allocation path (sparse_buffer_alloc() succeeds), the memory is
+> not zeroed (since it was previously allocated with
+> memblock_alloc_try_nid_raw()).
 > 
-> > > +Example:
-> > > +This example has a camera CMA node in reserved memory, which is then
-> > > +referenced by the dmabuf-heap-cma node.
-> > > +
-> > > +
-> > > +       reserved-memory {
-> > > +               #address-cells = <2>;
-> > > +               #size-cells = <2>;
-> > > +               ranges;
-> > > +               ...
-> > > +               cma_camera: cma-camera {
-> > > +                       compatible = "shared-dma-pool";
-> > > +                       reg = <0x0 0x24C00000 0x0 0x4000000>;
-> > > +                       reusable;
-> > > +               };
-> > > +               ...
-> > > +       };
-> > > +
-> > > +       cma_heap {
-> > > +               compatible = "dmabuf-heap-cma";
-> > > +               memory-region = <&cma_camera>;
-> >
-> > Why the indirection here? Can't you just add a flag property to
-> > reserved-memory nodes like we do to flag CMA nodes?
+> In the other allocation path (sparse_buffer_alloc() fails and
+> sparse_mem_map_populate() falls back to memblock_alloc_try_nid()), the
+> memory is zeroed.
 > 
-> Happy to try. Do you mean like with the "reuasable" tag?  Or more like
-> the "linux,cma-default" tag?
+> AFAICS this difference does not appear to be on purpose.  If the code is
+> supposed to work with non-initialized memory (__init_single_page() takes
+> care of zeroing the struct pages which are actually used), we should
+> consistently not zero the memory, to avoid masking bugs.
 
-Probably like "linux,cma-default" as it is a hint for who to manage it 
-rather than a characteristic of the region.
- 
-> Do you have a preference for the flag name here?
+You are right that this is not intentional.
 
-Not really.
+> (I noticed this because on my ARM64 platform, with 1 GiB of memory the
+>  first [and only] section is allocated from the zeroing path while with
+>  2 GiB of memory the first 1 GiB section is allocated from the
+>  non-zeroing path.)
 
+Do I get it right that sparse_buffer_init couldn't allocate memmap for
+the full node for some reason and so sparse_init_nid would have to
+allocate one for each memory section?
 
-> > As I suspected, it's because in patch 2 you're just abusing DT to
-> > instantiate platform devices. We already support binding drivers to
-> > reserved-memory nodes directly.
+> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+
+Anyway the patch is OK. Even though this is not a bug strictly speaking
+it is certainly a suboptimal behavior because zeroying takes time so
+I would flag this for a stable tree 4.19+. There is no clear Fixes tag
+to apply (35fd1eb1e8212 would get closest I guess).
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/sparse.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Sorry, one of those "when all you know how to do is hammer, everything
-> looks like a nail" issues.
-> Is there a specific example for binding drivers to reserved-memory
-> nodes I can try to follow?
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index f6891c1992b1..01e467adc219 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -458,7 +458,7 @@ struct page __init *__populate_section_memmap(unsigned long pfn,
+>  	if (map)
+>  		return map;
+>  
+> -	map = memblock_alloc_try_nid(size,
+> +	map = memblock_alloc_try_nid_raw(size,
+>  					  PAGE_SIZE, addr,
+>  					  MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+>  	if (!map)
+> -- 
+> 2.20.0
 
-ramoops and I think there's a QCom driver.
-
-Rob
+-- 
+Michal Hocko
+SUSE Labs
