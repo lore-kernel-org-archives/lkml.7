@@ -2,118 +2,124 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F728CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0886FCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441752087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2AD22087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CliY0Hrn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AxRUvdWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfJ3XXQ (ORCPT
+        id S1727726AbfJ3XZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 19:23:16 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41431 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbfJ3XXQ (ORCPT
+        Wed, 30 Oct 2019 19:25:19 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57496 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727071AbfJ3XZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 19:23:16 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p26so2787109pfq.8;
-        Wed, 30 Oct 2019 16:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=crdZedgJsEUhNDHFcmXoQIoFK0wBPhDuBUpe6JPSKvo=;
-        b=CliY0HrnVg8FJ4Wq4+R2whhLQ3QxvhpTJE1lspOt7TXIgC6pw1ibEoc0jUni8RJ0ov
-         bNJqqxJc9dId/yRjOwzXkfYE0D8ua0gGMWpm8imHgKD9SuxUe+T9RhRvmB0ROCLaW+e0
-         MHMqO++FtzmPX0bw0zuyS/nUAw6JSEAb+Rl5jJMBapGrDE239J/v1wLqP6UQbyH2C6yt
-         7lD6sIAnD52+JpuKy/ODpU9TBlSEDguvjbX1xfiAn9wJzWhSrPue1+erFEa/g1Ax0bW7
-         KhZwpsmdS95nNW/Fvk8fM9s/yLqdwJCg02VrAYphVLeGJFj7FiNR1+h+Bfhd9N86S7mo
-         clWw==
+        Wed, 30 Oct 2019 19:25:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572477918;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tJ1MSZzMLDEO0OgbsgxLdqPc9Wad6rEGEERX1y/YXuc=;
+        b=AxRUvdWVU/6hEgZcrTSJwW/JyS0uVmxw82HO3MWTbTxv7LlahI6GqqfaOLLY1gJRkybLYt
+        fjEsVb1vggFgCoVtNce24oPnk6cUnCkWZkQjypbApkAFLiqNYM79ZfjLTIQ+w6ViM90xSj
+        HXKPc/zNREMk51Ky2sEkJJWkc3lyGAE=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-uSCEycfVOsyhzNy2N8-fpg-1; Wed, 30 Oct 2019 19:25:16 -0400
+Received: by mail-qt1-f200.google.com with SMTP id f2so4198989qtv.21
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 16:25:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=crdZedgJsEUhNDHFcmXoQIoFK0wBPhDuBUpe6JPSKvo=;
-        b=OeQ88By4yYwm7ftlxNENiSH/WCyxR/yMUUXjH9aBBZZcx+Wiq8OJAKE+ba2th6X6Vo
-         2X0Rc2iaE1ZBSVgikTdg8GqFwzPVxJlJeVq2MmzSFn+CZc5Gk54tyiI/4w08rmwYBmc+
-         uv8NHo86WF/uKl8aqGwFsBI7i3e6A4JY0AlWUIAiTYmYOo7j3+e7UKXMheUhlF2xb0hQ
-         ABfo0qaWLrFQ31aBDo4jXkjKvXV2xixS73Al4hFtWK0bD1YomyQBR9t173rbOn2BOlhU
-         TBC2ceLTmElqsS5B6rU5Exkvl24m2VOgYuFdy0eRgtrc6HDBXYigY3ru6NKwoBUyWTXO
-         UIhQ==
-X-Gm-Message-State: APjAAAWpkzAIo7AH+eLU992X8QndFG0unVIo2JcaAp+JWVGt1ZJMjmzr
-        FIq/u6PIhCYXPAQ8VYDte9Y=
-X-Google-Smtp-Source: APXvYqyaMO7XWhV9n5h+BlOcP48RjTk3sB8ZyfkIrmrzRB/jUwYPgcERvLeSWwXxozjY1PxP7KeByQ==
-X-Received: by 2002:a63:145e:: with SMTP id 30mr2162826pgu.151.1572477794832;
-        Wed, 30 Oct 2019 16:23:14 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 37sm835294pgv.32.2019.10.30.16.23.13
+         :mime-version:content-disposition:in-reply-to;
+        bh=bQFkVyYFi8hag3At5ZE72O/aG1IU1WcgEzzZGm8W/yY=;
+        b=S4+XZqgerRAkfjypDkU5gLFtV2FXrygR+ygeqbAfDgOFhHB/9cf6hobZekZBzH1u+0
+         mDfXdCYIXG08r0VQVgK624EtFKAj6ONgGXsBaBno1iiYCIhZdXzk5/Y2ZnjXbR17ZGjy
+         0njFFB3BzFDZ7vuTEIAZqVmZLphqhV6/1H2gGuHHUuV0qPsbaYYQL68BO/85PInUeTle
+         kb3YZ9cgk5jH+pcu4qiR389zEEYOCeduR25MiyXNJlTris8xTfhWL7VdL/LALOKwVxpT
+         s8zMKeN6Nm+sREstuY7YfkTBGcdmhgXws30Eifye1vNWaln6Vh2T1lzms9idUkhTHCc2
+         bx9Q==
+X-Gm-Message-State: APjAAAWOKpki/nH7wxPEgYmBgH05E38bQI7G2mNHx6c/lB0CaoeT7JE9
+        UnIgCGD4jjMvt6XMIRIPH1Z4nuvdr1SJR1AXUzoHUBXEYOFUugIOFojHT9kEUj73g/kTigJ6d1r
+        akfLvm4eqLtys9a7U4HUysO+/
+X-Received: by 2002:a0c:fd63:: with SMTP id k3mr1679810qvs.185.1572477915995;
+        Wed, 30 Oct 2019 16:25:15 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqya63mUMpcS/++yI/vMJ7TUMWDzAtmYepIWeYl2T0nCu7UdIJ2I0dwkq34m7+mgWtvRrwkPPw==
+X-Received: by 2002:a0c:fd63:: with SMTP id k3mr1679787qvs.185.1572477915731;
+        Wed, 30 Oct 2019 16:25:15 -0700 (PDT)
+Received: from redhat.com (94.222.26.109.rev.sfr.net. [109.26.222.94])
+        by smtp.gmail.com with ESMTPSA id v13sm791419qkv.132.2019.10.30.16.25.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 16:23:13 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 16:23:11 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Henrik Rydberg <rydberg@bitmath.org>
-Cc:     Jiada Wang <jiada_wang@mentor.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, erosca@de.adit-jv.com,
-        Andrew_Gabbasov@mentor.com
-Subject: Re: [PATCH v4 01/48] Input: introduce input_mt_report_slot_inactive
-Message-ID: <20191030232311.GK57214@dtor-ws>
-References: <20191029072010.8492-1-jiada_wang@mentor.com>
- <20191029072010.8492-2-jiada_wang@mentor.com>
- <b3de4c05-d2d1-58f8-a447-d5e127574ac0@bitmath.org>
+        Wed, 30 Oct 2019 16:25:15 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 19:25:07 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yin Fengwei <fengwei.yin@intel.com>
+Subject: Re: linux-next: manual merge of the vhost tree with the pm tree
+Message-ID: <20191030192308-mutt-send-email-mst@kernel.org>
+References: <20191029151928.780c8ede@canb.auug.org.au>
+ <2535052.Q9mzRWFaI7@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <2535052.Q9mzRWFaI7@kreacher>
+X-MC-Unique: uSCEycfVOsyhzNy2N8-fpg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <b3de4c05-d2d1-58f8-a447-d5e127574ac0@bitmath.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 06:13:09PM +0100, Henrik Rydberg wrote:
-> Hi Jiada,
-> 
-> > input_mt_report_slot_state() ignores the tool when the slot is closed.
-> > which has caused a bit of confusion.
-> > This patch introduces input_mt_report_slot_inactive() to report slot
-> > inactive state.
-> > replaces all input_mt_report_slot_state() with
-> > input_mt_report_slot_inactive() in case of close of slot.
-> > 
-> > Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-> 
-> NACK on this one.
-> 
-> We already discussed this patch and the potentially changed behavior to
-> existing setups stemming from ignoring the MT state.
-> 
-> On the upside, what I can see this patch does exactly no difference to the
-> cases where the MT state is set, so it can be safely dropped without
-> affecting the rest of the patch series.
+On Tue, Oct 29, 2019 at 11:13:57PM +0100, Rafael J. Wysocki wrote:
+> On Tuesday, October 29, 2019 5:19:28 AM CET Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > Today's linux-next merge of the vhost tree got a conflict in:
+> >=20
+> >   drivers/acpi/processor_idle.c
+> >=20
+> > between commit:
+> >=20
+> >   fa583f71a99c ("ACPI: processor_idle: Skip dummy wait if kernel is in =
+guest")
+> >=20
+> > from the pm tree and commit:
+> >=20
+> >   a04c0533b07c ("ACPI: disable extra P_LVLx access on KVM")
+>=20
+> Well, if this touches code under drivers/acpi/, it should have been CCed =
+to
+> linux-acpi@vger.kernel.org, but I don't recall seeing it.
 
-I guess Jiada's concern that we are forcing to pass tool type even
-though we end up ignoring it intervally, which confuses users of the API
-as they might not know what tool to specify.
+It's an old RFC, posted a couple of years ago.
+I guess I can drop it for now.
 
-How about we do:
 
-static inline void input_mt_report_slot_inactive(struct input_dev *dev)
-{
-	input_mt_report_slot_state(dev, 0, false);
-}
+> > from the vhost tree.
+> >=20
+> > I fixed it up (I just used the pm tree version) and can carry the fix a=
+s
+> > necessary. This is now fixed as far as linux-next is concerned, but any
+> > non trivial conflicts should be mentioned to your upstream maintainer
+> > when your tree is submitted for merging.  You may also want to consider
+> > cooperating with the maintainer of the conflicting tree to minimise any
+> > particularly complex conflicts.
+> >=20
+> >=20
+>=20
+>=20
+>=20
 
-This should not change any behavior.
-
-Thanks.
-
--- 
-Dmitry
