@@ -2,170 +2,127 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB23CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC640CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF3A2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A832083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gdmK7b/f"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="B/1+lG88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfJ3NeP (ORCPT
+        id S1726407AbfJ3Ngp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:34:15 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42422 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfJ3NeP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:34:15 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UDYDge120315;
-        Wed, 30 Oct 2019 08:34:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572442453;
-        bh=riPq1EjtRAH4k2brd9erciAO5pC1LvIMZqcdS/NknfM=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=gdmK7b/f9xsSEWH04DxtPVar7CK2ysklueV9IOK1ZpYDffekDLkk5BsSyq6tcSK+g
-         z7CnfVAcJeoIXjklxapgvhodvfgCdJ7isEFFqcW/d72iEngxGF+WiGDx8dmuo1FtGD
-         KADbjuHRe3H1uwrYpM/rNPkl3g/9tKEYPl+/FvBM=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UDYD9N117904
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 08:34:13 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 08:34:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 08:34:00 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x9UDYCc1028496;
-        Wed, 30 Oct 2019 08:34:12 -0500
-Date:   Wed, 30 Oct 2019 08:34:12 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 03/19] media: ti-vpe: cal: Add per platform data support
-Message-ID: <20191030133412.un4w25qpn3usmcnw@ti.com>
-References: <20191018153437.20614-1-bparrot@ti.com>
- <20191018153437.20614-4-bparrot@ti.com>
- <20191029131855.GA27597@bogus>
+        Wed, 30 Oct 2019 09:36:45 -0400
+Received: from mail-eopbgr730076.outbound.protection.outlook.com ([40.107.73.76]:20275
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726171AbfJ3Ngo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:36:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lJ2TIbb/U6hrHDk32Dix4iA6RYDeCHdZBQ8tq+NZRRVbKGWD78wZXshx4qcm7VB12okdSkXNHKjaeCmQnuRTaTmftlsCQ4T6ljrw7CCn6iGXY7ie2uuEjW8LmlZGwBv1OY3be7LBedFFIOwIB/LNoMb+9W4/aKPnEmT7CruiRmwJGpY/2ElF3GkOScdnKDegEyPjm52jnVVva33Ouj5X5HCVucsdp/8woGftZGSZQTTFRe7ByTiO++/TRUsgxneLhXrqG3U0y7ow7KJ3l5qJRA2Y9LP6OpPjcn1HKV6bPmt4wOVacuOAQFeTMYFTtj7xzz2qNw5T3un97OdD3vtPjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aN0VleDSXUjx3LymmtsJEwlLFtz7H3Uei29kHfXAr+Q=;
+ b=WU3LgP5zwadkhdk5yv9kZ+f/UkuMicxo/ng8kRM0k3CLcFoM51W4PMoFelIMMqj+Lupw+VOhrzYkOKG9+tMLsmxkeHlOAkZJ48eMvnIeM0u3U3hYF/tZ9NBbqGE5tLYfL0KV9EbJWvzVQpVQzI6izI3A+qEN6NvdOy7M5O6AEsQd/LvO4w5IOl0drzxoGLrae8thdkflXhuexRogTTew7XiJ5xM31DIloKgdO5Rz4f/4xwXdWM3yS3VhvU/bO5xGJ8Msf4WEJ6S7WpPBqan6tXhg4YyWG55p3X8T1EIehuqj14WaA65hMih9868BS0Mr2TBDTq8raQDMz3SO/KD7mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aN0VleDSXUjx3LymmtsJEwlLFtz7H3Uei29kHfXAr+Q=;
+ b=B/1+lG88oaFjjMuU48p1YFSD4mw4dvLTM6GGGvuxASvnuR3oCr3E1FVRYxPsGeSD4lAbFxqHxWax3aWV7FR4EASh3P+gZn6MuEEPLb7UPSmuw2m8HsSjq16KmYqwCCzike2gm6FBfErzxl/Z/wzITz1iqia0axSgdzKjEn72OX4=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB0120.namprd12.prod.outlook.com (10.172.78.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.22; Wed, 30 Oct 2019 13:36:41 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::5471:f58b:733e:1a61]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::5471:f58b:733e:1a61%7]) with mapi id 15.20.2387.028; Wed, 30 Oct 2019
+ 13:36:41 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     zhong jiang <zhongjiang@huawei.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+CC:     "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amd/display: remove redundant null pointer check
+ before kfree
+Thread-Topic: [PATCH] drm/amd/display: remove redundant null pointer check
+ before kfree
+Thread-Index: AQHVjsYF6IMKJatV60G8yg8AJh6PZKdzMJAA
+Date:   Wed, 30 Oct 2019 13:36:40 +0000
+Message-ID: <723f11bc-9a65-bce6-9c0f-2ef2dbe7a1db@amd.com>
+References: <1572400673-42535-1-git-send-email-zhongjiang@huawei.com>
+In-Reply-To: <1572400673-42535-1-git-send-email-zhongjiang@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.251]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
+x-clientproxiedby: YT1PR01CA0013.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::26)
+ To CY4PR1201MB0230.namprd12.prod.outlook.com (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a1b991e5-dbac-44d7-3512-08d75d3e3206
+x-ms-traffictypediagnostic: CY4PR1201MB0120:|CY4PR1201MB0120:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB0120856831BEEDA42EC8BC3D8C600@CY4PR1201MB0120.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1051;
+x-forefront-prvs: 02065A9E77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(396003)(366004)(136003)(189003)(199004)(81166006)(71200400001)(4744005)(102836004)(54906003)(4326008)(7736002)(81156014)(110136005)(305945005)(53546011)(316002)(52116002)(6246003)(6506007)(8936002)(66556008)(66446008)(64756008)(25786009)(76176011)(5660300002)(478600001)(6512007)(66946007)(66476007)(386003)(486006)(71190400001)(186003)(8676002)(99286004)(26005)(36756003)(2906002)(31696002)(6486002)(6116002)(3846002)(6636002)(14444005)(256004)(6436002)(229853002)(31686004)(11346002)(446003)(476003)(2616005)(66066001)(4001150100001)(14454004)(58126008)(65956001)(65806001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0120;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5G4lZBSHFW9SJO1LWXg01p2np2wlom9LhpK5tEkIbc485WEbHhC9bnyyJxT4rdHZ+flKV+Fvyn5A3j0o3HbKFe1tCe9XgDP4RQRC6E/MSOy2448wyQkCtpgwlR5+qbw9HAzRKs5sj/PoegKZvcx8pY5O/mPcz39mJWZ6rNUWvHxPYKsRgbvz4woWjRAWpsmX/9wqjeFEtzXaIZWhV4BhFznrtB175iZFFPHd8iD0dwdCj8I4kUwEJqbn/KMaToxnreffcMgLLXrHMXYQefskk/3iVGoo0tDx8VQCeHmiGyMgX1G88/sHIdHwiP2+BM+rKM2ep+KTm/MoEsmgUxNd3vW/gcsg4AGirrHw4x4hEAIwnZUV4JWQMumhE5Ei2Ph6jj8ejb9CRqTxdC/S1SSZ86X/S0+GIWmXxcHvFFwJJJUv04II77DhY0ytXOQyToLp
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4AAD7E9224D2294EB9757B417C585CF9@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191029131855.GA27597@bogus>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1b991e5-dbac-44d7-3512-08d75d3e3206
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 13:36:40.9525
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3rrJfvfa1mqQTayHtF1s5+m3gAQzV7fUprMMia3Cz9nytlwaxqhOy3WkFxNC0AQtVeaRPLUvAKZ33F3nOG27HQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob Herring <robh@kernel.org> wrote on Tue [2019-Oct-29 08:18:55 -0500]:
-> On Fri, Oct 18, 2019 at 10:34:21AM -0500, Benoit Parrot wrote:
-> > First this patch adds a method to access the CTRL_CORE_CAMERRX_CONTROL
-> > register to use the syscon mechanism. For backward compatibility we also
-> > handle using the existing camerrx_control "reg" entry if a syscon node
-> > is not found.
-> > 
-> > In addition the register bit layout for the CTRL_CORE_CAMERRX_CONTROL
-> > changes depending on the device. In order to support this we need to use
-> > a register access scheme based on data configuration instead of using
-> > static macro.
-> > 
-> > In this case we make use of the regmap facility and create data set
-> > based on the various device and phy available.
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/platform/ti-vpe/cal.c | 281 +++++++++++++++++++++-------
-> >  1 file changed, 212 insertions(+), 69 deletions(-)
-> 
-> 
-> > @@ -1816,6 +1911,18 @@ static int cal_probe(struct platform_device *pdev)
-> >  	if (!dev)
-> >  		return -ENOMEM;
-> >  
-> > +	match = of_match_device(of_match_ptr(cal_of_match), &pdev->dev);
-> 
-> Use of_device_get_match_data() instead.
-
-Ok I'll change that.
-
-> 
-> > +	if (!match)
-> > +		return -ENODEV;
-> > +
-> > +	if (match->data) {
-> > +		dev->data = (struct cal_data *)match->data;
-> > +		dev->flags = dev->data->flags;
-> > +	} else {
-> > +		dev_err(&pdev->dev, "Could not get feature data based on compatible version\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> >  	/* set pseudo v4l2 device name so we can use v4l2_printk */
-> >  	strscpy(dev->v4l2_dev.name, CAL_MODULE_NAME,
-> >  		sizeof(dev->v4l2_dev.name));
-> > @@ -1823,6 +1930,43 @@ static int cal_probe(struct platform_device *pdev)
-> >  	/* save pdev pointer */
-> >  	dev->pdev = pdev;
-> >  
-> > +	if (parent && of_property_read_bool(parent, "syscon-camerrx")) {
-> > +		syscon_camerrx =
-> > +			syscon_regmap_lookup_by_phandle(parent,
-> > +							"syscon-camerrx");
-> > +		if (IS_ERR(syscon_camerrx)) {
-> > +			dev_err(&pdev->dev, "failed to get syscon-camerrx regmap\n");
-> > +			return PTR_ERR(syscon_camerrx);
-> > +		}
-> > +
-> > +		if (of_property_read_u32_index(parent, "syscon-camerrx", 1,
-> > +					       &syscon_camerrx_offset)) {
-> 
-> Kind of odd to read the property twice and using functions that don't 
-> match the type. We have functions to retrieve phandle and args.
-
-Yeah, I wanted to make a distinction between the node being present and
-any other kind of errors, so we can have a little more precise error
-message.
-
-> 
-> > +			dev_err(&pdev->dev, "failed to get syscon-camerrx offset\n");
-> > +			return -EINVAL;
-> > +		}
-> > +	} else {
-> > +		/*
-> > +		 * Backward DTS compatibility.
-> > +		 * If syscon entry is not present then check if the
-> > +		 * camerrx_control resource is present.
-> > +		 */
-> > +		syscon_camerrx = cal_get_camerarx_regmap(dev);
-> > +		if (IS_ERR(syscon_camerrx)) {
-> > +			dev_err(&pdev->dev, "failed to get camerrx_control regmap\n");
-> > +			return PTR_ERR(syscon_camerrx);
-> > +		}
-> > +		/* In this case the base already point to the direct
-> > +		 * CM register so no need for an offset
-> > +		 */
-> > +		syscon_camerrx_offset = 0;
-> > +	}
-> > +
-> > +	dev->syscon_camerrx = syscon_camerrx;
-> > +	dev->syscon_camerrx_offset = syscon_camerrx_offset;
-> > +	ret = cal_camerarx_regmap_init(dev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> >  	dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> >  						"cal_top");
-> >  	dev->base = devm_ioremap_resource(&pdev->dev, dev->res);
-> 
+T24gMjAxOS0xMC0yOSA5OjU3IHAubS4sIHpob25nIGppYW5nIHdyb3RlOg0KPiBrZnJlZSBoYXMg
+dGFrZW4gbnVsbCBwb2ludGVyIGludG8gYWNjb3VudC4gaGVuY2UgaXQgaXMgc2FmZSB0byByZW1v
+dmUNCj4gdGhlIHVubmVjZXNzYXJ5IGNoZWNrLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogemhvbmcg
+amlhbmcgPHpob25namlhbmdAaHVhd2VpLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IEhhcnJ5IFdlbnRs
+YW5kIDxoYXJyeS53ZW50bGFuZEBhbWQuY29tPg0KDQpIYXJyeQ0KDQo+IC0tLQ0KPiAgZHJpdmVy
+cy9ncHUvZHJtL2FtZC9kaXNwbGF5L2RjL2hkY3AvaGRjcF9tc2cuYyB8IDQgKy0tLQ0KPiAgMSBm
+aWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9oZGNwL2hkY3BfbXNnLmMgYi9k
+cml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvaGRjcC9oZGNwX21zZy5jDQo+IGluZGV4IGNm
+NmVmMzguLjZmNzMwYjUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxh
+eS9kYy9oZGNwL2hkY3BfbXNnLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5
+L2RjL2hkY3AvaGRjcF9tc2cuYw0KPiBAQCAtMTc0LDkgKzE3NCw3IEBAIHN0YXRpYyBib29sIGhk
+bWlfMTRfcHJvY2Vzc190cmFuc2FjdGlvbigNCj4gIAkJCWxpbmstPmN0eCwNCj4gIAkJCWxpbmss
+DQo+ICAJCQkmaTJjX2NvbW1hbmQpOw0KPiAtDQo+IC0JaWYgKGJ1ZmYpDQo+IC0JCWtmcmVlKGJ1
+ZmYpOw0KPiArCWtmcmVlKGJ1ZmYpOw0KPiAgDQo+ICAJcmV0dXJuIHJlc3VsdDsNCj4gIH0NCj4g
+DQo=
