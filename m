@@ -2,171 +2,242 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00722C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5920FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62772083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371B920856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbfJ3I07 (ORCPT
+        id S1726357AbfJ3I11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:26:59 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:49354 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfJ3I06 (ORCPT
+        Wed, 30 Oct 2019 04:27:27 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53817 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725923AbfJ3I10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:26:58 -0400
-X-AuditID: c0a8fbf4-199ff70000001fa6-94-5db94950733f
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 57.F1.08102.05949BD5; Wed, 30 Oct 2019 09:26:56 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Wed, 30 Oct 2019 09:26:51 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH v2 02/13] dt-bindings: mfd: Document ROHM BD71828
- bindings
-Thread-Topic: [RFC PATCH v2 02/13] dt-bindings: mfd: Document ROHM BD71828
- bindings
-Thread-Index: AQHVimAFYId2ZTjVIEaonX+EqNqiYKdqDi6AgACrYYCAB0C9AIAA18IA
-Date:   Wed, 30 Oct 2019 08:26:50 +0000
-Message-ID: <3e0f0943cd599cae544bd7a7a49dded46d57a604.camel@fi.rohmeurope.com>
-References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
-         <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
-         <ed0b2aa8-8a70-0341-4ecf-8959f37c53bd@ti.com>
-         <5c793f1308ccc6e787260b64fe6a875a8d0eb9d0.camel@fi.rohmeurope.com>
-         <20191029193440.GA1812@bogus>
-In-Reply-To: <20191029193440.GA1812@bogus>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F0E489925A5D7E499CECB6477F5FBCFC@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 30 Oct 2019 04:27:26 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iPjK5-0003re-9e; Wed, 30 Oct 2019 09:27:21 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iPjK2-00007C-A9; Wed, 30 Oct 2019 09:27:18 +0100
+Date:   Wed, 30 Oct 2019 09:27:18 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Joris Offouga <offougajoris@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Otavio Salvador <otavio@ossystems.com.br>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V3] ARM: dts: imx7d-pico: Add LCD support
+Message-ID: <20191030082718.oj4nq5li6mohf4tg@pengutronix.de>
+References: <20191029101742.9100-1-offougajoris@gmail.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wTZxzGee+udy/VM0ct4xWV4S3GiEo1YeHN1iz+IePMFmJEl2iCeMhB
-        G0pLrmXDqQvZskwqbBB1hEuBDS0wYP6oPyiKok1BxESDiGgmYh0x0SBmwR8hEtidh8Jf99z7
-        PJ/3+f7xfSFpekzHQ7vTI8lO0cHTRupK89vT67Zs7sha3+Vbjo/3DzL4l/FGBr+s7aPw0cgo
-        jevDNw340I2zBvzPuVMUHnnVDfDrOwcJfGSqicD/lT804DP1UwAPXPDR+NzYCYB7Wu/Q2D/U
-        T2Cfv5fC/X1peLivm8YznUEGT989TW2MFdrq2oDw4t7PjFDXtk/oUIYZIdBSRgsP7nbSwrV7
-        7YRQXTdJCM2tbxhhIpCwxbhzgTVH9Hybac93Wr7YvcD2V4WfKApbSs5U1oBS0JzsBdEQcSno
-        /MBV4AVGaOIGAfIOts/+9AKkPK+ivQBCmrMi731GA8zcKvRna4TUMiTXAlFX/SNCMxZz21D4
-        5O9AD21Hl38tn9VfopHuKVrTFLcSdXW3vsuzXAYKVh8k9bKLBJqeGDNoRjSXhAbGdQ245ais
-        dPwdQHJxKPDkjUEfm0PHO2+Ruo5FT/+dnj3n0aXJCKUNTXKr0ckLFh3diCqUYUrXK9CRQxFG
-        nyEGXa8ZpSrBR8q8BmWOVubRyjxamUf/AQwtABWKdke+6JE2JMtScbLsshWqnz2uwgDQd+Zl
-        EMyENocAAUEILIEEH8u2pwezTItyXLl7baLbli0XOyR3CCBI8mb2tbUjy8Tminu/l2TXe2sp
-        pPg4dlWkKsvEaV0FklQkye/dZRDyiF0kqGCMLOVLJXl2h2fOJmC0drkx3uyWnLmSLBZ7bNna
-        gmS71Q3RrIVq7ycazrqLxEL1VEf7wBpY+bS2gYThWn8DaaKcLqcUH8dmalFOi9qKnR+KnoE4
-        CPjF7Nt01V2oPpwP9zxTKwi1Yu3kea3CI85Z8aUg6r41L/9Y5+G/l8Tc+rG6USjwfXWjPJFf
-        hvp3lfmDS3/4Li/9eg/BzFSNZcT4QRORZD0bNm8dSkj1bHJEPfGFhILkhk9TJqiPt2UMWVL3
-        3P46sSRqZWPab/tTdpTZjwY6Ptt/yW10/XR4OPjN50pvtXXTjvbUfebYizkHLExGUw/PU26b
-        uCGJlN3i/8jDhXD1AwAA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029101742.9100-1-offougajoris@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:20:03 up 165 days, 14:38, 98 users,  load average: 0.09, 0.06,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBUdWUsIDIwMTktMTAtMjkgYXQgMTQ6MzQgLTA1MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0K
-PiBPbiBGcmksIE9jdCAyNSwgMjAxOSBhdCAwNTo0OToxN0FNICswMDAwLCBWYWl0dGluZW4sIE1h
-dHRpIHdyb3RlOg0KPiA+IEhlbGxvIERhbiwNCj4gPiANCj4gPiBUaGFua3MgYWdhaW4gZm9yIGNo
-ZWNraW5nIHRoaXMgOikNCj4gPiANCj4gPiBPbiBUaHUsIDIwMTktMTAtMjQgYXQgMTQ6MzUgLTA1
-MDAsIERhbiBNdXJwaHkgd3JvdGU6DQo+ID4gPiBNYXR0aQ0KPiA+ID4gDQo+ID4gPiBPbiAxMC8y
-NC8xOSA2OjQxIEFNLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+ID4gPiA+IFJPSE0gQkQ3MTgy
-OCBQb3dlciBtYW5hZ2VtZW50IElDIGludGVncmF0ZXMgNyBidWNrIGNvbnZlcnRlcnMsDQo+ID4g
-PiA+IDcNCj4gPiA+ID4gTERPcywNCj4gPiA+ID4gYSByZWFsLXRpbWUgY2xvY2sgKFJUQyksIDMg
-R1BPL3JlZ3VsYXRvciBjb250cm9sIHBpbnMsIEhBTEwNCj4gPiA+ID4gaW5wdXQNCj4gPiA+ID4g
-YW5kIGEgMzIuNzY4IGtIeiBjbG9jayBnYXRlLg0KPiA+ID4gPiANCj4gPiA+ID4gRG9jdW1lbnQg
-dGhlIGR0IGJpbmRpbmdzIGRyaXZlcnMgYXJlIHVzaW5nLg0KPiA+ID4gPiANCj4gPiA+ID4gU2ln
-bmVkLW9mZi1ieTogTWF0dGkgVmFpdHRpbmVuIDwNCj4gPiA+ID4gbWF0dGkudmFpdHRpbmVuQGZp
-LnJvaG1ldXJvcGUuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gDQo+ID4gPiA+IE5vIGNoYW5n
-ZXMgc2luY2UgdjENCj4gPiA+ID4gDQo+ID4gPiA+ICAgLi4uL2JpbmRpbmdzL21mZC9yb2htLGJk
-NzE4MjgtcG1pYy50eHQgICAgICAgIHwgMTgwDQo+ID4gPiA+ICsrKysrKysrKysrKysrKysrKw0K
-PiA+ID4gPiAgIDEgZmlsZSBjaGFuZ2VkLCAxODAgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPiAgIGNy
-ZWF0ZSBtb2RlIDEwMDY0NA0KPiA+ID4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWZkL3JvaG0sYmQ3MTgyOC1wbWljLnR4dA0KPiA+ID4gDQo+ID4gPiBJIHdpbGwgbGV0IG1h
-aW50YWluZXJzIHdlaWdoIGluIGhlcmUgYnV0IGlmIHRoaXMgaXMgbmV3IHRoaXMNCj4gPiA+IHNo
-b3VsZCANCj4gPiA+IHByb2JhYmx5IGJlIGluIHRoZSB5YW1sIGZvcm1hdCB0byBhdm9pZCBjb252
-ZXJzaW9uIGluIHRoZSBmdXR1cmUNCj4gPiANCj4gPiBPaC4uLiBUaGlzIGlzIG5ldyB0byBtZS4g
-SSBndWVzcyB0aGVyZSBhcmUgcmVhc29ucyBmb3IgdGhpcyAtIGJ1dCBJDQo+ID4gbXVzdCBzYXkg
-SSBhbSBub3QgZXhjaXRlZCBhcyBJIGhhdmUgbmV2ZXIgdXNlZCB5YW1sIGZvciBhbnl0aGluZy4N
-Cj4gPiBJJ2xsDQo+ID4gZG8gYXMgeW91IHN1Z2dlc3QgYW5kIHdhaXQgZm9yIHdoYXQgb3RoZXJz
-IGhhdmUgdG8gc2F5IDopIFRoYW5rcw0KPiA+IGZvcg0KPiA+IHBvaW50aW5nIHRoaXMgb3V0IHRo
-b3VnaC4NCj4gDQo+IFNvcnJ5IGZvciB5b3VyIGxhY2sgb2YgZXhjaXRlbWVudC4gSXQgY291bGQg
-YmUgWE1MLi4uDQoNClRoYW5rcywgSSBhcHByZWNpYXRlIHRoYXQsIGFwb2xvZ3kgYWNjZXB0ZWQg
-WC1EDQoNCj4gVGhlcmUgYXJlbid0IG1hbnkgTUZEIGV4YW1wbGVzIHlldCwgYnV0IHRoZXJlIGlz
-IG1heDc3NjUwIGluIG15IHRyZWUNCj4gYW5kIA0KPiBsaW51eC1uZXh0Lg0KDQpJIGxvb2tlZCBh
-dCB0aGUgbWF4Nzc2NTAgTUZEIGJpbmRpbmcgZnJvbSBsaW51eC1uZXh0LiBBZnRlciB0aGF0IEkg
-YWxzbw0KbG9va2VkIHNvbWUgb2YgdGhlIGdlbmVyaWMgZG9jdW1lbnRzIGZvciBEVCBiaW5kaW5n
-cyAoSSBrbm93IC0gSSBzaG91bGQNCmhhdmUgZG9uZSB0aGF0IGVhcmxpZXIgYW5kIHlvdXIgam9i
-IGhhZCBiZWVuIGVhc2llcikuIEJ1dCBhbGwgdGhhdCBsZWZ0DQptZSAic2xpZ2h0bHkiIHB1enps
-ZWQuIEFmdGVyIHNvbWUgZnVydGhlciB3YW5kZXJpbmcgaW4gdGhlIHZpcnR1YWwNCndvcmxkIEkg
-c3BvdHRlZCB0aGlzOg0KaHR0cHM6Ly9lbGludXgub3JnL2ltYWdlcy82LzZiL0xQQzIwMThfanNv
-bi1zY2hlbWFfZm9yX0RldmljZXRyZWUucGRmDQoNCkkgdGhpbmsgdGhpcyBsaW5rIGluIHNvbWUg
-ZHQteWFtbC1iaW5kaW5nLXJlYWRtZSBtaWdodCBiZSBoZWxwZnVsLg0KDQpTbyBpZiBJIHVuZGVy
-c3RhbmQgdGhpcyBjb3JyZWN0bHksIGlkZWEgaXMgdG8gY29udmVydCB0aGUgZHRzIHNvdXJjZXMN
-CnRvIHVzZSB5YW1sIChyaWdodD8pLiBUaGlzIGlzIHNlZW4gYmV0dGVyIGJlY2F1c2UgbW9yZSBw
-ZW9wbGUga25vdw0KSlNPTi9ZQU1MIHRoYW4gZHRzIGZvcm1hdCg/KSBGYWlyIGVub3VnaC4gQWx0
-aG91Z2ggc29tZSBvZiB1cyBrbm93IGR0cw0KZm9ybWF0IGRlY2VudGx5IHdlbGwgYnV0IGhhdmUg
-bmV2ZXIgdXNlZCBKU09OIG9yIHlhbWwuIEkgZ3Vlc3MgZHRzDQpzdXBwb3J0IGlzIG5vdCBnb2lu
-ZyBhd2F5IHRob3VnaCBhbmQgeWFtbCBleGFtcGxlcyBkbyBub3Qgc2VlbSB0ZXJyaWJseQ0KaGFy
-ZCBhdCBmaXJzdCBzaWdodC4NCg0KV2hhdCBjb21lcyB0byBiaW5kaW5nIGRvY3MgLSB3ZWxsLCBp
-biBteSBleWVzICh3aGljaCBtYXkgYmUgYmlhc2VkKQ0Kd3JpdGluZyBkb2N1bWVudGF0aW9uIGlu
-IGFueXRoaW5nIGludGVuZGVkIHRvIGJlIGludGVycHJldGVkIGJ5IGENCm1hY2hpbmUgaXMgc3Rp
-bGwgYSBzdGVwIGJhY2t3YXJkcyBmb3IgYSBodW1hbiBkb2N1bWVudCByZWFkZXIuIFN1cmUNCnN5
-bnRheCB2YWxpZGF0aW9uIG9yIHJldmlld2luZyBpcyBlYXNpZXIgaWYgZm9ybWF0IGlzIG1hY2hp
-bmUgcmVhZGFibGUNCi0gYnV0IGZyZWUgdGV4dCBpbmZvIGlzIG1vcmUsIHdlbGwsIGluZm9ybWF0
-aXZlIChmb3JtIG1lIGF0IGxlYXN0KS4gSQ0KZm9yIGV4YW1wbGUgd291bGRuJ3QgbGlrZSByZWFk
-aW5nIGEgYm9vayB3cml0dGVuIGluIGFueSBzY3JpcHQgb3INCm1hcmt1cCBsYW5ndWFnZS4gTm9y
-IHdyaXRpbmcgb25lLiBJdCBpcyBkaWZmaWN1bHQgZm9yIG1lIHRvIHVuZGVyc3RhbmQNCnRoZSBk
-b2N1bWVudGF0aW9uIGNoYW5nZSB0byB5YW1sLCBtYXliZSBiZWNhdXNlIEkgYW0gbW9yZSBvZnRl
-biB1c2luZw0KdGhlIGJpbmRpbmcgZG9jcyBmb3IgY29tcG9zaW5nIERUIGZvciBhIGRldmljZSB0
-aGFuIHJldmlld2luZyB0aGVtIDspDQoNCkFueXdheXMsIEkgZ3Vlc3MgSSdkIGJldHRlciBlaXRo
-ZXIgdHJ5IGxlYXJuaW5nIHRoZSB5YW1sLCBmaWd1cmUgb3V0DQp3aGF0IGFyZSBzY2hlbWFzIGFu
-ZCBzZWUgaG93IHRvIGNvbnZlcnQgeWFtbCBkb2NzIHRvIHRleHQgZm9yIG5pY2VyDQpyZWFkaW5n
-IChJIGFzc3VtZSB0aGlzIGlzIGRvYWJsZSkgYW5kIGhvdyB0byB2ZXJpZnkgeWFtbCBiaW5kaW5n
-IGRvY3MNCmFyZSBPayAtIG9yIHF1aXQgY29udHJpYnV0aW5nLiBObyBvbmUgaXMgZm9yY2luZyBt
-ZSB0byBkbyB0aGlzLg0KQ29udGludWluZyBjb21wbGFpbmluZyBvbiB0aGlzIGlzIHByb2JhYmx5
-IG5vdCBnZXR0aW5nIHVzIGFueXdoZXJlIHNvIEkNCm1pZ2h0IGFzIHdlbGwgc2h1dCB1cCBub3cg
-Oi8NCg0KQW5kIFNvcnJ5IFJvYi4gSSBhbSBzZWVpbmcgeW91IGhhdmUgYmVlbiByZWFsbHkgY2xv
-c2UgdG8gdGhpcyB5YW1sL0pTT04NCmNoYW5nZSBzbyBteSB3b25kZXJpbmcgbWF5IGJlIGZydXN0
-cmF0aW5nLiBJIGRvbid0IGludGVuZCB0byBiZQ0KZGlzcmVzcGVjdGZ1bCAtIEkgc2VlIHRoYXQg
-eW91IGhhdmUgZG9uZSBodWdlIHdvcmsgd2l0aCB0aGlzLiBJIGFtDQpqdXN0Li4uIC4uLlNsaWdo
-dGx5IHNldCBpbiBteSB3YXlzLiBMaXR0bGUgYml0IHBpZy1oZWFkZWQgYW5kIHNvbWV3aGF0DQph
-IHNtYXJ0LWFyc2UgLSBzbyBJIGNvdWxkbid0IGp1c3QgbGV0IGl0IGdvIHdpdGhvdXQgZ2l2aW5n
-IG91dCBhbg0Kb3Bpbmlvbi4NCg0KPiA+ID4gaTJjIHsNCj4gPiA+IA0KPiA+ID4gICAgICAgICAg
-cG1pY0A0YiB7DQo+ID4gPiANCj4gPiA+ICAgICAgICAgICAgICAgICAgWy4uLl0NCj4gPiA+IA0K
-PiA+ID4gICAgICAgICAgfTsNCj4gPiA+IA0KPiA+ID4gfTsNCj4gPiANCj4gPiBJIGRvbid0IHRo
-aW5rIHRoZSBJMkMgbm9kZSBpcyBuZWVkZWQgaW4gZXhhbXBsZS4gSXQgaXMgbm90IHBhcnQgb2YN
-Cj4gPiB0aGUNCj4gPiBQTUlDIC0gYW5kIEkgZG9uJ3Qgc2VlIHRoZSBjb250YWluaW5nIGJ1cyBp
-biBvdGhlciBleGFtcGxlcyBJIGp1c3QNCj4gPiBvcGVuZWQuICh0aGUgdHdvIG90aGVyIHJvaG0s
-eHh4IFBNSUMgZG9jcyAtIHdlbGwsIGJpYXNlZCBhcyBJIHdyb3RlDQo+ID4gdGhlbSksIGRhOTE1
-MC50eHQsIGxwMzk0My50eHQsIG1heDc3Njg2LnR4dCwgdHBzNjUwN3gudHh0LA0KPiA+IHRwczY1
-OTEwLnR4dA0KPiANCj4gSXQgd2lsbCBiZSBuZWVkZWQgZm9yIHRoZSBzY2hlbWEgYmVjYXVzZSB0
-aGUgZXhhbXBsZXMgYXJlIGNvbXBpbGVkDQo+IGFuZCANCj4gdmFsaWRhdGVkLg0KDQpUaGFua3Mg
-Zm9yIGV4cGxhaW5pbmcgdGhlIHJlYXNvbi4NCg0KQnIsDQoJTWF0dGkgVmFpdHRpbmVuDQoNCg==
+Hi Joris,
+
+On 19-10-29 11:17, Joris Offouga wrote:
+> From: Fabio Estevam <festevam@gmail.com>
+> 
+> Add support for the VXT VL050-8048NT-C01 panel connected through
+> the 24 bit parallel LCDIF interface.
+> 
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+> Signed-off-by: Joris Offouga <offougajoris@gmail.com>
+> ---
+>  Changes v2 -> v3 
+> 	rename pintcrl_backlight to pinctrl_pwm4
+> 	sort the nodes alphabetical
+> 
+>  Changes v1 -> v2
+>  	change "From:" Joris Offouga to Fabio Estevam
+> 	set Joris Offouga signed-off to the last one
+> 
+>  arch/arm/boot/dts/imx7d-pico.dtsi | 82 +++++++++++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
+> index 6f50ebf31a0a..9c7c2c45e6aa 100644
+> --- a/arch/arm/boot/dts/imx7d-pico.dtsi
+> +++ b/arch/arm/boot/dts/imx7d-pico.dtsi
+> @@ -7,12 +7,40 @@
+>  #include "imx7d.dtsi"
+>  
+>  / {
+> +        backlight: backlight {
+> +                compatible = "pwm-backlight";
+> +                pwms = <&pwm4 0 50000 0>;
+                                         ^
+                                   still not needed
+
+> +                brightness-levels = <0 36 72 108 144 180 216 255>;
+> +                default-brightness-level = <6>;
+> +        };
+> +
+>  	/* Will be filled by the bootloader */
+>  	memory@80000000 {
+>  		device_type = "memory";
+>  		reg = <0x80000000 0>;
+>  	};
+>  
+> +        panel {
+> +                compatible = "vxt,vl050-8048nt-c01";
+> +                backlight = <&backlight>;
+> +                power-supply = <&reg_lcd_3v3>;
+> +
+> +                port {
+> +                        panel_in: endpoint {
+> +                                remote-endpoint = <&display_out>;
+> +                        };
+> +                };
+> +        };
+> +
+> +	reg_lcd_3v3: regulator-lcd-3v3 {
+> +                compatible = "regulator-fixed";
+> +                regulator-name = "lcd-3v3";
+> +                regulator-min-microvolt = <3300000>;
+> +                regulator-max-microvolt = <3300000>;
+> +                gpio = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+
+Where happens the muxing for this gpio?
+
+> +                enable-active-high;
+> +        };
+> +
+>  	reg_wlreg_on: regulator-wlreg_on {
+>  		compatible = "regulator-fixed";
+>  		pinctrl-names = "default";
+> @@ -230,6 +258,18 @@
+>  	};
+>  };
+>  
+> +&lcdif {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lcdif>;
+> +	status = "okay";
+> +
+> +	port {
+> +		display_out: endpoint {
+> +			remote-endpoint = <&panel_in>;
+> +		};
+> +	};
+> +};
+> +
+>  &sai1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_sai1>;
+> @@ -260,6 +300,8 @@
+>  };
+>  
+>  &pwm4 { /* Backlight */
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm4>;
+>  	status = "okay";
+>  };
+>  
+> @@ -413,6 +455,40 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_lcdif: lcdifgrp {
+> +		fsl,pins = <
+> +			MX7D_PAD_LCD_DATA00__LCD_DATA0		0x79
+> +			MX7D_PAD_LCD_DATA01__LCD_DATA1		0x79
+> +			MX7D_PAD_LCD_DATA02__LCD_DATA2		0x79
+> +			MX7D_PAD_LCD_DATA03__LCD_DATA3		0x79
+> +			MX7D_PAD_LCD_DATA04__LCD_DATA4		0x79
+> +			MX7D_PAD_LCD_DATA05__LCD_DATA5		0x79
+> +			MX7D_PAD_LCD_DATA06__LCD_DATA6		0x79
+> +			MX7D_PAD_LCD_DATA07__LCD_DATA7		0x79
+> +			MX7D_PAD_LCD_DATA08__LCD_DATA8		0x79
+> +			MX7D_PAD_LCD_DATA09__LCD_DATA9		0x79
+> +			MX7D_PAD_LCD_DATA10__LCD_DATA10		0x79
+> +			MX7D_PAD_LCD_DATA11__LCD_DATA11		0x79
+> +			MX7D_PAD_LCD_DATA12__LCD_DATA12		0x79
+> +			MX7D_PAD_LCD_DATA13__LCD_DATA13		0x79
+> +			MX7D_PAD_LCD_DATA14__LCD_DATA14		0x79
+> +			MX7D_PAD_LCD_DATA15__LCD_DATA15		0x79
+> +			MX7D_PAD_LCD_DATA16__LCD_DATA16		0x79
+> +			MX7D_PAD_LCD_DATA17__LCD_DATA17		0x79
+> +			MX7D_PAD_LCD_DATA18__LCD_DATA18		0x79
+> +			MX7D_PAD_LCD_DATA19__LCD_DATA19		0x79
+> +			MX7D_PAD_LCD_DATA20__LCD_DATA20		0x79
+> +			MX7D_PAD_LCD_DATA21__LCD_DATA21		0x79
+> +			MX7D_PAD_LCD_DATA22__LCD_DATA22		0x79
+> +			MX7D_PAD_LCD_DATA23__LCD_DATA23		0x79
+> +			MX7D_PAD_LCD_CLK__LCD_CLK		0x79
+> +			MX7D_PAD_LCD_ENABLE__LCD_ENABLE		0x78
+> +			MX7D_PAD_LCD_VSYNC__LCD_VSYNC		0x78
+> +			MX7D_PAD_LCD_HSYNC__LCD_HSYNC		0x78
+> +			MX7D_PAD_LCD_RESET__GPIO3_IO4		0x14
+> +		>;
+> +	};
+> +
+>  	pinctrl_pwm1: pwm1 {
+>  		fsl,pins = <
+>  			MX7D_PAD_GPIO1_IO08__PWM1_OUT   0x7f
+> @@ -431,6 +507,12 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_pwm4: pwm4grp{
+> +		fsl,pins = <
+> +			MX7D_PAD_GPIO1_IO11__PWM4_OUT	0x0
+                                                         ^
+                                         Is this muxing value valid?
+
+Regards,
+  Marco
+
+> +		>;
+> +	};
+> +
+>  	pinctrl_reg_wlreg_on: regregongrp {
+>  		fsl,pins = <
+>  			MX7D_PAD_ECSPI1_SCLK__GPIO4_IO16	0x59
+> -- 
+> 2.17.1
+> 
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
