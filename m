@@ -2,173 +2,108 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA50DCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98DCCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A52FB20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97DDB208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g63vcrfv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrZwX3M6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbfJ3QCN (ORCPT
+        id S1728746AbfJ3QCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:02:13 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:41661 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbfJ3Pvz (ORCPT
+        Wed, 30 Oct 2019 12:02:18 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40749 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfJ3QCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:51:55 -0400
-Received: by mail-vk1-f196.google.com with SMTP id 70so596317vkz.8
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:51:54 -0700 (PDT)
+        Wed, 30 Oct 2019 12:02:16 -0400
+Received: by mail-ot1-f65.google.com with SMTP id d8so2567696otc.7;
+        Wed, 30 Oct 2019 09:02:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MM8FYPP/M/qSGLzrMimtzxUAQYpF/zt1wu6EL2luqtE=;
-        b=g63vcrfvchtAY5Rd4CuFqJnAncPsp38RdAVZRNM9WTGTq5FdrGZl2oMdK24C0ouZMv
-         Zx3My7Upbfwkqdu1ZF5cDQ1kc66k/jp8wegkgxnQ/ALeyvgSeFHS/snQ/xWL75V7Phqp
-         4MalfrNRHwi4CpIylLOnmzj9sdkHNkEDYEmmwx+aVxrHD+QCV51Rzzl6vHtIJ3iMO30J
-         kFpmzeq4jWbaxsqwIjDZZneLyXJaaJdjcH+c/BSSTf8iRjl2gNc5j54vOdQqJfw/rePZ
-         P3cKjDCcYPbQxJlN9cpB5CkBmYD/3vyML4pHLz4SnMVneG80kChlnAC6NwFHN0uFm/d2
-         8DyA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Io+g/Mop1YTO7IEeBRV6yOSmnttfivb/SWZtZYVfkLU=;
+        b=rrZwX3M614HUB1QzRH0h8zC9UfyKHcbaXzNo9WeFt6hAxhK/EIOLuHA5VowG5k/7M1
+         9TNp2/F06fJplrOREF7SilqiobyoD5l+j1L7Frx/WnD2ET0Fes8HEI1KB2MKAYWT5P43
+         wlEEJCfHRxmUsrhCl9T5toj1xlRnmq3vDKBKmVhL8s1M3RfoIaF4fnTpCV3HDyC862Mg
+         f9/D7R/lVUIMRaPLp5Jb7gXAySTVkTrvAfVE08styByL1LJhCjqB0bSMakInQhXt68VU
+         s4Gi4AtYJFDjNiYDKzLi3hhioJ3NhjDIpB2ACEjNCghsPHaOz49ml6/tE3T5QXGeoefJ
+         GkFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MM8FYPP/M/qSGLzrMimtzxUAQYpF/zt1wu6EL2luqtE=;
-        b=YCBUZGQ2o+9Y9NoGD1ZEnCds9NSwwEWCgW+4YdSvS9BqLHWuAlfENsV5Te2P0xRWUc
-         W8fCYhyydiDkSYQBzLkZLSQvhg+N+i9Ap6KaXvfLxe+2Da0GGdLlbkKOxhDXqgzr1+De
-         Sf7U1oJwwCSM0t/uZxS1VdxM0eHXkfHCN2bW3Te9anCGMBH5ygx9T3CmvzdOBHidHyWS
-         CLIDlGTahJGmx+VlFW74n9qpFHcGkpvuRO2aE6StPrpN/99+kcdQ5E1FEULZZYSlDW+m
-         upnjHeltU3HniEGHsOY/TvOOM2xz6oJhLjA7ZN2f7bFO41o4lUNoxhupezRU9P7RcwT5
-         MVng==
-X-Gm-Message-State: APjAAAXczj0Xf1zvTuo/ySFYDLAIiEBRAgUT/fZHjSseYJ0Nd35Xp6LW
-        ODaDIkeMd1b16/363XJuE0XYbVs9YXO1hSvXYf3zJA==
-X-Google-Smtp-Source: APXvYqyHupdgWHa7qCIjuf/ufG4zCQRus8URSrYdV3I3LkSUfaiNNDW1LPfNwtjXqRaPr+zQbaPiggFXKTik4rvlgIk=
-X-Received: by 2002:a1f:2f51:: with SMTP id v78mr15055854vkv.101.1572450713564;
- Wed, 30 Oct 2019 08:51:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Io+g/Mop1YTO7IEeBRV6yOSmnttfivb/SWZtZYVfkLU=;
+        b=C4g7cROdYodD2AHkjvx22thIOVaRvax6tAweFHRhP8LNmc5h35dn0XKVJugisus+h6
+         l6ZvKYYnz5NVZ7ItAWb8oRaRcVPrsdOTv54apnu+4c/abAraTdwFEH79SWyHBy4cLQhd
+         SXDOmUytz63s8QOl+fwbxsmdn9Kzs1UAELlCkLDZZK9NkuQLvxxY6/smNUnBS1mHDkkw
+         +PvHedzrW+VVjb7Nv4bRDAQOgo5jMIaBHKjF1DgR12YLSDq1DeOcoj1zxJF+uUi0BizQ
+         6JxWt3mUBhiKpsdWb1o77EFOcujgiFwAg/P7coM+lW3VARW5OXXdt1AmI2Thf/BIiXNf
+         C/aA==
+X-Gm-Message-State: APjAAAXRRyYSmZTOPhA2Ba31HGKHzoCmpyRmE9beKAqgxGRH/nJWLUKa
+        H5Sck4prNc3Opb97rZgj3fY=
+X-Google-Smtp-Source: APXvYqxqGe7NQskyZekS8CGgFbCef9gYqCVGPeORga0Wgh98IHDBt0IuR+og2dT9OOYAkVfpClfCzw==
+X-Received: by 2002:a9d:509:: with SMTP id 9mr536124otw.70.1572451334923;
+        Wed, 30 Oct 2019 09:02:14 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id j129sm108696oib.22.2019.10.30.09.02.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 09:02:14 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH net-next] mlxsw: Fix 64-bit division in mlxsw_sp_sb_prs_init
+Date:   Wed, 30 Oct 2019 09:01:52 -0700
+Message-Id: <20191030160152.11305-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.0.rc1
 MIME-Version: 1.0
-References: <cover.1571510481.git.hns@goldelico.com> <0887d84402f796d1e7361261b88ec6057fbb0065.1571510481.git.hns@goldelico.com>
-In-Reply-To: <0887d84402f796d1e7361261b88ec6057fbb0065.1571510481.git.hns@goldelico.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 30 Oct 2019 16:51:17 +0100
-Message-ID: <CAPDyKFp3EjTuCTj+HXhxf+Ssti0hW8eMDR-NrGYWDWSDmQz6Lw@mail.gmail.com>
-Subject: Re: [PATCH v2 04/11] mmc: host: omap_hsmmc: add code for special init
- of wl1251 to get rid of pandora_wl1251_init_card
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        "# 4.0+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 19 Oct 2019 at 20:42, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> Pandora_wl1251_init_card was used to do special pdata based
-> setup of the sdio mmc interface. This does no longer work with
-> v4.7 and later. A fix requires a device tree based mmc3 setup.
->
-> Therefore we move the special setup to omap_hsmmc.c instead
-> of calling some pdata supplied init_card function.
->
-> The new code checks for a DT child node compatible to wl1251
-> so it will not affect other MMC3 use cases.
->
-> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
->
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: <stable@vger.kernel.org> # 4.7.0
-> ---
->  drivers/mmc/host/omap_hsmmc.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index 952fa4063ff8..03ba80bcf319 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -1512,6 +1512,27 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
->
->         if (mmc_pdata(host)->init_card)
->                 mmc_pdata(host)->init_card(card);
-> +       else if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
-> +               struct device_node *np = mmc_dev(mmc)->of_node;
-> +
-> +               np = of_get_compatible_child(np, "ti,wl1251");
-> +               if (np) {
-> +                       /*
-> +                        * We have TI wl1251 attached to MMC3. Pass this information to
-> +                        * SDIO core because it can't be probed by normal methods.
-> +                        */
-> +
-> +                       dev_info(host->dev, "found wl1251\n");
-> +                       card->quirks |= MMC_QUIRK_NONSTD_SDIO;
-> +                       card->cccr.wide_bus = 1;
-> +                       card->cis.vendor = 0x104c;
-> +                       card->cis.device = 0x9066;
-> +                       card->cis.blksize = 512;
-> +                       card->cis.max_dtr = 24000000;
-> +                       card->ocr = 0x80;
+When building for 32-bit ARM, there is a link time error because of a
+64-bit division:
 
-These things should really be figured out by the mmc core during SDIO
-card initialization itself, not via the host ops ->init_card()
-callback. That is just poor hack, which in the long run should go
-away.
+ld.lld: error: undefined symbol: __aeabi_uldivmod
+>>> referenced by spectrum_buffers.c
+>>>               net/ethernet/mellanox/mlxsw/spectrum_buffers.o:(mlxsw_sp_buffers_init) in archive drivers/built-in.a
+>>> did you mean: __aeabi_uidivmod
+>>> defined in: arch/arm/lib/lib.a(lib1funcs.o
 
-Moreover, I think we should add a subnode to the host node in the DT,
-to describe the embedded SDIO card, rather than parsing the subnode
-for the SDIO func - as that seems wrong to me.
+Avoid this by using div_u64, which is designed to avoid this problem.
 
-To add a subnode for the SDIO card, we already have a binding that I
-think we should extend. Please have a look at
-Documentation/devicetree/bindings/mmc/mmc-card.txt.
+Fixes: bc9f6e94bcb5 ("mlxsw: spectrum_buffers: Calculate the size of the main pool")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If you want an example of how to implement this for your case, do a
-git grep "broken-hpi" in the driver/mmc/core/, I think it will tell
-you more of what I have in mind.
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c
+index 33a978af80d6..968f0902e4fe 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c
+@@ -470,7 +470,7 @@ static int mlxsw_sp_sb_prs_init(struct mlxsw_sp *mlxsw_sp,
+ 				size_t prs_len)
+ {
+ 	/* Round down, unlike mlxsw_sp_bytes_cells(). */
+-	u32 sb_cells = mlxsw_sp->sb->sb_size / mlxsw_sp->sb->cell_size;
++	u32 sb_cells = div_u64(mlxsw_sp->sb->sb_size, mlxsw_sp->sb->cell_size);
+ 	u32 rest_cells[2] = {sb_cells, sb_cells};
+ 	int i;
+ 	int err;
+-- 
+2.24.0.rc1
 
-> +                       of_node_put(np);
-> +               }
-> +       }
->  }
->
->  static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
-> --
-> 2.19.1
->
-
-Kind regards
-Uffe
