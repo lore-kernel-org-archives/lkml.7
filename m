@@ -2,100 +2,109 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69700CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E36FCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411862087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:13:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572441188;
-	bh=TYzyLtP+D7kB/qnfgS6x7BUXNu6ybul91VI0CYY7u8M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=imwdR/m67YQFQImzZsi9Y8flOkTjKX5+el8vrFWUBXMhljmY72pQpYt4NROktsnpN
-	 B/vst38NG/XWJKzecsvuGsdGdmpCOM20NTvf01rYenUeQVtxdGGwY7fqlUf8ueav7p
-	 yrt+efVTTGcQDV1tKlPZfM3On8M3wxZ3Vnz6Uikk=
+	by mail.kernel.org (Postfix) with ESMTP id E1A0220874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfJ3NNH (ORCPT
+        id S1726423AbfJ3NNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:13:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfJ3NNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:13:07 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37FE3208E3;
-        Wed, 30 Oct 2019 13:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572441186;
-        bh=TYzyLtP+D7kB/qnfgS6x7BUXNu6ybul91VI0CYY7u8M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bSpRV8bJ94Yt1H4/pwx0XzesfPodlXVb29S+DU1VXYKifjAa+HKPLuvcQ6CI2uAka
-         GlRm3JpSuqUn6FAxTRna1ZsYcSY9ZzjUWlh0sDaSxPDF1+L2j1Ld2/lto6jMU/HmkW
-         JsJv7rS/aqpAvRuMD0rq8Hu/SIcQonDL9etPfobk=
-Received: by mail-qt1-f174.google.com with SMTP id g50so3132401qtb.4;
-        Wed, 30 Oct 2019 06:13:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAX0wpuUaQq5+JXhDIZFeCKGgrE9td+aEv4ooi1r9EET2cwxyWkd
-        ixRnJcItNRZukLJ9W8UkflzSYSF2Le1KWjIaHg==
-X-Google-Smtp-Source: APXvYqzpbAR616454Q99vvOIazcNBXYazAW21qXlBdc1UMHRA5TCBXDrgT6hbzNXT2P9BQZAhzCr31sSccUE5YWDInk=
-X-Received: by 2002:ac8:65d5:: with SMTP id t21mr4861712qto.300.1572441185291;
- Wed, 30 Oct 2019 06:13:05 -0700 (PDT)
+        Wed, 30 Oct 2019 09:13:10 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:37290 "EHLO
+        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfJ3NNJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:13:09 -0400
+Received: from [10.20.41.27] (unknown [10.20.41.27])
+        by mail (Coremail) with SMTP id QMiowPDxT11XjLldw_cZAA--.52S3;
+        Wed, 30 Oct 2019 21:13:03 +0800 (CST)
+Subject: Re: [PATCH] fsnotify: Use NULL instead of 0 for pointer
+To:     Jan Kara <jack@suse.cz>
+References: <1572356342-24776-1-git-send-email-yangtiezhu@loongson.cn>
+ <20191030122149.GK28525@quack2.suse.cz>
+Cc:     Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <dade5dda-6d1f-519d-e4e6-e29d2a44bed9@loongson.cn>
+Date:   Wed, 30 Oct 2019 21:12:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
-In-Reply-To: <20191030120440.3699-1-peter.ujfalusi@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 30 Oct 2019 08:12:53 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
-Message-ID: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191030122149.GK28525@quack2.suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: QMiowPDxT11XjLldw_cZAA--.52S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr13Cr17Gr18XF18CFy3urg_yoW8Wr17p3
+        97ta9YyayDGFyjg3W0vF4Yq3WayrW8KrWDJFsay34Iy3ZrXw1Fqr1xKw1Y9FykWFWSqa10
+        gw4Yya98Zr47ZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWxJVW8Jr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU5xgA3UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+On 10/30/2019 08:21 PM, Jan Kara wrote:
+> On Tue 29-10-19 21:39:02, Tiezhu Yang wrote:
+>> Fix the following sparse warning:
+>>
+>> fs/notify/fdinfo.c:53:87: warning: Using plain integer as NULL pointer
+>>
+>> Fixes: be77196b809c ("fs, notify: add procfs fdinfo helper")
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Thanks for the patch but similar patch already sits in my tree as commit
+> ddd06c36bdb "fsnotify/fdinfo: exportfs_encode_inode_fh() takes pointer as
+> 4th argument". I'll send it to Linus in the next merge window.
 >
-> Hi,
->
-> The shared GPIO line for external components tends to be a common issue and
-> there is no 'clean' way of handling it.
->
-> I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
-> a driver tries to request a GPIO which is already in use.
-> However the driver must know that the component is going to be used in such a
-> way, which can be said to any external components with GPIO line, so in theory
-> all drivers must set this flag when requesting the GPIO...
->
-> But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
-> GPIO line. For example any device using the same GPIO as reset/enable line can
-> reset/enable other devices, which is not something the other device might like
-> or can handle.
-> For example a device needs to be configured after it is enabled, but some other
-> driver would reset it while handling the same GPIO -> the device is not
-> operational anymmore as it lost it's configuration.
->
-> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
-> the role of making sure that the GPIO line only changes state when it will not
-> disturb any of the clients sharing the same GPIO line.
+> 								Honza
 
-Why can't we just add a shared flag like we have for interrupts?
-Effectively, we have that for resets too, it's just hardcoded in the
-the drivers.
+Thanks for your reply. I can not find your tree about fs/notify
+in the MAINTAINERS file, so this patch is based on Linus's tree.
+Sorry for the noise, you can ignore it.
 
-Rob
+By the way, could you add your tree in the MAINTAINERS file?
+
+Thanks,
+
+Tiezhu Yang
+
+>
+>> ---
+>>   fs/notify/fdinfo.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/notify/fdinfo.c b/fs/notify/fdinfo.c
+>> index 1e2bfd2..cd2846e 100644
+>> --- a/fs/notify/fdinfo.c
+>> +++ b/fs/notify/fdinfo.c
+>> @@ -50,7 +50,8 @@ static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
+>>   	f.handle.handle_bytes = sizeof(f.pad);
+>>   	size = f.handle.handle_bytes >> 2;
+>>   
+>> -	ret = exportfs_encode_inode_fh(inode, (struct fid *)f.handle.f_handle, &size, 0);
+>> +	ret = exportfs_encode_inode_fh(inode, (struct fid *)f.handle.f_handle,
+>> +				       &size, NULL);
+>>   	if ((ret == FILEID_INVALID) || (ret < 0)) {
+>>   		WARN_ONCE(1, "Can't encode file handler for inotify: %d\n", ret);
+>>   		return;
+>> -- 
+>> 2.1.0
+>>
+>>
+
