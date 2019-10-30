@@ -2,129 +2,145 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E799CCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949A7CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA02320856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8E620856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572442176;
+	bh=igiX650YpjR8H3mGZ/ALPmIk+Lrkf/kUdT1CdvytKdY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tWPQB/Q4hLTKAgUih4d+CidJWGwMJLJ4JnM25OUYrtxu6uv5n1grbJBFM0PXp547y
+	 H0aSTvpRhHSYq2IRFKtP6/maVpVMGEgiiX+JlkqkhyHaLrFeFh22ZqE/GaWCKdjaSV
+	 ueIpoV+6EIzyNj6bZl95gGdkLQUYiqPjnK5aS18s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfJ3N1l (ORCPT
+        id S1726357AbfJ3N3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:27:41 -0400
-Received: from mga07.intel.com ([134.134.136.100]:38086 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfJ3N1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:27:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 06:27:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
-   d="scan'208";a="211322476"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 30 Oct 2019 06:27:37 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 30 Oct 2019 15:27:37 +0200
-Date:   Wed, 30 Oct 2019 15:27:37 +0200
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v9 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Message-ID: <20191030132737.GF2593@lahna.fi.intel.com>
-References: <SL2P216MB018739B339B453DE872DB71E80610@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <20191030120705.GC2593@lahna.fi.intel.com>
- <SL2P216MB018746C15E0262862D428C1480600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        Wed, 30 Oct 2019 09:29:35 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44702 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3N3e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:29:34 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n48so2055016ota.11;
+        Wed, 30 Oct 2019 06:29:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2PIp3nuujjbVDTCQlERuQPPmNS4hMz6vAUUQvwn05Tc=;
+        b=HCru8Ej2p19n/vaYXq0Vuji5lWKCNrkqKpiBpfQ+0eQJ+UNkYiN0kCMRhYPXBsOV44
+         LF/HfHmdCwHFLkHSf7OOPvHN/VX4g4IZZiYiMF2uzcFGq5nP3uXWjiI+YGfZ6NvFWtp1
+         guA8AYHYihnaXhbuMKuXiaPl+8z3Ow9GIvBEYedo/sW4wvId3dtqiOIFh7fvZBz0pdMm
+         isdPwWD/Llz39wfX9KKX/mtomWoNi9jTyjJEZOcYVn3E9c4pG2lMsbxzuI+6yjosh5+r
+         lFis5fL7IGMSKLgNQD23g/gYx3nfIBz17JkvCA+hed/FDO6Tz4a8qowpwswTS9Q7goay
+         ZEWQ==
+X-Gm-Message-State: APjAAAXe2PLU20K+ZKZ1dJm9uCZVqUrr+Zp57UAxBnKPHnXWlaD2ionr
+        BpO2iz0YQLnW7q3x/tAJ6g==
+X-Google-Smtp-Source: APXvYqxZ/cduY/57uFpVQbDA+dzUHNgNL7l4CUKcqiu/GlyrSfqJ4CfvFx7pOS+ityjeM2CS6IH5vA==
+X-Received: by 2002:a05:6830:1e65:: with SMTP id m5mr13647806otr.41.1572442173786;
+        Wed, 30 Oct 2019 06:29:33 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u1sm9804oie.37.2019.10.30.06.29.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 06:29:33 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 08:29:32 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Rob Herring <rob.e.herring@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [RFC][PATCH 1/3] dt-bindings: dma-buf: heaps: Describe CMA
+ regions to be added to dmabuf heaps interface.
+Message-ID: <20191030132932.GA7292@bogus>
+References: <20191025225009.50305-1-john.stultz@linaro.org>
+ <20191025225009.50305-2-john.stultz@linaro.org>
+ <CAC=3eda3sCMjCQbFX2Y0-6iVt-YRR7P_Y1ksJOsLw9CmJJRxbA@mail.gmail.com>
+ <CALAqxLXG8LrWAQevEyj7BJ00CiAkodfgFMdCbuMRucO5w5yhKg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SL2P216MB018746C15E0262862D428C1480600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CALAqxLXG8LrWAQevEyj7BJ00CiAkodfgFMdCbuMRucO5w5yhKg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 01:22:44PM +0000, Nicholas Johnson wrote:
-> On Wed, Oct 30, 2019 at 02:07:05PM +0200, mika.westerberg@linux.intel.com wrote:
-> > On Tue, Oct 29, 2019 at 03:29:21PM +0000, Nicholas Johnson wrote:
-> > > Remove checks for resource size in extend_bridge_window(). This is
-> > > necessary to allow the pci_bus_distribute_available_resources() to
-> > > function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-> > > allocate resources. Because the kernel parameter sets the size of all
-> > > hotplug bridges to be the same, there are problems when nested hotplug
-> > > bridges are encountered. Fitting a downstream hotplug bridge with size X
-> > > and normal bridges with non-zero size Y into parent hotplug bridge with
-> > > size X is impossible, and hence the downstream hotplug bridge needs to
-> > > shrink to fit into its parent.
-> > > 
-> > > Add check for if bridge is extended or shrunken and adjust pci_dbg to
-> > > reflect this.
-> > > 
-> > > Reset the resource if its new size is zero (if we have run out of a
-> > > bridge window resource) to prevent the PCI resource assignment code from
-> > > attempting to assign a zero-sized resource.
-> > > 
-> > > Rename extend_bridge_window() to adjust_bridge_window() to reflect the
-> > > fact that the window can now shrink.
-> > > 
-> > > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > > ---
-> > >  drivers/pci/setup-bus.c | 23 +++++++++++++++--------
-> > >  1 file changed, 15 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > > index fe8b2c715..f8cd54584 100644
-> > > --- a/drivers/pci/setup-bus.c
-> > > +++ b/drivers/pci/setup-bus.c
-> > > @@ -1814,7 +1814,7 @@ void __init pci_assign_unassigned_resources(void)
-> > >  	}
-> > >  }
-> > >  
-> > > -static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
-> > > +static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
-> > >  				 struct list_head *add_list,
-> > >  				 resource_size_t new_size)
-> > >  {
-> > > @@ -1823,13 +1823,20 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
-> > >  	if (res->parent)
-> > >  		return;
-> > >  
-> > > -	if (resource_size(res) >= new_size)
-> > > -		return;
-> > > +	if (new_size > resource_size(res)) {
-> > > +		add_size = new_size - resource_size(res);
-> > > +		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-> > > +			&add_size);
-> > > +	} else if (new_size < resource_size(res)) {
-> > > +		add_size = resource_size(res) - new_size;
-> > > +		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-> > > +			&add_size);
-> > > +	}
-> > 
-> > Do we need to care about new_size == resource_size(res)?
-> Sorry, I skipped over this before re-posting. If we are not changing the 
-> size, does it need to be logged in pci_dbg? I could change it to ">=", 
-> meaning if the size does not change then it will be "extended" by 0 in 
-> pci_dbg.
+On Fri, Oct 25, 2019 at 04:55:35PM -0700, John Stultz wrote:
+> On Fri, Oct 25, 2019 at 4:32 PM Rob Herring <rob.e.herring@gmail.com> wrote:
+> >
+> > On Fri, Oct 25, 2019 at 5:51 PM John Stultz <john.stultz@linaro.org> wrote:
+> > >
+> > > This binding specifies which CMA regions should be added to the
+> > > dmabuf heaps interface.
+> >
+> > Is this an ION DT binding in disguise? I thought I killed that. ;)
 > 
-> Let me know if you wish for this to happen. But I am easy either way.
+> Maybe? I may not have been paying attention back then.  :)
+> 
+> > > +Example:
+> > > +This example has a camera CMA node in reserved memory, which is then
+> > > +referenced by the dmabuf-heap-cma node.
+> > > +
+> > > +
+> > > +       reserved-memory {
+> > > +               #address-cells = <2>;
+> > > +               #size-cells = <2>;
+> > > +               ranges;
+> > > +               ...
+> > > +               cma_camera: cma-camera {
+> > > +                       compatible = "shared-dma-pool";
+> > > +                       reg = <0x0 0x24C00000 0x0 0x4000000>;
+> > > +                       reusable;
+> > > +               };
+> > > +               ...
+> > > +       };
+> > > +
+> > > +       cma_heap {
+> > > +               compatible = "dmabuf-heap-cma";
+> > > +               memory-region = <&cma_camera>;
+> >
+> > Why the indirection here? Can't you just add a flag property to
+> > reserved-memory nodes like we do to flag CMA nodes?
+> 
+> Happy to try. Do you mean like with the "reuasable" tag?  Or more like
+> the "linux,cma-default" tag?
 
-No need.
+Probably like "linux,cma-default" as it is a hint for who to manage it 
+rather than a characteristic of the region.
+ 
+> Do you have a preference for the flag name here?
 
-> If you are fine with how it is, PATCH v10 should have addressed 
-> everything so far.
+Not really.
 
-Yes, v10 looks fine by me.
+
+> > As I suspected, it's because in patch 2 you're just abusing DT to
+> > instantiate platform devices. We already support binding drivers to
+> > reserved-memory nodes directly.
+> 
+> Sorry, one of those "when all you know how to do is hammer, everything
+> looks like a nail" issues.
+> Is there a specific example for binding drivers to reserved-memory
+> nodes I can try to follow?
+
+ramoops and I think there's a QCom driver.
+
+Rob
