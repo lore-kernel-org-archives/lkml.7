@@ -2,145 +2,163 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879BDCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE74CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDB92080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6125C2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:47:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rTgsJpzW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GsSorIn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfJ3Mph (ORCPT
+        id S1726538AbfJ3MrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:45:37 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42610 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfJ3Mpg (ORCPT
+        Wed, 30 Oct 2019 08:47:19 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50706 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfJ3MrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:45:36 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z12so1439170lfj.9
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 05:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z/lBvgj2tEa3ewK9stecrJwWbqYMjUJzw11XHWG5FOU=;
-        b=rTgsJpzWI5VRDYzYA8OK+NMiiwUWn+nXQxhEXl702L+YTP/w8CrLC81P0JJEIstmBR
-         1CwT5RWxJkiYre2CpQ3vgohfeSR+vd0HmESrAN+Pc8K3Pp+ldKsr2ITBANimBtbruOqp
-         fUhw/5Pu/rRI1CsSEc/1avDvKOGppY2Pvel+6OsYVyIp4EpQ1rlJS3APYLqEY/MrQ4PJ
-         gvOlJloA0E5eSPhtgMyesfaO9SmwcFsZxjHpurmfcKYl8F7mt4tS0gGLKD2vDi3aWhPZ
-         zF8mfNYh1u7i3D+o/kdwc53E/0Fsr57dp+xD9DqF4w6uJlx8zqhDNoxTgpbYTFpqAQ+w
-         x8cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z/lBvgj2tEa3ewK9stecrJwWbqYMjUJzw11XHWG5FOU=;
-        b=aLSGDQldPPvhHbF/DJW/kyHGb3ZH1eppOF5nEg5KXU/LerW5E3rryErZsca/0dadZO
-         /Mkm3A2VGsxNNfL6b+q+k4BQahWDmo8blLPLLSEcnyin7PZKZ68S4JZNWzspmrZynimW
-         a2JRDfZDyrEmqNfoV0sQJJT7XfJIz5FReW4zg0vvlI/8PdvFqwIi8abN7hzPrWaOk5qQ
-         WIXOaqzo6K7KKuB3srHvCa9S+fljY8QOsqNl5KFx8vEo3NalOZY9p4q8XyhAencgt+cg
-         17BoNqnI1BAL+eF3IvTE/WVOuR+SxilGNhCCIx4qMb9tobNjSifmW6ispbI2T+ck47xf
-         nfBw==
-X-Gm-Message-State: APjAAAVDUskRm6hd1RZE7ujtKEN0ja9WWcZFcNAAed+E8ZCTg7naHYyC
-        zowIqqXDg2cWLlWiRd2SFksGzBpTQlF0Xo5FzgGiGg==
-X-Google-Smtp-Source: APXvYqzCnpzso0Psg3jJulXH2mRfwtdawfmefqJGiB+XfZIOBEFwhCwPfWOmE5n9Iqbz9Ejbwbc6JT9xQ6haKiRivgw=
-X-Received: by 2002:a19:3f0a:: with SMTP id m10mr6181421lfa.67.1572439534595;
- Wed, 30 Oct 2019 05:45:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190405015859.32755-1-tobin@kernel.org> <20190405015859.32755-3-tobin@kernel.org>
-In-Reply-To: <20190405015859.32755-3-tobin@kernel.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 30 Oct 2019 18:15:22 +0530
-Message-ID: <CA+G9fYsfJpXQvOvHdjtg8z4a89dSStOQZOKa9zMjjQgWKng1aw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/6] kselftest: Add test runner creation script
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wed, 30 Oct 2019 08:47:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/m49eZ61fGR01vML73iup+AhH6sl213r3BQETPC+rI8=; b=GsSorIn9gaIxPHvdTLOwabIb4
+        193uAmQXvz+BnKDc/c5VRfZsdn94yhejQHPet5n8WE8ETynBayC+6PivwlfpYHAntbwOHq7b9ZDK5
+        vRbVBWIV/GZiucp2RdIxdPf6lhT9eARpclKiOGkHWTzXLP7RA9zEWixywygwpR6VW75Mbmvxern5u
+        VgvlosCbLwqQ2VwD5/gN89eosBsOmsg7PcgLs1mzkAxmiShOzhWSfWOD2e5qhjXr0XsH9Zbxzw3s7
+        5B75/O3xvYu8Q82ObKXF1DuVZAf/CB71WkS3Ofklisw1qfl8C1n1UDETCm0kcUovVvqbsyS4MK8ds
+        io71IBiig==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPnNP-0003Yn-8d; Wed, 30 Oct 2019 12:47:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 31C7F3006D0;
+        Wed, 30 Oct 2019 13:45:58 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 61B4B2B435A44; Wed, 30 Oct 2019 13:46:59 +0100 (CET)
+Date:   Wed, 30 Oct 2019 13:46:59 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        kernel-hardening@lists.openwall.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/6] perf/x86: Add perf text poke event
+Message-ID: <20191030124659.GQ4114@hirez.programming.kicks-ass.net>
+References: <20191025130000.13032-1-adrian.hunter@intel.com>
+ <20191025130000.13032-2-adrian.hunter@intel.com>
+ <20191030104747.GA21153@leoy-ThinkPad-X240s>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030104747.GA21153@leoy-ThinkPad-X240s>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tobin,
+On Wed, Oct 30, 2019 at 06:47:47PM +0800, Leo Yan wrote:
+> Hi Adrian,
+> 
+> On Fri, Oct 25, 2019 at 03:59:55PM +0300, Adrian Hunter wrote:
+> > Record changes to kernel text (i.e. self-modifying code) in order to
+> > support tracers like Intel PT decoding through jump labels.
+> > 
+> > A copy of the running kernel code is needed as a reference point
+> > (e.g. from /proc/kcore). The text poke event records the old bytes
+> > and the new bytes so that the event can be processed forwards or backwards.
+> > 
+> > The text poke event has 'flags' to describe when the event is sent. At
+> > present the only flag is PERF_TEXT_POKE_UPDATE which indicates the
+> > point at which tools should update their reference kernel executable to
+> > change the old bytes to the new bytes.
+> > 
+> > Other architectures may wish to emit a pair of text poke events. One before
+> > and one after a text poke. In that case, PERF_TEXT_POKE_UPDATE flag would
+> > be set on only one of the pair.
+> 
+> Thanks a lot for the patch set.
+> 
+> Below is my understanding for implementation 'emit a pair of text poke
+> events' as you mentioned:
+> 
+> Since Arm64 instruction is fixed size, it doesn't need to rely on INT3
+> liked mechanism to replace instructions and directly uses two operations
+> to alter instruction (modify instruction and flush icache line).  So
+> Arm64 has no chance to send perf event in the middle of altering
+> instruction.
 
-On Fri, 5 Apr 2019 at 07:30, Tobin C. Harding <tobin@kernel.org> wrote:
->
-> Currently if we wish to use kselftest to run tests within a kernel
-> module we write a small script to load/unload and do error reporting.
-> There are a bunch of these under tools/testing/selftests/lib/ that are
-> all identical except for the test name.  We can reduce code duplication
-> and improve maintainability if we have one version of this.  However
-> kselftest requires an executable for each test.  We can move all the
-> script logic to a central script then have each individual test script
-> call the main script.
->
-> Oneliner to call kselftest_module.sh courtesy of Kees, thanks!
->
-> Add test runner creation script.  Convert
-> tools/testing/selftests/lib/*.sh to use new test creation script.
->
-> Testing
-> -------
->
-> Configure kselftests for lib/ then build and boot kernel.  Then run
-> kselftests as follows:
->
->   $ cd /path/to/kernel/tree
->   $ sudo make O=$output_path -C tools/testing/selftests TARGETS="lib" run_tests
+Right.
 
-We are missing "kselftest_module.sh" file when we do "make install"
-and followed by generating a tar file "gen_kselftest_tar.sh" and
-copying that on to target device and running tests by using
-"run_kselftest.sh" script file on the target.
+> Thus we can send pair of text poke events in the kernel:
+> 
+>   perf_event_text_poke(PERF_TEXT_POKE_UPDATE_PREV)
+> 
+>     Change instruction
+>     Flush icache
+> 
+>   perf_event_text_poke(PERF_TEXT_POKE_UPDATE_POST)
+> 
+> In the userspace, if perf tool detects the instruction is changed
+> from nop to branch,
 
-Could you install the supporting script file "kselftest_module.sh" ?
+There is _far_ more text poking than just jump_label's NOP/JMP
+transitions. Ftrace also does NOP/CALL, CALL/CALL, and the static_call
+infrastructure that I posted here:
 
-Error log,
--------------
-# selftests lib printf.sh
-lib: printf.sh_ #
-# ./printf.sh line 4 ./../kselftest_module.sh No such file or directory
-line: 4_./../kselftest_module.sh #
-[FAIL] 1 selftests lib printf.sh # exit=127
-selftests: lib_printf.sh [FAIL]
-# selftests lib bitmap.sh
-lib: bitmap.sh_ #
-# ./bitmap.sh line 3 ./../kselftest_module.sh No such file or directory
-line: 3_./../kselftest_module.sh #
-[FAIL] 2 selftests lib bitmap.sh # exit=127
-selftests: lib_bitmap.sh [FAIL]
-# selftests lib prime_numbers.sh
-lib: prime_numbers.sh_ #
-# ./prime_numbers.sh line 4 ./../kselftest_module.sh No such file or directory
-line: 4_./../kselftest_module.sh #
-[FAIL] 3 selftests lib prime_numbers.sh # exit=127
-selftests: lib_prime_numbers.sh [FAIL]
-# selftests lib strscpy.sh
-lib: strscpy.sh_ #
-# ./strscpy.sh line 3 ./../kselftest_module.sh No such file or directory
-line: 3_./../kselftest_module.sh #
-[FAIL] 4 selftests lib strscpy.sh # exit=127
-selftests: lib_strscpy.sh [FAIL]
+  https://lkml.kernel.org/r/20191007082708.013939311@infradead.org
 
-- Naresh
+Has: JMP/RET, JMP/JMP and if it has inline patching support: NOP/CALL,
+CALL/CALL, patching.
+
+Anyway, the below argument doesn't care much, it works for NOP/JMP just
+fine.
+
+> we need to update dso cache for the
+> 'PERF_TEXT_POKE_UPDATE_PREV' event; if detect the instruction is
+> changed from branch to nop, we need to update dso cache for
+> 'PERF_TEXT_POKE_UPDATE_POST' event.  The main idea is to ensure the
+> branch instructions can be safely contained in the dso file and any
+> branch samples can read out correct branch instruction.
+> 
+> Could you confirm this is the same with your understanding?  Or I miss
+> anything?  I personally even think the pair events can be used for
+> different arches (e.g. the solution can be reused on Arm64/x86, etc).
+
+So the problem we have with PT is that it is a bit-stream of
+branch taken/not-taken decisions. In order to decode that we need to
+have an accurate view of the unconditional code flow.
+
+Both NOP/JMP are unconditional and we need to exactly know which of the
+two was encountered.
+
+With your scheme, I don't see how we can ever actually know that. When
+we get the PRE event, all we really know is that we're going to change
+a specific instruction into another. And at the POST event we know it
+has been done. But in between these two events, we have no clue which of
+the two instructions is live on which CPU (two CPUs might in fact have a
+different live instruction at the same time).
+
+This means we _cannot_ unambiguously decode a taken/not-taken decision
+stream.
+
+Does CS have this same problem, and how would the PRE/POST events help
+with that?
+
+So our (x86) horrible (variable instruction length induced) complexity
+for text poking is actually in our advantage this one time. The
+exception and exception-return paths allow us to unambiguously know what
+happens around the time of poking.
