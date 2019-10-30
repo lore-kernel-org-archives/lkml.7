@@ -2,60 +2,61 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB20AC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D10CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EEC320862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFCFF20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUtTT8l4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+JGjMrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfJ3Vf0 (ORCPT
+        id S1727268AbfJ3Vfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:35:26 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33868 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfJ3Vf0 (ORCPT
+        Wed, 30 Oct 2019 17:35:30 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45945 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfJ3Vf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:35:26 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 139so4365235ljf.1;
-        Wed, 30 Oct 2019 14:35:24 -0700 (PDT)
+        Wed, 30 Oct 2019 17:35:28 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v8so2745746lfa.12;
+        Wed, 30 Oct 2019 14:35:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=89DBhMAwUuhNmjQB8YcL91mzuXL0pI6vL6Wp1D7Oo0I=;
-        b=PUtTT8l42rQSCeM0lUpdELeH2toylgMOFYH9+szuUqsilQV5G9ucXIs+tR5XT3QiQd
-         bt9U44/yhyMsJ+ng1cHaNyx2vre2ZT5CblDEKQ9mQoX8DyIe+StViWkRlOkuj+GO6jaB
-         kfSXUWSzV45WbMBWOhxuTbJKb3ctjbwq5eMLhceMQDhDYnPOW3q6mGmcgQDHzrhhGxXv
-         d5P8EEJHZWVOh9Aslm9BcmyPeLQbxmOVmh1dWrqqS8Qw1iu1wCXQkc5sMHw9bnoV0FOx
-         Pl2T3Xso/N9l8qSrhwXtEIyNb4a8RXdeiHjKw/Y6KEmA8eIFPLZzbPn7ZvTIkklR6Gx2
-         jqcQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Y0gNszD0ptBgrgfqARNo4dCfpARXgUJI1xW2pH1mNqQ=;
+        b=K+JGjMrpWis7LiqdTjrEDc0Vb4vkrIiJgpGzq8V5anTW1SLs0nOIZjQ3YiS4tFagQK
+         ZCim6N7Ja6vb12irMLpYvntQgob7oxH5jqyn5ApvTfymoP/pBmpCBWk+tGUlq+ibe3UE
+         Li17jzu4JYWaHyNoKxKB7BKnzLrO6405nNSySFiFdKrgtt460RiytltlawXyEMp1zImP
+         oFHjT/MgRAlHTLAeFNN3utd2ZFoIzO2N1FMnwg4M65zM3Qq9EA5+jq3wb3eRYxsC5fbn
+         IGeVyo2IEWBXFl9N/gCIDBJvx79LqQEigQxEftaMRtLFJDOEiPIf88LuPS2NTOXLwD+t
+         3G8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=89DBhMAwUuhNmjQB8YcL91mzuXL0pI6vL6Wp1D7Oo0I=;
-        b=GC233hFq7nNj+Nhc45PovM/PZiReatpGZ8OjPN/4sEFagSeKI0+az8ArQnpPLI1L6J
-         LUvQh9xtO6Y5iCSFCCCVWFfJhhIu1COpxRiq5AjDNSCwWQO+soYEutOuMro5jm62r1/k
-         aoMliQns+UIAiDxV1JEinNBYPXXwxEvIgMoJgknidzarCEoV8niKz27segRfNUAf/z3Q
-         9CcJ+hPTSW8llhB0zyv1MqHET8Fi0SbvUiWWRHgZX1TY3yCS6NUBz68RF4ECG98n5/Ii
-         LdeQ67JH9JHB7gY/L+pp9TtX3/IPWnaIpFtPgAbSQcexFEYXjcLtonropAlXCkWFtxr4
-         kV/A==
-X-Gm-Message-State: APjAAAXOCf8WdLQCpyiIWWdnax8AreRUDLCkJ2/R18SffZLr4x9upryW
-        zBl5+4zzNdOgOjBBpqEJTgQ=
-X-Google-Smtp-Source: APXvYqxOFUcWp3V8SD1KyAeWu5qFw9AmOlxC1ZiPWu/Tw12nQhCodH5BN9rux3m6HjnLYr8PXMwMcg==
-X-Received: by 2002:a2e:b4c1:: with SMTP id r1mr1287932ljm.203.1572471323442;
-        Wed, 30 Oct 2019 14:35:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Y0gNszD0ptBgrgfqARNo4dCfpARXgUJI1xW2pH1mNqQ=;
+        b=Tf49f7CfnhachPDmRXyz+VqEQWXSqwOdsUINWp2avUWIYJeBF8RZX6S9DIyuANunHX
+         Wnw5WHfQ2tK1Q9LcMvqVRfs2oGYRdfCwq87IR3lvARgInaOp+/G558lBiWxttE+OL/Za
+         RTTCCLWPZKLLqmPBDR7Sc+Igg6oGsMwg96KtBAC/LmPpTti1BPg4ae1ZkesRVo3O1KS9
+         TEI5ln+Cc/Z+ksRv4Atp3SPFykh4+BeYV4/vPGtmH4xaX4XGccMu0yj2zURTE1OMshln
+         17qTbtjVWPIPp7bjwi0uGTVubwpnu7Ncgo08lBZAjzi3HHUyORkr/bxfkiV6GwcAaNMn
+         /H/g==
+X-Gm-Message-State: APjAAAVfv/4V6UesHMSsS0a1rpvGw5xODRqTl5p35SpvN820mdK+HdTH
+        x28FSNeoJ1ywg3JeiRtmJ7M=
+X-Google-Smtp-Source: APXvYqwVLX27k1uSJPoQEJ8Tj9MGUe4CF2sJMA6bvZGQkGnOTDBhEMEHYJmOmqcP5bpWKXn+APqsfg==
+X-Received: by 2002:ac2:5deb:: with SMTP id z11mr252892lfq.35.1572471325864;
+        Wed, 30 Oct 2019 14:35:25 -0700 (PDT)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.22
+        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 14:35:22 -0700 (PDT)
+        Wed, 30 Oct 2019 14:35:25 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -70,10 +71,12 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Marcel Ziswiler <marcel.ziswiler@toradex.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 00/10] NVIDIA Tegra20 CPUFreq driver major update
-Date:   Thu, 31 Oct 2019 00:33:50 +0300
-Message-Id: <20191030213400.29434-1-digetx@gmail.com>
+Subject: [PATCH v3 02/10] clk: tegra: pll: Add pre/post rate-change hooks
+Date:   Thu, 31 Oct 2019 00:33:52 +0300
+Message-Id: <20191030213400.29434-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191030213400.29434-1-digetx@gmail.com>
+References: <20191030213400.29434-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,69 +84,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+There is a need to temporarily re-parent CCLK away from PLLX if PLLX's
+rate is about to change. The newly introduced PLL pre/post rate-change
+hooks allow to handle such case.
 
-This series moves intermediate-clk handling from tegra20-cpufreq into
-tegra-clk driver. This allows us to switch to generic cpufreq-dt driver
-which brings voltage scaling, per-hardware OPPs and Tegra30 support out
-of the box. All boards need to adopt CPU OPPs in their device-trees in
-order to get cpufreq support.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/clk/tegra/clk-pll.c | 12 +++++++++++-
+ drivers/clk/tegra/clk.h     |  6 ++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-Changelog:
-
-v3: - The "Add custom CCLK implementation" patch was updated in accordance
-      to the comments from Peter De Schrijver. We will not use the clock
-      skipper.
-
-    - Re added OPPs for T30 Beaver board because Thierry has that board ;)
-
-    - Added r-b for the "DT binding" patch from Rob Herring.
-
-v2: - Kept modularity of the tegra20-cpufreq as was requested by Viresh Kumar
-      in a review comment to v1.
-
-    - Added acks from Viresh Kumar.
-
-    - Added tested-by from Nicolas Chauvet to the "trimslice" patch.
-      Nicolas told me on IRC that it works fine.
-
-    - Fixed compilation of the "Add custom CCLK implementation" patch. The
-      error happened because v1 was based on top of yet unreviewed/unapplied
-      patch "clk: tegra: divider: Support enable-bit for Super clocks". Thanks
-      to Peter Geis for reporting the problem.
-
-    - Replaced Tegra30 "beaver" board with "cardhu-a04" because turned out
-      that's what NVIDIA uses in the testing farm.
-
-Dmitry Osipenko (10):
-  clk: tegra: Add custom CCLK implementation
-  clk: tegra: pll: Add pre/post rate-change hooks
-  clk: tegra: cclk: Add helpers for handling PLLX rate changes
-  clk: tegra20: Support custom CCLK implementation
-  clk: tegra30: Support custom CCLK implementation
-  dt-bindings: cpufreq: Add binding for NVIDIA Tegra20/30
-  cpufreq: tegra20: Use generic cpufreq-dt driver (Tegra30 supported
-    now)
-  ARM: tegra: Create tegra20-cpufreq platform device on Tegra30
-  ARM: dts: tegra30: beaver: Set up voltage regulators for DVFS
-  ARM: dts: tegra30: beaver: Add CPU Operating Performance Points
-
- .../cpufreq/nvidia,tegra20-cpufreq.txt        |  56 +++++
- arch/arm/boot/dts/tegra30-beaver.dts          |  40 +++-
- arch/arm/mach-tegra/tegra.c                   |   4 +
- drivers/clk/tegra/Makefile                    |   1 +
- drivers/clk/tegra/clk-pll.c                   |  12 +-
- drivers/clk/tegra/clk-tegra-super-cclk.c      | 210 +++++++++++++++++
- drivers/clk/tegra/clk-tegra20.c               |   7 +-
- drivers/clk/tegra/clk-tegra30.c               |   6 +-
- drivers/clk/tegra/clk.h                       |  19 +-
- drivers/cpufreq/Kconfig.arm                   |   6 +-
- drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
- drivers/cpufreq/tegra20-cpufreq.c             | 211 +++++-------------
- 12 files changed, 400 insertions(+), 174 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
- create mode 100644 drivers/clk/tegra/clk-tegra-super-cclk.c
-
+diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+index 531c2b3d814e..0b212cf2e794 100644
+--- a/drivers/clk/tegra/clk-pll.c
++++ b/drivers/clk/tegra/clk-pll.c
+@@ -744,13 +744,19 @@ static int _program_pll(struct clk_hw *hw, struct tegra_clk_pll_freq_table *cfg,
+ 
+ 	state = clk_pll_is_enabled(hw);
+ 
++	if (state && pll->params->pre_rate_change) {
++		ret = pll->params->pre_rate_change();
++		if (WARN_ON(ret))
++			return ret;
++	}
++
+ 	_get_pll_mnp(pll, &old_cfg);
+ 
+ 	if (state && pll->params->defaults_set && pll->params->dyn_ramp &&
+ 			(cfg->m == old_cfg.m) && (cfg->p == old_cfg.p)) {
+ 		ret = pll->params->dyn_ramp(pll, cfg);
+ 		if (!ret)
+-			return 0;
++			goto done;
+ 	}
+ 
+ 	if (state) {
+@@ -772,6 +778,10 @@ static int _program_pll(struct clk_hw *hw, struct tegra_clk_pll_freq_table *cfg,
+ 		pll_clk_start_ss(pll);
+ 	}
+ 
++done:
++	if (state && pll->params->post_rate_change)
++		pll->params->post_rate_change();
++
+ 	return ret;
+ }
+ 
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index ee35a847df08..fa18bef914af 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -266,6 +266,10 @@ struct tegra_clk_pll;
+  *				disabled.
+  * @dyn_ramp:			Callback which can be used to define a custom
+  *				dynamic ramp function for a given PLL.
++ * @pre_rate_change:		Callback which is invoked just before changing
++ *				PLL's rate.
++ * @post_rate_change:		Callback which is invoked right after changing
++ *				PLL's rate.
+  *
+  * Flags:
+  * TEGRA_PLL_USE_LOCK - This flag indicated to use lock bits for
+@@ -342,6 +346,8 @@ struct tegra_clk_pll_params {
+ 	void	(*set_defaults)(struct tegra_clk_pll *pll);
+ 	int	(*dyn_ramp)(struct tegra_clk_pll *pll,
+ 			struct tegra_clk_pll_freq_table *cfg);
++	int	(*pre_rate_change)(void);
++	void	(*post_rate_change)(void);
+ };
+ 
+ #define TEGRA_PLL_USE_LOCK BIT(0)
 -- 
 2.23.0
 
