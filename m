@@ -2,88 +2,85 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60A4CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA5ECA9EC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BF22086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FFB12086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572396817;
-	bh=CiN8+uBGBBbTGDNsi2Hq3KM6FLtlK9d7Wva0KwIc9AE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nwJaTBcwxORdlFGk2PwlGwVxw/Lp/qM0/7XfL3xjk53ncSrqIUmOsYSCNOsalOTFQ
-	 7GhfD0oTvhNcsdbXlYEXbmDu4LphAWWkcRHbjF9o4CS6zO16v8nraxroreNOnfYPRU
-	 PK0XYqgRGJWJrnBKHFpPO2WejgZBP3tLn7BHqYmI=
+	s=default; t=1572396903;
+	bh=tFF8Zjgmu+WIIlTlxCMd0FFO5WyZqnXX4sv24/2yUUc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lgssVwoHcjG+Cq/FzWwOMLgirMWsdq3txpbxgoLuzNv9NKIGzZNK+Cy6SbL2DutFk
+	 AX7Ps8J4f8esl22k7YhCU/2poFCshb4qnazWx5MqM1qsf99ATJnpCv5AMBQLWzY4Ux
+	 WOA1KwqSFuVNwqv4ooyJ+9hUYhdJ/Wr4bE/atfvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfJ3Axg (ORCPT
+        id S1726684AbfJ3AzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 20:53:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51598 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 20:55:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726076AbfJ3Axf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 20:53:35 -0400
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
+        id S1726108AbfJ3AzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 20:55:02 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A898320862;
-        Wed, 30 Oct 2019 00:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A43E220862;
+        Wed, 30 Oct 2019 00:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572396815;
-        bh=CiN8+uBGBBbTGDNsi2Hq3KM6FLtlK9d7Wva0KwIc9AE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f6X+5fgpK5x5cJvSZ6A3HfkeIYsIcBMFlK4k1FonoDO9lwlgatFeb/YO50HwKQmVm
-         jrAvuv3CwkdD2EaURvLvWNkF9SyJZwUc0j+9XJkNAdje7SEH/dVmF7w0FUcO3mKiVv
-         pZXTiaQxmaw+BxhX3CIAZkdPj5V3mvHWxRnyL7S0=
-Date:   Wed, 30 Oct 2019 09:53:27 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH v2] nvme: Add hardware monitoring support
-Message-ID: <20191030005327.GC15332@redsun51.ssa.fujisawa.hgst.com>
-References: <20191029223214.18889-1-linux@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029223214.18889-1-linux@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        s=default; t=1572396900;
+        bh=tFF8Zjgmu+WIIlTlxCMd0FFO5WyZqnXX4sv24/2yUUc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=z6JxpYIAXwYaitOroIOgVkFFJ+fD7w974Y/gOcL+K9o7d1P1lWTu08tW16aKNpUvw
+         y+t/MUhPzHfbuARnFWHe6PZgDfV3SiJMRkW2/CE4taPh37lj9lpTCJutLLoo1fzGnY
+         M/E0EaPON/9wkaV7L85UXF+LEpMHvI7mmNWumlTY=
+Date:   Tue, 29 Oct 2019 17:54:59 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Greg Thelen <gthelen@google.com>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com
+Subject: Re: [PATCH] mm: vmscan: memcontrol: remove
+ mem_cgroup_select_victim_node()
+Message-Id: <20191029175459.b3bfed9326559e69acdd2e35@linux-foundation.org>
+In-Reply-To: <20191029234753.224143-1-shakeelb@google.com>
+References: <20191029234753.224143-1-shakeelb@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 03:32:14PM -0700, Guenter Roeck wrote:
-> nvme devices report temperature information in the controller information
-> (for limits) and in the smart log. Currently, the only means to retrieve
-> this information is the nvme command line interface, which requires
-> super-user privileges.
-> 
-> At the same time, it would be desirable to use NVME temperature information
-> for thermal control.
-> 
-> This patch adds support to read NVME temperatures from the kernel using the
-> hwmon API and adds temperature zones for NVME drives. The thermal subsystem
-> can use this information to set thermal policies, and userspace can access
-> it using libsensors and/or the "sensors" command.
-> 
-> Example output from the "sensors" command:
-> 
-> nvme0-pci-0100
-> Adapter: PCI adapter
-> Composite:    +39.0°C  (high = +85.0°C, crit = +85.0°C)
-> Sensor 1:     +39.0°C
-> Sensor 2:     +41.0°C
-> 
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+On Tue, 29 Oct 2019 16:47:53 -0700 Shakeel Butt <shakeelb@google.com> wrote:
 
-This looks fine to me, but I'll wait a few more days to see if there are
-any additional comments..
+> Since commit 1ba6fc9af35b ("mm: vmscan: do not share cgroup iteration
+> between reclaimers"), the memcg reclaim does not bail out earlier based
+> on sc->nr_reclaimed and will traverse all the nodes. All the reclaimable
+> pages of the memcg on all the nodes will be scanned relative to the
+> reclaim priority. So, there is no need to maintain state regarding which
+> node to start the memcg reclaim from. Also KCSAN complains data races in
+> the code maintaining the state.
+> 
+> This patch effectively reverts the commit 889976dbcb12 ("memcg: reclaim
+> memory from nodes in round-robin order") and the commit 453a9bf347f1
+> ("memcg: fix numa scan information update to be triggered by memory
+> event").
+> 
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> Reported-by: <syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com>
+
+I can't find the original sysbot email.  Help?
+
+iirc the incidentally-fixed issue is a rather theoretical data race and
+the patch isn't a high priority thing?
+
