@@ -6,88 +6,69 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23253CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286A4CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC86520874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F220B2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfJ3I6E (ORCPT
+        id S1726128AbfJ3JBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:58:04 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:51365 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726032AbfJ3I6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:58:03 -0400
-Received: from [10.17.212.211] (unknown [195.37.61.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 50FA820225AEB;
-        Wed, 30 Oct 2019 09:58:00 +0100 (CET)
-Subject: Re: load_uefi_certs: Couldn't get size: 0x800000000000000e
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-To:     Josh Boyer <jwboyer@fedoraproject.org>
-Cc:     linux-security-module@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <3f48aab2-7d8e-ee9b-c362-3b7f84609abe@molgen.mpg.de>
-Message-ID: <b22a8c89-c843-f688-a723-df93430b6382@molgen.mpg.de>
-Date:   Wed, 30 Oct 2019 09:57:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 05:01:11 -0400
+Received: from latin.grep.be ([46.4.76.168]:37371 "EHLO latin.grep.be"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfJ3JBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:01:10 -0400
+X-Greylist: delayed 1254 seconds by postgrey-1.27 at vger.kernel.org; Wed, 30 Oct 2019 05:01:09 EDT
+Received: from [105.12.0.33] (helo=gangtai.home.grep.be)
+        by latin.grep.be with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <w@uter.be>)
+        id 1iPjWW-0005Cf-Be; Wed, 30 Oct 2019 09:40:12 +0100
+Received: from wouter by gangtai.home.grep.be with local (Exim 4.92.3)
+        (envelope-from <w@uter.be>)
+        id 1iPjWH-0006qB-RE; Wed, 30 Oct 2019 10:39:57 +0200
+Date:   Wed, 30 Oct 2019 10:39:57 +0200
+From:   Wouter Verhelst <w@uter.be>
+To:     "Richard W.M. Jones" <rjones@redhat.com>
+Cc:     Mike Christie <mchristi@redhat.com>,
+        syzbot <syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com>,
+        axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: INFO: task hung in nbd_ioctl
+Message-ID: <20191030083957.GD25097@grep.be>
+References: <000000000000b1b1ee0593cce78f@google.com>
+ <5D93C2DD.10103@redhat.com>
+ <20191017140330.GB25667@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <3f48aab2-7d8e-ee9b-c362-3b7f84609abe@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017140330.GB25667@redhat.com>
+X-Speed: Gates' Law: Every 18 months, the speed of software halves.
+Organization: none
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Josh,
+On Thu, Oct 17, 2019 at 03:03:30PM +0100, Richard W.M. Jones wrote:
+> On Tue, Oct 01, 2019 at 04:19:25PM -0500, Mike Christie wrote:
+> > Hey Josef and nbd list,
+> > 
+> > I had a question about if there are any socket family restrictions for nbd?
+> 
+> In normal circumstances, in userspace, the NBD protocol would only be
+> used over AF_UNIX or AF_INET/AF_INET6.
 
+Note that someone once also did work to make it work over SCTP. I
+incorporated the patch into nbd-client and nbd-server, but never
+actually tested it myself. I have no way of knowing if it even still
+works anymore...
 
-On 04.10.19 14:24, Paul Menzel wrote:
+[...]
+-- 
+To the thief who stole my anti-depressants: I hope you're happy
 
-> On a Dell Latitude E7250 with a self-built Linux 5.4-rc1 the error message
-> below is printed on the screen.
-> 
->      [    0.658664] Couldn't get size: 0x800000000000000e
-> 
-> Here are the message from the ring buffer (`dmesg`).
-> 
-> ```
-> [    0.658329] calling  load_uefi_certs+0x0/0x217 @ 1
-> [    0.658472] integrity: Loading X.509 certificate: UEFI:db
-> [    0.658544] integrity: Loaded X.509 cert 'Microsoft Windows Production PCA 2011: a92902398e16c49778cd90f99e4f9ae17c55af53'
-> [    0.658545] integrity: Loading X.509 certificate: UEFI:db
-> [    0.658606] integrity: Loaded X.509 cert 'Microsoft Corporation UEFI CA 2011: 13adbf4309bd82709c8cd54f316ed522988a1bd4'
-> [    0.658664] Couldn't get size: 0x800000000000000e
-> [    0.658689] Couldn't get UEFI MokListRT
-> [    0.658768] initcall load_uefi_certs+0x0/0x217 returned 0 after 426 usecs
-> ```
-> 
-> Could this error message be improved, to give the user a hint, what is wrong,
-> what the consequences are, and what should be done?
-> 
-> Should the message below be `pr_error`, and the other error debug?
-> 
->      pr_info("Couldn't get UEFI MokListRT\n");
-> 
-> Please find the Linux messages and (`make savedefconfig`) configuration
-> attached.
-> 
-> Do you know more about the reason, and if the Linux code can handle it more
-> gracefully?
-> 
-> Commit 15ea0e1e (efi: Import certificates from UEFI Secure Boot) was already
-> added in Linux 5.0, and I do not remember seeing it with Debian’s default
-> Linux kernel. No idea, what is configured differently, or I just missed it.
-
-I am still getting this with Linux 5.4-rc5.
-
-
-Kind regards,
-
-Paul
+  -- seen somewhere on the Internet on a photo of a billboard
