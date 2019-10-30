@@ -2,119 +2,188 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F1CCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7722CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140DA20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB46520874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/kASAQN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C28IGoYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbfJ3V7C (ORCPT
+        id S1727408AbfJ3WAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:59:02 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40179 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbfJ3V7B (ORCPT
+        Wed, 30 Oct 2019 18:00:49 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35191 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfJ3WAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:59:01 -0400
-Received: by mail-lj1-f195.google.com with SMTP id u22so4388351lji.7;
-        Wed, 30 Oct 2019 14:58:59 -0700 (PDT)
+        Wed, 30 Oct 2019 18:00:49 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l10so4065659wrb.2;
+        Wed, 30 Oct 2019 15:00:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3PTvruMyJudl8KIl7cB1h1Hs9ux7BvolUSo2ebbahMc=;
-        b=J/kASAQNnXbwLD/iXj8zuYKLlj+95pio3K1ygpMtBqiXjVyW1pjEmsqb0pBe+6z8or
-         23WZPac7j+FVjwj82qUV4YlgnPXmQzwcjtce4sGqHpWDI021jGHvYRFFWBr8+aBv7vaI
-         /Cp/M9QpBwlNhIsDXEVKlOyv6nAugClAQ8TvjoJFnXGd4aj8NoWzrNznQ6w2qTt0aFBT
-         mHpO6G6/3xVEFwaJ/7CUPd6F9JTcipXYdNho5Z+CNEGgmMLiXMaXPax5oAgsdHLdkNZM
-         E78J8+HWybh+USRxKpPs5vLDYk6qYHk/t6QyNvFdUlia7SWhdcCi7SjSO9mHB0IgR32k
-         tEAg==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=puPnnpE6ZsR/xBwG7v5EJGpjm01NA7rreHLssAdLjbE=;
+        b=C28IGoYiOT/xjEWLTtfGsJ8fzMcS/+GYGcaJu5/gDMhmnMIs/4W+w10NtVPa5a6tPe
+         wjU69Z1nOcemexLP26ffyfI4TmpJ7xMIYSYjEGZXg3+wIZE9V4VhaP0jVMjTkTiP3A/4
+         rBWsQgZR0Th/XKkReWJ4/oznxtN0toddhj7tulXpIuOJoHWK1MW6C6eyYjwyQHijNgGN
+         FdYPleo1doIxTUdjQlp4R0/hIhE44rD+nW5vhUPsnWTJx6pz8yiwCnPtGKXjkpQpYayS
+         tUpXlEDlMPU32ylbHE9BoZ/gnm5QJhodhrS84v0bZhCRxDUKNvbBQ/mvnNYF7suuj8eh
+         E8Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3PTvruMyJudl8KIl7cB1h1Hs9ux7BvolUSo2ebbahMc=;
-        b=jFsfNwYqttmcpIJHRr+yIxjna8lt7XJe7JlX/QF3gUXEb6YXrHHVOq0h/wGciy2K7e
-         CYEoRPJfL3SZGUfpxyB9lM+XjtJ92121D+OhBJZuEeMSrobAllkr21IGDsUDNaDgF8jj
-         IbPKXb8NBTvNoGUJE6YgToEfLnI4Yc3rdsEsjhtFiquNagl7DIaYNT/LpAnaGaEHTtiT
-         KSc5tIJwsCbGLm1ehkD0SBJ6PPDJ3y4mgpYI7n29JfdsQtfgqCxT9N7ct9Lxxpa89W+l
-         Knq8h14mBiCKY612K7S4MfWhJcmNnnpkmZysms5JafLEMwqmU4qp4D0fCf4+2MYppExU
-         L0qg==
-X-Gm-Message-State: APjAAAVaSNligRA1ayg6cjlOyCzfvR+d0n5TVVZjheXmZhIcDtjXFzbD
-        6Gy/szTVmI+pU8ciwEXNL9M=
-X-Google-Smtp-Source: APXvYqyqTI9sAZowqVntg9lV7gOzQ/W2frzM85pFu9EjT/g3St3eAIDRSJrFSyusJ2E6OFXKSHXcFQ==
-X-Received: by 2002:a2e:6c0b:: with SMTP id h11mr1334976ljc.76.1572472738672;
-        Wed, 30 Oct 2019 14:58:58 -0700 (PDT)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id 9sm429988ljf.21.2019.10.30.14.58.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 14:58:58 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=puPnnpE6ZsR/xBwG7v5EJGpjm01NA7rreHLssAdLjbE=;
+        b=IgJLmIQhVaTjSPHt9H3+t6P6wqvoBnCfSb5hECMo8jX8/AJTm3mGM5mNNdE3dVwkKD
+         LUtCfVJ/S5l2UwQnLK2hBj3VRAPmEu+JH5fs4ytD/Lm1uHRjTWBZJ8wdwkI3ki4BVQAI
+         m7Yn/hbd9Amb/bwSBFspNHP0gP18jIpvmsmkfta3Gv5rIK8tsms+4hv/G//+IbNGj3xM
+         9DlnOP8e8aKZNO/1jQvQRlMHYCLtQRWZ3ihPyZ3i0aDifdX4R4sckUecN6/RXaEqs5UP
+         qppCN845ZeXDPg/o3XmbZnjxqn+0o6erRwKMEYMwf2EUntq4ijEUDLCNZiFnxTlhPZS7
+         73/Q==
+X-Gm-Message-State: APjAAAUvw6Ia4KPjmrDArUUqletXbBYNFPCzeHAmFhGQe+aMvs43aiae
+        9Aoa/Iut2tFtr4okNvYwhIUZqHVQ
+X-Google-Smtp-Source: APXvYqweb2MeGgmLCBl557QgXr3gFDdrHZHqneMgquwkpJe5Vuv+LE1AR6XWvfKx7ZI/yNlGFR395g==
+X-Received: by 2002:adf:b603:: with SMTP id f3mr2037288wre.306.1572472845743;
+        Wed, 30 Oct 2019 15:00:45 -0700 (PDT)
+Received: from [192.168.1.19] (bkv74.neoplus.adsl.tpnet.pl. [83.28.189.74])
+        by smtp.gmail.com with ESMTPSA id r13sm1963929wra.74.2019.10.30.15.00.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 15:00:45 -0700 (PDT)
+Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     Dan Murphy <dmurphy@ti.com>, kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, pavel@ucw.cz, linux-leds@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] clk: tegra20/30: Explicitly set parent clock for Video Decoder
-Date:   Thu, 31 Oct 2019 00:58:27 +0300
-Message-Id: <20191030215827.15533-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191030215827.15533-1-digetx@gmail.com>
-References: <20191030215827.15533-1-digetx@gmail.com>
+References: <20191028183629.11779-7-dmurphy@ti.com>
+ <201910302027.2hNdR993%lkp@intel.com>
+ <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
+ <075c9330-a9b5-1360-4447-71a4797553a9@gmail.com>
+ <f32e2063-3c56-607c-0e74-f75f68e62e16@ti.com>
+ <b50fa8f6-1a27-ad22-d4a7-37bc07fc6768@gmail.com>
+ <6b64d284-0854-4143-6cd8-2b07ac268e5e@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <d2d42ff8-bda3-ff32-6163-a7d2122e3441@gmail.com>
+Date:   Wed, 30 Oct 2019 23:00:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <6b64d284-0854-4143-6cd8-2b07ac268e5e@ti.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VDE parent won't be changed automatically to PLLC if bootloader
-didn't do that for us, hence let's explicitly set the parent for
-consistency.
+Dan,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clk/tegra/clk-tegra20.c | 2 +-
- drivers/clk/tegra/clk-tegra30.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On 10/30/19 9:55 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 10/30/19 3:50 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 10/30/19 9:23 PM, Dan Murphy wrote:
+>>> Jacek
+>>>
+>>>
+>>>>> Does not appear here
+>>>>>
+>>>>> Finally not sure why the MIPS compiler is complaining about this
+>>>>> but the
+>>>>> ARM and x86 is not
+>>>> Compilation breaks also for ARM.
+>>> Thanks for the information.
+>>>
+>>> I am not seeing this issue or even a warning when using the ARM 8.3
+>>> toolchain even in a clean build.
+>>>
+>>> arm-linux-gnueabihf-gcc (GNU Toolchain for the A-profile Architecture
+>>> 8.3-2019.03 (arm-rel-8.36)) 8.3.0
+>>>
+>>> So is a bug in this toolchain?
+>>  From what I've just googled C specification allows for a compiler
+>> implementation to accept also other forms of constants expressions
+>> than standard ones pointed out in the spec.
+>>
+>> So this is not necessarily a bug.
+>>
+> OK.  Well I will try to repo with the above instructions.  And wait till
+> Friday for any other comments.  If I get no other comments I will make
+> the couple of changes and then post v16.
 
-diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
-index 0d6441621989..abc6a2bc828a 100644
---- a/drivers/clk/tegra/clk-tegra20.c
-+++ b/drivers/clk/tegra/clk-tegra20.c
-@@ -1051,7 +1051,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
- 	{ TEGRA20_CLK_HOST1X, TEGRA20_CLK_PLL_C, 150000000, 0 },
- 	{ TEGRA20_CLK_GR2D, TEGRA20_CLK_PLL_C, 300000000, 0 },
- 	{ TEGRA20_CLK_GR3D, TEGRA20_CLK_PLL_C, 300000000, 0 },
--	{ TEGRA20_CLK_VDE, TEGRA20_CLK_CLK_MAX, 300000000, 0 },
-+	{ TEGRA20_CLK_VDE, TEGRA20_CLK_PLL_C, 300000000, 0 },
- 	/* must be the last entry */
- 	{ TEGRA20_CLK_CLK_MAX, TEGRA20_CLK_CLK_MAX, 0, 0 },
- };
-diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
-index 8146cc49ca3b..43b94175ff33 100644
---- a/drivers/clk/tegra/clk-tegra30.c
-+++ b/drivers/clk/tegra/clk-tegra30.c
-@@ -1258,7 +1258,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
- 	{ TEGRA30_CLK_GR3D, TEGRA30_CLK_PLL_C, 300000000, 0 },
- 	{ TEGRA30_CLK_GR3D2, TEGRA30_CLK_PLL_C, 300000000, 0 },
- 	{ TEGRA30_CLK_PLL_U, TEGRA30_CLK_CLK_MAX, 480000000, 0 },
--	{ TEGRA30_CLK_VDE, TEGRA30_CLK_CLK_MAX, 600000000, 0 },
-+	{ TEGRA30_CLK_VDE, TEGRA30_CLK_PLL_C, 600000000, 0 },
- 	{ TEGRA30_CLK_SPDIF_IN_SYNC, TEGRA30_CLK_CLK_MAX, 24000000, 0 },
- 	{ TEGRA30_CLK_I2S0_SYNC, TEGRA30_CLK_CLK_MAX, 24000000, 0 },
- 	{ TEGRA30_CLK_I2S1_SYNC, TEGRA30_CLK_CLK_MAX, 24000000, 0 },
+I confirm that with arm-unknown-linux-gnueabi-gcc just built with
+crosstool-NG 1.24.0 I don't observe the issue either.
+
+Previously I used quite old gcc 5.2 or so.
+
 -- 
-2.23.0
-
+Best regards,
+Jacek Anaszewski
