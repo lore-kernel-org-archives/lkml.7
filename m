@@ -2,125 +2,92 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B2CCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44041CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C232820856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA4820873
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:54:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbchFVgC"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jbIvggOI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfJ3Vx6 (ORCPT
+        id S1727399AbfJ3VyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:53:58 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43461 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfJ3Vx5 (ORCPT
+        Wed, 30 Oct 2019 17:54:08 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39635 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfJ3VyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:53:57 -0400
-Received: by mail-lj1-f196.google.com with SMTP id s4so4354637ljj.10;
-        Wed, 30 Oct 2019 14:53:55 -0700 (PDT)
+        Wed, 30 Oct 2019 17:54:08 -0400
+Received: by mail-qk1-f196.google.com with SMTP id 15so4543561qkh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 14:54:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LrhIzqAOKcThSWpXVPxHX0ADaa3rzHyxkRuOfbx8IPw=;
-        b=YbchFVgC3wpZUXEOaMjzcmtOkpjJhy86/i2w94hoelj0CeW162PV5eSTZQkTAhGhlB
-         JqQjSktlo0xAfY5Kt+dXooEoFGxXdN7bbDFGq9ez3f8ENcl2vlNjMkRL4rL3Shsq/WlC
-         5pIWipHRmxfwKr/TicnFRPNmV+plo7Ni6fS0m0nLvx09gkNOMg6qMYoddymOgI4NvYmt
-         SZE3O/muI+uHvUNRQk+MD/Nds/hvXJa5zzcMhi//I/k/4LwIkg8h9/b0lHZnrOSAkCX1
-         kMw7Sj+cMJJVZhZj5IW/GmIytVR6CEHXEcWxzLtdGsFzX2Sf0LBiKJTlq58aHyV1Ahyq
-         HOcA==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=41dVk3HlaKb/dFjB8UnWPeItSsHUeTbp2B9Q6WI0tdI=;
+        b=jbIvggOIeT93+HYPaTBumtry7oeGFtRGRR/RJZ//h55U0bXJOWNKOfcHnZsH8nOSWl
+         ijjgihsoEFCZxaBjB/0RnqYBI1yXeuE4KsNREA7rDgbLcUukvlHQ7BiuLh8SnlAIY1Zj
+         2teTt4r/7ljvLvpSxEbw21SmAMMe7xfYuqcf+z+bLbkEaCoF5KcFLv+vipKztqVqk2UR
+         Fi0fMP14X7hf0Gl/7+UWABKMNrv18W5BFb/b9DVRJLD0CPzz44FiXlPDuwKMfz7KUOZg
+         uGZIN1nJUZM0Wxck74k4CocTGv72D/HSth4B9ilouuvO2SdGzq1j3ykuB6nPpkCaeT/l
+         n6UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LrhIzqAOKcThSWpXVPxHX0ADaa3rzHyxkRuOfbx8IPw=;
-        b=L0BhTtmSO7QWlJre6jwQWav7WhExZZKFZoLum5/hwErTKR5Z58XNYy22074u8E5C0F
-         uOL2gnertT62OQAx6z1b2QDw7QIvn31m0HCyKwU/GJwo2weTow4o8JsalxLGlSOZHXJN
-         YczeK1vOlido3X8fsHSVZ8qieCBSmLwgoFJz0fe8FJdqclhmT95UMaOeDzC/wLQo9wJf
-         o99by3y9cwNcZoNRfBCgQYnRBNEfjcIEsQYPrg1XR32Zm5kIyPtjCHcNbmrZHbgaljCc
-         StTi3iNXCWo0eeQaftebdmAlbzvQbc8cqSqKeBRfqROuv2tGGaLWZLZYN5CtZGKRCiLA
-         6aLg==
-X-Gm-Message-State: APjAAAX0Wwp1etrrzFp/zqL8aVskqL4a8w0jXW2bRczJdBlK3XW0vcrl
-        yXUB0gKuWS+2gT8z6N4QYLc=
-X-Google-Smtp-Source: APXvYqyh+MeH0kSO9RSqv+LxrHF2Z40UZrsRQJdqxel0BvA8mn/9z5tEY/vzT7dQzNkNeMQ3yU6k6g==
-X-Received: by 2002:a05:651c:1b0:: with SMTP id c16mr1286453ljn.192.1572472434371;
-        Wed, 30 Oct 2019 14:53:54 -0700 (PDT)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id a2sm520316lfh.73.2019.10.30.14.53.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 14:53:53 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] ARM: tegra: Don't enable PLLX while resuming from LP1 on Tegra30
-Date:   Thu, 31 Oct 2019 00:53:42 +0300
-Message-Id: <20191030215342.14948-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191030215342.14948-1-digetx@gmail.com>
-References: <20191030215342.14948-1-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=41dVk3HlaKb/dFjB8UnWPeItSsHUeTbp2B9Q6WI0tdI=;
+        b=XN61Q7vFRT62Z9xD85amElqQl6c6PD8qks2rBWGxee/E7NmUpHcsItAew7aj80vM8D
+         T0p5r3udeFGZb82uWQEUIZjeIaTEtUsX8NPfeHA92zQCuRT30BEobKqBziQEFoggtssw
+         34YB+PTFgeCxJjwMmotu8jkjqoshxP5kCyQ1iC6GRwmQcPPcvge+JiwEOsP2Eo3cToVV
+         D7RsZyJj+rKcjghQsFl6kX515xOXph2suuslfJ73MLCWLvODeP1VLtLr7uMLoU7D39ZC
+         sF950zX6/l1/QMcvy/NhIl8HxaTvbuhgTUDaig1rAzgl8Mn/AHYJs9BdNUhtFVymlXaY
+         1Hcg==
+X-Gm-Message-State: APjAAAU39sSrxQs50/98vj7lg/wtUjYED93TbGAGapVKLk2zSD16fO+5
+        dCKd//OoQwnGcN0d8GztEFwG4w==
+X-Google-Smtp-Source: APXvYqwrQ09V/5pkR6XSIY1CNfD1/GGL1Zz/FvP/T6FEFfnzt1OotLdGJngFwNtEvyKl0Z4cQVy96Q==
+X-Received: by 2002:a37:4cd5:: with SMTP id z204mr2102084qka.153.1572472447368;
+        Wed, 30 Oct 2019 14:54:07 -0700 (PDT)
+Received: from ?IPv6:2600:1000:b063:e143:9455:99a5:c2db:fc9c? ([2600:1000:b063:e143:9455:99a5:c2db:fc9c])
+        by smtp.gmail.com with ESMTPSA id n62sm769982qkn.47.2019.10.30.14.54.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2019 14:54:06 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2] nvdimm/btt: fix variable 'rc' set but not used
+Date:   Wed, 30 Oct 2019 17:54:05 -0400
+Message-Id: <5E00893B-D36C-446F-9E71-54FB32772DA0@lca.pw>
+References: <03cacc16f2fcd7cc74cf15c57070c78e73206e68.camel@intel.com>
+Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+In-Reply-To: <03cacc16f2fcd7cc74cf15c57070c78e73206e68.camel@intel.com>
+To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PLLX may be kept disabled if cpufreq driver selects some other clock for
-CPU. In that case PLLX will be disabled later in the resume path by the
-CLK driver, which also can enable PLLX if necessary by itself. Thus there
-is no need to enable PLLX early during resume. Tegra114/124 CLK drivers do
-not manage PLLX on resume and thus they are left untouched by this patch.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/mach-tegra/sleep-tegra30.S | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-tegra/sleep-tegra30.S b/arch/arm/mach-tegra/sleep-tegra30.S
-index 2f9e5076d201..3caae60a75a0 100644
---- a/arch/arm/mach-tegra/sleep-tegra30.S
-+++ b/arch/arm/mach-tegra/sleep-tegra30.S
-@@ -358,7 +358,6 @@ _no_pll_iddq_exit:
- 
- 	pll_enable r1, r0, CLK_RESET_PLLM_BASE, CLK_RESET_PLLM_MISC
- 	pll_enable r1, r0, CLK_RESET_PLLC_BASE, CLK_RESET_PLLC_MISC
--	pll_enable r1, r0, CLK_RESET_PLLX_BASE, CLK_RESET_PLLX_MISC
- 
- _pll_m_c_x_done:
- 	pll_enable r1, r0, CLK_RESET_PLLP_BASE, CLK_RESET_PLLP_MISC
-@@ -368,8 +367,18 @@ _pll_m_c_x_done:
- 	pll_locked r1, r0, CLK_RESET_PLLP_BASE
- 	pll_locked r1, r0, CLK_RESET_PLLA_BASE
- 	pll_locked r1, r0, CLK_RESET_PLLC_BASE
-+
-+	/*
-+	 * CPUFreq driver could select other PLL for CPU. PLLX will be
-+	 * enabled by the Tegra30 CLK driver on an as-needed basis, see
-+	 * tegra30_cpu_clock_resume().
-+	 */
-+	cmp	r10, #TEGRA30
-+	beq	_pll_m_c_x_locked
-+
- 	pll_locked r1, r0, CLK_RESET_PLLX_BASE
- 
-+_pll_m_c_x_locked:
- 	mov32	r7, TEGRA_TMRUS_BASE
- 	ldr	r1, [r7]
- 	add	r1, r1, #LOCK_DELAY
--- 
-2.23.0
+> On Oct 30, 2019, at 5:38 PM, Verma, Vishal L <vishal.l.verma@intel.com> wr=
+ote:
+>=20
+> Good find! Since we're not really using rc later, we should just
+> simplify this to:
+>=20
+>    if (btt_map_write(...))
+>        dev_warn_ratelimited(...)
+>    goto out_rtt;
 
+Ah, I thought about printing the rc as well at first, but it seems only retu=
+rn -EIO for errors, so I agree with you.=
