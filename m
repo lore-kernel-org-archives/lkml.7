@@ -2,98 +2,184 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB80BCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067FECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30202080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:50:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oOgzHtNF"
+	by mail.kernel.org (Postfix) with ESMTP id D49C92080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfJ3Mup (ORCPT
+        id S1726506AbfJ3MwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:50:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41755 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfJ3Mup (ORCPT
+        Wed, 30 Oct 2019 08:52:11 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:38969 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfJ3MwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:50:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p26so1512965pfq.8;
-        Wed, 30 Oct 2019 05:50:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e/BrVROAKCsOPa46MS4js3VUUm8IwAVzchIOw9kB3Js=;
-        b=oOgzHtNFEUBOiTd3TCkRuvSlRekqYrG1JdV9NRm5Z0h0qsRnDG8jQXYiwsRxlTTAMM
-         AYsXYnb8R1zuXhVatvUCgbAOLKy/7ZYE9teTpn38xPYA2nRCWAD6zVddebTNPB7UIaKW
-         +rKFt6zdIVUultza3Ww26dRxwXJLThYM2YbaNAnf+baeitDaQLa2Lnuc9MveAlk29SN7
-         7FZOQ7JyWbhf+2W6V7cuvdl5GWLvbxB6vMHFn7/7JSJD1T4OwQmixJconmUA1OVem6cI
-         64UnjLmtXYgkPHxZyYezWMPwDqYMDNzMZFS6eZ7uePAp51/ovtXSnF76oXJRcomPHY55
-         jWsQ==
+        Wed, 30 Oct 2019 08:52:11 -0400
+Received: by mail-il1-f197.google.com with SMTP id o11so1939447ilc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 05:52:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e/BrVROAKCsOPa46MS4js3VUUm8IwAVzchIOw9kB3Js=;
-        b=tUDgAp8vsM4VTycK5jTdA1LX78DTz8+8/2Bq2I9fDKaq2gyt14IjGZ9f2Z5HA8yIM1
-         cJE3Ab0aUAoLM6UUQAFZW7x6ZpicFYimSGWXCpZ3xluwrX85nePr3d5pMHjGNjqUp3rv
-         Z5WteFoKqUwHzgpNQ7zoznPWtVmX7SqgAN/UjePvtDxGeGdJ0SKxtvPi/K60xJG+csAq
-         py/uYubB3Nf7lvdqrHJ1JgdcKUlWKIBDzq+D2Cl0SSVDIjfQaijJslY+lBL1R5jlfrYy
-         HQQhDRsj2lYH98STIqYZAcAJStV2yZqwR88RJsCpsTPUymhw0inrdH9K5Fj4gsQ3vrV2
-         hhzg==
-X-Gm-Message-State: APjAAAVemxogKCx3t+8Y+Q1Fhsswrxz7p1uMtY6I5goV0ZO3kzlsiEiu
-        VoPSih3tcMYW4GIQN3I4uhQ=
-X-Google-Smtp-Source: APXvYqykonnEOR+IqPlpKVUbiFY02m6Ohg2mNivAAG6QmoWabtD/S0dIXVd70C+4DIL9rfS5F7bDWA==
-X-Received: by 2002:a65:4d06:: with SMTP id i6mr6583527pgt.93.1572439843908;
-        Wed, 30 Oct 2019 05:50:43 -0700 (PDT)
-Received: from localhost.localdomain ([43.251.175.137])
-        by smtp.gmail.com with ESMTPSA id 82sm3074048pfa.115.2019.10.30.05.50.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 05:50:43 -0700 (PDT)
-From:   liupold <rohn.ch@gmail.com>
-To:     kvalo@codeaurora.org
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, liupold <rohn.ch@gmail.com>
-Subject: [PATCH] ath10k: Fixed "Failed to wake target" QCA6174
-Date:   Wed, 30 Oct 2019 18:20:35 +0530
-Message-Id: <20191030125035.31848-1-rohn.ch@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=5hl1COUvMaR/U8JjzZqIErDBOd54NybwZ/tb4y78jAQ=;
+        b=Qu8GDrFOk3+TVQRq+kygWsKNBAwMXZhh3q976Ntx6iDQgJ/S0LKiW0nS2jz9h2rDkj
+         rfZGKgXr+xgivyQ5Ac0b/i2LxYiUO63/SYx15Zv0F2R9f48vSYgvwbQekMxO4AaDs1Ac
+         8vXEd19xR8U3zP+xzFHr+UumY9w/0yUdYJr0T60eQG7CzthOIuj2z0DfjZO6AdlcGkQ7
+         Cg11GktQyioqBmTndU76jguDBO3uz/b0WFT/ZY2WWY+vr15AyXaloSC9PdA4aI9v1J4l
+         en+sY0ZJX/tLkmBeQlUEVaDq3Zn7ZAPM2hvqbgYjHN3nL0CA2WIYof8/0gI/68YbDKjW
+         4GDA==
+X-Gm-Message-State: APjAAAVBRLoxJT1fofmfGiNOtuRL1ywU4quqBpyzTB9wTs4WlFOrBU2A
+        wvxY2FQyKSTF/UbhvIGT486oESQHiZY/HDYT1MTKHaGpNjK+
+X-Google-Smtp-Source: APXvYqz9IdOqVAWhBZFp4jTj3wtDsFAQEvnFLMFBXNXDb5NTFnEnQEDIA4rX7SdypFtBelBuAYEkR9NveoCO+CapTI1FZGDPJHVO
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:4c4:: with SMTP id f4mr25553238ils.79.1572439928625;
+ Wed, 30 Oct 2019 05:52:08 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 05:52:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006062280596203360@google.com>
+Subject: KASAN: use-after-free Read in chaoskey_disconnect
+From:   syzbot <syzbot+6d8505fcdf25f00ac276@syzkaller.appspotmail.com>
+To:     alexandre.belloni@bootlin.com, andreyknvl@google.com,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        lvivier@redhat.com, mchehab+samsung@kernel.org, mpm@selenic.com,
+        swboyd@chromium.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a issue with card about waking up during boot and from suspend
-the only way to prevent it (is seems) by making pci_ps = false,
-on Acer Swift 3 (ryzen 2500u).
+Hello,
 
-Signed-off-by: liupold <rohn.ch@gmail.com>
+syzbot found the following crash on:
+
+HEAD commit:    ff6409a6 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=15e1ba24e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3230c37d442895b7
+dashboard link: https://syzkaller.appspot.com/bug?extid=6d8505fcdf25f00ac276
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169b8904e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166f3104e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6d8505fcdf25f00ac276@syzkaller.appspotmail.com
+
+usb 3-1: string descriptor 0 read error: -71
+usb 3-1: USB disconnect, device number 2
+==================================================================
+BUG: KASAN: use-after-free in atomic_read  
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in refcount_inc_not_zero_checked+0x72/0x1e0  
+lib/refcount.c:123
+Read of size 4 at addr ffff8881cf679820 by task kworker/1:1/1730
+
+CPU: 1 PID: 1730 Comm: kworker/1:1 Not tainted 5.4.0-rc5+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+  kasan_report+0xe/0x20 mm/kasan/common.c:634
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
+  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+  refcount_inc_not_zero_checked+0x72/0x1e0 lib/refcount.c:123
+  refcount_inc_checked+0x12/0x60 lib/refcount.c:156
+  get_task_struct include/linux/sched/task.h:110 [inline]
+  kthread_stop+0x6c/0x610 kernel/kthread.c:554
+  hwrng_unregister+0x190/0x210 drivers/char/hw_random/core.c:538
+  chaoskey_disconnect+0x1b2/0x200 drivers/usb/misc/chaoskey.c:232
+  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1134 [inline]
+  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:532
+  device_del+0x420/0xb20 drivers/base/core.c:2376
+  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2200
+  hub_port_connect drivers/usb/core/hub.c:5035 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+  port_event drivers/usb/core/hub.c:5470 [inline]
+  hub_event+0x16f2/0x3800 drivers/usb/core/hub.c:5552
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 2:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
+  slab_post_alloc_hook mm/slab.h:584 [inline]
+  slab_alloc_node mm/slub.c:2779 [inline]
+  kmem_cache_alloc_node+0xdc/0x310 mm/slub.c:2815
+  alloc_task_struct_node kernel/fork.c:169 [inline]
+  dup_task_struct kernel/fork.c:865 [inline]
+  copy_process+0x4201/0x6470 kernel/fork.c:1851
+  _do_fork+0x129/0xec0 kernel/fork.c:2366
+  kernel_thread+0xaa/0xe0 kernel/fork.c:2453
+  create_kthread kernel/kthread.c:278 [inline]
+  kthreadd+0x4a2/0x680 kernel/kthread.c:596
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 16:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
+  slab_free_hook mm/slub.c:1424 [inline]
+  slab_free_freelist_hook mm/slub.c:1475 [inline]
+  slab_free mm/slub.c:3025 [inline]
+  kmem_cache_free+0xb9/0x380 mm/slub.c:3041
+  __put_task_struct+0x1e2/0x4c0 kernel/fork.c:748
+  put_task_struct include/linux/sched/task.h:119 [inline]
+  delayed_put_task_struct+0x1b4/0x2c0 kernel/exit.c:182
+  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
+  rcu_core+0x630/0x1ca0 kernel/rcu/tree.c:2377
+  __do_softirq+0x221/0x912 kernel/softirq.c:292
+
+The buggy address belongs to the object at ffff8881cf679800
+  which belongs to the cache task_struct of size 5888
+The buggy address is located 32 bytes inside of
+  5888-byte region [ffff8881cf679800, ffff8881cf67af00)
+The buggy address belongs to the page:
+page:ffffea00073d9e00 refcount:1 mapcount:0 mapping:ffff8881da116000  
+index:0x0 compound_mapcount: 0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da116000
+raw: 0000000000000000 0000000080050005 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881cf679700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8881cf679780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8881cf679800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                ^
+  ffff8881cf679880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881cf679900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
- drivers/net/wireless/ath/ath10k/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index a0b4d265c6eb..653590342619 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -3514,7 +3514,7 @@ static int ath10k_pci_probe(struct pci_dev *pdev,
- 	case QCA6164_2_1_DEVICE_ID:
- 	case QCA6174_2_1_DEVICE_ID:
- 		hw_rev = ATH10K_HW_QCA6174;
--		pci_ps = true;
-+		pci_ps = false;
- 		pci_soft_reset = ath10k_pci_warm_reset;
- 		pci_hard_reset = ath10k_pci_qca6174_chip_reset;
- 		targ_cpu_to_ce_addr = ath10k_pci_qca6174_targ_cpu_to_ce_addr;
--- 
-2.23.0
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
