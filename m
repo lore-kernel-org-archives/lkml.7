@@ -2,101 +2,109 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06009CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD7BCA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC98720856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D41620856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfJ3OzF (ORCPT
+        id S1726863AbfJ3OzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:55:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50027 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfJ3OzE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:55:04 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iPpNB-0000Y6-Dj; Wed, 30 Oct 2019 14:54:57 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] soc: samsung: exynos-asv: fix potential overflow in multiply
-Date:   Wed, 30 Oct 2019 14:54:57 +0000
-Message-Id: <20191030145457.10120-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 30 Oct 2019 10:55:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52070 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfJ3OzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 10:55:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 07:55:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="198698715"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Oct 2019 07:55:20 -0700
+Date:   Wed, 30 Oct 2019 07:55:20 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "keescook@chromium.org" <keescook@chromium.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Dock, Deneen T" <deneen.t.dock@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kristen@linux.intel.com" <kristen@linux.intel.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+Subject: Re: [RFC PATCH 09/13] x86/cpufeature: Add detection of KVM XO
+Message-ID: <20191030145520.GA14391@linux.intel.com>
+References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
+ <20191003212400.31130-10-rick.p.edgecombe@intel.com>
+ <201910291633.927254B10@keescook>
+ <40cb4ea3b351c25074cf47ae92a189eec12161fb.camel@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40cb4ea3b351c25074cf47ae92a189eec12161fb.camel@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Oct 29, 2019 at 04:52:08PM -0700, Edgecombe, Rick P wrote:
+> On Tue, 2019-10-29 at 16:33 -0700, Kees Cook wrote:
+> > On Thu, Oct 03, 2019 at 02:23:56PM -0700, Rick Edgecombe wrote:
+> > > Add a new CPUID leaf to hold the contents of CPUID 0x40000030 EAX to
+> > > detect KVM defined generic VMM features.
+> > >
+> > > The leaf was proposed to allow KVM to communicate features that are
+> > > defined by KVM, but available for any VMM to implement.
 
-The multiplication of opp_freq by MHZ is performed using unsigned int
-multiplication however the result is being passed into a function where
-the frequency is an unsigned long, so there is an expectation that the
-result won't fit into an unsigned int. Fix any potential integer overflow
-my making opp_freq an unsigned long.  Also change from %u to %lu format
-specifiers
+This doesn't necessarily work the way you intend, KVM's base CPUID isn't
+guaranteed to be 0x40000000.  E.g. KVM supports advertising itself as
+HyperV *and* KVM, in which case KVM's CPUID base will be 0x40000100.
 
-Addresses-Coverity: ("Unintentional integer overflow")
-Fixes: 5ea428595cc5 ("soc: samsung: Add Exynos Adaptive Supply Voltage driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/soc/samsung/exynos-asv.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I think you're better off just making this a standard KVM CPUID feature.
+If a different hypervisor wants to reuse guest support as is, it can
+advertise KVM support at a lower priority.
 
-diff --git a/drivers/soc/samsung/exynos-asv.c b/drivers/soc/samsung/exynos-asv.c
-index 8abf4dfaa5c5..d66fc74379a3 100644
---- a/drivers/soc/samsung/exynos-asv.c
-+++ b/drivers/soc/samsung/exynos-asv.c
-@@ -30,7 +30,7 @@ static int exynos_asv_update_cpu_opps(struct exynos_asv *asv,
- {
- 	struct exynos_asv_subsys *subsys = NULL;
- 	struct dev_pm_opp *opp;
--	unsigned int opp_freq;
-+	unsigned long opp_freq;
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(asv->subsys); i++) {
-@@ -51,7 +51,7 @@ static int exynos_asv_update_cpu_opps(struct exynos_asv *asv,
- 
- 		opp = dev_pm_opp_find_freq_exact(cpu, opp_freq * MHZ, true);
- 		if (IS_ERR(opp)) {
--			dev_info(asv->dev, "cpu%d opp%d, freq: %u missing\n",
-+			dev_info(asv->dev, "cpu%d opp%d, freq: %lu missing\n",
- 				 cpu->id, i, opp_freq);
- 
- 			continue;
-@@ -68,11 +68,11 @@ static int exynos_asv_update_cpu_opps(struct exynos_asv *asv,
- 						new_volt, new_volt, new_volt);
- 		if (ret < 0)
- 			dev_err(asv->dev,
--				"Failed to adjust OPP %u Hz/%u uV for cpu%d\n",
-+				"Failed to adjust OPP %lu Hz/%u uV for cpu%d\n",
- 				opp_freq, new_volt, cpu->id);
- 		else
- 			dev_dbg(asv->dev,
--				"Adjusted OPP %u Hz/%u -> %u uV, cpu%d\n",
-+				"Adjusted OPP %lu Hz/%u -> %u uV, cpu%d\n",
- 				opp_freq, volt, new_volt, cpu->id);
- 	}
- 
--- 
-2.20.1
+Note, querying guest CPUID isn't straightforward in either case.  But,
+KVM doesn't support disabling its other CPUID-base paravirt features, e.g.
+KVM emulates the kvm_clock MSRs regardless of what userspace advertises to
+the guest.  Depending on what changes are required in KVM's MMU, this may
+also need to be a KVM-wide feature, i.e. controlled via a module param.
 
+> > > Add cpu_feature_enabled() support for features in this leaf (KVM XO), and
+> > > a pgtable_kvmxo_enabled() helper similar to pgtable_l5_enabled() so that
+> > > pgtable_kvmxo_enabled() can be used in early code that includes
+> > > arch/x86/include/asm/sparsemem.h.
+> > >
+> > > Lastly, in head64.c detect and this feature and perform necessary
+> > > adjustments to physical_mask.
+> >
+> > Can this be exposed to /proc/cpuinfo so a guest userspace can determine
+> > if this feature is enabled?
+> >
+> > -Kees
+>
+> Is there a good place to expose the information that the PROT_EXEC and
+> !PROT_READ combo creates execute-only memory? This way apps can check one place
+> for the support and not worry about the implementation whether it's this, x86
+> pkeys, arm or other.
+
+I don't think so?  Assuming there's no common method, it can be displayed
+in /proc/cpuinfo by adding a synthetic bit, e.g. in Linux-defined word 8
+(virtualization) instead of a dedicated word.  The bit can then be
+set if the features exists and is enabled (by the guest).
+
+I'd also name the feature EXEC_ONLY.  XO is unnecessarily terse IMO, and
+including "KVM" in the name may be misconstrued as a host KVM feature and
+will be flat out wrong if hardware ever supports XO natively.
