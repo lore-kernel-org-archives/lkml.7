@@ -2,130 +2,170 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47778CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2660CCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AAAE20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FC520679
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="O0gGjKRr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXjnRC/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfJ3Olv (ORCPT
+        id S1726427AbfJ3Ood (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:41:51 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44212 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfJ3Olu (ORCPT
+        Wed, 30 Oct 2019 10:44:33 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44783 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfJ3Ood (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:41:50 -0400
-Received: by mail-il1-f196.google.com with SMTP id h5so2308562ilh.11
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 07:41:49 -0700 (PDT)
+        Wed, 30 Oct 2019 10:44:33 -0400
+Received: by mail-io1-f66.google.com with SMTP id w12so2786713iol.11;
+        Wed, 30 Oct 2019 07:44:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=8M4Q/hulOLKq5QBH7SseZicRn46BDfUKYYJB1woZ9F8=;
-        b=O0gGjKRrxHys6Q2aujV+4MT2j/ZjsSYkDi9GKfTadrp+3OsaEj9MpPZeaVUYjh3jga
-         Lt/pb1YjDeKkLIc9X0ysapeDeMirJQ5DAoWssEDfb1y9SMHca7Cpner/0PwQkojLHkpx
-         N4TSDBzSztYw8kJfiT9Daj01/md5WfML34mttZWozPOAn5dmoM5foBsQXL+jEaHnmEzW
-         RhhGAMAO5fVn+TzVSsErUinwOJRVAltcO+jIVr/z2lFeIAA+i5gdvsrvJVYsoFn6iVDd
-         5t2q0XNohZr2NnrrDWO1Q8lxvwtpuTZKxxUQL9BKAIZqMKdtPXdqb1BwFUAK4RSsm2wv
-         ZkIA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v69E/vAISH85pBxwVE2N7vhsH75pOHxu/fxiGY0QbeQ=;
+        b=jXjnRC/x0AeJB/QbSDoglLlI2mM7uoL59nA1SheOa24mpXYHVbx8ZGru91eHCOC5yI
+         SJ7vwR86I0EES8IlDT4BmaDC+tPi6otXqTk+VUUQQiYLCsCmtehR0jpFweGy7EDkdets
+         kUr2diEZfOmYvdliAUEOSVoTxDU+45JBI8xWqBWSRt8bxMK3LKc3fYZojC1uHE/Tlz9N
+         E8KOg3JZclRFc4rXl5LP83vK/QrmmmBVQp2o5mTvTyDf+dX3WPd4887MZPG8Yc7xsuco
+         oiVncDPY0nb1HmJ49VrFGHGIqvmcCr3BsVmxsXtwQYePRzEYveNrwfqIWRbnMbe3Rv8Z
+         S82w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8M4Q/hulOLKq5QBH7SseZicRn46BDfUKYYJB1woZ9F8=;
-        b=LbL7iXYSb4EqAdz8xm1gObWy0HhNukhBc1vxtsglf0Gent6ThyZM6BE1pvZ3MAxUNI
-         qpPiKXEeytFIyUJsEwfivcHhGP8YUdcPDk2vKzfEC5uwlq6CTruL93vRZ7/5AI+xfWIZ
-         iSGeWtHjOo+RkbNIWjIfHIAkkG7xe0bEJHA57TReCF5gjtscmYHhpMqxScI7Evo9hQ1z
-         h0u/npuJbPonKA7I4ILvo7vvo2K1bdsvE3laM/vMIOY5F+s//3SgYH6LYsLk7t4Ta7Xh
-         yE8TlZeprDOp81uOLnPj61rXmehMXm4I9wmwIcya3sICl0yhbSyxs47c+4gWTFOX6B+m
-         bVNQ==
-X-Gm-Message-State: APjAAAXrdoi6wse8Tbr6XWF2w7Yb0jMo61SW5dXuNyGVLhtbosAHJtX1
-        Vgpf2+73fUPvLIZnPdErtGgy0Q==
-X-Google-Smtp-Source: APXvYqyqrROuX3U0xP+PNenNQOMYso72VKgcxfO/6ysc4+hXLZApIoNa/HRe7jHr0SUpJ9LQw4UwlQ==
-X-Received: by 2002:a92:580c:: with SMTP id m12mr389533ilb.225.1572446509207;
-        Wed, 30 Oct 2019 07:41:49 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id i79sm55737ild.6.2019.10.30.07.41.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 07:41:48 -0700 (PDT)
-Subject: Re: BUG: unable to handle kernel paging request in io_wq_cancel_all
-To:     syzbot <syzbot+221cc24572a2fed23b6b@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, dan.j.williams@intel.com,
-        dhowells@redhat.com, gregkh@linuxfoundation.org,
-        hannes@cmpxchg.org, joel@joelfernandes.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        mingo@redhat.com, patrick.bellasi@arm.com, rgb@redhat.com,
-        rostedt@goodmis.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk, yamada.masahiro@socionext.com
-References: <00000000000069801e05961be5fb@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0e2bc2bf-2a7a-73c5-03e2-9d08f89f0ffa@kernel.dk>
-Date:   Wed, 30 Oct 2019 08:41:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v69E/vAISH85pBxwVE2N7vhsH75pOHxu/fxiGY0QbeQ=;
+        b=PbY+p/gIWZr8Fe45LLdvRhi2JWGNUKveD02P9sPNvwrVM6TyXQai1X3TdCpNLg7K8s
+         5vYI+NWF2TJeeoZFbBl5gkzbm6h2ImePkO7nDblT+FywB4pjpvfoLDDBS6Sz3VfKaKC7
+         QK2lBcqGPXHeeKLjIQ03C5dqiFloxosEqIlKtjG9I1RCUYQvG2gHJ/6LvKziI1MnSz11
+         Rt8orm0GDUs9sJoqWzz6Ph7pNV4Y7GPWEgHuTAJctEDgXkuSHJS9jQlP67rB3c4IuBoU
+         8AVun+X7TaXcdaIOs02NAY91Z+LdDIYAk26ztiQYO7pLzWgC4EeDByUSU2z1cxWmDWkV
+         cCcw==
+X-Gm-Message-State: APjAAAVahPdHEFL/emv/Pu7yb4wTTuQr7nURF81ZVjAopZ6RUB+NZpDQ
+        lO0HQgfcKI6Bfq8qXesa4a//b9U3jTHqTBTyImyDaw==
+X-Google-Smtp-Source: APXvYqz9ISkB3eGeL8FfMvO09xLvJ4YONlu+FugWEIXfRPeSrJQJUmxiQL8wy/pNoaUViiXqYAOHQtwSg3lnrA2NftI=
+X-Received: by 2002:a5e:9245:: with SMTP id z5mr87806iop.205.1572446672018;
+ Wed, 30 Oct 2019 07:44:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <00000000000069801e05961be5fb@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191016135147.7743-1-aford173@gmail.com>
+In-Reply-To: <20191016135147.7743-1-aford173@gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 30 Oct 2019 09:44:20 -0500
+Message-ID: <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
+Subject: Re: [PATCH V5 1/3] drm/panel: simple: Add Logic PD Type 28 display support
+To:     dri-devel <dri-devel@lists.freedesktop.org>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/30/19 1:44 AM, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit ef0524d3654628ead811f328af0a4a2953a8310f
-> Author: Jens Axboe <axboe@kernel.dk>
-> Date:   Thu Oct 24 13:25:42 2019 +0000
-> 
->       io_uring: replace workqueue usage with io-wq
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16acf5d0e00000
-> start commit:   c57cf383 Add linux-next specific files for 20191029
-> git tree:       linux-next
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15acf5d0e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11acf5d0e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cb86688f30db053d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=221cc24572a2fed23b6b
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168671d4e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140f4898e00000
-> 
-> Reported-by: syzbot+221cc24572a2fed23b6b@syzkaller.appspotmail.com
-> Fixes: ef0524d36546 ("io_uring: replace workqueue usage with io-wq")
+On Wed, Oct 16, 2019 at 8:52 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> Previously, there was an omap panel-dpi driver that would
+> read generic timings from the device tree and set the display
+> timing accordingly.  This driver was removed so the screen
+> no longer functions.  This patch modifies the panel-simple
+> file to setup the timings to the same values previously used.
+>
+> Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+>
 
-Good catch, it's a case of NULL vs ERR_PTR() confusion. I'll fold in
-the below fix.
+Will this be able to make it into linux-next for the 5.5 merge window?
+ I believe Tony has picked up the device tree portion in his omap
+tree, but I haven't seen any notifications on this series on whether
+or not it's being applied.  I also don't know which tree I need to
+look if it's already been applied.
 
+This fixes a regression introduced a while ago where the driver I was
+using for the display was removed.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index af1937d66aee..76d653085987 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -3534,8 +3534,9 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
- 	/* Do QD, or 4 * CPUS, whatever is smallest */
- 	concurrency = min(ctx->sq_entries, 4 * num_online_cpus());
- 	ctx->io_wq = io_wq_create(concurrency, ctx->sqo_mm);
--	if (!ctx->io_wq) {
--		ret = -ENOMEM;
-+	if (IS_ERR(ctx->io_wq)) {
-+		ret = PTR_ERR(ctx->io_wq);
-+		ctx->io_wq = NULL;
- 		goto err;
- 	}
- 
+thank you,
 
--- 
-Jens Axboe
+adam
 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+> V5:  No Change
+> V4:  No Change
+> V3:  No Change
+> V2:  No Change
+>
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 5d487686d25c..72f69709f349 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+>         .flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+>  };
+>
+> +static const struct drm_display_mode logicpd_type_28_mode = {
+> +       .clock = 9000,
+> +       .hdisplay = 480,
+> +       .hsync_start = 480 + 3,
+> +       .hsync_end = 480 + 3 + 42,
+> +       .htotal = 480 + 3 + 42 + 2,
+> +
+> +       .vdisplay = 272,
+> +       .vsync_start = 272 + 2,
+> +       .vsync_end = 272 + 2 + 11,
+> +       .vtotal = 272 + 2 + 11 + 3,
+> +       .vrefresh = 60,
+> +       .flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
+> +};
+> +
+> +static const struct panel_desc logicpd_type_28 = {
+> +       .modes = &logicpd_type_28_mode,
+> +       .num_modes = 1,
+> +       .bpc = 8,
+> +       .size = {
+> +               .width = 105,
+> +               .height = 67,
+> +       },
+> +       .delay = {
+> +               .prepare = 200,
+> +               .enable = 200,
+> +               .unprepare = 200,
+> +               .disable = 200,
+> +       },
+> +       .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +       .bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
+> +                    DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
+> +};
+> +
+>  static const struct panel_desc mitsubishi_aa070mc01 = {
+>         .modes = &mitsubishi_aa070mc01_mode,
+>         .num_modes = 1,
+> @@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
+>         }, {
+>                 .compatible = "lg,lp129qe",
+>                 .data = &lg_lp129qe,
+> +       }, {
+> +               .compatible = "logicpd,type28",
+> +               .data = &logicpd_type_28,
+>         }, {
+>                 .compatible = "mitsubishi,aa070mc01-ca1",
+>                 .data = &mitsubishi_aa070mc01,
+> --
+> 2.17.1
+>
