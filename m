@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C13CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AF7CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3309208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E864521734
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450841;
-	bh=rfJoh8q2ttJiOkExTu/CY0Vkr6sPogKzCVxD224wjXY=;
+	s=default; t=1572450846;
+	bh=2kUUZAC+wtzg7AMNOy1KGj2017jVYF+ynzXc66sbHiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PuFp6IGhHlIa9hn8bFx95IA2FuX0eIX+krrhN9bCREWCfpcBAXxfgiiAyQPcBMeCj
-	 6JiS4oxO7XwbESXvUvQzfLF3gRagXro9lS5BuSYUGus0HXTpGzR3DOoTyuzr9xGIZR
-	 0l7uYULKQFStHdfpSHiw1PN4G+johCOkgWikKW5c=
+	b=nCpAuefjOtKGobOJZf/Iq8drR1kbYpzZlVw6A4mwSPq4lJUfbaj0l9iS9WfVFDwNb
+	 kn20hPJZrOl1AWeJvc0yhbZ1XSUSexSzTe2FOSaymTEIWDYoJnf4NBz/8G2y5NNDjp
+	 qlqlvnPj1SlSBlUIseJufWoyxiP1x+XbhTReUPRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbfJ3PyA (ORCPT
+        id S1728291AbfJ3PyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:54:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55292 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbfJ3Pxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:53:55 -0400
+        id S1726913AbfJ3PyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:54:00 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 780B021882;
-        Wed, 30 Oct 2019 15:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB9DA20874;
+        Wed, 30 Oct 2019 15:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450834;
-        bh=rfJoh8q2ttJiOkExTu/CY0Vkr6sPogKzCVxD224wjXY=;
+        s=default; t=1572450839;
+        bh=2kUUZAC+wtzg7AMNOy1KGj2017jVYF+ynzXc66sbHiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YDEqS+lr+8ByaQlf/e4leFH04fS749bmNLu207stFznFLd+t/SV3kGL0FMISyINvA
-         wVW4q/FzKQ3xRE7rWh6hbSVfty37FZbSUxdM8y29O8mno000jyvEYbzGzYnug/ignu
-         JCZA4FxDUKm3Weg/i6YG+m/MXZtGcQCwhoVVWgvk=
+        b=Ewn/aYDFDR4hyW/GvIg8aa5IK7WkNvqLJOI1oTlbHl/un53oNYDVEG4Bb4kzSmDxH
+         3F4WvESegvHXLJeSvGd1N2TM4BLu+mIrwRgMS5HfaIb9mzWWaedZFf/01ouFqAnIct
+         rzEqej8SBLv/25Dl2TsyZ8wFygu+QO1i1jdTZBKY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 61/81] tracing: Fix "gfp_t" format for synthetic events
-Date:   Wed, 30 Oct 2019 11:49:07 -0400
-Message-Id: <20191030154928.9432-61-sashal@kernel.org>
+Cc:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Joel Stanley <joel@jms.id.au>, Tao Ren <taoren@fb.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 63/81] i2c: aspeed: fix master pending state handling
+Date:   Wed, 30 Oct 2019 11:49:09 -0400
+Message-Id: <20191030154928.9432-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -60,56 +61,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 
-[ Upstream commit 9fa8c9c647be624e91b09ecffa7cd97ee0600b40 ]
+[ Upstream commit 1f0d9cbeec9bb0a1c2013342836f2c9754d6502b ]
 
-In the format of synthetic events, the "gfp_t" is shown as "signed:1",
-but in fact the "gfp_t" is "unsigned", should be shown as "signed:0".
+In case of master pending state, it should not trigger a master
+command, otherwise data could be corrupted because this H/W shares
+the same data buffer for slave and master operations. It also means
+that H/W command queue handling is unreliable because of the buffer
+sharing issue. To fix this issue, it clears command queue if a
+master command is queued in pending state to use S/W solution
+instead of H/W command queue handling. Also, it refines restarting
+mechanism of the pending master command.
 
-The issue can be reproduced by the following commands:
-
-echo 'memlatency u64 lat; unsigned int order; gfp_t gfp_flags; int migratetype' > /sys/kernel/debug/tracing/synthetic_events
-cat  /sys/kernel/debug/tracing/events/synthetic/memlatency/format
-
-name: memlatency
-ID: 2233
-format:
-        field:unsigned short common_type;       offset:0;       size:2; signed:0;
-        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
-        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
-        field:int common_pid;   offset:4;       size:4; signed:1;
-
-        field:u64 lat;  offset:8;       size:8; signed:0;
-        field:unsigned int order;       offset:16;      size:4; signed:0;
-        field:gfp_t gfp_flags;  offset:24;      size:4; signed:1;
-        field:int migratetype;  offset:32;      size:4; signed:1;
-
-print fmt: "lat=%llu, order=%u, gfp_flags=%x, migratetype=%d", REC->lat, REC->order, REC->gfp_flags, REC->migratetype
-
-Link: http://lkml.kernel.org/r/20191018012034.6404-1-zhengjun.xing@linux.intel.com
-
-Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 2e57b7cebb98 ("i2c: aspeed: Add multi-master use case support")
+Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Acked-by: Joel Stanley <joel@jms.id.au>
+Tested-by: Tao Ren <taoren@fb.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/i2c/busses/i2c-aspeed.c | 54 +++++++++++++++++++++------------
+ 1 file changed, 34 insertions(+), 20 deletions(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index dd310d3b58431..725b9b35f933c 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -674,6 +674,8 @@ static bool synth_field_signed(char *type)
- {
- 	if (str_has_prefix(type, "u"))
- 		return false;
-+	if (strcmp(type, "gfp_t") == 0)
-+		return false;
+diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+index fa66951b05d06..7b098ff5f5dd3 100644
+--- a/drivers/i2c/busses/i2c-aspeed.c
++++ b/drivers/i2c/busses/i2c-aspeed.c
+@@ -108,6 +108,12 @@
+ #define ASPEED_I2CD_S_TX_CMD				BIT(2)
+ #define ASPEED_I2CD_M_TX_CMD				BIT(1)
+ #define ASPEED_I2CD_M_START_CMD				BIT(0)
++#define ASPEED_I2CD_MASTER_CMDS_MASK					       \
++		(ASPEED_I2CD_M_STOP_CMD |				       \
++		 ASPEED_I2CD_M_S_RX_CMD_LAST |				       \
++		 ASPEED_I2CD_M_RX_CMD |					       \
++		 ASPEED_I2CD_M_TX_CMD |					       \
++		 ASPEED_I2CD_M_START_CMD)
  
- 	return true;
- }
+ /* 0x18 : I2CD Slave Device Address Register   */
+ #define ASPEED_I2CD_DEV_ADDR_MASK			GENMASK(6, 0)
+@@ -336,18 +342,19 @@ static void aspeed_i2c_do_start(struct aspeed_i2c_bus *bus)
+ 	struct i2c_msg *msg = &bus->msgs[bus->msgs_index];
+ 	u8 slave_addr = i2c_8bit_addr_from_msg(msg);
+ 
+-	bus->master_state = ASPEED_I2C_MASTER_START;
+-
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+ 	/*
+ 	 * If it's requested in the middle of a slave session, set the master
+ 	 * state to 'pending' then H/W will continue handling this master
+ 	 * command when the bus comes back to the idle state.
+ 	 */
+-	if (bus->slave_state != ASPEED_I2C_SLAVE_INACTIVE)
++	if (bus->slave_state != ASPEED_I2C_SLAVE_INACTIVE) {
+ 		bus->master_state = ASPEED_I2C_MASTER_PENDING;
++		return;
++	}
+ #endif /* CONFIG_I2C_SLAVE */
+ 
++	bus->master_state = ASPEED_I2C_MASTER_START;
+ 	bus->buf_index = 0;
+ 
+ 	if (msg->flags & I2C_M_RD) {
+@@ -422,20 +429,6 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+ 		}
+ 	}
+ 
+-#if IS_ENABLED(CONFIG_I2C_SLAVE)
+-	/*
+-	 * A pending master command will be started by H/W when the bus comes
+-	 * back to idle state after completing a slave operation so change the
+-	 * master state from 'pending' to 'start' at here if slave is inactive.
+-	 */
+-	if (bus->master_state == ASPEED_I2C_MASTER_PENDING) {
+-		if (bus->slave_state != ASPEED_I2C_SLAVE_INACTIVE)
+-			goto out_no_complete;
+-
+-		bus->master_state = ASPEED_I2C_MASTER_START;
+-	}
+-#endif /* CONFIG_I2C_SLAVE */
+-
+ 	/* Master is not currently active, irq was for someone else. */
+ 	if (bus->master_state == ASPEED_I2C_MASTER_INACTIVE ||
+ 	    bus->master_state == ASPEED_I2C_MASTER_PENDING)
+@@ -462,11 +455,15 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+ 		/*
+ 		 * If a peer master starts a xfer immediately after it queues a
+-		 * master command, change its state to 'pending' then H/W will
+-		 * continue the queued master xfer just after completing the
+-		 * slave mode session.
++		 * master command, clear the queued master command and change
++		 * its state to 'pending'. To simplify handling of pending
++		 * cases, it uses S/W solution instead of H/W command queue
++		 * handling.
+ 		 */
+ 		if (unlikely(irq_status & ASPEED_I2CD_INTR_SLAVE_MATCH)) {
++			writel(readl(bus->base + ASPEED_I2C_CMD_REG) &
++				~ASPEED_I2CD_MASTER_CMDS_MASK,
++			       bus->base + ASPEED_I2C_CMD_REG);
+ 			bus->master_state = ASPEED_I2C_MASTER_PENDING;
+ 			dev_dbg(bus->dev,
+ 				"master goes pending due to a slave start\n");
+@@ -629,6 +626,14 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
+ 			irq_handled |= aspeed_i2c_master_irq(bus,
+ 							     irq_remaining);
+ 	}
++
++	/*
++	 * Start a pending master command at here if a slave operation is
++	 * completed.
++	 */
++	if (bus->master_state == ASPEED_I2C_MASTER_PENDING &&
++	    bus->slave_state == ASPEED_I2C_SLAVE_INACTIVE)
++		aspeed_i2c_do_start(bus);
+ #else
+ 	irq_handled = aspeed_i2c_master_irq(bus, irq_remaining);
+ #endif /* CONFIG_I2C_SLAVE */
+@@ -691,6 +696,15 @@ static int aspeed_i2c_master_xfer(struct i2c_adapter *adap,
+ 		     ASPEED_I2CD_BUS_BUSY_STS))
+ 			aspeed_i2c_recover_bus(bus);
+ 
++		/*
++		 * If timed out and the state is still pending, drop the pending
++		 * master command.
++		 */
++		spin_lock_irqsave(&bus->lock, flags);
++		if (bus->master_state == ASPEED_I2C_MASTER_PENDING)
++			bus->master_state = ASPEED_I2C_MASTER_INACTIVE;
++		spin_unlock_irqrestore(&bus->lock, flags);
++
+ 		return -ETIMEDOUT;
+ 	}
+ 
 -- 
 2.20.1
 
