@@ -2,125 +2,119 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA79BCA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F44CCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9B92087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nsVLguS5"
+	by mail.kernel.org (Postfix) with ESMTP id 6F71821734
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572445845;
+	bh=S5Tw7Z8qftyyZYiz2DVEWd/JEwXROqSdvVTEKK+A4Tw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pBeJ/AU9nLLuSRYLLIxmxU7p1Oc4Qd3V9JLXUst5R+9vD/jJ2CsvJEpNy+FYViUYK
+	 r8Ozbn0QXEf15Efcvmwdf0tm46Gvj5u+6uz/QeZzJdnZunlZWDMi5OVBHBz3xMn93L
+	 3eN0URDf9kSONYKYqB/DdmMkSJYP6gtVyUktRmjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfJ3Oag (ORCPT
+        id S1726731AbfJ3Oao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:30:36 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39410 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfJ3Oag (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:30:36 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UEURxE009017;
-        Wed, 30 Oct 2019 09:30:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572445827;
-        bh=sjHkzET0W6fegbqYYxLj/nvwD1jevn9Rf6o8Hy+EKt0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nsVLguS5Xvh99O0z62zWL3lSC+MN9kBVqEmmfnm/O7m0YbI3dzpEJ9/LF79owtHnr
-         usMVQ1IBXPcMRGu466VKLjcudML79XSK0hQ0OPj4xgGFlq32DI6Skv2fjFvoEEp7h9
-         Sfg1kNWjOF/itYDrveMdsYt3Qy5EDOg9xKn84xnk=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UEURZJ063645;
-        Wed, 30 Oct 2019 09:30:27 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 09:30:26 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 09:30:14 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UEUNHU130877;
-        Wed, 30 Oct 2019 09:30:24 -0500
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Mark Brown <broonie@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <20191030141736.GN4568@sirena.org.uk>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
-Date:   Wed, 30 Oct 2019 16:31:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 10:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726137AbfJ3Oan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 10:30:43 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8909A2087E;
+        Wed, 30 Oct 2019 14:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572445843;
+        bh=S5Tw7Z8qftyyZYiz2DVEWd/JEwXROqSdvVTEKK+A4Tw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ikVSX1Ldv+wRdChyKOspjMgvpcUguXBUqVvoG+TbQSOaU47YVqzrmhFRjaNgtuHB1
+         jK1iAIlRWrBhCExn8WE/Ay95K7+cZpwHuhkFAZhLyd7zY9mKSUjGJ5ZzDKh1t2oFCO
+         BJb90GygVSm06hpz3cgib+Uw/uG2DqE3o/bo9HSI=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>
+Subject: [PATCH v4 00/10] Rework REFCOUNT_FULL using atomic_fetch_* operations
+Date:   Wed, 30 Oct 2019 14:30:25 +0000
+Message-Id: <20191030143035.19440-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191030141736.GN4568@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
+This is version four of the patches I previously posted here:
 
-On 30/10/2019 16.17, Mark Brown wrote:
-> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
->> On 30/10/2019 15.12, Rob Herring wrote:
-> 
->>> Why can't we just add a shared flag like we have for interrupts?
->>> Effectively, we have that for resets too, it's just hardcoded in the
->>> the drivers.
-> 
->> This would be kind of the same thing what the
->> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
->> fixed-regulators afaik.
-> 
-> The theory with that was that any usage of this would need the
-> higher level code using the GPIO to cooperate so they didn't step
-> on each other's toes so the GPIO code should just punt to it.
+  v1: https://lkml.kernel.org/r/20190802101000.12958-1-will@kernel.org
+  v2: https://lkml.kernel.org/r/20190827163204.29903-1-will@kernel.org
+  v3: https://lkml.kernel.org/r/20191007154703.5574-1-will@kernel.org
 
-But from the client driver point of view a GPIO is still GPIO and if the
-components are unrelated then it is hard to patch things together from
-the top.
+Changes since v3 include:
 
->> But let's say that a board design will pick two components (C1 and C2)
->> and use the same GPIO line to enable them. We already have the drivers
->> for them and they are used in boards already.
-> 
-> This is basically an attempt to make a generic implementation of
-> that cooperation for simple cases.
+  - Add description of racy behaviour include/linux/refcount.h
+  - Fix saturation behaviour in refcount_sub_and_test()
+  - Added Acks and Tested-bys
 
-Without some generic implementation we would need to patch up drivers
-(sometimes unrelated) for components which uses the same GPIO line on
-some random board.
+Cheers,
 
-We have such a thing for tlv310aic3x (for Nokia n900). I would need one
-for pcm3168a and there were an attempt for max98927 also.
-We also have boards where one GPIO is used for backlight and panel, etc.
+Will
 
-If we would have generic way then it can be tuned for more exotic
-setups, but again, I believe that board designers are not doing things
-just to be evil. What they connect most of the times are 'sane'
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Elena Reshetova <elena.reshetova@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Jan Glauber <jglauber@marvell.com>
 
-- Péter
+--->8
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Will Deacon (10):
+  lib/refcount: Define constants for saturation and max refcount values
+  lib/refcount: Ensure integer operands are treated as signed
+  lib/refcount: Remove unused refcount_*_checked() variants
+  lib/refcount: Move bulk of REFCOUNT_FULL implementation into header
+  lib/refcount: Improve performance of generic REFCOUNT_FULL code
+  lib/refcount: Move saturation warnings out of line
+  lib/refcount: Consolidate REFCOUNT_{MAX,SATURATED} definitions
+  refcount: Consolidate implementations of refcount_t
+  lib/refcount: Remove unused 'refcount_error_report()' function
+  drivers/lkdtm: Remove references to CONFIG_REFCOUNT_FULL
+
+ arch/Kconfig                       |  21 ---
+ arch/arm/Kconfig                   |   1 -
+ arch/arm64/Kconfig                 |   1 -
+ arch/s390/configs/debug_defconfig  |   1 -
+ arch/x86/Kconfig                   |   1 -
+ arch/x86/include/asm/asm.h         |   6 -
+ arch/x86/include/asm/refcount.h    | 126 --------------
+ arch/x86/mm/extable.c              |  49 ------
+ drivers/gpu/drm/i915/Kconfig.debug |   1 -
+ drivers/misc/lkdtm/refcount.c      |  11 +-
+ include/linux/kernel.h             |   7 -
+ include/linux/refcount.h           | 269 ++++++++++++++++++++++++-----
+ kernel/panic.c                     |  11 --
+ lib/refcount.c                     | 255 +++------------------------
+ 14 files changed, 257 insertions(+), 503 deletions(-)
+ delete mode 100644 arch/x86/include/asm/refcount.h
+
+-- 
+2.24.0.rc0.303.g954a862665-goog
+
