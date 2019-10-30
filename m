@@ -2,127 +2,101 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2348BCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AE9CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E707820856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437E720856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7p2Q0z+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4etqiVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfJ3TDp (ORCPT
+        id S1726877AbfJ3TFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:03:45 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40773 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfJ3TDp (ORCPT
+        Wed, 30 Oct 2019 15:05:24 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44212 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfJ3TFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:03:45 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r4so2221283pfl.7;
-        Wed, 30 Oct 2019 12:03:44 -0700 (PDT)
+        Wed, 30 Oct 2019 15:05:24 -0400
+Received: by mail-qt1-f195.google.com with SMTP id b10so2947168qto.11
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 12:05:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZNOGSfXr8+zRM3gw1fL95YFSKLrvQki0gAx0cCCVmnw=;
-        b=K7p2Q0z+EPicIlEOu4mRy+aFK7lPM3qKqoyibHjvwi0Z9ghwJEN/YEHh9dAWqMN4H1
-         5Gkum1Ig8hPyo+s0pydbsTxT74WHAdJjO18gj4y/B5XXwi7L4xKo51zFCNqpmJYPLxv6
-         A4MICxj/kT9lu1vFzrBandY56jjxwXm8pDmSAbCKM/VFaGscfPOniWbLzFLl8uBvlqoi
-         RJ+GXmbewQhhEwYSIkkRpwPxWcMD2E76OmH52D2oWq0mm7xg+gxjpk7glib4v3lR223Z
-         NrDb4kHtpMK+Yp8M/1DtTGJoqx/TtMc7RQLUKVoRtRyPI/ftU13B/pyV1JgihayRZTjb
-         L4qA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GIfcfwZSfz3iFqYkkCsQDsEpxbNUtoI0tD1NbKhoPSw=;
+        b=U4etqiVAXYGLuwSnkCnKmAeDO4XYNCdR0mgSrR8JvZeQNyIwor8I4gBMU2o1F2uVs8
+         B2XmYPHf1WlDyU7sX5GBdYgynpwJr++CmY8p5jKmzWxmARa539d3tShPdv84iDmv+3BT
+         x2cdXvA6Pr703pxNBkGkNNHG3bWzelCxU1ITY/wVJxzsJQqLKs+SeFQs99gx1HcMZ9E7
+         Eqi0jmhJW2OP++aJy/q+58eqLaNXg9mgYMQgdzXAnehZUFW6tO0fE7kIpuFo/vFgkg/i
+         pjoBElmuqvxxxCNVvJJ4cfYqOOccvKSoHuWX4Dk6IaNwf9mqL97os01S06dWIfFdetuW
+         7PTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZNOGSfXr8+zRM3gw1fL95YFSKLrvQki0gAx0cCCVmnw=;
-        b=nzJr1b7NPSSEF+Xr5fny88ou1EM1TAenP0J0EJ1sutDIJsVNqpGb5GnBlZjfs6u58K
-         +/gFer/Ko9bqS+2aoC/4q7Pj1j3mH1MHHtlYKVAtArR6lJnO1t59kmW8gdXaZT7kRvB6
-         jmwB9L1B9cFPVvEPUM9XOAw7r330/Fj0r0zbX3Ei7XAb96hbEn7OcCmO4ieh1lh0REFZ
-         tkdCI6CyiKeAhf5TavNyWMQeM2G0OBJse708aXgeSi9igdwVEn3HBPeYg1ul0GAK3yE8
-         Yx6Fwyy5EaQmC5KzGFd285It6nacjZb4I1qmKP8uvyb2286XZsK6COjyUyeCnpyfe7+a
-         GQYg==
-X-Gm-Message-State: APjAAAV/GWTc+LtlgTjKiTbsGgIiRQZ/EJDIjyBanxGC1vvbfr54MwF/
-        2+f9jt9v1Q5PnbVcXoxXw0ccsiZ0
-X-Google-Smtp-Source: APXvYqwl5VpbxI+r1KoXrqGAugu6jPGfjRFB+TajhSLOkyTHFgkjVVsoIgEqAsPp5zGpWfGmeokA9A==
-X-Received: by 2002:a62:53:: with SMTP id 80mr988273pfa.192.1572462224545;
-        Wed, 30 Oct 2019 12:03:44 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id y1sm716981pfq.138.2019.10.30.12.03.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Oct 2019 12:03:43 -0700 (PDT)
-Subject: Re: [PATCH] sctp: set ooo_okay properly for Transmit Packet Steering
-To:     Wally Zhao <wallyzhao@gmail.com>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, marcelo.leitner@gmail.com,
-        davem@davemloft.net, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     wally.zhao@nokia-sbell.com
-References: <1572451637-14085-1-git-send-email-wallyzhao@gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <c2d0890f-8900-6838-69c4-6b72b2e58062@gmail.com>
-Date:   Wed, 30 Oct 2019 12:03:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        bh=GIfcfwZSfz3iFqYkkCsQDsEpxbNUtoI0tD1NbKhoPSw=;
+        b=QvvSlVjTuy1W87HoVmikgztMmYDWi4HpBYaZeeUcDjZMog0nzcmcEKSbXr9k7sBaX1
+         HUBKXwfZhu1anVO8F4BkEa9dmxUSIySfdXvEVJtqmu6dxrNKMOb/BHMgLP8fsN/prc4I
+         ICfgPyGbwFmzJ4rfVh0va5JjOH/M2J63ESM2ZmuKNn0/oJ7ixqJne5Ow6BJWyUUDFt1v
+         VD56GnmTjMbA62x21vh/TYDOu8VOuG4uyFDD9OElFjpN4L/ee7GcOMrxMvbXjoDOWVPS
+         CO+tozPPsiFNJQyqA6GoaJl6t1/EFtjc2+CXBK+bGiwV35ArtI4t09JeTNpIlixWyMg+
+         Y3LA==
+X-Gm-Message-State: APjAAAV7S8RstAXlJetCYKG8peT3U5DMHfQpqkvHFRAkIquyFmHyUG/C
+        faJI9zCnFqV8NJuIq2Ye22A=
+X-Google-Smtp-Source: APXvYqxkMw6RX4XNwRXX+HeXx4n622VVKCx9NLt8ZhgLlog4sMtxfMlRg7p2s4xvzh8Z15AlC6n7fw==
+X-Received: by 2002:ac8:4a8f:: with SMTP id l15mr1734494qtq.220.1572462322849;
+        Wed, 30 Oct 2019 12:05:22 -0700 (PDT)
+Received: from GBdebian.ic.unicamp.br (wifi-177-220-85-136.wifi.ic.unicamp.br. [177.220.85.136])
+        by smtp.gmail.com with ESMTPSA id o28sm690544qtk.4.2019.10.30.12.05.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 12:05:22 -0700 (PDT)
+From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+To:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
+        nishkadg.linux@gmail.com, kim.jamie.bradley@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Subject: [PATCH v3 0/3] staging: rts5208: Eliminate the use of Camel Case
+Date:   Wed, 30 Oct 2019 16:05:11 -0300
+Message-Id: <20191030190514.10011-1-gabrielabittencourt00@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1572451637-14085-1-git-send-email-wallyzhao@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Cleans up checks of "Avoid CamelCase" in tree rts5208
 
+Changes in v3:
+- Change the subject line of commits to make it more clear and informative
 
-On 10/30/19 9:07 AM, Wally Zhao wrote:
-> Unlike tcp_transmit_skb,
-> sctp_packet_transmit does not set ooo_okay explicitly,
-> causing unwanted Tx queue switching when multiqueue is in use;
-> Tx queue switching may cause out-of-order packets.
-> Change sctp_packet_transmit to allow Tx queue switching only for
-> the first in flight packet, to avoid unwanted Tx queue switching.
-> 
+Changes in v2:
+- Place the changes on variable's names in the use and definition in the
+same commit
 
-While the patch seems fine, the changelog is quite confusing.
+I compile the kernel after each commit of the series to make sure it
+doesn't break the compilation.
 
-When skb->ooo_olay is 0 (which is the default for freshly allocated skbs),
-the core networking stack will stick to whatever TX queue was chosen
-at the time the dst_entry was attached to the (connected) socket.
+Gabriela Bittencourt (3):
+  staging: rts5208: Eliminate the use of Camel Case in files ms.{h,c}
+  staging: rts5208: Eliminate the use of Camel Case in files xd.{h,c}
+  staging: rts5208: Eliminate the use of Camel Case in file sd.h
 
-This means no reorder can happen at all by default.
+ drivers/staging/rts5208/ms.c | 86 ++++++++++++++++++------------------
+ drivers/staging/rts5208/ms.h | 70 ++++++++++++++---------------
+ drivers/staging/rts5208/sd.h |  2 +-
+ drivers/staging/rts5208/xd.c |  8 ++--
+ drivers/staging/rts5208/xd.h |  6 +--
+ 5 files changed, 86 insertions(+), 86 deletions(-)
 
-By setting ooo_okay carefully (as you did in your patch), you allow
-core networking stack to _switch_ to another TX queue based on
-current CPU  (XPS selection)
+-- 
+2.20.1
 
-So even without your fix, SCTP should not experience out-of-order packets.
-
-> Signed-off-by: Wally Zhao <wallyzhao@gmail.com>
-> ---
->  net/sctp/output.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/net/sctp/output.c b/net/sctp/output.c
-> index dbda7e7..5ff75cc 100644
-> --- a/net/sctp/output.c
-> +++ b/net/sctp/output.c
-> @@ -626,6 +626,10 @@ int sctp_packet_transmit(struct sctp_packet *packet, gfp_t gfp)
->  	/* neighbour should be confirmed on successful transmission or
->  	 * positive error
->  	 */
-> +
-> +	/* allow switch tx queue only for the first in flight pkt */
-> +	head->ooo_okay = asoc->outqueue.outstanding_bytes == 0;
-> +
->  	if (tp->af_specific->sctp_xmit(head, tp) >= 0 &&
->  	    tp->dst_pending_confirm)
->  		tp->dst_pending_confirm = 0;
-> 
