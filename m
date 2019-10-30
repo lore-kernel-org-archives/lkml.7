@@ -2,106 +2,111 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F163FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971E2CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C893620663
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CDE0217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:51:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XyPVZBz2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kUuKbEvd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbfJ3Huw (ORCPT
+        id S1726151AbfJ3HvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 03:50:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34428 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfJ3Huw (ORCPT
+        Wed, 30 Oct 2019 03:51:11 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46268 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfJ3HvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 03:50:52 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t16so1133157wrr.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 00:50:50 -0700 (PDT)
+        Wed, 30 Oct 2019 03:51:10 -0400
+Received: by mail-io1-f65.google.com with SMTP id c6so1378461ioo.13
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 00:51:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=FLPIpnHOBePg/Y6da8w9/WRUoNiVkxQNWcq2DQOe07M=;
-        b=XyPVZBz2kVqf6z+1cIyhTkCY9EFXOZzeQZGpHure5f5izzCxjf1ZVQ6kVBYmm9H1+U
-         d/t30k/IvFZWYAj66fXjRzzv6d+hZ/7mVXinYxHIyoMrDgHZnV8vHynTWW4njmDFj9a6
-         vEs84X07ky4e9x3e9KtjF1LWqsIFnWK6+82TOscZunOTqiGZeOYVRsNxts9VjEQKa+lt
-         FhdpBJnumN6gY9IAN4yvMFF80r4RX3gQFjM1jg9NhL2pXmvBoC3b9DJa8zBtK6RPIeAl
-         DqxNx0LhriVy4PCV06zjT9oR0h6QR3/Rd7c6ScnJbVfmiu0iLZnoBeXTiIVq1McqfwwE
-         Y6MA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Okxu6w7d4kBEnS57vDGxuBMtTFr/mHU/UQyaytadsfQ=;
+        b=kUuKbEvdPYa8fNHrYpYzmh661dxQFL12J2F+lmIBu+SvW4hPvpShVqFU/P2uzbP78t
+         n0h2SHxycr/3suv4MqTl6/dlMQa3uzgH4eE3QHfVQ2Z6looWnk6nuEsLAXwT1/sqVLLV
+         yKFQgR/sZ38yg6LyVW2sfC6bY4gICvdIrJFY3SxsG/ciVKAoD9AMxt3gdkl9bOC4rPrY
+         y31ohXOENkruOwnmerGEYq8LTppuEiFsPz8UQEM1eQGfC1+HRueLp+SBMeWopZht/GVh
+         Cc2gW/PY4RzU5dE5LnNI1dF0zgyuxu8fiAUZp43X+9Tnqbvgu40fRVdF6u0qv3fHCGll
+         TMLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=FLPIpnHOBePg/Y6da8w9/WRUoNiVkxQNWcq2DQOe07M=;
-        b=PxE/1uDsetKiAjU+5N2s6Bh0t0RK24m/HxnRT9ghtTmerPKA5LJi7tV6U4tLlIPwox
-         7gVLWHipkAMioeRiavE4ZQtAdbqelv9LG6ZDbPGKr/ikO0Iy95q7vdyhxPzdLJD7X5mH
-         54qx0dJQ4mrdZMMyL25U2V+zcczPD+K4W8o/RAEo14AQ5/epp+IRMxCuGgkWd1nxGPrp
-         mwfMfGzQ76/n3kNJmNbnenVfYuchjkDjh3v5YoD5gE3VAdSLsuuRGPdO337lXAuaQR3a
-         plHU0s6JdsOkrcWEW1rNlwkvqPuwF0pT8+benBGmhPYAJxoJ3wUNyQx2HWTOEUyi/2Wi
-         sHBg==
-X-Gm-Message-State: APjAAAW4c8QqUdmUL3CACp0uqvrXPpcEq/iMaxi6UuRnad7RB3wY6PGd
-        SBn2hSaSPh5GscGja2DEFk4eOQ==
-X-Google-Smtp-Source: APXvYqxqLawwSBkqOwElIXw0EitJZw7c5fIQELur6Ziwo9Eowbi50RtGdHxZjDIulp8GE33dkMbA8A==
-X-Received: by 2002:a5d:4808:: with SMTP id l8mr22968551wrq.118.1572421849544;
-        Wed, 30 Oct 2019 00:50:49 -0700 (PDT)
-Received: from dell ([2.31.163.64])
-        by smtp.gmail.com with ESMTPSA id r19sm1929303wrr.47.2019.10.30.00.50.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 30 Oct 2019 00:50:49 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 07:50:47 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH next] dt-bindings: backlight: lm3630a: fix missing include
-Message-ID: <20191030075047.GC4484@dell>
-References: <20191029185350.31155-1-andreas@kemnade.info>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Okxu6w7d4kBEnS57vDGxuBMtTFr/mHU/UQyaytadsfQ=;
+        b=FEGFuJbq8RVn+hty3Lnq1Z2Ida6Ccht/PqVwLK6lvpAUk3ExQuDNfF7JEMsgz6aXJy
+         +qToNCGfq61e233TsaohFiGpT5e5eOALZFuiLSbLyYaRWA2kb3fLk1FryLoTG057Sfbf
+         3v8xHz0IYdMwGCnipQCM5gMkKwh6uIUzuk3lTs9GlYr822k0VMyizgQroWffds0q7s1X
+         wQFAlkrXMSOh5UstRLsmmGjVXl3fq2/f+D5dbEIIhHCjJ/Sao9wBbV2ogYTbEUMtUOsS
+         pROVsgCuHIf7DvHahWRibTrnQ1koXyTTtCNpo7k2xDRFTHatePTK2QZP8WmOuNFEtJfz
+         vCHg==
+X-Gm-Message-State: APjAAAW4HVh4+IHy+uy7TiGGXXdlM547s1jBWSC3uNY1vfWvs4a3+i2n
+        70RHzKtmeaieOZvsvK3hes2LpbBqWBKwO4IuaoDdXQ==
+X-Google-Smtp-Source: APXvYqw040kXjM0AEAMRYxUnnP87MHXu0hAc+Mw5N68WNHfPkVsJsZmP572K6iWlZz7YD9yv0sX0W4DXPrEEAQ0O2Us=
+X-Received: by 2002:a02:c98c:: with SMTP id b12mr10674967jap.40.1572421868447;
+ Wed, 30 Oct 2019 00:51:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029185350.31155-1-andreas@kemnade.info>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <2700308706c0d46ca06eeb973079a1f18bf553dd.1571390916.git.viresh.kumar@linaro.org>
+ <20191018211214.444D32089C@mail.kernel.org> <20191021022516.gecunkpahu7okvm5@vireshk-i7>
+ <20191028120133.3E85F2086D@mail.kernel.org>
+In-Reply-To: <20191028120133.3E85F2086D@mail.kernel.org>
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Wed, 30 Oct 2019 13:20:56 +0530
+Message-ID: <CAKohpo=ky8FR4thsuW1xPnZrEW8zgXL0n4e+9rkRE0RLKKk1uQ@mail.gmail.com>
+Subject: Re: [PATCH] opp: Reinitialize the list_kref before adding the static
+ OPPs again
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019, Andreas Kemnade wrote:
+On Mon, 28 Oct 2019 at 17:31, Stephen Boyd <sboyd@kernel.org> wrote:
+> Quoting Viresh Kumar (2019-10-20 19:25:16)
 
-> example failed to compile due to undefined GPIO_ACTIVE_HIGH
-> fix that by adding the needed #include to the exammple
-> 
-> Fixes: ae92365cdd75 ("dt-bindings: backlight: lm3630a: Add enable-gpios to describe HWEN pin")
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
->  .../devicetree/bindings/leds/backlight/lm3630a-backlight.yaml    | 1 +
->  1 file changed, 1 insertion(+)
+> Some static OPP is removed at the same time that this function is
+> called?
 
-Applied, thanks.
+Hmm, not just this line but yeah this can be racy in principle though
+not in practice.
+As both addition and removal of the static OPPs happen from the same
+driver, like
+during cpufreq registration and unregistration.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> Right. I don't understand why the count reaches 0 if we can still get a
+> pointer to something. I guess we've got this kref thing that has a
+> lifetime beyond the life of what it's tracking, which is weird.
+
+Something is weird here for sure as the kref is not protecting a
+specific object here.
+Maybe we should use a simple counter protected with opp-table lock here.
+
+> Usually
+> the kref is embedded inside the pointer that is returned by the "get"
+> call, but here it's outside it and used to track when we should free
+> static OPPs.
+
+> Why are we removing static OPPs? Shouldn't they just stick
+> around forever until the device is deleted vs. populated over and over
+> again?
+
+Because the only use of the static OPPs is gone and so freeing them is the
+right thing to do. Also, it is possible in principle to change the supported-hw
+values after removing the cpufreq driver and adding it back, which means
+it is possible to get a new set of OPPs.
+
+--
+viresh
