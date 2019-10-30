@@ -2,96 +2,173 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128CBCA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA50DCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7FA20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451324;
-	bh=5VyfATjDRZ/d61SscXopb+AgGGmd7/YaQZLg5GFAo3w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xzqqYS7QtHtUTNr93vEL1Gj6d+W17PX7ASohQvHUMATlQfhHDx3DfMUobHugailIF
-	 5+im02J3KMyGYYZG7d2SQBNio7KbLMOXx6fqquS6UdFfqf/4ROyub7hYQdKBlpp5ZV
-	 R2YqNZ8IP9tZ+hx53XVZdDxZDddtcPEdJmDPB/Mw=
+	by mail.kernel.org (Postfix) with ESMTP id A52FB20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g63vcrfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbfJ3PxR (ORCPT
+        id S1728346AbfJ3QCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:53:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbfJ3PxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:53:15 -0400
-Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6E321734;
-        Wed, 30 Oct 2019 15:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450795;
-        bh=5VyfATjDRZ/d61SscXopb+AgGGmd7/YaQZLg5GFAo3w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CUkV1KWzFApbrC0eWa9eNKBKV4sgRol6zEUbE2ASw6HZ2j1InBQhGun9+QwiE4hO0
-         u1AlDqAEtQlzM3FNPAWl9/ZAVO3VCoXzU9IgMUDcIBwEFspGFcZa2CbycSpZ67kTHC
-         TuiKuvRj2uWFIKhYQBSpIzXtvUG8hln2Mdr51E0U=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        legousb-devel@lists.sourceforge.net, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 51/81] USB: legousbtower: fix a signedness bug in tower_probe()
-Date:   Wed, 30 Oct 2019 11:48:57 -0400
-Message-Id: <20191030154928.9432-51-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
-References: <20191030154928.9432-1-sashal@kernel.org>
+        Wed, 30 Oct 2019 12:02:13 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:41661 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727893AbfJ3Pvz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:55 -0400
+Received: by mail-vk1-f196.google.com with SMTP id 70so596317vkz.8
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:51:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MM8FYPP/M/qSGLzrMimtzxUAQYpF/zt1wu6EL2luqtE=;
+        b=g63vcrfvchtAY5Rd4CuFqJnAncPsp38RdAVZRNM9WTGTq5FdrGZl2oMdK24C0ouZMv
+         Zx3My7Upbfwkqdu1ZF5cDQ1kc66k/jp8wegkgxnQ/ALeyvgSeFHS/snQ/xWL75V7Phqp
+         4MalfrNRHwi4CpIylLOnmzj9sdkHNkEDYEmmwx+aVxrHD+QCV51Rzzl6vHtIJ3iMO30J
+         kFpmzeq4jWbaxsqwIjDZZneLyXJaaJdjcH+c/BSSTf8iRjl2gNc5j54vOdQqJfw/rePZ
+         P3cKjDCcYPbQxJlN9cpB5CkBmYD/3vyML4pHLz4SnMVneG80kChlnAC6NwFHN0uFm/d2
+         8DyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MM8FYPP/M/qSGLzrMimtzxUAQYpF/zt1wu6EL2luqtE=;
+        b=YCBUZGQ2o+9Y9NoGD1ZEnCds9NSwwEWCgW+4YdSvS9BqLHWuAlfENsV5Te2P0xRWUc
+         W8fCYhyydiDkSYQBzLkZLSQvhg+N+i9Ap6KaXvfLxe+2Da0GGdLlbkKOxhDXqgzr1+De
+         Sf7U1oJwwCSM0t/uZxS1VdxM0eHXkfHCN2bW3Te9anCGMBH5ygx9T3CmvzdOBHidHyWS
+         CLIDlGTahJGmx+VlFW74n9qpFHcGkpvuRO2aE6StPrpN/99+kcdQ5E1FEULZZYSlDW+m
+         upnjHeltU3HniEGHsOY/TvOOM2xz6oJhLjA7ZN2f7bFO41o4lUNoxhupezRU9P7RcwT5
+         MVng==
+X-Gm-Message-State: APjAAAXczj0Xf1zvTuo/ySFYDLAIiEBRAgUT/fZHjSseYJ0Nd35Xp6LW
+        ODaDIkeMd1b16/363XJuE0XYbVs9YXO1hSvXYf3zJA==
+X-Google-Smtp-Source: APXvYqyHupdgWHa7qCIjuf/ufG4zCQRus8URSrYdV3I3LkSUfaiNNDW1LPfNwtjXqRaPr+zQbaPiggFXKTik4rvlgIk=
+X-Received: by 2002:a1f:2f51:: with SMTP id v78mr15055854vkv.101.1572450713564;
+ Wed, 30 Oct 2019 08:51:53 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <cover.1571510481.git.hns@goldelico.com> <0887d84402f796d1e7361261b88ec6057fbb0065.1571510481.git.hns@goldelico.com>
+In-Reply-To: <0887d84402f796d1e7361261b88ec6057fbb0065.1571510481.git.hns@goldelico.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 30 Oct 2019 16:51:17 +0100
+Message-ID: <CAPDyKFp3EjTuCTj+HXhxf+Ssti0hW8eMDR-NrGYWDWSDmQz6Lw@mail.gmail.com>
+Subject: Re: [PATCH v2 04/11] mmc: host: omap_hsmmc: add code for special init
+ of wl1251 to get rid of pandora_wl1251_init_card
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        "# 4.0+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+On Sat, 19 Oct 2019 at 20:42, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+> Pandora_wl1251_init_card was used to do special pdata based
+> setup of the sdio mmc interface. This does no longer work with
+> v4.7 and later. A fix requires a device tree based mmc3 setup.
+>
+> Therefore we move the special setup to omap_hsmmc.c instead
+> of calling some pdata supplied init_card function.
+>
+> The new code checks for a DT child node compatible to wl1251
+> so it will not affect other MMC3 use cases.
+>
+> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: <stable@vger.kernel.org> # 4.7.0
+> ---
+>  drivers/mmc/host/omap_hsmmc.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>
+> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+> index 952fa4063ff8..03ba80bcf319 100644
+> --- a/drivers/mmc/host/omap_hsmmc.c
+> +++ b/drivers/mmc/host/omap_hsmmc.c
+> @@ -1512,6 +1512,27 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
+>
+>         if (mmc_pdata(host)->init_card)
+>                 mmc_pdata(host)->init_card(card);
+> +       else if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
+> +               struct device_node *np = mmc_dev(mmc)->of_node;
+> +
+> +               np = of_get_compatible_child(np, "ti,wl1251");
+> +               if (np) {
+> +                       /*
+> +                        * We have TI wl1251 attached to MMC3. Pass this information to
+> +                        * SDIO core because it can't be probed by normal methods.
+> +                        */
+> +
+> +                       dev_info(host->dev, "found wl1251\n");
+> +                       card->quirks |= MMC_QUIRK_NONSTD_SDIO;
+> +                       card->cccr.wide_bus = 1;
+> +                       card->cis.vendor = 0x104c;
+> +                       card->cis.device = 0x9066;
+> +                       card->cis.blksize = 512;
+> +                       card->cis.max_dtr = 24000000;
+> +                       card->ocr = 0x80;
 
-[ Upstream commit fd47a417e75e2506eb3672ae569b1c87e3774155 ]
+These things should really be figured out by the mmc core during SDIO
+card initialization itself, not via the host ops ->init_card()
+callback. That is just poor hack, which in the long run should go
+away.
 
-The problem is that sizeof() is unsigned long so negative error codes
-are type promoted to high positive values and the condition becomes
-false.
+Moreover, I think we should add a subnode to the host node in the DT,
+to describe the embedded SDIO card, rather than parsing the subnode
+for the SDIO func - as that seems wrong to me.
 
-Fixes: 1d427be4a39d ("USB: legousbtower: fix slab info leak at probe")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191011141115.GA4521@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/misc/legousbtower.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+To add a subnode for the SDIO card, we already have a binding that I
+think we should extend. Please have a look at
+Documentation/devicetree/bindings/mmc/mmc-card.txt.
 
-diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
-index 62dab2441ec4f..23061f1526b4e 100644
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -878,7 +878,7 @@ static int tower_probe (struct usb_interface *interface, const struct usb_device
- 				  get_version_reply,
- 				  sizeof(*get_version_reply),
- 				  1000);
--	if (result < sizeof(*get_version_reply)) {
-+	if (result != sizeof(*get_version_reply)) {
- 		if (result >= 0)
- 			result = -EIO;
- 		dev_err(idev, "get version request failed: %d\n", result);
--- 
-2.20.1
+If you want an example of how to implement this for your case, do a
+git grep "broken-hpi" in the driver/mmc/core/, I think it will tell
+you more of what I have in mind.
 
+> +                       of_node_put(np);
+> +               }
+> +       }
+>  }
+>
+>  static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
+> --
+> 2.19.1
+>
+
+Kind regards
+Uffe
