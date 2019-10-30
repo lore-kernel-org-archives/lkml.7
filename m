@@ -4,178 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19106CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867D9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA8920866
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC9C2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbfJ3EO3 (ORCPT
+        id S1726793AbfJ3EXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 00:14:29 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:4010 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727014AbfJ3EO2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 00:14:28 -0400
-X-IronPort-AV: E=Sophos;i="5.68,245,1569254400"; 
-   d="scan'208";a="77665123"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 30 Oct 2019 12:14:26 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id BA7B84CE1513;
-        Wed, 30 Oct 2019 12:06:28 +0800 (CST)
-Received: from localhost.localdomain (10.167.225.140) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Wed, 30 Oct 2019 12:14:37 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <linux-xfs@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
-        <darrick.wong@oracle.com>, <rgoldwyn@suse.de>, <hch@infradead.org>,
-        <david@fromorbit.com>
-CC:     <linux-kernel@vger.kernel.org>, <gujx@cn.fujitsu.com>,
-        <qi.fuli@fujitsu.com>, <caoj.fnst@cn.fujitsu.com>,
-        <ruansy.fnst@cn.fujitsu.com>
-Subject: [RFC PATCH v2 6/7] xfs: handle copy-on-write in fsdax write() path.
-Date:   Wed, 30 Oct 2019 12:13:57 +0800
-Message-ID: <20191030041358.14450-7-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20191030041358.14450-1-ruansy.fnst@cn.fujitsu.com>
-References: <20191030041358.14450-1-ruansy.fnst@cn.fujitsu.com>
+        Wed, 30 Oct 2019 00:23:42 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54614 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725308AbfJ3EXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 00:23:41 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 92F56914FB7379F9428A;
+        Wed, 30 Oct 2019 12:23:39 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
+ 2019 12:23:32 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+CC:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH] ext4: bio_alloc never fails
+Date:   Wed, 30 Oct 2019 12:26:18 +0800
+Message-ID: <20191030042618.124220-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.167.225.140]
-X-yoursite-MailScanner-ID: BA7B84CE1513.A6BD3
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In fsdax mode, WRITE and ZERO on a shared extent need COW mechanism
-performed.  After COW, new extents needs to be remapped to the file.
+Similar to [1] [2], it seems a trivial cleanup since
+bio_alloc can handle memory allocation as mentioned in
+fs/direct-io.c (also see fs/block_dev.c, fs/buffer.c, ..)
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+[1] https://lore.kernel.org/r/20191030035518.65477-1-gaoxiang25@huawei.com
+[2] https://lore.kernel.org/r/20190830162812.GA10694@infradead.org
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/xfs/xfs_bmap_util.c |  6 +++++-
- fs/xfs/xfs_file.c      | 10 +++++++---
- fs/xfs/xfs_iomap.c     |  3 ++-
- fs/xfs/xfs_iops.c      | 11 ++++++++---
- fs/xfs/xfs_reflink.c   |  2 ++
- 5 files changed, 24 insertions(+), 8 deletions(-)
+ fs/ext4/page-io.c  | 11 +++--------
+ fs/ext4/readpage.c |  2 --
+ 2 files changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 99bf372ed551..1b7d0665d889 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -1114,10 +1114,14 @@ xfs_free_file_space(
- 	if (offset + len > XFS_ISIZE(ip))
- 		len = XFS_ISIZE(ip) - offset;
- 	error = iomap_zero_range(VFS_I(ip), offset, len, NULL,
--			&xfs_buffered_write_iomap_ops);
-+		  IS_DAX(VFS_I(ip)) ?
-+		  &xfs_direct_write_iomap_ops : &xfs_buffered_write_iomap_ops);
- 	if (error)
- 		return error;
- 
-+	if (xfs_is_reflink_inode(ip))
-+		xfs_reflink_end_cow(ip, offset, len);
-+
- 	/*
- 	 * If we zeroed right up to EOF and EOF straddles a page boundary we
- 	 * must make sure that the post-EOF area is also zeroed because the
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 24659667d5cb..48071f16a436 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -594,9 +594,13 @@ xfs_file_dax_write(
- 
- 	trace_xfs_file_dax_write(ip, count, pos);
- 	ret = dax_iomap_rw(iocb, from, &xfs_direct_write_iomap_ops);
--	if (ret > 0 && iocb->ki_pos > i_size_read(inode)) {
--		i_size_write(inode, iocb->ki_pos);
--		error = xfs_setfilesize(ip, pos, ret);
-+	if (ret > 0) {
-+		if (iocb->ki_pos > i_size_read(inode)) {
-+			i_size_write(inode, iocb->ki_pos);
-+			error = xfs_setfilesize(ip, pos, ret);
-+		}
-+		if (xfs_is_cow_inode(ip))
-+			xfs_reflink_end_cow(ip, pos, ret);
- 	}
- out:
- 	xfs_iunlock(ip, iolock);
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index e8fb500e1880..db8ee371252f 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -772,13 +772,14 @@ xfs_direct_write_iomap_begin(
- 		goto out_unlock;
- 
- 	if (imap_needs_cow(ip, flags, &imap, nimaps)) {
-+		bool need_convert = flags & IOMAP_DIRECT || IS_DAX(inode);
- 		error = -EAGAIN;
- 		if (flags & IOMAP_NOWAIT)
- 			goto out_unlock;
- 
- 		/* may drop and re-acquire the ilock */
- 		error = xfs_reflink_allocate_cow(ip, &imap, &cmap, &shared,
--				&lockmode, flags & IOMAP_DIRECT);
-+				&lockmode, need_convert);
- 		if (error)
- 			goto out_unlock;
- 		if (shared)
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 329a34af8e79..0052a97ccebf 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -834,6 +834,7 @@ xfs_setattr_size(
- 	int			error;
- 	uint			lock_flags = 0;
- 	bool			did_zeroing = false;
-+	const struct iomap_ops	*ops;
- 
- 	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL));
- 	ASSERT(xfs_isilocked(ip, XFS_MMAPLOCK_EXCL));
-@@ -880,13 +881,17 @@ xfs_setattr_size(
- 	 * extension, or zeroing out the rest of the block on a downward
- 	 * truncate.
- 	 */
-+	if (IS_DAX(inode))
-+		ops = &xfs_direct_write_iomap_ops;
-+	else
-+		ops = &xfs_buffered_write_iomap_ops;
-+
- 	if (newsize > oldsize) {
- 		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
- 		error = iomap_zero_range(inode, oldsize, newsize - oldsize,
--				&did_zeroing, &xfs_buffered_write_iomap_ops);
-+				&did_zeroing, ops);
- 	} else {
--		error = iomap_truncate_page(inode, newsize, &did_zeroing,
--				&xfs_buffered_write_iomap_ops);
-+		error = iomap_truncate_page(inode, newsize, &did_zeroing, ops);
- 	}
- 
- 	if (error)
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 2c8ad581d4db..e3620bc794a2 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -1270,6 +1270,8 @@ xfs_reflink_zero_posteof(
- 
- 	trace_xfs_zero_eof(ip, isize, pos - isize);
- 	return iomap_zero_range(VFS_I(ip), isize, pos - isize, NULL,
-+			IS_DAX(VFS_I(ip)) ?
-+			&xfs_direct_write_iomap_ops :
- 			&xfs_buffered_write_iomap_ops);
+diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
+index 12ceadef32c5..f1f7b6601780 100644
+--- a/fs/ext4/page-io.c
++++ b/fs/ext4/page-io.c
+@@ -358,14 +358,12 @@ void ext4_io_submit_init(struct ext4_io_submit *io,
+ 	io->io_end = NULL;
  }
  
+-static int io_submit_init_bio(struct ext4_io_submit *io,
+-			      struct buffer_head *bh)
++static void io_submit_init_bio(struct ext4_io_submit *io,
++			       struct buffer_head *bh)
+ {
+ 	struct bio *bio;
+ 
+ 	bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
+-	if (!bio)
+-		return -ENOMEM;
+ 	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
+ 	bio_set_dev(bio, bh->b_bdev);
+ 	bio->bi_end_io = ext4_end_bio;
+@@ -373,7 +371,6 @@ static int io_submit_init_bio(struct ext4_io_submit *io,
+ 	io->io_bio = bio;
+ 	io->io_next_block = bh->b_blocknr;
+ 	wbc_init_bio(io->io_wbc, bio);
+-	return 0;
+ }
+ 
+ static int io_submit_add_bh(struct ext4_io_submit *io,
+@@ -388,9 +385,7 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
+ 		ext4_io_submit(io);
+ 	}
+ 	if (io->io_bio == NULL) {
+-		ret = io_submit_init_bio(io, bh);
+-		if (ret)
+-			return ret;
++		io_submit_init_bio(io, bh);
+ 		io->io_bio->bi_write_hint = inode->i_write_hint;
+ 	}
+ 	ret = bio_add_page(io->io_bio, page, bh->b_size, bh_offset(bh));
+diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
+index a30b203fa461..bfeb77b93f48 100644
+--- a/fs/ext4/readpage.c
++++ b/fs/ext4/readpage.c
+@@ -362,8 +362,6 @@ int ext4_mpage_readpages(struct address_space *mapping,
+ 
+ 			bio = bio_alloc(GFP_KERNEL,
+ 				min_t(int, nr_pages, BIO_MAX_PAGES));
+-			if (!bio)
+-				goto set_error_page;
+ 			ctx = get_bio_post_read_ctx(inode, bio, page->index);
+ 			if (IS_ERR(ctx)) {
+ 				bio_put(bio);
 -- 
-2.23.0
-
-
+2.17.1
 
