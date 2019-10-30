@@ -2,158 +2,137 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC621CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B8ACA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8B820874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0592320874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:12:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="VTGm2FJj"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="l6DVykWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfJ3PLn (ORCPT
+        id S1727078AbfJ3PMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:11:43 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41655 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfJ3PLm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:11:42 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j14so1838715lfb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:11:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ew4mPHzEDChjwZ6r+gSELsFP9TQqVpPuS742rIsS3aE=;
-        b=VTGm2FJjHoT/ZAESegWwnI0GDBO1bZXjQqYVbwyRw9Qmae+24JA8Jy1DsEbFoaTm3F
-         qpYKVPvWyqStm6Sp/Ef8wvmfeG9QCS3BmH7zxuTvsg40Tb95m1/Sqf8I4WrVBR+TqTfj
-         8rSRXTZroyj7p1x9mdQUhAIEel0/gwZTm7VZnvq3bANLf4Y9y8l/9g8nccIC8dkmkDS9
-         xggPgk2vedAK9zjZ4sZjF2471t0sXTVbboWmvxZiyQhqB77u08PCUwA2IT0Xve7r9cqb
-         RWzqRlWM+4yQ75PyfXZrd6aHNzSW7gs2IZDcuWRj60dkfYocDaMSW0VWXBE/23Yk3lRS
-         urEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ew4mPHzEDChjwZ6r+gSELsFP9TQqVpPuS742rIsS3aE=;
-        b=XNhi0xlFGLRoPbP/VLtVbVeMgqU7fyOFrD46Zn3IuuFah5xfBN4HFO0+kFTvP+kKgh
-         ZW+aWq9MlE+UFU4kE1W68VAXDZ+SjqbaGQz4jh/drrrv7zUA6bg/B0UY1Vy3OV4EBZMe
-         sE0LThK88dqU55MTBkTl+E6qTxEixRODOb0GrK2hmY4wR/ns7YbSwZdgGhlWVflYaZz0
-         0f+wY4n/NoguxjTGM1fR3by1NPKI3/Ll7d9Y+KV2sRANRxmNYNc/z8xMRPb32TC/tIGc
-         RFyet+/PmB7XdooeQXxJxkFW3V/jGQhKVPY2pGYOhkAlIKiyr/VSfcxYmRy1o2+SBJ7u
-         eAHQ==
-X-Gm-Message-State: APjAAAXc0Vgo3ewSUOgpdDIotZOApLD1VzZWrEPTvs8Wqwnb21wpJU2l
-        5Ham+KTCrrP/ccnz0hTa+porUw==
-X-Google-Smtp-Source: APXvYqwcEExqFdUNonrfA4lX6RwYdiJdcOhGFj/HtekeESzr5IUyiQjiWsB5ozrcE1oDLfyAaoXuGw==
-X-Received: by 2002:a19:7515:: with SMTP id y21mr6435911lfe.96.1572448299509;
-        Wed, 30 Oct 2019 08:11:39 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id x16sm102028ljd.69.2019.10.30.08.11.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 08:11:38 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id C1CE0100C02; Wed, 30 Oct 2019 18:11:37 +0300 (+03)
-Date:   Wed, 30 Oct 2019 18:11:37 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Kirill Smelkov <kirr@nexedi.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: sound/core/timer: Deadlock on register_mutex
-Message-ID: <20191030151137.nret25uc5caak2z4@box>
-References: <20191030141029.isw4y3tfmjp5azev@box.shutemov.name>
- <s5h1ruugtr2.wl-tiwai@suse.de>
+        Wed, 30 Oct 2019 11:12:07 -0400
+Received: from mail-eopbgr790047.outbound.protection.outlook.com ([40.107.79.47]:57025
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726949AbfJ3PMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:12:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I+AYMQuZMIYasmmfFzr+pRe76Fe+ZKA8TkVMRve9zRMW7OaO/hk8k3H4qMO/z2/qpxbnkye8RNCpxykC9NzAAxry0giOjd6c8u9XO0aUIkEHy9QjmaYyKHsKWryta8+S9pxvIgXMIyu/UZKUNxxq2Hhlfs+baOcdvM3G9jHA+Xvjzr8JGn+26wrv4vzNRpcxupmvFV0QaI1Vy0dF1KS2aMkvuBXZTSiJlK0EQzcH6c3NQpHVk/7ZT+ypniQ9BMYyH+4b8pAkE7+aSuzCkFxV17X2kFhRUBzRG/XoHLaf2kIpYAwCwTlDKYeVkei2lMLNVSvTaGG1TiDHVx88PKOn0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D7M2rzwapq2j4EcLgblt7FMr7H0APJlJVoHuYLp4ohc=;
+ b=fRfNzhzUj9+XECgxY90ffDbUYtADo3AJG8iZOGZeXUUCvkGrxOJoas7Lj1m5ensYSK3eSgcuAHrcwekUIziJaYWEbVfZoxACTwgbXpOOukeQpSO37R5nLA+1m4NCCENzzWaatwSFMvfXEvoQreRJMqplvYg/EEdmRmfzTOl6v53atA2qmzkvcFN6H99kmpeTKBqUy2MjdfeOC1hjjJUUBuZxNPSNs0jJ+9nUQJXJUmICtU+H/Y1yx9r+vJQ7hiOoWXF3XRWqsOhfxXbhcRKTV7N+ioAoP/e8cFYyx55T2cX4T1ccBZ6DPo3gdoaAywml9fp0kaD429PGEl+NBIaS+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D7M2rzwapq2j4EcLgblt7FMr7H0APJlJVoHuYLp4ohc=;
+ b=l6DVykWHcmQPbG7q8CGTfWOOeosyMifUWKXEa/CPCpDuE2Ftw15elq8VFGEMyIdRjnqhRS5z35MLX/cjwQatVbrVUA4JRdlpAOmzrtFxa7UAb44l9hxbiPKe1QocWFIIB8vPlkx+EiI8g7l6nBkMyM9K4QwuuHljgr4kb6485Kg=
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com (10.174.175.149) by
+ MWHPR05MB3232.namprd05.prod.outlook.com (10.173.230.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.15; Wed, 30 Oct 2019 15:12:03 +0000
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209]) by MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209%7]) with mapi id 15.20.2408.018; Wed, 30 Oct 2019
+ 15:12:03 +0000
+From:   Jorgen Hansen <jhansen@vmware.com>
+To:     'Stefano Garzarella' <sgarzare@redhat.com>
+CC:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH net-next 08/14] vsock: add vsock_create_connected() called
+ by transports
+Thread-Topic: [PATCH net-next 08/14] vsock: add vsock_create_connected()
+ called by transports
+Thread-Index: AQHViYhdeVPi6OQfNk2qMDuo8gjV+KdzVVZA
+Date:   Wed, 30 Oct 2019 15:12:03 +0000
+Message-ID: <MWHPR05MB337613E733661BE7D00DDC2ADA600@MWHPR05MB3376.namprd05.prod.outlook.com>
+References: <20191023095554.11340-1-sgarzare@redhat.com>
+ <20191023095554.11340-9-sgarzare@redhat.com>
+In-Reply-To: <20191023095554.11340-9-sgarzare@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhansen@vmware.com; 
+x-originating-ip: [146.247.47.49]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5f6391d-1e42-414e-0b2c-08d75d4b854e
+x-ms-traffictypediagnostic: MWHPR05MB3232:
+x-microsoft-antispam-prvs: <MWHPR05MB3232159B19AC71FB2B804564DA600@MWHPR05MB3232.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:499;
+x-forefront-prvs: 02065A9E77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(376002)(39860400002)(189003)(199004)(316002)(6116002)(2906002)(3846002)(66066001)(6436002)(14454004)(25786009)(229853002)(54906003)(9686003)(8936002)(55016002)(6246003)(81166006)(81156014)(8676002)(478600001)(5660300002)(33656002)(4326008)(52536014)(7696005)(7416002)(76176011)(74316002)(6916009)(6506007)(53546011)(446003)(476003)(256004)(11346002)(14444005)(66476007)(7736002)(99286004)(71190400001)(26005)(186003)(4744005)(102836004)(76116006)(66556008)(66446008)(86362001)(486006)(305945005)(71200400001)(64756008)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB3232;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: U8jcSxRgeoqUiGgF2bcev2uKOsQOkEi/V92VL4Amd6wN6P0ikB6BgEHOh+Uh+VGUpHLnF+Ij7ECnkK6GzjAF/6jD24QNMuoTeRF5B3oJzv9yvUF/JTJRBPTgFkKWUlsAt+Y6EwNzsnDvm2ya7PoOgqOmq2cAMhst26CEer6hTAiSlSZ7E7IYnZm3fGZtX99NNMajUA89g23+xiQY4eafa2hsqB7mFPbCvvsSx3psRMZhG5IO4xtoBUMQQodKmPgx/g0ZN7EfVzKgTudSUM3VqCFe1J3XpsSlTL+7d/tK31ldJDQBuHndxAL4Fi5C012P2sttXzkng1Tg0qfw+VKgO8jjj8xaUwEVoLBllmP8VkGFrs9zOT2F7e4L8XAwp5RwzYZgILRtoXLxb0RN/YLbR9USidR78irPzD4YC45LRticZ7wWSUqj/YBeTu2W26VF
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <s5h1ruugtr2.wl-tiwai@suse.de>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5f6391d-1e42-414e-0b2c-08d75d4b854e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 15:12:03.6239
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1fxRfUsxZxP3H23+eW9H01NdAsBo9jb7mc7TjfB7JHX2qyiBS2Y2lutbqBth0DiHK0HWA/R1XzsNgyjFMqD8Hw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB3232
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 04:04:01PM +0100, Takashi Iwai wrote:
-> On Wed, 30 Oct 2019 15:10:29 +0100,
-> Kirill A. Shutemov wrote:
-> > 
-> > Hi,
-> > 
-> > I've stepped on this after pulling USB sound card:
-> > 
-> > 	 ============================================
-> > 	 WARNING: possible recursive locking detected
-> > 	 5.4.0-rc4-00090-g95b5dc072cc3-dirty #48 Not tainted
-> > 	 --------------------------------------------
-> > 	 xdg-screensaver/1321 is trying to acquire lock:
-> > 	 ffffffffbaf6b3a0 (register_mutex){+.+.}, at: snd_timer_free.part.0 (/include/linux/compiler.h:199 /include/linux/list.h:268 /sound/core/timer.c:944)
-> > 
-> > 	but task is already holding lock:
-> > 	 ffffffffbaf6b3a0 (register_mutex){+.+.}, at: snd_timer_close (/sound/core/timer.c:416)
-> > 
-> > 	other info that might help us debug this:
-> > 	  Possible unsafe locking scenario:
-> > 
-> > 		CPU0
-> > 		----
-> > 	   lock(register_mutex);
-> > 	   lock(register_mutex);
-> > 
-> > 	*** DEADLOCK ***
-> > 
-> > 	  May be due to missing lock nesting notation
-> > 
-> > 	 2 locks held by xdg-screensaver/1321:
-> > 	 #0: ffff9f74bbf5ef50 (&tu->ioctl_lock){+.+.}, at: snd_timer_user_release (/sound/core/timer.c:1467)
-> > 	 #1: ffffffffbaf6b3a0 (register_mutex){+.+.}, at: snd_timer_close (/sound/core/timer.c:416)
-> > 
-> > 	stack backtrace:
-> > 	 CPU: 27 PID: 1321 Comm: xdg-screensaver Not tainted 5.4.0-rc4-00090-g95b5dc072cc3-dirty #48
-> > 	 Hardware name: Gigabyte Technology Co., Ltd. X299 AORUS Gaming 3 Pro/X299 AORUS Gaming 3 Pro-CF, BIOS F3 12/28/2017
-> > 	 Call Trace:
-> > 	 dump_stack (/lib/dump_stack.c:115)
-> > 	 __lock_acquire.cold (/kernel/locking/lockdep.c:2371 /kernel/locking/lockdep.c:2412 /kernel/locking/lockdep.c:2955 /kernel/locking/lockdep.c:3955)
-> > 	 ? __lock_acquire (/kernel/locking/lockdep.c:3962)
-> > 	 lock_acquire (/arch/x86/include/asm/current.h:15 /kernel/locking/lockdep.c:4489)
-> > 	 ? snd_timer_free.part.0 (/include/linux/compiler.h:199 /include/linux/list.h:268 /sound/core/timer.c:944)
-> > 	 __mutex_lock (/include/linux/compiler.h:199 /arch/x86/include/asm/atomic64_64.h:22 /include/asm-generic/atomic-instrumented.h:837 /include/asm-generic/atomic-long.h:28 /kernel/locking/mutex.c:111 /kernel/locking/mutex.c:152 /kernel/locking/mutex.c:958 /kernel/locking/mutex.c:1103)
-> > 	 ? snd_timer_free.part.0 (/include/linux/compiler.h:199 /include/linux/list.h:268 /sound/core/timer.c:944)
-> > 	 ? __mutex_lock (/include/linux/compiler.h:199 /arch/x86/include/asm/atomic64_64.h:22 /include/asm-generic/atomic-instrumented.h:837 /include/asm-generic/atomic-long.h:28 /kernel/locking/mutex.c:111 /kernel/locking/mutex.c:152 /kernel/locking/mutex.c:958 /kernel/locking/mutex.c:1103)
-> > 	 ? __mutex_lock (/arch/x86/include/asm/preempt.h:102 /kernel/locking/mutex.c:964 /kernel/locking/mutex.c:1103)
-> > 	 ? snd_timer_free.part.0 (/include/linux/compiler.h:199 /include/linux/list.h:268 /sound/core/timer.c:944)
-> > 	 ? snd_timer_free.part.0 (/include/linux/compiler.h:199 /include/linux/list.h:268 /sound/core/timer.c:944)
-> > 	 ? lockdep_hardirqs_on (/kernel/locking/lockdep.c:3394 /kernel/locking/lockdep.c:3434)
-> > 	 snd_timer_free.part.0 (/include/linux/compiler.h:199 /include/linux/list.h:268 /sound/core/timer.c:944)
-> > 	 snd_timer_dev_free (/sound/core/timer.c:967)
-> > 	 __snd_device_free (/sound/core/device.c:76)
-> > 	 snd_device_free_all (/sound/core/device.c:228)
-> > 	 release_card_device (/sound/core/init.c:471 /sound/core/init.c:140)
-> > 	 device_release (/drivers/base/core.c:1105)
-> > 	 kobject_put (/lib/kobject.c:697 /lib/kobject.c:722 /include/linux/kref.h:65 /lib/kobject.c:739)
-> > 	 snd_timer_close_locked (/sound/core/timer.c:398)
-> > 	 snd_timer_close (/sound/core/timer.c:417)
-> > 	 snd_timer_user_release (/sound/core/timer.c:1469)
-> > 	 __fput (/fs/file_table.c:281)
-> > 	 task_work_run (/kernel/task_work.c:115 (discriminator 1))
-> > 	 exit_to_usermode_loop (/include/linux/tracehook.h:188 /arch/x86/entry/common.c:163)
-> > 	 do_syscall_64 (/arch/x86/entry/common.c:194 /arch/x86/entry/common.c:274 /arch/x86/entry/common.c:300)
-> > 	 entry_SYSCALL_64_after_hwframe (/arch/x86/entry/entry_64.S:177)
-> 
-> OK, this looks like a deadlock that is via put_device() called at
-> closing the timer device that is the last open instance while freeing
-> the card.
-> 
-> Could you try the patch below?
+> From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> Sent: Wednesday, October 23, 2019 11:56 AM
+> Subject: [PATCH net-next 08/14] vsock: add vsock_create_connected() calle=
+d
+> by transports
+>=20
+> All transports call __vsock_create() with the same parameters,
+> most of them depending on the parent socket. In order to simplify
+> the VSOCK core APIs exposed to the transports, this patch adds
+> the vsock_create_connected() callable from transports to create
+> a new socket when a connection request is received.
+> We also unexported the __vsock_create().
+>=20
+> Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  include/net/af_vsock.h                  |  5 +----
+>  net/vmw_vsock/af_vsock.c                | 20 +++++++++++++-------
+>  net/vmw_vsock/hyperv_transport.c        |  3 +--
+>  net/vmw_vsock/virtio_transport_common.c |  3 +--
+>  net/vmw_vsock/vmci_transport.c          |  3 +--
+>  5 files changed, 17 insertions(+), 17 deletions(-)
 
-I can, but I'm not sure if I can trigger the issue for the second time.
-
--- 
- Kirill A. Shutemov
+Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
