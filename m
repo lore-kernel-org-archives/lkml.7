@@ -2,112 +2,79 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 768CCCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719DECA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442212173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h8BpNJDK"
+	by mail.kernel.org (Postfix) with ESMTP id 507892067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfJ3U4c (ORCPT
+        id S1727026AbfJ3U5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 16:56:32 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44278 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfJ3U4c (ORCPT
+        Wed, 30 Oct 2019 16:57:18 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:29953 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbfJ3U5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 16:56:32 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UKuLXl016614;
-        Wed, 30 Oct 2019 15:56:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572468981;
-        bh=uTa+nOWWvFmdv+XqibK6OdPOOuNPy1uXmeMAZ1EYTP8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=h8BpNJDKWuUVYFAZPMvqDUsA5LLhZV9TQRpm5jNnq9cXt7PmY/366WMOXLdpgjMxp
-         fwmqefKaWqttxNhQpMd98r1WxZWuF/SFgbUUTsh/AsZUcXm2kUKAHamwgVsiG4E0JN
-         g1jPTjN/rpe+v/VhzMxrQNY9dAorW+lIEe/oeCaU=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UKuLww128650
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 15:56:21 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 15:56:08 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 15:56:21 -0500
-Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UKuKcI091822;
-        Wed, 30 Oct 2019 15:56:20 -0500
-Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        kbuild test robot <lkp@intel.com>
-CC:     <kbuild-all@lists.01.org>, <pavel@ucw.cz>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191028183629.11779-7-dmurphy@ti.com>
- <201910302027.2hNdR993%lkp@intel.com>
- <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
- <075c9330-a9b5-1360-4447-71a4797553a9@gmail.com>
- <f32e2063-3c56-607c-0e74-f75f68e62e16@ti.com>
- <b50fa8f6-1a27-ad22-d4a7-37bc07fc6768@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <6b64d284-0854-4143-6cd8-2b07ac268e5e@ti.com>
-Date:   Wed, 30 Oct 2019 15:55:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 16:57:17 -0400
+Received: from belgarion ([90.55.204.252])
+        by mwinf5d15 with ME
+        id KwxF210025TFNlm03wxFig; Wed, 30 Oct 2019 21:57:15 +0100
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Wed, 30 Oct 2019 21:57:15 +0100
+X-ME-IP: 90.55.204.252
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Subject: Re: [PATCH 36/46] ARM: pxa: move smemc register access from clk to platform
+References: <20191018154052.1276506-1-arnd@arndb.de>
+        <20191018154201.1276638-36-arnd@arndb.de>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Wed, 30 Oct 2019 21:57:15 +0100
+In-Reply-To: <20191018154201.1276638-36-arnd@arndb.de> (Arnd Bergmann's
+        message of "Fri, 18 Oct 2019 17:41:51 +0200")
+Message-ID: <87pnielzo4.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <b50fa8f6-1a27-ad22-d4a7-37bc07fc6768@gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+Arnd Bergmann <arnd@arndb.de> writes:
 
-On 10/30/19 3:50 PM, Jacek Anaszewski wrote:
-> Dan,
+> The get_sdram_rows() and get_memclkdiv() helpers need smemc
+> register that are separate from the clk registers, move
+> them out of the clk driver, and use an extern declaration
+> instead.
 >
-> On 10/30/19 9:23 PM, Dan Murphy wrote:
->> Jacek
->>
->>
->>>> Does not appear here
->>>>
->>>> Finally not sure why the MIPS compiler is complaining about this but the
->>>> ARM and x86 is not
->>> Compilation breaks also for ARM.
->> Thanks for the information.
->>
->> I am not seeing this issue or even a warning when using the ARM 8.3
->> toolchain even in a clean build.
->>
->> arm-linux-gnueabihf-gcc (GNU Toolchain for the A-profile Architecture
->> 8.3-2019.03 (arm-rel-8.36)) 8.3.0
->>
->> So is a bug in this toolchain?
->  From what I've just googled C specification allows for a compiler
-> implementation to accept also other forms of constants expressions
-> than standard ones pointed out in the spec.
->
-> So this is not necessarily a bug.
->
-OK.  Well I will try to repo with the above instructions.  And wait till 
-Friday for any other comments.  If I get no other comments I will make 
-the couple of changes and then post v16.
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+This patch bothers me a bit.
 
-Dan
+The idea behind generic.c is that it's a file common to all pxa2xx, pxa3xx
+platforms. Yet with this patch, someone without history will believe that
+calling pxa_smemc_get_sdram_rows() on a pxa3xx platform is perfectly valid,
+while it is not, because DRAC2 doesn't exist on pxa3xx (bits are not defined in
+MDCNFG).
 
+At least I'll rename the function to pxa2xx_smemc_get_sdram_rows() if you don't
+have a better idea.
+
+Cheers.
+
+--
+Robert
