@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44078CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A18CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A6F2087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6ED20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450899;
-	bh=EB16L9vTHdgOumIeosjbfNzBmnYiyoIdyewf7yrkr2k=;
+	s=default; t=1572450905;
+	bh=8Q9g2juXNBV5no/rSw06P+H5qP7c3cfW0hVwZxa0L+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TXItA6WeFWzvO8dR27NMXAC/otuqVu5l9nTDOuZ3HIgG1fPKu6X3GBsaL7p/YCSYf
-	 s/JRXYjWd4jrCKfMF1dDY5ttBVIJfdKQJ1uoEf4FG8es5mBeeB25hzHPfvzppHTMhv
-	 jAL5s4QnS1VYwGNRMa+JP3TM3NNhSju5sEcauwTs=
+	b=tRrkj7OAofIeugjoGpTSJvVO55ajj1JUOuybAUKJw3wC3ujIdcV0viObuIJlhi2fK
+	 THpNOzaxCCdmv4VxNt/hfG12YPvVQIY3q0SzQeglK1wSV+fIJg6hkNzxRne59ViQLt
+	 5LZPv/x6/HYh2aWrlvM6tBlSPHWmiK+IoR6HnuOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbfJ3Pyx (ORCPT
+        id S1728525AbfJ3PzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:54:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56122 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbfJ3Pyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:54:41 -0400
+        id S1728488AbfJ3PzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:55:00 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E2C920874;
-        Wed, 30 Oct 2019 15:54:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CFC920874;
+        Wed, 30 Oct 2019 15:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450879;
-        bh=EB16L9vTHdgOumIeosjbfNzBmnYiyoIdyewf7yrkr2k=;
+        s=default; t=1572450899;
+        bh=8Q9g2juXNBV5no/rSw06P+H5qP7c3cfW0hVwZxa0L+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zEahE0nRZMIDIEl5l0Vmw0NbOFJqWUmbiSywePdWlq0w3p41Ba7kAhzDzi2hhClO2
-         R/VZSodN1OuEuiAzLTL0j+4iSUYVNadh+e6xgMKETHYAOdnpgoyCPAgx3LkNMcwaIS
-         2PKw80bnOyBX114DGZBEeIKtjg28d3yd4HsL7T5c=
+        b=chaIhKWBeE8sWnKC9dATe7EU9HvzfBlUt+cpxc/ZYi5/+DzhNqKEcHxlnVnsUkvd7
+         ZLdxox8W9P/lrReV08QfHAa4XQKmEngMwGlsIUwmz/veP7MRTV5LKyj55Bzt4BuoGM
+         qqdpXNP0T/hmbsDm8hcL2KRwjfyG+UZx1kFR/jKU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 13/38] ARM: mm: fix alignment handler faults under memory pressure
-Date:   Wed, 30 Oct 2019 11:53:41 -0400
-Message-Id: <20191030155406.10109-13-sashal@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/38] ARM: dts: imx7s: Correct GPT's ipg clock source
+Date:   Wed, 30 Oct 2019 11:53:47 -0400
+Message-Id: <20191030155406.10109-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
 References: <20191030155406.10109-1-sashal@kernel.org>
@@ -59,108 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 67e15fa5b487adb9b78a92789eeff2d6ec8f5cee ]
+[ Upstream commit 252b9e21bcf46b0d16f733f2e42b21fdc60addee ]
 
-When the system has high memory pressure, the page containing the
-instruction may be paged out.  Using probe_kernel_address() means that
-if the page is swapped out, the resulting page fault will not be
-handled because page faults are disabled by this function.
+i.MX7S/D's GPT ipg clock should be from GPT clock root and
+controlled by CCM's GPT CCGR, using correct clock source for
+GPT ipg clock instead of IMX7D_CLK_DUMMY.
 
-Use get_user() to read the instruction instead.
-
-Reported-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-Fixes: b255188f90e2 ("ARM: fix scheduling while atomic warning in alignment handling code")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 3ef79ca6bd1d ("ARM: dts: imx7d: use imx7s.dtsi as base device tree")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/alignment.c | 44 +++++++++++++++++++++++++++++++++--------
- 1 file changed, 36 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/imx7s.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
-index bd2c739d80839..84a6bbaf8cb20 100644
---- a/arch/arm/mm/alignment.c
-+++ b/arch/arm/mm/alignment.c
-@@ -768,6 +768,36 @@ do_alignment_t32_to_handler(unsigned long *pinstr, struct pt_regs *regs,
- 	return NULL;
- }
- 
-+static int alignment_get_arm(struct pt_regs *regs, u32 *ip, unsigned long *inst)
-+{
-+	u32 instr = 0;
-+	int fault;
-+
-+	if (user_mode(regs))
-+		fault = get_user(instr, ip);
-+	else
-+		fault = probe_kernel_address(ip, instr);
-+
-+	*inst = __mem_to_opcode_arm(instr);
-+
-+	return fault;
-+}
-+
-+static int alignment_get_thumb(struct pt_regs *regs, u16 *ip, u16 *inst)
-+{
-+	u16 instr = 0;
-+	int fault;
-+
-+	if (user_mode(regs))
-+		fault = get_user(instr, ip);
-+	else
-+		fault = probe_kernel_address(ip, instr);
-+
-+	*inst = __mem_to_opcode_thumb16(instr);
-+
-+	return fault;
-+}
-+
- static int
- do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- {
-@@ -775,10 +805,10 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 	unsigned long instr = 0, instrptr;
- 	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
- 	unsigned int type;
--	unsigned int fault;
- 	u16 tinstr = 0;
- 	int isize = 4;
- 	int thumb2_32b = 0;
-+	int fault;
- 
- 	if (interrupts_enabled(regs))
- 		local_irq_enable();
-@@ -787,15 +817,14 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 
- 	if (thumb_mode(regs)) {
- 		u16 *ptr = (u16 *)(instrptr & ~1);
--		fault = probe_kernel_address(ptr, tinstr);
--		tinstr = __mem_to_opcode_thumb16(tinstr);
-+
-+		fault = alignment_get_thumb(regs, ptr, &tinstr);
- 		if (!fault) {
- 			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
- 			    IS_T32(tinstr)) {
- 				/* Thumb-2 32-bit */
--				u16 tinst2 = 0;
--				fault = probe_kernel_address(ptr + 1, tinst2);
--				tinst2 = __mem_to_opcode_thumb16(tinst2);
-+				u16 tinst2;
-+				fault = alignment_get_thumb(regs, ptr + 1, &tinst2);
- 				instr = __opcode_thumb32_compose(tinstr, tinst2);
- 				thumb2_32b = 1;
- 			} else {
-@@ -804,8 +833,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 			}
- 		}
- 	} else {
--		fault = probe_kernel_address((void *)instrptr, instr);
--		instr = __mem_to_opcode_arm(instr);
-+		fault = alignment_get_arm(regs, (void *)instrptr, &instr);
- 	}
- 
- 	if (fault) {
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index a7f697b0290ff..90f5bdfa9b3ce 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -443,7 +443,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302d0000 0x10000>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT1_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT1_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 			};
+@@ -452,7 +452,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302e0000 0x10000>;
+ 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT2_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT2_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+@@ -462,7 +462,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302f0000 0x10000>;
+ 				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT3_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT3_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+@@ -472,7 +472,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x30300000 0x10000>;
+ 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT4_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT4_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
 -- 
 2.20.1
 
