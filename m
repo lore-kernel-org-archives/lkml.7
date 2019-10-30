@@ -2,134 +2,162 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE37DCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CA3CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C274220679
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9437020679
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfJ3PQy (ORCPT
+        id S1727112AbfJ3PSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:16:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60084 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726451AbfJ3PQy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:16:54 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9UF61Ai129567
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:16:52 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vycekj4dd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:16:51 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <iii@linux.ibm.com>;
-        Wed, 30 Oct 2019 15:16:48 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 30 Oct 2019 15:16:46 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9UFGigr51904710
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 15:16:44 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51984A4054;
-        Wed, 30 Oct 2019 15:16:44 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ECAF7A4060;
-        Wed, 30 Oct 2019 15:16:43 +0000 (GMT)
-Received: from white.boeblingen.de.ibm.com (unknown [9.152.96.251])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 30 Oct 2019 15:16:43 +0000 (GMT)
-From:   Ilya Leoshkevich <iii@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v2] mm/sparse.c: mark populate_section_memmap as __meminit
-Date:   Wed, 30 Oct 2019 16:16:39 +0100
-X-Mailer: git-send-email 2.23.0
+        Wed, 30 Oct 2019 11:18:37 -0400
+Received: from mga11.intel.com ([192.55.52.93]:3811 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726950AbfJ3PSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:18:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 08:18:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="374918242"
+Received: from kmbarley-mobl.amr.corp.intel.com (HELO [10.252.135.193]) ([10.252.135.193])
+  by orsmga005.jf.intel.com with ESMTP; 30 Oct 2019 08:18:35 -0700
+Subject: Re: [alsa-devel] [PATCH v3 2/2] soundwire: qcom: add support for
+ SoundWire controller
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
+        lgirdwood@gmail.com, broonie@kernel.org
+References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
+ <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
+ <20191021044405.GB2654@vkoul-mobl>
+ <17cb6d3f-2317-9667-8642-566a8a88bd4c@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <e9b63796-4af2-452c-53de-aab2e7c85866@linux.intel.com>
+Date:   Wed, 30 Oct 2019 10:18:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
+In-Reply-To: <17cb6d3f-2317-9667-8642-566a8a88bd4c@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19103015-0012-0000-0000-0000035F2C4E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103015-0013-0000-0000-0000219A729B
-Message-Id: <20191030151639.41486-1-iii@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910300141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building the kernel on s390 with -Og produces the following warning:
 
-WARNING: vmlinux.o(.text+0x28dabe): Section mismatch in reference from the function populate_section_memmap() to the function .meminit.text:__populate_section_memmap()
-The function populate_section_memmap() references
-the function __meminit __populate_section_memmap().
-This is often because populate_section_memmap lacks a __meminit
-annotation or the annotation of __populate_section_memmap is wrong.
 
-While -Og is not supported, in theory this might still happen with
-another compiler or on another architecture. So fix this by using the
-correct section annotations.
+On 10/30/19 9:56 AM, Srinivas Kandagatla wrote:
+> 
+> 
+> On 21/10/2019 05:44, Vinod Koul wrote:
+>> On 11-10-19, 16:44, Srinivas Kandagatla wrote:
+>>
+>>> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
+>>> +{
+>>> +    struct qcom_swrm_ctrl *ctrl = dev_id;
+>>> +    u32 sts, value;
+>>> +    unsigned long flags;
+>>> +
+>>> +    ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS, &sts);
+>>> +
+>>> +    if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
+>>> +        ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS, &value);
+>>> +        dev_err_ratelimited(ctrl->dev,
+>>> +                    "CMD error, fifo status 0x%x\n",
+>>> +                     value);
+>>> +        ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
+>>> +    }
+>>> +
+>>> +    if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
+>>> +        sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS)
+>>> +        schedule_work(&ctrl->slave_work);
+>>
+>> we are in irq thread, so why not do the work here rather than schedule
+>> it?
+> 
+> The reason is that, sdw_handle_slave_status() we will read device id 
+> registers, which are fifo based in this controller and triggers an 
+> interrupt for each read.
+> So all the such reads will timeout waiting for interrupt if we do not do 
+> it in a separate thread.
 
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
----
+Yes, it's similar for Intel. we don't read device ID in the handler or 
+reads would time out. And in the latest patches we also use a work queue 
+for the slave status handling (due to MSI handling issues).
+Even if this timeout problem did not exists, updates to the slave status 
+will typically result in additional read/writes, which are going to be 
+throttled by the command bandwidth (frame rate), so this status update 
+should really not be done in a handler. This has to be done in a thread 
+or work queue.
 
-v1 -> v2: Do not touch mm/sparse.c version of __populate_section_memmap:
-its __init annotation is correct, since it is only called during init
-phase (by sparse_init_nid), and contains the call to another __init
-function. Spotted by kbuild test robot <lkp@intel.com> and Oscar
-Salvador <osalvador@suse.de>.
+> 
+> 
+> 
+>>
+>>> +static int qcom_swrm_compute_params(struct sdw_bus *bus)
+>>> +{
+>>> +    struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+>>> +    struct sdw_master_runtime *m_rt;
+>>> +    struct sdw_slave_runtime *s_rt;
+>>> +    struct sdw_port_runtime *p_rt;
+>>> +    struct qcom_swrm_port_config *pcfg;
+>>> +    int i = 0;
+>>> +
+>>> +    list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
+>>> +        list_for_each_entry(p_rt, &m_rt->port_list, port_node) {
+>>> +            pcfg = &ctrl->pconfig[p_rt->num - 1];
+>>> +            p_rt->transport_params.port_num = p_rt->num;
+>>> +            p_rt->transport_params.sample_interval = pcfg->si + 1;
+>>> +            p_rt->transport_params.offset1 = pcfg->off1;
+>>> +            p_rt->transport_params.offset2 = pcfg->off2;
+>>> +        }
+>>> +
+>>> +        list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
+>>> +            list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
+>>> +                pcfg = &ctrl->pconfig[i];
+>>> +                p_rt->transport_params.port_num = p_rt->num;
+>>> +                p_rt->transport_params.sample_interval =
+>>> +                    pcfg->si + 1;
+>>> +                p_rt->transport_params.offset1 = pcfg->off1;
+>>> +                p_rt->transport_params.offset2 = pcfg->off2;
+>>> +                i++;
+>>> +            }
+>>
+>> Can you explain this one, am not sure I understood this. This fn is
+>> supposed to compute and fill up the params, all I can see is filling up!
+>>
+> Bandwidth parameters are currently coming from board specific Device 
+> Tree, which are programmed here.
 
-I was notified that v1 has already been included into
-http://ozlabs.org/~akpm/mmots/broken-out. Since this is not a git
-repository, I've decided to send a v2 instead of the fix. Please let me
-know if I should send a fix instead.
+'compute' does not mean 'dynamic on-demand bandwidth allocation', it's 
+perfectly legal to use fixed tables as done here.
 
- mm/sparse.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/mm/sparse.c b/mm/sparse.c
-index f6891c1992b1..c2c01b6330af 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -647,7 +647,7 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
- #endif
- 
- #ifdef CONFIG_SPARSEMEM_VMEMMAP
--static struct page *populate_section_memmap(unsigned long pfn,
-+static struct page * __meminit populate_section_memmap(unsigned long pfn,
- 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
- 	return __populate_section_memmap(pfn, nr_pages, nid, altmap);
-@@ -669,7 +669,7 @@ static void free_map_bootmem(struct page *memmap)
- 	vmemmap_free(start, end, NULL);
- }
- #else
--struct page *populate_section_memmap(unsigned long pfn,
-+struct page * __meminit populate_section_memmap(unsigned long pfn,
- 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
- 	struct page *page, *ret;
--- 
-2.23.0
-
+> 
+>>> +static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
+>>> +    .hw_params = qcom_swrm_hw_params,
+>>> +    .prepare = qcom_swrm_prepare,
+>>> +    .hw_free = qcom_swrm_hw_free,
+>>> +    .startup = qcom_swrm_startup,
+>>> +    .shutdown = qcom_swrm_shutdown,
+>>> +        .set_sdw_stream = qcom_swrm_set_sdw_stream,
+>>
+>> why does indent look off to me!
+>>
+> Yep, Fixed in next version.
+> 
+> --srini
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
