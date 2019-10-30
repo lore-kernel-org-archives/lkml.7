@@ -2,124 +2,232 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC19ECA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AC9CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC7020656
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="PxRXFHyq"
+	by mail.kernel.org (Postfix) with ESMTP id 2AD2820656
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572450662;
+	bh=qBIHlVIiMD+DatNMRp0koo/R95x0y31dpttHdv2ls+4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hIrq1Lx0r2fl9b1Sht8rnkv/ny+9rGosYGBLeohQwpm6zLPImeMAK4IfZ/xip4DHj
+	 E9qlH2IfDbqbFtPwV1T2pkI7q/4BiepFfX+6i9ufqZMcsqh4P3+fL9wIRwNpyXv1E6
+	 CCvYBGBYdx0jffzMm9NO4/kM9DMyti47Up257nLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfJ3Puw (ORCPT
+        id S1727672AbfJ3PvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:50:52 -0400
-Received: from sonic308-55.consmr.mail.gq1.yahoo.com ([98.137.68.31]:34057
-        "EHLO sonic308-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727629AbfJ3Puv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:50:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1572450650; bh=tlzW+EHXjriGMcNx2q7rBODiO5QJOtbDYR9mIItAx7c=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=PxRXFHyq1BwiPdfBCGkKlBIYlzsV/0JFMaOvTMvltrSJynguwBjBs7AkNjF+0/9tc97g3hhMCH/YXfA4n8rnZCm09eIomwM+iC4V+nUs7Pp+1KoWWCUWAkKM89LZBOwfetEXoQYH9haIJbFDq3emBaM7br9SdLUZGZVAo+CTeq4QbbUrJ8fBGFOzE1h9b3xy6o+H2NjaCZLd+qiqnsikTXSRQVpHUCZga3N4+Bdd17FCbbwCsDfJ6ZZoq5Lxm4n+/TWPib+Re/tW/LbqBGXN2cyZv0XOSofNp4QCBpA5JpI1Z3J5nwWmWvNccsJjm3B3FnyMed5agi1tRAoHtvIChQ==
-X-YMail-OSG: HIJd13kVM1k4sA98h6t_XGpmpEp2jWNj1U_XV4n9OX8AN520dD71uJ8PHv13D_2
- omE8WRCjHn2967vQv6JzS0UQvmrmTABhtz6ArxefHcIfykBA8jAEENwHE8KAOALswyI6xDB04TWw
- xMPOXBf374r6q35M60hA93Y0HJGpQY.alMyw6IG4Xn8rGK7hs8sC1kBz.jBJ8yQHYPN7qcbE.9WA
- hH.s3tJQM6M8ACyYaL2xKXG6iZ_1JkVUAaJSBTSiFpijnnAliKPJX2Rj4QIShn6aqLwaJOWk21vj
- 1wVoKWoOJlq.CqsKW_nl4VwVwA6.Um2Whv7JJ4d8_N3l4MkHWbKX9ztRdYjbdq7RepB7Wi1KPA1z
- R2orOR3UY_cxKJALXVe6h7b2XxmzlVMzbHWmvq8wrUXchPz0SYrbFsC.2gCLV3jNcJHzwZsTIFkO
- yK4eiFSoIOc0KgoMWxbzdFYJmIuWgHkI8ECvE7OXPSOH16aOm7MFUIbjEyZNGkXhrlaZZl4rrjj9
- r3eJkJDhL98V_zFDSqG_lMbTf6mNh9KcdENQUmTeIrfTqSqy8GoeTvR1qeXRG8KFu.ww9_ogRZjz
- 0kf3mcqo42r05UCCwsGep.4zdIUmryoimEOz6Zd0bdND3jslLc5_1Y8ADEfwJzfyTd34XqVS5L3Z
- bOwX2xusZjxw4w17.rnBBHXLmr5prGlcu5.UssPW4NXC.lkwUN39Q3GTIas1VGO8Xbo56YDnvyAX
- DeJc6Tj_EqzdW.YVfBLrYct2lqEIBpIhl9puQ0Oksx9F5RiQ1y_xRgd_SqGlj6b4vcECOrZ4my1r
- v9.ca5Br_axLga54rozxFcp7fIXqo5gIwFK_ek2fLTnvWGWV.EWcG.ggyshNL9b6LM_fXHbZdMjT
- S_A0qQV2QvWBnY8GAjatPCNxgae4Hd8Iauw8Xqia7qfoZIf2J_dhqazdSyeHSGRD7fX80x7lp7O1
- D7EO33CSUhEllw7EUu8Zi9a6rTDLbrLaAGFdwaedVb_7J_5K.9jyFKt7vARtP4ybn7U2Qn_wr.zv
- 8hHxG69aQSusZpFtKIDCoICNsPZKbbw_RPI32wmSvnGBFBH0fsGNANC9bAobaM623daFV1GOCamV
- f8XfQ21vn1mkUsR6RCVNwMuHxlSSB44jYQsnwhtc33zSX29N9wlpo54zbXoj.aELxlrPC7YhaJu1
- YlLlVO6DgLja30t54lFBbj6V1j5k6EcBDQ1XLqC0aNoI0rXtZQRYBPL4kNdW2R5E5rRrr8nIUrdV
- .akd01OnBIOijzH9Hy_GSuDLg6i0scWI7MokVOSHS5Ll_fdrx2xQz.rFA9fGeWaAkMgxDSs8wHWr
- R8LZxzmW34m0mgMDRWVEFwpgh55_JjkHl2ONqcZMpN7WEOMGgOgiHJ2qQcsZzrwiO.80SS0zYA6E
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Wed, 30 Oct 2019 15:50:50 +0000
-Received: by smtp419.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID ecf34bf87d460b3002b31f8cc4759825;
-          Wed, 30 Oct 2019 15:50:47 +0000 (UTC)
-Date:   Wed, 30 Oct 2019 23:50:37 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Gao Xiang <gaoxiang25@huawei.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: bio_alloc should never fail
-Message-ID: <20191030155020.GA3953@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20191030035518.65477-1-gaoxiang25@huawei.com>
- <20aa40bd-280d-d223-9f73-d9ed7dbe4f29@huawei.com>
- <20191030091542.GA24976@architecture4>
- <19a417e6-8f0e-564e-bc36-59bfc883ec16@huawei.com>
- <20191030104345.GB170703@architecture4>
- <20191030151444.GC16197@mit.edu>
+        Wed, 30 Oct 2019 11:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727233AbfJ3PvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:00 -0400
+Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6842C20656;
+        Wed, 30 Oct 2019 15:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572450658;
+        bh=qBIHlVIiMD+DatNMRp0koo/R95x0y31dpttHdv2ls+4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RpMoQTCCslTa/plW4IeE75GJlcT31kvayuV4uNOMSdEmxW/0lC0tY2yPD+Jbl8xcz
+         IvfpLeNNT3WKfKt+Po3fFEhS22riWK2m/D+WfpQRfRS/DGmyVb/ph0CH1r4WVgmt7N
+         EE35VuFqXRvG+4l/YDjtlnsu+4PsZMFr99W+YUGU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 16/81] ASoC: SOF: Intel: hda: Disable DMI L1 entry during capture
+Date:   Wed, 30 Oct 2019 11:48:22 -0400
+Message-Id: <20191030154928.9432-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
+References: <20191030154928.9432-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030151444.GC16197@mit.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Mailer: WebService/1.1.14593 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-On Wed, Oct 30, 2019 at 11:14:45AM -0400, Theodore Y. Ts'o wrote:
-> On Wed, Oct 30, 2019 at 06:43:45PM +0800, Gao Xiang wrote:
-> > > You're right, in low memory scenario, allocation with bioset will be faster, as
-> > > you mentioned offline, maybe we can add/use a priviate bioset like btrfs did
-> > > rather than using global one, however, we'd better check how deadlock happen
-> > > with a bioset mempool first ...
-> > 
-> > Okay, hope to get hints from Jaegeuk and redo this patch then...
-> 
-> It's not at all clear to me that using a private bioset is a good idea
-> for f2fs.  That just means you're allocating a separate chunk of
-> memory just for f2fs, as opposed to using the global pool.  That's an
-> additional chunk of non-swapable kernel memory that's not going to be
-> available, in *addition* to the global mempool.  
-> 
-> Also, who else would you be contending for space with the global
-> mempool?  It's not like an mobile handset is going to have other users
-> of the global bio mempool.
-> 
-> On a low-end mobile handset, memory is at a premium, so wasting memory
-> to no good effect isn't going to be a great idea.
+[ Upstream commit 43b2ab9009b13bfff47fcc1893de9244b39bdd54 ]
 
-Thanks for your reply. I agree with your idea.
+There is a known issue on some Intel platforms which causes
+pause/release to run into xrun's during capture usecases.
+The suggested workaround to address the issue is to
+disable the entry of lower power L1 state in the physical
+DMI link when there is a capture stream open.
 
-Actually I think after this version patch is applied, all are the same
-as the previous status (whether some deadlock or not).
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190927200538.660-14-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/sof/intel/Kconfig      | 10 +++++++
+ sound/soc/sof/intel/hda-ctrl.c   | 12 +++------
+ sound/soc/sof/intel/hda-stream.c | 45 +++++++++++++++++++++++++++-----
+ sound/soc/sof/intel/hda.h        |  5 +++-
+ 4 files changed, 56 insertions(+), 16 deletions(-)
 
-So I'm curious about the original issue in commit 740432f83560
-("f2fs: handle failed bio allocation"). Since f2fs manages multiple write
-bios with its internal fio but it seems the commit is not helpful to
-resolve potential mempool deadlock (I'm confused since no calltrace,
-maybe I'm wrong)...
-
-I think it should be gotten clear first and think how to do next..
-(I tend not to add another private bioset since it's unshareable as you
- said as well...)
-
-Thanks,
-Gao Xiang
-
-> 
-> Regards,
-> 
-> 						- Ted
-> 
->
+diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
+index dd14ce92fe102..a5fd356776ee9 100644
+--- a/sound/soc/sof/intel/Kconfig
++++ b/sound/soc/sof/intel/Kconfig
+@@ -241,6 +241,16 @@ config SND_SOC_SOF_HDA_AUDIO_CODEC
+ 	  Say Y if you want to enable HDAudio codecs with SOF.
+ 	  If unsure select "N".
  
++config SND_SOC_SOF_HDA_ALWAYS_ENABLE_DMI_L1
++	bool "SOF enable DMI Link L1"
++	help
++	  This option enables DMI L1 for both playback and capture
++	  and disables known workarounds for specific HDaudio platforms.
++	  Only use to look into power optimizations on platforms not
++	  affected by DMI L1 issues. This option is not recommended.
++	  Say Y if you want to enable DMI Link L1
++	  If unsure, select "N".
++
+ endif ## SND_SOC_SOF_HDA_COMMON
+ 
+ config SND_SOC_SOF_HDA_LINK_BASELINE
+diff --git a/sound/soc/sof/intel/hda-ctrl.c b/sound/soc/sof/intel/hda-ctrl.c
+index ea63f83a509bb..760094d49f18f 100644
+--- a/sound/soc/sof/intel/hda-ctrl.c
++++ b/sound/soc/sof/intel/hda-ctrl.c
+@@ -139,20 +139,16 @@ void hda_dsp_ctrl_misc_clock_gating(struct snd_sof_dev *sdev, bool enable)
+  */
+ int hda_dsp_ctrl_clock_power_gating(struct snd_sof_dev *sdev, bool enable)
+ {
+-#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+-	struct hdac_bus *bus = sof_to_bus(sdev);
+-#endif
+ 	u32 val;
+ 
+ 	/* enable/disable audio dsp clock gating */
+ 	val = enable ? PCI_CGCTL_ADSPDCGE : 0;
+ 	snd_sof_pci_update_bits(sdev, PCI_CGCTL, PCI_CGCTL_ADSPDCGE, val);
+ 
+-#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+-	/* enable/disable L1 support */
+-	val = enable ? SOF_HDA_VS_EM2_L1SEN : 0;
+-	snd_hdac_chip_updatel(bus, VS_EM2, SOF_HDA_VS_EM2_L1SEN, val);
+-#endif
++	/* enable/disable DMI Link L1 support */
++	val = enable ? HDA_VS_INTEL_EM2_L1SEN : 0;
++	snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR, HDA_VS_INTEL_EM2,
++				HDA_VS_INTEL_EM2_L1SEN, val);
+ 
+ 	/* enable/disable audio dsp power gating */
+ 	val = enable ? 0 : PCI_PGCTL_ADSPPGD;
+diff --git a/sound/soc/sof/intel/hda-stream.c b/sound/soc/sof/intel/hda-stream.c
+index ad8d41f22e92d..2c74471884025 100644
+--- a/sound/soc/sof/intel/hda-stream.c
++++ b/sound/soc/sof/intel/hda-stream.c
+@@ -185,6 +185,17 @@ hda_dsp_stream_get(struct snd_sof_dev *sdev, int direction)
+ 			direction == SNDRV_PCM_STREAM_PLAYBACK ?
+ 			"playback" : "capture");
+ 
++	/*
++	 * Disable DMI Link L1 entry when capture stream is opened.
++	 * Workaround to address a known issue with host DMA that results
++	 * in xruns during pause/release in capture scenarios.
++	 */
++	if (!IS_ENABLED(SND_SOC_SOF_HDA_ALWAYS_ENABLE_DMI_L1))
++		if (stream && direction == SNDRV_PCM_STREAM_CAPTURE)
++			snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR,
++						HDA_VS_INTEL_EM2,
++						HDA_VS_INTEL_EM2_L1SEN, 0);
++
+ 	return stream;
+ }
+ 
+@@ -193,23 +204,43 @@ int hda_dsp_stream_put(struct snd_sof_dev *sdev, int direction, int stream_tag)
+ {
+ 	struct hdac_bus *bus = sof_to_bus(sdev);
+ 	struct hdac_stream *s;
++	bool active_capture_stream = false;
++	bool found = false;
+ 
+ 	spin_lock_irq(&bus->reg_lock);
+ 
+-	/* find used stream */
++	/*
++	 * close stream matching the stream tag
++	 * and check if there are any open capture streams.
++	 */
+ 	list_for_each_entry(s, &bus->stream_list, list) {
+-		if (s->direction == direction &&
+-		    s->opened && s->stream_tag == stream_tag) {
++		if (!s->opened)
++			continue;
++
++		if (s->direction == direction && s->stream_tag == stream_tag) {
+ 			s->opened = false;
+-			spin_unlock_irq(&bus->reg_lock);
+-			return 0;
++			found = true;
++		} else if (s->direction == SNDRV_PCM_STREAM_CAPTURE) {
++			active_capture_stream = true;
+ 		}
+ 	}
+ 
+ 	spin_unlock_irq(&bus->reg_lock);
+ 
+-	dev_dbg(sdev->dev, "stream_tag %d not opened!\n", stream_tag);
+-	return -ENODEV;
++	/* Enable DMI L1 entry if there are no capture streams open */
++	if (!IS_ENABLED(SND_SOC_SOF_HDA_ALWAYS_ENABLE_DMI_L1))
++		if (!active_capture_stream)
++			snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR,
++						HDA_VS_INTEL_EM2,
++						HDA_VS_INTEL_EM2_L1SEN,
++						HDA_VS_INTEL_EM2_L1SEN);
++
++	if (!found) {
++		dev_dbg(sdev->dev, "stream_tag %d not opened!\n", stream_tag);
++		return -ENODEV;
++	}
++
++	return 0;
+ }
+ 
+ int hda_dsp_stream_trigger(struct snd_sof_dev *sdev,
+diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
+index d9c17146200b3..2cc789f0e83c4 100644
+--- a/sound/soc/sof/intel/hda.h
++++ b/sound/soc/sof/intel/hda.h
+@@ -39,7 +39,6 @@
+ #define SOF_HDA_WAKESTS			0x0E
+ #define SOF_HDA_WAKESTS_INT_MASK	((1 << 8) - 1)
+ #define SOF_HDA_RIRBSTS			0x5d
+-#define SOF_HDA_VS_EM2_L1SEN            BIT(13)
+ 
+ /* SOF_HDA_GCTL register bist */
+ #define SOF_HDA_GCTL_RESET		BIT(0)
+@@ -228,6 +227,10 @@
+ #define HDA_DSP_REG_HIPCIE		(HDA_DSP_IPC_BASE + 0x0C)
+ #define HDA_DSP_REG_HIPCCTL		(HDA_DSP_IPC_BASE + 0x10)
+ 
++/* Intel Vendor Specific Registers */
++#define HDA_VS_INTEL_EM2		0x1030
++#define HDA_VS_INTEL_EM2_L1SEN		BIT(13)
++
+ /*  HIPCI */
+ #define HDA_DSP_REG_HIPCI_BUSY		BIT(31)
+ #define HDA_DSP_REG_HIPCI_MSG_MASK	0x7FFFFFFF
+-- 
+2.20.1
+
