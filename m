@@ -2,71 +2,82 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8569CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762E6CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB8EC217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5699020862
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfJ3MJY (ORCPT
+        id S1726784AbfJ3MKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:09:24 -0400
-Received: from gentwo.org ([3.19.106.255]:37994 "EHLO gentwo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfJ3MJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:09:24 -0400
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 549D13EF15; Wed, 30 Oct 2019 12:09:23 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 523D63EECB;
-        Wed, 30 Oct 2019 12:09:23 +0000 (UTC)
-Date:   Wed, 30 Oct 2019 12:09:23 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Mike Rapoport <rppt@kernel.org>
-cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-In-Reply-To: <20191030071136.GA20624@rapoport-lnx>
-Message-ID: <alpine.DEB.2.21.1910301205001.14416@www.lameter.com>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org> <1572171452-7958-2-git-send-email-rppt@kernel.org> <20191028123124.ogkk5ogjlamvwc2s@box> <20191028130018.GA7192@rapoport-lnx> <20191028131623.zwuwguhm4v4s5imh@box> <alpine.DEB.2.21.1910290706360.3769@www.lameter.com>
- <20191029085551.GA18773@rapoport-lnx> <alpine.DEB.2.21.1910291011090.5411@www.lameter.com> <20191030071136.GA20624@rapoport-lnx>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 30 Oct 2019 08:10:04 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5654 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726242AbfJ3MKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 08:10:04 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8D31F10FB44CB8F6E8FE;
+        Wed, 30 Oct 2019 20:09:59 +0800 (CST)
+Received: from [127.0.0.1] (10.133.219.218) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 30 Oct 2019
+ 20:09:54 +0800
+Message-ID: <5DB97D91.1010500@huawei.com>
+Date:   Wed, 30 Oct 2019 20:09:53 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fault-inject: use DEFINE_DEBUGFS_ATTRIBUTE to define
+ debugfs fops
+References: <1572423756-59943-1-git-send-email-zhongjiang@huawei.com> <CAC5umygBcEic4HXCWfFKj0ZJHo8RRzPkO959051eYoH7y4C39A@mail.gmail.com>
+In-Reply-To: <CAC5umygBcEic4HXCWfFKj0ZJHo8RRzPkO959051eYoH7y4C39A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.219.218]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Wed, 30 Oct 2019, Mike Rapoport wrote:
-
-> > /dev/securemem or so?
+On 2019/10/30 18:29, Akinobu Mita wrote:
+> 2019年10月30日(水) 17:26 zhong jiang <zhongjiang@huawei.com>:
+>> It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
+>> operation rather than DEFINE_SIMPLE_ATTRIBUTE.
+>>
+>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+>> ---
+>>  lib/fault-inject.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/lib/fault-inject.c b/lib/fault-inject.c
+>> index 8186ca8..4e61326 100644
+>> --- a/lib/fault-inject.c
+>> +++ b/lib/fault-inject.c
+>> @@ -164,7 +164,7 @@ static int debugfs_ul_get(void *data, u64 *val)
+>>         return 0;
+>>  }
+>>
+>> -DEFINE_SIMPLE_ATTRIBUTE(fops_ul, debugfs_ul_get, debugfs_ul_set, "%llu\n");
+>> +DEFINE_DEBUGFS_ATTRIBUTE(fops_ul, debugfs_ul_get, debugfs_ul_set, "%llu\n");
+>>
+>>  static void debugfs_create_ul(const char *name, umode_t mode,
+>>                               struct dentry *parent, unsigned long *value)
+> Nowadays we have debugfs_create_ulong(), so should we use it instead of
+> debugfs_create_ul() defined in this file and remove the definision
+> altogether?
 >
-> A device driver will need to remove the secure area from the direct map and
-> then we back to square one.
+> .
+yes, you are right. That is better. I will repost in v2. Thanks
 
-We have avoided the need for modifications to kernel core code. And its a
-natural thing to treat this like special memory provided by a device
-driver.
+Sincerely,
+zhong jiang
+>
 
 
