@@ -2,93 +2,58 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7A8CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD07ECA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A7D2087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572444304;
-	bh=1wJeIZRTGBvYQK67ll1QuK+8QXEEfDG/Z64iY5sRAb4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a9znWaJ55msDQEdBs/gjzC2wPsz7emWGSSprC5S5oNYe/1CBGLachdIC81+HdCpQc
-	 D4NmLQc2MoA5X/epx0kbyiZ4989W0oOyWA/nWEj2wbbm2nUwKGojM3vmftGuEHUcPM
-	 oROPxz1f0VgK+NoyoKBwgwnq/e+lBqB0dmRpBPco=
+	by mail.kernel.org (Postfix) with ESMTP id 9591A20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfJ3OFD (ORCPT
+        id S1726792AbfJ3OFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:05:03 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43468 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfJ3OFC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:05:02 -0400
-Received: by mail-oi1-f196.google.com with SMTP id s5so2033493oie.10;
-        Wed, 30 Oct 2019 07:05:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VjUbeXseZNfZ1pV6P1oZr6TvD5+K3+0WHvnHgaOVfyc=;
-        b=kQuUH+S6Fmh6UCsKAzyP9jg1N2QniL1UreLbqAQnyAMdedXbSbkaS3TxNdHzV2uloL
-         8xjYRjqIFa0AtW2q7h6qolAgTniAHFQfFZgwSYqBveeqwW/lj0WKMogIDkHXW6nEDvtl
-         rn6JXZztgnbo2szYMUV3ULE8DyqpsFFbFkk9c0h4E38QUJ2kLELMdyCpOqU+XdMoPNk8
-         ptXLd29LEO4TfbNUwJpTuCSzgG3leMYB0pH60GXt5xSO1rYTQkauG+34ObjJSzBst8wy
-         x7X0YjpKDCoM4U2JfmUlE/PvbkKzFuGRhBouWBoUvdLjgcUXGNwRlgryh10pOLhdDo99
-         /KMQ==
-X-Gm-Message-State: APjAAAVhJrpFYXvr0x1LBeyFFxZVrIdPjsSiC1KONflkSoCZU4jUsmTM
-        tsgsqvki1p7aBPx71yZucQ==
-X-Google-Smtp-Source: APXvYqxh7UaJbqXooxPymSVpV2Dkk9RFHomlOl61v/922QK11EtyGIdV7wMcJTOi1B5ho34SClF9Fw==
-X-Received: by 2002:aca:5d8a:: with SMTP id r132mr8536367oib.119.1572444301779;
-        Wed, 30 Oct 2019 07:05:01 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t12sm55049otl.71.2019.10.30.07.04.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 07:04:56 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 09:04:55 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Marcel Ziswiler <marcel@ziswiler.com>
-Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        linux-imx@nxp.com, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/5] dt-bindings: input: tochscreen: ad7879: generic
- node names in example
-Message-ID: <20191030140455.GA4544@bogus>
-References: <20191026090403.3057-1-marcel@ziswiler.com>
- <20191026090403.3057-3-marcel@ziswiler.com>
+        Wed, 30 Oct 2019 10:05:16 -0400
+Received: from verein.lst.de ([213.95.11.211]:45675 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbfJ3OFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 10:05:16 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id BC5D068C4E; Wed, 30 Oct 2019 15:05:11 +0100 (CET)
+Date:   Wed, 30 Oct 2019 15:05:11 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v2] nvme: Add hardware monitoring support
+Message-ID: <20191030140511.GA14252@lst.de>
+References: <20191029223214.18889-1-linux@roeck-us.net> <CAC5umyhc=6yULiLwXu65VDvDk2cBiF0R9O39B-T5ftapJfj0rQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191026090403.3057-3-marcel@ziswiler.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAC5umyhc=6yULiLwXu65VDvDk2cBiF0R9O39B-T5ftapJfj0rQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 11:04:01AM +0200, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Wed, Oct 30, 2019 at 08:16:48PM +0900, Akinobu Mita wrote:
+> The nvme_init_identify() can be called multiple time in nvme ctrl's
+> lifetime (e.g 'nvme reset /dev/nvme*' or suspend/resume paths), so
+> should we need to prevent nvme_hwmon_init() from registering hwmon
+> device more than twice?
+> 
+> In the nvme thermal zone patchset[1], thernal zone is registered in
+> nvme_init_identify and unregistered in nvme_stop_ctrl().
 
-There's a typo in the subject.
-
-> 
-> Update example in ad7879 devicetree documentation to use generic touch
-> controller node names.
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> ---
-> 
-> Changes in v2: New patch.
-> 
->  .../devicetree/bindings/input/touchscreen/ad7879.txt          | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+So Guenter said above the thermal subsystem could use the information
+from hwmon as well.  Does this mean this patch would solve your needs
+as well?
