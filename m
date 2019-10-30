@@ -2,86 +2,156 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025F3CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78015CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACC2205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C26C205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfJ3PlG (ORCPT
+        id S1727024AbfJ3PmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:41:06 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:35318 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726461AbfJ3PlG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:41:06 -0400
-Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x9UFf5QL006874
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:41:05 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x9UFf03u006364
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:41:05 -0400
-Received: by mail-qt1-f199.google.com with SMTP id k53so2835763qtk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:41:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:date:message-id;
-        bh=eIoWGi3U/SGYr7w5rrsbliBxDrgak+FNrEviy/8rGIk=;
-        b=Qem+ASaUqScax1MPITXVxJ1SgXRm9hCJVEihvwSGN9gKwYr17G27oMRABiqBBY1vh4
-         DY25yp8cHpZxbhESVkE8fSZOqXFDgmwM807N4FaG7Er4nDP95bRWTHyifwhIU7FlEZkh
-         DnQAOa0vgO1mjmFJXQ8Oaz1WM0pTa4Jubd74EIInriusXhvSJe3gHMnSxX7NECt1u0GF
-         ZRQ/uMB/eCuKK4QKMNs4uB0lIkwx7bypuxjXKHihdxgd7+uegml4kVaAWVA3eoQ09WTp
-         ZXuLmRiyHRXGtkrf6EvlyyGXnMggo6zU6ffbwZi9pAAqqSqkPlsMaw9lO511Py/27Eme
-         Tedw==
-X-Gm-Message-State: APjAAAURMU3QU2U4b1rdxJdjOFIAJ/s9d7WSer7oilVEbfsPTNRCdCmY
-        NCLudnQyOwcSUKG1ep8MrD2xO7UT2wxs+Ic3yHc4bE/A60abmIdIakszZh7m2/1UajupAsI+NT4
-        kwLQk/5BDyehY/v/syD9K3un3OTrXA0V61Pk=
-X-Received: by 2002:ac8:7546:: with SMTP id b6mr716402qtr.104.1572450059574;
-        Wed, 30 Oct 2019 08:40:59 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwxyrOL2KJZakZX+lSdi47kBXVJMoQi6jylMX1/YtjfV276ujKko4yFtHRvF28Z5bPPRKRdfA==
-X-Received: by 2002:ac8:7546:: with SMTP id b6mr716361qtr.104.1572450059254;
-        Wed, 30 Oct 2019 08:40:59 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id c17sm273439qkm.37.2019.10.30.08.40.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 08:40:58 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Davidlohr Bueso <dave@stgolabs.net>
-cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drivers/staging/exfat: Replace binary semaphores for mutexes
-In-reply-to: <20191030144916.10802-1-dave@stgolabs.net>
-References: <20191029080521.GA494993@kroah.com>
- <20191030144916.10802-1-dave@stgolabs.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Wed, 30 Oct 2019 11:40:57 -0400
-Message-ID: <74400.1572450057@turing-police>
+        Wed, 30 Oct 2019 11:42:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:36558 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726273AbfJ3PmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:42:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BADFF4F5;
+        Wed, 30 Oct 2019 08:42:05 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67D883F6C4;
+        Wed, 30 Oct 2019 08:42:03 -0700 (PDT)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 01/12] arm64: hibernate.c: create a new function to handle cpu_up(sleep_cpu)
+Date:   Wed, 30 Oct 2019 15:38:26 +0000
+Message-Id: <20191030153837.18107-2-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191030153837.18107-1-qais.yousef@arm.com>
+References: <20191030153837.18107-1-qais.yousef@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 30 Oct 2019 07:49:16 -0700, Davidlohr Bueso said:
-> At a slight footprint cost (24 vs 32 bytes), mutexes are more optimal
-> than semaphores; it's also a nicer interface for mutual exclusion,
-> which is why they are encouraged over binary semaphores, when possible.
->
-> For both v_sem and z_sem, their semantics imply traditional lock
-> ownership; that is, the lock owner is the same for both lock/unlock
-> operations. Therefore it is safe to convert.
->
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+In preparation to make cpu_up/down private - move the user in arm64
+hibernate.c to use a new generic function that provides what arm64
+needs.
 
-Looks sane.
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Catalin Marinas <catalin.marinas@arm.com>
+CC: Will Deacon <will@kernel.org>
+CC: Steve Capper <steve.capper@arm.com>
+CC: Richard Fontana <rfontana@redhat.com>
+CC: James Morse <james.morse@arm.com>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Josh Poimboeuf <jpoimboe@redhat.com>
+CC: Ingo Molnar <mingo@kernel.org>
+CC: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+CC: Nicholas Piggin <npiggin@gmail.com>
+CC: Daniel Lezcano <daniel.lezcano@linaro.org>
+CC: Jiri Kosina <jkosina@suse.cz>
+CC: Pavankumar Kondeti <pkondeti@codeaurora.org>
+CC: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+CC: linux-arm-kernel@lists.infradead.org
+CC: linux-kernel@vger.kernel.org
+---
 
-Acked-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+AFAICT we can't use device_online() directly here because suspend happens via
+cpu_down() not device_offline(). If it is actually safe to use device_online()
+then that would be simpler than creating the new function. Although the
+operation seems generic enough to me and could benefit another arch user in the
+future so the new function makes sense.
 
+
+ arch/arm64/kernel/hibernate.c | 13 +++++--------
+ include/linux/cpu.h           |  1 +
+ kernel/cpu.c                  | 14 ++++++++++++++
+ 3 files changed, 20 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index e0a7fce0e01c..3b178055022f 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -166,14 +166,11 @@ int arch_hibernation_header_restore(void *addr)
+ 		sleep_cpu = -EINVAL;
+ 		return -EINVAL;
+ 	}
+-	if (!cpu_online(sleep_cpu)) {
+-		pr_info("Hibernated on a CPU that is offline! Bringing CPU up.\n");
+-		ret = cpu_up(sleep_cpu);
+-		if (ret) {
+-			pr_err("Failed to bring hibernate-CPU up!\n");
+-			sleep_cpu = -EINVAL;
+-			return ret;
+-		}
++
++	ret = hibernation_bringup_sleep_cpu(sleep_cpu);
++	if (ret) {
++		sleep_cpu = -EINVAL;
++		return ret;
+ 	}
+ 
+ 	resume_hdr = *hdr;
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 88dc0c653925..3b1fbe192989 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -87,6 +87,7 @@ int cpu_up(unsigned int cpu);
+ void notify_cpu_starting(unsigned int cpu);
+ extern void cpu_maps_update_begin(void);
+ extern void cpu_maps_update_done(void);
++extern int hibernation_bringup_sleep_cpu(unsigned int sleep_cpu);
+ 
+ #else	/* CONFIG_SMP */
+ #define cpuhp_tasks_frozen	0
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index e1967e9eddc2..219f9033f438 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1197,6 +1197,20 @@ int cpu_up(unsigned int cpu)
+ }
+ EXPORT_SYMBOL_GPL(cpu_up);
+ 
++int hibernation_bringup_sleep_cpu(unsigned int sleep_cpu)
++{
++	int ret;
++
++	if (!cpu_online(sleep_cpu)) {
++		pr_info("Hibernated on a CPU that is offline! Bringing CPU up.\n");
++		ret = cpu_up(sleep_cpu);
++		if (ret) {
++			pr_err("Failed to bring hibernate-CPU up!\n");
++			return ret;
++		}
++	}
++}
++
+ #ifdef CONFIG_PM_SLEEP_SMP
+ static cpumask_var_t frozen_cpus;
+ 
+-- 
+2.17.1
 
