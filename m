@@ -2,117 +2,54 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB36CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ADECA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66FF2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572464615;
-	bh=SvrbAEw49Plnafe/VzNSWq8FLiN2PZsNxZj5PIYPCAQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZzzK7c91Dza3xVebYgoUaYsAZsj7u4+yQZFGGkcMhB1gFOuX9C09pXguaPpzZRO5J
-	 E6siihZlgqBRZJnGb08gfu7UoJuHq6xlJrBVVlrTW4VzOXbxl1zFvxSXuQvw6itMpM
-	 vW6QiCF2RS9dR1npPe7v62oycV+bB5ibvd3hbJ1U=
+	by mail.kernel.org (Postfix) with ESMTP id 5BA9A205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfJ3Tne (ORCPT
+        id S1726535AbfJ3Tph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:43:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35244 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 15:45:37 -0400
+Received: from verein.lst.de ([213.95.11.211]:47490 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfJ3Tne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:43:34 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6997205C9;
-        Wed, 30 Oct 2019 19:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572464613;
-        bh=SvrbAEw49Plnafe/VzNSWq8FLiN2PZsNxZj5PIYPCAQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qhMfLygR9U7KoGtM2N9i/dXW6g1ijNGhj7Oz//aFnrSyQHID47A0Xju37huThLgpU
-         h2ojTqe8N+JdKsUkmDhwMG6UVR57UeaIW3J+7nW8m+arNodehDgUpxDiZMAUYkY6hF
-         qhqdix6PJKUna/ZSbL6CNrR4Cu4Vn9z04ds/n3uw=
-Date:   Wed, 30 Oct 2019 19:43:25 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        id S1726261AbfJ3Tpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 15:45:36 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id CE4BF68B05; Wed, 30 Oct 2019 20:45:32 +0100 (CET)
+Date:   Wed, 30 Oct 2019 20:45:32 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 4/9] drivers/iio: Sign extend without triggering
- implementation-defined behavior
-Message-ID: <20191030194325.2ad20a8e@archlinux>
-In-Reply-To: <20191028200700.213753-5-bvanassche@acm.org>
-References: <20191028200700.213753-1-bvanassche@acm.org>
-        <20191028200700.213753-5-bvanassche@acm.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Stephen Boyd <swboyd@chromium.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Semmle Security Reports <security-reports@semmle.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] dma-mapping: Add vmap checks to dma_map_single()
+Message-ID: <20191030194532.GA21020@lst.de>
+References: <20191029213423.28949-1-keescook@chromium.org> <20191029213423.28949-2-keescook@chromium.org> <20191030091849.GA637042@kroah.com> <20191030180921.GB19366@lst.de> <20191030192640.GC709410@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030192640.GC709410@kroah.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019 13:06:55 -0700
-Bart Van Assche <bvanassche@acm.org> wrote:
+On Wed, Oct 30, 2019 at 08:26:40PM +0100, Greg Kroah-Hartman wrote:
+> Looks good!  You can apply patch 2/2 as well if you want to take that
+> through your tree too.
 
-> From the C standard: "The result of E1 >> E2 is E1 right-shifted E2 bit
-> positions. If E1 has an unsigned type or if E1 has a signed type and a
-> nonnegative value, the value of the result is the integral part of the
-> quotient of E1 / 2E2 . If E1 has a signed type and a negative value, the
-> resulting value is implementation-defined."
-> 
-> Hence use sign_extend_24_to_32() instead of "<< 8 >> 8".
-
-+CC linux-iio
-
-> 
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-> ---
->  drivers/iio/common/st_sensors/st_sensors_core.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iio/common/st_sensors/st_sensors_core.c b/drivers/iio/common/st_sensors/st_sensors_core.c
-> index 4a3064fb6cd9..94a9cec69cd7 100644
-> --- a/drivers/iio/common/st_sensors/st_sensors_core.c
-> +++ b/drivers/iio/common/st_sensors/st_sensors_core.c
-> @@ -21,11 +21,6 @@
->  
->  #include "st_sensors_core.h"
->  
-> -static inline u32 st_sensors_get_unaligned_le24(const u8 *p)
-> -{
-> -	return (s32)((p[0] | p[1] << 8 | p[2] << 16) << 8) >> 8;
-> -}
-> -
->  int st_sensors_write_data_with_mask(struct iio_dev *indio_dev,
->  				    u8 reg_addr, u8 mask, u8 data)
->  {
-> @@ -556,7 +551,7 @@ static int st_sensors_read_axis_data(struct iio_dev *indio_dev,
->  	else if (byte_for_channel == 2)
->  		*data = (s16)get_unaligned_le16(outdata);
->  	else if (byte_for_channel == 3)
-> -		*data = (s32)st_sensors_get_unaligned_le24(outdata);
-> +		*data = get_unaligned_signed_le24(outdata);
->  
->  st_sensors_free_memory:
->  	kfree(outdata);
-
+I can do that, I'll just need a formal ACK from you.
