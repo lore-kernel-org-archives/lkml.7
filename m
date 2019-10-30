@@ -2,176 +2,127 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF04CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DE6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8F520874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C1420862
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mw37YHGV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IssXzYXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfJ3Iob (ORCPT
+        id S1726151AbfJ3Isd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:44:31 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54400 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfJ3Ioa (ORCPT
+        Wed, 30 Oct 2019 04:48:33 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49871 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726028AbfJ3Isd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:44:30 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9U8iEeI098145;
-        Wed, 30 Oct 2019 03:44:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572425054;
-        bh=E27tcJBYIvqvaA31Zqpz1NjcSVFU5/7cIiIXtS8r2MU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Mw37YHGV8JrhVh7Qmt4bWBP3OSmJyp5Oj7izmTpcXhms4HZettDOBj4ae0OH08FvZ
-         N+uMAvcdvv2SuBuNAJqkOIzCM8UOSGQQ+G3x7mFdOHTc3ViSbz8FCrufDTaLqahcFk
-         zAVOLDu7Eoaw1/cASLhzy9zZpUvCvIvvthdZWPX4=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9U8iEIC102783
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 03:44:14 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 03:44:01 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 03:44:00 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9U8iBda078433;
-        Wed, 30 Oct 2019 03:44:11 -0500
-Subject: Re: [PATCH] usb: cdns3: gadget: Fix g_audio use case when connected
- to Super-Speed host
-To:     Peter Chen <peter.chen@nxp.com>
-CC:     "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "pawell@cadence.com" <pawell@cadence.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        "kurahul@cadence.com" <kurahul@cadence.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191029151514.28495-1-rogerq@ti.com>
- <20191030063636.GE26815@b29397-desktop>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <b780ffea-dca0-310e-1d66-4ceca380b4ee@ti.com>
-Date:   Wed, 30 Oct 2019 10:44:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 04:48:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572425311;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nxeEn5vTSgM9eH45CLFbxbgOktGOR7e/qmHK5tiEGJk=;
+        b=IssXzYXl9/vHSxtrz5a68oG78qscf2mKO/J9CYeJrw5mBGzptdjsUbE672flCahWg+PFUN
+        zih+z7Xz0h07ZzStsMHxhsGBQ+hvdSOr52q7kxTsAPG9vAtADRlOM0yhcB2JWCNq47XpKS
+        PKBbjBx+6aqjUiXb+XcwgkLK81Q4LmM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-342-uXwssujUOo-NFLOe28wEEA-1; Wed, 30 Oct 2019 04:48:28 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4808481A334;
+        Wed, 30 Oct 2019 08:48:27 +0000 (UTC)
+Received: from ovpn-116-229.phx2.redhat.com (ovpn-116-229.phx2.redhat.com [10.3.116.229])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BA6BE5D6D8;
+        Wed, 30 Oct 2019 08:48:26 +0000 (UTC)
+Message-ID: <52d963553deda810113accd8d69b6dffdb37144f.camel@redhat.com>
+Subject: Re: [PATCH] timers/nohz: Update nohz load even if tick already
+ stopped
+From:   Scott Wood <swood@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 30 Oct 2019 03:48:26 -0500
+In-Reply-To: <20191029100506.GJ4114@hirez.programming.kicks-ass.net>
+References: <20191028150716.22890-1-frederic@kernel.org>
+         <20191029100506.GJ4114@hirez.programming.kicks-ass.net>
+Organization: Red Hat
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29)
 MIME-Version: 1.0
-In-Reply-To: <20191030063636.GE26815@b29397-desktop>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: uXwssujUOo-NFLOe28wEEA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2019-10-29 at 11:05 +0100, Peter Zijlstra wrote:
+> On Mon, Oct 28, 2019 at 04:07:16PM +0100, Frederic Weisbecker wrote:
+> > From: Scott Wood <swood@redhat.com>
+> >=20
+> > The way loadavg is tracked during nohz only pays attention to the load
+> > upon entering nohz. This can be particularly noticeable if nohz is
+> > entered while non-idle, and then the cpu goes idle and stays that way
+> > for
+> > a long time. We've had reports of a loadavg near 150 on a mostly idle
+> > system.
+> >=20
+> > Calling calc_load_nohz_start() regardless of whether the tick is alread=
+y
+> > stopped addresses the issue when going idle. Tracking load changes when
+> > not going idle (e.g. multiple SCHED_FIFO tasks coming and going) is not
+> > addressed by this patch.
+>=20
+> Hurph, is that phenomena you describe NOHZ or NOHZ_FULL? Because that
+> second thing you talk about, multiple SCHED_FIFO tasks running without a
+> tick is definitely NOHZ_FULL.
+>=20
+> I'm thinking all of this is NOHZ_FULL because IIRC we always start the
+> tick when there is a runnable task. So your example of going idle in
+> NOHZ already cannot happen for regular NOHZ.
+
+Yes, NOHZ_FULL (sorry for not stating that clearly).
+
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index eb42b71faab9..209e50d48f80 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3666,6 +3666,8 @@ static void sched_tick_remote(struct work_struct
+> *work)
+>  =09 * having one too much is no big deal because the scheduler tick
+> updates
+>  =09 * statistics and checks timeslices in a time-independent way,
+> regardless
+>  =09 * of when exactly it is running.
+> +=09 *
+> +=09 * XXX should we be checking tick_nohz_tick_stopped_cpu() under rq-
+> >lock ?
+>  =09 */
+>  =09if (idle_cpu(cpu) || !tick_nohz_tick_stopped_cpu(cpu))
+>  =09=09goto out_requeue;
+> @@ -3686,6 +3688,7 @@ static void sched_tick_remote(struct work_struct
+> *work)
+>  =09curr->sched_class->task_tick(rq, curr, 0);
+> =20
+>  out_unlock:
+> +=09calc_load_nohz_remote(cpu);
+>  =09rq_unlock_irq(rq, &rf);
+
+This gets skipped when the cpu is idle, so it still misses the update.
+
+-Scott
 
 
-On 30/10/2019 08:36, Peter Chen wrote:
-> On 19-10-29 17:15:14, Roger Quadros wrote:
->> Take into account gadget driver's speed limit when programming
->> controller speed.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->> Hi Greg,
->>
->> Please apply this for -rc.
->> Without this, g_audio is broken on cdns3 USB controller is
->> connected to a Super-Speed host.
->>
->> cheers,
->> -roger
->>
->>   drivers/usb/cdns3/gadget.c | 31 ++++++++++++++++++++++++++-----
->>   1 file changed, 26 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
->> index 40dad4e8d0dc..1c724c20d468 100644
->> --- a/drivers/usb/cdns3/gadget.c
->> +++ b/drivers/usb/cdns3/gadget.c
->> @@ -2338,9 +2338,35 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
->>   {
->>   	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
->>   	unsigned long flags;
->> +	enum usb_device_speed max_speed = driver->max_speed;
->>   
->>   	spin_lock_irqsave(&priv_dev->lock, flags);
->>   	priv_dev->gadget_driver = driver;
->> +
->> +	/* limit speed if necessary */
->> +	max_speed = min(driver->max_speed, gadget->max_speed);
->> +
->> +	switch (max_speed) {
->> +	case USB_SPEED_FULL:
->> +		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
->> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
->> +		break;
->> +	case USB_SPEED_HIGH:
->> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
->> +		break;
->> +	case USB_SPEED_SUPER:
->> +		break;
->> +	default:
->> +		dev_err(priv_dev->dev,
->> +			"invalid maximum_speed parameter %d\n",
->> +			max_speed);
->> +		/* fall through */
->> +	case USB_SPEED_UNKNOWN:
->> +		/* default to superspeed */
->> +		max_speed = USB_SPEED_SUPER;
->> +		break;
->> +	}
->> +
->>   	cdns3_gadget_config(priv_dev);
->>   	spin_unlock_irqrestore(&priv_dev->lock, flags);
->>   	return 0;
->> @@ -2570,12 +2596,7 @@ static int cdns3_gadget_start(struct cdns3 *cdns)
->>   	/* Check the maximum_speed parameter */
->>   	switch (max_speed) {
->>   	case USB_SPEED_FULL:
->> -		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
->> -		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
->> -		break;
->>   	case USB_SPEED_HIGH:
->> -		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
->> -		break;
->>   	case USB_SPEED_SUPER:
->>   		break;
->>   	default:
-> 
-> Just a small comment:
-> 
-> You could delete switch-case at cdns3_gadget_start, and just use
-> if() statement, eg:
-> 
-> 	max_speed = usb_get_maximum_speed(cdns->dev);
-> 	if (max_speed == USB_SPEED_UNKNOWN)
-> 		max_speed = USB_SPEED_SUPER;
-
-But then it will not take care of bailing out for USB_SPEED_WIRELESS,
-USB_SPEED_SUPER_PLUS and any future speeds.
-
-> 
-> Otherwise:
-> 
-> Acked-by: Peter Chen <peter.chen@nxp.com>
-> 
-
--- 
-cheers,
--roger
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
