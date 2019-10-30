@@ -2,125 +2,332 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A97CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AEECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7EDC204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E8B204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IgR3AvNb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sfX29vsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfJ3TJn (ORCPT
+        id S1727161AbfJ3TKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:09:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43148 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfJ3TJm (ORCPT
+        Wed, 30 Oct 2019 15:10:25 -0400
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:33188 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfJ3TKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:09:42 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l24so2087716pgh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 12:09:42 -0700 (PDT)
+        Wed, 30 Oct 2019 15:10:25 -0400
+Received: by mail-oi1-f170.google.com with SMTP id m193so2998758oig.0;
+        Wed, 30 Oct 2019 12:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dufKW7ailST27XmBsRzEjUu5gldQC2+JQubS/xpnsTo=;
-        b=IgR3AvNb/IW+SuaYisEPvGgQ1N2CpDUOZAYg3Bs1VILV+oQkm3mFZj1IcMwvtNGnDL
-         yeG/doPiWKeFY3yEF0o2hjznX9oxZms0D8u3x06ENtLStfpt0E7OnXbnVS1h8Gnqe7Ln
-         znKBLsdqnjwo/9KJQEFt73HS/yRu0B+AJ1Qpc=
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=9zBGeuRJAsojTp30lVr3SleNVsHIFJC9n4Zs2QOF5Ic=;
+        b=sfX29vsHuA1eKJmwTZRoNYdUH4pMY2Cn/t5BIxFNf3JvjVAmjSTgyopVxQfBhzYqYR
+         vAGlCgDR/jjIqDPDIzzGHdufNr2j9AzR0DRwxMndRuOzKzf2h0wsD+DERt0Mwp9A7cX8
+         kGd7UjrGjUxqYEM8yDUEIrgMfqYrwUt339HY4bfJDBuu0Zv3OqpOKByVMqTolh2C8aJB
+         uLZomxZ7n4exoNmhZRDSx8R3RGCURor/Ghlc+8nm0+idBXdYssZRAmFNmkxvvI1NlRlC
+         ov8qpCz1MSKNV3t9wUxNFTYCL5e5sFwoHVnGMy4zNvACZQvKz7fvmQ08RSqNVaTFNrub
+         NXew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dufKW7ailST27XmBsRzEjUu5gldQC2+JQubS/xpnsTo=;
-        b=WkDWGlBZ99d/hhLNY1rjG2z6FNbTV45m3LjQr/84+6R0IF0PNu3G1EoHN1UogAx9Jq
-         +FFaUHsPQhr+K0OpFWJ/fZ9/6my04np7yft7Uf1nbFuinlJe/RY6wGXDp7AOHA7WKNOd
-         piI4kbCwPoUB63/+oF9UIrYSjFtSpyIf4ris8I33rpzcbfAA3HctAXnCv5S024OKUCBT
-         oFAB2PTc9xfW6pZj2qq3k4D4hAYeALmT2xATQ4z47B7RKaxJCgbH10vAghfwhrreHjmU
-         mO3PZyYFb/NJeLidxbBUne7+cC649DPFv/RAtTxpaN9wwKXhFvbgYUfKrt51Cs/eRxYw
-         d3Gg==
-X-Gm-Message-State: APjAAAXBPALMuKH2DWwdzpXv7skRQ4XJYA7OoKiFt6hIpj373AmKP+Mv
-        AG2vgjxbA+jlfrfG27r5HW2XLQ==
-X-Google-Smtp-Source: APXvYqyWkXi7dHZifGHol+L8h1naJvUA7vjOJyl4pJ9ePxkgrWj5xfjXri3x2IxsOUF4oLO2ZUTSBw==
-X-Received: by 2002:a17:90a:9204:: with SMTP id m4mr1064291pjo.104.1572462581965;
-        Wed, 30 Oct 2019 12:09:41 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m123sm699881pfb.133.2019.10.30.12.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 12:09:41 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 12:09:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Matthias Maennich <maennich@google.com>,
-        shuah <shuah@kernel.org>,
-        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
-        serge@hallyn.com, Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>, Theodore Ts'o <tytso@mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Mike Salvatore <mike.salvatore@canonical.com>
-Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
- tests for policy unpack
-Message-ID: <201910301205.74EC2A226D@keescook>
-References: <20191018001816.94460-1-brendanhiggins@google.com>
- <20191018122949.GD11244@42.do-not-panic.com>
- <alpine.LRH.2.20.1910191348280.11804@dhcp-10-175-221-34.vpn.oracle.com>
- <CAFd5g46aO4jwyo32DSz4L8GdhP6t38+Qb9NB+3fev3u4G6sg4w@mail.gmail.com>
- <20191024101529.GK11244@42.do-not-panic.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=9zBGeuRJAsojTp30lVr3SleNVsHIFJC9n4Zs2QOF5Ic=;
+        b=V2RcjtZEOUapbQZQOZz8EQnNBNFLeQcx5eHYd+9Tz8N1KR+cvXDLxX8SUZF3a70olp
+         ZJc1UmZ37pswG35qziOQKLTmNWRno51Acl4IYpvDKjCdOwDZBm6MJVGxIWWMsg4NnXLm
+         vnljOv0Z3dYogVtsz5on7wxZWDhTnqUCYS1O5BVlluwh6GkF7vkSDwlvlAzgumvq7Jxq
+         XUwM42wGQ4bcA4NNZRsbfSlvcWWZqefVdFqotKOhDRksxBTV7VPhhff7oQNuIFri9iyX
+         m8i4JQA26R6BpPt1d96TYzpkvR0BzXm0kWL2Wb4LpbYpwZj7gjyzLzQB4NT8sEIB1HDh
+         uJIQ==
+X-Gm-Message-State: APjAAAWIMH81W8ll7Txra7CbAv7OaEL+vOmnLG3k+QE2IrcIS4QOTuKz
+        AnxDgZDCefrskoX2tG3nQRMOnHk4Bqu/mCTT3tT26/5w
+X-Google-Smtp-Source: APXvYqwaJOu5wK8jhgwKH6DaGOvP7nmFWAgZFOuafCnQXcRhkRfgMHpJwZV74LJ20/RU8SMT1/2eUtaMSbfr8qmNcmA=
+X-Received: by 2002:a54:448b:: with SMTP id v11mr656445oiv.155.1572462623555;
+ Wed, 30 Oct 2019 12:10:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024101529.GK11244@42.do-not-panic.com>
+Received: by 2002:a9d:7511:0:0:0:0:0 with HTTP; Wed, 30 Oct 2019 12:10:23
+ -0700 (PDT)
+From:   Tom Psyborg <pozega.tomislav@gmail.com>
+Date:   Wed, 30 Oct 2019 20:10:23 +0100
+Message-ID: <CAKR_QVLhy3qNni4Pgvn1Mi6jOM28r-RQ3AZQXXAbbgkm-d56EA@mail.gmail.com>
+Subject: ath3k patch file not found
+To:     linux-wireless <linux-wireless@vger.kernel.org>
+Cc:     linux-firmware <linux-firmware@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 10:15:29AM +0000, Luis Chamberlain wrote:
-> On Wed, Oct 23, 2019 at 05:42:18PM -0700, Brendan Higgins wrote:
-> > With that, I think the best solution in this case will be the
-> > "__visible_for_testing" route. It has no overhead when testing is
-> > turned off (in fact it is no different in anyway when testing is
-> > turned off). The downsides I see are:
-> > 
-> > 1) You may not be able to test non-module code not compiled for
-> > testing later with the test modules that Alan is working on (But the
-> > only way I think that will work is by preventing the symbol from being
-> > inlined, right?).
-> > 
-> > 2) I think "__visible_for_testing" will be prone to abuse. Here, I
-> > think there are reasons why we might want to expose these symbols for
-> > testing, but not otherwise. Nevertheless, I think most symbols that
-> > should be tested should probably be made visible by default. Since you
-> > usually only want to test your public interfaces. I could very well
-> > see this getting used as a kludge that gets used far too frequently.
-> 
-> There are two parts to your statement on 2):
-> 
->   a) possible abuse of say __visible_for_testing
+Hi
 
-I really don't like the idea of littering the kernel with these. It'll
-also require chunks in header files wrapped in #ifdefs. This is really
-ugly.
+After loading QCA9880 card on my laptop I noticed it has bluetooth
+capabilities, lsusb identifies it as AR3012 BT4.0.
 
->   b) you typically only want to test your public interfaces
+It is unable to start, according to message, due to missing patch file:
 
-True, but being able to test the little helper functions is a nice
-starting point and a good building block.
+Bluetooth: Patch file not found ar3k/AthrBT_0x41010000.dfu
 
-Why can't unit tests live with the code they're testing? They're already
-logically tied together; what's the harm there? This needn't be the case
-for ALL tests, etc. The test driver could still live externally. The
-test in the other .c would just have exported functions... ?
+Anyone can tell how to obtain the related patch files, or is there a
+way to modify existing ones to fit this device?
 
--- 
-Kees Cook
+Here is complete lsusb output:
+
+Bus 001 Device 003: ID 0cf3:3004 Atheros Communications, Inc. AR3012
+Bluetooth 4.0
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               1.10
+  bDeviceClass          224 Wireless
+  bDeviceSubClass         1 Radio Frequency
+  bDeviceProtocol         1 Bluetooth
+  bMaxPacketSize0        64
+  idVendor           0x0cf3 Atheros Communications, Inc.
+  idProduct          0x3004 AR3012 Bluetooth 4.0
+  bcdDevice            0.01
+  iManufacturer           0
+  iProduct                0
+  iSerial                 0
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength          177
+    bNumInterfaces          2
+    bConfigurationValue     1
+    iConfiguration          0
+    bmAttributes         0xe0
+      Self Powered
+      Remote Wakeup
+    MaxPower              100mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           3
+      bInterfaceClass       224 Wireless
+      bInterfaceSubClass      1 Radio Frequency
+      bInterfaceProtocol      1 Bluetooth
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            3
+          Transfer Type            Interrupt
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0010  1x 16 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x82  EP 2 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x02  EP 2 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               1
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       0
+      bNumEndpoints           2
+      bInterfaceClass       224 Wireless
+      bInterfaceSubClass      1 Radio Frequency
+      bInterfaceProtocol      1 Bluetooth
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0000  1x 0 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x03  EP 3 OUT
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0000  1x 0 bytes
+        bInterval               1
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       1
+      bNumEndpoints           2
+      bInterfaceClass       224 Wireless
+      bInterfaceSubClass      1 Radio Frequency
+      bInterfaceProtocol      1 Bluetooth
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0009  1x 9 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x03  EP 3 OUT
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0009  1x 9 bytes
+        bInterval               1
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       2
+      bNumEndpoints           2
+      bInterfaceClass       224 Wireless
+      bInterfaceSubClass      1 Radio Frequency
+      bInterfaceProtocol      1 Bluetooth
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0011  1x 17 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x03  EP 3 OUT
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0011  1x 17 bytes
+        bInterval               1
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       3
+      bNumEndpoints           2
+      bInterfaceClass       224 Wireless
+      bInterfaceSubClass      1 Radio Frequency
+      bInterfaceProtocol      1 Bluetooth
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0019  1x 25 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x03  EP 3 OUT
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0019  1x 25 bytes
+        bInterval               1
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       4
+      bNumEndpoints           2
+      bInterfaceClass       224 Wireless
+      bInterfaceSubClass      1 Radio Frequency
+      bInterfaceProtocol      1 Bluetooth
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0021  1x 33 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x03  EP 3 OUT
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0021  1x 33 bytes
+        bInterval               1
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       5
+      bNumEndpoints           2
+      bInterfaceClass       224 Wireless
+      bInterfaceSubClass      1 Radio Frequency
+      bInterfaceProtocol      1 Bluetooth
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0031  1x 49 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x03  EP 3 OUT
+        bmAttributes            1
+          Transfer Type            Isochronous
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0031  1x 49 bytes
+        bInterval               1
+Device Status:     0x0003
+  Self Powered
+  Remote Wakeup Enabled
