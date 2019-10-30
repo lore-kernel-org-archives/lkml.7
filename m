@@ -2,184 +2,96 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067FECA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78392CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D49C92080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4601C2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:52:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="UeZxmXcP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfJ3MwL (ORCPT
+        id S1726490AbfJ3Mwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:52:11 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:38969 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfJ3MwL (ORCPT
+        Wed, 30 Oct 2019 08:52:39 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36893 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfJ3Mwi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:52:11 -0400
-Received: by mail-il1-f197.google.com with SMTP id o11so1939447ilc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 05:52:09 -0700 (PDT)
+        Wed, 30 Oct 2019 08:52:38 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v2so2551283lji.4
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 05:52:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5erIfBzA/jd7EXBaSVGi4HXOCmx41ZkwEb2QQHCHgvk=;
+        b=UeZxmXcP45HajlZCYTH/fPyfVK7l1VzXklUgS+JvhBfli6XupBaZ6oybuR4B0/An4o
+         YkfSu1jEro5BttaiBUCjD3BKKyuvn3uZaxqZvJrbOX821We5YHsTMZVt1W/Tg2CnC0N3
+         Ilvs/BDd2vCMKXhzz00VdbdI1YVn0PGO0dv04=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5hl1COUvMaR/U8JjzZqIErDBOd54NybwZ/tb4y78jAQ=;
-        b=Qu8GDrFOk3+TVQRq+kygWsKNBAwMXZhh3q976Ntx6iDQgJ/S0LKiW0nS2jz9h2rDkj
-         rfZGKgXr+xgivyQ5Ac0b/i2LxYiUO63/SYx15Zv0F2R9f48vSYgvwbQekMxO4AaDs1Ac
-         8vXEd19xR8U3zP+xzFHr+UumY9w/0yUdYJr0T60eQG7CzthOIuj2z0DfjZO6AdlcGkQ7
-         Cg11GktQyioqBmTndU76jguDBO3uz/b0WFT/ZY2WWY+vr15AyXaloSC9PdA4aI9v1J4l
-         en+sY0ZJX/tLkmBeQlUEVaDq3Zn7ZAPM2hvqbgYjHN3nL0CA2WIYof8/0gI/68YbDKjW
-         4GDA==
-X-Gm-Message-State: APjAAAVBRLoxJT1fofmfGiNOtuRL1ywU4quqBpyzTB9wTs4WlFOrBU2A
-        wvxY2FQyKSTF/UbhvIGT486oESQHiZY/HDYT1MTKHaGpNjK+
-X-Google-Smtp-Source: APXvYqz9IdOqVAWhBZFp4jTj3wtDsFAQEvnFLMFBXNXDb5NTFnEnQEDIA4rX7SdypFtBelBuAYEkR9NveoCO+CapTI1FZGDPJHVO
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5erIfBzA/jd7EXBaSVGi4HXOCmx41ZkwEb2QQHCHgvk=;
+        b=mDl6PXWJ1Bkvl1icfNw7VA19/MkAWgxbWnGXuo5EUO1SJiScraBKiQ9KrofsBoM/SR
+         cI5s/bfaD4vgV3fPkM5eVc6+s/QSKS13fJ5E8kb/qmpPqakESlBEaYf04xiVTqyxAofE
+         5WDrNMJDfbDSg32gzUTm+N0g+Iz+lJGgVhXViL3E5PXfxYZqCaRACiPaoQweCmPTnV9V
+         WeqBVQybmlww1UJWUaxO1gdO9Jrxrna8Qtb8LRx7AI20xrqovpAWel7cm9gAS+34Wout
+         ZinXZaRESpmNiw3KaOVTN6Zb71YZmfB9XxF0HVb/mIUomCnWVLpMoj505oVF14aR/sZC
+         fKaA==
+X-Gm-Message-State: APjAAAWB9klAPXVMcRQ4fUuLjEOL2iSn5gT9W8V64B4p1gXcUQH1/vjF
+        NikQ9AcFoztE4XZyQBDwOjiYFQ==
+X-Google-Smtp-Source: APXvYqwUzQtilkzjwaBLHyLTKEW/yG9aPJtXBPBUOwPOr4CS6DkX1KalmlTNN88bUG4+HgjaXpR6Eg==
+X-Received: by 2002:a05:651c:28a:: with SMTP id b10mr475136ljo.124.1572439956073;
+        Wed, 30 Oct 2019 05:52:36 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id d9sm1426980lfj.81.2019.10.30.05.52.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 05:52:34 -0700 (PDT)
+Subject: Re: [PATCH v2 17/23] soc: fsl: qe: make qe_ic_cascade_* static
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Scott Wood <oss@buserror.net>,
+        Valentin Longchamp <valentin.longchamp@keymile.com>
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <20191025124058.22580-1-linux@rasmusvillemoes.dk>
+ <20191025124058.22580-18-linux@rasmusvillemoes.dk>
+ <1d12e0d1-a873-d841-6e73-22ec1d09c268@c-s.fr>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <bb00fda2-7d20-b1a1-e2e8-22702842548e@rasmusvillemoes.dk>
+Date:   Wed, 30 Oct 2019 13:52:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4c4:: with SMTP id f4mr25553238ils.79.1572439928625;
- Wed, 30 Oct 2019 05:52:08 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 05:52:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006062280596203360@google.com>
-Subject: KASAN: use-after-free Read in chaoskey_disconnect
-From:   syzbot <syzbot+6d8505fcdf25f00ac276@syzkaller.appspotmail.com>
-To:     alexandre.belloni@bootlin.com, andreyknvl@google.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        lvivier@redhat.com, mchehab+samsung@kernel.org, mpm@selenic.com,
-        swboyd@chromium.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <1d12e0d1-a873-d841-6e73-22ec1d09c268@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 30/10/2019 11.50, Christophe Leroy wrote:
+> 
+> 
+> Le 25/10/2019 à 14:40, Rasmus Villemoes a écrit :
+>> Now that the references from arch/powerpc/ are gone, these are only
+>> referenced from inside qe_ic.c, so make them static.
+> 
+> Why do that in two steps ?
+> I think patch 9 could remain until here, and then you could squash patch
+> 9 and patch 17 together here.
 
-syzbot found the following crash on:
+Agreed, I should rearrange stuff to avoid touching the same lines again
+and again.
 
-HEAD commit:    ff6409a6 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=15e1ba24e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3230c37d442895b7
-dashboard link: https://syzkaller.appspot.com/bug?extid=6d8505fcdf25f00ac276
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169b8904e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166f3104e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6d8505fcdf25f00ac276@syzkaller.appspotmail.com
-
-usb 3-1: string descriptor 0 read error: -71
-usb 3-1: USB disconnect, device number 2
-==================================================================
-BUG: KASAN: use-after-free in atomic_read  
-include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in refcount_inc_not_zero_checked+0x72/0x1e0  
-lib/refcount.c:123
-Read of size 4 at addr ffff8881cf679820 by task kworker/1:1/1730
-
-CPU: 1 PID: 1730 Comm: kworker/1:1 Not tainted 5.4.0-rc5+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
-  kasan_report+0xe/0x20 mm/kasan/common.c:634
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
-  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
-  refcount_inc_not_zero_checked+0x72/0x1e0 lib/refcount.c:123
-  refcount_inc_checked+0x12/0x60 lib/refcount.c:156
-  get_task_struct include/linux/sched/task.h:110 [inline]
-  kthread_stop+0x6c/0x610 kernel/kthread.c:554
-  hwrng_unregister+0x190/0x210 drivers/char/hw_random/core.c:538
-  chaoskey_disconnect+0x1b2/0x200 drivers/usb/misc/chaoskey.c:232
-  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-  __device_release_driver drivers/base/dd.c:1134 [inline]
-  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:532
-  device_del+0x420/0xb20 drivers/base/core.c:2376
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2200
-  hub_port_connect drivers/usb/core/hub.c:5035 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x16f2/0x3800 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 2:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
-  slab_post_alloc_hook mm/slab.h:584 [inline]
-  slab_alloc_node mm/slub.c:2779 [inline]
-  kmem_cache_alloc_node+0xdc/0x310 mm/slub.c:2815
-  alloc_task_struct_node kernel/fork.c:169 [inline]
-  dup_task_struct kernel/fork.c:865 [inline]
-  copy_process+0x4201/0x6470 kernel/fork.c:1851
-  _do_fork+0x129/0xec0 kernel/fork.c:2366
-  kernel_thread+0xaa/0xe0 kernel/fork.c:2453
-  create_kthread kernel/kthread.c:278 [inline]
-  kthreadd+0x4a2/0x680 kernel/kthread.c:596
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 16:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
-  slab_free_hook mm/slub.c:1424 [inline]
-  slab_free_freelist_hook mm/slub.c:1475 [inline]
-  slab_free mm/slub.c:3025 [inline]
-  kmem_cache_free+0xb9/0x380 mm/slub.c:3041
-  __put_task_struct+0x1e2/0x4c0 kernel/fork.c:748
-  put_task_struct include/linux/sched/task.h:119 [inline]
-  delayed_put_task_struct+0x1b4/0x2c0 kernel/exit.c:182
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
-  rcu_core+0x630/0x1ca0 kernel/rcu/tree.c:2377
-  __do_softirq+0x221/0x912 kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff8881cf679800
-  which belongs to the cache task_struct of size 5888
-The buggy address is located 32 bytes inside of
-  5888-byte region [ffff8881cf679800, ffff8881cf67af00)
-The buggy address belongs to the page:
-page:ffffea00073d9e00 refcount:1 mapcount:0 mapping:ffff8881da116000  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da116000
-raw: 0000000000000000 0000000080050005 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881cf679700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8881cf679780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881cf679800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                ^
-  ffff8881cf679880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cf679900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Thanks,
+Rasmus
