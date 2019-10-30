@@ -2,114 +2,91 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E2CCA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E81CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF4FA208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:06:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EuV+imwY";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EuV+imwY"
+	by mail.kernel.org (Postfix) with ESMTP id D431620856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfJ3GGp (ORCPT
+        id S1727261AbfJ3GJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 02:06:45 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46510 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfJ3GGo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 02:06:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C02F660F36; Wed, 30 Oct 2019 06:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572415603;
-        bh=4s51Cnb1yRkUC9YAVygkrHqi5ty/axuCrm5Hc1HwD1k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EuV+imwY8HNt7pVYcglKgm5zzIwv6ou9HN0JTsUjPoV/YpeZEzhRrlnU9iLUJb2ui
-         j2/BZIHFa1Ag3ZcWfn4D94+DifneSRMUMuaj0aM4PwSvLrGff0N/R5bgzwTM9NiRNN
-         AQeSmEQ1izCnOe2hTmn/wU801uqKeT9TzO7kZ8gw=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 229CE60DF8;
-        Wed, 30 Oct 2019 06:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572415603;
-        bh=4s51Cnb1yRkUC9YAVygkrHqi5ty/axuCrm5Hc1HwD1k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EuV+imwY8HNt7pVYcglKgm5zzIwv6ou9HN0JTsUjPoV/YpeZEzhRrlnU9iLUJb2ui
-         j2/BZIHFa1Ag3ZcWfn4D94+DifneSRMUMuaj0aM4PwSvLrGff0N/R5bgzwTM9NiRNN
-         AQeSmEQ1izCnOe2hTmn/wU801uqKeT9TzO7kZ8gw=
+        Wed, 30 Oct 2019 02:09:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60968 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726808AbfJ3GJB (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 02:09:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 23:09:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="211258333"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.58]) ([10.239.196.58])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Oct 2019 23:08:58 -0700
+Subject: Re: [PATCH v4 5/7] perf report: Sort by sampled cycles percent per
+ block for stdio
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191028013330.18319-1-yao.jin@linux.intel.com>
+ <20191028013330.18319-6-yao.jin@linux.intel.com>
+ <20191029092747.GH28772@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <df900509-7e69-2414-fca6-dccb70a2daf1@linux.intel.com>
+Date:   Wed, 30 Oct 2019 14:08:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20191029092747.GH28772@krava>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 30 Oct 2019 11:36:43 +0530
-From:   kgunda@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-Subject: Re: [PATCH v3 07/11] arm64: dts: qcom: sc7180: Add SPMI PMIC arbiter
- device
-In-Reply-To: <5db86bb1.1c69fb81.dc254.ec0b@mx.google.com>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-8-rnayak@codeaurora.org>
- <5db86bb1.1c69fb81.dc254.ec0b@mx.google.com>
-Message-ID: <78809ef8464c46018f3803454c1165ab@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-29 22:11, Stephen Boyd wrote:
-> Quoting Rajendra Nayak (2019-10-23 02:02:15)
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 04808a07d7da..6584ac6e6c7b 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -224,6 +224,25 @@
->>                         };
->>                 };
->> 
->> +               spmi_bus: spmi@c440000 {
->> +                       compatible = "qcom,spmi-pmic-arb";
->> +                       reg = <0 0xc440000 0 0x1100>,
-> 
-> Please pad out the registers to 8 numbers. See sdm845.
-Ok.. Will address it in the next series.
-> 
->> +                             <0 0xc600000 0 0x2000000>,
->> +                             <0 0xe600000 0 0x100000>,
->> +                             <0 0xe700000 0 0xa0000>,
->> +                             <0 0xc40a000 0 0x26000>;
->> +                       reg-names = "core", "chnls", "obsrvr", "intr", 
->> "cnfg";
->> +                       interrupt-names = "periph_irq";
->> +                       interrupts-extended = <&pdc 1 
->> IRQ_TYPE_LEVEL_HIGH>;
-> 
-> This is different than sdm845. I guess pdc is working?
-> 
-Yes. For SDM845 pdc controller support was not yet added. That's why 
-still the GIC interrupt is used.
-Where as for SC7180 the same is added with 
-https://lore.kernel.org/patchwork/patch/1143335/.
 
-Yes. pdc is working.
 
->> +                       qcom,ee = <0>;
->> +                       qcom,channel = <0>;
->> +                       #address-cells = <1>;
->> +                       #size-cells = <1>;
->> +                       interrupt-controller;
->> +                       #interrupt-cells = <4>;
->> +                       cell-index = <0>;
->> +               };
->> +
+On 10/29/2019 5:27 PM, Jiri Olsa wrote:
+> On Mon, Oct 28, 2019 at 09:33:28AM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+>> index 0e27d6830011..7cf137b0451b 100644
+>> --- a/tools/perf/util/hist.c
+>> +++ b/tools/perf/util/hist.c
+>> @@ -758,6 +758,10 @@ struct hist_entry *hists__add_entry_block(struct hists *hists,
+>>   	struct hist_entry entry = {
+>>   		.block_info = block_info,
+>>   		.hists = hists,
+>> +		.ms = {
+>> +			.map = al->map,
+>> +			.sym = al->sym,
+>> +		},
+> 
+> this looks like separated fix, if thats the case
+> please explain the change and move it to separate patch
+> 
+> thanks,
+> jirka
+> 
+
+Hi Jiri,
+
+Sorry, this information is needed for reporting the block range 
+information (such as reporting the source lines).
+
+I will move this code to another patch in v5.
+
+Thanks
+Jin Yao
+
