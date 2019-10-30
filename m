@@ -2,98 +2,116 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC49CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941C7CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912DD20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EE72205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfJ3Pmh (ORCPT
+        id S1727230AbfJ3PnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:42:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:36720 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727409AbfJ3Pmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:42:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FD927AD;
-        Wed, 30 Oct 2019 08:42:31 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CE883F6C4;
-        Wed, 30 Oct 2019 08:42:30 -0700 (PDT)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 09/12] firmware: psci: Replace cpu_up/down with device_online/offline
-Date:   Wed, 30 Oct 2019 15:38:34 +0000
-Message-Id: <20191030153837.18107-10-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191030153837.18107-1-qais.yousef@arm.com>
-References: <20191030153837.18107-1-qais.yousef@arm.com>
+        Wed, 30 Oct 2019 11:43:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35574 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726242AbfJ3PnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:43:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 20E55B456;
+        Wed, 30 Oct 2019 15:43:20 +0000 (UTC)
+From:   Petr Mladek <pmladek@suse.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH v4 0/5] livepatch: new API to track system state changes
+Date:   Wed, 30 Oct 2019 16:43:08 +0100
+Message-Id: <20191030154313.13263-1-pmladek@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The core device API performs extra housekeeping bits that are missing
-from directly calling cpu_up/down.
+Hi,
 
-See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
-serialization during LPM") for an example description of what might go
-wrong.
+this is another piece in the puzzle that helps to maintain more
+livepatches.
 
-This also prepares to make cpu_up/down a private interface for anything
-but the cpu subsystem.
+Especially pre/post (un)patch callbacks might change a system state.
+Any newly installed livepatch has to somehow deal with system state
+modifications done be already installed livepatches.
 
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC: linux-arm-kernel@lists.infradead.org
-CC: linux-kernel@vger.kernel.org
----
- drivers/firmware/psci/psci_checker.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+This patchset provides a simple and generic API that
+helps to keep and pass information between the livepatches.
+It is also usable to prevent loading incompatible livepatches.
 
-diff --git a/drivers/firmware/psci/psci_checker.c b/drivers/firmware/psci/psci_checker.c
-index 6a445397771c..9e4b1bade659 100644
---- a/drivers/firmware/psci/psci_checker.c
-+++ b/drivers/firmware/psci/psci_checker.c
-@@ -83,8 +83,9 @@ static unsigned int down_and_up_cpus(const struct cpumask *cpus,
- 	cpumask_clear(offlined_cpus);
- 
- 	/* Try to power down all CPUs in the mask. */
-+	lock_device_hotplug();
- 	for_each_cpu(cpu, cpus) {
--		int ret = cpu_down(cpu);
-+		int ret = device_offline(get_cpu_device(cpu));
- 
- 		/*
- 		 * cpu_down() checks the number of online CPUs before the TOS
-@@ -116,7 +117,7 @@ static unsigned int down_and_up_cpus(const struct cpumask *cpus,
- 
- 	/* Try to power up all the CPUs that have been offlined. */
- 	for_each_cpu(cpu, offlined_cpus) {
--		int ret = cpu_up(cpu);
-+		int ret = device_online(get_cpu_device(cpu));
- 
- 		if (ret != 0) {
- 			pr_err("Error occurred (%d) while trying "
-@@ -126,6 +127,7 @@ static unsigned int down_and_up_cpus(const struct cpumask *cpus,
- 			cpumask_clear_cpu(cpu, offlined_cpus);
- 		}
- 	}
-+	unlock_device_hotplug();
- 
- 	/*
- 	 * Something went bad at some point and some CPUs could not be turned
+Changes since v3:
+
+  + selftests compilation error [kbuild test robot]	
+  + fix copyright in selftests [Joe]
+  + used macros for the module names in selftests [Joe]
+  + allow zero state version [Josh]
+  + slightly refactor the code for checking state version [Josh]
+  + fix few typos reported by checkpatch.pl [Petr]
+  + added Acks [Joe]
+
+Changes since v2:
+
+  + Typo fixes [Miroslav]
+  + Move the documentation at the end of the list [Miroslav]
+  + Add Miroslav's acks
+
+Changes since v1:
+
+  + Use "unsigned long" instead of "int" for "state.id" [Nicolai]
+  + Use "unsigned int" instead of "int" for "state.version [Petr]
+  + Include "state.h" to avoid warning about non-static func [Miroslav]
+  + Simplify logic in klp_is_state_compatible() [Miroslav]
+  + Document how livepatches should handle the state [Nicolai]
+  + Fix some typos, formulation, module metadata [Joe, Miroslav]
+
+Petr Mladek (5):
+  livepatch: Keep replaced patches until post_patch callback is called
+  livepatch: Basic API to track system state changes
+  livepatch: Allow to distinguish different version of system state
+    changes
+  livepatch: Documentation of the new API for tracking system state
+    changes
+  livepatch: Selftests of the API for tracking system state changes
+
+ Documentation/livepatch/index.rst               |   1 +
+ Documentation/livepatch/system-state.rst        | 167 +++++++++++++++++++++
+ include/linux/livepatch.h                       |  17 +++
+ kernel/livepatch/Makefile                       |   2 +-
+ kernel/livepatch/core.c                         |  44 ++++--
+ kernel/livepatch/core.h                         |   5 +-
+ kernel/livepatch/state.c                        | 119 +++++++++++++++
+ kernel/livepatch/state.h                        |   9 ++
+ kernel/livepatch/transition.c                   |  12 +-
+ lib/livepatch/Makefile                          |   5 +-
+ lib/livepatch/test_klp_state.c                  | 162 ++++++++++++++++++++
+ lib/livepatch/test_klp_state2.c                 | 191 ++++++++++++++++++++++++
+ lib/livepatch/test_klp_state3.c                 |   5 +
+ tools/testing/selftests/livepatch/Makefile      |   3 +-
+ tools/testing/selftests/livepatch/test-state.sh | 180 ++++++++++++++++++++++
+ 15 files changed, 901 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/livepatch/system-state.rst
+ create mode 100644 kernel/livepatch/state.c
+ create mode 100644 kernel/livepatch/state.h
+ create mode 100644 lib/livepatch/test_klp_state.c
+ create mode 100644 lib/livepatch/test_klp_state2.c
+ create mode 100644 lib/livepatch/test_klp_state3.c
+ create mode 100755 tools/testing/selftests/livepatch/test-state.sh
+
 -- 
-2.17.1
+2.16.4
 
