@@ -2,185 +2,74 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11881CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5776DCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B9720874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T01tsbGO"
+	by mail.kernel.org (Postfix) with ESMTP id 2885020874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:40:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572428454;
+	bh=v2VPGzmwzTx7M7vLZa8QbUcX7fBOpSfiiK/n0DFbQ1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dbkVs1014aCWQfVWXEFofnYDBxdWAaVx3PF8ZCRSqqjVJnTXyenaZ/Dg0QcH8aM6E
+	 9tBvE/zKhaQCrmIibWDieFyQ9r52hxNSCiVGlMq1JuQxfymhoO3A4WoXTMfAJEvjzQ
+	 RWYe6boPDVA9GmL1HFgTCscUFsjpqrkChIxizXh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfJ3JjS (ORCPT
+        id S1726283AbfJ3Jkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:39:18 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37613 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfJ3JjS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:39:18 -0400
-Received: by mail-pl1-f196.google.com with SMTP id p13so742500pll.4;
-        Wed, 30 Oct 2019 02:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1YGXo/SF75Yt2VzSc2ZhTmUHp1jTQNYYmgSwhHo/iHE=;
-        b=T01tsbGOKACg8rjHZVgIdjsyfJausHFmH+b2g77sqkgKM7KmQxZx70eFw3IbyIobfb
-         MH5Z+VSbM1Asv23w19JsyWwD2RzIr2tBjJiaPmNRI2j2gnU6iEXAHdzDClI0KIpJBnwi
-         9Y6QKPx9aH9HCago4K9+pCkbx+5gtTGuFtcROqyPHrHbG9LSKRBmD92dXiPzrHpKOHZE
-         gr2DkSaYyFWTw18zLL1jdwglNRx0ZcgAm1vV+dptbCmCz9eQt42+jd9Ec4nFIW4uOUbr
-         yZ8t8g8lwRon4e3zydIetmoQQ62dwAjzQuZ/2chUofLPFp+ZC/p2HXrsHk0WRkjoRG4t
-         SM5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1YGXo/SF75Yt2VzSc2ZhTmUHp1jTQNYYmgSwhHo/iHE=;
-        b=KAcsjuwDCTSoXRBiJDM1L4mQ0j03mM9j9hKQ/Ak9ZpShu1KZee9Cz7VilBJCM0zM65
-         eW33qBVsXZXc8LRIHvQcevQC58lABiWgz6cny+icWW7lKJPKIK3lu2r9BP1WwvK7gGmL
-         QSQVhPhc2eT28CsaaOYXxEiof17EK89y6DabbWaVrdW3/uIshacqIauztuXXkq5+F+fT
-         Ht0e5yPvkU3TtaWwpmhzCWYByra8dDe4P7qUkMGUPUwA9qJRyUw7WMLhmDdsnlzpYBR7
-         VkAT3SPqcxHAlgdwB/8VTmYXXuAb6Ebb26k4LQ0N4mFOBDkvSUA9+ReWcX5hVhuy+VEU
-         oOAA==
-X-Gm-Message-State: APjAAAV/6S99R+Z9T4SHHpHoy6IA75n874/wFT/8EkrHaDBIcvEJIca5
-        RUUZ0gaWP08hg0BlypMqjyw=
-X-Google-Smtp-Source: APXvYqx2bsz0q1YEMomF7tg/QE6FaJHQoLR84yjHPoMEDBHwD4lQZ294O5HfQO+LsqTI8UdPhs9pyA==
-X-Received: by 2002:a17:902:a609:: with SMTP id u9mr3503407plq.180.1572428356669;
-        Wed, 30 Oct 2019 02:39:16 -0700 (PDT)
-Received: from archlinux.GovzHome.Local ([2407:7000:aa08:9602:1f09:3b2d:1861:4613])
-        by smtp.gmail.com with ESMTPSA id i17sm1876190pfo.106.2019.10.30.02.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 02:39:16 -0700 (PDT)
-From:   sanjay.govind9@gmail.com
-Cc:     sanjay.govind9@gmail.com, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: sony: Add support for Guitar Hero Guitars
-Date:   Wed, 30 Oct 2019 22:29:56 +1300
-Message-Id: <20191030092956.17934-1-sanjay.govind9@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 30 Oct 2019 05:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbfJ3Jkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:40:52 -0400
+Received: from localhost (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 915FF20874;
+        Wed, 30 Oct 2019 09:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572428452;
+        bh=v2VPGzmwzTx7M7vLZa8QbUcX7fBOpSfiiK/n0DFbQ1c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=teLC9UHiGJUAq5pRLSA/gRsvVZXir0xuU7lSsK8x1XPPalvs/Q+VDYbUtdzcLY7wM
+         ygwqzA3nSYRdk/+yY80K6hhGnEWiR6mQB7J/73ZoQiC0HFt0MbOWJY59vlJ7opU4wh
+         6LVGhoNpCaPRt3OosGChWLOgfMObma9ICXp7ANhY=
+Date:   Wed, 30 Oct 2019 10:40:49 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, kim.jamie.bradley@gmail.com,
+        nishkadg.linux@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Subject: Re: [PATCH v2 1/3] staging: rts5208: Eliminate the use of Camel Case
+ in files ms
+Message-ID: <20191030094049.GA676265@kroah.com>
+References: <20191029145517.630-1-gabrielabittencourt00@gmail.com>
+ <20191029145517.630-2-gabrielabittencourt00@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029145517.630-2-gabrielabittencourt00@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay Govind <sanjay.govind9@gmail.com>
+On Tue, Oct 29, 2019 at 11:55:15AM -0300, Gabriela Bittencourt wrote:
+> Cleans up checks of "Avoid CamelCase" in file ms.h and ms.c
+> 
+> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
 
-Guitar Hero Guitars use the accelerometer x axis for tilt. Currently,
-they are treated as a regular HID device, and this does not allow the
-usage of the accelerometer. Add in support for both the PS3 and the 
-PC guitars (they are the same guitars, with different vids and pids).
+The subject line seems odd, what does "in files ms" mean?
 
-Signed-off-by: Sanjay Govind <sanjay.govind9@gmail.com>
----
- drivers/hid/hid-ids.h  |  5 +++++
- drivers/hid/hid-sony.c | 26 ++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+Same for other patches in this series, please clean that up to make it
+more informative.
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 447e8db21174..1d640f94c5bc 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -40,6 +40,9 @@
- #define USB_VENDOR_ID_ACTIONSTAR	0x2101
- #define USB_DEVICE_ID_ACTIONSTAR_1011	0x1011
- 
-+#define USB_VENDOR_ID_ACTIVISION 0x1430
-+#define USB_DEVICE_ID_ACTIVISION_GUITAR 0x474c
-+
- #define USB_VENDOR_ID_ADS_TECH		0x06e1
- #define USB_DEVICE_ID_ADS_TECH_RADIO_SI470X	0xa155
- 
-@@ -1031,6 +1034,7 @@
- 
- 
- #define USB_VENDOR_ID_SONY			0x054c
-+#define USB_VENDOR_ID_SONY2			0x12BA
- #define USB_DEVICE_ID_SONY_VAIO_VGX_MOUSE	0x024b
- #define USB_DEVICE_ID_SONY_VAIO_VGP_MOUSE	0x0374
- #define USB_DEVICE_ID_SONY_PS3_BDREMOTE		0x0306
-@@ -1042,6 +1046,7 @@
- #define USB_DEVICE_ID_SONY_NAVIGATION_CONTROLLER	0x042f
- #define USB_DEVICE_ID_SONY_BUZZ_CONTROLLER		0x0002
- #define USB_DEVICE_ID_SONY_WIRELESS_BUZZ_CONTROLLER	0x1000
-+#define USB_DEVICE_ID_SONY_GUITAR_CONTROLLER 0x0100
- 
- #define USB_VENDOR_ID_SINO_LITE			0x1345
- #define USB_DEVICE_ID_SINO_LITE_CONTROLLER	0x3008
-diff --git a/drivers/hid/hid-sony.c b/drivers/hid/hid-sony.c
-index 4c6ed6ef31f1..410c855fb830 100644
---- a/drivers/hid/hid-sony.c
-+++ b/drivers/hid/hid-sony.c
-@@ -56,6 +56,7 @@
- #define NSG_MR5U_REMOTE_BT        BIT(14)
- #define NSG_MR7U_REMOTE_BT        BIT(15)
- #define SHANWAN_GAMEPAD           BIT(16)
-+#define GH_GUITAR_CONTROLLER      BIT(17)
- 
- #define SIXAXIS_CONTROLLER (SIXAXIS_CONTROLLER_USB | SIXAXIS_CONTROLLER_BT)
- #define MOTION_CONTROLLER (MOTION_CONTROLLER_USB | MOTION_CONTROLLER_BT)
-@@ -507,6 +508,8 @@ struct motion_output_report_02 {
- #define SIXAXIS_INPUT_REPORT_ACC_X_OFFSET 41
- #define SIXAXIS_ACC_RES_PER_G 113
- 
-+#define GUITAR_TILT_USAGE 44
-+
- static DEFINE_SPINLOCK(sony_dev_list_lock);
- static LIST_HEAD(sony_device_list);
- static DEFINE_IDA(sony_device_id_allocator);
-@@ -757,6 +760,20 @@ static int navigation_mapping(struct hid_device *hdev, struct hid_input *hi,
- 	return -1;
- }
- 
-+static int guitar_mapping(struct hid_device *hdev, struct hid_input *hi,
-+			  struct hid_field *field, struct hid_usage *usage,
-+			  unsigned long **bit, int *max)
-+{
-+	if ((usage->hid & HID_USAGE_PAGE) == HID_UP_MSVENDOR) {
-+		unsigned int abs = usage->hid & HID_USAGE;
-+
-+		if (abs == GUITAR_TILT_USAGE) {
-+			hid_map_usage_clear(hi, usage, bit, max, EV_ABS, ABS_RY);
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
- 
- static int sixaxis_mapping(struct hid_device *hdev, struct hid_input *hi,
- 			  struct hid_field *field, struct hid_usage *usage,
-@@ -1340,6 +1357,9 @@ static int sony_mapping(struct hid_device *hdev, struct hid_input *hi,
- 	if (sc->quirks & SIXAXIS_CONTROLLER)
- 		return sixaxis_mapping(hdev, hi, field, usage, bit, max);
- 
-+	if (sc->quirks & GH_GUITAR_CONTROLLER)
-+		return guitar_mapping(hdev, hi, field, usage, bit, max);
-+
- 	if (sc->quirks & DUALSHOCK4_CONTROLLER)
- 		return ds4_mapping(hdev, hi, field, usage, bit, max);
- 
-@@ -2950,6 +2970,12 @@ static int sony_resume(struct hid_device *hdev)
- #endif
- 
- static const struct hid_device_id sony_devices[] = {
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_ACTIVISION, USB_DEVICE_ID_ACTIVISION_GUITAR),
-+		.driver_data = GH_GUITAR_CONTROLLER },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SONY2, USB_DEVICE_ID_SONY_GUITAR_CONTROLLER),
-+		.driver_data = GH_GUITAR_CONTROLLER },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_PS3_CONTROLLER),
-+		.driver_data = SIXAXIS_CONTROLLER_USB },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_PS3_CONTROLLER),
- 		.driver_data = SIXAXIS_CONTROLLER_USB },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_NAVIGATION_CONTROLLER),
--- 
-2.23.0
+thanks,
 
+greg k-h
