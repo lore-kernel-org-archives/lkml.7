@@ -4,221 +4,397 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC56CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54158CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B6220874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001D92086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:37:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IoXoUJup"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mFc0gaPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbfJ3BhS (ORCPT
+        id S1727134AbfJ3BhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 21:37:18 -0400
-Received: from mail-yb1-f201.google.com ([209.85.219.201]:50255 "EHLO
-        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfJ3BhP (ORCPT
+        Tue, 29 Oct 2019 21:37:23 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:51197 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfJ3BhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 21:37:15 -0400
-Received: by mail-yb1-f201.google.com with SMTP id y17so666167ybq.17
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 18:37:13 -0700 (PDT)
+        Tue, 29 Oct 2019 21:37:19 -0400
+Received: by mail-pl1-f201.google.com with SMTP id x8so568566plo.17
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 18:37:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=qPaHEbPrYv6JUTplbHxnlfnp4zAORaH8vrWi/UicSm4=;
-        b=IoXoUJuphbNgV9+X/Lt6knalFErc6s3NPqkOlQ1S9+wbHCVkgdrrVTFFV8e96qVxr/
-         0WxOP+lLX3dm04M/Rm4QLxaw7PPDMOb4YA8sQ4FqlOteYVc4hLtgPZ8beJub3SoPjyJr
-         AAWsxEFMqvfgjw7+6q9NT6dyDAVWFGcoldP5pC6gP6HhqcJRehTktAk+nJJSaGPbX3GK
-         hLIFa8uM4Gei6GarKIYl6WV2534SqhVj2JpP9eQZRGef5nz6hXPnqrtlA59DHOmXOfQd
-         VmNuRLkgOzTGa91wU/Dkt/tAuEfv4kgUBdrP141WQYWSiuXeHYv58sO8Llt+5ADfAKsF
-         LPHA==
+        bh=ssFvuk0QwiNdDKtxF9cfWOelfIf78FQ2C/PtpI944yM=;
+        b=mFc0gaPn4+VtUnI+sKXZq6Rbt7U7TlRL2Fbyt2WcirmO4EW/I6YAIxCL/OZ+VSeG/d
+         7LjNVrFXvDK8NxErbG3ICDiOUxBi/h/ze5AzHpxGRmgxOYD1qQ/LbgawvyqZMFkP3Ic3
+         gxHY0YsrRXpa3AuRelnMPVCCcTaXo3ymxJAvl1p128I0QIzdmirI+rvK1pTC6O+UiIgf
+         LodM4HWFDrBkEzVme0QCQMfjQO3U4ZM51UevgkIJaYU6o/ewhnMAQcEhD+ER+mo70g+6
+         /yCScps/qV5SprmOZagCz1ajlf14xvxQPoGjrPeSxG7w8jKf+73FxTuPS6tQz9MdyVwb
+         +csw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=qPaHEbPrYv6JUTplbHxnlfnp4zAORaH8vrWi/UicSm4=;
-        b=H/97huZv0WMbOZ28A1fgSySy1xiotG8/pCEfhlAhDLyAASWUR8gB1W+YkK+PVCvvxQ
-         KbHd1JobfCbGkOMWy3ZT8gBQmfPw8c4mNY2e86ZBPqUbGDyAkV+LimoTc8c62YyLgzvv
-         yE0zGMtlw1phCrmS91HzAGAq5HuhIfKPmAcp6Rx9+DqHC6oTjcqZ3vgkjCgOYF3RQ8W3
-         MuzeeiNYkgJBGk++UJ8njI2YC/J4kIo7SEONOiI8yLnwZXxmYWEihqfhQoHruSgOH6cG
-         8DSRcuS5Nr6qpBJ30Ye9lYkjm3TePgfz/+NEKH0PJZk4CnMbbJKbC2AtyWIg0FoMbTkb
-         0isQ==
-X-Gm-Message-State: APjAAAV1mbkQYRaOWOFvweI+bRXaXtIz/PprKw97oXKVlhG83QrrltEG
-        cEa31LRIAyJqV5f/eac5enXlB9HdXQdedjLBRw==
-X-Google-Smtp-Source: APXvYqwq6yygYVt3tY6tYtpBGDJ/fDbgkOJS1xGErEBdHsCzNqN+627UxywOTbJIshRr0GqN+Ey54sxWbBYsAt3Bog==
-X-Received: by 2002:a81:25d7:: with SMTP id l206mr19187868ywl.36.1572399433419;
- Tue, 29 Oct 2019 18:37:13 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 18:36:56 -0700
+        bh=ssFvuk0QwiNdDKtxF9cfWOelfIf78FQ2C/PtpI944yM=;
+        b=iIdAVXaJdYMULVwiKzlUDds07niqIjVPEvMK0Yg2vN2k54b/g9HCcZoclIxzGmEfda
+         rnkez/o4P2/zAoI+vnsLKs/aOc5ZnkpWNgB5nhk15RFkSCXiYWO4CzGL5+T6oBClRo9U
+         PRjUlMMY3En0H0ZVRzQlX6CjpkbQa4Px/zE3tl8B6ixeiuJg2UJnwyHdcnSGhIafFKV6
+         Bl5IVNOPvOtmNEwufnkzCF+Vy1eBHvvP6YpkSzRDgu9igP+765j0pIKZd6wolc+eAHvl
+         JWy+VW5WH7VCHTGyPvebH7P/ZEw/ogrpfqNklzWbkCqCkncWm0qmYsy44AqJzRBBhv+D
+         cTXg==
+X-Gm-Message-State: APjAAAVuaBv7VgTpeVcdgPALwbrt6sEK3jyJCkaIwAobySpbA2GaaqyU
+        djADCC/j92CigmqPfEfMcRJgXXbZtHSzBAC1Lg==
+X-Google-Smtp-Source: APXvYqyfljDGlEbqdyichT3gDqFF/INDoWM+kXTzr44JK6GZRNZHGTLJJHtZJyFdtBpnf9GUBVFylkm4p989Wv+UKg==
+X-Received: by 2002:a63:ed50:: with SMTP id m16mr23888231pgk.341.1572399438731;
+ Tue, 29 Oct 2019 18:37:18 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 18:36:58 -0700
 In-Reply-To: <20191030013701.39647-1-almasrymina@google.com>
-Message-Id: <20191030013701.39647-4-almasrymina@google.com>
+Message-Id: <20191030013701.39647-6-almasrymina@google.com>
 Mime-Version: 1.0
 References: <20191030013701.39647-1-almasrymina@google.com>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH v8 4/9] hugetlb_cgroup: add reservation accounting for private mappings
+Subject: [PATCH v8 6/9] hugetlb_cgroup: add accounting for shared mappings
 From:   Mina Almasry <almasrymina@google.com>
 To:     mike.kravetz@oracle.com
 Cc:     shuah@kernel.org, almasrymina@google.com,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
-        aneesh.kumar@linux.vnet.ibm.com, Hillf Danton <hdanton@sina.com>
+        aneesh.kumar@linux.vnet.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Normally the pointer to the cgroup to uncharge hangs off the struct
-page, and gets queried when it's time to free the page. With
-hugetlb_cgroup reservations, this is not possible. Because it's possible
-for a page to be reserved by one task and actually faulted in by another
-task.
+For shared mappings, the pointer to the hugetlb_cgroup to uncharge lives
+in the resv_map entries, in file_region->reservation_counter.
 
-The best place to put the hugetlb_cgroup pointer to uncharge for
-reservations is in the resv_map. But, because the resv_map has different
-semantics for private and shared mappings, the code patch to
-charge/uncharge shared and private mappings is different. This patch
-implements charging and uncharging for private mappings.
+After a call to region_chg, we charge the approprate hugetlb_cgroup, and if
+successful, we pass on the hugetlb_cgroup info to a follow up region_add call.
+When a file_region entry is added to the resv_map via region_add, we put the
+pointer to that cgroup in file_region->reservation_counter. If charging doesn't
+succeed, we report the error to the caller, so that the kernel fails the
+reservation.
 
-For private mappings, the counter to uncharge is in
-resv_map->reservation_counter. On initializing the resv_map this is set
-to NULL. On reservation of a region in private mapping, the tasks
-hugetlb_cgroup is charged and the hugetlb_cgroup is placed is
-resv_map->reservation_counter.
-
-On hugetlb_vm_op_close, we uncharge resv_map->reservation_counter.
+On region_del, which is when the hugetlb memory is unreserved, we also uncharge
+the file_region->reservation_counter.
 
 Signed-off-by: Mina Almasry <almasrymina@google.com>
-Acked-by: Hillf Danton <hdanton@sina.com>
 
 ---
- include/linux/hugetlb.h        |  8 +++++++
- include/linux/hugetlb_cgroup.h | 11 +++++++++
- mm/hugetlb.c                   | 44 +++++++++++++++++++++++++++++++++-
- mm/hugetlb_cgroup.c            | 12 ----------
- 4 files changed, 62 insertions(+), 13 deletions(-)
+ mm/hugetlb.c | 149 ++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 117 insertions(+), 32 deletions(-)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 9c49a0ba894d3..36dcda7be4b0e 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -46,6 +46,14 @@ struct resv_map {
- 	long adds_in_progress;
- 	struct list_head region_cache;
- 	long region_cache_count;
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 1162eeaf8d160..40f4b85de59c4 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -242,6 +242,15 @@ struct file_region {
+ 	struct list_head link;
+ 	long from;
+ 	long to;
 +#ifdef CONFIG_CGROUP_HUGETLB
 +	/*
-+	 * On private mappings, the counter to uncharge reservations is stored
-+	 * here. If these fields are 0, then the mapping is shared.
++	 * On shared mappings, each reserved region appears as a struct
++	 * file_region in resv_map. These fields hold the info needed to
++	 * uncharge each reservation.
 +	 */
 +	struct page_counter *reservation_counter;
 +	unsigned long pages_per_hpage;
 +#endif
  };
- extern struct resv_map *resv_map_alloc(void);
- void resv_map_release(struct kref *ref);
-diff --git a/include/linux/hugetlb_cgroup.h b/include/linux/hugetlb_cgroup.h
-index 1bb58a63af586..f6e3d74a02536 100644
---- a/include/linux/hugetlb_cgroup.h
-+++ b/include/linux/hugetlb_cgroup.h
-@@ -25,6 +25,17 @@ struct hugetlb_cgroup;
- #define HUGETLB_CGROUP_MIN_ORDER 3
 
- #ifdef CONFIG_CGROUP_HUGETLB
-+struct hugetlb_cgroup {
-+	struct cgroup_subsys_state css;
-+	/*
-+	 * the counter to account for hugepages from hugetlb.
-+	 */
-+	struct page_counter hugepage[HUGE_MAX_HSTATE];
-+	/*
-+	 * the counter to account for hugepage reservations from hugetlb.
-+	 */
-+	struct page_counter reserved_hugepage[HUGE_MAX_HSTATE];
-+};
-
- static inline struct hugetlb_cgroup *hugetlb_cgroup_from_page(struct page *page,
- 							      bool reserved)
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 325d5454bf168..8d8aa89a9928e 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -665,6 +665,16 @@ struct resv_map *resv_map_alloc(void)
- 	INIT_LIST_HEAD(&resv_map->regions);
-
- 	resv_map->adds_in_progress = 0;
-+#ifdef CONFIG_CGROUP_HUGETLB
-+	/*
-+	 * Initialize these to 0. On shared mappings, 0's here indicate these
-+	 * fields don't do cgroup accounting. On private mappings, these will be
-+	 * re-initialized to the proper values, to indicate that hugetlb cgroup
-+	 * reservations are to be un-charged from here.
-+	 */
-+	resv_map->reservation_counter = NULL;
-+	resv_map->pages_per_hpage = 0;
-+#endif
-
- 	INIT_LIST_HEAD(&resv_map->region_cache);
- 	list_add(&rg->link, &resv_map->region_cache);
-@@ -3216,7 +3226,18 @@ static void hugetlb_vm_op_close(struct vm_area_struct *vma)
-
- 	reserve = (end - start) - region_count(resv, start, end);
-
--	kref_put(&resv->refs, resv_map_release);
-+#ifdef CONFIG_CGROUP_HUGETLB
-+	/*
-+	 * Since we check for HPAGE_RESV_OWNER above, this must a private
-+	 * mapping, and these values should be none-zero, and should point to
-+	 * the hugetlb_cgroup counter to uncharge for this reservation.
-+	 */
-+	WARN_ON(!resv->reservation_counter);
-+	WARN_ON(!resv->pages_per_hpage);
-+
-+	hugetlb_cgroup_uncharge_counter(resv->reservation_counter,
-+					(end - start) * resv->pages_per_hpage);
-+#endif
-
- 	if (reserve) {
- 		/*
-@@ -3226,6 +3247,8 @@ static void hugetlb_vm_op_close(struct vm_area_struct *vma)
- 		gbl_reserve = hugepage_subpool_put_pages(spool, reserve);
- 		hugetlb_acct_memory(h, -gbl_reserve);
- 	}
-+
-+	kref_put(&resv->refs, resv_map_release);
+ /* Helper that removes a struct file_region from the resv_map cache and returns
+@@ -265,6 +274,23 @@ get_file_region_entry_from_cache(struct resv_map *resv, long from, long to)
+ 	return nrg;
  }
 
- static int hugetlb_vm_op_split(struct vm_area_struct *vma, unsigned long addr)
-@@ -4559,6 +4582,7 @@ int hugetlb_reserve_pages(struct inode *inode,
++/* Helper that records hugetlb_cgroup uncharge info. */
++static void record_hugetlb_cgroup_uncharge_info(struct hugetlb_cgroup *h_cg,
++						struct file_region *nrg,
++						struct hstate *h)
++{
++#ifdef CONFIG_CGROUP_HUGETLB
++	if (h_cg) {
++		nrg->reservation_counter =
++			&h_cg->reserved_hugepage[hstate_index(h)];
++		nrg->pages_per_hpage = pages_per_huge_page(h);
++	} else {
++		nrg->reservation_counter = NULL;
++		nrg->pages_per_hpage = 0;
++	}
++#endif
++}
++
+ /* Must be called with resv->lock held. Calling this with count_only == true
+  * will count the number of pages to be added but will not modify the linked
+  * list. If regions_needed != NULL and count_only == true, then regions_needed
+@@ -272,7 +298,9 @@ get_file_region_entry_from_cache(struct resv_map *resv, long from, long to)
+  * add the regions for this range.
+  */
+ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
+-				     long *regions_needed, bool count_only)
++				     struct hugetlb_cgroup *h_cg,
++				     struct hstate *h, long *regions_needed,
++				     bool count_only)
+ {
+ 	long add = 0;
+ 	struct list_head *head = &resv->regions;
+@@ -311,6 +339,8 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
+ 			if (!count_only) {
+ 				nrg = get_file_region_entry_from_cache(
+ 					resv, last_accounted_offset, rg->from);
++				record_hugetlb_cgroup_uncharge_info(h_cg, nrg,
++								    h);
+ 				list_add(&nrg->link, rg->link.prev);
+ 			} else if (regions_needed)
+ 				*regions_needed += 1;
+@@ -327,12 +357,14 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
+ 		if (!count_only) {
+ 			nrg = get_file_region_entry_from_cache(
+ 				resv, last_accounted_offset, t);
++			record_hugetlb_cgroup_uncharge_info(h_cg, nrg, h);
+ 			list_add(&nrg->link, rg->link.prev);
+ 		} else if (regions_needed)
+ 			*regions_needed += 1;
+ 		last_accounted_offset = t;
+ 	}
+
++	VM_BUG_ON(add < 0);
+ 	return add;
+ }
+
+@@ -351,7 +383,8 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
+  * region_add of regions of length 1 never allocate file_regions and cannot
+  * fail.
+  */
+-static long region_add(struct resv_map *resv, long f, long t,
++static long region_add(struct hstate *h, struct hugetlb_cgroup *h_cg,
++		       struct resv_map *resv, long f, long t,
+ 		       long in_regions_needed)
+ {
+ 	long add = 0, actual_regions_needed = 0, i = 0;
+@@ -364,7 +397,8 @@ static long region_add(struct resv_map *resv, long f, long t,
+ retry:
+
+ 	/* Count how many regions are actually needed to execute this add. */
+-	add_reservation_in_range(resv, f, t, &actual_regions_needed, true);
++	add_reservation_in_range(resv, f, t, NULL, NULL, &actual_regions_needed,
++				 true);
+
+ 	/*
+ 	 * Check for sufficient descriptors in the cache to accommodate
+@@ -402,7 +436,7 @@ static long region_add(struct resv_map *resv, long f, long t,
+ 		goto retry;
+ 	}
+
+-	add = add_reservation_in_range(resv, f, t, NULL, false);
++	add = add_reservation_in_range(resv, f, t, h_cg, h, NULL, false);
+
+ 	resv->adds_in_progress -= in_regions_needed;
+
+@@ -450,7 +484,8 @@ static long region_chg(struct resv_map *resv, long f, long t,
+ 	spin_lock(&resv->lock);
+
+ 	/* Count how many hugepages in this range are NOT respresented. */
+-	chg = add_reservation_in_range(resv, f, t, out_regions_needed, true);
++	chg = add_reservation_in_range(resv, f, t, NULL, NULL,
++				       out_regions_needed, true);
+
+ 	if (*out_regions_needed < 1)
+ 		*out_regions_needed = 1;
+@@ -515,6 +550,24 @@ static void region_abort(struct resv_map *resv, long f, long t,
+ 	spin_unlock(&resv->lock);
+ }
+
++static void uncharge_cgroup_if_shared_mapping(struct resv_map *resv,
++					      struct file_region *rg,
++					      unsigned long nr_pages)
++{
++#ifdef CONFIG_CGROUP_HUGETLB
++	/*
++	 * If resv->reservation_counter is NULL, then this is shared
++	 * reservation, and the reserved memory is tracked in the file_struct
++	 * entries inside of resv_map. So we need to uncharge the memory here.
++	 */
++	if (rg->reservation_counter && rg->pages_per_hpage && nr_pages > 0 &&
++	    !resv->reservation_counter) {
++		hugetlb_cgroup_uncharge_counter(rg->reservation_counter,
++						nr_pages * rg->pages_per_hpage);
++	}
++#endif
++}
++
+ /*
+  * Delete the specified range [f, t) from the reserve map.  If the
+  * t parameter is LONG_MAX, this indicates that ALL regions after f
+@@ -584,6 +637,9 @@ static long region_del(struct resv_map *resv, long f, long t)
+ 			/* Original entry is trimmed */
+ 			rg->to = f;
+
++			uncharge_cgroup_if_shared_mapping(resv, rg,
++							  nrg->to - nrg->from);
++
+ 			list_add(&nrg->link, &rg->link);
+ 			nrg = NULL;
+ 			break;
+@@ -591,6 +647,8 @@ static long region_del(struct resv_map *resv, long f, long t)
+
+ 		if (f <= rg->from && t >= rg->to) { /* Remove entire region */
+ 			del += rg->to - rg->from;
++			uncharge_cgroup_if_shared_mapping(resv, rg,
++							  rg->to - rg->from);
+ 			list_del(&rg->link);
+ 			kfree(rg);
+ 			continue;
+@@ -599,14 +657,20 @@ static long region_del(struct resv_map *resv, long f, long t)
+ 		if (f <= rg->from) {	/* Trim beginning of region */
+ 			del += t - rg->from;
+ 			rg->from = t;
++
++			uncharge_cgroup_if_shared_mapping(resv, rg,
++							  t - rg->from);
+ 		} else {		/* Trim end of region */
+ 			del += rg->to - f;
+ 			rg->to = f;
++
++			uncharge_cgroup_if_shared_mapping(resv, rg, rg->to - f);
+ 		}
+ 	}
+
+ 	spin_unlock(&resv->lock);
+ 	kfree(nrg);
++
+ 	return del;
+ }
+
+@@ -2015,7 +2079,7 @@ static long __vma_reservation_common(struct hstate *h,
+ 		VM_BUG_ON(dummy_out_regions_needed != 1);
+ 		break;
+ 	case VMA_COMMIT_RESV:
+-		ret = region_add(resv, idx, idx + 1, 1);
++		ret = region_add(NULL, NULL, resv, idx, idx + 1, 1);
+ 		/* region_add calls of range 1 should never fail. */
+ 		VM_BUG_ON(ret < 0);
+ 		break;
+@@ -2025,7 +2089,7 @@ static long __vma_reservation_common(struct hstate *h,
+ 		break;
+ 	case VMA_ADD_RESV:
+ 		if (vma->vm_flags & VM_MAYSHARE) {
+-			ret = region_add(resv, idx, idx + 1, 1);
++			ret = region_add(NULL, NULL, resv, idx, idx + 1, 1);
+ 			/* region_add calls of range 1 should never fail. */
+ 			VM_BUG_ON(ret < 0);
+ 		} else {
+@@ -4686,7 +4750,7 @@ int hugetlb_reserve_pages(struct inode *inode,
  	struct hstate *h = hstate_inode(inode);
  	struct hugepage_subpool *spool = subpool_inode(inode);
  	struct resv_map *resv_map;
-+	struct hugetlb_cgroup *h_cg;
- 	long gbl_reserve;
+-	struct hugetlb_cgroup *h_cg;
++	struct hugetlb_cgroup *h_cg = NULL;
+ 	long gbl_reserve, regions_needed = 0;
 
  	/* This should never happen */
-@@ -4592,12 +4616,30 @@ int hugetlb_reserve_pages(struct inode *inode,
- 		chg = region_chg(resv_map, from, to);
-
- 	} else {
-+		/* Private mapping. */
- 		resv_map = resv_map_alloc();
- 		if (!resv_map)
- 			return -ENOMEM;
+@@ -4727,23 +4791,6 @@ int hugetlb_reserve_pages(struct inode *inode,
 
  		chg = to - from;
 
-+		if (hugetlb_cgroup_charge_cgroup(hstate_index(h),
-+						 chg * pages_per_huge_page(h),
-+						 &h_cg, true)) {
-+			kref_put(&resv_map->refs, resv_map_release);
-+			return -ENOMEM;
-+		}
+-		if (hugetlb_cgroup_charge_cgroup(hstate_index(h),
+-						 chg * pages_per_huge_page(h),
+-						 &h_cg, true)) {
+-			kref_put(&resv_map->refs, resv_map_release);
+-			return -ENOMEM;
+-		}
+-
+-#ifdef CONFIG_CGROUP_HUGETLB
+-		/*
+-		 * Since this branch handles private mappings, we attach the
+-		 * counter to uncharge for this reservation off resv_map.
+-		 */
+-		resv_map->reservation_counter =
+-			&h_cg->reserved_hugepage[hstate_index(h)];
+-		resv_map->pages_per_hpage = pages_per_huge_page(h);
+-#endif
+-
+ 		set_vma_resv_map(vma, resv_map);
+ 		set_vma_resv_flags(vma, HPAGE_RESV_OWNER);
+ 	}
+@@ -4753,6 +4800,25 @@ int hugetlb_reserve_pages(struct inode *inode,
+ 		goto out_err;
+ 	}
+
++	ret = hugetlb_cgroup_charge_cgroup(
++		hstate_index(h), chg * pages_per_huge_page(h), &h_cg, true);
 +
++	if (ret < 0) {
++		ret = -ENOMEM;
++		goto out_err;
++	}
++
++#ifdef CONFIG_CGROUP_HUGETLB
++	if (vma && !(vma->vm_flags & VM_MAYSHARE)) {
++		/* For private mappings, the hugetlb_cgroup uncharge info hangs
++		 * of the resv_map.
++		 */
++		resv_map->reservation_counter =
++			&h_cg->reserved_hugepage[hstate_index(h)];
++		resv_map->pages_per_hpage = pages_per_huge_page(h);
++	}
++#endif
++
+ 	/*
+ 	 * There must be enough pages in the subpool for the mapping. If
+ 	 * the subpool has a minimum size, there may be some global
+@@ -4761,7 +4827,7 @@ int hugetlb_reserve_pages(struct inode *inode,
+ 	gbl_reserve = hugepage_subpool_get_pages(spool, chg);
+ 	if (gbl_reserve < 0) {
+ 		ret = -ENOSPC;
+-		goto out_err;
++		goto out_uncharge_cgroup;
+ 	}
+
+ 	/*
+@@ -4770,9 +4836,7 @@ int hugetlb_reserve_pages(struct inode *inode,
+ 	 */
+ 	ret = hugetlb_acct_memory(h, gbl_reserve);
+ 	if (ret < 0) {
+-		/* put back original number of pages, chg */
+-		(void)hugepage_subpool_put_pages(spool, chg);
+-		goto out_err;
++		goto out_put_pages;
+ 	}
+
+ 	/*
+@@ -4787,7 +4851,7 @@ int hugetlb_reserve_pages(struct inode *inode,
+ 	 * else has to be done for private mappings here
+ 	 */
+ 	if (!vma || vma->vm_flags & VM_MAYSHARE) {
+-		add = region_add(resv_map, from, to, regions_needed);
++		add = region_add(h, h_cg, resv_map, from, to, regions_needed);
+
+ 		if (unlikely(add < 0)) {
+ 			hugetlb_acct_memory(h, -gbl_reserve);
+@@ -4804,12 +4868,33 @@ int hugetlb_reserve_pages(struct inode *inode,
+ 			 */
+ 			long rsv_adjust;
+
+-			rsv_adjust = hugepage_subpool_put_pages(spool,
+-								chg - add);
++			hugetlb_cgroup_uncharge_cgroup(
++				hstate_index(h),
++				(chg - add) * pages_per_huge_page(h), h_cg,
++				true);
++
++			rsv_adjust =
++				hugepage_subpool_put_pages(spool, chg - add);
+ 			hugetlb_acct_memory(h, -rsv_adjust);
+ 		}
++	} else {
 +#ifdef CONFIG_CGROUP_HUGETLB
 +		/*
 +		 * Since this branch handles private mappings, we attach the
@@ -228,32 +404,16 @@ index 325d5454bf168..8d8aa89a9928e 100644
 +			&h_cg->reserved_hugepage[hstate_index(h)];
 +		resv_map->pages_per_hpage = pages_per_huge_page(h);
 +#endif
-+
- 		set_vma_resv_map(vma, resv_map);
- 		set_vma_resv_flags(vma, HPAGE_RESV_OWNER);
  	}
-diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-index ac1500205faf7..a0ca4024888e1 100644
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -19,18 +19,6 @@
- #include <linux/hugetlb.h>
- #include <linux/hugetlb_cgroup.h>
-
--struct hugetlb_cgroup {
--	struct cgroup_subsys_state css;
--	/*
--	 * the counter to account for hugepages from hugetlb.
--	 */
--	struct page_counter hugepage[HUGE_MAX_HSTATE];
--	/*
--	 * the counter to account for hugepage reservations from hugetlb.
--	 */
--	struct page_counter reserved_hugepage[HUGE_MAX_HSTATE];
--};
--
- #define MEMFILE_PRIVATE(x, val)	(((x) << 16) | (val))
- #define MEMFILE_IDX(val)	(((val) >> 16) & 0xffff)
- #define MEMFILE_ATTR(val)	((val) & 0xffff)
+ 	return 0;
++out_put_pages:
++	/* put back original number of pages, chg */
++	(void)hugepage_subpool_put_pages(spool, chg);
++out_uncharge_cgroup:
++	hugetlb_cgroup_uncharge_cgroup(
++		hstate_index(h), chg * pages_per_huge_page(h), h_cg, true);
+ out_err:
+ 	if (!vma || vma->vm_flags & VM_MAYSHARE)
+ 		/* Only call region_abort if the region_chg succeeded but the
 --
 2.24.0.rc1.363.gb1bccd3e3d-goog
