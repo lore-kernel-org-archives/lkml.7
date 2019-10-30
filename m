@@ -2,224 +2,217 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A612DCA9EC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0049CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E95F2087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WSSiufiZ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dQYIYF1O"
+	by mail.kernel.org (Postfix) with ESMTP id C881320874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfJ3EG4 (ORCPT
+        id S1727312AbfJ3EHH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 00:06:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35998 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727197AbfJ3EGz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 00:06:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4340660F79; Wed, 30 Oct 2019 04:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572408414;
-        bh=8Pd/E1F2GITTQ0OZqlMrdEyd7JcogM8q9jE0bY5JquU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSSiufiZbFYTGbq6mT4YhSQElJjvl2oQDa2WfZyFOh2DXTzpwaFT5ZW0ZCAVX2ghX
-         fnJVS4AVjGrWJ+2NEgEMnyxdxUp2zQXl4mDGOJC7mdfwfYY7gz4iJCxYDeR6aI9D3b
-         5/mdqkFlKREUuuZawPr5soexRyLWHQ2il+GMHcMc=
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4ED8F60F7E;
-        Wed, 30 Oct 2019 04:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572408413;
-        bh=8Pd/E1F2GITTQ0OZqlMrdEyd7JcogM8q9jE0bY5JquU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dQYIYF1OrkSyf+OkIfFTN+fgBH4rMhxySlJTMHQasioMTlqY6FCuWlc4kfzFY/ob1
-         YU5VmpqdQHFZNG2jeUXr0vK8xN06TAsCFTnwJzQYpLwd6TEGiDKJOdpL4IEpZj0UPG
-         F9iUnkwUXsWloVCRrlqbofaWSSWyQvp5mUfi7+z4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4ED8F60F7E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
-        mka@chromium.org, swboyd@chromium.org, evgreen@chromium.org,
-        dianders@chromium.org, Maulik Shah <mkshah@codeaurora.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: sc7180: Add cpuidle low power states
-Date:   Wed, 30 Oct 2019 09:35:18 +0530
-Message-Id: <1572408318-28681-2-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
-References: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
+        Wed, 30 Oct 2019 00:07:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:24712 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727197AbfJ3EHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 00:07:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 21:07:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="198564310"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga008.fm.intel.com with ESMTP; 29 Oct 2019 21:07:06 -0700
+Received: from fmsmsx158.amr.corp.intel.com (10.18.116.75) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 29 Oct 2019 21:07:06 -0700
+Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
+ fmsmsx158.amr.corp.intel.com (10.18.116.75) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 29 Oct 2019 21:07:06 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
+ SHSMSX103.ccr.corp.intel.com ([169.254.4.60]) with mapi id 14.03.0439.000;
+ Wed, 30 Oct 2019 12:07:04 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>
+Subject: RE: [PATCH v1 7/8] KVM: x86: Expose PEBS feature to guest
+Thread-Topic: [PATCH v1 7/8] KVM: x86: Expose PEBS feature to guest
+Thread-Index: AQHVjLd7lPe74bngJEyQFMJJsvDDF6dxNRGAgAFBajA=
+Date:   Wed, 30 Oct 2019 04:07:03 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E173835B45@SHSMSX104.ccr.corp.intel.com>
+References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
+ <1572217877-26484-8-git-send-email-luwei.kang@intel.com>
+ <20191029150531.GN4097@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191029150531.GN4097@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDMzOTNmY2QtYWU5MS00YThhLWE5MTctZjg1OThhNDBiZmEwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMjkzaDh2WUZWVDRpcGQ5aFowUHdZWms0MTNVQ25ZbDJOVlwvQjVHUUZHOXFxZndJN3dBTWdDaWZZZVBpRjY2ZnMifQ==
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device bindings for cpuidle states for cpu devices.
+> > Expose PEBS feature to guest by IA32_MISC_ENABLE[bit12].
+> > IA32_MISC_ENABLE[bit12] is Processor Event Based Sampling (PEBS)
+> > Unavailable (RO) flag:
+> > 1 = PEBS is not supported; 0 = PEBS is supported.
+> 
+> Why does it make sense to expose this on SVM?
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+Thanks for the review. This patch won't expose the pebs feature to SVM and return not supported.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index fceac50..69d5e2c 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -70,6 +70,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
- 				compatible = "cache";
-@@ -85,6 +88,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_100>;
- 			L2_100: l2-cache {
- 				compatible = "cache";
-@@ -97,6 +103,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_200>;
- 			L2_200: l2-cache {
- 				compatible = "cache";
-@@ -109,6 +118,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_300>;
- 			L2_300: l2-cache {
- 				compatible = "cache";
-@@ -121,6 +133,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_400>;
- 			L2_400: l2-cache {
- 				compatible = "cache";
-@@ -133,6 +148,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_500>;
- 			L2_500: l2-cache {
- 				compatible = "cache";
-@@ -145,6 +163,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&BIG_CPU_SLEEP_0
-+					   &BIG_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_600>;
- 			L2_600: l2-cache {
- 				compatible = "cache";
-@@ -157,12 +178,69 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&BIG_CPU_SLEEP_0
-+					   &BIG_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			next-level-cache = <&L2_700>;
- 			L2_700: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
- 			};
- 		};
-+
-+		idle-states {
-+			entry-method = "psci";
-+
-+			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "little-power-down";
-+				arm,psci-suspend-param = <0x40000003>;
-+				entry-latency-us = <350>;
-+				exit-latency-us = <461>;
-+				min-residency-us = <1890>;
-+				local-timer-stop;
-+			};
-+
-+			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "little-rail-power-down";
-+				arm,psci-suspend-param = <0x40000004>;
-+				entry-latency-us = <360>;
-+				exit-latency-us = <531>;
-+				min-residency-us = <3934>;
-+				local-timer-stop;
-+			};
-+
-+			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "big-power-down";
-+				arm,psci-suspend-param = <0x40000003>;
-+				entry-latency-us = <264>;
-+				exit-latency-us = <621>;
-+				min-residency-us = <952>;
-+				local-timer-stop;
-+			};
-+
-+			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "big-rail-power-down";
-+				arm,psci-suspend-param = <0x40000004>;
-+				entry-latency-us = <702>;
-+				exit-latency-us = <1061>;
-+				min-residency-us = <4488>;
-+				local-timer-stop;
-+			};
-+
-+			CLUSTER_SLEEP_0: cluster-sleep-0 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "cluster-power-down";
-+				arm,psci-suspend-param = <0x400000F4>;
-+				entry-latency-us = <3263>;
-+				exit-latency-us = <6562>;
-+				min-residency-us = <9987>;
-+				local-timer-stop;
-+			};
-+		};
- 	};
- 
- 	memory@80000000 {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> > ---
+> >  arch/x86/include/asm/kvm_host.h |  1 +
+> >  arch/x86/kvm/svm.c              |  6 ++++++
+> >  arch/x86/kvm/vmx/vmx.c          |  1 +
+> >  arch/x86/kvm/x86.c              | 22 +++++++++++++++++-----
+> >  4 files changed, 25 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/kvm_host.h
+> > b/arch/x86/include/asm/kvm_host.h index 24a0ab9..76f5fa5 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -1127,6 +1127,7 @@ struct kvm_x86_ops {
+> >  	bool (*xsaves_supported)(void);
+> >  	bool (*umip_emulated)(void);
+> >  	bool (*pt_supported)(void);
+> > +	bool (*pebs_supported)(void);
+> >  	bool (*pdcm_supported)(void);
+> >
+> >  	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool
+> > external_intr); diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > index 7e0a7b3..3a1bbb3 100644
+> > --- a/arch/x86/kvm/svm.c
+> > +++ b/arch/x86/kvm/svm.c
+> > @@ -5975,6 +5975,11 @@ static bool svm_pt_supported(void)
+> >  	return false;
+> >  }
+> >
+> > +static bool svm_pebs_supported(void)
+> > +{
+> > +	return false;
+> > +}
+> > +
+> >  static bool svm_pdcm_supported(void)
+> >  {
+> >  	return false;
+> > @@ -7277,6 +7282,7 @@ static bool svm_apic_init_signal_blocked(struct kvm_vcpu *vcpu)
+> >  	.xsaves_supported = svm_xsaves_supported,
+> >  	.umip_emulated = svm_umip_emulated,
+> >  	.pt_supported = svm_pt_supported,
+> > +	.pebs_supported = svm_pebs_supported,
+> >  	.pdcm_supported = svm_pdcm_supported,
+> >
+> >  	.set_supported_cpuid = svm_set_supported_cpuid, diff --git
+> > a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c index
+> > 5c4dd05..3c370a3 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -7879,6 +7879,7 @@ static __exit void hardware_unsetup(void)
+> >  	.xsaves_supported = vmx_xsaves_supported,
+> >  	.umip_emulated = vmx_umip_emulated,
+> >  	.pt_supported = vmx_pt_supported,
+> > +	.pebs_supported = vmx_pebs_supported,
+> >  	.pdcm_supported = vmx_pdcm_supported,
+> >
+> >  	.request_immediate_exit = vmx_request_immediate_exit, diff --git
+> > a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c index 661e2bf..5f59073
+> > 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -2591,6 +2591,7 @@ static void record_steal_time(struct kvm_vcpu
+> > *vcpu)  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data
+> > *msr_info)  {
+> >  	bool pr = false;
+> > +	bool update_cpuid = false;
+> >  	u32 msr = msr_info->index;
+> >  	u64 data = msr_info->data;
+> >
+> > @@ -2671,11 +2672,17 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> >  		    ((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_MWAIT)) {
+> >  			if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
+> >  				return 1;
+> > -			vcpu->arch.ia32_misc_enable_msr = data;
+> > -			kvm_update_cpuid(vcpu);
+> > -		} else {
+> > -			vcpu->arch.ia32_misc_enable_msr = data;
+> > +			update_cpuid = true;
+> >  		}
+> > +
+> > +		if (kvm_x86_ops->pebs_supported())
+> > +			data &=  ~MSR_IA32_MISC_ENABLE_PEBS;
+> 
+> whitespace damage
 
+Yes. Will fix it and below coding style violation.
+
+Thanks,
+Luwei Kang
+
+> 
+> > +		else
+> > +			data |= MSR_IA32_MISC_ENABLE_PEBS;
+> > +
+> > +		vcpu->arch.ia32_misc_enable_msr = data;
+> > +		if (update_cpuid)
+> > +			kvm_update_cpuid(vcpu);
+> >  		break;
+> >  	case MSR_IA32_SMBASE:
+> >  		if (!msr_info->host_initiated)
+> > @@ -2971,7 +2978,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> >  		msr_info->data = (u64)vcpu->arch.ia32_tsc_adjust_msr;
+> >  		break;
+> >  	case MSR_IA32_MISC_ENABLE:
+> > -		msr_info->data = vcpu->arch.ia32_misc_enable_msr;
+> > +		if (kvm_x86_ops->pebs_supported())
+> > +			msr_info->data = (vcpu->arch.ia32_misc_enable_msr &
+> > +						~MSR_IA32_MISC_ENABLE_PEBS);
+> > +		else
+> > +			msr_info->data = (vcpu->arch.ia32_misc_enable_msr |
+> > +						MSR_IA32_MISC_ENABLE_PEBS);
+> 
+> Coding style violation.
+> 
+> >  		break;
+> >  	case MSR_IA32_SMBASE:
+> >  		if (!msr_info->host_initiated)
+> > --
+> > 1.8.3.1
+> >
