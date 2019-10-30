@@ -2,118 +2,92 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29924CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB34CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010962087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A5720874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/hIlRzu"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="j7zBi87r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfJ3N4z (ORCPT
+        id S1726551AbfJ3N5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:56:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45084 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfJ3N4z (ORCPT
+        Wed, 30 Oct 2019 09:57:21 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:9616 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726171AbfJ3N5V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:56:55 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q13so2398015wrs.12
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 06:56:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DwVcSXoannBan2m8zWPB7PFI0kJUSthZFWNX18Hm/LQ=;
-        b=Y/hIlRzunT8W0Xp+WjWPqr78Z2vnSK7uei64oEtx4N+eNc0jemkWFRFCtgjT/jT1r8
-         XDd1W9iMqbd0lTmkQLX6U/7HUauSWOUU3l3ZgONqxoqUiV0sc7wfM9XPUoh+/sIN+n83
-         En5XSIt1UCBZ6rui4krmtoWgX2/U4Y0Hurw8kpOWcU7GjRu4DJ6KnZj33d+nkW+5Jhch
-         dimiw5OGcJx4ukM/iTFVW2eS248VFmsBk8VRVz7gRnY1CVRwmf2nO6Ii8x+hvlqjjlDj
-         d5xCYEb33OBjoaPvStBnEBdQ6ddMhTCI1BvAfGIp3P9hYFd8oGLd2eyWB1cSNxpejHnR
-         Wnvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DwVcSXoannBan2m8zWPB7PFI0kJUSthZFWNX18Hm/LQ=;
-        b=QcFwnmr+0aP+ZCLzRkPdmHdPycJ1ADBJ8dDFfew9TTgWvwFIbpHFULxcLaLjJfewTS
-         Itf4vV7ciUDHPu0ofCBdp4uZ3kjC+KA+2gWeHHUQw3Z+ttiK0mQfhnlnXmRs6VN9Rc62
-         Grit9+mN9+klAnI68dW/VgY8EyWo/yh7VeNzbNuhNUx26Hl7jbzdvCgG83BqlDI53//K
-         4qMY5rA9S20DRuGVa5aR+4QlARQvTJIbL/7urilkcN0W6xo8K9TxynxEHM9GPluQgJPy
-         FhUiEupF2B3vDp78tf2K2QRFTEqO8y5Jybpqksys8BsBggsgx++Dlodc6IBQE7nE6NIF
-         JlSw==
-X-Gm-Message-State: APjAAAVeONhIiQLP05HCrx/ue0gScuaMwiAWJ15IksOCZO7ZjRoAjht7
-        jFHy2vRl8hs9I2vjMkho5q1msfVhQvM5e9wE4ds=
-X-Google-Smtp-Source: APXvYqyEugonbjl2q4DWU/AHaJmj/Blp0GlAvoirFuqlE/MSiO8C4JoaW1C/7bETPx1i3Wzdu9TdNu6NLtRVVwtT8gU=
-X-Received: by 2002:a5d:6ac3:: with SMTP id u3mr24079wrw.206.1572443813028;
- Wed, 30 Oct 2019 06:56:53 -0700 (PDT)
+        Wed, 30 Oct 2019 09:57:21 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9UDqLfC032051;
+        Wed, 30 Oct 2019 14:57:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=eH7mwtf1v4gBy1/YWM1SPqmdubzRlFaFMR+UtH0lgC8=;
+ b=j7zBi87rylKqaJglCnoq5i6DN3YP+/mR6z07XXagMi0XDRM44KxJ5+Sb83qZHC+5yYZx
+ iRd45/jsISq6IJy3j5ZKm38/7/LOMY+CRDQ5kdjSJ9KCPHqvVD3pGjVKQ/yrSpCg3YwU
+ +s5aL9MpRVZ92mO4hVMSiYfZwDbQnZAX/21SxyqMYqCJBsjwddLUOyBNAIZsNISKvAC5
+ 6ETNFNPIiGfywFpLppHCsNUg8j7EDf7IHUcsgLlT2q7Fe3xMBevtG0fKbwJ+rpJdq19X
+ Qtf7Agr6IUOHsVe++qHwjefrRRJbtxju65BDdqV+txXiKHzjg+YNVTMAYo2mx8/BOVem RQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2vxwf442u1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Oct 2019 14:57:06 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8775910002A;
+        Wed, 30 Oct 2019 14:57:05 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 592C72C07FB;
+        Wed, 30 Oct 2019 14:57:05 +0100 (CET)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
+ 2019 14:57:05 +0100
+Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct 2019 14:57:04
+ +0100
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH v2 0/2] mailbox: stm32-ipcc: rework wakeup
+Date:   Wed, 30 Oct 2019 14:56:59 +0100
+Message-ID: <1572443821-28112-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1572400673-42535-1-git-send-email-zhongjiang@huawei.com> <723f11bc-9a65-bce6-9c0f-2ef2dbe7a1db@amd.com>
-In-Reply-To: <723f11bc-9a65-bce6-9c0f-2ef2dbe7a1db@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 30 Oct 2019 09:56:40 -0400
-Message-ID: <CADnq5_PRfOn1BRJyqT54yKLnmiJxoDaMFwpTOFe=KgQWW0_bDw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: remove redundant null pointer check
- before kfree
-To:     Harry Wentland <hwentlan@amd.com>
-Cc:     zhong jiang <zhongjiang@huawei.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.25]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-30_06:2019-10-30,2019-10-30 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 9:36 AM Harry Wentland <hwentlan@amd.com> wrote:
->
-> On 2019-10-29 9:57 p.m., zhong jiang wrote:
-> > kfree has taken null pointer into account. hence it is safe to remove
-> > the unnecessary check.
-> >
-> > Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->
-> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
->
+Remove the dedicated wakeup IRQ as wakeup can be handled by the RX IRQ.
 
-Applied.  thanks!
+Changes since v1:
+- typo fix
+- add Rob's Acked-by for bindings
 
-Alex
+Fabien Dessenne (2):
+  dt-bindings: mailbox: stm32-ipcc: Updates for wakeup management
+  mailbox: stm32-ipcc: Update wakeup management
 
-> Harry
->
-> > ---
-> >  drivers/gpu/drm/amd/display/dc/hdcp/hdcp_msg.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/hdcp/hdcp_msg.c b/drivers/gpu/drm/amd/display/dc/hdcp/hdcp_msg.c
-> > index cf6ef38..6f730b5 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/hdcp/hdcp_msg.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/hdcp/hdcp_msg.c
-> > @@ -174,9 +174,7 @@ static bool hdmi_14_process_transaction(
-> >                       link->ctx,
-> >                       link,
-> >                       &i2c_command);
-> > -
-> > -     if (buff)
-> > -             kfree(buff);
-> > +     kfree(buff);
-> >
-> >       return result;
-> >  }
-> >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+ .../devicetree/bindings/mailbox/stm32-ipcc.txt     |  4 +--
+ drivers/mailbox/stm32-ipcc.c                       | 36 +++++-----------------
+ 2 files changed, 9 insertions(+), 31 deletions(-)
+
+-- 
+2.7.4
+
