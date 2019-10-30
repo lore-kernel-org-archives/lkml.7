@@ -2,130 +2,150 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AEDCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27219CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF09218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DECCB218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:36:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i7omyIFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfJ3QgI (ORCPT
+        id S1726883AbfJ3QgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:36:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42060 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726261AbfJ3QgH (ORCPT
+        Wed, 30 Oct 2019 12:36:10 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34572 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbfJ3QgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:36:07 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9UGPvRL081612
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 12:36:05 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vycvwkkyp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 12:36:05 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 30 Oct 2019 16:36:03 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 30 Oct 2019 16:35:57 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9UGZtxl35848306
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 16:35:55 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD11AA405B;
-        Wed, 30 Oct 2019 16:35:55 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B9C6A4054;
-        Wed, 30 Oct 2019 16:35:53 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.134.98])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 30 Oct 2019 16:35:52 +0000 (GMT)
-Subject: Re: [PATCH v9 5/8] ima: make process_buffer_measurement() generic
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-Date:   Wed, 30 Oct 2019 12:35:52 -0400
-In-Reply-To: <6c94bfc0-d3ce-202b-6927-f664ee513fa9@linux.microsoft.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com>
-         <20191024034717.70552-6-nayna@linux.ibm.com>
-         <6c94bfc0-d3ce-202b-6927-f664ee513fa9@linux.microsoft.com>
+        Wed, 30 Oct 2019 12:36:09 -0400
+Received: by mail-lf1-f66.google.com with SMTP id f5so2083072lfp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 09:36:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fglx1P/Lr2zU5Bv2rqxkj3RwVFl25hRHEVVaBlkj2AM=;
+        b=i7omyIFWFXzx+qrHikNEEnejVxeMI+/RkkoSc9Uh7jn1Uu4NJ65e1gQXFAR6nerCCA
+         k3s4BnXN/BLtrxMZ91NiqXOVQ+z6MmOPGK/HU3PwvL3nZU/odNQcqvj8Yyg2AP6beOm5
+         kBZtrlO2zdXyQkrYbG0Nbnb8UcCOCKOiFhCt5PsLoAVGEU6ph/+cKBZjUf+9xYC2ZDay
+         tu2FUNhEWyk3pK4M8HKIYLN+zHa9iXd+WZ9E43UDVVUbSxN9G9xPqaqKHtm2OC8hUvnt
+         2TzmqLNiIlqHKQAlHLcKbXBUNTGGCEiqAALYpjcUaiaJiu2BL5ZXqhMDujNZGhPDNrCv
+         oRvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fglx1P/Lr2zU5Bv2rqxkj3RwVFl25hRHEVVaBlkj2AM=;
+        b=V7lw3SNvJ/ivpTC1Ef4mgwtVxTGEcvXKE6Wl/2FUvQr6W3t8ueVGzfJKZfQS8uMsbk
+         UqkZEGe1TjCMwXuaqs7uxgNai/vJoYxm7DK9VzkmK3Ai080KHICYPmkeGZp5SuSM7Ml3
+         L80GZsBTFJhdoX8aSdz6gn7Zw4Aqe5/xiGA22CiIuhCkh9S7O3Zo/QxWq/h+g4/4RvLK
+         vmr47lm3f6hIlZi2uc3XB6ihgPQhFwggJZV8DBeL8lmJXtUtwfL7izB2IXjVhsPtAEtd
+         Nl4rOvMDDzRKsOdks4BtfvpwqWp2D54D/K1lFlOwhJWzGnxMbKAahTP4uTgCqEgEztam
+         Lhjw==
+X-Gm-Message-State: APjAAAUF2smzrzPVQnCYqb/Z2cu/dnLN+mbncbRMlUjuaeGYJWDvVqoD
+        aAzFy0GZo2Ot3Cxf4g8Tmzt42f+fDjYcbUMRQZmS5Q==
+X-Google-Smtp-Source: APXvYqyp9Wa/AjUY3SZTFNdxu9Cmd7YfligZ1R/JfPihPZrFZlrwopXaUWdcnzdnmSwfycSpsy2j5jqCbk36NnTVBUU=
+X-Received: by 2002:a19:ca13:: with SMTP id a19mr6645684lfg.133.1572453366556;
+ Wed, 30 Oct 2019 09:36:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <20191021075038.GA27361@gmail.com> <20191030162440.GO3016@techsingularity.net>
+In-Reply-To: <20191030162440.GO3016@techsingularity.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 30 Oct 2019 17:35:53 +0100
+Message-ID: <CAKfTPtBVWenCt5qLvow6ubB6a8c1gdPfW8-fWaKAa0k8b47m9Q@mail.gmail.com>
+Subject: Re: [PATCH v4 00/10] sched/fair: rework the CFS load balance
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19103016-0028-0000-0000-000003B12C1E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103016-0029-0000-0000-00002473720A
-Message-Id: <1572453352.5707.3.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=649 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910300149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-30 at 08:22 -0700, Lakshmi Ramasubramanian wrote:
-> On 10/23/19 8:47 PM, Nayna Jain wrote:
-> 
-> Hi Nayna,
-> 
-> > process_buffer_measurement() is limited to measuring the kexec boot
-> > command line. This patch makes process_buffer_measurement() more
-> > generic, allowing it to measure other types of buffer data (e.g.
-> > blacklisted binary hashes or key hashes).
-> 
-> Now that process_buffer_measurement() is being made generic to measure 
-> any buffer, it would be good to add a tag to indicate what type of 
-> buffer is being measured.
-> 
-> For example, if the buffer is kexec command line the log could look like:
-> 
->   "kexec_cmdline: <command line data>"
-> 
-> Similarly, if the buffer is blacklisted binary hash:
-> 
->   "blacklist hash: <data>".
-> 
-> If the buffer is key hash:
-> 
->   "<name of the keyring>: key data".
-> 
-> This would greatly help the consumer of the IMA log to know the type of 
-> data represented in each IMA log entry.
+On Wed, 30 Oct 2019 at 17:24, Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Mon, Oct 21, 2019 at 09:50:38AM +0200, Ingo Molnar wrote:
+> > > <SNIP>
+> >
+> > Thanks, that's an excellent series!
+> >
+>
+> Agreed despite the level of whining and complaining I made during the
+> review.
 
-Both the existing kexec command line and the new blacklist buffer
-measurement pass that information in the eventname.   The [PATCH 7/8]
-"ima: check against blacklisted hashes for files with modsig" patch
-description includes an example.
+Thanks for the review.
+I haven't gone through all your comments yet but will do in the coming days
 
-Mimi
-
+>
+> > I've queued it up in sched/core with a handful of readability edits to
+> > comments and changelogs.
+> >
+> > There are some upstreaming caveats though, I expect this series to be a
+> > performance regression magnet:
+> >
+> >  - load_balance() and wake-up changes invariably are such: some workloads
+> >    only work/scale well by accident, and if we touch the logic it might
+> >    flip over into a less advantageous scheduling pattern.
+> >
+> >  - In particular the changes from balancing and waking on runnable load
+> >    to full load that includes blocking *will* shift IO-intensive
+> >    workloads that you tests don't fully capture I believe. You also made
+> >    idle balancing more aggressive in essence - which might reduce cache
+> >    locality for some workloads.
+> >
+> > A full run on Mel Gorman's magic scalability test-suite would be super
+> > useful ...
+> >
+>
+> I queued this back on the 21st and it took this long for me to get back
+> to it.
+>
+> What I tested did not include the fix for the last patch so I cannot say
+> the data is that useful. I also failed to include something that exercised
+> the IO paths in a way that idles rapidly as that can catch interesting
+> details (usually cpufreq related but sometimes load-balancing related).
+> There was no real thinking behind this decision, I just used an old
+> collection of tests to get a general feel for the series.
+>
+> Most of the results were performance-neutral and some notable gains
+> (kernel compiles were 1-6% faster depending on the -j count). Hackbench
+> saw a disproportionate gain in terms of performance but I tend to be wary
+> of hackbench as improving it is rarely a universal win.
+> There tends to be some jitter around the point where a NUMA nodes worth
+> of CPUs gets overloaded. tbench (mmtests configuation network-tbench) on
+> a NUMA machine showed gains for low thread counts and high thread counts
+> but a loss near the boundary where a single node would get overloaded.
+>
+> Some NAS-related workloads saw a drop in performance on NUMA machines
+> but the size class might be too small to be certain, I'd have to rerun
+> with the D class to be sure.  The biggest strange drop in performance
+> was the elapsed time to run the git test suite (mmtests configuration
+> workload-shellscripts modified to use a fresh XFS partition) took 17.61%
+> longer to execute on a UMA Skylake machine. This *might* be due to the
+> missing fix because it is mostly a single-task workload.
+>
+> I'm not going to go through the results in detail because I think another
+> full round of testing would be required to take the fix into account. I'd
+> also prefer to wait to see if the review results in any material change
+> to the series.
+>
+> --
+> Mel Gorman
+> SUSE Labs
