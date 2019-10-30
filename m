@@ -4,92 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCD2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B07BC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD8720856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E3B20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfJ3HZr (ORCPT
+        id S1727005AbfJ3H1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 03:25:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47742 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725855AbfJ3HZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 03:25:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 090E5AC2E;
-        Wed, 30 Oct 2019 07:25:46 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH v3] stacktrace: don't skip first entry on noncurrent tasks
-Date:   Wed, 30 Oct 2019 08:25:45 +0100
-Message-Id: <20191030072545.19462-1-jslaby@suse.cz>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191029071944.17123-1-jslaby@suse.cz>
-References: <20191029071944.17123-1-jslaby@suse.cz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 30 Oct 2019 03:27:10 -0400
+Received: from lucky1.263xmail.com ([211.157.147.133]:46708 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbfJ3H1K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 03:27:10 -0400
+Received: from localhost (unknown [192.168.167.69])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 27AE7782E3;
+        Wed, 30 Oct 2019 15:26:55 +0800 (CST)
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P24329T139764409022208S1572420409020177_;
+        Wed, 30 Oct 2019 15:26:54 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <aa4f6e373c65ec03269a1d2ffc15d6c0>
+X-RL-SENDER: andy.yan@rock-chips.com
+X-SENDER: yxj@rock-chips.com
+X-LOGIN-NAME: andy.yan@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Andy Yan <andy.yan@rock-chips.com>
+To:     heiko@sntech.de, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH 1/2] dt-bindings: Add doc for Firefly ROC-RK3308-CC board
+Date:   Wed, 30 Oct 2019 15:26:48 +0800
+Message-Id: <20191030072648.29738-1-andy.yan@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing cat /proc/<PID>/stack, the output is missing the first entry.
-When the current code walks the stack starting in stack_trace_save_tsk,
-it skips all scheduler functions (that's OK) plus one more function. But
-this one function should be skipped only for the 'current' task as it is
-stack_trace_save_tsk proper.
+Add compatible for Firefly ROC-RK3308-CC board.
 
-The original code (before the common infrastructure) skipped one
-function only for the 'current' task -- see save_stack_trace_tsk before
-3599fe12a125. So do so also in the new infrastructure now.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Fixes: 214d8ca6ee85 ("stacktrace: Provide common infrastructure")
-Tested-by: Michal Suchanek <msuchanek@suse.de>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 ---
 
-Notes:
-    [v2] add the same for the !ARCH_STACKWALK case
-    
-    [v3] fix build on !ARCH_STACKWALK
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- kernel/stacktrace.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-index 6d1f68b7e528..c9ea7eb2cb1a 100644
---- a/kernel/stacktrace.c
-+++ b/kernel/stacktrace.c
-@@ -141,7 +141,8 @@ unsigned int stack_trace_save_tsk(struct task_struct *tsk, unsigned long *store,
- 	struct stacktrace_cookie c = {
- 		.store	= store,
- 		.size	= size,
--		.skip	= skipnr + 1,
-+		/* skip this function if they are tracing us */
-+		.skip	= skipnr + !!(current == tsk),
- 	};
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index bf86e8237363..6b6c9d5611ce 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -77,6 +77,11 @@ properties:
+           - const: firefly,firefly-rk3288-reload
+           - const: rockchip,rk3288
  
- 	if (!try_get_task_stack(tsk))
-@@ -298,7 +299,8 @@ unsigned int stack_trace_save_tsk(struct task_struct *task,
- 	struct stack_trace trace = {
- 		.entries	= store,
- 		.max_entries	= size,
--		.skip		= skipnr + 1,
-+		/* skip this function if they are tracing us */
-+		.skip	= skipnr + !!(current == task),
- 	};
- 
- 	save_stack_trace_tsk(task, &trace);
++      - description: Firefly ROC-RK3308-CC
++        items:
++          - const: firefly, roc-rk3308-cc
++          - const: rockchip,rk3308
++
+       - description: Firefly Firefly-RK3399
+         items:
+           - const: firefly,firefly-rk3399
 -- 
-2.23.0
+2.17.1
+
+
 
