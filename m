@@ -2,84 +2,88 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBE6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB89BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3055F2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:08:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572426489;
-	bh=e761Xyx0yYXRP619DZxFfKdqoRtYMZUkJSPlaGJ8qZw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qnvr71Jdx010u9PQ+SXyzAdXyrnXSLt8XOH7KP+KolyIs+Aiqq1cJ9rVeh+X+XUff
-	 6rGT85T0KpnLVt7eN6UjrU75FgtN5ubk0WGBRp7a5HkVLAG0sjCXmnm9OqwiGeZRy3
-	 84rxtFXWwXi9W7QoikUZaBIF/ptqf74t5UZ5ngBE=
+	by mail.kernel.org (Postfix) with ESMTP id 929232083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfJ3JII (ORCPT
+        id S1726411AbfJ3JJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:08:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44636 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfJ3JIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:08:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F081CB6EF;
-        Wed, 30 Oct 2019 09:08:05 +0000 (UTC)
-Date:   Wed, 30 Oct 2019 10:08:04 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pan Zhang <zhangpan26@huawei.com>
-Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        hannes@cmpxchg.org, guro@fb.com, shakeelb@google.com,
-        chris@chrisdown.name, yang.shi@linux.alibaba.com, tj@kernel.org,
-        tglx@linutronix.de, hushiyuan@huawei.com, wuxu.wu@huawei.com,
+        Wed, 30 Oct 2019 05:09:52 -0400
+Received: from mga17.intel.com ([192.55.52.151]:8496 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfJ3JJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:09:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 02:09:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="198621558"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Oct 2019 02:09:51 -0700
+Date:   Wed, 30 Oct 2019 02:09:51 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Reto Buerki <reet@codelabs.ch>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fix a typo of memcg annotation.
-Message-ID: <20191030090804.GS31513@dhcp22.suse.cz>
-References: <1572400917-28079-1-git-send-email-zhangpan26@huawei.com>
+Subject: Re: [PATCH v2 0/8] KVM: x86: nVMX GUEST_CR3 bug fix, and then some...
+Message-ID: <20191030090950.GA12481@linux.intel.com>
+References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
+ <8414d3e8-9a68-e817-de5a-3e9ca6dc85bb@codelabs.ch>
+ <20191029150304.GA29542@nodbug.lucina.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1572400917-28079-1-git-send-email-zhangpan26@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029150304.GA29542@nodbug.lucina.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 30-10-19 10:01:57, Pan Zhang wrote:
-> There is a annotation forgot to follow the patchset of `Move LRU page reclaim from zones to nodes`.
-> I corrected it to avoid misunderstanding.
+On Tue, Oct 29, 2019 at 04:03:04PM +0100, Martin Lucina wrote:
+> (Cc:s trimmed)
 > 
-> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  include/linux/memcontrol.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi,
 > 
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index ae703ea..e211689 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -112,7 +112,7 @@ struct memcg_shrinker_map {
->  };
->  
->  /*
-> - * per-zone information in memory controller.
-> + * per-node information in memory controller.
->   */
->  struct mem_cgroup_per_node {
->  	struct lruvec		lruvec;
-> -- 
-> 2.7.4
+> On Monday, 30.09.2019 at 12:42, Reto Buerki wrote:
+> > On 9/27/19 11:45 PM, Sean Christopherson wrote:
+> > > Sean Christopherson (8):
+> > >   KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter
+> > >   KVM: VMX: Skip GUEST_CR3 VMREAD+VMWRITE if the VMCS is up-to-date
+> > >   KVM: VMX: Consolidate to_vmx() usage in RFLAGS accessors
+> > >   KVM: VMX: Optimize vmx_set_rflags() for unrestricted guest
+> > >   KVM: x86: Add WARNs to detect out-of-bounds register indices
+> > >   KVM: x86: Fold 'enum kvm_ex_reg' definitions into 'enum kvm_reg'
+> > >   KVM: x86: Add helpers to test/mark reg availability and dirtiness
+> > >   KVM: x86: Fold decache_cr3() into cache_reg()
+> > > 
+> > >  arch/x86/include/asm/kvm_host.h |  5 +-
+> > >  arch/x86/kvm/kvm_cache_regs.h   | 67 +++++++++++++++++------
+> > >  arch/x86/kvm/svm.c              |  5 --
+> > >  arch/x86/kvm/vmx/nested.c       | 14 ++++-
+> > >  arch/x86/kvm/vmx/vmx.c          | 94 ++++++++++++++++++---------------
+> > >  arch/x86/kvm/x86.c              | 13 ++---
+> > >  arch/x86/kvm/x86.h              |  6 +--
+> > >  7 files changed, 123 insertions(+), 81 deletions(-)
+> > 
+> > Series:
+> > Tested-by: Reto Buerki <reet@codelabs.ch>
+> 
+> Any chance of this series making it into 5.4? Unless I'm looking in the
+> wrong place, I don't see the changes in either kvm.git or Linus' tree.
 
--- 
-Michal Hocko
-SUSE Labs
+It's queued up in kvm.git for 5.5.  That being said, the first patch
+should go into 5.4 (it's also tagged for stable).  The next round of KVM
+fixes for 5.4 will probably be delayed due to KVM Forum.
+
+Paolo?
