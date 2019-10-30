@@ -2,155 +2,86 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195BFCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025F3CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB597205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:40:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="P4sJgcQ7"
+	by mail.kernel.org (Postfix) with ESMTP id CACC2205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:41:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfJ3PkK (ORCPT
+        id S1727126AbfJ3PlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:40:10 -0400
-Received: from mail-eopbgr700045.outbound.protection.outlook.com ([40.107.70.45]:63968
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726302AbfJ3PkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:40:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BTWmVKCBvLcveUa7heIEJSz5GFAkv8nmmlQzRoqbZQrfACX3giVPstiON2J+0+SiKsyqhFFiIOE+WSd2NASAo74QPpdOvl9/sg7NtXWIAxH2aIMBr7GY6JsSNv5qhT++OiI2CzySnZ/cn5QczRHAzBCi02CI63+P0kOSmWqzcNx+mbyM1EvtkzoOdNlUineNJ7sN+IotzK35anOsmU0gwQFFVkeGTey07eO+6nCI36cz+UE+JnfHRU4aoDY8Dl5OTQnmtgOOPvXQ0TqrYVBNjrJzUqZeV3kfWnaLwD7Mys49d/4GNRfK+mpimcCKgaZIEWTIMjxn06WgbLzk/pK04w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vc07ImVMgNVyLiULifycZRo6xqCv5Ysb5B4Llv8uH6k=;
- b=ONv7/B3fU82AAHksjsl0HAQtr8IIPltC8D0TUR1cXDv+Hgg8Gp46U3LFLRLwBeM6kyxF1THqNctHoZAPF7+1GtTpOjBPpQpXeVbSnRvl2go2GIgg9NfxFmyLFpdaqnBbqyn+X9xsHdm32eDuB2zVOqlJe0Koe941Den1I0aYJ8HrVS5t00wyfp117+fJrOrvrOuE+DYZvA18OmkDjfF1zq5BMtXFkAolp2rNJoXGqBzuaHdZCVBMsdjlTiVbAkaruNCdS9VQwJK8T+Z1ltyD/4YoWTY7IsSa0lGwg38OSjspGD5LAlCGCKj5avwpO+n0U8+tsVoxOd1ALO6KGJkRcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vc07ImVMgNVyLiULifycZRo6xqCv5Ysb5B4Llv8uH6k=;
- b=P4sJgcQ7fTR3kYfo4kNOmjNRxzxgjLpBaPNAciBibbddM0Fc9XpcCNOOZnppPEIDF3z4921YTb/fzJwid2OLzp3aRl2GxA0NejmLIvomW1MkGadp+UBYz9Dcz+IMB2Rm3DtJpwB6T3ogxZTAQUvyYL1M7bg1tmy604MOczB9oFk=
-Received: from MWHPR05MB3376.namprd05.prod.outlook.com (10.174.175.149) by
- MWHPR05MB2957.namprd05.prod.outlook.com (10.168.246.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.15; Wed, 30 Oct 2019 15:40:05 +0000
-Received: from MWHPR05MB3376.namprd05.prod.outlook.com
- ([fe80::4098:2c39:d8d3:a209]) by MWHPR05MB3376.namprd05.prod.outlook.com
- ([fe80::4098:2c39:d8d3:a209%7]) with mapi id 15.20.2408.018; Wed, 30 Oct 2019
- 15:40:05 +0000
-From:   Jorgen Hansen <jhansen@vmware.com>
-To:     'Stefano Garzarella' <sgarzare@redhat.com>
-CC:     Sasha Levin <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>, kvm <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH net-next 11/14] vsock: add multi-transports support
-Thread-Topic: [PATCH net-next 11/14] vsock: add multi-transports support
-Thread-Index: AQHViYhm3+s3qIN1EEmJgzgCfyvFAqdoVEGAgAsGKDA=
-Date:   Wed, 30 Oct 2019 15:40:05 +0000
-Message-ID: <MWHPR05MB3376E623764F54D39D8135A9DA600@MWHPR05MB3376.namprd05.prod.outlook.com>
-References: <20191023095554.11340-1-sgarzare@redhat.com>
- <20191023095554.11340-12-sgarzare@redhat.com>
- <CAGxU2F7n48kBy_y2GB=mcvraK=mw_2Jn8=2hvQnEOWqWuT9OjA@mail.gmail.com>
-In-Reply-To: <CAGxU2F7n48kBy_y2GB=mcvraK=mw_2Jn8=2hvQnEOWqWuT9OjA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jhansen@vmware.com; 
-x-originating-ip: [146.247.47.49]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0bc0d4f6-649e-4161-7d74-08d75d4f6fb3
-x-ms-traffictypediagnostic: MWHPR05MB2957:
-x-microsoft-antispam-prvs: <MWHPR05MB295719D2CCD818E455543E0DDA600@MWHPR05MB2957.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02065A9E77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(136003)(366004)(376002)(199004)(189003)(8936002)(66476007)(305945005)(64756008)(66446008)(316002)(7416002)(7736002)(66556008)(81166006)(81156014)(74316002)(478600001)(52536014)(55016002)(66066001)(8676002)(9686003)(54906003)(6246003)(86362001)(25786009)(66946007)(5660300002)(33656002)(4326008)(76116006)(6436002)(6506007)(14454004)(76176011)(6916009)(476003)(2906002)(7696005)(186003)(71200400001)(71190400001)(6116002)(99286004)(26005)(3846002)(102836004)(256004)(229853002)(446003)(486006)(14444005)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB2957;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lWTiDen5iXKOdLsNU+yjRrfkfy4j2Ny7Ga3uNA4mVYRmgAurEhkdxyahG/ldTgLkslcAbLp3lfkhNFOqWnS5uaFo8AUA0bTkElB0/fzbdv9sVc2OfnOJO67FNY82viBZcW0/8LQFU0ptaum1nnTJ6hDk7YuynnIz+loPrTdHOoX9uIpw+7DppTrOB52qwnwQAlST1M+/9Sobw2qGe6V1XVf6VPgqewSFNYJIFjx/t7lj3Ww5zwS2XZSCTtS7fAg7pqDFrr7YqyB4Y9x9wCzYj470kZFTGQ42lwxWtfcp/OXFySGH+sBByPCUo1rUD4aqK7iQu/NDcAsBnY2W6UFin05yKWB1H+G+ouo0c0idmHTzPXS6Ud3rNxp1xUct8FKPxAvgfgU4MrXqFkli31mwew/UHxnrbpkFRVDuygCRqA76KGUdsmWp+v5JZWpk2GXg
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0bc0d4f6-649e-4161-7d74-08d75d4f6fb3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 15:40:05.2998
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ri/s3DjZk4FvNg+1W27BHZSABEN1A34AsICGmdjBsfrxKBRrFkqV2yB8GZfZLBGk64e3FNuMcYv8s9nlESoi/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB2957
+        Wed, 30 Oct 2019 11:41:06 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:35318 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726461AbfJ3PlG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:41:06 -0400
+Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x9UFf5QL006874
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:41:05 -0400
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x9UFf03u006364
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:41:05 -0400
+Received: by mail-qt1-f199.google.com with SMTP id k53so2835763qtk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:41:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:date:message-id;
+        bh=eIoWGi3U/SGYr7w5rrsbliBxDrgak+FNrEviy/8rGIk=;
+        b=Qem+ASaUqScax1MPITXVxJ1SgXRm9hCJVEihvwSGN9gKwYr17G27oMRABiqBBY1vh4
+         DY25yp8cHpZxbhESVkE8fSZOqXFDgmwM807N4FaG7Er4nDP95bRWTHyifwhIU7FlEZkh
+         DnQAOa0vgO1mjmFJXQ8Oaz1WM0pTa4Jubd74EIInriusXhvSJe3gHMnSxX7NECt1u0GF
+         ZRQ/uMB/eCuKK4QKMNs4uB0lIkwx7bypuxjXKHihdxgd7+uegml4kVaAWVA3eoQ09WTp
+         ZXuLmRiyHRXGtkrf6EvlyyGXnMggo6zU6ffbwZi9pAAqqSqkPlsMaw9lO511Py/27Eme
+         Tedw==
+X-Gm-Message-State: APjAAAURMU3QU2U4b1rdxJdjOFIAJ/s9d7WSer7oilVEbfsPTNRCdCmY
+        NCLudnQyOwcSUKG1ep8MrD2xO7UT2wxs+Ic3yHc4bE/A60abmIdIakszZh7m2/1UajupAsI+NT4
+        kwLQk/5BDyehY/v/syD9K3un3OTrXA0V61Pk=
+X-Received: by 2002:ac8:7546:: with SMTP id b6mr716402qtr.104.1572450059574;
+        Wed, 30 Oct 2019 08:40:59 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwxyrOL2KJZakZX+lSdi47kBXVJMoQi6jylMX1/YtjfV276ujKko4yFtHRvF28Z5bPPRKRdfA==
+X-Received: by 2002:ac8:7546:: with SMTP id b6mr716361qtr.104.1572450059254;
+        Wed, 30 Oct 2019 08:40:59 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id c17sm273439qkm.37.2019.10.30.08.40.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 08:40:58 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Davidlohr Bueso <dave@stgolabs.net>
+cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drivers/staging/exfat: Replace binary semaphores for mutexes
+In-reply-to: <20191030144916.10802-1-dave@stgolabs.net>
+References: <20191029080521.GA494993@kroah.com>
+ <20191030144916.10802-1-dave@stgolabs.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Wed, 30 Oct 2019 11:40:57 -0400
+Message-ID: <74400.1572450057@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Stefano Garzarella [mailto:sgarzare@redhat.com]
-> > +/* Assign a transport to a socket and call the .init transport callbac=
-k.
-> > + *
-> > + * Note: for stream socket this must be called when vsk->remote_addr
-> > +is set
-> > + * (e.g. during the connect() or when a connection request on a
-> > +listener
-> > + * socket is received).
-> > + * The vsk->remote_addr is used to decide which transport to use:
-> > + *  - remote CID > VMADDR_CID_HOST will use host->guest transport
-> > + *  - remote CID <=3D VMADDR_CID_HOST will use guest->host transport
-> > +*/ int vsock_assign_transport(struct vsock_sock *vsk, struct
-> > +vsock_sock *psk) {
-> > +       const struct vsock_transport *new_transport;
-> > +       struct sock *sk =3D sk_vsock(vsk);
-> > +
-> > +       switch (sk->sk_type) {
-> > +       case SOCK_DGRAM:
-> > +               new_transport =3D transport_dgram;
-> > +               break;
-> > +       case SOCK_STREAM:
-> > +               if (vsk->remote_addr.svm_cid > VMADDR_CID_HOST)
-> > +                       new_transport =3D transport_h2g;
-> > +               else
-> > +                       new_transport =3D transport_g2h;
->=20
-> I just noticed that this break the loopback in the guest.
-> As a fix, we should use 'transport_g2h' when remote_cid <=3D
-> VMADDR_CID_HOST or remote_cid is the id of 'transport_g2h'.
->=20
-> To do that we also need to avoid that L2 guests can have the same CID of =
-L1.
-> For vhost_vsock I can call vsock_find_cid() in vhost_vsock_set_cid()
->=20
-> @Jorgen: for vmci we need to do the same? or it is guaranteed, since it's
-> already support nested VMs, that a L2 guests cannot have the same CID as
-> the L1.
+On Wed, 30 Oct 2019 07:49:16 -0700, Davidlohr Bueso said:
+> At a slight footprint cost (24 vs 32 bytes), mutexes are more optimal
+> than semaphores; it's also a nicer interface for mutual exclusion,
+> which is why they are encouraged over binary semaphores, when possible.
+>
+> For both v_sem and z_sem, their semantics imply traditional lock
+> ownership; that is, the lock owner is the same for both lock/unlock
+> operations. Therefore it is safe to convert.
+>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 
-As far as I can tell, we have the same issue with the current support for n=
-ested VMs in
-VMCI. If we have an L2 guest with the same CID as the L1 guest, we will alw=
-ays send to
-the L2 guest, and we may assign an L2 guest the same CID as L1. It should b=
-e straight
-forward to avoid this, though.
+Looks sane.
+
+Acked-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+
 
