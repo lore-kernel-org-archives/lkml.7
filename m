@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64405CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70AACA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 303702054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7332054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451307;
-	bh=vEco0Qc5gNZWgnkrLje5461Udlzws/Ff4y+WCVIP6Ug=;
+	s=default; t=1572451314;
+	bh=A8OJ0gmDn66ao2MoOx6aQnaAj57Lc5OKhEELCpvSyIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2KxWo0wP2zwePD9AjTxe9Jl6e2lzmm8j2RiPFes86fVQQLr0pocJT9/QdDqXctLn4
-	 lr+YiFBMjiXMcgiiZK800Zt9uv1MXWQCFG8e+P/oHnjpgep5w1VC6UXjGy7NhcA1Cv
-	 5GC5jd6IKpKmt5xbo2xPPtpQi/1fbD6I+vTR54nU=
+	b=BFQXp9GaEyoG6vTn0bnOyXh+2mutnrQKNYu2i57dTe82IP6NTSEI6SEeDyroGGoJ1
+	 qpzM8FoThLWw63EBnxOmr6EMIu/o1QcrmDtv84AIo6NzfM2BqrHJ6AAO9LOd6nsAVE
+	 5/uXhNsXuHIdA38nFP9SfHCVLbK4j2ykUmZTiSag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbfJ3Py1 (ORCPT
+        id S1727987AbfJ3QBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55842 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 12:01:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbfJ3PyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:54:23 -0400
+        id S1728301AbfJ3PyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:54:17 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A86B920874;
-        Wed, 30 Oct 2019 15:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31F5120874;
+        Wed, 30 Oct 2019 15:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450863;
-        bh=vEco0Qc5gNZWgnkrLje5461Udlzws/Ff4y+WCVIP6Ug=;
+        s=default; t=1572450856;
+        bh=A8OJ0gmDn66ao2MoOx6aQnaAj57Lc5OKhEELCpvSyIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OUovC4sADRC6bemYjvpbnya6py3WyF3Wn9UFaoqjx2DVk/9a5lVvlCVns3ItzWzi0
-         hT/5PnolU7G+H1HqEyQprypFXfBnaYpzkGRwSUrz0Dij4IlVuuqi9ekuSkFG9DjVxm
-         +sNtTSSexepjvROOwc8e024GptaZLZZA0khpT2ko=
+        b=HbTI4sGqhdtgCGlPpKZa1bFAZ9mvCiMscKeHF9vCjop2ktnGKNoKjZC4qwgRT59Bu
+         loHqyF/IxGTBfDx9yHBlbC4cLRSuUktG0dv71+mg3VBJMFfBxU77rxy2m5+5YuHR0b
+         dQXJv1fiwR458xC0b2Qe2sALsUqmruPTp8qizESk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, Nishanth Menon <nm@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 06/38] regulator: ti-abb: Fix timeout in ti_abb_wait_txdone/ti_abb_clear_all_txdone
-Date:   Wed, 30 Oct 2019 11:53:34 -0400
-Message-Id: <20191030155406.10109-6-sashal@kernel.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/38] arm64: dts: allwinner: a64: pine64-plus: Add PHY regulator delay
+Date:   Wed, 30 Oct 2019 11:53:31 -0400
+Message-Id: <20191030155406.10109-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
 References: <20191030155406.10109-1-sashal@kernel.org>
@@ -59,77 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit f64db548799e0330897c3203680c2ee795ade518 ]
+[ Upstream commit 2511366797fa6ab4a404b4b000ef7cd262aaafe8 ]
 
-ti_abb_wait_txdone() may return -ETIMEDOUT when ti_abb_check_txdone()
-returns true in the latest iteration of the while loop because the timeout
-value is abb->settling_time + 1. Similarly, ti_abb_clear_all_txdone() may
-return -ETIMEDOUT when ti_abb_check_txdone() returns false in the latest
-iteration of the while loop. Fix it.
+Depending on kernel and bootloader configuration, it's possible that
+Realtek ethernet PHY isn't powered on properly. According to the
+datasheet, it needs 30ms to power up and then some more time before it
+can be used.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Nishanth Menon <nm@ti.com>
-Link: https://lore.kernel.org/r/20190929095848.21960-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix that by adding 100ms ramp delay to regulator responsible for
+powering PHY.
+
+Fixes: 94dcfdc77fc5 ("arm64: allwinner: pine64-plus: Enable dwmac-sun8i")
+Suggested-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/ti-abb-regulator.c | 26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
-index cced1ffb896c1..89b9314d64c9d 100644
---- a/drivers/regulator/ti-abb-regulator.c
-+++ b/drivers/regulator/ti-abb-regulator.c
-@@ -173,19 +173,14 @@ static int ti_abb_wait_txdone(struct device *dev, struct ti_abb *abb)
- 	while (timeout++ <= abb->settling_time) {
- 		status = ti_abb_check_txdone(abb);
- 		if (status)
--			break;
-+			return 0;
- 
- 		udelay(1);
- 	}
- 
--	if (timeout > abb->settling_time) {
--		dev_warn_ratelimited(dev,
--				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
--				     __func__, timeout, readl(abb->int_base));
--		return -ETIMEDOUT;
--	}
--
--	return 0;
-+	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
-+			     __func__, timeout, readl(abb->int_base));
-+	return -ETIMEDOUT;
- }
- 
- /**
-@@ -205,19 +200,14 @@ static int ti_abb_clear_all_txdone(struct device *dev, const struct ti_abb *abb)
- 
- 		status = ti_abb_check_txdone(abb);
- 		if (!status)
--			break;
-+			return 0;
- 
- 		udelay(1);
- 	}
- 
--	if (timeout > abb->settling_time) {
--		dev_warn_ratelimited(dev,
--				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
--				     __func__, timeout, readl(abb->int_base));
--		return -ETIMEDOUT;
--	}
--
--	return 0;
-+	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
-+			     __func__, timeout, readl(abb->int_base));
-+	return -ETIMEDOUT;
- }
- 
- /**
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
+index 24f1aac366d64..d5b6e8159a335 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
+@@ -63,3 +63,12 @@
+ 		reg = <1>;
+ 	};
+ };
++
++&reg_dc1sw {
++	/*
++	 * Ethernet PHY needs 30ms to properly power up and some more
++	 * to initialize. 100ms should be plenty of time to finish
++	 * whole process.
++	 */
++	regulator-enable-ramp-delay = <100000>;
++};
 -- 
 2.20.1
 
