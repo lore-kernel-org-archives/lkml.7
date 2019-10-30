@@ -2,118 +2,100 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CA2CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 02:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AE7CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 02:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9ED420874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 02:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4037420856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 02:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfJ3CuX (ORCPT
+        id S1727085AbfJ3Cvv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 22:50:23 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:43316 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726747AbfJ3CuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 22:50:23 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TgfhIsK_1572403814;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TgfhIsK_1572403814)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 30 Oct 2019 10:50:17 +0800
-Subject: Re: mbind() breaks its API definition since v5.2 by commit
- d883544515aa (mm: mempolicy: make the behavior consistent when MPOL_MF_MOVE*
- and MPOL_MF_STRICT were specified)
-To:     Li Xinhai <lixinhai.lxh@gmail.com>, linux-mm <linux-mm@kvack.org>,
-        akpm <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Linux API <linux-api@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        lixinhai_lxh <lixinhai_lxh@126.com>
-References: <2019103010274679257634@gmail.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <dc4864bf-8fa3-f5c8-f68c-57edc68d4662@linux.alibaba.com>
-Date:   Tue, 29 Oct 2019 19:50:11 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Tue, 29 Oct 2019 22:51:51 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:6708 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726983AbfJ3Cvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 22:51:50 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id CF8FBEED7FEA4ED64C6A;
+        Wed, 30 Oct 2019 10:51:48 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x9U2pZDb074519;
+        Wed, 30 Oct 2019 10:51:35 +0800 (GMT-8)
+        (envelope-from zhong.shiqi@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019103010515442-192490 ;
+          Wed, 30 Oct 2019 10:51:54 +0800 
+From:   zhongshiqi <zhong.shiqi@zte.com.cn>
+To:     Julia.Lawall@lip6.fr
+Cc:     Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
+        zhongshiqi <zhong.shiqi@zte.com.cn>
+Subject: [PATCH v5] coccicheck: Support search for SmPL scripts within selected directory hierarchy
+Date:   Wed, 30 Oct 2019 10:54:30 +0800
+Message-Id: <1572404070-41580-1-git-send-email-zhong.shiqi@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <2019103010274679257634@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-30 10:51:54,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-30 10:51:38
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse-fl2.zte.com.cn x9U2pZDb074519
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+*Allow defining the environment variable “COCCI” as a directory to search
+SmPL scripts.
 
+*Start a corresponding file determination if it contains an acceptable
+path.
 
-On 10/29/19 7:27 PM, Li Xinhai wrote:
-> One change in do_mbind() of this commit has suspicious usage of return value of
-> queue_pages_range(), excerpt as below:
->
-> ---
-> @@ -1243,10 +1265,15 @@ static long do_mbind(unsigned long start, unsigned long len,
->   	if (err)
->   		goto mpol_out;
->   
-> -	err = queue_pages_range(mm, start, end, nmask,
-> +	ret = queue_pages_range(mm, start, end, nmask,
->   			  flags | MPOL_MF_INVERT, &pagelist);
-> -	if (!err)
-> -		err = mbind_range(mm, start, end, new);
-> +
-> +	if (ret < 0) {      /////// convert to all possible 'ret' to '-EIO' <<<<
-> +		err = -EIO;
-> +		goto up_out;
-> +	}
-> +
-> +	err = mbind_range(mm, start, end, new);
->   
->   	if (!err) {
->   		int nr_failed = 0;
-> ---
->
-> Note that inside queue_pages_range(), the call to walk_page_range() may return
-> errors from 'test_walk' of 'struct mm_walk_ops', e.g. -EFAULT. Now, those error
-> codes are no longer reported to user space application.
->
->  From user space, the mbind() call need to reported error, with EFAULT, as example:
-> EFAULT
-> Part or all of the memory range specified by nodemask and maxnode points
-> outside your accessible address space. Or, there was an unmapped hole in the
-> specified memory range specified by addr and len.
+Signed-off-by: zhongshiqi <zhong.shiqi@zte.com.cn>
+---
+Changes in v5:
+	1:rewrite change description as an enumeration
 
-Thanks for catching this. That commit was aimed to correct the return 
-values for some corner cases in mbind(), but it should not alter the 
-errno for other failure cases, i.e. -EFAULT.
+Changes in v4:
+	1:rewrite change description in another wording
 
-Could you please try the below patch (build test only)?
+Changes in v3:
+	1:rewrite change description
+	2:fix patch subject
+	3:modify commit log
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 4ae967b..99df43a 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1286,7 +1286,7 @@ static long do_mbind(unsigned long start, unsigned 
-long len,
-                           flags | MPOL_MF_INVERT, &pagelist);
+Changes in v2:
+	1.fix patch subject according to the reply by Markus
+	<Markus.Elfring@web.de>
+	2.change description in “imperative mood”
+ 
+ scripts/coccicheck | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-         if (ret < 0) {
--               err = -EIO;
-+               err = ret;
-                 goto up_out;
-         }
-
-
->
-> Please correct me if this is the intended change(and will have updated API
-> definition), or something was misunderstood.
->
-> -Xinhai
+diff --git a/scripts/coccicheck b/scripts/coccicheck
+index e04d328..a1c4197 100755
+--- a/scripts/coccicheck
++++ b/scripts/coccicheck
+@@ -257,6 +257,10 @@ if [ "$COCCI" = "" ] ; then
+     for f in `find $srctree/scripts/coccinelle/ -name '*.cocci' -type f | sort`; do
+ 	coccinelle $f
+     done
++elif [ -d "$COCCI" ] ; then
++    for f in `find $COCCI/ -name '*.cocci' -type f | sort`; do
++	coccinelle $f
++    done
+ else
+     coccinelle $COCCI
+ fi
+-- 
+2.9.5
 
