@@ -2,129 +2,64 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538B2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343D5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34AEC20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122E120659
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbfJ3HoU (ORCPT
+        id S1726071AbfJ3HrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 03:44:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12034 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725923AbfJ3HoT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 03:44:19 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9U7gJlJ131355
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 03:44:18 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vy60jrpby-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 03:44:18 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <freude@linux.ibm.com>;
-        Wed, 30 Oct 2019 07:44:16 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 30 Oct 2019 07:44:12 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9U7iCO361866182
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 07:44:12 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E728642041;
-        Wed, 30 Oct 2019 07:44:11 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3DCF642052;
-        Wed, 30 Oct 2019 07:44:11 +0000 (GMT)
-Received: from funtu.home (unknown [9.145.158.134])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 30 Oct 2019 07:44:11 +0000 (GMT)
-Subject: Re: [PATCH] s390: vfio-ap: disable IRQ in remove callback results in
- kernel OOPS
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
-        pmorel@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com
-References: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
-From:   Harald Freudenberger <freude@linux.ibm.com>
-Date:   Wed, 30 Oct 2019 08:44:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19103007-0008-0000-0000-0000032907CB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103007-0009-0000-0000-00004A484CD5
-Message-Id: <0565c250-726f-dd99-f933-f91162dc107e@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910300076
+        Wed, 30 Oct 2019 03:47:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52964 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725822AbfJ3HrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 03:47:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F018CAF98;
+        Wed, 30 Oct 2019 07:47:10 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 08:47:09 +0100
+Message-ID: <s5hy2x2hdz6.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>
+Cc:     perex@perex.cz, tiwai@suse.com, allison@lohutok.net,
+        rfontana@redhat.com, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, saurav.girepunje@hotmail.com
+Subject: Re: [PATCH v1] ALSA: usb-audio: sound: usb: usb true/false for bool return type
+In-Reply-To: <20191029175200.GA7320@saurav>
+References: <20191029175200.GA7320@saurav>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.10.19 23:09, Tony Krowiak wrote:
-> From: aekrowia <akrowiak@linux.ibm.com>
->
-> When an AP adapter card is configured off via the SE or the SCLP
-> Deconfigure Adjunct Processor command and the AP bus subsequently detects
-> that the adapter card is no longer in the AP configuration, the card
-> device representing the adapter card as well as each of its associated
-> AP queue devices will be removed by the AP bus. If one or more of the
-> affected queue devices is bound to the VFIO AP device driver, its remove
-> callback will be invoked for each queue to be removed. The remove callback
-> resets the queue and disables IRQ processing. If interrupt processing was
-> never enabled for the queue, disabling IRQ processing will fail resulting
-> in a kernel OOPS.
->
-> This patch verifies IRQ processing is enabled before attempting to disable
-> interrupts for the queue.
->
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> Signed-off-by: aekrowia <akrowiak@linux.ibm.com>
+On Tue, 29 Oct 2019 18:52:00 +0100,
+Saurav Girepunje wrote:
+> 
+> Use true/false for bool type return in uac_clock_source_is_valid().
+> 
+> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
 > ---
->  drivers/s390/crypto/vfio_ap_drv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-> index be2520cc010b..42d8308fd3a1 100644
-> --- a/drivers/s390/crypto/vfio_ap_drv.c
-> +++ b/drivers/s390/crypto/vfio_ap_drv.c
-> @@ -79,7 +79,8 @@ static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
->  	apid = AP_QID_CARD(q->apqn);
->  	apqi = AP_QID_QUEUE(q->apqn);
->  	vfio_ap_mdev_reset_queue(apid, apqi, 1);
-> -	vfio_ap_irq_disable(q);
-> +	if (q->saved_isc != VFIO_AP_ISC_INVALID)
-> +		vfio_ap_irq_disable(q);
->  	kfree(q);
->  	mutex_unlock(&matrix_dev->lock);
->  }
-Reset of an APQN does also clear IRQ processing. I don't say that the
-resources associated with IRQ handling for the APQN are also cleared.
-But when you call PQAP(AQIC) after an PQAP(RAPQ) or PQAP(ZAPQ)
-it is superfluous. However, there should not appear any kernel OOPS.
-So can you please give me more details about this kernel oops - maybe
-I need to add exception handler code to the inline ap_aqic() function.
+> 
+> Changes in v1:
+> 
+> 	- Update the patch subject suggested by Takashi Iwai <tiwai@suse.de>
+> 
+>         - Drop "!!" but keep the ternary operator in last return
+>           statement so that function will return always true/false.
 
-regards, Harald Freudenberger
+Applied, thanks.
 
+
+Takashi
