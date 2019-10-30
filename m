@@ -2,150 +2,119 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27219CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A45CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DECCB218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B61208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i7omyIFW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="fQ0EYHGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfJ3QgK (ORCPT
+        id S1726846AbfJ3QjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:36:10 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34572 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbfJ3QgJ (ORCPT
+        Wed, 30 Oct 2019 12:39:24 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:30140 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbfJ3QjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:36:09 -0400
-Received: by mail-lf1-f66.google.com with SMTP id f5so2083072lfp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 09:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fglx1P/Lr2zU5Bv2rqxkj3RwVFl25hRHEVVaBlkj2AM=;
-        b=i7omyIFWFXzx+qrHikNEEnejVxeMI+/RkkoSc9Uh7jn1Uu4NJ65e1gQXFAR6nerCCA
-         k3s4BnXN/BLtrxMZ91NiqXOVQ+z6MmOPGK/HU3PwvL3nZU/odNQcqvj8Yyg2AP6beOm5
-         kBZtrlO2zdXyQkrYbG0Nbnb8UcCOCKOiFhCt5PsLoAVGEU6ph/+cKBZjUf+9xYC2ZDay
-         tu2FUNhEWyk3pK4M8HKIYLN+zHa9iXd+WZ9E43UDVVUbSxN9G9xPqaqKHtm2OC8hUvnt
-         2TzmqLNiIlqHKQAlHLcKbXBUNTGGCEiqAALYpjcUaiaJiu2BL5ZXqhMDujNZGhPDNrCv
-         oRvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fglx1P/Lr2zU5Bv2rqxkj3RwVFl25hRHEVVaBlkj2AM=;
-        b=V7lw3SNvJ/ivpTC1Ef4mgwtVxTGEcvXKE6Wl/2FUvQr6W3t8ueVGzfJKZfQS8uMsbk
-         UqkZEGe1TjCMwXuaqs7uxgNai/vJoYxm7DK9VzkmK3Ai080KHICYPmkeGZp5SuSM7Ml3
-         L80GZsBTFJhdoX8aSdz6gn7Zw4Aqe5/xiGA22CiIuhCkh9S7O3Zo/QxWq/h+g4/4RvLK
-         vmr47lm3f6hIlZi2uc3XB6ihgPQhFwggJZV8DBeL8lmJXtUtwfL7izB2IXjVhsPtAEtd
-         Nl4rOvMDDzRKsOdks4BtfvpwqWp2D54D/K1lFlOwhJWzGnxMbKAahTP4uTgCqEgEztam
-         Lhjw==
-X-Gm-Message-State: APjAAAUF2smzrzPVQnCYqb/Z2cu/dnLN+mbncbRMlUjuaeGYJWDvVqoD
-        aAzFy0GZo2Ot3Cxf4g8Tmzt42f+fDjYcbUMRQZmS5Q==
-X-Google-Smtp-Source: APXvYqyp9Wa/AjUY3SZTFNdxu9Cmd7YfligZ1R/JfPihPZrFZlrwopXaUWdcnzdnmSwfycSpsy2j5jqCbk36NnTVBUU=
-X-Received: by 2002:a19:ca13:: with SMTP id a19mr6645684lfg.133.1572453366556;
- Wed, 30 Oct 2019 09:36:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
- <20191021075038.GA27361@gmail.com> <20191030162440.GO3016@techsingularity.net>
-In-Reply-To: <20191030162440.GO3016@techsingularity.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 30 Oct 2019 17:35:53 +0100
-Message-ID: <CAKfTPtBVWenCt5qLvow6ubB6a8c1gdPfW8-fWaKAa0k8b47m9Q@mail.gmail.com>
-Subject: Re: [PATCH v4 00/10] sched/fair: rework the CFS load balance
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 30 Oct 2019 12:39:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1572453562;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Dn40tVbbGhA5NczjSxQCCaGadlXd23pRkpE7OM8NH5A=;
+        b=fQ0EYHGnVog07STSSHN1xVxozHHsN1q4avo/yikt4Mxs6niBW/Cdu/5zgLCk+NknRz
+        SmNRpolDwU+UIeiqmzeCT+C3pSkjtOO/zj/9G147LyD6NkvbKecOWHn8y3f3K/BV6+SW
+        Aoe71lBhAUSOVyfPZ9N/LZq30ueX3+6pqPRy2dYvJC8PXvW/0bfxfUIJaljRVIkoWeKA
+        DxRucbYmwLKbIchByJSYqPL8lKXugDik8xh7XqG+iGMmEQrGEAfXlu5XA+IgSB0yB9fy
+        Qa4a9MmcRAs7qNT9p9WT1E22l1J04kZ/xRF1MRVCRA4SeSWhEalK3DuDGNQ2Zo07+NQy
+        SYaw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCymhdRVSmPRBIbFC67m67z0KUz0RNG8vGE966zI"
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2001:16b8:2638:1d00:3142:f353:47a0:b4bd]
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id L09db3v9UGdC5Tu
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 30 Oct 2019 17:39:12 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191030161604.GA5610@atomide.com>
+Date:   Wed, 30 Oct 2019 17:39:11 +0100
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <61AAD023-6B22-4F81-A3B3-7C9571F967B2@goldelico.com>
+References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com> <20191030161604.GA5610@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 30 Oct 2019 at 17:24, Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Mon, Oct 21, 2019 at 09:50:38AM +0200, Ingo Molnar wrote:
-> > > <SNIP>
-> >
-> > Thanks, that's an excellent series!
-> >
->
-> Agreed despite the level of whining and complaining I made during the
-> review.
+Hi,
 
-Thanks for the review.
-I haven't gone through all your comments yet but will do in the coming days
+> Am 30.10.2019 um 17:16 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [191018 18:47]:
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
+>> @@ -0,0 +1,76 @@
+>> +Imagination PVR/SGX GPU
+>> +
+>> +Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently =
+covered by this binding.
+>> +
+>> +Required properties:
+>> +- compatible:	Should be one of
+>> +		"img,sgx530-121", "img,sgx530", =
+"ti,omap-omap3-sgx530-121";
+>> +		  - BeagleBoard ABC, OpenPandora 600MHz
+>> +		"img,sgx530-125", "img,sgx530", =
+"ti,omap-omap3-sgx530-125";
+>> +		  - BeagleBoard XM, GTA04, OpenPandora 1GHz
+>> +		"img,sgx530-125", "img,sgx530", =
+"ti,omap-am3517-sgx530-125";
+>> +		"img,sgx530-125", "img,sgx530", =
+"ti,omap-am335x-sgx530-125";
+>> +		  - BeagleBone Black
+>> +		"img,sgx540-120", "img,sgx540", =
+"ti,omap-omap4-sgx540-120";
+>> +		  - Pandaboard (ES)
+>> +		"img,sgx544-112", "img,sgx544", =
+"ti,omap-omap4-sgx544-112";
+>> +		"img,sgx544-116", "img,sgx544", =
+"ti,omap-omap5-sgx544-116";
+>> +		  - OMAP5 UEVM, Pyra Handheld
+>> +		"img,sgx544-116", "img,sgx544", =
+"ti,omap-dra7-sgx544-116";
+>=20
+> FYI, the compatible names above have unnecessary omap in them:
+>=20
+> "ti,omap-omap3-sgx530-121" should be "ti,omap3-sgx530-121"
+> "ti,omap-am335x-sgx530-125" should be "ti,am335x-sgx530-125";
+> "ti,omap-dra7-sgx544-116" should be "ti,dra7-sgx544-116"
+>=20
+> And so on.
 
->
-> > I've queued it up in sched/core with a handful of readability edits to
-> > comments and changelogs.
-> >
-> > There are some upstreaming caveats though, I expect this series to be a
-> > performance regression magnet:
-> >
-> >  - load_balance() and wake-up changes invariably are such: some workloads
-> >    only work/scale well by accident, and if we touch the logic it might
-> >    flip over into a less advantageous scheduling pattern.
-> >
-> >  - In particular the changes from balancing and waking on runnable load
-> >    to full load that includes blocking *will* shift IO-intensive
-> >    workloads that you tests don't fully capture I believe. You also made
-> >    idle balancing more aggressive in essence - which might reduce cache
-> >    locality for some workloads.
-> >
-> > A full run on Mel Gorman's magic scalability test-suite would be super
-> > useful ...
-> >
->
-> I queued this back on the 21st and it took this long for me to get back
-> to it.
->
-> What I tested did not include the fix for the last patch so I cannot say
-> the data is that useful. I also failed to include something that exercised
-> the IO paths in a way that idles rapidly as that can catch interesting
-> details (usually cpufreq related but sometimes load-balancing related).
-> There was no real thinking behind this decision, I just used an old
-> collection of tests to get a general feel for the series.
->
-> Most of the results were performance-neutral and some notable gains
-> (kernel compiles were 1-6% faster depending on the -j count). Hackbench
-> saw a disproportionate gain in terms of performance but I tend to be wary
-> of hackbench as improving it is rarely a universal win.
-> There tends to be some jitter around the point where a NUMA nodes worth
-> of CPUs gets overloaded. tbench (mmtests configuation network-tbench) on
-> a NUMA machine showed gains for low thread counts and high thread counts
-> but a loss near the boundary where a single node would get overloaded.
->
-> Some NAS-related workloads saw a drop in performance on NUMA machines
-> but the size class might be too small to be certain, I'd have to rerun
-> with the D class to be sure.  The biggest strange drop in performance
-> was the elapsed time to run the git test suite (mmtests configuration
-> workload-shellscripts modified to use a fresh XFS partition) took 17.61%
-> longer to execute on a UMA Skylake machine. This *might* be due to the
-> missing fix because it is mostly a single-task workload.
->
-> I'm not going to go through the results in detail because I think another
-> full round of testing would be required to take the fix into account. I'd
-> also prefer to wait to see if the review results in any material change
-> to the series.
->
-> --
-> Mel Gorman
-> SUSE Labs
+Yes,
+Rob already noted a while ago and our latest private code has it fixed.
+
+There is no progress towards a v2 since I am still fighting with the new
+yaml format he also requested...
+
+BR and thanks,
+Nikolaus
+
