@@ -2,83 +2,117 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1DFCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C810CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDB62087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:22:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="EsBv0Dhf"
+	by mail.kernel.org (Postfix) with ESMTP id 6E65820679
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:22:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572448936;
+	bh=FrgPUpJt9DSttRGiTsP8U1+/ZhfzRV/kofLgO/IQuVw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C5yIlcJ97RCqGE/+sZcw2I/zr9zVydR9l4aVMeczb6kvqW53sumq08uv1Xpp99IlI
+	 M8UXAEXChqAs3zQQqSjwivkW4Ae1ll+WO2NeEdet25XlEJHWyOrp00S9r/r2KCrP63
+	 8O/pQLHxSDaMGUXnlKuenA3Vjp86pW3nSbY0Hm9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfJ3PWL (ORCPT
+        id S1727158AbfJ3PWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:22:11 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46545 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfJ3PWK (ORCPT
+        Wed, 30 Oct 2019 11:22:15 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43495 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfJ3PWP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:22:10 -0400
-Received: by mail-ed1-f67.google.com with SMTP id z22so2033187edr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HvMNKSCrNMxtROTkfOzlYhe7iouX9dJL649o/i6yCrk=;
-        b=EsBv0DhfbRnsI0WEmZMkwydFvbWFPsRbbEbAZtBPdh9M083h/c5NSHWDtPHC75mpyi
-         38XxlW39llSU8Ey7FQ3jEGYG3AJ4j39pFedtJGqpBXXE7G60UbKP/Vgay8/DWkhOK9ca
-         ppA9WpqjfIpe0BN7xKE16kev55IHzH0ZowCMFiN0NOAiBU3s85SiaXzh10AgadtBLV92
-         LMVZPV5pJ36JH6+CSwu+4r8Ib5OyjjmdR1NTiM+El6cGes9BHX+eeX0qHGRG/895/rrc
-         XQb4s25qvWM6DoKEUtF/1vNKC6O9qHdO+iR7/YajL7kT0OZbHeeeuJ++73oS8loCcolq
-         ZxcQ==
+        Wed, 30 Oct 2019 11:22:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id s5so2275145oie.10
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:22:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HvMNKSCrNMxtROTkfOzlYhe7iouX9dJL649o/i6yCrk=;
-        b=opshjPL4uAldE9Ks6mLqLLdCoHMYRveLpO6f4YbwLJfm5uR20pNU8TLPX90raKRjRa
-         DYq3cfw2GQVOkeROXh5mGx3dUtQPOahYfFIhf2GDeVIWDrZ6w68bo4e17jTDc7c3p6sy
-         KVKkOlUWV5iin8ozjiVEpv2136RMpkH0pjt9bEyjoe7zDZObOjyqIPBVy/ZhxXkBmZdA
-         AOT1US4jc28DIO5rHaSHyFkl1qGWtgldis55CMoLhymS2tFBmqdt50+4/7LLdKNXCRdx
-         WgB/P6NLWtKwFMU3fz0ZP00v4OTW0uPl8HU9vujsQA49Jjc3Mm+wFQbk4jU8MxmNjAbs
-         8IMg==
-X-Gm-Message-State: APjAAAVSUPPlud4WPTYZ20dIg5J0JLL4TmLGDTWrrMl0gYXBwos1+Wgf
-        fH01t3vS9u/UmuC6yGL6hKUXRqVF+LbhQl+CdN7W1Q==
-X-Google-Smtp-Source: APXvYqxkf+B29MLZi9AVfIHKME6DTKtd6/WLRp0HEHJrp2xexHMw3qaJaeHTNMiTJ6l3DYnaI0D3OibgfJIzJo6C3zo=
-X-Received: by 2002:a17:906:b2c1:: with SMTP id cf1mr7523ejb.155.1572448926920;
- Wed, 30 Oct 2019 08:22:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ks/aDXETKL7/ewjtlGzGE6lh24DrchMHRBDEy0Btj3E=;
+        b=MEBcvyV4k0zHNPrHcCfBZVu8dffcZ5lyV7v9TliFMtYbGNjLg9OQiZsBmMyVjUAhLt
+         IkuUjQ8WHHz7JCTENZBwUrIpYpyDJbc14NPaC0STFtdO5spgUtQYJHXD2X6VMaLE13rJ
+         O13vLjCU3XLXfoRP241gRYO2qi90z8PqnLphebtZboHo6NNwUpvDpN8X3wpEQA6CczDD
+         b+C0oC3ZKuAlPP8o7Qv9JcgRmrDg/0jhrCh5iq0DAJziDwn3e3G+Ru+vJqa+9v4Plh07
+         HEOipSRwwguryf9Q4wlsG6BzMg7c0/W7FTKs5+JXLwVODcU4lTJyjbSfQed5uAmaz2BB
+         /+3g==
+X-Gm-Message-State: APjAAAWafK4ONMPfKYTxDmilQ0R18gQgdtWhD0VvJIssj/6C9OCQdY2y
+        mye5qu4LLX7P32BmrNEGH1xaioKGLw==
+X-Google-Smtp-Source: APXvYqx6Kj/zkuW+wIRPdRkZqOqV/N47QSWRwvNNo72T68bbg7gUodLDkXU4GW9fmyM9615s+4cAgw==
+X-Received: by 2002:aca:904:: with SMTP id 4mr9507441oij.25.1572448933984;
+        Wed, 30 Oct 2019 08:22:13 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m50sm115746otc.80.2019.10.30.08.22.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 08:22:13 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 10:22:12 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 7/7] iommu/arm-smmu: Allow building as a module
+Message-ID: <20191030152212.ifzhl2w3knapc367@bogus>
+References: <20191030145112.19738-1-will@kernel.org>
+ <20191030145112.19738-8-will@kernel.org>
 MIME-Version: 1.0
-References: <20191030131122.8256-1-vincent.whitchurch@axis.com>
-In-Reply-To: <20191030131122.8256-1-vincent.whitchurch@axis.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 30 Oct 2019 11:21:56 -0400
-Message-ID: <CA+CK2bDDPn-nmoM7mYS0X8xUBF6q8_scpZY5-YQQXvGAdoCRpQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/sparse: Consistently do not zero memmap
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vincent Whitchurch <rabinv@axis.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030145112.19738-8-will@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> (I noticed this because on my ARM64 platform, with 1 GiB of memory the
->  first [and only] section is allocated from the zeroing path while with
->  2 GiB of memory the first 1 GiB section is allocated from the
->  non-zeroing path.)
->
-> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+On Wed, Oct 30, 2019 at 02:51:12PM +0000, Will Deacon wrote:
+> By conditionally dropping support for the legacy binding and exporting
+> the newly introduced 'arm_smmu_impl_init()' function we can allow the
+> ARM SMMU driver to be built as a module.
+> 
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  drivers/iommu/Kconfig         | 14 ++++++++-
+>  drivers/iommu/arm-smmu-impl.c |  6 ++++
+>  drivers/iommu/arm-smmu.c      | 54 +++++++++++++++++++++--------------
+>  3 files changed, 51 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 7583d47fc4d5..02703f51e533 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -350,7 +350,7 @@ config SPAPR_TCE_IOMMU
+>  
+>  # ARM IOMMU support
+>  config ARM_SMMU
+> -	bool "ARM Ltd. System MMU (SMMU) Support"
+> +	tristate "ARM Ltd. System MMU (SMMU) Support"
+>  	depends on (ARM64 || ARM) && MMU
+>  	select IOMMU_API
+>  	select IOMMU_IO_PGTABLE_LPAE
+> @@ -362,6 +362,18 @@ config ARM_SMMU
+>  	  Say Y here if your SoC includes an IOMMU device implementing
+>  	  the ARM SMMU architecture.
+>  
+> +config ARM_SMMU_LEGACY_DT_BINDINGS
+> +	bool "Support the legacy \"mmu-masters\" devicetree bindings"
 
-LGTM, Thank you!
-Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Can't we just remove this now? The only user is Seattle. Is anyone still 
+using Seattle AND DT? There's been no real dts change since Feb '16.
+There's a bit of clean-up needed in the Seattle dts files, so I'd like 
+to remove them if there's not users.
+
+If there are users, can't we just make them move to the new binding? 
+Yes compatibility, but that really depends on the users caring.
+
+I though Calxeda was using this too, but I guess we didn't get that 
+finished. We should probably remove that secure mode flag as well.
+
+Rob
