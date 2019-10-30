@@ -2,97 +2,147 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6DACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D08CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C23220578
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7273220578
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfJ3Ivx (ORCPT
+        id S1726321AbfJ3IxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:51:53 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33636 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfJ3Ivw (ORCPT
+        Wed, 30 Oct 2019 04:53:15 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:7319 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfJ3IxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:51:52 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m193so1318164oig.0;
-        Wed, 30 Oct 2019 01:51:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mziza5J/MoDupcgI0RkmxCcsKm60Et3F2KLUw+t1RqQ=;
-        b=FX0Qpi9u4CqeUqqDJRv0OaUj52bbx/Xh9cSzN35AEx14RwvvFwdQiK/IxsR0X0gpIs
-         031snMs2K2ONh1aaFaDHcq8MCbuBVmJ5j1udrklDhi0pOVTbxJqEbHaJrqb7VdFsQXN/
-         Iy+R7kgA2dayPFHDNWCDgZ9OZNdEMTTLhUw49+Y2UGaUo8xvlARX+zUVqvdkHEfavtka
-         NdWKua2VdXBo0oypW7XJf3zNiPJ1tqYYp/EQwfG5wkTZpaTvVv13wo7K5tyOU9TkVHSF
-         UUdrcjbCwDnqWNKkIqSxlQHYkVbFVRkxs8xfzQf30Ia8GoP2VNwp4kTCh4uILnKkxi5r
-         3CbQ==
-X-Gm-Message-State: APjAAAVNjlNUyoh7BjJ+GtO+jgaxq2nfplYG4A5K6TAApapog6KVoq3n
-        UhCB7TPT5Ly5/F1KpOXj/5lWbazf5e5lxNztH2M=
-X-Google-Smtp-Source: APXvYqywm9C+CpnmelJ6SWQKVIah4mda9qPmB6OrDMq707nGOy+7YzCdX2/qccGqz5HinY9G/c8lSRqxbZE+WID7kSw=
-X-Received: by 2002:aca:4ac5:: with SMTP id x188mr4822487oia.148.1572425510897;
- Wed, 30 Oct 2019 01:51:50 -0700 (PDT)
+        Wed, 30 Oct 2019 04:53:15 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: cI+a4Vq/q5z7vdc74fDOKro/iJQP/AVCXSmzsTcb1alrbT5d75PBB5UIyhnOScb+Fs1uPHNX6e
+ 8aGqe9kmE4x20O+5eBwGsnAfT8zIx7lVKQ5/3/2YhdSBGdG5Akc+HSnovvC+YzuUnnYc3wMnDQ
+ Fnvbfk4QT5wK0wZRAqTV3eBtwuv4pfAZLqc92ENP5e1mV2kB9uwo/j15g/ijk05lrHzf8ZrWQ4
+ lNbuHZ1ItAFaHG036TBKt9O2T/oFH3ve36HXnVZS4531+IxBu55o5oNon1b3pnvJwoQh8Oeacy
+ mQU=
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="52107702"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Oct 2019 01:53:14 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 30 Oct 2019 01:53:06 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 30 Oct 2019 01:53:06 -0700
+Date:   Wed, 30 Oct 2019 09:53:05 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <claudiu.beznea@microchip.com>
+Subject: Re: [PATCH] pinctrl: at91: Enable slewrate by default on SAM9X60
+Message-ID: <20191030085305.uwrt5g3mmbwthwms@M43218.corp.atmel.com>
+Mail-Followup-To: Rob Herring <robh@kernel.org>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com
+References: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
+ <20191029213757.GA8829@bogus>
 MIME-Version: 1.0
-References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-14-hch@lst.de>
-In-Reply-To: <20191029064834.23438-14-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 30 Oct 2019 09:51:39 +0100
-Message-ID: <CAMuHMdWGiHhSv=xCqnsUXok7wYG7Wr1EQh+yuPOZBxPCskUFVw@mail.gmail.com>
-Subject: Re: [PATCH 13/21] m68k: rename __iounmap and mark it static
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Openrisc <openrisc@lists.librecores.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191029213757.GA8829@bogus>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 7:56 AM Christoph Hellwig <hch@lst.de> wrote:
-> m68k uses __iounmap as the name for an internal helper that is only
-> used for some CPU types.  Mark it static, give it a better name
-> and move it around a bit to avoid a forward declaration.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Tue, Oct 29, 2019 at 04:37:57PM -0500, Rob Herring wrote:
+> On Thu, Oct 24, 2019 at 08:22:34PM +0300, Codrin Ciubotariu wrote:
+> > On SAM9X60, slewrate should be enabled on pins with a switching frequency
+> > below 50Mhz. Since most of our pins do not exceed this value, we enable
+> > slewrate by default. Pins with a switching value that exceeds 50Mhz will
+> > have to explicitly disable slewrate.
+> > 
+> > Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> > Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> > ---
+> >  drivers/pinctrl/pinctrl-at91.c     | 4 ++--
+> >  include/dt-bindings/pinctrl/at91.h | 4 ++--
+> >  2 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> > index 117075b5798f..c135149e84e9 100644
+> > --- a/drivers/pinctrl/pinctrl-at91.c
+> > +++ b/drivers/pinctrl/pinctrl-at91.c
+> > @@ -85,8 +85,8 @@ enum drive_strength_bit {
+> >  					 DRIVE_STRENGTH_SHIFT)
+> >  
+> >  enum slewrate_bit {
+> > -	SLEWRATE_BIT_DIS,
+> >  	SLEWRATE_BIT_ENA,
+> > +	SLEWRATE_BIT_DIS,
+> >  };
+> >  
+> >  #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
+> > @@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
+> >  {
+> >  	unsigned int tmp;
+> >  
+> > -	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
+> > +	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
+> >  		return;
+> >  
+> >  	tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
+> > diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
+> > index 3831f91fb3ba..e8e117306b1b 100644
+> > --- a/include/dt-bindings/pinctrl/at91.h
+> > +++ b/include/dt-bindings/pinctrl/at91.h
+> > @@ -27,8 +27,8 @@
+> >  #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
+> >  #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
+> >  
+> > -#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
+> > -#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
+> > +#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
+> > +#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
+> 
+> This is an ABI. You can't just change the definition.
 
-Thanks for the update!
+There is no DT using these definitions. They have been introduced for our new
+SoC but its DT is not submitted yet. I assume it's not too late to do this
+change as nothing will be broken.
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Regards
 
-Gr{oetje,eeting}s,
+Ludovic
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> Rob
