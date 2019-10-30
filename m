@@ -2,143 +2,139 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CCBCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A00CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC1C20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572473682;
-	bh=jZI/FXKfbqv9Ga9+lgH+eslmJ6dwwmvbb60jHX9+xF0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=zFQ4SESc+3JAGyD6KEeZcoqsP3slmzmykShsykms7mvuxMYwDFyry/eKVcivxcPEw
-	 zHmF6qwtjSxsCHFdwCo77RXnHICanbG8J1FIo/CryzrV36mVAggbmCKXapGIAt7kiA
-	 wrXW4rs/gQokBfiEaO8whbEOYQhaabyWq47fPPz4=
+	by mail.kernel.org (Postfix) with ESMTP id 5BE852067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:16:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/WgYu38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfJ3WOl (ORCPT
+        id S1727299AbfJ3WQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 18:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfJ3WOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:14:40 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F5822083E;
-        Wed, 30 Oct 2019 22:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572473679;
-        bh=jZI/FXKfbqv9Ga9+lgH+eslmJ6dwwmvbb60jHX9+xF0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kUIVedaXNCpW7h6o6+TG8ZlyRVFBUfFWi5EMxFY0ByFPcZNjyKmUAO4lYJss7uy06
-         o40AOBGZ9ruMLMzUbuKp5XXiFOhs39cyESitVnc0VxiSmjRYGraANRBREo47HdtQIL
-         ah+bEH8XGGTVy7LPClfV5OUPIvpcL6HqUNiG+yx0=
-Date:   Wed, 30 Oct 2019 17:14:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Rajat Jain <rajatja@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
- pcie link
-Message-ID: <20191030221436.GA261632@google.com>
+        Wed, 30 Oct 2019 18:16:10 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46108 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbfJ3WQJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 18:16:09 -0400
+Received: by mail-il1-f195.google.com with SMTP id m16so3540408iln.13;
+        Wed, 30 Oct 2019 15:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6aG6jaBQjykZMmoKoaVIScDbAeprHhorDd6ERUFUGTc=;
+        b=F/WgYu38dQJ2we3ACG0fFRAum6GXnziWqvKxwc8o0MXX4MEMwQjV5ERndrF8qyP56o
+         v1SGNFDy6uxA/Qt380IHl6jVwBQlM2/PcH3LoRrBS/B/d32S9STTGSiPf8zyyv0dWAG/
+         kIyzrcu1RagGogthigCxLj//XMUBsTIdMniQ1B8oZfLrdg2F/l0T3xzIkDP7PvV/D6r/
+         kGcWQCxBhCGCy/pFiwiGNyQFPrOyy1tea67MLK7UErHj9vUy4GXdkkTjdqfF2UeV4oHo
+         r2CdQkzRIUGOD0TXx1oG8704nL8dDxiPNuyeoNx0Zh654jg3a1ExuijDav1Y2jU6SLrR
+         ss8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6aG6jaBQjykZMmoKoaVIScDbAeprHhorDd6ERUFUGTc=;
+        b=GZdgG2YVsLv1tHRBDRWwOfWGdQ+GnTvUi8rY6pBZpzFf51VMCRL/wWHoUyyS2ICf1Z
+         yZLmqO9zJRKaePIAajBgb/1p73BoMmNsmSbtbK9t8yqvclLEtZ00lLFfidf+m+Jp5uW3
+         ysaSKgDtuTMflGkO4e90AgGOZNufn/AKzZ8p5Bq4cdbCZ1bvilYEcSq+sc4uOxhPRcti
+         rxmSEMiY4ZVH2O18eg/ARV98zBgUfCCin3al2BJOBvPVTO02O1AzqKdLgTmagZxQacgX
+         JBtNG2O41xZQNG51DBWVHUrXpB7v7W2n0yJ9mZkXrP8KfNd7Bi/JxEPxQIWxMEL7lcPW
+         NQPg==
+X-Gm-Message-State: APjAAAU1RrSKfItOOhsCed499ApftW2gakTY+NNfJvkD+AHLUUffM4WF
+        i8JBQBzVP9I3xCfixgl/HzbY6tdMNNraYi4+VT0=
+X-Google-Smtp-Source: APXvYqwv8oUCajfo1pOFHmNy6b86xLBgxyYuXpSl7PVowx/iM+uUjWJhp9J3RH+BSJI98acLMwAdZJwdE8J8nyDheQA=
+X-Received: by 2002:a92:8703:: with SMTP id m3mr2573584ild.131.1572473768596;
+ Wed, 30 Oct 2019 15:16:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1aadeea-7904-1455-5393-c4998fbd8037@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+ <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+ <CAOi1vP97DMX8zweOLfBDOFstrjC78=6RgxK3PPj_mehCOSeoaw@mail.gmail.com> <4892d186-8eb0-a282-e7e6-e79958431a54@rasmusvillemoes.dk>
+In-Reply-To: <4892d186-8eb0-a282-e7e6-e79958431a54@rasmusvillemoes.dk>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Wed, 30 Oct 2019 23:16:23 +0100
+Message-ID: <CAOi1vP9paV2-2_S0NgfbZDE6+5kqHXVc9xabHVC-2Ss1MmXkCg@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
+ not cursor and length [ver #2]
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-api@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Heiner, Rajat]
+On Wed, Oct 30, 2019 at 9:35 PM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> On 30/10/2019 17.19, Ilya Dryomov wrote:
+> > On Thu, Oct 24, 2019 at 11:49 AM David Howells <dhowells@redhat.com> wrote:
+> >>  /*
+> >> - * We use a start+len construction, which provides full use of the
+> >> - * allocated memory.
+> >> - * -- Florian Coosmann (FGC)
+> >> - *
+> >> + * We use head and tail indices that aren't masked off, except at the point of
+> >> + * dereference, but rather they're allowed to wrap naturally.  This means there
+> >> + * isn't a dead spot in the buffer, provided the ring size < INT_MAX.
+> >> + * -- David Howells 2019-09-23.
+> >
+> > Hi David,
+> >
+> > Is "ring size < INT_MAX" constraint correct?
+>
+> No. As long as one always uses a[idx % size] to access the array, the
+> only requirement is that size is representable in an unsigned int. Then
+> because one also wants to do the % using simple bitmasking, that further
+> restricts one to sizes that are a power of 2, so the end result is that
+> the max size is 2^31 (aka INT_MAX+1).
 
-On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
-> On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
-> > [+cc Rafael, linux-pm, beginning of discussion at
-> > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
-> > 
-> > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
-> > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
-> > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
-> > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
-> > > > > > of changing link width and speed on the fly.
-> > > > Please add more details about why this is needed.  Since you're adding
-> > > > sysfs files, it sounds like it's not actually the *driver* that needs
-> > > > this; it's something in userspace?
-> > > We have use cases to change the link speed and width on the fly.
-> > > One is EMI check and other is power saving.  Some battery backed
-> > > applications have to switch PCIe link from higher GEN to GEN1 and
-> > > width to x1. During the cases like external power supply got
-> > > disconnected or broken. Once external power supply is connected then
-> > > switch PCIe link to higher GEN and width.
-> > That sounds plausible, but of course nothing there is specific to the
-> > Intel Gateway, so we should implement this generically so it would
-> > work on all hardware.
-> Agree.
-> > 
-> > I'm not sure what the interface should look like -- should it be a
-> > low-level interface as you propose where userspace would have to
-> > identify each link of interest, or is there some system-wide
-> > power/performance knob that could tune all links?  Cc'd Rafael and
-> > linux-pm in case they have ideas.
-> 
-> To my knowledge sysfs is the appropriate way to go.
-> If there are any other best possible knobs, will be helpful.
+I think the fact that indices are free running and wrap at a power of
+two already restricts you to sizes the are a power of two, independent
+of how you do masking.  If you switch to a[idx % size], size still has
+to be a power of two for things to work when idx wraps.  Consider:
 
-I agree sysfs is the right place for it; my question was whether we
-should have files like:
+  size = 6
+  head = tail = 4294967292, empty buffer
 
-  /sys/.../0000:00:1f.3/pcie_speed
-  /sys/.../0000:00:1f.3/pcie_width
+  push  4294967292 % 6 = 0
+  push  4294967293 % 6 = 1
+  push  4294967294 % 6 = 2
+  push  4294967295 % 6 = 3
+  push           0 % 6 = 0  <-- expected 4, overwrote a[0]
 
-as I think this patch would add (BTW, please include sample paths like
-the above in the commit log), or whether there should be a more global
-thing that would affect all the links in the system.
+>
+> > I've never had to implement this free running indices scheme, but
+> > the way I've always visualized it is that the top bit of the index is
+> > used as a lap (as in a race) indicator, leaving 31 bits to work with
+> > (in case of unsigned ints).  Should that be
+> >
+> >   ring size <= 2^31
+> >
+> > or more precisely
+> >
+> >   ring size is a power of two <= 2^31
+>
+> Exactly. But it's kind of moot since the ring size would never be
+> allowed to grow anywhere near that.
 
-I think the low-level files like you propose would be better because
-one might want to tune link performance differently for different
-types of devices and workloads.
+Thanks for confirming.  Even if it's kind of moot, I think it should be
+corrected to avoid confusion.
 
-We also have to decide if these files should be associated with the
-device at the upstream or downstream end of the link.  For ASPM, the
-current proposal [1] has the files at the downstream end on the theory
-that the GPU, NIC, NVMe device, etc is the user-recognizable one.
-Also, neither ASPM nor link speed/width make any sense unless there
-*is* a device at the downstream end, so putting them there
-automatically makes them visible only when they're useful.
-
-Rafael had some concerns about the proposed ASPM interface [2], but I
-don't know what they are yet.
-
-For ASPM we added a "link_pm" directory, and maybe that's too
-specific.  Maybe it should be a generic "link_mgt" or even "pcie"
-directory that could contain both the ASPM and width/speed files.
-
-There's also a change coming to put AER stats in something like this:
-
-  /sys/.../0000:00:1f.3/aer_stats/correctable_rx_err
-  /sys/.../0000:00:1f.3/aer_stats/correctable_timeout
-  /sys/.../0000:00:1f.3/aer_stats/fatal_TLP
-  ...
-
-It would certainly be good to have some organizational scheme or we'll
-end up with a real hodge-podge.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/aspm&id=ad46fe1c733656611788e2cd59793e891ed7ded7
-[2] https://lore.kernel.org/r/CAJZ5v0jdxR4roEUC_Hs3puCzGY4ThdLsi_XcxfBUUxqruP4z7A@mail.gmail.com
+                Ilya
