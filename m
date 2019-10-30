@@ -2,112 +2,95 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54D6CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C17CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC25205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E29205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SVAfgh6V"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="FvKZArqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfJ3UYH (ORCPT
+        id S1726700AbfJ3UZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 16:24:07 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34030 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfJ3UYH (ORCPT
+        Wed, 30 Oct 2019 16:25:41 -0400
+Received: from mail-qk1-f176.google.com ([209.85.222.176]:33281 "EHLO
+        mail-qk1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfJ3UZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 16:24:07 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UKNuKj099408;
-        Wed, 30 Oct 2019 15:23:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572467036;
-        bh=QRjoE331Q/k4D/4Fby6fACVvZ6zBumRrr3LPiv9jIBA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SVAfgh6V5NpUgTVMsmXdUR35BuWKy8I8d346G0sBuzrsR9MykqwlfjEmqBtDDbzvC
-         tCE1ye2Fac9sUOR0tWRifwSc0rhFhzx2yAxcW2kEPiE/s80OdYVz/nfCRfZRKsVvq7
-         4qXpbcVwyunJ6ujLBmCVVNkWl/uwtqUTfc2g3hXc=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UKNuq5090504
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 15:23:56 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 15:23:43 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 15:23:43 -0500
-Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UKNtCG022757;
-        Wed, 30 Oct 2019 15:23:55 -0500
-Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        kbuild test robot <lkp@intel.com>
-CC:     <kbuild-all@lists.01.org>, <pavel@ucw.cz>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191028183629.11779-7-dmurphy@ti.com>
- <201910302027.2hNdR993%lkp@intel.com>
- <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
- <075c9330-a9b5-1360-4447-71a4797553a9@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <f32e2063-3c56-607c-0e74-f75f68e62e16@ti.com>
-Date:   Wed, 30 Oct 2019 15:23:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <075c9330-a9b5-1360-4447-71a4797553a9@gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 30 Oct 2019 16:25:40 -0400
+Received: by mail-qk1-f176.google.com with SMTP id 71so4281240qkl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 13:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:mime-version
+         :content-transfer-encoding;
+        bh=KiFm2XT1/ex9pyBydKszuWy1JMFujhglMV+BmZKuRx8=;
+        b=FvKZArqVg5c7lnvj3ny0bJF74EIWJqP3pvXLD4J3+mOSMFEBPxbo9BgJ+KEaSUBze4
+         WQJCgxFBT+NqD4gA7Jq74eaTQ5WEKQBfdp2OIYdeB5ad3mh6DB++FjqUOvPK1R1le3Sp
+         bkqMApjE3M/tR17+3EgezeNzv7rKXq9DgGfIIxLHN8cVAKKwBm14RymhMm699b0Xtdb5
+         ngG/3T7cfsLqIv0E3igR3HK7Lk89z74QBgbw5yPcIXLmLo3lW2Z9KRq/nBUxsdY+AMhM
+         EQsrgqvjpSs6pbIeek9OmD3IlDt/4+cU01ZLA5Mo54Rh9KqmlOt0ZJmBbV8KsqYTMu2V
+         Ja0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
+         :content-transfer-encoding;
+        bh=KiFm2XT1/ex9pyBydKszuWy1JMFujhglMV+BmZKuRx8=;
+        b=owTkqPrsaCWJ04WdHfzZ+CPVgX+Z/D1WNa0G+NJ/0jhHk+NpIqg+BOT7Rdn9QsshJE
+         vzI40tb8uwmPGdUiM8ck1kwyZvIiZ91DU7eA3pR98Cr21A0rj5bq0ui7DrXc+nqv4cWr
+         3pKei9NCqtCzZNH2MxIsePMpnoMKts6IrpeqEmSAtJXQ0TTYDtHjRRYQ7kwjoqo6TKGs
+         BOQCyfdieBlJuUuoHiRRMGkLNuAnlwGSmyGrJoavyvjfvqSOpO+gwd3Ng3ySFqVyH60i
+         nmaNGaFVVZj4UUDIYpj1Mm30DVldyAY7z2GTb0Cly+MLmFwwBqRx1QIWtT+UCLgRHXaJ
+         PFOQ==
+X-Gm-Message-State: APjAAAXS+NKVzV4xhYPfGHakjN0RNgiHT68oxqYoe2Ap+wAkSJc+qWuT
+        GeNeMNA69Z9WLeWlcLw/8oGLhg==
+X-Google-Smtp-Source: APXvYqyx0H3XsyanEpK1jniy58tWKZ3wda42vCC2p7wzRRQRjGWr6vlqi0Sn1CUS/nb0HAADenFj2Q==
+X-Received: by 2002:ae9:f204:: with SMTP id m4mr1874942qkg.105.1572467139382;
+        Wed, 30 Oct 2019 13:25:39 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id q7sm600893qkb.46.2019.10.30.13.25.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 13:25:38 -0700 (PDT)
+Message-ID: <1572467136.5937.107.camel@lca.pw>
+Subject: Section mismatch warnings on powerpc
+From:   Qian Cai <cai@lca.pw>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Wed, 30 Oct 2019 16:25:36 -0400
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+Still see those,
 
+WARNING: vmlinux.o(.text+0x2d04): Section mismatch in reference from the
+variable __boot_from_prom to the function .init.text:prom_init()
+The function __boot_from_prom() references
+the function __init prom_init().
+This is often because __boot_from_prom lacks a __init
+annotation or the annotation of prom_init is wrong.
 
->> Does not appear here
->>
->> Finally not sure why the MIPS compiler is complaining about this but the
->> ARM and x86 is not
-> Compilation breaks also for ARM.
+WARNING: vmlinux.o(.text+0x2ec8): Section mismatch in reference from the
+variable start_here_common to the function .init.text:start_kernel()
+The function start_here_common() references
+the function __init start_kernel().
+This is often because start_here_common lacks a __init
+annotation or the annotation of start_kernel is wrong.
 
-Thanks for the information.
+There is a patch around,
 
-I am not seeing this issue or even a warning when using the ARM 8.3 
-toolchain even in a clean build.
+http://patchwork.ozlabs.org/patch/895442/
 
-arm-linux-gnueabihf-gcc (GNU Toolchain for the A-profile Architecture 
-8.3-2019.03 (arm-rel-8.36)) 8.3.0
-
-So is a bug in this toolchain?
-
-> This is not architecture specific but language specific thing.
->
-> If you enter this error message got Google you will get an answer
-> to why this happens in the first result.
-
-I did Google the issue and got the answer I guess I just question to why 
-I am not seeing the error because for me the patchset builds fine no errors.
-
-And why is this only reported on the MIPS arch.  Not saying that it is 
-not an issue in the code just wondering how it gets there.
-
->
-> You need to patch your driver with the attached one.
->
-I will try to reproduce the error and then apply the changes.
-
-Dan
-
+Does it still wait for Michael to come with some better names?
