@@ -2,322 +2,172 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56E3CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51C1CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880DA218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7873720874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KJjbvv9J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJORTo7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfJ3Umw (ORCPT
+        id S1726965AbfJ3UuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 16:42:52 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:37152 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfJ3Umv (ORCPT
+        Wed, 30 Oct 2019 16:50:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38585 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfJ3UuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 16:42:51 -0400
-Received: by mail-qt1-f201.google.com with SMTP id x50so3748243qth.4
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 13:42:50 -0700 (PDT)
+        Wed, 30 Oct 2019 16:50:22 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v9so3874136wrq.5;
+        Wed, 30 Oct 2019 13:50:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=4dygeh2iZiGXKLjzsumFt04L193TA2xYMuRz30FRIjM=;
-        b=KJjbvv9JdsHOC1+VBzyZMKgf4nKhnjENRGCorWIcKQiV2CIw2DoTEoTnBNhIYLG9yB
-         lAId6fGQSyE8UkT9YlJLubzYI7zABQy99MHUmvUk9c6zdPUTsEpzB6wJWG4EcTIma/89
-         H74TVkQ291kTE0ZyKr8yo7acXvu1QJuM5hmIZHImqplx12Zdro08r3Qu/MdXrPR/46Yv
-         fTqWN1/Y/+VWsbah3U5vTfTgiFOsQ7dZoTkKEFSIJK68/xhj8pA0Oc7itPv2Y2eKmfsf
-         s0qISL0je+HKr3c+Be9uaVbnDj2K/R9/46CZi/NxzOc0x8axDJyRwH1eii9QLHe6NHpm
-         HgIw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BfI6/HaSXjtet8iaHMSaHc180MTq3gkxLjqoXGwpgo0=;
+        b=CJORTo7I12WeBS0TO+1K2ucutPmqi8lg2v9GQ14Y2fwAGraP4eZ7WsmKqlrX4Y2AnM
+         oK4xvyes8aWqyMLYfKnDNeca2yxdTUxMNY/KVoIDMTo5nmNbIRFhAHCeu21oq1QkGuYb
+         jiZP83Z/56A9qXrCgRyAXG6ExpeWEyotV8saND2XpsttWUh8/CkTb5Njuj4UbcL1nru5
+         ZJ5uLJ+33uaDHE34EnQNZEyc8NBZWLxNyJ6ErTRme0CnZxsnIZO10vtO5yPk1yUOh8h4
+         IqqnvcidB0OO+h9woqLcPygXp6mk05+hsoumcFo8fqXNPUsrnT4ZMDXdbOGq/onTnfYA
+         f3PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=4dygeh2iZiGXKLjzsumFt04L193TA2xYMuRz30FRIjM=;
-        b=Fc9wZhGrruYT+syqUfNtFPjXSTcBsiJUTup17VtjwaICBDA3wCc1jAdzP0RU5wmH9Q
-         emOMaYiEIDdGEoTczFhNYXZ+72RDpr2A/s6kSceJlsibRQnrxvolx4R7HJ40bdwOkE+5
-         CuA53aCY0zjabj745Ulmzm7vLEhlnnmzYz0I44x7P9M4VJ70NOUjwUJfiC6arVGUZm/E
-         jlDCU249CpmMseffTixxU+YB1HK+smAz+imoVYQlHlRuiuCp+5SEgnNtMpLPh+ed1Z55
-         AKuIfQtGOJySCSc1mtW7hNG7tV+qoGrfiM71nMDq4SGN2xH22zo2XEzM8vU/bczvfko0
-         RtCg==
-X-Gm-Message-State: APjAAAWtH7RHLQ+WfvMAZtdFWrYPgXb6fD/5999otWm5W0GH4+OA55Do
-        cJXm4fzdy+NSwXhpf0pvNRiJtBLyrInEvw==
-X-Google-Smtp-Source: APXvYqzrpiQHS+NjTfDDdxWRWUdhgaEjCi+F8Tz4h+0gAbf3UXOH1KtQScm8HASesUzzQg5CUo+/arSzArn7jg==
-X-Received: by 2002:a05:6214:c9:: with SMTP id f9mr1051497qvs.216.1572468169607;
- Wed, 30 Oct 2019 13:42:49 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 13:42:32 -0700
-Message-Id: <20191030204232.139424-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH v2] mm: vmscan: memcontrol: remove mem_cgroup_select_victim_node()
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Greg Thelen <gthelen@google.com>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=BfI6/HaSXjtet8iaHMSaHc180MTq3gkxLjqoXGwpgo0=;
+        b=r9fgS143Dg/Ubv+qOOsv43ZrjXjsTfPXUJFoMPLwG3j6p1f7Q+iWuXKI8ZXglWe+Nr
+         zajVSs0OaGF55sAq/xmg9XiN9In98FepcUG/8qEM1eF1meiKe4tJsXrAgt0w6WoaFmkE
+         ke4GPItB9iH6kc+7MZuTgtam1Ky/ntvL56Pf0Q2l5WmilaxsPl2Fvs0pYU46IxaxJZf+
+         iFsR2tNRcZ+y/kqhdImSTs88N4vxYrTcespAWkg/smQ0E9cG0OfGNPGgvGJvvg7nrXIg
+         hulFk9GI1/FtXsKIxavJCfsCgI7C24nhUgORd2hlY6e5VSAdMLRwlrz1/sbHVSAWFmsg
+         PWSg==
+X-Gm-Message-State: APjAAAVHVqC/Rpp7BMqBjAuj9uh8qCTV0OVAFP/h5nDg+wQ51+HtVh/1
+        LU8q8bzy0u90X7wgrK2zECN7g0jY
+X-Google-Smtp-Source: APXvYqyAd+GuL2tk0Kq3gLs+VasEVjv/80fXdOrTiyg6l/FDFjJidHdbpfPJvxmh5k+VFjCbGjAzLw==
+X-Received: by 2002:adf:e5c4:: with SMTP id a4mr1812548wrn.334.1572468619547;
+        Wed, 30 Oct 2019 13:50:19 -0700 (PDT)
+Received: from [192.168.1.19] (bkv74.neoplus.adsl.tpnet.pl. [83.28.189.74])
+        by smtp.gmail.com with ESMTPSA id q2sm1083957wmq.30.2019.10.30.13.50.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 13:50:18 -0700 (PDT)
+Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     Dan Murphy <dmurphy@ti.com>, kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, pavel@ucw.cz, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191028183629.11779-7-dmurphy@ti.com>
+ <201910302027.2hNdR993%lkp@intel.com>
+ <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
+ <075c9330-a9b5-1360-4447-71a4797553a9@gmail.com>
+ <f32e2063-3c56-607c-0e74-f75f68e62e16@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b50fa8f6-1a27-ad22-d4a7-37bc07fc6768@gmail.com>
+Date:   Wed, 30 Oct 2019 21:50:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <f32e2063-3c56-607c-0e74-f75f68e62e16@ti.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 1ba6fc9af35b ("mm: vmscan: do not share cgroup iteration
-between reclaimers"), the memcg reclaim does not bail out earlier based
-on sc->nr_reclaimed and will traverse all the nodes. All the reclaimable
-pages of the memcg on all the nodes will be scanned relative to the
-reclaim priority. So, there is no need to maintain state regarding which
-node to start the memcg reclaim from.
+Dan,
 
-This patch effectively reverts the commit 889976dbcb12 ("memcg: reclaim
-memory from nodes in round-robin order") and commit 453a9bf347f1
-("memcg: fix numa scan information update to be triggered by memory
-event").
+On 10/30/19 9:23 PM, Dan Murphy wrote:
+> Jacek
+> 
+> 
+>>> Does not appear here
+>>>
+>>> Finally not sure why the MIPS compiler is complaining about this but the
+>>> ARM and x86 is not
+>> Compilation breaks also for ARM.
+> 
+> Thanks for the information.
+> 
+> I am not seeing this issue or even a warning when using the ARM 8.3
+> toolchain even in a clean build.
+> 
+> arm-linux-gnueabihf-gcc (GNU Toolchain for the A-profile Architecture
+> 8.3-2019.03 (arm-rel-8.36)) 8.3.0
+> 
+> So is a bug in this toolchain?
 
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Greg Thelen <gthelen@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
-Changes since v1:
-- Added comment in vmscan on zonelist traversal.
-- Removed reference to the KCSAN report.
+From what I've just googled C specification allows for a compiler
+implementation to accept also other forms of constants expressions
+than standard ones pointed out in the spec.
 
- include/linux/memcontrol.h |   8 ---
- mm/memcontrol.c            | 112 -------------------------------------
- mm/vmscan.c                |  14 ++---
- 3 files changed, 5 insertions(+), 129 deletions(-)
+So this is not necessarily a bug.
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index e82928deea88..239e752a7817 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -80,7 +80,6 @@ struct mem_cgroup_id {
- enum mem_cgroup_events_target {
- 	MEM_CGROUP_TARGET_THRESH,
- 	MEM_CGROUP_TARGET_SOFTLIMIT,
--	MEM_CGROUP_TARGET_NUMAINFO,
- 	MEM_CGROUP_NTARGETS,
- };
- 
-@@ -312,13 +311,6 @@ struct mem_cgroup {
- 	struct list_head kmem_caches;
- #endif
- 
--	int last_scanned_node;
--#if MAX_NUMNODES > 1
--	nodemask_t	scan_nodes;
--	atomic_t	numainfo_events;
--	atomic_t	numainfo_updating;
--#endif
--
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	struct list_head cgwb_list;
- 	struct wb_domain cgwb_domain;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ea085877c548..aaa19bf5cf0f 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -100,7 +100,6 @@ static bool do_memsw_account(void)
- 
- #define THRESHOLDS_EVENTS_TARGET 128
- #define SOFTLIMIT_EVENTS_TARGET 1024
--#define NUMAINFO_EVENTS_TARGET	1024
- 
- /*
-  * Cgroups above their limits are maintained in a RB-Tree, independent of
-@@ -869,9 +868,6 @@ static bool mem_cgroup_event_ratelimit(struct mem_cgroup *memcg,
- 		case MEM_CGROUP_TARGET_SOFTLIMIT:
- 			next = val + SOFTLIMIT_EVENTS_TARGET;
- 			break;
--		case MEM_CGROUP_TARGET_NUMAINFO:
--			next = val + NUMAINFO_EVENTS_TARGET;
--			break;
- 		default:
- 			break;
- 		}
-@@ -891,21 +887,12 @@ static void memcg_check_events(struct mem_cgroup *memcg, struct page *page)
- 	if (unlikely(mem_cgroup_event_ratelimit(memcg,
- 						MEM_CGROUP_TARGET_THRESH))) {
- 		bool do_softlimit;
--		bool do_numainfo __maybe_unused;
- 
- 		do_softlimit = mem_cgroup_event_ratelimit(memcg,
- 						MEM_CGROUP_TARGET_SOFTLIMIT);
--#if MAX_NUMNODES > 1
--		do_numainfo = mem_cgroup_event_ratelimit(memcg,
--						MEM_CGROUP_TARGET_NUMAINFO);
--#endif
- 		mem_cgroup_threshold(memcg);
- 		if (unlikely(do_softlimit))
- 			mem_cgroup_update_tree(memcg, page);
--#if MAX_NUMNODES > 1
--		if (unlikely(do_numainfo))
--			atomic_inc(&memcg->numainfo_events);
--#endif
- 	}
- }
- 
-@@ -1590,104 +1577,6 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	return ret;
- }
- 
--#if MAX_NUMNODES > 1
--
--/**
-- * test_mem_cgroup_node_reclaimable
-- * @memcg: the target memcg
-- * @nid: the node ID to be checked.
-- * @noswap : specify true here if the user wants flle only information.
-- *
-- * This function returns whether the specified memcg contains any
-- * reclaimable pages on a node. Returns true if there are any reclaimable
-- * pages in the node.
-- */
--static bool test_mem_cgroup_node_reclaimable(struct mem_cgroup *memcg,
--		int nid, bool noswap)
--{
--	struct lruvec *lruvec = mem_cgroup_lruvec(NODE_DATA(nid), memcg);
--
--	if (lruvec_page_state(lruvec, NR_INACTIVE_FILE) ||
--	    lruvec_page_state(lruvec, NR_ACTIVE_FILE))
--		return true;
--	if (noswap || !total_swap_pages)
--		return false;
--	if (lruvec_page_state(lruvec, NR_INACTIVE_ANON) ||
--	    lruvec_page_state(lruvec, NR_ACTIVE_ANON))
--		return true;
--	return false;
--
--}
--
--/*
-- * Always updating the nodemask is not very good - even if we have an empty
-- * list or the wrong list here, we can start from some node and traverse all
-- * nodes based on the zonelist. So update the list loosely once per 10 secs.
-- *
-- */
--static void mem_cgroup_may_update_nodemask(struct mem_cgroup *memcg)
--{
--	int nid;
--	/*
--	 * numainfo_events > 0 means there was at least NUMAINFO_EVENTS_TARGET
--	 * pagein/pageout changes since the last update.
--	 */
--	if (!atomic_read(&memcg->numainfo_events))
--		return;
--	if (atomic_inc_return(&memcg->numainfo_updating) > 1)
--		return;
--
--	/* make a nodemask where this memcg uses memory from */
--	memcg->scan_nodes = node_states[N_MEMORY];
--
--	for_each_node_mask(nid, node_states[N_MEMORY]) {
--
--		if (!test_mem_cgroup_node_reclaimable(memcg, nid, false))
--			node_clear(nid, memcg->scan_nodes);
--	}
--
--	atomic_set(&memcg->numainfo_events, 0);
--	atomic_set(&memcg->numainfo_updating, 0);
--}
--
--/*
-- * Selecting a node where we start reclaim from. Because what we need is just
-- * reducing usage counter, start from anywhere is O,K. Considering
-- * memory reclaim from current node, there are pros. and cons.
-- *
-- * Freeing memory from current node means freeing memory from a node which
-- * we'll use or we've used. So, it may make LRU bad. And if several threads
-- * hit limits, it will see a contention on a node. But freeing from remote
-- * node means more costs for memory reclaim because of memory latency.
-- *
-- * Now, we use round-robin. Better algorithm is welcomed.
-- */
--int mem_cgroup_select_victim_node(struct mem_cgroup *memcg)
--{
--	int node;
--
--	mem_cgroup_may_update_nodemask(memcg);
--	node = memcg->last_scanned_node;
--
--	node = next_node_in(node, memcg->scan_nodes);
--	/*
--	 * mem_cgroup_may_update_nodemask might have seen no reclaimmable pages
--	 * last time it really checked all the LRUs due to rate limiting.
--	 * Fallback to the current node in that case for simplicity.
--	 */
--	if (unlikely(node == MAX_NUMNODES))
--		node = numa_node_id();
--
--	memcg->last_scanned_node = node;
--	return node;
--}
--#else
--int mem_cgroup_select_victim_node(struct mem_cgroup *memcg)
--{
--	return 0;
--}
--#endif
--
- static int mem_cgroup_soft_reclaim(struct mem_cgroup *root_memcg,
- 				   pg_data_t *pgdat,
- 				   gfp_t gfp_mask,
-@@ -5056,7 +4945,6 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
- 		goto fail;
- 
- 	INIT_WORK(&memcg->high_work, high_work_func);
--	memcg->last_scanned_node = MAX_NUMNODES;
- 	INIT_LIST_HEAD(&memcg->oom_notify);
- 	mutex_init(&memcg->thresholds_lock);
- 	spin_lock_init(&memcg->move_lock);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 1154b3a2b637..0748ac915128 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -3344,10 +3344,8 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
- 					   gfp_t gfp_mask,
- 					   bool may_swap)
- {
--	struct zonelist *zonelist;
- 	unsigned long nr_reclaimed;
- 	unsigned long pflags;
--	int nid;
- 	unsigned int noreclaim_flag;
- 	struct scan_control sc = {
- 		.nr_to_reclaim = max(nr_pages, SWAP_CLUSTER_MAX),
-@@ -3360,16 +3358,14 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
- 		.may_unmap = 1,
- 		.may_swap = may_swap,
- 	};
--
--	set_task_reclaim_state(current, &sc.reclaim_state);
- 	/*
--	 * Unlike direct reclaim via alloc_pages(), memcg's reclaim doesn't
--	 * take care of from where we get pages. So the node where we start the
--	 * scan does not need to be the current node.
-+	 * Traverse the ZONELIST_FALLBACK zonelist of the current node to put
-+	 * equal pressure on all the nodes. This is based on the assumption that
-+	 * the reclaim does not bail out early.
- 	 */
--	nid = mem_cgroup_select_victim_node(memcg);
-+	struct zonelist *zonelist = node_zonelist(numa_node_id(), sc.gfp_mask);
- 
--	zonelist = &NODE_DATA(nid)->node_zonelists[ZONELIST_FALLBACK];
-+	set_task_reclaim_state(current, &sc.reclaim_state);
- 
- 	trace_mm_vmscan_memcg_reclaim_begin(
- 				cgroup_ino(memcg->css.cgroup),
 -- 
-2.24.0.rc0.303.g954a862665-goog
-
+Best regards,
+Jacek Anaszewski
