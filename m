@@ -2,140 +2,155 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237E7CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C83CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E823220873
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4C02067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDeqytxn"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="jbiHAiws";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NG9iU9if"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfJ3Vfr (ORCPT
+        id S1727379AbfJ3Vfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:35:47 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38645 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727312AbfJ3Vfg (ORCPT
+        Wed, 30 Oct 2019 17:35:46 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36802 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727361AbfJ3Vfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:35:36 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so3940957ljc.5;
-        Wed, 30 Oct 2019 14:35:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7wI6f4nvMYsmBCMp+G12GdGK/taTCqKZ+wxQzPpgr3A=;
-        b=rDeqytxnY1lMSwbNo19GxcF6E2Km7OBfX8XzxvlbUrTtMbJRUbOv73NXQ7wBpfy6Jh
-         Grri4pplXKRLRQl+g5WZUqfur1Nlf0iKQya2ck2RPepa3xYyyMhZIsby7NesI2w/jjbN
-         61cb/QwkvqOeVcUxxbX6mETerzh4veIDM0pCmZPwAQZmGOE5HiWPWSR/ndfAvWTucpbX
-         cdhgoD+IaZFW5B+7RuBQJOPPR0tg1K24IAqk7xb7Z+x45zZykLDyN43w8umk2jvpZH+F
-         xGVthh34S77T2guVmh3BmzA9oKjBSApDcS9y7Ahx0ZijIOqZmAFOdCIzZ3wrplSDRbDE
-         /0OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7wI6f4nvMYsmBCMp+G12GdGK/taTCqKZ+wxQzPpgr3A=;
-        b=hZBzrtehT8tPgxhU8WMznFeWxWmPqfue1chpdiNo/V9qNAII24olRYAzi/oGvlINg+
-         z6sGawnbZUiiVB45jUaTImOuhYGUCAXUFQY++Nq7rcVgbev+VAUO/pkfbIfYfKLotzUN
-         P2SlCkyyP3K33hiniK2Ffw2M0tFPJHDdYWpOaknxqVGlriZlBGAjxxJ2IM7O4VU4+IMD
-         4Baz5g4sgy/K+F7qsIizf+oEPON83ZiDccpv+7CcNj9dLes4oWggH9qBoMYaCGgeSLfc
-         jhaTZCUZ4ffHoXDbl7mm4aWyTAUGmB3MAck5KBZfQstTqyCXJtvKQ/F5eMjS5SmVcTbg
-         /anQ==
-X-Gm-Message-State: APjAAAWe1H+K9UDamYWwYZM/AU+Tk4cL+cWTZ5PGTmDz1bpeVK46cOKC
-        5yCqzqK61hVVpTN0E2CwzTs=
-X-Google-Smtp-Source: APXvYqzoH8fuZdbDSgAU9MjlE8QYenK/QsipZ5KucXZXBebsErH0ojtuYDMQH7mN/gw0gqCygQ6hYA==
-X-Received: by 2002:a05:651c:119b:: with SMTP id w27mr1144514ljo.221.1572471334103;
-        Wed, 30 Oct 2019 14:35:34 -0700 (PDT)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 14:35:33 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 09/10] ARM: dts: tegra30: beaver: Set up voltage regulators for DVFS
-Date:   Thu, 31 Oct 2019 00:33:59 +0300
-Message-Id: <20191030213400.29434-10-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191030213400.29434-1-digetx@gmail.com>
-References: <20191030213400.29434-1-digetx@gmail.com>
+        Wed, 30 Oct 2019 17:35:41 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9ULZGdP007608;
+        Wed, 30 Oct 2019 14:35:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=xtn4Gu0q4WTHSoxu3eGVPY1mCW0JtcubVqX6fgIDKzQ=;
+ b=jbiHAiwsKFBdmJbKsS6Hpn/DxeRVicwHmvOc3GHKeYqs0ERWG7aZjB0jQjj7P7Quv2//
+ ab2o0X1+OEl9G0xWIQBs5ojAm98u/6uJpfUXaMmZC2OF6X3WvnA244u6PcVignR0JM/K
+ tLmEVATH2Ekgm3C7j708o36a3gALkRAmgrY= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vxwn6x0kr-12
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 30 Oct 2019 14:35:30 -0700
+Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 30 Oct 2019 14:35:22 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 30 Oct 2019 14:35:22 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e0W3fpc31fXXzE2PFnYnW2jrpKG1meJNOVYtzwzHxGP9UAmxv2Y3aUjMuWGl/j9MDpzcU8vWzXHmswgTb+m0K1qYOmh+D43wbaoIATsKuyEn2cw8KAQeihTAntW20dhKZQFFPEs8FkZ3LbTF4u2Lk+h80A4U7dDnHmpBUE2HGCSeKBHK7Ra+hsgyNcQjHEnmC4IIufkg6S/+9SPG4X0EgquZ+Tk5CsuwBv1OEcDE7erxv4nuNX2KeVJ1NoSFs0QXvvcyORYRiJPm25ly4/V/poXI1L4vjqFK51YPuRaHbb0J6LzDPN4NAJaqhOse5HgnpE6DO+jg7YMUWkkeEKdnoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xtn4Gu0q4WTHSoxu3eGVPY1mCW0JtcubVqX6fgIDKzQ=;
+ b=e3B6DwiTkuBJo2lv8u7K2fzO3dMIFByhCb234hEt7aCpYMfMVvTG/1IB1DdXee1wV34KIlOEDJQBgCOV09THMNP/rwy2qt635okloxDyJ0KSRveNFuNB4JU13BXkie9qTnfNDcn3c1N9cXqkje7F8tcFD78PBEDmuDhktVQvJSKAWAoagkYRLnlMENbJSJoefkYUR5WG4olEbQwll/Dmq9C3CP0etbBot85ULNNVtydryubsZD5lmudQihaNtTMNJzEbKm/XGzUBwz7Ci+xp/+RE/KnFD4nYwdgHXomXBweLIKe/bbGZiRHTX8imm7l7GL8iVr2G+aYg/xqX+FZqTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xtn4Gu0q4WTHSoxu3eGVPY1mCW0JtcubVqX6fgIDKzQ=;
+ b=NG9iU9ifkYhrrEb6XHjvsUn0IRYab+QSEktiXyNL2RoyFY7WXbY2Cy4PLFsPMT/ytRQ+lOTHsrnMiIDIi68tM5tXfEhQhbMpZY0tQzICBGOZChu8wqEYTtsans/3NH4GNZSAQZkO2Q9LVVdaSHUpUWECM814w+movuzTB7xn5zQ=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB3444.namprd15.prod.outlook.com (20.179.76.74) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.18; Wed, 30 Oct 2019 21:35:20 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::3056:945b:e60e:e2e0]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::3056:945b:e60e:e2e0%6]) with mapi id 15.20.2387.027; Wed, 30 Oct 2019
+ 21:35:20 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>
+Subject: Re: [PATCH] mm: slab: make page_cgroup_ino() to recognize
+ non-compound slab pages properly
+Thread-Topic: [PATCH] mm: slab: make page_cgroup_ino() to recognize
+ non-compound slab pages properly
+Thread-Index: AQHVi4v82H5KK2bDBUCYEvoLagPlLadzs8sAgAAI8IA=
+Date:   Wed, 30 Oct 2019 21:35:19 +0000
+Message-ID: <20191030213513.GA15706@castle.DHCP.thefacebook.com>
+References: <20191025232710.4081957-1-guro@fb.com>
+ <20191030210314.2el7wysojucqypoq@ca-dmjordan1.us.oracle.com>
+In-Reply-To: <20191030210314.2el7wysojucqypoq@ca-dmjordan1.us.oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR2201CA0048.namprd22.prod.outlook.com
+ (2603:10b6:301:16::22) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::3c87]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9521b0e0-d522-4045-39f6-08d75d811016
+x-ms-traffictypediagnostic: BN8PR15MB3444:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR15MB3444570AE43932CCBF223E4ABE600@BN8PR15MB3444.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02065A9E77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(366004)(136003)(346002)(376002)(189003)(199004)(6246003)(476003)(6486002)(1076003)(11346002)(478600001)(486006)(52116002)(305945005)(6916009)(99286004)(5660300002)(86362001)(102836004)(446003)(46003)(7736002)(6436002)(186003)(6512007)(9686003)(76176011)(6506007)(386003)(4744005)(6116002)(8936002)(54906003)(81156014)(81166006)(8676002)(14444005)(2906002)(71200400001)(256004)(4326008)(229853002)(71190400001)(33656002)(316002)(25786009)(66556008)(66946007)(64756008)(66476007)(66446008)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3444;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yjR5fqMUHxVzGxQdpylR7bPzLPOizylHsMyl3Xbv6zfsB4OCfH6MBKzT0xQrku9cu9qMjC/ecxZVOMuoehAJsLrPeAxoik2psb7sLFDcEPEb4A+Ny9VOOj5dR+BRnjGjDuxxAONRXx/2LBmpA9gbg8GDVrGnA2ZdRHqtO2cU2FtRuS1Evik/8OFFqQ/YoBPmmjPCHTRE/rLPZ7sUCDgoIClOQWvnYyQtf9oSHV0ISRUxGk59BttIa3wVi7MlaI6OxI6WalFjESNRFnPKjqXZiD1kHxPbMuZg/7S5k/4hrpkV3NWpby6bfc0xpgaZ5ND60hpKVMQ2hY6K09cLpcBFQ+X6WAqZjNdKAaDnOkWZ+aDfDbKJ+uGw2oTBL8mVmqCfeAM+YM1o3YWbHf63d2WvZRS2usGtxWPCKq84wVYN83S2f6PW/6X7qH7MPrJihaQ3
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <93E53AB8895A244C87CBDBD29623B224@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9521b0e0-d522-4045-39f6-08d75d811016
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 21:35:20.0119
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sUnHOaYpEdiBImls1tSq9PvFTr6JBdOa+cua/ApyAy7UCiAdZhjTDDv4+uI7xXxD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3444
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-30_09:2019-10-30,2019-10-30 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=766
+ mlxscore=0 spamscore=0 clxscore=1011 phishscore=0 impostorscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=0
+ malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910300189
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set min/max voltage and couple CPU/CORE regulators.
+On Wed, Oct 30, 2019 at 05:03:14PM -0400, Daniel Jordan wrote:
+> Hi Roman,
+>=20
+> On Fri, Oct 25, 2019 at 04:27:10PM -0700, Roman Gushchin wrote:
+> > page_cgroup_ino() doesn't return a valid memcg pointer for non-compund
+> > slab pages, because it depends on PgHead AND PgSlab flags to be set
+> > to determine the memory cgroup from the kmem_cache.
+> > It's correct for compound pages, but not for generic small pages. Those
+> > don't have PgHead set, so it ends up returning zero.
+> >=20
+> > Fix this by replacing the condition to PageSlab() && !PageTail().
+>=20
+> You may also want to update the comment above memcg_from_slab_page():
+>=20
+>  * So this function assumes that the page can pass PageHead() and PageSla=
+b()
+>  * checks.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/boot/dts/tegra30-beaver.dts | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
-index a3b0f3555cd2..6ebb3105af9e 100644
---- a/arch/arm/boot/dts/tegra30-beaver.dts
-+++ b/arch/arm/boot/dts/tegra30-beaver.dts
-@@ -1806,9 +1806,14 @@
- 
- 				vddctrl_reg: vddctrl {
- 					regulator-name = "vdd_cpu,vdd_sys";
--					regulator-min-microvolt = <1000000>;
--					regulator-max-microvolt = <1000000>;
-+					regulator-min-microvolt = <800000>;
-+					regulator-max-microvolt = <1250000>;
-+					regulator-coupled-with = <&core_vdd_reg>;
-+					regulator-coupled-max-spread = <300000>;
-+					regulator-max-step-microvolt = <100000>;
- 					regulator-always-on;
-+
-+					nvidia,tegra-cpu-regulator;
- 				};
- 
- 				vio_reg: vio {
-@@ -1868,17 +1873,22 @@
- 			};
- 		};
- 
--		tps62361@60 {
-+		core_vdd_reg: tps62361@60 {
- 			compatible = "ti,tps62361";
- 			reg = <0x60>;
- 
- 			regulator-name = "tps62361-vout";
- 			regulator-min-microvolt = <500000>;
- 			regulator-max-microvolt = <1500000>;
-+			regulator-coupled-with = <&vddctrl_reg>;
-+			regulator-coupled-max-spread = <300000>;
-+			regulator-max-step-microvolt = <100000>;
- 			regulator-boot-on;
- 			regulator-always-on;
- 			ti,vsel0-state-high;
- 			ti,vsel1-state-high;
-+
-+			nvidia,tegra-core-regulator;
- 		};
- 	};
- 
--- 
-2.23.0
-
+Good catch, thank you! Will send v2 in no time.
