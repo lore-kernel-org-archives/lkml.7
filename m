@@ -2,293 +2,99 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBEFCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764EDCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3B320866
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4117320866
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="DMpzWpJg"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ZrnBz8u9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfJ3AdZ (ORCPT
+        id S1726481AbfJ3Agc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 20:33:25 -0400
-Received: from mail4.protonmail.ch ([185.70.40.27]:47602 "EHLO
-        mail4.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfJ3AdY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 20:33:24 -0400
-Date:   Wed, 30 Oct 2019 00:33:18 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1572395600;
-        bh=FwhprvLq1xljUqhH5vWb3i3RX6HuYJfDn9vIcoVDAtk=;
-        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
-        b=DMpzWpJg8aNi4nkd6+ZPa4bb+tOLlAggCG9lSsabKUz9DkhVyxwT7Tu6CkS+/1LQb
-         MrQ+bBMt6xtd7Rry09HN9hSOqw4JazdJPdd9MdqVnAFuUiZdxpr4zqtYhFR6zAjrjq
-         KZCwOmE3kLkcljTxBXjApFlDw0cZQutVTRLy+UBc=
-To:     linux-media@vger.kernel.org
-From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-        <nfraprado@protonmail.com>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-          <nfraprado@protonmail.com>
-Subject: [PATCH v3] media: vimc: Make capture devices and subdevices use different link_validates
-Message-ID: <20191030003209.1997739-1-nfraprado@protonmail.com>
-Feedback-ID: cwTKJQq-dqva77NrgNeIaWzOvcDQqfI9VSy7DoyJdvgY6-nEE7fD-E-3GiKFHexW4OBWbzutmMZN6q4SflMDRw==:Ext:ProtonMail
+        Tue, 29 Oct 2019 20:36:32 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37899 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbfJ3Agb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 20:36:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 472qJX3hTfz9sPc;
+        Wed, 30 Oct 2019 11:36:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1572395789;
+        bh=cULIR7FKewGoqcCdVz8c9GWUqTWBzH9vqip6TO04VUc=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ZrnBz8u9UtK35OIBdIYRAEKio8qsnCeoIwPBgPl54K4vLbIV96JpIRijFpj2d6VB/
+         3yh38Zr83pyrrBKy1ob5pSFhYxjuOlDR0wxkT8j7sl+eURIwkfQTLhKOPMbjRLCHNq
+         MPU6tRZ65hAlAqqvCFI2RrdLVQrG78Wr2+aweqLgfwKHT2b4iNG1L0VLagLCRgHq71
+         9Qowav3rgtSLYQrVlsSwHP5FNWVuKn5384n4lcPyxoq23HnVPJULVs58QCVxd2xxKS
+         D2BpI2IuAS9K0kM2/GMwh2a5yxiVaLELSZ6BKELGQ4NYJ1J1dErqYrlReUBS6dnZ/y
+         akJSpbqkFajEA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Li Yang <leoyang.li@nxp.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Qiang Zhao <qiang.zhao@nxp.com>
+Subject: Re: [PATCH 4/7] soc: fsl: qe: replace spin_event_timeout by readx_poll_timeout_atomic
+In-Reply-To: <a11aaeaa-7075-4ad0-aa26-d8d7eafa72f5@rasmusvillemoes.dk>
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk> <20191018125234.21825-5-linux@rasmusvillemoes.dk> <20191018160852.GA13036@infradead.org> <a11aaeaa-7075-4ad0-aa26-d8d7eafa72f5@rasmusvillemoes.dk>
+Date:   Wed, 30 Oct 2019 11:36:27 +1100
+Message-ID: <87wocnf4s4.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of validating the links to capture devices and subdevices with
-the same function, use the default v4l function for links between
-subdevices and only use a different function for validating between
-capture device and subdevice.
-This change should also ease future work to associate multiple mbus
-codes for the same pixelformat in vimc_pix_map.
+Rasmus Villemoes <linux@rasmusvillemoes.dk> writes:
+> On 18/10/2019 18.08, Christoph Hellwig wrote:
+>> On Fri, Oct 18, 2019 at 02:52:31PM +0200, Rasmus Villemoes wrote:
+>>>  	/* wait for the QE_CR_FLG to clear */
+>>> -	ret = spin_event_timeout((ioread32be(&qe_immr->cp.cecr) & QE_CR_FLG) == 0,
+>>> -				 100, 0);
+>>> -	/* On timeout (e.g. failure), the expression will be false (ret == 0),
+>>> -	   otherwise it will be true (ret == 1). */
+>>> +	ret = readx_poll_timeout_atomic(ioread32be, &qe_immr->cp.cecr, val, (val & QE_CR_FLG) == 0,
+>> 
+>> This creates an overly long line.
+>
+> Yeah, readx_poll_timeout_atomic is a mouthful, and then one also has to
+> put in the name of the accessor... I'll wrap it when I respin the
+> series, thanks.
+>
+>> Btw, given how few users of spin_event_timeout we have it might be good
+>> idea to just kill it entirely.
+>
+> Maybe. That's for the ppc folks to comment on; the iopoll.h helpers are
+> not completely equivalent (because obviously they don't read tbl
+> directly).
 
-These changes were tested with
-v4l2-compliance SHA: 3f806630e2ecbcebe31872b865c5c4b42f111a99, 64 bits
-and passed all tests:
-Grand Total for vimc device /dev/media0: 451, Succeeded: 451, Failed: 0, Wa=
-rnings: 0
+AFAICS it was added by and only ever used by Freescale folks, most of
+whom have now moved on to other things.
 
-Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
----
-Changes in v3:
-- Rebase patch on current media tree
-- Make vimc_get_pix_format() static
+I'd be happy to see it replaced with something generic.
 
-Changes in v2:
-- Remove blank lines
-- Rename vimc_cap_link_validate to vimc_vdev_link_validate and move it back=
- to
-  vimc-common.c
-- Fix style issue on vimc_get_pix_format header
-- Remove vimc_get_pix_format declaration from vimc-common.h
+I created an issue in our github to remind us to do that cleanup. Though
+in practice that probably just means we'll never get around to it:
 
- drivers/media/platform/vimc/vimc-capture.c |  2 +-
- drivers/media/platform/vimc/vimc-common.c  | 85 +++++++++++-----------
- drivers/media/platform/vimc/vimc-common.h  |  4 +-
- 3 files changed, 46 insertions(+), 45 deletions(-)
+  https://github.com/linuxppc/issues/issues/280
 
-diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/pla=
-tform/vimc/vimc-capture.c
-index a5d79fb25dff..76c015898cfd 100644
---- a/drivers/media/platform/vimc/vimc-capture.c
-+++ b/drivers/media/platform/vimc/vimc-capture.c
-@@ -322,7 +322,7 @@ static const struct vb2_ops vimc_cap_qops =3D {
- };
-=20
- static const struct media_entity_operations vimc_cap_mops =3D {
--=09.link_validate=09=09=3D vimc_link_validate,
-+=09.link_validate=09=09=3D vimc_vdev_link_validate,
- };
-=20
- static void vimc_cap_release(struct video_device *vdev)
-diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/plat=
-form/vimc/vimc-common.c
-index 2a0c40e9ae88..eb1cac0c01d6 100644
---- a/drivers/media/platform/vimc/vimc-common.c
-+++ b/drivers/media/platform/vimc/vimc-common.c
-@@ -194,35 +194,36 @@ const struct vimc_pix_map *vimc_pix_map_by_pixelforma=
-t(u32 pixelformat)
- =09return NULL;
- }
-=20
--static int vimc_get_mbus_format(struct media_pad *pad,
--=09=09=09=09struct v4l2_subdev_format *fmt)
-+static int vimc_get_pix_format(struct media_pad *pad,
-+=09=09=09       struct v4l2_pix_format *fmt)
- {
- =09if (is_media_entity_v4l2_subdev(pad->entity)) {
- =09=09struct v4l2_subdev *sd =3D
- =09=09=09media_entity_to_v4l2_subdev(pad->entity);
-+=09=09struct v4l2_subdev_format sd_fmt;
-+=09=09const struct vimc_pix_map *pix_map;
- =09=09int ret;
-=20
--=09=09fmt->which =3D V4L2_SUBDEV_FORMAT_ACTIVE;
--=09=09fmt->pad =3D pad->index;
-+=09=09sd_fmt.which =3D V4L2_SUBDEV_FORMAT_ACTIVE;
-+=09=09sd_fmt.pad =3D pad->index;
-=20
--=09=09ret =3D v4l2_subdev_call(sd, pad, get_fmt, NULL, fmt);
-+=09=09ret =3D v4l2_subdev_call(sd, pad, get_fmt, NULL, &sd_fmt);
- =09=09if (ret)
- =09=09=09return ret;
-=20
-+=09=09v4l2_fill_pix_format(fmt, &sd_fmt.format);
-+=09=09pix_map =3D vimc_pix_map_by_code(sd_fmt.format.code);
-+=09=09fmt->pixelformat =3D pix_map->pixelformat;
- =09} else if (is_media_entity_v4l2_video_device(pad->entity)) {
- =09=09struct video_device *vdev =3D container_of(pad->entity,
- =09=09=09=09=09=09=09 struct video_device,
- =09=09=09=09=09=09=09 entity);
- =09=09struct vimc_ent_device *ved =3D video_get_drvdata(vdev);
--=09=09const struct vimc_pix_map *vpix;
--=09=09struct v4l2_pix_format vdev_fmt;
-=20
- =09=09if (!ved->vdev_get_format)
- =09=09=09return -ENOIOCTLCMD;
-=20
--=09=09ved->vdev_get_format(ved, &vdev_fmt);
--=09=09vpix =3D vimc_pix_map_by_pixelformat(vdev_fmt.pixelformat);
--=09=09v4l2_fill_mbus_format(&fmt->format, &vdev_fmt, vpix->code);
-+=09=09ved->vdev_get_format(ved, fmt);
- =09} else {
- =09=09return -EINVAL;
- =09}
-@@ -230,16 +231,16 @@ static int vimc_get_mbus_format(struct media_pad *pad=
-,
- =09return 0;
- }
-=20
--int vimc_link_validate(struct media_link *link)
-+int vimc_vdev_link_validate(struct media_link *link)
- {
--=09struct v4l2_subdev_format source_fmt, sink_fmt;
-+=09struct v4l2_pix_format source_fmt, sink_fmt;
- =09int ret;
-=20
--=09ret =3D vimc_get_mbus_format(link->source, &source_fmt);
-+=09ret =3D vimc_get_pix_format(link->source, &source_fmt);
- =09if (ret)
- =09=09return ret;
-=20
--=09ret =3D vimc_get_mbus_format(link->sink, &sink_fmt);
-+=09ret =3D vimc_get_pix_format(link->sink, &sink_fmt);
- =09if (ret)
- =09=09return ret;
-=20
-@@ -248,21 +249,21 @@ int vimc_link_validate(struct media_link *link)
- =09=09"%s:snk:%dx%d (0x%x, %d, %d, %d, %d)\n",
- =09=09/* src */
- =09=09link->source->entity->name,
--=09=09source_fmt.format.width, source_fmt.format.height,
--=09=09source_fmt.format.code, source_fmt.format.colorspace,
--=09=09source_fmt.format.quantization, source_fmt.format.xfer_func,
--=09=09source_fmt.format.ycbcr_enc,
-+=09=09source_fmt.width, source_fmt.height,
-+=09=09source_fmt.pixelformat, source_fmt.colorspace,
-+=09=09source_fmt.quantization, source_fmt.xfer_func,
-+=09=09source_fmt.ycbcr_enc,
- =09=09/* sink */
- =09=09link->sink->entity->name,
--=09=09sink_fmt.format.width, sink_fmt.format.height,
--=09=09sink_fmt.format.code, sink_fmt.format.colorspace,
--=09=09sink_fmt.format.quantization, sink_fmt.format.xfer_func,
--=09=09sink_fmt.format.ycbcr_enc);
--
--=09/* The width, height and code must match. */
--=09if (source_fmt.format.width !=3D sink_fmt.format.width
--=09    || source_fmt.format.height !=3D sink_fmt.format.height
--=09    || source_fmt.format.code !=3D sink_fmt.format.code)
-+=09=09sink_fmt.width, sink_fmt.height,
-+=09=09sink_fmt.pixelformat, sink_fmt.colorspace,
-+=09=09sink_fmt.quantization, sink_fmt.xfer_func,
-+=09=09sink_fmt.ycbcr_enc);
-+
-+=09/* The width, height and pixelformat must match. */
-+=09if (source_fmt.width !=3D sink_fmt.width
-+=09    || source_fmt.height !=3D sink_fmt.height
-+=09    || source_fmt.pixelformat !=3D sink_fmt.pixelformat)
- =09=09return -EPIPE;
-=20
- =09/*
-@@ -270,43 +271,43 @@ int vimc_link_validate(struct media_link *link)
- =09 * to support interlaced hardware connected to bridges that support
- =09 * progressive formats only.
- =09 */
--=09if (source_fmt.format.field !=3D sink_fmt.format.field &&
--=09    sink_fmt.format.field !=3D V4L2_FIELD_NONE)
-+=09if (source_fmt.field !=3D sink_fmt.field &&
-+=09    sink_fmt.field !=3D V4L2_FIELD_NONE)
- =09=09return -EPIPE;
-=20
- =09/*
- =09 * If colorspace is DEFAULT, then assume all the colorimetry is also
- =09 * DEFAULT, return 0 to skip comparing the other colorimetry parameters
- =09 */
--=09if (source_fmt.format.colorspace =3D=3D V4L2_COLORSPACE_DEFAULT
--=09    || sink_fmt.format.colorspace =3D=3D V4L2_COLORSPACE_DEFAULT)
-+=09if (source_fmt.colorspace =3D=3D V4L2_COLORSPACE_DEFAULT
-+=09    || sink_fmt.colorspace =3D=3D V4L2_COLORSPACE_DEFAULT)
- =09=09return 0;
-=20
- =09/* Colorspace must match. */
--=09if (source_fmt.format.colorspace !=3D sink_fmt.format.colorspace)
-+=09if (source_fmt.colorspace !=3D sink_fmt.colorspace)
- =09=09return -EPIPE;
-=20
- =09/* Colorimetry must match if they are not set to DEFAULT */
--=09if (source_fmt.format.ycbcr_enc !=3D V4L2_YCBCR_ENC_DEFAULT
--=09    && sink_fmt.format.ycbcr_enc !=3D V4L2_YCBCR_ENC_DEFAULT
--=09    && source_fmt.format.ycbcr_enc !=3D sink_fmt.format.ycbcr_enc)
-+=09if (source_fmt.ycbcr_enc !=3D V4L2_YCBCR_ENC_DEFAULT
-+=09    && sink_fmt.ycbcr_enc !=3D V4L2_YCBCR_ENC_DEFAULT
-+=09    && source_fmt.ycbcr_enc !=3D sink_fmt.ycbcr_enc)
- =09=09return -EPIPE;
-=20
--=09if (source_fmt.format.quantization !=3D V4L2_QUANTIZATION_DEFAULT
--=09    && sink_fmt.format.quantization !=3D V4L2_QUANTIZATION_DEFAULT
--=09    && source_fmt.format.quantization !=3D sink_fmt.format.quantization=
-)
-+=09if (source_fmt.quantization !=3D V4L2_QUANTIZATION_DEFAULT
-+=09    && sink_fmt.quantization !=3D V4L2_QUANTIZATION_DEFAULT
-+=09    && source_fmt.quantization !=3D sink_fmt.quantization)
- =09=09return -EPIPE;
-=20
--=09if (source_fmt.format.xfer_func !=3D V4L2_XFER_FUNC_DEFAULT
--=09    && sink_fmt.format.xfer_func !=3D V4L2_XFER_FUNC_DEFAULT
--=09    && source_fmt.format.xfer_func !=3D sink_fmt.format.xfer_func)
-+=09if (source_fmt.xfer_func !=3D V4L2_XFER_FUNC_DEFAULT
-+=09    && sink_fmt.xfer_func !=3D V4L2_XFER_FUNC_DEFAULT
-+=09    && source_fmt.xfer_func !=3D sink_fmt.xfer_func)
- =09=09return -EPIPE;
-=20
- =09return 0;
- }
-=20
- static const struct media_entity_operations vimc_ent_sd_mops =3D {
--=09.link_validate =3D vimc_link_validate,
-+=09.link_validate =3D v4l2_subdev_link_validate,
- };
-=20
- int vimc_ent_sd_register(struct vimc_ent_device *ved,
-diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/plat=
-form/vimc/vimc-common.h
-index c75401a36312..bf729fcde6a9 100644
---- a/drivers/media/platform/vimc/vimc-common.h
-+++ b/drivers/media/platform/vimc/vimc-common.h
-@@ -206,12 +206,12 @@ int vimc_ent_sd_register(struct vimc_ent_device *ved,
- =09=09=09 const struct v4l2_subdev_ops *sd_ops);
-=20
- /**
-- * vimc_link_validate - validates a media link
-+ * vimc_vdev_link_validate - validates a media link
-  *
-  * @link: pointer to &struct media_link
-  *
-  * This function calls validates if a media link is valid for streaming.
-  */
--int vimc_link_validate(struct media_link *link);
-+int vimc_vdev_link_validate(struct media_link *link);
-=20
- #endif
---=20
-2.23.0
+> Maybe the generic versions should be taught
+> spin_begin/spin_end/spin_cpu_relax so at least that part would be
+> drop-in replacement.
 
+That would be nice. Though TBH the intersection of platforms that use
+spin_event_timeout() and also define a non-empty spin_begin() etc. is
+close to if not zero.
 
+cheers
