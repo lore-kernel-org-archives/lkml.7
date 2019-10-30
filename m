@@ -2,311 +2,173 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B2ECA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2B7CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E813120874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572436169;
-	bh=37fID1EttsiQBDt9O/wSxlzlKK3odjBlMJpl5iwmp1w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=agnJyUE/M6lIwgiZjZB8OBFaMBnmLYjWR79/UBUnPRo/EkITfiBo+cCj42tAThztS
-	 rLQEtDUaWoJHIjetUzY2KT8KW8XqgWc23r31mopVha9Fi5zQe4oBek32EMzNueIeVS
-	 UD4Gb7ame5a2FcmPD/IpCu59czwetechxDaVp2eo=
+	by mail.kernel.org (Postfix) with ESMTP id E4ABA20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:50:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbvw6A61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfJ3Lt1 (ORCPT
+        id S1726589AbfJ3LuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 07:49:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58860 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726088AbfJ3Lt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 07:49:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1E163AC45;
-        Wed, 30 Oct 2019 11:49:24 +0000 (UTC)
-Date:   Wed, 30 Oct 2019 12:49:21 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Greg Thelen <gthelen@google.com>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com
-Subject: Re: [PATCH] mm: vmscan: memcontrol: remove
- mem_cgroup_select_victim_node()
-Message-ID: <20191030114921.GB31513@dhcp22.suse.cz>
-References: <20191029234753.224143-1-shakeelb@google.com>
+        Wed, 30 Oct 2019 07:50:10 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37578 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfJ3LuJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 07:50:09 -0400
+Received: by mail-qt1-f193.google.com with SMTP id g50so2780703qtb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 04:50:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wlKcSgJ6VIQSbi39vhT5J2AzL3oGEIyJc9PzAltSPGo=;
+        b=sbvw6A61OB/VcVQ1WXmwGSfwG+eyG5H621Qu9Ep1IsUVaV/BKFkSFjWoWNcIUQXiL2
+         0EYlX9u/VhT9bhtiIvB7QzAmT6P49Soyu1xBMKXKXtL2p6tKZQVDKUMa4Fevn935piNn
+         Xz8PLdxnFelulwnePIRMVCxZzL/Y4yuMAkueDnBIpcRxtS5ENvchKnZ78/iPNAMSGaE8
+         irhnmugLQttal6XV8xbQAkglqAEqLXdHQhVunHwBNneqnrJ3bf6gTyZCu4U5f6NPW99q
+         Ce7U48Zbl5q+eYT8aAPr43WaIBsh4Iz2e+LmlY39RIWeSUea5v3ebqP284pFQv9gsw8o
+         Jn/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wlKcSgJ6VIQSbi39vhT5J2AzL3oGEIyJc9PzAltSPGo=;
+        b=JQCRtcnyqwzhkWfVL0FgqGmLePkVgPmZpXyNOl2c88ug/PJfUAEgCCaIdLboblmLEW
+         GzCBGsMVlfG+fuoBQ1Luz4cf3rFNEcIYPrUG4oexETAuMV1gfSMWWlORdyE7HvbZux2f
+         pgyqxNzEojF+apClLyi+pBkWJkAYwGmcNmlbFS6+SgDIfVgQPH7IKtjrafPELYwTBh9/
+         +4SbZ6EEvwKHccoscPBPm6rLYlI/bY7VL/BlkQvGi+Ia4lWKpnwuG8gxRoF1PImHAM4f
+         7Dd7e9y5sPcU1mW1lQ5xTqmkYwQd4Zy/sbpOq5kffswNObGxJUOMtKAGMKfU9nhg+vC3
+         sB4A==
+X-Gm-Message-State: APjAAAUo/VSnRuaEgfvhKLh9rMk6T0u5kBnVb1rzy2H+JTy1sxCI+/wK
+        ngPTvVtwOVFYM5q1J77NorY=
+X-Google-Smtp-Source: APXvYqx8kjcxMgyfSy07YXWCvULVjQvODvD3G2pSUhGXmIEVuaJMcYWSXpodGAfbRnZuk75gK35YSQ==
+X-Received: by 2002:ac8:29a5:: with SMTP id 34mr4350641qts.56.1572436207998;
+        Wed, 30 Oct 2019 04:50:07 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id 50sm1279938qtv.88.2019.10.30.04.50.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 04:50:07 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6EF8F410D7; Wed, 30 Oct 2019 08:50:04 -0300 (-03)
+Date:   Wed, 30 Oct 2019 08:50:04 -0300
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     Chandan Rajendra <chandanrlinux@gmail.com>,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, rostedt@goodmis.org, tstoyanov@vmware.com,
+        gregkh@linuxfoundation.org, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, chandan@linux.ibm.com
+Subject: Re: [PATCH] perf script: Fix obtaining next event
+Message-ID: <20191030115004.GA27327@kernel.org>
+References: <20191030084032.31503-1-chandanrlinux@gmail.com>
+ <0befd460-b9bf-ba2b-556a-aa06798b16b9@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029234753.224143-1-shakeelb@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0befd460-b9bf-ba2b-556a-aa06798b16b9@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 29-10-19 16:47:53, Shakeel Butt wrote:
-> Since commit 1ba6fc9af35b ("mm: vmscan: do not share cgroup iteration
-> between reclaimers"), the memcg reclaim does not bail out earlier based
-> on sc->nr_reclaimed and will traverse all the nodes. All the reclaimable
-> pages of the memcg on all the nodes will be scanned relative to the
-> reclaim priority. So, there is no need to maintain state regarding which
-> node to start the memcg reclaim from. Also KCSAN complains data races in
-> the code maintaining the state.
-
-If you want to mention KCSAN then it would be really good to describe
-the race and explain why it is more theoretical than real. Other than
-that it just causes confusion IMHO.
-
-> This patch effectively reverts the commit 889976dbcb12 ("memcg: reclaim
-> memory from nodes in round-robin order") and the commit 453a9bf347f1
-> ("memcg: fix numa scan information update to be triggered by memory
-> event").
+Em Wed, Oct 30, 2019 at 03:16:10PM +0530, Ravi Bangoria escreveu:
 > 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> Reported-by: <syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com>
-
-I like this very much. The code was dubious to say the least. It was
-really hard to make any educated guess on how the reclaim is going to
-behave NUMA wise. The diffstat is also encouraging.
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-Thanks!
-
-> ---
->  include/linux/memcontrol.h |   8 ---
->  mm/memcontrol.c            | 112 -------------------------------------
->  mm/vmscan.c                |  11 +---
->  3 files changed, 1 insertion(+), 130 deletions(-)
 > 
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index e82928deea88..239e752a7817 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -80,7 +80,6 @@ struct mem_cgroup_id {
->  enum mem_cgroup_events_target {
->  	MEM_CGROUP_TARGET_THRESH,
->  	MEM_CGROUP_TARGET_SOFTLIMIT,
-> -	MEM_CGROUP_TARGET_NUMAINFO,
->  	MEM_CGROUP_NTARGETS,
->  };
->  
-> @@ -312,13 +311,6 @@ struct mem_cgroup {
->  	struct list_head kmem_caches;
->  #endif
->  
-> -	int last_scanned_node;
-> -#if MAX_NUMNODES > 1
-> -	nodemask_t	scan_nodes;
-> -	atomic_t	numainfo_events;
-> -	atomic_t	numainfo_updating;
-> -#endif
-> -
->  #ifdef CONFIG_CGROUP_WRITEBACK
->  	struct list_head cgwb_list;
->  	struct wb_domain cgwb_domain;
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index ea085877c548..aaa19bf5cf0f 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -100,7 +100,6 @@ static bool do_memsw_account(void)
->  
->  #define THRESHOLDS_EVENTS_TARGET 128
->  #define SOFTLIMIT_EVENTS_TARGET 1024
-> -#define NUMAINFO_EVENTS_TARGET	1024
->  
->  /*
->   * Cgroups above their limits are maintained in a RB-Tree, independent of
-> @@ -869,9 +868,6 @@ static bool mem_cgroup_event_ratelimit(struct mem_cgroup *memcg,
->  		case MEM_CGROUP_TARGET_SOFTLIMIT:
->  			next = val + SOFTLIMIT_EVENTS_TARGET;
->  			break;
-> -		case MEM_CGROUP_TARGET_NUMAINFO:
-> -			next = val + NUMAINFO_EVENTS_TARGET;
-> -			break;
->  		default:
->  			break;
->  		}
-> @@ -891,21 +887,12 @@ static void memcg_check_events(struct mem_cgroup *memcg, struct page *page)
->  	if (unlikely(mem_cgroup_event_ratelimit(memcg,
->  						MEM_CGROUP_TARGET_THRESH))) {
->  		bool do_softlimit;
-> -		bool do_numainfo __maybe_unused;
->  
->  		do_softlimit = mem_cgroup_event_ratelimit(memcg,
->  						MEM_CGROUP_TARGET_SOFTLIMIT);
-> -#if MAX_NUMNODES > 1
-> -		do_numainfo = mem_cgroup_event_ratelimit(memcg,
-> -						MEM_CGROUP_TARGET_NUMAINFO);
-> -#endif
->  		mem_cgroup_threshold(memcg);
->  		if (unlikely(do_softlimit))
->  			mem_cgroup_update_tree(memcg, page);
-> -#if MAX_NUMNODES > 1
-> -		if (unlikely(do_numainfo))
-> -			atomic_inc(&memcg->numainfo_events);
-> -#endif
->  	}
->  }
->  
-> @@ -1590,104 +1577,6 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
->  	return ret;
->  }
->  
-> -#if MAX_NUMNODES > 1
-> -
-> -/**
-> - * test_mem_cgroup_node_reclaimable
-> - * @memcg: the target memcg
-> - * @nid: the node ID to be checked.
-> - * @noswap : specify true here if the user wants flle only information.
-> - *
-> - * This function returns whether the specified memcg contains any
-> - * reclaimable pages on a node. Returns true if there are any reclaimable
-> - * pages in the node.
-> - */
-> -static bool test_mem_cgroup_node_reclaimable(struct mem_cgroup *memcg,
-> -		int nid, bool noswap)
-> -{
-> -	struct lruvec *lruvec = mem_cgroup_lruvec(NODE_DATA(nid), memcg);
-> -
-> -	if (lruvec_page_state(lruvec, NR_INACTIVE_FILE) ||
-> -	    lruvec_page_state(lruvec, NR_ACTIVE_FILE))
-> -		return true;
-> -	if (noswap || !total_swap_pages)
-> -		return false;
-> -	if (lruvec_page_state(lruvec, NR_INACTIVE_ANON) ||
-> -	    lruvec_page_state(lruvec, NR_ACTIVE_ANON))
-> -		return true;
-> -	return false;
-> -
-> -}
-> -
-> -/*
-> - * Always updating the nodemask is not very good - even if we have an empty
-> - * list or the wrong list here, we can start from some node and traverse all
-> - * nodes based on the zonelist. So update the list loosely once per 10 secs.
-> - *
-> - */
-> -static void mem_cgroup_may_update_nodemask(struct mem_cgroup *memcg)
-> -{
-> -	int nid;
-> -	/*
-> -	 * numainfo_events > 0 means there was at least NUMAINFO_EVENTS_TARGET
-> -	 * pagein/pageout changes since the last update.
-> -	 */
-> -	if (!atomic_read(&memcg->numainfo_events))
-> -		return;
-> -	if (atomic_inc_return(&memcg->numainfo_updating) > 1)
-> -		return;
-> -
-> -	/* make a nodemask where this memcg uses memory from */
-> -	memcg->scan_nodes = node_states[N_MEMORY];
-> -
-> -	for_each_node_mask(nid, node_states[N_MEMORY]) {
-> -
-> -		if (!test_mem_cgroup_node_reclaimable(memcg, nid, false))
-> -			node_clear(nid, memcg->scan_nodes);
-> -	}
-> -
-> -	atomic_set(&memcg->numainfo_events, 0);
-> -	atomic_set(&memcg->numainfo_updating, 0);
-> -}
-> -
-> -/*
-> - * Selecting a node where we start reclaim from. Because what we need is just
-> - * reducing usage counter, start from anywhere is O,K. Considering
-> - * memory reclaim from current node, there are pros. and cons.
-> - *
-> - * Freeing memory from current node means freeing memory from a node which
-> - * we'll use or we've used. So, it may make LRU bad. And if several threads
-> - * hit limits, it will see a contention on a node. But freeing from remote
-> - * node means more costs for memory reclaim because of memory latency.
-> - *
-> - * Now, we use round-robin. Better algorithm is welcomed.
-> - */
-> -int mem_cgroup_select_victim_node(struct mem_cgroup *memcg)
-> -{
-> -	int node;
-> -
-> -	mem_cgroup_may_update_nodemask(memcg);
-> -	node = memcg->last_scanned_node;
-> -
-> -	node = next_node_in(node, memcg->scan_nodes);
-> -	/*
-> -	 * mem_cgroup_may_update_nodemask might have seen no reclaimmable pages
-> -	 * last time it really checked all the LRUs due to rate limiting.
-> -	 * Fallback to the current node in that case for simplicity.
-> -	 */
-> -	if (unlikely(node == MAX_NUMNODES))
-> -		node = numa_node_id();
-> -
-> -	memcg->last_scanned_node = node;
-> -	return node;
-> -}
-> -#else
-> -int mem_cgroup_select_victim_node(struct mem_cgroup *memcg)
-> -{
-> -	return 0;
-> -}
-> -#endif
-> -
->  static int mem_cgroup_soft_reclaim(struct mem_cgroup *root_memcg,
->  				   pg_data_t *pgdat,
->  				   gfp_t gfp_mask,
-> @@ -5056,7 +4945,6 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
->  		goto fail;
->  
->  	INIT_WORK(&memcg->high_work, high_work_func);
-> -	memcg->last_scanned_node = MAX_NUMNODES;
->  	INIT_LIST_HEAD(&memcg->oom_notify);
->  	mutex_init(&memcg->thresholds_lock);
->  	spin_lock_init(&memcg->move_lock);
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 1154b3a2b637..cb4dc52cfb88 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -3344,10 +3344,8 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
->  					   gfp_t gfp_mask,
->  					   bool may_swap)
->  {
-> -	struct zonelist *zonelist;
->  	unsigned long nr_reclaimed;
->  	unsigned long pflags;
-> -	int nid;
->  	unsigned int noreclaim_flag;
->  	struct scan_control sc = {
->  		.nr_to_reclaim = max(nr_pages, SWAP_CLUSTER_MAX),
-> @@ -3360,16 +3358,9 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
->  		.may_unmap = 1,
->  		.may_swap = may_swap,
->  	};
-> +	struct zonelist *zonelist = node_zonelist(numa_node_id(), sc.gfp_mask);
->  
->  	set_task_reclaim_state(current, &sc.reclaim_state);
-> -	/*
-> -	 * Unlike direct reclaim via alloc_pages(), memcg's reclaim doesn't
-> -	 * take care of from where we get pages. So the node where we start the
-> -	 * scan does not need to be the current node.
-> -	 */
-> -	nid = mem_cgroup_select_victim_node(memcg);
-> -
-> -	zonelist = &NODE_DATA(nid)->node_zonelists[ZONELIST_FALLBACK];
->  
->  	trace_mm_vmscan_memcg_reclaim_begin(
->  				cgroup_ino(memcg->css.cgroup),
-> -- 
-> 2.24.0.rc0.303.g954a862665-goog
+> On 10/30/19 2:10 PM, Chandan Rajendra wrote:
+> > The current code segfaults when perf.data file contains two or more
+> > events. This happens due to incorrect pointer arithmetic being performed
+> > in trace_find_next_event().
+> > 
+> > tep_handle->events is an array of pointers to 'struct tep_event'. The
+> > pointer arithmetic interprets tep_handle->events as an array of 'struct
+> > tep_event' elements.
+> > 
+> > This commit replaces the usage of pointer arithmetic with calls to
+> > tep_get_event().
+> > 
+> > Fixes: bb3dd7e ("tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file")
+> > Signed-off-by: Chandan Rajendra <chandanrlinux@gmail.com>
+> 
+>   $ sudo ./perf record -e sched:sched_switch -e syscalls:sys_enter_openat -- make
+> 
+> Without patch:
+>   $ sudo ./perf script -g python
+>   Segmentation fault
+> 
+> With patch:
+>   $ sudo ./perf script -g python
+>   generated Python script: perf-script.py
+> 
+> Reviewed-and-tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
--- 
-Michal Hocko
-SUSE Labs
+This was fixed already in perf/core, by Steven:
+
+commit 9bdff5b6436655d42dd30253c521e86ce07b9961
+Author: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Date:   Thu Oct 17 17:05:23 2019 -0400
+
+    perf tools: Remove unused trace_find_next_event()
+
+    trace_find_next_event() was buggy and pretty much a useless helper. As
+    there are no more users, just remove it.
+
+    Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+    Cc: Andrew Morton <akpm@linux-foundation.org>
+    Cc: Jiri Olsa <jolsa@redhat.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+    Cc: linux-trace-devel@vger.kernel.org
+    Link: http://lore.kernel.org/lkml/20191017210636.224045576@goodmis.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+commit a5e05abc6b8d81148b35cd8632a4a6252383d968
+Author: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Date:   Thu Oct 17 17:05:22 2019 -0400
+
+    perf scripting engines: Iterate on tep event arrays directly
+
+    Instead of calling a useless (and broken) helper function to get the
+    next event of a tep event array, just get the array directly and iterate
+    over it.
+
+    Note, the broken part was from trace_find_next_event() which after this
+    will no longer be used, and can be removed.
+
+    Committer notes:
+
+    This fixes a segfault when generating python scripts from perf.data
+    files with multiple tracepoint events, i.e. the following use case is
+    fixed by this patch:
+
+      # perf record -e sched:* sleep 1
+      [ perf record: Woken up 31 times to write data ]
+      [ perf record: Captured and wrote 0.031 MB perf.data (9 samples) ]
+      # perf script -g python
+      Segmentation fault (core dumped)
+      #
+
+    Reported-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+    Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+    Cc: Andrew Morton <akpm@linux-foundation.org>
+    Cc: Jiri Olsa <jolsa@redhat.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+    Cc: linux-trace-devel@vger.kernel.org
+    Link: http://lkml.kernel.org/r/20191017153733.630cd5eb@gandalf.local.home
+    Link: http://lore.kernel.org/lkml/20191017210636.061448713@goodmis.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
