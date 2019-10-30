@@ -2,213 +2,262 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BC5CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C9ACA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A55920862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E1B20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:17:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldvbF7s9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfJ3LPW (ORCPT
+        id S1726268AbfJ3LRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 07:15:22 -0400
-Received: from mga03.intel.com ([134.134.136.65]:24063 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfJ3LPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 07:15:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 04:15:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
-   d="scan'208";a="211303915"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 30 Oct 2019 04:15:17 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 30 Oct 2019 13:15:16 +0200
-Date:   Wed, 30 Oct 2019 13:15:16 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191030111516.GX2593@lahna.fi.intel.com>
-References: <20191029111520.GE2593@lahna.fi.intel.com>
- <20191029202708.GA38926@google.com>
+        Wed, 30 Oct 2019 07:17:02 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37007 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfJ3LRB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 07:17:01 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p13so849935pll.4;
+        Wed, 30 Oct 2019 04:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0M10ohuWo+ZvYS5iML77SXzkc6HJmcmNLrKxyOaOKHo=;
+        b=ldvbF7s9tpvO+LPxcA8+Ez0lsFl6FMzLaLfis/OHarEAKOpXuiJEgRPxyN81XClAf4
+         9+gnDjnCeDosks+lU2vYG7KGaYvbokBjsLu7yEfUyxj93jDAuhNWfzDeg80RjOE+a2Zz
+         Pl+LZADf8k4qEcMgvccoQ0lurYKWfd9mYZpjsZDQHCZxKcv2XGn6jWTJs1M746MVrFj8
+         pa4MtWwTrxb12XxPax5O2zuV4OfF4Ix3n3L1tkscIgAT30nZwP6uKOUK49+1lmNCmbMQ
+         BpaZE+wD1iVG7I058gzttqVUyLIZV0oEN5SKDqpq3pIhtpCpN4NtaWMqjTMUWSEIrCuB
+         96HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0M10ohuWo+ZvYS5iML77SXzkc6HJmcmNLrKxyOaOKHo=;
+        b=MELZnhYUjhfoc7c2UmVVIcxr+O3cpcDzb6cLcumc3eNoZcSOB+pGVXLvf9FZYSC46g
+         S3o02zmsFJcxE+TKNuoh5EVqUb20PQYUYz2y1pYSOo2i4cdElUxvMZXlfvaju2MX3jHQ
+         cS6VI1bhdmM/l9x6kT/1tZ3px0S0n5RueezUAF3ybbHhYRWt6wvFhH92d/I8EUmmUxpF
+         ydi6XzzyYGwSMDr2RNHTodu4ogWidMgIV7J+5U6IPjRbcLjfl2f1anbQsoZSFZTJBiqg
+         E5XsCgLJaLPf+Px2m0Zy5FI5SErjONz41QK89KnL76XhUU9UE3j2LGFs7x5dX6W9FxAd
+         zTZA==
+X-Gm-Message-State: APjAAAWpuNxN890r6aqSJzBXh0Baai4OPWG3qG62497IzGOZcFf+KVzt
+        NHe+aaQbJsCLYfx4uw9lGU/iubRpQy+qzYeOvkE=
+X-Google-Smtp-Source: APXvYqxPP7K1TcX0QpfF/pVkhpbeDr+WqtqFWkW7FZiGMwTTqXV2+kvhaQUMPk5OfGl9cILNiSXcfkkl3Oi0S3lGCxc=
+X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr4037783plk.192.1572434219222;
+ Wed, 30 Oct 2019 04:16:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029202708.GA38926@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191029223214.18889-1-linux@roeck-us.net>
+In-Reply-To: <20191029223214.18889-1-linux@roeck-us.net>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Wed, 30 Oct 2019 20:16:48 +0900
+Message-ID: <CAC5umyhc=6yULiLwXu65VDvDk2cBiF0R9O39B-T5ftapJfj0rQ@mail.gmail.com>
+Subject: Re: [PATCH v2] nvme: Add hardware monitoring support
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 03:27:09PM -0500, Bjorn Helgaas wrote:
-> On Tue, Oct 29, 2019 at 01:15:20PM +0200, Mika Westerberg wrote:
-> > On Mon, Oct 28, 2019 at 03:16:53PM -0500, Bjorn Helgaas wrote:
-> > > > The related hardware event is resume in this case. Can you point
-> > > > me to the actual point where you want me to put this?
-> > > 
-> > > "Resume" is a Linux software concept, so of course the PCIe spec
-> > > doesn't say anything about it.  The spec talks about delays
-> > > related to resets and device power and link state transitions, so
-> > > somehow we have to connect the Linux delay with those hardware
-> > > events.
-> > > 
-> > > Since we're talking about a transition from D3cold, this has to be
-> > > done via something external to the device such as power
-> > > regulators.  For ACPI systems that's probably hidden inside _PS0
-> > > or something similar.  That's opaque, but at least it's a hook
-> > > that says "here's where we put the device into D0".  I suggested
-> > > acpi_pci_set_power_state() as a possibility since I think that's
-> > > the lowest-level point where we have the pci_dev so we know the
-> > > current state and the new state.
-> > 
-> > I looked at how we could use acpi_pci_set_power_state() but I don't
-> > think it is possible because it is likely that only the root port
-> > has the power resource that is used to bring the link to L2 or L3.
-> > However, we would need to repeat the delay for each downstream/root
-> > port if there are multiple PCIe switches in the topology.
-> 
-> OK, I think I understand why that's a problem (correct me if I'm
-> wrong):
-> 
->   We call pci_pm_resume_noirq() for every device, but it only calls
->   acpi_pci_set_power_state() for devices that have _PS0 or _PR0
->   methods.  So if the delay is in acpi_pci_set_power_state() and we
->   have A -> B -> C where only A has _PS0, we would delay for the link
->   to B to come up, but not for the link to C.
+2019=E5=B9=B410=E6=9C=8830=E6=97=A5(=E6=B0=B4) 7:32 Guenter Roeck <linux@ro=
+eck-us.net>:
+>
+> nvme devices report temperature information in the controller information
+> (for limits) and in the smart log. Currently, the only means to retrieve
+> this information is the nvme command line interface, which requires
+> super-user privileges.
+>
+> At the same time, it would be desirable to use NVME temperature informati=
+on
+> for thermal control.
+>
+> This patch adds support to read NVME temperatures from the kernel using t=
+he
+> hwmon API and adds temperature zones for NVME drives. The thermal subsyst=
+em
+> can use this information to set thermal policies, and userspace can acces=
+s
+> it using libsensors and/or the "sensors" command.
+>
+> Example output from the "sensors" command:
+>
+> nvme0-pci-0100
+> Adapter: PCI adapter
+> Composite:    +39.0=C2=B0C  (high =3D +85.0=C2=B0C, crit =3D +85.0=C2=B0C=
+)
+> Sensor 1:     +39.0=C2=B0C
+> Sensor 2:     +41.0=C2=B0C
+>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> v2: Use devm_kfree() to release memory in error path
+>
+>  drivers/nvme/host/Kconfig      |  10 ++
+>  drivers/nvme/host/Makefile     |   1 +
+>  drivers/nvme/host/core.c       |   5 +
+>  drivers/nvme/host/nvme-hwmon.c | 163 +++++++++++++++++++++++++++++++++
+>  drivers/nvme/host/nvme.h       |   8 ++
+>  5 files changed, 187 insertions(+)
+>  create mode 100644 drivers/nvme/host/nvme-hwmon.c
+>
+> diff --git a/drivers/nvme/host/Kconfig b/drivers/nvme/host/Kconfig
+> index 2b36f052bfb9..aeb49e16e386 100644
+> --- a/drivers/nvme/host/Kconfig
+> +++ b/drivers/nvme/host/Kconfig
+> @@ -23,6 +23,16 @@ config NVME_MULTIPATH
+>            /dev/nvmeXnY device will show up for each NVMe namespaces,
+>            even if it is accessible through multiple controllers.
+>
+> +config NVME_HWMON
+> +       bool "NVME hardware monitoring"
+> +       depends on (NVME_CORE=3Dy && HWMON=3Dy) || (NVME_CORE=3Dm && HWMO=
+N)
+> +       help
+> +         This provides support for NVME hardware monitoring. If enabled,
+> +         a hardware monitoring device will be created for each NVME driv=
+e
+> +         in the system.
+> +
+> +         If unsure, say N.
+> +
+>  config NVME_FABRICS
+>         tristate
+>
+> diff --git a/drivers/nvme/host/Makefile b/drivers/nvme/host/Makefile
+> index 8a4b671c5f0c..03de4797a877 100644
+> --- a/drivers/nvme/host/Makefile
+> +++ b/drivers/nvme/host/Makefile
+> @@ -14,6 +14,7 @@ nvme-core-$(CONFIG_TRACING)           +=3D trace.o
+>  nvme-core-$(CONFIG_NVME_MULTIPATH)     +=3D multipath.o
+>  nvme-core-$(CONFIG_NVM)                        +=3D lightnvm.o
+>  nvme-core-$(CONFIG_FAULT_INJECTION_DEBUG_FS)   +=3D fault_inject.o
+> +nvme-core-$(CONFIG_NVME_HWMON)         +=3D nvme-hwmon.o
+>
+>  nvme-y                                 +=3D pci.o
+>
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index fa7ba09dca77..fc1d4b146717 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -2796,6 +2796,9 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
+>         ctrl->oncs =3D le16_to_cpu(id->oncs);
+>         ctrl->mtfa =3D le16_to_cpu(id->mtfa);
+>         ctrl->oaes =3D le32_to_cpu(id->oaes);
+> +       ctrl->wctemp =3D le16_to_cpu(id->wctemp);
+> +       ctrl->cctemp =3D le16_to_cpu(id->cctemp);
+> +
+>         atomic_set(&ctrl->abort_limit, id->acl + 1);
+>         ctrl->vwc =3D id->vwc;
+>         if (id->mdts)
+> @@ -2897,6 +2900,8 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
+>
+>         ctrl->identified =3D true;
+>
+> +       nvme_hwmon_init(ctrl);
+> +
+>         return 0;
+>
+>  out_free:
 
-Yes, that's correct.
+The nvme_init_identify() can be called multiple time in nvme ctrl's
+lifetime (e.g 'nvme reset /dev/nvme*' or suspend/resume paths), so
+should we need to prevent nvme_hwmon_init() from registering hwmon
+device more than twice?
 
-> I do see that we do need both delays.  In acpi_pci_set_power_state()
-> when we transition A from D3cold->D0, I assume that single _PS0
-> evaluation on A causes B to transition from D3cold->D3hot, which in
-> turn causes C to transition from D3cold->D3hot.  Is that your
-> understanding, too?
+In the nvme thermal zone patchset[1], thernal zone is registered in
+nvme_init_identify and unregistered in nvme_stop_ctrl().
 
-Not exactly :)
+[1] https://lore.kernel.org/linux-devicetree/1561990354-4084-2-git-send-ema=
+il-akinobu.mita@gmail.com/
 
-It is _ON() that causes the links to be retrained and it also causes the
-PERST# (reset) to be unasserted for the whole topology transitioning all
-devices into D0unitialized (default value for PMCSR PowerState field is 0).
+> diff --git a/drivers/nvme/host/nvme-hwmon.c b/drivers/nvme/host/nvme-hwmo=
+n.c
+> new file mode 100644
+> index 000000000000..af5eda326ec6
+> --- /dev/null
+> +++ b/drivers/nvme/host/nvme-hwmon.c
+> @@ -0,0 +1,163 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * NVM Express hardware monitoring support
+> + * Copyright (c) 2019, Guenter Roeck
+> + */
+> +
+> +#include <linux/hwmon.h>
+> +
+> +#include "nvme.h"
+> +
+> +struct nvme_hwmon_data {
+> +       struct nvme_ctrl *ctrl;
+> +       struct nvme_smart_log log;
+> +};
+> +
+> +static int nvme_hwmon_get_smart_log(struct nvme_hwmon_data *data)
+> +{
+> +       return nvme_get_log(data->ctrl, NVME_NSID_ALL, NVME_LOG_SMART, 0,
+> +                           &data->log, sizeof(data->log), 0);
+> +}
 
-> We do know that topology in acpi_pci_set_power_state(), since we have
-> the pci_dev for A, so it seems conceivable that we could descend the
-> hierarchy and delay for each level.
+The 'data->log' is allocated per nvme_ctrl, so are there any locks to
+prevent multiple callers of nvme_hwmon_get_smart_log() from breaking
+the log buffer?
 
-Right.
+> +
+> +static int nvme_hwmon_read(struct device *dev, enum hwmon_sensor_types t=
+ype,
+> +                          u32 attr, int channel, long *val)
+> +{
+> +       struct nvme_hwmon_data *data =3D dev_get_drvdata(dev);
+> +       struct nvme_smart_log *log =3D &data->log;
+> +       int err;
+> +       int temp;
+> +
+> +       err =3D nvme_hwmon_get_smart_log(data);
+> +       if (err)
+> +               return err < 0 ? err : -EPROTO;
+> +
+> +       switch (attr) {
+> +       case hwmon_temp_max:
+> +               *val =3D (data->ctrl->wctemp - 273) * 1000;
+> +               break;
+> +       case hwmon_temp_crit:
+> +               *val =3D (data->ctrl->cctemp - 273) * 1000;
+> +               break;
 
-> If the delay is in pci_pm_resume_noirq() (as in your patch), what
-> happens with a switch with several Downstream Ports?  I assume that
-> all the Downstream Ports start their transition out of D3cold
-> basically simultaneously, so we probably don't need N delays, do we?
+When this function is called with 'hwmon_temp_max' or 'hwmon_temp_crit',
+we don't need to call nvme_hwmon_get_smart_log() at all, do we?
 
-No. Actually Linux already resumes these in paraller because async
-suspend is set for them (for system suspend that is).
-
-> It seems a little messy to optimize this in pci_pm_resume_noirq().
-
-I agree.
-
-> The outline of the pci_pm_resume_noirq() part of this patch is:
-> 
->   pci_pm_resume_noirq
->     if (!dev->skip_bus_pm ...)   # <-- condition 1
->       pci_pm_default_resume_early
->         pci_power_up
->           if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
->             platform_pci_set_power_state
->               pci_platform_pm->set_state
->                 acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
->                   acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
-> +   if (d3cold)                  # <-- condition 2
-> +     pci_bridge_wait_for_secondary_bus
-> 
-> Another thing that niggles at me here is that the condition for
-> calling pci_bridge_wait_for_secondary_bus() is completely different
-> than the condition for changing the power state.  If we didn't change
-> the power state, there's no reason to wait, is there?
-
-Indeed, if you are talking about the dev->skip_bus_pm check there is no
-point to wait if we did not change the power state. I would assume that
-d3cold is false in that case but we could also do this for clarity:
-
-	if (!dev->skip_bus_pm && d3cold)
-		pci_bridge_wait_for_secondary_bus(...)
-
-> The outline of the pci_pm_runtime_resume() part of this patch is:
-> 
->   pci_pm_runtime_resume
->     pci_restore_standard_config
->       if (dev->current_state != PCI_D0)
->         pci_set_power_state(PCI_D0)
->           __pci_start_power_transition
->             pci_platform_power_transition
->               if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
->                 platform_pci_set_power_state
->                   pci_platform_pm->set_state
->                     acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
->                       acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
->               pci_raw_set_power_state
->           __pci_complete_power_transition
-> +   if (d3cold)
-> +     pci_bridge_wait_for_secondary_bus
-> 
-> In this part, the power state change is inside
-> pci_restore_standard_config(), which calls pci_set_power_state().
-> There are many other callers of pci_set_power_state(); can we be sure
-> that none of them need a delay?
-
-Since we are handling the delay when we resume the downstream port, not
-when we resume the device itself, I think the link should be up already
-and the device accessible if someone calls pci_set_power_state() for it
-(as the parent is always resumed before children).
-
-> > > But it seems that at least some ACPI firmware doesn't do those
-> > > delays, so I guess our only alternatives are to always do it in
-> > > the OS or have some sort of blacklist.  And it doesn't really seem
-> > > practical to maintain a blacklist.
-> > 
-> > I really think this is crystal clear:
-> 
-> I am agreeing with you that the OS needs to do the delays.
-> 
-> > The OS is always responsible for the delays described in the PCIe
-> > spec.
-> 
-> If the ACPI spec contained this statement, it would be useful, but I
-> haven't seen it.  It's certainly true that some combination of
-> firmware and the OS is responsible for the delays :)
-> 
-> > However, if the platform implements some of them say in _ON or _PS0
-> > methods then it can notify the OS about this by using the _DSM so
-> > the OS does not need to duplicate all of them.
-> 
-> That makes good sense, but there are other reasons for using that
-> _DSM, e.g., firmware may know that MID or similar devices are not
-> really PCI devices and don't need delays anywhere.  So the existence
-> of the _DSM by itself doesn't convince me that the OS is responsible
-> for the delays.
-
-Hmm, my interpretion of the specs is that OS is responsible for these
-delays but if you can't be convinced then how you propose we handle this
-problem? I mean there are two cases already listed in the changelog of
-this patch from a real systems that need these delays. I don't think we
-can just say people that unfortunately your system will not be supported
-by Linux because we are not convinced that OS should do these delays. ;-)
+> +       case hwmon_temp_input:
+> +               if (!channel)
+> +                       temp =3D le16_to_cpup((__le16 *)log->temperature)=
+;
+> +               else
+> +                       temp =3D le16_to_cpu(log->temp_sensor[channel - 1=
+]);
+> +               *val =3D (temp - 273) * 1000;
+> +               break;
+> +       case hwmon_temp_crit_alarm:
+> +               *val =3D !!(log->critical_warning & NVME_SMART_CRIT_TEMPE=
+RATURE);
+> +               break;
+> +       default:
+> +               err =3D -EOPNOTSUPP;
+> +               break;
+> +       }
+> +       return err;
+> +}
