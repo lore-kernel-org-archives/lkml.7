@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D724CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88916CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6350D217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DE4208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450670;
-	bh=LcaDl67Y4pCj301MYjZerPTQIELp2RQWnNCIQmsB/2I=;
+	s=default; t=1572450675;
+	bh=tCu4UpkpbyeBzVGi3Tlm180a+mIntA+FBp6LDTqaeD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NLOgjNW+w1sx1+PNX12j4eRjcXId6quNcyZ+GXVSn6o9rLFk9dZbT5snCiiIBHPcK
-	 aclfKmpsWkU8PJTwF7R4etp3jt4crmbd1dWUtKNij8lVAIhHRRWJPymC1m8i1CIRL2
-	 Ip/A9jJCv6OFQRJiyZK3eeNVtUp+QDoPdHQFyclM=
+	b=ptWBHADj2fbUPxsesRSdHrmEjbyMk4mm71fP1wsiM2+C6kykpbBhiBN0eML08Kaji
+	 iECBnMhF6SPEaFsMpbyqvC7wmjllzgEwWyslB0qUbtlU0K7oetnN967hyGe/HhPxZE
+	 lsfMu0nwkK+gzErnu5n0EpgZyro6VSkXGWwjvMjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfJ3PvJ (ORCPT
+        id S1727715AbfJ3PvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:51:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51816 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:51:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbfJ3PvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:51:08 -0400
+        id S1726691AbfJ3PvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:10 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B424920856;
-        Wed, 30 Oct 2019 15:51:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4638208C0;
+        Wed, 30 Oct 2019 15:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450668;
-        bh=LcaDl67Y4pCj301MYjZerPTQIELp2RQWnNCIQmsB/2I=;
+        s=default; t=1572450670;
+        bh=tCu4UpkpbyeBzVGi3Tlm180a+mIntA+FBp6LDTqaeD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2iPDCOrcoDmf9zji+AweDKmeDVjFSpC3PBkBgQzmIRmm38CxfQGl+jxknacQ/vRq
-         /ciBcSAxxrMBT6WQxNmQt9O2mVWlXILEIX439UBsu6xmSx4Dqh2tNzwe57aRILrCbo
-         gODWWzKXLMXTIF4VbEBVy1sUrvP+T0A3T3JzF4rc=
+        b=f7QtHIYrZ1w0eXlPInI7txAtRFre/f6I4sVvx74UDYZwCF8jfT2kCGJDQQjdmiUe8
+         ug2vaqx3L8s9Nyyf89oO0LPB6dERZh/czNnl4R2igjvpL2LDertiSThADgrtViaXfj
+         kT6NFm7hW4zlmhT0xFVWuHHB/m00xh/KLvBbP47s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jaska Uimonen <jaska.uimonen@intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 18/81] ASoC: intel: sof_rt5682: add remove function to disable jack
-Date:   Wed, 30 Oct 2019 11:48:24 -0400
-Message-Id: <20191030154928.9432-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 19/81] ASoC: intel: bytcr_rt5651: add null check to support_button_press
+Date:   Wed, 30 Oct 2019 11:48:25 -0400
+Message-Id: <20191030154928.9432-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -62,50 +62,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jaska Uimonen <jaska.uimonen@intel.com>
 
-[ Upstream commit 6ba5041c23c1062d4e8287b2b76a1181538c6df1 ]
+[ Upstream commit 2bdf194e2030fce4f2e91300817338353414ab3b ]
 
-When removing sof module the rt5682 jack handler will oops
-if jack detection is not disabled. So add remove function,
-which disables the jack detection.
+When removing sof module the support_button_press function will oops
+because hp_jack pointer is not checked for NULL. So add a check to fix
+this.
 
 Signed-off-by: Jaska Uimonen <jaska.uimonen@intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190927201408.925-5-pierre-louis.bossart@linux.intel.com
+Link: https://lore.kernel.org/r/20190927201408.925-2-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/sof_rt5682.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ sound/soc/codecs/rt5651.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
-index daeaa396d9281..239eef128c2b7 100644
---- a/sound/soc/intel/boards/sof_rt5682.c
-+++ b/sound/soc/intel/boards/sof_rt5682.c
-@@ -618,8 +618,24 @@ static int sof_audio_probe(struct platform_device *pdev)
- 					  &sof_audio_card_rt5682);
- }
+diff --git a/sound/soc/codecs/rt5651.c b/sound/soc/codecs/rt5651.c
+index 762595de956c1..c506c9305043e 100644
+--- a/sound/soc/codecs/rt5651.c
++++ b/sound/soc/codecs/rt5651.c
+@@ -1770,6 +1770,9 @@ static int rt5651_detect_headset(struct snd_soc_component *component)
  
-+static int sof_rt5682_remove(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = platform_get_drvdata(pdev);
-+	struct snd_soc_component *component = NULL;
+ static bool rt5651_support_button_press(struct rt5651_priv *rt5651)
+ {
++	if (!rt5651->hp_jack)
++		return false;
 +
-+	for_each_card_components(card, component) {
-+		if (!strcmp(component->name, rt5682_component[0].name)) {
-+			snd_soc_component_set_jack(component, NULL, NULL);
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static struct platform_driver sof_audio = {
- 	.probe = sof_audio_probe,
-+	.remove = sof_rt5682_remove,
- 	.driver = {
- 		.name = "sof_rt5682",
- 		.pm = &snd_soc_pm_ops,
+ 	/* Button press support only works with internal jack-detection */
+ 	return (rt5651->hp_jack->status & SND_JACK_MICROPHONE) &&
+ 		rt5651->gpiod_hp_det == NULL;
 -- 
 2.20.1
 
