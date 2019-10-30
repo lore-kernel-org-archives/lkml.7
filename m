@@ -2,390 +2,85 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41092CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4D9CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23002067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27AA220873
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjjMLB1y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H6kn4x8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfJ3Vf4 (ORCPT
+        id S1727429AbfJ3VgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:35:56 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46296 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727285AbfJ3Vff (ORCPT
+        Wed, 30 Oct 2019 17:36:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37434 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfJ3Vf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:35:35 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t8so2748055lfc.13;
-        Wed, 30 Oct 2019 14:35:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BK4txBT97LVoKJGJW9u4O6HXGB3uLuHGQDSLu0eTgG0=;
-        b=AjjMLB1yn0XN2SIpPOzLmabSxeW5P+kSNTIDMbkd+BlsaPvuHBntysP0qx6rr9iOrO
-         Le7d8pSNSJeyRqVfvHQGExPeuF6fkqpECsUvebYIoTcJJyXvNbM6wlaNt0LuZPFh5P0N
-         Q9VibrBCGgAw/4o5lMjU4gLXiw2qXHCxvrFDsvkShwIHTmr2ayCeDv5l2jP9lN+bAM3U
-         svV4UkIbyvdoks2Oq+qFunmZH8sCL6m//Dg2bs7ozk4Qoxx0u98c0Ce0p8bJ7ba2FkS5
-         sY2r4S6RwFuakCXOwb4rmr3vF2nxO+Z8m+G6kq9Sr6zzEFhb/5cF8SOkaRZZNkWS0KfN
-         RIsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BK4txBT97LVoKJGJW9u4O6HXGB3uLuHGQDSLu0eTgG0=;
-        b=Rnv3HEjytnxvbGhCiCIhzK4vrXS1AamtrESQUI7Y8lvYY3rHHC/QtZAPcTJqYJS8E1
-         Rke+jzbx7Ttve+7zBbZxuWjab3R51XQY9empeQnt5KYVMgx6XmoOAdWIZwcoL3qbTDSo
-         zStRgm549/4lWaQyvEkRfD0DVRjtHCHcoYkzakKwPLyYEzlikJBqPXrMrDZvbfqYLKxv
-         TST7itZBvH8b6fJD6FeQA3eRWUdn+wMQLwUayZNeIpSEMfcLXNBEGdS7+aT+voSYJuWc
-         9fhQ9lVTsw0Bmb54KEuRQWAoMqd4J7M4XzD7qQJt2lHjfZJvyR+0He/f56zQAK/nbrax
-         CFwQ==
-X-Gm-Message-State: APjAAAUXZKp2SD5dncvn7Vmm/D3WJSu/MkWgQGuI9a6NreRvItfDRxw0
-        00TniDTbztfeH2fT2hh1YJM=
-X-Google-Smtp-Source: APXvYqxXjXmbrxCRSpG0JbEF5LYxV9IBvh+Qe2Og6Q0b5nYpCJp8gX+irZi2bcxsLAaNRyPRcnVINw==
-X-Received: by 2002:a19:10:: with SMTP id 16mr264773lfa.100.1572471331616;
-        Wed, 30 Oct 2019 14:35:31 -0700 (PDT)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 14:35:31 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 07/10] cpufreq: tegra20: Use generic cpufreq-dt driver (Tegra30 supported now)
-Date:   Thu, 31 Oct 2019 00:33:57 +0300
-Message-Id: <20191030213400.29434-8-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191030213400.29434-1-digetx@gmail.com>
-References: <20191030213400.29434-1-digetx@gmail.com>
+        Wed, 30 Oct 2019 17:35:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oZE9PLQkCNqVdXZKdyI2tvc9yH25xqcUJOKWm/BFDc4=; b=H6kn4x8eafHW+zT8MA8DZo/7m
+        10m3usqaiRcsUGtruQ1nB9zh4kFZuo3BtMRMQvgvkwcftfx5ss2voVRdDWvgjNSQaCuiVO1kpgZUi
+        m+fiVa9aKYKxxSmTgN6OvCofwC1LLKg0CH9JBFEPANHerRoT71FRlKcovaJrnNFDd/UXSxHV4mhiV
+        4Uc6dgAxfO602UaQiF/v9SyeuluZf6h7LXyt6AXiC/L+CqZp0EDfWr7O92UalLHiJd4KribvJ5CkA
+        3rmnr4AVikO9CH08MyUoXJaGzX5TZ4Z5/2XEpzQSCVGFsDajuvmWd2aLXjLtS6bjSCI0VPSHre31F
+        P9JTWBSiQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPvdD-0008Vj-UC; Wed, 30 Oct 2019 21:35:55 +0000
+Date:   Wed, 30 Oct 2019 14:35:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v3 0/8] drivers: add new variants of
+ devm_platform_ioremap_resource()
+Message-ID: <20191030213555.GA25515@infradead.org>
+References: <20191006053916.8849-1-brgl@bgdev.pl>
+ <CAMRc=Me3Q=67fCDrFM38LAGXCd+apJybLYVfyrfwmwYa5L1CmQ@mail.gmail.com>
+ <CAK8P3a3tUg4SBtO0xb2GAHfegp23WF4TLymzqFfra2-fGLRO7w@mail.gmail.com>
+ <CAMRc=Me8g2gFiag0UQwuu4UZONcowQw900+MUbGF+4-E0z09Zg@mail.gmail.com>
+ <CAK8P3a2mh+Eh+W1GFL2Mi5R3t55SRwWyXW_iBxXB-nBhdCO8LA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2mh+Eh+W1GFL2Mi5R3t55SRwWyXW_iBxXB-nBhdCO8LA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Re-parenting to intermediate clock is supported now by the clock driver
-and thus there is no need in a customized CPUFreq driver, all that code
-is common for both Tegra20 and Tegra30. The available CPU freqs are now
-specified in device-tree in a form of OPPs, all users should update their
-device-trees.
+On Mon, Oct 21, 2019 at 09:29:30PM +0200, Arnd Bergmann wrote:
+> > Is Christoph's work in next? The series doesn't apply cleanly on next,
+> > I needed to fix a couple conflicts. What branch should I rebase it on
+> > before resending?
+> 
+> Not sure, maybe Christoph can comment.
+> 
+> Your patches would best go through the char-misc tree and be based
+> on top of that, for Christoph's I think the idea is to have some go
+> through the architecture maintainer trees, and have whatever is
+> left go through my asm-generic tree.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/cpufreq/Kconfig.arm          |   6 +-
- drivers/cpufreq/cpufreq-dt-platdev.c |   2 +
- drivers/cpufreq/tegra20-cpufreq.c    | 211 +++++++--------------------
- 3 files changed, 55 insertions(+), 164 deletions(-)
+Actually I thought of just doing an ioremap tree for this merge window.
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 3858d86cf409..92a6a5089979 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -295,11 +295,11 @@ config ARM_TANGO_CPUFREQ
- 	default y
- 
- config ARM_TEGRA20_CPUFREQ
--	tristate "Tegra20 CPUFreq support"
--	depends on ARCH_TEGRA
-+	tristate "Tegra20/30 CPUFreq support"
-+	depends on ARCH_TEGRA && CPUFREQ_DT
- 	default y
- 	help
--	  This adds the CPUFreq driver support for Tegra20 SOCs.
-+	  This adds the CPUFreq driver support for Tegra20/30 SOCs.
- 
- config ARM_TEGRA124_CPUFREQ
- 	bool "Tegra124 CPUFreq support"
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index f1d170dcf4d3..aba591d57c67 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -121,6 +121,8 @@ static const struct of_device_id blacklist[] __initconst = {
- 	{ .compatible = "mediatek,mt8176", },
- 	{ .compatible = "mediatek,mt8183", },
- 
-+	{ .compatible = "nvidia,tegra20", },
-+	{ .compatible = "nvidia,tegra30", },
- 	{ .compatible = "nvidia,tegra124", },
- 	{ .compatible = "nvidia,tegra210", },
- 
-diff --git a/drivers/cpufreq/tegra20-cpufreq.c b/drivers/cpufreq/tegra20-cpufreq.c
-index f84ecd22f488..527cd9686220 100644
---- a/drivers/cpufreq/tegra20-cpufreq.c
-+++ b/drivers/cpufreq/tegra20-cpufreq.c
-@@ -7,201 +7,90 @@
-  *	Based on arch/arm/plat-omap/cpu-omap.c, (C) 2005 Nokia Corporation
-  */
- 
--#include <linux/clk.h>
--#include <linux/cpufreq.h>
-+#include <linux/bits.h>
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
- #include <linux/types.h>
- 
--static struct cpufreq_frequency_table freq_table[] = {
--	{ .frequency = 216000 },
--	{ .frequency = 312000 },
--	{ .frequency = 456000 },
--	{ .frequency = 608000 },
--	{ .frequency = 760000 },
--	{ .frequency = 816000 },
--	{ .frequency = 912000 },
--	{ .frequency = 1000000 },
--	{ .frequency = CPUFREQ_TABLE_END },
--};
--
--struct tegra20_cpufreq {
--	struct device *dev;
--	struct cpufreq_driver driver;
--	struct clk *cpu_clk;
--	struct clk *pll_x_clk;
--	struct clk *pll_p_clk;
--	bool pll_x_prepared;
--};
-+#include <soc/tegra/common.h>
-+#include <soc/tegra/fuse.h>
- 
--static unsigned int tegra_get_intermediate(struct cpufreq_policy *policy,
--					   unsigned int index)
-+static bool cpu0_node_has_opp_v2_prop(void)
- {
--	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
--	unsigned int ifreq = clk_get_rate(cpufreq->pll_p_clk) / 1000;
--
--	/*
--	 * Don't switch to intermediate freq if:
--	 * - we are already at it, i.e. policy->cur == ifreq
--	 * - index corresponds to ifreq
--	 */
--	if (freq_table[index].frequency == ifreq || policy->cur == ifreq)
--		return 0;
--
--	return ifreq;
--}
-+	struct device_node *np = of_cpu_device_node_get(0);
-+	bool ret = false;
- 
--static int tegra_target_intermediate(struct cpufreq_policy *policy,
--				     unsigned int index)
--{
--	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
--	int ret;
--
--	/*
--	 * Take an extra reference to the main pll so it doesn't turn
--	 * off when we move the cpu off of it as enabling it again while we
--	 * switch to it from tegra_target() would take additional time.
--	 *
--	 * When target-freq is equal to intermediate freq we don't need to
--	 * switch to an intermediate freq and so this routine isn't called.
--	 * Also, we wouldn't be using pll_x anymore and must not take extra
--	 * reference to it, as it can be disabled now to save some power.
--	 */
--	clk_prepare_enable(cpufreq->pll_x_clk);
--
--	ret = clk_set_parent(cpufreq->cpu_clk, cpufreq->pll_p_clk);
--	if (ret)
--		clk_disable_unprepare(cpufreq->pll_x_clk);
--	else
--		cpufreq->pll_x_prepared = true;
-+	if (of_get_property(np, "operating-points-v2", NULL))
-+		ret = true;
- 
-+	of_node_put(np);
- 	return ret;
- }
- 
--static int tegra_target(struct cpufreq_policy *policy, unsigned int index)
--{
--	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
--	unsigned long rate = freq_table[index].frequency;
--	unsigned int ifreq = clk_get_rate(cpufreq->pll_p_clk) / 1000;
--	int ret;
--
--	/*
--	 * target freq == pll_p, don't need to take extra reference to pll_x_clk
--	 * as it isn't used anymore.
--	 */
--	if (rate == ifreq)
--		return clk_set_parent(cpufreq->cpu_clk, cpufreq->pll_p_clk);
--
--	ret = clk_set_rate(cpufreq->pll_x_clk, rate * 1000);
--	/* Restore to earlier frequency on error, i.e. pll_x */
--	if (ret)
--		dev_err(cpufreq->dev, "Failed to change pll_x to %lu\n", rate);
--
--	ret = clk_set_parent(cpufreq->cpu_clk, cpufreq->pll_x_clk);
--	/* This shouldn't fail while changing or restoring */
--	WARN_ON(ret);
--
--	/*
--	 * Drop count to pll_x clock only if we switched to intermediate freq
--	 * earlier while transitioning to a target frequency.
--	 */
--	if (cpufreq->pll_x_prepared) {
--		clk_disable_unprepare(cpufreq->pll_x_clk);
--		cpufreq->pll_x_prepared = false;
--	}
--
--	return ret;
--}
--
--static int tegra_cpu_init(struct cpufreq_policy *policy)
--{
--	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
--
--	clk_prepare_enable(cpufreq->cpu_clk);
--
--	/* FIXME: what's the actual transition time? */
--	cpufreq_generic_init(policy, freq_table, 300 * 1000);
--	policy->clk = cpufreq->cpu_clk;
--	policy->suspend_freq = freq_table[0].frequency;
--	return 0;
--}
--
--static int tegra_cpu_exit(struct cpufreq_policy *policy)
--{
--	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
--
--	clk_disable_unprepare(cpufreq->cpu_clk);
--	return 0;
--}
--
- static int tegra20_cpufreq_probe(struct platform_device *pdev)
- {
--	struct tegra20_cpufreq *cpufreq;
-+	struct platform_device *cpufreq_dt;
-+	struct opp_table *opp_table;
-+	u32 versions[2];
- 	int err;
- 
--	cpufreq = devm_kzalloc(&pdev->dev, sizeof(*cpufreq), GFP_KERNEL);
--	if (!cpufreq)
--		return -ENOMEM;
-+	if (!cpu0_node_has_opp_v2_prop()) {
-+		dev_err(&pdev->dev, "operating points not found\n");
-+		dev_err(&pdev->dev, "please update your device tree\n");
-+		return -ENODEV;
-+	}
-+
-+	if (of_machine_is_compatible("nvidia,tegra20")) {
-+		versions[0] = BIT(tegra_sku_info.cpu_process_id);
-+		versions[1] = BIT(tegra_sku_info.soc_speedo_id);
-+	} else {
-+		versions[0] = BIT(tegra_sku_info.cpu_process_id);
-+		versions[1] = BIT(tegra_sku_info.cpu_speedo_id);
-+	}
- 
--	cpufreq->cpu_clk = clk_get_sys(NULL, "cclk");
--	if (IS_ERR(cpufreq->cpu_clk))
--		return PTR_ERR(cpufreq->cpu_clk);
-+	dev_info(&pdev->dev, "hardware version 0x%x 0x%x\n",
-+		 versions[0], versions[1]);
- 
--	cpufreq->pll_x_clk = clk_get_sys(NULL, "pll_x");
--	if (IS_ERR(cpufreq->pll_x_clk)) {
--		err = PTR_ERR(cpufreq->pll_x_clk);
--		goto put_cpu;
-+	opp_table = dev_pm_opp_set_supported_hw(get_cpu_device(0), versions, 2);
-+	err = PTR_ERR_OR_ZERO(opp_table);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to set supported hw: %d\n", err);
-+		return err;
- 	}
- 
--	cpufreq->pll_p_clk = clk_get_sys(NULL, "pll_p");
--	if (IS_ERR(cpufreq->pll_p_clk)) {
--		err = PTR_ERR(cpufreq->pll_p_clk);
--		goto put_pll_x;
-+	cpufreq_dt = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
-+	err = PTR_ERR_OR_ZERO(cpufreq_dt);
-+	if (err) {
-+		dev_err(&pdev->dev,
-+			"failed to create cpufreq-dt device: %d\n", err);
-+		goto err_put_supported_hw;
- 	}
- 
--	cpufreq->dev = &pdev->dev;
--	cpufreq->driver.get = cpufreq_generic_get;
--	cpufreq->driver.attr = cpufreq_generic_attr;
--	cpufreq->driver.init = tegra_cpu_init;
--	cpufreq->driver.exit = tegra_cpu_exit;
--	cpufreq->driver.flags = CPUFREQ_NEED_INITIAL_FREQ_CHECK;
--	cpufreq->driver.verify = cpufreq_generic_frequency_table_verify;
--	cpufreq->driver.suspend = cpufreq_generic_suspend;
--	cpufreq->driver.driver_data = cpufreq;
--	cpufreq->driver.target_index = tegra_target;
--	cpufreq->driver.get_intermediate = tegra_get_intermediate;
--	cpufreq->driver.target_intermediate = tegra_target_intermediate;
--	snprintf(cpufreq->driver.name, CPUFREQ_NAME_LEN, "tegra");
--
--	err = cpufreq_register_driver(&cpufreq->driver);
--	if (err)
--		goto put_pll_p;
--
--	platform_set_drvdata(pdev, cpufreq);
-+	platform_set_drvdata(pdev, cpufreq_dt);
- 
- 	return 0;
- 
--put_pll_p:
--	clk_put(cpufreq->pll_p_clk);
--put_pll_x:
--	clk_put(cpufreq->pll_x_clk);
--put_cpu:
--	clk_put(cpufreq->cpu_clk);
-+err_put_supported_hw:
-+	dev_pm_opp_put_supported_hw(opp_table);
- 
- 	return err;
- }
- 
- static int tegra20_cpufreq_remove(struct platform_device *pdev)
- {
--	struct tegra20_cpufreq *cpufreq = platform_get_drvdata(pdev);
-+	struct platform_device *cpufreq_dt;
-+	struct opp_table *opp_table;
- 
--	cpufreq_unregister_driver(&cpufreq->driver);
-+	cpufreq_dt = platform_get_drvdata(pdev);
-+	platform_device_unregister(cpufreq_dt);
- 
--	clk_put(cpufreq->pll_p_clk);
--	clk_put(cpufreq->pll_x_clk);
--	clk_put(cpufreq->cpu_clk);
-+	opp_table = dev_pm_opp_get_opp_table(get_cpu_device(0));
-+	dev_pm_opp_put_supported_hw(opp_table);
-+	dev_pm_opp_put_opp_table(opp_table);
- 
- 	return 0;
- }
--- 
-2.23.0
-
+What kind of changes does Bartosz have?  I'm kinda missing the context
+here.
