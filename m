@@ -2,95 +2,103 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C17CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9275CCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E29205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E972205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:26:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="FvKZArqV"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="YljXv7Q1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfJ3UZl (ORCPT
+        id S1726774AbfJ3UZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 16:25:41 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]:33281 "EHLO
-        mail-qk1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfJ3UZk (ORCPT
+        Wed, 30 Oct 2019 16:25:59 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40647 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfJ3UZ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 16:25:40 -0400
-Received: by mail-qk1-f176.google.com with SMTP id 71so4281240qkl.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 13:25:40 -0700 (PDT)
+        Wed, 30 Oct 2019 16:25:58 -0400
+Received: by mail-oi1-f195.google.com with SMTP id r27so3168269oij.7
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 13:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=KiFm2XT1/ex9pyBydKszuWy1JMFujhglMV+BmZKuRx8=;
-        b=FvKZArqVg5c7lnvj3ny0bJF74EIWJqP3pvXLD4J3+mOSMFEBPxbo9BgJ+KEaSUBze4
-         WQJCgxFBT+NqD4gA7Jq74eaTQ5WEKQBfdp2OIYdeB5ad3mh6DB++FjqUOvPK1R1le3Sp
-         bkqMApjE3M/tR17+3EgezeNzv7rKXq9DgGfIIxLHN8cVAKKwBm14RymhMm699b0Xtdb5
-         ngG/3T7cfsLqIv0E3igR3HK7Lk89z74QBgbw5yPcIXLmLo3lW2Z9KRq/nBUxsdY+AMhM
-         EQsrgqvjpSs6pbIeek9OmD3IlDt/4+cU01ZLA5Mo54Rh9KqmlOt0ZJmBbV8KsqYTMu2V
-         Ja0A==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DB0Esgn2u6S/gYy4ztTMEgAHIadfdnSppVecXQR/BmQ=;
+        b=YljXv7Q1wxqnCkVDdMgZtofx2rSTMM1fz2RXU61tBTgnlP0XWpsjt2e7fOAXcaulgw
+         zP1YXn3xn0NIogw5hHNK/JbZWlmG/cB8fKERqX+qByERFbGGXqazPfY1UsGLe6FhzMr5
+         meg8weMmaWBQE6H8xDtwkQLPnHopTbzo+VKpyITAF1/FRiX8D5as90CncBFlzGxtE7Xx
+         6lWql9xMWWreZiUhbqTxlvLrJOCpCG9BTIBbzIBVOYt0wSCOvxlR/M5RFH5gpKakutd2
+         SEjKKcyvzAVAIPpGbUQK8yrvAd9WidP8NL4G1Tf0MV8TQ64vDliHg22CQl+RvphcQRDA
+         PVEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=KiFm2XT1/ex9pyBydKszuWy1JMFujhglMV+BmZKuRx8=;
-        b=owTkqPrsaCWJ04WdHfzZ+CPVgX+Z/D1WNa0G+NJ/0jhHk+NpIqg+BOT7Rdn9QsshJE
-         vzI40tb8uwmPGdUiM8ck1kwyZvIiZ91DU7eA3pR98Cr21A0rj5bq0ui7DrXc+nqv4cWr
-         3pKei9NCqtCzZNH2MxIsePMpnoMKts6IrpeqEmSAtJXQ0TTYDtHjRRYQ7kwjoqo6TKGs
-         BOQCyfdieBlJuUuoHiRRMGkLNuAnlwGSmyGrJoavyvjfvqSOpO+gwd3Ng3ySFqVyH60i
-         nmaNGaFVVZj4UUDIYpj1Mm30DVldyAY7z2GTb0Cly+MLmFwwBqRx1QIWtT+UCLgRHXaJ
-         PFOQ==
-X-Gm-Message-State: APjAAAXS+NKVzV4xhYPfGHakjN0RNgiHT68oxqYoe2Ap+wAkSJc+qWuT
-        GeNeMNA69Z9WLeWlcLw/8oGLhg==
-X-Google-Smtp-Source: APXvYqyx0H3XsyanEpK1jniy58tWKZ3wda42vCC2p7wzRRQRjGWr6vlqi0Sn1CUS/nb0HAADenFj2Q==
-X-Received: by 2002:ae9:f204:: with SMTP id m4mr1874942qkg.105.1572467139382;
-        Wed, 30 Oct 2019 13:25:39 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id q7sm600893qkb.46.2019.10.30.13.25.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 13:25:38 -0700 (PDT)
-Message-ID: <1572467136.5937.107.camel@lca.pw>
-Subject: Section mismatch warnings on powerpc
-From:   Qian Cai <cai@lca.pw>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 30 Oct 2019 16:25:36 -0400
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DB0Esgn2u6S/gYy4ztTMEgAHIadfdnSppVecXQR/BmQ=;
+        b=WzgiyQVofj5icDihDgzlrn2+HgK3J8Wa91EBivKCONFamcVQ90O8T7XtY7S94GbHKy
+         ZroXmfKDc7ZT8hE7xaaOtjq28Vl+zu3+nUE7LzIlPwmM7fBXIdgHlp1L3YfV2lBaosBT
+         hXjkjyqVJR+drwEy7BqFupZttHn7uuw95kV0RE1jYg7atib5v9LSxk6hbUQUHZBWLSTP
+         wY7FCBYyLnBHpPSvmPOgpp3iucv04fTYdmz8RzWzWAIxzB6I8KZEHyswvsAlwIxk+MIy
+         B2UIXO8C1EAuZcO0vfNIXaINRP2ruirwb6+hKHWa0EFefjMe8gSbaM66X4s6oSviaPdL
+         aiTA==
+X-Gm-Message-State: APjAAAXO6VUk5IPZlVWckxlaQHZGzX3dFohpee98qyb71PslQs83Pl3n
+        1UunXgdMdybITLi8Wdafzd5Yg3ALkhYsbIKR1+NOew==
+X-Google-Smtp-Source: APXvYqxjoPtFXRn8Md6QTlvFeMTbTacSemsUejC32ZRefBEyCk6rhqYcrCf8nNLaTgsDOrV06arS1pSWZ+A1j8byPas=
+X-Received: by 2002:aca:ad52:: with SMTP id w79mr915721oie.149.1572467158050;
+ Wed, 30 Oct 2019 13:25:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <1572462939-18201-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1572462939-18201-1-git-send-email-cai@lca.pw>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 30 Oct 2019 13:25:47 -0700
+Message-ID: <CAPcyv4jvoo2Ez5hMivt+-B3-9giX3v6VZ0xZWLBQzL=7spVnrg@mail.gmail.com>
+Subject: Re: [PATCH] nvdimm/btt: fix variable 'rc' set but not used
+To:     Qian Cai <cai@lca.pw>
+Cc:     Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Still see those,
+On Wed, Oct 30, 2019 at 12:16 PM Qian Cai <cai@lca.pw> wrote:
+>
+> drivers/nvdimm/btt.c: In function 'btt_read_pg':
+> drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
+> [-Wunused-but-set-variable]
+>     int rc;
+>         ^~
+>
+> Add a ratelimited message in case a storm of errors is encountered.
+>
+> Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  drivers/nvdimm/btt.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+> index 3e9f45aec8d1..59852f7e2d60 100644
+> --- a/drivers/nvdimm/btt.c
+> +++ b/drivers/nvdimm/btt.c
+> @@ -1266,6 +1266,11 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
+>                         /* Media error - set the e_flag */
+>                         rc = btt_map_write(arena, premap, postmap, 0, 1,
+>                                 NVDIMM_IO_ATOMIC);
+> +
+> +                       if (rc)
+> +                               dev_warn_ratelimited(to_dev(arena),
+> +                                       "Error persistently tracking bad blocks\n");
 
-WARNING: vmlinux.o(.text+0x2d04): Section mismatch in reference from the
-variable __boot_from_prom to the function .init.text:prom_init()
-The function __boot_from_prom() references
-the function __init prom_init().
-This is often because __boot_from_prom lacks a __init
-annotation or the annotation of prom_init is wrong.
-
-WARNING: vmlinux.o(.text+0x2ec8): Section mismatch in reference from the
-variable start_here_common to the function .init.text:start_kernel()
-The function start_here_common() references
-the function __init start_kernel().
-This is often because start_here_common lacks a __init
-annotation or the annotation of start_kernel is wrong.
-
-There is a patch around,
-
-http://patchwork.ozlabs.org/patch/895442/
-
-Does it still wait for Michael to come with some better names?
+If the driver is going to warn about bad blocks it should at least
+include the block address that is returning an error.
