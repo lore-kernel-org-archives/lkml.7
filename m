@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668FFCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B71CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E1020874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDDE52067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pwrdF0uO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/m0+yvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727343AbfJ3Vfh (ORCPT
+        id S1727359AbfJ3Vfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:35:37 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44079 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727300AbfJ3Vff (ORCPT
+        Wed, 30 Oct 2019 17:35:40 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40933 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfJ3Vfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:35:35 -0400
-Received: by mail-lf1-f66.google.com with SMTP id v4so2753954lfd.11;
-        Wed, 30 Oct 2019 14:35:33 -0700 (PDT)
+        Wed, 30 Oct 2019 17:35:37 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u22so4332784lji.7;
+        Wed, 30 Oct 2019 14:35:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mzAZfLCHZriyZeqCihOmNKPh325Oe6nsAgLe2vRiK88=;
-        b=pwrdF0uOP1QQJTP5ElenVP3eBeZrYGAFkmkfgZa6GKGZSF1EOUCbCBL2GsFsdPSNT9
-         9tiBTAfDyVIQVWCvWjaIZrBH2KHx8UpdcHkRICyw8MJZAnxO9Gm2E6n73K04iETY+sH3
-         XEU7ND9gKDQP8SEduhG6f70hSy8hBvtYWHehkqB5mJ482HacGfHHjawt+2qr/W0TlS7i
-         XGQf6okN0sfVOvHOLPx8UhCqAXnA7ZLTPlSkaeWOAcDz0wM8v0sj1dKf98TLguXLaFjE
-         cx3fTBMCXu/O58lqFPAaOgeJfe2rCbqoyuGqMLBIWfz/+bQ6+z3iWVwJm6btZjdzxBj2
-         KwrA==
+        bh=BEJ200kbZVTsss1iDk6Wt5qRmYYgbTDuf+N828TJE+4=;
+        b=V/m0+yvu+XQPediAtxkB/QWeX/tegpDYhM3Inv8dWd0Kf/bfbLJiBakX570cQEw9tZ
+         oaJbL5uNhMw5goVZuu6vAi0RX1M0WRbeo4wOcuXMuqg6iT9cG6LGi7ntzurpzxv/YIIn
+         U6KcVwQWdW0HCQnW+x/0gmuLSnmo1YPmPC2fb0+hq6FRW6Pwp85P2ajApM63oMKYPYTQ
+         gUei/RwNzU/y0q98OlzjNAkstbCi5crlEROlzPzjZST1MiPcSzE7s3PCIUrLfb0VxOUL
+         9/+2w9LLpkQi7ep9AE9alBRNF5KEC4bckJk/VT2V7n+ygyRFhBIukcY4Js6GhRhiElFu
+         x9Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mzAZfLCHZriyZeqCihOmNKPh325Oe6nsAgLe2vRiK88=;
-        b=PkaIIDvr03pPOrcDyTEtedAH4m3pgv0/bL5ZLX5e7Eka/AfV6X5hbZ3VRFnkpEP5vb
-         JfCqxYUI3f9RxAtOyH8DCJYWgtUkbd9+BTE0UiaMtDY10xaSCEW0FX1ZIQ4rDfAQLPuC
-         +06exSbl5h/dr5BgWYJMzMnBzzY3tf/+cXym0Kd8QKHaBpCLnMphgpRryuVuiL2Cpybs
-         g0q7gMOm9kz+TrRDPUiAft+AgvlvIvsVUMCWLSoxPmlPj8VpsnSoshOqqEAxCHoGqYQy
-         i/oXJqcx+zbtWfyxKmQaUvV9Rvps0RhncaF/4ZDmZN3jVw3RDcFad3kml4Ef2vYpIkMf
-         10Fw==
-X-Gm-Message-State: APjAAAWYFdks8TRfW5R2V0t0gUOWNzqpcgy5wa051O5UfOgzT+BBy3By
-        XKe/NLN89aJL9wcHSbnNa2k=
-X-Google-Smtp-Source: APXvYqz1VsJQPmSeMl+4IOFC/N8lHzf+F/i7JDn1ZHvn8GdJ0MB4lynO6GmEr7vNdamOgNmb4JKAXA==
-X-Received: by 2002:a19:fc1c:: with SMTP id a28mr251195lfi.170.1572471332741;
-        Wed, 30 Oct 2019 14:35:32 -0700 (PDT)
+        bh=BEJ200kbZVTsss1iDk6Wt5qRmYYgbTDuf+N828TJE+4=;
+        b=czq1Dov/Ju9LQc6NZLL7K7f9jIf11RL9PDhf4vyqtrkUhjmjEu5hDs3ZC1Ier4jDuP
+         +qxn9v6SpmIlGouUqHZkvl0iQO0b8atn85NLSD75/GrZ+rizav8If4TsEcaQ6DA+J30J
+         xXAsp+uW4Boir/Qb6gkKOvIc8rDPNKmBp5a23Jj8OETYgRu7jCgbZ0PUMP3SWpnbV89j
+         WHziGsfAoQO9dqFQBh3eD7kbiqYbuaQ8yQ/SZguu1N0YYqsxtywO8faqAcXQn3A1k6/E
+         hcAs0Fr3WMMkn26wjbjitiSn6C0duqvm0n2+CkU4ws5lA9ykErqZ/z2an9zMbflOqWAI
+         1hRw==
+X-Gm-Message-State: APjAAAWWCbYW9Se5rTpO/NUNRlSi4zZUoxRtKwQeBZroTvE6az1mBeJG
+        d15CaqHqT3fEfcNnEc2C0ik=
+X-Google-Smtp-Source: APXvYqxqas7JJTy3po8gqA9lxcVBaMsPmryEn6NF2QLtfhQNuAfHsBPhKGocMJM10XASN29tgYQlow==
+X-Received: by 2002:a2e:9888:: with SMTP id b8mr1125681ljj.167.1572471335206;
+        Wed, 30 Oct 2019 14:35:35 -0700 (PDT)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.31
+        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 14:35:32 -0700 (PDT)
+        Wed, 30 Oct 2019 14:35:34 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -71,9 +71,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Marcel Ziswiler <marcel.ziswiler@toradex.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/10] ARM: tegra: Create tegra20-cpufreq platform device on Tegra30
-Date:   Thu, 31 Oct 2019 00:33:58 +0300
-Message-Id: <20191030213400.29434-9-digetx@gmail.com>
+Subject: [PATCH v3 10/10] ARM: dts: tegra30: beaver: Add CPU Operating Performance Points
+Date:   Thu, 31 Oct 2019 00:34:00 +0300
+Message-Id: <20191030213400.29434-11-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191030213400.29434-1-digetx@gmail.com>
 References: <20191030213400.29434-1-digetx@gmail.com>
@@ -84,29 +84,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tegra20-cpufreq now instantiates cpufreq-dt and Tegra30 is fully
-supported by that driver.
+Utilize common Tegra30 CPU OPP table. CPU DVFS is available now on beaver.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/mach-tegra/tegra.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/tegra30-beaver.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
-index e512e606eabd..1e3b85923ca3 100644
---- a/arch/arm/mach-tegra/tegra.c
-+++ b/arch/arm/mach-tegra/tegra.c
-@@ -95,6 +95,10 @@ static void __init tegra_dt_init_late(void)
- 	if (IS_ENABLED(CONFIG_ARCH_TEGRA_2x_SOC) &&
- 	    of_machine_is_compatible("nvidia,tegra20"))
- 		platform_device_register_simple("tegra20-cpufreq", -1, NULL, 0);
-+
-+	if (IS_ENABLED(CONFIG_ARCH_TEGRA_3x_SOC) &&
-+	    of_machine_is_compatible("nvidia,tegra30"))
-+		platform_device_register_simple("tegra20-cpufreq", -1, NULL, 0);
- }
+diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
+index 6ebb3105af9e..86556622be25 100644
+--- a/arch/arm/boot/dts/tegra30-beaver.dts
++++ b/arch/arm/boot/dts/tegra30-beaver.dts
+@@ -2,6 +2,8 @@
+ /dts-v1/;
  
- static const char * const tegra_dt_board_compat[] = {
+ #include "tegra30.dtsi"
++#include "tegra30-cpu-opp.dtsi"
++#include "tegra30-cpu-opp-microvolt.dtsi"
+ 
+ / {
+ 	model = "NVIDIA Tegra30 Beaver evaluation board";
+@@ -2124,4 +2126,26 @@
+ 			 <&tegra_car TEGRA30_CLK_EXTERN1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
++
++	cpus {
++		cpu0: cpu@0 {
++			cpu-supply = <&vddctrl_reg>;
++			operating-points-v2 = <&cpu0_opp_table>;
++		};
++
++		cpu@1 {
++			cpu-supply = <&vddctrl_reg>;
++			operating-points-v2 = <&cpu0_opp_table>;
++		};
++
++		cpu@2 {
++			cpu-supply = <&vddctrl_reg>;
++			operating-points-v2 = <&cpu0_opp_table>;
++		};
++
++		cpu@3 {
++			cpu-supply = <&vddctrl_reg>;
++			operating-points-v2 = <&cpu0_opp_table>;
++		};
++	};
+ };
 -- 
 2.23.0
 
