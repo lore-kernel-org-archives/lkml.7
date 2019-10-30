@@ -2,163 +2,124 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56B4CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC19ECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C05208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450638;
-	bh=1Xi4C8BHtyWqVSzTXqvV4jzH3vajRRFBRAa8ig1ix9o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iGI0rMaSov9jYepq4NXlyILbC9oGMAGa0QPrLq4NnTRbFspoiRJmKV/5QGv1iPxTt
-	 jjy3I3KvjxWcEYbpX8aeoRG170Q63zIxrmDSc62Sqp5I7Uh4U/eU8wuCvLmD5FMJTG
-	 3/2BqtHGOsxTojed+fDjfYxgbF9MzAW69sh/Zyt8=
+	by mail.kernel.org (Postfix) with ESMTP id 9BC7020656
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="PxRXFHyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfJ3Puh (ORCPT
+        id S1727657AbfJ3Puw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbfJ3Puh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:50:37 -0400
-Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ECF5208C0;
-        Wed, 30 Oct 2019 15:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450635;
-        bh=1Xi4C8BHtyWqVSzTXqvV4jzH3vajRRFBRAa8ig1ix9o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PafyVamXArHZbBxJ2V7Cd/gL4/BGNLDrzbQ+0wlont1eNUUYH4EKVwu0fSkR5kSFs
-         9HxAaO1Z1lfBXYKZvWkFk4tv6Qke/L27Xkinr9O8kSckBVlRSRtq/xSTHZll1NFEPV
-         /lLlab9vVThtyrr+YVQd/gtJrdI7NyPOjbkpNbnE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 15/81] ASoC: SOF: Intel: initialise and verify FW crash dump data.
-Date:   Wed, 30 Oct 2019 11:48:21 -0400
-Message-Id: <20191030154928.9432-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
-References: <20191030154928.9432-1-sashal@kernel.org>
+        Wed, 30 Oct 2019 11:50:52 -0400
+Received: from sonic308-55.consmr.mail.gq1.yahoo.com ([98.137.68.31]:34057
+        "EHLO sonic308-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727629AbfJ3Puv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:50:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1572450650; bh=tlzW+EHXjriGMcNx2q7rBODiO5QJOtbDYR9mIItAx7c=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=PxRXFHyq1BwiPdfBCGkKlBIYlzsV/0JFMaOvTMvltrSJynguwBjBs7AkNjF+0/9tc97g3hhMCH/YXfA4n8rnZCm09eIomwM+iC4V+nUs7Pp+1KoWWCUWAkKM89LZBOwfetEXoQYH9haIJbFDq3emBaM7br9SdLUZGZVAo+CTeq4QbbUrJ8fBGFOzE1h9b3xy6o+H2NjaCZLd+qiqnsikTXSRQVpHUCZga3N4+Bdd17FCbbwCsDfJ6ZZoq5Lxm4n+/TWPib+Re/tW/LbqBGXN2cyZv0XOSofNp4QCBpA5JpI1Z3J5nwWmWvNccsJjm3B3FnyMed5agi1tRAoHtvIChQ==
+X-YMail-OSG: HIJd13kVM1k4sA98h6t_XGpmpEp2jWNj1U_XV4n9OX8AN520dD71uJ8PHv13D_2
+ omE8WRCjHn2967vQv6JzS0UQvmrmTABhtz6ArxefHcIfykBA8jAEENwHE8KAOALswyI6xDB04TWw
+ xMPOXBf374r6q35M60hA93Y0HJGpQY.alMyw6IG4Xn8rGK7hs8sC1kBz.jBJ8yQHYPN7qcbE.9WA
+ hH.s3tJQM6M8ACyYaL2xKXG6iZ_1JkVUAaJSBTSiFpijnnAliKPJX2Rj4QIShn6aqLwaJOWk21vj
+ 1wVoKWoOJlq.CqsKW_nl4VwVwA6.Um2Whv7JJ4d8_N3l4MkHWbKX9ztRdYjbdq7RepB7Wi1KPA1z
+ R2orOR3UY_cxKJALXVe6h7b2XxmzlVMzbHWmvq8wrUXchPz0SYrbFsC.2gCLV3jNcJHzwZsTIFkO
+ yK4eiFSoIOc0KgoMWxbzdFYJmIuWgHkI8ECvE7OXPSOH16aOm7MFUIbjEyZNGkXhrlaZZl4rrjj9
+ r3eJkJDhL98V_zFDSqG_lMbTf6mNh9KcdENQUmTeIrfTqSqy8GoeTvR1qeXRG8KFu.ww9_ogRZjz
+ 0kf3mcqo42r05UCCwsGep.4zdIUmryoimEOz6Zd0bdND3jslLc5_1Y8ADEfwJzfyTd34XqVS5L3Z
+ bOwX2xusZjxw4w17.rnBBHXLmr5prGlcu5.UssPW4NXC.lkwUN39Q3GTIas1VGO8Xbo56YDnvyAX
+ DeJc6Tj_EqzdW.YVfBLrYct2lqEIBpIhl9puQ0Oksx9F5RiQ1y_xRgd_SqGlj6b4vcECOrZ4my1r
+ v9.ca5Br_axLga54rozxFcp7fIXqo5gIwFK_ek2fLTnvWGWV.EWcG.ggyshNL9b6LM_fXHbZdMjT
+ S_A0qQV2QvWBnY8GAjatPCNxgae4Hd8Iauw8Xqia7qfoZIf2J_dhqazdSyeHSGRD7fX80x7lp7O1
+ D7EO33CSUhEllw7EUu8Zi9a6rTDLbrLaAGFdwaedVb_7J_5K.9jyFKt7vARtP4ybn7U2Qn_wr.zv
+ 8hHxG69aQSusZpFtKIDCoICNsPZKbbw_RPI32wmSvnGBFBH0fsGNANC9bAobaM623daFV1GOCamV
+ f8XfQ21vn1mkUsR6RCVNwMuHxlSSB44jYQsnwhtc33zSX29N9wlpo54zbXoj.aELxlrPC7YhaJu1
+ YlLlVO6DgLja30t54lFBbj6V1j5k6EcBDQ1XLqC0aNoI0rXtZQRYBPL4kNdW2R5E5rRrr8nIUrdV
+ .akd01OnBIOijzH9Hy_GSuDLg6i0scWI7MokVOSHS5Ll_fdrx2xQz.rFA9fGeWaAkMgxDSs8wHWr
+ R8LZxzmW34m0mgMDRWVEFwpgh55_JjkHl2ONqcZMpN7WEOMGgOgiHJ2qQcsZzrwiO.80SS0zYA6E
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Wed, 30 Oct 2019 15:50:50 +0000
+Received: by smtp419.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID ecf34bf87d460b3002b31f8cc4759825;
+          Wed, 30 Oct 2019 15:50:47 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 23:50:37 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: bio_alloc should never fail
+Message-ID: <20191030155020.GA3953@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191030035518.65477-1-gaoxiang25@huawei.com>
+ <20aa40bd-280d-d223-9f73-d9ed7dbe4f29@huawei.com>
+ <20191030091542.GA24976@architecture4>
+ <19a417e6-8f0e-564e-bc36-59bfc883ec16@huawei.com>
+ <20191030104345.GB170703@architecture4>
+ <20191030151444.GC16197@mit.edu>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030151444.GC16197@mit.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Mailer: WebService/1.1.14593 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+Hi Ted,
 
-[ Upstream commit ff2be865633e6fa523cd2db3b73197d795dec991 ]
+On Wed, Oct 30, 2019 at 11:14:45AM -0400, Theodore Y. Ts'o wrote:
+> On Wed, Oct 30, 2019 at 06:43:45PM +0800, Gao Xiang wrote:
+> > > You're right, in low memory scenario, allocation with bioset will be faster, as
+> > > you mentioned offline, maybe we can add/use a priviate bioset like btrfs did
+> > > rather than using global one, however, we'd better check how deadlock happen
+> > > with a bioset mempool first ...
+> > 
+> > Okay, hope to get hints from Jaegeuk and redo this patch then...
+> 
+> It's not at all clear to me that using a private bioset is a good idea
+> for f2fs.  That just means you're allocating a separate chunk of
+> memory just for f2fs, as opposed to using the global pool.  That's an
+> additional chunk of non-swapable kernel memory that's not going to be
+> available, in *addition* to the global mempool.  
+> 
+> Also, who else would you be contending for space with the global
+> mempool?  It's not like an mobile handset is going to have other users
+> of the global bio mempool.
+> 
+> On a low-end mobile handset, memory is at a premium, so wasting memory
+> to no good effect isn't going to be a great idea.
 
-FW mailbox offset was not set before use and HDR size was not validated.
-Fix this.
+Thanks for your reply. I agree with your idea.
 
-Signed-off-by: Liam Girdwood <liam.r.girdwood@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190927200538.660-12-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/sof/intel/bdw.c | 7 +++++++
- sound/soc/sof/intel/byt.c | 6 ++++++
- sound/soc/sof/intel/hda.c | 7 +++++++
- 3 files changed, 20 insertions(+)
+Actually I think after this version patch is applied, all are the same
+as the previous status (whether some deadlock or not).
 
-diff --git a/sound/soc/sof/intel/bdw.c b/sound/soc/sof/intel/bdw.c
-index 70d524ef9bc07..0ca3c1b55eeb1 100644
---- a/sound/soc/sof/intel/bdw.c
-+++ b/sound/soc/sof/intel/bdw.c
-@@ -37,6 +37,7 @@
- #define MBOX_SIZE       0x1000
- #define MBOX_DUMP_SIZE 0x30
- #define EXCEPT_OFFSET	0x800
-+#define EXCEPT_MAX_HDR_SIZE	0x400
- 
- /* DSP peripherals */
- #define DMAC0_OFFSET    0xFE000
-@@ -228,6 +229,11 @@ static void bdw_get_registers(struct snd_sof_dev *sdev,
- 	/* note: variable AR register array is not read */
- 
- 	/* then get panic info */
-+	if (xoops->arch_hdr.totalsize > EXCEPT_MAX_HDR_SIZE) {
-+		dev_err(sdev->dev, "invalid header size 0x%x. FW oops is bogus\n",
-+			xoops->arch_hdr.totalsize);
-+		return;
-+	}
- 	offset += xoops->arch_hdr.totalsize;
- 	sof_mailbox_read(sdev, offset, panic_info, sizeof(*panic_info));
- 
-@@ -588,6 +594,7 @@ static int bdw_probe(struct snd_sof_dev *sdev)
- 	/* TODO: add offsets */
- 	sdev->mmio_bar = BDW_DSP_BAR;
- 	sdev->mailbox_bar = BDW_DSP_BAR;
-+	sdev->dsp_oops_offset = MBOX_OFFSET;
- 
- 	/* PCI base */
- 	mmio = platform_get_resource(pdev, IORESOURCE_MEM,
-diff --git a/sound/soc/sof/intel/byt.c b/sound/soc/sof/intel/byt.c
-index 107d711efc3f0..96faaa8fa5a3a 100644
---- a/sound/soc/sof/intel/byt.c
-+++ b/sound/soc/sof/intel/byt.c
-@@ -28,6 +28,7 @@
- #define MBOX_OFFSET		0x144000
- #define MBOX_SIZE		0x1000
- #define EXCEPT_OFFSET		0x800
-+#define EXCEPT_MAX_HDR_SIZE	0x400
- 
- /* DSP peripherals */
- #define DMAC0_OFFSET		0x098000
-@@ -273,6 +274,11 @@ static void byt_get_registers(struct snd_sof_dev *sdev,
- 	/* note: variable AR register array is not read */
- 
- 	/* then get panic info */
-+	if (xoops->arch_hdr.totalsize > EXCEPT_MAX_HDR_SIZE) {
-+		dev_err(sdev->dev, "invalid header size 0x%x. FW oops is bogus\n",
-+			xoops->arch_hdr.totalsize);
-+		return;
-+	}
- 	offset += xoops->arch_hdr.totalsize;
- 	sof_mailbox_read(sdev, offset, panic_info, sizeof(*panic_info));
- 
-diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
-index 7f665392618f6..f2d45d62dfa56 100644
---- a/sound/soc/sof/intel/hda.c
-+++ b/sound/soc/sof/intel/hda.c
-@@ -37,6 +37,8 @@
- #define IS_CFL(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0xa348)
- #define IS_CNL(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x9dc8)
- 
-+#define EXCEPT_MAX_HDR_SIZE	0x400
-+
- /*
-  * Debug
-  */
-@@ -121,6 +123,11 @@ static void hda_dsp_get_registers(struct snd_sof_dev *sdev,
- 	/* note: variable AR register array is not read */
- 
- 	/* then get panic info */
-+	if (xoops->arch_hdr.totalsize > EXCEPT_MAX_HDR_SIZE) {
-+		dev_err(sdev->dev, "invalid header size 0x%x. FW oops is bogus\n",
-+			xoops->arch_hdr.totalsize);
-+		return;
-+	}
- 	offset += xoops->arch_hdr.totalsize;
- 	sof_block_read(sdev, sdev->mmio_bar, offset,
- 		       panic_info, sizeof(*panic_info));
--- 
-2.20.1
+So I'm curious about the original issue in commit 740432f83560
+("f2fs: handle failed bio allocation"). Since f2fs manages multiple write
+bios with its internal fio but it seems the commit is not helpful to
+resolve potential mempool deadlock (I'm confused since no calltrace,
+maybe I'm wrong)...
 
+I think it should be gotten clear first and think how to do next..
+(I tend not to add another private bioset since it's unshareable as you
+ said as well...)
+
+Thanks,
+Gao Xiang
+
+> 
+> Regards,
+> 
+> 						- Ted
+> 
+>
+ 
