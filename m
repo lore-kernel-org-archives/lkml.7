@@ -7,67 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD33CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0485CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F5220663
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31F120663
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:02:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SNIJd0jr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iXm81CQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfJ3JB6 (ORCPT
+        id S1726626AbfJ3JCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:01:58 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37362 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfJ3JB6 (ORCPT
+        Wed, 30 Oct 2019 05:02:06 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44766 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfJ3JCG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:01:58 -0400
-Received: by mail-pl1-f195.google.com with SMTP id p13so695365pll.4
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 02:01:57 -0700 (PDT)
+        Wed, 30 Oct 2019 05:02:06 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e10so1026805pgd.11
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 02:02:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=m5azgLhd2I2E3q9JQtIgUVQ0suPVCkYbQEeRBm5oMb8=;
-        b=SNIJd0jrHsBMX6/ZKZfmY+w36WI2FQ8qqZCU7AAOSX1m1BH+waTBtt4HsR5Cpitl0M
-         qizjCUyqfRXUfN6QTVJOMhqIJjxSn2xIGAaLdkeydUjLLMvQqr564H7wMctcKfSwSKhI
-         34pcDje4oDfteKOd0sOIWEPkpGduCiO9uBJes8AEfdXJj//H+RJxVEhKME1VjEfcglcv
-         bQtYVMecgFVUuv8CqgXp3WMq/wv1mpqGjiGcc+F8WXGpzrls96q4j9uVNmvQtTjNZqOy
-         xRH30D1vP/r22R/QtbgSOmLCKl/U61AlaG9mLcczOCemky44THQcAFq/cMwg0aH4OZ4p
-         j7dQ==
+        bh=19R5LsKrbgqwghaZ71mmjHUlNxFRBymDHjBQo6p8lc4=;
+        b=iXm81CQavjLlHdERzGPrpTTyW7r5NcqLhXFQ1WTyFwd+Z6701Mb2qRcRfg5NKqcz9T
+         nzePMn/HZp7MECls2uqe67R5z7/Kt84ihDs9n0aseUOZhymnypq1pNIRqiT6x7e9JMi5
+         4P8nxqOnOnymKHdeojgbnKk9W9P10K/gCNd76px0xlCr0Ok7i7BigOn/D99Lu6x9cEM2
+         khUU9lr8+DL784zXy36KHdzoAVcwpDpoQdx2Ya9i5v1E+7QCJ48ShqIcdLbdKF5YSSGz
+         j8OaVO4qQAyXo1Uzd5vKUwAscz2pFh4nZdgUkthhf4AWXGYlWJO6Kb6enL6DZnyYynGq
+         soWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=m5azgLhd2I2E3q9JQtIgUVQ0suPVCkYbQEeRBm5oMb8=;
-        b=ThrIprzM7+SGwkCHD307UWzAa6HDkNdZ0z7+pFfVl2jfaKSkVH3e2uKlZWtz8PzJp+
-         DyxYrDuFpqxZ6HXzw3wOzG5rjo+UuFqPGeh8zeVXIE/Qf8sGSSc1RPs4HgBZoHDLMXfo
-         PjiOPoJlsUVOR2/Tj0jRCD7eenaeZ8QcsU29aNXR2pYXx20QmYcpLfY2U4vcGp4qFZgy
-         Mlzz2+s7Tx5f1L7RsupC0l9W3c64QkRxtAsHXBiBbmy9nUGkQXlHX5esIFlPpoAbyL/+
-         kn846WU1CsRtC4GkvXkuYkXgoSio7LzPjDJa6Mpp5rRtaBsN+OvCXepIQI90ACMZlmA3
-         oJSw==
-X-Gm-Message-State: APjAAAXHaDySFcTIQ68u5Sg6Y1JSmHfn5Te9Wd+IoxlFpc3R1894pH53
-        Vv6VkMmNvbHLqkzs2KE47h3X
-X-Google-Smtp-Source: APXvYqx1+RxRWncZTcuyUZhz6kgWlf5fD+XfO4AMeFborkT4X05rfAgRFXHGr0HdkiWpGhfJT+G4fg==
-X-Received: by 2002:a17:902:d891:: with SMTP id b17mr3445548plz.310.1572426117078;
-        Wed, 30 Oct 2019 02:01:57 -0700 (PDT)
+        bh=19R5LsKrbgqwghaZ71mmjHUlNxFRBymDHjBQo6p8lc4=;
+        b=AB4zwBpBLUHOmfq912Mm1l4u3GvuE5vdkh8mmpV6tkpnEB5fwzGxnR3WLoHmBoUJyS
+         bRIEjZoQvcO50mX8Kza9qFbdQpMLP7jKebvIF6kWmVKPm7iBamKI7EYeGXSN0tNafM30
+         ci60aFrp7ghGUSI3AnU2b0NZB/FDdh55KSj+qDENYlK4R3++ltYVvc8qcy5KNBovb6dq
+         Qd5mzWO9bHl7tkWtNFeo/LAkwPvWt6qf4HvcfEIqEDywBmkd+5dVHXexiKpp04PnjPt/
+         KuiAXawkvEFYvXhXAdY0+z7evGkHNDiTQnuwD1nGNAT4ODm37CQteE1D5Eu4vNU/ruer
+         0yBQ==
+X-Gm-Message-State: APjAAAV+mlKXqGZ3b2DwjgjGxvlcCzAFv29FBIJRMZqxpcJhjsHM7VZS
+        HE5ZTCc5MjpYLZ/OPGguexC+
+X-Google-Smtp-Source: APXvYqwUuGARa9qA1Xv26SDwtPBHlu97DYP79Xh26qXZ4IpI9ZV/Bzj19v7ntAvjvWo3KKyAV/P64g==
+X-Received: by 2002:a17:90a:a598:: with SMTP id b24mr12829604pjq.46.1572426125350;
+        Wed, 30 Oct 2019 02:02:05 -0700 (PDT)
 Received: from localhost.localdomain ([2409:4072:618e:77d9:c9fa:423a:3851:8df4])
-        by smtp.gmail.com with ESMTPSA id g24sm2070351pfi.81.2019.10.30.02.01.48
+        by smtp.gmail.com with ESMTPSA id g24sm2070351pfi.81.2019.10.30.02.01.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 02:01:56 -0700 (PDT)
+        Wed, 30 Oct 2019 02:02:04 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org
 Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         darshak.patel@einfochips.com, prajose.john@einfochips.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org
-Subject: [PATCH v2 1/4] dt-bindings: leds: Document commonly used LED triggers
-Date:   Wed, 30 Oct 2019 14:31:21 +0530
-Message-Id: <20191030090124.24900-2-manivannan.sadhasivam@linaro.org>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 2/4] dt-bindings: arm: Add devicetree binding for Thor96 Board
+Date:   Wed, 30 Oct 2019 14:31:22 +0530
+Message-Id: <20191030090124.24900-3-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
 References: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
@@ -76,48 +73,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit documents the LED triggers used commonly in the SoCs. Not
-all triggers are documented as some of them are very application specific.
-Most of the triggers documented here are currently used in devicetrees
-of many SoCs.
+Add devicetree binding for Thor96 Board from Einfochips. This board is
+one of the 96Boards Consumer Edition platform powered by NXP i.MX8MQ SoC.
 
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Cc: linux-leds@vger.kernel.org
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/leds/common.txt         | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 9fa6f9795d50..2a6806161590 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -55,6 +55,23 @@ Optional properties for child nodes:
-      "timer" - LED flashes at a fixed, configurable rate
-      "pattern" - LED alters the brightness for the specified duration with one
-                  software timer (requires "led-pattern" property)
-+     "mmc[N]" - LED indicates [N]th MMC storage activity
-+     "flash" - LED indicates camera flash state
-+     "torch" - LED indicates camera torch state
-+     "audio-mute" - LED indicates audio mute state
-+     "audio-micmute" - LED indicates mic mute state
-+     "bluetooth-power" - LED indicates bluetooth power state
-+     "usb-gadget" - LED indicates USB gadget activity
-+     "usb-host" - LED indicates USB host activity
-+     "mtd" - LED indicates MTD memory activity
-+     "nand-disk" - LED indicates NAND memory activity (deprecated),
-+                  in new implementations use "mtd"
-+     "disk-read" - LED indicates disk read activity
-+     "disk-write" - LED indicates disk write activity
-+     "none" - No trigger assigned to the LED. This is the default mode
-+              if trigger is absent
-+     "cpu" - LED indicates activity of all CPUs
-+     "cpu[N]" - LED indicates activity of [N]th CPU
- 
- - led-pattern : Array of integers with default pattern for certain triggers.
-                 Each trigger may parse this property differently:
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 1b4b4e6573b5..8016174d5e49 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -239,6 +239,7 @@ properties:
+         items:
+           - enum:
+               - boundary,imx8mq-nitrogen8m # i.MX8MQ NITROGEN Board
++              - einfochips,imx8mq-thor96  # i.MX8MQ Thor96 Board
+               - fsl,imx8mq-evk            # i.MX8MQ EVK Board
+               - purism,librem5-devkit     # Purism Librem5 devkit
+               - solidrun,hummingboard-pulse # SolidRun Hummingboard Pulse
 -- 
 2.17.1
 
