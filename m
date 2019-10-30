@@ -2,44 +2,45 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59006CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E742DCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C3020679
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B33BE2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:29:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="UisusYJw"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="C0JfV5wf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfJ3P3E (ORCPT
+        id S1727311AbfJ3P3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:29:04 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:39120 "EHLO
+        Wed, 30 Oct 2019 11:29:08 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:39130 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727039AbfJ3P3D (ORCPT
+        by vger.kernel.org with ESMTP id S1727039AbfJ3P3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:29:03 -0400
+        Wed, 30 Oct 2019 11:29:05 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 32231C0DE4;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 33041C0DE5;
         Wed, 30 Oct 2019 15:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1572449343; bh=66e/bYyhcGrAFctAHp4076TE/JEaWIo4me4coBNTLE4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UisusYJw9jOvIsXZkfJxzPB8s+FfMXeBNTap3qWNDjaLtsNIAJo3ZDActVJ3vMkg/
-         so418MsACo0KkbTR3ZntPXQF9s1g8LrZ+tWzFSWxmJqJ1qJ26AM5hqtgJR20LaQAKW
-         dVekW/7G5jUlyAVeIi+xEGsty4fYBzi3Zs423KPVO4bugjqj45dSH8V5YhAI52lAN6
-         EtN1OntgLkWJBn3zOop8FBT0QkGuYsNvoi1JwweQoBlp1p+F8ZWfKtfXK2NIXNVEgO
-         sYJDAMgmfZ+QSEi15Iu9kV0C2woDau+Pt94hGEpdFPB3jxiUQLYSzL+TyL2YthpRN7
-         ZOXfxvQLH8tOg==
+        t=1572449345; bh=scoltA+WigVvTzqdJe03QvtfADm3p97oUkWlWeL7UFM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=C0JfV5wftejE2Zrc7hs298DB1il00674wv+0PaRxFtNkoGvpmkNNtTFYJ56xnidN1
+         ASC+0Bp+rlLpTP8I5d7QuzkcAsG8LsLqVr0WY9fooMt95yhVFfTGQKasuHDyYjAFpd
+         wwfn7bGENArpW0UOcDBE43gaHU0+tMDashY/KkBJDGcAmRF5rNJJbxCsmPPUvxX8fa
+         BJNIN7zlxrFGqowRw3UQkFZrHvZVMTqV8jGG+EGOSMYOpdzXOt63EQebBLYhhnOjpU
+         oT/PRO+FlNRz0SXTEuChQ4TlDTskk1uulbWMQ/eeu6HOAT5NzFA1YPWAUx1EC5D1l4
+         7MiGLNceonL9w==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 51946A0057;
-        Wed, 30 Oct 2019 15:28:56 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id DD1DCA0064;
+        Wed, 30 Oct 2019 15:28:58 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -51,25 +52,23 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 0/3] net: stmmac: Improvements for -next
-Date:   Wed, 30 Oct 2019 16:28:47 +0100
-Message-Id: <cover.1572449009.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net-next 3/3] net: stmmac: tc: Remove the speed dependency
+Date:   Wed, 30 Oct 2019 16:28:50 +0100
+Message-Id: <e376abc1b9511f9196977b7b4bb2f871dcbd44fe.1572449009.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1572449009.git.Jose.Abreu@synopsys.com>
+References: <cover.1572449009.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1572449009.git.Jose.Abreu@synopsys.com>
+References: <cover.1572449009.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Misc improvements for stmmac.
+XGMAC3 supports full CBS features with speeds that can go up to 10G so
+we can now remove the maximum speed check of CBS.
 
-Patch 1/3, adds the support for Split Header feature in GMAC4+ cores. This
-was already available for XGMAC and now with this change it is supported in
-all relevant cores.
-
-Patch 2/3, adds the support for C45 MDIO callbacks in XGMAC cores.
-
-Patch 3/3, removes the speed dependency in TC CBS callbacks because XGMAC3
-supports CBS feature at speeds up to 10Gbps
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -82,21 +81,22 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Jose Abreu (3):
-  net: stmmac: gmac4+: Add Split Header support
-  net: stmmac: xgmac: Add C45 PHY support in the MDIO callbacks
-  net: stmmac: tc: Remove the speed dependency
-
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h       |  7 ++++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c | 21 ++++++++--
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.h |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   | 19 +++++++++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.h   |  1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  | 47 ++++++++++++++++++++--
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c    |  2 -
- 7 files changed, 89 insertions(+), 9 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+index f9a9a9d82233..7d972e0fd2b0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+@@ -321,8 +321,6 @@ static int tc_setup_cbs(struct stmmac_priv *priv,
+ 		return -EINVAL;
+ 	if (!priv->dma_cap.av)
+ 		return -EOPNOTSUPP;
+-	if (priv->speed != SPEED_100 && priv->speed != SPEED_1000)
+-		return -EOPNOTSUPP;
+ 
+ 	mode_to_use = priv->plat->tx_queues_cfg[queue].mode_to_use;
+ 	if (mode_to_use == MTL_QUEUE_DCB && qopt->enable) {
 -- 
 2.7.4
 
