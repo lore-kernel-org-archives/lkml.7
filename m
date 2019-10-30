@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C71CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FDECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A762083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C552080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451011;
-	bh=38h9OxLbGYMEfB6eiKf0+8nZ0bNWOcuSd0cJSLAwGVI=;
+	s=default; t=1572451015;
+	bh=ysw7QuSPH6w9H59lOO9u2sSxRofHAlj8WmxiEtXxzkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KXMwC32l4LjGgmg2ULxZn8k1Iz5eH8EALAcVrgck+xgrjsJStlzNYqqdrB//mls4R
-	 ijlZmsUewxM4/Nphtcs0F9nOXToFLSb0kdR4JK9NbXNRI7GF8aQyryErMmdCGCamX2
-	 66zpFttgJ0ubmNdyvuc+x1qhYb0Xo2Q6WX5zfroo=
+	b=OLUOI5BWQQmnQvnt78pf10PwpC91WZM9uzd6BAT0cLmRED5GUmHlQHZrH94I0SYJD
+	 etwB6FtdNtrD5KmNBZOwoqdne7AhStkNVYA6CgWBYz5MRElwVnZullxFUWxrE/3Zjx
+	 6zuGSwKj6hw+ffaQTgy6O8GEQNx+1mx2QVasvUT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfJ3P4t (ORCPT
+        id S1728917AbfJ3P4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:56:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58324 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:56:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbfJ3P4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:56:44 -0400
+        id S1728902AbfJ3P4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:56:50 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11AA420874;
-        Wed, 30 Oct 2019 15:56:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EF3F20650;
+        Wed, 30 Oct 2019 15:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451003;
-        bh=38h9OxLbGYMEfB6eiKf0+8nZ0bNWOcuSd0cJSLAwGVI=;
+        s=default; t=1572451009;
+        bh=ysw7QuSPH6w9H59lOO9u2sSxRofHAlj8WmxiEtXxzkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U3SsEymsgbO+DznJW0DRJ2lc9RWq72F18Wqa7foPG5z1KJp8f2uO8/KUN+Ay0evwC
-         XUgGPF/N58JgAQ36a8zJ/lUA2Nx+jCaNgQ7fiDn2TZljmzKpHyrHp7brJo02Y9oi38
-         k3aDZx1WP17gyetYfNHkVIqmMTDr+DWZEzmMvWSk=
+        b=xuIPyUteCY19+bufh9mPpRtRs2agPnzSM/vLzKGgMYP4uT+9Wz+FikegCv+/i3T4b
+         n1MGCOYr3AHis9tbgzFXKx48EvB6ryMHD1rCKypkjyoPfucv5dj3sMVJ9bRq8ydlHQ
+         vA/esrrY9N8vYL+eq2xyUWMf3bOH0h/pU1o297Dc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 19/24] of: unittest: fix memory leak in unittest_data_add
-Date:   Wed, 30 Oct 2019 11:55:50 -0400
-Message-Id: <20191030155555.10494-19-sashal@kernel.org>
+Cc:     Jonas Gorski <jonas.gorski@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 20/24] MIPS: bmips: mark exception vectors as char arrays
+Date:   Wed, 30 Oct 2019 11:55:51 -0400
+Message-Id: <20191030155555.10494-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155555.10494-1-sashal@kernel.org>
 References: <20191030155555.10494-1-sashal@kernel.org>
@@ -60,35 +62,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
 
-[ Upstream commit e13de8fe0d6a51341671bbe384826d527afe8d44 ]
+[ Upstream commit e4f5cb1a9b27c0f94ef4f5a0178a3fde2d3d0e9e ]
 
-In unittest_data_add, a copy buffer is created via kmemdup. This buffer
-is leaked if of_fdt_unflatten_tree fails. The release for the
-unittest_data buffer is added.
+The vectors span more than one byte, so mark them as arrays.
 
-Fixes: b951f9dc7f25 ("Enabling OF selftest to run without machine's devicetree")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Fixes the following build error when building when using GCC 8.3:
+
+In file included from ./include/linux/string.h:19,
+                 from ./include/linux/bitmap.h:9,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/mips/include/asm/processor.h:15,
+                 from ./arch/mips/include/asm/thread_info.h:16,
+                 from ./include/linux/thread_info.h:38,
+                 from ./include/asm-generic/preempt.h:5,
+                 from ./arch/mips/include/generated/asm/preempt.h:1,
+                 from ./include/linux/preempt.h:81,
+                 from ./include/linux/spinlock.h:51,
+                 from ./include/linux/mmzone.h:8,
+                 from ./include/linux/bootmem.h:8,
+                 from arch/mips/bcm63xx/prom.c:10:
+arch/mips/bcm63xx/prom.c: In function 'prom_init':
+./arch/mips/include/asm/string.h:162:11: error: '__builtin_memcpy' forming offset [2, 32] is out of the bounds [0, 1] of object 'bmips_smp_movevec' with type 'char' [-Werror=array-bounds]
+   __ret = __builtin_memcpy((dst), (src), __len); \
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/mips/bcm63xx/prom.c:97:3: note: in expansion of macro 'memcpy'
+   memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
+   ^~~~~~
+In file included from arch/mips/bcm63xx/prom.c:14:
+./arch/mips/include/asm/bmips.h:80:13: note: 'bmips_smp_movevec' declared here
+ extern char bmips_smp_movevec;
+
+Fixes: 18a1eef92dcd ("MIPS: BMIPS: Introduce bmips.h")
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/unittest.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/bcm63xx/prom.c      |  2 +-
+ arch/mips/include/asm/bmips.h | 10 +++++-----
+ arch/mips/kernel/smp-bmips.c  |  8 ++++----
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 7c6aff7618009..87650d42682fc 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1002,6 +1002,7 @@ static int __init unittest_data_add(void)
- 	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
- 	if (!unittest_data_node) {
- 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
-+		kfree(unittest_data);
- 		return -ENODATA;
- 	}
- 	of_node_set_flag(unittest_data_node, OF_DETACHED);
+diff --git a/arch/mips/bcm63xx/prom.c b/arch/mips/bcm63xx/prom.c
+index 7019e2967009e..bbbf8057565b2 100644
+--- a/arch/mips/bcm63xx/prom.c
++++ b/arch/mips/bcm63xx/prom.c
+@@ -84,7 +84,7 @@ void __init prom_init(void)
+ 		 * Here we will start up CPU1 in the background and ask it to
+ 		 * reconfigure itself then go back to sleep.
+ 		 */
+-		memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
++		memcpy((void *)0xa0000200, bmips_smp_movevec, 0x20);
+ 		__sync();
+ 		set_c0_cause(C_SW0);
+ 		cpumask_set_cpu(1, &bmips_booted_mask);
+diff --git a/arch/mips/include/asm/bmips.h b/arch/mips/include/asm/bmips.h
+index b3e2975f83d36..a564915fddc40 100644
+--- a/arch/mips/include/asm/bmips.h
++++ b/arch/mips/include/asm/bmips.h
+@@ -75,11 +75,11 @@ static inline int register_bmips_smp_ops(void)
+ #endif
+ }
+ 
+-extern char bmips_reset_nmi_vec;
+-extern char bmips_reset_nmi_vec_end;
+-extern char bmips_smp_movevec;
+-extern char bmips_smp_int_vec;
+-extern char bmips_smp_int_vec_end;
++extern char bmips_reset_nmi_vec[];
++extern char bmips_reset_nmi_vec_end[];
++extern char bmips_smp_movevec[];
++extern char bmips_smp_int_vec[];
++extern char bmips_smp_int_vec_end[];
+ 
+ extern int bmips_smp_enabled;
+ extern int bmips_cpu_offset;
+diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
+index 382d12eb88f0f..45fbcbbf2504e 100644
+--- a/arch/mips/kernel/smp-bmips.c
++++ b/arch/mips/kernel/smp-bmips.c
+@@ -457,10 +457,10 @@ static void bmips_wr_vec(unsigned long dst, char *start, char *end)
+ 
+ static inline void bmips_nmi_handler_setup(void)
+ {
+-	bmips_wr_vec(BMIPS_NMI_RESET_VEC, &bmips_reset_nmi_vec,
+-		&bmips_reset_nmi_vec_end);
+-	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, &bmips_smp_int_vec,
+-		&bmips_smp_int_vec_end);
++	bmips_wr_vec(BMIPS_NMI_RESET_VEC, bmips_reset_nmi_vec,
++		bmips_reset_nmi_vec_end);
++	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, bmips_smp_int_vec,
++		bmips_smp_int_vec_end);
+ }
+ 
+ struct reset_vec_info {
 -- 
 2.20.1
 
