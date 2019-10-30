@@ -2,104 +2,118 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CBCCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41511CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BCF217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:04:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k8bDC5IW"
+	by mail.kernel.org (Postfix) with ESMTP id 201B4217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfJ3KEr (ORCPT
+        id S1726667AbfJ3KFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:04:47 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49654 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfJ3KEq (ORCPT
+        Wed, 30 Oct 2019 06:05:41 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:35775 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfJ3KFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:04:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=k4pc/iMWUhnLptKqwUE4lPn7l5icEmFDqp2yizhA38o=; b=k8bDC5IW7yDWjoy94bRZqyVvl
-        YGcEQxUqCyZunYCwEAnVro6R0yoIKAbmS236ylADPR/HMUjrQYMV1ZcUb3/NSSn/YURlKJYAteYDw
-        3eHeFCUiZOlBGRR/NMVTWqnmc4CPTjUdMG5M00fBZRUpaEIQEBsTHTjdbsBOgEVwTAg+3KDgvfbCY
-        k4c3HpZuAjB1OPateFke9CbRcII8C1PvsdHh7n+HLO1pOoCxkFfXadIaMVJHyA85k2MxEwqqsruBP
-        26rfWxj4kRYQQH6W4I78FtUuo+zcNFzsME30YSJ0uxJcH7qRZUt9X3AbsMPTCXIw/UjOctKD3cswE
-        RBe8ZqPtw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPkpw-0007Ha-5H; Wed, 30 Oct 2019 10:04:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 54D4B30610C;
-        Wed, 30 Oct 2019 11:03:17 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 722EF2B4574F5; Wed, 30 Oct 2019 11:04:18 +0100 (CET)
-Date:   Wed, 30 Oct 2019 11:04:18 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rppt@kernel.org" <rppt@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "kirill@shutemov.name" <kirill@shutemov.name>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191030100418.GV4097@hirez.programming.kicks-ass.net>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
- <20191028123124.ogkk5ogjlamvwc2s@box>
- <20191028130018.GA7192@rapoport-lnx>
- <20191028131623.zwuwguhm4v4s5imh@box>
- <20191028135521.GB4097@hirez.programming.kicks-ass.net>
- <0a35765f7412937c1775daa05177b20113760aee.camel@intel.com>
- <20191028210052.GM4643@worktop.programming.kicks-ass.net>
- <69c57f7fa9a1be145827673b37beff155a3adc3c.camel@intel.com>
+        Wed, 30 Oct 2019 06:05:40 -0400
+X-Originating-IP: 91.217.168.176
+Received: from [172.20.50.240] (unknown [91.217.168.176])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 3DAAE60004;
+        Wed, 30 Oct 2019 10:05:38 +0000 (UTC)
+Subject: Re: [PATCH 1/2] dt-bindings: arm: at91: Document Kizbox2 boards
+ binding
+To:     Rob Herring <robh@kernel.org>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191017085405.12599-1-kamel.bouhara@bootlin.com>
+ <20191017085405.12599-2-kamel.bouhara@bootlin.com>
+ <20191029014949.GA22009@bogus>
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+Message-ID: <3c3b1763-5185-34b6-8f68-bbc153eb916f@bootlin.com>
+Date:   Wed, 30 Oct 2019 11:05:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69c57f7fa9a1be145827673b37beff155a3adc3c.camel@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191029014949.GA22009@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 05:27:43PM +0000, Edgecombe, Rick P wrote:
-> On Mon, 2019-10-28 at 22:00 +0100, Peter Zijlstra wrote:
-
-> > That should be limited to the module range. Random data maps could
-> > shatter the world.
+On 29/10/2019 02:49, Rob Herring wrote:
+> On Thu, Oct 17, 2019 at 10:54:04AM +0200, Kamel Bouhara wrote:
+>> Document devicetree's bindings for the SAMA5D31 Kizbox2 boards of
+>> Overkiz SAS.
+>>
+>> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>> ---
+>>   .../devicetree/bindings/arm/atmel-at91.yaml   | 35 +++++++++++++++++++
+>>   1 file changed, 35 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+>> index c0869cb860f3..7636bf7c2382 100644
+>> --- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+>> @@ -80,6 +80,41 @@ properties:
+>>             - const: atmel,sama5d3
+>>             - const: atmel,sama5
+>>   
+>> +      - description: Overkiz kizbox2 board without antenna
+>> +        items:
+>> +          - const: overkiz,kizbox2-0
+>> +          - const: atmel,sama5d31
+>> +          - const: atmel,sama5d3
+>> +          - const: atmel,sama5
+>> +
+>> +      - description: Overkiz kizbox2 board with one head
+>> +        items:
+>> +          - const: overkiz,kizbox2-1
+>> +          - const: atmel,sama5d31
+>> +          - const: atmel,sama5d3
+>> +          - const: atmel,sama5
+>> +
+>> +      - description: Overkiz kizbox2 board with two heads
+>> +        items:
+>> +          - const: overkiz,kizbox2-2
+>> +          - const: atmel,sama5d31
+>> +          - const: atmel,sama5d3
+>> +          - const: atmel,sama5
+>> +
+>> +      - description: Overkiz kizbox2 board with three heads
+>> +        items:
+>> +          - const: overkiz,kizbox2-3
+>> +          - const: atmel,sama5d31
+>> +          - const: atmel,sama5d3
+>> +          - const: atmel,sama5
+>> +
+>> +      - description: Overkiz kizbox2 board Rev2 with two heads
+>> +        items:
+>> +          - const: overkiz,kizbox2-rev2
+>> +          - const: atmel,sama5d31
+>> +          - const: atmel,sama5d3
+>> +          - const: atmel,sama5
 > 
-> BPF has one vmalloc space allocation for the byte code and one for the module
-> space allocation for the JIT. Both get RO also set on the direct map alias of
-> the pages, and reset RW when freed.
+> These can all be made a single items list with the 1st entry being an
+> enum of all the boards. The board description can be a comment.
+> 
+> Rob
+> 
+Yes agree, actually it's already done in v2, by the way thanks for the 
+review.
 
-Argh, I didn't know they mapped the bytecode RO; why does it do that? It
-can throw out the bytecode once it's JIT'ed.
-
-> You mean shatter performance?
-
-Shatter (all) large pages.
+-- 
+Kamel Bouhara, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
