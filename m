@@ -2,174 +2,193 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75713CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C611CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 467FC20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D985C20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L6VZ7BA2"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="md/zgeBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbfJ3W6w (ORCPT
+        id S1727594AbfJ3XF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 18:58:52 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46426 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726837AbfJ3W6v (ORCPT
+        Wed, 30 Oct 2019 19:05:29 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17582 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfJ3XF2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:58:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572476330;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=nzz7sPab5APnqYMyjw2jhY5UVs1dF5WZgMMoICv2W90=;
-        b=L6VZ7BA2qzRnyujtxGjQFhum+++tXW5zakMxS1S6wl0IkIlcvUNrzPl2Kz+B8xdu6f3zFB
-        6MoreKcLdNm6RsniFGK104hoPCZunukcgy32IxKFepnO7ekCpoAkQgDM+m+5bNCYCnMZJN
-        Zbm0kzF5ZzpKkArKsri7yjtNa3kD6s8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-yma7WaZvPoWPAOsDcfcQ0A-1; Wed, 30 Oct 2019 18:58:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 007471005500;
-        Wed, 30 Oct 2019 22:58:45 +0000 (UTC)
-Received: from cantor.redhat.com (ovpn-116-32.phx2.redhat.com [10.3.116.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9791C5D6D6;
-        Wed, 30 Oct 2019 22:58:44 +0000 (UTC)
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org
-Subject: [PATCH v4] tpm: Add tpm_version_major sysfs file
-Date:   Wed, 30 Oct 2019 15:58:43 -0700
-Message-Id: <20191030225843.23366-1-jsnitsel@redhat.com>
+        Wed, 30 Oct 2019 19:05:28 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dba17390001>; Wed, 30 Oct 2019 16:05:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 30 Oct 2019 16:05:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 30 Oct 2019 16:05:23 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 30 Oct
+ 2019 23:05:22 +0000
+Subject: Re: [PATCH 14/19] vfio, mm: pin_longterm_pages (FOLL_PIN) and
+ put_user_page() conversion
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191030224930.3990755-1-jhubbard@nvidia.com>
+ <20191030224930.3990755-15-jhubbard@nvidia.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <cfa579f0-999c-9712-494a-9d519bbc4314@nvidia.com>
+Date:   Wed, 30 Oct 2019 16:05:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: yma7WaZvPoWPAOsDcfcQ0A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191030224930.3990755-15-jhubbard@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572476729; bh=53l+EYxovXaJJmkDDYPwp5PBwN0eKGoaifL7qKM0Mds=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=md/zgeBc2zml8TuAaTKRK2oyv1Btng0H6ozq8zn2sRJiXmTfxKbYsvkGcjK6gQS+q
+         3nPYnJq+1Eps5VG6ooIJSjGzkjOCMYIGUlSFcOJoUyjFNZ1H0vd+dWvWBSOqDkH5Uc
+         dvFo63nthImmg9iCDmU6xj0EE8b8pgUM6g95EetFKN1/r0QnPl5BygVRpoyVLlCyiH
+         iCMwhme/pZSwh1q5oOeHae8CYEOAkIwb1y6ebulV3/7WSgE5bb3SmwuYCg/xWfmbmX
+         iPDY0K1xyswztlMvQmBw8+uJFpl2scC5scONZ/nlQeN+ZcWegNbDORlz6y4lLuTxuj
+         WJ+vmX9yZfaww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Easily determining what TCG version a tpm device implements
-has been a pain point for userspace for a long time, so
-add a sysfs file to report the TCG major version of a tpm device.
+On 10/30/19 3:49 PM, John Hubbard wrote:
+> This also fixes one or two likely bugs.
 
-Also add an entry to Documentation/ABI/stable/sysfs-class-tpm
-describing the new file.
+Well, actually just one...
 
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-integrity@vger.kernel.org
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
----
-v4: - Change file name to tpm_version_major
-    - Actually display just the major version.
-    - change structs to tpm1_* & tpm2_*
-      instead of tpm12_* tpm20_*.
-v3: - Change file name to version_major.
-v2: - Fix TCG usage in commit message.
-    - Add entry to sysfs-class-tpm in Documentation/ABI/stable
+> 
+> 1. Change vfio from get_user_pages(FOLL_LONGTERM), to
+> pin_longterm_pages(), which sets both FOLL_LONGTERM and FOLL_PIN.
+> 
+> Note that this is a change in behavior, because the
+> get_user_pages_remote() call was not setting FOLL_LONGTERM, but the
+> new pin_user_pages_remote() call that replaces it, *is* setting
+> FOLL_LONGTERM. It is important to set FOLL_LONGTERM, because the
+> DMA case requires it. Please see the FOLL_PIN documentation in
+> include/linux/mm.h, and Documentation/pin_user_pages.rst for details.
 
- Documentation/ABI/stable/sysfs-class-tpm | 11 ++++++++
- drivers/char/tpm/tpm-sysfs.c             | 34 +++++++++++++++++++-----
- 2 files changed, 38 insertions(+), 7 deletions(-)
+Correction: the above comment is stale and wrong. I wrote it before 
+getting further into the details, and the patch doesn't do this. 
 
-diff --git a/Documentation/ABI/stable/sysfs-class-tpm b/Documentation/ABI/s=
-table/sysfs-class-tpm
-index c0e23830f56a..5468fedc493c 100644
---- a/Documentation/ABI/stable/sysfs-class-tpm
-+++ b/Documentation/ABI/stable/sysfs-class-tpm
-@@ -183,3 +183,14 @@ Description:=09The "timeouts" property shows the 4 ven=
-dor-specific values
- =09=09The four timeout values are shown in usecs, with a trailing
- =09=09"[original]" or "[adjusted]" depending on whether the values
- =09=09were scaled by the driver to be reported in usec from msecs.
-+
-+What:=09=09/sys/class/tpm/tpmX/tpm_version_major
-+Date:=09=09October 2019
-+KernelVersion:=095.5
-+Contact:=09linux-integrity@vger.kernel.org
-+Description:=09The "tpm_version_major" property shows the TCG spec major v=
-ersion
-+=09=09implemented by the TPM device.
-+
-+=09=09Example output:
-+
-+=09=092
-diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
-index edfa89160010..12da71e72488 100644
---- a/drivers/char/tpm/tpm-sysfs.c
-+++ b/drivers/char/tpm/tpm-sysfs.c
-@@ -309,7 +309,17 @@ static ssize_t timeouts_show(struct device *dev, struc=
-t device_attribute *attr,
- }
- static DEVICE_ATTR_RO(timeouts);
-=20
--static struct attribute *tpm_dev_attrs[] =3D {
-+static ssize_t tpm_version_major_show(struct device *dev,
-+=09=09=09=09  struct device_attribute *attr, char *buf)
-+{
-+=09struct tpm_chip *chip =3D to_tpm_chip(dev);
-+
-+=09return sprintf(buf, "%s\n", chip->flags & TPM_CHIP_FLAG_TPM2
-+=09=09       ? "2" : "1");
-+}
-+static DEVICE_ATTR_RO(tpm_version_major);
-+
-+static struct attribute *tpm1_dev_attrs[] =3D {
- =09&dev_attr_pubek.attr,
- =09&dev_attr_pcrs.attr,
- =09&dev_attr_enabled.attr,
-@@ -320,18 +330,28 @@ static struct attribute *tpm_dev_attrs[] =3D {
- =09&dev_attr_cancel.attr,
- =09&dev_attr_durations.attr,
- =09&dev_attr_timeouts.attr,
-+=09&dev_attr_tpm_version_major.attr,
- =09NULL,
- };
-=20
--static const struct attribute_group tpm_dev_group =3D {
--=09.attrs =3D tpm_dev_attrs,
-+static struct attribute *tpm2_dev_attrs[] =3D {
-+=09&dev_attr_tpm_version_major.attr,
-+=09NULL
-+};
-+
-+static const struct attribute_group tpm1_dev_group =3D {
-+=09.attrs =3D tpm1_dev_attrs,
-+};
-+
-+static const struct attribute_group tpm2_dev_group =3D {
-+=09.attrs =3D tpm2_dev_attrs,
- };
-=20
- void tpm_sysfs_add_device(struct tpm_chip *chip)
- {
--=09if (chip->flags & TPM_CHIP_FLAG_TPM2)
--=09=09return;
--
- =09WARN_ON(chip->groups_cnt !=3D 0);
--=09chip->groups[chip->groups_cnt++] =3D &tpm_dev_group;
-+=09if (chip->flags & TPM_CHIP_FLAG_TPM2)
-+=09=09chip->groups[chip->groups_cnt++] =3D &tpm2_dev_group;
-+=09else
-+=09=09chip->groups[chip->groups_cnt++] =3D &tpm1_dev_group;
- }
---=20
-2.23.0
+Instead, it keeps exactly the old behavior: pin_longterm_pages_remote()
+is careful to avoid setting FOLL_LONGTERM. Instead of setting that flag,
+it drops in a "TODO" comment nearby. :)
 
+I'll update the commit description in the next version of the series.
+
+
+thanks,
+
+John Hubbard
+NVIDIA
+
+> 
+> 2. Because all FOLL_PIN-acquired pages must be released via
+> put_user_page(), also convert the put_page() call over to
+> put_user_pages().
+> 
+> Note that this effectively changes the code's behavior in
+> vfio_iommu_type1.c: put_pfn(): it now ultimately calls
+> set_page_dirty_lock(), instead of set_page_dirty(). This is
+> probably more accurate.
+> 
+> As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
+> dealing with a file backed page where we have reference on the inode it
+> hangs off." [1]
+> 
+> [1] https://lore.kernel.org/r/20190723153640.GB720@lst.de
+> 
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index d864277ea16f..795e13f3ef08 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -327,9 +327,8 @@ static int put_pfn(unsigned long pfn, int prot)
+>  {
+>  	if (!is_invalid_reserved_pfn(pfn)) {
+>  		struct page *page = pfn_to_page(pfn);
+> -		if (prot & IOMMU_WRITE)
+> -			SetPageDirty(page);
+> -		put_page(page);
+> +
+> +		put_user_pages_dirty_lock(&page, 1, prot & IOMMU_WRITE);
+>  		return 1;
+>  	}
+>  	return 0;
+> @@ -349,11 +348,11 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+>  
+>  	down_read(&mm->mmap_sem);
+>  	if (mm == current->mm) {
+> -		ret = get_user_pages(vaddr, 1, flags | FOLL_LONGTERM, page,
+> -				     vmas);
+> +		ret = pin_longterm_pages(vaddr, 1, flags, page, vmas);
+>  	} else {
+> -		ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags, page,
+> -					    vmas, NULL);
+> +		ret = pin_longterm_pages_remote(NULL, mm, vaddr, 1,
+> +						flags, page, vmas,
+> +						NULL);
+>  		/*
+>  		 * The lifetime of a vaddr_get_pfn() page pin is
+>  		 * userspace-controlled. In the fs-dax case this could
+> @@ -363,7 +362,7 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+>  		 */
+>  		if (ret > 0 && vma_is_fsdax(vmas[0])) {
+>  			ret = -EOPNOTSUPP;
+> -			put_page(page[0]);
+> +			put_user_page(page[0]);
+>  		}
+>  	}
+>  	up_read(&mm->mmap_sem);
+> 
