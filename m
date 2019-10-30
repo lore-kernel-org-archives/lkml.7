@@ -2,108 +2,126 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC7DCA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D54CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC29920717
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B897820717
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:34:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q5NAYgao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfJ3JdY (ORCPT
+        id S1726501AbfJ3JeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:33:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49820 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfJ3JdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:33:22 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A67A73E0A51CECA0DC52;
-        Wed, 30 Oct 2019 17:33:20 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.218) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 30 Oct 2019
- 17:33:14 +0800
-Message-ID: <5DB958DA.7080305@huawei.com>
-Date:   Wed, 30 Oct 2019 17:33:14 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        Wed, 30 Oct 2019 05:34:02 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42947 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfJ3JeB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:34:01 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c16so724427plz.9
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 02:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dHt8xmgIY1Zu8o3Odq810rQJYiQ3EDnuokPmILyCi40=;
+        b=Q5NAYgao/jXfBsZ4i0cijFUPxE6TMxG8N+DDCvw3S0ypSp9Uhkclrt0C7ZyXQJkxMF
+         B5Azo0yVgzK1Lm/HtVC1+P+8NLO3GeiOUYhY9n0iA19RIL9bEjRDd++5Y74jA/jFlBL6
+         HJ6YOEtkuNRg/kvrxZrbYVXL1Qz4ifJYEhAEeeMnrMTbeGaWlVHQMuhXFGCJcHSavPwO
+         0F0bO0uCvFr2GAJ+DFYT2fkQo6GlTX0kZ4qzg6ig6DH7KVJDNVYCkmxnWONGu/Zk1duS
+         w3xqZ7lk0A633sBiDEluslRqG9O0RHKN+1Tdq+/wJGvD3Wz/Uqt75MFGjYNc+Au3jlI0
+         hDTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dHt8xmgIY1Zu8o3Odq810rQJYiQ3EDnuokPmILyCi40=;
+        b=AnWky8wOys1FhndC+PgnhU5dq2zx2olH+XW6PH/WJaW+ozIQ56dyHrPwF2aRfxKAj9
+         h4hR6ZZTOBxfNdu1TkkqsVbUwnVyXjLEOi8hvy/xFT4ThLKI1Py6Zv9O3rFgJqTL7Em6
+         ISjLqMRbZ4Oai3KUdM1FGVwn5uc19+O9uR3KO2CFHPb0s/fR7YpOrOK0NrBXYJRwmLg0
+         kvypoqQ3O2qqvApHVJ0MgoLr85keDd27yIr7cop68+hFhj0kMN1ZbL1W4DW0ZiV7tJPI
+         B+wPG0IugU0MTSM3R2WSljWBkfVtqupEN5tA00KkeUS5YDcCGK5KB/44+0F2Q12EYn1M
+         nyXw==
+X-Gm-Message-State: APjAAAUSs2tBad0NhSuJWPQH54cAIcX4g4CMA9LCE1lIZylS4OQdE5se
+        whs6qk/sWhRtPZ9T2CIs5iOs
+X-Google-Smtp-Source: APXvYqyB79vuui3L771+FWwAqgE5eWr71fvsNfKt24AA2PmRgygcBC0iGb+2exeZLjcTPu46alJzGw==
+X-Received: by 2002:a17:902:a584:: with SMTP id az4mr3507150plb.74.1572428040369;
+        Wed, 30 Oct 2019 02:34:00 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:618e:77d9:c9fa:423a:3851:8df4])
+        by smtp.gmail.com with ESMTPSA id i126sm2090862pfc.29.2019.10.30.02.33.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 30 Oct 2019 02:33:59 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 15:03:51 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v3 2/2] media: i2c: Add IMX296 CMOS image sensor driver
+Message-ID: <20191030093351.GC11637@Mani-XPS-13-9360>
+References: <20191025175908.14260-1-manivannan.sadhasivam@linaro.org>
+ <20191025175908.14260-3-manivannan.sadhasivam@linaro.org>
+ <20191029121320.GA5017@valkosipuli.retiisi.org.uk>
+ <20191030062634.GA11637@Mani-XPS-13-9360>
+ <20191030083544.GG5017@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-CC:     "jic23@kernel.org" <jic23@kernel.org>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 1/2] iio: imu: adis16460: use DEFINE_DEBUGFS_ATTRIBUTE
- to define debugfs fops
-References: <1572423581-59762-1-git-send-email-zhongjiang@huawei.com>         <1572423581-59762-2-git-send-email-zhongjiang@huawei.com> <fb8722ad2c1ef51944dc814a7b24433f4348721e.camel@analog.com>
-In-Reply-To: <fb8722ad2c1ef51944dc814a7b24433f4348721e.camel@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.218]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030083544.GG5017@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/30 17:13, Ardelean, Alexandru wrote:
-> On Wed, 2019-10-30 at 16:19 +0800, zhong jiang wrote:
->> [External]
->>
->> It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
->> operation rather than DEFINE_SIMPLE_ATTRIBUTE.
-> Not sure if "more clear" is the word.
-Should be more clearly. :-)
-> But it is more correct to use DEFINE_DEBUGFS_ATTRIBUTE(), since they are
-> debugfs attrs.
->
-> In any case, this is no big deal.
-> So:
->
-> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
->
->> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->> ---
->>  drivers/iio/imu/adis16460.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/iio/imu/adis16460.c b/drivers/iio/imu/adis16460.c
->> index 6aed9e8..2e7a582 100644
->> --- a/drivers/iio/imu/adis16460.c
->> +++ b/drivers/iio/imu/adis16460.c
->> @@ -87,7 +87,7 @@ static int adis16460_show_serial_number(void *arg, u64
->> *val)
->>  
->>  	return 0;
->>  }
->> -DEFINE_SIMPLE_ATTRIBUTE(adis16460_serial_number_fops,
->> +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_serial_number_fops,
->>  	adis16460_show_serial_number, NULL, "0x%.4llx\n");
->>  
->>  static int adis16460_show_product_id(void *arg, u64 *val)
->> @@ -105,7 +105,7 @@ static int adis16460_show_product_id(void *arg, u64
->> *val)
->>  
->>  	return 0;
->>  }
->> -DEFINE_SIMPLE_ATTRIBUTE(adis16460_product_id_fops,
->> +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_product_id_fops,
->>  	adis16460_show_product_id, NULL, "%llu\n");
->>  
->>  static int adis16460_show_flash_count(void *arg, u64 *val)
->> @@ -123,7 +123,7 @@ static int adis16460_show_flash_count(void *arg, u64
->> *val)
->>  
->>  	return 0;
->>  }
->> -DEFINE_SIMPLE_ATTRIBUTE(adis16460_flash_count_fops,
->> +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_flash_count_fops,
->>  	adis16460_show_flash_count, NULL, "%lld\n");
->>  
->>  static int adis16460_debugfs_init(struct iio_dev *indio_dev)
+Hi Sakari,
 
+On Wed, Oct 30, 2019 at 10:35:44AM +0200, Sakari Ailus wrote:
+> On Wed, Oct 30, 2019 at 11:56:34AM +0530, Manivannan Sadhasivam wrote:
+> > Hi Sakari,
+> > 
+> > Thanks for the review!
+> 
+> You're welcome!
+> 
+> > 
+> > On Tue, Oct 29, 2019 at 02:13:20PM +0200, Sakari Ailus wrote:
+> > > Hi Manivannan,
+> > > 
+> > > On Fri, Oct 25, 2019 at 11:29:08PM +0530, Manivannan Sadhasivam wrote:
+> 
+> ...
+> 
+> > > > +static struct i2c_driver imx296_i2c_driver = {
+> > > > +	.probe_new  = imx296_probe,
+> > > > +	.remove = imx296_remove,
+> > > > +	.driver = {
+> > > > +		.name  = "imx296",
+> > > > +		.pm = &imx296_pm_ops,
+> > > > +		.of_match_table = of_match_ptr(imx296_of_match),
+> > > 
+> > > No need for of_match_ptr here.
+> > > 
+> > 
+> > AFAIK, of_match_ptr is needed for !OF case. Else we need to manually add
+> > #ifdef clut to make it NULL. Does the situation changed now?
+> 
+> ACPI based systems can also make use of the compatible string for matching
+> drivers with devices through of_match_table. This may sometimes be the most
+> practical approach. I.e. you don't need ifdefs either.
+> 
 
+Oh okay, I'm not aware of this. Will remove of_match_ptr then.
+
+Thanks,
+Mani
+
+> -- 
+> Regards,
+> 
+> Sakari Ailus
