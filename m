@@ -2,63 +2,79 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BFBCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A932DCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 882C620862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85FDA20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfJ3A5f (ORCPT
+        id S1726666AbfJ3BCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 20:57:35 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33848 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfJ3A5f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 20:57:35 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9E004140F6FBE;
-        Tue, 29 Oct 2019 17:57:34 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 17:57:34 -0700 (PDT)
-Message-Id: <20191029.175734.1356331205705402957.davem@davemloft.net>
-To:     Anson.Huang@nxp.com
-Cc:     fugang.duan@nxp.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH RESEND 2/2] net: fec_ptp: Use
- platform_get_irq_xxx_optional() to avoid error message
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1572313999-23317-2-git-send-email-Anson.Huang@nxp.com>
-References: <1572313999-23317-1-git-send-email-Anson.Huang@nxp.com>
-        <1572313999-23317-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
+        Tue, 29 Oct 2019 21:02:19 -0400
+Received: from gate.crashing.org ([63.228.1.57]:57584 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbfJ3BCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 21:02:18 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9U11JQ0012494;
+        Tue, 29 Oct 2019 20:01:20 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x9U11Hij012492;
+        Tue, 29 Oct 2019 20:01:17 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 29 Oct 2019 20:01:17 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-arch@vger.kernel.org,
+        linux-s390@vger.kernel.org, Michal Simek <monstr@monstr.eu>,
+        x86@kernel.org, linux-ia64@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-xtensa@linux-xtensa.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-parisc@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org
+Subject: Re: [PATCH v2 01/29] powerpc: Rename "notes" PT_NOTE to "note"
+Message-ID: <20191030010117.GJ28442@gate.crashing.org>
+References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-2-keescook@chromium.org> <20191011082519.GI9749@gate.crashing.org> <201910110910.48270FC97@keescook> <20191011162552.GK9749@gate.crashing.org> <20191015165412.GD596@zn.tnic> <201910291414.F29F738B7@keescook>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 29 Oct 2019 17:57:34 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201910291414.F29F738B7@keescook>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
-Date: Tue, 29 Oct 2019 09:53:19 +0800
-
-> Use platform_get_irq_byname_optional() and platform_get_irq_optional()
-> instead of platform_get_irq_byname() and platform_get_irq() for optional
-> IRQs to avoid below error message during probe:
+On Tue, Oct 29, 2019 at 02:15:39PM -0700, Kees Cook wrote:
+> On Tue, Oct 15, 2019 at 06:54:13PM +0200, Borislav Petkov wrote:
+> > On Fri, Oct 11, 2019 at 11:25:52AM -0500, Segher Boessenkool wrote:
+> > > Names *matter*, internal names doubly so.  So why replace a good name with
+> > > a worse name?  Because it is slightly less work for you?
+> > 
+> > So if we agree on the name "notes" and we decide to rename the other
+> > arches, this should all be done in a separate patchset anyway, and ontop
+> > of this one. And I believe Kees wouldn't mind doing it ontop since he's
+> > gotten his hands dirty already. :-P
 > 
-> [    0.795803] fec 30be0000.ethernet: IRQ pps not found
-> [    0.800787] fec 30be0000.ethernet: IRQ index 3 not found
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Acked-by: Fugang Duan <fugang.duan@nxp.com>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> I've added more rationale to patch #1 in the just-sent v3 of this
+> series. If I still can't convince you Segher, I'm happy to send "patch
+> 30/29" to do a bulk rename to "notes". Let me know. :)
 
-Applied.
+I am still not convinced the worse name is a better name, no :-)  But if
+you don't want to do the work, and instead prefer the much smaller change,
+that is of course a fine decision.  Thank you!
+
+(I would be happy with such a 30/29 as well, of course.)
+
+
+Segher
