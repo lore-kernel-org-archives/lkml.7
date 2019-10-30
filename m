@@ -2,139 +2,107 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F8BCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B267ECA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F282054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bmD7Hkqd"
+	by mail.kernel.org (Postfix) with ESMTP id 89D092054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfJ3Q5f (ORCPT
+        id S1727231AbfJ3Q7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:57:35 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37552 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbfJ3Q5f (ORCPT
+        Wed, 30 Oct 2019 12:59:02 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:49164 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbfJ3Q7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:57:35 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q130so2969276wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 09:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QdY6TmK+2y/s14qGjHPxqB0jIXd8MwHLs26zXdSKXyo=;
-        b=bmD7Hkqdf7uXcVoMVRdbMoeBgNoMMbYtDDMQY6sprJ7vUeXGYrqcg+O+i43cwqp8tg
-         UqoRL4ynL+GX3RFQkptjwyDRAM3BtttyVBlJk1hCBAZxTaEnu+8a9mjmuj8xQeM83ykX
-         eriHVoiIJvYciq9fBX7X7LTNNydhtLiJhZgVQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QdY6TmK+2y/s14qGjHPxqB0jIXd8MwHLs26zXdSKXyo=;
-        b=bfha/isV8gnsXFczuBgT223QBLWhXiG3SAUmCWlPFWAZwZOnVLOBp7O7QSQlsKQyAo
-         cWnomp17lddjIXf4xZOIwVr3lmK73Hh4kF3eNcg6cX2yaqFGRuXK8sJXeATshZRRMDU8
-         pmP+jwpM3TDVuOGANvXB/b1i22vXRt/3c5jmZ8cMHCPwBgeSpRK9xMgRogWUsWd/jkRq
-         YpdLELdtmQ0E8DGdqFG09879bg3xO/uwJbI+q5jpoe4wYiuecYfLw2z+cnQ/f6GvLCP8
-         09zcwIZ7aZHA9tjERKl/rv9nOypd77TYsihAy8rbnxcYqfpWzLSfNFheiV7YjodrJdP8
-         mL6A==
-X-Gm-Message-State: APjAAAV8ixdDGKi8KBp8ehPxLWF8gZhg84+02vjZh7zdnQ5agWozoEis
-        Rvg9hsUKsXA43RvCANL6DO4rYm4fTVUTm3TDYQySya/vorsnjh6r9m3aWHWWsOKTpjxJKy0tZ4K
-        ec2SQGq/bPzXYzVlGqpUR1ESwS88lfRlaBy2NzODH7H2wx8WRyA/hsNz3Q1J/gi+YXI9TbXCnOl
-        WV+A+PTgMkVQ==
-X-Google-Smtp-Source: APXvYqz5dKN657/XSJ3JgH9xSQmO8Ni/BmRdwv014BOEqPEYUzkkU9LiTkFVbIQXO+XWsVX5K82/ug==
-X-Received: by 2002:a7b:c30c:: with SMTP id k12mr408919wmj.89.1572454652740;
-        Wed, 30 Oct 2019 09:57:32 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x205sm741097wmb.5.2019.10.30.09.57.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 09:57:31 -0700 (PDT)
-Subject: Re: [PATCH] thermal: brcmstb: enable hwmon
-To:     Chen-Yu Tsai <wens@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191030163807.17817-1-wens@kernel.org>
-From:   Florian Fainelli <florian.fainelli@broadcom.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=florian.fainelli@broadcom.com; prefer-encrypt=mutual; keydata=
- mQENBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAG0MEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPokB
- xAQQAQgArgUCXJvPrRcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFrZXktdXNh
- Z2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2RpbmdAcGdw
- LmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29tLmNvbQUb
- AwAAAAMWAgEFHgEAAAAEFQgJCgAKCRCBMbXEKbxmoE4DB/9JySDRt/ArjeOHOwGA2sLR1DV6
- Mv6RuStiefNvJ14BRfMkt9EV/dBp9CsI+slwj9/ZlBotQXlAoGr4uivZvcnQ9dWDjTExXsRJ
- WcBwUlSUPYJc/kPWFnTxF8JFBNMIQSZSR2dBrDqRP0UWYJ5XaiTbVRpd8nka9BQu4QB8d/Bx
- VcEJEth3JF42LSF9DPZlyKUTHOj4l1iZ/Gy3AiP9jxN50qol9OT37adOJXGEbix8zxoCAn2W
- +grt1ickvUo95hYDxE6TSj4b8+b0N/XT5j3ds1wDd/B5ZzL9fgBjNCRzp8McBLM5tXIeTYu9
- mJ1F5OW89WvDTwUXtT19P1r+qRqKuQENBFPAG8EBCACsa+9aKnvtPjGAnO1mn1hHKUBxVML2
- C3HQaDp5iT8Q8A0ab1OS4akj75P8iXYfZOMVA0Lt65taiFtiPT7pOZ/yc/5WbKhsPE9dwysr
- vHjHL2gP4q5vZV/RJduwzx8v9KrMZsVZlKbvcvUvgZmjG9gjPSLssTFhJfa7lhUtowFof0fA
- q3Zy+vsy5OtEe1xs5kiahdPb2DZSegXW7DFg15GFlj+VG9WSRjSUOKk+4PCDdKl8cy0LJs+r
- W4CzBB2ARsfNGwRfAJHU4Xeki4a3gje1ISEf+TVxqqLQGWqNsZQ6SS7jjELaB/VlTbrsUEGR
- 1XfIn/sqeskSeQwJiFLeQgj3ABEBAAGJAkEEGAECASsFAlPAG8IFGwwAAADAXSAEGQEIAAYF
- AlPAG8EACgkQk2AGqJgvD1UNFQgAlpN5/qGxQARKeUYOkL7KYvZFl3MAnH2VeNTiGFoVzKHO
- e7LIwmp3eZ6GYvGyoNG8cOKrIPvXDYGdzzfwxVnDSnAE92dv+H05yanSUv/2HBIZa/LhrPmV
- hXKgD27XhQjOHRg0a7qOvSKx38skBsderAnBZazfLw9OukSnrxXqW/5pe3mBHTeUkQC8hHUD
- Cngkn95nnLXaBAhKnRfzFqX1iGENYRH3Zgtis7ZvodzZLfWUC6nN8LDyWZmw/U9HPUaYX8qY
- MP0n039vwh6GFZCqsFCMyOfYrZeS83vkecAwcoVh8dlHdke0rnZk/VytXtMe1u2uc9dUOr68
- 7hA+Z0L5IQAKCRCBMbXEKbxmoLoHCACXeRGHuijOmOkbyOk7x6fkIG1OXcb46kokr2ptDLN0
- Ky4nQrWp7XBk9ls/9j5W2apKCcTEHONK2312uMUEryWI9BlqWnawyVL1LtyxLLpwwsXVq5m5
- sBkSqma2ldqBu2BHXZg6jntF5vzcXkqG3DCJZ2hOldFPH+czRwe2OOsiY42E/w7NUyaN6b8H
- rw1j77+q3QXldOw/bON361EusWHdbhcRwu3WWFiY2ZslH+Xr69VtYAoMC1xtDxIvZ96ps9ZX
- pUPJUqHJr8QSrTG1/zioQH7j/4iMJ07MMPeQNkmj4kGQOdTcsFfDhYLDdCE5dj5WeE6fYRxE
- Q3up0ArDSP1L
-Message-ID: <6c681697-c9ad-02a1-8289-fa265cea36c8@broadcom.com>
-Date:   Wed, 30 Oct 2019 09:57:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191030163807.17817-1-wens@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 30 Oct 2019 12:59:02 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tgiqt6T_1572454731;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tgiqt6T_1572454731)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 31 Oct 2019 00:58:58 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     lixinhai.lxh@gmail.com, vbabka@suse.cz, mhocko@suse.com,
+        mgorman@techsingularity.net, akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: mempolicy: fix the wrong return value and potential pages leak of mbind
+Date:   Thu, 31 Oct 2019 00:58:51 +0800
+Message-Id: <1572454731-3925-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chen-Yu,
+The commit d883544515aa ("mm: mempolicy: make the behavior consistent
+when MPOL_MF_MOVE* and MPOL_MF_STRICT were specified") fixed the return
+value of mbind() for a couple of corner cases.  But, it altered the
+errno for some other cases, for example, mbind() should return -EFAULT
+when part or all of the memory range specified by nodemask and maxnode
+points  outside your accessible address space, or there was an unmapped
+hole in the specified memory range specified by addr and len.
 
-On 10/30/19 9:38 AM, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
-> 
-> By defaul of-based thermal driver do not have hwmon entries registered.
-> 
-> Do this explicitly so users can use standard hwmon interfaces and tools
-> to read the temperature.
-> 
-> This is based on similar changes for bcm2835_thermal in commit
-> d56c19d07e0b ("thermal: bcm2835: enable hwmon explicitly").
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Fixed this by preserving the errno returned by queue_pages_range().
+And, the pagelist may be not empty even though queue_pages_range()
+returns error, put the pages back to LRU since mbind_range() is not called
+to really apply the policy so those pages should not be migrated, this
+is also the old behavior before the problematic commit.
 
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+Reported-by: Li Xinhai <lixinhai.lxh@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: <stable@vger.kernel.org> v4.19 and v5.2+
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+ mm/mempolicy.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-There a number of patches that I need to get upstream from our
-downstream tree, because right now the temperatures reported are note
-quite in the expected units..
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 4ae967b..e08c941 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -672,7 +672,9 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
+  * 1 - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
+  *     specified.
+  * 0 - queue pages successfully or no misplaced page.
+- * -EIO - there is misplaced page and only MPOL_MF_STRICT was specified.
++ * errno - i.e. misplaced pages with MPOL_MF_STRICT specified (-EIO) or
++ *         memory range specified by nodemask and maxnode points outside
++ *         your accessible address space (-EFAULT)
+  */
+ static int
+ queue_pages_range(struct mm_struct *mm, unsigned long start, unsigned long end,
+@@ -1286,7 +1288,7 @@ static long do_mbind(unsigned long start, unsigned long len,
+ 			  flags | MPOL_MF_INVERT, &pagelist);
+ 
+ 	if (ret < 0) {
+-		err = -EIO;
++		err = ret;
+ 		goto up_out;
+ 	}
+ 
+@@ -1305,10 +1307,12 @@ static long do_mbind(unsigned long start, unsigned long len,
+ 
+ 		if ((ret > 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
+ 			err = -EIO;
+-	} else
+-		putback_movable_pages(&pagelist);
+-
++	} else {
+ up_out:
++		if (!list_empty(&pagelist))
++			putback_movable_pages(&pagelist);
++	}
++
+ 	up_write(&mm->mmap_sem);
+ mpol_out:
+ 	mpol_put(new);
 -- 
-Florian
+1.8.3.1
+
