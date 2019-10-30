@@ -2,124 +2,121 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7918CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1E2CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2F62080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287AC2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:40:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="h6STLAlg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wpso2Uet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfJ3UfP (ORCPT
+        id S1726934AbfJ3Ukt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 16:35:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39915 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfJ3UfO (ORCPT
+        Wed, 30 Oct 2019 16:40:49 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45140 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfJ3Ukt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 16:35:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a11so3825832wra.6
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 13:35:12 -0700 (PDT)
+        Wed, 30 Oct 2019 16:40:49 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 41so3344913oti.12
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 13:40:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GKB6Sx/IUizZ9IZiRwVYRZ7sZESLZmd5Upv0GbKgvpI=;
-        b=h6STLAlgZAIHahRpiOqt75+7YPhEervlfOHpzdNopczUpjoi/cznwsqOZegaIuJ4TM
-         zdwrYQypkfpFaKGT8vusv604I2nbF1GOJZlwrB9ZKBgTEBjDOpLU6TSZRH/roP8sxwT+
-         LZ6HXtPlhEH+GSsavlv45TTL5baI9xO8kN71I=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lxhTNdcXi1iSw45vhfEhl1l1cZifBtpWm7YMx8V/F14=;
+        b=Wpso2UetFVj77NjHviuT0FEGL2UuDhKUDp2LUKH5Cl81X0s/m4j69C4nk4zPjgZyEU
+         spxnLSa5IaPaHPQiFb7ybHezMgAZE7/crJ4+STddhL9i4K1PVaD74ptW1nZuBB1Iclco
+         h9uWXs0nq7574ny5w9crAS9EbFmHSWuaz/AZYfRObNSk0JZYTfhZBDogxXSAbSse9+MG
+         4DO5BTPt3G1nM9Mcv/0eLa0dCHj9xn/oOvIxFRTYOTr3ITZBKwGWGCASDyaB+qr+cSfJ
+         peQufOEY7xxazpql5HyYFrOw7PslZIPczo3z+VmsL1QgA09KSmpYqqwsV2gbuuHraFZK
+         Hnug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GKB6Sx/IUizZ9IZiRwVYRZ7sZESLZmd5Upv0GbKgvpI=;
-        b=R5+hbup4k+HWkGsKEGUbA3HuLoeX41URuBb798AeUQEaG1t9qwts/bYHeueTsyjuaA
-         7YZ2iO3SbX4atvsuxuJEDuLrOwvoeK67es3I0/cLLgyljavmxURl4U2e8HBY1JQB1wP6
-         nCsSeRX71EIVP3W/Wnc+sAFnms6TmJCmJy61KGmD7yvep/8zAbiyL5WG5tSy3sAy3hvG
-         hHiwe/0/k9ptlkzKe9xzEcAY/5gbxnaNJxhmnj4BZlUHtiAbkWZaJq8b1/HIpheJ2Hsb
-         etXSfUhZPh3K7dTSeTaZJRDq1CE1u+AfA6nARoN54K4B7Nfs/npNVUC9pIpoPe1bMCdh
-         V35A==
-X-Gm-Message-State: APjAAAUluMBjiB7SXWCGQzHSXow5BWWRWKf6INo/UwLtSECnpFoBcDmG
-        sHHzl2ROHuBRSSDbQCdSebmdiV1wz9XlY8iIcBg=
-X-Google-Smtp-Source: APXvYqwZ8L7WBUXKpllPra1iDKCIj9jTGodgQKb31qnM478jp8ypjhyOfCzrMdjpE9K/VYB36AzGxg==
-X-Received: by 2002:adf:d18b:: with SMTP id v11mr1782349wrc.308.1572467711910;
-        Wed, 30 Oct 2019 13:35:11 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id a7sm1633681wrr.89.2019.10.30.13.35.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 13:35:10 -0700 (PDT)
-Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
- not cursor and length [ver #2]
-To:     Ilya Dryomov <idryomov@gmail.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-api@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
- <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
- <CAOi1vP97DMX8zweOLfBDOFstrjC78=6RgxK3PPj_mehCOSeoaw@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <4892d186-8eb0-a282-e7e6-e79958431a54@rasmusvillemoes.dk>
-Date:   Wed, 30 Oct 2019 21:35:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lxhTNdcXi1iSw45vhfEhl1l1cZifBtpWm7YMx8V/F14=;
+        b=X2ZqlMDX03+2DcEGp5Cn+SoLMCQEv7LozhekHfRa6vRHvGc0xBnlj6HvtC6GDCJRhu
+         EiLe0m2ejfBqsqYbvcXOTbByI6lPDYSiB2NDYwU3slBIE8chvp7eE2SzBMrMIfFpY9C0
+         XP8x9lk0+zK7UssEZSegi52ktO4HVSOVM1uLuz35l00CA+EYQhmtagQH7zBCKBiz42GE
+         R9x4VLsf7+82AOrjhb05ZRm+pVIC1YmfAeOgnNZTRYRhgqCfC4i6VMIlfiNGIrt6FkAS
+         SNIV2KmRRL5wXudt1CDQGYjbrzfAu59BGP4Y7LfztAhJk8s4p8O2jME/9TVXgB15e1+X
+         w2Gg==
+X-Gm-Message-State: APjAAAWkBB77C8PMPMYl25xoAJM6usFD7nsqyuer2UHLjy8BRqJP9qwm
+        JSwzeeqmtD66mpWKgmIMHGMb9uFWIDc6heOKISe81Q==
+X-Google-Smtp-Source: APXvYqycOyKPScktzrGCfVEovcqq7O+1VV0i/yWjURxuY0dKAyi5wxsuzlNaxT1bGJCEGODLaJcnzyEwQWlpE0WsUeo=
+X-Received: by 2002:a9d:5e10:: with SMTP id d16mr1527700oti.191.1572468048210;
+ Wed, 30 Oct 2019 13:40:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAOi1vP97DMX8zweOLfBDOFstrjC78=6RgxK3PPj_mehCOSeoaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191025232710.4081957-1-guro@fb.com>
+In-Reply-To: <20191025232710.4081957-1-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 30 Oct 2019 13:40:36 -0700
+Message-ID: <CALvZod53EboWVN_fGOwKKmfARX7SNxciLkVo-jLPUn6pj=f3vw@mail.gmail.com>
+Subject: Re: [PATCH] mm: slab: make page_cgroup_ino() to recognize
+ non-compound slab pages properly
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Linux MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/10/2019 17.19, Ilya Dryomov wrote:
-> On Thu, Oct 24, 2019 at 11:49 AM David Howells <dhowells@redhat.com> wrote:
->>  /*
->> - * We use a start+len construction, which provides full use of the
->> - * allocated memory.
->> - * -- Florian Coosmann (FGC)
->> - *
->> + * We use head and tail indices that aren't masked off, except at the point of
->> + * dereference, but rather they're allowed to wrap naturally.  This means there
->> + * isn't a dead spot in the buffer, provided the ring size < INT_MAX.
->> + * -- David Howells 2019-09-23.
-> 
-> Hi David,
-> 
-> Is "ring size < INT_MAX" constraint correct?
+On Fri, Oct 25, 2019 at 4:28 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> page_cgroup_ino() doesn't return a valid memcg pointer for non-compund
 
-No. As long as one always uses a[idx % size] to access the array, the
-only requirement is that size is representable in an unsigned int. Then
-because one also wants to do the % using simple bitmasking, that further
-restricts one to sizes that are a power of 2, so the end result is that
-the max size is 2^31 (aka INT_MAX+1).
+non-compound
 
-> I've never had to implement this free running indices scheme, but
-> the way I've always visualized it is that the top bit of the index is
-> used as a lap (as in a race) indicator, leaving 31 bits to work with
-> (in case of unsigned ints).  Should that be
-> 
->   ring size <= 2^31
-> 
-> or more precisely
-> 
->   ring size is a power of two <= 2^31
+> slab pages, because it depends on PgHead AND PgSlab flags to be set
+> to determine the memory cgroup from the kmem_cache.
+> It's correct for compound pages, but not for generic small pages. Those
+> don't have PgHead set, so it ends up returning zero.
+>
+> Fix this by replacing the condition to PageSlab() && !PageTail().
+>
+> Before this patch:
+> [root@localhost ~]# ./page-types -c /sys/fs/cgroup/user.slice/user-0.slice/user@0.service/ | grep slab
+> 0x0000000000000080              38        0  _______S___________________________________        slab
+>
+> After this patch:
+> [root@localhost ~]# ./page-types -c /sys/fs/cgroup/user.slice/user-0.slice/user@0.service/ | grep slab
+> 0x0000000000000080             147        0  _______S___________________________________        slab
+>
+> Fixes: 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages")
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Exactly. But it's kind of moot since the ring size would never be
-allowed to grow anywhere near that.
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-Rasmus
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Shakeel Butt <shakeelb@google.com>
+> ---
+>  mm/memcontrol.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index ea085877c548..00b4188b1bed 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -476,7 +476,7 @@ ino_t page_cgroup_ino(struct page *page)
+>         unsigned long ino = 0;
+>
+>         rcu_read_lock();
+> -       if (PageHead(page) && PageSlab(page))
+> +       if (PageSlab(page) && !PageTail(page))
+>                 memcg = memcg_from_slab_page(page);
+>         else
+>                 memcg = READ_ONCE(page->mem_cgroup);
+> --
+> 2.17.1
+>
