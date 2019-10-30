@@ -2,158 +2,134 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DB5CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9897DCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 02:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33F32086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623F02086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 02:00:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPlnOSEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfJ3B6q (ORCPT
+        id S1726816AbfJ3CAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 21:58:46 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5221 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726108AbfJ3B6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 21:58:45 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BACE7FFFD70AD4B8F000;
-        Wed, 30 Oct 2019 09:58:41 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 30 Oct 2019
- 09:58:41 +0800
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Greg KH <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>
-References: <20190925104108.GE4553@hirez.programming.kicks-ass.net>
- <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
- <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
- <20191010073212.GB18412@dhcp22.suse.cz>
- <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
- <20191011111539.GX2311@hirez.programming.kicks-ass.net>
- <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
- <20191012074014.GA2037204@kroah.com>
- <1ec704df-97a5-04b7-1f20-8e3db19440a3@huawei.com>
- <20191029085336.GF31513@dhcp22.suse.cz>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <6c822a7d-499a-a031-5f67-848f590d5257@huawei.com>
-Date:   Wed, 30 Oct 2019 09:58:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Tue, 29 Oct 2019 22:00:16 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39663 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbfJ3CAP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 22:00:15 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t12so212474plo.6;
+        Tue, 29 Oct 2019 19:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4D0rSlERGCFg+HpPsc22n7LM+0fvKRRRI5LIsVOytZs=;
+        b=kPlnOSEFYvjvNe+/OznUbYQJqwKtp3lF/al1O8JlJtS+0XL9rPvJ87r97ZvdCTBsi5
+         MJ0O8OhYwzUFiHHklCGf5gobsgOyxBKXLxgdHBvIeG7B6CbGIEctpz7jPIZ4gVVN9lo8
+         e/SMNfQz8X/gF1dKFtQZ0W2PvtWvtdRQTzlDW7N0B+zlB5rHqE+/OBJq0jzva2GcbTDW
+         3meHJc18Ph4ciGRlGaNpX8zLoRI/gPwEXVpQ5qfLwMgK8ACadwmnGSMdAxeYvYHqCDf7
+         m9H1uhihuFaKUyWJ/APcNunpWA6e7tM3PK2W5KQX/IoAvnULJsT5aJPcttTFNV0xrljE
+         R+1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4D0rSlERGCFg+HpPsc22n7LM+0fvKRRRI5LIsVOytZs=;
+        b=fCR0ld6jLmcyjA6LOdMuCdiUPm4G2gs7+oeAerHbRiej6ghiiNq/JAxTUJ6s4jhcw8
+         EoTAcyrdDLDyMYJWSCaSPXMetlQ5DHTfwdgKljAuMVU9ueb5dCDRCnpZElx8nWG98IAd
+         BqVMOpiPPo1sGLSZU+qoniwcxKvWEscNa5yfl5I0bONooE8+JbousgKkKn1jPD67/kmX
+         qV2N+Sw2VK9aCeYyt7Pbpnlwhfy76lnKKIikUT/fpE/pbI57awOH1YPpXaFVCN+g61fj
+         fwXSu6tPhU5NqT6udlXE1XmsnDZ3V0whKls5qBMGwu9P/fWAUK4tDsnCi94M4xjogHwb
+         F+2A==
+X-Gm-Message-State: APjAAAV8nCaBpCeQ9UediVePnA4RI5e+UtNreOonkQhuCwC+2FhdbIl0
+        q4yilRS4KTSnymhbCAr+khP6KRxx
+X-Google-Smtp-Source: APXvYqzGBAiKExeeLxijQTKVrm2LZ9v6yQdLvEB9xYpsjKHx10zoEGZB6ZnEqBgozW66wfdGEtiP/A==
+X-Received: by 2002:a17:902:7784:: with SMTP id o4mr1893970pll.111.1572400814949;
+        Tue, 29 Oct 2019 19:00:14 -0700 (PDT)
+Received: from [192.168.1.60] (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
+        by smtp.gmail.com with ESMTPSA id 184sm420534pfu.58.2019.10.29.19.00.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 19:00:14 -0700 (PDT)
+Subject: Re: [PATCH V2 7/7] USB: serial: f81232: Add gpiolib to GPIO device
+To:     Johan Hovold <johan@kernel.org>
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peter_hong@fintek.com.tw,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+References: <20190923022449.10952-1-hpeter+linux_kernel@gmail.com>
+ <20190923022449.10952-8-hpeter+linux_kernel@gmail.com>
+ <20191023122208.GW24768@localhost>
+From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+Message-ID: <ef91b42d-e81d-ecdd-c688-0cb3f0b94906@gmail.com>
+Date:   Wed, 30 Oct 2019 10:00:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191029085336.GF31513@dhcp22.suse.cz>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191023122208.GW24768@localhost>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/29 16:53, Michal Hocko wrote:
-> On Mon 28-10-19 17:20:33, Yunsheng Lin wrote:
->> On 2019/10/12 15:40, Greg KH wrote:
->>> On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
->>>> add pci and acpi maintainer
->>>> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
->>>>
->>>> On 2019/10/11 19:15, Peter Zijlstra wrote:
->>>>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
->>>>>> But I failed to see why the above is related to making node_to_cpumask_map()
->>>>>> NUMA_NO_NODE aware?
->>>>>
->>>>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
->>>>> have a node assigned.
->>>>>
->>>>> It not having one, is a straight up bug. We must not silently accept
->>>>> NO_NODE there, ever.
->>>>>
->>>>
->>>> I suppose you mean reporting a lack of affinity when the node of a pcie
->>>> device is not set by "not silently accept NO_NODE".
->>>
->>> If the firmware of a pci device does not provide the node information,
->>> then yes, warn about that.
->>>
->>>> As Greg has asked about in [1]:
->>>> what is a user to do when the user sees the kernel reporting that?
->>>>
->>>> We may tell user to contact their vendor for info or updates about
->>>> that when they do not know about their system well enough, but their
->>>> vendor may get away with this by quoting ACPI spec as the spec
->>>> considering this optional. Should the user believe this is indeed a
->>>> fw bug or a misreport from the kernel?
->>>
->>> Say it is a firmware bug, if it is a firmware bug, that's simple.
->>>
->>>> If this kind of reporting is common pratice and will not cause any
->>>> misunderstanding, then maybe we can report that.
->>>
->>> Yes, please do so, that's the only way those boxes are ever going to get
->>> fixed.  And go add the test to the "firmware testing" tool that is based
->>> on Linux that Intel has somewhere, to give vendors a chance to fix this
->>> before they ship hardware.
->>>
->>> This shouldn't be a big deal, we warn of other hardware bugs all the
->>> time.
->>
->> Hi, all.
->>
->> The warning for the above case has been added in [1].
->>
->> So maybe it makes sense to make node_to_cpumask_map() NUMA_NO_NODE aware
->> now?
->>
->> If Yes, this patch still can be applied to the latest linus' tree cleanly,
->> Do I need to resend it?
->>
+Hi Johan,
+
+Johan Hovold 於 2019/10/23 下午 08:22 寫道:
+> On Mon, Sep 23, 2019 at 10:24:49AM +0800, Ji-Ze Hong (Peter Hong) wrote:
+>> The Fintek F81534A series contains 3 GPIOs per UART and The max GPIOs
+>> is 12x3 = 36 GPIOs and this patch will implements GPIO device as a
+>> gpiochip to control all GPIO pins even transforms to transceiver pins.
 > 
-> By this patch you mean http://lkml.kernel.org/r/1568724534-146242-1-git-send-email-linyunsheng@huawei.com
-> right?
+> Depending to your answer to my question whether these pins are truly
+> general purpose or not, this may not be the right interface.
 
-Yes.
+Our F81534A series contains F81532A/534A/535/536. For the following link
+of F81534A pin-out:
+	https://imgur.com/a/AZHqQ1N
 
+We had 2 type about GPIO pins, MODEx_y & GPIOxx. All MODEx_y & GPIOxx
+are GPIOs and can be controlled by GPIO device, but they had some
+difference about usage.
+	MODEx_y:
+		1. 3 pins(x: 0/1/2) can be access by UART port y.
+		2. Used to control UART's transceiver normally, but it
+		   also can be configure as GPIO when UART disabled by
+		   H/W (DTR strap to GND).
+	GPIOxx:
+		1. Access only by GPIO device.
+
+The series patch only support RS233 mode for all serial port, So we'll
+direct set all MODEx_y to (0/0/1) for our demo board for default. If
+user really want to use the pin, we had provide the gpiolib with GPIO
+device, but we'll recommend user to use GPIOxy first.
+
+Is any suggest about this ? Could I maintain this for this series patch?
+
+>> +
+>> +	status = devm_gpiochip_add_data(&intf->dev, &priv->chip, priv);
+>> +	if (status) {
+>> +		dev_err(&intf->dev, "failed to register gpiochip: %d\n",
+>> +				status);
+>> +		return status;
+>> +	}
 > 
-> I would just resend it unless there is still a clear disagreement over
-> it.
+> Have you tried disconnecting the device with gpios requested? This used
+> to break gpiolib, but was fixed. Just want to make sure it hasn't
+> regressed.
 
-Ok, thanks.
+I had try export GPIOs and detach the F81534A in kernel 5.0.0, it seems
+no problem. Is any link about this issue for me to do more test ?
 
-Will resend it to see if there is still a disagreement over it.
+Thanks
 
-> 
->> [1] https://lore.kernel.org/linux-pci/1571467543-26125-1-git-send-email-linyunsheng@huawei.com/
-> 
-
+-- 
+With Best Regards,
+Peter Hong
