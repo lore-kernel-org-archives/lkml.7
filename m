@@ -6,128 +6,85 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA404CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A359CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6B020874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27DD2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfJ3NKR (ORCPT
+        id S1726353AbfJ3NL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:10:17 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34572 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726203AbfJ3NKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:10:17 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B1DC34B0C0F4A344D568;
-        Wed, 30 Oct 2019 21:10:13 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 30 Oct 2019 21:10:07 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <akinobu.mita@gmail.com>, <gregkh@linuxfoundation.org>
-CC:     <zhongjiang@huawei.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] fault-inject: Use debugfs_create_ulong() instead of debugfs_create_ul()
-Date:   Wed, 30 Oct 2019 21:06:16 +0800
-Message-ID: <1572440776-50318-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Wed, 30 Oct 2019 09:11:28 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:21213 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfJ3NL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:11:28 -0400
+IronPort-SDR: 4yyDR3sJFKrKPKpLcaUxoo9d9+Pa0Ek0erNLQarTDt+8/VKUKoAxoJCgSezeapCwfUIGpDd1iN
+ 4QjHBoj3+5egc0nG5FUaM5YNEYdj0KlEdYCA3Ms8u1oRauTzxovDOLJVdG3RGhg79S1qUEri7+
+ Uin78f580QoK6o98KzsmYYqyIeDnwu1P2zl82et/DWYeC2jAoAcg7k/1Cx2kM2GvQ4A5kVVtQY
+ fGTSJ2CwXNfFRh3rwyxqaD1WUUzm6T7ZkwDMKWZFw/i9V2j/NBIIInkg2XuJWQ9GRUr1K/Axmp
+ qPE=
+X-IronPort-AV: E=Sophos;i="5.68,247,1569276000"; 
+   d="scan'208";a="1923405"
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     akpm@linux-foundation.org
+Cc:     osalvador@suse.de, mhocko@suse.com, pasha.tatashin@oracle.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vincent Whitchurch <rabinv@axis.com>
+Subject: [PATCH] mm/sparse: Consistently do not zero memmap
+Date:   Wed, 30 Oct 2019 14:11:22 +0100
+Message-Id: <20191030131122.8256-1-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-debugfs_create_ulong() has implemented the function of debugfs_create_ul()
-in lib/fault-inject.c. hence we can replace it.
+sparsemem without VMEMMAP has two allocation paths to allocate the
+memory needed for its memmap (done in sparse_mem_map_populate()).
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+In one allocation path (sparse_buffer_alloc() succeeds), the memory is
+not zeroed (since it was previously allocated with
+memblock_alloc_try_nid_raw()).
+
+In the other allocation path (sparse_buffer_alloc() fails and
+sparse_mem_map_populate() falls back to memblock_alloc_try_nid()), the
+memory is zeroed.
+
+AFAICS this difference does not appear to be on purpose.  If the code is
+supposed to work with non-initialized memory (__init_single_page() takes
+care of zeroing the struct pages which are actually used), we should
+consistently not zero the memory, to avoid masking bugs.
+
+(I noticed this because on my ARM64 platform, with 1 GiB of memory the
+ first [and only] section is allocated from the zeroing path while with
+ 2 GiB of memory the first 1 GiB section is allocated from the
+ non-zeroing path.)
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
 ---
- lib/fault-inject.c | 43 ++++++++++++++-----------------------------
- 1 file changed, 14 insertions(+), 29 deletions(-)
+ mm/sparse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/fault-inject.c b/lib/fault-inject.c
-index 8186ca8..326fc1d 100644
---- a/lib/fault-inject.c
-+++ b/lib/fault-inject.c
-@@ -151,10 +151,13 @@ bool should_fail(struct fault_attr *attr, ssize_t size)
- EXPORT_SYMBOL_GPL(should_fail);
+diff --git a/mm/sparse.c b/mm/sparse.c
+index f6891c1992b1..01e467adc219 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -458,7 +458,7 @@ struct page __init *__populate_section_memmap(unsigned long pfn,
+ 	if (map)
+ 		return map;
  
- #ifdef CONFIG_FAULT_INJECTION_DEBUG_FS
-+#ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
- 
--static int debugfs_ul_set(void *data, u64 val)
-+static int debugfs_stacktrace_depth_set(void *data, u64 val)
- {
--	*(unsigned long *)data = val;
-+	*(unsigned long *)data =
-+		min_t(unsigned long, val, MAX_STACK_TRACE_DEPTH);
-+
- 	return 0;
- }
- 
-@@ -164,26 +167,8 @@ static int debugfs_ul_get(void *data, u64 *val)
- 	return 0;
- }
- 
--DEFINE_SIMPLE_ATTRIBUTE(fops_ul, debugfs_ul_get, debugfs_ul_set, "%llu\n");
--
--static void debugfs_create_ul(const char *name, umode_t mode,
--			      struct dentry *parent, unsigned long *value)
--{
--	debugfs_create_file(name, mode, parent, value, &fops_ul);
--}
--
--#ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
--
--static int debugfs_stacktrace_depth_set(void *data, u64 val)
--{
--	*(unsigned long *)data =
--		min_t(unsigned long, val, MAX_STACK_TRACE_DEPTH);
--
--	return 0;
--}
--
--DEFINE_SIMPLE_ATTRIBUTE(fops_stacktrace_depth, debugfs_ul_get,
--			debugfs_stacktrace_depth_set, "%llu\n");
-+DEFINE_DEBUGFS_ATTRIBUTE(fops_stacktrace_depth, debugfs_ul_get,
-+			 debugfs_stacktrace_depth_set, "%llu\n");
- 
- static void debugfs_create_stacktrace_depth(const char *name, umode_t mode,
- 					    struct dentry *parent,
-@@ -204,11 +189,11 @@ struct dentry *fault_create_debugfs_attr(const char *name,
- 	if (IS_ERR(dir))
- 		return dir;
- 
--	debugfs_create_ul("probability", mode, dir, &attr->probability);
--	debugfs_create_ul("interval", mode, dir, &attr->interval);
-+	debugfs_create_ulong("probability", mode, dir, &attr->probability);
-+	debugfs_create_ulong("interval", mode, dir, &attr->interval);
- 	debugfs_create_atomic_t("times", mode, dir, &attr->times);
- 	debugfs_create_atomic_t("space", mode, dir, &attr->space);
--	debugfs_create_ul("verbose", mode, dir, &attr->verbose);
-+	debugfs_create_ulong("verbose", mode, dir, &attr->verbose);
- 	debugfs_create_u32("verbose_ratelimit_interval_ms", mode, dir,
- 			   &attr->ratelimit_state.interval);
- 	debugfs_create_u32("verbose_ratelimit_burst", mode, dir,
-@@ -218,10 +203,10 @@ struct dentry *fault_create_debugfs_attr(const char *name,
- #ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
- 	debugfs_create_stacktrace_depth("stacktrace-depth", mode, dir,
- 					&attr->stacktrace_depth);
--	debugfs_create_ul("require-start", mode, dir, &attr->require_start);
--	debugfs_create_ul("require-end", mode, dir, &attr->require_end);
--	debugfs_create_ul("reject-start", mode, dir, &attr->reject_start);
--	debugfs_create_ul("reject-end", mode, dir, &attr->reject_end);
-+	debugfs_create_ulong("require-start", mode, dir, &attr->require_start);
-+	debugfs_create_ulong("require-end", mode, dir, &attr->require_end);
-+	debugfs_create_ulong("reject-start", mode, dir, &attr->reject_start);
-+	debugfs_create_ulong("reject-end", mode, dir, &attr->reject_end);
- #endif /* CONFIG_FAULT_INJECTION_STACKTRACE_FILTER */
- 
- 	attr->dname = dget(dir);
+-	map = memblock_alloc_try_nid(size,
++	map = memblock_alloc_try_nid_raw(size,
+ 					  PAGE_SIZE, addr,
+ 					  MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+ 	if (!map)
 -- 
-1.7.12.4
+2.20.0
 
