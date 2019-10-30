@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77559CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0312CCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45035208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C80ED208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450681;
-	bh=XD1D1VT5cOjCVBZpol8U0nDBMsixK5DchGwMkIdXBi0=;
+	s=default; t=1572450684;
+	bh=j0dq07s5gcJmAjlTqbRFwDv0S35OH9GkUrQKdW+7wE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTpHg2naW1tsaE06KKC9CEpRS0FsAMrIvgtJZCF3NC7Sov3CwNJbndaYwLhujEEqe
-	 iGx48/Pw5E+jNdgFlHlOLiy0RPCjkSznP4ahUMIZvsiiyLbR4sG2DIAEUwW5z0VL0h
-	 eqHzvOBWqoeIOWGlbC2xUQv8VZj0x0oGxpyM9Fg8=
+	b=bdHwl1j2hzkWiaCVHaoDctLPX2vihhoxl3vg83wVXi0uvkf9fjpdE1SsmwK+Odd7H
+	 Ph1nkKhLSx4qEn5VGX5+nBRVxYKaGNymixVetS0eO+dRD8TZv9Kjm8nyeG8BNDiKhW
+	 oGZDn3nrbqXGqeDgd3vniMIDEsDXw32Vsn6aRQJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfJ3PvU (ORCPT
+        id S1727754AbfJ3PvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:51:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:51:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbfJ3PvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:51:18 -0400
+        id S1727725AbfJ3PvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:22 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B5BD208C0;
-        Wed, 30 Oct 2019 15:51:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EABA1208E3;
+        Wed, 30 Oct 2019 15:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450677;
-        bh=XD1D1VT5cOjCVBZpol8U0nDBMsixK5DchGwMkIdXBi0=;
+        s=default; t=1572450681;
+        bh=j0dq07s5gcJmAjlTqbRFwDv0S35OH9GkUrQKdW+7wE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o5QE/7pn4PfXW9EEC2Nd9xLWF/IdXH512IkeZ3LvjCdixit7KMJrjlTsLyg8/YkHi
-         cr63z+xURsy3wX5iCa0vnJ1aNWJyZRhbOxO+JPriTILU2w7ME/y1JS8BF7hutv7LSh
-         RsUMlL5eEofGUPJ2RWs/T5yChpyLqZ2pkmgWYM8s=
+        b=MTvuGCLd5CaTAxK3/sPmdL461wXtFo2GqwAwBjK4cqrdgPoQNpB+X+aRJWNGRMGyS
+         DhBXQngevvRpJrM+GuY4sLIKRnuboNWetptSGKi21MZwRq7NOfuRDUlqp2mM9Qujcd
+         bUqCIfq9tVZ8eIU3tsmFEwmERyjUmT1xxRJu8DsE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Hugh Cole-Baker <sigmaris@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 22/81] ASoc: rockchip: i2s: Fix RPM imbalance
-Date:   Wed, 30 Oct 2019 11:48:28 -0400
-Message-Id: <20191030154928.9432-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 23/81] arm64: dts: rockchip: fix Rockpro64 RK808 interrupt line
+Date:   Wed, 30 Oct 2019 11:48:29 -0400
+Message-Id: <20191030154928.9432-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -60,37 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Hugh Cole-Baker <sigmaris@gmail.com>
 
-[ Upstream commit b1e620e7d32f5aad5353cc3cfc13ed99fea65d3a ]
+[ Upstream commit deea9f5fc32040fd6f6132f2260ba410fb5cf98c ]
 
-If rockchip_pcm_platform_register() fails, e.g. upon deferring to wait
-for an absent DMA channel, we return without disabling RPM, which makes
-subsequent re-probe attempts scream with errors about the unbalanced
-enable. Don't do that.
+Fix the pinctrl and interrupt specifier for RK808 to use GPIO3_B2. On the
+Rockpro64 schematic [1] page 16, it shows GPIO3_B2 used for the interrupt
+line PMIC_INT_L from the RK808, and there's a note which translates as:
+"PMU termination GPIO1_C5 changed to this".
 
-Fixes: ebb75c0bdba2 ("ASoC: rockchip: i2s: Adjust devm usage")
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/bcb12a849a05437fb18372bc7536c649b94bdf07.1570029862.git.robin.murphy@arm.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Tested by setting an RTC wakealarm and checking /proc/interrupts counters.
+Without this patch, neither the rockchip_gpio_irq counter for the RK808,
+nor the RTC alarm counter increment when the alarm time is reached.
+With this patch, both interrupt counters increment by 1 as expected.
+
+[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
+
+Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
+Signed-off-by: Hugh Cole-Baker <sigmaris@gmail.com>
+Link: https://lore.kernel.org/r/20190921131457.36258-1-sigmaris@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/rockchip/rockchip_i2s.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
-index 88ebaf6e1880a..a0506e554c98b 100644
---- a/sound/soc/rockchip/rockchip_i2s.c
-+++ b/sound/soc/rockchip/rockchip_i2s.c
-@@ -674,7 +674,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
- 	ret = rockchip_pcm_platform_register(&pdev->dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register PCM\n");
--		return ret;
-+		goto err_suspend;
- 	}
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+index eb55940620060..5818b85255123 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+@@ -240,8 +240,8 @@
+ 	rk808: pmic@1b {
+ 		compatible = "rockchip,rk808";
+ 		reg = <0x1b>;
+-		interrupt-parent = <&gpio1>;
+-		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
+ 		#clock-cells = <1>;
+ 		clock-output-names = "xin32k", "rk808-clkout2";
+ 		pinctrl-names = "default";
+@@ -567,7 +567,7 @@
  
- 	return 0;
+ 	pmic {
+ 		pmic_int_l: pmic-int-l {
+-			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 
+ 		vsel1_gpio: vsel1-gpio {
 -- 
 2.20.1
 
