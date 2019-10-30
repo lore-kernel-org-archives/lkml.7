@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43C3CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC0CCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B422083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6466320874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:11:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cPwCZVCo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jcy8Fggj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbfJ3JL3 (ORCPT
+        id S1726619AbfJ3JLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:11:29 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34333 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfJ3JL3 (ORCPT
+        Wed, 30 Oct 2019 05:11:31 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44305 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfJ3JL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 30 Oct 2019 05:11:29 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v3so3808138wmh.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 02:11:27 -0700 (PDT)
+Received: by mail-wr1-f68.google.com with SMTP id z11so1354321wro.11
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 02:11:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=bOJ34PW9YadKMWVy7Lq7RFshOmanpmOaFJ0/LQDvOqk=;
-        b=cPwCZVCovU/2CggOdtlONW+HZ6vJ7trmhL6nPvJqYuw/oD1PyHK17o3Tz6pwRytnQ8
-         CrPypUXTHXlG8BoCEPtuwAzA9U1uWgHRJQwmCInvns67XnF+kWFy0hMm3NOG5UyoT/cq
-         0ycPALIj/Vgu//Ye9inmkdYDNjuKDw+Hrd34RhvLlFEbc/kSbr/R3mRY1RMC4gZiT9rN
-         EhnO++bBeYFzwPbTyiwXLJy9yvyiFFpxsBU07mk+fw/ft6vj7n0T73TZxecfbyBi6YRG
-         vHcwmIrVz1R9pDf4v4cEcKi7LrjFnFzQ2c9pm5tvv48nHEtON21c7C45Avw6axIGDOI3
-         6ZSA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=0cMzmwOQ45CvCpy5BV9I0axI+oTcT02C42maobILAtA=;
+        b=Jcy8FggjKwJb4bd9H4Q6f/qntfaIsKoRcwzdf8bVSIBZsq/wZACAWyQxjs8qrpoM48
+         0ojV8Qx7fKxGvn1Ln8S3TyUUB2yHjlEIbRFbrWIPy6gqUg+cq1BwbLCUPD3//EwoprbA
+         AgGv2ykIUrdJ0p3sJsRBFDWKLmEm2e1yZMwHwVPUUzdzXR2f/e46jXEky77tjWm7SmOm
+         +pCMyc8RIFnudmO8HCTTXlsoQpgvD5OSf6MlAZxumT0m8PyR0xwCe5aXgbKqRzprLcKq
+         ZsblpQ+IM82gyL4ansMguDQ6BFePNWjNBI5BYGWQwFY56600Vfb/MQRl+GTWWYPd7eK+
+         YETg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=bOJ34PW9YadKMWVy7Lq7RFshOmanpmOaFJ0/LQDvOqk=;
-        b=aZUtjsJfo3TsCgNYRT2h7XSTgEIx945/RvAuErKE5SUqlHVKCcEkeUJLmLfJxaGdKy
-         EFGhlsvDDQW5Q+z2FUXikLoubQ95Uipud3hh9dmzCRyauJfUJ6mj2JdGojZZU+IrqHen
-         q2QFvgIJz3jdbMiO9UpYTZDD1GhV6Lz5Y9k5szjj9g+jO2WFPDIF1ft+Gs0SoPJGkd2v
-         miMSrbq0pscZUxRPDyeegJz3nmabW9GNh/RwiuX0ftDWCyq4jagnCthkiBe8L74VciYZ
-         cRvmPusmmpMCkn0d1Zj1fMT2mOGGjlz92stImmfzWodUjM00M7siG+MWW2WvdhWL+FlT
-         HhYg==
-X-Gm-Message-State: APjAAAUlm26o04gNIRV0qeVfaYkQVwpIWgP78nz4gl1haPdoquVMKqhf
-        0GHxoszT74kugoTLxE0CLUBTYB4qEk0=
-X-Google-Smtp-Source: APXvYqy0w7naVwNgnhQ/SgNL4RSoXuzbGVisLCeRIfRNlMZSRXD/MvlZHZRncQDBE1MAoEA51vnfOg==
-X-Received: by 2002:a7b:c94f:: with SMTP id i15mr8250697wml.8.1572426686603;
-        Wed, 30 Oct 2019 02:11:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=0cMzmwOQ45CvCpy5BV9I0axI+oTcT02C42maobILAtA=;
+        b=Xs6VRZXpquPx+af8d2wYOJMm6j6SWrUHUbAPW/1wLTCeiQYh9uIKxDYedaYMsMKcnZ
+         gtIbciLkm5fMQnOuoeM5NpgRD7xlII0drGJ1wZ507XVxJYTeNbRtc47QdYPH/2Tq4h6y
+         avpSNlxBxZ1IV5DDh/JE8qHVj2OjOJ2jMYD5pZm93uDunxOSLNRH5QNlT9e8pLx//djs
+         FQxXduMAmEHzXKcB5xMn8Sy7+w379R2tP0hu+d8v/LUrRo324L6H01WdOLG6arm29kMj
+         FLC/Go7ip6qjFmnz/TBv/9eXcyQX0L102dxvhaR7NGCHbJ739Aq+KBVC/DMlOafLPZrz
+         c37Q==
+X-Gm-Message-State: APjAAAU9A+pc+KEmW4ZlF2Mn3QtPmVLwxT0WF9NkK2Hd2DxmwC8uIXQe
+        u132He7bn7sElovSeY6gLb4bRA==
+X-Google-Smtp-Source: APXvYqz2E4NMQlmOnxogLoFoSCKmtXixmPvQMaVqKsn2Qt80aUGkIwMVP0MmgrZZNDpIGpFr/1oowA==
+X-Received: by 2002:a5d:66c6:: with SMTP id k6mr23308468wrw.152.1572426688132;
+        Wed, 30 Oct 2019 02:11:28 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e34:ed2f:f020:2c7f:2fc:5551:ee55])
-        by smtp.gmail.com with ESMTPSA id t24sm2608394wra.55.2019.10.30.02.11.25
+        by smtp.gmail.com with ESMTPSA id t24sm2608394wra.55.2019.10.30.02.11.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 02:11:26 -0700 (PDT)
+        Wed, 30 Oct 2019 02:11:27 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     daniel.lezcano@linaro.org
 Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
@@ -64,46 +65,63 @@ Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
         Amit Kucheria <amit.kucheria@verdurent.com>,
         linux-pm@vger.kernel.org (open list:THERMAL/CPU_COOLING),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/2] thermal: cpu_cooling: Remove pointless dependency on CONFIG_OF
-Date:   Wed, 30 Oct 2019 10:10:36 +0100
-Message-Id: <20191030091038.678-1-daniel.lezcano@linaro.org>
+Subject: [PATCH 2/2] thermal: cpu_cooling: Reorder the header file
+Date:   Wed, 30 Oct 2019 10:10:37 +0100
+Message-Id: <20191030091038.678-2-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191030091038.678-1-daniel.lezcano@linaro.org>
+References: <20191030091038.678-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The option CONFIG_CPU_THERMAL depends on CONFIG_OF in the Kconfig.
+As the conditions are simplified and unified, it is useless to have
+different blocks of definitions under the same compiler condition,
+let's merge the blocks.
 
-It it pointless to check if CONFIG_OF is set in the header file as
-this is always true if CONFIG_CPU_THERMAL is true. Remove it.
+There is no functional change.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- include/linux/cpu_cooling.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/cpu_cooling.h | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
 diff --git a/include/linux/cpu_cooling.h b/include/linux/cpu_cooling.h
-index bae54bb7c048..72d1c9c5e538 100644
+index 72d1c9c5e538..b74732535e4b 100644
 --- a/include/linux/cpu_cooling.h
 +++ b/include/linux/cpu_cooling.h
-@@ -47,7 +47,7 @@ void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev)
- }
- #endif	/* CONFIG_CPU_THERMAL */
+@@ -33,6 +33,13 @@ cpufreq_cooling_register(struct cpufreq_policy *policy);
+  */
+ void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev);
  
--#if defined(CONFIG_THERMAL_OF) && defined(CONFIG_CPU_THERMAL)
-+#ifdef CONFIG_CPU_THERMAL
- /**
-  * of_cpufreq_cooling_register - create cpufreq cooling device based on DT.
-  * @policy: cpufreq policy.
-@@ -60,6 +60,6 @@ of_cpufreq_cooling_register(struct cpufreq_policy *policy)
++/**
++ * of_cpufreq_cooling_register - create cpufreq cooling device based on DT.
++ * @policy: cpufreq policy.
++ */
++struct thermal_cooling_device *
++of_cpufreq_cooling_register(struct cpufreq_policy *policy);
++
+ #else /* !CONFIG_CPU_THERMAL */
+ static inline struct thermal_cooling_device *
+ cpufreq_cooling_register(struct cpufreq_policy *policy)
+@@ -45,16 +52,7 @@ void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev)
  {
- 	return NULL;
+ 	return;
  }
--#endif /* defined(CONFIG_THERMAL_OF) && defined(CONFIG_CPU_THERMAL) */
-+#endif /* CONFIG_CPU_THERMAL */
+-#endif	/* CONFIG_CPU_THERMAL */
  
- #endif /* __CPU_COOLING_H__ */
+-#ifdef CONFIG_CPU_THERMAL
+-/**
+- * of_cpufreq_cooling_register - create cpufreq cooling device based on DT.
+- * @policy: cpufreq policy.
+- */
+-struct thermal_cooling_device *
+-of_cpufreq_cooling_register(struct cpufreq_policy *policy);
+-#else
+ static inline struct thermal_cooling_device *
+ of_cpufreq_cooling_register(struct cpufreq_policy *policy)
+ {
 -- 
 2.17.1
 
