@@ -4,204 +4,210 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8F3CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8481DCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2309C204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F112087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfJ3KiI (ORCPT
+        id S1726795AbfJ3KjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:38:08 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2501 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726046AbfJ3KiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:38:07 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 180FDFE20842B11A1B1F;
-        Wed, 30 Oct 2019 18:38:05 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 30 Oct 2019 18:38:04 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 30 Oct 2019 18:38:04 +0800
-Date:   Wed, 30 Oct 2019 18:40:49 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-CC:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] ext4: bio_alloc never fails
-Message-ID: <20191030104049.GA170703@architecture4>
-References: <20191030042618.124220-1-gaoxiang25@huawei.com>
- <20191030101311.2175EA4055@d06av23.portsmouth.uk.ibm.com>
+        Wed, 30 Oct 2019 06:39:00 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:55709 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726046AbfJ3KjA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 06:39:00 -0400
+Received: from [172.20.50.122] ([91.217.168.176])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id PlNMiZEaKsBskPlNPiLsG2; Wed, 30 Oct 2019 11:38:57 +0100
+Subject: Re: [PATCH] dt-bindings: media: meson-ao-cec: convert to yaml
+To:     Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191021121131.25017-1-narmstrong@baylibre.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <d8733cd1-fca8-3aa7-8a48-8e79d0249e82@xs4all.nl>
+Date:   Wed, 30 Oct 2019 11:38:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191030101311.2175EA4055@d06av23.portsmouth.uk.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191021121131.25017-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfIQ2VdeGwB3P6PAcICDG9mQkN2WKp13Tk7/oBtUpSOf67QH/VGP9pPxvt49Oopz6Qm4vSECPrgX7ZQVLgpKlLNgISmpxyQBwJFLd9BAdOQ/cv1vaA4TN
+ YYzuB+p3f3BPchXc6x3xOmgODI6mEhcMDhNoAdVUYRc9jAHCeDEA+JzcJKFEAWzOm29SFD48uSQHaKuz6hfvRXx0SwwazEcFDflnaRUPOcdVaqV/pzoXtT3M
+ 8ypLdzK972vSyI1Zck283wFUvDjvGllc8x4oSDjx9TQQS2qWDHr0E0E9IcPaarP43bs2Pj6VfwAqBV9c5uXOAr6Zl+NY/ptrW7WMUnMHA/vAsRSHqwiIQPPV
+ L/QHyEYjc91sYgyCK18FtGJGNStxGU91lJcWyI9T57H/nKhLqe9gtpTMPtnLdfEAskMCRHXz4fQyEMv7BtaL/9nbR4hPEg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ritech,
+Hi Neil,
 
-On Wed, Oct 30, 2019 at 03:43:10PM +0530, Ritesh Harjani wrote:
-> 
-> 
-> On 10/30/19 9:56 AM, Gao Xiang wrote:
-> > Similar to [1] [2], it seems a trivial cleanup since
-> > bio_alloc can handle memory allocation as mentioned in
-> > fs/direct-io.c (also see fs/block_dev.c, fs/buffer.c, ..)
-> > 
-> 
-> AFAIU, the reason is that, bio_alloc with __GFP_DIRECT_RECLAIM
-> flags guarantees bio allocation under some given restrictions,
-> as stated in fs/direct-io.c
-> So here it is ok to not check for NULL value from bio_alloc.
-> 
-> I think we can update above info too in your commit msg.
+Can you post a new patch that updates the MAINTAINERS file?
 
-Ok, I will update commit msg as you suggested.
+Thanks!
 
-> 
-> > [1] https://lore.kernel.org/r/20191030035518.65477-1-gaoxiang25@huawei.com
-> > [2] https://lore.kernel.org/r/20190830162812.GA10694@infradead.org
-> > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> > ---
-> >   fs/ext4/page-io.c  | 11 +++--------
-> >   fs/ext4/readpage.c |  2 --
-> >   2 files changed, 3 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-> > index 12ceadef32c5..f1f7b6601780 100644
-> > --- a/fs/ext4/page-io.c
-> > +++ b/fs/ext4/page-io.c
-> > @@ -358,14 +358,12 @@ void ext4_io_submit_init(struct ext4_io_submit *io,
-> >   	io->io_end = NULL;
-> >   }
-> > 
-> > -static int io_submit_init_bio(struct ext4_io_submit *io,
-> > -			      struct buffer_head *bh)
-> > +static void io_submit_init_bio(struct ext4_io_submit *io,
-> > +			       struct buffer_head *bh)
-> >   {
-> >   	struct bio *bio;
-> > 
-> >   	bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
-> > -	if (!bio)
-> > -		return -ENOMEM;
-> >   	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
-> >   	bio_set_dev(bio, bh->b_bdev);
-> >   	bio->bi_end_io = ext4_end_bio;
-> > @@ -373,7 +371,6 @@ static int io_submit_init_bio(struct ext4_io_submit *io,
-> >   	io->io_bio = bio;
-> >   	io->io_next_block = bh->b_blocknr;
-> >   	wbc_init_bio(io->io_wbc, bio);
-> > -	return 0;
-> >   }
-> > 
-> >   static int io_submit_add_bh(struct ext4_io_submit *io,
-> > @@ -388,9 +385,7 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
-> >   		ext4_io_submit(io);
-> >   	}
-> >   	if (io->io_bio == NULL) {
-> > -		ret = io_submit_init_bio(io, bh);
-> > -		if (ret)
-> > -			return ret;
-> > +		io_submit_init_bio(io, bh);
-> >   		io->io_bio->bi_write_hint = inode->i_write_hint;
-> >   	}
-> >   	ret = bio_add_page(io->io_bio, page, bh->b_size, bh_offset(bh));
-> 
-> 
-> Also we can further simplify it like below. Please check.
+	Hans
 
-Got it, let me update the patch later. :-)
-Thanks for your suggestion. I will wait for a while and
-see if other opinions raise up...
-
-Thanks,
-Gao Xiang
-
+On 10/21/19 2:11 PM, Neil Armstrong wrote:
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Amlogic AO-CEC controller over to a YAML schemas.
 > 
-> diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-> index f1f7b6601780..a3a2edeb3bbf 100644
-> --- a/fs/ext4/page-io.c
-> +++ b/fs/ext4/page-io.c
-> @@ -373,7 +373,7 @@ static void io_submit_init_bio(struct ext4_io_submit
-> *io,
->  	wbc_init_bio(io->io_wbc, bio);
->  }
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>   .../media/amlogic,meson-gx-ao-cec.yaml        | 91 +++++++++++++++++++
+>   .../bindings/media/meson-ao-cec.txt           | 37 --------
+>   2 files changed, 91 insertions(+), 37 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
+>   delete mode 100644 Documentation/devicetree/bindings/media/meson-ao-cec.txt
 > 
-> -static int io_submit_add_bh(struct ext4_io_submit *io,
-> +static void io_submit_add_bh(struct ext4_io_submit *io,
->  			    struct inode *inode,
->  			    struct page *page,
->  			    struct buffer_head *bh)
-> @@ -393,7 +393,6 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
->  		goto submit_and_retry;
->  	wbc_account_cgroup_owner(io->io_wbc, page, bh->b_size);
->  	io->io_next_block++;
-> -	return 0;
->  }
-> 
->  int ext4_bio_write_page(struct ext4_io_submit *io,
-> @@ -495,30 +494,23 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
->  	do {
->  		if (!buffer_async_write(bh))
->  			continue;
-> -		ret = io_submit_add_bh(io, inode, bounce_page ?: page, bh);
-> -		if (ret) {
-> -			/*
-> -			 * We only get here on ENOMEM.  Not much else
-> -			 * we can do but mark the page as dirty, and
-> -			 * better luck next time.
-> -			 */
-> -			break;
-> -		}
-> +		io_submit_add_bh(io, inode, bounce_page ?: page, bh);
->  		nr_submitted++;
->  		clear_buffer_dirty(bh);
->  	} while ((bh = bh->b_this_page) != head);
-> 
-> -	/* Error stopped previous loop? Clean up buffers... */
-> -	if (ret) {
-> -	out:
-> -		fscrypt_free_bounce_page(bounce_page);
-> -		printk_ratelimited(KERN_ERR "%s: ret = %d\n", __func__, ret);
-> -		redirty_page_for_writepage(wbc, page);
-> -		do {
-> -			clear_buffer_async_write(bh);
-> -			bh = bh->b_this_page;
-> -		} while (bh != head);
-> -	}
-> +	goto unlock;
+> diff --git a/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml b/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
+> new file mode 100644
+> index 000000000000..41197578f19a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/media/amlogic,meson-gx-ao-cec.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +out:
-> +	fscrypt_free_bounce_page(bounce_page);
-> +	printk_ratelimited(KERN_ERR "%s: ret = %d\n", __func__, ret);
-> +	redirty_page_for_writepage(wbc, page);
-> +	do {
-> +		clear_buffer_async_write(bh);
-> +		bh = bh->b_this_page;
-> +	} while (bh != head);
+> +title: Amlogic Meson AO-CEC Controller
 > +
-> +unlock:
->  	unlock_page(page);
->  	/* Nothing submitted - we have to end page writeback */
->  	if (!nr_submitted)
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +
+> +description: |
+> +  The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
+> +  to handle communication between HDMI connected devices over the CEC bus.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,meson-gx-ao-cec # GXBB, GXL, GXM, G12A and SM1 AO_CEC_A module
+> +      - amlogic,meson-g12a-ao-cec # G12A AO_CEC_B module
+> +      - amlogic,meson-sm1-ao-cec # SM1 AO_CEC_B module
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  hdmi-phandle:
+> +    description: phandle to the HDMI controller
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - amlogic,meson-gx-ao-cec
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: AO-CEC clock
+> +
+> +        clock-names:
+> +          maxItems: 1
+> +          items:
+> +            - const: core
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - amlogic,meson-g12a-ao-cec
+> +              - amlogic,meson-sm1-ao-cec
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: AO-CEC clock generator source
+> +
+> +        clock-names:
+> +          maxItems: 1
+> +          items:
+> +            - const: oscin
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - hdmi-phandle
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    cec_AO: cec@100 {
+> +        compatible = "amlogic,meson-gx-ao-cec";
+> +        reg = <0x0 0x00100 0x0 0x14>;
+> +        interrupts = <199>;
+> +        clocks = <&clkc_cec>;
+> +        clock-names = "core";
+> +        hdmi-phandle = <&hdmi_tx>;
+> +    };
+> +
+> diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+> deleted file mode 100644
+> index ad92ee41c0dd..000000000000
+> --- a/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+> +++ /dev/null
+> @@ -1,37 +0,0 @@
+> -* Amlogic Meson AO-CEC driver
+> -
+> -The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
+> -to handle communication between HDMI connected devices over the CEC bus.
+> -
+> -Required properties:
+> -  - compatible : value should be following depending on the SoC :
+> -	For GXBB, GXL, GXM, G12A and SM1 (AO_CEC_A module) :
+> -	"amlogic,meson-gx-ao-cec"
+> -	For G12A (AO_CEC_B module) :
+> -	"amlogic,meson-g12a-ao-cec"
+> -	For SM1 (AO_CEC_B module) :
+> -	"amlogic,meson-sm1-ao-cec"
+> -
+> -  - reg : Physical base address of the IP registers and length of memory
+> -	  mapped region.
+> -
+> -  - interrupts : AO-CEC interrupt number to the CPU.
+> -  - clocks : from common clock binding: handle to AO-CEC clock.
+> -  - clock-names : from common clock binding, must contain :
+> -		For GXBB, GXL, GXM, G12A and SM1 (AO_CEC_A module) :
+> -		- "core"
+> -		For G12A, SM1 (AO_CEC_B module) :
+> -		- "oscin"
+> -		corresponding to entry in the clocks property.
+> -  - hdmi-phandle: phandle to the HDMI controller
+> -
+> -Example:
+> -
+> -cec_AO: cec@100 {
+> -	compatible = "amlogic,meson-gx-ao-cec";
+> -	reg = <0x0 0x00100 0x0 0x14>;
+> -	interrupts = <GIC_SPI 199 IRQ_TYPE_EDGE_RISING>;
+> -	clocks = <&clkc_AO CLKID_AO_CEC_32K>;
+> -	clock-names = "core";
+> -	hdmi-phandle = <&hdmi_tx>;
+> -};
 > 
-> 
-> -ritesh
-> 
+
