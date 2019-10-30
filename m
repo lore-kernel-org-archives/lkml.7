@@ -2,85 +2,82 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14945CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 03:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FD1CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4FD92080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 03:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588AE20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AypR2kir"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E5qc+g45";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="knKrf4PB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfJ3D7B (ORCPT
+        id S1726671AbfJ3EGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 23:59:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42056 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfJ3D7B (ORCPT
+        Wed, 30 Oct 2019 00:06:31 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35794 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfJ3EGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 23:59:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Otea3GUj7Y6yguIprmqpsQUijyiqZsI5ui8Xykspypg=; b=AypR2kirE85cx/HxaOLtBJvgy
-        M141UOXaRHiXPhK9e6+ousO4gSfopG3UVn6f+hCqcMTsi7536slqOuBBmzbj0TljXhEbgrYtdNFrK
-        DLu60Cq6znXVZRBBPVAGK4O6PBK6YKsK/ZDFxki6Dlkd/AwhQZy0F0xg1wPe3JkU7j2GwPln5kjsN
-        WbnI5mEzm3pjrD5bOLffg8ang/9H8QCH3c9+0SkzFqcnwc5BegGaYVf9jf8Gm0apRE6GyRhJ9IKfe
-        3MBwdhrY4QcbwcKXfP8cGmMJEzkjv134bZZs3J359/h7TE3LrJCwp8WyOphqVlnEvoj6AJQOl4o1d
-        DWqeFdpVQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPf8O-0005RW-Nc; Wed, 30 Oct 2019 03:59:00 +0000
-Subject: Re: [PATCH] scripts:prune-kernel:prune kernel and modules dir from
- the system
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191029030030.31659-1-unixbhaskar@gmail.com>
- <de2a4604-e3ba-dab1-c72c-a0ff451541cf@infradead.org>
- <20191030024312.GA1251@ArchLinux>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d9f7acd6-e948-4eb7-41ef-4d9a2cafe15a@infradead.org>
-Date:   Tue, 29 Oct 2019 20:58:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191030024312.GA1251@ArchLinux>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 30 Oct 2019 00:06:31 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4B79A60C8E; Wed, 30 Oct 2019 04:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572408390;
+        bh=r0tGaf1qSrUb7xFSDWv+7Mxo9UoXZ+w51K/d6nmW/4o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=E5qc+g45o6SZOnimCJf/ReNn5hk6jngef6g2JJsJiad3yXQPkipxoKaKzIjZw4X28
+         FEoR8UsoObMF2bUoSojfqQSjZipY22aGtrlAnnLOUctbqcaaKZSppCrJOq33r4O2Gq
+         b1RPuj0kPbLE2FV/Q4tOtiTpQ8lwULdd3ewagVuI=
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 805E560C8E;
+        Wed, 30 Oct 2019 04:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572408389;
+        bh=r0tGaf1qSrUb7xFSDWv+7Mxo9UoXZ+w51K/d6nmW/4o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=knKrf4PBU2ytzxWJXZik8TjcN0Dtw1zkeu4v3q14dbhmJoHZ9ig2nAvwud4aidLCk
+         tJmFKngZo5910nQa2hw10a5DXF9TeoJHlpiNrwVLcyDUouLpXlSM2NYIJw05hW3U8A
+         3j0ewkqvZjQAg5Kg9EIN2NEdSmfbr2XFg8TB1LtU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 805E560C8E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        mka@chromium.org, swboyd@chromium.org, evgreen@chromium.org,
+        dianders@chromium.org, Maulik Shah <mkshah@codeaurora.org>
+Subject: arm64: dts: qcom: sc7180: Add cpuidle low power states
+Date:   Wed, 30 Oct 2019 09:35:17 +0530
+Message-Id: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/29/19 7:43 PM, Bhaskar Chowdhury wrote:
-> On 17:05 Tue 29 Oct 2019, Randy Dunlap wrote:
-> 
->> Hi,
-> Thank you Randy, my answers are inline , kindly look.
-> 
-> The modified version(implemented your suggestions) of the script and their interaction will send in next patch mail.
->>
->>
->> This patch does not delete the original script loop, so that still follows
->> after the 'done' above.  Was that intentional?
-> This is confuse me! not sure  what you meant. Did you meant to say
-> the do loop inside does not match with this pair???
+Add cpuidle low power mode support for sc7180.
+The change has dependency on adding device tree support for sc7180 [1]
+to merge first.
 
-I mean that the old loop that begins with
-for f in "$@"
+Dependencies:
 
-is still there after your patch.
+[1] https://lkml.org/lkml/2019/10/23/223
 
+Maulik Shah (1):
+  arm64: dts: qcom: sc7180: Add cpuidle low power states
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
 -- 
-~Randy
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
