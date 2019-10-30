@@ -2,148 +2,223 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB02CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB6BCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E532080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6364C2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:31:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TYqPsN7N"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OgLOifYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfJ3NbO (ORCPT
+        id S1726566AbfJ3Nbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:31:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56058 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfJ3NbN (ORCPT
+        Wed, 30 Oct 2019 09:31:36 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50996 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3Nbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:31:13 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UDV5vB101659;
-        Wed, 30 Oct 2019 08:31:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572442265;
-        bh=STjwO10Amw2PZ9XYXEda6DiaqThl/EwMnKhScqY6AdQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TYqPsN7NUV/OLsDdttH86+fZ8BHWyOi4WuAyZ+QF4jEKxX4ZuYyo+0SD6RSz4B8U8
-         RpH805j8GTmIQS8kbR+fnlsQZNv7QZkBlK5Kbd+BL6GDgeGFDxxhDrBBOAto4WMPQ+
-         G5k3JfpVxKkQbnkwrKfzFSsCtkd4laKkTxcqGMXM=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UDV4l4062652
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 08:31:05 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 08:30:51 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 08:30:51 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UDV1M8022289;
-        Wed, 30 Oct 2019 08:31:02 -0500
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
-Date:   Wed, 30 Oct 2019 15:32:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 09:31:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3dQu/Y6BQBuqx+sqo4SkSkjd36H/g8qFYAZTXsAn2dY=; b=OgLOifYK4kO/IJpwyhCg56W95
+        7OQC8zDdqiPFbXoV1I0m2pvk9HPGjXMRlrNVcBqniJco1ijlN29kcfk2HG3GtHmFnZrLG9xSqK1EH
+        AihntLS88LMv65kLnSmytxJ1iTTLgXaAjzxfiIzG6/t/W8GlCJCD1GBOXlu498ORMVed1wuFsRTjh
+        gs2hck+HN+eSMqwnk3GNn5D6CySv4qdDc8Nop5i3Ikh9CPr7T4pZA/NS7xj5HXd64fW8VweyLA1Mk
+        W6nT1tCgtrRsXcjoviikbqgoatIUvDY/3gPrbbkceQRu804MilS8gdxC1kCDCO7I/0CyIJrIJ+XgP
+        yefX6oKDw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPo4S-0004yA-Jc; Wed, 30 Oct 2019 13:31:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 67647300596;
+        Wed, 30 Oct 2019 14:30:29 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 916B32B4032A2; Wed, 30 Oct 2019 14:31:30 +0100 (CET)
+Date:   Wed, 30 Oct 2019 14:31:30 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] timers/nohz: Update nohz load even if tick already
+ stopped
+Message-ID: <20191030133130.GY4097@hirez.programming.kicks-ass.net>
+References: <20191028150716.22890-1-frederic@kernel.org>
+ <20191029100506.GJ4114@hirez.programming.kicks-ass.net>
+ <52d963553deda810113accd8d69b6dffdb37144f.camel@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52d963553deda810113accd8d69b6dffdb37144f.camel@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 30, 2019 at 03:48:26AM -0500, Scott Wood wrote:
+> On Tue, 2019-10-29 at 11:05 +0100, Peter Zijlstra wrote:
 
-
-On 30/10/2019 15.12, Rob Herring wrote:
-> On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->> Hi,
->>
->> The shared GPIO line for external components tends to be a common issue and
->> there is no 'clean' way of handling it.
->>
->> I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
->> a driver tries to request a GPIO which is already in use.
->> However the driver must know that the component is going to be used in such a
->> way, which can be said to any external components with GPIO line, so in theory
->> all drivers must set this flag when requesting the GPIO...
->>
->> But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
->> GPIO line. For example any device using the same GPIO as reset/enable line can
->> reset/enable other devices, which is not something the other device might like
->> or can handle.
->> For example a device needs to be configured after it is enabled, but some other
->> driver would reset it while handling the same GPIO -> the device is not
->> operational anymmore as it lost it's configuration.
->>
->> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
->> the role of making sure that the GPIO line only changes state when it will not
->> disturb any of the clients sharing the same GPIO line.
+> > @@ -3686,6 +3688,7 @@ static void sched_tick_remote(struct work_struct
+> > *work)
+> >  	curr->sched_class->task_tick(rq, curr, 0);
+> >  
+> >  out_unlock:
+> > +	calc_load_nohz_remote(cpu);
+> >  	rq_unlock_irq(rq, &rf);
 > 
-> Why can't we just add a shared flag like we have for interrupts?
-> Effectively, we have that for resets too, it's just hardcoded in the
-> the drivers.
+> This gets skipped when the cpu is idle, so it still misses the update.
 
-This would be kind of the same thing what the
-GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
-fixed-regulators afaik.
+Oh argh! that's a bit radical of the remote tick. The normal tick runs
+just fine on idle CPUs, so lets mirror that.
 
-But let's say that a board design will pick two components (C1 and C2)
-and use the same GPIO line to enable them. We already have the drivers
-for them and they are used in boards already.
+How's this then?
 
-Both needs the GPIO line to be high for normal operation.
-One or both of them needs register writes after they are enabled.
-
-During boot both requests the GPIO (OUTPUT_LOW) and sets it high, then
-run the register setup.
-
-C1 request GPIO (LOW)
-C1 gpio_set(1)
-C1 register writes
-C2 requests GPIO (LOW)
- C1 placed to reset and looses the configuration
-C2 gpio_set(1)
- C1 also enabled
-C2 register writes
-
-At this point C2 is operational, C1 is not.
-
-In shared GPIO case the GPIO should be handled like a regulator with a
-twist that the 'sticky' state of the GPIO might be low or high depending
-on the needs of the components it is connected to.
-
-The shared GPIO line is a board design quirk and basically any device
-which have reset/enable GPIO must be able to work in a situation when
-they are sharing that line with other components and the driver should
-not know much about this small detail.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+---
+diff --git a/include/linux/sched/nohz.h b/include/linux/sched/nohz.h
+index 1abe91ff6e4a..6d67e9a5af6b 100644
+--- a/include/linux/sched/nohz.h
++++ b/include/linux/sched/nohz.h
+@@ -15,9 +15,11 @@ static inline void nohz_balance_enter_idle(int cpu) { }
+ 
+ #ifdef CONFIG_NO_HZ_COMMON
+ void calc_load_nohz_start(void);
++void calc_load_nohz_remote(struct rq *rq);
+ void calc_load_nohz_stop(void);
+ #else
+ static inline void calc_load_nohz_start(void) { }
++static inline void calc_load_nohz_remote(struct rq *rq) { }
+ static inline void calc_load_nohz_stop(void) { }
+ #endif /* CONFIG_NO_HZ_COMMON */
+ 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index eb42b71faab9..d02d1b8f40af 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3660,21 +3660,17 @@ static void sched_tick_remote(struct work_struct *work)
+ 	u64 delta;
+ 	int os;
+ 
+-	/*
+-	 * Handle the tick only if it appears the remote CPU is running in full
+-	 * dynticks mode. The check is racy by nature, but missing a tick or
+-	 * having one too much is no big deal because the scheduler tick updates
+-	 * statistics and checks timeslices in a time-independent way, regardless
+-	 * of when exactly it is running.
+-	 */
+-	if (idle_cpu(cpu) || !tick_nohz_tick_stopped_cpu(cpu))
++	if (!tick_nohz_tick_stopped_cpu(cpu))
+ 		goto out_requeue;
+ 
+ 	rq_lock_irq(rq, &rf);
+-	curr = rq->curr;
+-	if (is_idle_task(curr) || cpu_is_offline(cpu))
++	/*
++	 * We must not call calc_load_nohz_remote() when not in NOHZ mode.
++	 */
++	if (cpu_is_offline(cpu) || !tick_nohz_tick_stopped(cpu))
+ 		goto out_unlock;
+ 
++	curr = rq->curr;
+ 	update_rq_clock(rq);
+ 	delta = rq_clock_task(rq) - curr->se.exec_start;
+ 
+@@ -3685,10 +3681,11 @@ static void sched_tick_remote(struct work_struct *work)
+ 	WARN_ON_ONCE(delta > (u64)NSEC_PER_SEC * 3);
+ 	curr->sched_class->task_tick(rq, curr, 0);
+ 
++	calc_load_nohz_remote(rq);
+ out_unlock:
+ 	rq_unlock_irq(rq, &rf);
+-
+ out_requeue:
++
+ 	/*
+ 	 * Run the remote tick once per second (1Hz). This arbitrary
+ 	 * frequency is large enough to avoid overload but short enough
+diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
+index 28a516575c18..de22da666ac7 100644
+--- a/kernel/sched/loadavg.c
++++ b/kernel/sched/loadavg.c
+@@ -231,16 +231,11 @@ static inline int calc_load_read_idx(void)
+ 	return calc_load_idx & 1;
+ }
+ 
+-void calc_load_nohz_start(void)
++static void calc_load_nohz_fold(struct rq *rq)
+ {
+-	struct rq *this_rq = this_rq();
+ 	long delta;
+ 
+-	/*
+-	 * We're going into NO_HZ mode, if there's any pending delta, fold it
+-	 * into the pending NO_HZ delta.
+-	 */
+-	delta = calc_load_fold_active(this_rq, 0);
++	delta = calc_load_fold_active(rq, 0);
+ 	if (delta) {
+ 		int idx = calc_load_write_idx();
+ 
+@@ -248,6 +243,24 @@ void calc_load_nohz_start(void)
+ 	}
+ }
+ 
++void calc_load_nohz_start(void)
++{
++	/*
++	 * We're going into NO_HZ mode, if there's any pending delta, fold it
++	 * into the pending NO_HZ delta.
++	 */
++	calc_load_nohz_fold(this_rq());
++}
++
++/*
++ * Keep track of the load for NOHZ_FULL, must be called between
++ * calc_load_nohz_{start,stop}().
++ */
++void calc_load_nohz_remote(struct rq *rq)
++{
++	calc_load_nohz_fold(rq);
++}
++
+ void calc_load_nohz_stop(void)
+ {
+ 	struct rq *this_rq = this_rq();
+@@ -268,7 +281,7 @@ void calc_load_nohz_stop(void)
+ 		this_rq->calc_load_update += LOAD_FREQ;
+ }
+ 
+-static long calc_load_nohz_fold(void)
++static long calc_load_nohz_read(void)
+ {
+ 	int idx = calc_load_read_idx();
+ 	long delta = 0;
+@@ -323,7 +336,7 @@ static void calc_global_nohz(void)
+ }
+ #else /* !CONFIG_NO_HZ_COMMON */
+ 
+-static inline long calc_load_nohz_fold(void) { return 0; }
++static inline long calc_load_nohz_read(void) { return 0; }
+ static inline void calc_global_nohz(void) { }
+ 
+ #endif /* CONFIG_NO_HZ_COMMON */
+@@ -346,7 +359,7 @@ void calc_global_load(unsigned long ticks)
+ 	/*
+ 	 * Fold the 'old' NO_HZ-delta to include all NO_HZ CPUs.
+ 	 */
+-	delta = calc_load_nohz_fold();
++	delta = calc_load_nohz_read();
+ 	if (delta)
+ 		atomic_long_add(delta, &calc_load_tasks);
+ 
