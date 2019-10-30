@@ -2,107 +2,175 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F9DCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0BFCA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4545208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6F2218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjKM6Kjt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dwwFFn4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfJ3MAy (ORCPT
+        id S1726710AbfJ3MBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:00:54 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42304 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfJ3MAx (ORCPT
+        Wed, 30 Oct 2019 08:01:15 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35586 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfJ3MBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:00:53 -0400
-Received: by mail-io1-f65.google.com with SMTP id k1so2181404iom.9;
-        Wed, 30 Oct 2019 05:00:53 -0700 (PDT)
+        Wed, 30 Oct 2019 08:01:15 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c8so1360571pgb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 05:01:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d4py8ng5wXpMr5cYgxc6n7h3nEMTISPpp6RpBa8PC14=;
-        b=MjKM6KjteLS5/1/dy3WtshPNenZKcsTFo9cByYcy1tUaj1+R3IAfey6+Zf7etAXxBG
-         A6nYspcZVEfGBzvgGIsMDmiaiB+KD0mByb/FdfrBULi/wy4Q0Nfmb8PDrOUJJWrNOy7L
-         VANA/3M+QsIvyCoXb+sQJndXbu7lTG2CYcYb6E5bC2QCnE2hSNu4nNchbS367xuI7XSu
-         VD7TI4heI/myB/whVGgeE2dB/gQvg0E8IJdFHSWRyaKtBuJZdJVvlWGzh27Wg9YnXh/c
-         mtpo1PHYR8G9WoOeFhlg+wLg/uf7mfO/JdtprlkIr4nduvboheVHa2qke7k/cHdXstKE
-         Dnhg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pn2SBbNltYyaVGymDbdAPJdCwQZFHAgjh2Z52q+dj1A=;
+        b=dwwFFn4mrIwtWIN6ANiIwElOwApzWsI7v1i7rx0h2QZ+LjebgtOSslaOAb91tjz2W8
+         pW0K/CNndOdBdaBssesEraMc8rUJYFv03ToPABpl5WVro25hduRcjipHBqXNGX4dVFB5
+         6OJD1IirtOdZ0wTeDIZdYrJE3V/tVC3xhJuGbMKwuBNtj22daYgkS/mUxtS8CXIHlTaL
+         hR2QEzC4MJ4Ri0K/5yWJwe8j0kGK7ly9qbdAkY1GOyykhTuwLu002sLFVWSCDusWuJzi
+         109l6LAYkFoxd5FDekLBmo5RpGpFLfPUxlMfkT0Dje7ryXziyzpZa08Y4nrRqquV8S99
+         Duhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d4py8ng5wXpMr5cYgxc6n7h3nEMTISPpp6RpBa8PC14=;
-        b=Jb8dcsuVlrx00jHruCTAlDhZaMtXHEV+rf5MGwVybiVUw3S6Xyu8L/lNzfXdamdaOD
-         Z8r27GJDPsXmNu+I4EEFhViwFvsBmVa+Xugdj0pntkh5A8QRklqNsqD4q62rdkcqgFi1
-         1tdSmbFMAWvnZQn8PtfASX1AtJ8D40w048BOWiCRDSxhzQTPW2UWpzOweE8wzdjO5/fJ
-         Y0Kmz9/p4RNNWdgO+A9Hb0YM7yRffRLqElzG6GAex18hNqbLKy4u3d5Piko/y7x7TjAJ
-         XGMOmjHLHHreJaGuE4sj6/hVyU6QgmR6fRerK2swDDZoVqEjsXF2B/ypoMlE9ggw1S7b
-         RXJw==
-X-Gm-Message-State: APjAAAXsTRJCx6cvDi0sk6xfGgC4RYgsTfSH9DZEYav7Bs9aS3YQhEL5
-        V5f5Db9tGFpNo88lt3iB2QBUtpfHTT6JEu5YzCY=
-X-Google-Smtp-Source: APXvYqwSkWwC+grcku8GH8N7R5a02dES/ihI7RDUKgmMZTYHfpQmsAhtsVpl/3ezfNV9XV1vDzvM48nWPxXtEK6Bfw4=
-X-Received: by 2002:a5e:9245:: with SMTP id z5mr2660581iop.205.1572436852244;
- Wed, 30 Oct 2019 05:00:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pn2SBbNltYyaVGymDbdAPJdCwQZFHAgjh2Z52q+dj1A=;
+        b=XbVdHfbupoiVIU0Mw5eR+iH6h2EcF/hFkE85GSAT1giFxxEPwzU5RhB7BxFTYpblRP
+         tmg9VrjsBwT+A9Dtwfhb2G0GueMC8GgIr6hGlaCJi0PySMrhVQJ4GhHGhByvlfuoFwRO
+         kYEAdYdAIkFjmgV+OG2Yywc8kBQ0IFMsFdnS37MGZarGtrujwmVma2wFltclMsNVwmgz
+         rN7RCzF+HgXeuMTebE0sFM6tFN8DJBL9CrdTaDeNumkXR4wYVIdefY3hprnJrq6ywSS8
+         maAfBEox4Xca+yEZUoI/92bWnRMKEzqlV4Szeifwioyqu3SV6H0BQgz2s7bUIHE6GP3O
+         MK6A==
+X-Gm-Message-State: APjAAAVavfOwIsKJnTCTQovViLuxJKzAuEYDIAbj9D0ad5rh4imuxZPe
+        TDqD6s6dXEqOzsJM2kCFBo/jpG7bMg==
+X-Google-Smtp-Source: APXvYqzZ4kqchrmVDuSmUbMpCOHr9OhgeLDhCral1RgOulvxlW5oUWV1FdBYh1NOIHktZhDyzxsfNw==
+X-Received: by 2002:a17:90b:282:: with SMTP id az2mr13396510pjb.23.1572436874465;
+        Wed, 30 Oct 2019 05:01:14 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:618e:77d9:c9fa:423a:3851:8df4])
+        by smtp.gmail.com with ESMTPSA id q185sm4328613pfc.153.2019.10.30.05.01.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 30 Oct 2019 05:01:13 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 17:31:05 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191030120105.GA11432@Mani-XPS-13-9360>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
+ <20191030115328.GA6253@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-References: <20190913153714.30980-1-aford173@gmail.com> <B710D701-6311-4344-BF4E-F39157BBF2BD@goldelico.com>
- <CAHCN7xKU1v-BFkwiuZQx82+Cmdgj_1CH1j51bN0TaaduWcu8rQ@mail.gmail.com>
- <97204F98-FA33-4EBA-80AC-2FB3A6E78B2B@goldelico.com> <CAHCN7xJus=Unsm5rvgtccM9jpdiwGnJXrfjhavwkoswGbNd7qw@mail.gmail.com>
- <CAHCN7x+=O6f4Q0ps1d5KA+-E9L-8wr5B9XggzurJWtEnxEj7yg@mail.gmail.com>
- <FD6FED45-EF20-49D8-A2B2-012FB314DCC6@goldelico.com> <CAHCN7xLN+52ZW6tzCQPDvwqrdgaQaMrkhPFPotYDr7RdNwqeNA@mail.gmail.com>
- <C469028D-959D-4BD1-9226-C0190A197CE5@goldelico.com>
-In-Reply-To: <C469028D-959D-4BD1-9226-C0190A197CE5@goldelico.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 30 Oct 2019 07:00:40 -0500
-Message-ID: <CAHCN7xL5sqLzaJ9b0721iAUeEb_pKB4QaeXfF94TZLQ7ZaS+bg@mail.gmail.com>
-Subject: Re: [RFC v2 1/2] ARM: dts: omap3: Add cpu trips and cooling map for
- omap3 family
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>, Nishanth Menon <nm@ti.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Grazvydas Ignotas <notasas@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030115328.GA6253@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 3:40 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> Hi Adam,
-> what is the status of this RFC/PATCH?
+Hi Sakari,
 
-I've submitted a formal 2-part patch [1] and [2], but Tony is
-concerned about power consumption.  As of right now, I don't have
-cycles to work on it.  My employer is about to release two new SOM's,
-and I'm writing up some documentation on some of the older ones to
-help some of the developers working on the new ones make their job go
-quicker.
+On Wed, Oct 30, 2019 at 01:53:28PM +0200, Sakari Ailus wrote:
+> Hi Nabuvannan,
+> 
+> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
+> > Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
+> > add MAINTAINERS entry for the binding and driver.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
+> >  MAINTAINERS                                   |  8 ++
+> >  2 files changed, 102 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > new file mode 100644
+> > index 000000000000..c04ec2203268
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > @@ -0,0 +1,94 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> > +
+> > +maintainers:
+> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +
+> > +description: |-
+> > +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> > +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> > +  features a global shutter with variable charge-integration time. It is
+> > +  programmable through I2C and 4-wire interfaces. The sensor output is
+> > +  available via CSI-2 serial data output (1 Lane).
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: sony,imx296
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    description:
+> > +      Input clock for the sensor.
+> > +    items:
+> > +      - const: mclk
+> > +
+> > +  clock-frequency:
+> > +    description:
+> > +      Frequency of the mclk clock in Hertz.
+> > +
+> > +  vddo-supply:
+> > +    description:
+> > +      Definition of the regulator used as interface power supply.
+> > +
+> > +  vdda-supply:
+> > +    description:
+> > +      Definition of the regulator used as analog power supply.
+> > +
+> > +  vddd-supply:
+> > +    description:
+> > +      Definition of the regulator used as digital power supply.
+> > +
+> > +  reset-gpios:
+> > +    description:
+> > +      The phandle and specifier for the GPIO that controls sensor reset.
+> > +    maxItems: 1
+> > +
+> > +  port: true
+> 
+> You're missing "type: object" under port.
+> 
 
-[1] - https://patchwork.kernel.org/patch/11178561/
-[2] - https://patchwork.kernel.org/patch/11178563/
+I did that intentionally, since there are other places where I can see the
+"type" field not specified. So, I was not sure about that. Most of the
+display bindings don't specify "type" and they are most available ones.
+I don't think the "port" property differs between cameras and displays.
+So I went with that.
 
-I requested if we could apply them as-is with 'status=disabled' for
-now until the bus is fixed, but I think there was some push-back.
+Thanks,
+Mani
 
-I'm trying to get to it.  I am hoping to find a little time this weekend.
-
-adam
->
-> BR and thanks,
-> Nikolaus
->
+> -- 
+> Regards,
+> 
+> Sakari Ailus
