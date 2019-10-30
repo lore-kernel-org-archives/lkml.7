@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D9BCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAB9CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F116C20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CD520856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:34:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="UqN/glHb"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="DxCT0iIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfJ3Sd6 (ORCPT
+        id S1727736AbfJ3SeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 14:33:58 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:43408 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfJ3Sd5 (ORCPT
+        Wed, 30 Oct 2019 14:34:02 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:43408 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfJ3SeB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 14:33:57 -0400
-Received: by mail-yw1-f67.google.com with SMTP id g77so1179344ywb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:33:56 -0700 (PDT)
+        Wed, 30 Oct 2019 14:34:01 -0400
+Received: by mail-yw1-f65.google.com with SMTP id g77so1179399ywb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:33:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=digitalocean.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=UAcDNxbsHyp6817IEPmuzBCq+EObPVndn4RGShy3l04=;
-        b=UqN/glHb2+oS0U30aEukrVIc5WYNVKImT1rr2eKuX4KJSu9753FFW2yorN8CpQidy1
-         UtF40MQzG0X/XWKez440BeIWKreETp4ifFuRwAU51XX9zoug0JC18+YV1VIa2ALvLU3F
-         odmg8GPx2g2O5GL/lmw/wQ5MY2+Fc6uAz32ts=
+        bh=G5U04p/Pz8N9/yMXvmIpSk5e/OvzTbOVT3JtlMr0icw=;
+        b=DxCT0iIj6RQ9VKyRm40z3YMkepG7E5oOVO2fRCEshteIKSua9HarbmBCs8c2UphlMY
+         BvD3Zf2OXAjp3pKMfKtUHGMoihPM4wmO/TPdmtQpPiztEv/fAAxciOx1H9dPhmPp8ISk
+         piHgBijvMqvyJMq5qq6yZ3yuP/lT9TFqzxg7I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=UAcDNxbsHyp6817IEPmuzBCq+EObPVndn4RGShy3l04=;
-        b=F3pyPrMasqMNsibpo9iIMu5Sbd9q/r2bkfBC3izIdW3mZ9id+HedRF6qU36ltPFVTT
-         +DcJoz/FHOTB0hvOlSMDqFdaWvxVDQIXLPpqO5SWLm8fr9ATOhEN6AX8RdI/m8kT3Iau
-         ItjTwBQhC8yD1I2LF/zQXNPxaJUbIvf5Qx8ujT4U4M4JQqH5EVRyUoS4tT0J/yOHtbog
-         bGSqaqzApSDkKiHywwpyPBScXifJxzVVHRETGYMITYdth51Nmt/C0gWjaqfKBkgP6zvO
-         BquPsNBFNlulxA+dS1fPiEFwT27OBvOwVAlyrBe+EO7SHrscjAIG9fw5mev4J1Us29JF
-         os5A==
-X-Gm-Message-State: APjAAAWdI8Pa/IqUNeX//D+qKzbxIZzCBQPNibaSmIjn+KUz8cGLnRg/
-        zqw3HJStglrqC2CusXmA9tsNvA==
-X-Google-Smtp-Source: APXvYqxg1WBHKIOCPQIO3byf2GcNUlQMjVSDhq+KH/Ms4EsgjokOfR7HAe7t88TWkDOmRjeJ3eEIIg==
-X-Received: by 2002:a81:5ed4:: with SMTP id s203mr882046ywb.340.1572460436197;
-        Wed, 30 Oct 2019 11:33:56 -0700 (PDT)
+        bh=G5U04p/Pz8N9/yMXvmIpSk5e/OvzTbOVT3JtlMr0icw=;
+        b=GpOa8cSv1kYeqh91SFfzgjjcQBjCu4StuptxRPLXB/amv5hVuS+6EZUQrKTX9HHZ4S
+         EuZNEGBebY+CkM+3Ld0Ou16ZcAX94HmL1WJq/WQxaBUzVjvd59x7rPCyn+NXp6DL64xS
+         Mc/Gl/1rNmSS/XfSZtobD6aYWtN5xKNDc6f5u3eP0ODK8WCX2TPhF7H7vm3zx2AsnJ9D
+         mBhMTrOeW3Hz3g49oYYKcdVHOYerZVUWJ9UnpDmlYvsIm4tPyH8STiLOOuRtjVyICDcr
+         qIF2tt5bvjxsJcer8845uF4w5blufHzFVhw9Mzcf8jCMaCpMxUJqOywm6uwsdXkLcB5K
+         I0uw==
+X-Gm-Message-State: APjAAAVmMGc0uEwXr1zyPolRr1+nZActKcSU/7yQLK/tX9dp+gvX7Lm7
+        hB/FunRCe0yCYadxdifUKHoe2A==
+X-Google-Smtp-Source: APXvYqw5nvzXK7JdGlveg5tNGL1510L1AVWCigxJM21uFulvsBTwqa2P4cDOesp5ldJbOuNAgF6WoA==
+X-Received: by 2002:a81:455:: with SMTP id 82mr860134ywe.14.1572460438713;
+        Wed, 30 Oct 2019 11:33:58 -0700 (PDT)
 Received: from vpillai-dev.sfo2.internal.digitalocean.com ([138.68.32.68])
-        by smtp.gmail.com with ESMTPSA id u7sm1020549ywu.45.2019.10.30.11.33.55
+        by smtp.gmail.com with ESMTPSA id y142sm1076279ywy.80.2019.10.30.11.33.58
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 30 Oct 2019 11:33:55 -0700 (PDT)
+        Wed, 30 Oct 2019 11:33:58 -0700 (PDT)
 From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
 To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
         Julien Desfossez <jdesfossez@digitalocean.com>,
@@ -67,9 +67,9 @@ Cc:     linux-kernel@vger.kernel.org, Dario Faggioli <dfaggioli@suse.com>,
         Mel Gorman <mgorman@techsingularity.net>,
         Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [RFC PATCH v4 01/19] stop_machine: Fix stop_cpus_in_progress ordering
-Date:   Wed, 30 Oct 2019 18:33:14 +0000
-Message-Id: <94254706c6b697b6351d604642c404ace101d3fb.1572437285.git.vpillai@digitalocean.com>
+Subject: [RFC PATCH v4 02/19] sched: Fix kerneldoc comment for ia64_set_curr_task
+Date:   Wed, 30 Oct 2019 18:33:15 +0000
+Message-Id: <d23db9c71a9b3310edb4da3765926d2fc3fc3ae5.1572437285.git.vpillai@digitalocean.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1572437285.git.vpillai@digitalocean.com>
 References: <cover.1572437285.git.vpillai@digitalocean.com>
@@ -82,33 +82,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Zijlstra <peterz@infradead.org>
 
-Make sure the entire for loop has stop_cpus_in_progress set.
-
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/stop_machine.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-index b4f83f7bdf86..c7031a22aa7b 100644
---- a/kernel/stop_machine.c
-+++ b/kernel/stop_machine.c
-@@ -383,6 +383,7 @@ static bool queue_stop_cpus_work(const struct cpumask *cpumask,
- 	 */
- 	preempt_disable();
- 	stop_cpus_in_progress = true;
-+	barrier();
- 	for_each_cpu(cpu, cpumask) {
- 		work = &per_cpu(cpu_stopper.stop_work, cpu);
- 		work->fn = fn;
-@@ -391,6 +392,7 @@ static bool queue_stop_cpus_work(const struct cpumask *cpumask,
- 		if (cpu_stop_queue_work(cpu, work))
- 			queued = true;
- 	}
-+	barrier();
- 	stop_cpus_in_progress = false;
- 	preempt_enable();
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index df9f1fe5689b..8225ddba344e 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6705,7 +6705,7 @@ struct task_struct *curr_task(int cpu)
  
+ #ifdef CONFIG_IA64
+ /**
+- * set_curr_task - set the current task for a given CPU.
++ * ia64_set_curr_task - set the current task for a given CPU.
+  * @cpu: the processor in question.
+  * @p: the task pointer to set.
+  *
 -- 
 2.17.1
 
