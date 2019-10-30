@@ -6,34 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D1CCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C1DCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8EE1205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F1D205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfJ3PmT (ORCPT
+        id S1727361AbfJ3PmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:42:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:36638 "EHLO foss.arm.com"
+        Wed, 30 Oct 2019 11:42:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:36654 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfJ3PmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:42:18 -0400
+        id S1726175AbfJ3PmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:42:22 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E2034F5;
-        Wed, 30 Oct 2019 08:42:18 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F8EF337;
+        Wed, 30 Oct 2019 08:42:21 -0700 (PDT)
 Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AF103F6C4;
-        Wed, 30 Oct 2019 08:42:17 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 258383F6C4;
+        Wed, 30 Oct 2019 08:42:20 -0700 (PDT)
 From:   Qais Yousef <qais.yousef@arm.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 04/12] ia64: Replace cpu_down with freeze_secondary_cpus
-Date:   Wed, 30 Oct 2019 15:38:29 +0000
-Message-Id: <20191030153837.18107-5-qais.yousef@arm.com>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 05/12] sparc: Replace cpu_up/down with device_online/offline
+Date:   Wed, 30 Oct 2019 15:38:30 +0000
+Message-Id: <20191030153837.18107-6-qais.yousef@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191030153837.18107-1-qais.yousef@arm.com>
 References: <20191030153837.18107-1-qais.yousef@arm.com>
@@ -42,40 +45,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use freeze_secondary_cpus() instead of open coding using cpu_down()
-directly.
+The core device API performs extra housekeeping bits that are missing
+from directly calling cpu_up/down.
+
+See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
+serialization during LPM") for an example description of what might go
+wrong.
 
 This also prepares to make cpu_up/down a private interface for anything
 but the cpu subsystem.
 
 Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Tony Luck <tony.luck@intel.com>
-CC: Fenghua Yu <fenghua.yu@intel.com>
-CC: linux-ia64@vger.kernel.org
+CC: "David S. Miller" <davem@davemloft.net>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Sakari Ailus <sakari.ailus@linux.intel.com>
+CC: sparclinux@vger.kernel.org
 CC: linux-kernel@vger.kernel.org
 ---
- arch/ia64/kernel/process.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ arch/sparc/kernel/ds.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/ia64/kernel/process.c b/arch/ia64/kernel/process.c
-index 968b5f33e725..70b433eafa5c 100644
---- a/arch/ia64/kernel/process.c
-+++ b/arch/ia64/kernel/process.c
-@@ -647,12 +647,8 @@ cpu_halt (void)
- void machine_shutdown(void)
- {
- #ifdef CONFIG_HOTPLUG_CPU
--	int cpu;
--
--	for_each_online_cpu(cpu) {
--		if (cpu != smp_processor_id())
--			cpu_down(cpu);
--	}
-+	/* TODO: Can we use disable_nonboot_cpus()? */
-+	freeze_secondary_cpus(smp_processor_id());
- #endif
- #ifdef CONFIG_KEXEC
- 	kexec_disable_iosapic();
+diff --git a/arch/sparc/kernel/ds.c b/arch/sparc/kernel/ds.c
+index bbf59b3b4af8..39350e5dbaf1 100644
+--- a/arch/sparc/kernel/ds.c
++++ b/arch/sparc/kernel/ds.c
+@@ -550,12 +550,13 @@ static int dr_cpu_configure(struct ds_info *dp, struct ds_cap_state *cp,
+ 	mdesc_populate_present_mask(mask);
+ 	mdesc_fill_in_cpu_data(mask);
+ 
++	lock_device_hotplug();
+ 	for_each_cpu(cpu, mask) {
+ 		int err;
+ 
+ 		printk(KERN_INFO "ds-%llu: Starting cpu %d...\n",
+ 		       dp->id, cpu);
+-		err = cpu_up(cpu);
++		err = device_online(get_cpu_device(cpu));
+ 		if (err) {
+ 			__u32 res = DR_CPU_RES_FAILURE;
+ 			__u32 stat = DR_CPU_STAT_UNCONFIGURED;
+@@ -574,6 +575,7 @@ static int dr_cpu_configure(struct ds_info *dp, struct ds_cap_state *cp,
+ 			dr_cpu_mark(resp, cpu, ncpus, res, stat);
+ 		}
+ 	}
++	unlock_device_hotplug();
+ 
+ 	spin_lock_irqsave(&ds_lock, flags);
+ 	__ds_send(dp->lp, resp, resp_len);
+@@ -606,17 +608,19 @@ static int dr_cpu_unconfigure(struct ds_info *dp,
+ 			     resp_len, ncpus, mask,
+ 			     DR_CPU_STAT_UNCONFIGURED);
+ 
++	lock_device_hotplug();
+ 	for_each_cpu(cpu, mask) {
+ 		int err;
+ 
+ 		printk(KERN_INFO "ds-%llu: Shutting down cpu %d...\n",
+ 		       dp->id, cpu);
+-		err = cpu_down(cpu);
++		err = device_offline(get_cpu_device(cpu));
+ 		if (err)
+ 			dr_cpu_mark(resp, cpu, ncpus,
+ 				    DR_CPU_RES_FAILURE,
+ 				    DR_CPU_STAT_CONFIGURED);
+ 	}
++	unlock_device_hotplug();
+ 
+ 	spin_lock_irqsave(&ds_lock, flags);
+ 	__ds_send(dp->lp, resp, resp_len);
 -- 
 2.17.1
 
