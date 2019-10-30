@@ -2,254 +2,128 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EF2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E035CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 255C920578
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283FB20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z4rh9H+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfJ3IoC (ORCPT
+        id S1726370AbfJ3IoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:44:02 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42684 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfJ3IoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:44:01 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 15ADDE56AFBAB5BA9233;
-        Wed, 30 Oct 2019 16:43:58 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
- 2019 16:43:52 +0800
-Subject: Re: [PATCH 2/2] f2fs: support data compression
-To:     Eric Biggers <ebiggers@kernel.org>
-References: <20191022171602.93637-1-jaegeuk@kernel.org>
- <20191022171602.93637-2-jaegeuk@kernel.org>
- <20191027225006.GA321938@sol.localdomain>
- <da214cdc-0074-b7bf-7761-d4c4ad3d4f6a@huawei.com>
- <20191030025512.GA4791@sol.localdomain>
-From:   Chao Yu <yuchao0@huawei.com>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-Message-ID: <97c33fa1-15af-b319-29a1-22f254a26c0a@huawei.com>
-Date:   Wed, 30 Oct 2019 16:43:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 30 Oct 2019 04:44:16 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35778 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbfJ3IoP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 04:44:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x5so1163230wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 01:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r8+wN7r4BrgoWGfrY7VXP4mHc/bPGpidu8v8LPP2YUc=;
+        b=Z4rh9H+22xLXETaMo+PSqs80h6xxtBjz58NKJRTXfIHYnvYxG4qsk/qTPRZc5w3rSz
+         IaYfVX548vJpJJOpwCjeb9GR4LiRuqdLkIP5Y45r5GgJuW8v1Oy8gt0wsND9oKgGtdtM
+         OOaDZsNZfFYvSauMwEzJGHHJiVJQRNBWpLsdeCmj2MmrHUZ3NNWJARzBmVY/n6A6D0Dh
+         9BsmO4XwhXOdoBZ+nuo+EhlcTL2drFa/dPRmAzQDtl8AScWe+QR6A0XhEEPvQ6jvjMlC
+         dv/0S4msE94jk2DH0WkCWWVMKIXE/3o3p7/oZNPc7sQEkzDkcA03jf5JGH3HjALAFNud
+         ULCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r8+wN7r4BrgoWGfrY7VXP4mHc/bPGpidu8v8LPP2YUc=;
+        b=OLUED/QcZZT97WFmWzDv7HCEFIpYlphwHbL0KsgUHRpKhUZzFWvKidhjT76ha9VQlP
+         xI7BGH7r/UzSOIqHbVz0l7huYlLWlqIgCfGwYy8lxHeNQuu/44e2FPfpf6C7F8mRyllT
+         V5RJjIN4bfkat8aKV4t5VLBUmEWvo3NALkfHm6iTYV2ROD3+h8CNr9Y3d+fJMtq5x/ZL
+         dauWPpSmN7NdDJKmt1I8rZLM7cMJ175LNAQ6c3UN4cC9a+Ule1GftaeXGnRbQht1KidC
+         HHtPNeKn7NVVYU3pPE4hUKt606MaYLX0RqnWGNQ8B6I5WgAPpud346jApukxr9u0Jsxk
+         67Cg==
+X-Gm-Message-State: APjAAAV7+ZpCh8L1nXUH2lrv4VuQ6Z+k9L1m/JnbIOpvzb8ap+KK5E2V
+        mpUV1WraC7G9jrIjJWBNxgHQ8dIghR3KSA==
+X-Google-Smtp-Source: APXvYqyf/bgbpTbw1ikl55tZ1ofxh+SXQtEBmKYIHB9qzbVXVvoo7WtSZFMTd0FPH0oxU1jIoJrwng==
+X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr3508726wml.22.1572425052624;
+        Wed, 30 Oct 2019 01:44:12 -0700 (PDT)
+Received: from pine ([91.217.168.176])
+        by smtp.gmail.com with ESMTPSA id d10sm1327109wme.47.2019.10.30.01.44.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 30 Oct 2019 01:44:11 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 09:44:10 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joe@perches.com
+Subject: Re: [PATCH] sh: kgdb: Mark expected switch fall-throughs
+Message-ID: <20191030084410.c7x2sa4ak3m2h2l7@pine>
+References: <878sp2d7mm.wl-kuninori.morimoto.gx@renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20191030025512.GA4791@sol.localdomain>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878sp2d7mm.wl-kuninori.morimoto.gx@renesas.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/30 10:55, Eric Biggers wrote:
-> On Tue, Oct 29, 2019 at 04:33:36PM +0800, Chao Yu wrote:
->> On 2019/10/28 6:50, Eric Biggers wrote:
->>>> +bool f2fs_is_compressed_page(struct page *page)
->>>> +{
->>>> +	if (!page_private(page))
->>>> +		return false;
->>>> +	if (IS_ATOMIC_WRITTEN_PAGE(page) || IS_DUMMY_WRITTEN_PAGE(page))
->>>> +		return false;
->>>> +	return *((u32 *)page_private(page)) == F2FS_COMPRESSED_PAGE_MAGIC;
->>>> +}
->>>
->>> This code implies that there can be multiple page private structures each of
->>> which has a different magic number.  But I only see F2FS_COMPRESSED_PAGE_MAGIC.
->>> Where in the code is the other one(s)?
->>
->> I'm not sure I understood you correctly, did you mean it needs to introduce
->> f2fs_is_atomic_written_page() and f2fs_is_dummy_written_page() like
->> f2fs_is_compressed_page()?
->>
+On Wed, Oct 30, 2019 at 04:17:53PM +0900, Kuninori Morimoto wrote:
 > 
-> No, I'm asking what is the case where the line
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > 
-> 	*((u32 *)page_private(page)) == F2FS_COMPRESSED_PAGE_MAGIC
+> Mark switch cases where we are expecting to fall through.
 > 
-> returns false?
-
-Should be this?
-
-if (!page_private(page))
-	return false;
-f2fs_bug_on(*((u32 *)page_private(page)) != F2FS_COMPRESSED_PAGE_MAGIC)
-return true;
-
+> This patch fixes the following error:
 > 
->>>
->>>> +
->>>> +static void f2fs_set_compressed_page(struct page *page,
->>>> +		struct inode *inode, pgoff_t index, void *data, refcount_t *r)
->>>> +{
->>>> +	SetPagePrivate(page);
->>>> +	set_page_private(page, (unsigned long)data);
->>>> +
->>>> +	/* i_crypto_info and iv index */
->>>> +	page->index = index;
->>>> +	page->mapping = inode->i_mapping;
->>>> +	if (r)
->>>> +		refcount_inc(r);
->>>> +}
->>>
->>> It isn't really appropriate to create fake pagecache pages like this.  Did you
->>> consider changing f2fs to use fscrypt_decrypt_block_inplace() instead?
->>
->> We need to store i_crypto_info and iv index somewhere, in order to pass them to
->> fscrypt_decrypt_block_inplace(), where did you suggest to store them?
->>
+> LINUX/arch/sh/kernel/kgdb.c: In function 'kgdb_arch_handle_exception':
+> LINUX/arch/sh/kernel/kgdb.c:267:6: error: this statement may fall through [-Werror=implicit-fallthrough=]
+> if (kgdb_hex2long(&ptr, &addr))
+> ^
+> LINUX/arch/sh/kernel/kgdb.c:269:2: note: here
+> case 'D':
+> ^~~~
 > 
-> The same place where the pages are stored.
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-Still we need allocate space for those fields, any strong reason to do so?
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 
+Just FYI this is likely to be converted to be the fallthrough
+pseudo-keyword shortly after introductionb but IIRC the keyword is only
+available in linux-next right now (and the conversion, from Joe Perches,
+is script based so it is likely the change will get picked up by the
+script without you having to do anything explicit).
+
+
+Daniel.
+
+> ---
+>  arch/sh/kernel/kgdb.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->>>> +
->>>> +void f2fs_destroy_compress_ctx(struct compress_ctx *cc)
->>>> +{
->>>> +	kvfree(cc->rpages);
->>>> +}
->>>
->>> The memory is allocated with kzalloc(), so why is it freed with kvfree() and not
->>> just kfree()?
->>
->> It was allocated by f2fs_*alloc() which will fallback to kvmalloc() once
->> kmalloc() failed.
-> 
-> This seems to be a bug in f2fs_kmalloc() -- it inappropriately falls back to
-> kvmalloc().  As per its name, it should only use kmalloc().  f2fs_kvmalloc()
-> already exists, so it can be used when the fallback is wanted.
-
-We can introduce f2fs_memalloc() to wrap f2fs_kmalloc() and f2fs_kvmalloc() as
-below:
-
-f2fs_memalloc()
-{
-	mem = f2fs_kmalloc();
-	if (mem)
-		return mem;
-	return f2fs_kvmalloc();
-}
-
-It can be used in specified place where we really need it, like the place
-descirbied in 5222595d093e ("f2fs: use kvmalloc, if kmalloc is failed") in where
-we introduced original logic.
-
-> 
->>
->>>> +static int lzo_compress_pages(struct compress_ctx *cc)
->>>> +{
->>>> +	int ret;
->>>> +
->>>> +	ret = lzo1x_1_compress(cc->rbuf, cc->rlen, cc->cbuf->cdata,
->>>> +					&cc->clen, cc->private);
->>>> +	if (ret != LZO_E_OK) {
->>>> +		printk_ratelimited("%sF2FS-fs: lzo compress failed, ret:%d\n",
->>>> +								KERN_ERR, ret);
->>>> +		return -EIO;
->>>> +	}
->>>> +	return 0;
->>>> +}
->>>
->>> Why not using f2fs_err()?  Same in lots of other places.
->>
->> We use printk_ratelimited at some points where we can afford to lose logs,
->> otherwise we use f2fs_{err,warn...} to record info as much as possible for
->> troubleshoot.
->>
-> 
-> It used to be the case that f2fs_msg() was ratelimited.  What stops it from
-> spamming the logs now?
-
-https://lore.kernel.org/patchwork/patch/973837/
-
-> 
-> The problem with a bare printk is that it doesn't show which filesystem instance
-> the message is coming from.
-
-We can add to print sbi->sb->s_id like f2fs_printk().
-
-> 
->>>> +
->>>> +	ret = cops->compress_pages(cc);
->>>> +	if (ret)
->>>> +		goto out_vunmap_cbuf;
->>>> +
->>>> +	max_len = PAGE_SIZE * (cc->cluster_size - 1) - COMPRESS_HEADER_SIZE;
->>>> +
->>>> +	if (cc->clen > max_len) {
->>>> +		ret = -EAGAIN;
->>>> +		goto out_vunmap_cbuf;
->>>> +	}
->>>
->>> Since we already know the max length we're willing to compress to (the max
->>> length for any space to be saved), why is more space than that being allocated?
->>> LZ4_compress_default() will return an error if there isn't enough space, so that
->>> error could just be used as the indication to store the data uncompressed.
->>
->> AFAIK, there is no such common error code returned from all compression
->> algorithms indicating there is no room for limited target size, however we need
->> that information to fallback to write raw pages. Any better idea?
->>
-> 
-> "Not enough room" is the only reasonable way for compression to fail, so all
-
-At a glance, compression comments did say only fail due to out-of-space of
-dst_buf, and it will fail due to other reasons as I checked few codes.
-a) dst_buf is too small
-b) src_buf is too large/small
-c) wrong step
-maybe missed other cases...
-
-Yeah, we can get rid of condition b)/c) during implementation, however, what I'm
-concern is the implementation is too tight to all error handling of all
-compression algorithms, as we're not always aware of compression error handling
-changes.
-
-> that's needed is the ability for compression to report errors at all.  What
-> specifically prevents this approach from working?
-> 
->>>>  static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
->>>>  {
->>>> -	/*
->>>> -	 * We use different work queues for decryption and for verity because
->>>> -	 * verity may require reading metadata pages that need decryption, and
->>>> -	 * we shouldn't recurse to the same workqueue.
->>>> -	 */
->>>
->>> Why is it okay (i.e., no deadlocks) to no longer use different work queues for
->>> decryption and for verity?  See the comment above which is being deleted.
->>
->> Could you explain more about how deadlock happen? or share me a link address if
->> you have described that case somewhere?
->>
-> 
-> The verity work can read pages from the file which require decryption.  I'm
-> concerned that it could deadlock if the work is scheduled on the same workqueue.
-
-I assume you've tried one workqueue, and suffered deadlock..
-
-> Granted, I'm not an expert in Linux workqueues, so if you've investigated this
-> and determined that it's safe, can you explain why?
-
-I'm not familiar with workqueue...  I guess it may not safe that if the work is
-scheduled to the same cpu in where verity was waiting for data? if the work is
-scheduled to other cpu, it may be safe.
-
-I can check that before splitting the workqueue for verity and decrypt/decompress.
-
-Thanks,
-
-> 
-> - Eric
-> .
+> diff --git a/arch/sh/kernel/kgdb.c b/arch/sh/kernel/kgdb.c
+> index 6d61f8c..0d5f3c9 100644
+> --- a/arch/sh/kernel/kgdb.c
+> +++ b/arch/sh/kernel/kgdb.c
+> @@ -266,6 +266,7 @@ int kgdb_arch_handle_exception(int e_vector, int signo, int err_code,
+>  		ptr = &remcomInBuffer[1];
+>  		if (kgdb_hex2long(&ptr, &addr))
+>  			linux_regs->pc = addr;
+> +		/* fallthrough */
+>  	case 'D':
+>  	case 'k':
+>  		atomic_set(&kgdb_cpu_doing_single_step, -1);
+> -- 
+> 2.7.4
 > 
