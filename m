@@ -2,178 +2,139 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB413CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F8BCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F89C2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F282054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uwsWF08I"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bmD7Hkqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfJ3Q43 (ORCPT
+        id S1727262AbfJ3Q5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:56:29 -0400
-Received: from mail-io1-f51.google.com ([209.85.166.51]:39720 "EHLO
-        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfJ3Q43 (ORCPT
+        Wed, 30 Oct 2019 12:57:35 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37552 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbfJ3Q5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:56:29 -0400
-Received: by mail-io1-f51.google.com with SMTP id 18so3350262ion.6
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 09:56:28 -0700 (PDT)
+        Wed, 30 Oct 2019 12:57:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id q130so2969276wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 09:57:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nSpmawBarbqhnPciRCHob+Ubj7vDm18R/O6y6DK5PxM=;
-        b=uwsWF08IAZwQ14BkrU9tIaTBJznjqAf/Iwph9uYqbrahm7sYb6EhsYZpzy3JPHRlHa
-         NalOvuvillKIVTXXx1TgtHES5kZKu8yFcd6FD311Wr0ja2FMAidA8l4hbcIHLxSWNztQ
-         VdaC6QotLQpTXXFBSdTnkNMt2DnqrkYBV2Ej77rsth/JOajLgm95LnmUWWYBfqgnp72t
-         KlPUhFpsyEhU11tjiqMjG5Su3idDofKpNI6XlSwTbPZUhS4/8T8tKqHWPzSK8hUJvzK3
-         NHElwAQ+2Zx7A8/yKfWeCl5xc32E4TQe7ZEzjEfAxh2P/SkiB1DtIQKqEUTSffaS3gDY
-         ocrA==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QdY6TmK+2y/s14qGjHPxqB0jIXd8MwHLs26zXdSKXyo=;
+        b=bmD7Hkqdf7uXcVoMVRdbMoeBgNoMMbYtDDMQY6sprJ7vUeXGYrqcg+O+i43cwqp8tg
+         UqoRL4ynL+GX3RFQkptjwyDRAM3BtttyVBlJk1hCBAZxTaEnu+8a9mjmuj8xQeM83ykX
+         eriHVoiIJvYciq9fBX7X7LTNNydhtLiJhZgVQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nSpmawBarbqhnPciRCHob+Ubj7vDm18R/O6y6DK5PxM=;
-        b=asS3swwDq9VEePUXGvfJDRDgAtg54SoJbvPdBU/lIvAY0M8xhsklqA/qmIyiuzFCVY
-         6dZQMiOQqK2MH1Dm/l+BCq+pm7PjEDuqt6VN80m6IabWGMCwMmnlp5/L70YJkHKzE5IY
-         2U8SnbK7QYiC3VO3tuXkawbrgxR6A1Z+SDCyEVU5iNyASAY4d6Xwy7OFGPRg+JJ+EK+o
-         tNIFkB62tJfLQ8Ale0mOUchhG/ljB5JKU3OQ9K8GoNmaXGIzmYyZscVejpUiTg6nFKvF
-         FW6pkuWbBlFQLI/cwEUPYLvjY4G7+wLbPKpeewRS3pCQQSeXuDMYJ2TfbhPu5NgPcAgR
-         RUOg==
-X-Gm-Message-State: APjAAAXpGzRiXvg+qewhv4tLo+0NJ+dV+MrYSiWy3qvmrLg0JxYuW6Jx
-        FKJfKRRQe4P183Mzp7QWxr+nsOzLUE9YJzn2Ipk+RQ==
-X-Google-Smtp-Source: APXvYqzzZhgTbtaSooTkKMRp0RLu20sJAejAcM43OqOKPzCGw+vfk0ZlMBCLk+RQ7IG7sCoXWe+85WzD/1wdwrpU6qg=
-X-Received: by 2002:a6b:ee07:: with SMTP id i7mr833488ioh.26.1572454587405;
- Wed, 30 Oct 2019 09:56:27 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=QdY6TmK+2y/s14qGjHPxqB0jIXd8MwHLs26zXdSKXyo=;
+        b=bfha/isV8gnsXFczuBgT223QBLWhXiG3SAUmCWlPFWAZwZOnVLOBp7O7QSQlsKQyAo
+         cWnomp17lddjIXf4xZOIwVr3lmK73Hh4kF3eNcg6cX2yaqFGRuXK8sJXeATshZRRMDU8
+         pmP+jwpM3TDVuOGANvXB/b1i22vXRt/3c5jmZ8cMHCPwBgeSpRK9xMgRogWUsWd/jkRq
+         YpdLELdtmQ0E8DGdqFG09879bg3xO/uwJbI+q5jpoe4wYiuecYfLw2z+cnQ/f6GvLCP8
+         09zcwIZ7aZHA9tjERKl/rv9nOypd77TYsihAy8rbnxcYqfpWzLSfNFheiV7YjodrJdP8
+         mL6A==
+X-Gm-Message-State: APjAAAV8ixdDGKi8KBp8ehPxLWF8gZhg84+02vjZh7zdnQ5agWozoEis
+        Rvg9hsUKsXA43RvCANL6DO4rYm4fTVUTm3TDYQySya/vorsnjh6r9m3aWHWWsOKTpjxJKy0tZ4K
+        ec2SQGq/bPzXYzVlGqpUR1ESwS88lfRlaBy2NzODH7H2wx8WRyA/hsNz3Q1J/gi+YXI9TbXCnOl
+        WV+A+PTgMkVQ==
+X-Google-Smtp-Source: APXvYqz5dKN657/XSJ3JgH9xSQmO8Ni/BmRdwv014BOEqPEYUzkkU9LiTkFVbIQXO+XWsVX5K82/ug==
+X-Received: by 2002:a7b:c30c:: with SMTP id k12mr408919wmj.89.1572454652740;
+        Wed, 30 Oct 2019 09:57:32 -0700 (PDT)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id x205sm741097wmb.5.2019.10.30.09.57.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 09:57:31 -0700 (PDT)
+Subject: Re: [PATCH] thermal: brcmstb: enable hwmon
+To:     Chen-Yu Tsai <wens@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191030163807.17817-1-wens@kernel.org>
+From:   Florian Fainelli <florian.fainelli@broadcom.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=florian.fainelli@broadcom.com; prefer-encrypt=mutual; keydata=
+ mQENBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAG0MEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPokB
+ xAQQAQgArgUCXJvPrRcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFrZXktdXNh
+ Z2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2RpbmdAcGdw
+ LmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29tLmNvbQUb
+ AwAAAAMWAgEFHgEAAAAEFQgJCgAKCRCBMbXEKbxmoE4DB/9JySDRt/ArjeOHOwGA2sLR1DV6
+ Mv6RuStiefNvJ14BRfMkt9EV/dBp9CsI+slwj9/ZlBotQXlAoGr4uivZvcnQ9dWDjTExXsRJ
+ WcBwUlSUPYJc/kPWFnTxF8JFBNMIQSZSR2dBrDqRP0UWYJ5XaiTbVRpd8nka9BQu4QB8d/Bx
+ VcEJEth3JF42LSF9DPZlyKUTHOj4l1iZ/Gy3AiP9jxN50qol9OT37adOJXGEbix8zxoCAn2W
+ +grt1ickvUo95hYDxE6TSj4b8+b0N/XT5j3ds1wDd/B5ZzL9fgBjNCRzp8McBLM5tXIeTYu9
+ mJ1F5OW89WvDTwUXtT19P1r+qRqKuQENBFPAG8EBCACsa+9aKnvtPjGAnO1mn1hHKUBxVML2
+ C3HQaDp5iT8Q8A0ab1OS4akj75P8iXYfZOMVA0Lt65taiFtiPT7pOZ/yc/5WbKhsPE9dwysr
+ vHjHL2gP4q5vZV/RJduwzx8v9KrMZsVZlKbvcvUvgZmjG9gjPSLssTFhJfa7lhUtowFof0fA
+ q3Zy+vsy5OtEe1xs5kiahdPb2DZSegXW7DFg15GFlj+VG9WSRjSUOKk+4PCDdKl8cy0LJs+r
+ W4CzBB2ARsfNGwRfAJHU4Xeki4a3gje1ISEf+TVxqqLQGWqNsZQ6SS7jjELaB/VlTbrsUEGR
+ 1XfIn/sqeskSeQwJiFLeQgj3ABEBAAGJAkEEGAECASsFAlPAG8IFGwwAAADAXSAEGQEIAAYF
+ AlPAG8EACgkQk2AGqJgvD1UNFQgAlpN5/qGxQARKeUYOkL7KYvZFl3MAnH2VeNTiGFoVzKHO
+ e7LIwmp3eZ6GYvGyoNG8cOKrIPvXDYGdzzfwxVnDSnAE92dv+H05yanSUv/2HBIZa/LhrPmV
+ hXKgD27XhQjOHRg0a7qOvSKx38skBsderAnBZazfLw9OukSnrxXqW/5pe3mBHTeUkQC8hHUD
+ Cngkn95nnLXaBAhKnRfzFqX1iGENYRH3Zgtis7ZvodzZLfWUC6nN8LDyWZmw/U9HPUaYX8qY
+ MP0n039vwh6GFZCqsFCMyOfYrZeS83vkecAwcoVh8dlHdke0rnZk/VytXtMe1u2uc9dUOr68
+ 7hA+Z0L5IQAKCRCBMbXEKbxmoLoHCACXeRGHuijOmOkbyOk7x6fkIG1OXcb46kokr2ptDLN0
+ Ky4nQrWp7XBk9ls/9j5W2apKCcTEHONK2312uMUEryWI9BlqWnawyVL1LtyxLLpwwsXVq5m5
+ sBkSqma2ldqBu2BHXZg6jntF5vzcXkqG3DCJZ2hOldFPH+czRwe2OOsiY42E/w7NUyaN6b8H
+ rw1j77+q3QXldOw/bON361EusWHdbhcRwu3WWFiY2ZslH+Xr69VtYAoMC1xtDxIvZ96ps9ZX
+ pUPJUqHJr8QSrTG1/zioQH7j/4iMJ07MMPeQNkmj4kGQOdTcsFfDhYLDdCE5dj5WeE6fYRxE
+ Q3up0ArDSP1L
+Message-ID: <6c681697-c9ad-02a1-8289-fa265cea36c8@broadcom.com>
+Date:   Wed, 30 Oct 2019 09:57:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191030142358.GB6853@xsang-OptiPlex-9020>
-In-Reply-To: <20191030142358.GB6853@xsang-OptiPlex-9020>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 30 Oct 2019 09:56:16 -0700
-Message-ID: <CALMp9eQv4Qbx-6r5cxDXcari5jKNx6_tb9rgJa8X43ftVEOSbw@mail.gmail.com>
-Subject: Re: [KVM] 671ddc700f: kvm-unit-tests.vmx.fail
-To:     kernel test robot <oliver.sang@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, Dan Cross <dcross@google.com>,
-        Peter Shier <pshier@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191030163807.17817-1-wens@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 7:16 AM kernel test robot <oliver.sang@intel.com> wrote:
->
-> FYI, we noticed the following commit (built with gcc-7):
->
-> commit: 671ddc700fd08b94967b1e2a937020e30c838609 ("KVM: nVMX: Don't leak L1 MMIO regions to L2")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->
-> in testcase: kvm-unit-tests
-> with following parameters:
->
->         ucode: 0x27
->
->
->
-> on test machine: 8 threads Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz with 8G memory
->
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
->
->
->
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <oliver.sang@intel.com>
->
-> 2019-10-29 16:17:51 ./run_tests.sh
->  [32mPASS [0m apic-split (53 tests)
->  [32mPASS [0m ioapic-split (19 tests)
->  [32mPASS [0m apic (53 tests)
->  [32mPASS [0m ioapic (19 tests)
->  [32mPASS [0m smptest (1 tests)
->  [32mPASS [0m smptest3 (1 tests)
->  [32mPASS [0m vmexit_cpuid
->  [32mPASS [0m vmexit_vmcall
->  [32mPASS [0m vmexit_mov_from_cr8
->  [32mPASS [0m vmexit_mov_to_cr8
->  [32mPASS [0m vmexit_inl_pmtimer
->  [32mPASS [0m vmexit_ipi
->  [32mPASS [0m vmexit_ipi_halt
->  [32mPASS [0m vmexit_ple_round_robin
->  [32mPASS [0m vmexit_tscdeadline
->  [32mPASS [0m vmexit_tscdeadline_immed
->  [32mPASS [0m access
->  [33mSKIP [0m smap (0 tests)
->  [33mSKIP [0m pku (0 tests)
->  [32mPASS [0m asyncpf (1 tests)
->  [32mPASS [0m emulator (125 tests, 2 skipped)
->  [32mPASS [0m eventinj (13 tests)
->  [32mPASS [0m hypercall (2 tests)
->  [32mPASS [0m idt_test (4 tests)
->  [32mPASS [0m memory (8 tests)
->  [32mPASS [0m msr (12 tests)
->  [32mPASS [0m pmu (67 tests)
->  [31mFAIL [0m vmware_backdoors (11 tests, 5 unexpected failures)
->  [32mPASS [0m port80
->  [32mPASS [0m realmode
->  [32mPASS [0m s3
->  [32mPASS [0m sieve
->  [32mPASS [0m syscall (2 tests)
->  [32mPASS [0m tsc (3 tests)
->  [32mPASS [0m tsc_adjust (5 tests)
->  [32mPASS [0m xsave (17 tests)
->  [32mPASS [0m rmap_chain
->  [33mSKIP [0m svm (0 tests)
->  [33mSKIP [0m taskswitch (i386 only)
->  [33mSKIP [0m taskswitch2 (i386 only)
->  [32mPASS [0m kvmclock_test
->  [32mPASS [0m pcid (3 tests)
->  [32mPASS [0m rdpru (1 tests)
->  [32mPASS [0m umip (21 tests)
->  [31mFAIL [0m vmx (timeout; duration=90s)
->  [33mSKIP [0m ept (0 tests)
->  [33mSKIP [0m vmx_eoi_bitmap_ioapic_scan (1 tests, 1 skipped)
->  [33mSKIP [0m vmx_hlt_with_rvi_test (1 tests, 1 skipped)
->  [33mSKIP [0m vmx_apicv_test (2 tests, 2 skipped)
->  [32mPASS [0m vmx_apic_passthrough_thread (8 tests)
->  [32mPASS [0m vmx_init_signal_test (8 tests)
->  [32mPASS [0m vmx_vmcs_shadow_test (142218 tests)
->  [32mPASS [0m debug (11 tests)
->  [32mPASS [0m hyperv_synic (1 tests)
->  [33mSKIP [0m hyperv_connections (1 tests, 1 skipped)
->  [32mPASS [0m hyperv_stimer (12 tests)
->  [32mPASS [0m hyperv_clock
->  [32mPASS [0m intel_iommu (11 tests)
->
->
->
-> To reproduce:
->
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp install job.yaml  # job file is attached in this email
->         bin/lkp run     job.yaml
->
->
->
-> Thanks,
-> Oliver Sang
+Hi Chen-Yu,
 
-It's unclear to me what the delta is, but I do see that the 'vmx'
-suite has failed. That is to be expected if you're getting your
-kvm-unit-tests from the 'master' branch of the kvm-unit-tests repo.
-You will need commit 591b5b54bba1 ("x86: Skip APIC-access address
-tests beyond mapped RAM"), which is in the 'next' branch of the
-kvm-unit-tests repo, but which has not yet made it to the 'master'
-branch.
+On 10/30/19 9:38 AM, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> By defaul of-based thermal driver do not have hwmon entries registered.
+> 
+> Do this explicitly so users can use standard hwmon interfaces and tools
+> to read the temperature.
+> 
+> This is based on similar changes for bcm2835_thermal in commit
+> d56c19d07e0b ("thermal: bcm2835: enable hwmon explicitly").
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+
+Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+
+There a number of patches that I need to get upstream from our
+downstream tree, because right now the temperatures reported are note
+quite in the expected units..
+-- 
+Florian
