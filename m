@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874A7CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7805CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54243217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F171217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451146;
-	bh=0guIy7a25neGWxvY8eDOVnp6P7zOlDJLv5fR2gY7DC0=;
+	s=default; t=1572451150;
+	bh=NhFgaETRNIdu3H6KVQg/gsjF9aOflfa/TtuGfDhAfsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DgUaFQX+gvDLHGzTN0m58gMxPqDOaFJ0i4pK4eZ+TWAbx8DWlot54gIZY9FX0utOq
-	 qWXyxy5JYZUsk0IEM4GY77hTA6z4v8pGA78O2mauwxtckTznGMZtaC9sqboUzX6t8G
-	 nmSVHpivMgax+Nv5c4Lq3gZqYAgvi0d6WpfXNbhA=
+	b=FBCOCtUXgqYiugL9zwz+457BuNyCY4ZN5BgSZ0vPTYuGtLbLIwsgF4Iyva8BlwKdK
+	 ydgTLrKBOUj+K2tt2811FIyL+oXqYf/jaRXTD94u4MQx8f1F4dbbSWNFDSsH4FIqPm
+	 wvdm1c1DE/6gWj4L1C61UjkXsBCKNROsWpVGF43c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbfJ3P5h (ORCPT
+        id S1728252AbfJ3P7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:59:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729067AbfJ3P5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:57:30 -0400
+        id S1729097AbfJ3P5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:57:37 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D42921734;
-        Wed, 30 Oct 2019 15:57:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84E352087E;
+        Wed, 30 Oct 2019 15:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451049;
-        bh=0guIy7a25neGWxvY8eDOVnp6P7zOlDJLv5fR2gY7DC0=;
+        s=default; t=1572451056;
+        bh=NhFgaETRNIdu3H6KVQg/gsjF9aOflfa/TtuGfDhAfsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yj86R2lKxjv18uxwOUX/D95GnfNLDbxPgXJDXMjTp+P18i9wO5b8m3TVhuS5dJ6vU
-         JlN2jBTMgo7uXE86qncKi1kLpWh+2zR99hwoxQMuhDaYYG6Mxe/hkLdc00jOPkHMOr
-         JnipyBiJE/rZ6qPV9gzJpasSiO7FAp6hlzzswWuA=
+        b=jbLTN8IsZA8MO9q+9J8BefzO/SjoHVPcSGxT3K0OmSyNAaVh0cGek5z3tZhK4RtEr
+         ueYcQ11tChxfCoQP3rak0AGeuXibqL8FwdgIwg2gcowMoYhK7Vn4qgL9seVPqm0mgd
+         2IHsH2tc6P6nklOVHPUCIOYwKhixkwcV+KCBtpv8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/18] ARM: dts: imx7s: Correct GPT's ipg clock source
-Date:   Wed, 30 Oct 2019 11:56:53 -0400
-Message-Id: <20191030155700.10748-11-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 14/18] ARM: davinci: dm365: Fix McBSP dma_slave_map entry
+Date:   Wed, 30 Oct 2019 11:56:56 -0400
+Message-Id: <20191030155700.10748-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155700.10748-1-sashal@kernel.org>
 References: <20191030155700.10748-1-sashal@kernel.org>
@@ -58,62 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 252b9e21bcf46b0d16f733f2e42b21fdc60addee ]
+[ Upstream commit 564b6bb9d42d31fc80c006658cf38940a9b99616 ]
 
-i.MX7S/D's GPT ipg clock should be from GPT clock root and
-controlled by CCM's GPT CCGR, using correct clock source for
-GPT ipg clock instead of IMX7D_CLK_DUMMY.
+dm365 have only single McBSP, so the device name is without .0
 
-Fixes: 3ef79ca6bd1d ("ARM: dts: imx7d: use imx7s.dtsi as base device tree")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 0c750e1fe481d ("ARM: davinci: dm365: Add dma_slave_map to edma")
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/mach-davinci/dm365.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index edc5ddeb851a7..0a7ea1a765f99 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -437,7 +437,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302d0000 0x10000>;
- 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT1_ROOT_CLK>,
- 					 <&clks IMX7D_GPT1_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 			};
-@@ -446,7 +446,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302e0000 0x10000>;
- 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT2_ROOT_CLK>,
- 					 <&clks IMX7D_GPT2_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
-@@ -456,7 +456,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302f0000 0x10000>;
- 				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT3_ROOT_CLK>,
- 					 <&clks IMX7D_GPT3_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
-@@ -466,7 +466,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x30300000 0x10000>;
- 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT4_ROOT_CLK>,
- 					 <&clks IMX7D_GPT4_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
+diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
+index ef3add9992631..8db549c56914d 100644
+--- a/arch/arm/mach-davinci/dm365.c
++++ b/arch/arm/mach-davinci/dm365.c
+@@ -864,8 +864,8 @@ static s8 dm365_queue_priority_mapping[][2] = {
+ };
+ 
+ static const struct dma_slave_map dm365_edma_map[] = {
+-	{ "davinci-mcbsp.0", "tx", EDMA_FILTER_PARAM(0, 2) },
+-	{ "davinci-mcbsp.0", "rx", EDMA_FILTER_PARAM(0, 3) },
++	{ "davinci-mcbsp", "tx", EDMA_FILTER_PARAM(0, 2) },
++	{ "davinci-mcbsp", "rx", EDMA_FILTER_PARAM(0, 3) },
+ 	{ "davinci_voicecodec", "tx", EDMA_FILTER_PARAM(0, 2) },
+ 	{ "davinci_voicecodec", "rx", EDMA_FILTER_PARAM(0, 3) },
+ 	{ "spi_davinci.2", "tx", EDMA_FILTER_PARAM(0, 10) },
 -- 
 2.20.1
 
