@@ -2,170 +2,433 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2660CCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93C8CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FC520679
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:44:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXjnRC/x"
+	by mail.kernel.org (Postfix) with ESMTP id 8014320856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfJ3Ood (ORCPT
+        id S1726442AbfJ3Out (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:44:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44783 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfJ3Ood (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:44:33 -0400
-Received: by mail-io1-f66.google.com with SMTP id w12so2786713iol.11;
-        Wed, 30 Oct 2019 07:44:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v69E/vAISH85pBxwVE2N7vhsH75pOHxu/fxiGY0QbeQ=;
-        b=jXjnRC/x0AeJB/QbSDoglLlI2mM7uoL59nA1SheOa24mpXYHVbx8ZGru91eHCOC5yI
-         SJ7vwR86I0EES8IlDT4BmaDC+tPi6otXqTk+VUUQQiYLCsCmtehR0jpFweGy7EDkdets
-         kUr2diEZfOmYvdliAUEOSVoTxDU+45JBI8xWqBWSRt8bxMK3LKc3fYZojC1uHE/Tlz9N
-         E8KOg3JZclRFc4rXl5LP83vK/QrmmmBVQp2o5mTvTyDf+dX3WPd4887MZPG8Yc7xsuco
-         oiVncDPY0nb1HmJ49VrFGHGIqvmcCr3BsVmxsXtwQYePRzEYveNrwfqIWRbnMbe3Rv8Z
-         S82w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v69E/vAISH85pBxwVE2N7vhsH75pOHxu/fxiGY0QbeQ=;
-        b=PbY+p/gIWZr8Fe45LLdvRhi2JWGNUKveD02P9sPNvwrVM6TyXQai1X3TdCpNLg7K8s
-         5vYI+NWF2TJeeoZFbBl5gkzbm6h2ImePkO7nDblT+FywB4pjpvfoLDDBS6Sz3VfKaKC7
-         QK2lBcqGPXHeeKLjIQ03C5dqiFloxosEqIlKtjG9I1RCUYQvG2gHJ/6LvKziI1MnSz11
-         Rt8orm0GDUs9sJoqWzz6Ph7pNV4Y7GPWEgHuTAJctEDgXkuSHJS9jQlP67rB3c4IuBoU
-         8AVun+X7TaXcdaIOs02NAY91Z+LdDIYAk26ztiQYO7pLzWgC4EeDByUSU2z1cxWmDWkV
-         cCcw==
-X-Gm-Message-State: APjAAAVahPdHEFL/emv/Pu7yb4wTTuQr7nURF81ZVjAopZ6RUB+NZpDQ
-        lO0HQgfcKI6Bfq8qXesa4a//b9U3jTHqTBTyImyDaw==
-X-Google-Smtp-Source: APXvYqz9ISkB3eGeL8FfMvO09xLvJ4YONlu+FugWEIXfRPeSrJQJUmxiQL8wy/pNoaUViiXqYAOHQtwSg3lnrA2NftI=
-X-Received: by 2002:a5e:9245:: with SMTP id z5mr87806iop.205.1572446672018;
- Wed, 30 Oct 2019 07:44:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191016135147.7743-1-aford173@gmail.com>
-In-Reply-To: <20191016135147.7743-1-aford173@gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 30 Oct 2019 09:44:20 -0500
-Message-ID: <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
-Subject: Re: [PATCH V5 1/3] drm/panel: simple: Add Logic PD Type 28 display support
-To:     dri-devel <dri-devel@lists.freedesktop.org>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 30 Oct 2019 10:50:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42726 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726175AbfJ3Out (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 10:50:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A7395AFCD;
+        Wed, 30 Oct 2019 14:50:45 +0000 (UTC)
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     valdis.kletnieks@vt.edu, gregkh@linuxfoundation.org
+Cc:     dave@stgolabs.net, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] drivers/staging/exfat: Replace binary semaphores for mutexes
+Date:   Wed, 30 Oct 2019 07:49:16 -0700
+Message-Id: <20191030144916.10802-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191029080521.GA494993@kroah.com>
+References: <20191029080521.GA494993@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 8:52 AM Adam Ford <aford173@gmail.com> wrote:
->
-> Previously, there was an omap panel-dpi driver that would
-> read generic timings from the device tree and set the display
-> timing accordingly.  This driver was removed so the screen
-> no longer functions.  This patch modifies the panel-simple
-> file to setup the timings to the same values previously used.
->
-> Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
->
+At a slight footprint cost (24 vs 32 bytes), mutexes are more optimal
+than semaphores; it's also a nicer interface for mutual exclusion,
+which is why they are encouraged over binary semaphores, when possible.
 
-Will this be able to make it into linux-next for the 5.5 merge window?
- I believe Tony has picked up the device tree portion in his omap
-tree, but I haven't seen any notifications on this series on whether
-or not it's being applied.  I also don't know which tree I need to
-look if it's already been applied.
+For both v_sem and z_sem, their semantics imply traditional lock
+ownership; that is, the lock owner is the same for both lock/unlock
+operations. Therefore it is safe to convert.
 
-This fixes a regression introduced a while ago where the driver I was
-using for the display was removed.
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+This is part of further reducing semaphore users in the kernel.
 
-thank you,
+v2: removed whitespace
 
-adam
+ drivers/staging/exfat/exfat.h       |  2 +-
+ drivers/staging/exfat/exfat_super.c | 84 ++++++++++++++++++-------------------
+ 2 files changed, 43 insertions(+), 43 deletions(-)
 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
-> V5:  No Change
-> V4:  No Change
-> V3:  No Change
-> V2:  No Change
->
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 5d487686d25c..72f69709f349 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
->         .flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
->  };
->
-> +static const struct drm_display_mode logicpd_type_28_mode = {
-> +       .clock = 9000,
-> +       .hdisplay = 480,
-> +       .hsync_start = 480 + 3,
-> +       .hsync_end = 480 + 3 + 42,
-> +       .htotal = 480 + 3 + 42 + 2,
-> +
-> +       .vdisplay = 272,
-> +       .vsync_start = 272 + 2,
-> +       .vsync_end = 272 + 2 + 11,
-> +       .vtotal = 272 + 2 + 11 + 3,
-> +       .vrefresh = 60,
-> +       .flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-> +};
-> +
-> +static const struct panel_desc logicpd_type_28 = {
-> +       .modes = &logicpd_type_28_mode,
-> +       .num_modes = 1,
-> +       .bpc = 8,
-> +       .size = {
-> +               .width = 105,
-> +               .height = 67,
-> +       },
-> +       .delay = {
-> +               .prepare = 200,
-> +               .enable = 200,
-> +               .unprepare = 200,
-> +               .disable = 200,
-> +       },
-> +       .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> +       .bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-> +                    DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
-> +};
-> +
->  static const struct panel_desc mitsubishi_aa070mc01 = {
->         .modes = &mitsubishi_aa070mc01_mode,
->         .num_modes = 1,
-> @@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
->         }, {
->                 .compatible = "lg,lp129qe",
->                 .data = &lg_lp129qe,
-> +       }, {
-> +               .compatible = "logicpd,type28",
-> +               .data = &logicpd_type_28,
->         }, {
->                 .compatible = "mitsubishi,aa070mc01-ca1",
->                 .data = &mitsubishi_aa070mc01,
-> --
-> 2.17.1
->
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index 6c12f2d79f4d..95c02f55de60 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -618,7 +618,7 @@ struct fs_info_t {
+ 	u32 dev_ejected;	/* block device operation error flag */
+ 
+ 	struct fs_func *fs_func;
+-	struct semaphore v_sem;
++	struct mutex v_mutex;
+ 
+ 	/* FAT cache */
+ 	struct buf_cache_t FAT_cache_array[FAT_CACHE_SIZE];
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index 5f6caee819a6..e9e9868cae85 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -283,7 +283,7 @@ static const struct dentry_operations exfat_dentry_ops = {
+ 	.d_compare      = exfat_cmp,
+ };
+ 
+-static DEFINE_SEMAPHORE(z_sem);
++static DEFINE_MUTEX(z_mutex);
+ 
+ static inline void fs_sync(struct super_block *sb, bool do_sync)
+ {
+@@ -352,11 +352,11 @@ static int ffsMountVol(struct super_block *sb)
+ 
+ 	pr_info("[EXFAT] trying to mount...\n");
+ 
+-	down(&z_sem);
++	mutex_lock(&z_mutex);
+ 
+ 	buf_init(sb);
+ 
+-	sema_init(&p_fs->v_sem, 1);
++	mutex_init(&p_fs->v_mutex);
+ 	p_fs->dev_ejected = 0;
+ 
+ 	/* open the block device */
+@@ -441,7 +441,7 @@ static int ffsMountVol(struct super_block *sb)
+ 	pr_info("[EXFAT] mounted successfully\n");
+ 
+ out:
+-	up(&z_sem);
++	mutex_unlock(&z_mutex);
+ 
+ 	return ret;
+ }
+@@ -453,10 +453,10 @@ static int ffsUmountVol(struct super_block *sb)
+ 
+ 	pr_info("[EXFAT] trying to unmount...\n");
+ 
+-	down(&z_sem);
++	mutex_lock(&z_mutex);
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+@@ -480,8 +480,8 @@ static int ffsUmountVol(struct super_block *sb)
+ 	buf_shutdown(sb);
+ 
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
+-	up(&z_sem);
++	mutex_unlock(&p_fs->v_mutex);
++	mutex_unlock(&z_mutex);
+ 
+ 	pr_info("[EXFAT] unmounted successfully\n");
+ 
+@@ -498,7 +498,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	if (p_fs->used_clusters == UINT_MAX)
+ 		p_fs->used_clusters = p_fs->fs_func->count_used_clusters(sb);
+@@ -513,7 +513,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
+ 		err = FFS_MEDIAERR;
+ 
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return err;
+ }
+@@ -524,7 +524,7 @@ static int ffsSyncVol(struct super_block *sb, bool do_sync)
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* synchronize the file system */
+ 	fs_sync(sb, do_sync);
+@@ -534,7 +534,7 @@ static int ffsSyncVol(struct super_block *sb, bool do_sync)
+ 		err = FFS_MEDIAERR;
+ 
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return err;
+ }
+@@ -561,7 +561,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check the validity of directory name in the given pathname */
+ 	ret = resolve_path(inode, path, &dir, &uni_name);
+@@ -635,7 +635,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
+ 		ret = FFS_MEDIAERR;
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -654,7 +654,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check the validity of directory name in the given pathname */
+ 	ret = resolve_path(inode, path, &dir, &uni_name);
+@@ -676,7 +676,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -703,7 +703,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check if the given file ID is opened */
+ 	if (fid->type != TYPE_FILE) {
+@@ -800,7 +800,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -833,7 +833,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check if the given file ID is opened */
+ 	if (fid->type != TYPE_FILE) {
+@@ -1057,7 +1057,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1080,7 +1080,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
+ 		 new_size);
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check if the given file ID is opened */
+ 	if (fid->type != TYPE_FILE) {
+@@ -1190,7 +1190,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
+ out:
+ 	pr_debug("%s exited (%d)\n", __func__, ret);
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1238,7 +1238,7 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	update_parent_info(fid, old_parent_inode);
+ 
+@@ -1336,7 +1336,7 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
+ 		ret = FFS_MEDIAERR;
+ out2:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1355,7 +1355,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
+ 		return FFS_INVALIDFID;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	dir.dir = fid->dir.dir;
+ 	dir.size = fid->dir.size;
+@@ -1398,7 +1398,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
+ 		ret = FFS_MEDIAERR;
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1433,7 +1433,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
+ 	}
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* get the directory entry of given file */
+ 	if (p_fs->vol_type == EXFAT) {
+@@ -1487,7 +1487,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
+ 		ret = FFS_MEDIAERR;
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1511,7 +1511,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
+ 	pr_debug("%s entered\n", __func__);
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	if (is_dir) {
+ 		if ((fid->dir.dir == p_fs->root_dir) &&
+@@ -1640,7 +1640,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	pr_debug("%s exited successfully\n", __func__);
+ 	return ret;
+@@ -1661,7 +1661,7 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
+ 	pr_debug("%s entered (inode %p info %p\n", __func__, inode, info);
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	if (is_dir) {
+ 		if ((fid->dir.dir == p_fs->root_dir) &&
+@@ -1727,7 +1727,7 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	pr_debug("%s exited (%d)\n", __func__, ret);
+ 
+@@ -1753,7 +1753,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	fid->rwoffset = (s64)(clu_offset) << p_fs->cluster_size_bits;
+ 
+@@ -1881,7 +1881,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1905,7 +1905,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
+ 		return FFS_ERROR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	/* check the validity of directory name in the given old pathname */
+ 	ret = resolve_path(inode, path, &dir, &uni_name);
+@@ -1925,7 +1925,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
+ 		ret = FFS_MEDIAERR;
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -1955,7 +1955,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
+ 		return FFS_PERMISSIONERR;
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	if (fid->entry == -1) {
+ 		dir.dir = p_fs->root_dir;
+@@ -2124,7 +2124,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -2154,7 +2154,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 	}
+ 
+ 	/* acquire the lock for file system critical section */
+-	down(&p_fs->v_sem);
++	mutex_lock(&p_fs->v_mutex);
+ 
+ 	clu_to_free.dir = fid->start_clu;
+ 	clu_to_free.size = (s32)((fid->size - 1) >> p_fs->cluster_size_bits) + 1;
+@@ -2187,7 +2187,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 
+ out:
+ 	/* release the lock for file system critical section */
+-	up(&p_fs->v_sem);
++	mutex_unlock(&p_fs->v_mutex);
+ 
+ 	return ret;
+ }
+@@ -3983,10 +3983,10 @@ static void exfat_debug_kill_sb(struct super_block *sb)
+ 			 * invalidate_bdev drops all device cache include
+ 			 * dirty. We use this to simulate device removal.
+ 			 */
+-			down(&p_fs->v_sem);
++			mutex_lock(&p_fs->v_mutex);
+ 			FAT_release_all(sb);
+ 			buf_release_all(sb);
+-			up(&p_fs->v_sem);
++			mutex_unlock(&p_fs->v_mutex);
+ 
+ 			invalidate_bdev(bdev);
+ 		}
+-- 
+2.16.4
+
