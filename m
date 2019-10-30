@@ -2,219 +2,219 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E64E8CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CA2CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC83C20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331D720874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:16:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dIv/d7gJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfJ3KNV (ORCPT
+        id S1726596AbfJ3KQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:13:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20302 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726071AbfJ3KNV (ORCPT
+        Wed, 30 Oct 2019 06:16:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46716 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfJ3KP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:13:21 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9UA9PCN075459
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 06:13:19 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vy672msq4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 06:13:19 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
-        Wed, 30 Oct 2019 10:13:17 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 30 Oct 2019 10:13:15 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9UADEog53411954
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 10:13:14 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 032ECA404D;
-        Wed, 30 Oct 2019 10:13:14 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2175EA4055;
-        Wed, 30 Oct 2019 10:13:11 +0000 (GMT)
-Received: from [9.199.158.87] (unknown [9.199.158.87])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 30 Oct 2019 10:13:10 +0000 (GMT)
-Subject: Re: [PATCH] ext4: bio_alloc never fails
-To:     Gao Xiang <gaoxiang25@huawei.com>, "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20191030042618.124220-1-gaoxiang25@huawei.com>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Wed, 30 Oct 2019 15:43:10 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 30 Oct 2019 06:15:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n15so1573368wrw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 03:15:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bRWjTok3cpmeNtVxH6zc/st7z28BlZWUi3b8mpXF5U0=;
+        b=dIv/d7gJcpOEWC1xWTFw2diyMpxZAL9inhvW98xziJlL8S5flMDpFWV0csaWJaWQ92
+         BluWhytq+fc8o8A6OYpD+dPmPqZ/RkDz+gwLzb6rg3L6DfBajfIvqG4MXsX+nLLvUtoX
+         Qq7uW7o2oFJCa3B55NuhdQHBCUy2z93njyhNj+g/gA88M4LM2iKT83TmZwgs4DkI4y6E
+         mszp4gHs/u7Xkt4g121W4/r2n0cpmNhj0dsEnjaRZ5a22F/08XZbtu2oMfUu0Uba9DDW
+         f7fSczLwYZKyMOv3UeBtHNXg4NMg9MYqVsgPL5eVYLG00x5/vpYa91rBMsO754uf4jji
+         ox6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bRWjTok3cpmeNtVxH6zc/st7z28BlZWUi3b8mpXF5U0=;
+        b=YLbeKPmTApNlcpaye0rJd4p5HUSeAjuxEfKc7UJ1+Ks6SP0wfKMrCoLkAtzQWRKUey
+         UHN7K0VfusKr4wvGSJvmwaxir+drCqgU9i5yRhmJuSKmmn9KsB3Rg3vHOnjSDNu4xGXW
+         Z6XIOVfW7K/X+ylGLHx9HVCubbR45Lo4rLY7HfwAS9tQ92A+KtXI5RKmlEG602iPMLzF
+         sIVBrezpW5izWdDXdkmawKeshzPSv+tUr4skZmIa1v3EHbvUU0FCySg/9WKkvDMxwVU7
+         oEdPQZsOJ07iR+3McSrJbWlvaqZWhUl5L5oPzDW4kCnjHbt/UYRDqhsnyQqR5xQjBtO3
+         WYag==
+X-Gm-Message-State: APjAAAVvpVfjwxYVBY/Wqm+GO3JTyXiD/41F62OfrnT+5zy46VJ3FmpL
+        fyqL6FST8gpjvDvBWuD89zmFCw==
+X-Google-Smtp-Source: APXvYqxeF/PukXETq4F5oK9NFZgfPCY5B5NiL2Av5xLntDJ7THjOYuQoCWT2mRaiFzGMcFpuAtTAJA==
+X-Received: by 2002:adf:e942:: with SMTP id m2mr2012593wrn.26.1572430556898;
+        Wed, 30 Oct 2019 03:15:56 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id u7sm4923842wre.59.2019.10.30.03.15.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 30 Oct 2019 03:15:56 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     robh+dt@kernel.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH] dt-bindings: interconnect: Convert qcom,qcs404 to DT schema
+Date:   Wed, 30 Oct 2019 12:15:55 +0200
+Message-Id: <20191030101555.10955-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191030042618.124220-1-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19103010-0016-0000-0000-000002BF14B1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103010-0017-0000-0000-000033207124
-Message-Id: <20191030101311.2175EA4055@d06av23.portsmouth.uk.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910300100
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Convert the qcom,qcs404 interconnect provider binding to DT schema.
 
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ .../bindings/interconnect/qcom,qcs404.txt     | 45 -----------
+ .../bindings/interconnect/qcom,qcs404.yaml    | 77 +++++++++++++++++++
+ 2 files changed, 77 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.yaml
 
-On 10/30/19 9:56 AM, Gao Xiang wrote:
-> Similar to [1] [2], it seems a trivial cleanup since
-> bio_alloc can handle memory allocation as mentioned in
-> fs/direct-io.c (also see fs/block_dev.c, fs/buffer.c, ..)
-> 
-
-AFAIU, the reason is that, bio_alloc with __GFP_DIRECT_RECLAIM
-flags guarantees bio allocation under some given restrictions,
-as stated in fs/direct-io.c
-So here it is ok to not check for NULL value from bio_alloc.
-
-I think we can update above info too in your commit msg.
-
-> [1] https://lore.kernel.org/r/20191030035518.65477-1-gaoxiang25@huawei.com
-> [2] https://lore.kernel.org/r/20190830162812.GA10694@infradead.org
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> ---
->   fs/ext4/page-io.c  | 11 +++--------
->   fs/ext4/readpage.c |  2 --
->   2 files changed, 3 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-> index 12ceadef32c5..f1f7b6601780 100644
-> --- a/fs/ext4/page-io.c
-> +++ b/fs/ext4/page-io.c
-> @@ -358,14 +358,12 @@ void ext4_io_submit_init(struct ext4_io_submit *io,
->   	io->io_end = NULL;
->   }
-> 
-> -static int io_submit_init_bio(struct ext4_io_submit *io,
-> -			      struct buffer_head *bh)
-> +static void io_submit_init_bio(struct ext4_io_submit *io,
-> +			       struct buffer_head *bh)
->   {
->   	struct bio *bio;
-> 
->   	bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
-> -	if (!bio)
-> -		return -ENOMEM;
->   	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
->   	bio_set_dev(bio, bh->b_bdev);
->   	bio->bi_end_io = ext4_end_bio;
-> @@ -373,7 +371,6 @@ static int io_submit_init_bio(struct ext4_io_submit *io,
->   	io->io_bio = bio;
->   	io->io_next_block = bh->b_blocknr;
->   	wbc_init_bio(io->io_wbc, bio);
-> -	return 0;
->   }
-> 
->   static int io_submit_add_bh(struct ext4_io_submit *io,
-> @@ -388,9 +385,7 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
->   		ext4_io_submit(io);
->   	}
->   	if (io->io_bio == NULL) {
-> -		ret = io_submit_init_bio(io, bh);
-> -		if (ret)
-> -			return ret;
-> +		io_submit_init_bio(io, bh);
->   		io->io_bio->bi_write_hint = inode->i_write_hint;
->   	}
->   	ret = bio_add_page(io->io_bio, page, bh->b_size, bh_offset(bh));
-
-
-Also we can further simplify it like below. Please check.
-
-diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-index f1f7b6601780..a3a2edeb3bbf 100644
---- a/fs/ext4/page-io.c
-+++ b/fs/ext4/page-io.c
-@@ -373,7 +373,7 @@ static void io_submit_init_bio(struct ext4_io_submit 
-*io,
-  	wbc_init_bio(io->io_wbc, bio);
-  }
-
--static int io_submit_add_bh(struct ext4_io_submit *io,
-+static void io_submit_add_bh(struct ext4_io_submit *io,
-  			    struct inode *inode,
-  			    struct page *page,
-  			    struct buffer_head *bh)
-@@ -393,7 +393,6 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
-  		goto submit_and_retry;
-  	wbc_account_cgroup_owner(io->io_wbc, page, bh->b_size);
-  	io->io_next_block++;
--	return 0;
-  }
-
-  int ext4_bio_write_page(struct ext4_io_submit *io,
-@@ -495,30 +494,23 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
-  	do {
-  		if (!buffer_async_write(bh))
-  			continue;
--		ret = io_submit_add_bh(io, inode, bounce_page ?: page, bh);
--		if (ret) {
--			/*
--			 * We only get here on ENOMEM.  Not much else
--			 * we can do but mark the page as dirty, and
--			 * better luck next time.
--			 */
--			break;
--		}
-+		io_submit_add_bh(io, inode, bounce_page ?: page, bh);
-  		nr_submitted++;
-  		clear_buffer_dirty(bh);
-  	} while ((bh = bh->b_this_page) != head);
-
--	/* Error stopped previous loop? Clean up buffers... */
--	if (ret) {
--	out:
--		fscrypt_free_bounce_page(bounce_page);
--		printk_ratelimited(KERN_ERR "%s: ret = %d\n", __func__, ret);
--		redirty_page_for_writepage(wbc, page);
--		do {
--			clear_buffer_async_write(bh);
--			bh = bh->b_this_page;
--		} while (bh != head);
--	}
-+	goto unlock;
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+deleted file mode 100644
+index c07d89812b73..000000000000
+--- a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
++++ /dev/null
+@@ -1,45 +0,0 @@
+-Qualcomm QCS404 Network-On-Chip interconnect driver binding
+------------------------------------------------------------
+-
+-Required properties :
+-- compatible : shall contain only one of the following:
+-			"qcom,qcs404-bimc"
+-			"qcom,qcs404-pcnoc"
+-			"qcom,qcs404-snoc"
+-- #interconnect-cells : should contain 1
+-
+-reg : specifies the physical base address and size of registers
+-clocks : list of phandles and specifiers to all interconnect bus clocks
+-clock-names : clock names should include both "bus" and "bus_a"
+-
+-Example:
+-
+-soc {
+-	...
+-	bimc: interconnect@400000 {
+-		reg = <0x00400000 0x80000>;
+-		compatible = "qcom,qcs404-bimc";
+-		#interconnect-cells = <1>;
+-		clock-names = "bus", "bus_a";
+-		clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+-			<&rpmcc RPM_SMD_BIMC_A_CLK>;
+-	};
+-
+-	pnoc: interconnect@500000 {
+-		reg = <0x00500000 0x15080>;
+-		compatible = "qcom,qcs404-pcnoc";
+-		#interconnect-cells = <1>;
+-		clock-names = "bus", "bus_a";
+-		clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+-			<&rpmcc RPM_SMD_PNOC_A_CLK>;
+-	};
+-
+-	snoc: interconnect@580000 {
+-		reg = <0x00580000 0x23080>;
+-		compatible = "qcom,qcs404-snoc";
+-		#interconnect-cells = <1>;
+-		clock-names = "bus", "bus_a";
+-		clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+-			<&rpmcc RPM_SMD_SNOC_A_CLK>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.yaml b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.yaml
+new file mode 100644
+index 000000000000..8d65c5f80679
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.yaml
+@@ -0,0 +1,77 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interconnect/qcom,qcs404.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+out:
-+	fscrypt_free_bounce_page(bounce_page);
-+	printk_ratelimited(KERN_ERR "%s: ret = %d\n", __func__, ret);
-+	redirty_page_for_writepage(wbc, page);
-+	do {
-+		clear_buffer_async_write(bh);
-+		bh = bh->b_this_page;
-+	} while (bh != head);
++title: Qualcomm QCS404 Network-On-Chip interconnect
 +
-+unlock:
-  	unlock_page(page);
-  	/* Nothing submitted - we have to end page writeback */
-  	if (!nr_submitted)
-
-
--ritesh
-
++maintainers:
++  - Georgi Djakov <georgi.djakov@linaro.org>
++
++description: |
++   The Qualcomm QCS404 interconnect providers support adjusting the
++   bandwidth requirements between the various NoC fabrics.
++
++properties:
++  reg:
++    maxItems: 1
++
++  compatible:
++    enum:
++      - qcom,qcs404-bimc
++      - qcom,qcs404-pcnoc
++      - qcom,qcs404-snoc
++
++  '#interconnect-cells':
++    const: 1
++
++  clock-names:
++    items:
++      - const: bus
++      - const: bus_a
++
++  clocks:
++    items:
++      - description: Bus Clock
++      - description: Bus A Clock
++
++required:
++  - compatible
++  - reg
++  - '#interconnect-cells'
++  - clock-names
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++      #include <dt-bindings/clock/qcom,rpmcc.h>
++
++      bimc: interconnect@400000 {
++              reg = <0x00400000 0x80000>;
++              compatible = "qcom,qcs404-bimc";
++              #interconnect-cells = <1>;
++              clock-names = "bus", "bus_a";
++              clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
++                       <&rpmcc RPM_SMD_BIMC_A_CLK>;
++      };
++
++      pnoc: interconnect@500000 {
++             reg = <0x00500000 0x15080>;
++             compatible = "qcom,qcs404-pcnoc";
++             #interconnect-cells = <1>;
++             clock-names = "bus", "bus_a";
++             clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
++                      <&rpmcc RPM_SMD_PNOC_A_CLK>;
++      };
++
++      snoc: interconnect@580000 {
++            reg = <0x00580000 0x23080>;
++            compatible = "qcom,qcs404-snoc";
++            #interconnect-cells = <1>;
++            clock-names = "bus", "bus_a";
++            clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
++                     <&rpmcc RPM_SMD_SNOC_A_CLK>;
++      };
