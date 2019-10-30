@@ -2,114 +2,109 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBF4CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D332ECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379262087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:35:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cM8ljuzJ"
+	by mail.kernel.org (Postfix) with ESMTP id AC4A62087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfJ3KfL (ORCPT
+        id S1726744AbfJ3KfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:35:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31688 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726046AbfJ3KfK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:35:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572431709;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vMnBP1vJh7DVtSAEiQOC37MaYouJjw4pGK3+A/kZfEE=;
-        b=cM8ljuzJEYay75gZmV+oyfNRyuEt79+iU/NIl03OwMj7CqNFqmmIXFEjeV0yalg1EkheTg
-        cMnSANZlcKEaVys+n0aH96mfcYVEp/v6WRPyy4A9/ZckonaMjJJwANrvAx3IjIBJ2VhcVQ
-        E2F1A+OzrpEH2NGGG8A7r1ORT5uJSRI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-nQpbRAfROVGuuPV7vSUXZw-1; Wed, 30 Oct 2019 06:35:06 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE4321005500;
-        Wed, 30 Oct 2019 10:35:04 +0000 (UTC)
-Received: from fogou.chygwyn.com (unknown [10.33.36.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 96A3910016EB;
-        Wed, 30 Oct 2019 10:34:32 +0000 (UTC)
-Subject: Re: [PATCH] mm/filemap: do not allocate cache pages beyond end of
- file at read
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>
-References: <157225677483.3442.4227193290486305330.stgit@buzz>
- <20191028124222.ld6u3dhhujfqcn7w@box>
- <CAHk-=wgQ-Dcs2keNJPovTb4gG33M81yANH6KZM9d5NLUb-cJ1g@mail.gmail.com>
- <20191028125702.xdfbs7rqhm3wer5t@box>
- <ac83fee6-9bcd-8c66-3596-2c0fbe6bcf96@yandex-team.ru>
- <CAHk-=who0HS=NT8U7vFDT7er_CD7+ZreRJMxjYrRXs5G6dbpyw@mail.gmail.com>
-From:   Steven Whitehouse <swhiteho@redhat.com>
-Message-ID: <f0140b13-cca2-af9e-eb4b-82eda134eb8f@redhat.com>
-Date:   Wed, 30 Oct 2019 10:34:22 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 30 Oct 2019 06:35:23 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:1741 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfJ3KfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 06:35:23 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Wed, 30 Oct 2019 06:35:22 EDT
+IronPort-SDR: ve5p2pZNlvpDL2krbZnIKB2D9SwTBZKOjF0PY2JWzUWzbkxJYfhyJuAEAhD8N7aY7IwgMrL1Zu
+ MbyHMzRC6yElgKfYimu97StkUmT8BAAKziXK1M/R4Zb+ubqt67DIJOCFoNXil2wj7odpBQD3pY
+ kPOugSZr7DeRoTvMIM22FuSeKfBf8L/HSQWVYNK5EUjWDQqjdSOka08z4IufXIr873n2TPRgHC
+ HJzxrs0l+l5F4Wmy6Z+9x/l15Vee7sRD11o0OMJo9sGKsCZ2f1M+ypV1Ww7zuwOZWVOkBkRdI7
+ bDE=
+X-IronPort-AV: E=Sophos;i="5.68,247,1569276000"; 
+   d="scan'208";a="1996420"
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     axboe@kernel.dk
+Cc:     linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vincent Whitchurch <rabinv@axis.com>
+Subject: [PATCH] buffer: Work around I/O errors due to ARM CPU bug
+Date:   Wed, 30 Oct 2019 11:28:10 +0100
+Message-Id: <20191030102810.20744-1-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=who0HS=NT8U7vFDT7er_CD7+ZreRJMxjYrRXs5G6dbpyw@mail.gmail.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: nQpbRAfROVGuuPV7vSUXZw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On my dual-core ARM Cortex-A9, reading from squashfs (over
+dm-verity/ubi/mtd) in a loop for hundreds of hours inevitably results in
+a read failure in squashfs_read_data().  The errors occur because the
+buffer_uptodate() check fails after wait_on_buffer().  Further debugging
+shows that the bh was in fact uptodate and that there is no actual I/O
+error in the lower layers.
 
-On 29/10/2019 16:52, Linus Torvalds wrote:
-> On Tue, Oct 29, 2019 at 3:25 PM Konstantin Khlebnikov
-> <khlebnikov@yandex-team.ru> wrote:
->> I think all network filesystems which synchronize metadata lazily should=
- be
->> marked. For example as "SB_VOLATILE". And vfs could handle them speciall=
-y.
-> No need. The VFS layer doesn't call generic_file_buffered_read()
-> directly anyway. It's just a helper function for filesystems to use if
-> they want to.
->
-> They could (and should) make sure the inode size is sufficiently
-> up-to-date before calling it. And if they want something more
-> synchronous, they can do it themselves.
->
-> But NFS, for example, has open/close consistency, so the metadata
-> revalidation is at open() time, not at read time.
->
->                 Linus
+The problem appears to be caused by the read-after-read hazards in the
+ARM Cortex-A9 MPCore (erratum #761319, see [1]).  The new value of the
+BH_Lock flag is seen but the new value of BH_Uptodate is not even though
+both the bits are read from the same memory location.  Work around it by
+adding a DMB between the two reads of bh->flags.
 
-NFS may be ok here, but it will break GFS2. There may be others too...=20
-OCFS2 is likely one. Not sure about CIFS either. Does it really matter=20
-that we might occasionally allocate a page and then free it again?
+ 27c:	9d08      	ldr	r5, [sp, #32]
+ 27e:	2400      	movs	r4, #0
+ 280:	e006      	b.n	290 <squashfs_read_data+0x290>
+ 282:	6803      	ldr	r3, [r0, #0]
+ 284:	07da      	lsls	r2, r3, #31
+ 286:	f140 810d 	bpl.w	4a4 <squashfs_read_data+0x4a4>
+ 28a:	3401      	adds	r4, #1
+ 28c:	42bc      	cmp	r4, r7
+ 28e:	da08      	bge.n	2a2 <squashfs_read_data+0x2a2>
+ 290:	f855 0f04 	ldr.w	r0, [r5, #4]!
+ 294:	6803      	ldr	r3, [r0, #0]
+ 296:	0759      	lsls	r1, r3, #29
+ 298:	d5f3      	bpl.n	282 <squashfs_read_data+0x282>
+ 29a:	f7ff fffe 	bl	0 <__wait_on_buffer>
 
-Ramfs is a simple test case, but at the same time it doesn't represent=20
-the complexity of a real world filesystem. I'm just back from a few days=20
-holiday so apologies if I've missed something earlier on in the discussions=
-,
+With this barrier, no failures have been seen in 2500+ hours of the same
+test.
 
-Steve.
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.uan0004a/UAN0004A_a9_read_read.pdf
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+ include/linux/buffer_head.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
+index 7b73ef7f902d..4ef909a91f8c 100644
+--- a/include/linux/buffer_head.h
++++ b/include/linux/buffer_head.h
+@@ -352,6 +352,14 @@ static inline void wait_on_buffer(struct buffer_head *bh)
+ 	might_sleep();
+ 	if (buffer_locked(bh))
+ 		__wait_on_buffer(bh);
++
++#ifdef CONFIG_ARM
++	/*
++	 * Work around ARM Cortex-A9 MPcore Read-after-Read Hazards (erratum
++	 * 761319).
++	 */
++	smp_rmb();
++#endif
+ }
+ 
+ static inline int trylock_buffer(struct buffer_head *bh)
+-- 
+2.20.0
 
