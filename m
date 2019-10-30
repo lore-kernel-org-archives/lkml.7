@@ -2,170 +2,75 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E34CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F40CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB8E20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:02:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="red73tWI"
+	by mail.kernel.org (Postfix) with ESMTP id 24B2320856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfJ3OCQ (ORCPT
+        id S1726759AbfJ3OCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:02:16 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35332 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfJ3OCP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:02:15 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UE26ls128492;
-        Wed, 30 Oct 2019 09:02:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572444126;
-        bh=ZAfLJiz4WoYUnlJxPbz6SDvn9hIgdianQtlpxsjHwxc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=red73tWIL4GTeuoVo/CG6nuKF9zwdDXG/Rljmd+kdDtcHNzg278aIdb4hb7DPnHjU
-         n0vl8UHu64Qfw93GVXqDxiP/byms/2geIm7aJ5L461kcumHug5224/oUGs74icVUsH
-         gx4awloqKRJVSICvafnMgVZuFk0uEGy0jk3GkZzc=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UE26wP028066
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 09:02:06 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 09:01:52 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 09:01:52 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UE21n8124938;
-        Wed, 30 Oct 2019 09:02:02 -0500
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <116e2d1eb1333c322450f20a5f591b7038586865.camel@pengutronix.de>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <9e862d4d-6661-e7ec-24ba-4e621155e145@ti.com>
-Date:   Wed, 30 Oct 2019 16:03:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 10:02:24 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:26087 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726328AbfJ3OCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 10:02:23 -0400
+IronPort-SDR: A6r/sRAgNcgUX6PPp549V7VnqRa+RPsV8Fgd5Ru+gJt5wm1+/Sadm+GxmQVl2XjiGjx+G3z7YQ
+ XTVBPDQVArlEmWjORPnItJ6Lae0eZOWyNcIg1u5SF2X7bETQvczeZ/LzWt02wZ3DXAK3+tG9Ti
+ dLDTINRcTZjDYjo76olwlpc8ZIKyxMkbc6m37TnfYz/ZIO5Ai0GClfE9RElV/B6zjTCAlUkKoZ
+ 3M+ungPUzRNzzcmBJgVdCqPpATxq6sZ9436l2dLaNlfn+Fza0GiP+L8HKNtz+u7aUcy0cTcnqa
+ nNI=
+X-IronPort-AV: E=Sophos;i="5.68,247,1569276000"; 
+   d="scan'208";a="1925617"
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Date:   Wed, 30 Oct 2019 15:02:16 +0100
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/sparse: Consistently do not zero memmap
+Message-ID: <20191030140216.i26n22asgafckfxy@axis.com>
+References: <20191030131122.8256-1-vincent.whitchurch@axis.com>
+ <20191030132958.GD31513@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <116e2d1eb1333c322450f20a5f591b7038586865.camel@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030132958.GD31513@dhcp22.suse.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 30/10/2019 15.51, Philipp Zabel wrote:
-> On Wed, 2019-10-30 at 15:32 +0200, Peter Ujfalusi wrote:
->>
->> On 30/10/2019 15.12, Rob Herring wrote:
->>> On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>> Hi,
->>>>
->>>> The shared GPIO line for external components tends to be a common issue and
->>>> there is no 'clean' way of handling it.
->>>>
->>>> I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
->>>> a driver tries to request a GPIO which is already in use.
->>>> However the driver must know that the component is going to be used in such a
->>>> way, which can be said to any external components with GPIO line, so in theory
->>>> all drivers must set this flag when requesting the GPIO...
->>>>
->>>> But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
->>>> GPIO line. For example any device using the same GPIO as reset/enable line can
->>>> reset/enable other devices, which is not something the other device might like
->>>> or can handle.
->>>> For example a device needs to be configured after it is enabled, but some other
->>>> driver would reset it while handling the same GPIO -> the device is not
->>>> operational anymmore as it lost it's configuration.
->>>>
->>>> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
->>>> the role of making sure that the GPIO line only changes state when it will not
->>>> disturb any of the clients sharing the same GPIO line.
->>>
->>> Why can't we just add a shared flag like we have for interrupts?
->>> Effectively, we have that for resets too, it's just hardcoded in the
->>> the drivers.
->>
->> This would be kind of the same thing what the
->> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
->> fixed-regulators afaik.
->>
->> But let's say that a board design will pick two components (C1 and C2)
->> and use the same GPIO line to enable them. We already have the drivers
->> for them and they are used in boards already.
->>
->> Both needs the GPIO line to be high for normal operation.
->> One or both of them needs register writes after they are enabled.
->>
->> During boot both requests the GPIO (OUTPUT_LOW) and sets it high, then
->> run the register setup.
->>
->> C1 request GPIO (LOW)
->> C1 gpio_set(1)
->> C1 register writes
->> C2 requests GPIO (LOW)
->>  C1 placed to reset and looses the configuration
->> C2 gpio_set(1)
->>  C1 also enabled
->> C2 register writes
->>
->> At this point C2 is operational, C1 is not.
->>
->> In shared GPIO case the GPIO should be handled like a regulator with a
->> twist that the 'sticky' state of the GPIO might be low or high depending
->> on the needs of the components it is connected to.
->>
->> The shared GPIO line is a board design quirk and basically any device
->> which have reset/enable GPIO must be able to work in a situation when
->> they are sharing that line with other components and the driver should
->> not know much about this small detail.
+On Wed, Oct 30, 2019 at 02:29:58PM +0100, Michal Hocko wrote:
+> On Wed 30-10-19 14:11:22, Vincent Whitchurch wrote:
+> > (I noticed this because on my ARM64 platform, with 1 GiB of memory the
+> >  first [and only] section is allocated from the zeroing path while with
+> >  2 GiB of memory the first 1 GiB section is allocated from the
+> >  non-zeroing path.)
 > 
-> What about components that require a register write right after being
-> enabled, for example to put the device into a low power state, to
-> silence it on a bus, or to mask some initially enabled interrupts?
+> Do I get it right that sparse_buffer_init couldn't allocate memmap for
+> the full node for some reason and so sparse_init_nid would have to
+> allocate one for each memory section?
 
-You are right, if a device needs driver to silence it when enabled (we
-might not have the driver compiled) then this can be a problem.
+Not quite.  The sparsemap_buf is successfully allocated with the correct
+size in sparse_buffer_init(), but sparse_buffer_alloc() fails to
+allocate the same size from it.
 
-But the same thing applies to components without enable/reset GPIO and
-only needing power, no?
+The reason it fails is that sparse_buffer_alloc() for some reason wants
+to return a pointer which is aligned to the allocation size.  But the
+sparsemap_buf was only allocated with PAGE_SIZE alignment so there's not
+enough space to align it.
 
-I would trust (I know...) on the board designers to not bundle
-components of such kinds.
-
-> 
-> regards
-> Philipp
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+I don't understand the reason for this alignment requirement since the
+fallback path also allocates with PAGE_SIZE alignment.  I'm guessing the
+alignment is for the VMEMAP code which also uses sparse_buffer_alloc()?
