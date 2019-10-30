@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1F5CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35150CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9D721906
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDBF521835
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451236;
-	bh=3zR5LJ09aUw6Xp7NTfJ2jsB8JLyk4o3y5+Lz4rXqc+k=;
+	s=default; t=1572451246;
+	bh=9CtT65Z849232WiDVbFzdI/KWnr+z2wOnr7nMlIbsiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6KGIQyhiR//4dR9sn4RhuGfgR9ukw1g6dTgPyGEggbMI0Pvg9pUhLoQKtSe7HO62
-	 KzNhpD5nkLPKOvUfhKPczI44PUMntlC4V2mj4NTy6wOukRDC84Mo3jgRf+bFilypkD
-	 vK2Yg22/I9HiJUqxbjyOb1GWwdaBtz61Y7PBQe4I=
+	b=Bo00BDk/jrMZK9lITtJIyyXG3aE8uQflZirpXAoPc3k/R9wSHATc7IYRpq2kie7o7
+	 ZEbfEpNTuDoj++VprQ9rdEg6aUs9z6u9EA8jQwaqpIJrEn5JWp9q08j0Ar/YPatXKH
+	 eeUdMXZZjLRKd11ZCCrzEhCSTO5e+RfkMK1MEvTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfJ3QAf (ORCPT
+        id S1728563AbfJ3QAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:00:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 12:00:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728563AbfJ3PzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:55:20 -0400
+        id S1728512AbfJ3PzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:55:10 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55CB0208C0;
-        Wed, 30 Oct 2019 15:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 041B820874;
+        Wed, 30 Oct 2019 15:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450920;
-        bh=3zR5LJ09aUw6Xp7NTfJ2jsB8JLyk4o3y5+Lz4rXqc+k=;
+        s=default; t=1572450909;
+        bh=9CtT65Z849232WiDVbFzdI/KWnr+z2wOnr7nMlIbsiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MR5eks3tImq8P/XQStCM57kVKLR4XXtoy/eXMLVpdaz+96hI1D+hsswdvHlMkScKi
-         WGLPHhmhWqoWN2QPaEih3zq6QZxu8PO7T6BkZAppNNx7PSQ+AflWCptSiFTPSwbQ4n
-         bDXYdH93y+FeAwjj27UtBQIOj05c6Jl+tAbKD/WI=
+        b=hyPM7l8POtF+SjWMhCGgfLWBZSzLp9U3bpEE15kvGDSZMbfxPdVexDD6OD5rhAPMp
+         wxjaPsOFImmIn/XoTqK1YLRsW0rWyNbRbSJYXUTHc0vPdgjLoR3M/M0v+a17ne/kYz
+         OBl/ED+cLw6MVp/WozwOM2NkVlNiWzkkqKffi3FI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 26/38] scsi: target: core: Do not overwrite CDB byte 1
-Date:   Wed, 30 Oct 2019 11:53:54 -0400
-Message-Id: <20191030155406.10109-26-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Michael Moese <mmoese@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 22/38] 8250-men-mcb: fix error checking when get_num_ports returns -ENODEV
+Date:   Wed, 30 Oct 2019 11:53:50 -0400
+Message-Id: <20191030155406.10109-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
 References: <20191030155406.10109-1-sashal@kernel.org>
@@ -62,59 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 27e84243cb63601a10e366afe3e2d05bb03c1cb5 ]
+[ Upstream commit f50b6805dbb993152025ec04dea094c40cc93a0c ]
 
-passthrough_parse_cdb() - used by TCMU and PSCSI - attepts to reset the LUN
-field of SCSI-2 CDBs (bits 5,6,7 of byte 1).  The current code is wrong as
-for newer commands not having the LUN field it overwrites relevant command
-bits (e.g. for SECURITY PROTOCOL IN / OUT). We think this code was
-unnecessary from the beginning or at least it is no longer useful. So we
-remove it entirely.
+The current checking for failure on the number of ports fails when
+-ENODEV is returned from the call to get_num_ports. Fix this by making
+num_ports and loop counter i signed rather than unsigned ints. Also
+add check for num_ports being less than zero to check for -ve error
+returns.
 
-Link: https://lore.kernel.org/r/12498eab-76fd-eaad-1316-c2827badb76a@ts.fujitsu.com
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: e2fea54e4592 ("8250-men-mcb: add support for 16z025 and 16z057")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Michael Moese <mmoese@suse.de>
+Link: https://lore.kernel.org/r/20191013220016.9369-1-colin.king@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_device.c | 21 ---------------------
- 1 file changed, 21 deletions(-)
+ drivers/tty/serial/8250/8250_men_mcb.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
-index 47b5ef153135c..e9ff2a7c0c0e6 100644
---- a/drivers/target/target_core_device.c
-+++ b/drivers/target/target_core_device.c
-@@ -1128,27 +1128,6 @@ passthrough_parse_cdb(struct se_cmd *cmd,
- 	struct se_device *dev = cmd->se_dev;
- 	unsigned int size;
+diff --git a/drivers/tty/serial/8250/8250_men_mcb.c b/drivers/tty/serial/8250/8250_men_mcb.c
+index 127017cc41d92..057b1eaf6d2eb 100644
+--- a/drivers/tty/serial/8250/8250_men_mcb.c
++++ b/drivers/tty/serial/8250/8250_men_mcb.c
+@@ -71,8 +71,8 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
+ {
+ 	struct serial_8250_men_mcb_data *data;
+ 	struct resource *mem;
+-	unsigned int num_ports;
+-	unsigned int i;
++	int num_ports;
++	int i;
+ 	void __iomem *membase;
  
--	/*
--	 * Clear a lun set in the cdb if the initiator talking to use spoke
--	 * and old standards version, as we can't assume the underlying device
--	 * won't choke up on it.
--	 */
--	switch (cdb[0]) {
--	case READ_10: /* SBC - RDProtect */
--	case READ_12: /* SBC - RDProtect */
--	case READ_16: /* SBC - RDProtect */
--	case SEND_DIAGNOSTIC: /* SPC - SELF-TEST Code */
--	case VERIFY: /* SBC - VRProtect */
--	case VERIFY_16: /* SBC - VRProtect */
--	case WRITE_VERIFY: /* SBC - VRProtect */
--	case WRITE_VERIFY_12: /* SBC - VRProtect */
--	case MAINTENANCE_IN: /* SPC - Parameter Data Format for SA RTPG */
--		break;
--	default:
--		cdb[1] &= 0x1f; /* clear logical unit number */
--		break;
--	}
--
- 	/*
- 	 * For REPORT LUNS we always need to emulate the response, for everything
- 	 * else, pass it up.
+ 	mem = mcb_get_resource(mdev, IORESOURCE_MEM);
+@@ -87,7 +87,7 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
+ 	dev_dbg(&mdev->dev, "found a 16z%03u with %u ports\n",
+ 		mdev->id, num_ports);
+ 
+-	if (num_ports == 0 || num_ports > 4) {
++	if (num_ports <= 0 || num_ports > 4) {
+ 		dev_err(&mdev->dev, "unexpected number of ports: %u\n",
+ 			num_ports);
+ 		return -ENODEV;
+@@ -132,7 +132,7 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
+ 
+ static void serial_8250_men_mcb_remove(struct mcb_device *mdev)
+ {
+-	unsigned int num_ports, i;
++	int num_ports, i;
+ 	struct serial_8250_men_mcb_data *data = mcb_get_drvdata(mdev);
+ 
+ 	if (!data)
 -- 
 2.20.1
 
