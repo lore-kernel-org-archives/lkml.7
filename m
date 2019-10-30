@@ -2,95 +2,135 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A60CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB594CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F88720679
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451262;
-	bh=HrRc/uzkTfFPv0L8nCGXB774/xM81RQM7rhRnnprTsk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hKu3Bp0JOk1pVUBYqXkcQth9+9ij5qVzAfrQgd4my6tuiSXtg2mqmZxuDBp96HasY
-	 G1aldmDUcM6fWJgLlEnZ4kC8Agxg4It51Bz7xLBnSvlZ6XNMdjsKtEab8oYO4RdytP
-	 nnC74TtNgK4THqpH3VYaqhsHNgSASmCZQ7QfTn78=
+	by mail.kernel.org (Postfix) with ESMTP id 994B621906
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYTB+7xl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbfJ3QBB (ORCPT
+        id S1728434AbfJ3QBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727884AbfJ3Pys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:54:48 -0400
-Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8424C2087E;
-        Wed, 30 Oct 2019 15:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450887;
-        bh=HrRc/uzkTfFPv0L8nCGXB774/xM81RQM7rhRnnprTsk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VVuVVe81s2JFd0gVG7THBMZGlRKI16dk7RXiqLG24MgqWSo/dMWv8mDj3lsdUKPnv
-         qfU2MHNebGjoFBvJxgg6B49H7ZqAWYMPpJc1wKKcyJelmGcqMZChmRMs5jj2KqhWJy
-         k9Gpk39t+YUvGLpbjQpxR93GVga7bTVqRf4SmzYg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/38] scsi: sni_53c710: fix compilation error
-Date:   Wed, 30 Oct 2019 11:53:44 -0400
-Message-Id: <20191030155406.10109-16-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
-References: <20191030155406.10109-1-sashal@kernel.org>
+        Wed, 30 Oct 2019 12:01:10 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39719 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727872AbfJ3Pyr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:54:47 -0400
+Received: by mail-qt1-f195.google.com with SMTP id t8so3876087qtc.6;
+        Wed, 30 Oct 2019 08:54:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=XRfFDBLo3b+7Jix/rVYd4DPxmBTVVlhffQMhrh75uRM=;
+        b=NYTB+7xlC2vEB9n73s3dHhQYIdib40WEvSkkOn90vdB848MLyePNydOhv9Fa7WErAF
+         r+I5O2KbTdHrfRQCE+SFpZPHAmL0tCv9qWvZAdwTzK+uW4a93SUJDh+DIMkglnyrb/p9
+         spz4FsaO/CQB+pXaeJpeNyEE/4n6Mv/LESjZkWbTrJTEk+zDkwh4RoHPG3Q3hz6iQ+7N
+         Gm1ydygLZwebvyBlp/qpeQtlMekRpBGOM06/i3gzrrUH0jLs28wNmPlOGQ+Qm1DYlpl+
+         ehORJ1ei4Mi1hhfr9uUgAfdAyRPpkQcXkuiiGv0F3Wsd5j7jrZgU/poy/jUTvEmdK8X1
+         xtrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=XRfFDBLo3b+7Jix/rVYd4DPxmBTVVlhffQMhrh75uRM=;
+        b=mV+c4RANCPS56YqxzLwSsDeHAE4tOjSmgDE3N6BBesIZUzUdS1pb5ElZEVehXGccny
+         v7aJcpAyqd+uotL9EouniMQb+HHuzaW8qfq3PnkNGcEAXzQ+IrVkOouo1mNjeixmqPYO
+         H5oXmdSW8mEQcVT7QxM+OMbun+ABQOe7c3fCjLu6aLrzFHGc2zXTYGDTTk8CDpDbLXUW
+         35sr8oUgvxkc8WDb9x4bjIGTa4D7zyO+BhXPYCrRWP8SR83QaJMNAfPdkn82UCeZAaze
+         LQ/Q8pObVdiSkL+n7k/GPxdnQHvnABb1TWozt29bUI/iQIbklK+XbWs3EZiBP4hImGtP
+         iQIw==
+X-Gm-Message-State: APjAAAUcefb0tTspr2M5dsUx/8YY27dxLc8Wfq0DpPgzFYVf9HdV0TbA
+        pJS5cl/m+2x/7oN+QJC1VLDIqC/VKpOZgLygC2U=
+X-Google-Smtp-Source: APXvYqxAeT3rxjjBtdZs6bR+Eo4Iz2uo6t7xVkDCXigNHcCdKx2PEhYZ4SyiaQ0yjIsEB6MTLNizb1jFOC/g0OV+YwY=
+X-Received: by 2002:aed:3f57:: with SMTP id q23mr829268qtf.116.1572450886323;
+ Wed, 30 Oct 2019 08:54:46 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: by 2002:ad4:54a5:0:0:0:0:0 with HTTP; Wed, 30 Oct 2019 08:54:45
+ -0700 (PDT)
+In-Reply-To: <20191030132420.GG4326@localhost.localdomain>
+References: <1572451637-14085-1-git-send-email-wallyzhao@gmail.com> <20191030132420.GG4326@localhost.localdomain>
+From:   Wei Zhao <wallyzhao@gmail.com>
+Date:   Wed, 30 Oct 2019 23:54:45 +0800
+Message-ID: <CAFRmqq42HqX5KctcNjwyZJ4jdknLSZ1EyBqHnJQQJx211mWopw@mail.gmail.com>
+Subject: Re: [PATCH] sctp: set ooo_okay properly for Transmit Packet Steering
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, davem@davemloft.net,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wally.zhao@nokia-sbell.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+On 10/30/19, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> wrote:
+> On Wed, Oct 30, 2019 at 12:07:17PM -0400, Wally Zhao wrote:
+>> Unlike tcp_transmit_skb,
+>> sctp_packet_transmit does not set ooo_okay explicitly,
+>> causing unwanted Tx queue switching when multiqueue is in use;
+>
+> It is initialized to 0 by __alloc_skb() via:
+>         memset(skb, 0, offsetof(struct sk_buff, tail));
+> and never set to 1 by anyone for SCTP.
+>
+> The patch description seems off. I don't see how the unwanted Tx queue
+> switching can happen. IOW, it's not fixing it OOO packets, but
+> improving it by allowing switching on the first packet. Am I missing
+> something?
 
-[ Upstream commit 0ee6211408a8e939428f662833c7301394125b80 ]
+Thanks for pointing this out. You are right. This ooo_okay is default to false.
 
-Drop out memory dev_printk() with wrong device pointer argument.
+I was observing some Tx queue switching before when testing with
+iperf3 (modified to be able to set window size, for higher throughput
+with long RTT), so I thought ooo_okay was set to true somewhere else
+after allocation. Just now I did the test again, it turns out that
+iperf3 made a re-connect silently which caused the Tx queue change.
 
-[mkp: typo]
+As for the improving purpose of this patch, that is not that critical
+from my side, and the patch description is not correct for this
+purpose. So I will give up this patch attempt. Thank you again for
+your time on this.
 
-Link: https://lore.kernel.org/r/20191009151118.32350-1-tbogendoerfer@suse.de
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/sni_53c710.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/scsi/sni_53c710.c b/drivers/scsi/sni_53c710.c
-index 1f9a087daf69f..3102a75984d3b 100644
---- a/drivers/scsi/sni_53c710.c
-+++ b/drivers/scsi/sni_53c710.c
-@@ -78,10 +78,8 @@ static int snirm710_probe(struct platform_device *dev)
- 
- 	base = res->start;
- 	hostdata = kzalloc(sizeof(*hostdata), GFP_KERNEL);
--	if (!hostdata) {
--		dev_printk(KERN_ERR, dev, "Failed to allocate host data\n");
-+	if (!hostdata)
- 		return -ENOMEM;
--	}
- 
- 	hostdata->dev = &dev->dev;
- 	dma_set_mask(&dev->dev, DMA_BIT_MASK(32));
--- 
-2.20.1
-
+>
+>> Tx queue switching may cause out-of-order packets.
+>> Change sctp_packet_transmit to allow Tx queue switching only for
+>> the first in flight packet, to avoid unwanted Tx queue switching.
+>>
+>> Signed-off-by: Wally Zhao <wallyzhao@gmail.com>
+>> ---
+>>  net/sctp/output.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/net/sctp/output.c b/net/sctp/output.c
+>> index dbda7e7..5ff75cc 100644
+>> --- a/net/sctp/output.c
+>> +++ b/net/sctp/output.c
+>> @@ -626,6 +626,10 @@ int sctp_packet_transmit(struct sctp_packet *packet,
+>> gfp_t gfp)
+>>  	/* neighbour should be confirmed on successful transmission or
+>>  	 * positive error
+>>  	 */
+>> +
+>> +	/* allow switch tx queue only for the first in flight pkt */
+>> +	head->ooo_okay = asoc->outqueue.outstanding_bytes == 0;
+>
+> Considering we are talking about NIC queues here, we would have a
+> better result with tp->flight_size instead. As in, we can switch
+> queues if, for this transport, the queue is empty.
+>
+>> +
+>>  	if (tp->af_specific->sctp_xmit(head, tp) >= 0 &&
+>>  	    tp->dst_pending_confirm)
+>>  		tp->dst_pending_confirm = 0;
+>> --
+>> 1.8.3.1
+>>
+>
