@@ -2,103 +2,199 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562D9CA9EC4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26670CA9EAF
 	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 05:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19CCE20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 05:13:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GaC3Sbcr"
+	by mail.kernel.org (Postfix) with ESMTP id EC79C20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 05:13:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfJ3FJO (ORCPT
+        id S1727164AbfJ3FGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 01:09:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41808 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbfJ3FJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 01:09:14 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9U59AEd030682;
-        Wed, 30 Oct 2019 00:09:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572412150;
-        bh=+UZO5Rzpyae9BI3I3UhwNUHD9+mTPpwFLq884upLfIU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GaC3SbcrrCYVrhz+qF5M0oNiwmYRF7DAqBcRQ+KiT9r3OYYmpBnOTvzePUTdrl2dh
-         r/UPAbCEkAdjGlY7FMP1TRlDV+s5P5d5H03oL1uMYaZQm6JjjEpcaq+Vh+q9uYJU3A
-         P3ArbojLgNed10bOwUQ0HmDpMdqeYggvkZhiHtFs=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9U59AeA012986
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 00:09:10 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 00:08:57 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 00:09:09 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9U596Lf053443;
-        Wed, 30 Oct 2019 00:09:07 -0500
-Subject: Re: [PATCH] phy: broadcom: phy-brcm-usb-init.c: Fix comparing pointer
- to 0
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>,
-        <alcooperx@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <bcm-kernel-feedback-list@broadcom.com>
-CC:     <saurav.girepunje@hotmail.com>
-References: <20191028202945.GA29284@saurav>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <d3e2fca7-3552-bf98-f455-7cd27f04336c@ti.com>
-Date:   Wed, 30 Oct 2019 10:38:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 01:06:13 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5224 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725855AbfJ3FGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 01:06:13 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 04441AD359BF000244D6;
+        Wed, 30 Oct 2019 13:06:11 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
+ 2019 13:06:00 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <chao@kernel.org>, <linux-erofs@lists.ozlabs.org>
+CC:     LKML <linux-kernel@vger.kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        "Pratik Shinde" <pratikshinde320@gmail.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v6] erofs: support superblock checksum
+Date:   Wed, 30 Oct 2019 13:08:46 +0800
+Message-ID: <20191030050846.175623-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191030025616.GB161610@architecture4>
+References: <20191030025616.GB161610@architecture4>
 MIME-Version: 1.0
-In-Reply-To: <20191028202945.GA29284@saurav>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Pratik Shinde <pratikshinde320@gmail.com>
 
-On 29/10/19 1:59 AM, Saurav Girepunje wrote:
-> Compare pointer-typed values to NULL rather than 0
-> 
-> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+Introduce superblock checksum feature in order to
+check at mounting time.
 
-I've already merged a patch by Ben Dooks for fixing this
-https://lore.kernel.org/r/20191015160332.15244-2-ben.dooks@codethink.co.uk
+Note that the first 1024 bytes are ignore for x86
+boot sectors and other oddities.
 
-Thanks
-Kishon
+Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+changes since v5:
+ - update commit message which was missed in v5.
 
-> ---
->  drivers/phy/broadcom/phy-brcm-usb-init.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.c b/drivers/phy/broadcom/phy-brcm-usb-init.c
-> index 3c53625f8bc2..2ea1e84b544b 100644
-> --- a/drivers/phy/broadcom/phy-brcm-usb-init.c
-> +++ b/drivers/phy/broadcom/phy-brcm-usb-init.c
-> @@ -707,7 +707,7 @@ static void brcmusb_usb3_otp_fix(struct brcm_usb_init_params *params)
->  	void __iomem *xhci_ec_base = params->xhci_ec_regs;
->  	u32 val;
->  
-> -	if (params->family_id != 0x74371000 || xhci_ec_base == 0)
-> +	if (params->family_id != 0x74371000 || xhci_ec_base == NULL)
->  		return;
->  	brcmusb_writel(0xa20c, USB_XHCI_EC_REG(xhci_ec_base, IRAADR));
->  	val = brcmusb_readl(USB_XHCI_EC_REG(xhci_ec_base, IRADAT));
-> 
+ fs/erofs/Kconfig    |  1 +
+ fs/erofs/erofs_fs.h |  3 ++-
+ fs/erofs/internal.h |  2 ++
+ fs/erofs/super.c    | 36 ++++++++++++++++++++++++++++++++++--
+ 4 files changed, 39 insertions(+), 3 deletions(-)
+
+diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+index 9d634d3a1845..74b0aaa7114c 100644
+--- a/fs/erofs/Kconfig
++++ b/fs/erofs/Kconfig
+@@ -3,6 +3,7 @@
+ config EROFS_FS
+ 	tristate "EROFS filesystem support"
+ 	depends on BLOCK
++	select LIBCRC32C
+ 	help
+ 	  EROFS (Enhanced Read-Only File System) is a lightweight
+ 	  read-only file system with modern designs (eg. page-sized
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index b1ee5654750d..385fa49c7749 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -11,6 +11,8 @@
+ 
+ #define EROFS_SUPER_OFFSET      1024
+ 
++#define EROFS_FEATURE_COMPAT_SB_CHKSUM          0x00000001
++
+ /*
+  * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
+  * be incompatible with this kernel version.
+@@ -37,7 +39,6 @@ struct erofs_super_block {
+ 	__u8 uuid[16];          /* 128-bit uuid for volume */
+ 	__u8 volume_name[16];   /* volume name */
+ 	__le32 feature_incompat;
+-
+ 	__u8 reserved2[44];
+ };
+ 
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 544a453f3076..a3778f597bf6 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -85,6 +85,7 @@ struct erofs_sb_info {
+ 
+ 	u8 uuid[16];                    /* 128-bit uuid for volume */
+ 	u8 volume_name[16];             /* volume name */
++	u32 feature_compat;
+ 	u32 feature_incompat;
+ 
+ 	unsigned int mount_opt;
+@@ -426,6 +427,7 @@ static inline void z_erofs_exit_zip_subsystem(void) {}
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+ 
+ #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
++#define EFSBADCRC       EBADMSG         /* Bad CRC detected */
+ 
+ #endif	/* __EROFS_INTERNAL_H */
+ 
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 0e369494f2f2..2fcf44b656dd 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -9,6 +9,7 @@
+ #include <linux/statfs.h>
+ #include <linux/parser.h>
+ #include <linux/seq_file.h>
++#include <linux/crc32c.h>
+ #include "xattr.h"
+ 
+ #define CREATE_TRACE_POINTS
+@@ -46,6 +47,30 @@ void _erofs_info(struct super_block *sb, const char *function,
+ 	va_end(args);
+ }
+ 
++static int erofs_superblock_csum_verify(struct super_block *sb, void *sbdata)
++{
++	struct erofs_super_block *dsb;
++	u32 expected_crc, crc;
++
++	dsb = kmemdup(sbdata + EROFS_SUPER_OFFSET,
++		      EROFS_BLKSIZ - EROFS_SUPER_OFFSET, GFP_KERNEL);
++	if (!dsb)
++		return -ENOMEM;
++
++	expected_crc = le32_to_cpu(dsb->checksum);
++	dsb->checksum = 0;
++	/* to allow for x86 boot sectors and other oddities. */
++	crc = crc32c(~0, dsb, EROFS_BLKSIZ - EROFS_SUPER_OFFSET);
++	kfree(dsb);
++
++	if (crc != expected_crc) {
++		erofs_err(sb, "invalid checksum 0x%08x, 0x%08x expected",
++			  crc, expected_crc);
++		return -EFSBADCRC;
++	}
++	return 0;
++}
++
+ static void erofs_inode_init_once(void *ptr)
+ {
+ 	struct erofs_inode *vi = ptr;
+@@ -112,7 +137,7 @@ static int erofs_read_superblock(struct super_block *sb)
+ 
+ 	sbi = EROFS_SB(sb);
+ 
+-	data = kmap_atomic(page);
++	data = kmap(page);
+ 	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
+ 
+ 	ret = -EINVAL;
+@@ -121,6 +146,13 @@ static int erofs_read_superblock(struct super_block *sb)
+ 		goto out;
+ 	}
+ 
++	sbi->feature_compat = le32_to_cpu(dsb->feature_compat);
++	if (sbi->feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM) {
++		ret = erofs_superblock_csum_verify(sb, data);
++		if (ret)
++			goto out;
++	}
++
+ 	blkszbits = dsb->blkszbits;
+ 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+ 	if (blkszbits != LOG_BLOCK_SIZE) {
+@@ -155,7 +187,7 @@ static int erofs_read_superblock(struct super_block *sb)
+ 	}
+ 	ret = 0;
+ out:
+-	kunmap_atomic(data);
++	kunmap(data);
+ 	put_page(page);
+ 	return ret;
+ }
+-- 
+2.17.1
+
