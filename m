@@ -2,112 +2,87 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867D9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3351ACA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC9C2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2D32083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfJ3EXm (ORCPT
+        id S1727071AbfJ3EYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 00:23:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54614 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725308AbfJ3EXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 00:23:41 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 92F56914FB7379F9428A;
-        Wed, 30 Oct 2019 12:23:39 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
- 2019 12:23:32 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-CC:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH] ext4: bio_alloc never fails
-Date:   Wed, 30 Oct 2019 12:26:18 +0800
-Message-ID: <20191030042618.124220-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+        Wed, 30 Oct 2019 00:24:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:25917 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbfJ3EYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 00:24:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 21:24:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="203071467"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 21:24:02 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v2 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Wed, 30 Oct 2019 12:23:58 +0800
+Message-Id: <cover.1572409172.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to [1] [2], it seems a trivial cleanup since
-bio_alloc can handle memory allocation as mentioned in
-fs/direct-io.c (also see fs/block_dev.c, fs/buffer.c, ..)
+Hi,
 
-[1] https://lore.kernel.org/r/20191030035518.65477-1-gaoxiang25@huawei.com
-[2] https://lore.kernel.org/r/20190830162812.GA10694@infradead.org
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- fs/ext4/page-io.c  | 11 +++--------
- fs/ext4/readpage.c |  2 --
- 2 files changed, 3 insertions(+), 10 deletions(-)
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
 
-diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-index 12ceadef32c5..f1f7b6601780 100644
---- a/fs/ext4/page-io.c
-+++ b/fs/ext4/page-io.c
-@@ -358,14 +358,12 @@ void ext4_io_submit_init(struct ext4_io_submit *io,
- 	io->io_end = NULL;
- }
- 
--static int io_submit_init_bio(struct ext4_io_submit *io,
--			      struct buffer_head *bh)
-+static void io_submit_init_bio(struct ext4_io_submit *io,
-+			       struct buffer_head *bh)
- {
- 	struct bio *bio;
- 
- 	bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
--	if (!bio)
--		return -ENOMEM;
- 	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
- 	bio_set_dev(bio, bh->b_bdev);
- 	bio->bi_end_io = ext4_end_bio;
-@@ -373,7 +371,6 @@ static int io_submit_init_bio(struct ext4_io_submit *io,
- 	io->io_bio = bio;
- 	io->io_next_block = bh->b_blocknr;
- 	wbc_init_bio(io->io_wbc, bio);
--	return 0;
- }
- 
- static int io_submit_add_bh(struct ext4_io_submit *io,
-@@ -388,9 +385,7 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
- 		ext4_io_submit(io);
- 	}
- 	if (io->io_bio == NULL) {
--		ret = io_submit_init_bio(io, bh);
--		if (ret)
--			return ret;
-+		io_submit_init_bio(io, bh);
- 		io->io_bio->bi_write_hint = inode->i_write_hint;
- 	}
- 	ret = bio_add_page(io->io_bio, page, bh->b_size, bh_offset(bh));
-diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
-index a30b203fa461..bfeb77b93f48 100644
---- a/fs/ext4/readpage.c
-+++ b/fs/ext4/readpage.c
-@@ -362,8 +362,6 @@ int ext4_mpage_readpages(struct address_space *mapping,
- 
- 			bio = bio_alloc(GFP_KERNEL,
- 				min_t(int, nr_pages, BIO_MAX_PAGES));
--			if (!bio)
--				goto set_error_page;
- 			ctx = get_bio_post_read_ctx(inode, bio, page->index);
- 			if (IS_ERR(ctx)) {
- 				bio_put(bio);
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 114 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 957 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 150 ++++
+ 5 files changed, 1240 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+
 -- 
-2.17.1
+2.11.0
 
