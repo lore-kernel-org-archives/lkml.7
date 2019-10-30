@@ -2,68 +2,79 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74C2CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215AECA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901852190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572441910;
-	bh=KgXJ9j5HWnetaN9CgIX50RksIn17hT55GgvLirltvWs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ObgARSAmsZ9vQ05OBYQ+vqahbIvQbUlschVm2JxlLwAfVZguaEOTKvEqpjNcAvMeo
-	 jOTfQ2UMqEGwf7sWXfzUdsYgRY3wj7LpBm7yKd933WJ4SRkfLBnFuD8cpZwtrAYYNI
-	 bzikxatJw0sN/2Fwh40ADn/EG94FZGrxAtChuNps=
+	by mail.kernel.org (Postfix) with ESMTP id EEA4B20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfJ3NZG (ORCPT
+        id S1726509AbfJ3NZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:25:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39610 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 09:25:14 -0400
+Received: from mga07.intel.com ([134.134.136.100]:37920 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfJ3NZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:25:05 -0400
-Subject: Re: [GIT PULL] gfs2: Fix remounting (broken in -rc1)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572441905;
-        bh=KgXJ9j5HWnetaN9CgIX50RksIn17hT55GgvLirltvWs=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Q6xYfSL12b0zumb3Xva9awmwsht1kRzKQl0VBVX9BI8coeE+mWjIQShWLHryLWcKe
-         yLweQu+wq+9lMhBGLFCVjO/8hOSm9TFYNJEVhcJqH05bsK3J2ZbHg6ggLXwq+szbwH
-         j9sgs+z3ydMSr15UU4qj1dWbYpQ2W4CtpwCve2dA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191030112449.24984-1-agruenba@redhat.com>
-References: <20191030112449.24984-1-agruenba@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191030112449.24984-1-agruenba@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git
- tags/gfs2-v5.4-rc5.fixes
-X-PR-Tracked-Commit-Id: d5798141fd54cea074c3429d5803f6c41ade0ca8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b66b449872d3652651cec775267f72f274eb7d7e
-Message-Id: <157244190524.19806.14233336921494801373.pr-tracker-bot@kernel.org>
-Date:   Wed, 30 Oct 2019 13:25:05 +0000
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+        id S1726239AbfJ3NZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:25:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 06:25:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="211322245"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 30 Oct 2019 06:25:09 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 30 Oct 2019 15:25:09 +0200
+Date:   Wed, 30 Oct 2019 15:25:09 +0200
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v10 4/4] PCI: Allow extend_bridge_window() to shrink
+ resource if necessary
+Message-ID: <20191030132509.GE2593@lahna.fi.intel.com>
+References: <SL2P216MB0187C1ACBE716693FD5622BD80600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SL2P216MB0187C1ACBE716693FD5622BD80600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 30 Oct 2019 12:24:49 +0100:
+On Wed, Oct 30, 2019 at 12:47:44PM +0000, Nicholas Johnson wrote:
+> Remove checks for resource size in extend_bridge_window(). This is
+> necessary to allow the pci_bus_distribute_available_resources() to
+> function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
+> allocate resources. Because the kernel parameter sets the size of all
+> hotplug bridges to be the same, there are problems when nested hotplug
+> bridges are encountered. Fitting a downstream hotplug bridge with size X
+> and normal bridges with non-zero size Y into parent hotplug bridge with
+> size X is impossible, and hence the downstream hotplug bridge needs to
+> shrink to fit into its parent.
+> 
+> Add check for if bridge is extended or shrunken and adjust pci_dbg to
+> reflect this.
+> 
+> Reset the resource if its new size is zero (if we have run out of a
+> bridge window resource) to prevent the PCI resource assignment code from
+> attempting to assign a zero-sized resource.
+> 
+> Rename extend_bridge_window() to adjust_bridge_window() to reflect the
+> fact that the window can now shrink.
+> 
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-v5.4-rc5.fixes
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b66b449872d3652651cec775267f72f274eb7d7e
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
