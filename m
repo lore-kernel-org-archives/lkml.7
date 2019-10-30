@@ -2,82 +2,113 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FD1CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCEDCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588AE20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E5qc+g45";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="knKrf4PB"
+	by mail.kernel.org (Postfix) with ESMTP id 1638E20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfJ3EGb (ORCPT
+        id S1726963AbfJ3EGl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 00:06:31 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35794 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfJ3EGb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 00:06:31 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4B79A60C8E; Wed, 30 Oct 2019 04:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572408390;
-        bh=r0tGaf1qSrUb7xFSDWv+7Mxo9UoXZ+w51K/d6nmW/4o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=E5qc+g45o6SZOnimCJf/ReNn5hk6jngef6g2JJsJiad3yXQPkipxoKaKzIjZw4X28
-         FEoR8UsoObMF2bUoSojfqQSjZipY22aGtrlAnnLOUctbqcaaKZSppCrJOq33r4O2Gq
-         b1RPuj0kPbLE2FV/Q4tOtiTpQ8lwULdd3ewagVuI=
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 805E560C8E;
-        Wed, 30 Oct 2019 04:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572408389;
-        bh=r0tGaf1qSrUb7xFSDWv+7Mxo9UoXZ+w51K/d6nmW/4o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=knKrf4PBU2ytzxWJXZik8TjcN0Dtw1zkeu4v3q14dbhmJoHZ9ig2nAvwud4aidLCk
-         tJmFKngZo5910nQa2hw10a5DXF9TeoJHlpiNrwVLcyDUouLpXlSM2NYIJw05hW3U8A
-         3j0ewkqvZjQAg5Kg9EIN2NEdSmfbr2XFg8TB1LtU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 805E560C8E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
-        mka@chromium.org, swboyd@chromium.org, evgreen@chromium.org,
-        dianders@chromium.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: arm64: dts: qcom: sc7180: Add cpuidle low power states
-Date:   Wed, 30 Oct 2019 09:35:17 +0530
-Message-Id: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 30 Oct 2019 00:06:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:43128 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbfJ3EGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 00:06:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 21:06:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="401376330"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Oct 2019 21:06:38 -0700
+Received: from fmsmsx126.amr.corp.intel.com (10.18.125.43) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 29 Oct 2019 21:06:38 -0700
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ FMSMSX126.amr.corp.intel.com (10.18.125.43) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 29 Oct 2019 21:06:38 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.2]) with mapi id 14.03.0439.000;
+ Wed, 30 Oct 2019 12:06:36 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>
+Subject: RE: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS
+ event
+Thread-Topic: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS
+ event
+Thread-Index: AQHVjLd13+lWyOpx00qD/bA0eE059qdxL6sAgAEppjA=
+Date:   Wed, 30 Oct 2019 04:06:36 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E173835B1A@SHSMSX104.ccr.corp.intel.com>
+References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
+ <1572217877-26484-4-git-send-email-luwei.kang@intel.com>
+ <20191029144612.GK4097@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191029144612.GK4097@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzhhOGQ4NDktZWMwMC00OThjLTkxYWUtMDFiNWMyNzVhMDJhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicUhZQTJjUzF2dnRRSWp6T0dYbGRWTW9UYmMxRnlWRVwvc1wvb3k4Qm1LZFo4d1lLM2gyK1JkMGsxSW42cDhBSEFoIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add cpuidle low power mode support for sc7180.
-The change has dependency on adding device tree support for sc7180 [1]
-to merge first.
+> >  static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+> >  				  unsigned config, bool exclude_user,
+> >  				  bool exclude_kernel, bool intr,
+> > -				  bool in_tx, bool in_tx_cp)
+> > +				  bool in_tx, bool in_tx_cp, bool pebs)
+> >  {
+> >  	struct perf_event *event;
+> >  	struct perf_event_attr attr = {
+> > @@ -111,9 +111,12 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+> >  		.exclude_user = exclude_user,
+> >  		.exclude_kernel = exclude_kernel,
+> >  		.config = config,
+> > +		.precise_ip = pebs ? 1 : 0,
+> > +		.aux_output = pebs ? 1 : 0,
+> 
+> srsly?
 
-Dependencies:
+Hi Peter,
+    Thanks for review. For aux_output, I think it should be set 1 when the guest wants to enabled PEBS by Intel PT.
+     For precise_ip, it is the precise level in perf and set by perf command line in KVM guest, this may not reflect the accurate value (can be 0~3) here. Here set to 1 is used to allocate a counter for PEBS event and set the MSR_IA32_PEBS_ENABLE register. For PMU virtualization, KVM will trap the guest's write operation to PMU registers and allocate/free event counter from host if a counter enable/disable in guest. We can't always deduce the exact parameter of perf command line from the value of the guest writers to the register.
 
-[1] https://lkml.org/lkml/2019/10/23/223
-
-Maulik Shah (1):
-  arm64: dts: qcom: sc7180: Add cpuidle low power states
-
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Thanks,
+Luwei Kang
