@@ -4,83 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517CFCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D379ACA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3FA20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D742087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfJ3K4t (ORCPT
+        id S1726638AbfJ3K61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:56:49 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59254 "EHLO huawei.com"
+        Wed, 30 Oct 2019 06:58:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38294 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726761AbfJ3K4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:56:48 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AD30DCE6CB8B683BAC3B;
-        Wed, 30 Oct 2019 18:56:45 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 30 Oct 2019
- 18:56:39 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
-        <eric.auger@redhat.com>, <aik@ozlabs.ru>, <mpe@ellerman.id.au>,
-        <bhelgaas@google.com>, <tglx@linutronix.de>, <hexin.op@gmail.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] VFIO: PCI: eliminate unnecessary overhead in vfio_pci_reflck_find
-Date:   Wed, 30 Oct 2019 18:57:10 +0800
-Message-ID: <1572433030-6267-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+        id S1726150AbfJ3K61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 06:58:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 55919AD12;
+        Wed, 30 Oct 2019 10:58:25 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: SGI-IP27: fix exception handler replication
+Date:   Wed, 30 Oct 2019 11:58:19 +0100
+Message-Id: <20191030105819.11266-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+Commit b3ffcd0d800c ("mips/sgi-ip35: Initial rough-in of minimal platform
+definition.") removed generating tlb refill handlers for every CPU, which
+was needed for generating per node exception handlers on IP27. Instead
+of resurrecting (and fixing) refill handler generation, we simply copy
+all exception vectors from the boot node to the other nodes. Also
+remove the config option since the memory tradeoff for exception handler
+replication is just 8k per node.
 
-The driver of the pci device may not equal to vfio_pci_driver,
-but we fetch vfio_device from pci_dev unconditionally in func
-vfio_pci_reflck_find. This overhead, such as the competition
-of vfio.group_lock, can be eliminated by check pci_dev_driver
-with vfio_pci_driver first.
-
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 ---
- drivers/vfio/pci/vfio_pci.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/mips/sgi-ip27/Kconfig       |  7 -------
+ arch/mips/sgi-ip27/ip27-init.c   | 23 +++++++----------------
+ arch/mips/sgi-ip27/ip27-memory.c |  4 ----
+ 3 files changed, 7 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 379a02c36e37..1e21970543a6 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1466,15 +1466,14 @@ static int vfio_pci_reflck_find(struct pci_dev *pdev, void *data)
- 	struct vfio_device *device;
- 	struct vfio_pci_device *vdev;
+diff --git a/arch/mips/sgi-ip27/Kconfig b/arch/mips/sgi-ip27/Kconfig
+index ef3847e7aee0..e5b6cadbec85 100644
+--- a/arch/mips/sgi-ip27/Kconfig
++++ b/arch/mips/sgi-ip27/Kconfig
+@@ -38,10 +38,3 @@ config REPLICATE_KTEXT
+ 	  Say Y here to enable replicating the kernel text across multiple
+ 	  nodes in a NUMA cluster.  This trades memory for speed.
  
--	device = vfio_device_get_from_dev(&pdev->dev);
--	if (!device)
--		return 0;
+-config REPLICATE_EXHANDLERS
+-	bool "Exception handler replication support"
+-	depends on SGI_IP27
+-	help
+-	  Say Y here to enable replicating the kernel exception handlers
+-	  across multiple nodes in a NUMA cluster. This trades memory for
+-	  speed.
+diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-init.c
+index 8fd3505e2b9c..7a269a088be9 100644
+--- a/arch/mips/sgi-ip27/ip27-init.c
++++ b/arch/mips/sgi-ip27/ip27-init.c
+@@ -64,23 +64,14 @@ static void per_hub_init(nasid_t nasid)
+ 
+ 	hub_rtc_init(nasid);
+ 
+-#ifdef CONFIG_REPLICATE_EXHANDLERS
+-	/*
+-	 * If this is not a headless node initialization,
+-	 * copy over the caliased exception handlers.
+-	 */
+-	if (get_nasid() == nasid) {
+-		extern char except_vec2_generic, except_vec3_generic;
+-		extern void build_tlb_refill_handler(void);
 -
- 	if (pci_dev_driver(pdev) != &vfio_pci_driver) {
--		vfio_device_put(device);
- 		return 0;
+-		memcpy((void *)(CKSEG0 + 0x100), &except_vec2_generic, 0x80);
+-		memcpy((void *)(CKSEG0 + 0x180), &except_vec3_generic, 0x80);
+-		build_tlb_refill_handler();
+-		memcpy((void *)(CKSEG0 + 0x100), (void *) CKSEG0, 0x80);
+-		memcpy((void *)(CKSEG0 + 0x180), &except_vec3_generic, 0x100);
+-		__flush_cache_all();
++	if (nasid) {
++		/* copy exception handlers from first node to current node */
++		memcpy((void *)NODE_OFFSET_TO_K0(nasid, 0),
++		       (void *)CKSEG0, 0x200);
++		/* switch to node local exception handlers */
++		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_8K);
++		local_flush_icache_range(CKSEG0, CKSEG0 + 0x200);
  	}
+-#endif
+ }
  
-+	device = vfio_device_get_from_dev(&pdev->dev);
-+	if (!device)
-+		return 0;
-+
- 	vdev = vfio_device_data(device);
+ void per_cpu_init(void)
+diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
+index f610fff592a6..563aad5e6398 100644
+--- a/arch/mips/sgi-ip27/ip27-memory.c
++++ b/arch/mips/sgi-ip27/ip27-memory.c
+@@ -311,11 +311,7 @@ static void __init mlreset(void)
+ 		 * thinks it is a node 0 address.
+ 		 */
+ 		REMOTE_HUB_S(nasid, PI_REGION_PRESENT, (region_mask | 1));
+-#ifdef CONFIG_REPLICATE_EXHANDLERS
+-		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_8K);
+-#else
+ 		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_0);
+-#endif
  
- 	if (vdev->reflck) {
+ #ifdef LATER
+ 		/*
 -- 
-2.19.1
+2.16.4
 
