@@ -2,221 +2,113 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D91CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0C3C47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358242067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB642087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfJ3J2N (ORCPT
+        id S1726206AbfJ3Jar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:28:13 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5652 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfJ3J2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:28:12 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EDCB5622CAB3BB28B0F6;
-        Wed, 30 Oct 2019 17:28:03 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
- 2019 17:27:55 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: bio_alloc should never fail
-To:     Gao Xiang <gaoxiang25@huawei.com>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20191030035518.65477-1-gaoxiang25@huawei.com>
- <20aa40bd-280d-d223-9f73-d9ed7dbe4f29@huawei.com>
- <20191030091542.GA24976@architecture4>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <19a417e6-8f0e-564e-bc36-59bfc883ec16@huawei.com>
-Date:   Wed, 30 Oct 2019 17:27:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 30 Oct 2019 05:30:47 -0400
+Received: from mga01.intel.com ([192.55.52.88]:4690 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfJ3Jar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:30:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 02:30:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="198625928"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Oct 2019 02:30:45 -0700
+Date:   Wed, 30 Oct 2019 02:30:45 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>
+Subject: Re: [PATCH v23 12/24] x86/sgx: Linux Enclave Driver
+Message-ID: <20191030093045.GB12481@linux.intel.com>
+References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+ <20191028210324.12475-13-jarkko.sakkinen@linux.intel.com>
+ <20191029092920.GA14494@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191030091542.GA24976@architecture4>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029092920.GA14494@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xiang,
+On Tue, Oct 29, 2019 at 11:29:20AM +0200, Jarkko Sakkinen wrote:
+> On Mon, Oct 28, 2019 at 11:03:12PM +0200, Jarkko Sakkinen wrote:
+> > +/**
+> > + * sgx_ioc_enclave_add_pages() - The handler for %SGX_IOC_ENCLAVE_ADD_PAGES
+> > + * @encl:       pointer to an enclave instance (via ioctl() file pointer)
+> > + * @arg:	a user pointer to a struct sgx_enclave_add_pages instance
+> > + *
+> > + * Add (EADD) one or more pages to an uninitialized enclave, and optionally
+> > + * extend (EEXTEND) the measurement with the contents of the page. The range of
+> > + * pages must be virtually contiguous. The SECINFO and measurement mask are
+> > + * applied to all pages, i.e. pages with different properties must be added in
+> > + * separate calls.
+> > + *
+> > + * A SECINFO for a TCS is required to always contain zero permissions because
+> > + * CPU silently zeros them. Allowing anything else would cause a mismatch in
+> > + * the measurement.
+> > + *
+> > + * mmap()'s protection bits are capped by the page permissions. For each page
+> > + * address, the maximum protection bits are computed with the following
+> > + * heuristics:
+> > + *
+> > + * 1. A regular page: PROT_R, PROT_W and PROT_X match the SECINFO permissions.
+> > + * 2. A TCS page: PROT_R | PROT_W.
+> > + * 3. No page: PROT_NONE.
+> > + *
+> > + * mmap() is not allowed to surpass the minimum of the maximum protection bits
+> > + * within the given address range.
+> > + *
+> > + * As stated above, a non-existent page is interpreted as a page with no
+> > + * permissions. In effect, this allows mmap() with PROT_NONE to be used to seek
+> > + * an address range for the enclave that can be then populated into SECS.
+> > + *
+> > + * @arg->addr, @arg->src and @arg->length are adjusted to reflect the
+> > + * remaining pages that need to be added to the enclave, e.g. userspace can
+> > + * re-invoke SGX_IOC_ENCLAVE_ADD_PAGES using the same struct in response to an
+> > + * ERESTARTSYS error.
+> > + *
+> > + * Return:
+> > + *   0 on success,
+> > + *   -EINVAL if any input param or the SECINFO contains invalid data,
+> > + *   -EACCES if an executable source page is located in a noexec partition,
+> > + *   -ENOMEM if any memory allocation, including EPC, fails,
+> > + *   -ERESTARTSYS if a pending signal is recognized
+> > + */
+> > +static long sgx_ioc_enclave_add_pages(struct sgx_encl *encl, void __user *arg)
+> 
+> This should return the number of pages processed instead of zero on
+> success. Kernel needs to be able to cap the amount it will process.
 
-On 2019/10/30 17:15, Gao Xiang wrote:
-> Hi Chao,
-> 
-> On Wed, Oct 30, 2019 at 04:56:17PM +0800, Chao Yu wrote:
->> On 2019/10/30 11:55, Gao Xiang wrote:
->>> remove such useless code and related fault injection.
->>
->> Hi Xiang,
->>
->> Although, there is so many 'nofail' allocation in f2fs, I think we'd better
->> avoid such allocation as much as possible (now for read path, we may allow to
->> fail to allocate bio), I suggest to keep the failure path and bio allocation
->> injection.
->>
->> It looks bio_alloc() will use its own mempool, which may suffer deadlock
->> potentially. So how about changing to use bio_alloc_bioset(, , NULL) instead of
->> bio_alloc()?
-> 
-> Yes, I noticed the original commit 740432f83560 ("f2fs: handle failed bio allocation"),
-> yet I don't find any real call trace clue what happened before.
-> 
-> As my understanding, if we allocate bios without submit_bio (I mean write path) with
-> default bs and gfp_flags GFP_NOIO or GFP_KERNEL, I think it will be slept inside
-> mempool rather than return NULL to its caller... Please correct me if I'm wrong...
-
-I'm curious too...
-
-Jaegeuk may know the details.
-
-> 
-> I could send another patch with bio_alloc_bioset(, , NULL), I am curious to know the
-> original issue and how it solved though...
-> 
-> For read or flush path, since it will submit_bio and bio_alloc one by one, I think
-> mempool will get a page quicker (memory failure path could be longer). But I can
-> send a patch just by using bio_alloc_bioset(, , NULL) instead as you suggested later.
-
-You're right, in low memory scenario, allocation with bioset will be faster, as
-you mentioned offline, maybe we can add/use a priviate bioset like btrfs did
-rather than using global one, however, we'd better check how deadlock happen
-with a bioset mempool first ...
-
-Thanks,
-
-> 
-> Thanks,
-> Gao Xiang
-> 
->>
->> Thanks,
->>
->>>
->>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
->>> ---
->>>  Documentation/filesystems/f2fs.txt |  1 -
->>>  fs/f2fs/data.c                     |  6 ++----
->>>  fs/f2fs/f2fs.h                     | 21 ---------------------
->>>  fs/f2fs/segment.c                  |  5 +----
->>>  fs/f2fs/super.c                    |  1 -
->>>  5 files changed, 3 insertions(+), 31 deletions(-)
->>>
->>> diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
->>> index 7e1991328473..3477c3e4c08b 100644
->>> --- a/Documentation/filesystems/f2fs.txt
->>> +++ b/Documentation/filesystems/f2fs.txt
->>> @@ -172,7 +172,6 @@ fault_type=%d          Support configuring fault injection type, should be
->>>                         FAULT_KVMALLOC		0x000000002
->>>                         FAULT_PAGE_ALLOC		0x000000004
->>>                         FAULT_PAGE_GET		0x000000008
->>> -                       FAULT_ALLOC_BIO		0x000000010
->>>                         FAULT_ALLOC_NID		0x000000020
->>>                         FAULT_ORPHAN		0x000000040
->>>                         FAULT_BLOCK		0x000000080
->>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->>> index 5755e897a5f0..3b88dcb15de6 100644
->>> --- a/fs/f2fs/data.c
->>> +++ b/fs/f2fs/data.c
->>> @@ -288,7 +288,7 @@ static struct bio *__bio_alloc(struct f2fs_io_info *fio, int npages)
->>>  	struct f2fs_sb_info *sbi = fio->sbi;
->>>  	struct bio *bio;
->>>  
->>> -	bio = f2fs_bio_alloc(sbi, npages, true);
->>> +	bio = bio_alloc(GFP_NOIO, npages);
->>>  
->>>  	f2fs_target_device(sbi, fio->new_blkaddr, bio);
->>>  	if (is_read_io(fio->op)) {
->>> @@ -682,9 +682,7 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
->>>  	struct bio_post_read_ctx *ctx;
->>>  	unsigned int post_read_steps = 0;
->>>  
->>> -	bio = f2fs_bio_alloc(sbi, min_t(int, nr_pages, BIO_MAX_PAGES), false);
->>> -	if (!bio)
->>> -		return ERR_PTR(-ENOMEM);
->>> +	bio = bio_alloc(GFP_KERNEL, min_t(int, nr_pages, BIO_MAX_PAGES));
->>>  	f2fs_target_device(sbi, blkaddr, bio);
->>>  	bio->bi_end_io = f2fs_read_end_io;
->>>  	bio_set_op_attrs(bio, REQ_OP_READ, op_flag);
->>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>> index 4024790028aa..40012f874be0 100644
->>> --- a/fs/f2fs/f2fs.h
->>> +++ b/fs/f2fs/f2fs.h
->>> @@ -44,7 +44,6 @@ enum {
->>>  	FAULT_KVMALLOC,
->>>  	FAULT_PAGE_ALLOC,
->>>  	FAULT_PAGE_GET,
->>> -	FAULT_ALLOC_BIO,
->>>  	FAULT_ALLOC_NID,
->>>  	FAULT_ORPHAN,
->>>  	FAULT_BLOCK,
->>> @@ -2210,26 +2209,6 @@ static inline void *f2fs_kmem_cache_alloc(struct kmem_cache *cachep,
->>>  	return entry;
->>>  }
->>>  
->>> -static inline struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi,
->>> -						int npages, bool no_fail)
->>> -{
->>> -	struct bio *bio;
->>> -
->>> -	if (no_fail) {
->>> -		/* No failure on bio allocation */
->>> -		bio = bio_alloc(GFP_NOIO, npages);
->>> -		if (!bio)
->>> -			bio = bio_alloc(GFP_NOIO | __GFP_NOFAIL, npages);
->>> -		return bio;
->>> -	}
->>> -	if (time_to_inject(sbi, FAULT_ALLOC_BIO)) {
->>> -		f2fs_show_injection_info(FAULT_ALLOC_BIO);
->>> -		return NULL;
->>> -	}
->>> -
->>> -	return bio_alloc(GFP_KERNEL, npages);
->>> -}
->>> -
->>>  static inline bool is_idle(struct f2fs_sb_info *sbi, int type)
->>>  {
->>>  	if (sbi->gc_mode == GC_URGENT)
->>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
->>> index 808709581481..28457c878d0d 100644
->>> --- a/fs/f2fs/segment.c
->>> +++ b/fs/f2fs/segment.c
->>> @@ -552,10 +552,7 @@ static int __submit_flush_wait(struct f2fs_sb_info *sbi,
->>>  	struct bio *bio;
->>>  	int ret;
->>>  
->>> -	bio = f2fs_bio_alloc(sbi, 0, false);
->>> -	if (!bio)
->>> -		return -ENOMEM;
->>> -
->>> +	bio = bio_alloc(GFP_KERNEL, 0);
->>>  	bio->bi_opf = REQ_OP_WRITE | REQ_SYNC | REQ_PREFLUSH;
->>>  	bio_set_dev(bio, bdev);
->>>  	ret = submit_bio_wait(bio);
->>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->>> index 1443cee15863..51945dd27f00 100644
->>> --- a/fs/f2fs/super.c
->>> +++ b/fs/f2fs/super.c
->>> @@ -44,7 +44,6 @@ const char *f2fs_fault_name[FAULT_MAX] = {
->>>  	[FAULT_KVMALLOC]	= "kvmalloc",
->>>  	[FAULT_PAGE_ALLOC]	= "page alloc",
->>>  	[FAULT_PAGE_GET]	= "page get",
->>> -	[FAULT_ALLOC_BIO]	= "alloc bio",
->>>  	[FAULT_ALLOC_NID]	= "alloc nid",
->>>  	[FAULT_ORPHAN]		= "orphan",
->>>  	[FAULT_BLOCK]		= "no more block",
->>>
-> .
-> 
+Why?  The number of pages processed is effectively returned via the params
+on any error, e.g. wouldn't it be more appropriate to return -ERESTARTSYS?
+And I don't see any reason to add an arbitrary cap on the number of pages,
+e.g. SGX plays nice with the scheduler and signals, and restricting the
+number of EPC pages available to a process via cgroups (returning -ENOMEM)
+is a better solution for managing EPC.
