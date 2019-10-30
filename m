@@ -2,113 +2,104 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978DECA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CBCCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77308217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08BCF217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:04:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k8bDC5IW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfJ3KEN (ORCPT
+        id S1726626AbfJ3KEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:04:13 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51485 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfJ3KEM (ORCPT
+        Wed, 30 Oct 2019 06:04:47 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49654 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfJ3KEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:04:12 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iPkpb-0008At-VY; Wed, 30 Oct 2019 11:04:00 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7B2D41C0072;
-        Wed, 30 Oct 2019 11:03:59 +0100 (CET)
-Date:   Wed, 30 Oct 2019 10:03:59 -0000
-From:   "tip-bot2 for Davidlohr Bueso" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] locking/mutex: Complain upon mutex API misuse in
- IRQ contexts
-Cc:     Davidlohr Bueso <dbueso@suse.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, dave@stgolabs.net,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191025033634.3330-1-dave@stgolabs.net>
-References: <20191025033634.3330-1-dave@stgolabs.net>
+        Wed, 30 Oct 2019 06:04:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=k4pc/iMWUhnLptKqwUE4lPn7l5icEmFDqp2yizhA38o=; b=k8bDC5IW7yDWjoy94bRZqyVvl
+        YGcEQxUqCyZunYCwEAnVro6R0yoIKAbmS236ylADPR/HMUjrQYMV1ZcUb3/NSSn/YURlKJYAteYDw
+        3eHeFCUiZOlBGRR/NMVTWqnmc4CPTjUdMG5M00fBZRUpaEIQEBsTHTjdbsBOgEVwTAg+3KDgvfbCY
+        k4c3HpZuAjB1OPateFke9CbRcII8C1PvsdHh7n+HLO1pOoCxkFfXadIaMVJHyA85k2MxEwqqsruBP
+        26rfWxj4kRYQQH6W4I78FtUuo+zcNFzsME30YSJ0uxJcH7qRZUt9X3AbsMPTCXIw/UjOctKD3cswE
+        RBe8ZqPtw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPkpw-0007Ha-5H; Wed, 30 Oct 2019 10:04:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 54D4B30610C;
+        Wed, 30 Oct 2019 11:03:17 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 722EF2B4574F5; Wed, 30 Oct 2019 11:04:18 +0100 (CET)
+Date:   Wed, 30 Oct 2019 11:04:18 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rppt@kernel.org" <rppt@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+Message-ID: <20191030100418.GV4097@hirez.programming.kicks-ass.net>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <1572171452-7958-2-git-send-email-rppt@kernel.org>
+ <20191028123124.ogkk5ogjlamvwc2s@box>
+ <20191028130018.GA7192@rapoport-lnx>
+ <20191028131623.zwuwguhm4v4s5imh@box>
+ <20191028135521.GB4097@hirez.programming.kicks-ass.net>
+ <0a35765f7412937c1775daa05177b20113760aee.camel@intel.com>
+ <20191028210052.GM4643@worktop.programming.kicks-ass.net>
+ <69c57f7fa9a1be145827673b37beff155a3adc3c.camel@intel.com>
 MIME-Version: 1.0
-Message-ID: <157242983900.29376.2332769194381838907.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69c57f7fa9a1be145827673b37beff155a3adc3c.camel@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/core branch of tip:
+On Tue, Oct 29, 2019 at 05:27:43PM +0000, Edgecombe, Rick P wrote:
+> On Mon, 2019-10-28 at 22:00 +0100, Peter Zijlstra wrote:
 
-Commit-ID:     a0855d24fc22d49cdc25664fb224caee16998683
-Gitweb:        https://git.kernel.org/tip/a0855d24fc22d49cdc25664fb224caee16998683
-Author:        Davidlohr Bueso <dave@stgolabs.net>
-AuthorDate:    Thu, 24 Oct 2019 20:36:34 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 29 Oct 2019 12:22:52 +01:00
+> > That should be limited to the module range. Random data maps could
+> > shatter the world.
+> 
+> BPF has one vmalloc space allocation for the byte code and one for the module
+> space allocation for the JIT. Both get RO also set on the direct map alias of
+> the pages, and reset RW when freed.
 
-locking/mutex: Complain upon mutex API misuse in IRQ contexts
+Argh, I didn't know they mapped the bytecode RO; why does it do that? It
+can throw out the bytecode once it's JIT'ed.
 
-Add warning checks if mutex_trylock() or mutex_unlock() are used in
-IRQ contexts, under CONFIG_DEBUG_MUTEXES=y.
+> You mean shatter performance?
 
-While the mutex rules and semantics are explicitly documented, this allows
-to expose any abusers and robustifies the whole thing.
-
-While trylock and unlock are non-blocking, calling from IRQ context
-is still forbidden (lock must be within the same context as unlock).
-
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: dave@stgolabs.net
-Link: https://lkml.kernel.org/r/20191025033634.3330-1-dave@stgolabs.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/locking/mutex.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index 5352ce5..54cc5f9 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -733,6 +733,9 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
-  */
- void __sched mutex_unlock(struct mutex *lock)
- {
-+#ifdef CONFIG_DEBUG_MUTEXES
-+	WARN_ON(in_interrupt());
-+#endif
- #ifndef CONFIG_DEBUG_LOCK_ALLOC
- 	if (__mutex_unlock_fast(lock))
- 		return;
-@@ -1413,6 +1416,7 @@ int __sched mutex_trylock(struct mutex *lock)
- 
- #ifdef CONFIG_DEBUG_MUTEXES
- 	DEBUG_LOCKS_WARN_ON(lock->magic != lock);
-+	WARN_ON(in_interrupt());
- #endif
- 
- 	locked = __mutex_trylock(lock);
+Shatter (all) large pages.
