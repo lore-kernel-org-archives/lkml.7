@@ -2,118 +2,101 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F95ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59767CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47DF9208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:39:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572453574;
-	bh=uPpsLnIwswK4MvCgYfMrudAcG0whDitorkLSfI+nb3Q=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=V6+VXuQPZ26pxIquNFTNfNvCiICgBkw6oQt03WupybyFBve9cpDKEuw+hgLjpBGEd
-	 3GXnWCNkcLVI1GkDiInUXfDn+quNDzTTB10e06sM4jOiba+IajuZ2go7FgjQQR0Fm2
-	 gRASjZtt+w9AAZW0xc5eQTVQAFI/txzjFwCuXvOU=
+	by mail.kernel.org (Postfix) with ESMTP id 1D545218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:42:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G7iNEDdF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfJ3Qjd (ORCPT
+        id S1726878AbfJ3QmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:39:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbfJ3Qjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:39:32 -0400
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78A97218AC;
-        Wed, 30 Oct 2019 16:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572453571;
-        bh=uPpsLnIwswK4MvCgYfMrudAcG0whDitorkLSfI+nb3Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xdkOfd1yvSJdwDk7TNjX9HOowIi2HLFtg17p6P0NFVvETxTk1VqoKCMxbdUwfIY0G
-         DZEaIhwLkmobqT0No607KZqrpOI73RtwYdp6hgKBYTEm/tdOwc6pELf22IPS+wmtY1
-         dpYphs9pdwMIH6/RoQNz9Eu0TDrTa7y2xV7Z/TMQ=
-Received: by wens.tw (Postfix, from userid 1000)
-        id 66E5F5FB7D; Thu, 31 Oct 2019 00:39:28 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Markus Mayer <mmayer@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] thermal: brcmstb: enable hwmon
-Date:   Thu, 31 Oct 2019 00:38:07 +0800
-Message-Id: <20191030163807.17817-1-wens@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 30 Oct 2019 12:42:25 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36256 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbfJ3QmZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 12:42:25 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UGgGo3022436;
+        Wed, 30 Oct 2019 11:42:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572453736;
+        bh=CCnWjmaSyDBwAcmvj4tdp75fEghlw9n17xSgZDvLzNE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=G7iNEDdFUPcnPrnB6iIhtbadYxsLdvJ468QBIY76uglRR0emhbIterApk1mDITTX+
+         7YG7kigZ9c0gxebCsDrFWezYd9p+Mcd+72VOduJlH7zenLNKn5gSarWsOWcjWYzGdm
+         kfOZbtkrfVrELd7jL8ignpzn0VWBgdfupBeTDqTg=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UGgGCp126766
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 11:42:16 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 11:42:15 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 11:42:15 -0500
+Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UGgFwM011148;
+        Wed, 30 Oct 2019 11:42:15 -0500
+Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     kbuild test robot <lkp@intel.com>
+CC:     <kbuild-all@lists.01.org>, <jacek.anaszewski@gmail.com>,
+        <pavel@ucw.cz>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191028183629.11779-7-dmurphy@ti.com>
+ <201910302027.2hNdR993%lkp@intel.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
+Date:   Wed, 30 Oct 2019 11:41:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <201910302027.2hNdR993%lkp@intel.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+Hello
 
-By defaul of-based thermal driver do not have hwmon entries registered.
+On 10/30/19 7:07 AM, kbuild test robot wrote:
+> Hi Dan,
+>
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on j.anaszewski-leds/for-next]
+> [also build test ERROR on v5.4-rc5 next-20191029]
 
-Do this explicitly so users can use standard hwmon interfaces and tools
-to read the temperature.
+I went to both these references and I do not see this patchset on either 
+of these.
 
-This is based on similar changes for bcm2835_thermal in commit
-d56c19d07e0b ("thermal: bcm2835: enable hwmon explicitly").
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework/20191030-144320
+It appears here though
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git for-next
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
+Does not appear here
 
-This patch was only compile tested. A similar patch [1] was submitted to
-the downstream kernel, which I did build and actually run on a Raspberry
-Pi 4.
+Finally not sure why the MIPS compiler is complaining about this but the 
+ARM and x86 is not
 
-This one for mainline is much simpler, as it does not need to deal with
-the error path or device removal, due to the use of devres.
-
- [1] https://github.com/raspberrypi/linux/pull/3307
-
----
- drivers/thermal/broadcom/brcmstb_thermal.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
-index 5825ac581f56..8353aaa4d624 100644
---- a/drivers/thermal/broadcom/brcmstb_thermal.c
-+++ b/drivers/thermal/broadcom/brcmstb_thermal.c
-@@ -21,6 +21,8 @@
- #include <linux/of_device.h>
- #include <linux/thermal.h>
- 
-+#include "../thermal_hwmon.h"
-+
- #define AVS_TMON_STATUS			0x00
-  #define AVS_TMON_STATUS_valid_msk	BIT(11)
-  #define AVS_TMON_STATUS_data_msk	GENMASK(10, 1)
-@@ -343,6 +345,12 @@ static int brcmstb_thermal_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	/* hwmon not enabled by default. Enable it here. */
-+	thermal->tzp->no_hwmon = false;
-+	ret = thermal_add_hwmon_sysfs(thermal);
-+	if (ret)
-+		return ret;
-+
- 	dev_info(&pdev->dev, "registered AVS TMON of-sensor driver\n");
- 
- 	return 0;
--- 
-2.20.1
+Dan
 
