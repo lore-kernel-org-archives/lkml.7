@@ -2,310 +2,132 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7539ECA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26D2CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E26D21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451786;
-	bh=JpvdwHbjFmDpVivy8ML1J+EA4ks01b4Vkvf5qVzRm9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BDoIBDD9UGyyQApdcInvbgCAlJHITFV4GXdHydg634XoolhX7gu048JxfFjcc/qj7
-	 WQ5cKKVUxs1/uyOcRT10KymOKAy9FW43j774im9Kom2NCEsO7i/QSF0mp1d/KXNJ+D
-	 TOeX6rqadbhxlEBfrTfCahgVFF4siF0IpRxww7HA=
+	by mail.kernel.org (Postfix) with ESMTP id 9D6F321835
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:13:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="QMBsrUOA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfJ3QJp (ORCPT
+        id S1727227AbfJ3QND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:09:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfJ3QJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:09:44 -0400
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A9A1217F9;
-        Wed, 30 Oct 2019 16:09:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451783;
-        bh=JpvdwHbjFmDpVivy8ML1J+EA4ks01b4Vkvf5qVzRm9k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bAPPcneWUPjfqQ1n1ZL9sLaQut83A7D/g7aMcuXjBHe6/3ccr6I7Rw0xrQmcQal+u
-         CRmRErrw2sGtLZcagP568XXhGek2+83mRcl7iT5Hot9tFMZ2wO3+ArzAr3LuhRf43U
-         D7H4gbknXIMe2d59FtoK8eyRa6yWfR6VVrQcI8Ks=
-Date:   Wed, 30 Oct 2019 09:09:42 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: support aligned pinned file
-Message-ID: <20191030160942.GA34056@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20191022171602.93637-1-jaegeuk@kernel.org>
- <c916c749-0abe-a7b7-e748-f0c4d5599e4a@huawei.com>
- <20191025181820.GA24183@jaegeuk-macbookpro.roam.corp.google.com>
- <8cfef676-e81f-6069-3b0b-7005fbf8e0bb@huawei.com>
+        Wed, 30 Oct 2019 12:13:03 -0400
+Received: from sonic313-19.consmr.mail.gq1.yahoo.com ([98.137.65.82]:35343
+        "EHLO sonic313-19.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726691AbfJ3QNC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 12:13:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1572451981; bh=S/ZDvmEPfSmBt4lxF3DnDhcZlHbW70loQ/lD49ODK0I=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=QMBsrUOAQVdL2w29pwAQaHcD6kp2e/RxIp85wI+KnwsKuWxiqcJd8pATRVM9juGX5aZ/M7BuyUfS5wt7Y0p7vu709QHNPrLp1Z4E9h7z68tMh618U7f6ta2GmPLy7yQCZRox404VNutWwYT8qNk/aAZEK3WRXE0N4mH403ldgsBC/Tx9M9nzP1ZDHq8F/LlUB9fkdt258m47X/57Ox1024R3FIkEwNiQAL0XywHbe9psFuOezVpV3A2f7pZyQb3XI/aSvm+06Oh24z+xWW8r97t43nzeGYvIXZJ9ZW1Rge1RRzUwoHSyq7JHN5f5juBRxYTrFXNP84iAVH7ZY7+o3Q==
+X-YMail-OSG: VUDslHoVM1nmGfsRLE0u6zk7Oh8KL_GwpUfSYXRJd11NEDgJqdxoDyFqJsBHhwD
+ J5Di1M9rrfPbZjoCYs9uFuiAHMizladxdFQNJmkGHayhDOIZsSFgNjLOmkN7zj_78F4XnsXXKNoH
+ aUtTv9GZR9.VRdzMCwVd81Pts54VKsRZ.JD20NZe2pzYH6D7cZFxA3dN.jIIVb7C8JD6j3G5pfOA
+ 7Wue0S3h8TiGNDOonY_o7fnuA7ga79sdfZBHRlvZKhgCJYlI_WUrZ76lG.8PHeUThs14_K0Mg9fK
+ ia5Ow1aNkdZC3urIl0TUBB1e6oWR3s_cY_P9t6aXScNzQyyCMTIrU.qrp2tN68btDzsHIX8C19Sp
+ PVZjDBlwW1cN6wgT5VhVXjoslEjOoBjVQGTkpsgtic5BWw2CwYb_paKFYyMh..sN4kfVoGcU5NCX
+ Qc5n4ZRt02IsYfuF9uEEV7_Ztjx5Iy_he2eohLQL4FRd0mRBCXMTeBAgOe6iz0AOgVVKkaQwl8Vj
+ oN96L9ZBf93ukvBDAcruF9nm.kL2Yfhaz8PpuaqOkfigoMuNNcQ1It94nLXHK8lHSJyJlK0uD675
+ AjPw_Vud6NlafOCsZJY4N8iizqSpuE5QXkL8xbGOH.0B0iofYy0yezUFrY0kPdvhHwLMzfkgOsfL
+ N0Tou4sPDQ4dSjwBbGbRhsfQpdGx3VcqEG0oWAY3ifxhnG9WVRbb_b_4p0qo1G2zeXPQ5jfxfbZs
+ 6lVHyj.PZdOxnpLrLMJsyc_FdXTpkBxPadHWs11RBUNpiMuhAXEHFwyQQNxEq9sC0JyIZqejGhOv
+ mi8r2eK3P8dEhDy5eX4EeWXinlzC1RG.KX4oqqBt1U85ALfe877Kq1qzxyzOFE9Atv22PxWqNbKM
+ iLkBUqEizY8iFKZ8vZaBmdClhopDxeCmZrdSimesgEWCQjTKvrRhuSu0aLGjx42_jXxUTcOEbauc
+ 6LZblcrM_54LoUOnQE8gCBcALNL2j5VUklssHHu8tbSNAmY2_LbkMQxB4ni2rbCd2z89la..ojMB
+ JQCUkH3Dyfudae9CqZNIGztmvD4fwf.wn4p_krKtkiFusiiskMiaLsXNvXujMv6yXR5bk1SR4B6a
+ zJfQ4V60duEOpO0XFgCd5Bzq0doRP6R6zJVzpSJZH4BDNb_qq4KqOKPtJvTyQLer9b7YIcYdLtBi
+ Nt4Z2xs.KOYNhiQxc0Vrpjo0aWUwDzmjReN0SkgkmOt3FhPovo0oA3KcgN_cRDyV4CjGSvoKTqUA
+ JhAVJ_wtD0hLl6umTyuUGUUJHnRkx9a1PK2v_LtCx8uvFRRMmBHs2F__keJdEBI0gc.6dzatprPn
+ NYs.w_VYphckCWYGa1zNGZ_d1E2n3DqcQfYweifeee2FaOf8Z2j_nlc3sZihMdvquuwbJCzslQON
+ RPKNRTQ--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.gq1.yahoo.com with HTTP; Wed, 30 Oct 2019 16:13:01 +0000
+Received: by smtp431.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 5bc5368066fdcbc1af6a611a83615b01;
+          Wed, 30 Oct 2019 16:12:59 +0000 (UTC)
+Date:   Thu, 31 Oct 2019 00:12:52 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] ext4: bio_alloc never fails
+Message-ID: <20191030161244.GB3953@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191030042618.124220-1-gaoxiang25@huawei.com>
+ <20191030101311.2175EA4055@d06av23.portsmouth.uk.ibm.com>
+ <20191030150437.GB16197@mit.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8cfef676-e81f-6069-3b0b-7005fbf8e0bb@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <20191030150437.GB16197@mit.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Mailer: WebService/1.1.14593 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/26, Chao Yu wrote:
-> On 2019/10/26 2:18, Jaegeuk Kim wrote:
-> > On 10/24, Chao Yu wrote:
-> >> Hi Jaegeuk,
-> >>
-> >> On 2019/10/23 1:16, Jaegeuk Kim wrote:
-> >>> This patch supports 2MB-aligned pinned file, which can guarantee no GC at all
-> >>> by allocating fully valid 2MB segment.
-> >>>
-> >>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> >>> ---
-> >>>  fs/f2fs/f2fs.h     |  4 +++-
-> >>>  fs/f2fs/file.c     | 39 ++++++++++++++++++++++++++++++++++-----
-> >>>  fs/f2fs/recovery.c |  2 +-
-> >>>  fs/f2fs/segment.c  | 21 ++++++++++++++++++++-
-> >>>  fs/f2fs/segment.h  |  2 ++
-> >>>  fs/f2fs/super.c    |  1 +
-> >>>  fs/f2fs/sysfs.c    |  2 ++
-> >>>  7 files changed, 63 insertions(+), 8 deletions(-)
-> >>>
-> >>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>> index ca342f4c7db1..c681f51e351b 100644
-> >>> --- a/fs/f2fs/f2fs.h
-> >>> +++ b/fs/f2fs/f2fs.h
-> >>> @@ -890,6 +890,7 @@ enum {
-> >>>  	CURSEG_WARM_NODE,	/* direct node blocks of normal files */
-> >>>  	CURSEG_COLD_NODE,	/* indirect node blocks */
-> >>>  	NO_CHECK_TYPE,
-> >>> +	CURSEG_COLD_DATA_PINNED,/* cold data for pinned file */
-> >>>  };
-> >>>  
-> >>>  struct flush_cmd {
-> >>> @@ -1301,6 +1302,7 @@ struct f2fs_sb_info {
-> >>>  
-> >>>  	/* threshold for gc trials on pinned files */
-> >>>  	u64 gc_pin_file_threshold;
-> >>> +	struct rw_semaphore pin_sem;
-> >>>  
-> >>>  	/* maximum # of trials to find a victim segment for SSR and GC */
-> >>>  	unsigned int max_victim_search;
-> >>> @@ -3116,7 +3118,7 @@ void f2fs_release_discard_addrs(struct f2fs_sb_info *sbi);
-> >>>  int f2fs_npages_for_summary_flush(struct f2fs_sb_info *sbi, bool for_ra);
-> >>>  void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
-> >>>  					unsigned int start, unsigned int end);
-> >>> -void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi);
-> >>> +void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type);
-> >>>  int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range);
-> >>>  bool f2fs_exist_trim_candidates(struct f2fs_sb_info *sbi,
-> >>>  					struct cp_control *cpc);
-> >>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> >>> index 29bc0a542759..f6c038e8a6a7 100644
-> >>> --- a/fs/f2fs/file.c
-> >>> +++ b/fs/f2fs/file.c
-> >>> @@ -1545,12 +1545,41 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
-> >>>  	if (off_end)
-> >>>  		map.m_len++;
-> >>>  
-> >>> -	if (f2fs_is_pinned_file(inode))
-> >>> -		map.m_seg_type = CURSEG_COLD_DATA;
-> >>> +	if (!map.m_len)
-> >>> +		return 0;
-> >>> +
-> >>> +	if (f2fs_is_pinned_file(inode)) {
-> >>> +		block_t len = (map.m_len >> sbi->log_blocks_per_seg) <<
-> >>> +					sbi->log_blocks_per_seg;
-> >>> +		block_t done = 0;
-> >>> +
-> >>> +		if (map.m_len % sbi->blocks_per_seg)
-> >>> +			len += sbi->blocks_per_seg;
-> >>>  
-> >>> -	err = f2fs_map_blocks(inode, &map, 1, (f2fs_is_pinned_file(inode) ?
-> >>> -						F2FS_GET_BLOCK_PRE_DIO :
-> >>> -						F2FS_GET_BLOCK_PRE_AIO));
-> >>> +		map.m_len = sbi->blocks_per_seg;
-> >>> +next_alloc:
-> >>> +		mutex_lock(&sbi->gc_mutex);
-> >>> +		err = f2fs_gc(sbi, true, false, NULL_SEGNO);
-> >>> +		if (err && err != -ENODATA && err != -EAGAIN)
-> >>> +			goto out_err;
-> >>
-> >> To grab enough free space?
-> >>
-> >> Shouldn't we call
-> >>
-> >> 	if (has_not_enough_free_secs(sbi, 0, 0)) {
-> >> 		mutex_lock(&sbi->gc_mutex);
-> >> 		f2fs_gc(sbi, false, false, NULL_SEGNO);
-> >> 	}
-> > 
-> > The above calls gc all the time. Do we need this?
-> 
-> Hmmm... my concern is why we need to run foreground GC even if there is enough
-> free space..
+Hi Ted,
 
-In order to get the free segment easily?
+On Wed, Oct 30, 2019 at 11:04:37AM -0400, Theodore Y. Ts'o wrote:
+> On Wed, Oct 30, 2019 at 03:43:10PM +0530, Ritesh Harjani wrote:
+> > 
+> > 
+> > On 10/30/19 9:56 AM, Gao Xiang wrote:
+> > > Similar to [1] [2], it seems a trivial cleanup since
+> > > bio_alloc can handle memory allocation as mentioned in
+> > > fs/direct-io.c (also see fs/block_dev.c, fs/buffer.c, ..)
+> > > 
+> > 
+> > AFAIU, the reason is that, bio_alloc with __GFP_DIRECT_RECLAIM
+> > flags guarantees bio allocation under some given restrictions,
+> > as stated in fs/direct-io.c
+> > So here it is ok to not check for NULL value from bio_alloc.
+> > 
+> > I think we can update above info too in your commit msg.
+> 
+> Please also add a short comment in the code itself, so it's clear why
+> it's OK to skip the error check, and reference the comments for
+> bio_alloc_bioset().  This is the fairly subtle bit which makes this
+> change not obvious:
+
+OK, I will add short comments in code then, and tidy up later since
+it's not urgent (but I'm surprised that so many in-kernel code handles
+that, those also makes me misleaded before, but I think mempool back
+maybe better since the total efficient path is shorter compared with
+error handling path)... and I'd like to know the f2fs side as well :-)
 
 > 
-> > 
-> >>
-> >>> +
-> >>> +		down_write(&sbi->pin_sem);
-> >>> +		map.m_seg_type = CURSEG_COLD_DATA_PINNED;
-> >>> +		f2fs_allocate_new_segments(sbi, CURSEG_COLD_DATA);
-> >>> +		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_DIO);
-> >>> +		up_write(&sbi->pin_sem);
-> >>> +
-> >>> +		done += map.m_len;
-> >>> +		len -= map.m_len;
-> >>> +		map.m_lblk += map.m_len;
-> >>> +		if (!err && len)
-> >>> +			goto next_alloc;
-> >>> +
-> >>> +		map.m_len = done;
-> >>> +	} else {
-> >>> +		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_AIO);
-> >>> +	}
-> >>> +out_err:
-> >>>  	if (err) {
-> >>>  		pgoff_t last_off;
-> >>>  
-> >>> diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-> >>> index 783773e4560d..76477f71d4ee 100644
-> >>> --- a/fs/f2fs/recovery.c
-> >>> +++ b/fs/f2fs/recovery.c
-> >>> @@ -711,7 +711,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
-> >>>  		f2fs_put_page(page, 1);
-> >>>  	}
-> >>>  	if (!err)
-> >>> -		f2fs_allocate_new_segments(sbi);
-> >>> +		f2fs_allocate_new_segments(sbi, NO_CHECK_TYPE);
-> >>>  	return err;
-> >>>  }
-> >>>  
-> >>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> >>> index 25c750cd0272..253d72c2663c 100644
-> >>> --- a/fs/f2fs/segment.c
-> >>> +++ b/fs/f2fs/segment.c
-> >>> @@ -2690,7 +2690,7 @@ void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
-> >>>  	up_read(&SM_I(sbi)->curseg_lock);
-> >>>  }
-> >>>  
-> >>> -void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
-> >>> +void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type)
-> >>>  {
-> >>>  	struct curseg_info *curseg;
-> >>>  	unsigned int old_segno;
-> >>> @@ -2699,6 +2699,9 @@ void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
-> >>>  	down_write(&SIT_I(sbi)->sentry_lock);
-> >>>  
-> >>>  	for (i = CURSEG_HOT_DATA; i <= CURSEG_COLD_DATA; i++) {
-> >>> +		if (type != NO_CHECK_TYPE && i != type)
-> >>> +			continue;
-> >>> +
-> >>>  		curseg = CURSEG_I(sbi, i);
-> >>>  		old_segno = curseg->segno;
-> >>>  		SIT_I(sbi)->s_ops->allocate_segment(sbi, i, true);
-> >>> @@ -3068,6 +3071,19 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
-> >>>  {
-> >>>  	struct sit_info *sit_i = SIT_I(sbi);
-> >>>  	struct curseg_info *curseg = CURSEG_I(sbi, type);
-> >>> +	bool put_pin_sem = false;
-> >>> +
-> >>> +	if (type == CURSEG_COLD_DATA) {
-> >>> +		/* GC during CURSEG_COLD_DATA_PINNED allocation */
-> >>> +		if (down_read_trylock(&sbi->pin_sem)) {
-> >>> +			put_pin_sem = true;
-> >>> +		} else {
-> >>> +			type = CURSEG_WARM_DATA;
-> >>> +			curseg = CURSEG_I(sbi, type);
-> >>
-> >> It will mix pending cold data into warm area... rather than recovering curseg to
-> >> write pointer of last cold segment?
-> >>
-> >> I know maybe that fallocate aligned address could be corner case, but I guess
-> >> there should be some better solutions can handle race case more effectively.
-> >>
-> >> One solution could be: allocating a virtual log header to select free segment as
-> >> 2m-aligned space target.
-> > 
-> > I thought about that, but concluded to avoid too much changes.
+>  *   When @bs is not NULL, if %__GFP_DIRECT_RECLAIM is set then bio_alloc will
+>  *   always be able to allocate a bio. This is due to the mempool guarantees.
+>  *   To make this work, callers must never allocate more than 1 bio at a time
+>  *   from this pool. Callers that need to allocate more than 1 bio must always
+>  *   submit the previously allocated bio for IO before attempting to allocate
+>  *   a new one. Failure to do so can cause deadlocks under memory pressure.
+>  *
+>  *   Note that when running under generic_make_request() (i.e. any block
+>  *   driver), bios are not submitted until after you return - see the code in
+>  *   generic_make_request() that converts recursion into iteration, to prevent
+>  *   stack overflows.
+>  *
+>  *   This would normally mean allocating multiple bios under
+>  *   generic_make_request() would be susceptible to deadlocks, but we have
+>  *   deadlock avoidance code that resubmits any blocked bios from a rescuer
+>  *   thread.
 > 
-> We have an unupstreamed feature which is based on virtual log header, I can
-> introduce that basic virtual log fwk, which can be used for aligned allocation
-> and later new features, would you like to check that?
+> Otherwise, someone else may not understand why it's safe to not check
+> the error return then submit cleanup patch to add the error checking
+> back.  :-)
+
+Got it.
+
+Thanks,
+Gao Xiang
+
 > 
-> Thanks,
-> 
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>> +		}
-> >>> +	} else if (type == CURSEG_COLD_DATA_PINNED) {
-> >>> +		type = CURSEG_COLD_DATA;
-> >>> +	}
-> >>>  
-> >>>  	down_read(&SM_I(sbi)->curseg_lock);
-> >>>  
-> >>> @@ -3133,6 +3149,9 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
-> >>>  	mutex_unlock(&curseg->curseg_mutex);
-> >>>  
-> >>>  	up_read(&SM_I(sbi)->curseg_lock);
-> >>> +
-> >>> +	if (put_pin_sem)
-> >>> +		up_read(&sbi->pin_sem);
-> >>>  }
-> >>>  
-> >>>  static void update_device_state(struct f2fs_io_info *fio)
-> >>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-> >>> index 325781a1ae4d..a95467b202ea 100644
-> >>> --- a/fs/f2fs/segment.h
-> >>> +++ b/fs/f2fs/segment.h
-> >>> @@ -313,6 +313,8 @@ struct sit_entry_set {
-> >>>   */
-> >>>  static inline struct curseg_info *CURSEG_I(struct f2fs_sb_info *sbi, int type)
-> >>>  {
-> >>> +	if (type == CURSEG_COLD_DATA_PINNED)
-> >>> +		type = CURSEG_COLD_DATA;
-> >>>  	return (struct curseg_info *)(SM_I(sbi)->curseg_array + type);
-> >>>  }
-> >>>  
-> >>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> >>> index f320fd11db48..c02a47ce551b 100644
-> >>> --- a/fs/f2fs/super.c
-> >>> +++ b/fs/f2fs/super.c
-> >>> @@ -2853,6 +2853,7 @@ static void init_sb_info(struct f2fs_sb_info *sbi)
-> >>>  	spin_lock_init(&sbi->dev_lock);
-> >>>  
-> >>>  	init_rwsem(&sbi->sb_lock);
-> >>> +	init_rwsem(&sbi->pin_sem);
-> >>>  }
-> >>>  
-> >>>  static int init_percpu_info(struct f2fs_sb_info *sbi)
-> >>> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-> >>> index b558b64a4c9c..f164959e4224 100644
-> >>> --- a/fs/f2fs/sysfs.c
-> >>> +++ b/fs/f2fs/sysfs.c
-> >>> @@ -154,6 +154,8 @@ static ssize_t features_show(struct f2fs_attr *a,
-> >>>  	if (f2fs_sb_has_casefold(sbi))
-> >>>  		len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
-> >>>  				len ? ", " : "", "casefold");
-> >>> +	len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
-> >>> +				len ? ", " : "", "pin_file");
-> >>>  	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
-> >>>  	return len;
-> >>>  }
-> >>>
-> > .
-> > 
+> 					- Ted
+> 					
