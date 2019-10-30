@@ -2,152 +2,162 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB71ECA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD80CA9EC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C171C20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:51:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mwjrt6aT"
+	by mail.kernel.org (Postfix) with ESMTP id 672F220679
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfJ3Hv5 (ORCPT
+        id S1726104AbfJ3H5C convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 03:51:57 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44521 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfJ3Hvw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 03:51:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z11so1091365wro.11
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 00:51:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SOlAXQwY6HSBzz+49x3YKRvdsvjSPYyd9t/VUL7Sm7I=;
-        b=Mwjrt6aT79QE65NzwTdFB425qwP+EQeE3I3yelYdNaqhngfedaIz18+aJHlqYXj8dn
-         vz9zZjona3aDwbRk5A6RrcZTAmcJ9qrBhuliqmc8Th2wmdC4tTEltpAi2r1CJgywWmgR
-         SGqcHpfqHxmRokw2lM6I7hzqddEoB4xN91Rn7JvaIOGR4tF0DixCKQbhgCjsOC2FpV9x
-         JKTM18/W0DSz7qx/yAczRQgyatHNrkv2l+lRElje2ZyUkUl7fKGx/6mdr15WLstIwln2
-         dr7VF0gjL/q2vhMJidvQMp5V/yNxeAMCLRgX5U1NGGWc5uLX5HGbYX7PtA/cueLpnPO4
-         +YoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=SOlAXQwY6HSBzz+49x3YKRvdsvjSPYyd9t/VUL7Sm7I=;
-        b=qGS4o8mJkuX5z2rA0cqg3yCbJ/Dhfv8iZp90lNWIpqrZz5gnWdyU1H6EPEk7unoAeC
-         8aNjlvXbTobSUzmNuqtEQ1hbms4ypg7ui/QmrRGv+MG/v/Gu0OmtyYw6caJ+4+RGfzuB
-         nmrybDU3pTRwsrehBIzfCD/S6VVykKAgPRD/oafwdBwJoUAph2cjBIoJ0NNXWbkN8YUJ
-         BVjyVAKfNFqWKOLF+5IPd6JUz6/4n3LRL2JQDbAe4itX1vfESbFOvFAHdyWNaU3asP0p
-         BK9XkfvtgNQrYnvnFodcoeuxyvSWRE3jhSqlwXYzqNG1lN2snR6JQNcfg+uURlQ1g6TL
-         6OBg==
-X-Gm-Message-State: APjAAAUFdjzHZ+b18jJpS00a4E6K6LvaOI4N9jEaQrnDkUT8QIIfLLED
-        IiKigla5uRDNKDxdgE+L9kg8Sg==
-X-Google-Smtp-Source: APXvYqw9AMwLfWTFG6RqKgk4L/ax+3b+3JHKQ59fZbAtV35gkAxrJCYY73B4LtShkKb5C+k6m+WWXg==
-X-Received: by 2002:adf:e9c7:: with SMTP id l7mr7084881wrn.57.1572421910196;
-        Wed, 30 Oct 2019 00:51:50 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e34:ed2f:f020:2c7f:2fc:5551:ee55])
-        by smtp.gmail.com with ESMTPSA id q11sm1114387wmq.21.2019.10.30.00.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 00:51:49 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rjw@rjwysocki.net
-Cc:     mathieu.poirier@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org
-Subject: [PATCH V6 3/3] powercap/drivers/idle_inject: Specify the idle state to inject
-Date:   Wed, 30 Oct 2019 08:51:41 +0100
-Message-Id: <20191030075141.1039-3-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191030075141.1039-1-daniel.lezcano@linaro.org>
-References: <20191030075141.1039-1-daniel.lezcano@linaro.org>
+        Wed, 30 Oct 2019 03:57:02 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2500 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725822AbfJ3H5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 03:57:01 -0400
+Received: from DGGEML401-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 96AD06923E5053B4AAD1;
+        Wed, 30 Oct 2019 15:56:59 +0800 (CST)
+Received: from DGGEML505-MBS.china.huawei.com ([169.254.11.138]) by
+ DGGEML401-HUB.china.huawei.com ([fe80::89ed:853e:30a9:2a79%31]) with mapi id
+ 14.03.0439.000; Wed, 30 Oct 2019 15:56:53 +0800
+From:   "wubo (T)" <wubo40@huawei.com>
+To:     "lduncan@suse.com" <lduncan@suse.com>,
+        "cleech@redhat.com" <cleech@redhat.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Mingfangsen <mingfangsen@huawei.com>,
+        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>
+Subject: [PATCH v2] scsi: avoid potential deadloop in iscsi_if_rx func
+Thread-Topic: [PATCH v2] scsi: avoid potential deadloop in iscsi_if_rx func
+Thread-Index: AdWO9lESg1/320hTRWyI93hubYXiRQAAM+TA
+Date:   Wed, 30 Oct 2019 07:56:52 +0000
+Message-ID: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DFA0FE@dggeml505-mbs.china.huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.252]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the idle injection framework only allows to inject the
-deepest idle state available on the system.
+From: Bo Wu <wubo40@huawei.com>
 
-Give the opportunity to specify which idle state we want to inject by
-adding a new function helper to set the state and use it when calling
-play_idle().
+In iscsi_if_rx func, after receiving one request through iscsi_if_recv_msg func, iscsi_if_send_reply will be called to try to reply the request in do-loop. If the return of iscsi_if_send_reply func fails all the time, one deadloop will occur.
+ 
+For example, a client only send msg without calling recvmsg func, then it will result in the watchdog soft lockup. 
+The details are given as follows,
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Details of the special case which can cause deadloop:
+
+sock_fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ISCSI); retval = bind(sock_fd, (struct sock addr*) & src_addr, sizeof(src_addr); while (1) { 
+	state_msg = sendmsg(sock_fd, &msg, 0); 
+	//Note: recvmsg(sock_fd, &msg, 0) is not processed here.
+} 	 
+close(sock_fd); 
+
+watchdog: BUG: soft lockup - CPU#7 stuck for 22s! [netlink_test:253305] Sample time: 4000897528 ns(HZ: 250) Sample stat: 
+curr: user: 675503481560, nice: 321724050, sys: 448689506750, idle: 4654054240530, iowait: 40885550700, irq: 14161174020, softirq: 8104324140, st: 0
+deta: user: 0, nice: 0, sys: 3998210100, idle: 0, iowait: 0, irq: 1547170, softirq: 242870, st: 0 Sample softirq:
+	TIMER:        992
+	SCHED:          8
+Sample irqstat:
+	irq    2: delta       1003, curr:    3103802, arch_timer
+CPU: 7 PID: 253305 Comm: netlink_test Kdump: loaded Tainted: G           OE     
+Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+pstate: 40400005 (nZcv daif +PAN -UAO)
+pc : __alloc_skb+0x104/0x1b0
+lr : __alloc_skb+0x9c/0x1b0
+sp : ffff000033603a30
+x29: ffff000033603a30 x28: 00000000000002dd
+x27: ffff800b34ced810 x26: ffff800ba7569f00
+x25: 00000000ffffffff x24: 0000000000000000
+x23: ffff800f7c43f600 x22: 0000000000480020
+x21: ffff0000091d9000 x20: ffff800b34eff200
+x19: ffff800ba7569f00 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000000 x14: 0001000101000100
+x13: 0000000101010000 x12: 0101000001010100
+x11: 0001010101010001 x10: 00000000000002dd
+x9 : ffff000033603d58 x8 : ffff800b34eff400
+x7 : ffff800ba7569200 x6 : ffff800b34eff400
+x5 : 0000000000000000 x4 : 00000000ffffffff
+x3 : 0000000000000000 x2 : 0000000000000001
+x1 : ffff800b34eff2c0 x0 : 0000000000000300 Call trace:
+__alloc_skb+0x104/0x1b0
+iscsi_if_rx+0x144/0x12bc [scsi_transport_iscsi]
+netlink_unicast+0x1e0/0x258
+netlink_sendmsg+0x310/0x378
+sock_sendmsg+0x4c/0x70
+sock_write_iter+0x90/0xf0
+__vfs_write+0x11c/0x190
+vfs_write+0xac/0x1c0
+ksys_write+0x6c/0xd8
+__arm64_sys_write+0x24/0x30
+el0_svc_common+0x78/0x130
+el0_svc_handler+0x38/0x78
+el0_svc+0x8/0xc
+
+Here, we add one limit of retry times in do-loop to avoid the deadloop.
+
+Signed-off-by: Bo Wu <wubo40@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Suggested-by: Lee Duncan <LDuncan@suse.com>
+
 ---
-  V6:
-   - Rename variable name 'state' -> 'state_idx':
-     https://lkml.org/lkml/2019/10/28/874
----
- drivers/powercap/idle_inject.c | 14 +++++++++++++-
- include/linux/idle_inject.h    |  3 +++
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ drivers/scsi/scsi_transport_iscsi.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
-index 233c878cbf46..2607d3e9afc5 100644
---- a/drivers/powercap/idle_inject.c
-+++ b/drivers/powercap/idle_inject.c
-@@ -66,6 +66,7 @@ struct idle_inject_thread {
-  */
- struct idle_inject_device {
- 	struct hrtimer timer;
-+	int state_idx;
- 	unsigned int idle_duration_us;
- 	unsigned int run_duration_us;
- 	unsigned long int cpumask[0];
-@@ -140,7 +141,7 @@ static void idle_inject_fn(unsigned int cpu)
- 	iit->should_run = 0;
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index 417b868d8735..85482bcfc727 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -24,6 +24,8 @@
  
- 	play_idle(READ_ONCE(ii_dev->idle_duration_us),
--		  cpuidle_find_deepest_state());
-+		  READ_ONCE(ii_dev->state_idx));
- }
+ #define ISCSI_TRANSPORT_VERSION "2.0-870"
  
- /**
-@@ -171,6 +172,16 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
- 	*idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
- }
- 
-+/**
-+ * idle_inject_set_state - set the idle state to inject
-+ * @state: an integer for the idle state to inject
-+ */
-+void idle_inject_set_state(struct idle_inject_device *ii_dev, int index)
-+{
-+	if (index >= CPUIDLE_STATE_NOUSE && index < CPUIDLE_STATE_MAX)
-+		WRITE_ONCE(ii_dev->state_idx, index);
-+}
++#define ISCSI_SEND_MAX_ALLOWED  10
 +
- /**
-  * idle_inject_start - start idle injections
-  * @ii_dev: idle injection control device structure
-@@ -299,6 +310,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
- 	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
- 	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	ii_dev->timer.function = idle_inject_timer_fn;
-+	ii_dev->state_idx = 0;
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/iscsi.h>
  
- 	for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
+@@ -3682,6 +3684,7 @@ iscsi_if_rx(struct sk_buff *skb)
+ 		struct nlmsghdr	*nlh;
+ 		struct iscsi_uevent *ev;
+ 		uint32_t group;
++		int retries = ISCSI_SEND_MAX_ALLOWED;
  
-diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
-index a445cd1a36c5..2efc60252d7b 100644
---- a/include/linux/idle_inject.h
-+++ b/include/linux/idle_inject.h
-@@ -26,4 +26,7 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
- void idle_inject_get_duration(struct idle_inject_device *ii_dev,
- 				 unsigned int *run_duration_us,
- 				 unsigned int *idle_duration_us);
+ 		nlh = nlmsg_hdr(skb);
+ 		if (nlh->nlmsg_len < sizeof(*nlh) + sizeof(*ev) || @@ -3710,6 +3713,16 @@ iscsi_if_rx(struct sk_buff *skb)
+ 				break;
+ 			if (ev->type == ISCSI_UEVENT_GET_CHAP && !err)
+ 				break;
++			/*
++			 * special case for sending reply failed too many times,
++			 * on error - fall through.
++			 */
++			if (--retries < 0) {
++				printk(KERN_ERR "Send reply failed too many times. "
++				       "Max supported retries %u\n", ISCSI_SEND_MAX_ALLOWED);
++				break;
++			}
 +
-+void idle_inject_set_state(struct idle_inject_device *ii_dev, int index);
-+
- #endif /* __IDLE_INJECT_H__ */
--- 
-2.17.1
+ 			err = iscsi_if_send_reply(portid, nlh->nlmsg_type,
+ 						  ev, sizeof(*ev));
+ 		} while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
+--
+1.8.3.1
 
