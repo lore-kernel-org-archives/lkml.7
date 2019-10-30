@@ -2,152 +2,114 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33548CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7905FCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97AD208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:23:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s5cydnpv"
+	by mail.kernel.org (Postfix) with ESMTP id 4D421208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfJ3QXk (ORCPT
+        id S1727514AbfJ3QYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:23:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55132 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfJ3QXk (ORCPT
+        Wed, 30 Oct 2019 12:24:46 -0400
+Received: from outbound-smtp34.blacknight.com ([46.22.139.253]:47084 "EHLO
+        outbound-smtp34.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726261AbfJ3QYq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:23:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MhjZQUW87IyuTxjRvPIP8irpYJjRIJ0bB6+g7tP3LwI=; b=s5cydnpvAKQtVHwFgaFzmGt3i
-        HB9X7PYRjKpNEkIdK648f/d/gOX+ehlhvXewdihcqwWlFeoa7keVtyf3iJE7us85zUsCGz/3UPbgj
-        f8ad3H9TqqXHqq4hh//UvjLODmdOIrOxqKeI6ZVO+iMqJBjhiaZxeRZfllxjJivHzMsCs0t6xETKd
-        MtbkXfHplWHO2R/ZBZY2ty+kDmwDOPnKguvYALR6vd3vbYaU0MyzzjU+t+E7B7NEvou0NebwiT2Xz
-        msGP+R9/gNaSJFboylevRAhTsWd/Dj+m7dpr1N0yFtioS97wI5idjg+0vjt1Zb/s8Sq9PMh+4Za8u
-        UGDVIq0xQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPqkq-0000hL-PJ; Wed, 30 Oct 2019 16:23:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C82AF306098;
-        Wed, 30 Oct 2019 17:22:24 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 09E7F2B444DB8; Wed, 30 Oct 2019 17:23:26 +0100 (CET)
-Date:   Wed, 30 Oct 2019 17:23:25 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Mike Leach <mike.leach@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/6] perf/x86: Add perf text poke event
-Message-ID: <20191030162325.GT4114@hirez.programming.kicks-ass.net>
-References: <20191025130000.13032-1-adrian.hunter@intel.com>
- <20191025130000.13032-2-adrian.hunter@intel.com>
- <20191030104747.GA21153@leoy-ThinkPad-X240s>
- <20191030124659.GQ4114@hirez.programming.kicks-ass.net>
- <20191030141950.GB21153@leoy-ThinkPad-X240s>
+        Wed, 30 Oct 2019 12:24:46 -0400
+Received: from mail.blacknight.com (unknown [81.17.255.152])
+        by outbound-smtp34.blacknight.com (Postfix) with ESMTPS id 6D831822
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 16:24:43 +0000 (GMT)
+Received: (qmail 4411 invoked from network); 30 Oct 2019 16:24:43 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.19.210])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 30 Oct 2019 16:24:43 -0000
+Date:   Wed, 30 Oct 2019 16:24:40 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, pauld@redhat.com, valentin.schneider@arm.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com
+Subject: Re: [PATCH v4 00/10] sched/fair: rework the CFS load balance
+Message-ID: <20191030162440.GO3016@techsingularity.net>
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <20191021075038.GA27361@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20191030141950.GB21153@leoy-ThinkPad-X240s>
+In-Reply-To: <20191021075038.GA27361@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 10:19:50PM +0800, Leo Yan wrote:
-> On Wed, Oct 30, 2019 at 01:46:59PM +0100, Peter Zijlstra wrote:
-> > On Wed, Oct 30, 2019 at 06:47:47PM +0800, Leo Yan wrote:
-
-> > Anyway, the below argument doesn't care much, it works for NOP/JMP just
-> > fine.
+On Mon, Oct 21, 2019 at 09:50:38AM +0200, Ingo Molnar wrote:
+> > <SNIP>
 > 
-> We can support NOP/JMP case as the first step, but later should can
-> extend to support other transitions.
-
-Since all instructions (with the possible exception of RET) are
-unconditional branch instructions: NOP, JMP, CALL. It makes no read
-difference to the argument below.
-
-( I'm thinking RET might be special in that it reads the return address
-from the stack and therefore must emit the whole IP into the stream, as
-we cannot know the stack state )
-
-> > > we need to update dso cache for the
-> > > 'PERF_TEXT_POKE_UPDATE_PREV' event; if detect the instruction is
-> > > changed from branch to nop, we need to update dso cache for
-> > > 'PERF_TEXT_POKE_UPDATE_POST' event.  The main idea is to ensure the
-> > > branch instructions can be safely contained in the dso file and any
-> > > branch samples can read out correct branch instruction.
-> > > 
-> > > Could you confirm this is the same with your understanding?  Or I miss
-> > > anything?  I personally even think the pair events can be used for
-> > > different arches (e.g. the solution can be reused on Arm64/x86, etc).
-> > 
-> > So the problem we have with PT is that it is a bit-stream of
-> > branch taken/not-taken decisions. In order to decode that we need to
-> > have an accurate view of the unconditional code flow.
-> > 
-> > Both NOP/JMP are unconditional and we need to exactly know which of the
-> > two was encountered.
+> Thanks, that's an excellent series!
 > 
-> If I understand correctly, PT decoder needs to read out instructions
-> from dso and decide the instruction type (NOP or JMP), and finally
-> generate the accurate code flow.
+
+Agreed despite the level of whining and complaining I made during the
+review.
+
+> I've queued it up in sched/core with a handful of readability edits to 
+> comments and changelogs.
 > 
-> So PT decoder relies on (cached) DSO for decoding.  As I know, this
-> might be different from Arm CS, since Arm CS decoder is merely
-> generate packets and it doesn't need to rely on DSO for decoding.
-
-Given a start point (from a start or sync packet) we scan the
-instruction stream forward until the first conditional branch
-instruction. Then we consume the next available branch decision bit to
-know where to continue.
-
-So yes, we need to have a correct text image available for this to work.
-
-> > With your scheme, I don't see how we can ever actually know that. When
-> > we get the PRE event, all we really know is that we're going to change
-> > a specific instruction into another. And at the POST event we know it
-> > has been done. But in between these two events, we have no clue which of
-> > the two instructions is live on which CPU (two CPUs might in fact have a
-> > different live instruction at the same time).
-> >
-> > This means we _cannot_ unambiguously decode a taken/not-taken decision
-> > stream.
-> > 
-> > Does CS have this same problem, and how would the PRE/POST events help
-> > with that?
+> There are some upstreaming caveats though, I expect this series to be a 
+> performance regression magnet:
 > 
-> My purpose is to use PRE event and POST event to update cached DSO,
-> thus perf tool can read out 'correct' instructions and fill them into
-> instruction/branch samples.
+>  - load_balance() and wake-up changes invariably are such: some workloads 
+>    only work/scale well by accident, and if we touch the logic it might 
+>    flip over into a less advantageous scheduling pattern.
+> 
+>  - In particular the changes from balancing and waking on runnable load 
+>    to full load that includes blocking *will* shift IO-intensive 
+>    workloads that you tests don't fully capture I believe. You also made 
+>    idle balancing more aggressive in essence - which might reduce cache 
+>    locality for some workloads.
+> 
+> A full run on Mel Gorman's magic scalability test-suite would be super 
+> useful ...
+> 
 
-The thing is, as I argued, the instruction state between PRE and POST is
-ambiguous. This makes it impossible to decode the branch decision
-stream.
+I queued this back on the 21st and it took this long for me to get back
+to it.
 
-Suppose CPU0 emits the PRE event at T1 and the POST event at T5, but we
-have CPU1 covering the instruction at T3.
+What I tested did not include the fix for the last patch so I cannot say
+the data is that useful. I also failed to include something that exercised
+the IO paths in a way that idles rapidly as that can catch interesting
+details (usually cpufreq related but sometimes load-balancing related).
+There was no real thinking behind this decision, I just used an old
+collection of tests to get a general feel for the series.
 
-How do you decide where CPU1 goes and what the next conditional branch
-is?
+Most of the results were performance-neutral and some notable gains
+(kernel compiles were 1-6% faster depending on the -j count). Hackbench
+saw a disproportionate gain in terms of performance but I tend to be wary
+of hackbench as improving it is rarely a universal win.
+There tends to be some jitter around the point where a NUMA nodes worth
+of CPUs gets overloaded. tbench (mmtests configuation network-tbench) on
+a NUMA machine showed gains for low thread counts and high thread counts
+but a loss near the boundary where a single node would get overloaded.
 
+Some NAS-related workloads saw a drop in performance on NUMA machines
+but the size class might be too small to be certain, I'd have to rerun
+with the D class to be sure.  The biggest strange drop in performance
+was the elapsed time to run the git test suite (mmtests configuration
+workload-shellscripts modified to use a fresh XFS partition) took 17.61%
+longer to execute on a UMA Skylake machine. This *might* be due to the
+missing fix because it is mostly a single-task workload.
+
+I'm not going to go through the results in detail because I think another
+full round of testing would be required to take the fix into account. I'd
+also prefer to wait to see if the review results in any material change
+to the series.
+
+-- 
+Mel Gorman
+SUSE Labs
