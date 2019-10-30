@@ -2,114 +2,80 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DF3CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB01CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9360520856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:05:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKtWSJu/"
+	by mail.kernel.org (Postfix) with ESMTP id 6D34C20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 01:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfJ3BFM (ORCPT
+        id S1726775AbfJ3BJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 21:05:12 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34729 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfJ3BFL (ORCPT
+        Tue, 29 Oct 2019 21:09:08 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:33996 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfJ3BJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 21:05:11 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t16so431820wrr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 18:05:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YdPunCo8P9dDqlKpWYJvgG38WQaPvb66w7p+wQZiDZ0=;
-        b=HKtWSJu/j3RiRaKQXF3g2ZwH8oXWiftHra1acJiyKrBG2tdY6nlZYspWLKwCfGGWRs
-         ys6h6/UJPfKR/fbhQK4VN7NJg1y1nTsXDv8ol6p9mGkum7DW2t9CVmTp2J0twVeRiFBl
-         L4xgulrpaQ7OWz0WsdIusG3J2PZYba/ipiayoK2OLoAPM6BFXRAkGXT4fP+KzQ6zjMQr
-         Y/TybfNzZKcflG3fc3WGe5IqxISrteE+7nbPx0VUB3LGlrtpA9Q/aenZEwCGRvXDdbGr
-         /pU9YzOfdw7RVnkf6Kzu5Qy8zcTYMq7c1U3rvH5EPHQEKB9q+WWSg0aLzp8f2oKztHcn
-         I3tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YdPunCo8P9dDqlKpWYJvgG38WQaPvb66w7p+wQZiDZ0=;
-        b=FC1JMB+0tTgPpoTjt/b2hBNWMBA3R7RNW4C8Xwp0fbn8KczRRupZ3fAiv+gBHp7dxo
-         DKJdfx3jjCBjZ8fH4vlkqXpTVhbgFGfWlupa6/TM34IEZBLl7ls1oIE/YaRZDzcAIIEi
-         1PghP+8tr21K8ITD3O4bXa0IY9WBLtVEQDkAiHljSBsMrPJtX55UpT5/1VgmZ7ZoKA25
-         e/GoQntCHLfIFyRSEb62BFBeasmYADP873jVTuaEX37xIu/D5uSjgQ+99ka1YnM8Kshd
-         +2CwuZOdeFbNDiBYDjmX3AhvgIuTOPciKl0+BuuqP9uE7poP6Bhu6yqMrNW1ilPqaXns
-         UOrw==
-X-Gm-Message-State: APjAAAV/7SVje6Ku0tHfbEtmdAc17vC/jCK62pnorx7+0S5u72cET/GV
-        MUNZ8SYRF67v3txQCWRCHUs=
-X-Google-Smtp-Source: APXvYqwXH9iLdXlKcxfC+BGKA2PPO5PjKM2WO6xN57cDBgsfAsyhGoA7yQG1vELdL3sKPasMJADUHQ==
-X-Received: by 2002:adf:a497:: with SMTP id g23mr21376484wrb.135.1572397509103;
-        Tue, 29 Oct 2019 18:05:09 -0700 (PDT)
-Received: from localhost ([92.177.95.83])
-        by smtp.gmail.com with ESMTPSA id f20sm372699wmb.6.2019.10.29.18.05.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 18:05:08 -0700 (PDT)
-From:   Roi Martin <jroi.martin@gmail.com>
-To:     valdis.kletnieks@vt.edu
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Roi Martin <jroi.martin@gmail.com>
-Subject: [PATCH 6/6] staging: exfat: replace kmalloc with kmalloc_array
-Date:   Wed, 30 Oct 2019 02:03:28 +0100
-Message-Id: <20191030010328.10203-7-jroi.martin@gmail.com>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191030010328.10203-1-jroi.martin@gmail.com>
-References: <20191030010328.10203-1-jroi.martin@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 29 Oct 2019 21:09:08 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C0F5C1433DDBF;
+        Tue, 29 Oct 2019 18:09:06 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 18:09:06 -0700 (PDT)
+Message-Id: <20191029.180906.71140804338490537.davem@davemloft.net>
+To:     christophe.roullier@st.com
+Cc:     robh@kernel.org, joabreu@synopsys.com, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        peppe.cavallaro@st.com, linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        andrew@lunn.ch
+Subject: Re: [PATCH 0/5] net: ethernet: stmmac: some fixes and optimizations
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191029101441.17290-1-christophe.roullier@st.com>
+References: <20191029101441.17290-1-christophe.roullier@st.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 29 Oct 2019 18:09:07 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace expressions of the form:
-	kmalloc(count * size, GFP_KERNEL);
-With:
-	kmalloc_array(count, size, GFP_KERNEL);
+From: Christophe Roullier <christophe.roullier@st.com>
+Date: Tue, 29 Oct 2019 11:14:36 +0100
 
-Signed-off-by: Roi Martin <jroi.martin@gmail.com>
----
- drivers/staging/exfat/exfat_core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Some improvements (manage syscfg as optional clock, update slew rate of
+> ETH_MDIO pin, Enable gating of the MAC TX clock during TX low-power mode)
+> Fix warning build message when W=1
 
-diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index f446e6e6c4ee..a9391f0b8141 100644
---- a/drivers/staging/exfat/exfat_core.c
-+++ b/drivers/staging/exfat/exfat_core.c
-@@ -713,8 +713,8 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
- 
- 	u32 checksum = 0;
- 
--	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
--						GFP_KERNEL);
-+	upcase_table = kmalloc_array(UTBL_COL_COUNT, sizeof(u16 *), GFP_KERNEL);
-+	p_fs->vol_utbl = upcase_table;
- 	if (!upcase_table)
- 		return FFS_MEMORYERR;
- 	memset(upcase_table, 0, UTBL_COL_COUNT * sizeof(u16 *));
-@@ -793,8 +793,8 @@ static s32 __load_default_upcase_table(struct super_block *sb)
- 	u16	uni = 0;
- 	u16 **upcase_table;
- 
--	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
--						GFP_KERNEL);
-+	upcase_table = kmalloc_array(UTBL_COL_COUNT, sizeof(u16 *), GFP_KERNEL);
-+	p_fs->vol_utbl = upcase_table;
- 	if (!upcase_table)
- 		return FFS_MEMORYERR;
- 	memset(upcase_table, 0, UTBL_COL_COUNT * sizeof(u16 *));
--- 
-2.20.1
+Please fix up several issues with this submission:
 
+1) Bug fixes should target the 'net' GIT tree.  Anything else, and this
+   means cleanups, new features, and optimizations, should all target
+   the 'net-next' GIT tree.
+
+2) Your subject lines are too much, for example:
+
+   [net: ethernet: stmmac: some fixes and optimizations 1/5] net: ethernet: stmmac: Add support for syscfg clock
+
+   The "net: ethernet: stmmac: some fixes and optimizations" part
+   should be completely removed.  'net' should be separate to indicate
+   the target GIT tree (or 'net-next' as could be the case) and then
+   we're left with, for example:
+
+   [PATCH net-next 1/5] net: ethernet: stmmac: Add support for syscfg clock
+
+3) There should be a seprate series with the bug fixes targetting 'net',
+   then you should wait for those fixes to propagate into 'net-next', at which
+   time you can submit a second patch series targetting 'net-next' with all
+   the cleanups, feature additions, and optimizations.
+
+Thank you.
