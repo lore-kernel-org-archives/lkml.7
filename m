@@ -2,173 +2,188 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475DCCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686BCCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1088F20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328D02067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNRbGTr5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ml1Kjv0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfJ3VgO (ORCPT
+        id S1727269AbfJ3Vhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:36:14 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38638 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfJ3Vfa (ORCPT
+        Wed, 30 Oct 2019 17:37:38 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33899 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfJ3Vhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:35:30 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y23so3940740ljc.5;
-        Wed, 30 Oct 2019 14:35:27 -0700 (PDT)
+        Wed, 30 Oct 2019 17:37:37 -0400
+Received: by mail-qt1-f193.google.com with SMTP id e14so5483960qto.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 14:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dVzm8mtRZe9pGxMBECnqp/gOMywxQtkTfIw9ywF34Yw=;
-        b=UNRbGTr5WuGohvs1YxWTAZri7+eq9htoRCvk2CrGjDnXG7VNuNuea+xI8IUIVi//zB
-         b81E8BErKCZ4zJJMT0/maJTaJ1Q3CJmetf4XSTAj0SVS8t3qOaZ7+p4N4Rj9Ollkq2ch
-         HfPgkvdHjuZW2gLAgGQ5xEcIV8gk7mrFEGKyglS6L1VJ9Wex2VC+8n/tDPMFlqfO2vxy
-         +gpMp7CuT1+Y8S3Lu/L5NE2ibM4JnumIvc5Ji9b6fk1LTS39oVXnPB5m0nnPT4RK5Qgm
-         0/66ODqLQOtpyekhn0uVZlZMBmQox+SDuqYbGxlMJeRHAjl7jGvL9VU5wT8NEnLj5qT5
-         2QjQ==
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=UwBNfcG9T4Ez2G+dzanxbhsfrkOhXSnedMAoblgFpl4=;
+        b=ml1Kjv0tloBRAh3zQRm7SGFzzDU2AzAarZr6Yv2w9gD3V+osmXURcuMlVipF0QnbM4
+         GC7+2We9PQQxJq5OLF+X/3udCGxrJsYa/6DQPi5+5ay+o/h2Zku1RvJ9Y91QSCxtaMoX
+         355krIYfUIDHgjyGO+gUtc2513z2FHwBjMiP2Xj6kCiBwqiPU7lkiX2bcM/GAgbWpM8w
+         QGhGgWmyg4cuf8PabC0TdhStnorlXT8bfnT2+gGyskLpgWYnfHd/Nx4txEhCWRjqR2zo
+         oNFcAxQlVOjqQf05feU/fu8AejJMcwYLbIZkPdt1sNNrG3ds0pWTvJYH8w91MxABBUAd
+         CRwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dVzm8mtRZe9pGxMBECnqp/gOMywxQtkTfIw9ywF34Yw=;
-        b=sQyx8QsIqa89KQa3Uof5BtZeg/vTjalxTGJHGTGH8hNNA3K7h4z8KcjF0rT4T9lzsn
-         TlAZPIA5C6KIxxbcOJ/bTdShG/bc0urQMNHz74JExYpfh+b++0sS5VyWodNFLnh3vPNz
-         SUDhLECtzBLykaKNAlStpi/COqLQGsCgpx/o+C7QBX95vwqu20atb178d8eCNns2fnDa
-         kT0CnvF/DMo8+oaDu/Hk7iwgHpmwiEk8ASrPcR2cWMeIJvgclfJpHyLv8IeHmvpLAafO
-         PsWueH2Z92iCfUBBDwVN6ymdK8FsxGGz2+NmZYCMuUnDYRYiCogVNXagelVnUUfRVKMY
-         vu8g==
-X-Gm-Message-State: APjAAAUIp58ob8CMJGHjCqIEdmCBd8Idhhv3/i1vhY7Yb8MSIG0d6ki0
-        JKVd8yFRkztKSWOYKxhC54Y=
-X-Google-Smtp-Source: APXvYqxNqQZFcLENWauGXTZYF4ycn2H0Ke6gJe3XnMbceLKhPamFT+iRFbeh7Uv2StfqcxVp6gOXYQ==
-X-Received: by 2002:a2e:b4ba:: with SMTP id q26mr1298579ljm.60.1572471327121;
-        Wed, 30 Oct 2019 14:35:27 -0700 (PDT)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 14:35:26 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 03/10] clk: tegra: cclk: Add helpers for handling PLLX rate changes
-Date:   Thu, 31 Oct 2019 00:33:53 +0300
-Message-Id: <20191030213400.29434-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191030213400.29434-1-digetx@gmail.com>
-References: <20191030213400.29434-1-digetx@gmail.com>
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=UwBNfcG9T4Ez2G+dzanxbhsfrkOhXSnedMAoblgFpl4=;
+        b=CSh2bQH7Cemjb6AY6rcNAazPNdq9ix1m0DPG6I0fgmuARhnegUunxS4cQqpZa0lWww
+         LVwpsDx1sDK8227TUgWOBa9MGT9UAQCohBqd7cuIa8I+Q95ApQKcT1L1/Z0Jk0Vnex6e
+         oHzf7JPsjICoTz8n5mexK9t2WRwFroX7dd/8rJz6wYImEOnCwEVjgW7ni6Aojrep2Y+Y
+         YvAqqPp8uOrHbl/nEVq9UwX9MVXu0x20Kx2sXZpxaVjq0WT3t9m0sFje5Pd5y7RflwjH
+         2mGjWPigcYjNCn4Ic+NxUFGfqOpMgFrdc7AVCuufJYeCujocSJO1lIl2xIoMt6C7DQ0R
+         rydQ==
+X-Gm-Message-State: APjAAAWIPCMmu9X4xykQdMoIB9UYoXpepgkBbfiXGQN95v3thPhTG5nt
+        xyR6uDZ13WL+lMI1CvGIw+Jxsw==
+X-Google-Smtp-Source: APXvYqy4pWJ2fxc96Jj9usXTSWO6SHuoyvhpjdZT6zzaLvufggDq/b2Xky46BxBj3AeXwa/+hqEv4g==
+X-Received: by 2002:ac8:4506:: with SMTP id q6mr2280547qtn.277.1572471456129;
+        Wed, 30 Oct 2019 14:37:36 -0700 (PDT)
+Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id p17sm678846qkm.135.2019.10.30.14.37.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 14:37:35 -0700 (PDT)
+Subject: Re: [Patch v4 2/6] sched: Add infrastructure to store and update
+ instantaneous thermal pressure
+To:     Peter Zijlstra <peterz@infradead.org>
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <1571776465-29763-3-git-send-email-thara.gopinath@linaro.org>
+ <20191028152135.GC4097@hirez.programming.kicks-ass.net>
+Cc:     mingo@redhat.com, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5DBA029E.8020508@linaro.org>
+Date:   Wed, 30 Oct 2019 17:37:34 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191028152135.GC4097@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CCLK should be re-parented away from PLLX if PLLX's rate is changing.
-The PLLP parent is a common safe CPU parent for all Tegra SoCs, thus
-CCLK will be re-parented to PLLP before PLLX rate-change begins and then
-switched back to PLLX after the rate-change completion. This patch adds
-helper functions which perform CCLK re-parenting, these helpers will be
-utilized by further patches.
+Hello Peter,
+Thanks for the review.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clk/tegra/clk-tegra-super-cclk.c | 34 ++++++++++++++++++++++++
- drivers/clk/tegra/clk.h                  |  2 ++
- 2 files changed, 36 insertions(+)
 
-diff --git a/drivers/clk/tegra/clk-tegra-super-cclk.c b/drivers/clk/tegra/clk-tegra-super-cclk.c
-index 5cff8363c978..c7e4be0efc59 100644
---- a/drivers/clk/tegra/clk-tegra-super-cclk.c
-+++ b/drivers/clk/tegra/clk-tegra-super-cclk.c
-@@ -25,6 +25,9 @@
- 
- #define SUPER_CDIV_ENB		BIT(31)
- 
-+static struct tegra_clk_super_mux *cclk_super;
-+static bool cclk_on_pllx;
-+
- static u8 cclk_super_get_parent(struct clk_hw *hw)
- {
- 	return tegra_clk_super_ops.get_parent(hw);
-@@ -115,6 +118,9 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 	struct clk_init_data init;
- 	u32 val;
- 
-+	if (WARN_ON(cclk_super))
-+		return ERR_PTR(-EBUSY);
-+
- 	super = kzalloc(sizeof(*super), GFP_KERNEL);
- 	if (!super)
- 		return ERR_PTR(-ENOMEM);
-@@ -171,6 +177,34 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 	clk = clk_register(NULL, &super->hw);
- 	if (IS_ERR(clk))
- 		kfree(super);
-+	else
-+		cclk_super = super;
- 
- 	return clk;
- }
-+
-+int tegra_cclk_pre_pllx_rate_change(void)
-+{
-+	if (IS_ERR_OR_NULL(cclk_super))
-+		return -EINVAL;
-+
-+	if (cclk_super_get_parent(&cclk_super->hw) == PLLX_INDEX)
-+		cclk_on_pllx = true;
-+	else
-+		cclk_on_pllx = false;
-+
-+	/*
-+	 * CPU needs to be temporarily re-parented away from PLLX if PLLX
-+	 * changes its rate. PLLP is a safe parent for CPU on all Tegra SoCs.
-+	 */
-+	if (cclk_on_pllx)
-+		cclk_super_set_parent(&cclk_super->hw, PLLP_INDEX);
-+
-+	return 0;
-+}
-+
-+void tegra_cclk_post_pllx_rate_change(void)
-+{
-+	if (cclk_on_pllx)
-+		cclk_super_set_parent(&cclk_super->hw, PLLX_INDEX);
-+}
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index fa18bef914af..0afe28f4372b 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -771,6 +771,8 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 		const char * const *parent_names, u8 num_parents,
- 		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
- 		spinlock_t *lock);
-+int tegra_cclk_pre_pllx_rate_change(void);
-+void tegra_cclk_post_pllx_rate_change(void);
- 
- /**
-  * struct tegra_sdmmc_mux - switch divider with Low Jitter inputs for SDMMC
+On 10/28/2019 11:21 AM, Peter Zijlstra wrote:
+> On Tue, Oct 22, 2019 at 04:34:21PM -0400, Thara Gopinath wrote:
+>> Add thermal.c and thermal.h files that provides interface
+>> APIs to initialize, update/average, track, accumulate and decay
+>> thermal pressure per cpu basis. A per cpu variable delta_capacity is
+>> introduced to keep track of instantaneous per cpu thermal pressure.
+>> Thermal pressure is the delta between maximum capacity and capped
+>> capacity due to a thermal event.
+> 
+>> API trigger_thermal_pressure_average is called for periodic accumulate
+>> and decay of the thermal pressure. It is to to be called from a
+>> periodic tick function. This API passes on the instantaneous delta
+>> capacity of a cpu to update_thermal_load_avg to do the necessary
+>> accumulate, decay and average.
+> 
+>> API update_thermal_pressure is for the system to update the thermal
+>> pressure by providing a capped frequency ratio.
+> 
+>> Considering, trigger_thermal_pressure_average reads delta_capacity and
+>> update_thermal_pressure writes into delta_capacity, one can argue for
+>> some sort of locking mechanism to avoid a stale value.
+> 
+>> But considering trigger_thermal_pressure_average can be called from a
+>> system critical path like scheduler tick function, a locking mechanism
+>> is not ideal. This means that it is possible the delta_capacity value
+>> used to calculate average thermal pressure for a cpu can be
+>> stale for upto 1 tick period.
+> 
+> Please use a blank line at the end of a paragraph.
+
+Will do
+
+> 
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> ---
+> 
+>>  include/linux/sched.h  |  8 ++++++++
+>>  kernel/sched/Makefile  |  2 +-
+>>  kernel/sched/thermal.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+>>  kernel/sched/thermal.h | 13 +++++++++++++
+>>  4 files changed, 67 insertions(+), 1 deletion(-)
+>>  create mode 100644 kernel/sched/thermal.c
+>>  create mode 100644 kernel/sched/thermal.h
+> 
+> These are some tiny files, do these functions really need their own
+> little files?
+
+I will merge them  into fair.c. There will be update_thermal_pressure
+that will be called from cpu_cooling or other relevant framework.
+> 
+> 
+>> diff --git a/kernel/sched/thermal.c b/kernel/sched/thermal.c
+>> new file mode 100644
+>> index 0000000..0c84960
+>> --- /dev/null
+>> +++ b/kernel/sched/thermal.c
+>> @@ -0,0 +1,45 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Scheduler Thermal Interactions
+>> + *
+>> + *  Copyright (C) 2018 Linaro, Inc., Thara Gopinath <thara.gopinath@linaro.org>
+>> + */
+>> +
+>> +#include <linux/sched.h>
+>> +#include "sched.h"
+>> +#include "pelt.h"
+>> +#include "thermal.h"
+>> +
+>> +static DEFINE_PER_CPU(unsigned long, delta_capacity);
+>> +
+>> +/**
+>> + * update_thermal_pressure: Update thermal pressure
+>> + * @cpu: the cpu for which thermal pressure is to be updated for
+>> + * @capped_freq_ratio: capped max frequency << SCHED_CAPACITY_SHIFT / max freq
+>> + *
+>> + * capped_freq_ratio is normalized into capped capacity and the delta between
+>> + * the arch_scale_cpu_capacity and capped capacity is stored in per cpu
+>> + * delta_capacity.
+>> + */
+>> +void update_thermal_pressure(int cpu, u64 capped_freq_ratio)
+>> +{
+>> +	unsigned long __capacity, delta;
+>> +
+>> +	/* Normalize the capped freq ratio */
+>> +	__capacity = (capped_freq_ratio * arch_scale_cpu_capacity(cpu)) >>
+>> +							SCHED_CAPACITY_SHIFT;
+>> +	delta = arch_scale_cpu_capacity(cpu) -  __capacity;
+>> +	pr_debug("updating cpu%d thermal pressure to %lu\n", cpu, delta);
+> 
+> Surely we can do without the pr_debug() here?
+
+Will remove. I had it while developing to check if the thermal pressure
+is calculated correct.
+> 
+>> +	per_cpu(delta_capacity, cpu) = delta;
+>> +}
+
+
 -- 
-2.23.0
-
+Warm Regards
+Thara
