@@ -2,163 +2,73 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D39ECA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C9DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64544205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB1B205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0eRAHdD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="nlo2Buu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfJ3Iii (ORCPT
+        id S1726239AbfJ3IkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:38:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46091 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfJ3Iii (ORCPT
+        Wed, 30 Oct 2019 04:40:01 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:12658 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfJ3IkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:38:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f19so979185pgn.13;
-        Wed, 30 Oct 2019 01:38:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v2hRD77Xa+8VszcX+WELl2gUUJHpsHwPoC3bm/BbZJM=;
-        b=O0eRAHdD3DBS5qT2uOGdJxD2ejyrVV4ujntxZVDXHK2ooTcUnKP/k7bUbI0NaeUM1u
-         YdR7lGqW/eh/55fHGUltUpJYU583TNyN5vHE2+2RMDKHOhEJLyHilGDL7KR8Bt4N0iJg
-         YXUQQ6iF3vSXDedenuRHCs6BVYYKCd2PAPbJvDtwVLgafZ82mnpo5yazIPYEjo5+0ESQ
-         QTvFjFmodYnnwwZzV/mkcPJDMrgCHFfn9yPlsg27NkywsIll1sk0i4eWYlZb+HazgjpP
-         1rPrIafhLPFMcndMvBiGq3ANbJxOMBZcimO8VkU0ZFyMePGUEZ1ygvBIM91Ik+Ezq07A
-         arCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v2hRD77Xa+8VszcX+WELl2gUUJHpsHwPoC3bm/BbZJM=;
-        b=D7lehUO3rdPMBKvnr75hQYZO4rc09yL5Fey1leyCfmP5hBrach4x19OQDT/1J5y7J3
-         7uy9d9osRJ5mnUeF9VXIqlGvlsecTK2RrH+jkvwcuVhkBYcFqA+YYVOmgO4bKq7eUT0k
-         5+v6/4G3Z6MoEO0CxNUWO9xqMIVexGQBuFue+OWayknpwtu73YPP4HjfBrN+dDPZhcZy
-         feEfAOPPTBeymhuMK5nQebh/pnC3W7BNRDNtASt0gotOD+WKzZy5trTBt0NYPJA4swel
-         YaByj3NmLq+zoQfRgeuDlSuy1gXgK/KZ6MqOxul3mI+/SBlRGY8vz/bhMJNGUJOCkRPu
-         NO1w==
-X-Gm-Message-State: APjAAAX9FWUgAwLFZEpoKM4mAkJVm7F6aMa3wK2ABB6SX8nOz7MmtyAS
-        MYCcwdCMrHB1P5f+VZQEPQ4=
-X-Google-Smtp-Source: APXvYqwahN/PAT9+SXrRtJkw50qD6UZNdHbCE8Z8QKgQmJfmTZRDGvMaddupYSRIAemYyM1TezVClw==
-X-Received: by 2002:a65:6713:: with SMTP id u19mr5515149pgf.358.1572424716728;
-        Wed, 30 Oct 2019 01:38:36 -0700 (PDT)
-Received: from Asurada (c-73-162-191-63.hsd1.ca.comcast.net. [73.162.191.63])
-        by smtp.gmail.com with ESMTPSA id b26sm1617680pfo.179.2019.10.30.01.38.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 01:38:36 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 01:38:13 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] ASoC: fsl_asrc: Add support for imx8qm
-Message-ID: <20191030083813.GA9924@Asurada>
-References: <VE1PR04MB64795758EBC0C898FBFFB3A5E3600@VE1PR04MB6479.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
+        Wed, 30 Oct 2019 04:40:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1572424796;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=ytcblrQ9momi5mrUnfe2JEwJ9Mxpgs6jMh2V+tmJuCc=;
+        b=nlo2Buu3DZ5rZPdLyBiKsNJZxoY82t5YeZT8XYxJkP2Dd+PWitgLp0F4JA5pxE5CJw
+        F9VXsEuaYRopoOids9/Ma3wd2cWM8UYr8I8pY86udjfqv3kPy+a9BxZMoctG4hxA8Hyh
+        lZgXHVg160KiSJ0Gy6eNIf4pKVyfooxjNTIm51+dyC4cPVKS8xsyvo/4oEdcIjzQDeeo
+        t6ThIA8JASUxMay7jibiQiFYuZBLyOeJUD10+E0eP14+M31cXC3ifHRgk5/xwpOvrRq0
+        6U5H3klWDkxTB4KxYM06pfYD3XG4waO3L89OkRenPWH3/u11m+ZrhU13BgR+BQGwyAW7
+        lIxw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDvG"
+X-RZG-CLASS-ID: mo00
+Received: from mbp-13-nikolaus.fritz.box
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id L09db3v9U8dg1tu
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 30 Oct 2019 09:39:42 +0100 (CET)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB64795758EBC0C898FBFFB3A5E3600@VE1PR04MB6479.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC v2 1/2] ARM: dts: omap3: Add cpu trips and cooling map for omap3 family
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CAHCN7xLN+52ZW6tzCQPDvwqrdgaQaMrkhPFPotYDr7RdNwqeNA@mail.gmail.com>
+Date:   Wed, 30 Oct 2019 09:39:45 +0100
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>, Nishanth Menon <nm@ti.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Grazvydas Ignotas <notasas@gmail.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <C469028D-959D-4BD1-9226-C0190A197CE5@goldelico.com>
+References: <20190913153714.30980-1-aford173@gmail.com> <B710D701-6311-4344-BF4E-F39157BBF2BD@goldelico.com> <CAHCN7xKU1v-BFkwiuZQx82+Cmdgj_1CH1j51bN0TaaduWcu8rQ@mail.gmail.com> <97204F98-FA33-4EBA-80AC-2FB3A6E78B2B@goldelico.com> <CAHCN7xJus=Unsm5rvgtccM9jpdiwGnJXrfjhavwkoswGbNd7qw@mail.gmail.com> <CAHCN7x+=O6f4Q0ps1d5KA+-E9L-8wr5B9XggzurJWtEnxEj7yg@mail.gmail.com> <FD6FED45-EF20-49D8-A2B2-012FB314DCC6@goldelico.com> <CAHCN7xLN+52ZW6tzCQPDvwqrdgaQaMrkhPFPotYDr7RdNwqeNA@mail.gmail.com>
+To:     Adam Ford <aford173@gmail.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 03:20:35AM +0000, S.j. Wang wrote:
-> Hi
-> 
-> > 
-> > On Tue, Oct 29, 2019 at 05:17:09PM +0800, Shengjiu Wang wrote:
-> > > There are two asrc module in imx8qm, each module has different clock
-> > > configuration, and the DMA type is EDMA.
-> > >
-> > > So in this patch, we define the new clocks, refine the clock map, and
-> > > include struct fsl_asrc_soc_data for different soc usage.
-> > >
-> > > The EDMA channel is fixed with each dma request, one dma request
-> > > corresponding to one dma channel. So we need to request dma channel
-> > > with dma request of asrc module.
-> > >
-> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > ---
-> > >  sound/soc/fsl/fsl_asrc.c     | 91 +++++++++++++++++++++++++++++-------
-> > >  sound/soc/fsl/fsl_asrc.h     | 65 +++++++++++++++++++++++++-
-> > >  sound/soc/fsl/fsl_asrc_dma.c | 39 ++++++++++++----
-> > >  3 files changed, 167 insertions(+), 28 deletions(-)
-> > 
-> > > diff --git a/sound/soc/fsl/fsl_asrc_dma.c
-> > > b/sound/soc/fsl/fsl_asrc_dma.c index d6146de9acd2..dbb07a486504
-> > 100644
-> > > --- a/sound/soc/fsl/fsl_asrc_dma.c
-> > > +++ b/sound/soc/fsl/fsl_asrc_dma.c
-> > > @@ -199,19 +199,40 @@ static int fsl_asrc_dma_hw_params(struct
-> > > snd_soc_component *component,
-> > >
-> > >       /* Get DMA request of Back-End */
-> > >       tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
-> > > -     tmp_data = tmp_chan->private;
-> > > -     pair->dma_data.dma_request = tmp_data->dma_request;
-> > > -     dma_release_channel(tmp_chan);
-> > > +     /* tmp_chan may be NULL for it is already allocated by Back-End */
-> > > +     if (tmp_chan) {
-> > > +             tmp_data = tmp_chan->private;
-> > > +             if (tmp_data)
-> > > +                     pair->dma_data.dma_request =
-> > > + tmp_data->dma_request;
-> > 
-> > If this patch is supposed to add a !tmp_chan case for EDMA, we probably
-> > shouldn't mute the !tmp_data case because dma_request will be NULL,
-> > although the code previously didn't have a check either. I mean we might
-> > need to error-out for !tmp_chan. Or...
-> > is this intentional?
-> > 
-> 
-> Yes, intentional. May be we can change to 
-> 
->         if (!asrc_priv->soc->use_edma) {
->                 /* Get DMA request of Back-End */
->                 tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
->                 tmp_data = tmp_chan->private;
->                 pair->dma_data.dma_request = tmp_data->dma_request;
->                 dma_release_channel(tmp_chan);
-> 
->                 /* Get DMA request of Front-End */
->                 tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
->                 tmp_data = tmp_chan->private;
->                 pair->dma_data.dma_request2 = tmp_data->dma_request;
->                 pair->dma_data.peripheral_type = tmp_data->peripheral_type;
->                 pair->dma_data.priority = tmp_data->priority;
->                 dma_release_channel(tmp_chan);
->         }
+Hi Adam,
+what is the status of this RFC/PATCH?
 
-Oh...now I understand..yea, I think this would be better.
+BR and thanks,
+Nikolaus
 
-Would you please change it in v2?
-
-I am fine with other places, so may add:
-
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-
-Thanks
