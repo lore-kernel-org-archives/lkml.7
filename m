@@ -2,111 +2,104 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BFACA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE63ACA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B538C208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66492067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:21:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FpnQkQ6K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIYtnp2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfJ3SQB (ORCPT
+        id S1727904AbfJ3SVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 14:16:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55516 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726184AbfJ3SQA (ORCPT
+        Wed, 30 Oct 2019 14:21:46 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41136 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfJ3SVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 14:16:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572459359;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bVsDGgUyFf/Lc4r2nBI3fmbyc9xGnSjSyn4XFOkRPo4=;
-        b=FpnQkQ6KJq1/5Pt21q6TUvIOX453IscYJAMXMaaUMt23azYkZ6iaLrM5vRK07JVD1pCsaS
-        3XcQNANlG4KxakkIBoz+yhc0M2i5+Xg9x4CoG70GmadVpb+sO6DDjNYedAYoBNmfcn7yUH
-        tQPlHBnbbE1T/UwfVLj/KrSQcs7t7cE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-3tKoewCdPPKL05J5zOAY_w-1; Wed, 30 Oct 2019 14:15:56 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13F461005500;
-        Wed, 30 Oct 2019 18:15:55 +0000 (UTC)
-Received: from krava (ovpn-204-82.brq.redhat.com [10.40.204.82])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 658C75D6D6;
-        Wed, 30 Oct 2019 18:15:53 +0000 (UTC)
-Date:   Wed, 30 Oct 2019 19:15:52 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     acme@kernel.org, jolsa@kernel.org, eranian@google.com,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v3 3/7] perf evsel: Add iterator to iterate over events
- ordered by CPU
-Message-ID: <20191030181552.GM20826@krava>
-References: <20191025181417.10670-1-andi@firstfloor.org>
- <20191025181417.10670-4-andi@firstfloor.org>
- <20191030100606.GG20826@krava>
- <20191030155108.taqo2kbuaro3idhe@two.firstfloor.org>
-MIME-Version: 1.0
-In-Reply-To: <20191030155108.taqo2kbuaro3idhe@two.firstfloor.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: 3tKoewCdPPKL05J5zOAY_w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Wed, 30 Oct 2019 14:21:46 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t10so1349997plr.8;
+        Wed, 30 Oct 2019 11:21:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=m5V1c15U0TRN6vcPfIUexZJlP17sTsMG1spksDWqkgo=;
+        b=VIYtnp2tw82TUaocPbDHIebvaM6KlLz6C/l7fT8PzqeQNmI0H+TPWMF/EmeD4WdzJO
+         k1YC1RjTzBGMjHIo0QbbsAKn1/SgaRR0BlN1wku1+2W9TQNBg8Fbq2kgyQ28KCSaQj5H
+         PdCUEacbKLwm6rE6FcUGzhH7fixaUBu3t143lVuAq8QHm6m8KQBZ1Dx3G4dn42t+Zz/2
+         dbkzOnaSwRhOMq/GM53ACClQcNFPHV1NhH7BROnh1onPesk1t3nnKCMCWhxuNk3vW9Wh
+         9fQ2KqmF8+Az5hvlsGD61dZ4VAXRmI2z0yCeMZyi+fU6BlYo4QnSMlC42B0Gt2MTpTST
+         J34w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=m5V1c15U0TRN6vcPfIUexZJlP17sTsMG1spksDWqkgo=;
+        b=KA5yW/Gfc2sPayxdNLZmjGpW1FhB2HL5FpQzfCkwfVgIiY3oORjsuL57DScH05Rj/R
+         ggMrpu3uYeSyq3HSzZme3NczNwBOxvO1h3qFHoRluIE5uz0qcEiTfckfKzw5T/dqsniG
+         WZNnIsFIaFHEqYMkyfA9mefyWjcwW+nHJxDMfl/wJ9RwTwxhRRB3mEA2UsSCoBFvhutj
+         BjCN9xUGNS/NduFpbzeK0FscQTpOmUBtmPwWhH0WkO7i6tfy26/HdX+/EWRA/pcptmV0
+         Z993Izi0dqJCcUS5H4VCsKp6NskH8d+g5mYpQOYYv4z7Fa+A6NFSDyjYrOQlHX56T4Tq
+         7VHw==
+X-Gm-Message-State: APjAAAUCu5SiHsd3vXwmfblLcJ6Lhda8QIrj0yWml1HHAkiINn7ICO8e
+        BmUpoMAAYIY/c6RVaOLRC6Y5hvq/
+X-Google-Smtp-Source: APXvYqwovkeawEjQc8Fpc4nu8GD5wMmrSR/nUwd//Arjwauo1SKoqktzbXGHyeUCWuR0WQRs5GRFPA==
+X-Received: by 2002:a17:902:b7c2:: with SMTP id v2mr1464868plz.202.1572459704769;
+        Wed, 30 Oct 2019 11:21:44 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z5sm521637pgi.19.2019.10.30.11.21.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 11:21:43 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM STB AVS TMON
+        DRIVER), Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-pm@vger.kernel.org (open list:BROADCOM STB AVS TMON DRIVER),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE)
+Subject: [PATCH 0/6] brcmstb_thermal updates for new processes
+Date:   Wed, 30 Oct 2019 11:21:26 -0700
+Message-Id: <20191030182132.25763-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 08:51:08AM -0700, Andi Kleen wrote:
-> On Wed, Oct 30, 2019 at 11:06:06AM +0100, Jiri Olsa wrote:
-> > > +struct perf_cpu_map *evlist__cpu_iter_start(struct evlist *evlist)
-> > > +{
-> > > +=09struct perf_cpu_map *cpus;
-> > > +=09struct evsel *pos;
-> > > +
-> > > +=09/*
-> > > +=09 * evlist->cpus is not necessarily a superset of all the
-> > > +=09 * event's cpus, so compute our own super set. This
-> > > +=09 * assume that there is a super set
-> > > +=09 */
-> > > +=09cpus =3D evlist->core.cpus;
-> > > +=09evlist__for_each_entry(evlist, pos) {
-> > > +=09=09pos->cpu_index =3D 0;
-> > > +=09=09if (pos->core.cpus->nr > cpus->nr)
-> > > +=09=09=09cpus =3D pos->core.cpus;
-> > > +=09}
-> > > +=09return cpus;
-> >=20
-> > I might not understand the reason for cpu_index, but=20
->=20
-> This is just so that we can iterate each event's map
-> independently.
->=20
-> > imagine something like below should be enough, no?
->=20
-> Well it's more complicated because evlist->all_cpus doesn't exist.
+Hi,
 
-yes, I suggest to create it
+This patch series contains a bug fix for the existing platforms and then
+paves the way for adding support for Broadcom STB's latest chips in 16nm
+processes, and finally updates the driver with pecularities introduced
+with the 16nm, like the lack of interrupt notification from the HW.
 
-> The exists evlist->cpus cannot be used (I tried that)
-> I also don't think we have an existing function to merge
-> two maps, so that would need to be added to create it.
-> Just using ->cpu_index is a much simpler change.
+Please queue up the first patch for -stable if you want, thanks!
 
-I dont think that would be lot of code
-and it would simplify this one
+Florian Fainelli (6):
+  thermal: brcmstb_thermal: Do not use DT coefficients
+  thermal: brcmstb_thermal: Prepare to support a different process
+  dt-bindings: thermal: Define BCM7216 thermal sensor compatible
+  thermal: brcmstb_thermal: Add 16nm process thermal parameters
+  thermal: brcmstb_thermal: Restructure interrupt registration
+  thermal: brcmstb_thermal: Register different ops per process
 
-jirka
+ .../bindings/thermal/brcm,avs-tmon.txt        |   8 +-
+ drivers/thermal/broadcom/brcmstb_thermal.c    | 108 ++++++++++--------
+ 2 files changed, 67 insertions(+), 49 deletions(-)
+
+-- 
+2.17.1
 
