@@ -2,262 +2,143 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C9ACA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28292CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E1B20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F399420862
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldvbF7s9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xkOXBmNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfJ3LRC (ORCPT
+        id S1726331AbfJ3LSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 07:17:02 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37007 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfJ3LRB (ORCPT
+        Wed, 30 Oct 2019 07:18:44 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37390 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfJ3LSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 07:17:01 -0400
-Received: by mail-pl1-f193.google.com with SMTP id p13so849935pll.4;
-        Wed, 30 Oct 2019 04:16:59 -0700 (PDT)
+        Wed, 30 Oct 2019 07:18:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q130so1702515wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 04:18:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0M10ohuWo+ZvYS5iML77SXzkc6HJmcmNLrKxyOaOKHo=;
-        b=ldvbF7s9tpvO+LPxcA8+Ez0lsFl6FMzLaLfis/OHarEAKOpXuiJEgRPxyN81XClAf4
-         9+gnDjnCeDosks+lU2vYG7KGaYvbokBjsLu7yEfUyxj93jDAuhNWfzDeg80RjOE+a2Zz
-         Pl+LZADf8k4qEcMgvccoQ0lurYKWfd9mYZpjsZDQHCZxKcv2XGn6jWTJs1M746MVrFj8
-         pa4MtWwTrxb12XxPax5O2zuV4OfF4Ix3n3L1tkscIgAT30nZwP6uKOUK49+1lmNCmbMQ
-         BpaZE+wD1iVG7I058gzttqVUyLIZV0oEN5SKDqpq3pIhtpCpN4NtaWMqjTMUWSEIrCuB
-         96HQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=RuPxJiOhy1TksXQbxGnEdNQWiW6DMirlb9h1UddzLpQ=;
+        b=xkOXBmNXF87UzY6oVz2q5LDZcXjFl3ddOGdr5h+J2C5hvXM1HeC7N+BnyxfdS9Fh5N
+         phzeuI+opX4XzEaD6zh8gHvU4uKaRLr6z/KDoukjJ2woYRNHeQDgVQcBsoHUxvDq8mjU
+         nWeJ8FdXTlhaTbGPF2wrEwjByMNTq83GTwogjtbbTOFcwhnwx4BIc5ziIV08rvZzfCrW
+         AmaXtqmbStD2DhONOUQXfwFxzVqar4OtLrW4AagcHPIBqAjWkYrbC6NdR2O+KwAtAdTQ
+         ycfORqHr0dQhGKku1YoV0xpGDPDW4/44/031NUknc6nusSqo/ZP/0Q7NBXF6mJqzVuPO
+         Dakg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0M10ohuWo+ZvYS5iML77SXzkc6HJmcmNLrKxyOaOKHo=;
-        b=MELZnhYUjhfoc7c2UmVVIcxr+O3cpcDzb6cLcumc3eNoZcSOB+pGVXLvf9FZYSC46g
-         S3o02zmsFJcxE+TKNuoh5EVqUb20PQYUYz2y1pYSOo2i4cdElUxvMZXlfvaju2MX3jHQ
-         cS6VI1bhdmM/l9x6kT/1tZ3px0S0n5RueezUAF3ybbHhYRWt6wvFhH92d/I8EUmmUxpF
-         ydi6XzzyYGwSMDr2RNHTodu4ogWidMgIV7J+5U6IPjRbcLjfl2f1anbQsoZSFZTJBiqg
-         E5XsCgLJaLPf+Px2m0Zy5FI5SErjONz41QK89KnL76XhUU9UE3j2LGFs7x5dX6W9FxAd
-         zTZA==
-X-Gm-Message-State: APjAAAWpuNxN890r6aqSJzBXh0Baai4OPWG3qG62497IzGOZcFf+KVzt
-        NHe+aaQbJsCLYfx4uw9lGU/iubRpQy+qzYeOvkE=
-X-Google-Smtp-Source: APXvYqxPP7K1TcX0QpfF/pVkhpbeDr+WqtqFWkW7FZiGMwTTqXV2+kvhaQUMPk5OfGl9cILNiSXcfkkl3Oi0S3lGCxc=
-X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr4037783plk.192.1572434219222;
- Wed, 30 Oct 2019 04:16:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191029223214.18889-1-linux@roeck-us.net>
-In-Reply-To: <20191029223214.18889-1-linux@roeck-us.net>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Wed, 30 Oct 2019 20:16:48 +0900
-Message-ID: <CAC5umyhc=6yULiLwXu65VDvDk2cBiF0R9O39B-T5ftapJfj0rQ@mail.gmail.com>
-Subject: Re: [PATCH v2] nvme: Add hardware monitoring support
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RuPxJiOhy1TksXQbxGnEdNQWiW6DMirlb9h1UddzLpQ=;
+        b=DZc4/8tqauCeNlpGZnmc3LsJVWwgebRC4c7xijZWpWeoHMuAUsmdKHfMg2VrnMb4V/
+         pu9Pp7lIyQ7l8Ht8U+zgdtEloY5LZWO9bfUrAj4hiDaRH77tz7m2fkVEqRF+QKKZDC+O
+         M0mRFO3tEiLQrt8m4V8Pj99j4v6r7M/0H/qUf433Mcp7jdpKGPSXEdMsB0s0GkkY6RKG
+         uu/zig7/NhgEP/bxKpUUISoQr9v5AHtstRDATYZc+bJlKXfqIbfcJdDLQ7OxPTGIVw+E
+         xOfMjeTOPDlKq/EYQF9jojseRcP2eUbTqu3LXbNQAxfvqZj6UD5J+RFne7TT0koKcW/s
+         OKbA==
+X-Gm-Message-State: APjAAAW/pu6lt9kpC6fSwXJU+rDnaM+Hjehp7lRyQ9mb9rgudEjcM1V1
+        ibSAxM+KMEYgeKLAST3WEfft09dduy0=
+X-Google-Smtp-Source: APXvYqw9DwDro23o1BUt/xP+wff1i5Gq9Nmepy0P7/CLSoltTHv/s72GysgCgxVzBOnSpTxCOhURTw==
+X-Received: by 2002:a7b:cf33:: with SMTP id m19mr315030wmg.146.1572434320564;
+        Wed, 30 Oct 2019 04:18:40 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:ac53:afe6:58b0:b88d])
+        by smtp.gmail.com with ESMTPSA id t24sm3024613wra.55.2019.10.30.04.18.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 30 Oct 2019 04:18:39 -0700 (PDT)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, dietmar.eggemann@arm.com,
+        juri.lelli@redhat.com, rostedt@goodmis.org, mgorman@suse.de
+Cc:     dsmythies@telus.net, Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] sched/pelt: fix update of blocked pelt ordering
+Date:   Wed, 30 Oct 2019 12:18:29 +0100
+Message-Id: <1572434309-32512-1-git-send-email-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B410=E6=9C=8830=E6=97=A5(=E6=B0=B4) 7:32 Guenter Roeck <linux@ro=
-eck-us.net>:
->
-> nvme devices report temperature information in the controller information
-> (for limits) and in the smart log. Currently, the only means to retrieve
-> this information is the nvme command line interface, which requires
-> super-user privileges.
->
-> At the same time, it would be desirable to use NVME temperature informati=
-on
-> for thermal control.
->
-> This patch adds support to read NVME temperatures from the kernel using t=
-he
-> hwmon API and adds temperature zones for NVME drives. The thermal subsyst=
-em
-> can use this information to set thermal policies, and userspace can acces=
-s
-> it using libsensors and/or the "sensors" command.
->
-> Example output from the "sensors" command:
->
-> nvme0-pci-0100
-> Adapter: PCI adapter
-> Composite:    +39.0=C2=B0C  (high =3D +85.0=C2=B0C, crit =3D +85.0=C2=B0C=
-)
-> Sensor 1:     +39.0=C2=B0C
-> Sensor 2:     +41.0=C2=B0C
->
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> v2: Use devm_kfree() to release memory in error path
->
->  drivers/nvme/host/Kconfig      |  10 ++
->  drivers/nvme/host/Makefile     |   1 +
->  drivers/nvme/host/core.c       |   5 +
->  drivers/nvme/host/nvme-hwmon.c | 163 +++++++++++++++++++++++++++++++++
->  drivers/nvme/host/nvme.h       |   8 ++
->  5 files changed, 187 insertions(+)
->  create mode 100644 drivers/nvme/host/nvme-hwmon.c
->
-> diff --git a/drivers/nvme/host/Kconfig b/drivers/nvme/host/Kconfig
-> index 2b36f052bfb9..aeb49e16e386 100644
-> --- a/drivers/nvme/host/Kconfig
-> +++ b/drivers/nvme/host/Kconfig
-> @@ -23,6 +23,16 @@ config NVME_MULTIPATH
->            /dev/nvmeXnY device will show up for each NVMe namespaces,
->            even if it is accessible through multiple controllers.
->
-> +config NVME_HWMON
-> +       bool "NVME hardware monitoring"
-> +       depends on (NVME_CORE=3Dy && HWMON=3Dy) || (NVME_CORE=3Dm && HWMO=
-N)
-> +       help
-> +         This provides support for NVME hardware monitoring. If enabled,
-> +         a hardware monitoring device will be created for each NVME driv=
-e
-> +         in the system.
-> +
-> +         If unsure, say N.
-> +
->  config NVME_FABRICS
->         tristate
->
-> diff --git a/drivers/nvme/host/Makefile b/drivers/nvme/host/Makefile
-> index 8a4b671c5f0c..03de4797a877 100644
-> --- a/drivers/nvme/host/Makefile
-> +++ b/drivers/nvme/host/Makefile
-> @@ -14,6 +14,7 @@ nvme-core-$(CONFIG_TRACING)           +=3D trace.o
->  nvme-core-$(CONFIG_NVME_MULTIPATH)     +=3D multipath.o
->  nvme-core-$(CONFIG_NVM)                        +=3D lightnvm.o
->  nvme-core-$(CONFIG_FAULT_INJECTION_DEBUG_FS)   +=3D fault_inject.o
-> +nvme-core-$(CONFIG_NVME_HWMON)         +=3D nvme-hwmon.o
->
->  nvme-y                                 +=3D pci.o
->
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index fa7ba09dca77..fc1d4b146717 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -2796,6 +2796,9 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
->         ctrl->oncs =3D le16_to_cpu(id->oncs);
->         ctrl->mtfa =3D le16_to_cpu(id->mtfa);
->         ctrl->oaes =3D le32_to_cpu(id->oaes);
-> +       ctrl->wctemp =3D le16_to_cpu(id->wctemp);
-> +       ctrl->cctemp =3D le16_to_cpu(id->cctemp);
-> +
->         atomic_set(&ctrl->abort_limit, id->acl + 1);
->         ctrl->vwc =3D id->vwc;
->         if (id->mdts)
-> @@ -2897,6 +2900,8 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
->
->         ctrl->identified =3D true;
->
-> +       nvme_hwmon_init(ctrl);
-> +
->         return 0;
->
->  out_free:
+update_cfs_rq_load_avg() can call cpufreq_update_util() to trigger an
+update of the frequency. Make sure that RT, DL and IRQ pelt signals have
+been updated before calling cpufreq
 
-The nvme_init_identify() can be called multiple time in nvme ctrl's
-lifetime (e.g 'nvme reset /dev/nvme*' or suspend/resume paths), so
-should we need to prevent nvme_hwmon_init() from registering hwmon
-device more than twice?
+Fixes: 371bf4273269 ("sched/rt: Add rt_rq utilization tracking")
+Fixes: 3727e0e16340 ("sched/dl: Add dl_rq utilization tracking")
+Fixes: 91c27493e78d ("sched/irq: Add IRQ utilization tracking")
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ kernel/sched/fair.c | 29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
 
-In the nvme thermal zone patchset[1], thernal zone is registered in
-nvme_init_identify and unregistered in nvme_stop_ctrl().
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index a144874..adc923f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7446,6 +7446,19 @@ static void update_blocked_averages(int cpu)
+ 	update_rq_clock(rq);
+ 
+ 	/*
++	 * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
++	 * that RT, DL and IRQ signals have been updated before updating CFS.
++	 */
++	curr_class = rq->curr->sched_class;
++	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
++	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
++	update_irq_load_avg(rq, 0);
++
++	/* Don't need periodic decay once load/util_avg are null */
++	if (others_have_blocked(rq))
++		done = false;
++
++	/*
+ 	 * Iterates the task_group tree in a bottom up fashion, see
+ 	 * list_add_leaf_cfs_rq() for details.
+ 	 */
+@@ -7472,14 +7485,6 @@ static void update_blocked_averages(int cpu)
+ 			done = false;
+ 	}
+ 
+-	curr_class = rq->curr->sched_class;
+-	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+-	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+-	update_irq_load_avg(rq, 0);
+-	/* Don't need periodic decay once load/util_avg are null */
+-	if (others_have_blocked(rq))
+-		done = false;
+-
+ 	update_blocked_load_status(rq, !done);
+ 	rq_unlock_irqrestore(rq, &rf);
+ }
+@@ -7540,12 +7545,18 @@ static inline void update_blocked_averages(int cpu)
+ 
+ 	rq_lock_irqsave(rq, &rf);
+ 	update_rq_clock(rq);
+-	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
+ 
++	/*
++	 * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
++	 * that RT, DL and IRQ signals have been updated before updating CFS.
++	 */
+ 	curr_class = rq->curr->sched_class;
+ 	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+ 	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+ 	update_irq_load_avg(rq, 0);
++
++	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
++
+ 	update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
+ 	rq_unlock_irqrestore(rq, &rf);
+ }
+-- 
+2.7.4
 
-[1] https://lore.kernel.org/linux-devicetree/1561990354-4084-2-git-send-ema=
-il-akinobu.mita@gmail.com/
-
-> diff --git a/drivers/nvme/host/nvme-hwmon.c b/drivers/nvme/host/nvme-hwmo=
-n.c
-> new file mode 100644
-> index 000000000000..af5eda326ec6
-> --- /dev/null
-> +++ b/drivers/nvme/host/nvme-hwmon.c
-> @@ -0,0 +1,163 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * NVM Express hardware monitoring support
-> + * Copyright (c) 2019, Guenter Roeck
-> + */
-> +
-> +#include <linux/hwmon.h>
-> +
-> +#include "nvme.h"
-> +
-> +struct nvme_hwmon_data {
-> +       struct nvme_ctrl *ctrl;
-> +       struct nvme_smart_log log;
-> +};
-> +
-> +static int nvme_hwmon_get_smart_log(struct nvme_hwmon_data *data)
-> +{
-> +       return nvme_get_log(data->ctrl, NVME_NSID_ALL, NVME_LOG_SMART, 0,
-> +                           &data->log, sizeof(data->log), 0);
-> +}
-
-The 'data->log' is allocated per nvme_ctrl, so are there any locks to
-prevent multiple callers of nvme_hwmon_get_smart_log() from breaking
-the log buffer?
-
-> +
-> +static int nvme_hwmon_read(struct device *dev, enum hwmon_sensor_types t=
-ype,
-> +                          u32 attr, int channel, long *val)
-> +{
-> +       struct nvme_hwmon_data *data =3D dev_get_drvdata(dev);
-> +       struct nvme_smart_log *log =3D &data->log;
-> +       int err;
-> +       int temp;
-> +
-> +       err =3D nvme_hwmon_get_smart_log(data);
-> +       if (err)
-> +               return err < 0 ? err : -EPROTO;
-> +
-> +       switch (attr) {
-> +       case hwmon_temp_max:
-> +               *val =3D (data->ctrl->wctemp - 273) * 1000;
-> +               break;
-> +       case hwmon_temp_crit:
-> +               *val =3D (data->ctrl->cctemp - 273) * 1000;
-> +               break;
-
-When this function is called with 'hwmon_temp_max' or 'hwmon_temp_crit',
-we don't need to call nvme_hwmon_get_smart_log() at all, do we?
-
-> +       case hwmon_temp_input:
-> +               if (!channel)
-> +                       temp =3D le16_to_cpup((__le16 *)log->temperature)=
-;
-> +               else
-> +                       temp =3D le16_to_cpu(log->temp_sensor[channel - 1=
-]);
-> +               *val =3D (temp - 273) * 1000;
-> +               break;
-> +       case hwmon_temp_crit_alarm:
-> +               *val =3D !!(log->critical_warning & NVME_SMART_CRIT_TEMPE=
-RATURE);
-> +               break;
-> +       default:
-> +               err =3D -EOPNOTSUPP;
-> +               break;
-> +       }
-> +       return err;
-> +}
