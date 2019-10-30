@@ -3,109 +3,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF43CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AEDCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A999B218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF09218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfJ3QgE (ORCPT
+        id S1726851AbfJ3QgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:36:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:37870 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfJ3QgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:36:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27E4131F;
-        Wed, 30 Oct 2019 09:36:02 -0700 (PDT)
-Received: from [10.188.222.161] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E77D53F6C4;
-        Wed, 30 Oct 2019 09:35:57 -0700 (PDT)
-Subject: Re: [PATCH v4 00/10] sched/fair: rework the CFS load balance
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Phil Auld <pauld@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>
-References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
- <20191021075038.GA27361@gmail.com>
- <CAKfTPtCcvKuf1Gt0W-BeEbQxFP_co14jdv_L5zEpS==Ecibabg@mail.gmail.com>
- <20191024123844.GB2708@pauld.bos.csb> <20191024134650.GD2708@pauld.bos.csb>
- <CAKfTPtB0VruWXq+wGgvNOMFJvvZQiZyi2AgBoJP3Uaeduu2Lqg@mail.gmail.com>
- <20191025133325.GA2421@pauld.bos.csb>
- <CAKfTPtDWV7AkzMNuJtkN-pLmDcK41LwNiX0Wr8UT+vMFHAx6Qg@mail.gmail.com>
- <20191030143937.GC1686@pauld.bos.csb>
- <564ca629-5c34-dbd1-8e64-2da6910b18a3@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <bf96be8a-2358-b9ab-b8eb-d0b8b94ed0d7@arm.com>
-Date:   Wed, 30 Oct 2019 17:35:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <564ca629-5c34-dbd1-8e64-2da6910b18a3@arm.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 30 Oct 2019 12:36:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42060 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726261AbfJ3QgH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 12:36:07 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9UGPvRL081612
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 12:36:05 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vycvwkkyp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 12:36:05 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 30 Oct 2019 16:36:03 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 30 Oct 2019 16:35:57 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9UGZtxl35848306
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 16:35:55 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD11AA405B;
+        Wed, 30 Oct 2019 16:35:55 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B9C6A4054;
+        Wed, 30 Oct 2019 16:35:53 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.134.98])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 30 Oct 2019 16:35:52 +0000 (GMT)
+Subject: Re: [PATCH v9 5/8] ima: make process_buffer_measurement() generic
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>
+Date:   Wed, 30 Oct 2019 12:35:52 -0400
+In-Reply-To: <6c94bfc0-d3ce-202b-6927-f664ee513fa9@linux.microsoft.com>
+References: <20191024034717.70552-1-nayna@linux.ibm.com>
+         <20191024034717.70552-6-nayna@linux.ibm.com>
+         <6c94bfc0-d3ce-202b-6927-f664ee513fa9@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19103016-0028-0000-0000-000003B12C1E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19103016-0029-0000-0000-00002473720A
+Message-Id: <1572453352.5707.3.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=649 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910300149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2019-10-30 at 08:22 -0700, Lakshmi Ramasubramanian wrote:
+> On 10/23/19 8:47 PM, Nayna Jain wrote:
+> 
+> Hi Nayna,
+> 
+> > process_buffer_measurement() is limited to measuring the kexec boot
+> > command line. This patch makes process_buffer_measurement() more
+> > generic, allowing it to measure other types of buffer data (e.g.
+> > blacklisted binary hashes or key hashes).
+> 
+> Now that process_buffer_measurement() is being made generic to measure 
+> any buffer, it would be good to add a tag to indicate what type of 
+> buffer is being measured.
+> 
+> For example, if the buffer is kexec command line the log could look like:
+> 
+>   "kexec_cmdline: <command line data>"
+> 
+> Similarly, if the buffer is blacklisted binary hash:
+> 
+>   "blacklist hash: <data>".
+> 
+> If the buffer is key hash:
+> 
+>   "<name of the keyring>: key data".
+> 
+> This would greatly help the consumer of the IMA log to know the type of 
+> data represented in each IMA log entry.
 
+Both the existing kexec command line and the new blacklist buffer
+measurement pass that information in the eventname.   The [PATCH 7/8]
+"ima: check against blacklisted hashes for files with modsig" patch
+description includes an example.
 
-On 30/10/2019 17:24, Dietmar Eggemann wrote:
-> On 30.10.19 15:39, Phil Auld wrote:
->> Hi Vincent,
->>
->> On Mon, Oct 28, 2019 at 02:03:15PM +0100 Vincent Guittot wrote:
-> 
-> [...]
-> 
->>>> When you say slow versus fast wakeup paths what do you mean? I'm still
->>>> learning my way around all this code.
->>>
->>> When task wakes up, we can decide to
->>> - speedup the wakeup and shorten the list of cpus and compare only
->>> prev_cpu vs this_cpu (in fact the group of cpu that share their
->>> respective LLC). That's the fast wakeup path that is used most of the
->>> time during a wakeup
->>> - or start to find the idlest CPU of the system and scan all domains.
->>> That's the slow path that is used for new tasks or when a task wakes
->>> up a lot of other tasks at the same time
-> 
-> [...]
-> 
-> Is the latter related to wake_wide()? If yes, is the SD_BALANCE_WAKE
-> flag set on the sched domains on your machines? IMHO, otherwise those
-> wakeups are not forced into the slowpath (if (unlikely(sd))?
-> 
-> I had this discussion the other day with Valentin S. on #sched and we
-> were not sure how SD_BALANCE_WAKE is set on sched domains on
-> !SD_ASYM_CPUCAPACITY systems.
-> 
+Mimi
 
-Well from the code nobody but us (asymmetric capacity systems) set
-SD_BALANCE_WAKE. I was however curious if there were some folks who set it
-with out of tree code for some reason.
-
-As Dietmar said, not having SD_BALANCE_WAKE means you'll never go through
-the slow path on wakeups, because there is no domain with SD_BALANCE_WAKE for
-the domain loop to find. Depending on your topology you most likely will
-go through it on fork or exec though.
-
-IOW wake_wide() is not really widening the wakeup scan on wakeups using
-mainline topology code (disregarding asymmetric capacity systems), which
-sounds a bit... off.
