@@ -2,235 +2,161 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30423CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226EECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90D2208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E75205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572456754;
-	bh=7YttjPf25uaH/HJ9LjN93gAC67M6cLBWLgKLTrTSIEI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HHTaaTX0SnurPcx4uEMS2fP3Pn6TKaESTXHwDADRZe14vB6CU1k3SrymL2l+dpZ8Y
-	 A2fDgRljuXlmglfaOO/lttslsviKZS5L+OxTb14c4Aq1WjD4mFYPU/Ob6GyhPPzVOo
-	 2icFcwBl+cFnvbzxMJJl2ijgRzovYPdXlGyHGhlE=
+	s=default; t=1572457084;
+	bh=I+taz+0JlPyC4PxpulZqCmxrYW7pkekzmqmeVUw2D8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zzbZ1o4lKH4FW0NSERNrLZTLnITcBTE6W12ttU2bHMItxflmJm/bCouxaoL899u32
+	 mlAcS9Eb0AHdhs2pjx5Et1b4jOyO3+Lo4xAx/DlmpEdUhqlvCEP7b+HT1zZEawr/CQ
+	 jiABEz79sTZao2fXcFpXtfDF5635Mr+kyetbnKbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfJ3Rcc (ORCPT
+        id S1727326AbfJ3RiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 13:32:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 13:38:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbfJ3Rcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 13:32:31 -0400
-Received: from localhost.localdomain (unknown [194.230.155.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727093AbfJ3RiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 13:38:01 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC06D208C0;
-        Wed, 30 Oct 2019 17:32:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E080B205ED;
+        Wed, 30 Oct 2019 17:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572456750;
-        bh=7YttjPf25uaH/HJ9LjN93gAC67M6cLBWLgKLTrTSIEI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jdyAXwcuImbI5Dnlq9yhye6rNZ1vtiYHuRiN2L8gbUdOGL5amFQAfRXBN/oNUIDXQ
-         Rr0GeyLu7xuKScUnY6gDOVragLGpAe8+i4iaUEgigkqGy5LKaadTlTVr65c6J3b4FR
-         waArH0hxloCLG3ahcBQ+cvtPM2pe2sJdvzWb5/4M=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 2/2] dt-bindings: power: Convert Samsung Exynos Power Domain bindings to json-schema
-Date:   Wed, 30 Oct 2019 18:32:16 +0100
-Message-Id: <20191030173216.5993-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191030173216.5993-1-krzk@kernel.org>
-References: <20191030173216.5993-1-krzk@kernel.org>
+        s=default; t=1572457080;
+        bh=I+taz+0JlPyC4PxpulZqCmxrYW7pkekzmqmeVUw2D8I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=soBGqRNpMSdSVNQfrQvw1BsNqq/ZVZqMgDb9RyP+UfXew7X31ml4kNM0WigxgUm08
+         tmbXvh/5RRRmf9DiKZe+D1DGwsgDELs5Tduu269t75uApg6vLRalkep2QcK7+YqQOY
+         P0eQpNClJ+pXWPX9E7Dpg4PaF+FCG0Ds2/0DEpXc=
+Date:   Wed, 30 Oct 2019 10:37:58 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Gwendal Grignou <gwendal@chromium.org>, Chao Yu <chao@kernel.org>,
+        Ryo Hashimoto <hashimoto@chromium.org>, sukhomlinov@google.com,
+        groeck@chromium.org, apronin@chromium.org,
+        linux-doc@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org
+Subject: Re: [PATCH] Revert "ext4 crypto: fix to check feature status before
+ get policy"
+Message-ID: <20191030173758.GC693@sol.localdomain>
+Mail-Followup-To: Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>, Chao Yu <chao@kernel.org>,
+        Ryo Hashimoto <hashimoto@chromium.org>, sukhomlinov@google.com,
+        groeck@chromium.org, apronin@chromium.org,
+        linux-doc@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, linux-fscrypt@vger.kernel.org,
+        linux-ext4@vger.kernel.org
+References: <20191030100618.1.Ibf7a996e4a58e84f11eec910938cfc3f9159c5de@changeid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030100618.1.Ibf7a996e4a58e84f11eec910938cfc3f9159c5de@changeid>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Samsung Exynos Soc Power Domain bindings to DT schema format using
-json-schema.
+Hi Douglas,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+On Wed, Oct 30, 2019 at 10:06:25AM -0700, Douglas Anderson wrote:
+> This reverts commit 0642ea2409f3 ("ext4 crypto: fix to check feature
+> status before get policy").
+> 
+> The commit made a clear and documented ABI change that is not backward
+> compatible.  There exists userspace code [1] that relied on the old
+> behavior and is now broken.
+> 
+> While we could entertain the idea of updating the userspace code to
+> handle the ABI change, it's my understanding that in general ABI
+> changes that break userspace are frowned upon (to put it nicely).
+> 
+> NOTE: if we for some reason do decide to entertain the idea of
+> allowing the ABI change and updating userspace, I'd appreciate any
+> help on how we should make the change.  Specifically the old code
+> relied on the different return values to differentiate between
+> "KeyState::NO_KEY" and "KeyState::NOT_SUPPORTED".  I'm no expert on
+> the ext4 encryption APIs (I just ended up here tracking down the
+> regression [2]) so I'd need a bit of handholding from someone.
+> 
+> [1] https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/master/cryptohome/dircrypto_util.cc#73
+> [2] https://crbug.com/1018265
+> 
+> Fixes: 0642ea2409f3 ("ext4 crypto: fix to check feature status before get policy")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  Documentation/filesystems/fscrypt.rst | 3 +--
+>  fs/ext4/ioctl.c                       | 2 --
+>  2 files changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
+> index 8a0700af9596..4289c29d7c5a 100644
+> --- a/Documentation/filesystems/fscrypt.rst
+> +++ b/Documentation/filesystems/fscrypt.rst
+> @@ -562,8 +562,7 @@ FS_IOC_GET_ENCRYPTION_POLICY_EX can fail with the following errors:
+>    or this kernel is too old to support FS_IOC_GET_ENCRYPTION_POLICY_EX
+>    (try FS_IOC_GET_ENCRYPTION_POLICY instead)
+>  - ``EOPNOTSUPP``: the kernel was not configured with encryption
+> -  support for this filesystem, or the filesystem superblock has not
+> -  had encryption enabled on it
+> +  support for this filesystem
+>  - ``EOVERFLOW``: the file is encrypted and uses a recognized
+>    encryption policy version, but the policy struct does not fit into
+>    the provided buffer
+> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+> index 0b7f316fd30f..13d97fb797b4 100644
+> --- a/fs/ext4/ioctl.c
+> +++ b/fs/ext4/ioctl.c
+> @@ -1181,8 +1181,6 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  #endif
+>  	}
+>  	case EXT4_IOC_GET_ENCRYPTION_POLICY:
+> -		if (!ext4_has_feature_encrypt(sb))
+> -			return -EOPNOTSUPP;
+>  		return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
+>  
 
----
+Thanks for reporting this.  Can you elaborate on exactly why returning
+EOPNOTSUPP breaks things in the Chrome OS code?  Since encryption is indeed not
+supported, why isn't "KeyState::NOT_SUPPORTED" correct?
 
-Changes since v2:
-1. Use new name of file in samsung,sysmmu.yaml and MAINTAINERS.
+Note that the state after this revert will be:
 
-Changes since v1:
-1. Indent example with four spaces (more readable),
-2. Remove unneeded types,
-3. Add missing address in example and fix the name.
----
- .../bindings/iommu/samsung,sysmmu.yaml        |  2 +-
- .../devicetree/bindings/power/pd-samsung.txt  | 45 -------------
- .../devicetree/bindings/power/pd-samsung.yaml | 66 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 4 files changed, 68 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/pd-samsung.txt
- create mode 100644 Documentation/devicetree/bindings/power/pd-samsung.yaml
+- FS_IOC_GET_ENCRYPTION_POLICY on ext4 => ENODATA
+- FS_IOC_GET_ENCRYPTION_POLICY on f2fs => EOPNOTSUPP
+- FS_IOC_GET_ENCRYPTION_POLICY_EX on ext4 => EOPNOTSUPP
+- FS_IOC_GET_ENCRYPTION_POLICY_EX on f2fs => EOPNOTSUPP
 
-diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-index ecde98da5b72..7cdd3aaa2ba4 100644
---- a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-@@ -69,7 +69,7 @@ properties:
-     description: |
-       Required if the System MMU is needed to gate its power.
-       Please refer to the following document:
--      Documentation/devicetree/bindings/power/pd-samsung.txt
-+      Documentation/devicetree/bindings/power/pd-samsung.yaml
-     maxItems: 1
- 
- required:
-diff --git a/Documentation/devicetree/bindings/power/pd-samsung.txt b/Documentation/devicetree/bindings/power/pd-samsung.txt
-deleted file mode 100644
-index 92ef355e8f64..000000000000
---- a/Documentation/devicetree/bindings/power/pd-samsung.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--* Samsung Exynos Power Domains
--
--Exynos processors include support for multiple power domains which are used
--to gate power to one or more peripherals on the processor.
--
--Required Properties:
--- compatible: should be one of the following.
--    * samsung,exynos4210-pd - for exynos4210 type power domain.
--    * samsung,exynos5433-pd - for exynos5433 type power domain.
--- reg: physical base address of the controller and length of memory mapped
--    region.
--- #power-domain-cells: number of cells in power domain specifier;
--    must be 0.
--
--Optional Properties:
--- label: Human readable string with domain name. Will be visible in userspace
--	to let user to distinguish between multiple domains in SoC.
--- power-domains: phandle pointing to the parent power domain, for more details
--		 see Documentation/devicetree/bindings/power/power_domain.txt
--
--Deprecated Properties:
--- clocks
--- clock-names
--
--Node of a device using power domains must have a power-domains property
--defined with a phandle to respective power domain.
--
--Example:
--
--	lcd0: power-domain-lcd0 {
--		compatible = "samsung,exynos4210-pd";
--		reg = <0x10023C00 0x10>;
--		#power-domain-cells = <0>;
--		label = "LCD0";
--	};
--
--	mfc_pd: power-domain@10044060 {
--		compatible = "samsung,exynos4210-pd";
--		reg = <0x10044060 0x20>;
--		#power-domain-cells = <0>;
--		label = "MFC";
--	};
--
--See Documentation/devicetree/bindings/power/power_domain.txt for description
--of consumer-side bindings.
-diff --git a/Documentation/devicetree/bindings/power/pd-samsung.yaml b/Documentation/devicetree/bindings/power/pd-samsung.yaml
-new file mode 100644
-index 000000000000..09bdd96c1ec1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/pd-samsung.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/pd-samsung.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos SoC Power Domains
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+description: |+
-+  Exynos processors include support for multiple power domains which are used
-+  to gate power to one or more peripherals on the processor.
-+
-+allOf:
-+  - $ref: power-domain.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - samsung,exynos4210-pd
-+      - samsung,exynos5433-pd
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    deprecated: true
-+    maxItems: 1
-+
-+  clock-names:
-+    deprecated: true
-+    maxItems: 1
-+
-+  label:
-+    description:
-+      Human readable string with domain name. Will be visible in userspace
-+      to let user to distinguish between multiple domains in SoC.
-+
-+  "#power-domain-cells":
-+    const: 0
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - "#power-domain-cells"
-+  - reg
-+
-+examples:
-+  - |
-+    lcd0_pd: power-domain@10023c80 {
-+        compatible = "samsung,exynos4210-pd";
-+        reg = <0x10023c80 0x20>;
-+        #power-domain-cells = <0>;
-+        label = "LCD0";
-+    };
-+
-+    mfc_pd: power-domain@10044060 {
-+        compatible = "samsung,exynos4210-pd";
-+        reg = <0x10044060 0x20>;
-+        #power-domain-cells = <0>;
-+        label = "MFC";
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8fde5aa64bda..7126d3e079a4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2258,7 +2258,7 @@ F:	drivers/soc/samsung/
- F:	include/linux/soc/samsung/
- F:	Documentation/arm/samsung/
- F:	Documentation/devicetree/bindings/arm/samsung/
--F:	Documentation/devicetree/bindings/power/pd-samsung.txt
-+F:	Documentation/devicetree/bindings/power/pd-samsung.yaml
- N:	exynos
- 
- ARM/SAMSUNG MOBILE MACHINE SUPPORT
--- 
-2.17.1
+So if this code change is made, the documentation would need to be updated to
+explain that the error code from FS_IOC_GET_ENCRYPTION_POLICY is
+filesystem-specific (which we'd really like to avoid...), and that
+FS_IOC_GET_ENCRYPTION_POLICY_EX handles this case differently.  Or else the
+other three would need to be changed to ENODATA -- which for
+FS_IOC_GET_ENCRYPTION_POLICY on f2fs would be an ABI break in its own right,
+though it's possible that no one would notice.
 
+Is your proposal to keep the error filesystem-specific for now?
+
+BTW, the crbug.com link is not publicly viewable, so should not be included in
+the commit message.
+
+- Eric
