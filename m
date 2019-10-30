@@ -6,50 +6,52 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548A2CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AF7CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3773A20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FB22083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfJ3MOV (ORCPT
+        id S1726825AbfJ3MQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:14:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43871 "EHLO ozlabs.org"
+        Wed, 30 Oct 2019 08:16:08 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36895 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfJ3MOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:14:20 -0400
+        id S1726088AbfJ3MQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 08:16:07 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4736nk4Wzwz9sPj; Wed, 30 Oct 2019 23:14:18 +1100 (AEDT)
+        id 4736qn4LRgz9sPj; Wed, 30 Oct 2019 23:16:05 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 29674a1c71be710f8418468aa6a8addd6d1aba1c
-In-Reply-To: <1568733750-14580-1-git-send-email-cai@lca.pw>
-To:     Qian Cai <cai@lca.pw>
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxram@us.ibm.com, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, paulus@samba.org,
+X-powerpc-patch-commit: 05d9a952832cb206a32e3705eff6edebdb2207e7
+In-Reply-To: <20190911163433.12822-1-bauerman@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] powerpc/pkeys: remove unused pkey_allows_readwrite
-Message-Id: <4736nk4Wzwz9sPj@ozlabs.org>
-Date:   Wed, 30 Oct 2019 23:14:18 +1100 (AEDT)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: Re: [PATCH] powerpc/prom_init: Undo relocation before entering secure mode
+Message-Id: <4736qn4LRgz9sPj@ozlabs.org>
+Date:   Wed, 30 Oct 2019 23:16:05 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-17 at 15:22:30 UTC, Qian Cai wrote:
-> pkey_allows_readwrite() was first introduced in the commit 5586cf61e108
-> ("powerpc: introduce execute-only pkey"), but the usage was removed
-> entirely in the commit a4fcc877d4e1 ("powerpc/pkeys: Preallocate
-> execute-only key").
+On Wed, 2019-09-11 at 16:34:33 UTC, Thiago Jung Bauermann wrote:
+> The ultravisor will do an integrity check of the kernel image but we
+> relocated it so the check will fail. Restore the original image by
+> relocating it back to the kernel virtual base address.
 > 
-> Found by the "-Wunused-function" compiler warning flag.
+> This works because during build vmlinux is linked with an expected virtual
+> runtime address of KERNELBASE.
 > 
-> Fixes: a4fcc877d4e1 ("powerpc/pkeys: Preallocate execute-only key")
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> Fixes: 6a9c930bd775 ("powerpc/prom_init: Add the ESM call to prom_init")
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-Applied to powerpc next, thanks.
+Applied to powerpc fixes, thanks.
 
-https://git.kernel.org/powerpc/c/29674a1c71be710f8418468aa6a8addd6d1aba1c
+https://git.kernel.org/powerpc/c/05d9a952832cb206a32e3705eff6edebdb2207e7
 
 cheers
