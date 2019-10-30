@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923B7CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A4FCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F53E20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CC620656
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450752;
-	bh=eICZE3qefE9ZCdHbOAwX78xPp8umXPpj1jH6Sgk+c9w=;
+	s=default; t=1572450756;
+	bh=PPt6GBJsSbXbytF2kq1k6abXEUt6ZqOmQYI4oa1Cr6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0BujVgCAHSdgkqv6vPPnjtBD1vB4va8N4KFW0eZAgLzFbOWgBXjQZFvVJuYVDvxUT
-	 gSy7hwV7bEK7Vm05kwx6+SX6z2tuV6vbGA8T5TuwnzGuQJKT20XLUHyTVweIE54v9u
-	 agvwkzAJ7L95CCQRkhJa7sLRq5ZrX617YPAk0xQA=
+	b=vYWKNCQ5mJf/Ng4NnagWgh4Cb/Jbk/XMfIoZntZCnGKNFiDFG8dQDjxf9Rs6hVbMj
+	 UspnCFHmM172CR1cW5jpD1vs3RQTexFyfe6652iYIk9p5l9MZiTKOtJslnTxBlvN9o
+	 mig7Q2aENLOPcCjiJen8vC2ugn+bvcqCBi5XqybU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfJ3Pwa (ORCPT
+        id S1727939AbfJ3PwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53462 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:52:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727547AbfJ3Pw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:52:26 -0400
+        id S1727429AbfJ3PwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:52:03 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1DC620856;
-        Wed, 30 Oct 2019 15:52:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3186D20874;
+        Wed, 30 Oct 2019 15:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450746;
-        bh=eICZE3qefE9ZCdHbOAwX78xPp8umXPpj1jH6Sgk+c9w=;
+        s=default; t=1572450722;
+        bh=PPt6GBJsSbXbytF2kq1k6abXEUt6ZqOmQYI4oa1Cr6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LAwxMTJXJs99KBdfn7wz+6vXbxn9d39NMn8GVSZUg/XU2lsoBauu8Q10eA0CxdITi
-         rYJ5HMx8UqY99oQ523i9rjMB+PhXeFj9UVF+6Wil4njLoPw3DvXDHomAtpK9uJB5de
-         hA8cFkxi1Ms2QrFiPdSHHCUx2qcAUDGupXRy0UXE=
+        b=Sa1YnqfCCysbP9wnh1mo9yldIb/HfBhOmdk32ev9MOkqrH5JJRAAUgAGh89jvDJdk
+         06v3S9QDS9orpTapSVVuLBgTt9Sfmypbaqk7vjLZs69DvYY8JPatifo1Yt9Mola39N
+         +z31O1hD2E72DYf0Ul0ZeX8MqzlBfBcqKT12AJJI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Soeren Moch <smoch@web.de>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 41/81] arm64: dts: rockchip: fix RockPro64 sdmmc settings
-Date:   Wed, 30 Oct 2019 11:48:47 -0400
-Message-Id: <20191030154928.9432-41-sashal@kernel.org>
+Cc:     Allen Pais <allen.pais@oracle.com>, Martin Wilck <mwilck@suse.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 35/81] scsi: qla2xxx: fix a potential NULL pointer dereference
+Date:   Wed, 30 Oct 2019 11:48:41 -0400
+Message-Id: <20191030154928.9432-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -59,37 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Soeren Moch <smoch@web.de>
+From: Allen Pais <allen.pais@oracle.com>
 
-[ Upstream commit 5234c14531152702a9f3e575cb552b7e9cea9f94 ]
+[ Upstream commit 35a79a63517981a8aea395497c548776347deda8 ]
 
-According to the RockPro64 schematic [1] the rk3399 sdmmc controller is
-connected to a microSD (TF card) slot. Remove the cap-mmc-highspeed
-property of the sdmmc controller, since no mmc card can be connected here.
+alloc_workqueue is not checked for errors and as a result a potential
+NULL dereference could occur.
 
-[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
-
-Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
-Signed-off-by: Soeren Moch <smoch@web.de>
-Link: https://lore.kernel.org/r/20191004203213.4995-1-smoch@web.de
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/1568824618-4366-1-git-send-email-allen.pais@oracle.com
+Signed-off-by: Allen Pais <allen.pais@oracle.com>
+Reviewed-by: Martin Wilck <mwilck@suse.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index 1ff617230f6c4..99d65d2fca5e1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -613,7 +613,6 @@
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 2835afbd2edc7..04cf6986eb8e6 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3233,6 +3233,10 @@ qla2x00_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	    req->req_q_in, req->req_q_out, rsp->rsp_q_in, rsp->rsp_q_out);
  
- &sdmmc {
- 	bus-width = <4>;
--	cap-mmc-highspeed;
- 	cap-sd-highspeed;
- 	cd-gpios = <&gpio0 7 GPIO_ACTIVE_LOW>;
- 	disable-wp;
+ 	ha->wq = alloc_workqueue("qla2xxx_wq", 0, 0);
++	if (unlikely(!ha->wq)) {
++		ret = -ENOMEM;
++		goto probe_failed;
++	}
+ 
+ 	if (ha->isp_ops->initialize_adapter(base_vha)) {
+ 		ql_log(ql_log_fatal, base_vha, 0x00d6,
 -- 
 2.20.1
 
