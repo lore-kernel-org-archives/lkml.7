@@ -2,271 +2,847 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8F8CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5727ACA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A218220874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1049220874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:53:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v9J4LHWX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LspXz30O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfJ3Gvk (ORCPT
+        id S1727482AbfJ3GxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 02:51:40 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37661 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfJ3Gvk (ORCPT
+        Wed, 30 Oct 2019 02:53:04 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60448 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727119AbfJ3GxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 02:51:40 -0400
-Received: by mail-wr1-f68.google.com with SMTP id e11so966084wrv.4
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 23:51:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yn686uGyou8YdPj2afqMy6ILfgVg96dAEC2ecmMx30s=;
-        b=v9J4LHWXdkwDTW1Po5zY2ZJomfGB32z00XvxtzvOvB+77Cq1dQQnN16bfSxC8A3UCR
-         rj+u9dA1jk7csVRPlrQRs3u7ozblbJ0TcV8doPmVNG1TbLQuKGKtLRTa/p2FKdmqi3eY
-         HrtOX3oWAw95ebqhFGgVxeflhD0RDsHOWGWkctksiaOAuJoz4VpXFErTIKujTI6VyxKC
-         jB/RNzPm5i9RE+DsPKSgqZ925QGyHvpxajw0ZR4C+z0PI4rh/7H2D1P+lRxVzRdk1KJU
-         qpthDOkzc92g66xzWpX05uctvD9gzFCb7VbKX5U+wZSKVGCaqAcS02g4U4SvcvuRrBvb
-         BcIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yn686uGyou8YdPj2afqMy6ILfgVg96dAEC2ecmMx30s=;
-        b=oH47C4x03VgRvkICBDowYXsaWVBYJFVzL9gD4fGLnPiIoRqJ0w9aad8T/uR3Ez2x4b
-         ELi9FcaZbk8KVBFIWAObXMyLyx4KYX3HzcAba6luSuRTq9JwXIquloD0CP8A8AJbaKHS
-         nenKQRHIgTLun9Tr7jGterbAW6ccMxB3otBYrDRY2QUBXPmx/jUnbHS82lpSoQ8avnNM
-         Kw9tsbzxzYluT53chnVb2Xt2D/I1uWj4rbCkanUsY6efsFPw6kcyZURl/fNr2RSMW72l
-         r2l4E2VHzbXorYaNFsxl9DTk8l0zzmpFF3dMUmAEEeDViEMlFAi3BTzfC9FqDM6I/qfg
-         X2OQ==
-X-Gm-Message-State: APjAAAXE5SzMRZ+9QjLGHT0UjtOURZ50UDTr272ifWRbtYe95/x8vda3
-        acRG6GhNj91KyqeXVN+tqGJ/iA==
-X-Google-Smtp-Source: APXvYqySw+R/IguJr0LWo+m0T2yfojfvQBkiF2qJYwoh3I1CcnHCv9NCVr/Qgvbb/cAXrFfbxDcWsw==
-X-Received: by 2002:a5d:4d0f:: with SMTP id z15mr22393695wrt.195.1572418298256;
-        Tue, 29 Oct 2019 23:51:38 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:7037:cc11:eb05:9c6a? ([2a01:e34:ed2f:f020:7037:cc11:eb05:9c6a])
-        by smtp.googlemail.com with ESMTPSA id s5sm1158543wmj.37.2019.10.29.23.51.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 23:51:37 -0700 (PDT)
-Subject: Re: [PATCH] of-thermal: Disable polling when interrupt property is
- found in DT
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        swboyd@chromium.org, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>
-Cc:     linux-pm@vger.kernel.org
-References: <cover.1571181041.git.amit.kucheria@linaro.org>
- <1b53ef537203e629328285b4597a09e4a586d688.1571181041.git.amit.kucheria@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ed9ef9e3-a8c3-90bf-4e71-8959b2ff94d2@linaro.org>
-Date:   Wed, 30 Oct 2019 07:51:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 30 Oct 2019 02:53:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572418380;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+QwaX1cTcMJpIPw4pGz+8aksK5AS2TfxLcxj423/inA=;
+        b=LspXz30OHePO3mUAltnXyVvnnAkYKzucVIqck6smuAiX5G5ULmy10/a9tf6GOOF3afN1VO
+        fRflbBVHcMJYFVpPVe8Xsu+JzaJ1o/96G2n8gi+VctJ2CNmn3Ye7WoWxYcMkjpfYSmeB70
+        N15+V1mhYqfmBF2BVuokP1l1zqbnoO0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-KmHGW5_5Ok-Y0CObsnv6oA-1; Wed, 30 Oct 2019 02:52:56 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D93F6180496F;
+        Wed, 30 Oct 2019 06:52:52 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-223.pek2.redhat.com [10.72.12.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1EE775D9C3;
+        Wed, 30 Oct 2019 06:51:07 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V6 6/6] docs: sample driver to demonstrate how to implement virtio-mdev framework
+Date:   Wed, 30 Oct 2019 14:44:44 +0800
+Message-Id: <20191030064444.21166-7-jasowang@redhat.com>
+In-Reply-To: <20191030064444.21166-1-jasowang@redhat.com>
+References: <20191030064444.21166-1-jasowang@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1b53ef537203e629328285b4597a09e4a586d688.1571181041.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: KmHGW5_5Ok-Y0CObsnv6oA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/10/2019 01:13, Amit Kucheria wrote:
-> Currently, in order to enable interrupt-only mode, one must set
-> polling-delay-passive and polling-delay properties in the DT to 0,
-> otherwise the thermal framework will continue to setup a periodic timers
-> to monitor the thermal zones.
-> 
-> Change the behaviour, so that on DT-based systems, we no longer have to
-> set the properties to zero if we find an 'interrupt' property in the
-> sensor.
-> 
-> Following data shows the number of times
-> thermal_zone_device_set_polling() is invoked with and without this
-> patch. So the patch achieves the same behaviour as setting the delay
-> properties to 0.
-> 
-> Current behaviour (without setting delay properties to 0):
->   FUNC                              COUNT
->   thermal_zone_device_update          302
->   thermal_zone_device_set_pollin     7911
-> 
-> Current behaviour (with delay properties set to 0):
->   FUNC                              COUNT
->   thermal_zone_device_update            3
->   thermal_zone_device_set_pollin        6
-> 
-> With this patch (without setting delay properties to 0):
->   FUNC                              COUNT
->   thermal_zone_device_update            3
->   thermal_zone_device_set_pollin        6
-> 
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  drivers/thermal/of-thermal.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-> index dc5093be553e..79ad587462b1 100644
-> --- a/drivers/thermal/of-thermal.c
-> +++ b/drivers/thermal/of-thermal.c
-> @@ -412,7 +412,8 @@ static struct thermal_zone_device_ops of_thermal_ops = {
->  static struct thermal_zone_device *
->  thermal_zone_of_add_sensor(struct device_node *zone,
->  			   struct device_node *sensor, void *data,
-> -			   const struct thermal_zone_of_device_ops *ops)
-> +			   const struct thermal_zone_of_device_ops *ops,
-> +			   bool force_interrupts)
->  {
->  	struct thermal_zone_device *tzd;
->  	struct __thermal_zone *tz;
-> @@ -433,6 +434,11 @@ thermal_zone_of_add_sensor(struct device_node *zone,
->  	tzd->ops->get_temp = of_thermal_get_temp;
->  	tzd->ops->get_trend = of_thermal_get_trend;
->  
-> +	if (force_interrupts) {
-> +		tz->passive_delay = 0;
-> +		tz->polling_delay = 0;
-> +	}
-> +
->  	/*
->  	 * The thermal zone core will calculate the window if they have set the
->  	 * optional set_trips pointer.
-> @@ -486,6 +492,7 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
->  {
->  	struct device_node *np, *child, *sensor_np;
->  	struct thermal_zone_device *tzd = ERR_PTR(-ENODEV);
-> +	bool force_interrupts = false;
->  
->  	np = of_find_node_by_name(NULL, "thermal-zones");
->  	if (!np)
-> @@ -498,6 +505,9 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
->  
->  	sensor_np = of_node_get(dev->of_node);
->  
-> +	if (of_find_property(sensor_np, "interrupts", NULL))
-> +		force_interrupts = true;
-> +
+This sample driver creates mdev device that simulate virtio net device
+over virtio mdev transport. The device is implemented through vringh
+and workqueue. A device specific dma ops is to make sure HVA is used
+directly as the IOVA. This should be sufficient for kernel virtio
+driver to work.
 
-This is hackish. It does cover only DT drivers.
+Only 'virtio' type is supported right now. I plan to add 'vhost' type
+on top which requires some virtual IOMMU implemented in this sample
+driver.
 
-It would be cleaner to add a specific flag describing the thermal sensor
-driver mode and then in the core code do not start the timers if the
-associated works in interrupt.
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ MAINTAINERS                |   1 +
+ samples/Kconfig            |   7 +
+ samples/vfio-mdev/Makefile |   1 +
+ samples/vfio-mdev/mvnet.c  | 691 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 700 insertions(+)
+ create mode 100644 samples/vfio-mdev/mvnet.c
 
-Moreover the interrupt mode can be used to activate faster the passive
-delay monitoring after reaching a threshold like the hikey and hikey960.
-So this patch will disable the mitigation on those boards. This is
-another argument to add flags for the thermal sensor mode.
-
-[ ... ]
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9e10ae9c2b4d..8b17927a81fd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17248,6 +17248,7 @@ F:=09include/linux/virtio*.h
+ F:=09include/uapi/linux/virtio_*.h
+ F:=09drivers/crypto/virtio/
+ F:=09mm/balloon_compaction.c
++F:=09samples/vfio-mdev/mvnet.c
+=20
+ VIRTIO BLOCK AND SCSI DRIVERS
+ M:=09"Michael S. Tsirkin" <mst@redhat.com>
+diff --git a/samples/Kconfig b/samples/Kconfig
+index c8dacb4dda80..a1a1ca2c00b7 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -131,6 +131,13 @@ config SAMPLE_VFIO_MDEV_MDPY
+ =09  mediated device.  It is a simple framebuffer and supports
+ =09  the region display interface (VFIO_GFX_PLANE_TYPE_REGION).
+=20
++config SAMPLE_VIRTIO_MDEV_NET
++        tristate "Build virtio mdev net example mediated device sample cod=
+e -- loadable modules only"
++=09depends on VIRTIO_MDEV_DEVICE && VHOST_RING && m
++=09help
++=09  Build a networking sample device for use as a virtio
++=09  mediated device.
++
+ config SAMPLE_VFIO_MDEV_MDPY_FB
+ =09tristate "Build VFIO mdpy example guest fbdev driver -- loadable module=
+ only"
+ =09depends on FB && m
+diff --git a/samples/vfio-mdev/Makefile b/samples/vfio-mdev/Makefile
+index 10d179c4fdeb..f34af90ed0a0 100644
+--- a/samples/vfio-mdev/Makefile
++++ b/samples/vfio-mdev/Makefile
+@@ -3,3 +3,4 @@ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MTTY) +=3D mtty.o
+ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MDPY) +=3D mdpy.o
+ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MDPY_FB) +=3D mdpy-fb.o
+ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MBOCHS) +=3D mbochs.o
++obj-$(CONFIG_SAMPLE_VIRTIO_MDEV_NET) +=3D mvnet.o
+diff --git a/samples/vfio-mdev/mvnet.c b/samples/vfio-mdev/mvnet.c
+new file mode 100644
+index 000000000000..a2a902d59fb7
+--- /dev/null
++++ b/samples/vfio-mdev/mvnet.c
+@@ -0,0 +1,691 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Mediated virtual virtio-net device driver.
++ *
++ * Copyright (c) 2019, Red Hat Inc. All rights reserved.
++ *     Author: Jason Wang <jasowang@redhat.com>
++ *
++ * Sample driver that creates mdev device that simulates ethernet loopback
++ * device.
++ *
++ * Usage:
++ *
++ * # modprobe virtio_mdev
++ * # modprobe mvnet
++ * # cd /sys/devices/virtual/mvnet/mvnet/mdev_supported_types/mvnet-virtio
++ * # echo "83b8f4f2-509f-382f-3c1e-e6bfe0fa1001" > ./create
++ * # cd devices/83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
++ * # ls -d virtio0
++ * virtio0
++ */
++
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/fs.h>
++#include <linux/poll.h>
++#include <linux/slab.h>
++#include <linux/sched.h>
++#include <linux/wait.h>
++#include <linux/uuid.h>
++#include <linux/iommu.h>
++#include <linux/sysfs.h>
++#include <linux/file.h>
++#include <linux/etherdevice.h>
++#include <linux/mdev.h>
++#include <linux/vringh.h>
++#include <linux/virtio_mdev_ops.h>
++#include <uapi/linux/virtio_config.h>
++#include <uapi/linux/virtio_net.h>
++
++#define VERSION_STRING  "0.1"
++#define DRIVER_AUTHOR   "Red Hat Corporation"
++
++#define MVNET_CLASS_NAME "mvnet"
++#define MVNET_NAME       "mvnet"
++
++/*
++ * Global Structures
++ */
++
++static struct mvnet_dev {
++=09struct class=09*vd_class;
++=09struct idr=09vd_idr;
++=09struct device=09dev;
++} mvnet_dev;
++
++struct mvnet_virtqueue {
++=09struct vringh vring;
++=09struct vringh_kiov iov;
++=09unsigned short head;
++=09bool ready;
++=09u64 desc_addr;
++=09u64 device_addr;
++=09u64 driver_addr;
++=09u32 num;
++=09void *private;
++=09irqreturn_t (*cb)(void *data);
++};
++
++#define MVNET_QUEUE_ALIGN PAGE_SIZE
++#define MVNET_QUEUE_MAX 256
++#define MVNET_DEVICE_ID 0x1
++#define MVNET_VENDOR_ID 0
++
++u64 mvnet_features =3D (1ULL << VIRTIO_F_ANY_LAYOUT) |
++=09=09     (1ULL << VIRTIO_F_VERSION_1) |
++=09=09     (1ULL << VIRTIO_F_IOMMU_PLATFORM);
++
++/* State of each mdev device */
++struct mvnet_state {
++=09struct mvnet_virtqueue vqs[2];
++=09struct work_struct work;
++=09spinlock_t lock;
++=09struct mdev_device *mdev;
++=09struct virtio_net_config config;
++=09void *buffer;
++=09u32 status;
++=09u32 generation;
++=09u64 features;
++=09struct list_head next;
++};
++
++static struct mutex mdev_list_lock;
++static struct list_head mdev_devices_list;
++
++static void mvnet_queue_ready(struct mvnet_state *mvnet, unsigned int idx)
++{
++=09struct mvnet_virtqueue *vq =3D &mvnet->vqs[idx];
++=09int ret;
++
++=09ret =3D vringh_init_kern(&vq->vring, mvnet_features, MVNET_QUEUE_MAX,
++=09=09=09       false, (struct vring_desc *)vq->desc_addr,
++=09=09=09       (struct vring_avail *)vq->driver_addr,
++=09=09=09       (struct vring_used *)vq->device_addr);
++}
++
++static void mvnet_vq_reset(struct mvnet_virtqueue *vq)
++{
++=09vq->ready =3D 0;
++=09vq->desc_addr =3D 0;
++=09vq->driver_addr =3D 0;
++=09vq->device_addr =3D 0;
++=09vq->cb =3D NULL;
++=09vq->private =3D NULL;
++=09vringh_init_kern(&vq->vring, mvnet_features, MVNET_QUEUE_MAX,
++=09=09=09false, 0, 0, 0);
++}
++
++static void mvnet_reset(struct mvnet_state *mvnet)
++{
++=09int i;
++
++=09for (i =3D 0; i < 2; i++)
++=09=09mvnet_vq_reset(&mvnet->vqs[i]);
++
++=09mvnet->features =3D 0;
++=09mvnet->status =3D 0;
++=09++mvnet->generation;
++}
++
++static void mvnet_work(struct work_struct *work)
++{
++=09struct mvnet_state *mvnet =3D container_of(work, struct
++=09=09=09=09=09=09 mvnet_state, work);
++=09struct mvnet_virtqueue *txq =3D &mvnet->vqs[1];
++=09struct mvnet_virtqueue *rxq =3D &mvnet->vqs[0];
++=09size_t read, write, total_write;
++=09int err;
++=09int pkts =3D 0;
++
++=09spin_lock(&mvnet->lock);
++
++=09if (!txq->ready || !rxq->ready)
++=09=09goto out;
++
++=09while (true) {
++=09=09total_write =3D 0;
++=09=09err =3D vringh_getdesc_kern(&txq->vring, &txq->iov, NULL,
++=09=09=09=09=09  &txq->head, GFP_ATOMIC);
++=09=09if (err <=3D 0)
++=09=09=09break;
++
++=09=09err =3D vringh_getdesc_kern(&rxq->vring, NULL, &rxq->iov,
++=09=09=09=09=09  &rxq->head, GFP_ATOMIC);
++=09=09if (err <=3D 0) {
++=09=09=09vringh_complete_kern(&txq->vring, txq->head, 0);
++=09=09=09break;
++=09=09}
++
++=09=09while (true) {
++=09=09=09read =3D vringh_iov_pull_kern(&txq->iov, mvnet->buffer,
++=09=09=09=09=09=09    PAGE_SIZE);
++=09=09=09if (read <=3D 0)
++=09=09=09=09break;
++
++=09=09=09write =3D vringh_iov_push_kern(&rxq->iov, mvnet->buffer,
++=09=09=09=09=09=09     read);
++=09=09=09if (write <=3D 0)
++=09=09=09=09break;
++
++=09=09=09total_write +=3D write;
++=09=09}
++
++=09=09/* Make sure data is wrote before advancing index */
++=09=09smp_wmb();
++
++=09=09vringh_complete_kern(&txq->vring, txq->head, 0);
++=09=09vringh_complete_kern(&rxq->vring, rxq->head, total_write);
++
++=09=09/* Make sure used is visible before rasing the interrupt. */
++=09=09smp_wmb();
++
++=09=09local_bh_disable();
++=09=09if (txq->cb)
++=09=09=09txq->cb(txq->private);
++=09=09if (rxq->cb)
++=09=09=09rxq->cb(rxq->private);
++=09=09local_bh_enable();
++
++=09=09if (++pkts > 4) {
++=09=09=09schedule_work(&mvnet->work);
++=09=09=09goto out;
++=09=09}
++=09}
++
++out:
++=09spin_unlock(&mvnet->lock);
++}
++
++static dma_addr_t mvnet_map_page(struct device *dev, struct page *page,
++=09=09=09=09 unsigned long offset, size_t size,
++=09=09=09=09 enum dma_data_direction dir,
++=09=09=09=09 unsigned long attrs)
++{
++=09/* Vringh can only use HVA */
++=09return (dma_addr_t)(page_address(page) + offset);
++}
++
++static void mvnet_unmap_page(struct device *dev, dma_addr_t dma_addr,
++=09=09=09     size_t size, enum dma_data_direction dir,
++=09=09=09     unsigned long attrs)
++{
++}
++
++static void *mvnet_alloc_coherent(struct device *dev, size_t size,
++=09=09=09=09  dma_addr_t *dma_addr, gfp_t flag,
++=09=09=09=09  unsigned long attrs)
++{
++=09void *addr =3D kmalloc(size, flag);
++
++=09if (addr =3D=3D NULL)
++=09=09*dma_addr =3D DMA_MAPPING_ERROR;
++=09else
++=09=09*dma_addr =3D (dma_addr_t) addr;
++
++=09return addr;
++}
++
++static void mvnet_free_coherent(struct device *dev, size_t size,
++=09=09=09=09void *vaddr, dma_addr_t dma_addr,
++=09=09=09=09unsigned long attrs)
++{
++=09kfree((void *)dma_addr);
++}
++
++static const struct dma_map_ops mvnet_dma_ops =3D {
++=09.map_page =3D mvnet_map_page,
++=09.unmap_page =3D mvnet_unmap_page,
++=09.alloc =3D mvnet_alloc_coherent,
++=09.free =3D mvnet_free_coherent,
++};
++
++static const struct virtio_mdev_device_ops virtio_mdev_ops;
++
++static int mvnet_create(struct kobject *kobj, struct mdev_device *mdev)
++{
++=09struct mvnet_state *mvnet;
++=09struct virtio_net_config *config;
++=09struct device *dev =3D mdev_dev(mdev);
++
++=09if (!mdev)
++=09=09return -EINVAL;
++
++=09mvnet =3D kzalloc(sizeof(struct mvnet_state), GFP_KERNEL);
++=09if (mvnet =3D=3D NULL)
++=09=09return -ENOMEM;
++
++=09mvnet->buffer =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
++=09if (!mvnet->buffer) {
++=09=09kfree(mvnet);
++=09=09return -ENOMEM;
++=09}
++
++=09config =3D &mvnet->config;
++=09config->mtu =3D 1500;
++=09config->status =3D VIRTIO_NET_S_LINK_UP;
++=09eth_random_addr(config->mac);
++
++=09INIT_WORK(&mvnet->work, mvnet_work);
++
++=09spin_lock_init(&mvnet->lock);
++=09mvnet->mdev =3D mdev;
++=09mdev_set_drvdata(mdev, mvnet);
++
++=09mutex_lock(&mdev_list_lock);
++=09list_add(&mvnet->next, &mdev_devices_list);
++=09mutex_unlock(&mdev_list_lock);
++
++=09dev->coherent_dma_mask =3D DMA_BIT_MASK(64);
++=09set_dma_ops(dev, &mvnet_dma_ops);
++
++=09mdev_set_virtio_ops(mdev, &virtio_mdev_ops);
++
++=09return 0;
++}
++
++static int mvnet_remove(struct mdev_device *mdev)
++{
++=09struct mvnet_state *mds, *tmp_mds;
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++=09int ret =3D -EINVAL;
++
++=09mutex_lock(&mdev_list_lock);
++=09list_for_each_entry_safe(mds, tmp_mds, &mdev_devices_list, next) {
++=09=09if (mvnet =3D=3D mds) {
++=09=09=09list_del(&mvnet->next);
++=09=09=09mdev_set_drvdata(mdev, NULL);
++=09=09=09kfree(mvnet->buffer);
++=09=09=09kfree(mvnet);
++=09=09=09ret =3D 0;
++=09=09=09break;
++=09=09}
++=09}
++=09mutex_unlock(&mdev_list_lock);
++
++=09return ret;
++}
++
++static ssize_t
++sample_mvnet_dev_show(struct device *dev, struct device_attribute *attr,
++=09=09     char *buf)
++{
++=09if (mdev_from_dev(dev))
++=09=09return sprintf(buf, "This is MDEV %s\n", dev_name(dev));
++
++=09return sprintf(buf, "\n");
++}
++
++static DEVICE_ATTR_RO(sample_mvnet_dev);
++
++static struct attribute *mvnet_dev_attrs[] =3D {
++=09&dev_attr_sample_mvnet_dev.attr,
++=09NULL,
++};
++
++static const struct attribute_group mvnet_dev_group =3D {
++=09.name  =3D "mvnet_dev",
++=09.attrs =3D mvnet_dev_attrs,
++};
++
++static const struct attribute_group *mvnet_dev_groups[] =3D {
++=09&mvnet_dev_group,
++=09NULL,
++};
++
++static ssize_t
++sample_mdev_dev_show(struct device *dev, struct device_attribute *attr,
++=09=09     char *buf)
++{
++=09if (mdev_from_dev(dev))
++=09=09return sprintf(buf, "This is MDEV %s\n", dev_name(dev));
++
++=09return sprintf(buf, "\n");
++}
++
++static DEVICE_ATTR_RO(sample_mdev_dev);
++
++static struct attribute *mdev_dev_attrs[] =3D {
++=09&dev_attr_sample_mdev_dev.attr,
++=09NULL,
++};
++
++static const struct attribute_group mdev_dev_group =3D {
++=09.name  =3D "vendor",
++=09.attrs =3D mdev_dev_attrs,
++};
++
++static const struct attribute_group *mdev_dev_groups[] =3D {
++=09&mdev_dev_group,
++=09NULL,
++};
++
++#define MVNET_STRING_LEN 16
++
++static ssize_t
++name_show(struct kobject *kobj, struct device *dev, char *buf)
++{
++=09char name[MVNET_STRING_LEN];
++=09const char *name_str =3D "virtio-net";
++
++=09snprintf(name, MVNET_STRING_LEN, "%s", dev_driver_string(dev));
++=09if (!strcmp(kobj->name, name))
++=09=09return sprintf(buf, "%s\n", name_str);
++
++=09return -EINVAL;
++}
++
++static MDEV_TYPE_ATTR_RO(name);
++
++static ssize_t
++available_instances_show(struct kobject *kobj, struct device *dev, char *b=
+uf)
++{
++=09return sprintf(buf, "%d\n", INT_MAX);
++}
++
++static MDEV_TYPE_ATTR_RO(available_instances);
++
++static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
++=09=09=09       char *buf)
++{
++=09return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_STRING);
++}
++
++static MDEV_TYPE_ATTR_RO(device_api);
++
++static struct attribute *mdev_types_attrs[] =3D {
++=09&mdev_type_attr_name.attr,
++=09&mdev_type_attr_device_api.attr,
++=09&mdev_type_attr_available_instances.attr,
++=09NULL,
++};
++
++static struct attribute_group mdev_type_group =3D {
++=09.name  =3D "virtio",
++=09.attrs =3D mdev_types_attrs,
++};
++
++/* TBD: "vhost" type */
++
++static struct attribute_group *mdev_type_groups[] =3D {
++=09&mdev_type_group,
++=09NULL,
++};
++
++static int mvnet_set_vq_address(struct mdev_device *mdev, u16 idx,
++=09=09=09=09u64 desc_area, u64 driver_area, u64 device_area)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++=09struct mvnet_virtqueue *vq =3D &mvnet->vqs[idx];
++
++=09vq->desc_addr =3D desc_area;
++=09vq->driver_addr =3D driver_area;
++=09vq->device_addr =3D device_area;
++
++=09return 0;
++}
++
++static void mvnet_set_vq_num(struct mdev_device *mdev, u16 idx, u32 num)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++=09struct mvnet_virtqueue *vq =3D &mvnet->vqs[idx];
++
++=09vq->num =3D num;
++}
++
++static void mvnet_kick_vq(struct mdev_device *mdev, u16 idx)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++=09struct mvnet_virtqueue *vq =3D &mvnet->vqs[idx];
++
++=09if (vq->ready)
++=09=09schedule_work(&mvnet->work);
++}
++
++static void mvnet_set_vq_cb(struct mdev_device *mdev, u16 idx,
++=09=09=09    struct virtio_mdev_callback *cb)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++=09struct mvnet_virtqueue *vq =3D &mvnet->vqs[idx];
++
++=09vq->cb =3D cb->callback;
++=09vq->private =3D cb->private;
++}
++
++static void mvnet_set_vq_ready(struct mdev_device *mdev, u16 idx, bool rea=
+dy)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++=09struct mvnet_virtqueue *vq =3D &mvnet->vqs[idx];
++
++=09spin_lock(&mvnet->lock);
++=09vq->ready =3D ready;
++=09if (vq->ready)
++=09=09mvnet_queue_ready(mvnet, idx);
++=09spin_unlock(&mvnet->lock);
++}
++
++static bool mvnet_get_vq_ready(struct mdev_device *mdev, u16 idx)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++=09struct mvnet_virtqueue *vq =3D &mvnet->vqs[idx];
++
++=09return vq->ready;
++}
++
++static int mvnet_set_vq_state(struct mdev_device *mdev, u16 idx, u64 state=
+)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++=09struct mvnet_virtqueue *vq =3D &mvnet->vqs[idx];
++=09struct vringh *vrh =3D &vq->vring;
++
++=09spin_lock(&mvnet->lock);
++=09vrh->last_avail_idx =3D state;
++=09spin_unlock(&mvnet->lock);
++
++=09return 0;
++}
++
++static u64 mvnet_get_vq_state(struct mdev_device *mdev, u16 idx)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++=09struct mvnet_virtqueue *vq =3D &mvnet->vqs[idx];
++=09struct vringh *vrh =3D &vq->vring;
++
++=09return vrh->last_avail_idx;
++}
++
++static u16 mvnet_get_vq_align(struct mdev_device *mdev)
++{
++=09return MVNET_QUEUE_ALIGN;
++}
++
++static u64 mvnet_get_features(struct mdev_device *mdev)
++{
++=09return mvnet_features;
++}
++
++static int mvnet_set_features(struct mdev_device *mdev, u64 features)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++
++=09/* DMA mapping must be done by driver */
++=09if (!(features & (1ULL << VIRTIO_F_IOMMU_PLATFORM)))
++=09=09return -EINVAL;
++
++=09mvnet->features =3D features & mvnet_features;
++
++=09return 0;
++}
++
++static void mvnet_set_config_cb(struct mdev_device *mdev,
++=09=09=09=09struct virtio_mdev_callback *cb)
++{
++=09/* We don't support config interrupt */
++}
++
++static u16 mvnet_get_vq_num_max(struct mdev_device *mdev)
++{
++=09return MVNET_QUEUE_MAX;
++}
++
++static u32 mvnet_get_device_id(struct mdev_device *mdev)
++{
++=09return MVNET_DEVICE_ID;
++}
++
++static u32 mvnet_get_vendor_id(struct mdev_device *mdev)
++{
++=09return MVNET_VENDOR_ID;
++}
++
++static u8 mvnet_get_status(struct mdev_device *mdev)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++
++=09return mvnet->status;
++}
++
++static void mvnet_set_status(struct mdev_device *mdev, u8 status)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++
++=09mvnet->status =3D status;
++
++=09if (status =3D=3D 0) {
++=09=09spin_lock(&mvnet->lock);
++=09=09mvnet_reset(mvnet);
++=09=09spin_unlock(&mvnet->lock);
++=09}
++}
++
++static void mvnet_get_config(struct mdev_device *mdev, unsigned int offset=
+,
++=09=09=09     void *buf, unsigned int len)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++
++=09if (offset + len < sizeof(struct virtio_net_config))
++=09=09memcpy(buf, &mvnet->config + offset, len);
++}
++
++static void mvnet_set_config(struct mdev_device *mdev, unsigned int offset=
+,
++=09=09=09     const void *buf, unsigned int len)
++{
++=09/* No writable config supportted by mvnet */
++}
++
++static u64 mvnet_get_mdev_features(struct mdev_device *mdev)
++{
++=09return VIRTIO_MDEV_F_VERSION_1;
++}
++
++static u32 mvnet_get_generation(struct mdev_device *mdev)
++{
++=09struct mvnet_state *mvnet =3D mdev_get_drvdata(mdev);
++
++=09return mvnet->generation;
++}
++
++static const struct virtio_mdev_device_ops virtio_mdev_ops =3D {
++=09.set_vq_address         =3D mvnet_set_vq_address,
++=09.set_vq_num             =3D mvnet_set_vq_num,
++=09.kick_vq                =3D mvnet_kick_vq,
++=09.set_vq_cb              =3D mvnet_set_vq_cb,
++=09.set_vq_ready           =3D mvnet_set_vq_ready,
++=09.get_vq_ready           =3D mvnet_get_vq_ready,
++=09.set_vq_state           =3D mvnet_set_vq_state,
++=09.get_vq_state           =3D mvnet_get_vq_state,
++=09.get_vq_align           =3D mvnet_get_vq_align,
++=09.get_features           =3D mvnet_get_features,
++=09.set_features           =3D mvnet_set_features,
++=09.set_config_cb          =3D mvnet_set_config_cb,
++=09.get_vq_num_max         =3D mvnet_get_vq_num_max,
++=09.get_device_id          =3D mvnet_get_device_id,
++=09.get_vendor_id          =3D mvnet_get_vendor_id,
++=09.get_status             =3D mvnet_get_status,
++=09.set_status             =3D mvnet_set_status,
++=09.get_config             =3D mvnet_get_config,
++=09.set_config             =3D mvnet_set_config,
++=09.get_mdev_features      =3D mvnet_get_mdev_features,
++=09.get_generation         =3D mvnet_get_generation,
++};
++
++static const struct mdev_parent_ops mdev_fops =3D {
++=09.owner                  =3D THIS_MODULE,
++=09.dev_attr_groups        =3D mvnet_dev_groups,
++=09.mdev_attr_groups       =3D mdev_dev_groups,
++=09.supported_type_groups  =3D mdev_type_groups,
++=09.create                 =3D mvnet_create,
++=09.remove=09=09=09=3D mvnet_remove,
++};
++
++static void mvnet_device_release(struct device *dev)
++{
++=09dev_dbg(dev, "mvnet: released\n");
++}
++
++static int __init mvnet_dev_init(void)
++{
++=09int ret =3D 0;
++
++=09pr_info("mvnet_dev: %s\n", __func__);
++
++=09memset(&mvnet_dev, 0, sizeof(mvnet_dev));
++
++=09idr_init(&mvnet_dev.vd_idr);
++
++=09mvnet_dev.vd_class =3D class_create(THIS_MODULE, MVNET_CLASS_NAME);
++
++=09if (IS_ERR(mvnet_dev.vd_class)) {
++=09=09pr_err("Error: failed to register mvnet_dev class\n");
++=09=09ret =3D PTR_ERR(mvnet_dev.vd_class);
++=09=09goto failed1;
++=09}
++
++=09mvnet_dev.dev.class =3D mvnet_dev.vd_class;
++=09mvnet_dev.dev.release =3D mvnet_device_release;
++=09dev_set_name(&mvnet_dev.dev, "%s", MVNET_NAME);
++
++=09ret =3D device_register(&mvnet_dev.dev);
++=09if (ret)
++=09=09goto failed2;
++
++=09ret =3D mdev_register_device(&mvnet_dev.dev, &mdev_fops);
++=09if (ret)
++=09=09goto failed3;
++
++=09mutex_init(&mdev_list_lock);
++=09INIT_LIST_HEAD(&mdev_devices_list);
++
++=09goto all_done;
++
++failed3:
++
++=09device_unregister(&mvnet_dev.dev);
++failed2:
++=09class_destroy(mvnet_dev.vd_class);
++
++failed1:
++all_done:
++=09return ret;
++}
++
++static void __exit mvnet_dev_exit(void)
++{
++=09mvnet_dev.dev.bus =3D NULL;
++=09mdev_unregister_device(&mvnet_dev.dev);
++
++=09device_unregister(&mvnet_dev.dev);
++=09idr_destroy(&mvnet_dev.vd_idr);
++=09class_destroy(mvnet_dev.vd_class);
++=09mvnet_dev.vd_class =3D NULL;
++=09pr_info("mvnet_dev: Unloaded!\n");
++}
++
++module_init(mvnet_dev_init)
++module_exit(mvnet_dev_exit)
++
++MODULE_LICENSE("GPL v2");
++MODULE_INFO(supported, "Simulate loopback ethernet device over mdev");
++MODULE_VERSION(VERSION_STRING);
++MODULE_AUTHOR(DRIVER_AUTHOR);
+--=20
+2.19.1
 
