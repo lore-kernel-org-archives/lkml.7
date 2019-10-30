@@ -2,113 +2,171 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6622CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE6CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC01020717
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:14:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GnC5/GZw"
+	by mail.kernel.org (Postfix) with ESMTP id 157142067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfJ3IOc (ORCPT
+        id S1726683AbfJ3IO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:14:32 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31178 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725822AbfJ3IOc (ORCPT
+        Wed, 30 Oct 2019 04:14:56 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:19059 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725822AbfJ3IOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:14:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572423270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AyFELAijSqcI7vkOjyd21vOAB6Rs2BQWCyD5xG76eKE=;
-        b=GnC5/GZwyhGbNbEmUxHThLM1xx8E+ubKtDMuShA/a2QSAuBCidah+I93C9xT6FYo+2z+Hd
-        EKZVdCOzcixj7IhSdRR72Osvc2ub9Sz2VgDvodV5DeYhe+32mtRuGTB/K11JkgY+sjndaX
-        zwIlsGkS+smMKNgYmD+Jle7A49XYx+s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-340-A6DgzRLdNGCuv80E0D5X9w-1; Wed, 30 Oct 2019 04:14:27 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF7FA80183D;
-        Wed, 30 Oct 2019 08:14:25 +0000 (UTC)
-Received: from [10.36.116.222] (ovpn-116-222.ams2.redhat.com [10.36.116.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 023885D9C3;
-        Wed, 30 Oct 2019 08:14:23 +0000 (UTC)
-Subject: Re: [PATCH v1] mm/memory_hotplug: Fix updating the node span
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20191027222714.5313-1-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <b572b20f-b7fb-2558-5c79-d0beb65d7f2e@redhat.com>
-Date:   Wed, 30 Oct 2019 09:14:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 30 Oct 2019 04:14:55 -0400
+X-UUID: 87125db8de6b42c8bcc2ee48db36e41b-20191030
+X-UUID: 87125db8de6b42c8bcc2ee48db36e41b-20191030
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1946478619; Wed, 30 Oct 2019 16:14:49 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 30 Oct
+ 2019 16:14:47 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 30 Oct 2019 16:14:46 +0800
+Message-ID: <1572423288.18464.38.camel@mhfsdcap03>
+Subject: Re: [PATCH] usb: mtk-xhci: Set the XHCI_NO_64BIT_SUPPORT quirk
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Changqi Hu <Changqi.Hu@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Shik Chen <shik@chromium.org>
+Date:   Wed, 30 Oct 2019 16:14:48 +0800
+In-Reply-To: <CAAFQd5AszvSow2vgRq+CbtBzdNO7ysymXp=xerR6dtmi8OxMZw@mail.gmail.com>
+References: <20191010075004.192818-1-tfiga@chromium.org>
+         <1570697118.32135.20.camel@mhfsdcap03>
+         <CAAFQd5AU53=BRUrK_i-0dRYueVoSd3Bg3AtvZUMHgFv3hLuNug@mail.gmail.com>
+         <1570705147.22261.13.camel@mhfsdcap03>
+         <CAAFQd5AszvSow2vgRq+CbtBzdNO7ysymXp=xerR6dtmi8OxMZw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20191027222714.5313-1-david@redhat.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: A6DgzRLdNGCuv80E0D5X9w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 60E1840DBE94508B2E5CDABD7A6FC01DE1971C6B2AD893D3FFBB7A973753CDDD2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.10.19 23:27, David Hildenbrand wrote:
-> We recently started updating the node span based on the zone span to
-> avoid touching uninitialized memmaps.
->=20
-> Currently, we will always detect the node span to start at 0, meaning a
-> node can easily span too many pages. pgdat_is_empty() will still work
-> correctly if all zones span no pages. We should skip over all zones witho=
-ut
-> spanned pages and properly handle the first detected zone that spans page=
-s.
->=20
-> Unfortunately, in contrast to the zone span (/proc/zoneinfo), the node sp=
-an
-> cannot easily be inspected and tested. The node span gives no real
-> guarantees when an architecture supports memory hotplug, meaning it can
-> easily contain holes or span pages of different nodes.
->=20
-> The node span is not really used after init on architectures that support
-> memory hotplug. E.g., we use it in mm/memory_hotplug.c:try_offline_node()
-> and in mm/kmemleak.c:kmemleak_scan(). These users seem to be fine.
->=20
-> Fixes: 00d6c019b5bc ("mm/memory_hotplug: don't access uninitialized memma=
-ps in shrink_pgdat_span()")
+Hi Tomasz,
+
+On Fri, 2019-10-11 at 13:35 +0900, Tomasz Figa wrote:
+> On Thu, Oct 10, 2019 at 7:59 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+> >
+> > On Thu, 2019-10-10 at 18:00 +0900, Tomasz Figa wrote:
+> > > Hi Chunfeng,
+> > >
+> > > On Thu, Oct 10, 2019 at 5:45 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+> > > >
+> > > > Hi, Tomasz,
+> > > >
+> > > > On Thu, 2019-10-10 at 16:50 +0900, Tomasz Figa wrote:
+> > > > > MediaTek XHCI host controller does not support 64-bit addressing despite
+> > > > > the AC64 bit of HCCPARAMS1 register being set. The platform-specific
+> > > > > glue sets the DMA mask to 32 bits on its own, but it has no effect,
+> > > > > because xhci_gen_setup() overrides it according to hardware
+> > > > > capabilities.
+> > Yes, this is what I want to do, maybe need remove DMA mask setting in
+> > platform-specific.
+> >
+> > > > >
+> > > > > Use the XHCI_NO_64BIT_SUPPORT quirk to tell the XHCI core to force
+> > > > > 32-bit DMA mask instead.
+> > > > >
+> > > > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> > > > > ---
+> > > > >  drivers/usb/host/xhci-mtk.c | 10 +++++-----
+> > > > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+> > > > > index b18a6baef204a..4d101d52cc11b 100644
+> > > > > --- a/drivers/usb/host/xhci-mtk.c
+> > > > > +++ b/drivers/usb/host/xhci-mtk.c
+> > > > > @@ -395,6 +395,11 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
+> > > > >       xhci->quirks |= XHCI_SPURIOUS_SUCCESS;
+> > > > >       if (mtk->lpm_support)
+> > > > >               xhci->quirks |= XHCI_LPM_SUPPORT;
+> > > > > +     /*
+> > > > > +      * MTK host controller does not support 64-bit addressing, despite
+> > > > > +      * having the AC64 bit of the HCCPARAMS1 register set.
+> > > > > +      */
+> > > > > +     xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+> > > > Somes SoCs support 64bits in fact, so can't support this quirk, do you
+> > > > encounter any issues without this quirk?
+> > > >
+> > >
+> > > Thanks for taking a look at this patch.
+> > >
+> > > Yes, on MT8183 the DMA mask ended up being set to 64 bits, but
+> > > according to the information I received from MediaTek, the controller
+> > > on that SoC only supports 32 bits.
+> > As I know, mt8183 doesn't support memory greater than 4G mode.
+> >
+> 
+> We have 4GB of DRAM at 0x40000000-0x140000000 on our board with
+> MT8183. What happens if you attempt to use the memory from
+> 0x100000000-0x140000000 with the XHCI controller on this SoC?
+
+Sorry for the late reply.
+
+I've checked it with USB DE, USB IP supports 64bit on MT8183, so no need
+set XHCI_NO_64BIT_SUPPORT. 
+Would you please help to send a new patch to remove local dma mask
+setting, no need set it.
+
+Thanks a lot
 
 
-@Andrew, can we also give this a churn, we should try to get this into=20
-5.4 due to
+> 
+> > >
+> > > If some SoCs support only 32 bits and some support 64 bits, we may
+> > > either need to use different DT compatible string for them or add a DT
+> > > property and set the quirk based on that. Right now in upstream we
+> > > have:
+> > >
+> > > 1) "mediatek,mt8173-xhci", used by:
+> > > MT8173
+> > >
+> > > 2)"mediatek,mtk-xhci", used by:
+> > > MT2712
+> > > MT7622
+> > > MT8183 (not yet upstream, but I suppose it's on the mailing lists)
+> > >
+> > > Would you be able to check which of the SoCs above report 64 bits but
+> > > support only 32? (and so would need this quirk)
+> > I'm afraid I can't, almost all MTK SoCs supporting xHCI are using this
+> > driver, AC64 should be set rightly according to addressing capability.
+> >
+> 
+> Does it mean that only MT8183 may be the only SoC with a problem with
+> this capability bit?
+> 
+> Matthias, do you have access to MT2712 and MT7622 devices? I have
+> MT8173 and MT8183, so I can check them, but would be good to check
+> this on the other ones too.
 
-$ git tag --contains 00d6c019b5bc
-[...]
-v5.4-rc5
 
-Thanks!
+> 
+> Best regards,
+> Tomasz
 
---=20
-
-Thanks,
-
-David / dhildenb
 
