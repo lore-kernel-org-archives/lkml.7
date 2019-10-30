@@ -2,127 +2,97 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DE6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6DACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C1420862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:48:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IssXzYXl"
+	by mail.kernel.org (Postfix) with ESMTP id 6C23220578
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfJ3Isd (ORCPT
+        id S1726302AbfJ3Ivx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:48:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49871 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726028AbfJ3Isd (ORCPT
+        Wed, 30 Oct 2019 04:51:53 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33636 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfJ3Ivw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:48:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572425311;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nxeEn5vTSgM9eH45CLFbxbgOktGOR7e/qmHK5tiEGJk=;
-        b=IssXzYXl9/vHSxtrz5a68oG78qscf2mKO/J9CYeJrw5mBGzptdjsUbE672flCahWg+PFUN
-        zih+z7Xz0h07ZzStsMHxhsGBQ+hvdSOr52q7kxTsAPG9vAtADRlOM0yhcB2JWCNq47XpKS
-        PKBbjBx+6aqjUiXb+XcwgkLK81Q4LmM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-342-uXwssujUOo-NFLOe28wEEA-1; Wed, 30 Oct 2019 04:48:28 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4808481A334;
-        Wed, 30 Oct 2019 08:48:27 +0000 (UTC)
-Received: from ovpn-116-229.phx2.redhat.com (ovpn-116-229.phx2.redhat.com [10.3.116.229])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BA6BE5D6D8;
-        Wed, 30 Oct 2019 08:48:26 +0000 (UTC)
-Message-ID: <52d963553deda810113accd8d69b6dffdb37144f.camel@redhat.com>
-Subject: Re: [PATCH] timers/nohz: Update nohz load even if tick already
- stopped
-From:   Scott Wood <swood@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 30 Oct 2019 03:48:26 -0500
-In-Reply-To: <20191029100506.GJ4114@hirez.programming.kicks-ass.net>
-References: <20191028150716.22890-1-frederic@kernel.org>
-         <20191029100506.GJ4114@hirez.programming.kicks-ass.net>
-Organization: Red Hat
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29)
+        Wed, 30 Oct 2019 04:51:52 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m193so1318164oig.0;
+        Wed, 30 Oct 2019 01:51:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mziza5J/MoDupcgI0RkmxCcsKm60Et3F2KLUw+t1RqQ=;
+        b=FX0Qpi9u4CqeUqqDJRv0OaUj52bbx/Xh9cSzN35AEx14RwvvFwdQiK/IxsR0X0gpIs
+         031snMs2K2ONh1aaFaDHcq8MCbuBVmJ5j1udrklDhi0pOVTbxJqEbHaJrqb7VdFsQXN/
+         Iy+R7kgA2dayPFHDNWCDgZ9OZNdEMTTLhUw49+Y2UGaUo8xvlARX+zUVqvdkHEfavtka
+         NdWKua2VdXBo0oypW7XJf3zNiPJ1tqYYp/EQwfG5wkTZpaTvVv13wo7K5tyOU9TkVHSF
+         UUdrcjbCwDnqWNKkIqSxlQHYkVbFVRkxs8xfzQf30Ia8GoP2VNwp4kTCh4uILnKkxi5r
+         3CbQ==
+X-Gm-Message-State: APjAAAVNjlNUyoh7BjJ+GtO+jgaxq2nfplYG4A5K6TAApapog6KVoq3n
+        UhCB7TPT5Ly5/F1KpOXj/5lWbazf5e5lxNztH2M=
+X-Google-Smtp-Source: APXvYqywm9C+CpnmelJ6SWQKVIah4mda9qPmB6OrDMq707nGOy+7YzCdX2/qccGqz5HinY9G/c8lSRqxbZE+WID7kSw=
+X-Received: by 2002:aca:4ac5:: with SMTP id x188mr4822487oia.148.1572425510897;
+ Wed, 30 Oct 2019 01:51:50 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: uXwssujUOo-NFLOe28wEEA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20191029064834.23438-1-hch@lst.de> <20191029064834.23438-14-hch@lst.de>
+In-Reply-To: <20191029064834.23438-14-hch@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 30 Oct 2019 09:51:39 +0100
+Message-ID: <CAMuHMdWGiHhSv=xCqnsUXok7wYG7Wr1EQh+yuPOZBxPCskUFVw@mail.gmail.com>
+Subject: Re: [PATCH 13/21] m68k: rename __iounmap and mark it static
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-29 at 11:05 +0100, Peter Zijlstra wrote:
-> On Mon, Oct 28, 2019 at 04:07:16PM +0100, Frederic Weisbecker wrote:
-> > From: Scott Wood <swood@redhat.com>
-> >=20
-> > The way loadavg is tracked during nohz only pays attention to the load
-> > upon entering nohz. This can be particularly noticeable if nohz is
-> > entered while non-idle, and then the cpu goes idle and stays that way
-> > for
-> > a long time. We've had reports of a loadavg near 150 on a mostly idle
-> > system.
-> >=20
-> > Calling calc_load_nohz_start() regardless of whether the tick is alread=
-y
-> > stopped addresses the issue when going idle. Tracking load changes when
-> > not going idle (e.g. multiple SCHED_FIFO tasks coming and going) is not
-> > addressed by this patch.
->=20
-> Hurph, is that phenomena you describe NOHZ or NOHZ_FULL? Because that
-> second thing you talk about, multiple SCHED_FIFO tasks running without a
-> tick is definitely NOHZ_FULL.
->=20
-> I'm thinking all of this is NOHZ_FULL because IIRC we always start the
-> tick when there is a runnable task. So your example of going idle in
-> NOHZ already cannot happen for regular NOHZ.
+On Tue, Oct 29, 2019 at 7:56 AM Christoph Hellwig <hch@lst.de> wrote:
+> m68k uses __iounmap as the name for an internal helper that is only
+> used for some CPU types.  Mark it static, give it a better name
+> and move it around a bit to avoid a forward declaration.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Yes, NOHZ_FULL (sorry for not stating that clearly).
+Thanks for the update!
 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index eb42b71faab9..209e50d48f80 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3666,6 +3666,8 @@ static void sched_tick_remote(struct work_struct
-> *work)
->  =09 * having one too much is no big deal because the scheduler tick
-> updates
->  =09 * statistics and checks timeslices in a time-independent way,
-> regardless
->  =09 * of when exactly it is running.
-> +=09 *
-> +=09 * XXX should we be checking tick_nohz_tick_stopped_cpu() under rq-
-> >lock ?
->  =09 */
->  =09if (idle_cpu(cpu) || !tick_nohz_tick_stopped_cpu(cpu))
->  =09=09goto out_requeue;
-> @@ -3686,6 +3688,7 @@ static void sched_tick_remote(struct work_struct
-> *work)
->  =09curr->sched_class->task_tick(rq, curr, 0);
-> =20
->  out_unlock:
-> +=09calc_load_nohz_remote(cpu);
->  =09rq_unlock_irq(rq, &rf);
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-This gets skipped when the cpu is idle, so it still misses the update.
+Gr{oetje,eeting}s,
 
--Scott
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
