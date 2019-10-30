@@ -2,92 +2,62 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD934CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD0CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747F220862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:25:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QyTE4zhZ"
+	by mail.kernel.org (Postfix) with ESMTP id 81BB42083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfJ3LZC (ORCPT
+        id S1726213AbfJ3Lcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 07:25:02 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50699 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726065AbfJ3LZC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 07:25:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572434701;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=WyEl0wLRTIq+YoJeUVVm33OKOBR2PjTrxSrJAN0xprI=;
-        b=QyTE4zhZA2qZ5k6QJu2mkESVDYXWWZpj+cm0XiJ0ZeLO1uJO2ptj742ZlS+kL61sgXyV/z
-        VDh1D0/mn4yMMPWzYeS7SioLTD6Sza/FqOel1h2ZnFjdApTchPcyM6k9dYVtnvEt2FSa2w
-        m2k2M1zOUxKzHKdfPQ4IRAqzt/4HSP4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-277-gA-vopK9M4uyfpozlQqNRw-1; Wed, 30 Oct 2019 07:24:59 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 434031800D56;
-        Wed, 30 Oct 2019 11:24:58 +0000 (UTC)
-Received: from max.com (unknown [10.40.206.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C8595DA70;
-        Wed, 30 Oct 2019 11:24:52 +0000 (UTC)
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] gfs2: Fix remounting (broken in -rc1)
-Date:   Wed, 30 Oct 2019 12:24:49 +0100
-Message-Id: <20191030112449.24984-1-agruenba@redhat.com>
+        Wed, 30 Oct 2019 07:32:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52112 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726065AbfJ3Lcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 07:32:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C0F22ACD8;
+        Wed, 30 Oct 2019 11:32:42 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 3A5A5DA783; Wed, 30 Oct 2019 12:32:52 +0100 (CET)
+Date:   Wed, 30 Oct 2019 12:32:52 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     dsterba@suse.com, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH] fs/affs: Replace binary semaphores with mutexes
+Message-ID: <20191030113252.GD3001@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Davidlohr Bueso <dave@stgolabs.net>,
+        dsterba@suse.com, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+References: <20191027220143.10756-1-dave@stgolabs.net>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: gA-vopK9M4uyfpozlQqNRw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191027220143.10756-1-dave@stgolabs.net>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sun, Oct 27, 2019 at 03:01:43PM -0700, Davidlohr Bueso wrote:
+> At a slight footprint cost (24 vs 32 bytes), mutexes are more optimal
+> than semaphores; it's also a nicer interface for mutual exclusion,
+> which is why they are encouraged over binary semaphores, when possible.
+> 
+> For both i_link_lock and i_ext_lock (and hence i_hash_lock which I
+> annotated for the hash lock mapping hackery for lockdep), their semantics
+> imply traditional lock ownership; that is, the lock owner is the same for
+> both lock/unlock operations and does not run in irq context. Therefore
+> it is safe to convert.
+> 
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 
-could you please pull the following fix for gfs2?
-
-Thanks,
-Andreas
-
-The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02=
-:
-
-  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gf=
-s2-v5.4-rc5.fixes
-
-for you to fetch changes up to d5798141fd54cea074c3429d5803f6c41ade0ca8:
-
-  gfs2: Fix initialisation of args for remount (2019-10-30 12:16:53 +0100)
-
-----------------------------------------------------------------
-Fix remounting (broken in -rc1).
-
-----------------------------------------------------------------
-Andrew Price (1):
-      gfs2: Fix initialisation of args for remount
-
- fs/gfs2/ops_fstype.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
-
+Thanks, I'll add it to affs queue.
