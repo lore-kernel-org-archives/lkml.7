@@ -2,88 +2,76 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F41CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60300CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A52D2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC192083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfJ3IZz (ORCPT
+        id S1726244AbfJ3I0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:25:55 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55819 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfJ3IZy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:25:54 -0400
-X-Originating-IP: 81.185.173.67
-Received: from localhost.localdomain (67.173.185.81.rev.sfr.net [81.185.173.67])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 3E8D320006;
-        Wed, 30 Oct 2019 08:25:51 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-mtd@lists.infradead.org
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH] MAINTAINERS: mtd/ubi/ubifs: Remove inactive maintainers
-Date:   Wed, 30 Oct 2019 09:25:50 +0100
-Message-Id: <20191030082550.13022-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191017142229.3853-1-miquel.raynal@bootlin.com>
-References: 
+        Wed, 30 Oct 2019 04:26:36 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5226 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725923AbfJ3I0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 04:26:35 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 48B392B7E56858FA9135;
+        Wed, 30 Oct 2019 16:26:34 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 30 Oct 2019 16:26:28 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <akinobu.mita@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <zhongjiang@huawei.com>
+Subject: [PATCH] fault-inject: use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs fops
+Date:   Wed, 30 Oct 2019 16:22:36 +0800
+Message-ID: <1572423756-59943-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 5c1719a2b978f9a292d4fb3efa6d6525f36b7489
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-17 at 14:22:29 UTC, Miquel Raynal wrote:
-> Despite their substantial personal investment in the MTD/UBI/UBIFS a
-> few years back, David, Brian, Artem and Adrian are not actively
-> maintaining the subsystem anymore. We warmly salute them for all the
-> work they have achieved and will of course still welcome their
-> participation and reviews.
-> 
-> That said, Marek retired himself a few weeks ago quoting Harald [1]:
-> 
->         It matters who has which title and when. Should somebody not
->         be an active maintainer, make sure he's not listed as such.
-> 
-> For this same reason, let’s trim the maintainers list with the
-> actually active ones over the past two years.
-> 
-> [1] http://laforge.gnumonks.org/blog/20180307-mchardy-gpl/
-> 
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Cc: Brian Norris <computersforpeace@gmail.com>
-> Cc: Artem Bityutskiy <dedekind1@gmail.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Marek Vasut <marek.vasut@gmail.com>
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> Acked-by: Brian Norris <computersforpeace@gmail.com>
-> Acked-by: Artem Bityutskiy <dedekind1@gmail.com>
+It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
+operation rather than DEFINE_SIMPLE_ATTRIBUTE.
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/next.
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ lib/fault-inject.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Miquel
+diff --git a/lib/fault-inject.c b/lib/fault-inject.c
+index 8186ca8..4e61326 100644
+--- a/lib/fault-inject.c
++++ b/lib/fault-inject.c
+@@ -164,7 +164,7 @@ static int debugfs_ul_get(void *data, u64 *val)
+ 	return 0;
+ }
+ 
+-DEFINE_SIMPLE_ATTRIBUTE(fops_ul, debugfs_ul_get, debugfs_ul_set, "%llu\n");
++DEFINE_DEBUGFS_ATTRIBUTE(fops_ul, debugfs_ul_get, debugfs_ul_set, "%llu\n");
+ 
+ static void debugfs_create_ul(const char *name, umode_t mode,
+ 			      struct dentry *parent, unsigned long *value)
+@@ -182,7 +182,7 @@ static int debugfs_stacktrace_depth_set(void *data, u64 val)
+ 	return 0;
+ }
+ 
+-DEFINE_SIMPLE_ATTRIBUTE(fops_stacktrace_depth, debugfs_ul_get,
++DEFINE_DEBUGFS_ATTRIBUTE(fops_stacktrace_depth, debugfs_ul_get,
+ 			debugfs_stacktrace_depth_set, "%llu\n");
+ 
+ static void debugfs_create_stacktrace_depth(const char *name, umode_t mode,
+-- 
+1.7.12.4
+
