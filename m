@@ -2,139 +2,224 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67569CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A612DCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D0320866
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E95F2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:06:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WSSiufiZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dQYIYF1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfJ3EGx convert rfc822-to-8bit (ORCPT
+        id S1727262AbfJ3EG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 00:06:53 -0400
-Received: from mga06.intel.com ([134.134.136.31]:36903 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbfJ3EGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 00:06:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 21:06:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
-   d="scan'208";a="205679958"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 Oct 2019 21:06:51 -0700
-Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 29 Oct 2019 21:06:51 -0700
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
- FMSMSX154.amr.corp.intel.com (10.18.116.70) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 29 Oct 2019 21:06:50 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
- SHSMSX151.ccr.corp.intel.com ([169.254.3.149]) with mapi id 14.03.0439.000;
- Wed, 30 Oct 2019 12:06:50 +0800
-From:   "Kang, Luwei" <luwei.kang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>
-Subject: RE: [PATCH v1 2/8] KVM: x86: PEBS output to Intel PT MSRs emulation
-Thread-Topic: [PATCH v1 2/8] KVM: x86: PEBS output to Intel PT MSRs emulation
-Thread-Index: AQHVjLdyhOcLoCoSDkKqY/nWjYpZ1qdxNEmAgAE5RbA=
-Date:   Wed, 30 Oct 2019 04:06:49 +0000
-Message-ID: <82D7661F83C1A047AF7DC287873BF1E173835B2F@SHSMSX104.ccr.corp.intel.com>
-References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
- <1572217877-26484-3-git-send-email-luwei.kang@intel.com>
- <20191029150243.GM4097@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191029150243.GM4097@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjE2ZTE1MmEtZDQ2Mi00ZTM2LThmNzctN2ZjM2Q1MjgwOTdkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicXZxMFdINjhNNVM1UWlrUjNyNmt3WnZvaGxPR1MxS0dVWWpWWnFwK0tuQ1RKenFSbkl0VE8zUVVKNG9YWWJGSSJ9
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Wed, 30 Oct 2019 00:06:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35998 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727197AbfJ3EGz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 00:06:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4340660F79; Wed, 30 Oct 2019 04:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572408414;
+        bh=8Pd/E1F2GITTQ0OZqlMrdEyd7JcogM8q9jE0bY5JquU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WSSiufiZbFYTGbq6mT4YhSQElJjvl2oQDa2WfZyFOh2DXTzpwaFT5ZW0ZCAVX2ghX
+         fnJVS4AVjGrWJ+2NEgEMnyxdxUp2zQXl4mDGOJC7mdfwfYY7gz4iJCxYDeR6aI9D3b
+         5/mdqkFlKREUuuZawPr5soexRyLWHQ2il+GMHcMc=
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4ED8F60F7E;
+        Wed, 30 Oct 2019 04:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572408413;
+        bh=8Pd/E1F2GITTQ0OZqlMrdEyd7JcogM8q9jE0bY5JquU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dQYIYF1OrkSyf+OkIfFTN+fgBH4rMhxySlJTMHQasioMTlqY6FCuWlc4kfzFY/ob1
+         YU5VmpqdQHFZNG2jeUXr0vK8xN06TAsCFTnwJzQYpLwd6TEGiDKJOdpL4IEpZj0UPG
+         F9iUnkwUXsWloVCRrlqbofaWSSWyQvp5mUfi7+z4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4ED8F60F7E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        mka@chromium.org, swboyd@chromium.org, evgreen@chromium.org,
+        dianders@chromium.org, Maulik Shah <mkshah@codeaurora.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sc7180: Add cpuidle low power states
+Date:   Wed, 30 Oct 2019 09:35:18 +0530
+Message-Id: <1572408318-28681-2-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
+References: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Intel new hardware introduces a mechanism to direct PEBS records
-> > output into the Intel PT buffer that can be used for enabling PEBS in
-> > KVM guest. This patch implements the registers read and write
-> > emulation when PEBS is supported in KVM guest.
-> >
-> > KMM needs to reprogram the counters when the value of these MSRs be
-> > changed that to make sure it can take effect in hardware.
-> >
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > ---
-> >  arch/x86/include/asm/kvm_host.h  |  4 +++
-> > arch/x86/include/asm/msr-index.h |  6 ++++
-> > arch/x86/kvm/vmx/capabilities.h  | 15 ++++++++++
-> >  arch/x86/kvm/vmx/pmu_intel.c     | 63 ++++++++++++++++++++++++++++++++++++++--
-> >  4 files changed, 86 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/msr-index.h
-> > b/arch/x86/include/asm/msr-index.h
-> > index 20ce682..d22f8d9 100644
-> > --- a/arch/x86/include/asm/msr-index.h
-> > +++ b/arch/x86/include/asm/msr-index.h
-> > @@ -131,9 +131,13 @@
-> >  #define LBR_INFO_ABORT			BIT_ULL(61)
-> >  #define LBR_INFO_CYCLES			0xffff
-> >
-> > +#define MSR_IA32_PEBS_PMI_AFTER_REC	BIT_ULL(60)
-> > +#define MSR_IA32_PEBS_OUTPUT_PT		BIT_ULL(61)
-> > +#define MSR_IA32_PEBS_OUTPUT_MASK	(3ULL << 61)
-> >  #define MSR_IA32_PEBS_ENABLE		0x000003f1
-> >  #define MSR_PEBS_DATA_CFG		0x000003f2
-> >  #define MSR_IA32_DS_AREA		0x00000600
-> > +#define MSR_IA32_PERF_CAP_PEBS_OUTPUT_PT	BIT_ULL(16)
-> >  #define MSR_IA32_PERF_CAPABILITIES	0x00000345
-> >  #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
-> >
-> > @@ -665,6 +669,8 @@
-> >  #define MSR_IA32_MISC_ENABLE_FERR			(1ULL << MSR_IA32_MISC_ENABLE_FERR_BIT)
-> >  #define MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX_BIT		10
-> >  #define MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX		(1ULL << MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX_BIT)
-> > +#define MSR_IA32_MISC_ENABLE_PEBS_BIT			12
-> > +#define MSR_IA32_MISC_ENABLE_PEBS			(1ULL << MSR_IA32_MISC_ENABLE_PEBS_BIT)
-> >  #define MSR_IA32_MISC_ENABLE_TM2_BIT			13
-> >  #define MSR_IA32_MISC_ENABLE_TM2			(1ULL << MSR_IA32_MISC_ENABLE_TM2_BIT)
-> >  #define MSR_IA32_MISC_ENABLE_ADJ_PREF_DISABLE_BIT	19
-> 
-> Some of these already exist but are local to perf. Don't blindly introduce more without unifying.
+Add device bindings for cpuidle states for cpu devices.
 
-Got it. Will reuse the exist definition in perf.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-Thanks,
-Luwei Kang
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index fceac50..69d5e2c 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -70,6 +70,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_0>;
+ 			L2_0: l2-cache {
+ 				compatible = "cache";
+@@ -85,6 +88,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_100>;
+ 			L2_100: l2-cache {
+ 				compatible = "cache";
+@@ -97,6 +103,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x200>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_200>;
+ 			L2_200: l2-cache {
+ 				compatible = "cache";
+@@ -109,6 +118,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x300>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_300>;
+ 			L2_300: l2-cache {
+ 				compatible = "cache";
+@@ -121,6 +133,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x400>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_400>;
+ 			L2_400: l2-cache {
+ 				compatible = "cache";
+@@ -133,6 +148,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x500>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_500>;
+ 			L2_500: l2-cache {
+ 				compatible = "cache";
+@@ -145,6 +163,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x600>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&BIG_CPU_SLEEP_0
++					   &BIG_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_600>;
+ 			L2_600: l2-cache {
+ 				compatible = "cache";
+@@ -157,12 +178,69 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x700>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&BIG_CPU_SLEEP_0
++					   &BIG_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_700>;
+ 			L2_700: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+ 			};
+ 		};
++
++		idle-states {
++			entry-method = "psci";
++
++			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
++				compatible = "arm,idle-state";
++				idle-state-name = "little-power-down";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <350>;
++				exit-latency-us = <461>;
++				min-residency-us = <1890>;
++				local-timer-stop;
++			};
++
++			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
++				compatible = "arm,idle-state";
++				idle-state-name = "little-rail-power-down";
++				arm,psci-suspend-param = <0x40000004>;
++				entry-latency-us = <360>;
++				exit-latency-us = <531>;
++				min-residency-us = <3934>;
++				local-timer-stop;
++			};
++
++			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
++				compatible = "arm,idle-state";
++				idle-state-name = "big-power-down";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <264>;
++				exit-latency-us = <621>;
++				min-residency-us = <952>;
++				local-timer-stop;
++			};
++
++			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
++				compatible = "arm,idle-state";
++				idle-state-name = "big-rail-power-down";
++				arm,psci-suspend-param = <0x40000004>;
++				entry-latency-us = <702>;
++				exit-latency-us = <1061>;
++				min-residency-us = <4488>;
++				local-timer-stop;
++			};
++
++			CLUSTER_SLEEP_0: cluster-sleep-0 {
++				compatible = "arm,idle-state";
++				idle-state-name = "cluster-power-down";
++				arm,psci-suspend-param = <0x400000F4>;
++				entry-latency-us = <3263>;
++				exit-latency-us = <6562>;
++				min-residency-us = <9987>;
++				local-timer-stop;
++			};
++		};
+ 	};
+ 
+ 	memory@80000000 {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
