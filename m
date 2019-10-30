@@ -2,136 +2,113 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBADCA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45F8CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47B3920679
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NOjUeleY"
+	by mail.kernel.org (Postfix) with ESMTP id 89CC620679
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572446298;
+	bh=/DpOdAcMT0ezAlZVaKxijthqHBV7gD1IaTkFMlMz/TU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mrVTjXtNdg2waRZ+urUz3LH8ohwN7Y9VPy89e1xstLDEXaNVojXYGwsbUh1xjR4L9
+	 YY7+615gM2ep7lRZYm2GfQHtc3vjkbOdZWprOLbKhhexd9qCx5vex8yOdk97ZaG5+M
+	 dB4G7XKdQSbsLfPg6/f81kn6B1i+sJeSvjud5Jlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfJ3OiB (ORCPT
+        id S1726488AbfJ3OiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:38:01 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34259 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfJ3OiB (ORCPT
+        Wed, 30 Oct 2019 10:38:17 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37104 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfJ3OiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:38:01 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k7so1091691pll.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 07:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:subject:to:cc:user-agent:date;
-        bh=BBv3NprOG50sxvV01T9xKOwoL1vnOBWmmTcp5qlcolM=;
-        b=NOjUeleY56P/LLUhY1pDoMnnIXClWmYXJvok8jOJp3QgI88kWTeW05aqKfpHLHACV3
-         aF86H3C7FuC7GLtJHKwUB2suKcncbPKdqzYpyLaWsWbgKzop0W7t2tZIfB7PeQbD9gLX
-         JMx0x2pXd7Bldrs+8e3NRyg15mHROuUwI9HIs=
+        Wed, 30 Oct 2019 10:38:17 -0400
+Received: by mail-oi1-f196.google.com with SMTP id y194so2163292oie.4;
+        Wed, 30 Oct 2019 07:38:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:subject:to:cc
-         :user-agent:date;
-        bh=BBv3NprOG50sxvV01T9xKOwoL1vnOBWmmTcp5qlcolM=;
-        b=X+vBqo+KpGkbFYTdnxkKdGZfcooYSWly1AHLgxWYJuh3K/a4XhFBMn5wgN4HtqVrVA
-         xSGqIxoFswIcwUPtNEZCYsF0eBwWdmcWlD9om3zEeif3smFDlbz5FuU34/e9nVEw0yDY
-         rixaOMSEPeO0q3vpAvQUKWAxpFvrZAr3+2yeWVWc9m9im7PqE+P+n9G35QfAc8QKm9w6
-         ZmG5RH9nuUo+BzK76TeEIKW5cL6/3P+pKpl6U/NF687A9p3KZVyd4db8EmhMB8xIEMgq
-         LeDs6F8p8hpxPmv9Zfxg3X8fsa0ftcZws0bIvVDEFE1udMY6GLUiHhkDXelMwb+80Ol1
-         FU2Q==
-X-Gm-Message-State: APjAAAV4TH5LuDRiGxKCb2Nyq27l8t2O9TO5ituXzTmya8jug22FG9e5
-        d7mNbNvAveYabPIoNz76ZcfI6g==
-X-Google-Smtp-Source: APXvYqyHlRn1/yRrhaMo098pWSKHb/HjxYHgjr7bjEr7ArRvZo66VLas7ihQktLOpOA6X2+FVNay+A==
-X-Received: by 2002:a17:902:6b06:: with SMTP id o6mr363566plk.154.1572446280248;
-        Wed, 30 Oct 2019 07:38:00 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id m12sm2273154pjk.13.2019.10.30.07.37.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+BfFad26abRQq38bwh8Mr1R+j43UFqfABvnUm8o1taw=;
+        b=D9m5xzaNqnwcGPtyRnii6aOuyUpk/a0DvUJXKWkJY6YW0libo/O9qur7wLybAp+Rwx
+         idTIArGeW8KhXb9ofxSGgkXy6WNOWRFdPdqHZKmdkUO/OiS9T2v6v66TLvYuy/UarTk4
+         m4ctegdcE55f1App50AZEQ8CHf6Mi81O8kRUIxSsxukbUY7tAsD/hq19vaYYSy3vde1f
+         io5cnaukk/AjRkuoRGdcGbFxZAIVObHm0eY54/wDjKeGHzfOBoUZdMgz0OOqf14HeY4d
+         1ZmwS7MtI52OA+rcLxJiSEyQdcv/vWMKC2rALs1ENiuAo4+0/T3Fp7+8x67Dr8oSf0qX
+         cFOg==
+X-Gm-Message-State: APjAAAVgCHgEpl4jYu//L8BAneUlRai98eiApV+CPf63x6ZfNDYcAhmh
+        ItU/cL7NdZKKWadiFu0rx//eXFULnA==
+X-Google-Smtp-Source: APXvYqxFcqCnjzslRGByaccuPPCxbj/xGiXI0T5sZQDtLsUsBwQFx0ajU2xY2DO4ZF1wqOj3CpQ5pw==
+X-Received: by 2002:aca:5441:: with SMTP id i62mr8840685oib.42.1572446295718;
+        Wed, 30 Oct 2019 07:38:15 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j129sm44729oib.22.2019.10.30.07.38.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 07:37:59 -0700 (PDT)
-Message-ID: <5db9a047.1c69fb81.85ac7.7aa1@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 30 Oct 2019 07:38:14 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 09:38:14 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     sre@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yuanjiang.yu@unisoc.com, baolin.wang7@gmail.com,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com
+Subject: Re: [PATCH 1/5] dt-bindings: power: Introduce one property to
+ describe the battery resistance with temperature changes
+Message-ID: <20191030143814.GA14919@bogus>
+References: <cover.1572245011.git.baolin.wang@linaro.org>
+ <44f0c19510c7317cb4ee6cac54b3adfa81c2d6d0.1572245011.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <87ec773e0d92571c4bbed44eeb65cff5@codeaurora.org>
-References: <20191023090219.15603-1-rnayak@codeaurora.org> <20191023090219.15603-9-rnayak@codeaurora.org> <5db86b1b.1c69fb81.be45f.0bb2@mx.google.com> <87ec773e0d92571c4bbed44eeb65cff5@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 08/11] arm64: dts: qcom: pm6150: Add PM6150/PM6150L PMIC peripherals
-To:     kgunda@codeaurora.org
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-User-Agent: alot/0.8.1
-Date:   Wed, 30 Oct 2019 07:37:58 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <44f0c19510c7317cb4ee6cac54b3adfa81c2d6d0.1572245011.git.baolin.wang@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting kgunda@codeaurora.org (2019-10-30 00:06:05)
-> On 2019-10-29 22:08, Stephen Boyd wrote:
-> > Quoting Rajendra Nayak (2019-10-23 02:02:16)
-> >> diff --git a/arch/arm64/boot/dts/qcom/pm6150.dtsi=20
-> >> b/arch/arm64/boot/dts/qcom/pm6150.dtsi
-> >> new file mode 100644
-> >> index 000000000000..20eb928e5ce3
-> >> --- /dev/null
-> >> +++ b/arch/arm64/boot/dts/qcom/pm6150.dtsi
-> >> @@ -0,0 +1,85 @@
-> >> +// SPDX-License-Identifier: BSD-3-Clause
-> >> +// Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> >> +
-> >> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
-> >> +#include <dt-bindings/input/linux-event-codes.h>
-> >> +#include <dt-bindings/interrupt-controller/irq.h>
-> >> +#include <dt-bindings/spmi/spmi.h>
-> >> +#include <dt-bindings/thermal/thermal.h>
-> >> +
-> >> +&spmi_bus {
-> >> +       pm6150_lsid0: pmic@0 {
-> >> +               compatible =3D "qcom,pm6150", "qcom,spmi-pmic";
-> >> +               reg =3D <0x0 SPMI_USID>;
-> >> +               #address-cells =3D <1>;
-> >> +               #size-cells =3D <0>;
-> >> +
-> >> +               pm6150_pon: pon@800 {
-> >> +                       compatible =3D "qcom,pm8998-pon";
-> >> +                       reg =3D <0x800>;
-> >> +                       mode-bootloader =3D <0x2>;
-> >> +                       mode-recovery =3D <0x1>;
-> >=20
-> > Can this have status =3D "disabled"? Or is the idea that if the pmic=20
-> > power
-> > button isn't used it should be disabled in the board dts file?
-> >=20
-> Yes. The idea is to go with latter option. Disable it in the board dts=20
-> file if the
-> pmic power button is not used.
+On Mon, Oct 28, 2019 at 03:18:57PM +0800, Baolin Wang wrote:
+> Since the battery internal resistance can be changed as the temperature
+> changes, thus add one table to describe the battery resistance percent
+> in different temperature to get a accurate battery internal resistance.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>  .../devicetree/bindings/power/supply/battery.txt   |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> index 5c913d4c..1a6f951 100644
+> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -35,6 +35,10 @@ Optional Properties:
+>     for each of the battery capacity lookup table. The first temperature value
+>     specifies the OCV table 0, and the second temperature value specifies the
+>     OCV table 1, and so on.
+> + - resistance-temp-table: An array providing the resistance percent and
+> +   corresponding temperature in degree Celsius, which is used to look up the
+> +   resistance percent according to current temperature to get a accurate
+> +   batterty internal resistance.
 
-Ok. Thanks.
+What's the order of values? The description and example don't seem to 
+agree unless negative percent is a thing.
 
-> >> +
-> >> +                       interrupt-names =3D "pm6150_gpio1",=20
-> >> "pm6150_gpio2",
-> >> +                                       "pm6150_gpio3",=20
-> >> "pm6150_gpio4",
-> >> +                                       "pm6150_gpio5",=20
-> >> "pm6150_gpio6",
-> >> +                                       "pm6150_gpio7",=20
-> >> "pm6150_gpio8",
-> >> +                                       "pm6150_gpio9",=20
-> >> "pm6150_gpio10";
-> >=20
-> > And this? And have gpio-ranges and use the irqdomain work. Basically,
-> > should look like pm8998.
-> Ok.. We can go ahead with the pm8998 way as well. We will address it in=20
-> next series.
-
-Yes please use the pm8998 way..
-
+>  
+>  Battery properties are named, where possible, for the corresponding
+>  elements in enum power_supply_property, defined in
+> @@ -61,6 +65,7 @@ Example:
+>  		ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>, ...;
+>  		ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>, ...;
+>  		ocv-capacity-table-2 = <4250000 100>, <4200000 95>, <4185000 90>, ...;
+> +		resistance-temp-table = <20 100>, <10 90>, <0 80>, <(-10) 60>;
+>  	};
+>  
+>  	charger: charger@11 {
+> -- 
+> 1.7.9.5
+> 
