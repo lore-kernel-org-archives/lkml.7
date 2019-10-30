@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07AFCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF77ECA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8162C20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD8020656
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450698;
-	bh=Sab2lu3lsOYA2LODitlLuvKjU5crS02ruw/fNrVJLaY=;
+	s=default; t=1572450699;
+	bh=IpiSE2O0Qb0OJ2zh6eh0U9SBp/2HJbtPHFeAUgw+Whc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fUJ/0Pr9z744WCwrSb2EcJlfKunaSUAF6a3naQrE09Rw5A4jwd6nE2O5p1Z2Ip3yJ
-	 iwp/Yt2NPEBYzN8z4tKkyh2js1CxxxjD/g4K+MuFtGMXiWHaSmO7E41wXkaGB9uiwb
-	 z/IMe0qaUCkRBgedCMet4wcrKtMgzzfTXzHI4TlE=
+	b=xJ2Q0HNks4JuDBZ8tgNEu+hDfZJhXbNPLSwuJ+uffS17YdUEMWZBq32D86pFwyjtF
+	 oO1sFV14Um1qhwk0dy0CN1xm6pdu8J8UwiefELCBC0CSDThkYBRKj7rHbJeREv7NRi
+	 Qgn8uYOVAX2n13HrvGKkgQ1k6v+6tMCQnaE7nOmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbfJ3Pvh (ORCPT
+        id S1727843AbfJ3Pvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:51:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:51:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbfJ3Pve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:51:34 -0400
+        id S1727815AbfJ3Pvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:36 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E8092087E;
-        Wed, 30 Oct 2019 15:51:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BC2C20874;
+        Wed, 30 Oct 2019 15:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450693;
-        bh=Sab2lu3lsOYA2LODitlLuvKjU5crS02ruw/fNrVJLaY=;
+        s=default; t=1572450695;
+        bh=IpiSE2O0Qb0OJ2zh6eh0U9SBp/2HJbtPHFeAUgw+Whc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B13gErkyxGtqMLAfydwynjNCWcIRcfsJDVGBTVHXjxqrnRJa5+DqPSA/NTGHWNKZI
-         dPnKJNn+Khmgg4jK2CNNqnoogTd3vxm7s1XgIyJcEONfqT03Cb5Bui1Ywcg3P11k0u
-         ofACceKnA2MhwTA+/X5RFauMBZNzmwerzmBcHCwc=
+        b=NOX49Tm9l4sl3c5SsKaNwIEpFT8QHVCAg23o80OIlKZ4YGnLeJWn5/Lzf7vFFD6hJ
+         foTEafqTBxYvkGEJLezSeR9i3YDwSYtrBFY4hCosl88h71QntViwMSKQhuhK8o6/s3
+         3T/WsUHcVjNhLqrLV2uElV47iY2McYUotWzqY+r8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Scott Branden <scott.branden@broadcom.com>,
+Cc:     Amelie Delaunay <amelie.delaunay@st.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 27/81] pinctrl: ns2: Fix off by one bugs in ns2_pinmux_enable()
-Date:   Wed, 30 Oct 2019 11:48:33 -0400
-Message-Id: <20191030154928.9432-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 28/81] pinctrl: stmfx: fix null pointer on remove
+Date:   Wed, 30 Oct 2019 11:48:34 -0400
+Message-Id: <20191030154928.9432-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -60,40 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
 
-[ Upstream commit 39b65fbb813089e366b376bd8acc300b6fd646dc ]
+[ Upstream commit 2fd215b8fdbe4d3a609adbe3a323696393cb1e53 ]
 
-The pinctrl->functions[] array has pinctrl->num_functions elements and
-the pinctrl->groups[] array is the same way.  These are set in
-ns2_pinmux_probe().  So the > comparisons should be >= so that we don't
-read one element beyond the end of the array.
+dev_get_platdata(&pdev->dev) returns a pointer on struct stmfx_pinctrl,
+not on struct stmfx (platform_set_drvdata(pdev, pctl); in probe).
+Pointer on struct stmfx is stored in driver data of pdev parent (in probe:
+struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);).
 
-Fixes: b5aa1006e4a9 ("pinctrl: ns2: add pinmux driver support for Broadcom NS2 SoC")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20190926081426.GB2332@mwanda
-Acked-by: Scott Branden <scott.branden@broadcom.com>
+Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Link: https://lore.kernel.org/r/20191004122342.22018-1-amelie.delaunay@st.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/bcm/pinctrl-ns2-mux.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/pinctrl-stmfx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
-index 2bf6af7df7d94..9fabc451550ea 100644
---- a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
-+++ b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
-@@ -640,8 +640,8 @@ static int ns2_pinmux_enable(struct pinctrl_dev *pctrl_dev,
- 	const struct ns2_pin_function *func;
- 	const struct ns2_pin_group *grp;
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index 31b6e511670fc..b7c7f24699c96 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -697,7 +697,7 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
  
--	if (grp_select > pinctrl->num_groups ||
--		func_select > pinctrl->num_functions)
-+	if (grp_select >= pinctrl->num_groups ||
-+		func_select >= pinctrl->num_functions)
- 		return -EINVAL;
+ static int stmfx_pinctrl_remove(struct platform_device *pdev)
+ {
+-	struct stmfx *stmfx = dev_get_platdata(&pdev->dev);
++	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
  
- 	func = &pinctrl->functions[func_select];
+ 	return stmfx_function_disable(stmfx,
+ 				      STMFX_FUNC_GPIO |
 -- 
 2.20.1
 
