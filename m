@@ -2,122 +2,108 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0D2CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAF3CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DC32087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440B92080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oLRbvfDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfJ3XKx (ORCPT
+        id S1727489AbfJ3XMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 19:10:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51904 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726411AbfJ3XKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 19:10:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E23A2B597;
-        Wed, 30 Oct 2019 23:10:50 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: SGI-IP27: fix exception handler replication
-Date:   Thu, 31 Oct 2019 00:10:43 +0100
-Message-Id: <20191030231043.7402-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Wed, 30 Oct 2019 19:12:10 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44699 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfJ3XMJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 19:12:09 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e10so2560613pgd.11;
+        Wed, 30 Oct 2019 16:12:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=885nbPg6jGyxC22i6djzkMtMUJgUk22kfQ1KMF5dCF4=;
+        b=oLRbvfDJm8VrWgYQ6QhhHNuvFg0HWFeMlx6uraE9cHEIEbD8Y1oHlM+S7uMR89ykig
+         BfnUSMWbX5wXD6M1Luqc9OvqhZCIF6SP5AJBqS5JclOKquwXOCvDsPXkqnE01c+5FPp3
+         UE67elkNz3DkQ2pUbtKXhNOQQ3mOta+UP73RbCv1nErNEX6a+3mjlG44qBG2gPZLXqat
+         gZswl4CcAZgj7NiEFz8QmrQEttmSAeNdYh0DtpI3YkTRDdLmPzQ4AiXauoif2iJOqtwe
+         u9VlEXoki011PG3H38z5ruJcH44K4kv4CvDQ9vm2frP71hTvnG1h/yE0nunVg8VfNv2G
+         daFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=885nbPg6jGyxC22i6djzkMtMUJgUk22kfQ1KMF5dCF4=;
+        b=faNfDdAIjZDaru17AUrcq1wG4DJwrbb/H8wyWxKwSsSasmZJAqeBB9o1FjezKSsDRU
+         zDR+bq3QzBB3Y/uc6qxYHsZK9pr87aqUjoBFr0e+R0fAoXriIzloUKNbNc4J7CUG57EA
+         S6qHQ7nfa3V/r1NAv37QCtuO0VYtfQ1qIlJeUFT4tU+CmbaiY5AvhF6tfWNjkbnWAEj+
+         7wOz65DlD0FY0tNXPWXs1RVy6fBH2O3EhmXv+2HPRgJqiDn9Wc4h3nsMdRyOufQ6n2bN
+         F7qWjpALE1xJxU7uGoPTF5s5j62v/d1F73453SlSaF75R0YvxoioI1MsLJ4sFqn5afYY
+         i3Qg==
+X-Gm-Message-State: APjAAAVC0fmFaLlL7lay7X3SLJYtyePJ1RNjgT56N5mNumNJMbS0wq3p
+        KxKXJWozflGfeyZzNPTp3IQ=
+X-Google-Smtp-Source: APXvYqxbfiwz4ogo5Kw8lSy4iUdkk8hpOLAZPedWTkyCs30wo0LDOGX1RlN+6AjnPZgj+BoIq0bmnQ==
+X-Received: by 2002:a17:90a:a504:: with SMTP id a4mr2279687pjq.61.1572477128315;
+        Wed, 30 Oct 2019 16:12:08 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r21sm1079774pfc.27.2019.10.30.16.12.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 16:12:07 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 16:12:05 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marcel Ziswiler <marcel@ziswiler.com>, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-kernel@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        linux-imx@nxp.com, linux-input@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/5] dt-bindings: input: tochscreen: ad7879: generic
+ node names in example
+Message-ID: <20191030231205.GI57214@dtor-ws>
+References: <20191026090403.3057-1-marcel@ziswiler.com>
+ <20191026090403.3057-3-marcel@ziswiler.com>
+ <20191030140455.GA4544@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030140455.GA4544@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 775b089aeffa ("MIPS: tlbex: Remove cpu_has_local_ebase") removed
-generating tlb refill handlers for every CPU, which was needed for
-generating per node exception handlers on IP27. Instead of resurrecting
-(and fixing) refill handler generation, we simply copy all exception
-vectors from the boot node to the other nodes. Also remove the config
-option since the memory tradeoff for expection handler replication
-is just 8k per node.
+On Wed, Oct 30, 2019 at 09:04:55AM -0500, Rob Herring wrote:
+> On Sat, Oct 26, 2019 at 11:04:01AM +0200, Marcel Ziswiler wrote:
+> > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> There's a typo in the subject.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- arch/mips/sgi-ip27/Kconfig       |  7 -------
- arch/mips/sgi-ip27/ip27-init.c   | 23 +++++++----------------
- arch/mips/sgi-ip27/ip27-memory.c |  4 ----
- 3 files changed, 7 insertions(+), 27 deletions(-)
+I fixed it up file applying, thank you for noticing.
 
-diff --git a/arch/mips/sgi-ip27/Kconfig b/arch/mips/sgi-ip27/Kconfig
-index ef3847e7aee0..e5b6cadbec85 100644
---- a/arch/mips/sgi-ip27/Kconfig
-+++ b/arch/mips/sgi-ip27/Kconfig
-@@ -38,10 +38,3 @@ config REPLICATE_KTEXT
- 	  Say Y here to enable replicating the kernel text across multiple
- 	  nodes in a NUMA cluster.  This trades memory for speed.
- 
--config REPLICATE_EXHANDLERS
--	bool "Exception handler replication support"
--	depends on SGI_IP27
--	help
--	  Say Y here to enable replicating the kernel exception handlers
--	  across multiple nodes in a NUMA cluster. This trades memory for
--	  speed.
-diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-init.c
-index 8fd3505e2b9c..7a269a088be9 100644
---- a/arch/mips/sgi-ip27/ip27-init.c
-+++ b/arch/mips/sgi-ip27/ip27-init.c
-@@ -64,23 +64,14 @@ static void per_hub_init(nasid_t nasid)
- 
- 	hub_rtc_init(nasid);
- 
--#ifdef CONFIG_REPLICATE_EXHANDLERS
--	/*
--	 * If this is not a headless node initialization,
--	 * copy over the caliased exception handlers.
--	 */
--	if (get_nasid() == nasid) {
--		extern char except_vec2_generic, except_vec3_generic;
--		extern void build_tlb_refill_handler(void);
--
--		memcpy((void *)(CKSEG0 + 0x100), &except_vec2_generic, 0x80);
--		memcpy((void *)(CKSEG0 + 0x180), &except_vec3_generic, 0x80);
--		build_tlb_refill_handler();
--		memcpy((void *)(CKSEG0 + 0x100), (void *) CKSEG0, 0x80);
--		memcpy((void *)(CKSEG0 + 0x180), &except_vec3_generic, 0x100);
--		__flush_cache_all();
-+	if (nasid) {
-+		/* copy exception handlers from first node to current node */
-+		memcpy((void *)NODE_OFFSET_TO_K0(nasid, 0),
-+		       (void *)CKSEG0, 0x200);
-+		/* switch to node local exception handlers */
-+		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_8K);
-+		local_flush_icache_range(CKSEG0, CKSEG0 + 0x200);
- 	}
--#endif
- }
- 
- void per_cpu_init(void)
-diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
-index f610fff592a6..563aad5e6398 100644
---- a/arch/mips/sgi-ip27/ip27-memory.c
-+++ b/arch/mips/sgi-ip27/ip27-memory.c
-@@ -311,11 +311,7 @@ static void __init mlreset(void)
- 		 * thinks it is a node 0 address.
- 		 */
- 		REMOTE_HUB_S(nasid, PI_REGION_PRESENT, (region_mask | 1));
--#ifdef CONFIG_REPLICATE_EXHANDLERS
--		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_8K);
--#else
- 		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_0);
--#endif
- 
- #ifdef LATER
- 		/*
+> 
+> > 
+> > Update example in ad7879 devicetree documentation to use generic touch
+> > controller node names.
+> > 
+> > Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> > 
+> > ---
+> > 
+> > Changes in v2: New patch.
+> > 
+> >  .../devicetree/bindings/input/touchscreen/ad7879.txt          | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+
 -- 
-2.16.4
-
+Dmitry
