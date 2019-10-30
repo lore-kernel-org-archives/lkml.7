@@ -2,52 +2,51 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377B3CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6826DCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E9F20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF772087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450717;
-	bh=/idMyIy3EstznScmSyy4e32Pa8RU7vF8zAOKGKWH8Qw=;
+	s=default; t=1572450722;
+	bh=+f5fV1K5SfaR6N41ceXQ6zF7T0/XN+l1jzOcTOiNBzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DgfZlPg9XlctkxxH13ldafqFtkQvMsEM9lX8T67siqrc5xtt5ReHAJfa9/fCABkIq
-	 AOGzvcWMYwYteTjqTG3Uh3sbOIyd/KIzIc1XbOUxtxtaOB11TAbGwGA5xwfCR8EHLv
-	 SYTM95G/fwbgsQ5N7GNXKQpo8B0v5+Yz5zmHtozw=
+	b=U1xeQdMN83BNCDikXyyMMoRn01rQQOuz97qr0BnBFlGb0D6+uWDUOcySzMKvAtLTe
+	 zeV+eNPIAwBbuPqwF0SnnmM+2qAEixfuA49r+vqMuG1JFBCD1zzOont92oU3u6ybYq
+	 4mgeTDupFXyO/LsohEpmIqBeM8f5wRbIZ/InqO9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfJ3Pvz (ORCPT
+        id S1727905AbfJ3PwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:51:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52768 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:52:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbfJ3Pvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:51:53 -0400
+        id S1727883AbfJ3Pvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:54 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 173D720874;
-        Wed, 30 Oct 2019 15:51:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 088C920656;
+        Wed, 30 Oct 2019 15:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450712;
-        bh=/idMyIy3EstznScmSyy4e32Pa8RU7vF8zAOKGKWH8Qw=;
+        s=default; t=1572450714;
+        bh=+f5fV1K5SfaR6N41ceXQ6zF7T0/XN+l1jzOcTOiNBzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pgfxY12Y1bNX3uTzkBy/PLp1Lq0M319rM4+HfDcc+R5ZKCXHTAb639b3itJJW+3ul
-         iWFyNvpYDUHKPX39G8coSDEEw22I+tkwY3KnHLeqo1vtUUecLCX0t8Tg/SismyPV8L
-         pVVreA0q336Q7juU4RESEpXOgX8085oQFlJ8Er6U=
+        b=m61353Be9Rw4MrrrdZCwhF5lxBCViFs6wpWfQPvTGyxvpdsP4OUkEisVXtKYw7HZ5
+         LHA2kA2BvT9hxAYdpJPWwt5HCE+Zn/hEI4wmahMTshBJEUB9qDcvq5JqhU9Zx1GnPx
+         e3Bfm0tPWKM7Bu6Q6vBmulppXyJsIONzq7HJtACQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 31/81] ASoC: msm8916-wcd-digital: add missing MIX2 path for RX1/2
-Date:   Wed, 30 Oct 2019 11:48:37 -0400
-Message-Id: <20191030154928.9432-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 32/81] ASoC: simple_card_utils.h: Fix potential multiple redefinition error
+Date:   Wed, 30 Oct 2019 11:48:38 -0400
+Message-Id: <20191030154928.9432-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -60,88 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-[ Upstream commit bcab05880f9306e94531b0009c627421db110a74 ]
+[ Upstream commit af6219590b541418d3192e9bfa03989834ca0e78 ]
 
-This patch adds missing MIX2 path on RX1/2 which take IIR1 and
-IIR2 as inputs.
+asoc_simple_debug_info and asoc_simple_debug_dai must be static
+otherwise we might a compilation error if the compiler decides
+not to inline the given function.
 
-Without this patch sound card fails to intialize with below warning:
-
- ASoC: no sink widget found for RX1 MIX2 INP1
- ASoC: Failed to add route IIR1 -> IIR1 -> RX1 MIX2 INP1
- ASoC: no sink widget found for RX2 MIX2 INP1
- ASoC: Failed to add route IIR1 -> IIR1 -> RX2 MIX2 INP1
- ASoC: no sink widget found for RX1 MIX2 INP1
- ASoC: Failed to add route IIR2 -> IIR2 -> RX1 MIX2 INP1
- ASoC: no sink widget found for RX2 MIX2 INP1
- ASoC: Failed to add route IIR2 -> IIR2 -> RX2 MIX2 INP1
-
-Reported-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20191009111944.28069-1-srinivas.kandagatla@linaro.org
+Fixes: 0580dde59438686d ("ASoC: simple-card-utils: add asoc_simple_debug_info()")
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20191009153615.32105-3-daniel.baluta@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/msm8916-wcd-digital.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ include/sound/simple_card_utils.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/codecs/msm8916-wcd-digital.c b/sound/soc/codecs/msm8916-wcd-digital.c
-index 1db7e43ec203e..5963d170df432 100644
---- a/sound/soc/codecs/msm8916-wcd-digital.c
-+++ b/sound/soc/codecs/msm8916-wcd-digital.c
-@@ -243,6 +243,10 @@ static const char *const rx_mix1_text[] = {
- 	"ZERO", "IIR1", "IIR2", "RX1", "RX2", "RX3"
- };
+diff --git a/include/sound/simple_card_utils.h b/include/sound/simple_card_utils.h
+index 985a5f583de4c..31f76b6abf712 100644
+--- a/include/sound/simple_card_utils.h
++++ b/include/sound/simple_card_utils.h
+@@ -135,9 +135,9 @@ int asoc_simple_init_priv(struct asoc_simple_priv *priv,
+ 			       struct link_info *li);
  
-+static const char * const rx_mix2_text[] = {
-+	"ZERO", "IIR1", "IIR2"
-+};
-+
- static const char *const dec_mux_text[] = {
- 	"ZERO", "ADC1", "ADC2", "ADC3", "DMIC1", "DMIC2"
- };
-@@ -270,6 +274,16 @@ static const struct soc_enum rx3_mix1_inp_enum[] = {
- 	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX3_B2_CTL, 0, 6, rx_mix1_text),
- };
+ #ifdef DEBUG
+-inline void asoc_simple_debug_dai(struct asoc_simple_priv *priv,
+-				  char *name,
+-				  struct asoc_simple_dai *dai)
++static inline void asoc_simple_debug_dai(struct asoc_simple_priv *priv,
++					 char *name,
++					 struct asoc_simple_dai *dai)
+ {
+ 	struct device *dev = simple_priv_to_dev(priv);
  
-+/* RX1 MIX2 */
-+static const struct soc_enum rx_mix2_inp1_chain_enum =
-+	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX1_B3_CTL,
-+		0, 3, rx_mix2_text);
-+
-+/* RX2 MIX2 */
-+static const struct soc_enum rx2_mix2_inp1_chain_enum =
-+	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX2_B3_CTL,
-+		0, 3, rx_mix2_text);
-+
- /* DEC */
- static const struct soc_enum dec1_mux_enum = SOC_ENUM_SINGLE(
- 				LPASS_CDC_CONN_TX_B1_CTL, 0, 6, dec_mux_text);
-@@ -309,6 +323,10 @@ static const struct snd_kcontrol_new rx3_mix1_inp2_mux = SOC_DAPM_ENUM(
- 				"RX3 MIX1 INP2 Mux", rx3_mix1_inp_enum[1]);
- static const struct snd_kcontrol_new rx3_mix1_inp3_mux = SOC_DAPM_ENUM(
- 				"RX3 MIX1 INP3 Mux", rx3_mix1_inp_enum[2]);
-+static const struct snd_kcontrol_new rx1_mix2_inp1_mux = SOC_DAPM_ENUM(
-+				"RX1 MIX2 INP1 Mux", rx_mix2_inp1_chain_enum);
-+static const struct snd_kcontrol_new rx2_mix2_inp1_mux = SOC_DAPM_ENUM(
-+				"RX2 MIX2 INP1 Mux", rx2_mix2_inp1_chain_enum);
+@@ -167,7 +167,7 @@ inline void asoc_simple_debug_dai(struct asoc_simple_priv *priv,
+ 		dev_dbg(dev, "%s clk %luHz\n", name, clk_get_rate(dai->clk));
+ }
  
- /* Digital Gain control -38.4 dB to +38.4 dB in 0.3 dB steps */
- static const DECLARE_TLV_DB_SCALE(digital_gain, -3840, 30, 0);
-@@ -740,6 +758,10 @@ static const struct snd_soc_dapm_widget msm8916_wcd_digital_dapm_widgets[] = {
- 			 &rx3_mix1_inp2_mux),
- 	SND_SOC_DAPM_MUX("RX3 MIX1 INP3", SND_SOC_NOPM, 0, 0,
- 			 &rx3_mix1_inp3_mux),
-+	SND_SOC_DAPM_MUX("RX1 MIX2 INP1", SND_SOC_NOPM, 0, 0,
-+			 &rx1_mix2_inp1_mux),
-+	SND_SOC_DAPM_MUX("RX2 MIX2 INP1", SND_SOC_NOPM, 0, 0,
-+			 &rx2_mix2_inp1_mux),
- 
- 	SND_SOC_DAPM_MUX("CIC1 MUX", SND_SOC_NOPM, 0, 0, &cic1_mux),
- 	SND_SOC_DAPM_MUX("CIC2 MUX", SND_SOC_NOPM, 0, 0, &cic2_mux),
+-inline void asoc_simple_debug_info(struct asoc_simple_priv *priv)
++static inline void asoc_simple_debug_info(struct asoc_simple_priv *priv)
+ {
+ 	struct snd_soc_card *card = simple_priv_to_card(priv);
+ 	struct device *dev = simple_priv_to_dev(priv);
 -- 
 2.20.1
 
