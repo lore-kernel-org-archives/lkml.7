@@ -2,152 +2,262 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82131CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B164CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C67F217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:06:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LmJEg7fa"
+	by mail.kernel.org (Postfix) with ESMTP id 11B4520663
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfJ3KGP (ORCPT
+        id S1726345AbfJ3KME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:06:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36099 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726032AbfJ3KGO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:06:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572429973;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XCFM+vy5sCIRGyEMkRyavRcNqvtNzzIvMJiO0ChiaNo=;
-        b=LmJEg7faqb5cVPtWI977+XuJnGo9N+9/VhEm5IoiW2J2gNmNf10Z4JCLm+3IjCjf56hGAq
-        WIQ1nJKTpQIAQtGE2GSGB2zRpaaPLzxS6gnUcTvj+v6lx+fhswH1Cy/JgdUEWlQLeCisj0
-        6xQFhn3o0UeV1KsUlQxQsfsrVbVK8Vk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-109-bqHUfyPvPXCt_Th37ejvZQ-1; Wed, 30 Oct 2019 06:06:09 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F4A41800D55;
-        Wed, 30 Oct 2019 10:06:08 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4A11460870;
-        Wed, 30 Oct 2019 10:06:07 +0000 (UTC)
-Date:   Wed, 30 Oct 2019 11:06:06 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     acme@kernel.org, jolsa@kernel.org, eranian@google.com,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v3 3/7] perf evsel: Add iterator to iterate over events
- ordered by CPU
-Message-ID: <20191030100606.GG20826@krava>
-References: <20191025181417.10670-1-andi@firstfloor.org>
- <20191025181417.10670-4-andi@firstfloor.org>
+        Wed, 30 Oct 2019 06:12:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46954 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726046AbfJ3KME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 06:12:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4E146B46F;
+        Wed, 30 Oct 2019 10:12:01 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 11:12:00 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+cc:     gor@linux.ibm.com, borntraeger@de.ibm.com, jpoimboe@redhat.com,
+        joe.lawrence@redhat.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jikos@kernel.org, pmladek@suse.com,
+        nstange@suse.de, live-patching@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] s390/livepatch: Implement reliable stack tracing
+ for the consistency model
+In-Reply-To: <20191029163450.GI5646@osiris>
+Message-ID: <alpine.LSU.2.21.1910301105550.18400@pobox.suse.cz>
+References: <20191029143904.24051-1-mbenes@suse.cz> <20191029163450.GI5646@osiris>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20191025181417.10670-4-andi@firstfloor.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: bqHUfyPvPXCt_Th37ejvZQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 11:14:13AM -0700, Andi Kleen wrote:
-> From: Andi Kleen <ak@linux.intel.com>
->=20
-> Add some common code that is needed to iterate over all events
-> in CPU order. Used in followon patches
->=20
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
->=20
-> ---
->=20
-> v2: Add cpumap__for_each_cpu macro to factor out some common code
-> ---
->  tools/perf/util/cpumap.h |  8 ++++++++
->  tools/perf/util/evlist.c | 33 +++++++++++++++++++++++++++++++++
->  tools/perf/util/evlist.h |  4 ++++
->  tools/perf/util/evsel.h  |  1 +
->  4 files changed, 46 insertions(+)
->=20
-> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-> index 2553bef1279d..a9b13d72fd29 100644
-> --- a/tools/perf/util/cpumap.h
-> +++ b/tools/perf/util/cpumap.h
-> @@ -60,4 +60,12 @@ int cpu_map__build_map(struct perf_cpu_map *cpus, stru=
-ct perf_cpu_map **res,
-> =20
->  int cpu_map__cpu(struct perf_cpu_map *cpus, int idx);
->  bool cpu_map__has(struct perf_cpu_map *cpus, int cpu);
-> +
-> +#define __cpumap__for_each_cpu(cpus, index, cpu, maxcpu)\
-> +=09for ((index) =3D 0; =09=09=09=09\
-> +=09     (cpu) =3D (index) < (maxcpu) ? (cpus)->map[index] : -1, (index) =
-< (maxcpu); \
-> +=09     (index)++)
-> +#define cpumap__for_each_cpu(cpus, index, cpu) \
-> +=09__cpumap__for_each_cpu(cpus, index, cpu, (cpus)->nr)
-> +
->  #endif /* __PERF_CPUMAP_H */
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index fdce590d2278..da3c8f8ef68e 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -342,6 +342,39 @@ static int perf_evlist__nr_threads(struct evlist *ev=
-list,
->  =09=09return perf_thread_map__nr(evlist->core.threads);
->  }
-> =20
-> +struct perf_cpu_map *evlist__cpu_iter_start(struct evlist *evlist)
-> +{
-> +=09struct perf_cpu_map *cpus;
-> +=09struct evsel *pos;
-> +
-> +=09/*
-> +=09 * evlist->cpus is not necessarily a superset of all the
-> +=09 * event's cpus, so compute our own super set. This
-> +=09 * assume that there is a super set
-> +=09 */
-> +=09cpus =3D evlist->core.cpus;
-> +=09evlist__for_each_entry(evlist, pos) {
-> +=09=09pos->cpu_index =3D 0;
-> +=09=09if (pos->core.cpus->nr > cpus->nr)
-> +=09=09=09cpus =3D pos->core.cpus;
-> +=09}
-> +=09return cpus;
+On Tue, 29 Oct 2019, Heiko Carstens wrote:
 
-I might not understand the reason for cpu_index, but=20
-imagine something like below should be enough, no?
+> On Tue, Oct 29, 2019 at 03:39:01PM +0100, Miroslav Benes wrote:
+> > - I tried to use the existing infrastructure as much as possible with
+> >   one exception. I kept unwind_next_frame_reliable() next to the
+> >   ordinary unwind_next_frame(). I did not come up with a nice solution
+> >   how to integrate it. The reliable unwinding is executed on a task
+> >   stack only, which leads to a nice simplification. My integration
+> >   attempts only obfuscated the existing unwind_next_frame() which is
+> >   already not easy to read. Ideas are definitely welcome.
+> 
+> Ah, now I see. So patch 2 seems to be leftover(?). Could you just send
+> how the result would look like?
+> 
+> I'd really like to have only one function, since some of the sanity
+> checks you added also make sense for what we already have - so code
+> would diverge from the beginning.
 
-=09make evlist->all_cpus that contains all events cpus + evlist->core.cpus,
-        and iterate it via:
+Ok, that is understandable. I tried a bit harder and the outcome does not 
+look as bad as my previous attempts (read, I gave up too early).
 
-=09evlist__for_each_cpu(evlist, cpu) {
-=09=09affinity__set(&affinity, cpu);
+I deliberately split unwind_reliable/!unwind_reliable case in "No 
+back-chain, look for a pt_regs structure" branch, because the purpose is 
+different there. In !unwind_reliable case we can continue on a different 
+stack (if I understood the code correctly when I analyzed it in the past. 
+I haven't found a good documentation unfortunately :(). While in 
+unwind_realiable case we just check if there are pt_regs in the right 
+place on a task stack and stop. If there are not, error out.
 
-=09=09evlist__for_each_entry(evlist, evsel) {
-=09=09=09if (!cpu_map__has(perf_evsel__cpus(&evsel->core), cpu)
-=09=09=09=09continue;
+It applies on top of the patch set. Only compile tested though. If it 
+looks ok-ish to you, I'll work on it.
 
-=09=09=09// here we have evsel with its cpu running on given cpu
-=09=09}
-=09}
+Thanks
+Miroslav
 
-jirka
-
+---
+diff --git a/arch/s390/include/asm/unwind.h b/arch/s390/include/asm/unwind.h
+index 87d1850d195a..282c158a3c2a 100644
+--- a/arch/s390/include/asm/unwind.h
++++ b/arch/s390/include/asm/unwind.h
+@@ -43,7 +43,7 @@ struct unwind_state {
+ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		    struct pt_regs *regs, unsigned long first_frame,
+ 		    bool unwind_reliable);
+-bool unwind_next_frame(struct unwind_state *state);
++bool unwind_next_frame(struct unwind_state *state, bool unwind_reliable);
+ bool unwind_next_frame_reliable(struct unwind_state *state);
+ unsigned long unwind_get_return_address(struct unwind_state *state);
+ 
+@@ -75,7 +75,7 @@ static inline struct pt_regs *unwind_get_entry_regs(struct unwind_state *state)
+ #define unwind_for_each_frame(state, task, regs, first_frame, unwind_reliable)	\
+ 	for (unwind_start(state, task, regs, first_frame, unwind_reliable);	\
+ 	     !unwind_done(state);						\
+-	     unwind_next_frame(state))
++	     unwind_next_frame(state, unwind_reliable))
+ 
+ static inline void unwind_init(void) {}
+ static inline void unwind_module_init(struct module *mod, void *orc_ip,
+diff --git a/arch/s390/kernel/stacktrace.c b/arch/s390/kernel/stacktrace.c
+index cff9ba0715e6..c5e3a37763f7 100644
+--- a/arch/s390/kernel/stacktrace.c
++++ b/arch/s390/kernel/stacktrace.c
+@@ -38,7 +38,7 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 
+ 	for (unwind_start(&state, task, NULL, 0, true);
+ 	     !unwind_done(&state) && !unwind_error(&state);
+-	     unwind_next_frame_reliable(&state)) {
++	     unwind_next_frame(&state, true)) {
+ 
+ 		addr = unwind_get_return_address(&state);
+ 		if (!addr)
+diff --git a/arch/s390/kernel/unwind_bc.c b/arch/s390/kernel/unwind_bc.c
+index 8d3a1d137ad0..2a7c88b58089 100644
+--- a/arch/s390/kernel/unwind_bc.c
++++ b/arch/s390/kernel/unwind_bc.c
+@@ -36,7 +36,7 @@ static bool update_stack_info(struct unwind_state *state, unsigned long sp)
+ 	return true;
+ }
+ 
+-bool unwind_next_frame(struct unwind_state *state)
++bool unwind_next_frame(struct unwind_state *state, bool unwind_reliable)
+ {
+ 	struct stack_info *info = &state->stack_info;
+ 	struct stack_frame *sf;
+@@ -58,28 +58,59 @@ bool unwind_next_frame(struct unwind_state *state)
+ 	} else {
+ 		sf = (struct stack_frame *) state->sp;
+ 		sp = READ_ONCE_NOCHECK(sf->back_chain);
+-		if (likely(sp)) {
+-			/* Non-zero back-chain points to the previous frame */
+-			if (unlikely(outside_of_stack(state, sp))) {
+-				if (!update_stack_info(state, sp))
+-					goto out_err;
+-			}
++		/*
++		 * unwind_reliable case: Idle tasks are special. The final
++		 * back-chain points to nodat_stack.  See CALL_ON_STACK() in
++		 * smp_start_secondary() callback used in __cpu_up(). We just
++		 * accept it, go to else branch and look for pt_regs.
++		 */
++		if (likely(sp) &&
++		    (!unwind_reliable || !(is_idle_task(state->task) &&
++					   outside_of_stack(state, sp)))) {
++
++			/*
++			 * Non-zero back-chain points to the previous frame. No
++			 * need to update stack info when unwind_reliable is
++			 * true. We should be on a task stack and everything
++			 * else is an error.
++			 */
++			if (unlikely(outside_of_stack(state, sp)) &&
++			    ((!unwind_reliable && !update_stack_info(state, sp)) ||
++			     unwind_reliable))
++				goto out_err;
++
+ 			sf = (struct stack_frame *) sp;
+ 			ip = READ_ONCE_NOCHECK(sf->gprs[8]);
+ 			reliable = true;
+ 		} else {
+ 			/* No back-chain, look for a pt_regs structure */
+ 			sp = state->sp + STACK_FRAME_OVERHEAD;
+-			if (!on_stack(info, sp, sizeof(struct pt_regs)))
+-				goto out_stop;
+ 			regs = (struct pt_regs *) sp;
+-			if (READ_ONCE_NOCHECK(regs->psw.mask) & PSW_MASK_PSTATE)
++
++			if (!unwind_reliable) {
++				if (!on_stack(info, sp, sizeof(struct pt_regs)))
++					goto out_stop;
++				if (READ_ONCE_NOCHECK(regs->psw.mask) & PSW_MASK_PSTATE)
++					goto out_stop;
++				ip = READ_ONCE_NOCHECK(regs->psw.addr);
++				reliable = true;
++			} else {
++				if ((unsigned long)regs != info->end - sizeof(struct pt_regs))
++					goto out_err;
++				if (!(state->task->flags & (PF_KTHREAD | PF_IDLE)) &&
++				      !user_mode(regs))
++					goto out_err;
++
++				state->regs = regs;
+ 				goto out_stop;
+-			ip = READ_ONCE_NOCHECK(regs->psw.addr);
+-			reliable = true;
++			}
+ 		}
+ 	}
+ 
++	/* Sanity check: ABI requires SP to be aligned 8 bytes. */
++	if (sp & 0x7)
++		goto out_err;
++
+ 	ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
+ 				   ip, (void *) sp);
+ 
+@@ -98,62 +129,6 @@ bool unwind_next_frame(struct unwind_state *state)
+ }
+ EXPORT_SYMBOL_GPL(unwind_next_frame);
+ 
+-bool unwind_next_frame_reliable(struct unwind_state *state)
+-{
+-	struct stack_info *info = &state->stack_info;
+-	struct stack_frame *sf;
+-	struct pt_regs *regs;
+-	unsigned long sp, ip;
+-
+-	sf = (struct stack_frame *) state->sp;
+-	sp = READ_ONCE_NOCHECK(sf->back_chain);
+-	/*
+-	 * Idle tasks are special. The final back-chain points to nodat_stack.
+-	 * See CALL_ON_STACK() in smp_start_secondary() callback used in
+-	 * __cpu_up(). We just accept it, go to else branch and look for
+-	 * pt_regs.
+-	 */
+-	if (likely(sp && !(is_idle_task(state->task) &&
+-			   outside_of_stack(state, sp)))) {
+-		/* Non-zero back-chain points to the previous frame */
+-		if (unlikely(outside_of_stack(state, sp)))
+-			goto out_err;
+-
+-		sf = (struct stack_frame *) sp;
+-		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
+-	} else {
+-		/* No back-chain, look for a pt_regs structure */
+-		sp = state->sp + STACK_FRAME_OVERHEAD;
+-		regs = (struct pt_regs *) sp;
+-		if ((unsigned long)regs != info->end - sizeof(struct pt_regs))
+-			goto out_err;
+-		if (!(state->task->flags & (PF_KTHREAD | PF_IDLE)) &&
+-		      !user_mode(regs))
+-			goto out_err;
+-
+-		state->regs = regs;
+-		goto out_stop;
+-	}
+-
+-	/* Sanity check: ABI requires SP to be aligned 8 bytes. */
+-	if (sp & 0x7)
+-		goto out_err;
+-
+-	ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
+-				   ip, (void *) sp);
+-
+-	/* Update unwind state */
+-	state->sp = sp;
+-	state->ip = ip;
+-	return true;
+-
+-out_err:
+-	state->error = true;
+-out_stop:
+-	state->stack_info.type = STACK_TYPE_UNKNOWN;
+-	return false;
+-}
+-
+ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		    struct pt_regs *regs, unsigned long sp,
+ 		    bool unwind_reliable)
