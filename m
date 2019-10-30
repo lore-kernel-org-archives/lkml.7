@@ -2,54 +2,88 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBDECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60A4CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733882083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82BF22086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572396817;
+	bh=CiN8+uBGBBbTGDNsi2Hq3KM6FLtlK9d7Wva0KwIc9AE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nwJaTBcwxORdlFGk2PwlGwVxw/Lp/qM0/7XfL3xjk53ncSrqIUmOsYSCNOsalOTFQ
+	 7GhfD0oTvhNcsdbXlYEXbmDu4LphAWWkcRHbjF9o4CS6zO16v8nraxroreNOnfYPRU
+	 PK0XYqgRGJWJrnBKHFpPO2WejgZBP3tLn7BHqYmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfJ3Avt (ORCPT
+        id S1726851AbfJ3Axg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 20:51:49 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33762 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfJ3Avt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 20:51:49 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9BB7E14053340;
-        Tue, 29 Oct 2019 17:51:48 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 17:51:48 -0700 (PDT)
-Message-Id: <20191029.175148.1513425500759326163.davem@davemloft.net>
-To:     saurav.girepunje@gmail.com
-Cc:     michael.chan@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, saurav.girepunje@hotmail.com
-Subject: Re: [PATCH] broadcom: bnxt: Fix use true/false for bool
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191028201634.GA29069@saurav>
-References: <20191028201634.GA29069@saurav>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 29 Oct 2019 17:51:48 -0700 (PDT)
+        Tue, 29 Oct 2019 20:53:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726076AbfJ3Axf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 20:53:35 -0400
+Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A898320862;
+        Wed, 30 Oct 2019 00:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572396815;
+        bh=CiN8+uBGBBbTGDNsi2Hq3KM6FLtlK9d7Wva0KwIc9AE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f6X+5fgpK5x5cJvSZ6A3HfkeIYsIcBMFlK4k1FonoDO9lwlgatFeb/YO50HwKQmVm
+         jrAvuv3CwkdD2EaURvLvWNkF9SyJZwUc0j+9XJkNAdje7SEH/dVmF7w0FUcO3mKiVv
+         pZXTiaQxmaw+BxhX3CIAZkdPj5V3mvHWxRnyL7S0=
+Date:   Wed, 30 Oct 2019 09:53:27 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v2] nvme: Add hardware monitoring support
+Message-ID: <20191030005327.GC15332@redsun51.ssa.fujisawa.hgst.com>
+References: <20191029223214.18889-1-linux@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029223214.18889-1-linux@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saurav Girepunje <saurav.girepunje@gmail.com>
-Date: Tue, 29 Oct 2019 01:46:35 +0530
-
-> Use true/false for bool type in bnxt_timer function.
+On Tue, Oct 29, 2019 at 03:32:14PM -0700, Guenter Roeck wrote:
+> nvme devices report temperature information in the controller information
+> (for limits) and in the smart log. Currently, the only means to retrieve
+> this information is the nvme command line interface, which requires
+> super-user privileges.
 > 
-> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+> At the same time, it would be desirable to use NVME temperature information
+> for thermal control.
+> 
+> This patch adds support to read NVME temperatures from the kernel using the
+> hwmon API and adds temperature zones for NVME drives. The thermal subsystem
+> can use this information to set thermal policies, and userspace can access
+> it using libsensors and/or the "sensors" command.
+> 
+> Example output from the "sensors" command:
+> 
+> nvme0-pci-0100
+> Adapter: PCI adapter
+> Composite:    +39.0°C  (high = +85.0°C, crit = +85.0°C)
+> Sensor 1:     +39.0°C
+> Sensor 2:     +41.0°C
+> 
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-Applied.
+This looks fine to me, but I'll wait a few more days to see if there are
+any additional comments..
