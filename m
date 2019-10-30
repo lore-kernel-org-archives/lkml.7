@@ -2,122 +2,93 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D71BCA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7A8CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D955320856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:04:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="b/0GuUzy"
+	by mail.kernel.org (Postfix) with ESMTP id 28A7D2087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572444304;
+	bh=1wJeIZRTGBvYQK67ll1QuK+8QXEEfDG/Z64iY5sRAb4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a9znWaJ55msDQEdBs/gjzC2wPsz7emWGSSprC5S5oNYe/1CBGLachdIC81+HdCpQc
+	 D4NmLQc2MoA5X/epx0kbyiZ4989W0oOyWA/nWEj2wbbm2nUwKGojM3vmftGuEHUcPM
+	 oROPxz1f0VgK+NoyoKBwgwnq/e+lBqB0dmRpBPco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfJ3OEu (ORCPT
+        id S1726777AbfJ3OFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:04:50 -0400
-Received: from cmta20.telus.net ([209.171.16.93]:42242 "EHLO cmta20.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbfJ3OEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:04:50 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id PoaZi6cp8N5I9PoaainIX7; Wed, 30 Oct 2019 08:04:48 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1572444288; bh=WJl/Zs24GFWlEsbeF89Dj/2Rqayile7sFsqtPXzJ8gY=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=b/0GuUzyyoTPlUH59Sb9pN/m0nMfbi04i6g17Yk0sp0UMVjc+Ms1djkgb/3PrgIF8
-         K3r5vt0MkS+CK3qa82YAS6ZD1GEfuKoreWHWbLiNNPYo+Cc4KzR8G5OK6/KzBlPZHg
-         0pTqUVXF0KkzQr9/Y1OJQ4poI09jp5lNHI24RQjpZNcbmVXqepcBrKlBHuhoxOx6Tu
-         ZsMoPUXW0waNaJOkJaQG6yCz1zEZj9URWUzXTiYxG2Q0s4GPdZrVxFpgFVyrhVU2fZ
-         gfvUh3KRwE4UnKEaSnMtY4uHD3n0gR8Ov3csEnaDlilogGqTqW7PQi4dtm4pm+9HQI
-         ER5fnQJ4SEueQ==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=qIE3Bv85-ZitGDqRaokA:9 a=CjuIK1q_8ugA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Vincent Guittot'" <vincent.guittot@linaro.org>
-Cc:     "'linux-kernel'" <linux-kernel@vger.kernel.org>,
-        "'open list:THERMAL'" <linux-pm@vger.kernel.org>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Ingo Molnar'" <mingo@kernel.org>,
-        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'Sargun Dhillon'" <sargun@sargun.me>,
-        "'Tejun Heo'" <tj@kernel.org>, "'Xie XiuQi'" <xiexiuqi@huawei.com>,
-        <xiezhipeng1@huawei.com>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Rik van Riel'" <riel@surriel.com>
-References: <1572018904-5234-1-git-send-email-dsmythies@telus.net> <CAKfTPtDFAS3TiNaaPoEXFZbqdMt_-tfGm9ffVcQAN=Mu_KbRdQ@mail.gmail.com> <000c01d58bca$f5709b30$e051d190$@net> <CAKfTPtDx6nu7YtYN=JLRAseZS3Q6Nt-QdMQuG_XoUtmtR_101A@mail.gmail.com> <001201d58e68$eaa39630$bfeac290$@net> <20191029160210.GA8343@linaro.org>
-In-Reply-To: <20191029160210.GA8343@linaro.org>
-Subject: RE: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load balancing path"
-Date:   Wed, 30 Oct 2019 07:04:40 -0700
-Message-ID: <000001d58f2a$fc593200$f50b9600$@net>
+        Wed, 30 Oct 2019 10:05:03 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43468 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfJ3OFC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 10:05:02 -0400
+Received: by mail-oi1-f196.google.com with SMTP id s5so2033493oie.10;
+        Wed, 30 Oct 2019 07:05:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VjUbeXseZNfZ1pV6P1oZr6TvD5+K3+0WHvnHgaOVfyc=;
+        b=kQuUH+S6Fmh6UCsKAzyP9jg1N2QniL1UreLbqAQnyAMdedXbSbkaS3TxNdHzV2uloL
+         8xjYRjqIFa0AtW2q7h6qolAgTniAHFQfFZgwSYqBveeqwW/lj0WKMogIDkHXW6nEDvtl
+         rn6JXZztgnbo2szYMUV3ULE8DyqpsFFbFkk9c0h4E38QUJ2kLELMdyCpOqU+XdMoPNk8
+         ptXLd29LEO4TfbNUwJpTuCSzgG3leMYB0pH60GXt5xSO1rYTQkauG+34ObjJSzBst8wy
+         x7X0YjpKDCoM4U2JfmUlE/PvbkKzFuGRhBouWBoUvdLjgcUXGNwRlgryh10pOLhdDo99
+         /KMQ==
+X-Gm-Message-State: APjAAAVhJrpFYXvr0x1LBeyFFxZVrIdPjsSiC1KONflkSoCZU4jUsmTM
+        tsgsqvki1p7aBPx71yZucQ==
+X-Google-Smtp-Source: APXvYqxh7UaJbqXooxPymSVpV2Dkk9RFHomlOl61v/922QK11EtyGIdV7wMcJTOi1B5ho34SClF9Fw==
+X-Received: by 2002:aca:5d8a:: with SMTP id r132mr8536367oib.119.1572444301779;
+        Wed, 30 Oct 2019 07:05:01 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t12sm55049otl.71.2019.10.30.07.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 07:04:56 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 09:04:55 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Marcel Ziswiler <marcel@ziswiler.com>
+Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        linux-imx@nxp.com, linux-input@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/5] dt-bindings: input: tochscreen: ad7879: generic
+ node names in example
+Message-ID: <20191030140455.GA4544@bogus>
+References: <20191026090403.3057-1-marcel@ziswiler.com>
+ <20191026090403.3057-3-marcel@ziswiler.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdWOcj5NDaNMZsSTQUuRuqwCnNBdRwAt1ecg
-X-CMAE-Envelope: MS4wfBxVetny6cp33PTZir3OVfW1MX09EzRaMXmcljIjr1EIXAbAncmTTjt3A8b4DoD/0OnHrJG7USEyLmh7l4PVT1/nPP7/sHEewTPkx0lIdzNsRCF3xCFq
- rMVbicXxj/2mdx+W96aevZ7QrczGPJO9siv8yY8hSxkFgR925ef50X/LpYp3I1V5MRIaq35EYzuMnnFWFGFB4mfTL7LTexpZa3PY05mJCRahAZEofEPfuuhL
- 6r2W0CinsZ5cMO+/JddQe5MgZwkVSpIxgpvNU209CAlmNxO+nIMxcHO7zqvFWZ8R7zlR8fk3zsyJ3+vikuWMMslekMeEQ2mTQj49BtVTR6I+DX5DcUmnoPdd
- lznXl31M1sEPexiKa0WvKprKAM2dCVNweobewV9KHhIja7zKGZPdhScM2lhcl3UCxhXU+VqFGv0Zor9vpmVb+Opdo4BXJUrVX/vjQgQrhcXvyUCo4YQgVSc5
- IdOisKyK2uyR4NDwDbKPzSBKCNhWmzuBHII9Tl75KOLi9LytyCW7dw0fsgqT+Jh/7HOzjC2klcfTogek0eGg0ylLL20i6nu/5ace+w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191026090403.3057-3-marcel@ziswiler.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.10.29 09:02 Vincent Guittot wrote:
+On Sat, Oct 26, 2019 at 11:04:01AM +0200, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-> Could you try the patch below ? It ensures that at least the root cfs rq stays
-> in the list so each time update_blocked_averages is called, we will call update_cfs_rq_load_avg()
-> for the root cfs_rq at least and even if everything already reach zero.
-> This will ensure that cfs_rq_util_change is called even if nothing has
-> changed.
->
+There's a typo in the subject.
+
+> 
+> Update example in ad7879 devicetree documentation to use generic touch
+> controller node names.
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
 > ---
->  kernel/sched/fair.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 151c0b7..ac0a549 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7552,6 +7552,8 @@ static inline void update_blocked_load_status(struct rq *rq, bool has_blocked) {
 > 
->  static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
->  {
-> +	struct rq *rq = rq_of(cfs_rq);
-> +
->  	if (cfs_rq->load.weight)
-> 		return false;
+> Changes in v2: New patch.
 > 
-> @@ -7564,6 +7566,9 @@ static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
-> 	if (cfs_rq->avg.runnable_load_sum)
-> 		return false;
-> 
-> +	if (cfs_rq == &rq->cfs)
-> +		return false;
-> +
-> 	return true;
-> }
-> 
-> -- 
-> 2.7.4
-
-Yes, this patch works and solves the long time
-between calls of the intel_pstate CPU frequency scaling
-driver issue.
-I see you sent a formal patch a few hours ago.
-I'll try it and report back.
-
-... Doug
- 
-
+>  .../devicetree/bindings/input/touchscreen/ad7879.txt          | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
