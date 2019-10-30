@@ -2,130 +2,125 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F52CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA79BCA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49128217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9B92087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:30:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0t2hUb4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nsVLguS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfJ3OaD (ORCPT
+        id S1726706AbfJ3Oag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:30:03 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:47033 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfJ3OaC (ORCPT
+        Wed, 30 Oct 2019 10:30:36 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39410 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfJ3Oag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:30:02 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w8so2876519lji.13
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 07:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UDQi5D+Jni0obEk/hrjnnpFb3HIzP7e6/KmAnzzfUzA=;
-        b=h0t2hUb4oT0r62g/cYibJjD1Fyqyoyjgd8JaJBdp8oUdJ7aXI+MoelJSuvU31m5zTW
-         9t5FudXDw80Z5My1dBKKXgsCu/7Gu9eh73ATRKB2rhIAv7GMWeavnW21688kuF9jpZpY
-         pHRE1y4vCKpMV/jmFLcEaX5CZ/9VFgXcarK09YTh+zaJmfM7uLK0aEDFGASxF1tJ/bLC
-         tx/2yWUM7YlMaRGD+S8pU+7cwTcuigP80RQ993kbcqqxly7AyKZctejgg3d+T2w44YUK
-         p6GXHGwn+arn3+YBZCrYhbJpGGVM8j9kad/eRmovTQxPTGy3BsJpRhEHIrSABScQ8Wsn
-         et0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UDQi5D+Jni0obEk/hrjnnpFb3HIzP7e6/KmAnzzfUzA=;
-        b=Ym9D3Snf2yUOeAv7tuVge8mFiTsULwAN7CyGsB1B9Dv7yxkzANWbUsqtRHZ7Qf3vNt
-         xxcDSmrCQv6ptx9Y04hsxoe6/duLE36N3Xzzwtxooc1lyzmf6RP3NmI9oQcwfj9jvtay
-         VVElIsKB6vfwkN7+jq+aKCnP8cGXlhmZ/qtowShOcLqFsmjdeTZ+CafoEflzAb4rc7/j
-         opiNSzRto7tyOrAvhofStpC8cT+W55HOlCmdLOzrWlYCt2Yr2KyiQ/NqwuI4Ft43txnd
-         FkRAkOPfUlZdHpI9SRVSXnFPt87mukD3KyQyGzoNOnfDp+53GTQ7ah+HR6dOlFtkOHvg
-         VfRA==
-X-Gm-Message-State: APjAAAV/THMqlnHcNFgpq9fDcfPOqgJmNjC4fOl0UDBXoTwT41lFzneo
-        kSEjPrtxN02oqr+Pbvfs/xQ=
-X-Google-Smtp-Source: APXvYqx/6ls83NprcmJjVqcPOseDGmZ24WPegNnd0fqzJOSCj4K/d9bGCTxDyewu+1FbJJXi3uqHXg==
-X-Received: by 2002:a2e:8545:: with SMTP id u5mr7565ljj.213.1572445800371;
-        Wed, 30 Oct 2019 07:30:00 -0700 (PDT)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id s7sm32320ljo.98.2019.10.30.07.29.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 07:29:59 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 30 Oct 2019 15:29:51 +0100
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
-        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        dvyukov@google.com, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com
-Subject: Re: [PATCH v10 1/5] kasan: support backing vmalloc space with real
- shadow memory
-Message-ID: <20191030142951.GA24958@pc636>
-References: <20191029042059.28541-1-dja@axtens.net>
- <20191029042059.28541-2-dja@axtens.net>
+        Wed, 30 Oct 2019 10:30:36 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UEURxE009017;
+        Wed, 30 Oct 2019 09:30:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572445827;
+        bh=sjHkzET0W6fegbqYYxLj/nvwD1jevn9Rf6o8Hy+EKt0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nsVLguS5Xvh99O0z62zWL3lSC+MN9kBVqEmmfnm/O7m0YbI3dzpEJ9/LF79owtHnr
+         usMVQ1IBXPcMRGu466VKLjcudML79XSK0hQ0OPj4xgGFlq32DI6Skv2fjFvoEEp7h9
+         Sfg1kNWjOF/itYDrveMdsYt3Qy5EDOg9xKn84xnk=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UEURZJ063645;
+        Wed, 30 Oct 2019 09:30:27 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 09:30:26 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 09:30:14 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UEUNHU130877;
+        Wed, 30 Oct 2019 09:30:24 -0500
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Mark Brown <broonie@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+ <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+ <20191030141736.GN4568@sirena.org.uk>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
+Date:   Wed, 30 Oct 2019 16:31:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029042059.28541-2-dja@axtens.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191030141736.GN4568@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Daniel
 
->  
-> @@ -1294,14 +1299,19 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
->  	spin_lock(&free_vmap_area_lock);
->  	llist_for_each_entry_safe(va, n_va, valist, purge_list) {
->  		unsigned long nr = (va->va_end - va->va_start) >> PAGE_SHIFT;
-> +		unsigned long orig_start = va->va_start;
-> +		unsigned long orig_end = va->va_end;
->  
->  		/*
->  		 * Finally insert or merge lazily-freed area. It is
->  		 * detached and there is no need to "unlink" it from
->  		 * anything.
->  		 */
-> -		merge_or_add_vmap_area(va,
-> -			&free_vmap_area_root, &free_vmap_area_list);
-> +		va = merge_or_add_vmap_area(va, &free_vmap_area_root,
-> +					    &free_vmap_area_list);
-> +
-> +		kasan_release_vmalloc(orig_start, orig_end,
-> +				      va->va_start, va->va_end);
->  
-I have some questions here. I have not analyzed kasan_releace_vmalloc()
-logic in detail, sorry for that if i miss something. __purge_vmap_area_lazy()
-deals with big address space, so not only vmalloc addresses it frees here,
-basically it can be any, starting from 1 until ULONG_MAX, whereas vmalloc
-space spans from VMALLOC_START - VMALLOC_END:
 
-1) Should it be checked that vmalloc only address is freed or you handle
-it somewhere else?
+On 30/10/2019 16.17, Mark Brown wrote:
+> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
+>> On 30/10/2019 15.12, Rob Herring wrote:
+> 
+>>> Why can't we just add a shared flag like we have for interrupts?
+>>> Effectively, we have that for resets too, it's just hardcoded in the
+>>> the drivers.
+> 
+>> This would be kind of the same thing what the
+>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
+>> fixed-regulators afaik.
+> 
+> The theory with that was that any usage of this would need the
+> higher level code using the GPIO to cooperate so they didn't step
+> on each other's toes so the GPIO code should just punt to it.
 
-if (is_vmalloc_addr(va->va_start))
-    kasan_release_vmalloc(...)
+But from the client driver point of view a GPIO is still GPIO and if the
+components are unrelated then it is hard to patch things together from
+the top.
 
-2) Have you run any bencmarking just to see how much overhead it adds?
-I am asking, because probably it make sense to add those figures to the
-backlog(commit message). For example you can run:
+>> But let's say that a board design will pick two components (C1 and C2)
+>> and use the same GPIO line to enable them. We already have the drivers
+>> for them and they are used in boards already.
+> 
+> This is basically an attempt to make a generic implementation of
+> that cooperation for simple cases.
 
-<snip>
-sudo ./test_vmalloc.sh performance
-and
-sudo ./test_vmalloc.sh sequential_test_order=1
-<snip>
+Without some generic implementation we would need to patch up drivers
+(sometimes unrelated) for components which uses the same GPIO line on
+some random board.
 
-Thanks!
+We have such a thing for tlv310aic3x (for Nokia n900). I would need one
+for pcm3168a and there were an attempt for max98927 also.
+We also have boards where one GPIO is used for backlight and panel, etc.
 
---
-Vlad Rezki
+If we would have generic way then it can be tuned for more exotic
+setups, but again, I believe that board designers are not doing things
+just to be evil. What they connect most of the times are 'sane'
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
