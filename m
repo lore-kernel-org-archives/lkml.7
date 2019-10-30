@@ -2,186 +2,153 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44D8CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AC8CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E14B20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:57:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="a9sYAwZB"
+	by mail.kernel.org (Postfix) with ESMTP id A3A6120874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfJ3N50 (ORCPT
+        id S1726415AbfJ3OAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:57:26 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:5378 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726316AbfJ3N5W (ORCPT
+        Wed, 30 Oct 2019 10:00:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64632 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726322AbfJ3OAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:57:22 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9UDq1Di024880;
-        Wed, 30 Oct 2019 14:57:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=TkMBAGGVxB8LtRc6WSOm83VyZX2JZbGYxIZL7Q3esw0=;
- b=a9sYAwZBms03qim9df1B9fuuU/44h1OHpPyenbVv5szNGJh18XoIEfneQ3YYRtjJyMni
- jgrw29yNs+ohPGyWlmJjBr5FCUyTc4VWpmg3WRmnGFTMh3CkWSGVtrApc9JKgBKPamSg
- 0Yq6Jk+70UhxtD2nGTMsEGaMA5hvpkEbajkLE7QrfRSDz1BbjcFBP1JLx4uKY2Wq9zrf
- wFGNv1n/G265tn3sFtHePNDhsap57H8uKw2kGCbSNjryty3JQe0qvDryKGIkdoM+oqBN
- PfI61BGRhR7LYC3yABLiV5ITwPu16AWNNGfxwtcMpoMCQJzJ9GCzix4TCtAaNa5VxJMB Fg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vxwhe41w7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 30 Oct 2019 14:57:09 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 53874100034;
-        Wed, 30 Oct 2019 14:57:08 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 477472C07FB;
-        Wed, 30 Oct 2019 14:57:08 +0100 (CET)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
- 2019 14:57:08 +0100
-Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct 2019 14:57:07
- +0100
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH v2 2/2] mailbox: stm32-ipcc: Update wakeup management
-Date:   Wed, 30 Oct 2019 14:57:01 +0100
-Message-ID: <1572443821-28112-3-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572443821-28112-1-git-send-email-fabien.dessenne@st.com>
-References: <1572443821-28112-1-git-send-email-fabien.dessenne@st.com>
+        Wed, 30 Oct 2019 10:00:45 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9UDvClP130966
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 10:00:44 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vyaacd062-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 10:00:40 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Wed, 30 Oct 2019 14:00:23 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 30 Oct 2019 14:00:21 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9UE0Jno38010928
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 14:00:19 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 86E394C046;
+        Wed, 30 Oct 2019 14:00:19 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E11824C052;
+        Wed, 30 Oct 2019 14:00:18 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.148.76])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 30 Oct 2019 14:00:18 +0000 (GMT)
+Subject: Re: [PATCH] s390: vfio-ap: disable IRQ in remove callback results in
+ kernel OOPS
+To:     Harald Freudenberger <freude@linux.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
+        pasic@linux.ibm.com, jjherne@linux.ibm.com
+References: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
+ <0565c250-726f-dd99-f933-f91162dc107e@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Wed, 30 Oct 2019 15:00:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.25]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-30_06:2019-10-30,2019-10-30 signatures=0
+In-Reply-To: <0565c250-726f-dd99-f933-f91162dc107e@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19103014-0016-0000-0000-000002BF261E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19103014-0017-0000-0000-0000332083C9
+Message-Id: <97cf7863-d6d0-418a-09c1-50d9e84fd855@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910300127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wakeup specific IRQ management is no more needed to wake up the
-stm32 platform. A relationship has been established between the EXTI and
-the RX IRQ, just need to declare the EXTI interrupt instead of the
-IPCC RX IRQ.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- drivers/mailbox/stm32-ipcc.c | 36 +++++++-----------------------------
- 1 file changed, 7 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/mailbox/stm32-ipcc.c b/drivers/mailbox/stm32-ipcc.c
-index 5c2d1e1..ef96688 100644
---- a/drivers/mailbox/stm32-ipcc.c
-+++ b/drivers/mailbox/stm32-ipcc.c
-@@ -52,7 +52,6 @@ struct stm32_ipcc {
- 	struct clk *clk;
- 	spinlock_t lock; /* protect access to IPCC registers */
- 	int irqs[IPCC_IRQ_NUM];
--	int wkp;
- 	u32 proc_id;
- 	u32 n_chans;
- 	u32 xcr;
-@@ -282,16 +281,9 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 
- 	/* wakeup */
- 	if (of_property_read_bool(np, "wakeup-source")) {
--		ipcc->wkp = platform_get_irq_byname(pdev, "wakeup");
--		if (ipcc->wkp < 0) {
--			if (ipcc->wkp != -EPROBE_DEFER)
--				dev_err(dev, "could not get wakeup IRQ\n");
--			ret = ipcc->wkp;
--			goto err_clk;
--		}
--
- 		device_set_wakeup_capable(dev, true);
--		ret = dev_pm_set_dedicated_wake_irq(dev, ipcc->wkp);
-+
-+		ret = dev_pm_set_wake_irq(dev, ipcc->irqs[IPCC_IRQ_RX]);
- 		if (ret) {
- 			dev_err(dev, "Failed to set wake up irq\n");
- 			goto err_init_wkp;
-@@ -334,10 +326,10 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_irq_wkp:
--	if (ipcc->wkp)
-+	if (of_property_read_bool(np, "wakeup-source"))
- 		dev_pm_clear_wake_irq(dev);
- err_init_wkp:
--	device_init_wakeup(dev, false);
-+	device_set_wakeup_capable(dev, false);
- err_clk:
- 	clk_disable_unprepare(ipcc->clk);
- 	return ret;
-@@ -345,27 +337,17 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 
- static int stm32_ipcc_remove(struct platform_device *pdev)
- {
--	struct stm32_ipcc *ipcc = platform_get_drvdata(pdev);
-+	struct device *dev = &pdev->dev;
- 
--	if (ipcc->wkp)
-+	if (of_property_read_bool(dev->of_node, "wakeup-source"))
- 		dev_pm_clear_wake_irq(&pdev->dev);
- 
--	device_init_wakeup(&pdev->dev, false);
-+	device_set_wakeup_capable(dev, false);
- 
- 	return 0;
- }
- 
- #ifdef CONFIG_PM_SLEEP
--static void stm32_ipcc_set_irq_wake(struct device *dev, bool enable)
--{
--	struct stm32_ipcc *ipcc = dev_get_drvdata(dev);
--	unsigned int i;
--
--	if (device_may_wakeup(dev))
--		for (i = 0; i < IPCC_IRQ_NUM; i++)
--			irq_set_irq_wake(ipcc->irqs[i], enable);
--}
--
- static int stm32_ipcc_suspend(struct device *dev)
- {
- 	struct stm32_ipcc *ipcc = dev_get_drvdata(dev);
-@@ -373,8 +355,6 @@ static int stm32_ipcc_suspend(struct device *dev)
- 	ipcc->xmr = readl_relaxed(ipcc->reg_proc + IPCC_XMR);
- 	ipcc->xcr = readl_relaxed(ipcc->reg_proc + IPCC_XCR);
- 
--	stm32_ipcc_set_irq_wake(dev, true);
--
- 	return 0;
- }
- 
-@@ -382,8 +362,6 @@ static int stm32_ipcc_resume(struct device *dev)
- {
- 	struct stm32_ipcc *ipcc = dev_get_drvdata(dev);
- 
--	stm32_ipcc_set_irq_wake(dev, false);
--
- 	writel_relaxed(ipcc->xmr, ipcc->reg_proc + IPCC_XMR);
- 	writel_relaxed(ipcc->xcr, ipcc->reg_proc + IPCC_XCR);
- 
+
+On 10/30/19 8:44 AM, Harald Freudenberger wrote:
+> On 29.10.19 23:09, Tony Krowiak wrote:
+>> From: aekrowia <akrowiak@linux.ibm.com>
+>>
+>> When an AP adapter card is configured off via the SE or the SCLP
+>> Deconfigure Adjunct Processor command and the AP bus subsequently detects
+>> that the adapter card is no longer in the AP configuration, the card
+>> device representing the adapter card as well as each of its associated
+>> AP queue devices will be removed by the AP bus. If one or more of the
+>> affected queue devices is bound to the VFIO AP device driver, its remove
+>> callback will be invoked for each queue to be removed. The remove callback
+>> resets the queue and disables IRQ processing. If interrupt processing was
+>> never enabled for the queue, disabling IRQ processing will fail resulting
+>> in a kernel OOPS.
+>>
+>> This patch verifies IRQ processing is enabled before attempting to disable
+>> interrupts for the queue.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> Signed-off-by: aekrowia <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_drv.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+>> index be2520cc010b..42d8308fd3a1 100644
+>> --- a/drivers/s390/crypto/vfio_ap_drv.c
+>> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+>> @@ -79,7 +79,8 @@ static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+>>   	apid = AP_QID_CARD(q->apqn);
+>>   	apqi = AP_QID_QUEUE(q->apqn);
+>>   	vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>> -	vfio_ap_irq_disable(q);
+>> +	if (q->saved_isc != VFIO_AP_ISC_INVALID)
+>> +		vfio_ap_irq_disable(q);
+>>   	kfree(q);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   }
+> Reset of an APQN does also clear IRQ processing. I don't say that the
+> resources associated with IRQ handling for the APQN are also cleared.
+> But when you call PQAP(AQIC) after an PQAP(RAPQ) or PQAP(ZAPQ)
+> it is superfluous. However, there should not appear any kernel OOPS.
+> So can you please give me more details about this kernel oops - maybe
+> I need to add exception handler code to the inline ap_aqic() function.
+>
+> regards, Harald Freudenberger
+>
+
+Hi Tony,
+
+wasn't it already solved by the patch 5c4c2126  from Christian ?
+
+Can you send the trace to me please?
+
+Thanks,
+
+Pierre
+
+
+
 -- 
-2.7.4
+Pierre Morel
+IBM Lab Boeblingen
 
