@@ -2,124 +2,101 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCC8CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A90CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC71E20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7878720856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:04:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I3AwHM8N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfJ3VCF (ORCPT
+        id S1727121AbfJ3VEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:02:05 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12375 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbfJ3VCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:02:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 14:02:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,248,1569308400"; 
-   d="scan'208";a="203312286"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by orsmga003.jf.intel.com with ESMTP; 30 Oct 2019 14:02:04 -0700
-Received: from orsmsx113.amr.corp.intel.com (10.22.240.9) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 30 Oct 2019 14:02:04 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.185]) by
- ORSMSX113.amr.corp.intel.com ([169.254.9.28]) with mapi id 14.03.0439.000;
- Wed, 30 Oct 2019 14:02:03 -0700
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "Dock, Deneen T" <deneen.t.dock@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kristen@linux.intel.com" <kristen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-Subject: Re: [RFC PATCH 09/13] x86/cpufeature: Add detection of KVM XO
-Thread-Topic: [RFC PATCH 09/13] x86/cpufeature: Add detection of KVM XO
-Thread-Index: AQHVejL7mBDeeBJOYUiqz0B6Xhz7/Kdy452AgAAFHYCAAPxSAIAAZnyA
-Date:   Wed, 30 Oct 2019 21:02:02 +0000
-Message-ID: <217403c0f9790c1142b51231d5b4ccfd6d83cf61.camel@intel.com>
-References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
-         <20191003212400.31130-10-rick.p.edgecombe@intel.com>
-         <201910291633.927254B10@keescook>
-         <40cb4ea3b351c25074cf47ae92a189eec12161fb.camel@intel.com>
-         <20191030145520.GA14391@linux.intel.com>
-In-Reply-To: <20191030145520.GA14391@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.54.75.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <68AFE186A011404BBA6BFA697DF6A0BD@intel.com>
-Content-Transfer-Encoding: base64
+        Wed, 30 Oct 2019 17:04:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44102 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbfJ3VEj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 17:04:39 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UL4NL4128665;
+        Wed, 30 Oct 2019 21:04:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=m8BQpoKL4gVtfFSx2IrDIKqn/JTZlYXtuUr58S1gZ0c=;
+ b=I3AwHM8NFCoaWStcPR5VaVGVIUPSBRnCM7BT08dsWJxFHCaiN0sPx30k6Frn6xk4ePSh
+ ye9qZ1KP80FnHuA3AnUQOTxXLAeW+F8BcKWvQ/yE7kMalGp+Ck0yPY66Fbm3kvqZ0UD3
+ FOhEB97BcYwp6rZ0H//q0bAl2+H6RSGius9m6L0EO6dCTBmbiSUP95fyGLi5krBsf7eS
+ uR6ZQ0lLUgcTGmKJMere0GXgkBqvGy0gtWfkiUQVJJL3orkArm5QmepQ+3zKaByfd7FD
+ 1UoYP2SKisUuCPDV2d+M133BuqoPr1M/ZUKyfnyGmhUKaX7Cc5tnpXze1XrjSdXB1QLu pw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2vxwhff2cu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 21:04:29 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UL4OsX130182;
+        Wed, 30 Oct 2019 21:04:28 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2vxwhwtage-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 21:04:24 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9UL3Iov013454;
+        Wed, 30 Oct 2019 21:03:19 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 30 Oct 2019 14:03:18 -0700
+Date:   Wed, 30 Oct 2019 17:03:14 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>
+Subject: Re: [PATCH] mm: slab: make page_cgroup_ino() to recognize
+ non-compound slab pages properly
+Message-ID: <20191030210314.2el7wysojucqypoq@ca-dmjordan1.us.oracle.com>
+References: <20191025232710.4081957-1-guro@fb.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025232710.4081957-1-guro@fb.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=729
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910300183
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=816 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910300184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTEwLTMwIGF0IDA3OjU1IC0wNzAwLCBTZWFuIENocmlzdG9waGVyc29uIHdy
-b3RlOg0KPiBPbiBUdWUsIE9jdCAyOSwgMjAxOSBhdCAwNDo1MjowOFBNIC0wNzAwLCBFZGdlY29t
-YmUsIFJpY2sgUCB3cm90ZToNCj4gPiBPbiBUdWUsIDIwMTktMTAtMjkgYXQgMTY6MzMgLTA3MDAs
-IEtlZXMgQ29vayB3cm90ZToNCj4gPiA+IE9uIFRodSwgT2N0IDAzLCAyMDE5IGF0IDAyOjIzOjU2
-UE0gLTA3MDAsIFJpY2sgRWRnZWNvbWJlIHdyb3RlOg0KPiA+ID4gPiBBZGQgYSBuZXcgQ1BVSUQg
-bGVhZiB0byBob2xkIHRoZSBjb250ZW50cyBvZiBDUFVJRCAweDQwMDAwMDMwIEVBWCB0bw0KPiA+
-ID4gPiBkZXRlY3QgS1ZNIGRlZmluZWQgZ2VuZXJpYyBWTU0gZmVhdHVyZXMuDQo+ID4gPiA+IA0K
-PiA+ID4gPiBUaGUgbGVhZiB3YXMgcHJvcG9zZWQgdG8gYWxsb3cgS1ZNIHRvIGNvbW11bmljYXRl
-IGZlYXR1cmVzIHRoYXQgYXJlDQo+ID4gPiA+IGRlZmluZWQgYnkgS1ZNLCBidXQgYXZhaWxhYmxl
-IGZvciBhbnkgVk1NIHRvIGltcGxlbWVudC4NCj4gDQo+IFRoaXMgZG9lc24ndCBuZWNlc3Nhcmls
-eSB3b3JrIHRoZSB3YXkgeW91IGludGVuZCwgS1ZNJ3MgYmFzZSBDUFVJRCBpc24ndA0KPiBndWFy
-YW50ZWVkIHRvIGJlIDB4NDAwMDAwMDAuICBFLmcuIEtWTSBzdXBwb3J0cyBhZHZlcnRpc2luZyBp
-dHNlbGYgYXMNCj4gSHlwZXJWICphbmQqIEtWTSwgaW4gd2hpY2ggY2FzZSBLVk0ncyBDUFVJRCBi
-YXNlIHdpbGwgYmUgMHg0MDAwMDEwMC4NCj4gDQo+IEkgdGhpbmsgeW91J3JlIGJldHRlciBvZmYg
-anVzdCBtYWtpbmcgdGhpcyBhIHN0YW5kYXJkIEtWTSBDUFVJRCBmZWF0dXJlLg0KPiBJZiBhIGRp
-ZmZlcmVudCBoeXBlcnZpc29yIHdhbnRzIHRvIHJldXNlIGd1ZXN0IHN1cHBvcnQgYXMgaXMsIGl0
-IGNhbg0KPiBhZHZlcnRpc2UgS1ZNIHN1cHBvcnQgYXQgYSBsb3dlciBwcmlvcml0eS4NCj4gDQpP
-aywgSSdtIGZpbmUgZ29pbmcgd2l0aCB0aGUgc2ltcGxlciBLVk0gQ1BVSUQgYml0LiBJdCdzIG5v
-dCBsaWtlIHBlci1WTU0gQ1BVSUQNCmxlYWYgbWVhbmluZ3MgYXJlIGEgbmV3IHNjZW5hcmlvIHdp
-dGggdGhpcy4NCg0KPiBOb3RlLCBxdWVyeWluZyBndWVzdCBDUFVJRCBpc24ndCBzdHJhaWdodGZv
-cndhcmQgaW4gZWl0aGVyIGNhc2UuICBCdXQsDQo+IEtWTSBkb2Vzbid0IHN1cHBvcnQgZGlzYWJs
-aW5nIGl0cyBvdGhlciBDUFVJRC1iYXNlIHBhcmF2aXJ0IGZlYXR1cmVzLCBlLmcuDQo+IEtWTSBl
-bXVsYXRlcyB0aGUga3ZtX2Nsb2NrIE1TUnMgcmVnYXJkbGVzcyBvZiB3aGF0IHVzZXJzcGFjZSBh
-ZHZlcnRpc2VzIHRvDQo+IHRoZSBndWVzdC4gIERlcGVuZGluZyBvbiB3aGF0IGNoYW5nZXMgYXJl
-IHJlcXVpcmVkIGluIEtWTSdzIE1NVSwgdGhpcyBtYXkNCj4gYWxzbyBuZWVkIHRvIGJlIGEgS1ZN
-LXdpZGUgZmVhdHVyZSwgaS5lLiBjb250cm9sbGVkIHZpYSBhIG1vZHVsZSBwYXJhbS4NCj4gPiA+
-ID4gQWRkIGNwdV9mZWF0dXJlX2VuYWJsZWQoKSBzdXBwb3J0IGZvciBmZWF0dXJlcyBpbiB0aGlz
-IGxlYWYgKEtWTSBYTyksDQo+ID4gPiA+IGFuZA0KPiA+ID4gPiBhIHBndGFibGVfa3ZteG9fZW5h
-YmxlZCgpIGhlbHBlciBzaW1pbGFyIHRvIHBndGFibGVfbDVfZW5hYmxlZCgpIHNvIHRoYXQNCj4g
-PiA+ID4gcGd0YWJsZV9rdm14b19lbmFibGVkKCkgY2FuIGJlIHVzZWQgaW4gZWFybHkgY29kZSB0
-aGF0IGluY2x1ZGVzDQo+ID4gPiA+IGFyY2gveDg2L2luY2x1ZGUvYXNtL3NwYXJzZW1lbS5oLg0K
-PiA+ID4gPiANCj4gPiA+ID4gTGFzdGx5LCBpbiBoZWFkNjQuYyBkZXRlY3QgYW5kIHRoaXMgZmVh
-dHVyZSBhbmQgcGVyZm9ybSBuZWNlc3NhcnkNCj4gPiA+ID4gYWRqdXN0bWVudHMgdG8gcGh5c2lj
-YWxfbWFzay4NCj4gPiA+IA0KPiA+ID4gQ2FuIHRoaXMgYmUgZXhwb3NlZCB0byAvcHJvYy9jcHVp
-bmZvIHNvIGEgZ3Vlc3QgdXNlcnNwYWNlIGNhbiBkZXRlcm1pbmUNCj4gPiA+IGlmIHRoaXMgZmVh
-dHVyZSBpcyBlbmFibGVkPw0KPiA+ID4gDQo+ID4gPiAtS2Vlcw0KPiA+IA0KPiA+IElzIHRoZXJl
-IGEgZ29vZCBwbGFjZSB0byBleHBvc2UgdGhlIGluZm9ybWF0aW9uIHRoYXQgdGhlIFBST1RfRVhF
-QyBhbmQNCj4gPiAhUFJPVF9SRUFEIGNvbWJvIGNyZWF0ZXMgZXhlY3V0ZS1vbmx5IG1lbW9yeT8g
-VGhpcyB3YXkgYXBwcyBjYW4gY2hlY2sgb25lDQo+ID4gcGxhY2UNCj4gPiBmb3IgdGhlIHN1cHBv
-cnQgYW5kIG5vdCB3b3JyeSBhYm91dCB0aGUgaW1wbGVtZW50YXRpb24gd2hldGhlciBpdCdzIHRo
-aXMsDQo+ID4geDg2DQo+ID4gcGtleXMsIGFybSBvciBvdGhlci4NCj4gDQo+IEkgZG9uJ3QgdGhp
-bmsgc28/ICBBc3N1bWluZyB0aGVyZSdzIG5vIGNvbW1vbiBtZXRob2QsIGl0IGNhbiBiZSBkaXNw
-bGF5ZWQNCj4gaW4gL3Byb2MvY3B1aW5mbyBieSBhZGRpbmcgYSBzeW50aGV0aWMgYml0LCBlLmcu
-IGluIExpbnV4LWRlZmluZWQgd29yZCA4DQo+ICh2aXJ0dWFsaXphdGlvbikgaW5zdGVhZCBvZiBh
-IGRlZGljYXRlZCB3b3JkLiAgVGhlIGJpdCBjYW4gdGhlbiBiZQ0KPiBzZXQgaWYgdGhlIGZlYXR1
-cmVzIGV4aXN0cyBhbmQgaXMgZW5hYmxlZCAoYnkgdGhlIGd1ZXN0KS4NCj4gDQo+IEknZCBhbHNv
-IG5hbWUgdGhlIGZlYXR1cmUgRVhFQ19PTkxZLiAgWE8gaXMgdW5uZWNlc3NhcmlseSB0ZXJzZSBJ
-TU8sIGFuZA0KPiBpbmNsdWRpbmcgIktWTSIgaW4gdGhlIG5hbWUgbWF5IGJlIG1pc2NvbnN0cnVl
-ZCBhcyBhIGhvc3QgS1ZNIGZlYXR1cmUgYW5kDQo+IHdpbGwgYmUgZmxhdCBvdXQgd3JvbmcgaWYg
-aGFyZHdhcmUgZXZlciBzdXBwb3J0cyBYTyBuYXRpdmVseS4NCg0KT2ssIGlmIHRoZXJlIGlzIG5v
-IGdlbmVyaWMgd2F5IEkgZ3Vlc3MgSSdsbCBkbyB0aGlzLg0KDQoNCg==
+Hi Roman,
+
+On Fri, Oct 25, 2019 at 04:27:10PM -0700, Roman Gushchin wrote:
+> page_cgroup_ino() doesn't return a valid memcg pointer for non-compund
+> slab pages, because it depends on PgHead AND PgSlab flags to be set
+> to determine the memory cgroup from the kmem_cache.
+> It's correct for compound pages, but not for generic small pages. Those
+> don't have PgHead set, so it ends up returning zero.
+> 
+> Fix this by replacing the condition to PageSlab() && !PageTail().
+
+You may also want to update the comment above memcg_from_slab_page():
+
+ * So this function assumes that the page can pass PageHead() and PageSlab()
+ * checks.
