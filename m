@@ -2,107 +2,130 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9DDCA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47778CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3C2208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572446394;
-	bh=xkUtinacDbptPxIJAZRaokT8H4vPvwWLPGyr+ZR150I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f9+sMonuJA9CLvkvEuiqvJRzWFFHKJdAGQeAup+wPrluFWK4bO9J+vaBitYNQEk/C
-	 qcdJ3I9RnV+hpfs0LWNAZnteQCwX/g5OV+1kp7G8u7RWCa9mYVrF05YpPmlECMQBCC
-	 U3KMs1quYVd5o8dvWBMGe6oulVHgagpDh52ZFDbA=
+	by mail.kernel.org (Postfix) with ESMTP id 1AAAE20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:41:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="O0gGjKRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfJ3Ojx (ORCPT
+        id S1726435AbfJ3Olv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:39:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34885 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfJ3Ojw (ORCPT
+        Wed, 30 Oct 2019 10:41:51 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44212 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfJ3Olu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:39:52 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z6so2325576otb.2;
-        Wed, 30 Oct 2019 07:39:51 -0700 (PDT)
+        Wed, 30 Oct 2019 10:41:50 -0400
+Received: by mail-il1-f196.google.com with SMTP id h5so2308562ilh.11
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 07:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=8M4Q/hulOLKq5QBH7SseZicRn46BDfUKYYJB1woZ9F8=;
+        b=O0gGjKRrxHys6Q2aujV+4MT2j/ZjsSYkDi9GKfTadrp+3OsaEj9MpPZeaVUYjh3jga
+         Lt/pb1YjDeKkLIc9X0ysapeDeMirJQ5DAoWssEDfb1y9SMHca7Cpner/0PwQkojLHkpx
+         N4TSDBzSztYw8kJfiT9Daj01/md5WfML34mttZWozPOAn5dmoM5foBsQXL+jEaHnmEzW
+         RhhGAMAO5fVn+TzVSsErUinwOJRVAltcO+jIVr/z2lFeIAA+i5gdvsrvJVYsoFn6iVDd
+         5t2q0XNohZr2NnrrDWO1Q8lxvwtpuTZKxxUQL9BKAIZqMKdtPXdqb1BwFUAK4RSsm2wv
+         ZkIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3tYP49i1zwXEbSPDyhdlkLTVBZpALwlhuoKF7K04zmM=;
-        b=rI8rFSa/fHfQV3CPvQYGfsbVBmKeccWRryU8ql88sbcbCjrn3sn9URXE0m5IDQG/g8
-         RrNu5PZOBYMO1XC+F7fuPCSbopaXhkCV5ymv+dnSQGrEGd+IAEQ3YAmuEd/+rzXXZ1tZ
-         4Jrht+raTSARtTvfCM4zDVbwlDK9AGRIBWtZmgp+8FmQorQn8BVRDbxwXNyBP5o+A8Ih
-         9BHyZ5tlQqpdLTJ2gCOjK+sLzcmK2ACQjPhiHCdpjAspdSkCbacDSVwzBbEyy8ziBe5c
-         qIpDB2t+KP3QXuAoicUlluhgruWAL+yo861+hLZLRqKiNbZ1373HV39APp+Mg/Zu+eku
-         z76A==
-X-Gm-Message-State: APjAAAVmqspVWvJna2eKhhpZ0/UJdqJ6TMm/bkDczLgA4Hz75/4yIFA5
-        aByNFEmlSN/k8mS9ruRZrg==
-X-Google-Smtp-Source: APXvYqyNsH82RV3UbML1PF4VWeA2jBFaZexE24zwlDWMjQt2A/bTlIeRgNWRhZ/DeTtqixeBNY4KAA==
-X-Received: by 2002:a05:6830:1e4a:: with SMTP id e10mr149190otj.345.1572446391375;
-        Wed, 30 Oct 2019 07:39:51 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s71sm60743oie.27.2019.10.30.07.39.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 07:39:50 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 09:39:49 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     sre@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yuanjiang.yu@unisoc.com, baolin.wang7@gmail.com,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com
-Subject: Re: [PATCH 4/5] dt-bindings: power: sc27xx: Add a new property to
- describe the real resistance of coulomb counter chip
-Message-ID: <20191030143949.GA18637@bogus>
-References: <cover.1572245011.git.baolin.wang@linaro.org>
- <00202f739348258555dcc40982c330542ac61863.1572245011.git.baolin.wang@linaro.org>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8M4Q/hulOLKq5QBH7SseZicRn46BDfUKYYJB1woZ9F8=;
+        b=LbL7iXYSb4EqAdz8xm1gObWy0HhNukhBc1vxtsglf0Gent6ThyZM6BE1pvZ3MAxUNI
+         qpPiKXEeytFIyUJsEwfivcHhGP8YUdcPDk2vKzfEC5uwlq6CTruL93vRZ7/5AI+xfWIZ
+         iSGeWtHjOo+RkbNIWjIfHIAkkG7xe0bEJHA57TReCF5gjtscmYHhpMqxScI7Evo9hQ1z
+         h0u/npuJbPonKA7I4ILvo7vvo2K1bdsvE3laM/vMIOY5F+s//3SgYH6LYsLk7t4Ta7Xh
+         yE8TlZeprDOp81uOLnPj61rXmehMXm4I9wmwIcya3sICl0yhbSyxs47c+4gWTFOX6B+m
+         bVNQ==
+X-Gm-Message-State: APjAAAXrdoi6wse8Tbr6XWF2w7Yb0jMo61SW5dXuNyGVLhtbosAHJtX1
+        Vgpf2+73fUPvLIZnPdErtGgy0Q==
+X-Google-Smtp-Source: APXvYqyqrROuX3U0xP+PNenNQOMYso72VKgcxfO/6ysc4+hXLZApIoNa/HRe7jHr0SUpJ9LQw4UwlQ==
+X-Received: by 2002:a92:580c:: with SMTP id m12mr389533ilb.225.1572446509207;
+        Wed, 30 Oct 2019 07:41:49 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id i79sm55737ild.6.2019.10.30.07.41.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 07:41:48 -0700 (PDT)
+Subject: Re: BUG: unable to handle kernel paging request in io_wq_cancel_all
+To:     syzbot <syzbot+221cc24572a2fed23b6b@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, dan.j.williams@intel.com,
+        dhowells@redhat.com, gregkh@linuxfoundation.org,
+        hannes@cmpxchg.org, joel@joelfernandes.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
+        mingo@redhat.com, patrick.bellasi@arm.com, rgb@redhat.com,
+        rostedt@goodmis.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk, yamada.masahiro@socionext.com
+References: <00000000000069801e05961be5fb@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0e2bc2bf-2a7a-73c5-03e2-9d08f89f0ffa@kernel.dk>
+Date:   Wed, 30 Oct 2019 08:41:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00202f739348258555dcc40982c330542ac61863.1572245011.git.baolin.wang@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <00000000000069801e05961be5fb@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 03:19:00PM +0800, Baolin Wang wrote:
-> Add a new property to describe the real resistance of coulomb counter chip,
-> which is used to calibrate the accuracy of the coulomb counter chip.
+On 10/30/19 1:44 AM, syzbot wrote:
+> syzbot has bisected this bug to:
 > 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  .../devicetree/bindings/power/supply/sc27xx-fg.txt |    2 ++
->  1 file changed, 2 insertions(+)
+> commit ef0524d3654628ead811f328af0a4a2953a8310f
+> Author: Jens Axboe <axboe@kernel.dk>
+> Date:   Thu Oct 24 13:25:42 2019 +0000
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> index 0a5705b..fc042d0 100644
-> --- a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> @@ -13,6 +13,7 @@ Required properties:
->  - io-channel-names: Should be "bat-temp" or "charge-vol".
->  - nvmem-cells: A phandle to the calibration cells provided by eFuse device.
->  - nvmem-cell-names: Should be "fgu_calib".
-> +- sprd,calib-resistance: Specify the real resistance of coulomb counter chip in micro Ohms.
->  - monitored-battery: Phandle of battery characteristics devicetree node.
->    See Documentation/devicetree/bindings/power/supply/battery.txt
+>       io_uring: replace workqueue usage with io-wq
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16acf5d0e00000
+> start commit:   c57cf383 Add linux-next specific files for 20191029
+> git tree:       linux-next
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15acf5d0e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11acf5d0e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cb86688f30db053d
+> dashboard link: https://syzkaller.appspot.com/bug?extid=221cc24572a2fed23b6b
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168671d4e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140f4898e00000
+> 
+> Reported-by: syzbot+221cc24572a2fed23b6b@syzkaller.appspotmail.com
+> Fixes: ef0524d36546 ("io_uring: replace workqueue usage with io-wq")
 
-Needs a standard unit suffix.
+Good catch, it's a case of NULL vs ERR_PTR() confusion. I'll fold in
+the below fix.
 
->  
-> @@ -52,5 +53,6 @@ Example:
->  			nvmem-cells = <&fgu_calib>;
->  			nvmem-cell-names = "fgu_calib";
->  			monitored-battery = <&bat>;
-> +			sprd,calib-resistance = <21500>;
->  		};
->  	};
-> -- 
-> 1.7.9.5
-> 
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index af1937d66aee..76d653085987 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3534,8 +3534,9 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+ 	/* Do QD, or 4 * CPUS, whatever is smallest */
+ 	concurrency = min(ctx->sq_entries, 4 * num_online_cpus());
+ 	ctx->io_wq = io_wq_create(concurrency, ctx->sqo_mm);
+-	if (!ctx->io_wq) {
+-		ret = -ENOMEM;
++	if (IS_ERR(ctx->io_wq)) {
++		ret = PTR_ERR(ctx->io_wq);
++		ctx->io_wq = NULL;
+ 		goto err;
+ 	}
+ 
+
+-- 
+Jens Axboe
+
