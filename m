@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D129ECA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072E6CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22A720874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00B820856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450617;
-	bh=dyWpOrS8kPblaluBAYmqNzbntvaVnGy7CHkLumzzqAY=;
+	s=default; t=1572450621;
+	bh=Q20vSiNZNOz4YiE2NlHcH9OoJldhsBbNcjgKqyF9u1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aM+2kanzOPC7I+E+7zXxLIAOLtV7GTMSeotIOMCT6B7gbesdHP8e4Y2cKqn5ttlaJ
-	 eXJwCVzjjB41ZJN1BAI0DjyeaTs025iRepWzub+X/8OX89+CPdYQvckZ6GFKVb/8BX
-	 nkI6/gU1dHjJW+U8Bc/sv0TyAz0DbnOQOMN6SuC4=
+	b=erVwvoO61QHDkBuBFrL+yVKXEB5hyAc8rTsoW4nRwR0s+SjcoSNSg2JRS3tTGg2do
+	 tq3LdreEL9MknOsIBAyXn8nRPBAblYFh4KFBBUpENVgJIGhFDC+m3LmV0nyc8dChtl
+	 0OMiSOHvkrV7rAn1nepM+GVWVozS6pvItzb0oSgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfJ3PuN (ORCPT
+        id S1727605AbfJ3PuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:50:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50088 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:50:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfJ3Ptk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:49:40 -0400
+        id S1727201AbfJ3PuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:50:18 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA212087E;
-        Wed, 30 Oct 2019 15:49:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8984F20856;
+        Wed, 30 Oct 2019 15:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450579;
-        bh=dyWpOrS8kPblaluBAYmqNzbntvaVnGy7CHkLumzzqAY=;
+        s=default; t=1572450617;
+        bh=Q20vSiNZNOz4YiE2NlHcH9OoJldhsBbNcjgKqyF9u1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ny3avsmbZ+JH+1/gN8NdRePqKYGQynjcUVbPm+PNtCeGn32DXk12PnThKPp9SraNB
-         8QXeVEbs7H7bz0njNWQtgepBAoVWp1R+ssUg8UT5zXuzsrQ836/w4WyiUEaC+RRNJx
-         ANUd5raXwfN29hPTav7uZIt9M17h3+lGurtqoTOg=
+        b=2UjUpnvUMiQsx9VxcYuR5TwI5l3Vh4jVAG025sm0WL485grOZR/Bpl6Pu22K89G6r
+         UlvywolvAUaHA9DIIudHdKwVI4+kBhOjHfIWBI8BodGfdg+AmIMHz4JYFSmrTJjkao
+         rUhCt+QEPYSSUF5OH/eBEazz7pFQDTKZrT9kFbAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 05/81] ASoC: topology: Fix a signedness bug in soc_tplg_dapm_widget_create()
-Date:   Wed, 30 Oct 2019 11:48:11 -0400
-Message-Id: <20191030154928.9432-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 14/81] ASoC: SOF: Intel: hda: fix warnings during FW load
+Date:   Wed, 30 Oct 2019 11:48:20 -0400
+Message-Id: <20191030154928.9432-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -59,35 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 752c938a5c14b8cbf0ed3ffbfa637fb166255c3f ]
+[ Upstream commit 4ff5f6439fe69624e8f7d559915e9b54a6477684 ]
 
-The "template.id" variable is an enum and in this context GCC will
-treat it as an unsigned int so it can never be less than zero.
+The "snd_pcm_substream" handle was not initialized properly
+in hda-loader.c for firmware load.
 
-Fixes: 8a9782346dcc ("ASoC: topology: Add topology core")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20190925110624.GR3264@mwanda
+When the HDA DMAs were used to load the firmware,
+the interrupts related to firmware load also triggered
+calls to snd_sof_pcm_period_elapsed() on a non-existent ALSA
+PCM stream.
+
+This caused runtime kernel warnings from
+pcm_lib.c:snd_pcm_period_elapsed().
+
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190927200538.660-11-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sof/intel/hda-loader.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index dc463f1a9e242..1cc5a07a2f5c7 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1588,7 +1588,7 @@ static int soc_tplg_dapm_widget_create(struct soc_tplg *tplg,
+diff --git a/sound/soc/sof/intel/hda-loader.c b/sound/soc/sof/intel/hda-loader.c
+index 6427f0b3a2f11..65c2af3fcaab7 100644
+--- a/sound/soc/sof/intel/hda-loader.c
++++ b/sound/soc/sof/intel/hda-loader.c
+@@ -44,6 +44,7 @@ static int cl_stream_prepare(struct snd_sof_dev *sdev, unsigned int format,
+ 		return -ENODEV;
+ 	}
+ 	hstream = &dsp_stream->hstream;
++	hstream->substream = NULL;
  
- 	/* map user to kernel widget ID */
- 	template.id = get_widget_id(le32_to_cpu(w->id));
--	if (template.id < 0)
-+	if ((int)template.id < 0)
- 		return template.id;
- 
- 	/* strings are allocated here, but used and freed by the widget */
+ 	/* allocate DMA buffer */
+ 	ret = snd_dma_alloc_pages(SNDRV_DMA_TYPE_DEV_SG, &pci->dev, size, dmab);
 -- 
 2.20.1
 
