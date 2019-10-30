@@ -2,213 +2,362 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBA6CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D94CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0440B20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gx0cugH7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dJNMGydy"
+	by mail.kernel.org (Postfix) with ESMTP id 6FFF820717
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfJ3MiK (ORCPT
+        id S1726788AbfJ3MmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:38:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37552 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfJ3MiK (ORCPT
+        Wed, 30 Oct 2019 08:42:07 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34576 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3MmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:38:10 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B4B546106C; Wed, 30 Oct 2019 12:38:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572439088;
-        bh=DBmrumYHBj8SE4uwRjnrzfskPulH9RfV3P8m3bSOu9c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gx0cugH76qiK7S4sEghOVcvfp6+XUvom9Wr3XHPxpwh3qG1WljvcGztX7Os9UAx56
-         JQjHvIioFoNNKugOoaHlC7ep6Awb+FcVcIij6Hi+qwuKxxdHzhJ1DiEc2K2Uduy3X1
-         gXS7ItuC3Tm38BwvsJttm+lsktnSdjMNfQpkcDos=
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C066A60FF9;
-        Wed, 30 Oct 2019 12:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572439087;
-        bh=DBmrumYHBj8SE4uwRjnrzfskPulH9RfV3P8m3bSOu9c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dJNMGydy3+2bRqoTba3UbKgzlyOGWfcdMzh113l5IF5izs1N+LjSnsVATAjZOpUMl
-         TGSGQ23VbH8KLDGhq7QpBXE271pVObf9YC6lNNx5+uZdo12x3Zu91I2KBEVvBkzcbt
-         jPBHUca4bOwxzDoiovvpKIFcAq/yxyN5ymqDf+Eo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C066A60FF9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v1 2/2] scsi: ufs-qcom: Export bus bandwidth voting ops
-Date:   Wed, 30 Oct 2019 05:37:43 -0700
-Message-Id: <1572439064-28785-3-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1572439064-28785-1-git-send-email-cang@codeaurora.org>
-References: <1572439064-28785-1-git-send-email-cang@codeaurora.org>
+        Wed, 30 Oct 2019 08:42:06 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 90D4B26B37F
+Subject: Re: [PATCH v4] media: vimc: Make capture devices and subdevices use
+ different link_validates
+To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
+        <nfraprado@protonmail.com>, linux-media@vger.kernel.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+References: <20191030122934.2154307-1-nfraprado@protonmail.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <a61f27c8-432d-3749-9acc-e61fff6bc71a@collabora.com>
+Date:   Wed, 30 Oct 2019 13:42:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20191030122934.2154307-1-nfraprado@protonmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export bus bandwidth voting ops so that UFS driver can vote for
-bus bandwidth change through vendor ops.
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufs-qcom.c | 53 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 35 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index a5b7148..0a6fac9 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -38,7 +38,6 @@ enum {
- 
- static struct ufs_qcom_host *ufs_qcom_hosts[MAX_UFS_QCOM_HOSTS];
- 
--static int ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote);
- static void ufs_qcom_get_default_testbus_cfg(struct ufs_qcom_host *host);
- static int ufs_qcom_set_dme_vs_core_clk_ctrl_clear_div(struct ufs_hba *hba,
- 						       u32 clk_cycles);
-@@ -630,7 +629,7 @@ static void ufs_qcom_get_speed_mode(struct ufs_pa_layer_attr *p, char *result)
- 	}
- }
- 
--static int ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote)
-+static int __ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote)
- {
- 	int err = 0;
- 
-@@ -661,7 +660,7 @@ static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
- 
- 	vote = ufs_qcom_get_bus_vote(host, mode);
- 	if (vote >= 0)
--		err = ufs_qcom_set_bus_vote(host, vote);
-+		err = __ufs_qcom_set_bus_vote(host, vote);
- 	else
- 		err = vote;
- 
-@@ -672,6 +671,35 @@ static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
- 	return err;
- }
- 
-+static int ufs_qcom_set_bus_vote(struct ufs_hba *hba, bool on)
-+{
-+	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-+	int vote, err;
-+
-+	/*
-+	 * In case ufs_qcom_init() is not yet done, simply ignore.
-+	 * This ufs_qcom_set_bus_vote() shall be called from
-+	 * ufs_qcom_init() after init is done.
-+	 */
-+	if (!host)
-+		return 0;
-+
-+	if (on) {
-+		vote = host->bus_vote.saved_vote;
-+		if (vote == host->bus_vote.min_bw_vote)
-+			ufs_qcom_update_bus_bw_vote(host);
-+	} else {
-+		vote = host->bus_vote.min_bw_vote;
-+	}
-+
-+	err = __ufs_qcom_set_bus_vote(host, vote);
-+	if (err)
-+		dev_err(hba->dev, "%s: set bus vote failed %d\n",
-+				__func__, err);
-+
-+	return err;
-+}
-+
- static ssize_t
- show_ufs_to_mem_max_bus_bw(struct device *dev, struct device_attribute *attr,
- 			char *buf)
-@@ -748,7 +776,7 @@ static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
- 	return 0;
- }
- 
--static int ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote)
-+static int ufs_qcom_set_bus_vote(struct ufs_hba *host, bool on)
- {
- 	return 0;
- }
-@@ -986,8 +1014,6 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
- 				 enum ufs_notify_change_status status)
- {
- 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
--	int err;
--	int vote = 0;
- 
- 	/*
- 	 * In case ufs_qcom_init() is not yet done, simply ignore.
-@@ -1001,25 +1027,14 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
- 		/* enable the device ref clock for HS mode*/
- 		if (ufshcd_is_hs_mode(&hba->pwr_info))
- 			ufs_qcom_dev_ref_clk_ctrl(host, true);
--		vote = host->bus_vote.saved_vote;
--		if (vote == host->bus_vote.min_bw_vote)
--			ufs_qcom_update_bus_bw_vote(host);
--
- 	} else if (!on && (status == PRE_CHANGE)) {
- 		if (!ufs_qcom_is_link_active(hba)) {
- 			/* disable device ref_clk */
- 			ufs_qcom_dev_ref_clk_ctrl(host, false);
- 		}
--
--		vote = host->bus_vote.min_bw_vote;
- 	}
- 
--	err = ufs_qcom_set_bus_vote(host, vote);
--	if (err)
--		dev_err(hba->dev, "%s: set bus vote failed %d\n",
--				__func__, err);
--
--	return err;
-+	return 0;
- }
- 
- static int
-@@ -1185,6 +1200,7 @@ static int ufs_qcom_init(struct ufs_hba *hba)
- 	ufs_qcom_set_caps(hba);
- 	ufs_qcom_advertise_quirks(hba);
- 
-+	ufs_qcom_set_bus_vote(hba, true);
- 	ufs_qcom_setup_clocks(hba, true, POST_CHANGE);
- 
- 	if (hba->dev->id < MAX_UFS_QCOM_HOSTS)
-@@ -1597,6 +1613,7 @@ static void ufs_qcom_device_reset(struct ufs_hba *hba)
- 	.suspend		= ufs_qcom_suspend,
- 	.resume			= ufs_qcom_resume,
- 	.dbg_register_dump	= ufs_qcom_dump_dbg_regs,
-+	.set_bus_vote		= ufs_qcom_set_bus_vote,
- 	.device_reset		= ufs_qcom_device_reset,
- };
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 10/30/19 1:30 PM, Nícolas F. R. A. Prado wrote:
+> Instead of validating the links to capture devices and subdevices with
+> the same function, use the default v4l function for links between
+> subdevices and only use a different function for validating between
+> capture device and subdevice.
+> This change should also ease future work to associate multiple mbus
+> codes for the same pixelformat in vimc_pix_map.
+> 
+> These changes were tested with
+> v4l2-compliance SHA: 3f806630e2ecbcebe31872b865c5c4b42f111a99, 64 bits
+> and passed all tests:
+> Grand Total for vimc device /dev/media0: 451, Succeeded: 451, Failed: 0, Warnings: 0
+> 
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
 
+Acked-by: Helen Koike <helen.koike@collabora.com>
+
+> ---
+> Changes in v4:
+> - Fix checkpatch checks "Logical continuations should be on the previous line"
+> 
+> Changes in v3:
+> - Rebase patch on current media tree
+> - Make vimc_get_pix_format() static
+> 
+> Changes in v2:
+> - Remove blank lines
+> - Rename vimc_cap_link_validate to vimc_vdev_link_validate and move it back to
+>   vimc-common.c
+> - Fix style issue on vimc_get_pix_format header
+> - Remove vimc_get_pix_format declaration from vimc-common.h
+> 
+>  drivers/media/platform/vimc/vimc-capture.c |  2 +-
+>  drivers/media/platform/vimc/vimc-common.c  | 85 +++++++++++-----------
+>  drivers/media/platform/vimc/vimc-common.h  |  4 +-
+>  3 files changed, 46 insertions(+), 45 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+> index a5d79fb25dff..76c015898cfd 100644
+> --- a/drivers/media/platform/vimc/vimc-capture.c
+> +++ b/drivers/media/platform/vimc/vimc-capture.c
+> @@ -322,7 +322,7 @@ static const struct vb2_ops vimc_cap_qops = {
+>  };
+>  
+>  static const struct media_entity_operations vimc_cap_mops = {
+> -	.link_validate		= vimc_link_validate,
+> +	.link_validate		= vimc_vdev_link_validate,
+>  };
+>  
+>  static void vimc_cap_release(struct video_device *vdev)
+> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+> index 2a0c40e9ae88..43e6fa5886da 100644
+> --- a/drivers/media/platform/vimc/vimc-common.c
+> +++ b/drivers/media/platform/vimc/vimc-common.c
+> @@ -194,35 +194,36 @@ const struct vimc_pix_map *vimc_pix_map_by_pixelformat(u32 pixelformat)
+>  	return NULL;
+>  }
+>  
+> -static int vimc_get_mbus_format(struct media_pad *pad,
+> -				struct v4l2_subdev_format *fmt)
+> +static int vimc_get_pix_format(struct media_pad *pad,
+> +			       struct v4l2_pix_format *fmt)
+>  {
+>  	if (is_media_entity_v4l2_subdev(pad->entity)) {
+>  		struct v4l2_subdev *sd =
+>  			media_entity_to_v4l2_subdev(pad->entity);
+> +		struct v4l2_subdev_format sd_fmt;
+> +		const struct vimc_pix_map *pix_map;
+>  		int ret;
+>  
+> -		fmt->which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> -		fmt->pad = pad->index;
+> +		sd_fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> +		sd_fmt.pad = pad->index;
+>  
+> -		ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, fmt);
+> +		ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &sd_fmt);
+>  		if (ret)
+>  			return ret;
+>  
+> +		v4l2_fill_pix_format(fmt, &sd_fmt.format);
+> +		pix_map = vimc_pix_map_by_code(sd_fmt.format.code);
+> +		fmt->pixelformat = pix_map->pixelformat;
+>  	} else if (is_media_entity_v4l2_video_device(pad->entity)) {
+>  		struct video_device *vdev = container_of(pad->entity,
+>  							 struct video_device,
+>  							 entity);
+>  		struct vimc_ent_device *ved = video_get_drvdata(vdev);
+> -		const struct vimc_pix_map *vpix;
+> -		struct v4l2_pix_format vdev_fmt;
+>  
+>  		if (!ved->vdev_get_format)
+>  			return -ENOIOCTLCMD;
+>  
+> -		ved->vdev_get_format(ved, &vdev_fmt);
+> -		vpix = vimc_pix_map_by_pixelformat(vdev_fmt.pixelformat);
+> -		v4l2_fill_mbus_format(&fmt->format, &vdev_fmt, vpix->code);
+> +		ved->vdev_get_format(ved, fmt);
+>  	} else {
+>  		return -EINVAL;
+>  	}
+> @@ -230,16 +231,16 @@ static int vimc_get_mbus_format(struct media_pad *pad,
+>  	return 0;
+>  }
+>  
+> -int vimc_link_validate(struct media_link *link)
+> +int vimc_vdev_link_validate(struct media_link *link)
+>  {
+> -	struct v4l2_subdev_format source_fmt, sink_fmt;
+> +	struct v4l2_pix_format source_fmt, sink_fmt;
+>  	int ret;
+>  
+> -	ret = vimc_get_mbus_format(link->source, &source_fmt);
+> +	ret = vimc_get_pix_format(link->source, &source_fmt);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = vimc_get_mbus_format(link->sink, &sink_fmt);
+> +	ret = vimc_get_pix_format(link->sink, &sink_fmt);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -248,21 +249,21 @@ int vimc_link_validate(struct media_link *link)
+>  		"%s:snk:%dx%d (0x%x, %d, %d, %d, %d)\n",
+>  		/* src */
+>  		link->source->entity->name,
+> -		source_fmt.format.width, source_fmt.format.height,
+> -		source_fmt.format.code, source_fmt.format.colorspace,
+> -		source_fmt.format.quantization, source_fmt.format.xfer_func,
+> -		source_fmt.format.ycbcr_enc,
+> +		source_fmt.width, source_fmt.height,
+> +		source_fmt.pixelformat, source_fmt.colorspace,
+> +		source_fmt.quantization, source_fmt.xfer_func,
+> +		source_fmt.ycbcr_enc,
+>  		/* sink */
+>  		link->sink->entity->name,
+> -		sink_fmt.format.width, sink_fmt.format.height,
+> -		sink_fmt.format.code, sink_fmt.format.colorspace,
+> -		sink_fmt.format.quantization, sink_fmt.format.xfer_func,
+> -		sink_fmt.format.ycbcr_enc);
+> -
+> -	/* The width, height and code must match. */
+> -	if (source_fmt.format.width != sink_fmt.format.width
+> -	    || source_fmt.format.height != sink_fmt.format.height
+> -	    || source_fmt.format.code != sink_fmt.format.code)
+> +		sink_fmt.width, sink_fmt.height,
+> +		sink_fmt.pixelformat, sink_fmt.colorspace,
+> +		sink_fmt.quantization, sink_fmt.xfer_func,
+> +		sink_fmt.ycbcr_enc);
+> +
+> +	/* The width, height and pixelformat must match. */
+> +	if (source_fmt.width != sink_fmt.width ||
+> +	    source_fmt.height != sink_fmt.height ||
+> +	    source_fmt.pixelformat != sink_fmt.pixelformat)
+>  		return -EPIPE;
+>  
+>  	/*
+> @@ -270,43 +271,43 @@ int vimc_link_validate(struct media_link *link)
+>  	 * to support interlaced hardware connected to bridges that support
+>  	 * progressive formats only.
+>  	 */
+> -	if (source_fmt.format.field != sink_fmt.format.field &&
+> -	    sink_fmt.format.field != V4L2_FIELD_NONE)
+> +	if (source_fmt.field != sink_fmt.field &&
+> +	    sink_fmt.field != V4L2_FIELD_NONE)
+>  		return -EPIPE;
+>  
+>  	/*
+>  	 * If colorspace is DEFAULT, then assume all the colorimetry is also
+>  	 * DEFAULT, return 0 to skip comparing the other colorimetry parameters
+>  	 */
+> -	if (source_fmt.format.colorspace == V4L2_COLORSPACE_DEFAULT
+> -	    || sink_fmt.format.colorspace == V4L2_COLORSPACE_DEFAULT)
+> +	if (source_fmt.colorspace == V4L2_COLORSPACE_DEFAULT ||
+> +	    sink_fmt.colorspace == V4L2_COLORSPACE_DEFAULT)
+>  		return 0;
+>  
+>  	/* Colorspace must match. */
+> -	if (source_fmt.format.colorspace != sink_fmt.format.colorspace)
+> +	if (source_fmt.colorspace != sink_fmt.colorspace)
+>  		return -EPIPE;
+>  
+>  	/* Colorimetry must match if they are not set to DEFAULT */
+> -	if (source_fmt.format.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
+> -	    && sink_fmt.format.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
+> -	    && source_fmt.format.ycbcr_enc != sink_fmt.format.ycbcr_enc)
+> +	if (source_fmt.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT &&
+> +	    sink_fmt.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT &&
+> +	    source_fmt.ycbcr_enc != sink_fmt.ycbcr_enc)
+>  		return -EPIPE;
+>  
+> -	if (source_fmt.format.quantization != V4L2_QUANTIZATION_DEFAULT
+> -	    && sink_fmt.format.quantization != V4L2_QUANTIZATION_DEFAULT
+> -	    && source_fmt.format.quantization != sink_fmt.format.quantization)
+> +	if (source_fmt.quantization != V4L2_QUANTIZATION_DEFAULT &&
+> +	    sink_fmt.quantization != V4L2_QUANTIZATION_DEFAULT &&
+> +	    source_fmt.quantization != sink_fmt.quantization)
+>  		return -EPIPE;
+>  
+> -	if (source_fmt.format.xfer_func != V4L2_XFER_FUNC_DEFAULT
+> -	    && sink_fmt.format.xfer_func != V4L2_XFER_FUNC_DEFAULT
+> -	    && source_fmt.format.xfer_func != sink_fmt.format.xfer_func)
+> +	if (source_fmt.xfer_func != V4L2_XFER_FUNC_DEFAULT &&
+> +	    sink_fmt.xfer_func != V4L2_XFER_FUNC_DEFAULT &&
+> +	    source_fmt.xfer_func != sink_fmt.xfer_func)
+>  		return -EPIPE;
+>  
+>  	return 0;
+>  }
+>  
+>  static const struct media_entity_operations vimc_ent_sd_mops = {
+> -	.link_validate = vimc_link_validate,
+> +	.link_validate = v4l2_subdev_link_validate,
+>  };
+>  
+>  int vimc_ent_sd_register(struct vimc_ent_device *ved,
+> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+> index c75401a36312..bf729fcde6a9 100644
+> --- a/drivers/media/platform/vimc/vimc-common.h
+> +++ b/drivers/media/platform/vimc/vimc-common.h
+> @@ -206,12 +206,12 @@ int vimc_ent_sd_register(struct vimc_ent_device *ved,
+>  			 const struct v4l2_subdev_ops *sd_ops);
+>  
+>  /**
+> - * vimc_link_validate - validates a media link
+> + * vimc_vdev_link_validate - validates a media link
+>   *
+>   * @link: pointer to &struct media_link
+>   *
+>   * This function calls validates if a media link is valid for streaming.
+>   */
+> -int vimc_link_validate(struct media_link *link);
+> +int vimc_vdev_link_validate(struct media_link *link);
+>  
+>  #endif
+> 
