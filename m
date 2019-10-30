@@ -2,85 +2,64 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA5ECA9EC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E25CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFB12086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572396903;
-	bh=tFF8Zjgmu+WIIlTlxCMd0FFO5WyZqnXX4sv24/2yUUc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lgssVwoHcjG+Cq/FzWwOMLgirMWsdq3txpbxgoLuzNv9NKIGzZNK+Cy6SbL2DutFk
-	 AX7Ps8J4f8esl22k7YhCU/2poFCshb4qnazWx5MqM1qsf99ATJnpCv5AMBQLWzY4Ux
-	 WOA1KwqSFuVNwqv4ooyJ+9hUYhdJ/Wr4bE/atfvI=
+	by mail.kernel.org (Postfix) with ESMTP id 2D2122086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfJ3AzC (ORCPT
+        id S1726759AbfJ3A52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 20:55:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbfJ3AzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 20:55:02 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A43E220862;
-        Wed, 30 Oct 2019 00:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572396900;
-        bh=tFF8Zjgmu+WIIlTlxCMd0FFO5WyZqnXX4sv24/2yUUc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=z6JxpYIAXwYaitOroIOgVkFFJ+fD7w974Y/gOcL+K9o7d1P1lWTu08tW16aKNpUvw
-         y+t/MUhPzHfbuARnFWHe6PZgDfV3SiJMRkW2/CE4taPh37lj9lpTCJutLLoo1fzGnY
-         M/E0EaPON/9wkaV7L85UXF+LEpMHvI7mmNWumlTY=
-Date:   Tue, 29 Oct 2019 17:54:59 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Greg Thelen <gthelen@google.com>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com
-Subject: Re: [PATCH] mm: vmscan: memcontrol: remove
- mem_cgroup_select_victim_node()
-Message-Id: <20191029175459.b3bfed9326559e69acdd2e35@linux-foundation.org>
-In-Reply-To: <20191029234753.224143-1-shakeelb@google.com>
-References: <20191029234753.224143-1-shakeelb@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Tue, 29 Oct 2019 20:57:28 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:33842 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfJ3A51 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 20:57:27 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3BFC2140F6FBE;
+        Tue, 29 Oct 2019 17:57:27 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 17:57:26 -0700 (PDT)
+Message-Id: <20191029.175726.406152531378673130.davem@davemloft.net>
+To:     Anson.Huang@nxp.com
+Cc:     fugang.duan@nxp.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH RESEND 1/2] net: fec_main: Use
+ platform_get_irq_byname_optional() to avoid error message
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1572313999-23317-1-git-send-email-Anson.Huang@nxp.com>
+References: <1572313999-23317-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 29 Oct 2019 17:57:27 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 16:47:53 -0700 Shakeel Butt <shakeelb@google.com> wrote:
+From: Anson Huang <Anson.Huang@nxp.com>
+Date: Tue, 29 Oct 2019 09:53:18 +0800
 
-> Since commit 1ba6fc9af35b ("mm: vmscan: do not share cgroup iteration
-> between reclaimers"), the memcg reclaim does not bail out earlier based
-> on sc->nr_reclaimed and will traverse all the nodes. All the reclaimable
-> pages of the memcg on all the nodes will be scanned relative to the
-> reclaim priority. So, there is no need to maintain state regarding which
-> node to start the memcg reclaim from. Also KCSAN complains data races in
-> the code maintaining the state.
+> Failed to get irq using name is NOT fatal as driver will use index
+> to get irq instead, use platform_get_irq_byname_optional() instead
+> of platform_get_irq_byname() to avoid below error message during
+> probe:
 > 
-> This patch effectively reverts the commit 889976dbcb12 ("memcg: reclaim
-> memory from nodes in round-robin order") and the commit 453a9bf347f1
-> ("memcg: fix numa scan information update to be triggered by memory
-> event").
+> [    0.819312] fec 30be0000.ethernet: IRQ int0 not found
+> [    0.824433] fec 30be0000.ethernet: IRQ int1 not found
+> [    0.829539] fec 30be0000.ethernet: IRQ int2 not found
 > 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> Reported-by: <syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Acked-by: Fugang Duan <fugang.duan@nxp.com>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-I can't find the original sysbot email.  Help?
-
-iirc the incidentally-fixed issue is a rather theoretical data race and
-the patch isn't a high priority thing?
-
+Applied.
