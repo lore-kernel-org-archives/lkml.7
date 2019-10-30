@@ -2,125 +2,76 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A194CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F303CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186B72080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813972080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfJ3Ndd convert rfc822-to-8bit (ORCPT
+        id S1726712AbfJ3Ndx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:33:33 -0400
-Received: from mail-oln040092255070.outbound.protection.outlook.com ([40.92.255.70]:6277
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        Wed, 30 Oct 2019 09:33:53 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5656 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726209AbfJ3Ndc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:33:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jnPCKU0zBsDiZUtHU/L4zM/t5fQXeMUMPcYYvibIXX1brVEP9BwPkaufsyUX2S7gWNBWApwJkgSm3mYTDSA5X1gHtM3SHHp9gaBMvO6nApKiLDkMvnZOqY5g6yI9+10WWR8yKj/keO1zparSWOwQ4uAutH78udgcw/9pLZSE1Mrmys6u4I2IuBrP1vxhp3Wa4qREjXJOUqW6ajplhPUSSmx8aaameVNXXgGLznZc+ia6zQOPevzlIK0tzbqoFvBRWnq+Lck9ewzPeqOFIo5tuFHE9ULrJ9O00SDCWOQ/TFZN2BQe3h6Nc3ejygyV+n1OgZxX8tsmkAPB8vvBalRxKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u4Gh8YwSwiR8w/fQwxcW3u9Y6sgV3lGpEgGLJiEI6js=;
- b=dH5K0ELdav8p/80L4idp1pDe6V5PDNE+UQUw7yb/AXdIyNGOVTPNGazquGkd9uN4F3kpjZ1af7/wcE7LUajuuJMR9UI9zmzEQ7X26DI/HVuWehFwoDenPFPuLfHASI9eZLfXwxIloUObLN7kzmCKT3Da6WXnduVQuITnAU696UhiJi9rFSj5peBsqKB8chc1M8j98QEEXl+EbciQjSKUG00XB/T6FFyquQJDPQG1rVh2jFh2s6tXXvLDjBoaQoVpskDoOIGLbD5mCEbBPAg0EJg3XEZo4Iu1rMoEARcNxRRFqPHy6S5uyiRtIe2m9Ub9B9m7pUCTiaMD1qK+qzs3rg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT007.eop-APC01.prod.protection.outlook.com
- (10.152.252.51) by PU1APC01HT225.eop-APC01.prod.protection.outlook.com
- (10.152.253.175) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Wed, 30 Oct
- 2019 13:33:26 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.54) by
- PU1APC01FT007.mail.protection.outlook.com (10.152.252.99) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2387.20 via Frontend Transport; Wed, 30 Oct 2019 13:33:26 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d%8]) with mapi id 15.20.2387.028; Wed, 30 Oct 2019
- 13:33:26 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v10 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Topic: [PATCH v10 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Index: AQHVjyA5XlOSuojfyUiAJcF9cam8n6dzLKaAgAACSIA=
-Date:   Wed, 30 Oct 2019 13:33:26 +0000
-Message-ID: <SL2P216MB0187F0B0630B8C5950342CA680600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-References: <SL2P216MB0187C1ACBE716693FD5622BD80600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <20191030132509.GE2593@lahna.fi.intel.com>
-In-Reply-To: <20191030132509.GE2593@lahna.fi.intel.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYXPR01CA0094.ausprd01.prod.outlook.com
- (2603:10c6:0:2e::27) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:F52AFA575D31254C7445DBE8A2806C230F005C97C594D427CA13D94194C6DC86;UpperCasedChecksum:D5CB05B2A30EBCFC2308AC774244B49240E96965B7FDDEC36B294648D8515C05;SizeAsReceived:7735;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [Ywuz2OsRPoimN5rxLvGHpIPGg4hXeV4zpDNwdDYIDjSaHPgotsuG0zA/LFoDyvmGK28Jb62sfOU=]
-x-microsoft-original-message-id: <20191030133319.GB27719@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: PU1APC01HT225:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: s/Sg7eGj1QEFv0d4lRIBj9IUZfwG0AyO1mz62Erk0Scib3tbBa7m5iOyh03U9F84QoJYwQvHEpPsnTyo11IOUKtaAIwPlS2Q0BqyFAYUbpiL/QhhBu4mHvcHkKJtK1w7kC4dNwHCvDd6yDkuikJnGoDFPiFQvenFG5WU9v5VE4FBcLU7vwbaXjS5ZWvbW7eU
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C72593C1E972854E9E712024F8C81492@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        id S1726209AbfJ3Ndx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:33:53 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 173E567D5D6D97417690;
+        Wed, 30 Oct 2019 21:33:48 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 30 Oct 2019
+ 21:33:40 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>
+CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] rtc: fsl-ftm-alarm: Fix build error without PM_SLEEP
+Date:   Wed, 30 Oct 2019 21:32:56 +0800
+Message-ID: <20191030133256.14612-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53110f9c-889f-4462-1bfd-08d75d3dbe0d
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 13:33:26.3660
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT225
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 03:25:09PM +0200, mika.westerberg@linux.intel.com wrote:
-> On Wed, Oct 30, 2019 at 12:47:44PM +0000, Nicholas Johnson wrote:
-> > Remove checks for resource size in extend_bridge_window(). This is
-> > necessary to allow the pci_bus_distribute_available_resources() to
-> > function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-> > allocate resources. Because the kernel parameter sets the size of all
-> > hotplug bridges to be the same, there are problems when nested hotplug
-> > bridges are encountered. Fitting a downstream hotplug bridge with size X
-> > and normal bridges with non-zero size Y into parent hotplug bridge with
-> > size X is impossible, and hence the downstream hotplug bridge needs to
-> > shrink to fit into its parent.
-> > 
-> > Add check for if bridge is extended or shrunken and adjust pci_dbg to
-> > reflect this.
-> > 
-> > Reset the resource if its new size is zero (if we have run out of a
-> > bridge window resource) to prevent the PCI resource assignment code from
-> > attempting to assign a zero-sized resource.
-> > 
-> > Rename extend_bridge_window() to adjust_bridge_window() to reflect the
-> > fact that the window can now shrink.
-> > 
-> > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Do I need to re-post with this line in it?
+When do randbuild, Kconfig warning this:
 
-Cheers!
+WARNING: unmet direct dependencies detected for FSL_RCPM
+  Depends on [n]: PM_SLEEP [=y] && (ARM || ARM64)
+  Selected by [y]:
+  - RTC_DRV_FSL_FTM_ALARM [=y] && RTC_CLASS [=y] && (ARCH_LAYERSCAPE || SOC_LS1021A || COMPILE_TEST [=y])
+
+Add PM_SLEEP dependency to fix this.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e1c2feb1efa2 ("rtc: fsl-ftm-alarm: allow COMPILE_TEST")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/rtc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 4185b0d..2bbf8ae 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1326,6 +1326,7 @@ config RTC_DRV_IMXDI
+ config RTC_DRV_FSL_FTM_ALARM
+ 	tristate "Freescale FlexTimer alarm timer"
+ 	depends on ARCH_LAYERSCAPE || SOC_LS1021A || COMPILE_TEST
++	depends on PM_SLEEP
+ 	select FSL_RCPM
+ 	default y
+ 	help
+-- 
+2.7.4
+
+
