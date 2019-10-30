@@ -2,114 +2,210 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CEDCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF6ECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFDD320856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:02:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ITHLhKwY"
+	by mail.kernel.org (Postfix) with ESMTP id E0B8F20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572462157;
+	bh=+38YM8UwTn3h5SiOhEnqRmj1g6UwoAQkEny6ADnAC2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VaNaM9WDUBtMx4rVHlzh00tDol+mdnzFH9L2E7H/HCPJc4rZBZjD1fc/bTu6S7vWM
+	 uLBHzBSu1i6nQTM+ds95EgefoeAwkVkXdEJiPaKiciU+rVScJAVRNslMP8MG2X/49p
+	 g+OgWtaE8YpHjMlXG3Ly428LeLNacgfUtMKdOb3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfJ3TCa (ORCPT
+        id S1727458AbfJ3TCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 30 Oct 2019 15:02:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfJ3TCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 30 Oct 2019 15:02:30 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33057 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfJ3TCa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:02:30 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c184so2249359pfb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 12:02:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oGDBahFoMPSIZ29sHXhe1mehZlhHuZjEGPvioRijuyg=;
-        b=ITHLhKwYHLawxDKJoXVFazyKfWfmJx5VWQYSzCXI3uwCtcs0q7fLyaj9SL04wb9vsM
-         RlSKIzlfu4E7whMcthOGZ0RckEeTvwu4OzrBanTEIRe9aOYcmYXOA8e4hm7V0kDaVqJU
-         d50WeQX+Habf5zhjgR6kw/cCCYQZ5jn9IttQk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oGDBahFoMPSIZ29sHXhe1mehZlhHuZjEGPvioRijuyg=;
-        b=SvTXRE0U0ko7f0+NFkSjDMqaPuCpZYv0t6bWrGOCf5lrBtVcXj1iozaBmXtzSVqacY
-         MfUcQnHG3hD8tRdEORtK4M4pzQ+raS+GkTvLWReK84S1h0qFZkIizciB3tjfdTLXX8nD
-         N687DcoEf6NeOjr+ZtQIETN+r1/aII0QxFWfEWcrIKmQ+79pGGGYmkbSvxCgsk0KcrZ6
-         KaSAnwm1Zp3D7yqi0UMNB0a3y4rnNDxIcpUgQMs2FU2oMPmPrFjc7U1hQ7K71tKkXnit
-         /qIoqNm4Cg1vjlUv00IPqUIB2x4TQhVhNn/bcXNw0N0DwQOjzGcG+V//+Jmjq0DMv5vi
-         fbvQ==
-X-Gm-Message-State: APjAAAUjC6ilLPztVkqA645RQQO7SPnwCfzucWR0/AT4h63tht/4wgQ6
-        n9s5460huTp/gnjGLKZj0GAPSQ==
-X-Google-Smtp-Source: APXvYqzota95kx11bi1wNxwIZc9AQEa/YsaYDEtNJUaPGRly4YWFB/enVi4ZfTsIfFi/BRYxa1QUGQ==
-X-Received: by 2002:a62:83c6:: with SMTP id h189mr892782pfe.213.1572462149354;
-        Wed, 30 Oct 2019 12:02:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j26sm508386pgi.92.2019.10.30.12.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 12:02:28 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 12:02:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, shuah <shuah@kernel.org>,
-        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
-        serge@hallyn.com, Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Mike Salvatore <mike.salvatore@canonical.com>
-Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
- tests for policy unpack
-Message-ID: <201910301201.404F0E3BB@keescook>
-References: <20191018001816.94460-1-brendanhiggins@google.com>
- <20191018004307.GA95597@google.com>
- <20191018162519.GH21137@mit.edu>
- <CAFd5g45LmnbD7L4LqdbfBV5YR377e81m61+z==RKCGjWBFqDGQ@mail.gmail.com>
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18F9E20659;
+        Wed, 30 Oct 2019 19:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572462148;
+        bh=+38YM8UwTn3h5SiOhEnqRmj1g6UwoAQkEny6ADnAC2g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nwkttn5SwTfS+1q2HWx6QJVDTYOCBvf2EjiRsXaYaIFS8vvQAzvYv6MkCGYIbUhD/
+         CnS987j70vJ43qeaabhjXanWTeQRdyv4ykISU3401Kpc1FqlsxgpyWa25Bx76QvaR7
+         99+flFPnlIgN8xxk4c/F8D6jd3ly1bzzQeyJo1qs=
+Date:   Wed, 30 Oct 2019 12:02:26 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Gwendal Grignou <gwendal@chromium.org>, Chao Yu <chao@kernel.org>,
+        Ryo Hashimoto <hashimoto@chromium.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Guenter Roeck <groeck@chromium.org>, apronin@chromium.org,
+        linux-doc@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH] Revert "ext4 crypto: fix to check feature status before
+ get policy"
+Message-ID: <20191030190226.GD693@sol.localdomain>
+Mail-Followup-To: Doug Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>, Chao Yu <chao@kernel.org>,
+        Ryo Hashimoto <hashimoto@chromium.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Guenter Roeck <groeck@chromium.org>, apronin@chromium.org,
+        linux-doc@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, linux-fscrypt@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+References: <20191030100618.1.Ibf7a996e4a58e84f11eec910938cfc3f9159c5de@changeid>
+ <20191030173758.GC693@sol.localdomain>
+ <CAD=FV=Uzma+eSGG1S1Aq6s3QdMNh4J-c=g-5uhB=0XBtkAawcA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFd5g45LmnbD7L4LqdbfBV5YR377e81m61+z==RKCGjWBFqDGQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=Uzma+eSGG1S1Aq6s3QdMNh4J-c=g-5uhB=0XBtkAawcA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 02:41:38PM -0700, Brendan Higgins wrote:
-> On Fri, Oct 18, 2019 at 9:25 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+On Wed, Oct 30, 2019 at 10:51:20AM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Wed, Oct 30, 2019 at 10:38 AM Eric Biggers <ebiggers@kernel.org> wrote:
 > >
-> > On Thu, Oct 17, 2019 at 05:43:07PM -0700, Brendan Higgins wrote:
-> > > > +config SECURITY_APPARMOR_TEST
-> > > > +   bool "Build KUnit tests for policy_unpack.c"
-> > > > +   default n
-> > > > +   depends on KUNIT && SECURITY_APPARMOR
+> > Hi Douglas,
+> >
+> > On Wed, Oct 30, 2019 at 10:06:25AM -0700, Douglas Anderson wrote:
+> > > This reverts commit 0642ea2409f3 ("ext4 crypto: fix to check feature
+> > > status before get policy").
 > > >
-> > > Ted, here is an example where doing select on direct dependencies is
-> > > tricky because SECURITY_APPARMOR has a number of indirect dependencies.
+> > > The commit made a clear and documented ABI change that is not backward
+> > > compatible.  There exists userspace code [1] that relied on the old
+> > > behavior and is now broken.
+> > >
+> > > While we could entertain the idea of updating the userspace code to
+> > > handle the ABI change, it's my understanding that in general ABI
+> > > changes that break userspace are frowned upon (to put it nicely).
+> > >
+> > > NOTE: if we for some reason do decide to entertain the idea of
+> > > allowing the ABI change and updating userspace, I'd appreciate any
+> > > help on how we should make the change.  Specifically the old code
+> > > relied on the different return values to differentiate between
+> > > "KeyState::NO_KEY" and "KeyState::NOT_SUPPORTED".  I'm no expert on
+> > > the ext4 encryption APIs (I just ended up here tracking down the
+> > > regression [2]) so I'd need a bit of handholding from someone.
+> > >
+> > > [1] https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/master/cryptohome/dircrypto_util.cc#73
+> > > [2] https://crbug.com/1018265
+> > >
+> > > Fixes: 0642ea2409f3 ("ext4 crypto: fix to check feature status before get policy")
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > >
+> > >  Documentation/filesystems/fscrypt.rst | 3 +--
+> > >  fs/ext4/ioctl.c                       | 2 --
+> > >  2 files changed, 1 insertion(+), 4 deletions(-)
+> > >
+> > > diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
+> > > index 8a0700af9596..4289c29d7c5a 100644
+> > > --- a/Documentation/filesystems/fscrypt.rst
+> > > +++ b/Documentation/filesystems/fscrypt.rst
+> > > @@ -562,8 +562,7 @@ FS_IOC_GET_ENCRYPTION_POLICY_EX can fail with the following errors:
+> > >    or this kernel is too old to support FS_IOC_GET_ENCRYPTION_POLICY_EX
+> > >    (try FS_IOC_GET_ENCRYPTION_POLICY instead)
+> > >  - ``EOPNOTSUPP``: the kernel was not configured with encryption
+> > > -  support for this filesystem, or the filesystem superblock has not
+> > > -  had encryption enabled on it
+> > > +  support for this filesystem
+> > >  - ``EOVERFLOW``: the file is encrypted and uses a recognized
+> > >    encryption policy version, but the policy struct does not fit into
+> > >    the provided buffer
+> > > diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+> > > index 0b7f316fd30f..13d97fb797b4 100644
+> > > --- a/fs/ext4/ioctl.c
+> > > +++ b/fs/ext4/ioctl.c
+> > > @@ -1181,8 +1181,6 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> > >  #endif
+> > >       }
+> > >       case EXT4_IOC_GET_ENCRYPTION_POLICY:
+> > > -             if (!ext4_has_feature_encrypt(sb))
+> > > -                     return -EOPNOTSUPP;
+> > >               return fscrypt_ioctl_get_policy(filp, (void __user *)arg);
+> > >
 > >
-> > Well, that could be solved by adding a select on all of the indirect
-> > dependencies.  I did get your point about the fact that we could have
+> > Thanks for reporting this.  Can you elaborate on exactly why returning
+> > EOPNOTSUPP breaks things in the Chrome OS code?  Since encryption is indeed not
+> > supported, why isn't "KeyState::NOT_SUPPORTED" correct?
 > 
-> In this particular case that would work.
+> I guess all I know is from the cryptohome source code I sent a link
+> to, which I'm not a super expert in.  Did you get a chance to take a
+> look at that?  As far as I can tell the code is doing something like
+> this:
 > 
-> > cases where the indirect dependencies might conflict with one another.
-> > That's going to be a tough situation regardless of whether we have a
-> > sat-solver or a human who has to struggle with that situation.
+> 1. If I see EOPNOTSUPP then this must be a kernel without ext4 crypto.
+> Fallback to using the old-style ecryptfs.
 > 
-> But yeah, that's the real problem.
+> 2. If I see ENODATA then this is a kernel with ext4 crypto but there's
+> no key yet.  We should set a key and (if necessarily) enable crypto on
+> the filesystem.
+> 
+> 3. If I see no error then we're already good.
+> 
+> > Note that the state after this revert will be:
+> >
+> > - FS_IOC_GET_ENCRYPTION_POLICY on ext4 => ENODATA
+> > - FS_IOC_GET_ENCRYPTION_POLICY on f2fs => EOPNOTSUPP
+> > - FS_IOC_GET_ENCRYPTION_POLICY_EX on ext4 => EOPNOTSUPP
+> > - FS_IOC_GET_ENCRYPTION_POLICY_EX on f2fs => EOPNOTSUPP
+> >
+> > So if this code change is made, the documentation would need to be updated to
+> > explain that the error code from FS_IOC_GET_ENCRYPTION_POLICY is
+> > filesystem-specific (which we'd really like to avoid...), and that
+> > FS_IOC_GET_ENCRYPTION_POLICY_EX handles this case differently.  Or else the
+> > other three would need to be changed to ENODATA -- which for
+> > FS_IOC_GET_ENCRYPTION_POLICY on f2fs would be an ABI break in its own right,
+> > though it's possible that no one would notice.
+> >
+> > Is your proposal to keep the error filesystem-specific for now?
+> 
+> I guess I'd have to leave it up to the people who know this better.
+> Mostly I just saw this as an ABI change breaking userspace which to me
+> means revert.  I have very little background here to make good
+> decisions about the right way to move forward.
+> 
 
-I think at this stage we want to make it _possible_ to write tests
-sanely without causing all kinds of headaches. I think "build all the
-tests" can just be a function of "allmodconfig" and leave it at that
-until we have cases we really need to deal with.
+Okay, that makes sense -- cryptohome assumes that ENODATA means the kernel
+supports encryption, even if the encrypt ext4 feature flag isn't set yet.
 
--- 
-Kees Cook
+The way it's really supposed to work (IMO) is that all fscrypt ioctls
+consistently return EOPNOTSUPP if the feature is off, and then if userspace
+really needs to know if encryption can nevertheless still be enabled and used on
+the filesystem, it can check for the presence of
+/sys/fs/ext4/features/encryption (or /sys/fs/f2fs/features/encryption).  Or the
+feature flag can just be set by configuration before any of the fscrypt ioctls
+are attempted (this is what Android does).
+
+I guess we're stuck with the existing ext4 FS_IOC_GET_ENCRYPTION_POLICY behavior
+though, so we need to take this revert for 5.4.
+
+For 5.5 I think we should try to make things slightly more sane by removing the
+same check from f2fs and fixing the documentation, so that at least each ioctl
+will behave consistently across filesystems and be correctly documented.
+
+Ted, Jaegeuk, Chao, do you agree?
+
+- Eric
