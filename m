@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7533CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02469CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F87217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0202190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451085;
-	bh=VUwH/AuwUiUuH2m0jq4xzOerAgHsaYC1KAQxUccPK4E=;
+	s=default; t=1572451087;
+	bh=eXUV9usKsFNCJl0ds2onpvux96p6TGBk/4ggU3O/OPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c4HxyBVaHZUwaO4/RHP7+d2xtbVza3jpzzDHE/BueieVqUckT+ne1oFqdfQ4Rh+Ej
-	 v8juNouNXvO193J/JT9MbibPf1PtX9iUUw64pHi2UdO5bHXOiR48qhbbjdGN/MY4bM
-	 1wuJawOZnTZ9hz4QAeWVR9WgJVuh92Lj8f5wIENQ=
+	b=yHZXhH7ngoMX0SP3MFTBTbBAcLLDbBNZ+G3bUo3PBjlp48WSAKarN1VnqH9hjJJ/D
+	 sTq/lHdsiW0n3jvxowZ/J/o9gAG8WUXfU4LjgRywJjr5eCsKYpESIghVTwAW785Mk+
+	 eNqPPUJrpWnWwdadcsrlullKnzZj9ti54LPJ0Pc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbfJ3P6A (ORCPT
+        id S1729223AbfJ3P6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:58:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59646 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:58:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729178AbfJ3P56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:57:58 -0400
+        id S1729197AbfJ3P6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:58:01 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 124D221835;
-        Wed, 30 Oct 2019 15:57:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE41321925;
+        Wed, 30 Oct 2019 15:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451077;
-        bh=VUwH/AuwUiUuH2m0jq4xzOerAgHsaYC1KAQxUccPK4E=;
+        s=default; t=1572451081;
+        bh=eXUV9usKsFNCJl0ds2onpvux96p6TGBk/4ggU3O/OPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YveAxKuskVUxQc1qY3t5gefxsY3IpkMguSXM/d3eq3UvK6MfHudojESJHlD8rO7el
-         6KqEru/CJpRf8Mvd3Jgrv7Pbku9Z/PEjO+TJY5zu34OXO01WEoriakKBX8Lzctv7TL
-         P0Vvp+bD21aFpgNDvDFRJdRxKkxwT46QIMrFhllM=
+        b=ty3V6WEX+R15FeTC093TB45PrDkXoqroRGQMIgHZpY6kopZcFRQ9E4LRFVHI/ihnX
+         beLhn7eqYE0PZJDlZ0XlP3Zb9I4X72KmxsdFqxUNLlLJK20fFKZ26junEIMRZbGH7p
+         IOr/BUH4cCH9M453AlAWDb3w/16N+b0ozGRHrj2Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yizhuo <yzhai003@ucr.edu>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 02/13] regulator: pfuze100-regulator: Variable "val" in pfuze100_regulator_probe() could be uninitialized
-Date:   Wed, 30 Oct 2019 11:57:40 -0400
-Message-Id: <20191030155751.10960-2-sashal@kernel.org>
+Cc:     Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 04/13] ARM: dts: logicpd-torpedo-som: Remove twl_keypad
+Date:   Wed, 30 Oct 2019 11:57:42 -0400
+Message-Id: <20191030155751.10960-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155751.10960-1-sashal@kernel.org>
 References: <20191030155751.10960-1-sashal@kernel.org>
@@ -58,42 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit 1252b283141f03c3dffd139292c862cae10e174d ]
+[ Upstream commit 6b512b0ee091edcb8e46218894e4c917d919d3dc ]
 
-In function pfuze100_regulator_probe(), variable "val" could be
-initialized if regmap_read() fails. However, "val" is used to
-decide the control flow later in the if statement, which is
-potentially unsafe.
+The TWL4030 used on the Logit PD Torpedo SOM does not have the
+keypad pins routed.  This patch disables the twl_keypad driver
+to remove some splat during boot:
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Link: https://lore.kernel.org/r/20190929170957.14775-1-yzhai003@ucr.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+twl4030_keypad 48070000.i2c:twl@48:keypad: missing or malformed property linux,keymap: -22
+twl4030_keypad 48070000.i2c:twl@48:keypad: Failed to build keymap
+twl4030_keypad: probe of 48070000.i2c:twl@48:keypad failed with error -22
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+[tony@atomide.com: removed error time stamps]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/pfuze100-regulator.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/logicpd-torpedo-som.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index c68556bf6f399..ec185502dcebd 100644
---- a/drivers/regulator/pfuze100-regulator.c
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -609,7 +609,13 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
- 
- 		/* SW2~SW4 high bit check and modify the voltage value table */
- 		if (i >= sw_check_start && i <= sw_check_end) {
--			regmap_read(pfuze_chip->regmap, desc->vsel_reg, &val);
-+			ret = regmap_read(pfuze_chip->regmap,
-+						desc->vsel_reg, &val);
-+			if (ret) {
-+				dev_err(&client->dev, "Fails to read from the register.\n");
-+				return ret;
-+			}
+diff --git a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
+index e05670423d8b7..a6c59bf698b31 100644
+--- a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
++++ b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
+@@ -169,3 +169,7 @@
+ &twl_gpio {
+ 	ti,use-leds;
+ };
 +
- 			if (val & sw_hi) {
- 				if (pfuze_chip->chip_id == PFUZE3000) {
- 					desc->volt_table = pfuze3000_sw2hi;
++&twl_keypad {
++	status = "disabled";
++};
 -- 
 2.20.1
 
