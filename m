@@ -2,175 +2,183 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555B0CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC5CCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9F02080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFF22087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:49:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="VH2JjfTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfJ3Mru convert rfc822-to-8bit (ORCPT
+        id S1726784AbfJ3MtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:47:50 -0400
-Received: from mail-oln040092254042.outbound.protection.outlook.com ([40.92.254.42]:59232
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726088AbfJ3Mrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:47:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jlyI+j9Fj2XiaOLnfNynqgZnho12Tlh5nk7P7laDZs9eKx9V40+8Z1cQnFAhOgEEuu3qZUfO/envjqkCcWw5N4YhGVuJ8I/o0Z03/f2YbMyzUC745KKjUO5HyG5iskCNSC5SMRxi4bWs4PrQ16psbPjc2aUFNEfQbgATNLU5Ade+u8s4ED7VWVNB5tO/WhIv8qCQMSX/2OCrCiUqxn28sMep0X1hu9KM1bCBIwRUvcSmgy6gheLZdOtXIH1Sv6yd1Mvu7DANRbn+3GBT4WJMo2sDfHAV9ZN95Int5ivq4vFxWZgTuOhTmai9HL203jjj66UQan+1fMqBBOiQ0/60gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zST80BDhYstqD3q+LnsS86RfBnpU0s3duNukixoi9OU=;
- b=SOLyO9h5azIB2Fv+9ZQrNJo1Kyqvf7JVXpIlFuieZ9hetIlkJWTBUQlroVRJGZ1ORu9sByeIOzsWAJ+Q7WNnsYNyJnsDZC9JqbckODOlkAIceUOYlP9axBUE4oMhl0u0zQxJIGV7UqSPO0Mxrj1twvevYDwlD919/YeehANwgFqb6bb57qsw1bZlYflJHpHcHRGUgJIUacQPMConpttdT6I+sj9Z6XYfEW4fHV1ay9PnCFfOCe95RNfTXrpo4MOhCBSeFJuLk5DpJ+cEfDcJ1bIYm8Ze4/LapBqQcRHitoRywZsf1MFoDu4sDChaTU71ClYB4e2smS0oKy0s5gByeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HK2APC01FT052.eop-APC01.prod.protection.outlook.com
- (10.152.248.54) by HK2APC01HT051.eop-APC01.prod.protection.outlook.com
- (10.152.249.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Wed, 30 Oct
- 2019 12:47:44 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.248.51) by
- HK2APC01FT052.mail.protection.outlook.com (10.152.248.244) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2387.20 via Frontend Transport; Wed, 30 Oct 2019 12:47:44 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d%8]) with mapi id 15.20.2387.028; Wed, 30 Oct 2019
- 12:47:44 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: [PATCH v10 4/4] PCI: Allow extend_bridge_window() to shrink resource
- if necessary
-Thread-Topic: [PATCH v10 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Index: AQHVjyA5XlOSuojfyUiAJcF9cam8nw==
-Date:   Wed, 30 Oct 2019 12:47:44 +0000
-Message-ID: <SL2P216MB0187C1ACBE716693FD5622BD80600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYYP282CA0003.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:b4::13) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:1135D175687A42FE736E044F0F95638F783C070B54F8571FF85EED94880FCFC2;UpperCasedChecksum:D37DEF15B4DE2D519BA3FCD290DEEB78C9C8BB8E7170C12D76B31284A4B9D883;SizeAsReceived:7539;Count:46
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [OgSBJgXNYEEeDTlNL+U1mETCvYUXN/RteYeNuJtyI1pVsFlJzTJ5wFNPjamswi1Q7y6yDbZzvq4=]
-x-microsoft-original-message-id: <20191030124736.GA2170@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 46
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: HK2APC01HT051:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3uqJSqCaMTk8AQk6Hu809SPqCd4UvsJsyvQamXAeT6SnRpTv/KV7KJOv91B2baMlzZJpKfd7riAUZDlXQp4jk5LqqbO8/vPYyn6BljBXrOJ3Z1SOtqWvl8HulsDVT9zfhdGZKB+TZNKXEV9WKxEK/uHAOJMdG6dHlyOcJubCzfy2Dpu/TLHMrVMMzONW5Dp7
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8D90C9A2356D994E90CD6AC975F46678@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Wed, 30 Oct 2019 08:49:05 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44229 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3MtE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 08:49:04 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v4so1434110lfd.11
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 05:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sSxMD93SgrMKa1m5daPa8vTyvv+ZCSpaIY9FPy5hVnc=;
+        b=VH2JjfTED6tJP9SgurJTiQJxYZXJDKAJ+tS5boUHlN5RVihbMQ5GRxPToaX+sOmjTV
+         7mupqAEL3KPSSblg3l1/0p6MMy9rGB1/wwKo9JNymSfGafIJm4bEu4J+zzspaHhypkFM
+         QmMllYvN4VWySnPjqfn84YqVMHDSPYrMCmkyw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sSxMD93SgrMKa1m5daPa8vTyvv+ZCSpaIY9FPy5hVnc=;
+        b=AUy7EC9salhXNf/L2TUVPQTmZ6xQtUDUfp6NSpf7VUc6DR5w6sK/O0USb8FK4llXvK
+         /oeO+h5WziB066K11aWtwwl9P1MgmAVXtbbxf2qBlFCi2AsUhorC+CJeh4rXWXIUVSnR
+         9jVB9uB/YOnN+8EbogtZhe07JRsgbjMfXggQcjjdyTruEEHhJQr36X2CSytsLuqEWyH8
+         lwM8aitzfv7ZuSxXWtlUbkjZktaQJcE3UYngqeh0QTVAjxkhHJPAlBECs3dS7xfLJJoz
+         hYHkqf9Lics2CM7XCk0uW/bZhFN6VKOMqAJjsZ2DbFTWsOMiCa63AKbYs2XFh/P09prO
+         BMdg==
+X-Gm-Message-State: APjAAAU0pSXD6a4zTN+jSGlinHtPcFFHB9dkh6xJNoeXotj0ZUKV3CoB
+        urNoEhUqxT2+DABD3+09tftaw6eDaE8=
+X-Google-Smtp-Source: APXvYqysJnmPCrxbSN5rEZs/my9yJdqOhMLqkjhxEuIQURnaFWauUaVQWJ3C/z/48K4+r7AZjwDRdA==
+X-Received: by 2002:a19:3845:: with SMTP id d5mr5838987lfj.162.1572439741746;
+        Wed, 30 Oct 2019 05:49:01 -0700 (PDT)
+Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id b4sm911745ljp.84.2019.10.30.05.49.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2019 05:49:01 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 4/4] bonding: balance ICMP echoes in layer3+4
+ mode
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Blakey <paulb@mellanox.com>, linux-kernel@vger.kernel.org
+References: <20191029135053.10055-1-mcroce@redhat.com>
+ <20191029135053.10055-5-mcroce@redhat.com>
+ <5be14e4e-807f-486d-d11a-3113901e72fe@cumulusnetworks.com>
+ <576a4a96-861b-6a86-b059-6621a22d191c@gmail.com>
+ <afdfd237-124d-0050-606f-cb5516c9e4d8@cumulusnetworks.com>
+ <294b9604-8d43-4a31-9324-6368c584fd63@gmail.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <4d4f88c6-8b95-5d9b-7e14-3cdc2f660d3f@cumulusnetworks.com>
+Date:   Wed, 30 Oct 2019 14:48:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8492b2df-4628-45a6-7d26-08d75d375b92
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 12:47:44.1683
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT051
+In-Reply-To: <294b9604-8d43-4a31-9324-6368c584fd63@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove checks for resource size in extend_bridge_window(). This is
-necessary to allow the pci_bus_distribute_available_resources() to
-function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-allocate resources. Because the kernel parameter sets the size of all
-hotplug bridges to be the same, there are problems when nested hotplug
-bridges are encountered. Fitting a downstream hotplug bridge with size X
-and normal bridges with non-zero size Y into parent hotplug bridge with
-size X is impossible, and hence the downstream hotplug bridge needs to
-shrink to fit into its parent.
+On 30/10/2019 01:04, Eric Dumazet wrote:
+> 
+> 
+> On 10/29/19 2:50 PM, Nikolay Aleksandrov wrote:
+> 
+>> Right, I was just giving it as an example. Your suggestion sounds much better and
+>> wouldn't interfere with other layers, plus we already use skb->hash in bond_xmit_hash()
+>> and skb_set_owner_w() sets l4_hash if txhash is present which is perfect.
+>>
+>> One thing - how do we deal with sk_rethink_txhash() ? I guess we'll need some way to
+>> signal that the user specified the txhash and it is not to be recomputed ?
+>> That can also be used to avoid the connect txhash set as well if SO_TXHASH was set prior
+>> to the connect. It's quite late here, I'll look into it more tomorrow. :)
+> 
+> I guess that we have something similar with SO_RCVBUF/SO_SNDBUF
+> 
+> autotuning is disabled when/if they are used :
+> 
+>  SOCK_RCVBUF_LOCK & SOCK_SNDBUF_LOCK
+> 
+> We could add a SOCK_TXHASH_LOCK so that sk_rethink_txhash() does nothing if
+> user forced a TXHASH value.
+> 
+> Something like the following (probably not complete) patch.
+> 
 
-Add check for if bridge is extended or shrunken and adjust pci_dbg to
-reflect this.
+Actually I think it's ok. I had a similar change last night sans the userlocks.
+I just built and tested a kernel with it successfully using the bonding.
+The only case that doesn't seem to work is a raw socket without hdrincl, IIUC due to
+the direct alloc_skb() (transhdrlen == 0) in ip_append_data().
+Unless you have other concerns could you please submit it formally ?
 
-Reset the resource if its new size is zero (if we have run out of a
-bridge window resource) to prevent the PCI resource assignment code from
-attempting to assign a zero-sized resource.
-
-Rename extend_bridge_window() to adjust_bridge_window() to reflect the
-fact that the window can now shrink.
-
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- drivers/pci/setup-bus.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index d83c55169..6b64bf909 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1814,22 +1814,29 @@ void __init pci_assign_unassigned_resources(void)
- 	}
- }
- 
--static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
-+static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
- 				 struct list_head *add_list,
- 				 resource_size_t new_size)
- {
--	resource_size_t add_size;
-+	resource_size_t add_size, size = resource_size(res);
- 
- 	if (res->parent)
- 		return;
- 
--	if (resource_size(res) >= new_size)
--		return;
-+	if (new_size > size) {
-+		add_size = new_size - size;
-+		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-+			&add_size);
-+	} else if (new_size < size) {
-+		add_size = size - new_size;
-+		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-+			&add_size);
-+	}
- 
--	add_size = new_size - resource_size(res);
--	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
- 	res->end = res->start + new_size - 1;
- 	remove_from_list(add_list, res);
-+	if (!new_size)
-+		reset_resource(res);
- }
- 
- static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-@@ -1865,9 +1872,9 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
- 	 * Update the resources to fill as much remaining resource space in the
- 	 * parent bridge as possible, while considering alignment.
- 	 */
--	extend_bridge_window(bridge, io_res, add_list, resource_size(&io));
--	extend_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
--	extend_bridge_window(bridge, mmio_pref_res, add_list,
-+	adjust_bridge_window(bridge, io_res, add_list, resource_size(&io));
-+	adjust_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
-+	adjust_bridge_window(bridge, mmio_pref_res, add_list,
- 			     resource_size(&mmio_pref));
- 
- 	/*
--- 
-2.23.0
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index 380312cc67a9d9ee8720eb2db82b1f7f8a5615ab..a8882738710eaa9d9d629e1207837a798401a594 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -1354,6 +1354,7 @@ static inline int __sk_prot_rehash(struct sock *sk)
+>  #define SOCK_RCVBUF_LOCK       2
+>  #define SOCK_BINDADDR_LOCK     4
+>  #define SOCK_BINDPORT_LOCK     8
+> +#define SOCK_TXHASH_LOCK       16
+>  
+>  struct socket_alloc {
+>         struct socket socket;
+> @@ -1852,7 +1853,8 @@ static inline u32 net_tx_rndhash(void)
+>  
+>  static inline void sk_set_txhash(struct sock *sk)
+>  {
+> -       sk->sk_txhash = net_tx_rndhash();
+> +       if (!(sk->sk_userlocks & SOCK_TXHASH_LOCK))
+> +               sk->sk_txhash = net_tx_rndhash();
+>  }
+>  
+>  static inline void sk_rethink_txhash(struct sock *sk)
+> diff --git a/include/uapi/asm-generic/socket.h b/include/uapi/asm-generic/socket.h
+> index 77f7c1638eb1ce7d3e143bbffd60056e472b1122..998be6ee7991de3a76d4ad33df3a38dbe791eae8 100644
+> --- a/include/uapi/asm-generic/socket.h
+> +++ b/include/uapi/asm-generic/socket.h
+> @@ -118,6 +118,7 @@
+>  #define SO_SNDTIMEO_NEW         67
+>  
+>  #define SO_DETACH_REUSEPORT_BPF 68
+> +#define SO_TXHASH              69
+>  
+>  #if !defined(__KERNEL__)
+>  
+> diff --git a/net/core/sock.c b/net/core/sock.c
+> index 997b352c2a72ee39f00b102a553ac1191202b74f..85b85dffd462bc3b497e0432100ff24b759832e0 100644
+> --- a/net/core/sock.c
+> +++ b/net/core/sock.c
+> @@ -770,6 +770,10 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
+>         case SO_BROADCAST:
+>                 sock_valbool_flag(sk, SOCK_BROADCAST, valbool);
+>                 break;
+> +       case SO_TXHASH:
+> +               sk->sk_txhash = val;
+> +               sk->sk_userlocks |= SOCK_TXHASH_LOCK;
+> +               break;
+>         case SO_SNDBUF:
+>                 /* Don't error on this BSD doesn't and if you think
+>                  * about it this is right. Otherwise apps have to
+> @@ -1249,6 +1253,10 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
+>                 v.val = sock_flag(sk, SOCK_BROADCAST);
+>                 break;
+>  
+> +       case SO_TXHASH:
+> +               v.val = sk->sk_txhash;
+> +               break;
+> +
+>         case SO_SNDBUF:
+>                 v.val = sk->sk_sndbuf;
+>                 break;
+> 
 
