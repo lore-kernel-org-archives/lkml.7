@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB86CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237E7CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815C82067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E823220873
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWqTn8F1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDeqytxn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfJ3Vfg (ORCPT
+        id S1727398AbfJ3Vfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:35:36 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44074 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727280AbfJ3Vfd (ORCPT
+        Wed, 30 Oct 2019 17:35:47 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38645 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727312AbfJ3Vfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:35:33 -0400
-Received: by mail-lf1-f66.google.com with SMTP id v4so2753811lfd.11;
-        Wed, 30 Oct 2019 14:35:29 -0700 (PDT)
+        Wed, 30 Oct 2019 17:35:36 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y23so3940957ljc.5;
+        Wed, 30 Oct 2019 14:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oZXgBiZ7YOkoGyisWeubyUkOPcMd11xlE2xTsIL1hcs=;
-        b=pWqTn8F1cf6KdDw1IogG3DYjamYVOwnJwIKPP5jYkfX6RipToLsLAQfIjn2qDVhsR4
-         oj3Jt0OItTvvQxUUE9uRnvQ8p/ML3Zqnjb6GpAbukEl9Z7QgaZ5IIVAjXTnSq0Op4JE7
-         R2X6QouHch+tAaG44+BXHWbBLmReDe7qQRnOVOikVBqVLtLaoD7uEhZTGL9oXZfq9qRO
-         fm0Tk05pSDlwormMHanT/MAUfM6JSLfz+axiuf2zU9ypUrUG+Y1WR2lLB4mF/px4MATC
-         QNnVsaurvI8dI2tbwbJmuyUeDvBdNKYvd/H7eFBIfefWc4CbpF3ypBPBDJnTKym6f8+s
-         dCZw==
+        bh=7wI6f4nvMYsmBCMp+G12GdGK/taTCqKZ+wxQzPpgr3A=;
+        b=rDeqytxnY1lMSwbNo19GxcF6E2Km7OBfX8XzxvlbUrTtMbJRUbOv73NXQ7wBpfy6Jh
+         Grri4pplXKRLRQl+g5WZUqfur1Nlf0iKQya2ck2RPepa3xYyyMhZIsby7NesI2w/jjbN
+         61cb/QwkvqOeVcUxxbX6mETerzh4veIDM0pCmZPwAQZmGOE5HiWPWSR/ndfAvWTucpbX
+         cdhgoD+IaZFW5B+7RuBQJOPPR0tg1K24IAqk7xb7Z+x45zZykLDyN43w8umk2jvpZH+F
+         xGVthh34S77T2guVmh3BmzA9oKjBSApDcS9y7Ahx0ZijIOqZmAFOdCIzZ3wrplSDRbDE
+         /0OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oZXgBiZ7YOkoGyisWeubyUkOPcMd11xlE2xTsIL1hcs=;
-        b=R83bEEtWBzty/gFNXNcGZQRG1+dD1TRAGttqvbUMSpvHBS5/Wk1zH35vZ2DbS96fxw
-         gbja2WOyS3AhBr2Z19NE9O1CzecYR0RN052gKXy+71egENR3wB4EYQALJ9/sKFDCVIpv
-         RN69AoCruIHVbPWjb5+Z5N32aUrPbqAQmQJgsVdN82cdNhjFwu5pTVKej3IcMrkYB6f0
-         mEWuPPnbtsGfmmZBRqMCl7TuC3sntamgAunXu9V5cISEzhyxX2nHIEB93yhxxscIk2ai
-         zr20En4LaCqh7zbJBckI+FlDIlVZI5EAckbL3/ugmX90MgBIxe6TVBfVUN89dvRqDkQe
-         DvWA==
-X-Gm-Message-State: APjAAAV+NA6qs6vV98NhmCaEzuAqGUlzARxQVsCj5maVATJeR5fvTfX9
-        hkXYJMnv6P21Bsz7LglMJ7E=
-X-Google-Smtp-Source: APXvYqx977yb+MS+GJ5iH+ErzHq2FIs5tonlPqY3+qtmNyiAYwEvDewUgz/mLnhuGNWVwZatPaxWKw==
-X-Received: by 2002:a19:e018:: with SMTP id x24mr213962lfg.191.1572471329315;
-        Wed, 30 Oct 2019 14:35:29 -0700 (PDT)
+        bh=7wI6f4nvMYsmBCMp+G12GdGK/taTCqKZ+wxQzPpgr3A=;
+        b=hZBzrtehT8tPgxhU8WMznFeWxWmPqfue1chpdiNo/V9qNAII24olRYAzi/oGvlINg+
+         z6sGawnbZUiiVB45jUaTImOuhYGUCAXUFQY++Nq7rcVgbev+VAUO/pkfbIfYfKLotzUN
+         P2SlCkyyP3K33hiniK2Ffw2M0tFPJHDdYWpOaknxqVGlriZlBGAjxxJ2IM7O4VU4+IMD
+         4Baz5g4sgy/K+F7qsIizf+oEPON83ZiDccpv+7CcNj9dLes4oWggH9qBoMYaCGgeSLfc
+         jhaTZCUZ4ffHoXDbl7mm4aWyTAUGmB3MAck5KBZfQstTqyCXJtvKQ/F5eMjS5SmVcTbg
+         /anQ==
+X-Gm-Message-State: APjAAAWe1H+K9UDamYWwYZM/AU+Tk4cL+cWTZ5PGTmDz1bpeVK46cOKC
+        5yCqzqK61hVVpTN0E2CwzTs=
+X-Google-Smtp-Source: APXvYqzoH8fuZdbDSgAU9MjlE8QYenK/QsipZ5KucXZXBebsErH0ojtuYDMQH7mN/gw0gqCygQ6hYA==
+X-Received: by 2002:a05:651c:119b:: with SMTP id w27mr1144514ljo.221.1572471334103;
+        Wed, 30 Oct 2019 14:35:34 -0700 (PDT)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.28
+        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 14:35:28 -0700 (PDT)
+        Wed, 30 Oct 2019 14:35:33 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -71,9 +71,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Marcel Ziswiler <marcel.ziswiler@toradex.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/10] clk: tegra30: Use custom CCLK implementation
-Date:   Thu, 31 Oct 2019 00:33:55 +0300
-Message-Id: <20191030213400.29434-6-digetx@gmail.com>
+Subject: [PATCH v3 09/10] ARM: dts: tegra30: beaver: Set up voltage regulators for DVFS
+Date:   Thu, 31 Oct 2019 00:33:59 +0300
+Message-Id: <20191030213400.29434-10-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191030213400.29434-1-digetx@gmail.com>
 References: <20191030213400.29434-1-digetx@gmail.com>
@@ -84,43 +84,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We're going to use the generic cpufreq-dt driver on Tegra30 and thus CCLK
-intermediate re-parenting will be performed by the clock driver. There is
-now special CCLK implementation that supports all CCLK quirks, this patch
-makes Tegra30 SoCs to use that implementation.
+Set min/max voltage and couple CPU/CORE regulators.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/clk/tegra/clk-tegra30.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/tegra30-beaver.dts | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
-index c8bc18e4d7e5..0fe03d69fe1a 100644
---- a/drivers/clk/tegra/clk-tegra30.c
-+++ b/drivers/clk/tegra/clk-tegra30.c
-@@ -499,6 +499,8 @@ static struct tegra_clk_pll_params pll_x_params __ro_after_init = {
- 	.freq_table = pll_x_freq_table,
- 	.flags = TEGRA_PLL_HAS_CPCON | TEGRA_PLL_SET_DCCON |
- 		 TEGRA_PLL_USE_LOCK | TEGRA_PLL_HAS_LOCK_ENABLE,
-+	.pre_rate_change = tegra_cclk_pre_pllx_rate_change,
-+	.post_rate_change = tegra_cclk_post_pllx_rate_change,
- };
+diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
+index a3b0f3555cd2..6ebb3105af9e 100644
+--- a/arch/arm/boot/dts/tegra30-beaver.dts
++++ b/arch/arm/boot/dts/tegra30-beaver.dts
+@@ -1806,9 +1806,14 @@
  
- static struct tegra_clk_pll_params pll_e_params __ro_after_init = {
-@@ -932,11 +934,11 @@ static void __init tegra30_super_clk_init(void)
- 	clk_register_clkdev(clk, "pll_p_out4_cclkg", NULL);
+ 				vddctrl_reg: vddctrl {
+ 					regulator-name = "vdd_cpu,vdd_sys";
+-					regulator-min-microvolt = <1000000>;
+-					regulator-max-microvolt = <1000000>;
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1250000>;
++					regulator-coupled-with = <&core_vdd_reg>;
++					regulator-coupled-max-spread = <300000>;
++					regulator-max-step-microvolt = <100000>;
+ 					regulator-always-on;
++
++					nvidia,tegra-cpu-regulator;
+ 				};
  
- 	/* CCLKG */
--	clk = tegra_clk_register_super_mux("cclk_g", cclk_g_parents,
-+	clk = tegra_clk_register_super_cclk("cclk_g", cclk_g_parents,
- 				  ARRAY_SIZE(cclk_g_parents),
- 				  CLK_SET_RATE_PARENT,
- 				  clk_base + CCLKG_BURST_POLICY,
--				  0, 4, 0, 0, NULL);
-+				  0, NULL);
- 	clks[TEGRA30_CLK_CCLK_G] = clk;
+ 				vio_reg: vio {
+@@ -1868,17 +1873,22 @@
+ 			};
+ 		};
  
- 	/*
+-		tps62361@60 {
++		core_vdd_reg: tps62361@60 {
+ 			compatible = "ti,tps62361";
+ 			reg = <0x60>;
+ 
+ 			regulator-name = "tps62361-vout";
+ 			regulator-min-microvolt = <500000>;
+ 			regulator-max-microvolt = <1500000>;
++			regulator-coupled-with = <&vddctrl_reg>;
++			regulator-coupled-max-spread = <300000>;
++			regulator-max-step-microvolt = <100000>;
+ 			regulator-boot-on;
+ 			regulator-always-on;
+ 			ti,vsel0-state-high;
+ 			ti,vsel1-state-high;
++
++			nvidia,tegra-core-regulator;
+ 		};
+ 	};
+ 
 -- 
 2.23.0
 
