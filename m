@@ -2,236 +2,152 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87360CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB287CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5466820874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9054820874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:46:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aF/kblen"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ebj2q00e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfJ3GqH (ORCPT
+        id S1726187AbfJ3Gql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 02:46:07 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33413 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbfJ3GqG (ORCPT
+        Wed, 30 Oct 2019 02:46:41 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24159 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727355AbfJ3Gqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 02:46:06 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u23so820803pgo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 23:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cUna80mgrJuvwZng2S/zg9eJ2aJtl1v9W/4Z7bansiw=;
-        b=aF/kblen9t7CI7DHz9bX09InKfJirCrxV3h4upoRTtuntFzgf+ordcplUGhDX3hTlI
-         enA6URTjG0DKHNBi7J0mrKJnZ4kpZEXgZiuT0h9iNBlprIQJyJtZIMrytcelto9jQO7H
-         MsopDsGzlopi41nNk+mnCl/lntEhDo13NN+XSceDsf0olDyv6lrE4MwZ8tOAOOOVRf37
-         hs6uKnu6Ueo6jwa5fJv4IwEn/6bbxawQmu6ZcBnZkngNeMEiroT/u7fHnv6vpuw5IYke
-         qnmMpHgGEebHdKWzYqH8bpUg+biG8CfvSfTg7sNHuFlVv8ytyegGt6zi0ypgzbIHLwXW
-         LJDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cUna80mgrJuvwZng2S/zg9eJ2aJtl1v9W/4Z7bansiw=;
-        b=YlUQNFt4F6EdcPmc7UN5wsAHYlarCCaPjQrbAV30A3mfYQZJr0jlXA/hZXvnpOlbj3
-         opXuWlQA0yC9c+6WAPmSf4wBsxzt3/wHuzNjP95exdT7tGUtDP0LRiLEQFkntBUebikH
-         pGQNEz4j0FZpPq/sRaaTUfvIOS4S8jYlrfSrWxNLyeVfNnV7drlH9yVNK8fi+Smo+/xL
-         RCLJ767sbXp6jjtEfGfC2edHVpFkWCXz18cGxddLVyw5T86EeYTTZmqNCeMucUFfObIZ
-         eNFbVuR3e+/dHZmX6Kl4GNIaRbuQEvQRYwYh97UJ9ICZ3vXykluGL/8yHCPdvcDf46Ve
-         zcrQ==
-X-Gm-Message-State: APjAAAVtScWL6Hu9NpfH5fwCl4LDeS1+B1bqZ+HJQpcI9UaTuGnLWOgZ
-        mSJZAnECNzxzr8k1cxX6a+c9
-X-Google-Smtp-Source: APXvYqw4sy47eUnhMCq6S6rBb149xzsVxBxXpwL1klsrmUeuNOV3Z+gzN5hBEkI38UsF/yJrZuzh7A==
-X-Received: by 2002:a63:f441:: with SMTP id p1mr31930177pgk.362.1572417964721;
-        Tue, 29 Oct 2019 23:46:04 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:618e:77d9:c9fa:423a:3851:8df4])
-        by smtp.gmail.com with ESMTPSA id i63sm1270378pgc.31.2019.10.29.23.45.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 29 Oct 2019 23:46:04 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 12:15:55 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
-        a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
- binding
-Message-ID: <20191030064555.GB11637@Mani-XPS-13-9360>
-References: <20191025175908.14260-1-manivannan.sadhasivam@linaro.org>
- <20191025175908.14260-2-manivannan.sadhasivam@linaro.org>
- <20191028122115.GB4928@valkosipuli.retiisi.org.uk>
- <20191029221213.GB17996@bogus>
+        Wed, 30 Oct 2019 02:46:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572417999;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kyIvhY3BXMqZ4TEtR3KTmpEF86AeFHO8xa0fKWzJeAE=;
+        b=ebj2q00e9FgnJwvXV5CKmCKOOyu+fgY5vt9LSxBFEFOmjMuF5xgOa0cItDJ7/oD//qUvcw
+        hm9lbCA9n9RbvKBwdrnfu8yXcm5Qhnwx1xKLAHXFgyxwo+0aWvBcK/cEMle/hwtp+KJJM2
+        sbes498HiSe88cuVaOJ1D3urWjmhwfQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-431-i8qo7N-XMa2Z6apM5KYufg-1; Wed, 30 Oct 2019 02:46:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7EAA51005500;
+        Wed, 30 Oct 2019 06:46:32 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-223.pek2.redhat.com [10.72.12.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C2AD5D9C3;
+        Wed, 30 Oct 2019 06:45:51 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V6 2/6] modpost: add support for mdev class id
+Date:   Wed, 30 Oct 2019 14:44:40 +0800
+Message-Id: <20191030064444.21166-3-jasowang@redhat.com>
+In-Reply-To: <20191030064444.21166-1-jasowang@redhat.com>
+References: <20191030064444.21166-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029221213.GB17996@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: i8qo7N-XMa2Z6apM5KYufg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob, Sakari,
+Add support to parse mdev class id table.
 
-On Tue, Oct 29, 2019 at 05:12:13PM -0500, Rob Herring wrote:
-> On Mon, Oct 28, 2019 at 02:21:15PM +0200, Sakari Ailus wrote:
-> > Hi Manivannan,
-> > 
-> > Thanks for the update.
-> > 
-> > On Fri, Oct 25, 2019 at 11:29:07PM +0530, Manivannan Sadhasivam wrote:
-> > > Add YAML devicetree binding for IMX296 CMOS image sensor.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  .../devicetree/bindings/media/i2c/imx296.yaml | 98 +++++++++++++++++++
-> > >  1 file changed, 98 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > > new file mode 100644
-> > > index 000000000000..4e204fd7cf90
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > > @@ -0,0 +1,98 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
-> > > +
-> > > +maintainers:
-> > > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > +
-> > > +description: |-
-> > > +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
-> > > +  sensor with square pixel array and 1.58 M effective pixels. This chip
-> > > +  features a global shutter with variable charge-integration time. It is
-> > > +  programmable through I2C and 4-wire interfaces. The sensor output is
-> > > +  available via CSI-2 serial data output (1 Lane).
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: sony,imx296
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    maxItems: 1
-> > > +
-> > > +  clock-names:
-> > > +    description:
-> > > +      Input clock for the sensor.
-> > > +    items:
-> > > +      - const: mclk
-> > > +
-> > > +  clock-frequency:
-> > > +    description:
-> > > +      Frequency of the mclk clock in Hertz.
-> > > +    default: 37125000
-> > 
-> > I think you could omit the default.
-> 
-> Yes, there's no default if it is required.
->
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vfio/mdev/vfio_mdev.c     |  2 ++
+ scripts/mod/devicetable-offsets.c |  3 +++
+ scripts/mod/file2alias.c          | 11 +++++++++++
+ 3 files changed, 16 insertions(+)
 
-Okay.
+diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
+index 38431e9ef7f5..a6641cd8b5a3 100644
+--- a/drivers/vfio/mdev/vfio_mdev.c
++++ b/drivers/vfio/mdev/vfio_mdev.c
+@@ -125,6 +125,8 @@ static const struct mdev_class_id vfio_id_table[] =3D {
+ =09{ 0 },
+ };
+=20
++MODULE_DEVICE_TABLE(mdev, vfio_id_table);
++
+ static struct mdev_driver vfio_mdev_driver =3D {
+ =09.name=09=3D "vfio_mdev",
+ =09.probe=09=3D vfio_mdev_probe,
+diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-of=
+fsets.c
+index 054405b90ba4..6cbb1062488a 100644
+--- a/scripts/mod/devicetable-offsets.c
++++ b/scripts/mod/devicetable-offsets.c
+@@ -231,5 +231,8 @@ int main(void)
+ =09DEVID(wmi_device_id);
+ =09DEVID_FIELD(wmi_device_id, guid_string);
+=20
++=09DEVID(mdev_class_id);
++=09DEVID_FIELD(mdev_class_id, id);
++
+ =09return 0;
+ }
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index c91eba751804..45f1c22f49be 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -1335,6 +1335,16 @@ static int do_wmi_entry(const char *filename, void *=
+symval, char *alias)
+ =09return 1;
+ }
+=20
++/* looks like: "mdev:cN" */
++static int do_mdev_entry(const char *filename, void *symval, char *alias)
++{
++=09DEF_FIELD(symval, mdev_class_id, id);
++
++=09sprintf(alias, "mdev:c%02X", id);
++=09add_wildcard(alias);
++=09return 1;
++}
++
+ /* Does namelen bytes of name exactly match the symbol? */
+ static bool sym_is(const char *name, unsigned namelen, const char *symbol)
+ {
+@@ -1407,6 +1417,7 @@ static const struct devtable devtable[] =3D {
+ =09{"typec", SIZE_typec_device_id, do_typec_entry},
+ =09{"tee", SIZE_tee_client_device_id, do_tee_entry},
+ =09{"wmi", SIZE_wmi_device_id, do_wmi_entry},
++=09{"mdev", SIZE_mdev_class_id, do_mdev_entry},
+ };
+=20
+ /* Create MODULE_ALIAS() statements.
+--=20
+2.19.1
 
-> > > +
-> > > +  vddo-supply:
-> > > +    description:
-> > > +      Definition of the regulator used as interface power supply.
-> > > +    maxItems: 1
-> > > +
-> > > +  vdda-supply:
-> > > +    description:
-> > > +      Definition of the regulator used as analog power supply.
-> > > +    maxItems: 1
-> > > +
-> > > +  vddd-supply:
-> > > +    description:
-> > > +      Definition of the regulator used as digital power supply.
-> > > +    maxItems: 1
-> > > +
-> > > +  reset-gpios:
-> > > +    description:
-> > > +      The phandle and specifier for the GPIO that controls sensor reset.
-> > > +    maxItems: 1
-> > > +
-> > > +  # See ../video-interfaces.txt for details
-> 
-> details on what?
->
-
-Standard properties like endpoint, reg, etc...  I can remove it if not
-required.
-
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - clocks
-> > > +  - clock-names
-> > > +  - clock-frequency
-> > > +  - vddo-supply
-> > > +  - vdda-supply
-> > > +  - vddd-supply
-> > 
-> > I think the port and endpoint nodes should documented here as well.
-> 
-> port yes, but endpoint no. Unless you have endpoint properties other 
-> than remote-endpoint or reg.
-> 
-
-
-Okay. Will document port.
-
-Thanks,
-Mani
-
-> > 
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/gpio/gpio.h>
-> > > +
-> > > +    imx296: camera-sensor@1a {
-> > > +        compatible = "sony,imx296";
-> > > +        reg = <0x1a>;
-> > > +        reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-> > > +        pinctrl-names = "default";
-> > > +        pinctrl-0 = <&camera_rear_default>;
-> > > +        clocks = <&gcc 90>;
-> > > +        clock-names = "mclk";
-> > > +        clock-frequency = <37125000>;
-> > > +        vddo-supply = <&camera_vddo_1v8>;
-> > > +        vdda-supply = <&camera_vdda_3v3>;
-> > > +        vddd-supply = <&camera_vddd_1v2>;
-> > > +
-> > > +        port {
-> > > +            imx296_ep: endpoint {
-> > > +                remote-endpoint = <&csiphy0_ep>;
-> > > +            };
-> > > +        };
-> > > +    };
-> > > +
-> > > +...
-> > 
-> > -- 
-> > Regards,
-> > 
-> > Sakari Ailus
