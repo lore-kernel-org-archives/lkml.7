@@ -2,205 +2,110 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28249CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AE9CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5A12173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450859;
-	bh=E/66I8gVAHeHm9drdzDI89rAtaP9NZE3+thIh4jkC9U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B1uNqdiaAOvZ5iY3NrqbjL4UqGYTZ30zUqdT2Cwc0GeKGAu70KkJYPeR8hEKrIPZ7
-	 NmRqxUovDpKobFRPtls7FZ9S/5wBs2hbN08Z+CYRUvmhLjso2IAfAa8Zd1qC92I9JV
-	 3Mt2xs8MOtDXMsSCOXehkJ+HrvTq9xyq2CIUlACI=
+	by mail.kernel.org (Postfix) with ESMTP id 7443B20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="abWxQJxD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfJ3PyR (ORCPT
+        id S1727800AbfJ3PyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727486AbfJ3PyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:54:19 -0400
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:37410 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727770AbfJ3PyQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 30 Oct 2019 11:54:16 -0400
-Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9E94218DE;
-        Wed, 30 Oct 2019 15:54:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450854;
-        bh=E/66I8gVAHeHm9drdzDI89rAtaP9NZE3+thIh4jkC9U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2RyF+/Z44iuJbEKh6psUyYAFMjocTpTX47oDT6opEKzeSN4tYAbdkAdwEznlXosIt
-         D4m4sRgxmxmjARgJaWY1Yo3AGEEqFHoisL+ZKh3XBwC5V/6fCR7P0L3WogrKphFSas
-         bvgZRi4yuQKHM7yQNG0FsJD1Ue2YzAiLKiXwlqlA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 4.19 02/38] ASoC: wm8994: Do not register inapplicable controls for WM1811
-Date:   Wed, 30 Oct 2019 11:53:30 -0400
-Message-Id: <20191030155406.10109-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
-References: <20191030155406.10109-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: by mail-wr1-f53.google.com with SMTP id e11so2910264wrv.4
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:54:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=jWEhqZt9LYIejbeeXyBHqZ/6ZK3DUBswkTDyOQjmctk=;
+        b=abWxQJxDUyMyhxtnDwX/xcTYhyZukDsV1EvX7XvsJb7GQh9wf6fAvZ3Pt97GdFNXbB
+         FTMZva7WScVv1ytasMJr8yJU8Z7nbgjGk64Nem1HDXosAYyh+Tsoc1kIeYt1W662a+cM
+         Oyruksj7yy1kTtRrQT4sC+j3Cg3kM6MQTYz/A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jWEhqZt9LYIejbeeXyBHqZ/6ZK3DUBswkTDyOQjmctk=;
+        b=nqZ1okBaEQnTByg769D32RsfifLKvYoa76Dyat+aLEh6yMpCJv/aqkGywQugoFDyhE
+         FSBSBu2SbqFE8ueRWZ3vEJ5sfBm9J/tFgIV9F+WyoRJUrc/F3T7wXLNsGaChpaFrLVd4
+         /5K+WEpLAs9W2Z821Yz/RDLNcCyTZ/VGi7HRTixLC4ecJsAY4Pj3v3Nu9JYXZ25JDRGz
+         mai9eIvTT9ONig8h5X3+3n35hAfI/1daX3vmps+vFT8B4DN+A1GY/uYCT2/PBQOMpKhQ
+         M4uUXNOXQiZ5puVk1j0fsM6SqqzwA+0Y5dzMdcSREAUZ1HrA/HC8AgjNwVSaqYZGeDeA
+         rZQA==
+X-Gm-Message-State: APjAAAUauqCbA2hApbtc39xrFmkSKTJXIf17e3DdmUBhz1IiIvKnIcK5
+        4dxRkLAtMriet7+/jwIVnt6PFA==
+X-Google-Smtp-Source: APXvYqzNOvTaSec6IwibKk2zSp2eYM03odLztiWGwylqONfHQQHRcjx9PV4xZhgGXz7qkNeeD84QYw==
+X-Received: by 2002:a05:6000:118f:: with SMTP id g15mr518021wrx.242.1572450854008;
+        Wed, 30 Oct 2019 08:54:14 -0700 (PDT)
+Received: from shitalt.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id g184sm499931wma.8.2019.10.30.08.54.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 30 Oct 2019 08:54:13 -0700 (PDT)
+From:   Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Vikram Prakash <vikram.prakash@broadcom.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vikas Gupta <vikas.gupta@broadcom.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tee-dev@lists.linaro.org, bcm-kernel-feedback-list@broadcom.com,
+        netdev@vger.kernel.org,
+        Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+Subject: [PATCH net-next V4 0/3] Add OP-TEE based bnxt f/w manager
+Date:   Wed, 30 Oct 2019 21:24:21 +0530
+Message-Id: <1572450864-16761-1-git-send-email-sheetal.tigadoli@broadcom.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+This patch series adds support for TEE based BNXT firmware
+management module and the driver changes to invoke OP-TEE
+APIs to fastboot firmware and to collect crash dump.
 
-[ Upstream commit ca2347190adb5e4eece73a2b16e96e651c46246b ]
+changes from v3:
+ - address review comments from sumit
+ - fix SZ_4M undeclared error reported by kbuild test robot
 
-In case of WM1811 device there are currently being registered controls
-referring to registers not existing on that device.
-It has been noticed when getting values of "AIF1ADC2 Volume", "AIF1DAC2
-Volume" controls was failing during ALSA state restoring at boot time:
- "amixer: Mixer hw:0 load error: Device or resource busy"
+Vasundhara Volam (2):
+  bnxt_en: Add support to invoke OP-TEE API to reset firmware
+  bnxt_en: Add support to collect crash dump via ethtool
 
-Reading some registers through I2C was failing with EBUSY error and
-indeed these registers were not available according to the datasheet.
+Vikas Gupta (1):
+  firmware: broadcom: add OP-TEE based BNXT f/w manager
 
-To fix this controls not available on WM1811 are moved to a separate
-array and registered only for WM8994 and WM8958.
+ drivers/firmware/broadcom/Kconfig             |   8 +
+ drivers/firmware/broadcom/Makefile            |   1 +
+ drivers/firmware/broadcom/tee_bnxt_fw.c       | 279 ++++++++++++++++++
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c     |  13 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h     |   6 +
+ .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c |  37 ++-
+ .../net/ethernet/broadcom/bnxt/bnxt_ethtool.h |   2 +
+ include/linux/firmware/broadcom/tee_bnxt_fw.h |  14 +
+ 8 files changed, 356 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/firmware/broadcom/tee_bnxt_fw.c
+ create mode 100644 include/linux/firmware/broadcom/tee_bnxt_fw.h
 
-There are some further differences between WM8994 and WM1811,
-e.g. registers 603h, 604h, 605h, which are not covered in this patch.
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Link: https://lore.kernel.org/r/20190920130218.32690-2-s.nawrocki@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/codecs/wm8994.c | 43 +++++++++++++++++++++++----------------
- 1 file changed, 26 insertions(+), 17 deletions(-)
-
-diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
-index 14f1b0c0d286a..01acb8da2f48e 100644
---- a/sound/soc/codecs/wm8994.c
-+++ b/sound/soc/codecs/wm8994.c
-@@ -537,13 +537,10 @@ static SOC_ENUM_SINGLE_DECL(dac_osr,
- static SOC_ENUM_SINGLE_DECL(adc_osr,
- 			    WM8994_OVERSAMPLING, 1, osr_text);
- 
--static const struct snd_kcontrol_new wm8994_snd_controls[] = {
-+static const struct snd_kcontrol_new wm8994_common_snd_controls[] = {
- SOC_DOUBLE_R_TLV("AIF1ADC1 Volume", WM8994_AIF1_ADC1_LEFT_VOLUME,
- 		 WM8994_AIF1_ADC1_RIGHT_VOLUME,
- 		 1, 119, 0, digital_tlv),
--SOC_DOUBLE_R_TLV("AIF1ADC2 Volume", WM8994_AIF1_ADC2_LEFT_VOLUME,
--		 WM8994_AIF1_ADC2_RIGHT_VOLUME,
--		 1, 119, 0, digital_tlv),
- SOC_DOUBLE_R_TLV("AIF2ADC Volume", WM8994_AIF2_ADC_LEFT_VOLUME,
- 		 WM8994_AIF2_ADC_RIGHT_VOLUME,
- 		 1, 119, 0, digital_tlv),
-@@ -560,8 +557,6 @@ SOC_ENUM("AIF2DACR Source", aif2dacr_src),
- 
- SOC_DOUBLE_R_TLV("AIF1DAC1 Volume", WM8994_AIF1_DAC1_LEFT_VOLUME,
- 		 WM8994_AIF1_DAC1_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
--SOC_DOUBLE_R_TLV("AIF1DAC2 Volume", WM8994_AIF1_DAC2_LEFT_VOLUME,
--		 WM8994_AIF1_DAC2_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
- SOC_DOUBLE_R_TLV("AIF2DAC Volume", WM8994_AIF2_DAC_LEFT_VOLUME,
- 		 WM8994_AIF2_DAC_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
- 
-@@ -569,17 +564,12 @@ SOC_SINGLE_TLV("AIF1 Boost Volume", WM8994_AIF1_CONTROL_2, 10, 3, 0, aif_tlv),
- SOC_SINGLE_TLV("AIF2 Boost Volume", WM8994_AIF2_CONTROL_2, 10, 3, 0, aif_tlv),
- 
- SOC_SINGLE("AIF1DAC1 EQ Switch", WM8994_AIF1_DAC1_EQ_GAINS_1, 0, 1, 0),
--SOC_SINGLE("AIF1DAC2 EQ Switch", WM8994_AIF1_DAC2_EQ_GAINS_1, 0, 1, 0),
- SOC_SINGLE("AIF2 EQ Switch", WM8994_AIF2_EQ_GAINS_1, 0, 1, 0),
- 
- WM8994_DRC_SWITCH("AIF1DAC1 DRC Switch", WM8994_AIF1_DRC1_1, 2),
- WM8994_DRC_SWITCH("AIF1ADC1L DRC Switch", WM8994_AIF1_DRC1_1, 1),
- WM8994_DRC_SWITCH("AIF1ADC1R DRC Switch", WM8994_AIF1_DRC1_1, 0),
- 
--WM8994_DRC_SWITCH("AIF1DAC2 DRC Switch", WM8994_AIF1_DRC2_1, 2),
--WM8994_DRC_SWITCH("AIF1ADC2L DRC Switch", WM8994_AIF1_DRC2_1, 1),
--WM8994_DRC_SWITCH("AIF1ADC2R DRC Switch", WM8994_AIF1_DRC2_1, 0),
--
- WM8994_DRC_SWITCH("AIF2DAC DRC Switch", WM8994_AIF2_DRC_1, 2),
- WM8994_DRC_SWITCH("AIF2ADCL DRC Switch", WM8994_AIF2_DRC_1, 1),
- WM8994_DRC_SWITCH("AIF2ADCR DRC Switch", WM8994_AIF2_DRC_1, 0),
-@@ -598,9 +588,6 @@ SOC_SINGLE("Sidetone HPF Switch", WM8994_SIDETONE, 6, 1, 0),
- SOC_ENUM("AIF1ADC1 HPF Mode", aif1adc1_hpf),
- SOC_DOUBLE("AIF1ADC1 HPF Switch", WM8994_AIF1_ADC1_FILTERS, 12, 11, 1, 0),
- 
--SOC_ENUM("AIF1ADC2 HPF Mode", aif1adc2_hpf),
--SOC_DOUBLE("AIF1ADC2 HPF Switch", WM8994_AIF1_ADC2_FILTERS, 12, 11, 1, 0),
--
- SOC_ENUM("AIF2ADC HPF Mode", aif2adc_hpf),
- SOC_DOUBLE("AIF2ADC HPF Switch", WM8994_AIF2_ADC_FILTERS, 12, 11, 1, 0),
- 
-@@ -641,6 +628,24 @@ SOC_SINGLE("AIF2DAC 3D Stereo Switch", WM8994_AIF2_DAC_FILTERS_2,
- 	   8, 1, 0),
- };
- 
-+/* Controls not available on WM1811 */
-+static const struct snd_kcontrol_new wm8994_snd_controls[] = {
-+SOC_DOUBLE_R_TLV("AIF1ADC2 Volume", WM8994_AIF1_ADC2_LEFT_VOLUME,
-+		 WM8994_AIF1_ADC2_RIGHT_VOLUME,
-+		 1, 119, 0, digital_tlv),
-+SOC_DOUBLE_R_TLV("AIF1DAC2 Volume", WM8994_AIF1_DAC2_LEFT_VOLUME,
-+		 WM8994_AIF1_DAC2_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
-+
-+SOC_SINGLE("AIF1DAC2 EQ Switch", WM8994_AIF1_DAC2_EQ_GAINS_1, 0, 1, 0),
-+
-+WM8994_DRC_SWITCH("AIF1DAC2 DRC Switch", WM8994_AIF1_DRC2_1, 2),
-+WM8994_DRC_SWITCH("AIF1ADC2L DRC Switch", WM8994_AIF1_DRC2_1, 1),
-+WM8994_DRC_SWITCH("AIF1ADC2R DRC Switch", WM8994_AIF1_DRC2_1, 0),
-+
-+SOC_ENUM("AIF1ADC2 HPF Mode", aif1adc2_hpf),
-+SOC_DOUBLE("AIF1ADC2 HPF Switch", WM8994_AIF1_ADC2_FILTERS, 12, 11, 1, 0),
-+};
-+
- static const struct snd_kcontrol_new wm8994_eq_controls[] = {
- SOC_SINGLE_TLV("AIF1DAC1 EQ1 Volume", WM8994_AIF1_DAC1_EQ_GAINS_1, 11, 31, 0,
- 	       eq_tlv),
-@@ -4262,13 +4267,15 @@ static int wm8994_component_probe(struct snd_soc_component *component)
- 	wm8994_handle_pdata(wm8994);
- 
- 	wm_hubs_add_analogue_controls(component);
--	snd_soc_add_component_controls(component, wm8994_snd_controls,
--			     ARRAY_SIZE(wm8994_snd_controls));
-+	snd_soc_add_component_controls(component, wm8994_common_snd_controls,
-+				       ARRAY_SIZE(wm8994_common_snd_controls));
- 	snd_soc_dapm_new_controls(dapm, wm8994_dapm_widgets,
- 				  ARRAY_SIZE(wm8994_dapm_widgets));
- 
- 	switch (control->type) {
- 	case WM8994:
-+		snd_soc_add_component_controls(component, wm8994_snd_controls,
-+					       ARRAY_SIZE(wm8994_snd_controls));
- 		snd_soc_dapm_new_controls(dapm, wm8994_specific_dapm_widgets,
- 					  ARRAY_SIZE(wm8994_specific_dapm_widgets));
- 		if (control->revision < 4) {
-@@ -4288,8 +4295,10 @@ static int wm8994_component_probe(struct snd_soc_component *component)
- 		}
- 		break;
- 	case WM8958:
-+		snd_soc_add_component_controls(component, wm8994_snd_controls,
-+					       ARRAY_SIZE(wm8994_snd_controls));
- 		snd_soc_add_component_controls(component, wm8958_snd_controls,
--				     ARRAY_SIZE(wm8958_snd_controls));
-+					       ARRAY_SIZE(wm8958_snd_controls));
- 		snd_soc_dapm_new_controls(dapm, wm8958_dapm_widgets,
- 					  ARRAY_SIZE(wm8958_dapm_widgets));
- 		if (control->revision < 1) {
+base-commit: 749234419aeeb275900c2706e1fa078fd7394743
 -- 
-2.20.1
+2.17.1
 
