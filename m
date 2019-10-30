@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B71CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB86CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDDE52067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815C82067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/m0+yvu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWqTn8F1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfJ3Vfk (ORCPT
+        id S1727330AbfJ3Vfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:35:40 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40933 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfJ3Vfh (ORCPT
+        Wed, 30 Oct 2019 17:35:36 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44074 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727280AbfJ3Vfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:35:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id u22so4332784lji.7;
-        Wed, 30 Oct 2019 14:35:35 -0700 (PDT)
+        Wed, 30 Oct 2019 17:35:33 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v4so2753811lfd.11;
+        Wed, 30 Oct 2019 14:35:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BEJ200kbZVTsss1iDk6Wt5qRmYYgbTDuf+N828TJE+4=;
-        b=V/m0+yvu+XQPediAtxkB/QWeX/tegpDYhM3Inv8dWd0Kf/bfbLJiBakX570cQEw9tZ
-         oaJbL5uNhMw5goVZuu6vAi0RX1M0WRbeo4wOcuXMuqg6iT9cG6LGi7ntzurpzxv/YIIn
-         U6KcVwQWdW0HCQnW+x/0gmuLSnmo1YPmPC2fb0+hq6FRW6Pwp85P2ajApM63oMKYPYTQ
-         gUei/RwNzU/y0q98OlzjNAkstbCi5crlEROlzPzjZST1MiPcSzE7s3PCIUrLfb0VxOUL
-         9/+2w9LLpkQi7ep9AE9alBRNF5KEC4bckJk/VT2V7n+ygyRFhBIukcY4Js6GhRhiElFu
-         x9Fg==
+        bh=oZXgBiZ7YOkoGyisWeubyUkOPcMd11xlE2xTsIL1hcs=;
+        b=pWqTn8F1cf6KdDw1IogG3DYjamYVOwnJwIKPP5jYkfX6RipToLsLAQfIjn2qDVhsR4
+         oj3Jt0OItTvvQxUUE9uRnvQ8p/ML3Zqnjb6GpAbukEl9Z7QgaZ5IIVAjXTnSq0Op4JE7
+         R2X6QouHch+tAaG44+BXHWbBLmReDe7qQRnOVOikVBqVLtLaoD7uEhZTGL9oXZfq9qRO
+         fm0Tk05pSDlwormMHanT/MAUfM6JSLfz+axiuf2zU9ypUrUG+Y1WR2lLB4mF/px4MATC
+         QNnVsaurvI8dI2tbwbJmuyUeDvBdNKYvd/H7eFBIfefWc4CbpF3ypBPBDJnTKym6f8+s
+         dCZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BEJ200kbZVTsss1iDk6Wt5qRmYYgbTDuf+N828TJE+4=;
-        b=czq1Dov/Ju9LQc6NZLL7K7f9jIf11RL9PDhf4vyqtrkUhjmjEu5hDs3ZC1Ier4jDuP
-         +qxn9v6SpmIlGouUqHZkvl0iQO0b8atn85NLSD75/GrZ+rizav8If4TsEcaQ6DA+J30J
-         xXAsp+uW4Boir/Qb6gkKOvIc8rDPNKmBp5a23Jj8OETYgRu7jCgbZ0PUMP3SWpnbV89j
-         WHziGsfAoQO9dqFQBh3eD7kbiqYbuaQ8yQ/SZguu1N0YYqsxtywO8faqAcXQn3A1k6/E
-         hcAs0Fr3WMMkn26wjbjitiSn6C0duqvm0n2+CkU4ws5lA9ykErqZ/z2an9zMbflOqWAI
-         1hRw==
-X-Gm-Message-State: APjAAAWWCbYW9Se5rTpO/NUNRlSi4zZUoxRtKwQeBZroTvE6az1mBeJG
-        d15CaqHqT3fEfcNnEc2C0ik=
-X-Google-Smtp-Source: APXvYqxqas7JJTy3po8gqA9lxcVBaMsPmryEn6NF2QLtfhQNuAfHsBPhKGocMJM10XASN29tgYQlow==
-X-Received: by 2002:a2e:9888:: with SMTP id b8mr1125681ljj.167.1572471335206;
-        Wed, 30 Oct 2019 14:35:35 -0700 (PDT)
+        bh=oZXgBiZ7YOkoGyisWeubyUkOPcMd11xlE2xTsIL1hcs=;
+        b=R83bEEtWBzty/gFNXNcGZQRG1+dD1TRAGttqvbUMSpvHBS5/Wk1zH35vZ2DbS96fxw
+         gbja2WOyS3AhBr2Z19NE9O1CzecYR0RN052gKXy+71egENR3wB4EYQALJ9/sKFDCVIpv
+         RN69AoCruIHVbPWjb5+Z5N32aUrPbqAQmQJgsVdN82cdNhjFwu5pTVKej3IcMrkYB6f0
+         mEWuPPnbtsGfmmZBRqMCl7TuC3sntamgAunXu9V5cISEzhyxX2nHIEB93yhxxscIk2ai
+         zr20En4LaCqh7zbJBckI+FlDIlVZI5EAckbL3/ugmX90MgBIxe6TVBfVUN89dvRqDkQe
+         DvWA==
+X-Gm-Message-State: APjAAAV+NA6qs6vV98NhmCaEzuAqGUlzARxQVsCj5maVATJeR5fvTfX9
+        hkXYJMnv6P21Bsz7LglMJ7E=
+X-Google-Smtp-Source: APXvYqx977yb+MS+GJ5iH+ErzHq2FIs5tonlPqY3+qtmNyiAYwEvDewUgz/mLnhuGNWVwZatPaxWKw==
+X-Received: by 2002:a19:e018:: with SMTP id x24mr213962lfg.191.1572471329315;
+        Wed, 30 Oct 2019 14:35:29 -0700 (PDT)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.34
+        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 14:35:34 -0700 (PDT)
+        Wed, 30 Oct 2019 14:35:28 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -71,9 +71,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Marcel Ziswiler <marcel.ziswiler@toradex.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/10] ARM: dts: tegra30: beaver: Add CPU Operating Performance Points
-Date:   Thu, 31 Oct 2019 00:34:00 +0300
-Message-Id: <20191030213400.29434-11-digetx@gmail.com>
+Subject: [PATCH v3 05/10] clk: tegra30: Use custom CCLK implementation
+Date:   Thu, 31 Oct 2019 00:33:55 +0300
+Message-Id: <20191030213400.29434-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191030213400.29434-1-digetx@gmail.com>
 References: <20191030213400.29434-1-digetx@gmail.com>
@@ -84,53 +84,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Utilize common Tegra30 CPU OPP table. CPU DVFS is available now on beaver.
+We're going to use the generic cpufreq-dt driver on Tegra30 and thus CCLK
+intermediate re-parenting will be performed by the clock driver. There is
+now special CCLK implementation that supports all CCLK quirks, this patch
+makes Tegra30 SoCs to use that implementation.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/boot/dts/tegra30-beaver.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/clk/tegra/clk-tegra30.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
-index 6ebb3105af9e..86556622be25 100644
---- a/arch/arm/boot/dts/tegra30-beaver.dts
-+++ b/arch/arm/boot/dts/tegra30-beaver.dts
-@@ -2,6 +2,8 @@
- /dts-v1/;
- 
- #include "tegra30.dtsi"
-+#include "tegra30-cpu-opp.dtsi"
-+#include "tegra30-cpu-opp-microvolt.dtsi"
- 
- / {
- 	model = "NVIDIA Tegra30 Beaver evaluation board";
-@@ -2124,4 +2126,26 @@
- 			 <&tegra_car TEGRA30_CLK_EXTERN1>;
- 		clock-names = "pll_a", "pll_a_out0", "mclk";
- 	};
-+
-+	cpus {
-+		cpu0: cpu@0 {
-+			cpu-supply = <&vddctrl_reg>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+
-+		cpu@1 {
-+			cpu-supply = <&vddctrl_reg>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+
-+		cpu@2 {
-+			cpu-supply = <&vddctrl_reg>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+
-+		cpu@3 {
-+			cpu-supply = <&vddctrl_reg>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+	};
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index c8bc18e4d7e5..0fe03d69fe1a 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -499,6 +499,8 @@ static struct tegra_clk_pll_params pll_x_params __ro_after_init = {
+ 	.freq_table = pll_x_freq_table,
+ 	.flags = TEGRA_PLL_HAS_CPCON | TEGRA_PLL_SET_DCCON |
+ 		 TEGRA_PLL_USE_LOCK | TEGRA_PLL_HAS_LOCK_ENABLE,
++	.pre_rate_change = tegra_cclk_pre_pllx_rate_change,
++	.post_rate_change = tegra_cclk_post_pllx_rate_change,
  };
+ 
+ static struct tegra_clk_pll_params pll_e_params __ro_after_init = {
+@@ -932,11 +934,11 @@ static void __init tegra30_super_clk_init(void)
+ 	clk_register_clkdev(clk, "pll_p_out4_cclkg", NULL);
+ 
+ 	/* CCLKG */
+-	clk = tegra_clk_register_super_mux("cclk_g", cclk_g_parents,
++	clk = tegra_clk_register_super_cclk("cclk_g", cclk_g_parents,
+ 				  ARRAY_SIZE(cclk_g_parents),
+ 				  CLK_SET_RATE_PARENT,
+ 				  clk_base + CCLKG_BURST_POLICY,
+-				  0, 4, 0, 0, NULL);
++				  0, NULL);
+ 	clks[TEGRA30_CLK_CCLK_G] = clk;
+ 
+ 	/*
 -- 
 2.23.0
 
