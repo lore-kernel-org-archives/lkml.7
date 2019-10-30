@@ -2,69 +2,170 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60B0CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE50CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9431B208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF0B218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572454262;
+	bh=CMyj9JS64TkQEn5oYuEpuitWEBfnmYxUiD5H5F70wK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ea6/dliu6GMl2Qhz7KkZTL7HmGc78v/vvOsWtfL44Ts3DSCRPEq12VdjbyzT3PEwU
+	 EGdRVOsGAyKD85xdDuqIbrvXkRu9m3V979dDRX/BNK7Opj8PJZ/9vXUz3tGMfwZJIZ
+	 j1pUMDn/beU/gm+mhm8zBOMizuzhfTbz3vehx3UI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfJ3Qu7 (ORCPT
+        id S1727241AbfJ3QvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:50:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:38106 "EHLO foss.arm.com"
+        Wed, 30 Oct 2019 12:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbfJ3Qu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726971AbfJ3Qu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 30 Oct 2019 12:50:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8372A31F;
-        Wed, 30 Oct 2019 09:50:58 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1504C3F6C4;
-        Wed, 30 Oct 2019 09:50:55 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 16:50:54 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     linux-mm@kvack.org, Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v14 22/22] arm64: mm: Display non-present entries in
- ptdump
-Message-ID: <20191030165053.GE13309@arrakis.emea.arm.com>
-References: <20191028135910.33253-1-steven.price@arm.com>
- <20191028135910.33253-23-steven.price@arm.com>
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54FCC2087E;
+        Wed, 30 Oct 2019 16:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572454258;
+        bh=CMyj9JS64TkQEn5oYuEpuitWEBfnmYxUiD5H5F70wK8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gXugWpub/ulkuSiZxR9DmWXlRxXOSRFu+dZJ+wj2IwewoPzKNa+qUcFM6CLl8awFB
+         KhCjIAqEikgZICZQLtK4nkVbB2PkHCZoUxVow0WnBEzAqup+HYJm0Hp2JIzeVlX+Cr
+         9OcaKKowoGdoKQXA3aFFb51maBcbDZCr97tiXumY=
+Date:   Wed, 30 Oct 2019 09:50:56 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH 2/2] f2fs: support data compression
+Message-ID: <20191030165056.GA693@sol.localdomain>
+Mail-Followup-To: Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+References: <20191022171602.93637-1-jaegeuk@kernel.org>
+ <20191022171602.93637-2-jaegeuk@kernel.org>
+ <20191027225006.GA321938@sol.localdomain>
+ <da214cdc-0074-b7bf-7761-d4c4ad3d4f6a@huawei.com>
+ <20191030025512.GA4791@sol.localdomain>
+ <97c33fa1-15af-b319-29a1-22f254a26c0a@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028135910.33253-23-steven.price@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <97c33fa1-15af-b319-29a1-22f254a26c0a@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 01:59:10PM +0000, Steven Price wrote:
-> Previously the /sys/kernel/debug/kernel_page_tables file would only show
-> lines for entries present in the page tables. However it is useful to
-> also show non-present entries as this makes the size and level of the
-> holes more visible. This aligns the behaviour with x86 which also shows
-> holes.
+On Wed, Oct 30, 2019 at 04:43:52PM +0800, Chao Yu wrote:
+> On 2019/10/30 10:55, Eric Biggers wrote:
+> > On Tue, Oct 29, 2019 at 04:33:36PM +0800, Chao Yu wrote:
+> >> On 2019/10/28 6:50, Eric Biggers wrote:
+> >>>> +bool f2fs_is_compressed_page(struct page *page)
+> >>>> +{
+> >>>> +	if (!page_private(page))
+> >>>> +		return false;
+> >>>> +	if (IS_ATOMIC_WRITTEN_PAGE(page) || IS_DUMMY_WRITTEN_PAGE(page))
+> >>>> +		return false;
+> >>>> +	return *((u32 *)page_private(page)) == F2FS_COMPRESSED_PAGE_MAGIC;
+> >>>> +}
+> >>>
+> >>> This code implies that there can be multiple page private structures each of
+> >>> which has a different magic number.  But I only see F2FS_COMPRESSED_PAGE_MAGIC.
+> >>> Where in the code is the other one(s)?
+> >>
+> >> I'm not sure I understood you correctly, did you mean it needs to introduce
+> >> f2fs_is_atomic_written_page() and f2fs_is_dummy_written_page() like
+> >> f2fs_is_compressed_page()?
+> >>
+> > 
+> > No, I'm asking what is the case where the line
+> > 
+> > 	*((u32 *)page_private(page)) == F2FS_COMPRESSED_PAGE_MAGIC
+> > 
+> > returns false?
 > 
-> Signed-off-by: Steven Price <steven.price@arm.com>
+> Should be this?
+> 
+> if (!page_private(page))
+> 	return false;
+> f2fs_bug_on(*((u32 *)page_private(page)) != F2FS_COMPRESSED_PAGE_MAGIC)
+> return true;
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Yes, that makes more sense, unless there are other cases.
+
+> 
+> > 
+> >>>
+> >>>> +
+> >>>> +static void f2fs_set_compressed_page(struct page *page,
+> >>>> +		struct inode *inode, pgoff_t index, void *data, refcount_t *r)
+> >>>> +{
+> >>>> +	SetPagePrivate(page);
+> >>>> +	set_page_private(page, (unsigned long)data);
+> >>>> +
+> >>>> +	/* i_crypto_info and iv index */
+> >>>> +	page->index = index;
+> >>>> +	page->mapping = inode->i_mapping;
+> >>>> +	if (r)
+> >>>> +		refcount_inc(r);
+> >>>> +}
+> >>>
+> >>> It isn't really appropriate to create fake pagecache pages like this.  Did you
+> >>> consider changing f2fs to use fscrypt_decrypt_block_inplace() instead?
+> >>
+> >> We need to store i_crypto_info and iv index somewhere, in order to pass them to
+> >> fscrypt_decrypt_block_inplace(), where did you suggest to store them?
+> >>
+> > 
+> > The same place where the pages are stored.
+> 
+> Still we need allocate space for those fields, any strong reason to do so?
+> 
+
+page->mapping set implies that the page is a pagecache page.  Faking it could
+cause problems with code elsewhere.
+
+> > 
+> >>>> +
+> >>>> +void f2fs_destroy_compress_ctx(struct compress_ctx *cc)
+> >>>> +{
+> >>>> +	kvfree(cc->rpages);
+> >>>> +}
+> >>>
+> >>> The memory is allocated with kzalloc(), so why is it freed with kvfree() and not
+> >>> just kfree()?
+> >>
+> >> It was allocated by f2fs_*alloc() which will fallback to kvmalloc() once
+> >> kmalloc() failed.
+> > 
+> > This seems to be a bug in f2fs_kmalloc() -- it inappropriately falls back to
+> > kvmalloc().  As per its name, it should only use kmalloc().  f2fs_kvmalloc()
+> > already exists, so it can be used when the fallback is wanted.
+> 
+> We can introduce f2fs_memalloc() to wrap f2fs_kmalloc() and f2fs_kvmalloc() as
+> below:
+> 
+> f2fs_memalloc()
+> {
+> 	mem = f2fs_kmalloc();
+> 	if (mem)
+> 		return mem;
+> 	return f2fs_kvmalloc();
+> }
+> 
+> It can be used in specified place where we really need it, like the place
+> descirbied in 5222595d093e ("f2fs: use kvmalloc, if kmalloc is failed") in where
+> we introduced original logic.
+
+No, just use kvmalloc().  The whole point of kvmalloc() is that it tries
+kmalloc() and then falls back to vmalloc() if it fails.
+
+- Eric
