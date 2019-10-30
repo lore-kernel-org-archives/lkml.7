@@ -2,175 +2,125 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4690BC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F73ACA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19AE420856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18BB320856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:24:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLGuKt96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfJ3NWv convert rfc822-to-8bit (ORCPT
+        id S1726377AbfJ3NYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:22:51 -0400
-Received: from mail-oln040092254065.outbound.protection.outlook.com ([40.92.254.65]:56234
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726119AbfJ3NWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:22:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T+2wrZstnkgU+3r5It3Ab5MR7ZVInU68a+6eP13YYsHbQKY/c77BVCFcie8xbcTXOLzOBxgaiaeCbe+DKvPb0tj5XacUtjCQqOyTkBNtprpDnS1+MZZcrl95Pk54VvUrs02lNyd6fdo4BzQVGotN8dXEh8ncBWlmDIzj3PbUmmK4rbUrjV+8FlHhCFP6CV+Af9NkCiL7GauLs92OkLRI56JntJUQ2o+QcC13A0WIT8EZgJhqgxMzTPS14ug1PtzW50wwfq8/InWs9ix6FaHZsvD40AXW9ZwWP1Q2rFuZHGg7AeseSwgSQTM2qWQKjOUU7z14sTu2PsLH/9LnKL20NQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ynlcacdcuwEaK2nEncg0gM4UkSoSNfYujkpgk+B74j0=;
- b=cZpLzsJZ2qgTCX/0AmXIuknrnT/qBPGnd3HzVPlZ0g/WGI7zdPDjMhmu1J7lHHeIreHFh7Cg35OW6q6OlC3+NA0PDQAWUozIlt3P5B1BiROUhRQdUozSS9OR2ZLt8gAzwGJ5TEl/1Ons6RnWqFPfHfR2zp+vUaMBGtRSJv1TLYzEC5BUe+vpk8rHckT5lzO50vUVsb7pnqZ0ULOwtwloqo5Bcm3MUPviiH2NDgxyJ+375o4U81YSMkc1700tAlkg9BDfNSTGkP0iQprSL4BasB/nAvONttB/30fImsdk4+HnOnjHQlbIeKw2jhZprWorcWK+Mjw79241T+oU+iVCTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT057.eop-APC01.prod.protection.outlook.com
- (10.152.252.58) by PU1APC01HT047.eop-APC01.prod.protection.outlook.com
- (10.152.253.107) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Wed, 30 Oct
- 2019 13:22:45 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.55) by
- PU1APC01FT057.mail.protection.outlook.com (10.152.253.7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2387.20 via Frontend Transport; Wed, 30 Oct 2019 13:22:45 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d%8]) with mapi id 15.20.2387.028; Wed, 30 Oct 2019
- 13:22:45 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v9 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Topic: [PATCH v9 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Index: AQHVjm2j6KwuziponkGop9V32ZF1J6dzGDuAgAAVG4A=
-Date:   Wed, 30 Oct 2019 13:22:44 +0000
-Message-ID: <SL2P216MB018746C15E0262862D428C1480600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-References: <SL2P216MB018739B339B453DE872DB71E80610@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <20191030120705.GC2593@lahna.fi.intel.com>
-In-Reply-To: <20191030120705.GC2593@lahna.fi.intel.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0108.ausprd01.prod.outlook.com
- (2603:10c6:10:1::24) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:9D53416EACB1DF86D9C8A1ECC5ADCA5892582068D1D608FF53189FDA068AE937;UpperCasedChecksum:6B62D25C89F168A497CE03236BE4802829DB0594E8B6C04BA86C88F4AE563A25;SizeAsReceived:7748;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [DdNjAGrKnSZH53kiIy2UcjhMLxXKJDtu0OHz/htpjNryfAgU0FTmlFatLwRsrR1Da7TYjhAgN4g=]
-x-microsoft-original-message-id: <20191030132237.GA27719@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: PU1APC01HT047:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /nGUYWaDWHwUIY9An4up6q/TyevDjG4HY+ls5+PhDzQnnsrRhRYlMUEiJc3eXc0jT2zwM4TFzQOPePb+rQSWqEZdnH8ZFAQRNNl+Ah3P4vI8SYFxox31tH85P0OH9qGoGu5e+UcNd5mO0uaR7UYfkuZSae/GHuglsuBpNAlORZvioJJPo4diWTHWa33wJRNu
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <AD622C2030C7064B86E3FF71276DC5CE@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Wed, 30 Oct 2019 09:24:25 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:32880 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3NYZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:24:25 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y39so3208840qty.0;
+        Wed, 30 Oct 2019 06:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=V/wnj6oKKe1Sq8rjaWwuzZNcb4lKIJbQVb556eiBhYE=;
+        b=NLGuKt964rUn6/j7+H4omNIBAjQYO0yoN/MjFMmQ46watXej8J547kVPSNuSb3hVIn
+         zcgk8ODIRiVMFQwbcLoE8L1RN/2BSWpxOE+nlbf1ShU44Hb6hVgT4JTv8eH2/GENjhh3
+         TJozMjddK9Gm4T2CbLx3jAsAvmPEVFTX9Jh6FbGU9ninoH/c6akKRlrxByYGSR9duPIz
+         ZW3n3bo/aSE9E9mOa38k4ScA9yI4Cy2EtpdbFTKvxcvl74hlqYh1U/bewqThxhEp0Szc
+         MoLOdCht8A36pTrSLpSPjEU9BSlVcrSlGtw+dRkEaTyBhEUFhAB5CFYb1muakCSpMFtm
+         Xjxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V/wnj6oKKe1Sq8rjaWwuzZNcb4lKIJbQVb556eiBhYE=;
+        b=biZSs30Nh9xDe3czGRdeHP8KxGVY/1q2MILhgQrOSm2EJ9w2O0XlUzW+q7dOfNiZ6S
+         q5zDxHsmXyx76lmp48hwgFpP9ZZSdIT3ivYzmwysheQCpoRx3BrpS7OKsUGi/mdbU+Em
+         v30wLe18d0/Qq/13AoFIswWoP0K+UUpUADyK1vH97Gg1Nx+RYYZpjv5jx7kgTPljJY2Z
+         Uqa6d877UIP67heS4BZd3cIMAUdGmbdCyh9HIrQQkRUoLCQ+/a6SrI//PEhiM9gW5CYM
+         +LVxygU+BbtkIn2z44jfSeNdVVs80e+NyQBz5/TD7YHjdKIu9jfPUgvdAiBNd43gm4NW
+         P2FA==
+X-Gm-Message-State: APjAAAXQdEHQ+OLGbtGw5X2dA84UFUn9nqws2Ce3XA0GvZ5tKRl4zueQ
+        InzxE8Ft7tfpsRsDEkCGm7sJY42sr8w=
+X-Google-Smtp-Source: APXvYqxXgk9xgikfWwKGihR0Bsg0yVAuHamm2kMo5n7KP0wL+5yKZBf0Fa1JRUR8URHAgHbsXKLTZg==
+X-Received: by 2002:aed:2722:: with SMTP id n31mr8776qtd.98.1572441863901;
+        Wed, 30 Oct 2019 06:24:23 -0700 (PDT)
+Received: from localhost.localdomain ([168.181.48.193])
+        by smtp.gmail.com with ESMTPSA id g83sm6644qke.100.2019.10.30.06.24.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 06:24:23 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 72739C0AD9; Wed, 30 Oct 2019 10:24:20 -0300 (-03)
+Date:   Wed, 30 Oct 2019 10:24:20 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Wally Zhao <wallyzhao@gmail.com>
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, davem@davemloft.net,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wally.zhao@nokia-sbell.com
+Subject: Re: [PATCH] sctp: set ooo_okay properly for Transmit Packet Steering
+Message-ID: <20191030132420.GG4326@localhost.localdomain>
+References: <1572451637-14085-1-git-send-email-wallyzhao@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f588a32-13c5-4ffe-3200-08d75d3c3fba
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 13:22:44.9370
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT047
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572451637-14085-1-git-send-email-wallyzhao@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 02:07:05PM +0200, mika.westerberg@linux.intel.com wrote:
-> On Tue, Oct 29, 2019 at 03:29:21PM +0000, Nicholas Johnson wrote:
-> > Remove checks for resource size in extend_bridge_window(). This is
-> > necessary to allow the pci_bus_distribute_available_resources() to
-> > function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-> > allocate resources. Because the kernel parameter sets the size of all
-> > hotplug bridges to be the same, there are problems when nested hotplug
-> > bridges are encountered. Fitting a downstream hotplug bridge with size X
-> > and normal bridges with non-zero size Y into parent hotplug bridge with
-> > size X is impossible, and hence the downstream hotplug bridge needs to
-> > shrink to fit into its parent.
-> > 
-> > Add check for if bridge is extended or shrunken and adjust pci_dbg to
-> > reflect this.
-> > 
-> > Reset the resource if its new size is zero (if we have run out of a
-> > bridge window resource) to prevent the PCI resource assignment code from
-> > attempting to assign a zero-sized resource.
-> > 
-> > Rename extend_bridge_window() to adjust_bridge_window() to reflect the
-> > fact that the window can now shrink.
-> > 
-> > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > ---
-> >  drivers/pci/setup-bus.c | 23 +++++++++++++++--------
-> >  1 file changed, 15 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > index fe8b2c715..f8cd54584 100644
-> > --- a/drivers/pci/setup-bus.c
-> > +++ b/drivers/pci/setup-bus.c
-> > @@ -1814,7 +1814,7 @@ void __init pci_assign_unassigned_resources(void)
-> >  	}
-> >  }
-> >  
-> > -static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
-> > +static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
-> >  				 struct list_head *add_list,
-> >  				 resource_size_t new_size)
-> >  {
-> > @@ -1823,13 +1823,20 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
-> >  	if (res->parent)
-> >  		return;
-> >  
-> > -	if (resource_size(res) >= new_size)
-> > -		return;
-> > +	if (new_size > resource_size(res)) {
-> > +		add_size = new_size - resource_size(res);
-> > +		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-> > +			&add_size);
-> > +	} else if (new_size < resource_size(res)) {
-> > +		add_size = resource_size(res) - new_size;
-> > +		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-> > +			&add_size);
-> > +	}
-> 
-> Do we need to care about new_size == resource_size(res)?
-Sorry, I skipped over this before re-posting. If we are not changing the 
-size, does it need to be logged in pci_dbg? I could change it to ">=", 
-meaning if the size does not change then it will be "extended" by 0 in 
-pci_dbg.
+On Wed, Oct 30, 2019 at 12:07:17PM -0400, Wally Zhao wrote:
+> Unlike tcp_transmit_skb,
+> sctp_packet_transmit does not set ooo_okay explicitly,
+> causing unwanted Tx queue switching when multiqueue is in use;
 
-Let me know if you wish for this to happen. But I am easy either way.
+It is initialized to 0 by __alloc_skb() via:
+        memset(skb, 0, offsetof(struct sk_buff, tail));
+and never set to 1 by anyone for SCTP.
 
-If you are fine with how it is, PATCH v10 should have addressed 
-everything so far.
+The patch description seems off. I don't see how the unwanted Tx queue
+switching can happen. IOW, it's not fixing it OOO packets, but
+improving it by allowing switching on the first packet. Am I missing
+something?
+
+> Tx queue switching may cause out-of-order packets.
+> Change sctp_packet_transmit to allow Tx queue switching only for
+> the first in flight packet, to avoid unwanted Tx queue switching.
 > 
-> Also there are several calls of resource_size(res) above so probably
-> worth storing it into a helper variable.
+> Signed-off-by: Wally Zhao <wallyzhao@gmail.com>
+> ---
+>  net/sctp/output.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> > -	add_size = new_size - resource_size(res);
-> > -	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
-> >  	res->end = res->start + new_size - 1;
-> >  	remove_from_list(add_list, res);
-> > +	if (!new_size)
-> > +		reset_resource(res);
-> >  }
-Cheers
+> diff --git a/net/sctp/output.c b/net/sctp/output.c
+> index dbda7e7..5ff75cc 100644
+> --- a/net/sctp/output.c
+> +++ b/net/sctp/output.c
+> @@ -626,6 +626,10 @@ int sctp_packet_transmit(struct sctp_packet *packet, gfp_t gfp)
+>  	/* neighbour should be confirmed on successful transmission or
+>  	 * positive error
+>  	 */
+> +
+> +	/* allow switch tx queue only for the first in flight pkt */
+> +	head->ooo_okay = asoc->outqueue.outstanding_bytes == 0;
+
+Considering we are talking about NIC queues here, we would have a
+better result with tp->flight_size instead. As in, we can switch
+queues if, for this transport, the queue is empty.
+
+> +
+>  	if (tp->af_specific->sctp_xmit(head, tp) >= 0 &&
+>  	    tp->dst_pending_confirm)
+>  		tp->dst_pending_confirm = 0;
+> -- 
+> 1.8.3.1
+> 
