@@ -2,62 +2,135 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD0CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8623ACA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81BB42083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604592083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572435217;
+	bh=fnnpfaC9BEEar7C5BqFB3BIb9m+9ZYBV8LUNLwzwOes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CU0A9vL2dtUDMaoaZk82hygyXPrU8gMDXL6c1h/im/OByqYT19AWU+09OAB8odudE
+	 oLLKix7CF53oS6KM1aQChWeMYn3sZyySKZm0aJPOpqgjG8IyerhN0VhL4QuRiAl7/3
+	 EHOPIh7MozRCEZuJyLlxEm5HW+CAP77RWnD8MK4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbfJ3Lcp (ORCPT
+        id S1726488AbfJ3Ldg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 07:32:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52112 "EHLO mx1.suse.de"
+        Wed, 30 Oct 2019 07:33:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52524 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726065AbfJ3Lcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 07:32:45 -0400
+        id S1726225AbfJ3Ldg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 07:33:36 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C0F22ACD8;
-        Wed, 30 Oct 2019 11:32:42 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 3A5A5DA783; Wed, 30 Oct 2019 12:32:52 +0100 (CET)
-Date:   Wed, 30 Oct 2019 12:32:52 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     dsterba@suse.com, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH] fs/affs: Replace binary semaphores with mutexes
-Message-ID: <20191030113252.GD3001@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Davidlohr Bueso <dave@stgolabs.net>,
-        dsterba@suse.com, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>
-References: <20191027220143.10756-1-dave@stgolabs.net>
+        by mx1.suse.de (Postfix) with ESMTP id 09DEAADDD;
+        Wed, 30 Oct 2019 11:33:32 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 12:33:28 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v7] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20191030113328.GA31513@dhcp22.suse.cz>
+References: <1572428068-180880-1-git-send-email-linyunsheng@huawei.com>
+ <20191030101449.GW4097@hirez.programming.kicks-ass.net>
+ <20191030102229.GY31513@dhcp22.suse.cz>
+ <20191030102800.GX4097@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191027220143.10756-1-dave@stgolabs.net>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20191030102800.GX4097@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 03:01:43PM -0700, Davidlohr Bueso wrote:
-> At a slight footprint cost (24 vs 32 bytes), mutexes are more optimal
-> than semaphores; it's also a nicer interface for mutual exclusion,
-> which is why they are encouraged over binary semaphores, when possible.
+On Wed 30-10-19 11:28:00, Peter Zijlstra wrote:
+> On Wed, Oct 30, 2019 at 11:22:29AM +0100, Michal Hocko wrote:
+> > On Wed 30-10-19 11:14:49, Peter Zijlstra wrote:
+> > > On Wed, Oct 30, 2019 at 05:34:28PM +0800, Yunsheng Lin wrote:
+> > > > When passing the return value of dev_to_node() to cpumask_of_node()
+> > > > without checking if the device's node id is NUMA_NO_NODE, there is
+> > > > global-out-of-bounds detected by KASAN.
+> > > > 
+> > > > From the discussion [1], NUMA_NO_NODE really means no node affinity,
+> > > > which also means all cpus should be usable. So the cpumask_of_node()
+> > > > should always return all cpus online when user passes the node id as
+> > > > NUMA_NO_NODE, just like similar semantic that page allocator handles
+> > > > NUMA_NO_NODE.
+> > > > 
+> > > > But we cannot really copy the page allocator logic. Simply because the
+> > > > page allocator doesn't enforce the near node affinity. It just picks it
+> > > > up as a preferred node but then it is free to fallback to any other numa
+> > > > node. This is not the case here and node_to_cpumask_map will only restrict
+> > > > to the particular node's cpus which would have really non deterministic
+> > > > behavior depending on where the code is executed. So in fact we really
+> > > > want to return cpu_online_mask for NUMA_NO_NODE.
+> > > > 
+> > > > Also there is a debugging version of node_to_cpumask_map() for x86 and
+> > > > arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
+> > > > patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
+> > > > 
+> > > > [1] https://lkml.org/lkml/2019/9/11/66
+> > > > Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> > > > Suggested-by: Michal Hocko <mhocko@kernel.org>
+> > > > Acked-by: Michal Hocko <mhocko@suse.com>
+> > > > Acked-by: Paul Burton <paul.burton@mips.com> # MIPS bits
+> > > 
+> > > Still:
+> > > 
+> > > Nacked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > 
+> > Do you have any other proposal that doesn't make any wild guesses about
+> > which node to use instead of the undefined one?
 > 
-> For both i_link_lock and i_ext_lock (and hence i_hash_lock which I
-> annotated for the hash lock mapping hackery for lockdep), their semantics
-> imply traditional lock ownership; that is, the lock owner is the same for
-> both lock/unlock operations and does not run in irq context. Therefore
-> it is safe to convert.
-> 
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+> It only makes 'wild' guesses when the BIOS is shit and it complains
+> about that.
 
-Thanks, I'll add it to affs queue.
+I really do not see how this is any better than simply using the online
+cpu mask in the same "broken" situation. We are effectivelly talking
+about a suboptimal path for suboptimal setups. I haven't heard any
+actual technical argument why cpu_online_mask is any worse than adding
+some sort of failover guessing which node to use as a replacement.
+
+I completely do you point about complaining loud about broken BIOS/fw.
+It seems we just disagree where we should workaround those issues
+because as of now we simply do generate semi random behavior because of
+an uninitialized memory access.
+
+> Or do you like you BIOS broken?
+
+I do not see anything like that in my response nor in my previous
+communication. Moreover a patch to warn about this should be on the way
+to get merged AFAIK.
+
+-- 
+Michal Hocko
+SUSE Labs
